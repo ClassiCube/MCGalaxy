@@ -106,6 +106,16 @@ namespace MCGalaxy.Gui
             this.srv_txtMOTD = new System.Windows.Forms.TextBox();
             this.srv_txtPort = new System.Windows.Forms.TextBox();
             this.srv_chkPublic = new System.Windows.Forms.CheckBox();
+            this.rank_cbSilentAdmins = new System.Windows.Forms.CheckBox();
+            this.rank_txtOSMaps = new System.Windows.Forms.TextBox();
+            this.rank_txtPrefix = new System.Windows.Forms.TextBox();
+            this.rank_txtLimit = new System.Windows.Forms.TextBox();
+            this.rank_txtMOTD = new System.Windows.Forms.TextBox();
+            this.rank_txtPerm = new System.Windows.Forms.TextBox();
+            this.rank_txtName = new System.Windows.Forms.TextBox();
+            this.rank_btnColor = new System.Windows.Forms.Button();
+            this.rank_txtUndo = new System.Windows.Forms.TextBox();
+            this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
@@ -135,25 +145,17 @@ namespace MCGalaxy.Gui
             this.blk_list = new System.Windows.Forms.ListBox();
             this.pageRanks = new System.Windows.Forms.TabPage();
             this.gbRankGeneral = new System.Windows.Forms.GroupBox();
+            this.rank_lblOsMap = new System.Windows.Forms.Label();
             this.rank_cbEmpty = new System.Windows.Forms.CheckBox();
             this.rank_lblDefault = new System.Windows.Forms.Label();
-            this.rank_cbSilentAdmins = new System.Windows.Forms.CheckBox();
             this.gbRankSettings = new System.Windows.Forms.GroupBox();
             this.rank_lblPrefix = new System.Windows.Forms.Label();
             this.rank_lblOSMaps = new System.Windows.Forms.Label();
-            this.rank_txtOSMaps = new System.Windows.Forms.TextBox();
-            this.rank_txtPrefix = new System.Windows.Forms.TextBox();
-            this.rank_txtLimit = new System.Windows.Forms.TextBox();
             this.rank_lblPerm = new System.Windows.Forms.Label();
-            this.rank_txtMOTD = new System.Windows.Forms.TextBox();
-            this.rank_txtPerm = new System.Windows.Forms.TextBox();
-            this.rank_txtName = new System.Windows.Forms.TextBox();
-            this.rank_btnColor = new System.Windows.Forms.Button();
             this.rank_lblMOTD = new System.Windows.Forms.Label();
             this.rank_lblName = new System.Windows.Forms.Label();
             this.rank_lblDraw = new System.Windows.Forms.Label();
             this.rank_lblColor = new System.Windows.Forms.Label();
-            this.rank_txtUndo = new System.Windows.Forms.TextBox();
             this.rank_lblUndo = new System.Windows.Forms.Label();
             this.rank_btnDel = new System.Windows.Forms.Button();
             this.rank_btnAdd = new System.Windows.Forms.Button();
@@ -209,7 +211,6 @@ namespace MCGalaxy.Gui
             this.irc_lblChannel = new System.Windows.Forms.Label();
             this.irc_lblOpChannel = new System.Windows.Forms.Label();
             this.irc_chkPass = new System.Windows.Forms.CheckBox();
-            this.irc_lblPass = new System.Windows.Forms.Label();
             this.irc_txtPass = new System.Windows.Forms.TextBox();
             this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.pageServer = new System.Windows.Forms.TabPage();
@@ -370,8 +371,6 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.rank_lblOsMap = new System.Windows.Forms.Label();
-            this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -936,7 +935,7 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.irc_chkEnabled, "Whether to use the IRC bot or not.\nIRC stands for Internet Relay Chat and allows " +
                         "for communication with the server while outside Minecraft.");
             this.irc_chkEnabled.UseVisualStyleBackColor = true;
-            this.irc_chkEnabled.CheckedChanged += new System.EventHandler(this.irc_ChkEnabled_CheckedChanged);
+            this.irc_chkEnabled.CheckedChanged += new System.EventHandler(this.irc_chkEnabled_CheckedChanged);
             // 
             // irc_txtServer
             // 
@@ -1056,6 +1055,100 @@ namespace MCGalaxy.Gui
             this.srv_chkPublic.Text = "Public";
             this.toolTip.SetToolTip(this.srv_chkPublic, "Whether or not the server will appear on the server list.");
             this.srv_chkPublic.UseVisualStyleBackColor = true;
+            // 
+            // rank_cbSilentAdmins
+            // 
+            this.rank_cbSilentAdmins.AutoSize = true;
+            this.rank_cbSilentAdmins.Location = new System.Drawing.Point(11, 79);
+            this.rank_cbSilentAdmins.Name = "rank_cbSilentAdmins";
+            this.rank_cbSilentAdmins.Size = new System.Drawing.Size(118, 17);
+            this.rank_cbSilentAdmins.TabIndex = 41;
+            this.rank_cbSilentAdmins.Text = "Admins join silently";
+            this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the game silently");
+            this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
+            // 
+            // rank_txtOSMaps
+            // 
+            this.rank_txtOSMaps.Location = new System.Drawing.Point(259, 74);
+            this.rank_txtOSMaps.Name = "rank_txtOSMaps";
+            this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtOSMaps.TabIndex = 19;
+            this.toolTip.SetToolTip(this.rank_txtOSMaps, "Maximum number of /os maps players are allowed");
+            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
+            // 
+            // rank_txtPrefix
+            // 
+            this.rank_txtPrefix.Location = new System.Drawing.Point(85, 74);
+            this.rank_txtPrefix.Name = "rank_txtPrefix";
+            this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtPrefix.TabIndex = 21;
+            this.toolTip.SetToolTip(this.rank_txtPrefix, "Short prefix showed before player names in chat.");
+            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
+            // 
+            // rank_txtLimit
+            // 
+            this.rank_txtLimit.Location = new System.Drawing.Point(85, 47);
+            this.rank_txtLimit.Name = "rank_txtLimit";
+            this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtLimit.TabIndex = 4;
+            this.toolTip.SetToolTip(this.rank_txtLimit, "Maximum number of blocks players can affect in draw commands.");
+            this.rank_txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
+            // 
+            // rank_txtMOTD
+            // 
+            this.rank_txtMOTD.Location = new System.Drawing.Point(85, 130);
+            this.rank_txtMOTD.Name = "rank_txtMOTD";
+            this.rank_txtMOTD.Size = new System.Drawing.Size(255, 21);
+            this.rank_txtMOTD.TabIndex = 17;
+            this.toolTip.SetToolTip(this.rank_txtMOTD, "MOTD shown to players of this rank.\r\nIf left blank, the server MOTD is shown to t" +
+                        "hem.");
+            this.rank_txtMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
+            // 
+            // rank_txtPerm
+            // 
+            this.rank_txtPerm.Location = new System.Drawing.Point(259, 20);
+            this.rank_txtPerm.Name = "rank_txtPerm";
+            this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtPerm.TabIndex = 6;
+            this.toolTip.SetToolTip(this.rank_txtPerm, "Permission level of this rank.");
+            this.rank_txtPerm.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
+            // 
+            // rank_txtName
+            // 
+            this.rank_txtName.Location = new System.Drawing.Point(85, 20);
+            this.rank_txtName.Name = "rank_txtName";
+            this.rank_txtName.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtName.TabIndex = 5;
+            this.toolTip.SetToolTip(this.rank_txtName, "Name of this rank");
+            this.rank_txtName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
+            // 
+            // rank_btnColor
+            // 
+            this.rank_btnColor.Location = new System.Drawing.Point(85, 101);
+            this.rank_btnColor.Name = "rank_btnColor";
+            this.rank_btnColor.Size = new System.Drawing.Size(81, 23);
+            this.rank_btnColor.TabIndex = 12;
+            this.toolTip.SetToolTip(this.rank_btnColor, "Color of this rank name in chat and the tab list");
+            this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
+            // 
+            // rank_txtUndo
+            // 
+            this.rank_txtUndo.Location = new System.Drawing.Point(259, 47);
+            this.rank_txtUndo.Name = "rank_txtUndo";
+            this.rank_txtUndo.Size = new System.Drawing.Size(81, 21);
+            this.rank_txtUndo.TabIndex = 15;
+            this.toolTip.SetToolTip(this.rank_txtUndo, "Maximum number of seconds players can undo up to in the past with /undo");
+            this.rank_txtUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
+            // 
+            // rank_cmbOsMap
+            // 
+            this.rank_cmbOsMap.FormattingEnabled = true;
+            this.rank_cmbOsMap.Location = new System.Drawing.Point(120, 47);
+            this.rank_cmbOsMap.Name = "rank_cmbOsMap";
+            this.rank_cmbOsMap.Size = new System.Drawing.Size(80, 21);
+            this.rank_cmbOsMap.TabIndex = 49;
+            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.\nIf \'nobody\'" +
+                        " is selected, rank required is the minimum rank that can use /os.");
             // 
             // sec_cbLogNotes
             // 
@@ -1367,12 +1460,21 @@ namespace MCGalaxy.Gui
             this.gbRankGeneral.TabStop = false;
             this.gbRankGeneral.Text = "General settings";
             // 
+            // rank_lblOsMap
+            // 
+            this.rank_lblOsMap.AutoSize = true;
+            this.rank_lblOsMap.Location = new System.Drawing.Point(11, 50);
+            this.rank_lblOsMap.Name = "rank_lblOsMap";
+            this.rank_lblOsMap.Size = new System.Drawing.Size(103, 13);
+            this.rank_lblOsMap.TabIndex = 50;
+            this.rank_lblOsMap.Text = "/os default perbuild:";
+            // 
             // rank_cbEmpty
             // 
             this.rank_cbEmpty.AutoSize = true;
             this.rank_cbEmpty.Location = new System.Drawing.Point(11, 125);
             this.rank_cbEmpty.Name = "rank_cbEmpty";
-            this.rank_cbEmpty.Size = new System.Drawing.Size(135, 17);
+            this.rank_cbEmpty.Size = new System.Drawing.Size(163, 17);
             this.rank_cbEmpty.TabIndex = 45;
             this.rank_cbEmpty.Text = "Show empty ranks in /players";
             this.rank_cbEmpty.UseVisualStyleBackColor = true;
@@ -1385,17 +1487,6 @@ namespace MCGalaxy.Gui
             this.rank_lblDefault.Size = new System.Drawing.Size(68, 13);
             this.rank_lblDefault.TabIndex = 43;
             this.rank_lblDefault.Text = "Default rank:";
-            // 
-            // rank_cbSilentAdmins
-            // 
-            this.rank_cbSilentAdmins.AutoSize = true;
-            this.rank_cbSilentAdmins.Location = new System.Drawing.Point(11, 79);
-            this.rank_cbSilentAdmins.Name = "rank_cbSilentAdmins";
-            this.rank_cbSilentAdmins.Size = new System.Drawing.Size(118, 17);
-            this.rank_cbSilentAdmins.TabIndex = 41;
-            this.rank_cbSilentAdmins.Text = "Admins join silently";
-            this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
-            this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the game silently");
             // 
             // gbRankSettings
             // 
@@ -1442,33 +1533,6 @@ namespace MCGalaxy.Gui
             this.rank_lblOSMaps.Text = "/os maps:";
             this.rank_lblOSMaps.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // rank_txtOSMaps
-            // 
-            this.rank_txtOSMaps.Location = new System.Drawing.Point(259, 74);
-            this.rank_txtOSMaps.Name = "rank_txtOSMaps";
-            this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtOSMaps.TabIndex = 19;
-            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtOSMaps, "Maximum number of /os maps players are allowed");
-            // 
-            // rank_txtPrefix
-            // 
-            this.rank_txtPrefix.Location = new System.Drawing.Point(85, 74);
-            this.rank_txtPrefix.Name = "rank_txtPrefix";
-            this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtPrefix.TabIndex = 21;
-            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtPrefix, "Short prefix showed before player names in chat.");
-            // 
-            // rank_txtLimit
-            // 
-            this.rank_txtLimit.Location = new System.Drawing.Point(85, 47);
-            this.rank_txtLimit.Name = "rank_txtLimit";
-            this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtLimit.TabIndex = 4;
-            this.rank_txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtLimit, "Maximum number of blocks players can affect in draw commands.");
-            // 
             // rank_lblPerm
             // 
             this.rank_lblPerm.AutoSize = true;
@@ -1478,42 +1542,6 @@ namespace MCGalaxy.Gui
             this.rank_lblPerm.TabIndex = 7;
             this.rank_lblPerm.Text = "Permission:";
             this.rank_lblPerm.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // rank_txtMOTD
-            // 
-            this.rank_txtMOTD.Location = new System.Drawing.Point(85, 130);
-            this.rank_txtMOTD.Name = "rank_txtMOTD";
-            this.rank_txtMOTD.Size = new System.Drawing.Size(255, 21);
-            this.rank_txtMOTD.TabIndex = 17;
-            this.rank_txtMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtMOTD, "MOTD shown to players of this rank.\r\nIf left blank, the server MOTD is shown to them.");
-            // 
-            // rank_txtPerm
-            // 
-            this.rank_txtPerm.Location = new System.Drawing.Point(259, 20);
-            this.rank_txtPerm.Name = "rank_txtPerm";
-            this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtPerm.TabIndex = 6;
-            this.rank_txtPerm.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtPerm, "Permission level of this rank.");
-            // 
-            // rank_txtName
-            // 
-            this.rank_txtName.Location = new System.Drawing.Point(85, 20);
-            this.rank_txtName.Name = "rank_txtName";
-            this.rank_txtName.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtName.TabIndex = 5;
-            this.rank_txtName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtName, "Name of this rank");            
-            // 
-            // rank_btnColor
-            // 
-            this.rank_btnColor.Location = new System.Drawing.Point(85, 101);
-            this.rank_btnColor.Name = "rank_btnColor";
-            this.rank_btnColor.Size = new System.Drawing.Size(81, 23);
-            this.rank_btnColor.TabIndex = 12;
-            this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
-            this.toolTip.SetToolTip(this.rank_btnColor, "Color of this rank name in chat and the tab list");
             // 
             // rank_lblMOTD
             // 
@@ -1552,15 +1580,6 @@ namespace MCGalaxy.Gui
             this.rank_lblColor.Size = new System.Drawing.Size(35, 13);
             this.rank_lblColor.TabIndex = 11;
             this.rank_lblColor.Text = "Color:";
-            // 
-            // rank_txtUndo
-            // 
-            this.rank_txtUndo.Location = new System.Drawing.Point(259, 47);
-            this.rank_txtUndo.Name = "rank_txtUndo";
-            this.rank_txtUndo.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtUndo.TabIndex = 15;
-            this.rank_txtUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
-            this.toolTip.SetToolTip(this.rank_txtUndo, "Maximum number of seconds players can undo up to in the past with /undo");
             // 
             // rank_lblUndo
             // 
@@ -1926,6 +1945,7 @@ namespace MCGalaxy.Gui
             this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
             this.pageIRC.Controls.Add(this.sql_grp);
             this.pageIRC.Controls.Add(this.irc_grp);
+            this.pageIRC.Controls.Add(this.irc_cbTitles);
             this.pageIRC.Location = new System.Drawing.Point(4, 22);
             this.pageIRC.Name = "pageIRC";
             this.pageIRC.Size = new System.Drawing.Size(498, 521);
@@ -1948,7 +1968,7 @@ namespace MCGalaxy.Gui
             this.sql_grp.Controls.Add(this.sql_txtPort);
             this.sql_grp.Location = new System.Drawing.Point(264, 3);
             this.sql_grp.Name = "sql_grp";
-            this.sql_grp.Size = new System.Drawing.Size(227, 272);
+            this.sql_grp.Size = new System.Drawing.Size(227, 214);
             this.sql_grp.TabIndex = 29;
             this.sql_grp.TabStop = false;
             this.sql_grp.Text = "MySQL";
@@ -2063,13 +2083,11 @@ namespace MCGalaxy.Gui
             this.irc_grp.Controls.Add(this.irc_txtChannel);
             this.irc_grp.Controls.Add(this.irc_lblOpChannel);
             this.irc_grp.Controls.Add(this.irc_chkPass);
-            this.irc_grp.Controls.Add(this.irc_lblPass);
             this.irc_grp.Controls.Add(this.irc_txtPass);
             this.irc_grp.Controls.Add(this.irc_txtOpChannel);
-            this.irc_grp.Controls.Add(this.irc_cbTitles);
             this.irc_grp.Location = new System.Drawing.Point(8, 3);
             this.irc_grp.Name = "irc_grp";
-            this.irc_grp.Size = new System.Drawing.Size(250, 272);
+            this.irc_grp.Size = new System.Drawing.Size(250, 214);
             this.irc_grp.TabIndex = 27;
             this.irc_grp.TabStop = false;
             this.irc_grp.Text = "IRC";
@@ -2129,35 +2147,28 @@ namespace MCGalaxy.Gui
             // irc_chkPass
             // 
             this.irc_chkPass.AutoSize = true;
-            this.irc_chkPass.Location = new System.Drawing.Point(9, 187);
+            this.irc_chkPass.Location = new System.Drawing.Point(9, 185);
             this.irc_chkPass.Name = "irc_chkPass";
-            this.irc_chkPass.Size = new System.Drawing.Size(152, 17);
+            this.irc_chkPass.Size = new System.Drawing.Size(72, 17);
             this.irc_chkPass.TabIndex = 27;
-            this.irc_chkPass.Text = "I have a NickServ password";
+            this.irc_chkPass.Text = "Password";
             this.irc_chkPass.UseVisualStyleBackColor = true;
-            // 
-            // irc_lblPass
-            // 
-            this.irc_lblPass.AutoSize = true;
-            this.irc_lblPass.Location = new System.Drawing.Point(25, 213);
-            this.irc_lblPass.Name = "irc_lblPass";
-            this.irc_lblPass.Size = new System.Drawing.Size(56, 13);
-            this.irc_lblPass.TabIndex = 29;
-            this.irc_lblPass.Text = "Password:";
+            this.toolTip.SetToolTip(this.irc_chkPass, "NickServ password set for the username");
+            this.irc_chkPass.CheckedChanged += new System.EventHandler(this.irc_chkPass_CheckedChanged);
             // 
             // irc_txtPass
             // 
-            this.irc_txtPass.Location = new System.Drawing.Point(82, 210);
+            this.irc_txtPass.Location = new System.Drawing.Point(82, 182);
             this.irc_txtPass.Name = "irc_txtPass";
             this.irc_txtPass.PasswordChar = '*';
             this.irc_txtPass.Size = new System.Drawing.Size(106, 21);
             this.irc_txtPass.TabIndex = 28;
-            this.irc_txtPass.Tag = "The password used for NickServ";
+            this.toolTip.SetToolTip(this.irc_txtPass, "NickServ password set for the username");
             // 
             // irc_cbTitles
             // 
             this.irc_cbTitles.AutoSize = true;
-            this.irc_cbTitles.Location = new System.Drawing.Point(9, 251);
+            this.irc_cbTitles.Location = new System.Drawing.Point(14, 308);
             this.irc_cbTitles.Name = "irc_cbTitles";
             this.irc_cbTitles.Size = new System.Drawing.Size(140, 17);
             this.irc_cbTitles.TabIndex = 32;
@@ -4021,25 +4032,6 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // rank_lblOsMap
-            // 
-            this.rank_lblOsMap.AutoSize = true;
-            this.rank_lblOsMap.Location = new System.Drawing.Point(11, 50);
-            this.rank_lblOsMap.Name = "rank_lblOsMap";
-            this.rank_lblOsMap.Size = new System.Drawing.Size(103, 13);
-            this.rank_lblOsMap.TabIndex = 50;
-            this.rank_lblOsMap.Text = "/os default perbuild:";
-            // 
-            // rank_cmbOsMap
-            // 
-            this.rank_cmbOsMap.FormattingEnabled = true;
-            this.rank_cmbOsMap.Location = new System.Drawing.Point(120, 47);
-            this.rank_cmbOsMap.Name = "rank_cmbOsMap";
-            this.rank_cmbOsMap.Size = new System.Drawing.Size(80, 21);
-            this.rank_cmbOsMap.TabIndex = 49;
-            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.\nIf \'nobody\' is sel" +
-                        "ected, rank required is the minimum rank that can use /os.");
-            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4093,6 +4085,7 @@ namespace MCGalaxy.Gui
             this.bak_grp.ResumeLayout(false);
             this.bak_grp.PerformLayout();
             this.pageIRC.ResumeLayout(false);
+            this.pageIRC.PerformLayout();
             this.sql_grp.ResumeLayout(false);
             this.sql_grp.PerformLayout();
             this.irc_grp.ResumeLayout(false);
@@ -4426,7 +4419,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TabControl tabGames;
         private System.Windows.Forms.TabPage tabPage11;
         private System.Windows.Forms.TabPage tabPage10;
-        private System.Windows.Forms.Label irc_lblPass;
         private System.Windows.Forms.TextBox irc_txtPass;
         private System.Windows.Forms.CheckBox irc_chkPass;
         private System.Windows.Forms.CheckBox irc_cbTitles;

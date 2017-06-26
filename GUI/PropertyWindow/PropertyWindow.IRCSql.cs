@@ -60,17 +60,17 @@ namespace MCGalaxy.Gui {
             Database.Backend = Server.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             //Server.MySQLPooling = ; // No setting for this?            
         }
-		
-		
-		        
+        
+        
+                
         void ToggleIrcSettings(bool enabled) {
             irc_txtServer.Enabled = enabled;
             irc_txtPort.Enabled = enabled;
             irc_txtNick.Enabled = enabled;
             irc_txtChannel.Enabled = enabled;
-            irc_txtOpChannel.Enabled = enabled;
-            irc_txtPass.Enabled = enabled;
+            irc_txtOpChannel.Enabled = enabled;            
             irc_chkPass.Enabled = enabled;
+            irc_txtPass.Enabled = enabled && irc_chkPass.Checked;
             irc_cbTitles.Enabled = enabled;
         }
 
@@ -81,11 +81,15 @@ namespace MCGalaxy.Gui {
             sql_txtHost.Enabled = enabled;
             sql_txtDBName.Enabled = enabled;
         }
-		
-		
-		
-		void irc_ChkEnabled_CheckedChanged(object sender, EventArgs e) {
+        
+        
+        
+        void irc_chkEnabled_CheckedChanged(object sender, EventArgs e) {
             ToggleIrcSettings(irc_chkEnabled.Checked);
+        }        
+        
+        void irc_chkPass_CheckedChanged(object sender, EventArgs e) {
+            irc_txtPass.Enabled = irc_chkEnabled.Checked && irc_chkPass.Checked;
         }
 
         void sql_linkDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
