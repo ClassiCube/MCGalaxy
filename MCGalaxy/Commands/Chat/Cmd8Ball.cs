@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static bool Sees8Ball(Player p) {
-            return !p.ignoreAll && !p.ignore8ball && p.level.worldChat && p.Chatroom == null;
+            return !p.ignoreAll && !p.ignore8ball && p.level.SeesServerWideChat && p.Chatroom == null;
         }
 
         public override void Help(Player p) {

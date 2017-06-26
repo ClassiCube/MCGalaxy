@@ -72,7 +72,7 @@ namespace MCGalaxy.Network {
         
         void Player_PlayerAction(Player p, PlayerAction action,
                                  string message, bool stealth) {
-            if (!Server.IRC.Enabled) return;
+            if (!Server.IRC.Enabled || !p.level.SeesServerWideChat) return;
             string msg = null;
             
             if (action == PlayerAction.AFK && Server.ircShowAFK && !p.hidden)
