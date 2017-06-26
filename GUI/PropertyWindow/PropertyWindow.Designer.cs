@@ -193,6 +193,10 @@ namespace MCGalaxy.Gui
             this.bak_lblTime = new System.Windows.Forms.Label();
             this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
             this.pageIRC = new System.Windows.Forms.TabPage();
+            this.gb_ircSettings = new System.Windows.Forms.GroupBox();
+            this.irc_cbAFK = new System.Windows.Forms.CheckBox();
+            this.irc_cbWorldChanges = new System.Windows.Forms.CheckBox();
+            this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.sql_grp = new System.Windows.Forms.GroupBox();
             this.sql_linkDownload = new System.Windows.Forms.LinkLabel();
             this.sql_lblUser = new System.Windows.Forms.Label();
@@ -212,7 +216,6 @@ namespace MCGalaxy.Gui
             this.irc_lblNick = new System.Windows.Forms.Label();
             this.irc_lblChannel = new System.Windows.Forms.Label();
             this.irc_lblOpChannel = new System.Windows.Forms.Label();
-            this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.pageServer = new System.Windows.Forms.TabPage();
             this.lvl_grp = new System.Windows.Forms.GroupBox();
             this.lvl_lblMain = new System.Windows.Forms.Label();
@@ -371,9 +374,12 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.gb_ircSettings = new System.Windows.Forms.GroupBox();
-            this.irc_cbWorldChanges = new System.Windows.Forms.CheckBox();
-            this.irc_cbAFK = new System.Windows.Forms.CheckBox();
+            this.irc_cbRank = new System.Windows.Forms.ComboBox();
+            this.irc_lblRank = new System.Windows.Forms.Label();
+            this.irc_cbVerify = new System.Windows.Forms.ComboBox();
+            this.irc_lblVerify = new System.Windows.Forms.Label();
+            this.irc_lblPrefix = new System.Windows.Forms.Label();
+            this.irc_txtPrefix = new System.Windows.Forms.TextBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -395,6 +401,7 @@ namespace MCGalaxy.Gui
             this.afk_grp.SuspendLayout();
             this.bak_grp.SuspendLayout();
             this.pageIRC.SuspendLayout();
+            this.gb_ircSettings.SuspendLayout();
             this.sql_grp.SuspendLayout();
             this.irc_grp.SuspendLayout();
             this.pageServer.SuspendLayout();
@@ -449,7 +456,6 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
-            this.gb_ircSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // pageChat
@@ -1977,6 +1983,54 @@ namespace MCGalaxy.Gui
             this.pageIRC.TabIndex = 6;
             this.pageIRC.Text = "IRC/SQL";
             // 
+            // gb_ircSettings
+            // 
+            this.gb_ircSettings.Controls.Add(this.irc_txtPrefix);
+            this.gb_ircSettings.Controls.Add(this.irc_lblPrefix);
+            this.gb_ircSettings.Controls.Add(this.irc_cbVerify);
+            this.gb_ircSettings.Controls.Add(this.irc_lblVerify);
+            this.gb_ircSettings.Controls.Add(this.irc_cbRank);
+            this.gb_ircSettings.Controls.Add(this.irc_lblRank);
+            this.gb_ircSettings.Controls.Add(this.irc_cbAFK);
+            this.gb_ircSettings.Controls.Add(this.irc_cbWorldChanges);
+            this.gb_ircSettings.Controls.Add(this.irc_cbTitles);
+            this.gb_ircSettings.Location = new System.Drawing.Point(8, 223);
+            this.gb_ircSettings.Name = "gb_ircSettings";
+            this.gb_ircSettings.Size = new System.Drawing.Size(483, 95);
+            this.gb_ircSettings.TabIndex = 33;
+            this.gb_ircSettings.TabStop = false;
+            this.gb_ircSettings.Text = "IRC settings";
+            // 
+            // irc_cbAFK
+            // 
+            this.irc_cbAFK.AutoSize = true;
+            this.irc_cbAFK.Location = new System.Drawing.Point(6, 70);
+            this.irc_cbAFK.Name = "irc_cbAFK";
+            this.irc_cbAFK.Size = new System.Drawing.Size(176, 17);
+            this.irc_cbAFK.TabIndex = 34;
+            this.irc_cbAFK.Text = "Announce when player goes AFK";
+            this.irc_cbAFK.UseVisualStyleBackColor = true;
+            // 
+            // irc_cbWorldChanges
+            // 
+            this.irc_cbWorldChanges.AutoSize = true;
+            this.irc_cbWorldChanges.Location = new System.Drawing.Point(6, 45);
+            this.irc_cbWorldChanges.Name = "irc_cbWorldChanges";
+            this.irc_cbWorldChanges.Size = new System.Drawing.Size(199, 17);
+            this.irc_cbWorldChanges.TabIndex = 33;
+            this.irc_cbWorldChanges.Text = "Announce when player changes level";
+            this.irc_cbWorldChanges.UseVisualStyleBackColor = true;
+            // 
+            // irc_cbTitles
+            // 
+            this.irc_cbTitles.AutoSize = true;
+            this.irc_cbTitles.Location = new System.Drawing.Point(6, 20);
+            this.irc_cbTitles.Name = "irc_cbTitles";
+            this.irc_cbTitles.Size = new System.Drawing.Size(171, 17);
+            this.irc_cbTitles.TabIndex = 32;
+            this.irc_cbTitles.Text = "Show player\'s title in messages";
+            this.irc_cbTitles.UseVisualStyleBackColor = true;
+            // 
             // sql_grp
             // 
             this.sql_grp.Controls.Add(this.sql_chkUseSQL);
@@ -2168,16 +2222,6 @@ namespace MCGalaxy.Gui
             this.irc_lblOpChannel.Size = new System.Drawing.Size(64, 13);
             this.irc_lblOpChannel.TabIndex = 25;
             this.irc_lblOpChannel.Text = "Op Channel:";
-            // 
-            // irc_cbTitles
-            // 
-            this.irc_cbTitles.AutoSize = true;
-            this.irc_cbTitles.Location = new System.Drawing.Point(6, 20);
-            this.irc_cbTitles.Name = "irc_cbTitles";
-            this.irc_cbTitles.Size = new System.Drawing.Size(171, 17);
-            this.irc_cbTitles.TabIndex = 32;
-            this.irc_cbTitles.Text = "Show player\'s title in messages";
-            this.irc_cbTitles.UseVisualStyleBackColor = true;
             // 
             // pageServer
             // 
@@ -4036,37 +4080,56 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // gb_ircSettings
+            // irc_cbRank
             // 
-            this.gb_ircSettings.Controls.Add(this.irc_cbAFK);
-            this.gb_ircSettings.Controls.Add(this.irc_cbWorldChanges);
-            this.gb_ircSettings.Controls.Add(this.irc_cbTitles);
-            this.gb_ircSettings.Location = new System.Drawing.Point(8, 223);
-            this.gb_ircSettings.Name = "gb_ircSettings";
-            this.gb_ircSettings.Size = new System.Drawing.Size(483, 95);
-            this.gb_ircSettings.TabIndex = 33;
-            this.gb_ircSettings.TabStop = false;
-            this.gb_ircSettings.Text = "IRC settings";
+            this.irc_cbRank.FormattingEnabled = true;
+            this.irc_cbRank.Location = new System.Drawing.Point(367, 17);
+            this.irc_cbRank.Name = "irc_cbRank";
+            this.irc_cbRank.Size = new System.Drawing.Size(100, 21);
+            this.irc_cbRank.TabIndex = 36;
             // 
-            // irc_cbWorldChanges
+            // irc_lblRank
             // 
-            this.irc_cbWorldChanges.AutoSize = true;
-            this.irc_cbWorldChanges.Location = new System.Drawing.Point(6, 45);
-            this.irc_cbWorldChanges.Name = "irc_cbWorldChanges";
-            this.irc_cbWorldChanges.Size = new System.Drawing.Size(199, 17);
-            this.irc_cbWorldChanges.TabIndex = 33;
-            this.irc_cbWorldChanges.Text = "Announce when player changes level";
-            this.irc_cbWorldChanges.UseVisualStyleBackColor = true;
+            this.irc_lblRank.AutoSize = true;
+            this.irc_lblRank.Location = new System.Drawing.Point(265, 21);
+            this.irc_lblRank.Name = "irc_lblRank";
+            this.irc_lblRank.Size = new System.Drawing.Size(97, 13);
+            this.irc_lblRank.TabIndex = 35;
+            this.irc_lblRank.Text = "IRC controller rank:";
             // 
-            // irc_cbAFK
+            // irc_cbVerify
             // 
-            this.irc_cbAFK.AutoSize = true;
-            this.irc_cbAFK.Location = new System.Drawing.Point(6, 70);
-            this.irc_cbAFK.Name = "irc_cbAFK";
-            this.irc_cbAFK.Size = new System.Drawing.Size(176, 17);
-            this.irc_cbAFK.TabIndex = 34;
-            this.irc_cbAFK.Text = "Announce when player goes AFK";
-            this.irc_cbAFK.UseVisualStyleBackColor = true;
+            this.irc_cbVerify.FormattingEnabled = true;
+            this.irc_cbVerify.Location = new System.Drawing.Point(387, 42);
+            this.irc_cbVerify.Name = "irc_cbVerify";
+            this.irc_cbVerify.Size = new System.Drawing.Size(80, 21);
+            this.irc_cbVerify.TabIndex = 38;
+            this.irc_cbVerify.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            // 
+            // irc_lblVerify
+            // 
+            this.irc_lblVerify.AutoSize = true;
+            this.irc_lblVerify.Location = new System.Drawing.Point(284, 45);
+            this.irc_lblVerify.Name = "irc_lblVerify";
+            this.irc_lblVerify.Size = new System.Drawing.Size(99, 13);
+            this.irc_lblVerify.TabIndex = 37;
+            this.irc_lblVerify.Text = "Verifcation method:";
+            // 
+            // irc_lblPrefix
+            // 
+            this.irc_lblPrefix.AutoSize = true;
+            this.irc_lblPrefix.Location = new System.Drawing.Point(265, 70);
+            this.irc_lblPrefix.Name = "irc_lblPrefix";
+            this.irc_lblPrefix.Size = new System.Drawing.Size(87, 13);
+            this.irc_lblPrefix.TabIndex = 39;
+            this.irc_lblPrefix.Text = "Command prefix:";
+            // 
+            // irc_txtPrefix
+            // 
+            this.irc_txtPrefix.Location = new System.Drawing.Point(367, 68);
+            this.irc_txtPrefix.Name = "irc_txtPrefix";
+            this.irc_txtPrefix.Size = new System.Drawing.Size(100, 21);
+            this.irc_txtPrefix.TabIndex = 32;
             // 
             // PropertyWindow
             // 
@@ -4121,6 +4184,8 @@ namespace MCGalaxy.Gui
             this.bak_grp.ResumeLayout(false);
             this.bak_grp.PerformLayout();
             this.pageIRC.ResumeLayout(false);
+            this.gb_ircSettings.ResumeLayout(false);
+            this.gb_ircSettings.PerformLayout();
             this.sql_grp.ResumeLayout(false);
             this.sql_grp.PerformLayout();
             this.irc_grp.ResumeLayout(false);
@@ -4195,10 +4260,14 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
-            this.gb_ircSettings.ResumeLayout(false);
-            this.gb_ircSettings.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label irc_lblRank;
+        private System.Windows.Forms.ComboBox irc_cbRank;
+        private System.Windows.Forms.Label irc_lblVerify;
+        private System.Windows.Forms.ComboBox irc_cbVerify;
+        private System.Windows.Forms.Label irc_lblPrefix;
+        private System.Windows.Forms.TextBox irc_txtPrefix;
         private System.Windows.Forms.CheckBox irc_cbAFK;
         private System.Windows.Forms.CheckBox irc_cbWorldChanges;
         private System.Windows.Forms.GroupBox gb_ircSettings;

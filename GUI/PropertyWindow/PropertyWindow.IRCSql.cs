@@ -32,7 +32,13 @@ namespace MCGalaxy.Gui {
             
             irc_cbTitles.Checked = Server.ircPlayerTitles;
             irc_cbWorldChanges.Checked = Server.ircShowWorldChanges;
-            irc_cbAFK.Checked = Server.ircShowAFK;
+            irc_cbAFK.Checked = Server.ircShowAFK;                 
+
+            irc_cbRank.Items.AddRange(GuiPerms.RankNames);            
+            GuiPerms.SetDefaultIndex(irc_cbRank, Server.ircControllerRank);
+            irc_cbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
+            irc_cbVerify.SelectedIndex = (int)Server.IRCVerify;
+            irc_txtPrefix.Text = Server.ircCommandPrefix;
             
             sql_chkUseSQL.Checked = Server.useMySQL;
             sql_txtUser.Text = Server.MySQLUsername;
@@ -56,6 +62,10 @@ namespace MCGalaxy.Gui {
             Server.ircShowWorldChanges = irc_cbWorldChanges.Checked;
             Server.ircShowAFK = irc_cbAFK.Checked;
             
+            Server.ircControllerRank = GuiPerms.GetPermission(irc_cbRank, LevelPermission.Nobody);
+            Server.IRCVerify = (IRCControllerVerify)irc_cbVerify.SelectedIndex;
+            Server.ircCommandPrefix = irc_txtPrefix.Text;
+            
             Server.useMySQL = sql_chkUseSQL.Checked;
             Server.MySQLUsername = sql_txtUser.Text;
             Server.MySQLPassword = sql_txtPass.Text;
@@ -70,25 +80,27 @@ namespace MCGalaxy.Gui {
         
                 
         void ToggleIrcSettings(bool enabled) {
-            irc_txtServer.Enabled = enabled;
-            irc_txtPort.Enabled = enabled;
-            irc_txtNick.Enabled = enabled;
-            irc_txtChannel.Enabled = enabled;
-            irc_txtOpChannel.Enabled = enabled;            
-            irc_chkPass.Enabled = enabled;
-            irc_txtPass.Enabled = enabled && irc_chkPass.Checked;
+            irc_txtServer.Enabled = enabled; irc_lblServer.Enabled = enabled;
+            irc_txtPort.Enabled = enabled; irc_lblPort.Enabled = enabled;
+            irc_txtNick.Enabled = enabled; irc_lblNick.Enabled = enabled;
+            irc_txtChannel.Enabled = enabled; irc_lblChannel.Enabled = enabled;
+            irc_txtOpChannel.Enabled = enabled; irc_lblOpChannel.Enabled = enabled;    
+            irc_chkPass.Enabled = enabled; irc_txtPass.Enabled = enabled && irc_chkPass.Checked;
             
             irc_cbTitles.Enabled = enabled;
             irc_cbWorldChanges.Enabled = enabled;
-            irc_cbAFK.Enabled = enabled;
+            irc_cbAFK.Enabled = enabled;           
+            irc_lblRank.Enabled = enabled; irc_cbRank.Enabled = enabled;
+            irc_lblVerify.Enabled = enabled; irc_cbVerify.Enabled = enabled;
+            irc_lblPrefix.Enabled = enabled; irc_txtPrefix.Enabled = enabled;
         }
 
         void ToggleMySQLSettings(bool enabled) {
-            sql_txtUser.Enabled = enabled;
-            sql_txtPass.Enabled = enabled;
-            sql_txtPort.Enabled = enabled;
-            sql_txtHost.Enabled = enabled;
-            sql_txtDBName.Enabled = enabled;
+            sql_txtUser.Enabled = enabled; sql_lblUser.Enabled = enabled;
+            sql_txtPass.Enabled = enabled; sql_lblPass.Enabled = enabled;
+            sql_txtPort.Enabled = enabled; sql_lblPort.Enabled = enabled;
+            sql_txtHost.Enabled = enabled; sql_lblHost.Enabled = enabled;
+            sql_txtDBName.Enabled = enabled; sql_lblDBName.Enabled = enabled;
         }
         
         
