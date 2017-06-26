@@ -275,6 +275,16 @@ namespace MCGalaxy.Games {
             zline = mainlevel.Length / 2;
         }
         
+        internal void SpawnPlayer(Player p) {
+            if (p.level != mainlevel) return;
+            
+            if (GetPlayer(p).blue) {
+                bluebase.SendToSpawn(mainlevel, this, p);
+            } else {
+                redbase.SendToSpawn(mainlevel, this, p);
+            }
+        }
+        
         string Vote()
         {
             started = false;
