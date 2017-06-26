@@ -600,7 +600,7 @@ namespace MCGalaxy {
             }
             
             if (HasCpeExt(CpeExt.LongerMessages) && continued != 0) {
-                if (text.Length < 64) storedMessage = storedMessage + text + " ";
+                if (text.Length < NetUtils.StringSize) storedMessage = storedMessage + text + " ";
                 else storedMessage = storedMessage + text;
                 return true;
             }

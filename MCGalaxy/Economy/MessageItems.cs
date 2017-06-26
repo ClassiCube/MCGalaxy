@@ -40,7 +40,7 @@ namespace MCGalaxy.Eco {
             if (text == PlayerDB.GetLoginMessage(p)) {
                 Player.Message(p, "%cYou already have that login message."); return;
             }
-            if (text.Length > 64) {
+            if (text.Length > NetUtils.StringSize) {
                 Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }
             Command.all.Find("loginmessage").Use(null, p.name + " " + text);
@@ -69,7 +69,7 @@ namespace MCGalaxy.Eco {
             if (text == PlayerDB.GetLogoutMessage(p)) {
                 Player.Message(p, "%cYou already have that logout message."); return;
             }       
-            if (text.Length > 64) {
+            if (text.Length > NetUtils.StringSize) {
                 Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }            
             Command.all.Find("logoutmessage").Use(null, p.name + " " + text);

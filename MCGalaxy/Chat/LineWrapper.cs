@@ -26,7 +26,7 @@ namespace MCGalaxy {
             message = Regex.Replace(message, @"(&[0-9a-f])+(&[0-9a-f])", "$2");
             message = Regex.Replace(message, @"(&[0-9a-f])+$", "");
 
-            int limit = 64; string color = "";
+            int limit = NetUtils.StringSize; string color = "";
             while ( message.Length > 0 ) {
                 //if (Regex.IsMatch(message, "&a")) break;
 
