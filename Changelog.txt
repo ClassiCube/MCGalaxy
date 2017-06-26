@@ -1,3 +1,24 @@
+v 1.8.9.4
+Fixed: Having 30-35 bots causing 10-20% CPU usage on mono
+Fixed: Opchat/Adminchat showing to IRC
+Fixed: uPnP not working at all
+Fixed: Console not showing timestap for commands
+Fixed: Players not being sent to spawn base in CTF
+Fixed: /bots not working from console
+Fixed: /me showing up on IRC when level has level-only chat
+Fixed: Various commands still sending globally when level-only chat
+Fixed: CTF writing broken config
+Fixed: random/cloudy brush showing 'only admin+ can draw with unknown'
+Fixed: No message being shown when specifiying an invalid block in commands
+Fixed: Upgrading old lockdown erroring
+Fixed: Being able to send opchat messages with no contents
+Improved: lb/gb info shows block tint colour
+Improved: /help map motd details the special rules (-hax, +respawn, etc)
+Added: Stack block (slabs/stairs) is a block property now
+Added: Ability to measure ping with /ping
+Added: Can configure IRC settings (command prefix, controller rank) from Gui
+Added: Can disable afk/unafk showing on IRC
+
 v 1.8.9.3
 Added: Listening on a specific IP
 Added: Color selector to GUI
