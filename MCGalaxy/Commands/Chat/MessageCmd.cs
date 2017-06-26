@@ -40,11 +40,12 @@ namespace MCGalaxy.Commands.Chatting {
         protected static bool TryMessage(Player p, string message, string cmd) {
             if (!CanSpeak(p, cmd)) return false;
             
-            if (p.level.worldChat) {
+            if (p.level.SeesServerWideChat) {
                 Player.SendChatFrom(p, message, false);
             } else {
                 Chat.MessageLevel(p, "<Level>" + message, false, p.level);
             }
+            
             p.CheckForMessageSpam();
             return true;
         }

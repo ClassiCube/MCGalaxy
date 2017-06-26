@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are now marked as being AFK.");
                 } else {
-                    Chat.MessageGlobal(p, "-" + p.ColoredName + "%S- is AFK " + message, false, true);
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);
                     Player.RaisePlayerAction(p, PlayerAction.AFK, message);
                     p.CheckForMessageSpam();
                 }
@@ -62,10 +62,18 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 } else {
-                    Chat.MessageGlobal(p, "-" + p.ColoredName + "%S- is no longer AFK", false, true);
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");
                     Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
                     p.CheckForMessageSpam();
                 }
+            }
+        }
+        
+        static void ShowMessage(Player p, string message) {                        
+            if (p.level.SeesServerWideChat) {
+                 Chat.MessageGlobal(p, message, false, true);
+            } else {
+                Chat.MessageLevel(p, "<Level>" + message, false, p.level);
             }
         }
         

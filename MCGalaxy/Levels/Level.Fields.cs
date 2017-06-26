@@ -86,9 +86,13 @@ namespace MCGalaxy {
         public string theme = "Normal";
         [ConfigBool("Unload", "General", null, true)]
         public bool unload = true;
-        /// <summary> true if this map sees server-wide chat, false if this map has level-only/isolated chat </summary>
+        /// <summary> true if this map may see server-wide chat, false if this map has level-only/isolated chat </summary>
         [ConfigBool("WorldChat", "General", null, true)]
         public bool worldChat = true;
+        
+        /// <summary> Whether this map sees server-wide chat. </summary>
+        /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
+        public bool SeesServerWideChat { get { return worldChat && Server.worldChat; } }
         
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();

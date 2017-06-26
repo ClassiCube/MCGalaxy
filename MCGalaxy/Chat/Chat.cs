@@ -41,7 +41,7 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (!NotIgnoring(source, p)) continue;
                 if (visibleOnly && !Entities.CanSee(p, source)) continue;
-                if (!p.level.worldChat || p.Chatroom != null) continue;
+                if (!p.level.SeesServerWideChat || p.Chatroom != null) continue;
                 
                 if (p.ignoreNicks && p.ignoreTitles) Player.Message(p, msg_NNNT);
                 else if (p.ignoreNicks) Player.Message(p, msg_NN);
@@ -140,7 +140,7 @@ namespace MCGalaxy {
         /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
         /// and are not on a level that does not have isolated/level only chat. </summary>
         public static void MessageGlobal(string message) {
-            MessageWhere(message, pl => !pl.ignoreAll && pl.level.worldChat && pl.Chatroom == null);
+            MessageWhere(message, pl => !pl.ignoreAll && pl.level.SeesServerWideChat && pl.Chatroom == null);
         }
         
         /// <summary> Sends a message to everyone, regardless of their level, chatroom or ignoring all chat. </summary>

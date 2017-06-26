@@ -185,7 +185,7 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (p.ignoreAll || p.ignoreIRC) continue;
                 
-                if (p.level.worldChat && p.Chatroom == null)
+                if (p.level.SeesServerWideChat && p.Chatroom == null)
                     Player.Message(p, message);
             }
         }
