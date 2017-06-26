@@ -116,6 +116,8 @@ namespace MCGalaxy.Gui
             this.rank_btnColor = new System.Windows.Forms.Button();
             this.rank_txtUndo = new System.Windows.Forms.TextBox();
             this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
+            this.irc_chkPass = new System.Windows.Forms.CheckBox();
+            this.irc_txtPass = new System.Windows.Forms.TextBox();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
             this.pageBlocks = new System.Windows.Forms.TabPage();
@@ -210,8 +212,6 @@ namespace MCGalaxy.Gui
             this.irc_lblNick = new System.Windows.Forms.Label();
             this.irc_lblChannel = new System.Windows.Forms.Label();
             this.irc_lblOpChannel = new System.Windows.Forms.Label();
-            this.irc_chkPass = new System.Windows.Forms.CheckBox();
-            this.irc_txtPass = new System.Windows.Forms.TextBox();
             this.irc_cbTitles = new System.Windows.Forms.CheckBox();
             this.pageServer = new System.Windows.Forms.TabPage();
             this.lvl_grp = new System.Windows.Forms.GroupBox();
@@ -371,6 +371,9 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.gb_ircSettings = new System.Windows.Forms.GroupBox();
+            this.irc_cbWorldChanges = new System.Windows.Forms.CheckBox();
+            this.irc_cbAFK = new System.Windows.Forms.CheckBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -446,6 +449,7 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
+            this.gb_ircSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // pageChat
@@ -1150,6 +1154,27 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.\nIf \'nobody\'" +
                         " is selected, rank required is the minimum rank that can use /os.");
             // 
+            // irc_chkPass
+            // 
+            this.irc_chkPass.AutoSize = true;
+            this.irc_chkPass.Location = new System.Drawing.Point(9, 185);
+            this.irc_chkPass.Name = "irc_chkPass";
+            this.irc_chkPass.Size = new System.Drawing.Size(72, 17);
+            this.irc_chkPass.TabIndex = 27;
+            this.irc_chkPass.Text = "Password";
+            this.toolTip.SetToolTip(this.irc_chkPass, "NickServ password set for the username");
+            this.irc_chkPass.UseVisualStyleBackColor = true;
+            this.irc_chkPass.CheckedChanged += new System.EventHandler(this.irc_chkPass_CheckedChanged);
+            // 
+            // irc_txtPass
+            // 
+            this.irc_txtPass.Location = new System.Drawing.Point(82, 182);
+            this.irc_txtPass.Name = "irc_txtPass";
+            this.irc_txtPass.PasswordChar = '*';
+            this.irc_txtPass.Size = new System.Drawing.Size(106, 21);
+            this.irc_txtPass.TabIndex = 28;
+            this.toolTip.SetToolTip(this.irc_txtPass, "NickServ password set for the username");
+            // 
             // sec_cbLogNotes
             // 
             this.sec_cbLogNotes.AutoSize = true;
@@ -1195,14 +1220,14 @@ namespace MCGalaxy.Gui
             this.blk_grpPhysics.Controls.Add(this.blk_cbDoor);
             this.blk_grpPhysics.Location = new System.Drawing.Point(134, 180);
             this.blk_grpPhysics.Name = "blk_grpPhysics";
-            this.blk_grpPhysics.Size = new System.Drawing.Size(360, 90);
+            this.blk_grpPhysics.Size = new System.Drawing.Size(360, 92);
             this.blk_grpPhysics.TabIndex = 26;
             this.blk_grpPhysics.TabStop = false;
             this.blk_grpPhysics.Text = "Physics behaviour";
             // 
             // blk_cbWater
             // 
-            this.blk_cbWater.Location = new System.Drawing.Point(186, 63);
+            this.blk_cbWater.Location = new System.Drawing.Point(186, 65);
             this.blk_cbWater.Name = "blk_cbWater";
             this.blk_cbWater.Size = new System.Drawing.Size(104, 24);
             this.blk_cbWater.TabIndex = 7;
@@ -1212,7 +1237,7 @@ namespace MCGalaxy.Gui
             // 
             // blk_cbLava
             // 
-            this.blk_cbLava.Location = new System.Drawing.Point(10, 63);
+            this.blk_cbLava.Location = new System.Drawing.Point(10, 65);
             this.blk_cbLava.Name = "blk_cbLava";
             this.blk_cbLava.Size = new System.Drawing.Size(116, 24);
             this.blk_cbLava.TabIndex = 6;
@@ -1222,7 +1247,7 @@ namespace MCGalaxy.Gui
             // 
             // blk_cbRails
             // 
-            this.blk_cbRails.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbRails.Location = new System.Drawing.Point(10, 40);
             this.blk_cbRails.Name = "blk_cbRails";
             this.blk_cbRails.Size = new System.Drawing.Size(89, 24);
             this.blk_cbRails.TabIndex = 5;
@@ -1265,7 +1290,7 @@ namespace MCGalaxy.Gui
             // 
             // blk_txtDeath
             // 
-            this.blk_txtDeath.Location = new System.Drawing.Point(100, 41);
+            this.blk_txtDeath.Location = new System.Drawing.Point(100, 42);
             this.blk_txtDeath.Name = "blk_txtDeath";
             this.blk_txtDeath.Size = new System.Drawing.Size(254, 21);
             this.blk_txtDeath.TabIndex = 3;
@@ -1273,7 +1298,7 @@ namespace MCGalaxy.Gui
             // 
             // blk_cbDeath
             // 
-            this.blk_cbDeath.Location = new System.Drawing.Point(10, 39);
+            this.blk_cbDeath.Location = new System.Drawing.Point(10, 40);
             this.blk_cbDeath.Name = "blk_cbDeath";
             this.blk_cbDeath.Size = new System.Drawing.Size(89, 24);
             this.blk_cbDeath.TabIndex = 2;
@@ -1943,9 +1968,9 @@ namespace MCGalaxy.Gui
             // pageIRC
             // 
             this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
+            this.pageIRC.Controls.Add(this.gb_ircSettings);
             this.pageIRC.Controls.Add(this.sql_grp);
             this.pageIRC.Controls.Add(this.irc_grp);
-            this.pageIRC.Controls.Add(this.irc_cbTitles);
             this.pageIRC.Location = new System.Drawing.Point(4, 22);
             this.pageIRC.Name = "pageIRC";
             this.pageIRC.Size = new System.Drawing.Size(498, 521);
@@ -2144,35 +2169,14 @@ namespace MCGalaxy.Gui
             this.irc_lblOpChannel.TabIndex = 25;
             this.irc_lblOpChannel.Text = "Op Channel:";
             // 
-            // irc_chkPass
-            // 
-            this.irc_chkPass.AutoSize = true;
-            this.irc_chkPass.Location = new System.Drawing.Point(9, 185);
-            this.irc_chkPass.Name = "irc_chkPass";
-            this.irc_chkPass.Size = new System.Drawing.Size(72, 17);
-            this.irc_chkPass.TabIndex = 27;
-            this.irc_chkPass.Text = "Password";
-            this.irc_chkPass.UseVisualStyleBackColor = true;
-            this.toolTip.SetToolTip(this.irc_chkPass, "NickServ password set for the username");
-            this.irc_chkPass.CheckedChanged += new System.EventHandler(this.irc_chkPass_CheckedChanged);
-            // 
-            // irc_txtPass
-            // 
-            this.irc_txtPass.Location = new System.Drawing.Point(82, 182);
-            this.irc_txtPass.Name = "irc_txtPass";
-            this.irc_txtPass.PasswordChar = '*';
-            this.irc_txtPass.Size = new System.Drawing.Size(106, 21);
-            this.irc_txtPass.TabIndex = 28;
-            this.toolTip.SetToolTip(this.irc_txtPass, "NickServ password set for the username");
-            // 
             // irc_cbTitles
             // 
             this.irc_cbTitles.AutoSize = true;
-            this.irc_cbTitles.Location = new System.Drawing.Point(14, 308);
+            this.irc_cbTitles.Location = new System.Drawing.Point(6, 20);
             this.irc_cbTitles.Name = "irc_cbTitles";
-            this.irc_cbTitles.Size = new System.Drawing.Size(140, 17);
+            this.irc_cbTitles.Size = new System.Drawing.Size(171, 17);
             this.irc_cbTitles.TabIndex = 32;
-            this.irc_cbTitles.Text = "Show player titles on IRC";
+            this.irc_cbTitles.Text = "Show player\'s title in messages";
             this.irc_cbTitles.UseVisualStyleBackColor = true;
             // 
             // pageServer
@@ -4032,6 +4036,38 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
+            // gb_ircSettings
+            // 
+            this.gb_ircSettings.Controls.Add(this.irc_cbAFK);
+            this.gb_ircSettings.Controls.Add(this.irc_cbWorldChanges);
+            this.gb_ircSettings.Controls.Add(this.irc_cbTitles);
+            this.gb_ircSettings.Location = new System.Drawing.Point(8, 223);
+            this.gb_ircSettings.Name = "gb_ircSettings";
+            this.gb_ircSettings.Size = new System.Drawing.Size(483, 95);
+            this.gb_ircSettings.TabIndex = 33;
+            this.gb_ircSettings.TabStop = false;
+            this.gb_ircSettings.Text = "IRC settings";
+            // 
+            // irc_cbWorldChanges
+            // 
+            this.irc_cbWorldChanges.AutoSize = true;
+            this.irc_cbWorldChanges.Location = new System.Drawing.Point(6, 45);
+            this.irc_cbWorldChanges.Name = "irc_cbWorldChanges";
+            this.irc_cbWorldChanges.Size = new System.Drawing.Size(199, 17);
+            this.irc_cbWorldChanges.TabIndex = 33;
+            this.irc_cbWorldChanges.Text = "Announce when player changes level";
+            this.irc_cbWorldChanges.UseVisualStyleBackColor = true;
+            // 
+            // irc_cbAFK
+            // 
+            this.irc_cbAFK.AutoSize = true;
+            this.irc_cbAFK.Location = new System.Drawing.Point(6, 70);
+            this.irc_cbAFK.Name = "irc_cbAFK";
+            this.irc_cbAFK.Size = new System.Drawing.Size(176, 17);
+            this.irc_cbAFK.TabIndex = 34;
+            this.irc_cbAFK.Text = "Announce when player goes AFK";
+            this.irc_cbAFK.UseVisualStyleBackColor = true;
+            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4085,7 +4121,6 @@ namespace MCGalaxy.Gui
             this.bak_grp.ResumeLayout(false);
             this.bak_grp.PerformLayout();
             this.pageIRC.ResumeLayout(false);
-            this.pageIRC.PerformLayout();
             this.sql_grp.ResumeLayout(false);
             this.sql_grp.PerformLayout();
             this.irc_grp.ResumeLayout(false);
@@ -4160,8 +4195,13 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
+            this.gb_ircSettings.ResumeLayout(false);
+            this.gb_ircSettings.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox irc_cbAFK;
+        private System.Windows.Forms.CheckBox irc_cbWorldChanges;
+        private System.Windows.Forms.GroupBox gb_ircSettings;
         private System.Windows.Forms.Label cmd_lblExtra1;
         private System.Windows.Forms.ComboBox cmd_cmbExtra1;
         private System.Windows.Forms.Label cmd_lblExtra2;

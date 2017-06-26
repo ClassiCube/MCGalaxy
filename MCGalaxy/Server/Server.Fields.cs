@@ -237,10 +237,10 @@ namespace MCGalaxy {
         public static bool irc = false;
         [ConfigBool("irc-player-titles", "IRC bot", null, true)]
         public static bool ircPlayerTitles = true;
-        [ConfigBool("irc-show-world-changes", "IRC bot", null, true)]
-        public static bool ircShowWorldChanges = true;
-        [ConfigBool("irc-colorsenable", "IRC bot", null, true)]
-        public static bool ircColorsEnable = true;
+        [ConfigBool("irc-show-world-changes", "IRC bot", null, false)]
+        public static bool ircShowWorldChanges = false;
+        [ConfigBool("irc-show-afk", "IRC bot", null, false)]
+        public static bool ircShowAFK = false;
         [ConfigInt("irc-port", "IRC bot", null, 6667, 0, 65535)]
         public static int ircPort = 6667;
         [ConfigString("irc-nick", "IRC bot", null, "ForgeBot")]

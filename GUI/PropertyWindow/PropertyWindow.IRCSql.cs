@@ -29,7 +29,10 @@ namespace MCGalaxy.Gui {
             irc_txtOpChannel.Text = Server.ircOpChannel;
             irc_chkPass.Checked = Server.ircIdentify;
             irc_txtPass.Text = Server.ircPassword;
+            
             irc_cbTitles.Checked = Server.ircPlayerTitles;
+            irc_cbWorldChanges.Checked = Server.ircShowWorldChanges;
+            irc_cbAFK.Checked = Server.ircShowAFK;
             
             sql_chkUseSQL.Checked = Server.useMySQL;
             sql_txtUser.Text = Server.MySQLUsername;
@@ -48,7 +51,10 @@ namespace MCGalaxy.Gui {
             Server.ircOpChannel = irc_txtOpChannel.Text;            
             Server.ircIdentify = irc_chkPass.Checked;
             Server.ircPassword = irc_txtPass.Text;
+            
             Server.ircPlayerTitles = irc_cbTitles.Checked;
+            Server.ircShowWorldChanges = irc_cbWorldChanges.Checked;
+            Server.ircShowAFK = irc_cbAFK.Checked;
             
             Server.useMySQL = sql_chkUseSQL.Checked;
             Server.MySQLUsername = sql_txtUser.Text;
@@ -71,7 +77,10 @@ namespace MCGalaxy.Gui {
             irc_txtOpChannel.Enabled = enabled;            
             irc_chkPass.Enabled = enabled;
             irc_txtPass.Enabled = enabled && irc_chkPass.Checked;
+            
             irc_cbTitles.Enabled = enabled;
+            irc_cbWorldChanges.Enabled = enabled;
+            irc_cbAFK.Enabled = enabled;
         }
 
         void ToggleMySQLSettings(bool enabled) {
