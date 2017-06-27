@@ -26,7 +26,7 @@ namespace MCGalaxy.Games.ZS {
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
                                      byte action, byte block, byte old, ZombieGame game) {
             
-            if (action == 1 && !game.CurLevel.Pillaring && !p.Game.Referee) {
+            if (action == 1 && !game.CurLevel.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(block, old)) {
                     p.Game.BlocksStacked = 0;
                 } else if (CheckCoords(p, x, y, z)) {

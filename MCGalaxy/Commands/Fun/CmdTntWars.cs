@@ -416,8 +416,8 @@ namespace MCGalaxy.Commands.Fun {
                     if (it.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
                         if (it.CheckAllSetUp(p, true)) {
                             if (it.PlayingPlayers() >= 2) {
-                                if (it.lvl.overload < 2500) {
-                                    it.lvl.overload = 2501;
+                                if (it.lvl.Config.overload < 2500) {
+                                    it.lvl.Config.overload = 2501;
                                     Player.Message(p, "TNT Wars: Increasing physics overload to 2500");
                                     Logger.Log(LogType.GameActivity, "TNT Wars: Increasing physics overload to 2500");
                                 }

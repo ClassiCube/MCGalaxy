@@ -36,7 +36,7 @@ namespace MCGalaxy.Levels.IO {
             BinaryReader reader = new BinaryReader(src);
             Vec3U16 dims = ReadHeader(reader);
             Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
-            lvl.EdgeLevel = 0;
+            lvl.Config.EdgeLevel = 0;
 
             byte[] blocks = lvl.blocks;
             int size = dims.X * dims.Y * dims.Z, i = 0;

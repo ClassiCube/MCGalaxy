@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void SetBuildPerms(Player p, Level lvl) {
-            lvl.RealmOwner = p.name;
+            lvl.Config.RealmOwner = p.name;
             lvl.BuildAccess.Whitelist(null, p.name);
             CmdZone.ZoneAll(lvl, p.name);
             

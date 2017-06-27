@@ -60,7 +60,7 @@ namespace MCGalaxy {
         public bool PhysicsEnabled;
 
         void PhysicsLoop() {
-            int wait = speedPhysics;
+            int wait = Config.speedPhysics;
             while (true) {
                 if (!PhysicsEnabled) { Thread.Sleep(500); continue; }
 
@@ -69,7 +69,7 @@ namespace MCGalaxy {
                     if (physics == 0 || ListCheck.Count == 0)
                     {
                         lastCheck = 0;
-                        wait = speedPhysics;
+                        wait = Config.speedPhysics;
                         if (physics == 0) break;
                         continue;
                     }
@@ -86,10 +86,10 @@ namespace MCGalaxy {
                     }
 
                     TimeSpan delta = DateTime.UtcNow - start;
-                    wait = speedPhysics - (int)delta.TotalMilliseconds;
+                    wait = Config.speedPhysics - (int)delta.TotalMilliseconds;
 
-                    if (wait < (int)(-overload * 0.75f)) {
-                        if (wait < -overload) {
+                    if (wait < (int)(-Config.overload * 0.75f)) {
+                        if (wait < -Config.overload) {
                             if (!ServerConfig.PhysicsRestart)
                                 setPhysics(0);
                             ClearPhysics();
@@ -99,7 +99,7 @@ namespace MCGalaxy {
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);
 
-                            wait = speedPhysics;
+                            wait = Config.speedPhysics;
                         } else {
                             Player[] online = PlayerInfo.Online.Items;
                             foreach (Player p in online) {
@@ -113,7 +113,7 @@ namespace MCGalaxy {
                         }
                     }
                 } catch {
-                    wait = speedPhysics;
+                    wait = Config.speedPhysics;
                 }
             }
             physThreadStarted = false;

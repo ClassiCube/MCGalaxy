@@ -330,7 +330,7 @@ namespace MCGalaxy {
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
                 
-                if (ServerConfig.AutoLoadMaps && level.unload && !level.IsMuseum && !level.HasPlayers())
+                if (ServerConfig.AutoLoadMaps && level.Config.unload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 

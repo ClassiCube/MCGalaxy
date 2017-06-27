@@ -115,10 +115,10 @@ namespace MCGalaxy.Gui {
                 settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)( x - 3 ), y, (ushort)( z - 3 )), new Vec3U16((ushort)( x + 3 ), (ushort)( y + 4 ), (ushort)( z + 3 )) };
                 Server.lava.SaveMapSettings(settings);
 
-                level.motd = "Lava Survival: " + level.name.Capitalize();
-                level.overload = 1000000;
-                level.unload = false;
-                level.loadOnGoto = false;
+                level.Config.motd = "Lava Survival: " + level.name.Capitalize();
+                level.Config.overload = 1000000;
+                level.Config.unload = false;
+                level.Config.loadOnGoto = false;
                 Level.SaveSettings(level);
                 level.Unload(true);
 
@@ -142,10 +142,10 @@ namespace MCGalaxy.Gui {
                 if ( level == null ) return;
 
                 Server.lava.RemoveMap(name);
-                level.motd = "ignore";
-                level.overload = 1500;
-                level.unload = true;
-                level.loadOnGoto = true;
+                level.Config.motd = "ignore";
+                level.Config.overload = 1500;
+                level.Config.unload = true;
+                level.Config.loadOnGoto = true;
                 Level.SaveSettings(level);
                 level.Unload(true);
 

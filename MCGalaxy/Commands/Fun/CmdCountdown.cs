@@ -231,10 +231,10 @@ namespace MCGalaxy.Commands.Fun {
                     Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 }
                 
-                Server.Countdown.mapon.Deletable = false;
-                Server.Countdown.mapon.Buildable = false;
+                Server.Countdown.mapon.Config.Deletable = false;
+                Server.Countdown.mapon.Config.Buildable = false;
                 Server.Countdown.mapon.BuildAccess.Min = LevelPermission.Nobody;
-                Server.Countdown.mapon.motd = "Welcome to the Countdown map! -hax";
+                Server.Countdown.mapon.Config.motd = "Welcome to the Countdown map! -hax";
                 
                 Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
                 Chat.MessageGlobal("Countdown has been enabled!!");

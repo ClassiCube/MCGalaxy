@@ -136,7 +136,7 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
-            byte side = (byte)level.EdgeBlock, edge = (byte)level.HorizonBlock;
+            byte side = (byte)level.Config.EdgeBlock, edge = (byte)level.Config.HorizonBlock;
             if (!hasBlockDefs) side = level.RawFallback(side);
             if (!hasBlockDefs) edge = level.RawFallback(edge);
             
@@ -149,41 +149,43 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
                 Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));
                 
-                Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.EdgeLevel));
-                Send(Packet.EnvMapProperty(EnvProp.SidesOffset, level.SidesOffset));
-                Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.CloudsHeight));
+                Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.Config.EdgeLevel));
+                Send(Packet.EnvMapProperty(EnvProp.SidesOffset, level.Config.SidesOffset));
+                Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.Config.CloudsHeight));
                 
-                Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.MaxFogDistance));
-                Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.CloudsSpeed));
-                Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.WeatherSpeed));
-                Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.ExpFog ? 1 : 0));
+                Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.Config.MaxFogDistance));
+                Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.Config.CloudsSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.Config.WeatherSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.Config.ExpFog ? 1 : 0));
             } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                    Send(Packet.MapAppearanceV2("", side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance, hasCP437));
+                    Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel, 
+                	                            level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 }
-                Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance, hasCP437));
+                Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel, 
+                                            level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
-                string url = level.terrainUrl == "" ? ServerConfig.DefaultTerrainUrl : level.terrainUrl;
-                Send(Packet.MapAppearance(url, side, edge, level.EdgeLevel, hasCP437));
+                string url = level.Config.terrainUrl == "" ? ServerConfig.DefaultTerrain : level.Config.terrainUrl;
+                Send(Packet.MapAppearance(url, side, edge, level.Config.EdgeLevel, hasCP437));
             }
         }
         
         public string GetTextureUrl() {
-            string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
+            string url = level.Config.texturePackUrl == "" ? level.Config.terrainUrl : level.Config.texturePackUrl;
             if (url == "")
-                url = ServerConfig.DefaultTextureUrl == "" ? ServerConfig.DefaultTerrainUrl : ServerConfig.DefaultTextureUrl;
+                url = ServerConfig.DefaultTexture == "" ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
             return url;
         }
         
         public void SendCurrentEnvColors() {
-            SendEnvColor(0, level.SkyColor);
-            SendEnvColor(1, level.CloudColor);
-            SendEnvColor(2, level.FogColor);
-            SendEnvColor(3, level.ShadowColor);
-            SendEnvColor(4, level.LightColor);
+            SendEnvColor(0, level.Config.SkyColor);
+            SendEnvColor(1, level.Config.CloudColor);
+            SendEnvColor(2, level.Config.FogColor);
+            SendEnvColor(3, level.Config.ShadowColor);
+            SendEnvColor(4, level.Config.LightColor);
         }
         
         public void SendEnvColor(byte type, string hex) {

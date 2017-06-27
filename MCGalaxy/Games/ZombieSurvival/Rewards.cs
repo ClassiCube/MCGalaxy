@@ -32,9 +32,9 @@ namespace MCGalaxy.Games.ZS {
             else game.CurLevel.ChatLevel("&2Congratulations to the survivors:");
             AnnounceWinners(game, alive, dead);
             
-            game.CurLevel.RoundsPlayed++;
+            game.CurLevel.Config.RoundsPlayed++;
             if (alive.Length > 0) {
-                game.CurLevel.RoundsHumanWon++;
+                game.CurLevel.Config.RoundsHumanWon++;
                 foreach (Player p in alive)
                     IncreaseAliveStats(p, game);
             }

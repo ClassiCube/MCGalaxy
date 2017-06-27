@@ -50,18 +50,18 @@ namespace MCGalaxy.Core {
             }
             
             if (p.HasCpeExt(CpeExt.EnvWeatherType))
-                p.Send(Packet.EnvWeatherType((byte)level.Weather));
+                p.Send(Packet.EnvWeatherType((byte)level.Config.Weather));
             if (p.HasCpeExt(CpeExt.EnvColors))
                 p.SendCurrentEnvColors();
             p.SendCurrentMapAppearance();
             if (p.HasCpeExt(CpeExt.BlockPermissions))
                 p.SendCurrentBlockPermissions();
 
-            if (!level.guns && p.aiming) {
+            if (!level.Config.guns && p.aiming) {
                 p.aiming = false;
                 p.ClearBlockchange();
             }
-            if (!p.level.UseBlockDB) {
+            if (!p.level.Config.UseBlockDB) {
                 Player.Message(p, "BlockDB is disabled here, &cyou will not be able to /undo or /redo");
             }
             ShowWelcome(p);
@@ -84,7 +84,7 @@ namespace MCGalaxy.Core {
         
         internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch, 
                                               byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
-            if (p.level.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
+            if (p.level.Config.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
             
             ExtBlock block = p.level.GetBlock(x, y, z);
             bool isMB = p.level.BlockProps[block.Index].IsMessageBlock;

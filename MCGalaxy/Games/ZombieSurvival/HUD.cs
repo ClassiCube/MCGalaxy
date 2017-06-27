@@ -78,8 +78,8 @@ namespace MCGalaxy.Games.ZS {
         }
         
         static string FormatSecondary(ZombieGame game) {
-            string pillar = "%SPillaring " + (game.CurLevel.Pillaring ? "&aYes" : "&cNo");
-            string type = "%S, Type is &a" + game.CurLevel.BuildType;
+            string pillar = "%SPillaring " + (game.CurLevel.Config.Pillaring ? "&aYes" : "&cNo");
+            string type = "%S, Type is &a" + game.CurLevel.Config.BuildType;
             return pillar + type;
         }
 

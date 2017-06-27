@@ -534,6 +534,7 @@
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Fields.cs" />
     <Compile Include="Levels\AccessController.cs" />
+    <Compile Include="Levels\LevelConfig.cs" />
     <Compile Include="Levels\LevelDB.cs" />
     <Compile Include="Levels\Level.Physics.cs" />
     <Compile Include="Levels\LevelActions.cs" />

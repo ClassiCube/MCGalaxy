@@ -91,14 +91,14 @@ namespace MCGalaxy.Blocks.Physics {
                 ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             }
 
-            if (!lvl.growTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            if (!lvl.Config.growTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             if (C.data.Data < 20) {
                 if (rand.Next(20) == 0) C.data.Data++;
                 return;
             }
             
             lvl.SetTile(x, y, z, Block.air);        
-            Tree tree = Tree.Find(lvl.TreeType);
+            Tree tree = Tree.Find(lvl.Config.TreeType);
             if (tree == null) tree = new NormalTree();
             
             tree.SetData(rand, tree.DefaultSize(rand));
@@ -112,7 +112,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoDirt(Level lvl, ref Check C) {
-            if (!lvl.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            if (!lvl.Config.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
@@ -126,7 +126,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoGrass(Level lvl, ref Check C) {
-            if (!lvl.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            if (!lvl.Config.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             

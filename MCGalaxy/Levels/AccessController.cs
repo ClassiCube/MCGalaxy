@@ -190,30 +190,30 @@ namespace MCGalaxy {
         
         /// <summary> Lowest allowed rank. </summary>
         public override LevelPermission Min {
-            get { return IsVisit ? lvl.permissionvisit : lvl.permissionbuild; }
+            get { return IsVisit ? lvl.Config.permissionvisit : lvl.Config.permissionbuild; }
             set {
-                if (IsVisit) lvl.permissionvisit = value;
-                else lvl.permissionbuild = value;
+                if (IsVisit) lvl.Config.permissionvisit = value;
+                else lvl.Config.permissionbuild = value;
             }
         }
         
         /// <summary> Highest allowed rank. </summary>
         public override LevelPermission Max {
-            get { return IsVisit ? lvl.pervisitmax : lvl.perbuildmax; }
+            get { return IsVisit ? lvl.Config.pervisitmax : lvl.Config.perbuildmax; }
             set {
-                if (IsVisit) lvl.pervisitmax = value;
-                else lvl.perbuildmax = value;
+                if (IsVisit) lvl.Config.pervisitmax = value;
+                else lvl.Config.perbuildmax = value;
             }
         }
         
         /// <summary> List of always allowed players, overrides rank allowances. </summary>
         public override List<string> Whitelisted {
-            get { return IsVisit ? lvl.VisitWhitelist : lvl.BuildWhitelist; }
+            get { return IsVisit ? lvl.Config.VisitWhitelist : lvl.Config.BuildWhitelist; }
         }
         
         /// <summary> List of never allowed players, ignores rank allowances. </summary>
         public override List<string> Blacklisted {
-            get { return IsVisit ? lvl.VisitBlacklist : lvl.BuildBlacklist; }
+            get { return IsVisit ? lvl.Config.VisitBlacklist : lvl.Config.BuildBlacklist; }
         }
         
         protected override string ColoredName { get { return lvl.ColoredName; } }

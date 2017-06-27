@@ -236,8 +236,8 @@ namespace MCGalaxy.Commands.Info {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.guns; BlockDB = lvl.UseBlockDB;
-                RealmOwner = lvl.RealmOwner;
+                Physics = lvl.physics; Guns = lvl.Config.guns; BlockDB = lvl.Config.UseBlockDB;
+                RealmOwner = lvl.Config.RealmOwner;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
                 
                 visit = lvl.VisitAccess.Min; visitmax = lvl.VisitAccess.Max;
@@ -247,22 +247,22 @@ namespace MCGalaxy.Commands.Info {
                 BuildWhitelist = new List<string>(lvl.BuildAccess.Whitelisted);
                 BuildBlacklist = new List<string>(lvl.BuildAccess.Blacklisted);
                 
-                Fog = lvl.FogColor; Sky = lvl.SkyColor; Clouds = lvl.CloudColor;
-                Light = lvl.LightColor; Shadow = lvl.ShadowColor;
-                EdgeLevel = lvl.EdgeLevel; SidesOffset = lvl.SidesOffset; CloudsHeight = lvl.CloudsHeight;
-                MaxFog = lvl.MaxFogDistance; ExpFog = lvl.ExpFog;
-                CloudsSpeed = lvl.CloudsSpeed; WeatherSpeed = lvl.WeatherSpeed;
-                EdgeBlock = (byte)lvl.EdgeBlock; HorizonBlock = (byte)lvl.HorizonBlock;
-                WeatherFade = lvl.WeatherFade;
+                Fog = lvl.Config.FogColor; Sky = lvl.Config.SkyColor; Clouds = lvl.Config.CloudColor;
+                Light = lvl.Config.LightColor; Shadow = lvl.Config.ShadowColor;
+                EdgeLevel = lvl.Config.EdgeLevel; SidesOffset = lvl.Config.SidesOffset; CloudsHeight = lvl.Config.CloudsHeight;
+                MaxFog = lvl.Config.MaxFogDistance; ExpFog = lvl.Config.ExpFog;
+                CloudsSpeed = lvl.Config.CloudsSpeed; WeatherSpeed = lvl.Config.WeatherSpeed;
+                EdgeBlock = (byte)lvl.Config.EdgeBlock; HorizonBlock = (byte)lvl.Config.HorizonBlock;
+                WeatherFade = lvl.Config.WeatherFade;
                 
-                TerrainUrl = lvl.terrainUrl != "" ?
-                    lvl.terrainUrl : ServerConfig.DefaultTerrainUrl;
-                TextureUrl = lvl.texturePackUrl != "" ?
-                    lvl.texturePackUrl : ServerConfig.DefaultTextureUrl;
+                TerrainUrl = lvl.Config.terrainUrl != "" ?
+                    lvl.Config.terrainUrl : ServerConfig.DefaultTerrain;
+                TextureUrl = lvl.Config.texturePackUrl != "" ?
+                    lvl.Config.texturePackUrl : ServerConfig.DefaultTexture;
                 
-                Authors = lvl.Authors;
-                TotalRounds = lvl.RoundsPlayed; HumanRounds = lvl.RoundsHumanWon;
-                Likes = lvl.Likes; Dislikes = lvl.Dislikes;
+                Authors = lvl.Config.Authors;
+                TotalRounds = lvl.Config.RoundsPlayed; HumanRounds = lvl.Config.RoundsHumanWon;
+                Likes = lvl.Config.Likes; Dislikes = lvl.Config.Dislikes;
             }
             
             public void FromOfflineLevel(string name) {

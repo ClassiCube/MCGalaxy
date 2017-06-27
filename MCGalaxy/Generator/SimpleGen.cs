@@ -42,7 +42,7 @@ namespace MCGalaxy.Generator {
             int grassHeight = lvl.Height / 2;
             if (args.UseSeed && args.Seed >= 0 && args.Seed < lvl.Height)
                 grassHeight = args.Seed;            
-            lvl.EdgeLevel = grassHeight + 1;
+            lvl.Config.EdgeLevel = grassHeight + 1;
             
             fixed (byte* ptr = lvl.blocks) {
                 if (grassHeight > 0)

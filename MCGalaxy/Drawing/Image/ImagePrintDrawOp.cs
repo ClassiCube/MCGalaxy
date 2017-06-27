@@ -78,11 +78,11 @@ namespace MCGalaxy.Drawing.Ops {
             
             CustomColor sun  = Colors.ParseHex("FFFFFF");
             CustomColor dark = Colors.ParseHex("9B9B9B");
-            if (Utils.IsValidHex(Level.LightColor)) {
-                sun = Colors.ParseHex(Level.LightColor);
+            if (Utils.IsValidHex(Level.Config.LightColor)) {
+                sun = Colors.ParseHex(Level.Config.LightColor);
             }
-            if (Utils.IsValidHex(Level.ShadowColor)) {
-                dark = Colors.ParseHex(Level.ShadowColor);
+            if (Utils.IsValidHex(Level.Config.ShadowColor)) {
+                dark = Colors.ParseHex(Level.Config.ShadowColor);
             }
             
             for (int i = 0; i < Palette.Entries.Length; i++) {

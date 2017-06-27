@@ -29,10 +29,10 @@ namespace MCGalaxy.Games {
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte block, byte old) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
-            if (CurLevel.BuildType == BuildType.NoModify) {
+            if (CurLevel.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); return true;
             }
-            if (CurLevel.BuildType == BuildType.ModifyOnly && Block.Props[old].OPBlock) {
+            if (CurLevel.Config.BuildType == BuildType.ModifyOnly && Block.Props[old].OPBlock) {
                 p.RevertBlock(x, y, z); return true;
             }
             
@@ -139,12 +139,12 @@ namespace MCGalaxy.Games {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
                 if (startLeft >= 0)
                     Player.Message(p, "%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                Player.Message(p, "This map has &a" + CurLevel.Likes +
-                              " likes %Sand &c" + CurLevel.Dislikes + " dislikes");
+                Player.Message(p, "This map has &a" + CurLevel.Config.Likes +
+                              " likes %Sand &c" + CurLevel.Config.Dislikes + " dislikes");
                 Player.Message(p, "This map's win chance is &a" + CurLevel.WinChance + "%S%");
                 
-                if (CurLevel.Authors != "") {
-                    string[] authors = CurLevel.Authors.Replace(" ", "").Split(',');
+                if (CurLevel.Config.Authors != "") {
+                    string[] authors = CurLevel.Config.Authors.Replace(" ", "").Split(',');
                     Player.Message(p, "It was created by {0}",
                                    authors.Join(n => PlayerInfo.GetColoredName(p, n)));
                 }

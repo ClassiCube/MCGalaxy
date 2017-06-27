@@ -214,8 +214,8 @@ namespace MCGalaxy {
                     LevelChunkStream.CompressMap(this, s);
                 
                 // Force players to read the MOTD (clamped to 3 seconds at most)
-                if (level.LoadDelay > 0)
-                    System.Threading.Thread.Sleep(level.LoadDelay);
+                if (level.Config.LoadDelay > 0)
+                    System.Threading.Thread.Sleep(level.Config.LoadDelay);
                 
                 byte[] buffer = Packet.LevelFinalise(level.Width, level.Height, level.Length);
                 Send(buffer);

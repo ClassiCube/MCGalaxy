@@ -68,7 +68,7 @@ namespace MCGalaxy {
         public static void Start() {
             serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
             zombieConfig = ConfigElement.GetAll(typeof(ZombieGameProps));
-            levelConfig = ConfigElement.GetAll(typeof(Level));
+            levelConfig = ConfigElement.GetAll(typeof(LevelConfig));
             
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
@@ -283,9 +283,9 @@ namespace MCGalaxy {
                 lvl = CmdLoad.LoadLevel(null, mapName);
             if (lvl == null) return false;
             
-            oldMain.unload = true;
+            oldMain.Config.unload = true;
             mainLevel = lvl;
-            mainLevel.unload = false;
+            mainLevel.Config.unload = false;
             ServerConfig.MainLevel = mapName;
             return true;
         }

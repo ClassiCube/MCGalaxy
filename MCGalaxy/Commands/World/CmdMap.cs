@@ -101,29 +101,29 @@ namespace MCGalaxy.Commands.World {
         static void PrintMapInfo(Player p, Level lvl) {
             Player.Message(p, "%TPhysics settings:");
             Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}",
-                           GetBool(lvl.finite), GetBool(lvl.randomFlow));
+                           GetBool(lvl.Config.finite), GetBool(lvl.Config.randomFlow));
             Player.Message(p, "  Animal AI: {0}%S, Edge water: {1}",
-                           GetBool(lvl.ai), GetBool(lvl.edgeWater));
+                           GetBool(lvl.Config.ai), GetBool(lvl.Config.edgeWater));
             Player.Message(p, "  Grass growing: {0}%S, {1} tree growing: {2}",
-                           GetBool(lvl.GrassGrow), lvl.TreeType.Capitalize(), GetBool(lvl.growTrees));
+                           GetBool(lvl.Config.GrassGrow), lvl.Config.TreeType.Capitalize(), GetBool(lvl.Config.growTrees));
             Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}",
-                           GetBool(lvl.leafDecay), lvl.overload);
+                           GetBool(lvl.Config.leafDecay), lvl.Config.overload);
             Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks",
-                           lvl.speedPhysics);
+                           lvl.Config.speedPhysics);
             
             Player.Message(p, "%TSurvival settings:");
             Player.Message(p, "  Survival death: {0} %S(Fall: {1}, Drown: {2})",
-                           GetBool(lvl.Death), lvl.fall, lvl.drown);
+                           GetBool(lvl.Config.Death), lvl.Config.fall, lvl.Config.drown);
             Player.Message(p, "  Guns: {0}%S, Killer blocks: {1}",
-                           GetBool(lvl.guns), GetBool(lvl.Killer));
+                           GetBool(lvl.Config.guns), GetBool(lvl.Config.Killer));
             
             Player.Message(p, "%TGeneral settings:");
-            Player.Message(p, "  MOTD: &b" + lvl.motd);
-            Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!lvl.worldChat));
+            Player.Message(p, "  MOTD: &b" + lvl.Config.motd);
+            Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!lvl.Config.worldChat));
             Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}",
-                           GetBool(lvl.loadOnGoto), GetBool(lvl.unload));
+                           GetBool(lvl.Config.loadOnGoto), GetBool(lvl.Config.unload));
             Player.Message(p, "  Buildable: {0}%S, Deletable: {1}",
-                           GetBool(lvl.Buildable), GetBool(lvl.Deletable));
+                           GetBool(lvl.Config.Buildable), GetBool(lvl.Config.Deletable));
         }
         
         static string GetBool(bool value, bool console = false) {

@@ -33,12 +33,12 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Use(Player p, string message) {
             if (message == "") {
-                Player.Message(p, "Map authors: " + p.level.Authors);
-                Player.Message(p, "Pillaring allowed: " + p.level.Pillaring);
-                Player.Message(p, "Build type: " + p.level.BuildType);
-                Player.Message(p, "Min round time: " + p.level.MinRoundTime + " minutes");
-                Player.Message(p, "Max round time: " + p.level.MaxRoundTime + " minutes");
-                Player.Message(p, "Drawing commands allowed: " + p.level.DrawingAllowed);
+                Player.Message(p, "Map authors: " + p.level.Config.Authors);
+                Player.Message(p, "Pillaring allowed: " + p.level.Config.Pillaring);
+                Player.Message(p, "Build type: " + p.level.Config.BuildType);
+                Player.Message(p, "Min round time: " + p.level.Config.MinRoundTime + " minutes");
+                Player.Message(p, "Max round time: " + p.level.Config.MaxRoundTime + " minutes");
+                Player.Message(p, "Drawing commands allowed: " + p.level.Config.DrawingAllowed);
                 return;
             }
             
@@ -46,20 +46,20 @@ namespace MCGalaxy.Commands.Fun {
             if (args.Length == 1) { Player.Message(p, "You need to provide a value."); return; }
             
             if (args[0].CaselessEq("author") || args[0].CaselessEq("authors")) {
-                p.level.Authors = args[1].Replace(" ", "%S, ");
+                p.level.Config.Authors = args[1].Replace(" ", "%S, ");
                 Player.Message(p, "Sets the authors of the map to: " + args[1]);
             } else if (args[0].CaselessEq("pillar") || args[0].CaselessEq("pillaring")) {
                 bool value = false;
                 if (!CommandParser.GetBool(p, args[1], ref value)) return;
                 
-                p.level.Pillaring = value;
+                p.level.Config.Pillaring = value;
                 Player.Message(p, "Set pillaring allowed to: " + value);
                 HUD.UpdateAllSecondary(Server.zombie);
             } else if (args[0].CaselessEq("build") || args[0].CaselessEq("buildtype")) {
                 BuildType value = BuildType.Normal;
                 if (!CommandParser.GetEnum(p, args[1], "Build type", ref value)) return;
                 
-                p.level.BuildType = value;
+                p.level.Config.BuildType = value;
                 p.level.UpdateBlockPermissions();
                 Player.Message(p, "Set build type to: " + value);
                 HUD.UpdateAllSecondary(Server.zombie);
@@ -67,32 +67,32 @@ namespace MCGalaxy.Commands.Fun {
                 byte time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
-                if (time > p.level.MaxRoundTime) {
+                if (time > p.level.Config.MaxRoundTime) {
                     Player.Message(p, "Min round time must be less than or equal to max round time"); return;
                 }
-                p.level.MinRoundTime = time;
+                p.level.Config.MinRoundTime = time;
                 Player.Message(p, "Set min round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("maxroundtime") || args[0].CaselessEq("maxround")) {
                 byte time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
-                if (time < p.level.MinRoundTime) {
+                if (time < p.level.Config.MinRoundTime) {
                     Player.Message(p, "Max round time must be greater than or equal to min round time"); return;
                 }
-                p.level.MaxRoundTime = time;
+                p.level.Config.MaxRoundTime = time;
                 Player.Message(p, "Set max round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("roundtime") || args[0].CaselessEq("round")) {
                 byte time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
-                p.level.MinRoundTime = time;
-                p.level.MaxRoundTime = time;
+                p.level.Config.MinRoundTime = time;
+                p.level.Config.MaxRoundTime = time;
                 Player.Message(p, "Set round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("drawingallowed") || args[0].CaselessEq("drawingenabled")) {
                 bool value = false;
                 if (!CommandParser.GetBool(p, args[1], ref value)) return;
                 
-                p.level.DrawingAllowed = value;
+                p.level.Config.DrawingAllowed = value;
                 Player.Message(p, "Set drawing commands allowed to: " + value);
             } else {
                 Player.Message(p, "Unrecognised property \"" + args[0] + "\"."); return;

@@ -64,8 +64,8 @@ namespace MCGalaxy {
             
             name = n; MapName = n.ToLower();
             BlockDB = new BlockDB(this);
-            EdgeLevel = (short)(y / 2);
-            CloudsHeight = (short)(y + 2);
+            Config.EdgeLevel = (short)(y / 2);
+            Config.CloudsHeight = (short)(y + 2);
             
             blocks = new byte[Width * Height * Length];
             ChunksX = Utils.CeilDiv16(Width);
@@ -105,7 +105,7 @@ namespace MCGalaxy {
         }
         
         public string GetMotd(Player p) {
-            if (motd != "ignore") return motd;
+            if (Config.motd != "ignore") return Config.motd;
             return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }
 
@@ -342,11 +342,11 @@ namespace MCGalaxy {
                 Level lvl = IMapImporter.Formats[0].Read(path, name, true);
                 lvl.backedup = true;
 
-                lvl.jailx = (ushort)(lvl.spawnx * 32);
-                lvl.jaily = (ushort)(lvl.spawny * 32);
-                lvl.jailz = (ushort)(lvl.spawnz * 32);
-                lvl.jailrotx = lvl.rotx;
-                lvl.jailroty = lvl.roty;
+                lvl.Config.jailx = (ushort)(lvl.spawnx * 32);
+                lvl.Config.jaily = (ushort)(lvl.spawny * 32);
+                lvl.Config.jailz = (ushort)(lvl.spawnz * 32);
+                lvl.Config.jailrotx = lvl.rotx;
+                lvl.Config.jailroty = lvl.roty;
                 
                 LoadMetadata(lvl);
                 Bots.BotsFile.LoadBots(lvl);
@@ -383,7 +383,7 @@ namespace MCGalaxy {
             } catch (Exception e) {
                 Logger.LogError(e);
             }
-            lvl.BlockDB.Cache.Enabled = lvl.UseBlockDB;
+            lvl.BlockDB.Cache.Enabled = lvl.Config.UseBlockDB;
             
             BlockDefinition[] defs = BlockDefinition.Load(false, lvl);
             for (int i = 0; i < defs.Length; i++) {

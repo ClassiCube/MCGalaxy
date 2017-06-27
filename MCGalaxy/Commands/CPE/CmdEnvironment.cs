@@ -59,64 +59,64 @@ namespace MCGalaxy.Commands.CPE {
             Level lvl = p.level;
             switch (variable) {
                 case "fog":
-                    LevelEnv.SetColor(p, value, 2, "fog", ref lvl.FogColor); break;
+                    LevelEnv.SetColor(p, value, 2, "fog", ref lvl.Config.FogColor); break;
                 case "cloud":
                 case "clouds":
-                    LevelEnv.SetColor(p, value, 1, "cloud", ref lvl.CloudColor); break;
+                    LevelEnv.SetColor(p, value, 1, "cloud", ref lvl.Config.CloudColor); break;
                 case "sky":
-                    LevelEnv.SetColor(p, value, 0, "sky", ref lvl.SkyColor); break;
+                    LevelEnv.SetColor(p, value, 0, "sky", ref lvl.Config.SkyColor); break;
                 case "dark":
                 case "shadow":
-                    LevelEnv.SetColor(p, value, 3, "shadow", ref lvl.ShadowColor); break;
+                    LevelEnv.SetColor(p, value, 3, "shadow", ref lvl.Config.ShadowColor); break;
                 case "sun":
                 case "light":
                 case "sunlight":
-                    LevelEnv.SetColor(p, value, 4, "sunlight", ref lvl.LightColor); break;
+                    LevelEnv.SetColor(p, value, 4, "sunlight", ref lvl.Config.LightColor); break;
                 case "weather":
                     LevelEnv.SetWeather(p, p.level, value); break;
                 case "cloudsheight":
                 case "cloudheight":
                     LevelEnv.SetShort(p, value, EnvProp.CloudsLevel,
-                             "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight); break;
+                             "clouds height", (short)(lvl.Height + 2), ref lvl.Config.CloudsHeight); break;
                 case "waterlevel":
                 case "edgelevel":
                 case "level":
                     LevelEnv.SetShort(p, value, EnvProp.EdgeLevel,
-                             "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel); break;
+                             "water level", (short)(lvl.Height / 2), ref lvl.Config.EdgeLevel); break;
                 case "bedrockoffset":
                 case "sidesoffset":
                 case "sideoffset":
                     LevelEnv.SetShort(p, value, EnvProp.SidesOffset,
-                             "bedrock offset", -2, ref lvl.SidesOffset); break;
+                             "bedrock offset", -2, ref lvl.Config.SidesOffset); break;
                 case "maxfogdistance":
                 case "maxfog":
                 case "fogdistance":
                 case "fogdist":
                     LevelEnv.SetShort(p, value, EnvProp.MaxFog,
-                             "max fog distance", 0, ref lvl.MaxFogDistance); break;
+                             "max fog distance", 0, ref lvl.Config.MaxFogDistance); break;
                 case "cloudspeed":
                 case "cloudsspeed":
                     LevelEnv.SetFloat(p, value, EnvProp.CloudsSpeed, 256, "clouds speed",
-                             256, ref lvl.CloudsSpeed, -32767, 32767); break;
+                             256, ref lvl.Config.CloudsSpeed, -32767, 32767); break;
                 case "weatherspeed":
                     LevelEnv.SetFloat(p, value, EnvProp.WeatherSpeed, 256, "weather speed",
-                             256, ref lvl.WeatherSpeed, -32767, 32767); break;
+                             256, ref lvl.Config.WeatherSpeed, -32767, 32767); break;
                 case "weatherfade":
                     LevelEnv.SetFloat(p, value, EnvProp.WeatherFade, 128, "weather fade rate",
-                             128, ref lvl.WeatherFade, 0, 255); break;
+                             128, ref lvl.Config.WeatherFade, 0, 255); break;
                 case "horizon":
                 case "edge":
                 case "water":
                     LevelEnv.SetBlock(p, value, EnvProp.EdgeBlock,
-                             "edge block", Block.water, ref lvl.HorizonBlock); break;
+                             "edge block", Block.water, ref lvl.Config.HorizonBlock); break;
                 case "side":
                 case "border":
                 case "bedrock":
                     LevelEnv.SetBlock(p, value, EnvProp.SidesBlock,
-                             "sides block", Block.blackrock, ref lvl.EdgeBlock); break;
+                             "sides block", Block.blackrock, ref lvl.Config.EdgeBlock); break;
                 case "expfog":
                     LevelEnv.SetBool(p, value, EnvProp.ExpFog,
-                                     "exp fog", false, ref lvl.ExpFog); break;
+                                     "exp fog", false, ref lvl.Config.ExpFog); break;
                 default:
                     return false;
             }
@@ -130,16 +130,16 @@ namespace MCGalaxy.Commands.CPE {
             LevelEnv.SetWeather(p, lvl, "normal");
             
             LevelEnv.SetBlock(p, "normal", EnvProp.EdgeBlock,
-                     "edge block", Block.water, ref lvl.HorizonBlock);
+                     "edge block", Block.water, ref lvl.Config.HorizonBlock);
             LevelEnv.SetBlock(p, "normal", EnvProp.SidesBlock,
-                     "sides block", Block.blackrock, ref lvl.EdgeBlock);
+                     "sides block", Block.blackrock, ref lvl.Config.EdgeBlock);
             
             LevelEnv.SetShort(p, "normal", EnvProp.EdgeLevel,
-                     "water level", (short)(lvl.Height / 2), ref lvl.EdgeLevel);
+                     "water level", (short)(lvl.Height / 2), ref lvl.Config.EdgeLevel);
             LevelEnv.SetShort(p, "normal", EnvProp.SidesOffset,
-                     "bedrock offset", -2, ref lvl.SidesOffset);
+                     "bedrock offset", -2, ref lvl.Config.SidesOffset);
             LevelEnv.SetShort(p, "normal", EnvProp.CloudsLevel,
-                     "clouds height", (short)(lvl.Height + 2), ref lvl.CloudsHeight);
+                     "clouds height", (short)(lvl.Height + 2), ref lvl.Config.CloudsHeight);
         }
         
         static bool SetPreset(Player p,  string value) {
@@ -172,15 +172,15 @@ namespace MCGalaxy.Commands.CPE {
             if (preset == null) { SendPresetsMessage(p); return false; }
             
             LevelEnv.UpdateEnvColor(p, 0, preset.Sky);
-            p.level.SkyColor = preset.Sky;
+            p.level.Config.SkyColor = preset.Sky;
             LevelEnv.UpdateEnvColor(p, 1, preset.Clouds);
-            p.level.CloudColor = preset.Clouds;
+            p.level.Config.CloudColor = preset.Clouds;
             LevelEnv.UpdateEnvColor(p, 2, preset.Fog);
-            p.level.FogColor = preset.Fog;
+            p.level.Config.FogColor = preset.Fog;
             LevelEnv.UpdateEnvColor(p, 3, preset.Shadow);
-            p.level.ShadowColor = preset.Shadow;
+            p.level.Config.ShadowColor = preset.Shadow;
             LevelEnv.UpdateEnvColor(p, 4, preset.Sun);
-            p.level.LightColor = preset.Sun;
+            p.level.Config.LightColor = preset.Sun;
             
             Level.SaveSettings(p.level);
             return true;

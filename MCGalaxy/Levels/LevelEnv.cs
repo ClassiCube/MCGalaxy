@@ -43,7 +43,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Set weather for {0} %Sto {1} ({2}%S)", lvl.ColoredName, weather, type);
             }
             
-            lvl.Weather = weather;
+            lvl.Config.Weather = weather;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level == lvl && pl.HasCpeExt(CpeExt.EnvWeatherType))

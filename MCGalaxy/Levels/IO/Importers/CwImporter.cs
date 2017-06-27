@@ -68,7 +68,7 @@ namespace MCGalaxy.Levels.IO {
             NbtCompound cpe = (NbtCompound)root["CPE"];
             
             if (cpe.Contains("EnvWeatherType"))
-                lvl.Weather = cpe["EnvWeatherType"]["WeatherType"].ByteValue;
+                lvl.Config.Weather = cpe["EnvWeatherType"]["WeatherType"].ByteValue;
             if (cpe.Contains("EnvMapAppearance"))
                 ParseEnvMapAppearance(cpe, lvl);
             if (cpe.Contains("EnvColors"))
@@ -80,28 +80,28 @@ namespace MCGalaxy.Levels.IO {
         
         static void ParseEnvMapAppearance(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvMapAppearance"];
-            lvl.HorizonBlock = comp["EdgeBlock"].ByteValue;
-            lvl.EdgeBlock = comp["SideBlock"].ByteValue;
-            lvl.EdgeLevel = comp["SideLevel"].ShortValue;
+            lvl.Config.HorizonBlock = comp["EdgeBlock"].ByteValue;
+            lvl.Config.EdgeBlock = comp["SideBlock"].ByteValue;
+            lvl.Config.EdgeLevel = comp["SideLevel"].ShortValue;
             
-            if (lvl.EdgeLevel == -1)
-                lvl.EdgeLevel = (short)(lvl.Height / 2);          
+            if (lvl.Config.EdgeLevel == -1)
+                lvl.Config.EdgeLevel = (short)(lvl.Height / 2);          
             if (!comp.Contains("TextureURL")) return;
             
             string url = comp["TextureURL"].StringValue;
             if (url.CaselessEnds(".png"))
-                lvl.terrainUrl = url == ServerConfig.DefaultTerrainUrl ? "" : url;
+                lvl.Config.terrainUrl = url == ServerConfig.DefaultTerrain ? "" : url;
             else
-                lvl.texturePackUrl = url == ServerConfig.DefaultTextureUrl ? "" : url;
+                lvl.Config.texturePackUrl = url == ServerConfig.DefaultTexture ? "" : url;
         }
         
         static void ParseEnvColors(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvColors"];
-            lvl.SkyColor = GetColor(comp, "Sky");
-            lvl.CloudColor = GetColor(comp, "Cloud");
-            lvl.FogColor = GetColor(comp, "Fog");
-            lvl.LightColor = GetColor(comp, "Sunlight");
-            lvl.ShadowColor = GetColor(comp, "Ambient");
+            lvl.Config.SkyColor = GetColor(comp, "Sky");
+            lvl.Config.CloudColor = GetColor(comp, "Cloud");
+            lvl.Config.FogColor = GetColor(comp, "Fog");
+            lvl.Config.LightColor = GetColor(comp, "Sunlight");
+            lvl.Config.ShadowColor = GetColor(comp, "Ambient");
         }
         
         static string GetColor(NbtCompound comp, string type) {

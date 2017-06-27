@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return;
             
             if (message.CaselessEq("set") && p != null) {
-                p.level.jailx = p.Pos.X; p.level.jaily = p.Pos.Y; p.level.jailz = p.Pos.Z;
-                p.level.jailrotx = p.Rot.RotY; p.level.jailroty = p.Rot.HeadX;
+                p.level.Config.jailx = p.Pos.X; p.level.Config.jaily = p.Pos.Y; p.level.Config.jailz = p.Pos.Z;
+                p.level.Config.jailrotx = p.Rot.RotY; p.level.Config.jailroty = p.Rot.HeadX;
                 Player.Message(p, "Set Jail point.");
                 return;
             }

@@ -79,7 +79,7 @@ namespace MCGalaxy.Games {
             Random random = new Random();
 
             RoundInProgress = true;
-            int roundMins = random.Next(CurLevel.MinRoundTime, CurLevel.MaxRoundTime);
+            int roundMins = random.Next(CurLevel.Config.MinRoundTime, CurLevel.Config.MaxRoundTime);
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
             CurLevel.ChatLevel("This round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);

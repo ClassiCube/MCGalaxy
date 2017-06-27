@@ -51,9 +51,9 @@ namespace MCGalaxy {
         [ConfigString("xjail-map-name", "Other", null, "(main)", false, "()._+")]
         public static string XJailLevel = "(main)";
         [ConfigString("default-texture-url", "General", null, "", true, null, NetUtils.StringSize)]
-        public static string DefaultTerrainUrl = "";
+        public static string DefaultTerrain = "";
         [ConfigString("default-texture-pack-url", "General", null, "", true, null, NetUtils.StringSize)]
-        public static string DefaultTextureUrl = "";
+        public static string DefaultTexture = "";
         
         [ConfigBool("report-back", "Error handling", null, true)]
         public static bool reportBack = true;

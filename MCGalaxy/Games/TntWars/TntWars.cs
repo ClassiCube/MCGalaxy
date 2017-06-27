@@ -122,7 +122,7 @@ namespace MCGalaxy.Games
             lvl.setPhysics(3);
             lvl.BuildAccess.Min = Group.standard.Permission;
             lvl.VisitAccess.Min = Group.standard.Permission;
-            lvl.Killer = true;
+            lvl.Config.Killer = true;
             //Seting Up Some Player stuff
             {
                 foreach (player p in Players)
@@ -373,9 +373,9 @@ namespace MCGalaxy.Games
             }
             //Reset map
             Command.all.Find("restore").Use(null, BackupNumber.ToString() + " " + lvl.name);
-            if (lvl.overload == 2501)
+            if (lvl.Config.overload == 2501)
             {
-                lvl.overload = 1500;
+                lvl.Config.overload = 1500;
                 Logger.Log(LogType.GameActivity, "TNT Wars: Set level physics overload back to 1500");
             }
         }

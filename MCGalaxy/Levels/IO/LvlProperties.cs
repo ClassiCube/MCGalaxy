@@ -36,7 +36,7 @@ namespace MCGalaxy.Levels.IO {
             w.WriteLine("#Level properties for " + level.name);
             w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
             w.WriteLine("Physics = " + level.physics);        
-            ConfigElement.Serialise(Server.levelConfig, " settings", w, level);
+            ConfigElement.Serialise(Server.levelConfig, " settings", w, level.Config);
         }
         
         
@@ -51,16 +51,16 @@ namespace MCGalaxy.Levels.IO {
         
         static void EnvLineProcessor(string key, string value, ref Level level) {
             switch (key.ToLower()) {
-                case "cloudcolor": level.CloudColor = value; break;
-                case "fogcolor": level.FogColor = value; break;
-                case "skycolor": level.SkyColor = value; break;
-                case "shadowcolor": level.ShadowColor = value; break;
-                case "lightcolor": level.LightColor = value; break;
-                case "edgeblock": level.EdgeBlock = byte.Parse(value); break;
-                case "edgelevel": level.EdgeLevel = short.Parse(value); break;
-                case "cloudsheight": level.CloudsHeight = short.Parse(value); break;
-                case "maxfog": level.MaxFogDistance = short.Parse(value); break;
-                case "horizonblock": level.HorizonBlock = byte.Parse(value); break;
+                case "cloudcolor": level.Config.CloudColor = value; break;
+                case "fogcolor": level.Config.FogColor = value; break;
+                case "skycolor": level.Config.SkyColor = value; break;
+                case "shadowcolor": level.Config.ShadowColor = value; break;
+                case "lightcolor": level.Config.LightColor = value; break;
+                case "edgeblock": level.Config.EdgeBlock = byte.Parse(value); break;
+                case "edgelevel": level.Config.EdgeLevel = short.Parse(value); break;
+                case "cloudsheight": level.Config.CloudsHeight = short.Parse(value); break;
+                case "maxfog": level.Config.MaxFogDistance = short.Parse(value); break;
+                case "horizonblock": level.Config.HorizonBlock = byte.Parse(value); break;
             }
         }
         
@@ -69,7 +69,7 @@ namespace MCGalaxy.Levels.IO {
                 case "physics":
                     level.setPhysics(int.Parse(value)); break;
                 default:
-                    if (!ConfigElement.Parse(Server.levelConfig, key, value, level)) {
+                    if (!ConfigElement.Parse(Server.levelConfig, key, value, level.Config)) {
                         Logger.Log(LogType.Warning, "\"{0}\" was not a recognised level property key.", key);
                     }
                     break;

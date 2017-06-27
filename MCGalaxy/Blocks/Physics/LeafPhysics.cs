@@ -29,7 +29,7 @@ namespace MCGalaxy.Blocks.Physics {
             }
 
             // Just immediately remove from physics list
-            if (!lvl.leafDecay) {
+            if (!lvl.Config.leafDecay) {
                 lvl.leaves.Clear();
                 C.data.Data = PhysicsArgs.RemoveFromChecks; return;
             }

@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Cannot {0}like this map as you are an author of it.", prefix); return false;
             }
             
-            if (like) p.level.Likes++;
-            else p.level.Dislikes++;
+            if (like) p.level.Config.Likes++;
+            else p.level.Config.Dislikes++;
             p.Game.RatedMap = true;
             p.Game.LikedMap = like;
             Level.SaveSettings(p.level);
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected static bool CheckIsAuthor(Player p) {
-            string[] authors = p.level.Authors.Split(',');
+            string[] authors = p.level.Config.Authors.Split(',');
             for (int i = 0; i < authors.Length; i++) {
                 if (authors[i].CaselessEq(p.name)) return true;
             }

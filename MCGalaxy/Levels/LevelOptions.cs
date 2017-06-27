@@ -32,26 +32,26 @@ namespace MCGalaxy {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
             { "TreeType", SetTreeType },
-            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.speedPhysics, value, "Physics speed", SpeedValidator) },
-            { "Overload", (p, l, value) => SetInt(p, l, ref l.overload, value, "Physics overload", OverloadValidator) },
-            { "Fall", (p, l, value) => SetInt(p, l, ref l.fall, value, "Fall distance") },
-            { "Drown", (p, l, value) => SetInt(p, l, ref l.drown, value, "Drown time (in tenths of a second)") },
-            { "Finite", (p, l, value) => Toggle(p, l, ref l.finite, "Finite mode") },
-            { "AI", (p, l, value) => Toggle(p, l, ref l.ai, "Animal AI") },
-            { "Edge", (p, l, value) => Toggle(p, l, ref l.edgeWater, "Edge water") },
-            { "Grass", (p, l, value) => Toggle(p, l, ref l.GrassGrow, "Growing grass") },
-            { "Death", (p, l, value) => Toggle(p, l, ref l.Death, "Survival death") },
-            { "Killer", (p, l, value) => Toggle(p, l, ref l.Killer, "Killer blocks") },
-            { "Unload", (p, l, value) => Toggle(p, l, ref l.unload, "Auto unload") },
-            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.loadOnGoto, "Load on goto") },
-            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.leafDecay, "Leaf decay") },
-            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.randomFlow, "Random flow") },
-            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.growTrees, "Tree growing") },
-            { "Chat", (p, l, value) => Toggle(p, l, ref l.worldChat, "Roleplay (level only) chat: ", true) },
+            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.Config.speedPhysics, value, "Physics speed", SpeedValidator) },
+            { "Overload", (p, l, value) => SetInt(p, l, ref l.Config.overload, value, "Physics overload", OverloadValidator) },
+            { "Fall", (p, l, value) => SetInt(p, l, ref l.Config.fall, value, "Fall distance") },
+            { "Drown", (p, l, value) => SetInt(p, l, ref l.Config.drown, value, "Drown time (in tenths of a second)") },
+            { "Finite", (p, l, value) => Toggle(p, l, ref l.Config.finite, "Finite mode") },
+            { "AI", (p, l, value) => Toggle(p, l, ref l.Config.ai, "Animal AI") },
+            { "Edge", (p, l, value) => Toggle(p, l, ref l.Config.edgeWater, "Edge water") },
+            { "Grass", (p, l, value) => Toggle(p, l, ref l.Config.GrassGrow, "Growing grass") },
+            { "Death", (p, l, value) => Toggle(p, l, ref l.Config.Death, "Survival death") },
+            { "Killer", (p, l, value) => Toggle(p, l, ref l.Config.Killer, "Killer blocks") },
+            { "Unload", (p, l, value) => Toggle(p, l, ref l.Config.unload, "Auto unload") },
+            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.Config.loadOnGoto, "Load on goto") },
+            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.Config.leafDecay, "Leaf decay") },
+            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.Config.randomFlow, "Random flow") },
+            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.Config.growTrees, "Tree growing") },
+            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.worldChat, "Roleplay (level only) chat: ", true) },
             { "Guns", ToggleGuns },
-            { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Buildable, "Buildable") },
-            { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Deletable, "Deletable") },
-            { "LoadDelay", (p, l, value) => SetInt(p, l, ref l.LoadDelay, value, "Load delay", DelayValidator) },
+            { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Config.Buildable, "Buildable") },
+            { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Config.Deletable, "Deletable") },
+            { "LoadDelay", (p, l, value) => SetInt(p, l, ref l.Config.LoadDelay, value, "Load delay", DelayValidator) },
         };
         
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
@@ -93,8 +93,8 @@ namespace MCGalaxy {
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         static void SetMotd(Player p, Level lvl, string value) {
-            lvl.motd = value == "" ? "ignore" : value;
-            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.motd);
+            lvl.Config.motd = value == "" ? "ignore" : value;
+            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.Config.motd);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -104,7 +104,7 @@ namespace MCGalaxy {
         }
         
         static void SetRealmOwner(Player p, Level lvl, string value) {
-            lvl.RealmOwner = value.Replace(' ', ',');
+            lvl.Config.RealmOwner = value.Replace(' ', ',');
             if (value == "") Player.Message(p, "Removed realm owner for this level.");
             else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
         }
@@ -112,7 +112,7 @@ namespace MCGalaxy {
         static void SetTreeType(Player p, Level lvl, string value) {
             if (value == "") {
                 Player.Message(p, "Reset tree type to default.");
-                lvl.TreeType = "fern";
+                lvl.Config.TreeType = "fern";
                 return;
             }
             
@@ -123,7 +123,7 @@ namespace MCGalaxy {
                 return;
             }
             
-            lvl.TreeType = value.ToLower();
+            lvl.Config.TreeType = value.ToLower();
             Player.Message(p, "Set tree type that saplings grow into to {0}.", value);
         }
         
@@ -167,8 +167,8 @@ namespace MCGalaxy {
         
         
         static void ToggleGuns(Player p, Level lvl, string value) {
-            Toggle(p, lvl, ref lvl.guns, "Guns allowed");
-            if (lvl.guns) return;
+            Toggle(p, lvl, ref lvl.Config.guns, "Guns allowed");
+            if (lvl.Config.guns) return;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

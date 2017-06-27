@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands.World {
             
             if (args.Length == 1) {
                 if (scope == "level")
-                    Player.Message(p, "Level terrain: " + GetPath(p.level.terrainUrl));
+                    Player.Message(p, "Level terrain: " + GetPath(p.level.Config.terrainUrl));
                 else if (scope == "levelzip")
-                    Player.Message(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
+                    Player.Message(p, "Level tex pack: " + GetPath(p.level.Config.texturePackUrl));
                 else if (scope == "global")
-                    Player.Message(p, "Global terrain: " + GetPath(ServerConfig.DefaultTerrainUrl));
+                    Player.Message(p, "Global terrain: " + GetPath(ServerConfig.DefaultTerrain));
                 else if (scope == "globalzip")
-                    Player.Message(p, "Global tex pack: " + GetPath(ServerConfig.DefaultTextureUrl));
+                    Player.Message(p, "Global tex pack: " + GetPath(ServerConfig.DefaultTexture));
                 else
                     Help(p);
                 return; 
@@ -64,19 +64,19 @@ namespace MCGalaxy.Commands.World {
             
             string path = url == "" ? "normal" : url;
             if (scope == "global") {
-                ServerConfig.DefaultTerrainUrl = url;
+                ServerConfig.DefaultTerrain = url;
                 Player.Message(p, "Set server's default terrain to " + path);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
-                p.level.terrainUrl = url;
+                p.level.Config.terrainUrl = url;
                 Player.Message(p, "Set level's terrain to " + path);
                 UpdateLevel(p);
             } else if (scope == "globalzip") {
-                ServerConfig.DefaultTextureUrl = url;
+                ServerConfig.DefaultTexture = url;
                 Player.Message(p, "Set server's default texture pack to " + path);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {
-                p.level.texturePackUrl = url;
+                p.level.Config.texturePackUrl = url;
                 Player.Message(p, "Set level's texture pack to " + path);
                 UpdateLevel(p);
             } else {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.World {
         void UpdateGlobally(Player p, bool zip) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                string url = zip ? pl.level.texturePackUrl : pl.level.terrainUrl;
+                string url = zip ? pl.level.Config.texturePackUrl : pl.level.Config.terrainUrl;
                 if (url == "") pl.SendCurrentMapAppearance();
             }
             SrvProperties.Save();

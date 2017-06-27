@@ -32,7 +32,7 @@ namespace MCGalaxy.Blocks {
         
         static void DirtGrass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             Level lvl = p.level;
-            if (!lvl.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
+            if (!lvl.Config.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
                 p.ChangeBlock(x, y, z, block); return;
             }
             if (p.ModeBlock.BlockID == Block.dirt || p.ModeBlock.BlockID == Block.grass) {
