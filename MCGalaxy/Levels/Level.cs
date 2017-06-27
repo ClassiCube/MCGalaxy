@@ -79,8 +79,8 @@ namespace MCGalaxy {
             rotx = 0; roty = 0;
             
             ZoneList = new List<Zone>();
-            VisitAccess = new LevelAccessController(this, true);
-            BuildAccess = new LevelAccessController(this, false);
+            VisitAccess = new LevelAccessController(this, Config, true);
+            BuildAccess = new LevelAccessController(this, Config, false);
             listCheckExists = new SparseBitSet(Width, Height, Length);
             listUpdateExists = new SparseBitSet(Width, Height, Length);
         }

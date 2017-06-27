@@ -99,6 +99,7 @@ namespace MCGalaxy {
             set {
                 if (value > 0 && Physicsint == 0) StartPhysics();
                 Physicsint = value;
+                Config.Physics = value;
             }
         }
         int Physicsint;

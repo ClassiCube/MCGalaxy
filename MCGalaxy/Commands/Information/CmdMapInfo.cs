@@ -25,7 +25,7 @@ using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdMapInfo : Command {       
+    public sealed class CmdMapInfo : Command {
         public override string name { get { return "mapinfo"; } }
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -102,17 +102,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowPermissions(Player p, MapInfoData data) {
-            List<string> vWhitelist = data.VisitWhitelist, vBlacklist = data.VisitBlacklist;
-            List<string> bWhitelist = data.BuildWhitelist, bBlacklist = data.BuildBlacklist;
-            GetBlacklistedPlayers(data.Name, vBlacklist);
-            
-            StringBuilder visitPerms = new StringBuilder("  Visitable by ");
-            PrintRanks(p, data.visit, data.visitmax, vWhitelist, vBlacklist, visitPerms);
-            Player.Message(p, visitPerms.ToString());
-            
-            StringBuilder buildPerms = new StringBuilder("  Modifiable by ");
-            PrintRanks(p, data.build, data.buildmax, bWhitelist, bBlacklist, buildPerms);
-            Player.Message(p, buildPerms.ToString());
+            PrintRanks(p, data.Visit, "  Visitable by ");
+            PrintRanks(p, data.Build, "  Modifiable by ");
             
             if (String.IsNullOrEmpty(data.RealmOwner))
                 data.RealmOwner = GetRealmMapOwner(data.Name);
@@ -123,22 +114,25 @@ namespace MCGalaxy.Commands.Info {
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         
-        // Can't pass a LevelAccess instance here
-        static void PrintRanks(Player p, LevelPermission min, LevelPermission max,
-                               List<string> whitelist, List<string> blacklist, StringBuilder builder) {
-            builder.Append(Group.GetColoredName(min) + "%S+");
-            if (max != LevelPermission.Nobody)
-                builder.Append(" up to " + Group.GetColoredName(max));
-            foreach (string name in whitelist)
-                builder.Append(", " + PlayerInfo.GetColoredName(p, name));
-
-            if (blacklist.Count == 0) return;
+        static void PrintRanks(Player p, LevelAccessController access, string initial) {
+            StringBuilder perms = new StringBuilder(initial);
+            perms.Append(Group.GetColoredName(access.Min) + "%S+");
+            if (access.Max != LevelPermission.Nobody)
+                perms.Append(" up to " + Group.GetColoredName(access.Max));
             
-            builder.Append( " %S(except ");
+            List<string> whitelist = access.Whitelisted;
+            foreach (string name in whitelist)
+                perms.Append(", " + PlayerInfo.GetColoredName(p, name));
+
+            List<string> blacklist = access.Blacklisted;
+            if (blacklist.Count == 0) { Player.Message(p, perms.ToString()); return; }
+            
+            perms.Append( " %S(except ");
             foreach (string name in blacklist)
-                builder.Append(PlayerInfo.GetColoredName(p, name) + ", ");
-            builder.Remove(builder.Length - 2, 2);
-            builder.Append("%S)");
+                perms.Append(PlayerInfo.GetColoredName(p, name) + ", ");
+            perms.Remove(perms.Length - 2, 2);
+            perms.Append("%S)");
+            Player.Message(p, perms.ToString());
         }
         
         void ShowZombieSurvival(Player p, MapInfoData data) {
@@ -167,17 +161,6 @@ namespace MCGalaxy.Commands.Info {
                 lvlName = lvlName.Substring(0, lvlName.Length - 1);
             }
             return PlayerInfo.FindName(lvlName);
-        }
-        
-        void GetBlacklistedPlayers(string l, List<string> blacklist) {
-            string path = "levels/blacklists/" + l + ".txt";
-            if (!File.Exists(path)) return;
-            
-            string[] lines = File.ReadAllLines(path);
-            foreach (string line in lines) {
-                if (line.IndexOf(' ') < 0) continue;
-                blacklist.Add(line.SplitSpaces()[1]);
-            }
         }
         
         void ShowEnv(Player p, MapInfoData data) {
@@ -222,11 +205,7 @@ namespace MCGalaxy.Commands.Info {
             public bool ExpFog;
             
             // Permissions data
-            public LevelPermission visit, build, visitmax, buildmax;
-            public List<string> VisitWhitelist = new List<string>();
-            public List<string> VisitBlacklist = new List<string>();
-            public List<string> BuildWhitelist = new List<string>();
-            public List<string> BuildBlacklist = new List<string>();
+            public LevelAccessController Visit, Build;
             
             // Zombie data
             public string Authors;
@@ -236,33 +215,10 @@ namespace MCGalaxy.Commands.Info {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.Config.Guns; BlockDB = lvl.Config.UseBlockDB;
-                RealmOwner = lvl.Config.RealmOwner;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
+                LoadConfig(lvl.Config);
                 
-                visit = lvl.VisitAccess.Min; visitmax = lvl.VisitAccess.Max;
-                build = lvl.BuildAccess.Min; buildmax = lvl.BuildAccess.Max;
-                VisitWhitelist = new List<string>(lvl.VisitAccess.Whitelisted);
-                VisitBlacklist = new List<string>(lvl.VisitAccess.Blacklisted);
-                BuildWhitelist = new List<string>(lvl.BuildAccess.Whitelisted);
-                BuildBlacklist = new List<string>(lvl.BuildAccess.Blacklisted);
-                
-                Fog = lvl.Config.FogColor; Sky = lvl.Config.SkyColor; Clouds = lvl.Config.CloudColor;
-                Light = lvl.Config.LightColor; Shadow = lvl.Config.ShadowColor;
-                EdgeLevel = lvl.Config.EdgeLevel; SidesOffset = lvl.Config.SidesOffset; CloudsHeight = lvl.Config.CloudsHeight;
-                MaxFog = lvl.Config.MaxFogDistance; ExpFog = lvl.Config.ExpFog;
-                CloudsSpeed = lvl.Config.CloudsSpeed; WeatherSpeed = lvl.Config.WeatherSpeed;
-                EdgeBlock = (byte)lvl.Config.EdgeBlock; HorizonBlock = (byte)lvl.Config.HorizonBlock;
-                WeatherFade = lvl.Config.WeatherFade;
-                
-                TerrainUrl = lvl.Config.Terrain != "" ?
-                    lvl.Config.Terrain : ServerConfig.DefaultTerrain;
-                TextureUrl = lvl.Config.TexturePack != "" ?
-                    lvl.Config.TexturePack : ServerConfig.DefaultTexture;
-                
-                Authors = lvl.Config.Authors;
-                TotalRounds = lvl.Config.RoundsPlayed; HumanRounds = lvl.Config.RoundsHumanWon;
-                Likes = lvl.Config.Likes; Dislikes = lvl.Config.Dislikes;
+                Visit = lvl.VisitAccess; Build = lvl.BuildAccess;
             }
             
             public void FromOfflineLevel(string name) {
@@ -275,64 +231,32 @@ namespace MCGalaxy.Commands.Info {
                 BlockDBEntries = BlockDBFile.CountEntries(name);
 
                 path = LevelInfo.FindPropertiesFile(name);
-                if (path != null)
-                    PropertiesFile.Read(path, ParseProperty, '=');
-                if (Authors == null) Authors = "";
-                if (SidesOffset == int.MinValue) SidesOffset = EdgeLevel - 2;
+                LevelConfig cfg = new LevelConfig();
+                LevelConfig.Load(path, cfg);
+                LoadConfig(cfg);
+                
+                Visit = new LevelAccessController(null, cfg, true);
+                Build = new LevelAccessController(null, cfg, false);
             }
             
-            void ParseProperty(string key, string value) {
-                switch (key.ToLower()) {
-                        case "physics": Physics = int.Parse(value); break;
-                        case "guns": Guns = bool.Parse(value); break;
-                        case "useblockdb": BlockDB = bool.Parse(value); break;
-                        case "realmowner": RealmOwner = value; break;
-                        
-                        case "perbuild": build = GetPerm(value); break;
-                        case "pervisit": visit = GetPerm(value); break;
-                        case "perbuildmax": buildmax = GetPerm(value); break;
-                        case "pervisitmax": visitmax = GetPerm(value); break;
-                        case "visitwhitelist": VisitWhitelist = Parse(value); break;
-                        case "visitblacklist": VisitBlacklist = Parse(value); break;
-                        case "buildwhitelist": BuildWhitelist = Parse(value); break;
-                        case "buildblacklist": BuildBlacklist = Parse(value); break;
-                        
-                        case "authors": Authors = value; break;
-                        case "roundsplayed": TotalRounds = int.Parse(value); break;
-                        case "roundshumanwon": HumanRounds = int.Parse(value); break;
-                        case "likes": Likes = int.Parse(value); break;
-                        case "dislikes": Dislikes = int.Parse(value); break;
-                        
-                        case "cloudcolor": Clouds = value; break;
-                        case "fogcolor": Fog = value; break;
-                        case "skycolor": Sky = value; break;
-                        case "shadowcolor": Shadow = value; break;
-                        case "lightcolor": Light = value; break;
-                        
-                        case "edgeblock": EdgeBlock = byte.Parse(value); break;
-                        case "edgelevel": EdgeLevel = short.Parse(value); break;
-                        case "sidesoffset": SidesOffset = short.Parse(value); break;
-                        case "horizonblock": HorizonBlock = byte.Parse(value); break;
-                        case "cloudsheight": CloudsHeight = short.Parse(value); break;
-                        case "maxfog": MaxFog = short.Parse(value); break;
-                        case "expfog": ExpFog = bool.Parse(value); break;
-                        
-                        case "texture": TerrainUrl = value; break;
-                        case "texturepack": TextureUrl = value; break;
-                        case "clouds-speed": CloudsSpeed = int.Parse(value); break;
-                        case "weather-speed": WeatherSpeed = int.Parse(value); break;
-                        case "weather-fade": WeatherFade = int.Parse(value); break;
-                }
-            }
-            
-            static List<string> Parse(string value) {
-                if (value == "") return new List<string>();
-                return new List<string>(value.Split(','));
-            }
-            
-            static LevelPermission GetPerm(string value) {
-                LevelPermission perm = Group.ParsePermOrName(value);
-                return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
+            void LoadConfig(LevelConfig cfg) {
+                Physics = cfg.Physics; Guns = cfg.Guns; BlockDB = cfg.UseBlockDB;
+                RealmOwner = cfg.RealmOwner;
+                
+                Fog = cfg.FogColor; Sky = cfg.SkyColor; Clouds = cfg.CloudColor;
+                Light = cfg.LightColor; Shadow = cfg.ShadowColor;
+                EdgeLevel = cfg.EdgeLevel; SidesOffset = cfg.SidesOffset; CloudsHeight = cfg.CloudsHeight;
+                MaxFog = cfg.MaxFogDistance; ExpFog = cfg.ExpFog;
+                CloudsSpeed = cfg.CloudsSpeed; WeatherSpeed = cfg.WeatherSpeed;
+                EdgeBlock = (byte)cfg.EdgeBlock; HorizonBlock = (byte)cfg.HorizonBlock;
+                WeatherFade = cfg.WeatherFade;
+                
+                TerrainUrl = cfg.Terrain != "" ? cfg.Terrain : ServerConfig.DefaultTerrain;
+                TextureUrl = cfg.TexturePack != "" ? cfg.TexturePack : ServerConfig.DefaultTexture;
+                
+                Authors = cfg.Authors;
+                TotalRounds = cfg.RoundsPlayed; HumanRounds = cfg.RoundsHumanWon;
+                Likes = cfg.Likes; Dislikes = cfg.Dislikes;
             }
         }
         

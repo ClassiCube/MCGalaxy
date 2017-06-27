@@ -182,38 +182,40 @@ namespace MCGalaxy {
         /// visit (true) or build (false) permission for the level. </summary>
         public readonly bool IsVisit;
         readonly Level lvl;
+        readonly LevelConfig cfg;
         
-        public LevelAccessController(Level lvl, bool isVisit) {
+        public LevelAccessController(Level lvl, LevelConfig cfg, bool isVisit) {
             this.lvl = lvl;
+            this.cfg = cfg;
             IsVisit = isVisit;
         }
         
         /// <summary> Lowest allowed rank. </summary>
         public override LevelPermission Min {
-            get { return IsVisit ? lvl.Config.VisitMin : lvl.Config.BuildMin; }
+            get { return IsVisit ? cfg.VisitMin : cfg.BuildMin; }
             set {
-                if (IsVisit) lvl.Config.VisitMin = value;
-                else lvl.Config.BuildMin = value;
+                if (IsVisit) cfg.VisitMin = value;
+                else cfg.BuildMin = value;
             }
         }
         
         /// <summary> Highest allowed rank. </summary>
         public override LevelPermission Max {
-            get { return IsVisit ? lvl.Config.VisitMax : lvl.Config.BuildMax; }
+            get { return IsVisit ? cfg.VisitMax : cfg.BuildMax; }
             set {
-                if (IsVisit) lvl.Config.VisitMax = value;
-                else lvl.Config.BuildMax = value;
+                if (IsVisit) cfg.VisitMax = value;
+                else cfg.BuildMax = value;
             }
         }
         
         /// <summary> List of always allowed players, overrides rank allowances. </summary>
         public override List<string> Whitelisted {
-            get { return IsVisit ? lvl.Config.VisitWhitelist : lvl.Config.BuildWhitelist; }
+            get { return IsVisit ? cfg.VisitWhitelist : cfg.BuildWhitelist; }
         }
         
         /// <summary> List of never allowed players, ignores rank allowances. </summary>
         public override List<string> Blacklisted {
-            get { return IsVisit ? lvl.Config.VisitBlacklist : lvl.Config.BuildBlacklist; }
+            get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }
         
         protected override string ColoredName { get { return lvl.ColoredName; } }
