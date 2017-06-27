@@ -52,7 +52,7 @@ namespace MCGalaxy {
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
         public static void BanPlayer(Player banner, string target, string reason, bool stealth, string oldrank) {
-            if (reason == "") reason = ServerConfig.defaultBanMessage;
+            if (reason == "") reason = ServerConfig.DefaultBanMessage;
             reason = reason.Replace(" ", "%20");
             
             string player = banner == null ? "(console)" : banner.truename;

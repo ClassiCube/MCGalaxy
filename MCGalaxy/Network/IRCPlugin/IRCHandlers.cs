@@ -153,16 +153,16 @@ namespace MCGalaxy.Network {
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
             
-            if (ircCmd == ServerConfig.ircCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
+            if (ircCmd == ServerConfig.IRCCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
 
             if (opchat) {
                 Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
                 Chat.MessageOps(String.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
-                                              ServerConfig.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                                              ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
                 Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
                 Player.GlobalIRCMessage(String.Format("%I(IRC) {0}: &f{1}", user.Nick,
-                                                      ServerConfig.profanityFilter ? ProfanityFilter.Parse(message) : message));
+                                                      ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
         
@@ -243,7 +243,7 @@ namespace MCGalaxy.Network {
             public readonly IRCBot Bot;
             
             public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
-                group = Group.findPerm(ServerConfig.ircControllerRank);
+                group = Group.findPerm(ServerConfig.IRCControllerRank);
                 if (group == null) group = Group.NobodyRank;
                 
                 IRCChannel = ircChannel;
@@ -291,9 +291,9 @@ namespace MCGalaxy.Network {
         }
         
         void Authenticate() {
-            if (ServerConfig.ircIdentify && ServerConfig.ircPassword != "") {
+            if (ServerConfig.IRCIdentify && ServerConfig.IRCPassword != "") {
                 Logger.Log(LogType.IRCCActivity, "Identifying with NickServ");
-                bot.connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + ServerConfig.ircPassword);
+                bot.connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + ServerConfig.IRCPassword);
             }
         }
 

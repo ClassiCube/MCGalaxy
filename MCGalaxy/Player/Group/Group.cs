@@ -141,8 +141,8 @@ namespace MCGalaxy {
             AddAndLoadGroup(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Find(ServerConfig.defaultRank) != null) {
-                standard = Group.Find(ServerConfig.defaultRank);
+            if (Find(ServerConfig.DefaultRankName) != null) {
+                standard = Group.Find(ServerConfig.DefaultRankName);
             } else {
                 standard = GuestRank;
             }

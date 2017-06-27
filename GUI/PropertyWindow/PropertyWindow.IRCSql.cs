@@ -21,60 +21,60 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form { 
         
         void LoadIrcSqlProps() {
-            irc_chkEnabled.Checked = ServerConfig.irc;
-            irc_txtServer.Text = ServerConfig.ircServer;
-            irc_txtPort.Text = ServerConfig.ircPort.ToString();
-            irc_txtNick.Text = ServerConfig.ircNick;
-            irc_txtChannel.Text = ServerConfig.ircChannel;
-            irc_txtOpChannel.Text = ServerConfig.ircOpChannel;
-            irc_chkPass.Checked = ServerConfig.ircIdentify;
-            irc_txtPass.Text = ServerConfig.ircPassword;
+            irc_chkEnabled.Checked = ServerConfig.UseIRC;
+            irc_txtServer.Text = ServerConfig.IRCServer;
+            irc_txtPort.Text = ServerConfig.IRCPort.ToString();
+            irc_txtNick.Text = ServerConfig.IRCNick;
+            irc_txtChannel.Text = ServerConfig.IRCChannels;
+            irc_txtOpChannel.Text = ServerConfig.IRCOpChannels;
+            irc_chkPass.Checked = ServerConfig.IRCIdentify;
+            irc_txtPass.Text = ServerConfig.IRCPassword;
             
-            irc_cbTitles.Checked = ServerConfig.ircPlayerTitles;
-            irc_cbWorldChanges.Checked = ServerConfig.ircShowWorldChanges;
-            irc_cbAFK.Checked = ServerConfig.ircShowAFK;                 
+            irc_cbTitles.Checked = ServerConfig.IRCShowPlayerTitles;
+            irc_cbWorldChanges.Checked = ServerConfig.IRCShowWorldChanges;
+            irc_cbAFK.Checked = ServerConfig.IRCShowAFK;                 
 
             irc_cbRank.Items.AddRange(GuiPerms.RankNames);            
-            GuiPerms.SetDefaultIndex(irc_cbRank, ServerConfig.ircControllerRank);
+            GuiPerms.SetDefaultIndex(irc_cbRank, ServerConfig.IRCControllerRank);
             irc_cbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
             irc_cbVerify.SelectedIndex = (int)ServerConfig.IRCVerify;
-            irc_txtPrefix.Text = ServerConfig.ircCommandPrefix;
+            irc_txtPrefix.Text = ServerConfig.IRCCommandPrefix;
             
-            sql_chkUseSQL.Checked = ServerConfig.useMySQL;
+            sql_chkUseSQL.Checked = ServerConfig.UseMySQL;
             sql_txtUser.Text = ServerConfig.MySQLUsername;
             sql_txtPass.Text = ServerConfig.MySQLPassword;
             sql_txtDBName.Text = ServerConfig.MySQLDatabaseName;
             sql_txtHost.Text = ServerConfig.MySQLHost;
             sql_txtPort.Text = ServerConfig.MySQLPort;
-            ToggleMySQLSettings(ServerConfig.useMySQL);
+            ToggleMySQLSettings(ServerConfig.UseMySQL);
         }
         
         void ApplyIrcSqlProps() {
-            ServerConfig.irc = irc_chkEnabled.Checked;
-            ServerConfig.ircServer = irc_txtServer.Text;
-            ServerConfig.ircPort = int.Parse(irc_txtPort.Text);
-            ServerConfig.ircNick = irc_txtNick.Text;            
-            ServerConfig.ircChannel = irc_txtChannel.Text;
-            ServerConfig.ircOpChannel = irc_txtOpChannel.Text;            
-            ServerConfig.ircIdentify = irc_chkPass.Checked;
-            ServerConfig.ircPassword = irc_txtPass.Text;
+            ServerConfig.UseIRC = irc_chkEnabled.Checked;
+            ServerConfig.IRCServer = irc_txtServer.Text;
+            ServerConfig.IRCPort = int.Parse(irc_txtPort.Text);
+            ServerConfig.IRCNick = irc_txtNick.Text;            
+            ServerConfig.IRCChannels = irc_txtChannel.Text;
+            ServerConfig.IRCOpChannels = irc_txtOpChannel.Text;            
+            ServerConfig.IRCIdentify = irc_chkPass.Checked;
+            ServerConfig.IRCPassword = irc_txtPass.Text;
             
-            ServerConfig.ircPlayerTitles = irc_cbTitles.Checked;
-            ServerConfig.ircShowWorldChanges = irc_cbWorldChanges.Checked;
-            ServerConfig.ircShowAFK = irc_cbAFK.Checked;
+            ServerConfig.IRCShowPlayerTitles = irc_cbTitles.Checked;
+            ServerConfig.IRCShowWorldChanges = irc_cbWorldChanges.Checked;
+            ServerConfig.IRCShowAFK = irc_cbAFK.Checked;
             
-            ServerConfig.ircControllerRank = GuiPerms.GetPermission(irc_cbRank, LevelPermission.Nobody);
+            ServerConfig.IRCControllerRank = GuiPerms.GetPermission(irc_cbRank, LevelPermission.Nobody);
             ServerConfig.IRCVerify = (IRCControllerVerify)irc_cbVerify.SelectedIndex;
-            ServerConfig.ircCommandPrefix = irc_txtPrefix.Text;
+            ServerConfig.IRCCommandPrefix = irc_txtPrefix.Text;
             
-            ServerConfig.useMySQL = sql_chkUseSQL.Checked;
+            ServerConfig.UseMySQL = sql_chkUseSQL.Checked;
             ServerConfig.MySQLUsername = sql_txtUser.Text;
             ServerConfig.MySQLPassword = sql_txtPass.Text;
             ServerConfig.MySQLDatabaseName = sql_txtDBName.Text;
             ServerConfig.MySQLHost = sql_txtHost.Text;
             ServerConfig.MySQLPort = sql_txtPort.Text;
             
-            Database.Backend = ServerConfig.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+            Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             //ServerConfig.MySQLPooling = ; // No setting for this?            
         }
         

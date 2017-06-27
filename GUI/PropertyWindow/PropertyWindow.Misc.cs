@@ -21,56 +21,56 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {  
         
         void LoadMiscProps() {
-            bak_txtTime.Text = ServerConfig.backupInterval.ToString();
-            bak_txtLocation.Text = ServerConfig.backupLocation;
-            hackrank_kick.Checked = ServerConfig.hackrank_kick;
-            hackrank_kick_time.Text = ServerConfig.hackrank_kick_time.ToString();
+            bak_txtTime.Text = ServerConfig.BackupInterval.ToString();
+            bak_txtLocation.Text = ServerConfig.BackupDirectory;
+            hackrank_kick.Checked = ServerConfig.HackrankKicks;
+            hackrank_kick_time.Text = ServerConfig.HackrankKickDelay.ToString();
             
-            afk_txtTimer.Text = ServerConfig.afkminutes.ToString();
-            afk_txtKickTime.Text = ServerConfig.afkkick.ToString();
-            GuiPerms.SetDefaultIndex(afk_cmbKickPerm, ServerConfig.afkkickperm);
+            afk_txtTimer.Text = ServerConfig.AutoAfkMins.ToString();
+            afk_txtKickTime.Text = ServerConfig.AfkKickMins.ToString();
+            GuiPerms.SetDefaultIndex(afk_cmbKickPerm, ServerConfig.AfkKickRank);
             
-            chkPhysicsRest.Checked = ServerConfig.physicsRestart;
-            txtRP.Text = ServerConfig.rpLimit.ToString();
-            txtNormRp.Text = ServerConfig.rpNormLimit.ToString();
+            chkPhysicsRest.Checked = ServerConfig.PhysicsRestart;
+            txtRP.Text = ServerConfig.PhysicsRestartLimit.ToString();
+            txtNormRp.Text = ServerConfig.PhysicsRestartNormLimit.ToString();
             
-            chkDeath.Checked = ServerConfig.deathcount;
-            chkSmile.Checked = ServerConfig.parseSmiley;
-            chk17Dollar.Checked = ServerConfig.dollarNames;
-            chkRepeatMessages.Checked = ServerConfig.repeatMessage;
-            chkRestartTime.Checked = ServerConfig.autorestart;
-            txtRestartTime.Text = ServerConfig.restarttime.ToString();
-            chkGuestLimitNotify.Checked = ServerConfig.guestLimitNotify;
-            txtMoneys.Text = ServerConfig.moneys;
-            nudCooldownTime.Value = ServerConfig.reviewcooldown;
-            chkProfanityFilter.Checked = ServerConfig.profanityFilter; // TODO: not visible?
+            chkDeath.Checked = ServerConfig.AnnounceDeathCount;
+            chkSmile.Checked = ServerConfig.ParseEmotes;
+            chk17Dollar.Checked = ServerConfig.DollarBeforeNamesToken;
+            chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
+            chkRestartTime.Checked = ServerConfig.AutoRestart;
+            txtRestartTime.Text = ServerConfig.RestartTime.ToString();
+            chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
+            txtMoneys.Text = ServerConfig.Currency;
+            nudCooldownTime.Value = ServerConfig.ReviewCooldown;
+            chkProfanityFilter.Checked = ServerConfig.ProfanityFiltering; // TODO: not visible?
         }
         
         void ApplyMiscProps() {
-            ServerConfig.backupInterval = int.Parse(bak_txtTime.Text);
-            ServerConfig.backupLocation = bak_txtLocation.Text;
-            ServerConfig.hackrank_kick = hackrank_kick.Checked;
-            ServerConfig.hackrank_kick_time = int.Parse(hackrank_kick_time.Text);
+            ServerConfig.BackupInterval = int.Parse(bak_txtTime.Text);
+            ServerConfig.BackupDirectory = bak_txtLocation.Text;
+            ServerConfig.HackrankKicks = hackrank_kick.Checked;
+            ServerConfig.HackrankKickDelay = int.Parse(hackrank_kick_time.Text);
             
-            ServerConfig.afkminutes = int.Parse(afk_txtTimer.Text);
-            ServerConfig.afkkick = int.Parse(afk_txtKickTime.Text);
-            ServerConfig.afkkickperm = GuiPerms.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
+            ServerConfig.AutoAfkMins = int.Parse(afk_txtTimer.Text);
+            ServerConfig.AfkKickMins = int.Parse(afk_txtKickTime.Text);
+            ServerConfig.AfkKickRank = GuiPerms.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
             
-            ServerConfig.physicsRestart = chkPhysicsRest.Checked;
-            ServerConfig.rpLimit = int.Parse(txtRP.Text);
-            ServerConfig.rpNormLimit = int.Parse(txtNormRp.Text);
+            ServerConfig.PhysicsRestart = chkPhysicsRest.Checked;
+            ServerConfig.PhysicsRestartLimit = int.Parse(txtRP.Text);
+            ServerConfig.PhysicsRestartNormLimit = int.Parse(txtNormRp.Text);
             
-            ServerConfig.deathcount = chkDeath.Checked;
-            ServerConfig.parseSmiley = chkSmile.Checked;
-            ServerConfig.dollarNames = chk17Dollar.Checked;
-            ServerConfig.repeatMessage = chkRepeatMessages.Checked;
-            ServerConfig.autorestart = chkRestartTime.Checked;
-            try { ServerConfig.restarttime = DateTime.Parse(txtRestartTime.Text); }
+            ServerConfig.AnnounceDeathCount = chkDeath.Checked;
+            ServerConfig.ParseEmotes = chkSmile.Checked;
+            ServerConfig.DollarBeforeNamesToken = chk17Dollar.Checked;
+            ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
+            ServerConfig.AutoRestart = chkRestartTime.Checked;
+            try { ServerConfig.RestartTime = DateTime.Parse(txtRestartTime.Text); }
             catch { } // ignore bad values
-            ServerConfig.guestLimitNotify = chkGuestLimitNotify.Checked;
-            ServerConfig.moneys = txtMoneys.Text;
-            ServerConfig.reviewcooldown = (int)nudCooldownTime.Value;
-            ServerConfig.profanityFilter = chkProfanityFilter.Checked;
+            ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
+            ServerConfig.Currency = txtMoneys.Text;
+            ServerConfig.ReviewCooldown = (int)nudCooldownTime.Value;
+            ServerConfig.ProfanityFiltering = chkProfanityFilter.Checked;
         }
         
                 

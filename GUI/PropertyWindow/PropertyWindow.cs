@@ -34,7 +34,7 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-            ToggleIrcSettings(ServerConfig.irc);
+            ToggleIrcSettings(ServerConfig.UseIRC);
 
             GuiPerms.UpdateRankNames();
             rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);

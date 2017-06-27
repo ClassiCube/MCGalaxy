@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Fun {
 
         public override void Use(Player p, string message) {
             if (p.money < 10) {
-                Player.Message(p, "You need &f10 " + ServerConfig.moneys + " %Sto enter the lottery."); return;
+                Player.Message(p, "You need &f10 " + ServerConfig.Currency + " %Sto enter the lottery."); return;
             }
             
             string[] players = Server.zombie.Lottery.Items;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/lottery %H-Enters lottery for &f10 " + ServerConfig.moneys);
+            Player.Message(p, "%T/lottery %H-Enters lottery for &f10 " + ServerConfig.Currency);
             Player.Message(p, "%HThe winner is calculated at the end of each round.");
             Player.Message(p, "%HYou are &cnot refunded %Hif you disconnect.");
         }

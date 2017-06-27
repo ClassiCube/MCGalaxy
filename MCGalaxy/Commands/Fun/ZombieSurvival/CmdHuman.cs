@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             if (Economy.Enabled && p.money < 5) {
-                Player.Message(p, "You need to have at least 5 &3" + ServerConfig.moneys + 
+                Player.Message(p, "You need to have at least 5 &3" + ServerConfig.Currency + 
                                    " %Sto pledge that you will not be infected."); return;
             }
             if (!Server.zombie.RoundInProgress) {
@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/human %H- pledges that you will not be infected.");
-            Player.Message(p, "%HIf you survive, you receive an &aextra 5 %3" + ServerConfig.moneys);
-            Player.Message(p, "%HHowever, if you are infected, you will &close 2 %3" + ServerConfig.moneys);
+            Player.Message(p, "%HIf you survive, you receive an &aextra 5 %3" + ServerConfig.Currency);
+            Player.Message(p, "%HHowever, if you are infected, you will &close 2 %3" + ServerConfig.Currency);
         }
     }
 }

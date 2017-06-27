@@ -23,55 +23,55 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
         void LoadGeneralProps() {
-            srv_txtName.Text = ServerConfig.name;
-            srv_txtMOTD.Text = ServerConfig.motd;
-            srv_txtPort.Text = ServerConfig.port.ToString();
-            srv_txtOwner.Text = ServerConfig.server_owner;
-            srv_chkPublic.Checked = ServerConfig.pub;
+            srv_txtName.Text = ServerConfig.Name;
+            srv_txtMOTD.Text = ServerConfig.MOTD;
+            srv_txtPort.Text = ServerConfig.Port.ToString();
+            srv_txtOwner.Text = ServerConfig.OwnerName;
+            srv_chkPublic.Checked = ServerConfig.Public;
             
-            srv_numPlayers.Value = ServerConfig.players;
-            srv_numGuests.Value = ServerConfig.maxGuests;
+            srv_numPlayers.Value = ServerConfig.MaxPlayers;
+            srv_numGuests.Value = ServerConfig.MaxGuests;
             srv_numGuests.Maximum = srv_numPlayers.Value;
-            srv_cbMustAgree.Checked = ServerConfig.agreetorulesonentry;
+            srv_cbMustAgree.Checked = ServerConfig.AgreeToRulesOnEntry;
             
-            lvl_txtMain.Text = ServerConfig.level;
-            lvl_chkAutoload.Checked = ServerConfig.AutoLoad;
-            lvl_chkWorld.Checked = ServerConfig.worldChat;
+            lvl_txtMain.Text = ServerConfig.MainLevel;
+            lvl_chkAutoload.Checked = ServerConfig.AutoLoadMaps;
+            lvl_chkWorld.Checked = ServerConfig.ServerWideChat;
             
-            adv_chkVerify.Checked = ServerConfig.verify;
+            adv_chkVerify.Checked = ServerConfig.VerifyNames;
             adv_chkRestart.Checked = ServerConfig.restartOnError;
-            adv_chkLogBeat.Checked = ServerConfig.logbeat;
+            adv_chkLogBeat.Checked = ServerConfig.LogHeartbeat;
             
-            chkUpdates.Checked = ServerConfig.checkUpdates;
-            autoUpdate.Checked = ServerConfig.autoupdate;
-            notifyInGameUpdate.Checked = ServerConfig.notifyPlayers;
-            updateTimeNumeric.Value = ServerConfig.restartcountdown;
+            chkUpdates.Checked = ServerConfig.CheckForUpdates;
+            autoUpdate.Checked = ServerConfig.AutoUpdate;
+            notifyInGameUpdate.Checked = ServerConfig.NotifyUpdating;
+            updateTimeNumeric.Value = ServerConfig.UpdateRestartDelay;
         }
         
         void ApplyGeneralProps() {
-            ServerConfig.name = srv_txtName.Text;
-            ServerConfig.motd = srv_txtMOTD.Text;
-            ServerConfig.port = int.Parse(srv_txtPort.Text);
-            ServerConfig.server_owner = srv_txtOwner.Text;
-            ServerConfig.pub = srv_chkPublic.Checked;
+            ServerConfig.Name = srv_txtName.Text;
+            ServerConfig.MOTD = srv_txtMOTD.Text;
+            ServerConfig.Port = int.Parse(srv_txtPort.Text);
+            ServerConfig.OwnerName = srv_txtOwner.Text;
+            ServerConfig.Public = srv_chkPublic.Checked;
             
-            ServerConfig.players = (byte)srv_numPlayers.Value;
-            ServerConfig.maxGuests = (byte)srv_numGuests.Value;
-            ServerConfig.agreetorulesonentry = srv_cbMustAgree.Checked;  
+            ServerConfig.MaxPlayers = (byte)srv_numPlayers.Value;
+            ServerConfig.MaxGuests = (byte)srv_numGuests.Value;
+            ServerConfig.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
             
             string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
             Server.SetMainLevel(main);
-            ServerConfig.AutoLoad = lvl_chkAutoload.Checked;
-            ServerConfig.worldChat = lvl_chkWorld.Checked;
+            ServerConfig.AutoLoadMaps = lvl_chkAutoload.Checked;
+            ServerConfig.ServerWideChat = lvl_chkWorld.Checked;
             
-            ServerConfig.verify = adv_chkVerify.Checked;
+            ServerConfig.VerifyNames = adv_chkVerify.Checked;
             ServerConfig.restartOnError = adv_chkRestart.Checked;
-            ServerConfig.logbeat = adv_chkLogBeat.Checked;
+            ServerConfig.LogHeartbeat = adv_chkLogBeat.Checked;
             
-            ServerConfig.checkUpdates = chkUpdates.Checked;
-            ServerConfig.autoupdate = autoUpdate.Checked;           
-            ServerConfig.notifyPlayers = notifyInGameUpdate.Checked;
-            ServerConfig.restartcountdown = (int)updateTimeNumeric.Value;
+            ServerConfig.CheckForUpdates = chkUpdates.Checked;
+            ServerConfig.AutoUpdate = autoUpdate.Checked;           
+            ServerConfig.NotifyUpdating = notifyInGameUpdate.Checked;
+            ServerConfig.UpdateRestartDelay = (int)updateTimeNumeric.Value;
             //ServerConfig.reportBack = ;  //No setting for this?                
         }
         

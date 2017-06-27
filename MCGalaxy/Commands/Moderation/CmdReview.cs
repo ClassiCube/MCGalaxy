@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
         void HandleEnter(Player p) {
             if (p == null) { Player.Message(p, "Console cannot enter the review queue."); return; }
             if (DateTime.UtcNow < p.NextReviewTime) {
-                Player.Message(p, "You have to wait " + ServerConfig.reviewcooldown + " seconds everytime you use this command");
+                Player.Message(p, "You have to wait " + ServerConfig.ReviewCooldown + " seconds everytime you use this command");
                 return;
             }
             
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Moderation {
             string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
             Chat.MessageWhere(p.ColoredName + " %Sentered the review queue", pl => pl.Rank >= nextPerm);
             Chat.MessageWhere(start + " waiting for a &creview!", pl => pl.Rank >= nextPerm);
-            p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.reviewcooldown);
+            p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
             Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
         }
         

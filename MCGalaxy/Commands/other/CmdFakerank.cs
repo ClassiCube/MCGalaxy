@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Misc {
                                 who.ColoredName, banner);
             } else {
                 string reason = newRank.Permission >= who.Rank ? 
-                    ServerConfig.defaultPromoteMessage : ServerConfig.defaultDemoteMessage;
+                    ServerConfig.DefaultPromoteMessage : ServerConfig.DefaultDemoteMessage;
                 string rankMsg = ModActionCmd.FormatRankChange(who.group, newRank, who.name, reason);
                 
                 Chat.MessageGlobal(rankMsg);

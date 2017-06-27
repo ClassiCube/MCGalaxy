@@ -65,7 +65,7 @@ namespace MCGalaxy.Games.ZS {
                     p.Game.LastPillarWarn = DateTime.UtcNow;
                 }
                 
-                string action = p.Game.PillarFined ? "kicked" : "fined 10 " + ServerConfig.moneys;
+                string action = p.Game.PillarFined ? "kicked" : "fined 10 " + ServerConfig.Currency;
                 Player.Message(p, "You are pillaring! &cStop before you are " + action + "!");
             } else if (p.Game.BlocksStacked == 4) {
                 if (!p.Game.PillarFined) {

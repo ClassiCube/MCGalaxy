@@ -59,7 +59,7 @@ namespace MCGalaxy {
         }
         
         static void WriteTableSchema(string tableName, StreamWriter sql) {
-            if (ServerConfig.useMySQL) {
+            if (ServerConfig.UseMySQL) {
                 string pri = "";
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
                 
@@ -169,7 +169,7 @@ namespace MCGalaxy {
         static void ParseCreate(ref string cmd, int index) {
             cmd = cmd.Remove(0, index);
             cmd = cmd.Replace(" unsigned", " UNSIGNED");
-            if (!ServerConfig.useMySQL) return;
+            if (!ServerConfig.UseMySQL) return;
             
             // MySQL does not support the format used by the SQLite backend for the primary key
             const string priKey = " PRIMARY KEY AUTOINCREMENT";

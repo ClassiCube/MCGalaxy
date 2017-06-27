@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Eco {
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + ServerConfig.moneys); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot give yourself %3" + ServerConfig.Currency); return; }
             int money = 0;
             
             if (who == null) {
@@ -58,14 +58,14 @@ namespace MCGalaxy.Commands.Eco {
         
         static bool ReachedMax(Player p, int current, int amount) {
             if (current + amount > 16777215) {
-                Player.Message(p, "%cPlayers cannot have over %316,777,215 %3" + ServerConfig.moneys); return true;
+                Player.Message(p, "%cPlayers cannot have over %316,777,215 %3" + ServerConfig.Currency); return true;
             }
             return false;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/give [player] [amount] <reason>");
-            Player.Message(p, "%HGives [player] [amount] %3" + ServerConfig.moneys);
+            Player.Message(p, "%HGives [player] [amount] %3" + ServerConfig.Currency);
         }
     }
 }

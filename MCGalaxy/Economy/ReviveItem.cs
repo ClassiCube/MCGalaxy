@@ -32,7 +32,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.moneys + "&c to buy a " + Name + "."); return;
+                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy a " + Name + "."); return;
             }
             if (!p.Game.Infected) {
                 Player.Message(p, "You are already a human."); return;

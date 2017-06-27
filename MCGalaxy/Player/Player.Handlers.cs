@@ -507,7 +507,7 @@ namespace MCGalaxy {
                 if (overallDeath > short.MaxValue) overallDeath = short.MaxValue;
             }
 
-            if (ServerConfig.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
+            if (ServerConfig.AnnounceDeathCount && (overallDeath > 0 && overallDeath % 10 == 0))
                 Chat.MessageLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false, level);
             lastDeath = DateTime.UtcNow;
         }
@@ -545,7 +545,7 @@ namespace MCGalaxy {
                 }
             }
             // Filter out bad words
-            if (ServerConfig.profanityFilter) text = ProfanityFilter.Parse(text);
+            if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
             
             if (IsHandledMessage(text)) return;
             
@@ -582,7 +582,7 @@ namespace MCGalaxy {
                 OnPlayerChatEvent.Call(this, text);
                 if (cancelchat) { cancelchat = false; return; }
                 
-                if (ServerConfig.worldChat) {
+                if (ServerConfig.ServerWideChat) {
                     SendChatFrom(this, text);
                 } else {
                     Chat.MessageLevel(this, text, true, level);
@@ -743,7 +743,7 @@ namespace MCGalaxy {
         
         bool CheckCommand(string cmd) {
             if (cmd == "") { SendMessage("No command entered."); return false; }
-            if (ServerConfig.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
+            if (ServerConfig.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
                 SendMessage("You must read /rules then agree to them with /agree!"); return false;
             }
             if (jailed) {

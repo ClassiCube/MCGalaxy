@@ -22,16 +22,16 @@ namespace MCGalaxy.Gui {
         void LoadSecurityProps() {
             sec_cbLogNotes.Checked = ServerConfig.LogNotes;            
             sec_cbVerifyAdmins.Checked = ServerConfig.verifyadmins;
-            sec_cbWhitelist.Checked = ServerConfig.useWhitelist;            
+            sec_cbWhitelist.Checked = ServerConfig.WhitelistedOnly;            
             sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
-            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, ServerConfig.verifyadminsrank);
+            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, ServerConfig.VerifyAdminsRank);
             sec_cmbVerifyRank.Enabled = ServerConfig.verifyadmins;
             
-            sec_cbChatAuto.Checked = ServerConfig.checkspam;
-            sec_numChatMsgs.Value = ServerConfig.spamcounter;
-            sec_numChatSecs.Value = ServerConfig.spamcountreset;
-            sec_numChatMute.Value = ServerConfig.mutespamtime;
-            ToggleChatSpamSettings(ServerConfig.checkspam);
+            sec_cbChatAuto.Checked = ServerConfig.ChatSpamCheck;
+            sec_numChatMsgs.Value = ServerConfig.ChatSpamCount;
+            sec_numChatSecs.Value = ServerConfig.ChatSpamInterval;
+            sec_numChatMute.Value = ServerConfig.ChatSpamMuteTime;
+            ToggleChatSpamSettings(ServerConfig.ChatSpamCheck);
             
             sec_cbCmdAuto.Checked = ServerConfig.CmdSpamCheck;
             sec_numCmdMsgs.Value = ServerConfig.CmdSpamCount;
@@ -54,15 +54,15 @@ namespace MCGalaxy.Gui {
         void ApplySecurityProps() {
             ServerConfig.LogNotes = sec_cbLogNotes.Checked;
             ServerConfig.verifyadmins = sec_cbVerifyAdmins.Checked;
-            ServerConfig.verifyadminsrank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
-            ServerConfig.useWhitelist = sec_cbWhitelist.Checked;
-            if (ServerConfig.useWhitelist && Server.whiteList == null)
+            ServerConfig.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
+            ServerConfig.WhitelistedOnly = sec_cbWhitelist.Checked;
+            if (ServerConfig.WhitelistedOnly && Server.whiteList == null)
                 Server.whiteList = PlayerList.Load("whitelist.txt");
             
-            ServerConfig.checkspam = sec_cbChatAuto.Checked;
-            ServerConfig.spamcounter = (int)sec_numChatMsgs.Value;
-            ServerConfig.spamcountreset = (int)sec_numChatSecs.Value;
-            ServerConfig.mutespamtime = (int)sec_numChatMute.Value;
+            ServerConfig.ChatSpamCheck = sec_cbChatAuto.Checked;
+            ServerConfig.ChatSpamCount = (int)sec_numChatMsgs.Value;
+            ServerConfig.ChatSpamInterval = (int)sec_numChatSecs.Value;
+            ServerConfig.ChatSpamMuteTime = (int)sec_numChatMute.Value;
             
             ServerConfig.CmdSpamCheck = sec_cbCmdAuto.Checked;
             ServerConfig.CmdSpamCount = (int)sec_numCmdMsgs.Value;

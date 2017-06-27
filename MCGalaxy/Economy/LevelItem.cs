@@ -80,7 +80,7 @@ namespace MCGalaxy.Eco {
             if (preset == null) { Player.Message(p, "%cThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
-                Player.Message(p, "%cYou don't have enough %3" + ServerConfig.moneys + "%c to buy that map"); return;
+                Player.Message(p, "%cYou don't have enough %3" + ServerConfig.Currency + "%c to buy that map"); return;
             }
             string name = p.name + "_" + args[2];
             
@@ -151,7 +151,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "Name: %f" + preset.name);
             Player.Message(p, "x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
             Player.Message(p, "Map Type: %f" + preset.type);
-            Player.Message(p, "Map Price: %f" + preset.price + " %3" + ServerConfig.moneys);
+            Player.Message(p, "Map Price: %f" + preset.price + " %3" + ServerConfig.Currency);
         }
         
         void RemovePreset(Player p, string[] args, LevelPreset preset) {
@@ -183,7 +183,7 @@ namespace MCGalaxy.Eco {
                 if (!CommandParser.GetInt(p, args[4], "Price", ref newPrice, 0)) return;
                 
                 preset.price = newPrice;
-                Player.Message(p, "%aSuccessfully changed preset price to %f" + preset.price + " %3" + ServerConfig.moneys);
+                Player.Message(p, "%aSuccessfully changed preset price to %f" + preset.price + " %3" + ServerConfig.Currency);
             } else {
                 Player.Message(p, "Supported properties to edit: name, title, x, y, z, type, price");
             }
@@ -210,7 +210,7 @@ namespace MCGalaxy.Eco {
             foreach (LevelPreset preset in Presets) {
                 Player.Message(p, "&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
                                preset.name, preset.x, preset.y, preset.z,
-                               preset.type, preset.price, ServerConfig.moneys);
+                               preset.type, preset.price, ServerConfig.Currency);
             }
         }
         

@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
             MCGalaxy.Gui.App.usingConsole = true;
             
             Server.Start();
-            Console.Title = ServerConfig.name + " - " + Server.SoftwareNameVersioned;
+            Console.Title = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
             ConsoleLoop();
         }
         

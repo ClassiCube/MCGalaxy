@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void CreatePlugin(Player p, string name) {
             Player.Message(p, "Creating a plugin example source");
-            string user = p == null ? ServerConfig.name : p.name;
+            string user = p == null ? ServerConfig.Name : p.name;
             if (!Directory.Exists("plugin_source"))
                 Directory.CreateDirectory("plugin_source");
             

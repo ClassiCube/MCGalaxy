@@ -64,7 +64,7 @@ namespace MCGalaxy {
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) return GotoLevel(p, lvl);
             
-            if (ServerConfig.AutoLoad) {
+            if (ServerConfig.AutoLoadMaps) {
                 string map = Matcher.FindMaps(p, name);
                 if (map == null) return false;
                 
@@ -143,7 +143,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level == lvl) { unloadOld = false; break; }
             }
-            if (unloadOld && ServerConfig.AutoLoad) lvl.Unload(true);
+            if (unloadOld && ServerConfig.AutoLoadMaps) lvl.Unload(true);
         }
     }
 }

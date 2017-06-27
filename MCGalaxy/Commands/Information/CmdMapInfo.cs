@@ -78,8 +78,8 @@ namespace MCGalaxy.Commands.Info {
 
             DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
-            if (Directory.Exists(ServerConfig.backupLocation + "/" + data.Name)) {
-                int latest = Directory.GetDirectories(ServerConfig.backupLocation + "/" + data.Name).Length;
+            if (Directory.Exists(ServerConfig.BackupDirectory + "/" + data.Name)) {
+                int latest = Directory.GetDirectories(ServerConfig.BackupDirectory + "/" + data.Name).Length;
                 DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
                 Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
@@ -256,9 +256,9 @@ namespace MCGalaxy.Commands.Info {
                 WeatherFade = lvl.WeatherFade;
                 
                 TerrainUrl = lvl.terrainUrl != "" ?
-                    lvl.terrainUrl : ServerConfig.defaultTerrainUrl;
+                    lvl.terrainUrl : ServerConfig.DefaultTerrainUrl;
                 TextureUrl = lvl.texturePackUrl != "" ?
-                    lvl.texturePackUrl : ServerConfig.defaultTextureUrl;
+                    lvl.texturePackUrl : ServerConfig.DefaultTextureUrl;
                 
                 Authors = lvl.Authors;
                 TotalRounds = lvl.RoundsPlayed; HumanRounds = lvl.RoundsHumanWon;

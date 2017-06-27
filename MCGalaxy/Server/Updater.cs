@@ -45,7 +45,7 @@ namespace MCGalaxy {
 
         public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
-            if (!ServerConfig.checkUpdates) return;
+            if (!ServerConfig.CheckForUpdates) return;
             WebClient client = HttpUtil.CreateWebClient();
 
             try {
@@ -56,8 +56,8 @@ namespace MCGalaxy {
                     return;
                 }
                 
-                if (ServerConfig.autoupdate || p != null) {
-                    if (ServerConfig.notifyPlayers || p != null) {
+                if (ServerConfig.AutoUpdate || p != null) {
+                    if (ServerConfig.NotifyUpdating || p != null) {
                         NotifyPlayersOfUpdate(p);
                     } else {
                         PerformUpdate();
@@ -92,16 +92,16 @@ namespace MCGalaxy {
         }
         
         static void NotifyPlayersOfUpdate(Player p) {
-            Chat.MessageAll("Update found. Prepare for restart in &f" + ServerConfig.restartcountdown + " %Sseconds.");
-            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", ServerConfig.restartcountdown);
+            Chat.MessageAll("Update found. Prepare for restart in &f" + ServerConfig.UpdateRestartDelay + " %Sseconds.");
+            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", ServerConfig.UpdateRestartDelay);
             
-            int timeLeft = ServerConfig.restartcountdown;
+            int timeLeft = ServerConfig.UpdateRestartDelay;
             System.Timers.Timer countDown = new System.Timers.Timer();
             countDown.Interval = 1000;
             countDown.Start();
             
             countDown.Elapsed += delegate {
-                if (ServerConfig.autoupdate || p != null) {
+                if (ServerConfig.AutoUpdate || p != null) {
                     Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
                     Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
                     

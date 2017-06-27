@@ -108,7 +108,7 @@ namespace MCGalaxy {
             IGame game = level == null ? null : level.CurrentGame();
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
-            bool isOwner = ServerConfig.server_owner.CaselessEq(name);
+            bool isOwner = ServerConfig.OwnerName.CaselessEq(name);
             bool devPrefix = ServerConfig.SoftwareStaffPrefixes;
             
             string viptitle =
@@ -330,7 +330,7 @@ namespace MCGalaxy {
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
                 
-                if (ServerConfig.AutoLoad && level.unload && !level.IsMuseum && !level.HasPlayers())
+                if (ServerConfig.AutoLoadMaps && level.unload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);
                 Dispose();
             } catch ( Exception e ) { 
@@ -346,7 +346,7 @@ namespace MCGalaxy {
             if (!isKick) {
                 string leavem = "&c- " + FullName + " %S" + chatMsg;
                 const LevelPermission perm = LevelPermission.Guest;
-                if (group.Permission > perm || (ServerConfig.guestLeaveNotify && group.Permission <= perm)) {
+                if (group.Permission > perm || (ServerConfig.GuestLeavesNotify && group.Permission <= perm)) {
                     Chat.MessageGlobal(this, leavem, false, true);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);

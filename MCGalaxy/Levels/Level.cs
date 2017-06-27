@@ -106,7 +106,7 @@ namespace MCGalaxy {
         
         public string GetMotd(Player p) {
             if (motd != "ignore") return motd;
-            return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.motd : p.group.MOTD;
+            return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }
 
         /// <summary> Whether block changes made on this level should be
@@ -277,14 +277,14 @@ namespace MCGalaxy {
             SaveSettings(this);
 
             Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
-                       name, players.Count, PlayerInfo.Online.Count, ServerConfig.players);
+                       name, players.Count, PlayerInfo.Online.Count, ServerConfig.MaxPlayers);
             changed = false;
         }
 
         public int Backup(bool Forced = false, string backupName = "") {
             if (!backedup || Forced) {
                 int backupNumber = 1;
-                string dir = Path.Combine(ServerConfig.backupLocation, name);
+                string dir = Path.Combine(ServerConfig.BackupDirectory, name);
                 backupNumber = IncrementBackup(dir);
 
                 string path = Path.Combine(dir, backupNumber.ToString());

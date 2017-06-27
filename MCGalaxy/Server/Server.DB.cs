@@ -62,7 +62,7 @@ namespace MCGalaxy {
 
             Database.Backend.CreateTable("Opstats", createOpstats);
             Database.Backend.CreateTable("Players", createPlayers);
-            if (!File.Exists("extra/alter.txt") && ServerConfig.useMySQL) {
+            if (!File.Exists("extra/alter.txt") && ServerConfig.UseMySQL) {
                 Database.Execute("ALTER TABLE Players MODIFY Name TEXT");
                 Database.Execute("ALTER TABLE Opstats MODIFY Name TEXT");
                 File.Create("extra/alter.txt");
@@ -79,7 +79,7 @@ namespace MCGalaxy {
             }
 
             // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
-            if (!ServerConfig.useMySQL) return;
+            if (!ServerConfig.UseMySQL) return;
             // Check if the color column exists.
             DataTable colorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='color'");
             if (colorExists.Rows.Count == 0) {

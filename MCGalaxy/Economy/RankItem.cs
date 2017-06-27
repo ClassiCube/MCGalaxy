@@ -79,7 +79,7 @@ namespace MCGalaxy.Eco {
                 return;
             }
             if (p.money < NextRank(p).price) {
-                Player.Message(p, "%cYou don't have enough %3" + ServerConfig.moneys + "%c to buy the next rank"); return;
+                Player.Message(p, "%cYou don't have enough %3" + ServerConfig.Currency + "%c to buy the next rank"); return;
             }
             
             Command.all.Find("setrank").Use(null, "+up " + p.name);
@@ -100,7 +100,7 @@ namespace MCGalaxy.Eco {
                     int cost = 0;
                     if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
                     
-                    Player.Message(p, "%aSuccesfully changed the rank price for {0} to: &f{1} &3{2}", rnk.group.ColoredName, cost, ServerConfig.moneys);
+                    Player.Message(p, "%aSuccesfully changed the rank price for {0} to: &f{1} &3{2}", rnk.group.ColoredName, cost, ServerConfig.Currency);
                     rnk.price = cost; break;
 
                 case "maxrank":
@@ -123,9 +123,9 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
             Player.Message(p, "%T/eco rank price [rank] [amount]");
-            Player.Message(p, "%HSets how many &3{0} %Hthat rank costs.", ServerConfig.moneys);
+            Player.Message(p, "%HSets how many &3{0} %Hthat rank costs.", ServerConfig.Currency);
             Player.Message(p, "%T/eco rank maxrank [rank]");
-            Player.Message(p, "%HSets the maximum rank that can be bought.", ServerConfig.moneys);
+            Player.Message(p, "%HSets the maximum rank that can be bought.", ServerConfig.Currency);
         }
 
         protected internal override void OnStoreOverview(Player p) {
@@ -137,7 +137,7 @@ namespace MCGalaxy.Eco {
             if (rnk == null) {
                 Player.Message(p, "&6Rankup %S- &cno further ranks to buy.");
             } else {
-                Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, ServerConfig.moneys);
+                Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, ServerConfig.Currency);
             }
         }
         
@@ -147,7 +147,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             
             foreach (Rank rnk in RanksList) {
-                Player.Message(p, "&6{0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, ServerConfig.moneys);
+                Player.Message(p, "&6{0} %S- &a{1} %S{2}", rnk.group.ColoredName, rnk.price, ServerConfig.Currency);
                 if (rnk.group.Permission >= MaxRank) break;
             }
         }

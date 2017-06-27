@@ -166,7 +166,7 @@ namespace MCGalaxy {
                 Send(Packet.MapAppearanceV2(url, side, edge, level.EdgeLevel, level.CloudsHeight, level.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
-                string url = level.terrainUrl == "" ? ServerConfig.defaultTerrainUrl : level.terrainUrl;
+                string url = level.terrainUrl == "" ? ServerConfig.DefaultTerrainUrl : level.terrainUrl;
                 Send(Packet.MapAppearance(url, side, edge, level.EdgeLevel, hasCP437));
             }
         }
@@ -174,7 +174,7 @@ namespace MCGalaxy {
         public string GetTextureUrl() {
             string url = level.texturePackUrl == "" ? level.terrainUrl : level.texturePackUrl;
             if (url == "")
-                url = ServerConfig.defaultTextureUrl == "" ? ServerConfig.defaultTerrainUrl : ServerConfig.defaultTextureUrl;
+                url = ServerConfig.DefaultTextureUrl == "" ? ServerConfig.DefaultTerrainUrl : ServerConfig.DefaultTextureUrl;
             return url;
         }
         

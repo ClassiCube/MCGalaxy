@@ -33,7 +33,7 @@ namespace MCGalaxy.Network {
                 NetUtils.Write(motd, buffer, 2, p.hasCP437);
                 NetUtils.Write(motd.Substring(NetUtils.StringSize), buffer, 66, p.hasCP437);
             } else {
-                NetUtils.Write(ServerConfig.name, buffer, 2, p.hasCP437);
+                NetUtils.Write(ServerConfig.Name, buffer, 2, p.hasCP437);
                 NetUtils.Write(motd, buffer, 66, p.hasCP437);
             }
 

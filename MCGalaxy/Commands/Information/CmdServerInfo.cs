@@ -37,23 +37,23 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             
-            Player.Message(p, "Server's name: &b{0}%S", ServerConfig.name);
+            Player.Message(p, "Server's name: &b{0}%S", ServerConfig.Name);
             Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
                            GetPlayerCount(), PlayerInfo.Online.Count, Group.BannedRank.PlayerCount);
             Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
-                           LevelInfo.Loaded.Count, ServerConfig.moneys);
+                           LevelInfo.Loaded.Count, ServerConfig.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             Player.Message(p, "Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
                            up.Shorten(true), Server.SoftwareName, Server.VersionString);
 
             Player.Message(p, "Player positions are updated every &b"
-                           + ServerConfig.PositionInterval + " %Smilliseconds.");
-            string owner = ServerConfig.server_owner;
+                           + ServerConfig.PositionUpdateInterval + " %Smilliseconds.");
+            string owner = ServerConfig.OwnerName;
             if (!owner.CaselessEq("Notch"))
-                Player.Message(p, "Owner is &3{0}. %SConsole state: &3{1}", owner, ServerConfig.ZallState);
+                Player.Message(p, "Owner is &3{0}. %SConsole state: &3{1}", owner, ServerConfig.ConsoleName);
             else
-                Player.Message(p, "Console state: &3{0}", ServerConfig.ZallState);
+                Player.Message(p, "Console state: &3{0}", ServerConfig.ConsoleName);
             
             if (CheckExtraPerm(p))
                 ShowServerStats(p);
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Info {
         static int GetPlayerCount() {
             // Use fast path if possible  TODO: fast path for mysql
             int count = 0;
-            if (!ServerConfig.useMySQL) {
+            if (!ServerConfig.UseMySQL) {
                 DataTable maxTable = Database.Backend.GetRows("Players", "MAX(_ROWID_)", "LIMIT 1");
                 if (maxTable.Rows.Count > 0) {
                      string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();

@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Info {
                 Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
             
             for (int i = playerList.Count - 1; i >= 0; i--)
-                playerList[i].Print(p, ServerConfig.showEmptyRanks);
+                playerList[i].Print(p, ServerConfig.ListEmptyRanks);
         }
         
         static void AddStates(Player pl, ref string name) {

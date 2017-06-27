@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return true; } }
 
         public override void Use(Player p, string message) {
-            string xjailMap = ServerConfig.xjailLevel;
+            string xjailMap = ServerConfig.XJailLevel;
             if (xjailMap == "(main)") xjailMap = Server.mainLevel.name;
             if (message == "") { Help(p); return; }
             
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message == "set") {
                 if (!p.level.IsMuseum) {
                     jail.Use(p, "set");
-                    ServerConfig.xjailLevel = p.level.name;
+                    ServerConfig.XJailLevel = p.level.name;
                     SrvProperties.Save();
                     Player.Message(p, "The xjail map was set from '" + xjailMap + "' to '" + p.level.name + "'");
                 } else {

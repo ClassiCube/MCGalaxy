@@ -90,7 +90,7 @@ namespace MCGalaxy {
 
                     if (wait < (int)(-overload * 0.75f)) {
                         if (wait < -overload) {
-                            if (!ServerConfig.physicsRestart)
+                            if (!ServerConfig.PhysicsRestart)
                                 setPhysics(0);
                             ClearPhysics();
 

@@ -26,8 +26,8 @@ namespace MCGalaxy.Gui {
             if (String.IsNullOrEmpty(text)) return;
             if (ChatModes.Handle(null, text)) return;
             
-            Chat.MessageGlobal("Console [&a{0}%S]:&f {1}", ServerConfig.ZallState, text);
-            Server.IRC.Say("Console [&a" + ServerConfig.ZallState + "%S]: " + text);
+            Chat.MessageGlobal("Console [&a{0}%S]:&f {1}", ServerConfig.ConsoleName, text);
+            Server.IRC.Say("Console [&a" + ServerConfig.ConsoleName + "%S]: " + text);
             Logger.Log(LogType.PlayerChat, "(console): " + text);
         }
         

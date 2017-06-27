@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
                 map_cmbType.Items.Add(theme);
             }
             
-            Text = ServerConfig.name + " - " + Server.SoftwareNameVersioned;
+            Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
             MakeNotifyIcon();
             
             // Bind player list
@@ -78,7 +78,7 @@ namespace MCGalaxy.Gui {
         void UpdateNotifyIconText() {
             int playerCount = PlayerInfo.Online.Count;
             string players = " (" + playerCount + " players)";
-            notifyIcon.Text = (ServerConfig.name + players).Truncate(63);
+            notifyIcon.Text = (ServerConfig.Name + players).Truncate(63);
         }
         
         void MakeNotifyIcon() {
@@ -177,7 +177,7 @@ namespace MCGalaxy.Gui {
             if (main_txtLog.InvokeRequired) {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
-                Text = ServerConfig.name + " - " + Server.SoftwareNameVersioned;
+                Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
                 UpdateNotifyIconText();
             }
         }
@@ -245,7 +245,7 @@ namespace MCGalaxy.Gui {
         }
 
         public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info) {
-            notifyIcon.ShowBalloonTip(3000, ServerConfig.name, message, icon);
+            notifyIcon.ShowBalloonTip(3000, ServerConfig.Name, message, icon);
         }
 
         public void UpdateMapList() {

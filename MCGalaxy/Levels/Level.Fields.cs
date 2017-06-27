@@ -92,7 +92,7 @@ namespace MCGalaxy {
         
         /// <summary> Whether this map sees server-wide chat. </summary>
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
-        public bool SeesServerWideChat { get { return worldChat && ServerConfig.worldChat; } }
+        public bool SeesServerWideChat { get { return worldChat && ServerConfig.ServerWideChat; } }
         
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();

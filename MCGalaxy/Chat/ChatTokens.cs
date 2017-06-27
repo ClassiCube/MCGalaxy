@@ -34,7 +34,7 @@ namespace MCGalaxy {
                 if (sb[i] != '$') continue;
                 
                 foreach (var token in standardTokens) {
-                    if (ServerConfig.disabledChatTokens.Contains(token.Key)) continue;
+                    if (ServerConfig.DisabledChatTokens.Contains(token.Key)) continue;
                     string value = token.Value(p);
                     if (value == null) continue;
                     sb.Replace(token.Key, value);
@@ -57,9 +57,9 @@ namespace MCGalaxy {
         internal static Dictionary<string, StringFormatter<Player>> standardTokens
             = new Dictionary<string, StringFormatter<Player>> {
             { "$name", p => p.DisplayName == null ? null :
-                    (ServerConfig.dollarNames ? "$" : "") + Colors.StripColors(p.DisplayName) },
+                    (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.StripColors(p.DisplayName) },
             { "$truename", p => p.truename == null ? null :
-                    (ServerConfig.dollarNames ? "$" : "") + p.truename },
+                    (ServerConfig.DollarBeforeNamesToken ? "$" : "") + p.truename },
             { "$date", p => DateTime.Now.ToString("yyyy-MM-dd") },
             { "$time", p => DateTime.Now.ToString("HH:mm:ss") },
             { "$ip", p => p.ip },
@@ -73,10 +73,10 @@ namespace MCGalaxy {
             { "$blocks", p => p.overallBlocks.ToString() },
             { "$first", p => p.firstLogin.ToString() },
             { "$kicked", p => p.totalKicked.ToString() },
-            { "$server", p => ServerConfig.name },
-            { "$motd", p => ServerConfig.motd },
+            { "$server", p => ServerConfig.Name },
+            { "$motd", p => ServerConfig.MOTD },
             { "$banned", p => Group.BannedRank.PlayerCount.ToString() },
-            { "$irc", p => ServerConfig.ircServer + " > " + ServerConfig.ircChannel },
+            { "$irc", p => ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels },
             
             { "$infected", p => p.Game.TotalInfected.ToString() },
             { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },

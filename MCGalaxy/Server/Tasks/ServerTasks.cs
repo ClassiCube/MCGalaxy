@@ -32,9 +32,9 @@ namespace MCGalaxy.Tasks {
                                              null, TimeSpan.FromSeconds(3));
             
             Server.Background.QueueRepeat(AutoSave,
-                                          1, TimeSpan.FromSeconds(ServerConfig.backupInterval));
+                                          1, TimeSpan.FromSeconds(ServerConfig.BackupInterval));
             Server.Background.QueueRepeat(BlockUpdates,
-                                          null, TimeSpan.FromSeconds(ServerConfig.blockInterval));
+                                          null, TimeSpan.FromSeconds(ServerConfig.BlockDBSaveInterval));
         }
         
         
@@ -89,7 +89,7 @@ namespace MCGalaxy.Tasks {
         internal static void UpdateEntityPositions(SchedulerTask task) {
             Entities.GlobalUpdate();
             PlayerBot.GlobalUpdatePosition();
-            task.Delay = TimeSpan.FromMilliseconds(ServerConfig.PositionInterval);
+            task.Delay = TimeSpan.FromMilliseconds(ServerConfig.PositionUpdateInterval);
         }
         
         internal static void CheckState(SchedulerTask task) {
@@ -101,21 +101,21 @@ namespace MCGalaxy.Tasks {
                     p.Send(Packet.Ping());
                 }
                 
-                if (ServerConfig.afkminutes <= 0) return;
+                if (ServerConfig.AutoAfkMins <= 0) return;
                 if (DateTime.UtcNow < p.AFKCooldown) return;
                 
                 if (p.IsAfk) {
-                    int time = ServerConfig.afkkick;
-                    if (p.AutoAfk) time += ServerConfig.afkminutes;
+                    int time = ServerConfig.AfkKickMins;
+                    if (p.AutoAfk) time += ServerConfig.AutoAfkMins;
                     
-                    if (ServerConfig.afkkick > 0 && p.Rank < ServerConfig.afkkickperm) {
+                    if (ServerConfig.AfkKickMins > 0 && p.Rank < ServerConfig.AfkKickRank) {
                         if (p.LastAction.AddMinutes(time) < DateTime.UtcNow)
-                            p.Leave("Auto-kick, AFK for " + ServerConfig.afkkick + " minutes");
+                            p.Leave("Auto-kick, AFK for " + ServerConfig.AfkKickMins + " minutes");
                     }
                 } else {
                     DateTime lastAction = p.LastAction;
-                    if (lastAction.AddMinutes(ServerConfig.afkminutes) < DateTime.UtcNow) {
-                        CmdAfk.ToggleAfk(p, "auto: Not moved for " + ServerConfig.afkminutes + " minutes");
+                    if (lastAction.AddMinutes(ServerConfig.AutoAfkMins) < DateTime.UtcNow) {
+                        CmdAfk.ToggleAfk(p, "auto: Not moved for " + ServerConfig.AutoAfkMins + " minutes");
                         p.AutoAfk = true;
                         p.LastAction = lastAction;
                     }
@@ -125,7 +125,7 @@ namespace MCGalaxy.Tasks {
         
         internal static void BlockUpdates(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            task.Delay = TimeSpan.FromSeconds(ServerConfig.blockInterval);
+            task.Delay = TimeSpan.FromSeconds(ServerConfig.BlockDBSaveInterval);
             
             foreach (Level lvl in loaded) {
                 try {
@@ -161,7 +161,7 @@ namespace MCGalaxy.Tasks {
 
             if (count <= 0) count = 15;
             task.State = count;
-            task.Delay = TimeSpan.FromSeconds(ServerConfig.backupInterval);
+            task.Delay = TimeSpan.FromSeconds(ServerConfig.BackupInterval);
 
             Player[] players = PlayerInfo.Online.Items;
             try {

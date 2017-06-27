@@ -37,14 +37,14 @@ namespace MCGalaxy.Commands.Maintenance {
                     return;
                 case "rp":
                 case "restartphysics":
-                    SetLimit(p, "Custom /rp limit", ref ServerConfig.rpLimit, limit, hasLimit);
+                    SetLimit(p, "Custom /rp limit", ref ServerConfig.PhysicsRestartLimit, limit, hasLimit);
                     return;
                 case "rpnormal":
-                    SetLimit(p, "Normal /rp limit", ref ServerConfig.rpNormLimit, limit, hasLimit);
+                    SetLimit(p, "Normal /rp limit", ref ServerConfig.PhysicsRestartNormLimit, limit, hasLimit);
                     return;
                 case "pu":
                 case "physicsundo":
-                    SetLimit(p, "Physics undo max entries", ref ServerConfig.physUndo, limit, hasLimit);
+                    SetLimit(p, "Physics undo max entries", ref ServerConfig.PhysicsUndo, limit, hasLimit);
                     return;
                 case "gen":
                 case "genlimit":

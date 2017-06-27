@@ -173,7 +173,7 @@ namespace MCGalaxy {
                 if (File.Exists("externalurl.txt")) File.Move("externalurl.txt", "text/externalurl.txt");
                 if (File.Exists("autoload.txt")) File.Move("autoload.txt", "text/autoload.txt");
                 if (File.Exists("IRC_Controllers.txt")) File.Move("IRC_Controllers.txt", "ranks/IRC_Controllers.txt");
-                if (ServerConfig.useWhitelist && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
+                if (ServerConfig.WhitelistedOnly && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
         }
@@ -275,7 +275,7 @@ namespace MCGalaxy {
         /// <returns> true if main level was changed, false if not
         /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
-            if (mapName.CaselessEq(ServerConfig.level)) return false;
+            if (mapName.CaselessEq(ServerConfig.MainLevel)) return false;
             Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);
@@ -286,7 +286,7 @@ namespace MCGalaxy {
             oldMain.unload = true;
             mainLevel = lvl;
             mainLevel.unload = false;
-            ServerConfig.level = mapName;
+            ServerConfig.MainLevel = mapName;
             return true;
         }
         

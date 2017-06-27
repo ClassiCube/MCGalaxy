@@ -23,7 +23,7 @@ namespace MCGalaxy {
         public SpamChecker(Player p) {
             this.p = p;
             blockLog = new List<DateTime>(ServerConfig.BlockSpamCount);
-            chatLog = new List<DateTime>(ServerConfig.spamcounter);
+            chatLog = new List<DateTime>(ServerConfig.ChatSpamCount);
             cmdLog = new List<DateTime>(ServerConfig.CmdSpamCount);
         }
         
@@ -56,13 +56,13 @@ namespace MCGalaxy {
         
         public bool CheckChatSpam() {
             Player.lastMSG = p.name;
-            if (!ServerConfig.checkspam || Player.IsSuper(p)) return false;
+            if (!ServerConfig.ChatSpamCheck || Player.IsSuper(p)) return false;
             
             lock (chatLock) {
-                if (chatLog.AddSpamEntry(ServerConfig.spamcounter, ServerConfig.spamcountreset)) 
+                if (chatLog.AddSpamEntry(ServerConfig.ChatSpamCount, ServerConfig.ChatSpamInterval)) 
                     return false;
                 
-                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.mutespamtime);
+                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
                 ModAction action = new ModAction(p.name, null, ModActionType.Muted, "&0Auto mute for spamming", duration);
                 OnModActionEvent.Call(action);
                 return true;

@@ -27,10 +27,10 @@ namespace MCGalaxy.Commands.Maintenance {
 
         public override void Use(Player p, string message) {
             if (message.CaselessEq("reset") || message.CaselessEq("reconnect")) {
-                if (!ServerConfig.irc) { Player.Message(p, "The server does not have IRC enabled."); }
+                if (!ServerConfig.UseIRC) { Player.Message(p, "The server does not have IRC enabled."); }
                 Server.IRC.Reset();
             } else if (message.CaselessEq("connect")) {
-                if (!ServerConfig.irc) { Player.Message(p, "The server does not have IRC enabled."); }
+                if (!ServerConfig.UseIRC) { Player.Message(p, "The server does not have IRC enabled."); }
                 Server.IRC.Connect();
             } else if (message.CaselessEq("disconnect")) {
                 Server.IRC.Disconnect("Disconnecting IRC bot");
