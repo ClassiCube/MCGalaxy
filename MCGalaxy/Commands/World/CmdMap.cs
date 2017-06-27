@@ -40,15 +40,21 @@ namespace MCGalaxy.Commands.World {
             string opt = null, value = null;
             
             if (IsMapOption(args)) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level"); return; }
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level"); return; }                
+                lvl = p.level; 
                 
-                lvl = p.level; opt = args[0];
+                opt = args[0];
                 args = message.SplitSpaces(2);
                 value = args.Length > 1 ? args[1] : "";
+            } else if (args.Length == 1) {
+                string map = Matcher.FindMaps(p, args[0]);
+                if (map == null) return;
+                
+                PrintMapInfo(p, GetConfig(map));
+                return;
             } else {
                 lvl = Matcher.FindLevels(p, args[0]);
                 if (lvl == null) return;
-                if (args.Length == 1) { PrintMapInfo(p, lvl); return; }
                 
                 opt = args[1];
                 value = args.Length > 2 ? args[2] : "";
@@ -61,6 +67,16 @@ namespace MCGalaxy.Commands.World {
             
             if (SetMapOption(p, lvl, opt, value)) return;
             Player.Message(p, "Could not find option entered.");
+        }
+        
+        static LevelConfig GetConfig(string map) {
+            Level lvl = LevelInfo.FindExact(map);
+            if (lvl != null) return lvl.Config;
+            
+            string propsPath = LevelInfo.FindPropertiesFile(map);
+            LevelConfig cfg = new LevelConfig();
+            if (propsPath != null) LevelConfig.Load(propsPath, cfg);
+            return cfg;
         }
         
         static bool IsMapOption(string[] args) {
@@ -98,32 +114,32 @@ namespace MCGalaxy.Commands.World {
                 || opt == "fall" || opt == "drown" || opt == "realmowner" || opt == "loaddelay";
         }
         
-        static void PrintMapInfo(Player p, Level lvl) {
+        static void PrintMapInfo(Player p, LevelConfig cfg) {
             Player.Message(p, "%TPhysics settings:");
             Player.Message(p, "  Finite mode: {0}%S, Random flow: {1}",
-                           GetBool(lvl.Config.FiniteLiquids), GetBool(lvl.Config.RandomFlow));
+                           GetBool(cfg.FiniteLiquids), GetBool(cfg.RandomFlow));
             Player.Message(p, "  Animal hunt AI: {0}%S, Edge water: {1}",
-                           GetBool(lvl.Config.AnimalHuntAI), GetBool(lvl.Config.EdgeWater));
+                           GetBool(cfg.AnimalHuntAI), GetBool(cfg.EdgeWater));
             Player.Message(p, "  Grass growing: {0}%S, {1} tree growing: {2}",
-                           GetBool(lvl.Config.GrassGrow), lvl.Config.TreeType.Capitalize(), GetBool(lvl.Config.GrowTrees));
+                           GetBool(cfg.GrassGrow), cfg.TreeType.Capitalize(), GetBool(cfg.GrowTrees));
             Player.Message(p, "  Leaf decay: {0}%S, Physics overload: {1}",
-                           GetBool(lvl.Config.LeafDecay), lvl.Config.PhysicsOverload);
+                           GetBool(cfg.LeafDecay), cfg.PhysicsOverload);
             Player.Message(p, "  Physics speed: &b{0} %Smilliseconds between ticks",
-                           lvl.Config.PhysicsSpeed);
+                           cfg.PhysicsSpeed);
             
             Player.Message(p, "%TSurvival settings:");
             Player.Message(p, "  Survival death: {0} %S(Fall: {1}, Drown: {2})",
-                           GetBool(lvl.Config.SurvivalDeath), lvl.Config.FallHeight, lvl.Config.DrownTime);
+                           GetBool(cfg.SurvivalDeath), cfg.FallHeight, cfg.DrownTime);
             Player.Message(p, "  Guns: {0}%S, Killer blocks: {1}",
-                           GetBool(lvl.Config.Guns), GetBool(lvl.Config.KillerBlocks));
+                           GetBool(cfg.Guns), GetBool(cfg.KillerBlocks));
             
             Player.Message(p, "%TGeneral settings:");
-            Player.Message(p, "  MOTD: &b" + lvl.Config.MOTD);
-            Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!lvl.Config.ServerWideChat));
+            Player.Message(p, "  MOTD: &b" + cfg.MOTD);
+            Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!cfg.ServerWideChat));
             Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}",
-                           GetBool(lvl.Config.LoadOnGoto), GetBool(lvl.Config.AutoUnload));
+                           GetBool(cfg.LoadOnGoto), GetBool(cfg.AutoUnload));
             Player.Message(p, "  Buildable: {0}%S, Deletable: {1}",
-                           GetBool(lvl.Config.Buildable), GetBool(lvl.Config.Deletable));
+                           GetBool(cfg.Buildable), GetBool(cfg.Deletable));
         }
         
         static string GetBool(bool value, bool console = false) {
