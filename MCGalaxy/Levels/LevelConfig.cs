@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
 
@@ -131,6 +132,8 @@ namespace MCGalaxy {
         public List<string> BuildBlacklist = new List<string>();
 
         // Physics settings
+        [ConfigInt("Physics", "Physics", null, 0, 0, 5)]
+        public int Physics;
         [ConfigInt("Physics overload", "Physics", null, 250)]
         public int PhysicsOverload = 1500;
         [ConfigInt("Physics speed", "Physics", null, 250)]
@@ -187,5 +190,29 @@ namespace MCGalaxy {
         public int RoundsPlayed = 0;
         [ConfigInt("RoundsHumanWon", "Game", null, 0)]
         public int RoundsHumanWon = 0;
+        
+        
+		public static void Load(string path, LevelConfig config) {
+            PropertiesFile.Read(path, ref config, LineProcessor);
+        }
+        
+        static void LineProcessor(string key, string value, ref LevelConfig config) {
+            if (!ConfigElement.Parse(Server.levelConfig, key, value, config)) {
+                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised level property key.", key);
+            }
+        }
+        
+        public static void Save(string path, LevelConfig config, string lvlname) {
+            try {
+                using (StreamWriter w = new StreamWriter(path)) {
+                    w.WriteLine("#Level properties for " + lvlname);
+                    w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
+                    ConfigElement.Serialise(Server.levelConfig, " settings", w, config);
+                }
+            } catch (Exception ex) {
+                Logger.Log(LogType.Warning, "Failed to save level properties!");
+                Logger.LogError(ex);
+            }
+        }
     }
 }

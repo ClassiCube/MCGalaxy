@@ -529,7 +529,6 @@
     <Compile Include="Levels\IO\Importers\FcmImporter.cs" />
     <Compile Include="Levels\IO\Importers\LvlImporter.cs" />
     <Compile Include="Levels\IO\Importers\McfImporter.cs" />
-    <Compile Include="Levels\IO\LvlProperties.cs" />
     <Compile Include="Levels\IO\MapFormats.cs" />
     <Compile Include="Levels\Level.Blocks.cs" />
     <Compile Include="Levels\Level.Fields.cs" />

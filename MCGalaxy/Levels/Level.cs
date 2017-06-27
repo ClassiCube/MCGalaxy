@@ -223,8 +223,10 @@ namespace MCGalaxy {
         public static void SaveSettings(Level lvl) {
             if (lvl.IsMuseum) return; // museums do not save properties
             
-            lock (lvl.savePropsLock)
-                LvlProperties.Save(lvl, LevelInfo.PropertiesPath(lvl.MapName));
+            lock (lvl.savePropsLock) {
+                string path = LevelInfo.PropertiesPath(lvl.MapName);
+                LevelConfig.Save(path, lvl.Config, lvl.name);
+            }
         }
 
         // Returns true if ListCheck does not already have an check in the position.
@@ -373,13 +375,15 @@ namespace MCGalaxy {
             try {
                 string propsPath = LevelInfo.FindPropertiesFile(lvl.MapName);
                 if (propsPath != null) {
-                    LvlProperties.Load(lvl, propsPath);
+                    LevelConfig.Load(propsPath, lvl.Config);
+                    lvl.setPhysics(lvl.Config.Physics);
                 } else {
                     Logger.Log(LogType.ConsoleMessage, ".properties file for level {0} was not found.", lvl.MapName);
                 }
                 
                 // Backwards compatibility for older levels which had .env files.
-                LvlProperties.LoadEnv(lvl);
+                string envPath = "levels/level properties/" + lvl.MapName + ".env";
+                LevelConfig.Load(envPath, lvl.Config);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
