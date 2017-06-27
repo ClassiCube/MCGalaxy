@@ -31,16 +31,16 @@ namespace MCGalaxy {
         }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, string name, bool ignorePerms = false) { 
-            return ChangeMap(p, null, name, ignorePerms); 
+        public static bool ChangeMap(Player p, string name) { 
+            return ChangeMap(p, null, name); 
         }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, Level lvl, bool ignorePerms = false) { 
-            return ChangeMap(p, lvl, null, ignorePerms); 
+        public static bool ChangeMap(Player p, Level lvl) { 
+            return ChangeMap(p, lvl, null); 
         }
         
-        static bool ChangeMap(Player p, Level lvl, string name, bool ignorePerms) {
+        static bool ChangeMap(Player p, Level lvl, string name) {
             if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
                 Player.Message(p, "Cannot use /goto, already joining a map."); return false; 
             }
@@ -48,8 +48,7 @@ namespace MCGalaxy {
             bool didJoin = false;
             
             try {
-                didJoin = name == null ? 
-                    GotoLevel(p, lvl, ignorePerms) : GotoMap(p, name, ignorePerms);
+                didJoin = name == null ? GotoLevel(p, lvl) : GotoMap(p, name);
             } finally {
                 Interlocked.Exchange(ref p.UsingGoto, 0);
                 Server.DoGC();
@@ -61,17 +60,17 @@ namespace MCGalaxy {
         }
         
         
-        static bool GotoMap(Player p, string name, bool ignorePerms) {
+        static bool GotoMap(Player p, string name) {
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
+            if (lvl != null) return GotoLevel(p, lvl);
             
             if (Server.AutoLoad) {
                 string map = Matcher.FindMaps(p, name);
                 if (map == null) return false;
                 
                 lvl = LevelInfo.FindExact(map);
-                if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
-                return LoadOfflineLevel(p, map, ignorePerms);
+                if (lvl != null) return GotoLevel(p, lvl);
+                return LoadOfflineLevel(p, map);
             } else {
                 lvl = Matcher.FindLevels(p, name);
                 if (lvl == null) {
@@ -79,11 +78,11 @@ namespace MCGalaxy {
                     Command.all.Find("search").Use(p, "levels " + name);
                     return false;
                 }
-                return GotoLevel(p, lvl, ignorePerms);
+                return GotoLevel(p, lvl);
             }
         }
         
-        static bool LoadOfflineLevel(Player p, string name, bool ignorePerms) {
+        static bool LoadOfflineLevel(Player p, string name) {
             if (!Level.CheckLoadOnGoto(name)) {
                 Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", name);
                 return false;
@@ -91,15 +90,15 @@ namespace MCGalaxy {
             
             CmdLoad.LoadLevel(p, name, true);
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) return GotoLevel(p, lvl, ignorePerms);
+            if (lvl != null) return GotoLevel(p, lvl);
 
             Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", name);
             return false;
         }
         
-        static bool GotoLevel(Player p, Level lvl, bool ignorePerms) {
+        static bool GotoLevel(Player p, Level lvl) {
             if (p.level == lvl) { Player.Message(p, "You are already in {0}%S.", lvl.ColoredName); return false; }
-            if (!lvl.CanJoin(p, ignorePerms)) return false;
+            if (!lvl.CanJoin(p)) return false;
             if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;

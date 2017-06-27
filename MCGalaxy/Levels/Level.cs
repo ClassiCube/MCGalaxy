@@ -143,8 +143,10 @@ namespace MCGalaxy {
             return null;
         }
         
-        public bool CanJoin(Player p, bool ignorePerms = false) {
+        public bool CanJoin(Player p) {
             if (p == null) return true;
+            
+            bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
             if (!VisitAccess.CheckDetailed(p, ignorePerms)) return false;
             if (Server.lockdown.Contains(name)) {
                 Player.Message(p, "The level " + name + " is locked."); return false;

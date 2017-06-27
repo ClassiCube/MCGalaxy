@@ -225,6 +225,7 @@ namespace MCGalaxy {
         public Vec3U16 lastClick = Vec3U16.Zero;
         public Position beforeTeleportPos = default(Position);
         public string lastTeleportMap = "";
+        public string summonedMap;
         public ushort[] pos = new ushort[3];        
         public byte[] rot = new byte[2];
         internal Position tempPos;

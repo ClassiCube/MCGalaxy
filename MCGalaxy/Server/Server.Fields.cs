@@ -290,8 +290,6 @@ namespace MCGalaxy {
         public static bool AutoLoad = true;
         [ConfigInt("physics-undo-max", "Other", null, 20000)]
         public static int physUndo = 20000;
-        [ConfigInt("total-undo", "Other", null, 200)]
-        public static int totalUndo = 200;
         [ConfigBool("parse-emotes", "Other", null, true)]
         public static bool parseSmiley = true;
         [ConfigBool("use-whitelist", "Other", null, false)]

@@ -67,7 +67,10 @@ namespace MCGalaxy.Commands.Misc {
             if (p.level != who.level) {
                 if (!CheckVisitPerm(p, who, confirmed)) return;
                 Player.Message(p, who.ColoredName + " %Sis in a different level, moving them..");
-                PlayerActions.ChangeMap(who, p.level, confirmed);
+                
+                who.summonedMap = p.level.name;
+                PlayerActions.ChangeMap(who, p.level);
+                who.summonedMap = null;
                 p.BlockUntilLoad(10); // wait for them to load
             }
 
