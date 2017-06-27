@@ -32,22 +32,22 @@ namespace MCGalaxy {
             { "motd", SetMotd },
             { "RealmOwner", SetRealmOwner },
             { "TreeType", SetTreeType },
-            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.Config.speedPhysics, value, "Physics speed", SpeedValidator) },
-            { "Overload", (p, l, value) => SetInt(p, l, ref l.Config.overload, value, "Physics overload", OverloadValidator) },
-            { "Fall", (p, l, value) => SetInt(p, l, ref l.Config.fall, value, "Fall distance") },
-            { "Drown", (p, l, value) => SetInt(p, l, ref l.Config.drown, value, "Drown time (in tenths of a second)") },
-            { "Finite", (p, l, value) => Toggle(p, l, ref l.Config.finite, "Finite mode") },
-            { "AI", (p, l, value) => Toggle(p, l, ref l.Config.ai, "Animal AI") },
-            { "Edge", (p, l, value) => Toggle(p, l, ref l.Config.edgeWater, "Edge water") },
+            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.Config.PhysicsSpeed, value, "Physics speed", SpeedValidator) },
+            { "Overload", (p, l, value) => SetInt(p, l, ref l.Config.PhysicsOverload, value, "Physics overload", OverloadValidator) },
+            { "Fall", (p, l, value) => SetInt(p, l, ref l.Config.FallHeight, value, "Fall distance") },
+            { "Drown", (p, l, value) => SetInt(p, l, ref l.Config.DrownTime, value, "Drown time (in tenths of a second)") },
+            { "Finite", (p, l, value) => Toggle(p, l, ref l.Config.FiniteLiquids, "Finite mode") },
+            { "AI", (p, l, value) => Toggle(p, l, ref l.Config.AnimalHuntAI, "Animal AI") },
+            { "Edge", (p, l, value) => Toggle(p, l, ref l.Config.EdgeWater, "Edge water") },
             { "Grass", (p, l, value) => Toggle(p, l, ref l.Config.GrassGrow, "Growing grass") },
-            { "Death", (p, l, value) => Toggle(p, l, ref l.Config.Death, "Survival death") },
-            { "Killer", (p, l, value) => Toggle(p, l, ref l.Config.Killer, "Killer blocks") },
-            { "Unload", (p, l, value) => Toggle(p, l, ref l.Config.unload, "Auto unload") },
-            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.Config.loadOnGoto, "Load on goto") },
-            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.Config.leafDecay, "Leaf decay") },
-            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.Config.randomFlow, "Random flow") },
-            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.Config.growTrees, "Tree growing") },
-            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.worldChat, "Roleplay (level only) chat: ", true) },
+            { "Death", (p, l, value) => Toggle(p, l, ref l.Config.SurvivalDeath, "Survival death") },
+            { "Killer", (p, l, value) => Toggle(p, l, ref l.Config.KillerBlocks, "Killer blocks") },
+            { "Unload", (p, l, value) => Toggle(p, l, ref l.Config.AutoUnload, "Auto unload") },
+            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.Config.LoadOnGoto, "Load on goto") },
+            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay") },
+            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.Config.RandomFlow, "Random flow") },
+            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.Config.GrowTrees, "Tree growing") },
+            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat: ", true) },
             { "Guns", ToggleGuns },
             { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Config.Buildable, "Buildable") },
             { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Config.Deletable, "Deletable") },
@@ -93,8 +93,8 @@ namespace MCGalaxy {
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         static void SetMotd(Player p, Level lvl, string value) {
-            lvl.Config.motd = value == "" ? "ignore" : value;
-            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.Config.motd);
+            lvl.Config.MOTD = value == "" ? "ignore" : value;
+            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.Config.MOTD);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -167,8 +167,8 @@ namespace MCGalaxy {
         
         
         static void ToggleGuns(Player p, Level lvl, string value) {
-            Toggle(p, lvl, ref lvl.Config.guns, "Guns allowed");
-            if (lvl.Config.guns) return;
+            Toggle(p, lvl, ref lvl.Config.Guns, "Guns allowed");
+            if (lvl.Config.Guns) return;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

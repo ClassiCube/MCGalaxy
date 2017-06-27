@@ -92,7 +92,7 @@ namespace MCGalaxy.Core {
             LogAction(e, who, "&8jailed");
             
             Entities.GlobalDespawn(who, false);
-            Position pos = new Position(who.level.Config.jailx, who.level.Config.jaily, who.level.Config.jailz);
+            Position pos = new Position(who.level.Config.JailX, who.level.Config.JailY, who.level.Config.JailZ);
             Orientation rot = new Orientation(who.level.Config.jailrotx, who.level.Config.jailroty);
             Entities.GlobalSpawn(who, pos, rot, true);
             Server.jailed.Save(true);

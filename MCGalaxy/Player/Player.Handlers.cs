@@ -347,7 +347,7 @@ namespace MCGalaxy {
         void CheckBlocks(Position pos) {
             try {
                 Vec3U16 P = (Vec3U16)pos.BlockCoords;
-                if (level.Config.Death) CheckSurvival(P.X, P.Y, P.Z);
+                if (level.Config.SurvivalDeath) CheckSurvival(P.X, P.Y, P.Z);
                 
                 CheckBlock();
                 oldIndex = level.PosToInt(P.X, P.Y, P.Z);
@@ -376,7 +376,7 @@ namespace MCGalaxy {
                     return;
                 } else if (!(bFeet == Block.water || bFeet == Block.waterstill ||
                              bFeet == Block.lava || bFeet == Block.lavastill)) {
-                    if (fallCount > level.Config.fall)
+                    if (fallCount > level.Config.FallHeight)
                         HandleDeath(ExtBlock.Air, null, false, true);
                     fallCount = 0;
                     drownCount = 0;
@@ -393,7 +393,7 @@ namespace MCGalaxy {
                     drownCount++;
                     
                     // level drown is in 10ths of a second, and there are 100 ticks/second
-                    if (drownCount > level.Config.drown * 10) {
+                    if (drownCount > level.Config.DrownTime * 10) {
                         HandleDeath((ExtBlock)Block.water);
                         drownCount = 0;
                     }
@@ -461,7 +461,7 @@ namespace MCGalaxy {
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
-            if (!level.Config.Killer || invincible || hidden) return;
+            if (!level.Config.KillerBlocks || invincible || hidden) return;
 
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
@@ -482,7 +482,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if ( Game.team != null && this.level.Config.ctfmode ) {
+            if ( Game.team != null && this.level.ctfmode ) {
                 //if (carryingFlag)
                 //{
                 // level.ctfgame.DropFlag(this, hasflag);
@@ -572,7 +572,7 @@ namespace MCGalaxy {
             text = HandleJoker(text);
             if (Chatroom != null) { Chat.MessageChatRoom(this, text, true, Chatroom); return; }
 
-            if (!level.Config.worldChat) {
+            if (!level.Config.ServerWideChat) {
                 Logger.Log(LogType.PlayerChat, "<{0}>[level] {1}", name, text);
                 Chat.MessageLevel(this, text, true, level);
             } else {

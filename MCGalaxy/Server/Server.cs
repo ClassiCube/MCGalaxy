@@ -283,9 +283,9 @@ namespace MCGalaxy {
                 lvl = CmdLoad.LoadLevel(null, mapName);
             if (lvl == null) return false;
             
-            oldMain.Config.unload = true;
+            oldMain.Config.AutoUnload = true;
             mainLevel = lvl;
-            mainLevel.Config.unload = false;
+            mainLevel.Config.AutoUnload = false;
             ServerConfig.MainLevel = mapName;
             return true;
         }

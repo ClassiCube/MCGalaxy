@@ -22,7 +22,7 @@ namespace MCGalaxy.Blocks.Physics {
     public static class AIPhysics {
         
         public static Player ClosestPlayer(Level lvl, ushort x, ushort y, ushort z) {
-            if (!lvl.Config.ai) return null;            
+            if (!lvl.Config.AnimalHuntAI) return null;            
             int closestDist = 75;
             Player closetPlayer = null;            
             Player[] players = PlayerInfo.Online.Items;

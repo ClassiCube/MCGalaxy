@@ -30,7 +30,7 @@ namespace MCGalaxy.Blocks.Physics {
             ActivateablePhysics.CheckAt(lvl, lvl.PosToInt(x, (ushort)(y - 1), z)); 
 
             //Edge of map water
-            if (lvl.Config.edgeWater && (y < lvl.Config.EdgeLevel && y >= (lvl.Config.EdgeLevel + lvl.Config.SidesOffset))) {
+            if (lvl.Config.EdgeWater && (y < lvl.Config.EdgeLevel && y >= (lvl.Config.EdgeLevel + lvl.Config.SidesOffset))) {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1) {
                     ExtBlock block = ExtBlock.FromRaw((byte)lvl.Config.HorizonBlock);
                     PhysicsArgs args = default(PhysicsArgs);

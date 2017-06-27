@@ -57,7 +57,7 @@ namespace MCGalaxy.Core {
             if (p.HasCpeExt(CpeExt.BlockPermissions))
                 p.SendCurrentBlockPermissions();
 
-            if (!level.Config.guns && p.aiming) {
+            if (!level.Config.Guns && p.aiming) {
                 p.aiming = false;
                 p.ClearBlockchange();
             }

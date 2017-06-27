@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Fun {
         protected abstract string Weapon { get; }
         
         public override void Use(Player p, string message) {
-            if (!p.level.Config.guns) {
+            if (!p.level.Config.Guns) {
                 Player.Message(p, Weapon + "s cannot be used on this map!"); return;
             }
             if (p.Game.hasflag != null) {

@@ -24,16 +24,16 @@ namespace MCGalaxy {
     public sealed class LevelConfig {
 
         [ConfigString("MOTD", "General", null, "ignore", true, null, 128)]
-        public string motd = "ignore";
+        public string MOTD = "ignore";
         [ConfigBool("LoadOnGoto", "General", null, true)]
-        public bool loadOnGoto = true;
+        public bool LoadOnGoto = true;
         [ConfigString("Theme", "General", null, "Normal", true)]
-        public string theme = "Normal";
+        public string Theme = "Normal";
         [ConfigBool("Unload", "General", null, true)]
-        public bool unload = true;
+        public bool AutoUnload = true;
         /// <summary> true if this map may see server-wide chat, false if this map has level-only/isolated chat </summary>
         [ConfigBool("WorldChat", "General", null, true)]
-        public bool worldChat = true;
+        public bool ServerWideChat = true;
 
         [ConfigBool("UseBlockDB", "Other", null, true)]
         public bool UseBlockDB = true;
@@ -42,19 +42,19 @@ namespace MCGalaxy {
         
         public byte jailrotx, jailroty;
         [ConfigInt("JailX", "Jail", null, 0, 0, 65535)]
-        public int jailx;
+        public int JailX;
         [ConfigInt("JailY", "Jail", null, 0, 0, 65535)]
-        public int jaily;
+        public int JailY;
         [ConfigInt("JailZ", "Jail", null, 0, 0, 65535)]
-        public int jailz;       
+        public int JailZ;       
 
         // Environment settings
         [ConfigInt("Weather", "Env", null, 0, 0, 2)]
         public int Weather;       
         [ConfigString("Texture", "Env", null, "", true, null, NetUtils.StringSize)]
-        public string terrainUrl = "";
+        public string Terrain = "";
         [ConfigString("TexturePack", "Env", null, "", true, null, NetUtils.StringSize)]
-        public string texturePackUrl = "";
+        public string TexturePack = "";
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("CloudColor", "Env", null, "", true)]
         public string CloudColor = "";
@@ -110,16 +110,16 @@ namespace MCGalaxy {
         public bool Buildable = true;
         [ConfigBool("Deletable", "Permissions", null, true)]
         public bool Deletable = true;
-        
-        [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody)]
-        public LevelPermission perbuildmax = LevelPermission.Nobody;
-        [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest)]
-        public LevelPermission permissionbuild = LevelPermission.Guest;
-        // What ranks can go to this map (excludes banned)
+
         [ConfigPerm("PerVisit", "Permissions", null, LevelPermission.Guest)]
-        public LevelPermission permissionvisit = LevelPermission.Guest;
+        public LevelPermission VisitMin = LevelPermission.Guest;
         [ConfigPerm("PerVisitMax", "Permissions", null, LevelPermission.Nobody)]
-        public LevelPermission pervisitmax = LevelPermission.Nobody;       
+        public LevelPermission VisitMax = LevelPermission.Nobody;
+        [ConfigPerm("PerBuild", "Permissions", null, LevelPermission.Guest)]
+        public LevelPermission BuildMin = LevelPermission.Guest;
+        [ConfigPerm("PerBuildMax", "Permissions", null, LevelPermission.Nobody)]
+        public LevelPermission BuildMax = LevelPermission.Nobody;
+   
         // Other blacklists/whitelists
         [ConfigStringList("VisitWhitelist", "Permissions", null)]
         public List<string> VisitWhitelist = new List<string>();
@@ -132,19 +132,19 @@ namespace MCGalaxy {
 
         // Physics settings
         [ConfigInt("Physics overload", "Physics", null, 250)]
-        public int overload = 1500;
-        [ConfigBool("RandomFlow", "Physics", null, true)]
-        public bool randomFlow = true;
+        public int PhysicsOverload = 1500;
         [ConfigInt("Physics speed", "Physics", null, 250)]
-        public int speedPhysics = 250;
+        public int PhysicsSpeed = 250;
+        [ConfigBool("RandomFlow", "Physics", null, true)]
+        public bool RandomFlow = true;
         [ConfigBool("LeafDecay", "Physics", null, false)]
-        public bool leafDecay;
+        public bool LeafDecay;
         [ConfigBool("Finite mode", "Physics", null, false)]
-        public bool finite;
+        public bool FiniteLiquids;
         [ConfigBool("GrowTrees", "Physics", null, false)]
-        public bool growTrees;
+        public bool GrowTrees;
         [ConfigBool("Animal AI", "Physics", null, true)]
-        public bool ai = true;
+        public bool AnimalHuntAI = true;
         [ConfigBool("GrassGrowth", "Physics", null, true)]
         public bool GrassGrow = true;
         [ConfigString("TreeType", "Physics", null, "fern", false)]
@@ -152,20 +152,19 @@ namespace MCGalaxy {
         
         // Survival settings
         [ConfigInt("Drown", "Survival", null, 70)]
-        public int drown = 70;
+        public int DrownTime = 70;
         [ConfigBool("Edge water", "Survival", null, true)]
-        public bool edgeWater;
+        public bool EdgeWater;
         [ConfigInt("Fall", "Survival", null, 9)]
-        public int fall = 9;
+        public int FallHeight = 9;
         [ConfigBool("Guns", "Survival", null, false)]
-        public bool guns = false;
+        public bool Guns = false;
         [ConfigBool("Survival death", "Survival", null, false)]
-        public bool Death;
+        public bool SurvivalDeath;
         [ConfigBool("Killer blocks", "Survival", null, true)]
-        public bool Killer = true;       
+        public bool KillerBlocks = true;       
         
         // Games settings
-        public bool ctfmode;
         [ConfigInt("Likes", "Game", null, 0)]
         public int Likes;
         [ConfigInt("Dislikes", "Game", null, 0)]

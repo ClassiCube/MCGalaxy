@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands.World {
             lvl.backedup = true;
             lvl.BuildAccess.Min = LevelPermission.Nobody;
 
-            lvl.Config.jailx = lvl.spawnx * 32;
-            lvl.Config.jaily = lvl.spawny * 32;
-            lvl.Config.jailz = lvl.spawnz * 32;
+            lvl.Config.JailX = lvl.spawnx * 32;
+            lvl.Config.JailY = lvl.spawny * 32;
+            lvl.Config.JailZ = lvl.spawnz * 32;
             lvl.Config.jailrotx = lvl.rotx; lvl.Config.jailroty = lvl.roty;
         }
         

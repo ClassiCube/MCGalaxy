@@ -80,7 +80,7 @@ namespace MCGalaxy {
         
         /// <summary> Whether this map sees server-wide chat. </summary>
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
-        public bool SeesServerWideChat { get { return Config.worldChat && ServerConfig.ServerWideChat; } }
+        public bool SeesServerWideChat { get { return Config.ServerWideChat && ServerConfig.ServerWideChat; } }
         
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();
@@ -91,6 +91,7 @@ namespace MCGalaxy {
         public bool backedup;
         public BlockDB BlockDB;
         public LevelAccessController VisitAccess, BuildAccess;
+        public bool ctfmode;
         
         // Physics fields and settings
         public int physics {

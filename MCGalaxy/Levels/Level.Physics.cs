@@ -60,7 +60,7 @@ namespace MCGalaxy {
         public bool PhysicsEnabled;
 
         void PhysicsLoop() {
-            int wait = Config.speedPhysics;
+            int wait = Config.PhysicsSpeed;
             while (true) {
                 if (!PhysicsEnabled) { Thread.Sleep(500); continue; }
 
@@ -69,7 +69,7 @@ namespace MCGalaxy {
                     if (physics == 0 || ListCheck.Count == 0)
                     {
                         lastCheck = 0;
-                        wait = Config.speedPhysics;
+                        wait = Config.PhysicsSpeed;
                         if (physics == 0) break;
                         continue;
                     }
@@ -86,10 +86,10 @@ namespace MCGalaxy {
                     }
 
                     TimeSpan delta = DateTime.UtcNow - start;
-                    wait = Config.speedPhysics - (int)delta.TotalMilliseconds;
+                    wait = Config.PhysicsSpeed - (int)delta.TotalMilliseconds;
 
-                    if (wait < (int)(-Config.overload * 0.75f)) {
-                        if (wait < -Config.overload) {
+                    if (wait < (int)(-Config.PhysicsOverload * 0.75f)) {
+                        if (wait < -Config.PhysicsOverload) {
                             if (!ServerConfig.PhysicsRestart)
                                 setPhysics(0);
                             ClearPhysics();
@@ -99,7 +99,7 @@ namespace MCGalaxy {
                             if (PhysicsStateChanged != null)
                                 PhysicsStateChanged(this, PhysicsState.Stopped);
 
-                            wait = Config.speedPhysics;
+                            wait = Config.PhysicsSpeed;
                         } else {
                             Player[] online = PlayerInfo.Online.Items;
                             foreach (Player p in online) {
@@ -113,7 +113,7 @@ namespace MCGalaxy {
                         }
                     }
                 } catch {
-                    wait = Config.speedPhysics;
+                    wait = Config.PhysicsSpeed;
                 }
             }
             physThreadStarted = false;

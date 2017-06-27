@@ -190,19 +190,19 @@ namespace MCGalaxy {
         
         /// <summary> Lowest allowed rank. </summary>
         public override LevelPermission Min {
-            get { return IsVisit ? lvl.Config.permissionvisit : lvl.Config.permissionbuild; }
+            get { return IsVisit ? lvl.Config.VisitMin : lvl.Config.BuildMin; }
             set {
-                if (IsVisit) lvl.Config.permissionvisit = value;
-                else lvl.Config.permissionbuild = value;
+                if (IsVisit) lvl.Config.VisitMin = value;
+                else lvl.Config.BuildMin = value;
             }
         }
         
         /// <summary> Highest allowed rank. </summary>
         public override LevelPermission Max {
-            get { return IsVisit ? lvl.Config.pervisitmax : lvl.Config.perbuildmax; }
+            get { return IsVisit ? lvl.Config.VisitMax : lvl.Config.BuildMax; }
             set {
-                if (IsVisit) lvl.Config.pervisitmax = value;
-                else lvl.Config.perbuildmax = value;
+                if (IsVisit) lvl.Config.VisitMax = value;
+                else lvl.Config.BuildMax = value;
             }
         }
         

@@ -236,7 +236,7 @@ namespace MCGalaxy.Commands.Info {
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
-                Physics = lvl.physics; Guns = lvl.Config.guns; BlockDB = lvl.Config.UseBlockDB;
+                Physics = lvl.physics; Guns = lvl.Config.Guns; BlockDB = lvl.Config.UseBlockDB;
                 RealmOwner = lvl.Config.RealmOwner;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
                 
@@ -255,10 +255,10 @@ namespace MCGalaxy.Commands.Info {
                 EdgeBlock = (byte)lvl.Config.EdgeBlock; HorizonBlock = (byte)lvl.Config.HorizonBlock;
                 WeatherFade = lvl.Config.WeatherFade;
                 
-                TerrainUrl = lvl.Config.terrainUrl != "" ?
-                    lvl.Config.terrainUrl : ServerConfig.DefaultTerrain;
-                TextureUrl = lvl.Config.texturePackUrl != "" ?
-                    lvl.Config.texturePackUrl : ServerConfig.DefaultTexture;
+                TerrainUrl = lvl.Config.Terrain != "" ?
+                    lvl.Config.Terrain : ServerConfig.DefaultTerrain;
+                TextureUrl = lvl.Config.TexturePack != "" ?
+                    lvl.Config.TexturePack : ServerConfig.DefaultTexture;
                 
                 Authors = lvl.Config.Authors;
                 TotalRounds = lvl.Config.RoundsPlayed; HumanRounds = lvl.Config.RoundsHumanWon;

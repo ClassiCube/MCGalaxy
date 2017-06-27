@@ -105,7 +105,7 @@ namespace MCGalaxy {
         }
         
         public string GetMotd(Player p) {
-            if (Config.motd != "ignore") return Config.motd;
+            if (Config.MOTD != "ignore") return Config.MOTD;
             return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }
 
@@ -342,9 +342,9 @@ namespace MCGalaxy {
                 Level lvl = IMapImporter.Formats[0].Read(path, name, true);
                 lvl.backedup = true;
 
-                lvl.Config.jailx = (ushort)(lvl.spawnx * 32);
-                lvl.Config.jaily = (ushort)(lvl.spawny * 32);
-                lvl.Config.jailz = (ushort)(lvl.spawnz * 32);
+                lvl.Config.JailX = (ushort)(lvl.spawnx * 32);
+                lvl.Config.JailY = (ushort)(lvl.spawny * 32);
+                lvl.Config.JailZ = (ushort)(lvl.spawnz * 32);
                 lvl.Config.jailrotx = lvl.rotx;
                 lvl.Config.jailroty = lvl.roty;
                 

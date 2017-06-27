@@ -121,9 +121,9 @@ namespace MCGalaxy.Commands.Fun {
             
             if (Server.lava.HasMap(lvl.name)) {
                 Server.lava.RemoveMap(lvl.name);
-                lvl.Config.overload = 1500;
-                lvl.Config.unload = true;
-                lvl.Config.loadOnGoto = true;
+                lvl.Config.PhysicsOverload = 1500;
+                lvl.Config.AutoUnload = true;
+                lvl.Config.LoadOnGoto = true;
                 Player.Message(p, "Map {0} %Shas been removed.", lvl.ColoredName);
             } else {
                 Server.lava.AddMap(lvl.name);
@@ -135,9 +135,9 @@ namespace MCGalaxy.Commands.Fun {
                 settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
                 Server.lava.SaveMapSettings(settings);
 
-                lvl.Config.overload = 1000000;
-                lvl.Config.unload = false;
-                lvl.Config.loadOnGoto = false;
+                lvl.Config.PhysicsOverload = 1000000;
+                lvl.Config.AutoUnload = false;
+                lvl.Config.LoadOnGoto = false;
                 Player.Message(p, "Map {0} %Shas been added.", lvl.ColoredName);
             }
             Level.SaveSettings(lvl);

@@ -35,12 +35,12 @@ namespace MCGalaxy.Games {
             lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.Config.Deletable = false;
             lvl.Config.Buildable = false;
-            lvl.Config.motd = "Welcome to the Countdown map! -hax";
+            lvl.Config.MOTD = "Welcome to the Countdown map! -hax";
             
             lvl.spawnx = (ushort)(lvl.Width / 2);
             lvl.spawny = (ushort)(lvl.Height / 2 + 4);
             lvl.spawnz = (ushort)(lvl.Length / 2);
-            lvl.Config.motd = "-hax";
+            lvl.Config.MOTD = "-hax";
             return lvl;
         }
         

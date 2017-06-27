@@ -280,9 +280,9 @@ namespace MCGalaxy.Games
                 mapData = GenerateMapData(mapSettings);
 
                 map.setPhysics(mapData.destroy ? 2 : 1);
-                map.Config.overload = 1000000;
-                map.Config.unload = false;
-                map.Config.loadOnGoto = false;
+                map.Config.PhysicsOverload = 1000000;
+                map.Config.AutoUnload = false;
+                map.Config.LoadOnGoto = false;
                 Level.SaveSettings(map);
             }
             

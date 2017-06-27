@@ -137,7 +137,7 @@ namespace MCGalaxy {
         
         static void Unload(Level lvl) {
             bool unloadOld = true;
-            if (lvl.IsMuseum || !lvl.Config.unload) return;
+            if (lvl.IsMuseum || !lvl.Config.AutoUnload) return;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

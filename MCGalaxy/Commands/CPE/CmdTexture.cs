@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands.World {
             
             if (args.Length == 1) {
                 if (scope == "level")
-                    Player.Message(p, "Level terrain: " + GetPath(p.level.Config.terrainUrl));
+                    Player.Message(p, "Level terrain: " + GetPath(p.level.Config.Terrain));
                 else if (scope == "levelzip")
-                    Player.Message(p, "Level tex pack: " + GetPath(p.level.Config.texturePackUrl));
+                    Player.Message(p, "Level tex pack: " + GetPath(p.level.Config.TexturePack));
                 else if (scope == "global")
                     Player.Message(p, "Global terrain: " + GetPath(ServerConfig.DefaultTerrain));
                 else if (scope == "globalzip")
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Set server's default terrain to " + path);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
-                p.level.Config.terrainUrl = url;
+                p.level.Config.Terrain = url;
                 Player.Message(p, "Set level's terrain to " + path);
                 UpdateLevel(p);
             } else if (scope == "globalzip") {
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Set server's default texture pack to " + path);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {
-                p.level.Config.texturePackUrl = url;
+                p.level.Config.TexturePack = url;
                 Player.Message(p, "Set level's texture pack to " + path);
                 UpdateLevel(p);
             } else {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.World {
         void UpdateGlobally(Player p, bool zip) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                string url = zip ? pl.level.Config.texturePackUrl : pl.level.Config.terrainUrl;
+                string url = zip ? pl.level.Config.TexturePack : pl.level.Config.Terrain;
                 if (url == "") pl.SendCurrentMapAppearance();
             }
             SrvProperties.Save();

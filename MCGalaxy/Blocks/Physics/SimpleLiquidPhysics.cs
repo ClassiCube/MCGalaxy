@@ -23,9 +23,9 @@ namespace MCGalaxy.Blocks.Physics {
         
         const StringComparison comp = StringComparison.Ordinal;
         public static void DoWater(Level lvl, ref Check C) {
-            if (lvl.Config.finite) {
+            if (lvl.Config.FiniteLiquids) {
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
-            } else if (lvl.Config.randomFlow) {
+            } else if (lvl.Config.RandomFlow) {
                 DoWaterRandowFlow(lvl, ref C);
             } else {
                 DoWaterUniformFlow(lvl, ref C);
@@ -38,9 +38,9 @@ namespace MCGalaxy.Blocks.Physics {
                 C.data.Data += (1 << 5); return;
             }
             
-            if (lvl.Config.finite) {
+            if (lvl.Config.FiniteLiquids) {
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
-            } else if (lvl.Config.randomFlow) {
+            } else if (lvl.Config.RandomFlow) {
                 DoLavaRandowFlow(lvl, ref C, true);
             } else {
                 DoLavaUniformFlow(lvl, ref C, true);
@@ -48,7 +48,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoFastLava(Level lvl, ref Check C) {
-            if (lvl.Config.randomFlow) {
+            if (lvl.Config.RandomFlow) {
                 DoLavaRandowFlow(lvl, ref C, false);
                 if (C.data.Data != PhysicsArgs.RemoveFromChecks)
                     C.data.Data = 0; // no lava delay

@@ -91,7 +91,7 @@ namespace MCGalaxy.Blocks.Physics {
                 ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             }
 
-            if (!lvl.Config.growTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
+            if (!lvl.Config.GrowTrees) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             if (C.data.Data < 20) {
                 if (rand.Next(20) == 0) C.data.Data++;
                 return;
