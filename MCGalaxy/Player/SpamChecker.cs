@@ -22,9 +22,9 @@ namespace MCGalaxy {
         
         public SpamChecker(Player p) {
             this.p = p;
-            blockLog = new List<DateTime>(Server.BlockSpamCount);
-            chatLog = new List<DateTime>(Server.spamcounter);
-            cmdLog = new List<DateTime>(Server.CmdSpamCount);
+            blockLog = new List<DateTime>(ServerConfig.BlockSpamCount);
+            chatLog = new List<DateTime>(ServerConfig.spamcounter);
+            cmdLog = new List<DateTime>(ServerConfig.CmdSpamCount);
         }
         
         Player p;
@@ -40,8 +40,8 @@ namespace MCGalaxy {
         }
         
         public bool CheckBlockSpam() {
-            if (p.ignoreGrief || !Server.BlockSpamCheck) return false;
-            if (blockLog.AddSpamEntry(Server.BlockSpamCount, Server.BlockSpamInterval)) 
+            if (p.ignoreGrief || !ServerConfig.BlockSpamCheck) return false;
+            if (blockLog.AddSpamEntry(ServerConfig.BlockSpamCount, ServerConfig.BlockSpamInterval)) 
                 return false;
 
             TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
@@ -56,13 +56,13 @@ namespace MCGalaxy {
         
         public bool CheckChatSpam() {
             Player.lastMSG = p.name;
-            if (!Server.checkspam || Player.IsSuper(p)) return false;
+            if (!ServerConfig.checkspam || Player.IsSuper(p)) return false;
             
             lock (chatLock) {
-                if (chatLog.AddSpamEntry(Server.spamcounter, Server.spamcountreset)) 
+                if (chatLog.AddSpamEntry(ServerConfig.spamcounter, ServerConfig.spamcountreset)) 
                     return false;
                 
-                TimeSpan duration = TimeSpan.FromSeconds(Server.mutespamtime);
+                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.mutespamtime);
                 ModAction action = new ModAction(p.name, null, ModActionType.Muted, "&0Auto mute for spamming", duration);
                 OnModActionEvent.Call(action);
                 return true;
@@ -70,15 +70,15 @@ namespace MCGalaxy {
         }
         
         public bool CheckCommandSpam() {
-            if (!Server.CmdSpamCheck || Player.IsSuper(p)) return false;
+            if (!ServerConfig.CmdSpamCheck || Player.IsSuper(p)) return false;
             
             lock (cmdLock) {
-                if (cmdLog.AddSpamEntry(Server.CmdSpamCount, Server.CmdSpamInterval)) 
+                if (cmdLog.AddSpamEntry(ServerConfig.CmdSpamCount, ServerConfig.CmdSpamInterval)) 
                     return false;
                 
                 Player.Message(p, "You have been blocked from using commands for " +
-                              Server.CmdSpamBlockTime + " seconds due to spamming");
-                p.cmdUnblocked = DateTime.UtcNow.AddSeconds(Server.CmdSpamBlockTime);
+                              ServerConfig.CmdSpamBlockTime + " seconds due to spamming");
+                p.cmdUnblocked = DateTime.UtcNow.AddSeconds(ServerConfig.CmdSpamBlockTime);
                 return true;
             }
         }

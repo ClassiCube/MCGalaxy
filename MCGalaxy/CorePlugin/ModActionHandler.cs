@@ -207,7 +207,7 @@ namespace MCGalaxy.Core {
                 }
                 who.warn++;
             } else {
-                if (!Server.LogNotes) {
+                if (!ServerConfig.LogNotes) {
                     Player.Message(e.Actor, "Notes logging must be enabled to warn offline players."); return;
                 }
                 LogAction(e, who, "&ewarned");

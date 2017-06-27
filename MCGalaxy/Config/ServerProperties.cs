@@ -48,10 +48,10 @@ namespace MCGalaxy {
                 ZombieGameProps.SaveSettings();
             ZombieGameProps.LoadSettings();
             
-            Database.Backend = Server.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+            Database.Backend = ServerConfig.useMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
 
-            if (!Directory.Exists(Server.backupLocation))
-                Server.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
+            if (!Directory.Exists(ServerConfig.backupLocation))
+                ServerConfig.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
             Save();
         }
         

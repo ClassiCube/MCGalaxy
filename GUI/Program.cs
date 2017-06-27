@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
             MCGalaxy.Gui.App.usingConsole = true;
             
             Server.Start();
-            Console.Title = Server.name + " - " + Server.SoftwareNameVersioned;
+            Console.Title = ServerConfig.name + " - " + Server.SoftwareNameVersioned;
             ConsoleLoop();
         }
         
@@ -161,7 +161,7 @@ namespace MCGalaxy.Gui {
             FileLogger.Flush(null);
             
             Thread.Sleep(500);
-            if (Server.restartOnError)
+            if (ServerConfig.restartOnError)
                 App.ExitProgram(true);
         }
 
@@ -171,7 +171,7 @@ namespace MCGalaxy.Gui {
             FileLogger.Flush(null);
             
             Thread.Sleep(500);
-            if (Server.restartOnError)
+            if (ServerConfig.restartOnError)
                 App.ExitProgram(true);
         }
     }

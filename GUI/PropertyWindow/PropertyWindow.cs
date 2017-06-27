@@ -34,11 +34,7 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-            ToggleIrcSettings(Server.irc);
-            ToggleMySQLSettings(Server.useMySQL);
-            ToggleChatSpamSettings(Server.checkspam);
-            ToggleCmdSpamSettings(Server.CmdSpamCheck);
-            ToggleBlocksSpamSettings(Server.BlockSpamCheck);
+            ToggleIrcSettings(ServerConfig.irc);
 
             GuiPerms.UpdateRankNames();
             rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);

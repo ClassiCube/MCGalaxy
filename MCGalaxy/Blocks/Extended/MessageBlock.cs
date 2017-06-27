@@ -37,7 +37,7 @@ namespace MCGalaxy.Blocks.Extended {
                 message.Cp437ToUnicodeInPlace();
                 message = message.Replace("@p", p.name);
                 
-                if (message != p.prevMsg || (alwaysRepeat || Server.repeatMessage)) {
+                if (message != p.prevMsg || (alwaysRepeat || ServerConfig.repeatMessage)) {
                     string text;
                     List<string> cmds = GetParts(message, out text);
                     if (text != null) Player.Message(p, text);

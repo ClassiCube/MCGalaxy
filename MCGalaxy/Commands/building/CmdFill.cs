@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
             int count = op.Positions.Count;
             
             bool confirmed = IsConfirmed(dArgs.Message), success = true;
-            if (count < p.group.maxBlocks && count > Server.DrawReloadLimit && !confirmed) {
+            if (count < p.group.maxBlocks && count > ServerConfig.DrawReloadLimit && !confirmed) {
                 Player.Message(p, "This fill would affect {0} blocks.", count);
                 Player.Message(p, "If you still want to fill, type %T/fill {0} confirm", dArgs.Message);
             } else {

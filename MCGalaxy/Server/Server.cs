@@ -66,7 +66,7 @@ namespace MCGalaxy {
         
         internal static ConfigElement[] serverConfig, levelConfig, zombieConfig;
         public static void Start() {
-            serverConfig = ConfigElement.GetAll(typeof(Server));
+            serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
             zombieConfig = ConfigElement.GetAll(typeof(ZombieGameProps));
             levelConfig = ConfigElement.GetAll(typeof(Level));
             
@@ -173,7 +173,7 @@ namespace MCGalaxy {
                 if (File.Exists("externalurl.txt")) File.Move("externalurl.txt", "text/externalurl.txt");
                 if (File.Exists("autoload.txt")) File.Move("autoload.txt", "text/autoload.txt");
                 if (File.Exists("IRC_Controllers.txt")) File.Move("IRC_Controllers.txt", "ranks/IRC_Controllers.txt");
-                if (useWhitelist && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
+                if (ServerConfig.useWhitelist && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
         }
@@ -217,8 +217,6 @@ namespace MCGalaxy {
         
         static void FixupOldPerms() {
             SrvProperties.OldPerms perms = SrvProperties.oldPerms;
-            Server.opchatperm = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
-            Server.adminchatperm = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1
                 && perms.opchatPerm == -1 && perms.adminchatPerm == -1) return;
             
@@ -277,7 +275,7 @@ namespace MCGalaxy {
         /// <returns> true if main level was changed, false if not
         /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
-            if (mapName.CaselessEq(level)) return false;
+            if (mapName.CaselessEq(ServerConfig.level)) return false;
             Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);
@@ -288,7 +286,7 @@ namespace MCGalaxy {
             oldMain.unload = true;
             mainLevel = lvl;
             mainLevel.unload = false;
-            level = mapName;
+            ServerConfig.level = mapName;
             return true;
         }
         

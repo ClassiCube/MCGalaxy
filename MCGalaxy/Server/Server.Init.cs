@@ -31,7 +31,7 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-                mainLevel = CmdLoad.LoadLevel(null, level);                
+                mainLevel = CmdLoad.LoadLevel(null, ServerConfig.level);                
                 if (mainLevel == null) GenerateMain();
                 
                 mainLevel.unload = false;
@@ -43,7 +43,7 @@ namespace MCGalaxy {
         
         static void GenerateMain() {
             Logger.Log(LogType.SystemActivity, "main level not found, generating..");
-            mainLevel = new Level(level, 128, 64, 128);
+            mainLevel = new Level(ServerConfig.level, 128, 64, 128);
             MapGen.Generate(mainLevel, "flat", "", null);
             mainLevel.Save();
         }
@@ -76,7 +76,7 @@ namespace MCGalaxy {
             tempBans = PlayerExtList.Load(Paths.TempBansFile);            
             ModerationTasks.QueueTasks();
             
-            if (useWhitelist)
+            if (ServerConfig.useWhitelist)
                 whiteList = PlayerList.Load("whitelist.txt");
         }
         
@@ -91,15 +91,15 @@ namespace MCGalaxy {
         }
         
         static void SetupSocket(SchedulerTask task) {
-		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", port);
+		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", ServerConfig.port);
             Listener = new TcpListen();
             
             IPAddress ip;
-            if (!IPAddress.TryParse(Server.listenIP, out ip)) {
+            if (!IPAddress.TryParse(ServerConfig.listenIP, out ip)) {
                 Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
                 ip = IPAddress.Any;
             }            
-            Listener.Listen(ip, (ushort)port);
+            Listener.Listen(ip, (ushort)ServerConfig.port);
         }
         
         static void InitHeartbeat(SchedulerTask task) {
@@ -120,12 +120,12 @@ namespace MCGalaxy {
             MainScheduler.QueueRepeat(RandomMessage, null, 
                                       TimeSpan.FromMinutes(5));
             Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
-                                 TimeSpan.FromMilliseconds(PositionInterval));
+                                 TimeSpan.FromMilliseconds(ServerConfig.PositionInterval));
         }
         
         static void InitRest(SchedulerTask task) {
             IRC = new IRCBot();
-            if (irc) IRC.Connect();
+            if (ServerConfig.irc) IRC.Connect();
              
             InitZombieSurvival();
             InitLavaSurvival();

@@ -36,7 +36,7 @@ namespace MCGalaxy {
             
             name = NetUtils.ReadString(packet, 2);
             SkinName = name; DisplayName = name; truename = name;
-            if (Server.ClassicubeAccountPlus) name += "+";
+            if (ServerConfig.ClassicubeAccountPlus) name += "+";
             
             string mppass = NetUtils.ReadString(packet, 66);
             if (PlayerConnecting != null) PlayerConnecting(this, mppass);
@@ -108,7 +108,7 @@ namespace MCGalaxy {
             
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
-            time = new TimeSpan(0, 0, 0, 1);
+            time = TimeSpan.FromSeconds(1);
             DataTable playerDb = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             
             if (playerDb.Rows.Count == 0) {
@@ -131,15 +131,15 @@ namespace MCGalaxy {
             playerDb.Dispose();
             LoadCpeData();
             
-            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank)
+            if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.verifyadminsrank)
                 adminpen = true;
             if (Server.noEmotes.Contains(name))
-                parseEmotes = !Server.parseSmiley;
+                parseEmotes = !ServerConfig.parseSmiley;
 
             LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
-            if (group.Permission >= adminChatRank && Server.adminsjoinsilent) {
+            if (group.Permission >= adminChatRank && ServerConfig.adminsjoinsilent) {
                 hidden = true; adminchat = true;
             }
             
@@ -152,16 +152,16 @@ namespace MCGalaxy {
             if (hidden) joinm = "&8(hidden)" + joinm;
             
             const LevelPermission perm = LevelPermission.Guest;
-            if (group.Permission > perm || (Server.guestJoinNotify && group.Permission <= perm)) {
+            if (group.Permission > perm || (ServerConfig.guestJoinNotify && group.Permission <= perm)) {
                 Chat.MessageGlobal(this, joinm, false, true);
             }
 
-            if (Server.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
+            if (ServerConfig.agreetorulesonentry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
                 agreed = false;
             }
 
-            if (Server.verifyadmins && group.Permission >= Server.verifyadminsrank) {
+            if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.verifyadminsrank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
                     SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
                 else
@@ -178,7 +178,7 @@ namespace MCGalaxy {
             } catch {
             }
             
-            if (Server.PositionInterval > 1000)
+            if (ServerConfig.PositionInterval > 1000)
                 SendMessage("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
@@ -252,7 +252,7 @@ namespace MCGalaxy {
             
             LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
-            if (p.group.Permission < adminChatRank || !Server.adminsjoinsilent) {
+            if (p.group.Permission < adminChatRank || !ServerConfig.adminsjoinsilent) {
                 Chat.MessageOps(altsMsg);
                 //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             }

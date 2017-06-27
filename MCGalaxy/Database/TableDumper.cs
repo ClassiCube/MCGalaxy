@@ -82,7 +82,7 @@ namespace MCGalaxy.SQL {
         
         
         public static string GetDate(IDataReader reader, int col) {
-            if (Server.useMySQL) {
+            if (ServerConfig.useMySQL) {
                 DateTime date = reader.GetDateTime(col);
                 return date.ToString("yyyy-MM-dd HH:mm:ss");
             } else {

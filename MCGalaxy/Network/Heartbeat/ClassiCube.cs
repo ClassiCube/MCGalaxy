@@ -66,15 +66,15 @@ namespace MCGalaxy.Network {
         }
 
         public override string GetHeartbeatData()  {
-            string name = Server.name;
+            string name = ServerConfig.name;
             Server.zombie.OnHeartbeat(ref name);
             Server.lava.OnHeartbeat(ref name);
             name = Colors.StripColors(name);
             
-            return "&port="  + Server.port +
-                "&max="      + Server.players +
+            return "&port="  + ServerConfig.port +
+                "&max="      + ServerConfig.players +
                 "&name="     + Uri.EscapeDataString(name) +
-                "&public="   + Server.pub +
+                "&public="   + ServerConfig.pub +
                 "&version=7" +
                 "&salt="     + Server.salt +
                 "&users="    + PlayerCount() + 
@@ -88,8 +88,8 @@ namespace MCGalaxy.Network {
                 if (!p.hidden) count++;
             }
             // This may happen if a VIP or a dev/mod joins an already full server.
-            if (count > Server.players)
-                count = Server.players;
+            if (count > ServerConfig.players)
+                count = ServerConfig.players;
             return count;
         }
         

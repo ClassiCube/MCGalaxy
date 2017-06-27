@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (LevelInfo.FindExact(map) == null)
-                CmdLoad.LoadLevel(p, map, Server.AutoLoad);
+                CmdLoad.LoadLevel(p, map, ServerConfig.AutoLoad);
             if (LevelInfo.FindExact(map) != null)
                 PlayerActions.ChangeMap(p, map);
         }
@@ -110,10 +110,10 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
-                string rank = value == "" ? Server.defaultRank : value;
+                string rank = value == "" ? ServerConfig.defaultRank : value;
                 Command.all.Find("pervisit").Use(p, rank);
             } else if (cmd == "PERBUILD") {
-                string rank = value == "" ? Server.defaultRank : value;
+                string rank = value == "" ? ServerConfig.defaultRank : value;
                 Command.all.Find("perbuild").Use(p, rank);
             } else if (cmd == "TEXTURE") {
                 if (value == "") {
@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands.World {
             lvl.BuildAccess.Whitelist(null, p.name);
             CmdZone.ZoneAll(lvl, p.name);
             
-            LevelPermission osPerm = Server.osPerbuildDefault;
+            LevelPermission osPerm = ServerConfig.osPerbuildDefault;
             if (osPerm == LevelPermission.Nobody)
                 osPerm = CommandPerms.MinPerm(Command.all.Find("overseer"));
             

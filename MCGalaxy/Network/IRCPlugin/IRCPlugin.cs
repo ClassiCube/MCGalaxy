@@ -75,9 +75,9 @@ namespace MCGalaxy.Network {
             if (!Server.IRC.Enabled || !p.level.SeesServerWideChat) return;
             string msg = null;
             
-            if (action == PlayerAction.AFK && Server.ircShowAFK && !p.hidden)
+            if (action == PlayerAction.AFK && ServerConfig.ircShowAFK && !p.hidden)
                 msg = p.ColoredName + " %Sis AFK " + message;
-            else if (action == PlayerAction.UnAFK && Server.ircShowAFK && !p.hidden)
+            else if (action == PlayerAction.UnAFK && ServerConfig.ircShowAFK && !p.hidden)
                 msg = p.ColoredName + " %Sis no longer AFK";
             else if (action == PlayerAction.Joker)
                 msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
@@ -87,7 +87,7 @@ namespace MCGalaxy.Network {
                 msg = "*" + p.DisplayName + " " + message;
             else if (action == PlayerAction.Review)
                 msg = p.ColoredName + " %Sis requesting a review.";
-            else if (action == PlayerAction.JoinWorld && Server.ircShowWorldChanges && !p.hidden)
+            else if (action == PlayerAction.JoinWorld && ServerConfig.ircShowWorldChanges && !p.hidden)
                 msg = p.ColoredName + " %Swent to &8" + message;
             
             if (msg != null) Bot.Say(msg, stealth);
@@ -96,14 +96,14 @@ namespace MCGalaxy.Network {
         
         void HandleDisconnect(Player p, string reason) {
             if (!Server.IRC.Enabled || p.hidden) return;
-            if (!Server.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
+            if (!ServerConfig.guestLeaveNotify && p.Rank <= LevelPermission.Guest) return;
             
             Bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
         }
 
         void HandleConnect(Player p) {
             if (!Server.IRC.Enabled || p.hidden) return;
-            if (!Server.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
+            if (!ServerConfig.guestJoinNotify && p.Rank <= LevelPermission.Guest) return;
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerLogin, p)) return;
             
             Bot.Say(p.ColoredName + " %Sjoined the game", false);
@@ -115,7 +115,7 @@ namespace MCGalaxy.Network {
             if (message.Trim(trimChars) == "") return;
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerChat, p)) return;
             
-            string name = Server.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
+            string name = ServerConfig.ircPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
             Bot.Say(name + "%S: " + message, p.opchat);
         }
     }

@@ -144,9 +144,9 @@ namespace MCGalaxy.Eco {
             foreach (PlayerAward pl in PlayerAwards) {
                 if (!pl.Name.CaselessEq(playerName)) continue;
                 double percentage = Math.Round(((double)pl.Awards.Count / numAwards) * 100, 2);
-                return "&f" + pl.Awards.Count + "/" + numAwards + " (" + percentage + "%)" + Server.DefaultColor;
+                return "&f" + pl.Awards.Count + "/" + numAwards + " (" + percentage + "%)";
             }
-            return "&f0/" + numAwards + " (0%)" + Server.DefaultColor;
+            return "&f0/" + numAwards + " (0%)";
         }
         
         /// <summary> Finds the list of awards that the given player has. </summary>

@@ -369,10 +369,10 @@ namespace MCGalaxy {
                     uP.index = b;
                     uP.SetData(old, block);
 
-                    if (UndoBuffer.Count < Server.physUndo) {
+                    if (UndoBuffer.Count < ServerConfig.physUndo) {
                         UndoBuffer.Add(uP);
                     } else {
-                        if (currentUndo >= Server.physUndo)
+                        if (currentUndo >= ServerConfig.physUndo)
                             currentUndo = 0;
                         UndoBuffer[currentUndo] = uP;
                     }

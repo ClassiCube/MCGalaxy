@@ -84,7 +84,7 @@ namespace MCGalaxy.Games.ZS {
         }
 
         static string FormatTertiary(Player p) {
-            string money = "&a" + p.money + " %S" + Server.moneys;
+            string money = "&a" + p.money + " %S" + ServerConfig.moneys;
             string state = ", you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             return money + state;
         }

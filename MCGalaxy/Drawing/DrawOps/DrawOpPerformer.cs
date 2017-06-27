@@ -127,7 +127,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (item.Op.Undoable) p.DrawOps.Add(entry);
                 if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
                 
-                if (item.Op.TotalModified > Server.DrawReloadLimit)
+                if (item.Op.TotalModified > ServerConfig.DrawReloadLimit)
                     DoReload(p, item.Op.Level);
                 item.Op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
             }
@@ -190,11 +190,11 @@ namespace MCGalaxy.Drawing.Ops {
                 }
                 
                 // Potentially buffer the block change
-                if (op.TotalModified == Server.DrawReloadLimit) {
-                    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", Server.DrawReloadLimit);
+                if (op.TotalModified == ServerConfig.DrawReloadLimit) {
+                    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", ServerConfig.DrawReloadLimit);
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
-                } else if (op.TotalModified < Server.DrawReloadLimit) {
+                } else if (op.TotalModified < ServerConfig.DrawReloadLimit) {
                     if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
 
                     if (lvl.physics > 0) {

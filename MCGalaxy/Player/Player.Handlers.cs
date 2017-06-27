@@ -65,7 +65,7 @@ namespace MCGalaxy {
             }
             bool doDelete = !painting && action == 0;
 
-            if (Server.verifyadmins && adminpen) {
+            if (ServerConfig.verifyadmins && adminpen) {
                 SendMessage("&cYou must first verify with %T/pass [Password]");
                 RevertBlock(x, y, z); return;
             }
@@ -507,7 +507,7 @@ namespace MCGalaxy {
                 if (overallDeath > short.MaxValue) overallDeath = short.MaxValue;
             }
 
-            if (Server.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
+            if (ServerConfig.deathcount && (overallDeath > 0 && overallDeath % 10 == 0))
                 Chat.MessageLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false, level);
             lastDeath = DateTime.UtcNow;
         }
@@ -545,7 +545,7 @@ namespace MCGalaxy {
                 }
             }
             // Filter out bad words
-            if (Server.profanityFilter) text = ProfanityFilter.Parse(text);
+            if (ServerConfig.profanityFilter) text = ProfanityFilter.Parse(text);
             
             if (IsHandledMessage(text)) return;
             
@@ -560,8 +560,8 @@ namespace MCGalaxy {
                 if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
                     TntWarsGame.player pl = it.FindPlayer(this);
                     foreach ( TntWarsGame.player p in it.Players ) {
-                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + Server.DefaultColor + newtext);
-                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + Server.DefaultColor + newtext);
+                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + ServerConfig.DefaultColor + newtext);
+                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + ServerConfig.DefaultColor + newtext);
                     }
                     
                     Logger.Log(LogType.GameActivity, "[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
@@ -582,7 +582,7 @@ namespace MCGalaxy {
                 OnPlayerChatEvent.Call(this, text);
                 if (cancelchat) { cancelchat = false; return; }
                 
-                if (Server.worldChat) {
+                if (ServerConfig.worldChat) {
                     SendChatFrom(this, text);
                 } else {
                     Chat.MessageLevel(this, text, true, level);
@@ -743,13 +743,13 @@ namespace MCGalaxy {
         
         bool CheckCommand(string cmd) {
             if (cmd == "") { SendMessage("No command entered."); return false; }
-            if (Server.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
+            if (ServerConfig.agreetorulesonentry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
                 SendMessage("You must read /rules then agree to them with /agree!"); return false;
             }
             if (jailed) {
                 SendMessage("You cannot use any commands while jailed."); return false;
             }
-            if (Server.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
+            if (ServerConfig.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
                 SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
             }
             

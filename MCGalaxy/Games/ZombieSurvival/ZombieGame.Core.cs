@@ -209,7 +209,7 @@ namespace MCGalaxy.Games {
                         if (lastPlayerToInfect == killer.name) {
                             infectCombo++;
                             if (infectCombo >= 2) {
-                                killer.SendMessage("You gained " + (2 + infectCombo) + " " + Server.moneys);
+                                killer.SendMessage("You gained " + (2 + infectCombo) + " " + ServerConfig.moneys);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
                                 CurLevel.ChatLevel("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
@@ -272,7 +272,7 @@ namespace MCGalaxy.Games {
             CurLevel.ChatLevel("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
-                Player.Message(p, "As this was an automatic infection, you have not lost any &3" + Server.moneys);
+                Player.Message(p, "As this was an automatic infection, you have not lost any &3" + ServerConfig.moneys);
             } else {
                 p.SetMoney(Math.Max(p.money - 2, 0));
             }
@@ -291,7 +291,7 @@ namespace MCGalaxy.Games {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 CurLevel.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
-                                   bounty.Amount + " %S" + Server.moneys + " on " + p.ColoredName + "%S.");
+                                   bounty.Amount + " %S" + ServerConfig.moneys + " on " + p.ColoredName + "%S.");
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }

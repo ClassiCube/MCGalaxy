@@ -36,9 +36,9 @@ namespace MCGalaxy.Commands.World {
                 else if (scope == "levelzip")
                     Player.Message(p, "Level tex pack: " + GetPath(p.level.texturePackUrl));
                 else if (scope == "global")
-                    Player.Message(p, "Global terrain: " + GetPath(Server.defaultTerrainUrl));
+                    Player.Message(p, "Global terrain: " + GetPath(ServerConfig.defaultTerrainUrl));
                 else if (scope == "globalzip")
-                    Player.Message(p, "Global tex pack: " + GetPath(Server.defaultTextureUrl));
+                    Player.Message(p, "Global tex pack: " + GetPath(ServerConfig.defaultTextureUrl));
                 else
                     Help(p);
                 return; 
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.World {
             
             string path = url == "" ? "normal" : url;
             if (scope == "global") {
-                Server.defaultTerrainUrl = url;
+                ServerConfig.defaultTerrainUrl = url;
                 Player.Message(p, "Set server's default terrain to " + path);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Set level's terrain to " + path);
                 UpdateLevel(p);
             } else if (scope == "globalzip") {
-                Server.defaultTextureUrl = url;
+                ServerConfig.defaultTextureUrl = url;
                 Player.Message(p, "Set server's default texture pack to " + path);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {

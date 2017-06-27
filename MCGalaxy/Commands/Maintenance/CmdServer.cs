@@ -46,13 +46,13 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         void SetPublic(Player p, string[] args) {
-            Server.pub = true;
+            ServerConfig.pub = true;
             Player.Message(p, "Server is now public!");
             Logger.Log(LogType.SystemActivity, "Server is now public!");
         }
         
         void SetPrivate(Player p, string[] args) {
-            Server.pub = false;
+            ServerConfig.pub = false;
             Player.Message(p, "Server is now private!");
             Logger.Log(LogType.SystemActivity, "Server is now private!");
         }
@@ -155,8 +155,8 @@ namespace MCGalaxy.Commands.Maintenance {
 
         static bool CheckPerms(Player p) {
             if (p == null) return true;
-            if (Server.server_owner.CaselessEq("Notch")) return false;
-            return p.name.CaselessEq(Server.server_owner);
+            if (ServerConfig.server_owner.CaselessEq("Notch")) return false;
+            return p.name.CaselessEq(ServerConfig.server_owner);
         }
 
         void SetToDefault() {
@@ -173,13 +173,13 @@ namespace MCGalaxy.Commands.Maintenance {
             Server.zombie.ResetState();
             SrvProperties.GenerateSalt();
 
-            Server.restarttime = DateTime.Now;
-            Server.level = "main";
+            ServerConfig.restarttime = DateTime.Now;
+            ServerConfig.level = "main";
 
-            Server.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
-            Server.blockInterval = 60;
+            ServerConfig.backupLocation = Path.Combine(Utils.FolderPath, "levels/backups");
+            ServerConfig.blockInterval = 60;
 
-            Server.unsafe_plugin = true;
+            ServerConfig.unsafe_plugin = true;
             Server.flipHead = false;
             Server.shuttingDown = false;
             Server.restarting = false;

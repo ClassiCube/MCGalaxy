@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         internal static List<PendingItem> pendingNames = new List<PendingItem>();
         internal static object pendingLock = new object();        
-        public static List<Player> connections = new List<Player>(Server.players);
+        public static List<Player> connections = new List<Player>(ServerConfig.players);
         public List<string> listignored = new List<string>();
         public static string lastMSG = "";
         
@@ -108,7 +108,7 @@ namespace MCGalaxy {
         public bool deleteMode = false;
         public bool ignorePermission = false;
         public bool ignoreGrief = false;
-        public bool parseEmotes = Server.parseSmiley;
+        public bool parseEmotes = ServerConfig.parseSmiley;
         public bool opchat = false;
         public bool adminchat = false;
         public bool onWhitelist = false;

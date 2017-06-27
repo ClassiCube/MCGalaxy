@@ -32,7 +32,7 @@ namespace MCGalaxy.Gui {
             Server.restarting = restarting;
             Server.shuttingDown = true;
             if (msg == "")
-                msg = restarting ? "Server restarted. Sign in again and rejoin." : Server.shutdownMessage;
+                msg = restarting ? "Server restarted. Sign in again and rejoin." : ServerConfig.shutdownMessage;
             Server.Exit(restarting, msg);
             new Thread(() => ShutdownThread(restarting, msg)).Start();
         }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Gui {
                     lvl.saveChanges();
                 }
                 
-                if (Server.ServerSetupFinished && !Server.AutoLoad) {
+                if (Server.ServerSetupFinished && !ServerConfig.AutoLoad) {
                     File.WriteAllText("text/autoload.txt", level);
                 }
             } catch (Exception ex) {

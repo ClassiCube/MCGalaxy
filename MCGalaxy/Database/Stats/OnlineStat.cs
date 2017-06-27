@@ -56,7 +56,7 @@ namespace MCGalaxy.DB {
         internal static void MiscLine(Player p, string name, int deaths, int money) {
             if (Economy.Enabled) {
                 Player.Message(p, "  &a{0} &cdeaths%S, &a{2} %S{3}, {1} %Sawards",
-                               deaths, Awards.AwardAmount(name), money, Server.moneys);
+                               deaths, Awards.AwardAmount(name), money, ServerConfig.moneys);
             } else {
                 Player.Message(p, "  &a{0} &cdeaths%S, {1} %Sawards",
                                deaths, Awards.AwardAmount(name));
@@ -104,7 +104,7 @@ namespace MCGalaxy.DB {
                 Player.Message(p, "  Player is an &9{0} Developer", Server.SoftwareName);
             if (Server.Mods.CaselessContains(name.RemoveLastPlus()))
                 Player.Message(p, "  Player is an &9{0} Moderator", Server.SoftwareName);
-            if (Server.server_owner.CaselessEq(name))
+            if (ServerConfig.server_owner.CaselessEq(name))
                 Player.Message(p, "  Player is the &cServer owner");
         }
         
@@ -116,7 +116,7 @@ namespace MCGalaxy.DB {
             if (Server.bannedIP.Contains(ip)) ipMsg = "&8" + ip + ", which is banned";
             
             Player.Message(p, "  The IP of " + ipMsg);
-            if (Server.useWhitelist && Server.whiteList.Contains(name))
+            if (ServerConfig.useWhitelist && Server.whiteList.Contains(name))
                 Player.Message(p, "  Player is &fWhitelisted");
         }
                 

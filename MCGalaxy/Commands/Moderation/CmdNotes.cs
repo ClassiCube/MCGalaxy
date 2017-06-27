@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (!Server.LogNotes) {
+            if (!ServerConfig.LogNotes) {
                 Player.Message(p, "The server does not have notes logging enabled."); return;
             }
             

@@ -34,10 +34,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
-            if (p != null && p.Rank < Server.verifyadminsrank) {
-                Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", Server.verifyadminsrank); return;
+            if (p != null && p.Rank < ServerConfig.verifyadminsrank) {
+                Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", ServerConfig.verifyadminsrank); return;
             }
-            if (!Server.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
+            if (!ServerConfig.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
             if (message == "") { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Moderation {
         void SetPassword(Player p, string message) {
             if (p.adminpen && File.Exists("extra/passwords/" + p.name + ".dat")) {
                 Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
-                               "%SIf you have &cforgotten %Syour password, contact &c" + Server.server_owner + " %Sand they can &creset it!");
+                               "%SIf you have &cforgotten %Syour password, contact &c" + ServerConfig.server_owner + " %Sand they can &creset it!");
                 return;
             }
             if (message.IndexOf(' ') >= 0) { Player.Message(p, "Your password must be one word!"); return; }
@@ -89,11 +89,11 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "&cYou must first verify with %T/pass [Password]"); return;
             }
             
-            if (p != null && (Server.server_owner == "Notch" || Server.server_owner == "")) {
+            if (p != null && (ServerConfig.server_owner == "Notch" || ServerConfig.server_owner == "")) {
                 Player.Message(p, "Please tell the server owner to set the 'Server Owner' property.");
                 return;
             }
-            if (p != null && Server.server_owner != p.name)  {
+            if (p != null && ServerConfig.server_owner != p.name)  {
                 Player.Message(p, "Only console and the server owner may reset passwords."); return;
             }
             

@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands.World {
             
             string name = null;
             if (args.Length == 1) {
-                name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + ")";
+                name = "&cMuseum " + ServerConfig.DefaultColor + "(" + args[0] + ")";
             } else {
-                name = "&cMuseum " + Server.DefaultColor + "(" + args[0] + " " + args[1] + ")";
+                name = "&cMuseum " + ServerConfig.DefaultColor + "(" + args[0] + " " + args[1] + ")";
             }
             
             if (p.level.name.CaselessEq(name)) {

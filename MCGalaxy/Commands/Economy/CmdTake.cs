@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Eco {
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "%cYou can't take %3" + Server.moneys + "%c from yourself"); return; }
+            if (p != null && p == who) { Player.Message(p, "%cYou can't take %3" + ServerConfig.moneys + "%c from yourself"); return; }
             
             int money = 0;
             if (who == null) {
@@ -66,9 +66,9 @@ namespace MCGalaxy.Commands.Eco {
         
         public override void Help(Player p){
             Player.Message(p, "%T/take [player] [amount] <reason>");
-            Player.Message(p, "%HTakes [amount] of &3" + Server.moneys + " %Sfrom [player]");
+            Player.Message(p, "%HTakes [amount] of &3" + ServerConfig.moneys + " %Sfrom [player]");
             Player.Message(p, "%T/take [player] all <reason>");
-            Player.Message(p, "%HTakes all the &3" + Server.moneys + " %Sfrom [player]");
+            Player.Message(p, "%HTakes all the &3" + ServerConfig.moneys + " %Sfrom [player]");
         }
     }
 }

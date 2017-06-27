@@ -78,7 +78,7 @@ namespace MCGalaxy {
                                    Orientation rot, string possession = "") {
             byte id = p == dst ? Entities.SelfID : p.id;
             
-            if (!Server.TablistGlobal)
+            if (!ServerConfig.TablistGlobal)
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
                 string col = GetSupportedCol(dst, p.color);
@@ -134,7 +134,7 @@ namespace MCGalaxy {
             string skin = Chat.Format(b.SkinName, dst, true, true, false);
 
             SpawnRaw(dst, b.id, skin, name, b.Model, b.Pos, b.Rot);
-            if (Server.TablistBots)
+            if (ServerConfig.TablistBots)
                 TabList.Add(dst, b);
         }
         
@@ -161,13 +161,13 @@ namespace MCGalaxy {
         
         internal static void Despawn(Player dst, byte id) {
             dst.Send(Packet.RemoveEntity(id));
-            if (!Server.TablistGlobal)
+            if (!ServerConfig.TablistGlobal)
                 TabList.Remove(dst, id);
         }
         
         internal static void Despawn(Player dst, PlayerBot b) {
             dst.Send(Packet.RemoveEntity(b.id));
-            if (Server.TablistBots)
+            if (ServerConfig.TablistBots)
                 TabList.Remove(dst, b.id);
         }
 

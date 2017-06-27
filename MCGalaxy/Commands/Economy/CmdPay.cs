@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + Server.moneys); return; }
+            if (p != null && p == who) { Player.Message(p, "You cannot pay yourself %3" + ServerConfig.moneys); return; }
             int money, srcMoney = Player.IsSuper(p) ? int.MaxValue : p.money;
             
             if (who == null) {
@@ -57,17 +57,17 @@ namespace MCGalaxy.Commands.Eco {
 
         static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
             if (receiver + amount > 16777215) { 
-                Player.Message(p, "%cPlayers cannot have over %f16777215 %3" + Server.moneys); return false; 
+                Player.Message(p, "%cPlayers cannot have over %f16777215 %3" + ServerConfig.moneys); return false; 
             }
             if (payer < amount) { 
-                Player.Message(p, "%cYou don't have enough %3" + Server.moneys); return false; 
+                Player.Message(p, "%cYou don't have enough %3" + ServerConfig.moneys); return false; 
             }
             return true;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/pay [player] [amount] <reason>");
-            Player.Message(p, "%HPays [amount] &3{0} %Hto [player]", Server.moneys);
+            Player.Message(p, "%HPays [amount] &3{0} %Hto [player]", ServerConfig.moneys);
         }
     }
 }

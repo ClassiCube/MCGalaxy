@@ -141,8 +141,8 @@ namespace MCGalaxy {
             AddAndLoadGroup(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Find(Server.defaultRank) != null) {
-                standard = Group.Find(Server.defaultRank);
+            if (Find(ServerConfig.defaultRank) != null) {
+                standard = Group.Find(ServerConfig.defaultRank);
             } else {
                 standard = GuestRank;
             }
@@ -259,7 +259,7 @@ namespace MCGalaxy {
             foreach (Group grp in Group.GroupList) {
                 if (skipExtra && (grp.Permission < LevelPermission.Guest || grp.Permission >= LevelPermission.Nobody)) continue;
                 
-                if (includeColor) sum += ", " + grp.ColoredName + Server.DefaultColor;
+                if (includeColor) sum += ", " + grp.ColoredName + ServerConfig.DefaultColor;
                 else if (permissions) sum += ", " + ((int)grp.Permission);
                 else sum += ", " + grp.name;
             }

@@ -102,8 +102,8 @@ namespace MCGalaxy {
                     File.Move(oldDir + src + ".lvl", newDir + dst + ".lvl");
                     if (DirectoryEmpty(oldDir)) Directory.Delete(oldDir);
                 } else {
-                    if (DirectoryEmpty(Server.backupLocation + "/" + src + "/"))
-                        Directory.Delete(Server.backupLocation + "/" + src + "/");
+                    if (DirectoryEmpty(ServerConfig.backupLocation + "/" + src + "/"))
+                        Directory.Delete(ServerConfig.backupLocation + "/" + src + "/");
                     break;
                 }
             }

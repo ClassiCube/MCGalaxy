@@ -83,13 +83,13 @@ namespace MCGalaxy {
             reset = true;
             retries = 0;
             Disconnect("IRC Bot resetting...");
-            if (!Server.irc) return;
+            if (!ServerConfig.irc) return;
             Connect();
         }
         
         /// <summary> Connects this bot to IRC, if IRC is enabled. </summary>
         public void Connect() {
-            if (!Server.irc || Connected || Server.shuttingDown) return;
+            if (!ServerConfig.irc || Connected || Server.shuttingDown) return;
             InitConnectionState();
             handlers.Hook();
             
@@ -118,11 +118,11 @@ namespace MCGalaxy {
         public bool Connected { get { return connection != null && connection.Connected; } }
         
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
-        public bool Enabled { get { return Server.irc && connection != null && connection.Connected; } }
+        public bool Enabled { get { return ServerConfig.irc && connection != null && connection.Connected; } }
         
         
         void InitConnectionState() {
-            if (!Server.irc || connection != null) return;
+            if (!ServerConfig.irc || connection != null) return;
             connection = new Connection(new UTF8Encoding(false), args);
             LoadBannedCommands();
         }
@@ -140,15 +140,15 @@ namespace MCGalaxy {
         }
         
         void UpdateState() {
-            channels = GetChannels(Server.ircChannel);
-            opchannels = GetChannels(Server.ircOpChannel);
-            nick = Server.ircNick.Replace(" ", "");
-            server = Server.ircServer;
+            channels = GetChannels(ServerConfig.ircChannel);
+            opchannels = GetChannels(ServerConfig.ircOpChannel);
+            nick = ServerConfig.ircNick.Replace(" ", "");
+            server = ServerConfig.ircServer;
             
             args = new ConnectionArgs(nick, server);
             args.RealName = Server.SoftwareNameVersioned;
-            args.Port = Server.ircPort;
-            args.ServerPassword = Server.ircIdentify && Server.ircPassword != "" ? Server.ircPassword : "*";
+            args.Port = ServerConfig.ircPort;
+            args.ServerPassword = ServerConfig.ircIdentify && ServerConfig.ircPassword != "" ? ServerConfig.ircPassword : "*";
         }
         
         static string[] GetChannels(string names) {

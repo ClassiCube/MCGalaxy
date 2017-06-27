@@ -33,28 +33,28 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[0].ToLower()) {
                 case "rt":
                 case "reloadthreshold":
-                    SetLimit(p, "Threshold before drawing reloads map", ref Server.DrawReloadLimit, limit, hasLimit);
+                    SetLimit(p, "Threshold before drawing reloads map", ref ServerConfig.DrawReloadLimit, limit, hasLimit);
                     return;
                 case "rp":
                 case "restartphysics":
-                    SetLimit(p, "Custom /rp limit", ref Server.rpLimit, limit, hasLimit);
+                    SetLimit(p, "Custom /rp limit", ref ServerConfig.rpLimit, limit, hasLimit);
                     return;
                 case "rpnormal":
-                    SetLimit(p, "Normal /rp limit", ref Server.rpNormLimit, limit, hasLimit);
+                    SetLimit(p, "Normal /rp limit", ref ServerConfig.rpNormLimit, limit, hasLimit);
                     return;
                 case "pu":
                 case "physicsundo":
-                    SetLimit(p, "Physics undo max entries", ref Server.physUndo, limit, hasLimit);
+                    SetLimit(p, "Physics undo max entries", ref ServerConfig.physUndo, limit, hasLimit);
                     return;
                 case "gen":
                 case "genlimit":
-                    SetLimit(p, "Maximum volume of maps players can generate", ref Server.MapGenLimit, limit, hasLimit);
+                    SetLimit(p, "Maximum volume of maps players can generate", ref ServerConfig.MapGenLimit, limit, hasLimit);
                     return;
                 case "genadmin":
                 case "genadminlimit":
                 case "admingen":
                 case "admingenlimit":
-                    SetLimit(p, "Maximum volume of maps admins can generate", ref Server.MapGenLimitAdmin, limit, hasLimit);
+                    SetLimit(p, "Maximum volume of maps admins can generate", ref ServerConfig.MapGenLimitAdmin, limit, hasLimit);
                     return;
             }
 

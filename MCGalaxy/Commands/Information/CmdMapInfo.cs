@@ -78,8 +78,8 @@ namespace MCGalaxy.Commands.Info {
 
             DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
-            if (Directory.Exists(Server.backupLocation + "/" + data.Name)) {
-                int latest = Directory.GetDirectories(Server.backupLocation + "/" + data.Name).Length;
+            if (Directory.Exists(ServerConfig.backupLocation + "/" + data.Name)) {
+                int latest = Directory.GetDirectories(ServerConfig.backupLocation + "/" + data.Name).Length;
                 DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
                 Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string GetRealmMapOwner(string lvlName) {
-            bool plus = Server.ClassicubeAccountPlus;
+            bool plus = ServerConfig.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
             if (plus && lvlName.IndexOf('+') == -1) return null;
             
@@ -256,9 +256,9 @@ namespace MCGalaxy.Commands.Info {
                 WeatherFade = lvl.WeatherFade;
                 
                 TerrainUrl = lvl.terrainUrl != "" ?
-                    lvl.terrainUrl : Server.defaultTerrainUrl;
+                    lvl.terrainUrl : ServerConfig.defaultTerrainUrl;
                 TextureUrl = lvl.texturePackUrl != "" ?
-                    lvl.texturePackUrl : Server.defaultTextureUrl;
+                    lvl.texturePackUrl : ServerConfig.defaultTextureUrl;
                 
                 Authors = lvl.Authors;
                 TotalRounds = lvl.RoundsPlayed; HumanRounds = lvl.RoundsHumanWon;

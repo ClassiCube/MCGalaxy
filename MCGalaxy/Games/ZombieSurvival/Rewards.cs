@@ -68,7 +68,7 @@ namespace MCGalaxy.Games.ZS {
 
         static void IncreaseAliveStats(Player p, ZombieGame game) {
             if (p.Game.PledgeSurvive) {
-                Player.Message(p, "You received &a5 %3" + Server.moneys +
+                Player.Message(p, "You received &a5 %3" + ServerConfig.moneys +
                               " %Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }
@@ -89,15 +89,15 @@ namespace MCGalaxy.Games.ZS {
                 int reward = GetMoneyReward(pl, alive, rand);
                 
                 if (reward == -1) {
-                    pl.SendMessage("You may not hide inside a block! No " + Server.moneys + " for you."); reward = 0;
+                    pl.SendMessage("You may not hide inside a block! No " + ServerConfig.moneys + " for you."); reward = 0;
                 } else if (reward > 0) {
-                    pl.SendMessage(Colors.gold + "You gained " + reward + " " + Server.moneys);
+                    pl.SendMessage(Colors.gold + "You gained " + reward + " " + ServerConfig.moneys);
                 }
                 
                 pl.SetMoney(pl.money + reward);
                 pl.Game.ResetZombieState();
                 if (pl.Game.Referee) {
-                    pl.SendMessage("You gained one " + Server.moneys + " because you're a ref. Would you like a medal as well?");
+                    pl.SendMessage("You gained one " + ServerConfig.moneys + " because you're a ref. Would you like a medal as well?");
                     pl.SetMoney(pl.money + 1);
                 }
                 
@@ -131,7 +131,7 @@ namespace MCGalaxy.Games.ZS {
                 winner = online[rand.Next(online.Count)];
                 amount = 9 * online.Count;
                 game.CurLevel.ChatLevel(winner.ColoredName + " %Swon the lottery for &6"
-                                        + amount + " " + Server.moneys);
+                                        + amount + " " + ServerConfig.moneys);
             }
             game.Lottery.Clear();
             winner.SetMoney(winner.money + amount);

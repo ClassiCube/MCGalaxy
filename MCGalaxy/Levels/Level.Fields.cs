@@ -69,7 +69,7 @@ namespace MCGalaxy {
         [Obsolete] public ushort length;
         
         public bool IsMuseum {
-            get { return name.StartsWith("&cMuseum " + Server.DefaultColor, StringComparison.Ordinal); }
+            get { return name.StartsWith("&cMuseum " + ServerConfig.DefaultColor, StringComparison.Ordinal); }
         }        
         
         public static bool cancelload;
@@ -92,7 +92,7 @@ namespace MCGalaxy {
         
         /// <summary> Whether this map sees server-wide chat. </summary>
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
-        public bool SeesServerWideChat { get { return worldChat && Server.worldChat; } }
+        public bool SeesServerWideChat { get { return worldChat && ServerConfig.worldChat; } }
         
         internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
         public List<ulong> blockqueue = new List<ulong>();

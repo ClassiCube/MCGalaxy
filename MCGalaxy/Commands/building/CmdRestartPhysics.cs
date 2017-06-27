@@ -102,14 +102,14 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (extraInfo.Raw == 0) {
-                if (buffer.Count > Server.rpNormLimit) {
-                    Player.Message(p, "Cannot restart more than " + Server.rpNormLimit + " blocks.");
+                if (buffer.Count > ServerConfig.rpNormLimit) {
+                    Player.Message(p, "Cannot restart more than " + ServerConfig.rpNormLimit + " blocks.");
                     Player.Message(p, "Tried to restart " + buffer.Count + " blocks.");
                     return false;
                 }
-            } else if (buffer.Count > Server.rpLimit) {
+            } else if (buffer.Count > ServerConfig.rpLimit) {
                 Player.Message(p, "Tried to add physics to " + buffer.Count + " blocks.");
-                Player.Message(p, "Cannot add physics to more than " + Server.rpLimit + " blocks.");
+                Player.Message(p, "Cannot add physics to more than " + ServerConfig.rpLimit + " blocks.");
                 return false;
             }
 

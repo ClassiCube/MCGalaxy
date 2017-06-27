@@ -32,7 +32,7 @@ namespace MCGalaxy {
             //Important note:  This does NOT account for foreign keys, BLOB's etc.  It only works for what we actually put in the db.
 
             sql.WriteLine("-- {0} SQL Database Dump", Server.SoftwareName);
-            sql.WriteLine("-- Host: {0}", Server.MySQLHost);
+            sql.WriteLine("-- Host: {0}", ServerConfig.MySQLHost);
             sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now);
             sql.WriteLine("-- {0} version: {1}", Server.SoftwareName, Server.VersionString);
             sql.WriteLine();
@@ -59,7 +59,7 @@ namespace MCGalaxy {
         }
         
         static void WriteTableSchema(string tableName, StreamWriter sql) {
-            if (Server.useMySQL) {
+            if (ServerConfig.useMySQL) {
                 string pri = "";
                 sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
                 
@@ -169,7 +169,7 @@ namespace MCGalaxy {
         static void ParseCreate(ref string cmd, int index) {
             cmd = cmd.Remove(0, index);
             cmd = cmd.Replace(" unsigned", " UNSIGNED");
-            if (!Server.useMySQL) return;
+            if (!ServerConfig.useMySQL) return;
             
             // MySQL does not support the format used by the SQLite backend for the primary key
             const string priKey = " PRIMARY KEY AUTOINCREMENT";

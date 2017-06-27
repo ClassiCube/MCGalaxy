@@ -26,9 +26,9 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
 
-            if (Server.irc) {
+            if (ServerConfig.irc) {
                 Player.Message(p, "IRC is &aEnabled%S.");
-                Player.Message(p, "Location: " + Server.ircServer + " > " + Server.ircChannel);
+                Player.Message(p, "Location: " + ServerConfig.ircServer + " > " + ServerConfig.ircChannel);
             } else {
                 Player.Message(p, "IRC is &cDisabled%S.");
             }

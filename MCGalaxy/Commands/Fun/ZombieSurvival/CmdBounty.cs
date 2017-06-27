@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Fun {
             if (!CommandParser.GetByte(p, args[1], "Bounty amount", ref amount)) return;
             
             if (p.money < amount) {
-                Player.Message(p, "You do not have enough " + Server.moneys + " to place such a large bountry."); return;
+                Player.Message(p, "You do not have enough " + ServerConfig.moneys + " to place such a large bountry."); return;
             }
             
             BountyData old = Server.zombie.FindBounty(who.name);
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Fun {
             
             if (old == null) {
                 Chat.MessageGlobal("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
-                                who.ColoredName, amount, Server.moneys);
+                                who.ColoredName, amount, ServerConfig.moneys);
             } else {
                 Chat.MessageGlobal("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
-                                who.ColoredName, amount, Server.moneys, old.Amount);
+                                who.ColoredName, amount, ServerConfig.moneys, old.Amount);
                 Server.zombie.Bounties.Remove(old);
             }
             

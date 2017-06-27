@@ -31,8 +31,8 @@ namespace MCGalaxy.SQL {
         
         static string connFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
         public override string ConnectionString {
-            get { return String.Format(connFormat, Server.MySQLHost, Server.MySQLPort,
-                                       Server.MySQLUsername, Server.MySQLPassword, Server.DatabasePooling); }
+            get { return String.Format(connFormat, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
+                                       ServerConfig.MySQLUsername, ServerConfig.MySQLPassword, ServerConfig.DatabasePooling); }
         }
         public override bool EnforcesTextLength { get { return true; } }
 
@@ -44,7 +44,7 @@ namespace MCGalaxy.SQL {
         
         public override void CreateDatabase() {
             ParameterisedQuery query = GetStaticParameterised();
-            Database.Execute(query, "CREATE DATABASE if not exists `" + Server.MySQLDatabaseName + "`", true);
+            Database.Execute(query, "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`", true);
         }
         
         public override BulkTransaction CreateBulk() {
@@ -63,7 +63,7 @@ namespace MCGalaxy.SQL {
         public override bool TableExists(string table) {
             ValidateTable(table);
             const string syntax = "SELECT * FROM information_schema.tables WHERE table_name = @0 AND table_schema = @1";
-            using (DataTable results = Database.Fill(syntax, table, Server.MySQLDatabaseName)) {
+            using (DataTable results = Database.Fill(syntax, table, ServerConfig.MySQLDatabaseName)) {
                 return results.Rows.Count > 0;
             }
         }
@@ -132,7 +132,7 @@ namespace MCGalaxy.SQL {
         public MySQLBulkTransaction(string connString) {
             connection = new MySqlConnection(connString);
             connection.Open();
-            connection.ChangeDatabase(Server.MySQLDatabaseName);
+            connection.ChangeDatabase(ServerConfig.MySQLDatabaseName);
 
             transaction = connection.BeginTransaction();
         }

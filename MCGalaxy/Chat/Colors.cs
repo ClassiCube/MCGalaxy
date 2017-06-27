@@ -179,10 +179,10 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (color == 'S') { color = Server.DefaultColor[1]; return true; }
-            if (color == 'H') { color = Server.HelpDescriptionColor[1]; return true; }
-            if (color == 'T') { color = Server.HelpSyntaxColor[1]; return true; }
-            if (color == 'I') { color = Server.IRCColour[1]; return true; }    
+            if (color == 'S') { color = ServerConfig.DefaultColor[1]; return true; }
+            if (color == 'H') { color = ServerConfig.HelpDescriptionColor[1]; return true; }
+            if (color == 'T') { color = ServerConfig.HelpSyntaxColor[1]; return true; }
+            if (color == 'I') { color = ServerConfig.IRCColour[1]; return true; }    
             return Colors.GetFallback(color) != '\0';
         }        
         

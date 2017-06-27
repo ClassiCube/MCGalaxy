@@ -79,7 +79,7 @@ namespace MCGalaxy {
                 if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
                     Logger.Log(LogType.Warning, "This plugin ({0}) isn't compatible with this version of {1}!", instance.name, Server.SoftwareName);
                     Thread.Sleep(1000);
-                    if (!Server.unsafe_plugin) return;
+                    if (!ServerConfig.unsafe_plugin) return;
                     
                     Logger.Log(LogType.Warning, "Will attempt to load plugin anyways!");
                 }

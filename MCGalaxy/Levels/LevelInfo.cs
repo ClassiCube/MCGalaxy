@@ -81,7 +81,7 @@ namespace MCGalaxy {
         
         /// <summary> Relative path of a level's backup map file </summary>
         public static string BackupPath(string name, string backup) {
-            return Server.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
+            return ServerConfig.backupLocation + "/" + name + "/" + backup + "/" + name + ".lvl";
         }
         
         /// <summary> Relative path of a level's property file </summary>

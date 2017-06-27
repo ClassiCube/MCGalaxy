@@ -23,18 +23,18 @@ namespace MCGalaxy.Gui {
         
         void LoadRankProps() {
             GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.standard.Permission);
-            GuiPerms.SetDefaultIndex(rank_cmbOsMap, Server.osPerbuildDefault);
-            rank_cbTPHigher.Checked = Server.higherranktp;
-            rank_cbSilentAdmins.Checked = Server.adminsjoinsilent;
-            rank_cbEmpty.Checked = Server.showEmptyRanks;
+            GuiPerms.SetDefaultIndex(rank_cmbOsMap, ServerConfig.osPerbuildDefault);
+            rank_cbTPHigher.Checked = ServerConfig.higherranktp;
+            rank_cbSilentAdmins.Checked = ServerConfig.adminsjoinsilent;
+            rank_cbEmpty.Checked = ServerConfig.showEmptyRanks;
         }
         
         void ApplyRankProps() {
-            Server.defaultRank = rank_cmbDefault.SelectedItem.ToString();
-            Server.osPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
-            Server.higherranktp = rank_cbTPHigher.Checked;
-            Server.adminsjoinsilent = rank_cbSilentAdmins.Checked;
-            Server.showEmptyRanks = rank_cbEmpty.Checked;
+            ServerConfig.defaultRank = rank_cmbDefault.SelectedItem.ToString();
+            ServerConfig.osPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
+            ServerConfig.higherranktp = rank_cbTPHigher.Checked;
+            ServerConfig.adminsjoinsilent = rank_cbSilentAdmins.Checked;
+            ServerConfig.showEmptyRanks = rank_cbEmpty.Checked;
         }
 		
 				

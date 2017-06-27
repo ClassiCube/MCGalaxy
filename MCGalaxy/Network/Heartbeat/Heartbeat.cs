@@ -57,7 +57,7 @@ namespace MCGalaxy.Network {
         
         /// <summary> Initialises all heartbeats. </summary>
         public static void InitHeartbeats() {
-            if (Server.logbeat && !File.Exists("heartbeat.log")) {
+            if (ServerConfig.logbeat && !File.Exists("heartbeat.log")) {
                 using (File.Create("heartbeat.log")) { }
             }
 
@@ -95,14 +95,14 @@ namespace MCGalaxy.Network {
                     req.ContentLength = data.Length;
                     using (Stream w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
-                        if (Server.logbeat) Logger.Log(LogType.Debug, "Beat " + beat + " was sent");
+                        if (ServerConfig.logbeat) Logger.Log(LogType.Debug, "Beat " + beat + " was sent");
                     }
 
                     using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream())) {
                         string response = r.ReadToEnd().Trim();
                         beat.OnResponse(response);
 
-                        if (Server.logbeat) Logger.Log(LogType.Debug, "Beat: \"" + response + "\" was recieved");
+                        if (ServerConfig.logbeat) Logger.Log(LogType.Debug, "Beat: \"" + response + "\" was recieved");
                     }
                     return;
                 } catch (Exception ex) {
@@ -115,7 +115,7 @@ namespace MCGalaxy.Network {
                 }            
             }
             
-            if (Server.logbeat) Logger.Log(LogType.Debug, "Beat: " + beat + " failed.");
+            if (ServerConfig.logbeat) Logger.Log(LogType.Debug, "Beat: " + beat + " failed.");
         }
     }
 }

@@ -59,7 +59,7 @@ namespace MCGalaxy.DB {
                         () => "Most deaths", FormatInteger),
             new TopStat("Money", PlayerData.DBTable, 
                         PlayerData.ColumnMoney,
-                        () => "Most " + Server.moneys, FormatInteger),
+                        () => "Most " + ServerConfig.moneys, FormatInteger),
             
             new TopStat("Oldest", PlayerData.DBTable, 
                         PlayerData.ColumnFirstLogin,

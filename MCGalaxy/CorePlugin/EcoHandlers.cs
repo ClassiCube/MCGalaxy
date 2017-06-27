@@ -40,11 +40,11 @@ namespace MCGalaxy.Core {
         static void HandlePurchase(EcoTransaction data) {
             Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
             stats.TotalSpent += data.Amount;
-            stats.Purchase = data.ItemDescription + "%3 for %f" + data.Amount + " %3" + Server.moneys
+            stats.Purchase = data.ItemDescription + "%3 for %f" + data.Amount + " %3" + ServerConfig.moneys
                 + " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             
             Player p = PlayerInfo.FindExact(data.TargetName);
-            if (p != null) Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, Server.moneys);
+            if (p != null) Player.Message(p, "Your balance is now &f{0} &3{1}", p.money, ServerConfig.moneys);
             Economy.UpdateStats(stats);
         }
         
@@ -80,11 +80,11 @@ namespace MCGalaxy.Core {
         static void MessageAll(string format, EcoTransaction data) {
             string reason = data.Reason == null ? "" : " %S(" + data.Reason + "%S)";
             Chat.MessageGlobal(format, data.SourceFormatted, data.TargetFormatted,
-                               data.Amount, Server.moneys, reason);
+                               data.Amount, ServerConfig.moneys, reason);
         }
 
         static string Format(string action, EcoTransaction data) {
-            string entry = "%f" + data.Amount + "%3 " + Server.moneys + action
+            string entry = "%f" + data.Amount + "%3 " + ServerConfig.moneys + action
                 + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             string reason = data.Reason;
             

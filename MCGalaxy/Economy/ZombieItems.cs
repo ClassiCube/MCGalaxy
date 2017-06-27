@@ -40,7 +40,7 @@ namespace MCGalaxy.Eco {
             
             if (p.money < Price * count) {
                 Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.",
-                               Name, count * 10, Server.moneys); return;
+                               Name, count * 10, ServerConfig.moneys); return;
             }
             
             p.Game.BlocksLeft += 10 * count;
@@ -49,7 +49,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreCommand(Player p) {
             Player.Message(p, "%T/buy 10blocks [num]");
-            Player.Message(p, "%HCosts &a{0} * [num] %H{1}", Price, Server.moneys);
+            Player.Message(p, "%HCosts &a{0} * [num] %H{1}", Price, ServerConfig.moneys);
             Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
         }
     }
@@ -128,7 +128,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, Server.moneys); return;
+                Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, ServerConfig.moneys); return;
             }
             if (p.Game.Invisible) { Player.Message(p, "You are already invisible."); return; }
             if (p.Game.InvisibilityPotions >= MaxPotions) {

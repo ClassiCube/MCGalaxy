@@ -45,7 +45,7 @@ namespace MCGalaxy {
 
         public static void UpdateCheck(Player p = null) {
             CurrentUpdate = true;
-            if (!Server.checkUpdates) return;
+            if (!ServerConfig.checkUpdates) return;
             WebClient client = HttpUtil.CreateWebClient();
 
             try {
@@ -56,8 +56,8 @@ namespace MCGalaxy {
                     return;
                 }
                 
-                if (Server.autoupdate || p != null) {
-                    if (Server.notifyPlayers || p != null) {
+                if (ServerConfig.autoupdate || p != null) {
+                    if (ServerConfig.notifyPlayers || p != null) {
                         NotifyPlayersOfUpdate(p);
                     } else {
                         PerformUpdate();
@@ -92,16 +92,16 @@ namespace MCGalaxy {
         }
         
         static void NotifyPlayersOfUpdate(Player p) {
-            Chat.MessageAll("Update found. Prepare for restart in &f" + Server.restartcountdown + " %Sseconds.");
-            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", Server.restartcountdown);
+            Chat.MessageAll("Update found. Prepare for restart in &f" + ServerConfig.restartcountdown + " %Sseconds.");
+            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", ServerConfig.restartcountdown);
             
-            int timeLeft = Server.restartcountdown;
+            int timeLeft = ServerConfig.restartcountdown;
             System.Timers.Timer countDown = new System.Timers.Timer();
             countDown.Interval = 1000;
             countDown.Start();
             
             countDown.Elapsed += delegate {
-                if (Server.autoupdate || p != null) {
+                if (ServerConfig.autoupdate || p != null) {
                     Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
                     Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
                     

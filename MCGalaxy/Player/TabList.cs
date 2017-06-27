@@ -30,7 +30,7 @@ namespace MCGalaxy {
         public static void Add(Player dst, Player p, byte id) {
             if (!dst.hasExtList) return;
             byte grpPerm = (byte)(offset - p.Rank);
-            if (!Server.TablistRankSorted) grpPerm = 0;
+            if (!ServerConfig.TablistRankSorted) grpPerm = 0;
             
             string name, group;
             GetEntry(p, dst, out name, out group);
@@ -40,7 +40,7 @@ namespace MCGalaxy {
         /// <summary> Gets the name and the group name for the given player. </summary>
         public static void GetEntry(Player p, Player dst, out string name, out string group) {
             string col = Entities.GetSupportedCol(dst, p.color);          
-            group = Server.TablistGlobal ? "On " + p.level.name : "&fPlayers";
+            group = ServerConfig.TablistGlobal ? "On " + p.level.name : "&fPlayers";
             name = col + p.truename;
             IGame game = p.level.CurrentGame();
             if (game != null) game.GetTabName(p, dst, ref name, ref group);
@@ -71,7 +71,7 @@ namespace MCGalaxy {
                     if (self) Add(other, p, Entities.SelfID);
                     continue;
                 }
-                if (!Server.TablistGlobal && p.level != other.level) continue;
+                if (!ServerConfig.TablistGlobal && p.level != other.level) continue;
                 
                 if (other.CanSeeEntity(p))
                     Add(other, p, p.id);
@@ -83,7 +83,7 @@ namespace MCGalaxy {
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
         internal static void RemoveAll(Player p, bool self, bool toVisible) {
-            if (!Server.TablistGlobal) return;
+            if (!ServerConfig.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {               
                 if (p == other) {

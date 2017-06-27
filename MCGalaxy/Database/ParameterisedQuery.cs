@@ -53,7 +53,7 @@ namespace MCGalaxy.SQL {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
-                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                    conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
                 using (IDbCommand cmd = CreateCommand(query, conn)) {
                     FillParams(cmd);
@@ -68,7 +68,7 @@ namespace MCGalaxy.SQL {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (MultipleSchema)
-                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                    conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
                 using (DbDataAdapter da = CreateDataAdapter(query, conn)) {
                     FillParams(da.SelectCommand);
@@ -84,7 +84,7 @@ namespace MCGalaxy.SQL {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (MultipleSchema)
-                    conn.ChangeDatabase(Server.MySQLDatabaseName);
+                    conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
                 using (IDbCommand cmd = CreateCommand(query, conn)) {
                     FillParams(cmd);

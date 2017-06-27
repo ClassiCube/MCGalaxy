@@ -27,7 +27,7 @@ namespace MCGalaxy.Core {
         static readonly object ipsLock = new object();
         
         internal static bool CheckIP(Player p) {
-            if (!Server.IPSpamCheck || Player.IsLocalIpAddress(p.ip)) return true;
+            if (!ServerConfig.IPSpamCheck || Player.IsLocalIpAddress(p.ip)) return true;
             DateTime blockedUntil, now = DateTime.UtcNow;
             
             lock (ipsLock) {
@@ -39,8 +39,8 @@ namespace MCGalaxy.Core {
                 blockedUntil = entries.BlockedUntil;
                 
                 if (blockedUntil < now) {
-                    if (!entries.AddSpamEntry(Server.IPSpamCount, Server.IPSpamInterval)) {
-                        entries.BlockedUntil = now.AddSeconds(Server.IPSpamBlockTime);
+                    if (!entries.AddSpamEntry(ServerConfig.IPSpamCount, ServerConfig.IPSpamInterval)) {
+                        entries.BlockedUntil = now.AddSeconds(ServerConfig.IPSpamBlockTime);
                     }
                     return true;
                 }
@@ -58,10 +58,10 @@ namespace MCGalaxy.Core {
         
         internal static void CleanupTask(SchedulerTask task) {
             lock (ipsLock) {
-                if (!Server.IPSpamCheck) { ips.Clear(); return; }
+                if (!ServerConfig.IPSpamCheck) { ips.Clear(); return; }
                 
                 // Find all connections which last joined before the connection spam check interval
-                DateTime threshold = DateTime.UtcNow.AddSeconds(-Server.IPSpamInterval);
+                DateTime threshold = DateTime.UtcNow.AddSeconds(-ServerConfig.IPSpamInterval);
                 List<string> expired = null;
                 foreach (var kvp in ips) {
                     DateTime lastJoin = kvp.Value[kvp.Value.Count - 1];
