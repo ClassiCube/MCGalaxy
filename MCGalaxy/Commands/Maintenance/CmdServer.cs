@@ -163,7 +163,6 @@ namespace MCGalaxy.Commands.Maintenance {
             foreach (var elem in Server.serverConfig)
                 elem.Field.SetValue(null, elem.Attrib.DefaultValue);
             
-            Server.ircafkset = new List<string>();
             Server.messages = new List<string>();
             Server.chatmod = false;
 

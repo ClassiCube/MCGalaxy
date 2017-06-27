@@ -34,6 +34,9 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can see server CPU and memory usage") }; }
         }
         
+        static PerformanceCounter allPCounter = null;
+        static PerformanceCounter cpuPCounter = null;
+        
         public override void Use(Player p, string message) {
             if (message != "") { Help(p); return; }
             
@@ -79,22 +82,22 @@ namespace MCGalaxy.Commands.Info {
         
         void ShowServerStats(Player p) {
             Process proc = Process.GetCurrentProcess();
-            if (Server.PCCounter == null) {
+            if (allPCounter == null) {
                 Player.Message(p, "Starting performance counters...one second");
-                Server.PCCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                Server.PCCounter.BeginInit();
-                Server.PCCounter.NextValue();
+                allPCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                allPCounter.BeginInit();
+                allPCounter.NextValue();
 
-                Server.ProcessCounter = new PerformanceCounter("Process", "% Processor Time", proc.ProcessName);
-                Server.ProcessCounter.BeginInit();
-                Server.ProcessCounter.NextValue();
+                cpuPCounter = new PerformanceCounter("Process", "% Processor Time", proc.ProcessName);
+                cpuPCounter.BeginInit();
+                cpuPCounter.NextValue();
                 System.Threading.Thread.Sleep(500);
             }
             
             // Private Bytes because it is what the process has reserved for itself
             int threads = proc.Threads.Count;
             int mem = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
-            double cpu = Server.ProcessCounter.NextValue(), all = Server.PCCounter.NextValue();
+            double cpu = cpuPCounter.NextValue(), all = allPCounter.NextValue();
             Player.Message(p, "&a{0}% %SCPU usage, &a{1}% %Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
             Player.Message(p, "&a{0} %Sthreads, using &a{1} %Smegabytes of memory", threads, mem);
         }

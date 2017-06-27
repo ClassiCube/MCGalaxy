@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdChatRoom : Command {        
         public override string name { get { return "chatroom"; } }
@@ -36,15 +38,17 @@ namespace MCGalaxy.Commands.Chatting {
                 }; }
         }
         
+        static List<string> Chatrooms = new List<string>();
+        
         public override void Use(Player p, string message) {
             string[] parts = message.ToLower().SplitSpaces();
             
             if (message == "") {
-                if (Server.Chatrooms.Count == 0) {
-                    Player.Message(p, "There are currently no rooms");
+                if (Chatrooms.Count == 0) {
+                    Player.Message(p, "There are currently no chatrooms");
                 } else {
-                    Player.Message(p, "The current rooms are:");
-                    foreach (string room in Server.Chatrooms)
+                    Player.Message(p, "Current chatrooms are:");
+                    foreach (string room in Chatrooms)
                         Player.Message(p, room);
                 }
                 return;
@@ -79,7 +83,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleJoin(Player p, string[] parts) {
-            if (parts.Length > 1 && Server.Chatrooms.Contains(parts[1])) {
+            if (parts.Length > 1 && Chatrooms.Contains(parts[1])) {
                 string room = parts[1];
                 if (p.spyChatRooms.Contains(room)) {
                     Player.Message(p, "The chat room '{0}' has been removed " +
@@ -109,10 +113,10 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             string room = parts[1];
-            if (Server.Chatrooms.Contains(parts[1])) {
+            if (Chatrooms.Contains(parts[1])) {
                 Player.Message(p, "The chatoom '{0}' already exists", room);
             } else {
-                Server.Chatrooms.Add(room);
+                Chatrooms.Add(room);
                 Chat.MessageGlobal("A new chat room '{0}' has been created", room);
             }
         }
@@ -130,7 +134,7 @@ namespace MCGalaxy.Commands.Chatting {
                 return;
             }
 
-            if (!Server.Chatrooms.Contains(room)) {
+            if (!Chatrooms.Contains(room)) {
                 Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
             
@@ -146,7 +150,7 @@ namespace MCGalaxy.Commands.Chatting {
             Chat.MessageGlobal("{0} is being deleted", room);
             if (p.Chatroom == room)
                 HandleLeave(p);
-            Server.Chatrooms.Remove(room);
+            Chatrooms.Remove(room);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
@@ -171,7 +175,7 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             string room = parts[1];
-            if (Server.Chatrooms.Contains(room)) {
+            if (Chatrooms.Contains(room)) {
                 if (p.Chatroom == room) {
                     Player.Message(p, "You cannot spy on your own room"); return;
                 }
@@ -196,7 +200,8 @@ namespace MCGalaxy.Commands.Chatting {
             string name = parts[1], room = parts[2];
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
-            if (!Server.Chatrooms.Contains(room)) {
+            
+            if (!Chatrooms.Contains(room)) {
                 Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
             if (pl.Rank >= p.Rank) { MessageTooHighRank(p, "force-join", false); return;}
@@ -251,7 +256,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         void HandleOther(Player p, string[] parts) {
             string room = parts[0];
-            if (Server.Chatrooms.Contains(room)) {
+            if (Chatrooms.Contains(room)) {
                 Player.Message(p, "Players in room '" + room + "' :");
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {

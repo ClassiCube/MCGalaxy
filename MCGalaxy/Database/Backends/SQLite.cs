@@ -29,7 +29,7 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
         
-        static string connFormat = "Data Source =" + Server.apppath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
+        static string connFormat = "Data Source =" + Utils.FolderPath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
         public override string ConnectionString {
             get { return String.Format(connFormat, ServerConfig.DatabasePooling); }
         }

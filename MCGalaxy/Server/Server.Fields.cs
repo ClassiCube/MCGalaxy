@@ -18,10 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
 using System.Threading;
-using MCGalaxy.Config;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
@@ -32,7 +29,6 @@ namespace MCGalaxy {
         public static bool canceladmin;
         public static bool cancellog;
         public static bool canceloplog;
-        public static string apppath = Utils.FolderPath;
         
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
@@ -65,8 +61,6 @@ namespace MCGalaxy {
         public static string Hash = String.Empty, URL = String.Empty;
         public static INetworkListen Listener;
 
-        //Chatrooms
-        public static List<string> Chatrooms = new List<string>();
         //Other
         public static bool UseCTF = false;
         public static bool ServerSetupFinished = false;
@@ -77,24 +71,19 @@ namespace MCGalaxy {
         public static PlayerExtList frozen, muted, jailed, tempBans, tempRanks;
         
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();
-
-        internal static readonly List<string> opstats = new List<string>(
+        public static readonly List<string> Opstats = new List<string>(
             new string[] { "ban", "tempban", "xban", "banip", "kickban", "kick",
                 "warn", "mute", "freeze", "demote", "promote", "setrank" }
         );
-        public static List<string> Opstats { get { return opstats; } }
-
-        public static PerformanceCounter PCCounter = null;
-        public static PerformanceCounter ProcessCounter = null;
 
         public static Level mainLevel;
         [Obsolete("Use LevelInfo.Loaded.Items")]
         public static List<Level> levels;
-        //reviewlist intitialize
-        public static List<string> reviewlist = new List<string>();
-        public static List<string> ircafkset = new List<string>();
-        public static List<string> messages = new List<string>();
 
+        public static List<string> reviewlist = new List<string>();
+        public static List<string> messages = new List<string>();
+        [Obsolete("Use %S or ServerConfig.DefaultColor")]
+        public static string DefaultColor;
         public static string IP;
         
         //Global VoteKick In Progress Flag
