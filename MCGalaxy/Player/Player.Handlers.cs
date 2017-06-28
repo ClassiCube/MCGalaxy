@@ -487,7 +487,7 @@ namespace MCGalaxy {
                 //}
                 Game.team.SpawnPlayer(this);
                 //this.health = 100;
-            } else if ( Server.Countdown.playersleftlist.Contains(this) ) {
+            } else if ( Server.Countdown.PlayersRemaining.Contains(this) ) {
                 Server.Countdown.Death(this);
                 Command.all.Find("spawn").Use(this, "");
             } else if ( PlayingTntWars ) {

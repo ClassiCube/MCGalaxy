@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.Operator, "+ can send the countdown rules to everybody"),
-                    new CommandPerm(LevelPermission.Operator, "+ can setup countdown (download/start/restart/enable/disable/cancel)"),
+                    new CommandPerm(LevelPermission.Operator, "+ can setup countdown (generate/start/restart/enable/disable/cancel)"),
                 }; }
         }
 
@@ -83,87 +83,77 @@ namespace MCGalaxy.Commands.Fun {
         void HandleJoin(Player p) {
             switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
-                    Player.Message(p, "Sorry - Countdown isn't enabled yet");
+                    Player.Message(p, "Cannot join as countdown is not running.");
                     return;
                 case CountdownGameStatus.Enabled:
                     Server.Countdown.PlayerJoinedGame(p);
                     return;
-                case CountdownGameStatus.AboutToStart:
-                    Player.Message(p, "Sorry - The game is about to start");
+                case CountdownGameStatus.RoundCountdown:
+                    Player.Message(p, "Cannot join when a round is about to start. Wait until next round.");
                     return;
-                case CountdownGameStatus.InProgress:
-                    Player.Message(p, "Sorry - The game is already in progress.");
+                case CountdownGameStatus.RoundInProgress:
+                    Player.Message(p, "Cannot join when a round is in progress. Wait until next round.");
                     return;
-                case CountdownGameStatus.Finished:
+                case CountdownGameStatus.RoundFinished:
                     Player.Message(p, "Sorry - The game has finished. Get an op to reset it.");
                     return;
             }
         }
         
         void HandleLeave(Player p) {
-            if (Server.Countdown.players.Contains(p)) {
+            if (Server.Countdown.Players.Contains(p)) {
                 switch (Server.Countdown.Status) {
                     case CountdownGameStatus.Disabled:
-                        Player.Message(p, "Sorry - Countdown isn't enabled yet");
+                        Player.Message(p, "Cannot leave as countdown is not running.");
                         return;
                     case CountdownGameStatus.Enabled:
-                        Player.Message(p, "You've left the game.");
+                        Player.Message(p, "You've left countdown.");
                         Server.Countdown.PlayerLeftGame(p);
                         break;
-                    case CountdownGameStatus.AboutToStart:
-                        Player.Message(p, "Sorry - The game is about to start");
+                    case CountdownGameStatus.RoundCountdown:
+                        Player.Message(p, "Cannot leave when a round is about to start.");
                         return; ;
-                    case CountdownGameStatus.InProgress:
-                        Player.Message(p, "Sorry - you are in a game that is in progress, please wait till its finished or till you've died.");
+                    case CountdownGameStatus.RoundInProgress:
+                        Player.Message(p, "Cannot leave when a round in progress - please wait until the round ends or you die.");
                         return;
-                    case CountdownGameStatus.Finished:
-                        Server.Countdown.players.Remove(p);
-                        Server.Countdown.playersleftlist.Remove(p);
+                    case CountdownGameStatus.RoundFinished:
+                        Server.Countdown.Players.Remove(p);
+                        Server.Countdown.PlayersRemaining.Remove(p);
                         p.playerofcountdown = false;
                         Player.Message(p, "You've left the game.");
                         break;
                 }
-            } else if (!(Server.Countdown.playersleftlist.Contains(p)) && Server.Countdown.players.Contains(p)) {
-                Server.Countdown.players.Remove(p);
+            } else if (!(Server.Countdown.PlayersRemaining.Contains(p)) && Server.Countdown.Players.Contains(p)) {
+                Server.Countdown.Players.Remove(p);
                 Player.Message(p, "You've left the game.");
             } else {
-                Player.Message(p, "You haven't joined the game yet!!");
+                Player.Message(p, "Cannot leave as you did not join countdown to begin with.");
             }
         }
         
         void HandlePlayers(Player p) {
             switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
-                    Player.Message(p, "The game has not been enabled yet.");
+                    Player.Message(p, "Countdown is not running.");
                     break;
 
-                case CountdownGameStatus.Enabled:
-                    Player.Message(p, "Players who have joined:");
-                    foreach (Player plya in Server.Countdown.players)
-                        Player.Message(p, plya.ColoredName);
-                    break;
+                case CountdownGameStatus.RoundInProgress:
+                    Player.Message(p, "Players in countdown:");
+                    Player.Message(p, Server.Countdown.Players.Join(FormatPlayer));
+                    break;                    
 
-                case CountdownGameStatus.AboutToStart:
-                    Player.Message(p, "Players who are about to play:");
-                    foreach (Player plya in Server.Countdown.players)
-                        Player.Message(p, plya.ColoredName);
+                default:
+                    Player.Message(p, "Players in countdown: ");
+                    Player.Message(p, Server.Countdown.Players.Join(pl => pl.ColoredName));
                     break;
-
-                case CountdownGameStatus.InProgress:
-                    Player.Message(p, "Players left playing:");
-                    foreach (Player plya in Server.Countdown.players) {
-                        if (Server.Countdown.playersleftlist.Contains(plya))
-                            Player.Message(p, plya.ColoredName + " %Swho is &aIN");
-                        else
-                            Player.Message(p, plya.ColoredName + " %Swho is &cOUT");
-                    }
-                    break;
-
-                case CountdownGameStatus.Finished:
-                    Player.Message(p, "Players who were playing:");
-                    foreach (Player plya in Server.Countdown.players)
-                        Player.Message(p, plya.ColoredName);
-                    break;
+            }
+        }
+        
+        static string FormatPlayer(Player pl) {
+            if (Server.Countdown.PlayersRemaining.Contains(pl)) {
+                return pl.ColoredName + " &a[IN]";
+            } else {
+                return pl.ColoredName + " &c[OUT]";
             }
         }
         
@@ -246,12 +236,12 @@ namespace MCGalaxy.Commands.Fun {
         void HandleDisable(Player p) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status == CountdownGameStatus.AboutToStart || Server.Countdown.Status == CountdownGameStatus.InProgress) {
+            if (Server.Countdown.Status == CountdownGameStatus.RoundCountdown || Server.Countdown.Status == CountdownGameStatus.RoundInProgress) {
                 Player.Message(p, "A game is currently in progress - please wait until it is finished, or use '/cd cancel' to cancel the game"); return;
             } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "Already disabled!!"); return;
             } else {
-                foreach (Player pl in Server.Countdown.players)
+                foreach (Player pl in Server.Countdown.Players)
                     Player.Message(pl, "The countdown game was disabled.");
                 Server.Countdown.Reset(p, true);
                 Server.Countdown.Status = CountdownGameStatus.Disabled;
@@ -262,7 +252,7 @@ namespace MCGalaxy.Commands.Fun {
         void HandleCancel(Player p) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status == CountdownGameStatus.AboutToStart || Server.Countdown.Status == CountdownGameStatus.InProgress) {
+            if (Server.Countdown.Status == CountdownGameStatus.RoundCountdown || Server.Countdown.Status == CountdownGameStatus.RoundInProgress) {
                 Server.Countdown.cancel = true;
                 Thread.Sleep(1500);
                 Player.Message(p, "Countdown has been canceled");
@@ -270,7 +260,7 @@ namespace MCGalaxy.Commands.Fun {
             } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "The game is disabled!!");
             } else {
-                foreach (Player pl in Server.Countdown.players)
+                foreach (Player pl in Server.Countdown.Players)
                     Player.Message(pl, "The countdown game was canceled");
                 Server.Countdown.Reset(null, true);
             }
@@ -282,11 +272,11 @@ namespace MCGalaxy.Commands.Fun {
             if (Server.Countdown.Status != CountdownGameStatus.Enabled) {
                 Player.Message(p, "Either a game is already in progress or it hasn't been enabled"); return;
             }
-            if (Server.Countdown.players.Count < 2) {
+            if (Server.Countdown.Players.Count < 2) {
                 Player.Message(p, "Sorry, there aren't enough players to play."); return;
             }
             
-            Server.Countdown.playersleftlist = Server.Countdown.players;
+            Server.Countdown.PlayersRemaining = Server.Countdown.Players;
             CountdownGame game = Server.Countdown;
             switch (par1) {
                 case "slow":
@@ -313,9 +303,9 @@ namespace MCGalaxy.Commands.Fun {
             switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Please enable countdown first."); break;
-                case CountdownGameStatus.AboutToStart:
+                case CountdownGameStatus.RoundCountdown:
                     Player.Message(p, "Sorry - The game is about to start"); break;
-                case CountdownGameStatus.InProgress:
+                case CountdownGameStatus.RoundInProgress:
                     Player.Message(p, "Sorry - The game is already in progress."); break;
                 default:
                     Player.Message(p, "Reseting");
