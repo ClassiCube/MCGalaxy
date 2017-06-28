@@ -83,10 +83,18 @@ namespace MCGalaxy {
         }
         
         static bool LoadOfflineLevel(Player p, string name) {
-            if (!Level.CheckLoadOnGoto(name)) {
+            string propsPath = LevelInfo.FindPropertiesFile(name);
+            LevelConfig cfg = new LevelConfig();
+            LevelConfig.Load(propsPath, cfg);
+            
+            if (!cfg.LoadOnGoto) {
                 Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", name);
                 return false;
             }
+            
+           // LevelAccessController visitAccess = new LevelAccessController(null, cfg, true);
+            //bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
+            //if (!visitAccess.CheckDetailed(p, ignorePerms)) return false;
             
             CmdLoad.LoadLevel(p, name, true);
             Level lvl = LevelInfo.FindExact(name);

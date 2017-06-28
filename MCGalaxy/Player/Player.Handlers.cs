@@ -560,8 +560,8 @@ namespace MCGalaxy {
                 if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
                     TntWarsGame.player pl = it.FindPlayer(this);
                     foreach ( TntWarsGame.player p in it.Players ) {
-                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- " + ServerConfig.DefaultColor + newtext);
-                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- " + ServerConfig.DefaultColor + newtext);
+                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- %S" + newtext);
+                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- %S" + newtext);
                     }
                     
                     Logger.Log(LogType.GameActivity, "[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);

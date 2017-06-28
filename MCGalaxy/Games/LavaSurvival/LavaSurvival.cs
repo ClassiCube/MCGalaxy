@@ -330,7 +330,7 @@ namespace MCGalaxy.Games
                 if (!votes.ContainsKey(opt) && opt != map.name)
                 {
                     votes.Add(opt, 0);
-                    str += ServerConfig.DefaultColor + ", &5" + opt.Capitalize();
+                    str += "%S, &5" + opt.Capitalize();
                     i++;
                 }
             }
@@ -483,7 +483,7 @@ namespace MCGalaxy.Games
                 {
                     StringBuilder sb = new StringBuilder();
                     foreach (KeyValuePair<string, int> kvp in votes)
-                        sb.AppendFormat("{0}, &5{1}", ServerConfig.DefaultColor, kvp.Key.Capitalize());
+                        sb.AppendFormat("%S, &5{0}", kvp.Key.Capitalize());
                     sb.Remove(0, 4);
                     return sb.ToString();
                 }

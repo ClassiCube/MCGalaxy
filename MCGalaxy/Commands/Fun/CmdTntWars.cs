@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands.Fun {
             if (pl.Blue)
                 msg += " on the " + Colors.blue + "blue team";
             if (pl.spec)
-                msg += ServerConfig.DefaultColor + " (as a spectator)";
+                msg += " %S(as a spectator)";
             Chat.MessageGlobal(msg);
         }
         

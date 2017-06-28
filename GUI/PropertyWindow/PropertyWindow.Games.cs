@@ -569,7 +569,7 @@ namespace MCGalaxy.Gui {
                                 }
                             }
                             {
-                                string mesg = pl.p.ColoredName + ServerConfig.DefaultColor + " " + "is now";
+                                string mesg = pl.p.ColoredName + " %Sis now";
                                 if ( pl.Red ) {
                                     mesg += " on the " + Colors.red + "red team";
                                 }
@@ -577,7 +577,7 @@ namespace MCGalaxy.Gui {
                                     mesg += " on the " + Colors.blue + "blue team";
                                 }
                                 if ( pl.spec ) {
-                                    mesg += ServerConfig.DefaultColor + " (as a spectator)";
+                                    mesg += " (as a spectator)";
                                 }
                                 Chat.MessageGlobal(mesg);
                             }

@@ -399,14 +399,6 @@ namespace MCGalaxy {
             lvl.UpdateBlockHandlers();
         }
 
-        public static bool CheckLoadOnGoto(string givenName) {
-            string value = LevelInfo.FindOfflineProperty(givenName, "loadongoto");
-            if (value == null) return true;
-            bool load;
-            if (!bool.TryParse(value, out load)) return true;
-            return load;
-        }
-
         public void ChatLevel(string message) {
             ChatLevel(message, LevelPermission.Banned);
         }

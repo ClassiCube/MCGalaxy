@@ -253,20 +253,6 @@ namespace MCGalaxy {
             }
             return Group.standard;
         }
-
-        public static string concatList(bool includeColor = true, bool skipExtra = false, bool permissions = false) {
-            string sum = "";
-            foreach (Group grp in Group.GroupList) {
-                if (skipExtra && (grp.Permission < LevelPermission.Guest || grp.Permission >= LevelPermission.Nobody)) continue;
-                
-                if (includeColor) sum += ", " + grp.ColoredName + ServerConfig.DefaultColor;
-                else if (permissions) sum += ", " + ((int)grp.Permission);
-                else sum += ", " + grp.name;
-            }
-
-            if (includeColor) sum = sum.Remove(sum.Length - 2);
-            return sum.Remove(0, 2);
-        }
         
         
         /// <summary> Returns whether the given player is in the banned rank. </summary>

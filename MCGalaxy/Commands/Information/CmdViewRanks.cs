@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(2);
             if (message == "") { 
-                Player.Message(p, "Available ranks: " + Group.concatList()); return; 
+                Player.Message(p, "Available ranks: " +Group.GroupList.Join(g => g.ColoredName)); return; 
             }
             string modifer = args.Length > 1 ? args[1] : "";
             
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
         public override void Help(Player p) {
             Player.Message(p, "/viewranks [rank] - Shows all players who have [rank]");
             Player.Message(p, "/viewranks banned - Shows all players who are banned.");
-            Player.Message(p, "Available ranks: " + Group.concatList());
+            Player.Message(p, "Available ranks: " + Group.GroupList.Join(g => g.ColoredName));
         }
     }
 }
