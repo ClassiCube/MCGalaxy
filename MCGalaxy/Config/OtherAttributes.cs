@@ -52,6 +52,20 @@ namespace MCGalaxy.Config {
         }
     }
     
+    
+    public class ConfigByteAttribute : ConfigIntAttribute {
+        
+        public ConfigByteAttribute(string name, string section, string desc, int defValue,
+                                  int min = byte.MinValue, int max = byte.MaxValue)
+            : base(name, section, desc, defValue, min, max) {
+        }
+        
+        public override object Parse(string value) {
+            int intValue = (int)base.Parse(value);
+            return (byte)intValue; // Can't directly unbox object to byte - must unbox to int, then cast to byte
+        }
+    }
+    
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         
         public ConfigBoolAttribute(string name, string section, string desc, bool defValue)
