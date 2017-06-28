@@ -242,7 +242,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.UserActivity, "{0} rank changed to {1} on {2}.", type, grp.trueName, lvl.name);
             Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
             if (p != null && p.level != lvl)
-                Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, lvl.ColoredName);
+                Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, ColoredName);
         }
         
         /// <summary> Messages all player on the level (and source player) notifying them that the
@@ -261,7 +261,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.UserActivity, "{0} on {1}", msg, lvl.name);
             Chat.MessageLevel(lvl, msg);
             if (p != null && p.level != lvl)
-                Player.Message(p, "{0} on %S{1}", msg, lvl.ColoredName);
+                Player.Message(p, "{0} on %S{1}", msg, ColoredName);
         }
         
         

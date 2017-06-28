@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/mute [player] [timespan] <reason>");
-            Player.Message(p, "%HMutes or unmutes that player.");
+            Player.Message(p, "%HMutes player for [timespan], or unmutes that player.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }

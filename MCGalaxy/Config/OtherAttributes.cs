@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Config {
     
-    public sealed class ConfigIntAttribute : ConfigAttribute {
+    public class ConfigIntAttribute : ConfigAttribute {
         
         /// <summary> Minimum integer allowed for a value. </summary>
         public int MinValue;

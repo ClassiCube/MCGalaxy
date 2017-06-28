@@ -50,8 +50,8 @@ namespace MCGalaxy {
         public int JailZ;       
 
         // Environment settings
-        [ConfigInt("Weather", "Env", null, 0, 0, 2)]
-        public int Weather;       
+        [ConfigByte("Weather", "Env", null, 0, 0, 2)]
+        public byte Weather;       
         [ConfigString("Texture", "Env", null, "", true, null, NetUtils.StringSize)]
         public string Terrain = "";
         [ConfigString("TexturePack", "Env", null, "", true, null, NetUtils.StringSize)]
@@ -95,11 +95,11 @@ namespace MCGalaxy {
         [ConfigInt("weather-fade", "Env", null, 128, short.MinValue, short.MaxValue)]
         public int WeatherFade = 128;
         /// <summary> The block which will be displayed on the horizon. </summary>
-        [ConfigInt("HorizonBlock", "Env", null, Block.water, 0, 255)]
-        public int HorizonBlock = Block.water;
+        [ConfigByte("HorizonBlock", "Env", null, Block.water)]
+        public byte HorizonBlock = Block.water;
         /// <summary> The block which will be displayed on the edge of the map. </summary>
-        [ConfigInt("EdgeBlock", "Env", null, Block.blackrock, 0, 255)]
-        public int EdgeBlock = Block.blackrock;
+        [ConfigByte("EdgeBlock", "Env", null, Block.blackrock)]
+        public byte EdgeBlock = Block.blackrock;
          /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBool("ExpFog", "Env", null, false)]
         public bool ExpFog;
