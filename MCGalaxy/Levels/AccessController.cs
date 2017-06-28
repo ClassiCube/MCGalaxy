@@ -183,10 +183,17 @@ namespace MCGalaxy {
         public readonly bool IsVisit;
         readonly Level lvl;
         readonly LevelConfig cfg;
+        readonly string lvlName;
         
-        public LevelAccessController(Level lvl, LevelConfig cfg, bool isVisit) {
+        public LevelAccessController(Level lvl, bool isVisit) {
             this.lvl = lvl;
+            this.cfg = lvl.Config;
+            IsVisit = isVisit;
+        }
+        
+        public LevelAccessController(LevelConfig cfg, string levelName, bool isVisit) {
             this.cfg = cfg;
+            this.lvlName = levelName;
             IsVisit = isVisit;
         }
         
@@ -218,7 +225,9 @@ namespace MCGalaxy {
             get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }
         
-        protected override string ColoredName { get { return lvl.ColoredName; } }
+        protected override string ColoredName { 
+            get { return lvl != null ? lvl.ColoredName : cfg.Color + lvlName; }
+        }
         protected override string Action { get { return IsVisit ? "go to" : "build in"; } }
         protected override string ActionIng { get { return IsVisit ? "going to" : "building in"; } }
         protected override string Type { get { return IsVisit ? "visit" : "build"; } }

@@ -92,9 +92,9 @@ namespace MCGalaxy {
                 return false;
             }
             
-           // LevelAccessController visitAccess = new LevelAccessController(null, cfg, true);
-            //bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
-            //if (!visitAccess.CheckDetailed(p, ignorePerms)) return false;
+            LevelAccessController visitAccess = new LevelAccessController(cfg, name, true);
+            bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
+            if (!visitAccess.CheckDetailed(p, ignorePerms)) return false;
             
             CmdLoad.LoadLevel(p, name, true);
             Level lvl = LevelInfo.FindExact(name);

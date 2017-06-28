@@ -30,16 +30,9 @@ using MCGalaxy.Util;
 namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
         
-        public string name, MapName;        
-        public string Color {
-            get {
-                LevelPermission maxPerm = VisitAccess.Min;
-                if (maxPerm < BuildAccess.Min) maxPerm = BuildAccess.Min;
-                return Group.GetColor(maxPerm);
-            }
-        }
-        
-        public string ColoredName { get { return Color + name; } }
+        public string name, MapName;
+        public string Color { get { return Config.Color; } }
+        public string ColoredName { get { return Config.Color + name; } }
         public LevelConfig Config = new LevelConfig();
         
         public byte rotx, roty;

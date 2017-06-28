@@ -49,8 +49,11 @@ namespace MCGalaxy {
             ZombieGameProps.LoadSettings();
             
             Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+            #pragma warning disable 0618
             Server.DefaultColor = ServerConfig.DefaultColor;
-
+            Server.moneys = ServerConfig.Currency;
+            #pragma warning restore 0618
+            
             if (!Directory.Exists(ServerConfig.BackupDirectory))
                 ServerConfig.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
             Save();

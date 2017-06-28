@@ -235,8 +235,8 @@ namespace MCGalaxy.Commands.Info {
                 LevelConfig.Load(path, cfg);
                 LoadConfig(cfg);
                 
-                Visit = new LevelAccessController(null, cfg, true);
-                Build = new LevelAccessController(null, cfg, false);
+                Visit = new LevelAccessController(cfg, name, true);
+                Build = new LevelAccessController(cfg, name, false);
             }
             
             void LoadConfig(LevelConfig cfg) {

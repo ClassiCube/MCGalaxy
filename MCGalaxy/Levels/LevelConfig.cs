@@ -192,6 +192,15 @@ namespace MCGalaxy {
         public int RoundsHumanWon = 0;
         
         
+        public string Color {
+            get {
+                LevelPermission maxPerm = VisitMin;
+                if (maxPerm < BuildMin) maxPerm = BuildMin;
+                return Group.GetColor(maxPerm);
+            }
+        }
+        
+        
 		public static void Load(string path, LevelConfig config) {
             PropertiesFile.Read(path, ref config, LineProcessor);
         }

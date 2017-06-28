@@ -83,6 +83,8 @@ namespace MCGalaxy {
         public static List<string> messages = new List<string>();
         [Obsolete("Use %S or ServerConfig.DefaultColor")]
         public static string DefaultColor;
+        [Obsolete("Use ServerConfig.Currency")]
+        public static string moneys;
         public static string IP;
         
         //Global VoteKick In Progress Flag
