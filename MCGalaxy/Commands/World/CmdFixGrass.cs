@@ -25,11 +25,12 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
             int totalFixed = 0;
             Level lvl = p.level;
-            if (p != null && !lvl.BuildAccess.CheckDetailed(p)) {
+            if (!lvl.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence you cannot use /fixgrass on this map"); return;
             }
             
