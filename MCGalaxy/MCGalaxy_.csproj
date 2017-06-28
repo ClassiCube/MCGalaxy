@@ -483,8 +483,8 @@
     <Compile Include="Events\Player.Events.cs" />
     <Compile Include="Events\PlayerClick.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />
-    <Compile Include="Games\Countdown\CountdownGame.Game.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
+    <Compile Include="Games\Countdown\CountdownPlugin.cs" />
     <Compile Include="Games\CTF\CtfConfig.cs" />
     <Compile Include="Games\CTF\CtfTeam.cs" />
     <Compile Include="Games\GameProps.cs" />

@@ -325,8 +325,6 @@ namespace MCGalaxy {
             Position next = new Position(x, y, z);
             CheckBlocks(next);
 
-            if (Server.Countdown.HandlesMovement(this, next, yaw, pitch))
-                return;
             if (Server.zombie.Running && Server.zombie.HandlesMovement(this, next, yaw, pitch))
                 return;
             

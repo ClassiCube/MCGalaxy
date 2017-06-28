@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleJoin(Player p) {
-            switch (Server.Countdown.gamestatus) {
+            switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Sorry - Countdown isn't enabled yet");
                     return;
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleLeave(Player p) {
             if (Server.Countdown.players.Contains(p)) {
-                switch (Server.Countdown.gamestatus) {
+                switch (Server.Countdown.Status) {
                     case CountdownGameStatus.Disabled:
                         Player.Message(p, "Sorry - Countdown isn't enabled yet");
                         return;
@@ -132,7 +132,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandlePlayers(Player p) {
-            switch (Server.Countdown.gamestatus) {
+            switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "The game has not been enabled yet.");
                     break;
@@ -207,7 +207,7 @@ namespace MCGalaxy.Commands.Fun {
             else LevelInfo.Loaded.Add(lvl);
             
             lvl.Save();
-            if (Server.Countdown.gamestatus != CountdownGameStatus.Disabled)
+            if (Server.Countdown.Status != CountdownGameStatus.Disabled)
                 Server.Countdown.mapon = lvl;
             
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
@@ -221,7 +221,7 @@ namespace MCGalaxy.Commands.Fun {
         void HandleEnable(Player p) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
+            if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
                 CmdLoad.LoadLevel(null, "countdown");
                 Server.Countdown.mapon = LevelInfo.FindExact("countdown");
                 
@@ -236,7 +236,7 @@ namespace MCGalaxy.Commands.Fun {
                 Server.Countdown.mapon.BuildAccess.Min = LevelPermission.Nobody;
                 Server.Countdown.mapon.Config.MOTD = "Welcome to the Countdown map! -hax";
                 
-                Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
+                Server.Countdown.Status = CountdownGameStatus.Enabled;
                 Chat.MessageGlobal("Countdown has been enabled!!");
             } else {
                 Player.Message(p, "A Game is either already enabled or is already progress");
@@ -246,15 +246,15 @@ namespace MCGalaxy.Commands.Fun {
         void HandleDisable(Player p) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.gamestatus == CountdownGameStatus.AboutToStart || Server.Countdown.gamestatus == CountdownGameStatus.InProgress) {
+            if (Server.Countdown.Status == CountdownGameStatus.AboutToStart || Server.Countdown.Status == CountdownGameStatus.InProgress) {
                 Player.Message(p, "A game is currently in progress - please wait until it is finished, or use '/cd cancel' to cancel the game"); return;
-            } else if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
+            } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "Already disabled!!"); return;
             } else {
                 foreach (Player pl in Server.Countdown.players)
                     Player.Message(pl, "The countdown game was disabled.");
                 Server.Countdown.Reset(p, true);
-                Server.Countdown.gamestatus = CountdownGameStatus.Disabled;
+                Server.Countdown.Status = CountdownGameStatus.Disabled;
                 Player.Message(p, "Countdown Disabled");
             }
         }
@@ -262,12 +262,12 @@ namespace MCGalaxy.Commands.Fun {
         void HandleCancel(Player p) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.gamestatus == CountdownGameStatus.AboutToStart || Server.Countdown.gamestatus == CountdownGameStatus.InProgress) {
+            if (Server.Countdown.Status == CountdownGameStatus.AboutToStart || Server.Countdown.Status == CountdownGameStatus.InProgress) {
                 Server.Countdown.cancel = true;
                 Thread.Sleep(1500);
                 Player.Message(p, "Countdown has been canceled");
-                Server.Countdown.gamestatus = CountdownGameStatus.Enabled;
-            } else if (Server.Countdown.gamestatus == CountdownGameStatus.Disabled) {
+                Server.Countdown.Status = CountdownGameStatus.Enabled;
+            } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "The game is disabled!!");
             } else {
                 foreach (Player pl in Server.Countdown.players)
@@ -279,7 +279,7 @@ namespace MCGalaxy.Commands.Fun {
         void HandleStart(Player p, string par1, string par2) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.gamestatus != CountdownGameStatus.Enabled) {
+            if (Server.Countdown.Status != CountdownGameStatus.Enabled) {
                 Player.Message(p, "Either a game is already in progress or it hasn't been enabled"); return;
             }
             if (Server.Countdown.players.Count < 2) {
@@ -310,7 +310,7 @@ namespace MCGalaxy.Commands.Fun {
         void HandleReset(Player p, string par1) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            switch (Server.Countdown.gamestatus) {
+            switch (Server.Countdown.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Please enable countdown first."); break;
                 case CountdownGameStatus.AboutToStart:

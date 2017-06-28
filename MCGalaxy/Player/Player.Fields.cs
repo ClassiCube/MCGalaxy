@@ -170,10 +170,10 @@ namespace MCGalaxy {
 
         //Countdown
         public bool playerofcountdown = false;
-        public bool incountdown = false;
-        public int countdowntempx;
-        public int countdowntempz;
-        public bool countdownsettemps = false;
+        public bool InCountdown = false;
+        public int CountdownFreezeX;
+        public int CountdownFreezeZ;
+        public bool CountdownSetFreezePos = false;
 
         //Tnt Wars
         public bool PlayingTntWars = false;
