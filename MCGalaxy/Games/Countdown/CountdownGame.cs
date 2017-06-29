@@ -22,107 +22,105 @@ using System.Threading;
 namespace MCGalaxy.Games {
     public sealed class CountdownGame : IGame {
         
+        /// <summary> All players who are playing this countdown game. </summary>
         public List<Player> Players = new List<Player>();
+        
+        /// <summary> Players who are still alive in the current round. </summary>
         public List<Player> PlayersRemaining = new List<Player>();
-        public List<SquarePos> squaresLeft = new List<SquarePos>();
-        public Level mapon;
+       
+        /// <summary> Map countdown is running on. </summary>
+        public Level Map;
+        
+        /// <summary> Current status of the countdown game. </summary>
+        public CountdownGameStatus Status = CountdownGameStatus.Disabled;        
 
-        public int speed;
-        public bool freezemode = false;
+        public int Speed;
+        public bool FreezeMode = false;
         public bool cancel = false;
-
-        public string speedtype;
-
-        public CountdownGameStatus Status = CountdownGameStatus.Disabled;
+        public string SpeedType;
+        
         CountdownPlugin plugin;
+        List<SquarePos> squaresLeft = new List<SquarePos>();
 
-        public void GameStart(Player p) {
+        public void BeginRound(Player p) {
             if (plugin == null) {
                 plugin = new CountdownPlugin();
                 plugin.Game = this;
                 plugin.Load(false);
             }
             
-            switch (Status) {
-                case CountdownGameStatus.Disabled:
-                    Player.Message(p, "Please enable Countdown first!!"); return;
-                case CountdownGameStatus.RoundCountdown:
-                    Player.Message(p, "Game is about to start"); return;
-                case CountdownGameStatus.RoundInProgress:
-                    Player.Message(p, "Game is already in progress"); return;
-                case CountdownGameStatus.RoundFinished:
-                    Player.Message(p, "Game has finished"); return;
-                case CountdownGameStatus.Enabled:
-                    Status = CountdownGameStatus.RoundCountdown;
-                    Thread.Sleep(2000); break;
-            }
-            
             SetGlassTube(Block.glass, Block.glass);
-            mapon.ChatLevel("Countdown is about to start!!");
-            mapon.BuildAccess.Min = LevelPermission.Nobody;
-            int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
+            Map.ChatLevel("Countdown is about to start!");
+            Map.BuildAccess.Min = LevelPermission.Nobody;
+            int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
             int xSpawn = (midX * 32 + 16);
-            int ySpawn = ((mapon.Height - 2) * 32);
+            int ySpawn = ((Map.Height - 2) * 32);
             int zSpawn = (midZ * 32 + 16);
             
             squaresLeft.Clear();
-            for(int zz = 6; zz < mapon.Length - 6; zz += 3)
-                for (int xx = 6; xx < mapon.Width - 6; xx += 3)
+            for(int zz = 6; zz < Map.Length - 6; zz += 3)
+                for (int xx = 6; xx < Map.Width - 6; xx += 3)
                     squaresLeft.Add(new SquarePos(xx, zz));            
             
-            if (freezemode)
-                mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode freeze in:");
+            if (FreezeMode)
+                Map.ChatLevel("Countdown starting with difficulty " + SpeedType + " and mode freeze in:");
             else
-                mapon.ChatLevel("Countdown starting with difficulty " + speedtype + " and mode normal in:");
+                Map.ChatLevel("Countdown starting with difficulty " + SpeedType + " and mode normal in:");
             
             Thread.Sleep(2000);
             SpawnPlayers(xSpawn, ySpawn, zSpawn);
-            mapon.ChatLevel("-----&b5%S-----");
+            Map.ChatLevel("-----&b5%S-----");
             
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, mapon);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, Map);
             Thread.Sleep(1000);
-            mapon.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
-            mapon.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
-            Cuboid(midX, mapon.Height - 5, midZ, midX + 1, mapon.Height - 5, midZ + 1, Block.air, mapon);
-            mapon.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
-            mapon.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
-            mapon.ChatLevel("GO!!!!!!!");
+            Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
+            Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.air, Map);
+            Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("GO!!!!!!!");
             
-            PlayersRemaining = Players;
-            foreach (Player pl in Players)
+            PlayersRemaining = new List<Player>(Players);
+            foreach (Player pl in Players) {
                 pl.InCountdown = true;
-            AfterStart();
-            Play();
-        }
-
-        public void Play() {
-            if (!freezemode) {
-                RemoveRandomSquares();
-            } else {
-                SendFreezeMessages();
-                MessageAll("&bPlayers Frozen");
-                Status = CountdownGameStatus.RoundInProgress;
-                foreach (Player pl in Players)
-                    pl.CountdownSetFreezePos = true;
-                Thread.Sleep(500);
-                
-                RemoveGlassBlocks();
-                RemoveRandomSquares();
             }
+            
+            DoRound();
         }
         
         void SpawnPlayers(int x, int y, int z) {
             Position pos = new Position(x, y, z);
             foreach (Player pl in Players) {
-                if (pl.level != mapon) {
+                if (pl.level != Map) {
                     pl.SendMessage("Sending you to the correct map.");
-                    PlayerActions.ChangeMap(pl, mapon.name);
+                    PlayerActions.ChangeMap(pl, Map.name);
                 }
                 Entities.Spawn(pl, pl, pos, pl.Rot);
             }
         }
         
-        void SendFreezeMessages() {
+        
+        #region Do a round
+        
+        void DoRound() {
+            if (FreezeMode) {
+                MessageFreezeCountdown();
+                MessageAll("&bPlayers Frozen");
+                
+                foreach (Player pl in Players) {
+                    Position pos = pl.Pos;
+                    pl.CountdownFreezeX = pos.X;
+                    pl.CountdownFreezeZ = pos.Z;
+                }
+                RemoveAllSquareBorders();
+            }
+            
+            CloseOffBoard();
+            Status = CountdownGameStatus.RoundInProgress;
+            RemoveSquares();
+        }
+
+        void MessageFreezeCountdown() {
             Thread.Sleep(500);
             MessageAll("Welcome to Freeze Mode of countdown");
             MessageAll("You have 15 seconds to stand on a square");
@@ -153,129 +151,123 @@ namespace MCGalaxy.Games {
             MessageAll("-----&b2%S-----"); Thread.Sleep(1000);
             MessageAll("-----&b1%S-----"); Thread.Sleep(1000);
         }
+
+        void CloseOffBoard() {
+            SetGlassTube(Block.air, Block.glass);            
+            int maxX = Map.Width - 1, maxZ = Map.Length - 1;
+            
+            // Cuboid the borders around game board with air
+            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.air, Map);
+            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.air, Map);
+            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.air, Map);
+            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.air, Map);
+        }        
         
-        void RemoveGlassBlocks() {
-            int maxX = mapon.Width - 1, maxZ = mapon.Length - 1;
+        
+        void RemoveAllSquareBorders() {
+            int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             for (int xx = 6; xx < maxX - 6; xx += 3)
-                Cuboid(xx - 1, 4, 4, xx - 1, 4, maxZ - 4, Block.air, mapon);
+                Cuboid(xx - 1, 4, 4, xx - 1, 4, maxZ - 4, Block.air, Map);
             for(int zz = 6; zz < maxZ - 6; zz += 3)
-                Cuboid(4, 4, zz - 1, maxX - 4, 4, zz - 2, Block.air, mapon);
+                Cuboid(4, 4, zz - 1, maxX - 4, 4, zz - 2, Block.air, Map);
         }
         
-        void RemoveRandomSquares() {
+        void RemoveSquares() {
+            Random rng = new Random();
             while (squaresLeft.Count > 0 && PlayersRemaining.Count != 0
                    && (Status == CountdownGameStatus.RoundInProgress || Status == CountdownGameStatus.RoundFinished))
-            {
-                Random number = new Random();
-                int index = number.Next(squaresLeft.Count);
-                SquarePos nextsquare = squaresLeft[index];
+            {                
+                int index = rng.Next(squaresLeft.Count);
+                SquarePos nextSquare = squaresLeft[index];
                 squaresLeft.RemoveAt(index);
-                RemoveSquare(nextsquare);
+                RemoveSquare(nextSquare);
                 
                 if (squaresLeft.Count % 10 == 0 && Status != CountdownGameStatus.RoundFinished)
-                    mapon.ChatLevel(squaresLeft.Count + " Squares Left and " + PlayersRemaining.Count + " Players left!!");
+                    Map.ChatLevel(squaresLeft.Count + " squares left and " + PlayersRemaining.Count + " players remaining!");
                 if (cancel)
                     End(null);
             }
         }
         
         void RemoveSquare(SquarePos pos) {
-            ushort x1 = pos.X, x2 = (ushort)(pos.X + 1), y = 4, z1 = pos.Z, z2 = (ushort)(pos.Z + 1);
-            Cuboid(x1, y, z1, x2, y, z2, Block.yellow, mapon);
-            Thread.Sleep(speed);
-            Cuboid(x1, y, z1, x2, y, z2, Block.orange, mapon);
-            Thread.Sleep(speed);
-            Cuboid(x1, y, z1, x2, y, z2, Block.red, mapon);
-            Thread.Sleep(speed);
-            Cuboid(x1, y, z1, x2, y, z2, Block.air, mapon);
+            ushort minX = pos.X, maxX = (ushort)(pos.X + 1), y = 4, minZ = pos.Z, maxZ = (ushort)(pos.Z + 1);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.yellow, Map);
+            Thread.Sleep(Speed);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.orange, Map);
+            Thread.Sleep(Speed);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.red, Map);
+            Thread.Sleep(Speed);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.air, Map);           
+            // Remove glass borders if neighbouring squared were previously removed.
             
-            //beneath this is checking the glass next to the square
-            bool up = false, left = false, right = false, down = false;
-            //directly next to
-            if (mapon.IsAirAt(x1, y, z2 + 2)) //right
-            {
-                mapon.Blockchange(x1, y, (ushort)(z2 + 1), ExtBlock.Air);
-                mapon.Blockchange(x2, y, (ushort)(z2 + 1), ExtBlock.Air);
-                right = true;
+            bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
+            if (Map.IsAirAt(minX, y, maxZ + 2)) {
+                Map.Blockchange(minX, y, (ushort)(maxZ + 1), ExtBlock.Air);
+                Map.Blockchange(maxX, y, (ushort)(maxZ + 1), ExtBlock.Air);
+                airMaxZ = true;
             }
-            if (mapon.IsAirAt(x1, y, z1 - 2)) //left
-            {
-                mapon.Blockchange(x1, y, (ushort)(z1 - 1), ExtBlock.Air);
-                mapon.Blockchange(x2, y, (ushort)(z1 - 1), ExtBlock.Air);
-                left = true;
+            if (Map.IsAirAt(minX, y, minZ - 2)) {
+                Map.Blockchange(minX, y, (ushort)(minZ - 1), ExtBlock.Air);
+                Map.Blockchange(maxX, y, (ushort)(minZ - 1), ExtBlock.Air);
+                airMinZ = true;
             }
-            if (mapon.IsAirAt(x2 + 2, y, z1)) //up
-            {
-                mapon.Blockchange((ushort)(x2 + 1), y, z1, ExtBlock.Air);
-                mapon.Blockchange((ushort)(x2 + 1), y, z2, ExtBlock.Air);
-                up = true;
+            if (Map.IsAirAt(maxX + 2, y, minZ)) {
+                Map.Blockchange((ushort)(maxX + 1), y, minZ, ExtBlock.Air);
+                Map.Blockchange((ushort)(maxX + 1), y, maxZ, ExtBlock.Air);
+                airMaxX = true;
             }
-            if (mapon.IsAirAt(x1 - 2, y, z1)) //down
-            {
-                mapon.Blockchange((ushort)(x1 - 1), y, z1, ExtBlock.Air);
-                mapon.Blockchange((ushort)(x1 - 1), y, z2, ExtBlock.Air);
-                down = true;
+            if (Map.IsAirAt(minX - 2, y, minZ)) {
+                Map.Blockchange((ushort)(minX - 1), y, minZ, ExtBlock.Air);
+                Map.Blockchange((ushort)(minX - 1), y, maxZ, ExtBlock.Air);
+                airMinX = true;
             }
             
-            //diagonal >:(
-            if (mapon.IsAirAt(x1 - 2, y, z1 - 2) && left && down) //bottom left
-            {
-                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), ExtBlock.Air);
+            // Remove glass borders for diagonals too.
+            if (Map.IsAirAt(minX - 2, y, minZ - 2) && airMinZ && airMinX) {
+                Map.Blockchange((ushort)(minX - 1), y, (ushort)(minZ - 1), ExtBlock.Air);
             }
-            if (mapon.IsAirAt(x1 - 2, y, z2 + 2) && right && down) //bottom right
-            {
-                mapon.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), ExtBlock.Air);
+            if (Map.IsAirAt(minX - 2, y, maxZ + 2) && airMaxZ && airMinX) {
+                Map.Blockchange((ushort)(minX - 1), y, (ushort)(maxZ + 1), ExtBlock.Air);
             }
-            if (mapon.IsAirAt(x2 + 2, y, z1 - 2) && left && up) //top left
-            {
-                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), ExtBlock.Air);
+            if (Map.IsAirAt(maxX + 2, y, minZ - 2) && airMinZ && airMaxX) {
+                Map.Blockchange((ushort)(maxX + 1), y, (ushort)(minZ - 1), ExtBlock.Air);
             }
-            if (mapon.IsAirAt(x2 + 2, y, z2 + 2) && right && up) //top right
-            {
-                mapon.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), ExtBlock.Air);
+            if (Map.IsAirAt(maxX + 2, y, maxZ + 2) && airMaxZ && airMaxX) {
+                Map.Blockchange((ushort)(maxX + 1), y, (ushort)(maxZ + 1), ExtBlock.Air);
             }
         }
 
-        void AfterStart() {
-            SetGlassTube(Block.air, Block.glass);
-            
-            int maxX = mapon.Width - 1, maxZ = mapon.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.air, mapon);
-            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.air, mapon);
-            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.air, mapon);
-            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.air, mapon);
-
-            if (!freezemode) {
-                Status = CountdownGameStatus.RoundInProgress;
-            }
-        }
+        #endregion
+        
 
         public void Death(Player p) {
-            mapon.ChatLevel(p.ColoredName + " %Sis out of countdown!!");
+            Map.ChatLevel(p.ColoredName + " %Sis out of countdown!!");
             p.InCountdown = false;
             PlayersRemaining.Remove(p);
-            MessagePlayersLeft();
+            UpdatePlayersLeft();
         }
 
-        public void MessagePlayersLeft() {
+        public void UpdatePlayersLeft() {
+            if (Status != CountdownGameStatus.RoundInProgress) return;
+        	
             switch (PlayersRemaining.Count) {
                 case 1:
-                    mapon.ChatLevel(PlayersRemaining[0].ColoredName + " %Sis the winner!!");
+                    Map.ChatLevel(PlayersRemaining[0].ColoredName + " %Sis the winner!!");
                     End(PlayersRemaining[0]);
                     break;
                 case 2:
-                    mapon.ChatLevel("Only 2 Players left:");
-                    mapon.ChatLevel(PlayersRemaining[0].ColoredName + " %Sand " + PlayersRemaining[1].ColoredName);
+                    Map.ChatLevel("Only 2 Players left:");
+                    Map.ChatLevel(PlayersRemaining[0].ColoredName + " %Sand " + PlayersRemaining[1].ColoredName);
                     break;
                 case 5:
-                    mapon.ChatLevel("Only 5 Players left:");
+                    Map.ChatLevel("Only 5 Players left:");
                     foreach (Player pl in PlayersRemaining) {
-                        mapon.ChatLevel(pl.ColoredName);
+                        Map.ChatLevel(pl.ColoredName);
                         Thread.Sleep(500);
                     }
                     break;
                 default:
-                    mapon.ChatLevel("Now there are " + PlayersRemaining.Count + " players left!!");
+                    Map.ChatLevel("Now there are " + PlayersRemaining.Count + " players left!!");
                     break;
             }
         }
@@ -315,11 +307,11 @@ namespace MCGalaxy.Games {
             }
             SetGlassTube(Block.air, Block.air);
 
-            int maxX = mapon.Width - 1, maxZ = mapon.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, mapon);
+            int maxX = Map.Width - 1, maxZ = Map.Length - 1;
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, Map);
             for(int zz = 6; zz < maxZ - 6; zz += 3)
                 for (int xx = 6; xx < maxX - 6; xx += 3)
-                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, mapon);
+                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, Map);
             
             if (!all) {
                 Player.Message(p, "The Countdown map has been reset");
@@ -330,7 +322,7 @@ namespace MCGalaxy.Games {
                 Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player pl in online) {
                     if (!pl.playerofcountdown) continue;
-                    if (pl.level == mapon) {
+                    if (pl.level == Map) {
                         Command.all.Find("countdown").Use(pl, "join");
                         Player.Message(pl, "You've rejoined countdown!!");
                     } else {
@@ -348,7 +340,7 @@ namespace MCGalaxy.Games {
                 Players.Clear();
                 squaresLeft.Clear();
                 
-                speed = 750;
+                Speed = 750;
                 Player[] online = PlayerInfo.Online.Items;
                 foreach (Player pl in online) {
                     pl.playerofcountdown = false;
@@ -358,12 +350,12 @@ namespace MCGalaxy.Games {
         }
         
         void SetGlassTube(byte block, byte floorBlock) {        
-            int midX = mapon.Width / 2, midY = mapon.Height / 2, midZ = mapon.Length / 2;
-            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block, mapon);
-            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block, mapon);
-            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block, mapon);
-            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block, mapon);
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock, mapon);
+            int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
+            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block, Map);
+            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block, Map);
+            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block, Map);
+            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block, Map);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock, Map);
         }
 
         public void MessageAll(string message) {
@@ -384,7 +376,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        public struct SquarePos {
+        struct SquarePos {
             public ushort X, Z;
             
             public SquarePos(int x, int z) {
@@ -398,7 +390,7 @@ namespace MCGalaxy.Games {
                 Server.Countdown.Players.Add(p);
                 Player.Message(p, "You've joined the Countdown game!!");
                 Chat.MessageGlobal("{0} has joined Countdown!!", p.name);
-                if (p.level != Server.Countdown.mapon)
+                if (p.level != Server.Countdown.Map)
                     PlayerActions.ChangeMap(p, "countdown");
                 p.playerofcountdown = true;
             } else {
@@ -411,12 +403,12 @@ namespace MCGalaxy.Games {
             p.playerofcountdown = false;
             Players.Remove(p);
             PlayersRemaining.Remove(p);
-            MessagePlayersLeft();
+            UpdatePlayersLeft();
         }
     }
 
     public enum CountdownGameStatus {
-		/// <summary> Countdown is not running. </summary>
+        /// <summary> Countdown is not running. </summary>
         Disabled,
         
         /// <summary> Countdown is running, but no round has been started at all yet. </summary>

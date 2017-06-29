@@ -49,30 +49,31 @@ namespace MCGalaxy.Commands.Fun {
             if (args.Length > 1) arg1 = args[1];
             if (args.Length > 2) arg2 = args[2];
             if (args.Length > 3) arg3 = args[3];
+            CountdownGame game = Server.Countdown;
             
             switch (cmd) {
                 case "join":
-                    HandleJoin(p); return;
+                    HandleJoin(p, game); return;
                 case "leave":
-                    HandleLeave(p); return;
+                    HandleLeave(p, game); return;
                 case "players":
-                    HandlePlayers(p); return;
+                    HandlePlayers(p, game); return;
                 case "rules":
                     HandleRules(p, arg1); return;
                 case "download":
                 case "generate":
-                    HandleGenerate(p, arg1, arg2, arg3); return;
+                    HandleGenerate(p, game, arg1, arg2, arg3); return;
                 case "enable":
-                    HandleEnable(p); return;
+                    HandleEnable(p, game); return;
                 case "disable":
-                    HandleDisable(p); return;
+                    HandleDisable(p, game); return;
                 case "cancel":
-                    HandleCancel(p); return;
+                    HandleCancel(p, game); return;
                 case "start":
                 case "play":
-                    HandleStart(p, arg1, arg2); return;
+                    HandleStart(p, game, arg1, arg2); return;
                 case "reset":
-                    HandleReset(p, arg1); return;
+                    HandleReset(p, game, arg1); return;
                 case "tutorial":
                     HandleTutorial(p); return;
                 default:
@@ -80,13 +81,13 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void HandleJoin(Player p) {
-            switch (Server.Countdown.Status) {
+        void HandleJoin(Player p, CountdownGame game) {
+            switch (game.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Cannot join as countdown is not running.");
                     return;
                 case CountdownGameStatus.Enabled:
-                    Server.Countdown.PlayerJoinedGame(p);
+                    game.PlayerJoinedGame(p);
                     return;
                 case CountdownGameStatus.RoundCountdown:
                     Player.Message(p, "Cannot join when a round is about to start. Wait until next round.");
@@ -100,57 +101,55 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void HandleLeave(Player p) {
-            if (Server.Countdown.Players.Contains(p)) {
-                switch (Server.Countdown.Status) {
-                    case CountdownGameStatus.Disabled:
-                        Player.Message(p, "Cannot leave as countdown is not running.");
-                        return;
-                    case CountdownGameStatus.Enabled:
-                        Player.Message(p, "You've left countdown.");
-                        Server.Countdown.PlayerLeftGame(p);
-                        break;
-                    case CountdownGameStatus.RoundCountdown:
-                        Player.Message(p, "Cannot leave when a round is about to start.");
-                        return; ;
-                    case CountdownGameStatus.RoundInProgress:
-                        Player.Message(p, "Cannot leave when a round in progress - please wait until the round ends or you die.");
-                        return;
-                    case CountdownGameStatus.RoundFinished:
-                        Server.Countdown.Players.Remove(p);
-                        Server.Countdown.PlayersRemaining.Remove(p);
-                        p.playerofcountdown = false;
-                        Player.Message(p, "You've left the game.");
-                        break;
-                }
-            } else if (!(Server.Countdown.PlayersRemaining.Contains(p)) && Server.Countdown.Players.Contains(p)) {
-                Server.Countdown.Players.Remove(p);
-                Player.Message(p, "You've left the game.");
-            } else {
+        void HandleLeave(Player p, CountdownGame game) {
+            if (!game.Players.Contains(p)) {
                 Player.Message(p, "Cannot leave as you did not join countdown to begin with.");
+                return;
+            }
+            
+            switch (game.Status) {
+                case CountdownGameStatus.Disabled:
+                    Player.Message(p, "Cannot leave as countdown is not running.");
+                    return;
+                case CountdownGameStatus.Enabled:
+                case CountdownGameStatus.RoundFinished:
+                    Player.Message(p, "You've left countdown.");
+                    game.PlayerLeftGame(p);
+                    return;
+                case CountdownGameStatus.RoundCountdown:
+                    Player.Message(p, "Cannot leave when a round is about to start.");
+                    return;
+                case CountdownGameStatus.RoundInProgress:
+                    if (game.PlayersRemaining.Contains(p)) {
+                        Player.Message(p, "Cannot leave when a round in progress - please wait until the round ends or you die.");
+                    } else {
+                        game.Players.Remove(p);
+                        Player.Message(p, "You've left countdown.");
+                    }
+                    return;
             }
         }
         
-        void HandlePlayers(Player p) {
-            switch (Server.Countdown.Status) {
+        void HandlePlayers(Player p, CountdownGame game) {
+            switch (game.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Countdown is not running.");
                     break;
 
                 case CountdownGameStatus.RoundInProgress:
                     Player.Message(p, "Players in countdown:");
-                    Player.Message(p, Server.Countdown.Players.Join(FormatPlayer));
-                    break;                    
+                    Player.Message(p, game.Players.Join(pl => FormatPlayer(pl, game)));
+                    break;
 
                 default:
                     Player.Message(p, "Players in countdown: ");
-                    Player.Message(p, Server.Countdown.Players.Join(pl => pl.ColoredName));
+                    Player.Message(p, game.Players.Join(pl => pl.ColoredName));
                     break;
             }
         }
         
-        static string FormatPlayer(Player pl) {
-            if (Server.Countdown.PlayersRemaining.Contains(pl)) {
+        static string FormatPlayer(Player pl, CountdownGame game) {
+            if (game.PlayersRemaining.Contains(pl)) {
                 return pl.ColoredName + " &a[IN]";
             } else {
                 return pl.ColoredName + " &c[OUT]";
@@ -166,7 +165,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (p.Rank < who.Rank) {
                     MessageTooHighRank(p, "send countdown rules", true); return;
                 }
-            }            
+            }
             
             Player.Message(who, "The aim of the game is to stay alive the longest.");
             Player.Message(who, "Don't fall in the lava!");
@@ -179,11 +178,11 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void HandleGenerate(Player p, string arg1, string arg2, string arg3) {
+        void HandleGenerate(Player p, CountdownGame game, string x, string y, string z) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
             int width, height, length;
-            if(!int.TryParse(arg1, out width) || !int.TryParse(arg2, out height) || !int.TryParse(arg3, out length)) {
+            if(!int.TryParse(x, out width) || !int.TryParse(y, out height) || !int.TryParse(z, out length)) {
                 width = 32; height = 32; length = 32;
             }
             if (width < 32 || !MapGen.OkayAxis(width)) width = 32;
@@ -197,8 +196,8 @@ namespace MCGalaxy.Commands.Fun {
             else LevelInfo.Loaded.Add(lvl);
             
             lvl.Save();
-            if (Server.Countdown.Status != CountdownGameStatus.Disabled)
-                Server.Countdown.mapon = lvl;
+            if (game.Status != CountdownGameStatus.Disabled)
+                game.Map = lvl;
             
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
             Player.Message(p, format, width, height, length);
@@ -208,113 +207,118 @@ namespace MCGalaxy.Commands.Fun {
             p.SendPos(Entities.SelfID, pos, p.Rot);
         }
         
-        void HandleEnable(Player p) {
+        void HandleEnable(Player p, CountdownGame game) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
+            if (game.Status == CountdownGameStatus.Disabled) {
                 CmdLoad.LoadLevel(null, "countdown");
-                Server.Countdown.mapon = LevelInfo.FindExact("countdown");
+                game.Map = LevelInfo.FindExact("countdown");
                 
-                if (Server.Countdown.mapon == null) {
-                    Player.Message(p, "countdown level not found, generating..");
-                    HandleGenerate(p, "", "", "");
-                    Server.Countdown.mapon = LevelInfo.FindExact("countdown");
+                if (game.Map == null) {
+                    Player.Message(p, "Countdown level not found, generating..");
+                    HandleGenerate(p, game, "", "", "");
+                    game.Map = LevelInfo.FindExact("countdown");
                 }
                 
-                Server.Countdown.mapon.Config.Deletable = false;
-                Server.Countdown.mapon.Config.Buildable = false;
-                Server.Countdown.mapon.BuildAccess.Min = LevelPermission.Nobody;
-                Server.Countdown.mapon.Config.MOTD = "Welcome to the Countdown map! -hax";
+                game.Map.Config.Deletable = false;
+                game.Map.Config.Buildable = false;
+                game.Map.BuildAccess.Min = LevelPermission.Nobody;
+                game.Map.Config.MOTD = "Welcome to the Countdown map! -hax";
                 
-                Server.Countdown.Status = CountdownGameStatus.Enabled;
-                Chat.MessageGlobal("Countdown has been enabled!!");
+                game.Status = CountdownGameStatus.Enabled;
+                Chat.MessageGlobal("Countdown has been enabled!");
             } else {
-                Player.Message(p, "A Game is either already enabled or is already progress");
+                Player.Message(p, "Countdown has already been enabled.");
             }
         }
         
-        void HandleDisable(Player p) {
+        void HandleDisable(Player p, CountdownGame game) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status == CountdownGameStatus.RoundCountdown || Server.Countdown.Status == CountdownGameStatus.RoundInProgress) {
-                Player.Message(p, "A game is currently in progress - please wait until it is finished, or use '/cd cancel' to cancel the game"); return;
-            } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
-                Player.Message(p, "Already disabled!!"); return;
+            if (game.Status == CountdownGameStatus.RoundCountdown || game.Status == CountdownGameStatus.RoundInProgress) {
+                Player.Message(p, "A round is currently in progress - please wait until it is finished, or use '/cd cancel' to cancel the game"); return;
+            } else if (game.Status == CountdownGameStatus.Disabled) {
+                Player.Message(p, "Countdown is not running."); return;
             } else {
-                foreach (Player pl in Server.Countdown.Players)
+                foreach (Player pl in game.Players)
                     Player.Message(pl, "The countdown game was disabled.");
-                Server.Countdown.Reset(p, true);
-                Server.Countdown.Status = CountdownGameStatus.Disabled;
+                game.Reset(p, true);
+                game.Status = CountdownGameStatus.Disabled;
                 Player.Message(p, "Countdown Disabled");
             }
         }
         
-        void HandleCancel(Player p) {
+        void HandleCancel(Player p, CountdownGame game) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status == CountdownGameStatus.RoundCountdown || Server.Countdown.Status == CountdownGameStatus.RoundInProgress) {
-                Server.Countdown.cancel = true;
+            if (game.Status == CountdownGameStatus.RoundCountdown || game.Status == CountdownGameStatus.RoundInProgress) {
+                game.cancel = true;
                 Thread.Sleep(1500);
                 Player.Message(p, "Countdown has been canceled");
-                Server.Countdown.Status = CountdownGameStatus.Enabled;
-            } else if (Server.Countdown.Status == CountdownGameStatus.Disabled) {
-                Player.Message(p, "The game is disabled!!");
+                game.Status = CountdownGameStatus.Enabled;
+            } else if (game.Status == CountdownGameStatus.Disabled) {
+                Player.Message(p, "Countdown is not running.");
             } else {
-                foreach (Player pl in Server.Countdown.Players)
+                foreach (Player pl in game.Players)
                     Player.Message(pl, "The countdown game was canceled");
-                Server.Countdown.Reset(null, true);
+                game.Reset(null, true);
             }
         }
         
-        void HandleStart(Player p, string par1, string par2) {
+        void HandleStart(Player p, CountdownGame game, string speed, string mode) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            if (Server.Countdown.Status != CountdownGameStatus.Enabled) {
-                Player.Message(p, "Either a game is already in progress or it hasn't been enabled"); return;
+            switch (game.Status) {
+                case CountdownGameStatus.Disabled:
+                    Player.Message(p, "Countdown is not yet enabled."); return;
+                case CountdownGameStatus.RoundCountdown:
+                    Player.Message(p, "A round is already about to begin."); return;
+                case CountdownGameStatus.RoundInProgress:
+                    Player.Message(p, "A round is already in progress."); return;
+                case CountdownGameStatus.RoundFinished:
+                    Player.Message(p, "Game has finished"); return;
+                case CountdownGameStatus.Enabled:
+                    if (game.Players.Count < 2) {
+                        Player.Message(p, "At least two players must join countdown before a round can begin."); return;
+                    }
+                    game.Status = CountdownGameStatus.RoundCountdown; break;
             }
-            if (Server.Countdown.Players.Count < 2) {
-                Player.Message(p, "Sorry, there aren't enough players to play."); return;
-            }
-            
-            Server.Countdown.PlayersRemaining = Server.Countdown.Players;
-            CountdownGame game = Server.Countdown;
-            switch (par1) {
+
+            switch (speed) {
                 case "slow":
-                    game.speed = 800; game.speedtype = "slow"; break;
+                    game.Speed = 800; game.SpeedType = "slow"; break;
                 case "normal":
-                    game.speed = 650; game.speedtype = "normal"; break;
+                    game.Speed = 650; game.SpeedType = "normal"; break;
                 case "fast":
-                    game.speed = 500; game.speedtype = "fast"; break;
+                    game.Speed = 500; game.SpeedType = "fast"; break;
                 case "extreme":
-                    game.speed = 300; game.speedtype = "extreme"; break;
+                    game.Speed = 300; game.SpeedType = "extreme"; break;
                 case "ultimate":
-                    game.speed = 150; game.speedtype = "ultimate"; break;
+                    game.Speed = 150; game.SpeedType = "ultimate"; break;
                 default:
-                    Player.Message(p, "You didn't specify a speed, resorting to 'normal'");
-                    game.speed = 650; game.speedtype = "normal"; break;
+                    Player.Message(p, "No speed specified, playing at 'normal' speed.");
+                    game.Speed = 650; game.SpeedType = "normal"; break;
             }
-            Server.Countdown.freezemode = (par2 == "freeze" || par2 == "frozen");
-            Server.Countdown.GameStart(p);
+            
+            game.FreezeMode = (mode == "freeze" || mode == "frozen");
+            game.BeginRound(p);
         }
         
-        void HandleReset(Player p, string par1) {
+        void HandleReset(Player p, CountdownGame game, string type) {
             if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
-            switch (Server.Countdown.Status) {
+            switch (game.Status) {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Please enable countdown first."); break;
                 case CountdownGameStatus.RoundCountdown:
-                    Player.Message(p, "Sorry - The game is about to start"); break;
+                    Player.Message(p, "Cannot reset as a round is about to begin."); break;
                 case CountdownGameStatus.RoundInProgress:
-                    Player.Message(p, "Sorry - The game is already in progress."); break;
+                    Player.Message(p, "Cannot reset as a round is already in progress."); break;
                 default:
                     Player.Message(p, "Reseting");
-                    if (par1 == "map")
-                        Server.Countdown.Reset(p, false);
-                    else if (par1 == "all")
-                        Server.Countdown.Reset(p, true);
-                    else
-                        Player.Message(p, "Please specify whether it is 'map' or 'all'");
+                    if (type == "map") game.Reset(p, false);
+                    else if (type == "all") game.Reset(p, true);
+                    else Player.Message(p, "Can only reset 'map' or 'all'");
                     break;
             }
         }
@@ -332,10 +336,10 @@ namespace MCGalaxy.Commands.Fun {
         public override void Help(Player p) {
             Player.Message(p, "%T/cd joins/leave %H- joins/leaves the game");
             Player.Message(p, "%T/cd players %H- lists players currently playing");
-            Player.Message(p, "%T/cd rules %H- view the rules of countdown");            
+            Player.Message(p, "%T/cd rules %H- view the rules of countdown");
             if (CheckExtraPerm(p, 1)) {
                 Player.Message(p, "%T/cd rules [player] %H- sends rules of countdown to that player.");
-            }           
+            }
             
             if (!CheckExtraPerm(p, 2)) return;
             Player.Message(p, "%T/cd generate [width] [height] [length] %H- generates the countdown map (default is 32x32x32)");

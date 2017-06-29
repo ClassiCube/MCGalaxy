@@ -173,7 +173,6 @@ namespace MCGalaxy {
         public bool InCountdown = false;
         public int CountdownFreezeX;
         public int CountdownFreezeZ;
-        public bool CountdownSetFreezePos = false;
 
         //Tnt Wars
         public bool PlayingTntWars = false;
