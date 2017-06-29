@@ -227,7 +227,7 @@ namespace MCGalaxy.Commands.Fun {
                     if (game.Players.Count < 2) {
                         Player.Message(p, "At least two players must join countdown before a round can begin."); return;
                     }
-                    game.Status = CountdownGameStatus.RoundCountdown; break;
+                    break;
             }
 
             switch (speed) {
