@@ -24,52 +24,52 @@ namespace MCGalaxy.Games {
     
     public sealed class CTFConfig {
  
-        [ConfigInt("base.red.x", null, null, 0)]
+        [ConfigInt("base.red.x", null, 0)]
         public int RedFlagX;
-        [ConfigInt("base.red.y", null, null, 0)]
+        [ConfigInt("base.red.y", null, 0)]
         public int RedFlagY;
-        [ConfigInt("base.red.z", null, null, 0)]
+        [ConfigInt("base.red.z", null, 0)]
         public int RedFlagZ;
-        [ConfigByte("base.red.block", null, null, 0)]
+        [ConfigByte("base.red.block", null, 0)]
         public byte RedFlagBlock;
  
-        [ConfigInt("base.blue.x", null, null, 0)]
+        [ConfigInt("base.blue.x", null, 0)]
         public int BlueFlagX;
-        [ConfigInt("base.blue.y", null, null, 0)]
+        [ConfigInt("base.blue.y", null, 0)]
         public int BlueFlagY;
-        [ConfigInt("base.blue.z", null, null, 0)]
+        [ConfigInt("base.blue.z", null, 0)]
         public int BlueFlagZ;
-        [ConfigByte("base.blue.block", null, null, 0)]
+        [ConfigByte("base.blue.block", null, 0)]
         public byte BlueFlagBlock;
         
-        [ConfigInt("base.red.spawnx", null, null, 0)]
+        [ConfigInt("base.red.spawnx", null, 0)]
         public int RedSpawnX;
-        [ConfigInt("base.red.spawny", null, null, 0)]
+        [ConfigInt("base.red.spawny", null, 0)]
         public int RedSpawnY;
-        [ConfigInt("base.red.spawnz", null, null, 0)]
+        [ConfigInt("base.red.spawnz", null, 0)]
         public int RedSpawnZ;
  
-        [ConfigInt("base.blue.spawnx", null, null, 0)]
+        [ConfigInt("base.blue.spawnx", null, 0)]
         public int BlueSpawnX;
-        [ConfigInt("base.blue.spawny", null, null, 0)]
+        [ConfigInt("base.blue.spawny", null, 0)]
         public int BlueSpawnY;
-        [ConfigInt("base.blue.spawnz", null, null, 0)]
+        [ConfigInt("base.blue.spawnz", null, 0)]
         public int BlueSpawnZ;
         
-        [ConfigBool("auto.setup", null, null, false)]
+        [ConfigBool("auto.setup", null, false)]
         public bool NeedSetup;
-        [ConfigInt("map.line.z", null, null, 0)]
+        [ConfigInt("map.line.z", null, 0)]
         public int ZLine;
         
-        [ConfigInt("game.maxpoints", null, null, 0)]
+        [ConfigInt("game.maxpoints", null, 0)]
         public int MaxPoints;
-        [ConfigInt("game.tag.points-gain", null, null, 0)]
+        [ConfigInt("game.tag.points-gain", null, 0)]
         public int Tag_PointsGained;
-        [ConfigInt("game.tag.points-lose", null, null, 0)]
+        [ConfigInt("game.tag.points-lose", null, 0)]
         public int Tag_PointsLost;
-        [ConfigInt("game.capture.points-gain", null, null, 0)]
+        [ConfigInt("game.capture.points-gain", null, 0)]
         public int Capture_PointsGained;
-        [ConfigInt("game.capture.points-lose", null, null, 0)]
+        [ConfigInt("game.capture.points-lose", null, 0)]
         public int Capture_PointsLost;
     }
 }

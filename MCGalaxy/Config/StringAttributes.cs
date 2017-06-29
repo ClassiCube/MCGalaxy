@@ -22,8 +22,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigColorAttribute : ConfigAttribute {
         
-        public ConfigColorAttribute(string name, string section, string desc, string defValue)
-            : base(name, section, desc, defValue) {
+        public ConfigColorAttribute(string name, string section, string defValue)
+            : base(name, section, defValue) {
         }
         
         public override object Parse(string value) {
@@ -48,11 +48,11 @@ namespace MCGalaxy.Config {
         public string AllowedChars;
         
         /// <summary> Maximum number of characters allowed in the value. 0 means no limit. </summary>
-        public int MaxLength = 0;
+        public int MaxLength = int.MaxValue;
         
-        public ConfigStringAttribute(string name, string section, string desc, string defValue,
+        public ConfigStringAttribute(string name, string section, string defValue,
                                      bool allowEmpty, string allowedChars, int maxLength)
-            : base(name, section, desc, defValue) {
+            : base(name, section, defValue) {
             AllowEmpty = allowEmpty;
             AllowedChars = allowedChars;
             MaxLength = maxLength;
@@ -60,21 +60,19 @@ namespace MCGalaxy.Config {
  
         // NOTE: required to define these, some compilers error when we try using optional parameters with:
         // "An attribute argument must be a constant expression, typeof expression.."
-        public ConfigStringAttribute(string name, string section, string desc, string defValue,
-                                     bool allowEmpty, string allowedChars)
-            : base(name, section, desc, defValue) {
+        public ConfigStringAttribute(string name, string section, string defValue, bool allowEmpty, string allowedChars)
+            : base(name, section, defValue) {
             AllowEmpty = allowEmpty;
             AllowedChars = allowedChars;
         }
 
-        public ConfigStringAttribute(string name, string section, string desc, string defValue,
-                                     bool allowEmpty)
-            : base(name, section, desc, defValue) {
+        public ConfigStringAttribute(string name, string section, string defValue, bool allowEmpty)
+            : base(name, section, defValue) {
             AllowEmpty = allowEmpty;
         }
 
-        public ConfigStringAttribute(string name, string section, string desc, string defValue)
-            : base(name, section, desc, defValue) {
+        public ConfigStringAttribute(string name, string section, string defValue)
+            : base(name, section, defValue) {
         }
         
         public override object Parse(string value) {
@@ -101,9 +99,9 @@ namespace MCGalaxy.Config {
         }
         
         string Truncate(string value) {
-            if (MaxLength > 0 && value.Length > MaxLength) {
+            if (value.Length > MaxLength) {
                 value = value.Substring(0, MaxLength);
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid color, truncating to {1}", Name, value);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too long, truncating to {1}", Name, value);
             }
             return value;
         }
@@ -111,8 +109,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigStringListAttribute : ConfigAttribute {
         
-        public ConfigStringListAttribute(string name, string section, string desc)
-            : base(name, section, desc, new List<string>()) {
+        public ConfigStringListAttribute(string name, string section)
+            : base(name, section, new List<string>()) {
         }
         
         public override object Parse(string value) {

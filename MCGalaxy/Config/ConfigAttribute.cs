@@ -27,9 +27,6 @@ namespace MCGalaxy.Config {
         /// <summary> Section/Group in the property file this config entry is part of. </summary>
         public string Section;
         
-        /// <summary> Comment shown in the property file above the key-value entry. </summary>
-        public string Description;
-        
         /// <summary> The default value used if validating the value read from the propery file fails. </summary>
         public object DefaultValue;
         
@@ -39,9 +36,8 @@ namespace MCGalaxy.Config {
         /// <summary> Converts the given value into its serialised string form. </summary>
         public virtual string Serialise(object value) { return value == null ? "" : value.ToString(); }
         
-        public ConfigAttribute(string name, string section, string desc, object defValue) {
-            Name = name; Description = desc; 
-            Section = section; DefaultValue = defValue;
+        public ConfigAttribute(string name, string section, object defValue) {
+            Name = name; Section = section; DefaultValue = defValue;
         }
     }
 }

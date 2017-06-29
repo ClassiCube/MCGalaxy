@@ -101,89 +101,89 @@ namespace MCGalaxy.Games {
     public static class ZombieGameProps {
         
         /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
-        [ConfigInt("zombie-hitbox-precision", "Zombie", null, 32)]
+        [ConfigInt("zombie-hitbox-precision", "Zombie", 32)]
         public static int HitboxPrecision = 32;
         
         /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
-        [ConfigInt("zombie-maxmove-distance", "Zombie", null, 50)]
+        [ConfigInt("zombie-maxmove-distance", "Zombie", 50)]
         public static int MaxMoveDistance = 50;
         
         /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
-        [ConfigBool("zombie-survival-only-server", "Zombie", null, false)]
+        [ConfigBool("zombie-survival-only-server", "Zombie", false)]
         public static bool SetMainLevel;
         
         /// <summary> Whether zombie survival should start upon server startup. </summary>
-        [ConfigBool("zombie-on-server-start", "Zombie", null, false)]
+        [ConfigBool("zombie-on-server-start", "Zombie", false)]
         public static bool StartImmediately;
         
         /// <summary> Whether changes made during a round of zombie survival should be permanently saved. </summary>
-        [ConfigBool("zombie-save-blockchanges", "Zombie", null, false)]
+        [ConfigBool("zombie-save-blockchanges", "Zombie", false)]
         public static bool SaveLevelBlockchanges;
         
         /// <summary> Whether maps with '+' in their name are ignored when choosing levels for the next round. </summary>
-        [ConfigBool("zombie-ignore-personalworlds", "Zombie", null, true)]
+        [ConfigBool("zombie-ignore-personalworlds", "Zombie", true)]
         public static bool IgnorePersonalWorlds = true;
         
         /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
-        [ConfigBool("zombie-map-inheartbeat", "Zombie", null, false)]
+        [ConfigBool("zombie-map-inheartbeat", "Zombie", false)]
         public static bool IncludeMapInHeartbeat = false;
 
-        [ConfigBool("no-respawning-during-zombie", "Zombie", null, true)]
+        [ConfigBool("no-respawning-during-zombie", "Zombie", true)]
         public static bool NoRespawn = true;
-        [ConfigBool("no-pillaring-during-zombie", "Zombie", null, true)]
+        [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public static bool NoPillaring = true;
-        [ConfigString("zombie-name-while-infected", "Zombie", null, "", true)]
+        [ConfigString("zombie-name-while-infected", "Zombie", "", true)]
         public static string ZombieName = "";
-        [ConfigString("zombie-model-while-infected", "Zombie", null, "zombie")]
+        [ConfigString("zombie-model-while-infected", "Zombie", "zombie")]
         public static string ZombieModel = "zombie";
         
-        [ConfigInt("zombie-invisibility-duration", "Zombie", null, 7, 1)]
+        [ConfigInt("zombie-invisibility-duration", "Zombie", 7, 1)]
         public static int InvisibilityDuration = 7;
-        [ConfigInt("zombie-invisibility-potions", "Zombie", null, 7, 1)]
+        [ConfigInt("zombie-invisibility-potions", "Zombie",  7, 1)]
         public static int InvisibilityPotions = 7;
-        [ConfigInt("zombie-zinvisibility-duration", "Zombie", null, 5, 1)]
+        [ConfigInt("zombie-zinvisibility-duration", "Zombie", 5, 1)]
         public static int ZombieInvisibilityDuration = 5;
-        [ConfigInt("zombie-zinvisibility-potions", "Zombie", null, 4, 1)]
+        [ConfigInt("zombie-zinvisibility-potions", "Zombie", 4, 1)]
         public static int ZombieInvisibilityPotions = 4;
-        [ConfigBool("enable-changing-levels", "Zombie", null, true)]
+        [ConfigBool("enable-changing-levels", "Zombie", true)]
         public static bool ChangeLevels = true;
         
-        [ConfigString("revive-notime-msg", "Revive", null,
+        [ConfigString("revive-notime-msg", "Revive",
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
         public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";
         
-        [ConfigInt("revive-no-time", "Revive", null, 120, 0)]
+        [ConfigInt("revive-no-time", "Revive", 120, 0)]
         public static int ReviveNoTime = 120;
         
-        [ConfigString("revive-fewzombies-msg", "Revive", null,
+        [ConfigString("revive-fewzombies-msg", "Revive",
                       "There aren't enough zombies for it to be worthwhile to produce revive potions.")]
         public static string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";
         
-        [ConfigInt("revive-fewzombies", "Revive", null, 3, 0)]
+        [ConfigInt("revive-fewzombies", "Revive", 3, 0)]
         public static int ReviveFewZombies = 3;
         
-        [ConfigInt("revive-tooslow", "Revive", null, 60, 0)]
+        [ConfigInt("revive-tooslow", "Revive", 60, 0)]
         public static int ReviveTooSlow = 60;
         
-        [ConfigInt("revive-chance", "Revive", null, 80, 0, 100)]
+        [ConfigInt("revive-chance", "Revive", 80, 0, 100)]
         public static int ReviveChance = 80;
         
-        [ConfigInt("revive-times", "Revive", null, 1, 0)]
+        [ConfigInt("revive-times", "Revive", 1, 0)]
         public static int ReviveTimes = 1;
         
-        [ConfigString("revive-success", "Revive", null, "used a revive potion. &aIt was super effective!")]
+        [ConfigString("revive-success", "Revive", "used a revive potion. &aIt was super effective!")]
         public static string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
 
-        [ConfigString("revive-failure", "Revive", null, "tried using a revive potion. &cIt was not very effective..")]
+        [ConfigString("revive-failure", "Revive", "tried using a revive potion. &cIt was not very effective..")]
         public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
         
         /// <summary> List of levels that are randomly picked for zombie survival.
         /// If this left blank, then all level files are picked from instead. </summary>
-        [ConfigStringList("zombie-levels-list", "Zombie", null)]
+        [ConfigStringList("zombie-levels-list", "Zombie")]
         public static List<string> LevelList = new List<string>();
         
         /// <summary> List of levels that are never picked for zombie survival. </summary>
-        [ConfigStringList("zombie-ignores-list", "Zombie", null)]
+        [ConfigStringList("zombie-ignores-list", "Zombie")]
         public static List<string> IgnoredLevelList = new List<string>();
         
         public static void SaveSettings() {

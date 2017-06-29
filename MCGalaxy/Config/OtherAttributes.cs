@@ -27,9 +27,9 @@ namespace MCGalaxy.Config {
         /// <summary> Maximum value integer allowed for a value. </summary>
         public int MaxValue;
         
-        public ConfigIntAttribute(string name, string section, string desc, int defValue,
+        public ConfigIntAttribute(string name, string section, int defValue,
                                   int min = int.MinValue, int max = int.MaxValue)
-            : base(name, section, desc, defValue) {
+            : base(name, section, defValue) {
             MinValue = min; MaxValue = max;
         }
         
@@ -55,9 +55,9 @@ namespace MCGalaxy.Config {
     
     public class ConfigByteAttribute : ConfigIntAttribute {
         
-        public ConfigByteAttribute(string name, string section, string desc, int defValue,
+        public ConfigByteAttribute(string name, string section, int defValue,
                                   int min = byte.MinValue, int max = byte.MaxValue)
-            : base(name, section, desc, defValue, min, max) {
+            : base(name, section, defValue, min, max) {
         }
         
         public override object Parse(string value) {
@@ -68,8 +68,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         
-        public ConfigBoolAttribute(string name, string section, string desc, bool defValue)
-            : base(name, section, desc, defValue) {
+        public ConfigBoolAttribute(string name, string section, bool defValue)
+            : base(name, section, defValue) {
         }
         
         public override object Parse(string value) {
@@ -84,8 +84,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigPermAttribute : ConfigAttribute {
         
-        public ConfigPermAttribute(string name, string section, string desc, LevelPermission defValue)
-            : base(name, section, desc, defValue) {
+        public ConfigPermAttribute(string name, string section, LevelPermission defValue)
+            : base(name, section, defValue) {
         }
         
         public override object Parse(string value) {
@@ -122,8 +122,8 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigDateTimeAttribute : ConfigAttribute {
         
-        public ConfigDateTimeAttribute(string name, string section, string desc)
-            : base(name, section, desc, DateTime.MinValue) {
+        public ConfigDateTimeAttribute(string name, string section)
+            : base(name, section, DateTime.MinValue) {
         }
         
         public override object Parse(string value) {
@@ -146,9 +146,8 @@ namespace MCGalaxy.Config {
         /// <summary> The type of members of this enumeration. </summary>
         public Type EnumType;
         
-        public ConfigEnumAttribute(string name, string section, string desc, 
-                                   object defValue, Type enumType)
-            : base(name, section, desc, defValue) {
+        public ConfigEnumAttribute(string name, string section, object defValue, Type enumType)
+            : base(name, section, defValue) {
             EnumType = enumType;
         }
         
