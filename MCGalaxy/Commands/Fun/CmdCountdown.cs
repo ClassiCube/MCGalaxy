@@ -253,7 +253,7 @@ namespace MCGalaxy.Commands.Fun {
                 case CountdownGameStatus.Disabled:
                     Player.Message(p, "Countdown is not running."); break;
                 case CountdownGameStatus.Enabled:
-                    Player.Message(p, "No round is not running."); break;
+                    Player.Message(p, "No round is currently running."); break;
                 default:
                     game.EndRound(null); break;
             }

@@ -46,19 +46,13 @@ namespace MCGalaxy.Games {
         public string SpeedType;
         
         
-        CountdownPlugin plugin;
+        CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();
         
         
         #region Round
 
         public void BeginRound(Player p) {
-            if (plugin == null) {
-                plugin = new CountdownPlugin();
-                plugin.Game = this;
-                plugin.Load(false);
-            }
-            
             ResetMap();
             SetGlassTube(Block.glass, Block.glass);
             Map.ChatLevel("Countdown is about to start!");
@@ -108,7 +102,9 @@ namespace MCGalaxy.Games {
                     pl.SendMessage("Sending you to the correct map.");
                     PlayerActions.ChangeMap(pl, Map.name);
                 }
+            	
                 Entities.Spawn(pl, pl, pos, pl.Rot);
+                pl.SendPos(Entities.SelfID, pos, pl.Rot);
             }
         }
         
@@ -303,6 +299,9 @@ namespace MCGalaxy.Games {
         
         
         public void Enable(Player p) {
+            plugin.Game = this;
+            plugin.Load(false);
+            
             CmdLoad.LoadLevel(null, "countdown");
             Map = LevelInfo.FindExact("countdown");
             
@@ -325,6 +324,8 @@ namespace MCGalaxy.Games {
             if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);
             
             Status = CountdownGameStatus.Disabled;
+            plugin.Unload(false);
+            
             Map.ChatLevel("Countdown was disabled.");
             Players.Clear();
             Remaining.Clear();
@@ -390,7 +391,7 @@ namespace MCGalaxy.Games {
             if (!Players.Contains(p)) {
                 Players.Add(p);
                 Player.Message(p, "You've joined countdown!");
-                Chat.MessageGlobal("{0} %Sjoined Countdown!", p.ColoredName);
+                Chat.MessageGlobal("{0} %Sjoined countdown!", p.ColoredName);
                 if (p.level != Map) PlayerActions.ChangeMap(p, "countdown");
             } else {
                 Player.Message(p, "You've already joined countdown. To leave type /countdown leave");

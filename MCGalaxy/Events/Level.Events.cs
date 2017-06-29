@@ -24,13 +24,13 @@ namespace MCGalaxy {
         
         public delegate void OnLevelLoad(string level);
 
-        public delegate void OnLevelLoaded(Level l);
+        public delegate void OnLevelLoaded(Level lvl);
 
-        public delegate void OnLevelSave(Level l);
+        public delegate void OnLevelSave(Level lvl);
 
-        public delegate void OnLevelUnload(Level l);
+        public delegate void OnLevelUnload(Level lvl);
 
-        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level l);
+        public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level lvl);
 
         public delegate void OnPhysicsStateChanged(object sender, PhysicsState state);
 

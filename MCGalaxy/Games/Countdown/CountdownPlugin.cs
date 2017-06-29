@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Threading;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Games {
@@ -29,11 +28,13 @@ namespace MCGalaxy.Games {
         public override void Load(bool startup) {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High, this);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High, this);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High, this);
         }
         
         public override void Unload(bool shutdown) {
             OnPlayerMoveEvent.UnRegister(this);
             OnPlayerDisconnectEvent.UnRegister(this);
+            OnLevelUnloadEvent.UnRegister(this);
         }
         
         
@@ -59,6 +60,11 @@ namespace MCGalaxy.Games {
                 Game.PlayerLeftGame(p);
             }
             Game.Players.Remove(p);
+        }
+        
+        void HandleLevelUnload(Level lvl) {
+            if (Game.Status == CountdownGameStatus.Disabled || lvl != Game.Map) return;
+            Game.Disable();
         }
     }
 }
