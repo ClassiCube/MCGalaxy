@@ -34,9 +34,6 @@ namespace MCGalaxy.Games {
         
         /// <summary> Current status of the countdown game. </summary>
         public CountdownGameStatus Status = CountdownGameStatus.Disabled;
-
-        /// <summary> Whether the current round is pending cancellation. </summary>
-        public bool PendingCancel = false;
         
         
         /// <summary> Whether the game is running in freeze mode or not. </summary>
@@ -121,7 +118,7 @@ namespace MCGalaxy.Games {
         void DoRound() {
             if (FreezeMode) {
                 MessageFreezeCountdown();
-                MessageAll("&bPlayers Frozen");
+               Map.ChatLevel("&bPlayers Frozen");
                 
                 Player[] players = Players.Items;
                 foreach (Player pl in players) {
@@ -139,34 +136,34 @@ namespace MCGalaxy.Games {
 
         void MessageFreezeCountdown() {
             Thread.Sleep(500);
-            MessageAll("Welcome to Freeze Mode of countdown");
-            MessageAll("You have 15 seconds to stand on a square");
+            Map.ChatLevel("Welcome to Freeze Mode of countdown");
+            Map.ChatLevel("You have 15 seconds to stand on a square");
             Thread.Sleep(500);
-            MessageAll("-----&b15%S-----"); Thread.Sleep(500);
-            MessageAll("Once the countdown is up, you are stuck on your square");
+            Map.ChatLevel("-----&b15%S-----"); Thread.Sleep(500);
+            Map.ChatLevel("Once the countdown is up, you are stuck on your square");
             Thread.Sleep(500);
-            MessageAll("-----&b14%S-----"); Thread.Sleep(500);
-            MessageAll("The squares then start to dissapear");
+            Map.ChatLevel("-----&b14%S-----"); Thread.Sleep(500);
+            Map.ChatLevel("The squares then start to dissapear");
             Thread.Sleep(500);
-            MessageAll("-----&b13%S-----"); Thread.Sleep(500);
-            MessageAll("Whoever is last out wins!!");
+            Map.ChatLevel("-----&b13%S-----"); Thread.Sleep(500);
+            Map.ChatLevel("Whoever is last out wins!");
             Thread.Sleep(500);
-            MessageAll("-----&b12%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b11%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b10%S-----");
-            MessageAll("Only 10 Seconds left to pick your places!!");
+            Map.ChatLevel("-----&b12%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b11%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b10%S-----");
+            Map.ChatLevel("Only 10 Seconds left to pick your places!");
             Thread.Sleep(1000);
-            MessageAll("-----&b9%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b8%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b7%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b6%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b5%S-----");
-            MessageAll("5 Seconds left to pick your places!!");
+            Map.ChatLevel("-----&b9%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b8%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b7%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b6%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b5%S-----");
+            Map.ChatLevel("5 Seconds left to pick your places!");
             Thread.Sleep(1000);
-            MessageAll("-----&b4%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b3%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b2%S-----"); Thread.Sleep(1000);
-            MessageAll("-----&b1%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
+            Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
         }
 
         void CloseOffBoard() {
@@ -185,8 +182,8 @@ namespace MCGalaxy.Games {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             for (int xx = 6; xx < maxX - 6; xx += 3)
                 Cuboid(xx - 1, 4, 4, xx - 1, 4, maxZ - 4, Block.air, Map);
-            for(int zz = 6; zz < maxZ - 6; zz += 3)
-                Cuboid(4, 4, zz - 1, maxX - 4, 4, zz - 2, Block.air, Map);
+            for (int zz = 6; zz < maxZ - 6; zz += 3)
+                Cuboid(4, 4, zz - 1, maxX - 4, 4, zz - 1, Block.air, Map);
         }
         
         void RemoveSquares() {
@@ -256,7 +253,7 @@ namespace MCGalaxy.Games {
         
 
         public void Death(Player p) {
-            Map.ChatLevel(p.ColoredName + " %Sis out of countdown!!");
+            Map.ChatLevel(p.ColoredName + " %Sis out of countdown!");
             Remaining.Remove(p);
             UpdatePlayersLeft();
         }
@@ -267,7 +264,7 @@ namespace MCGalaxy.Games {
             
             switch (players.Length) {
                 case 1:
-                    Map.ChatLevel(players[0].ColoredName + " %Sis the winner!!");
+                    Map.ChatLevel(players[0].ColoredName + " %Sis the winner!");
                     EndRound(players[0]);
                     break;
                 case 2:
@@ -296,12 +293,9 @@ namespace MCGalaxy.Games {
             } else {
                 Player[] players = Players.Items;
                 foreach (Player pl in players) {
-                    Player.Message(pl, "Current round was force ended!");
                     Command.all.Find("spawn").Use(pl, "");
-                }
-                
-                Chat.MessageGlobal("Current round was force ended!");
-                PendingCancel = false;
+                }                
+                Map.ChatLevel("Current round was force ended!");
             }
         }
         
@@ -331,7 +325,7 @@ namespace MCGalaxy.Games {
             if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);
             
             Status = CountdownGameStatus.Disabled;
-            MessageAll("Countdown was disabled.");
+            Map.ChatLevel("Countdown was disabled.");
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
@@ -363,15 +357,7 @@ namespace MCGalaxy.Games {
                 for (int xx = 6; xx < maxX - 6; xx += 3)
                     Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, Map);
             
-            MessageAll("Countdown map has been reset");
-        }
-
-        /// <summary> Sends a message to all players of countdown. </summary>
-        public void MessageAll(string message) {
-            Player[] players = Players.Items;
-            foreach (Player pl in players) {
-                Player.Message(pl, message);
-            }
+            Map.ChatLevel("Countdown map has been reset");
         }
         
         
