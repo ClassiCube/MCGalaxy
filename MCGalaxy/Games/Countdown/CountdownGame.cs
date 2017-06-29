@@ -176,10 +176,12 @@ namespace MCGalaxy.Games {
         
         void RemoveAllSquareBorders() {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
-            for (int xx = 6; xx < maxX - 6; xx += 3)
-                Cuboid(xx - 1, 4, 4, xx - 1, 4, maxZ - 4, Block.air, Map);
-            for (int zz = 6; zz < maxZ - 6; zz += 3)
-                Cuboid(4, 4, zz - 1, maxX - 4, 4, zz - 1, Block.air, Map);
+            for (int xx = 6 - 1; xx <= Map.Width - 6; xx += 3) {
+                Cuboid(xx, 4, 4, xx, 4, maxZ - 4, Block.air, Map);
+            }
+            for (int zz = 6 - 1; zz <= Map.Length - 6; zz += 3) {
+                Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.air, Map);
+            }
         }
         
         void RemoveSquares() {
