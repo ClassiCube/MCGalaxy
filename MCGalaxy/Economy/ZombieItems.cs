@@ -183,8 +183,8 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "Invisibility"; } }
-        protected override int MaxPotions { get { return ZombieGameProps.InvisibilityPotions; } }
-        protected override int Duration { get { return ZombieGameProps.InvisibilityDuration; } }
+        protected override int MaxPotions { get { return ZSConfig.InvisibilityPotions; } }
+        protected override int Duration { get { return ZSConfig.InvisibilityDuration; } }
         protected override bool ForHumans { get { return true; } }
     }
     
@@ -196,8 +196,8 @@ namespace MCGalaxy.Eco {
         }
         
         public override string Name { get { return "ZombieInvisibility"; } }
-        protected override int MaxPotions { get { return ZombieGameProps.ZombieInvisibilityPotions; } }
-        protected override int Duration { get { return ZombieGameProps.ZombieInvisibilityDuration; } }
+        protected override int MaxPotions { get { return ZSConfig.ZombieInvisibilityPotions; } }
+        protected override int Duration { get { return ZSConfig.ZombieInvisibilityDuration; } }
         protected override bool ForHumans { get { return false; } }
     }
 }

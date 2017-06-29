@@ -87,11 +87,11 @@ namespace MCGalaxy {
             }
             
             string name = p.truename, skinName = p.SkinName;
-            if (ZombieGameProps.ZombieName != "" && !dst.Game.Aka) {
-                name = ZombieGameProps.ZombieName; skinName = name;
+            if (ZSConfig.ZombieName != "" && !dst.Game.Aka) {
+                name = ZSConfig.ZombieName; skinName = name;
             }
             
-            string model = p == dst ? p.Model : ZombieGameProps.ZombieModel;
+            string model = p == dst ? p.Model : ZSConfig.ZombieModel;
             SpawnRaw(dst, id, skinName, Colors.red + name + possession, model, p.Pos, p.Rot);
         }
         

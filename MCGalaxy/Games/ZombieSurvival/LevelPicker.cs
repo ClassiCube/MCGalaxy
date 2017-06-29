@@ -26,7 +26,7 @@ namespace MCGalaxy.Games.ZS {
         
         internal static void ChooseNextLevel(ZombieGame game) {
             if (game.QueuedLevel != null) { game.ChangeLevel(game.QueuedLevel); return; }
-            if (!ZombieGameProps.ChangeLevels) return;
+            if (!ZSConfig.ChangeLevels) return;
             
             try {
                 List<string> maps = GetCandidateLevels();
@@ -131,20 +131,20 @@ namespace MCGalaxy.Games.ZS {
         /// <returns> null if not enough levels are available, otherwise the list of levels. </returns>
         internal static List<string> GetCandidateLevels() {
             List<string> maps = null;
-            if (ZombieGameProps.LevelList.Count > 0) {
-                maps = new List<string>(ZombieGameProps.LevelList);
+            if (ZSConfig.LevelList.Count > 0) {
+                maps = new List<string>(ZSConfig.LevelList);
             } else {
                 maps = GetAllMaps();
             }
-            foreach (string ignore in ZombieGameProps.IgnoredLevelList)
+            foreach (string ignore in ZSConfig.IgnoredLevelList)
                 maps.Remove(ignore);
             
-            bool useLevelList = ZombieGameProps.LevelList.Count > 0;
-            if (ZombieGameProps.ChangeLevels && maps.Count <= 3) {
+            bool useLevelList = ZSConfig.LevelList.Count > 0;
+            if (ZSConfig.ChangeLevels && maps.Count <= 3) {
                 string group = useLevelList ? "in your level list " : "";
                 Logger.Log(LogType.Warning, "You must have more than 3 levels {0}to change levels in Zombie Survival", group);
                 return null;
-            } else if (!ZombieGameProps.ChangeLevels && maps.Count == 0) {
+            } else if (!ZSConfig.ChangeLevels && maps.Count == 0) {
                 string group = useLevelList ? "in your level list " : "";
                 Logger.Log(LogType.Warning, "You must have at least 1 level {0}to play Zombie Survival", group);
                 return null;
@@ -159,7 +159,7 @@ namespace MCGalaxy.Games.ZS {
             
             foreach (string file in files) {
                 string name = Path.GetFileNameWithoutExtension(file);
-                if (name.IndexOf('+') >= 0 && ZombieGameProps.IgnorePersonalWorlds)
+                if (name.IndexOf('+') >= 0 && ZSConfig.IgnorePersonalWorlds)
                     continue;
                 maps.Add(name);
             }

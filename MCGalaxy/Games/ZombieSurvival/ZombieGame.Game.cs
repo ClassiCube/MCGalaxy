@@ -58,7 +58,7 @@ namespace MCGalaxy.Games {
             if (p.level == null || !p.level.name.CaselessEq(CurLevelName)) return false;
             
             return MovementCheck.DetectNoclip(p, next) 
-                || MovementCheck.DetectSpeedhack(p, next, ZombieGameProps.MaxMoveDistance);
+                || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
         }
         
         public override bool HandlesChatMessage(Player p, string message) {
@@ -119,7 +119,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedServer(Player p) {
-            if (!Running || ZombieGameProps.SetMainLevel) return;
+            if (!Running || ZSConfig.SetMainLevel) return;
             Player.Message(p, "Zombie Survival is running! Type %T/zs go %Sto join.");
         }
         
@@ -183,7 +183,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void OnHeartbeat(ref string name) {
-            if (!Running || !ZombieGameProps.IncludeMapInHeartbeat || CurLevelName == null) return;
+            if (!Running || !ZSConfig.IncludeMapInHeartbeat || CurLevelName == null) return;
             name += " (map: " + CurLevelName + ")";
         }
         
@@ -202,8 +202,8 @@ namespace MCGalaxy.Games {
                 group = "&2Referees";
             } else if (p.Game.Infected) {
                 group = "&cZombies";
-                if (ZombieGameProps.ZombieName != "" && !dst.Game.Aka) {
-                    name = "&c" + ZombieGameProps.ZombieName;
+                if (ZSConfig.ZombieName != "" && !dst.Game.Aka) {
+                    name = "&c" + ZSConfig.ZombieName;
                 } else {
                     name = "&c" + p.truename;
                 }

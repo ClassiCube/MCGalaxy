@@ -98,7 +98,7 @@ namespace MCGalaxy.Games {
         public VolatileArray<string> Lottery = new VolatileArray<string>(false);
     }
     
-    public static class ZombieGameProps {
+    public static class ZSConfig {
         
         /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
         [ConfigInt("zombie-hitbox-precision", "Zombie", 32)]

@@ -140,7 +140,7 @@ namespace MCGalaxy.Gui {
             SaveBlocks();
             try { SaveLavaSettings(); }
             catch { Logger.Log(LogType.Warning, "Error saving Lava Survival settings!"); }
-            try { ZombieGameProps.SaveSettings(); }
+            try { ZSConfig.SaveSettings(); }
             catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 
             SrvProperties.Load(); // loads when saving?

@@ -115,7 +115,7 @@ namespace MCGalaxy {
             if (!saveLevel) return false;
             ZombieGame zs = Server.zombie;
             
-            if (zs.Running && !ZombieGameProps.SaveLevelBlockchanges &&
+            if (zs.Running && !ZSConfig.SaveLevelBlockchanges &&
                 (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName)))
                 return false;
             if (Server.lava.active && Server.lava.HasMap(name))

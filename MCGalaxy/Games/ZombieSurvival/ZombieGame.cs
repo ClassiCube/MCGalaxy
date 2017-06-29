@@ -68,7 +68,7 @@ namespace MCGalaxy.Games {
                 PlayerJoinedLevel(p, p.level, p.level);
             }
             
-            if (ZombieGameProps.SetMainLevel)
+            if (ZSConfig.SetMainLevel)
                 Server.mainLevel = CurLevel;
             return true;
         }
@@ -148,7 +148,7 @@ namespace MCGalaxy.Games {
             QueuedLevel = null;
             CmdLoad.LoadLevel(null, next);
             CurLevel = LevelInfo.FindExact(next);
-            if (ZombieGameProps.SetMainLevel)
+            if (ZSConfig.SetMainLevel)
                 Server.mainLevel = CurLevel;
             
             online = PlayerInfo.Online.Items;
@@ -242,13 +242,13 @@ namespace MCGalaxy.Games {
         
         public bool IsZombieMap(string name) {
             if (!Running) return false;
-            if (ZombieGameProps.IgnorePersonalWorlds && name.IndexOf('+') >= 0)
+            if (ZSConfig.IgnorePersonalWorlds && name.IndexOf('+') >= 0)
                 return false;
-            if (ZombieGameProps.IgnoredLevelList.CaselessContains(name))
+            if (ZSConfig.IgnoredLevelList.CaselessContains(name))
                 return false;
             
-            return ZombieGameProps.LevelList.Count == 0 ?
-                true : ZombieGameProps.LevelList.CaselessContains(name);
+            return ZSConfig.LevelList.Count == 0 ?
+                true : ZSConfig.LevelList.CaselessContains(name);
         }
         
         #region Database

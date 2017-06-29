@@ -53,7 +53,7 @@ namespace MCGalaxy.Games {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ZombieGameProps.ChangeLevels)
+                    if (ZSConfig.ChangeLevels)
                         LevelPicker.ChooseNextLevel(this);
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
                         ResetState(); return;
                     } else {
                         DoRound();
-                        if (ZombieGameProps.ChangeLevels)
+                        if (ZSConfig.ChangeLevels)
                             LevelPicker.ChooseNextLevel(this);
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
@@ -187,7 +187,7 @@ namespace MCGalaxy.Games {
         }
         
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
-            int dist = ZombieGameProps.HitboxPrecision;
+            int dist = ZSConfig.HitboxPrecision;
             foreach (Player killer in deadList) {
                 killer.Game.Infected = true;
                 UpdatePlayerColor(killer, InfectCol);

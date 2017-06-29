@@ -108,30 +108,30 @@ namespace MCGalaxy.Commands.Fun {
         
         static void HandleHitbox(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Player.Message(p, "Hitbox detection is currently &a" + ZombieGameProps.HitboxPrecision + " %Sunits apart.");
+                Player.Message(p, "Hitbox detection is currently &a" + ZSConfig.HitboxPrecision + " %Sunits apart.");
                 return;
             }
             
             byte precision = 0;
             if (!CommandParser.GetByte(p, args[1], "Hitbox detection", ref precision)) return;
             
-            ZombieGameProps.HitboxPrecision = precision;
+            ZSConfig.HitboxPrecision = precision;
             Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
-            ZombieGameProps.SaveSettings();
+            ZSConfig.SaveSettings();
         }
         
         static void HandleMaxMove(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Player.Message(p, "Maxmium move distance is currently &a" + ZombieGameProps.MaxMoveDistance + " %Sunits apart.");
+                Player.Message(p, "Maxmium move distance is currently &a" + ZSConfig.MaxMoveDistance + " %Sunits apart.");
                 return;
             }
             
             byte distance = 0;
             if (!CommandParser.GetByte(p, args[1], "Maxmimum move distance", ref distance)) return;
             
-            ZombieGameProps.MaxMoveDistance = distance;
+            ZSConfig.MaxMoveDistance = distance;
             Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
-            ZombieGameProps.SaveSettings();
+            ZSConfig.SaveSettings();
         }
         
         public override void Help(Player p) {

@@ -45,8 +45,8 @@ namespace MCGalaxy {
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref oldPerms, LineProcessor))
                 Server.SettingsUpdate();
             if (oldPerms.saveZS)
-                ZombieGameProps.SaveSettings();
-            ZombieGameProps.LoadSettings();
+                ZSConfig.SaveSettings();
+            ZSConfig.LoadSettings();
             
             Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             #pragma warning disable 0618
