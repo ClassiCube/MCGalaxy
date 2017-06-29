@@ -38,8 +38,8 @@ namespace MCGalaxy.Games {
         
         
         void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
-            if (!p.InCountdown || Game.Status != CountdownGameStatus.RoundInProgress || !Game.FreezeMode)
-                return;
+            if (Game.Status != CountdownGameStatus.RoundInProgress || !Game.FreezeMode) return;
+            if (!Game.Remaining.Contains(p)) return;
             
             if (next.X != p.CountdownFreezeX || next.Z != p.CountdownFreezeZ) {
                 next.X = p.CountdownFreezeX; next.Z = p.CountdownFreezeZ;
@@ -54,7 +54,7 @@ namespace MCGalaxy.Games {
         void HandlePlayerDisconnect(Player p, string reason) {
             if (!Game.Players.Contains(p)) return;
             
-            if (Game.PlayersRemaining.Contains(p)) {
+            if (Game.Remaining.Contains(p)) {
                 Game.Map.ChatLevel(p.ColoredName + " %Slogged out, and so is out of countdown");
                 Game.PlayerLeftGame(p);
             }

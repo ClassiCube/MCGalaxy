@@ -169,8 +169,6 @@ namespace MCGalaxy {
         public int SessionID;
 
         //Countdown
-        public bool playerofcountdown = false;
-        public bool InCountdown = false;
         public int CountdownFreezeX;
         public int CountdownFreezeZ;
 

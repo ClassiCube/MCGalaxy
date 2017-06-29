@@ -49,11 +49,20 @@ namespace MCGalaxy {
                     newItems[i] = Items[i];
                 }
 
-                if (useList) list.Add(value);                
+                if (useList) list.Add(value);
                 newItems[Items.Length] = value;
                 Items = newItems;
             }
             return true;
+        }
+        
+        public bool Contains(T value) {
+            lock (locker) {
+                for (int i = 0; i < Items.Length; i++) {
+                    if (object.ReferenceEquals(Items[i], value)) return true;
+                }
+            }
+            return false;
         }
         
         public bool Remove(T value) {

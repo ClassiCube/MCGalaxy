@@ -311,7 +311,6 @@ namespace MCGalaxy {
 
                 Server.zombie.PlayerLeftServer(this);
                 if ( Game.team != null ) Game.team.RemoveMember(this);
-                Server.Countdown.PlayerLeftServer(this);
                 TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                 if ( tntwarsgame != null ) {
                     tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
