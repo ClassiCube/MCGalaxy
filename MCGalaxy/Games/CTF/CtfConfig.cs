@@ -18,68 +18,76 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using MCGalaxy.SQL;
+using MCGalaxy.Config;
 
 namespace MCGalaxy.Games {
-    public sealed partial class CTFGame {
+    
+    public sealed class CTFConfig {
  
-        void LineProcessor(string key, string value) {
-            switch (key.ToLower()) {
-                case "base.red.x":
-                    redbase.x = ushort.Parse(value); break;
-                case "base.red.y":
-                    redbase.y = ushort.Parse(value); break;
-                case "game.maxpoints":
-                    maxpoints = int.Parse(value); break;
-                case "game.tag.points-gain":
-                    tagpoint = int.Parse(value); break;
-                case "game.tag.points-lose":
-                    taglose = int.Parse(value); break;
-                case "game.capture.points-gain":
-                    cappoint = int.Parse(value); break;
-                case "game.capture.points-lose":
-                    caplose = int.Parse(value); break;
-                case "auto.setup":
-                    needSetup = bool.Parse(value); break;
-                case "base.red.z":
-                    redbase.z = ushort.Parse(value); break;
-                case "base.red.block":
-                    redbase.block = ExtBlock.FromRaw(byte.Parse(value)); break;
-                case "base.blue.block":
-                    bluebase.block = ExtBlock.FromRaw(byte.Parse(value)); break;
-                case "base.blue.spawnx":
-                    bluebase.spawnx = ushort.Parse(value); break;
-                case "base.blue.spawny":
-                    bluebase.spawny = ushort.Parse(value); break;
-                case "base.blue.spawnz":
-                    bluebase.spawnz = ushort.Parse(value); break;
-                case "base.red.spawnx":
-                    redbase.spawnx = ushort.Parse(value); break;
-                case "base.red.spawny":
-                    redbase.spawny = ushort.Parse(value); break;
-                case "base.red.spawnz":
-                    redbase.spawnz = ushort.Parse(value); break;
-                case "base.blue.x":
-                    bluebase.x = ushort.Parse(value); break;
-                case "base.blue.y":
-                    bluebase.y = ushort.Parse(value); break;
-                case "base.blue.z":
-                    bluebase.z = ushort.Parse(value); break;
-                case "map.line.z":
-                    zline = ushort.Parse(value); break;
-            }
-        }
+        [ConfigInt("base.red.x", null, 0)]
+        public int RedFlagX;
+        [ConfigInt("base.red.y", null, 0)]
+        public int RedFlagY;
+        [ConfigInt("base.red.z", null, 0)]
+        public int RedFlagZ;
+        [ConfigByte("base.red.block", null, 0)]
+        public byte RedFlagBlock;
+ 
+        [ConfigInt("base.blue.x", null, 0)]
+        public int BlueFlagX;
+        [ConfigInt("base.blue.y", null, 0)]
+        public int BlueFlagY;
+        [ConfigInt("base.blue.z", null, 0)]
+        public int BlueFlagZ;
+        [ConfigByte("base.blue.block", null, 0)]
+        public byte BlueFlagBlock;
         
-        bool LoadConfig() {
-            //Load some configs
-            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            if (!File.Exists("CTF/maps.config")) return false;
+        [ConfigInt("base.red.spawnx", null, 0)]
+        public int RedSpawnX;
+        [ConfigInt("base.red.spawny", null, 0)]
+        public int RedSpawnY;
+        [ConfigInt("base.red.spawnz", null, 0)]
+        public int RedSpawnZ;
+ 
+        [ConfigInt("base.blue.spawnx", null, 0)]
+        public int BlueSpawnX;
+        [ConfigInt("base.blue.spawny", null, 0)]
+        public int BlueSpawnY;
+        [ConfigInt("base.blue.spawnz", null, 0)]
+        public int BlueSpawnZ;
+        
+        [ConfigInt("map.line.z", null, 0)]
+        public int ZDivider;        
+        [ConfigInt("game.maxpoints", null, 0)]
+        public int MaxPoints;
+        [ConfigInt("game.tag.points-gain", null, 0)]
+        public int Tag_PointsGained;
+        [ConfigInt("game.tag.points-lose", null, 0)]
+        public int Tag_PointsLost;
+        [ConfigInt("game.capture.points-gain", null, 0)]
+        public int Capture_PointsGained;
+        [ConfigInt("game.capture.points-lose", null, 0)]
+        public int Capture_PointsLost;
+        
+        public void SetDefaults(Level map) {
+            ZDivider = map.Length / 2;
+            RedFlagBlock = Block.red;
+            BlueFlagBlock = Block.blue;            
+            int midX = map.Width / 2, maxZ = map.Length - 1;
             
-            string[] lines = File.ReadAllLines("CTF/maps.config");
-            maps = new List<string>(lines);
-            return maps.Count > 0;
+            RedFlagX = midX; RedSpawnX = midX * 32; 
+            RedFlagY = 6;    RedSpawnY = 4 * 32 + Entities.CharacterHeight;
+            RedFlagZ = 0;    RedSpawnZ = 0 * 32;
+            
+            BlueFlagX = midX; BlueSpawnX = midX * 32;
+            BlueFlagY = 6;    BlueSpawnY = 4 * 32 + Entities.CharacterHeight;
+            BlueFlagZ = maxZ; BlueSpawnZ = maxZ * 32;
+            
+            MaxPoints = 3;
+            Tag_PointsGained = 5;
+            Tag_PointsLost = 5;
+            Capture_PointsGained = 10;
+            Capture_PointsLost = 10;
         }
     }
 }

@@ -31,6 +31,7 @@ namespace MCGalaxy.Config {
             if (color == "") {
                 color = Colors.Name(value);
                 if (color != "") return value;
+                
                 Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid color, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
             }

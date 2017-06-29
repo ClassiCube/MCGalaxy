@@ -29,20 +29,20 @@ namespace MCGalaxy {
         
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.Public | BindingFlags.NonPublic;
-        public static ConfigElement[] GetAll(params Type[] types) {
+        
+        public static ConfigElement[] GetAll(Type type) {
             List<ConfigElement> elems = new List<ConfigElement>();
-            foreach (Type type in types) {
-                FieldInfo[] fields = type.GetFields(flags);
-                for (int i = 0; i < fields.Length; i++) {
-                    FieldInfo field = fields[i];
-                    Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
-                    if (attributes.Length == 0) continue;
-                    
-                    ConfigElement elem;
-                    elem.Field = field;
-                    elem.Attrib = (ConfigAttribute)attributes[0];
-                    elems.Add(elem);
-                }
+            FieldInfo[] fields = type.GetFields(flags);
+            
+            for (int i = 0; i < fields.Length; i++) {
+                FieldInfo field = fields[i];
+                Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
+                if (attributes.Length == 0) continue;
+                
+                ConfigElement elem;
+                elem.Field = field;
+                elem.Attrib = (ConfigAttribute)attributes[0];
+                elems.Add(elem);
             }
             return elems.ToArray();
         }
@@ -60,7 +60,7 @@ namespace MCGalaxy {
         
         public static void Serialise(ConfigElement[] elements, string suffix,
                                      StreamWriter dst, object instance) {
-            Dictionary<string, List<ConfigElement>> sections 
+            Dictionary<string, List<ConfigElement>> sections
                 = new Dictionary<string, List<ConfigElement>>();
             
             foreach (ConfigElement elem in elements) {
