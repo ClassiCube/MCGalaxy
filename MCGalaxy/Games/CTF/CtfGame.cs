@@ -48,12 +48,11 @@ namespace MCGalaxy.Games {
         
         CtfTeam2 red;
         CtfTeam2 blue;
-        Level map;
+        public Level map;
         List<string> maps = new List<string>();
         List<Data> cache = new List<Data>();
         
         public CTFConfig Config = new CTFConfig();
-        ConfigElement[] ctfConfigElems;
         
         /// <summary> Create a new CTF object </summary>
         public CTFGame() {
@@ -95,15 +94,12 @@ namespace MCGalaxy.Games {
             File.Copy("CTF/maps/" + mapName + ".lvl", "levels/ctf.lvl");
             CmdLoad.LoadLevel(null, "ctf");
             map = LevelInfo.FindExact("ctf");
-            LoadMapConfig();
+            UpdateConfig();
         }
         
-        void LoadMapConfig() {
-            if (ctfConfigElems == null)
-                ctfConfigElems = ConfigElement.GetAll(typeof(CTFConfig));
-
+        public void UpdateConfig() {
             Config.SetDefaults(map);
-            PropertiesFile.Read("CTF/" + map.name + ".config", LineProcessor);
+            Config.Retrieve(map.name);
             CTFConfig cfg = Config;
             
             red.FlagBlock = ExtBlock.FromRaw(cfg.RedFlagBlock);
@@ -113,12 +109,6 @@ namespace MCGalaxy.Games {
             blue.FlagBlock = ExtBlock.FromRaw(cfg.BlueFlagBlock);
             blue.FlagPos = new Vec3U16((ushort)cfg.BlueFlagX, (ushort)cfg.BlueFlagY, (ushort)cfg.BlueFlagZ);
             blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
-        }
-        
-        void LineProcessor(string key, string value) {
-            if (!ConfigElement.Parse(ctfConfigElems, key, value, Config)) {
-                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised CTF config key.", key);
-            }
         }
         
         bool LoadConfig() {

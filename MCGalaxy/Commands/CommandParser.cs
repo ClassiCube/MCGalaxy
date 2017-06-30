@@ -43,12 +43,13 @@ namespace MCGalaxy.Commands {
                                           ref TEnum result) where TEnum : struct {
             try {
                 result = (TEnum)Enum.Parse(typeof(TEnum), input, true);
-                return true;
-            } catch (Exception) {
-                string[] names = Enum.GetNames(typeof(TEnum));
-                Player.Message(p, argName + " must be one of the following: " + names.Join());
-                return false;
+                if (Enum.IsDefined(typeof(TEnum), result)) return true;
+            } catch {
             }
+            
+             string[] names = Enum.GetNames(typeof(TEnum));
+             Player.Message(p, argName + " must be one of the following: " + names.Join());
+             return false;
         }
         
         /// <summary> Attempts to parse the given argument as an timespan in short form. </summary>                

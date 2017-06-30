@@ -16,14 +16,15 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
+using System.IO;
 using MCGalaxy.Config;
 
 namespace MCGalaxy.Games {
     
     public sealed class CTFConfig {
- 
+        
         [ConfigInt("base.red.x", null, 0)]
         public int RedFlagX;
         [ConfigInt("base.red.y", null, 0)]
@@ -32,7 +33,7 @@ namespace MCGalaxy.Games {
         public int RedFlagZ;
         [ConfigByte("base.red.block", null, 0)]
         public byte RedFlagBlock;
- 
+        
         [ConfigInt("base.blue.x", null, 0)]
         public int BlueFlagX;
         [ConfigInt("base.blue.y", null, 0)]
@@ -48,7 +49,7 @@ namespace MCGalaxy.Games {
         public int RedSpawnY;
         [ConfigInt("base.red.spawnz", null, 0)]
         public int RedSpawnZ;
- 
+        
         [ConfigInt("base.blue.spawnx", null, 0)]
         public int BlueSpawnX;
         [ConfigInt("base.blue.spawny", null, 0)]
@@ -57,7 +58,7 @@ namespace MCGalaxy.Games {
         public int BlueSpawnZ;
         
         [ConfigInt("map.line.z", null, 0)]
-        public int ZDivider;        
+        public int ZDivider;
         [ConfigInt("game.maxpoints", null, 0)]
         public int MaxPoints;
         [ConfigInt("game.tag.points-gain", null, 0)]
@@ -69,13 +70,15 @@ namespace MCGalaxy.Games {
         [ConfigInt("game.capture.points-lose", null, 0)]
         public int Capture_PointsLost;
         
+        
+        /// <summary> Sets the default CTF config values for the given map. </summary>
         public void SetDefaults(Level map) {
             ZDivider = map.Length / 2;
             RedFlagBlock = Block.red;
-            BlueFlagBlock = Block.blue;            
+            BlueFlagBlock = Block.blue;
             int midX = map.Width / 2, maxZ = map.Length - 1;
             
-            RedFlagX = midX; RedSpawnX = midX * 32; 
+            RedFlagX = midX; RedSpawnX = midX * 32;
             RedFlagY = 6;    RedSpawnY = 4 * 32 + Entities.CharacterHeight;
             RedFlagZ = 0;    RedSpawnZ = 0 * 32;
             
@@ -88,6 +91,25 @@ namespace MCGalaxy.Games {
             Tag_PointsLost = 5;
             Capture_PointsGained = 10;
             Capture_PointsLost = 10;
+        }
+        
+        
+        static ConfigElement[] elems;
+        public void Retrieve(string mapName) {
+            if (elems == null) elems = ConfigElement.GetAll(typeof(CTFConfig));
+            PropertiesFile.Read("CTF/" + mapName + ".config", LineProcessor);
+        }
+        
+        public void Save(string mapName) {
+            using (StreamWriter w = new StreamWriter("CTF/" + mapName + ".config")) {
+                ConfigElement.SerialisePlain(elems, w, this);
+            }
+        }
+        
+        void LineProcessor(string key, string value) {
+            if (!ConfigElement.Parse(elems, key, value, this)) {
+                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised CTF config key.", key);
+            }
         }
     }
 }

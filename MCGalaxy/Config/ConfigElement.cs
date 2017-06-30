@@ -58,6 +58,7 @@ namespace MCGalaxy {
             return false;
         }
         
+        /// <summary> Writes all config elements to the given stream, grouped by named sections. </summary>
         public static void Serialise(ConfigElement[] elements, string suffix,
                                      StreamWriter dst, object instance) {
             Dictionary<string, List<ConfigElement>> sections
@@ -79,6 +80,14 @@ namespace MCGalaxy {
                     dst.WriteLine(elem.Attrib.Name + " = " + elem.Attrib.Serialise(value));
                 }
                 dst.WriteLine();
+            }
+        }
+        
+        /// <summary> Writes all config elements to the given stream. </summary>
+        public static void SerialisePlain(ConfigElement[] elements, StreamWriter dst, object instance) {
+            foreach (ConfigElement elem in elements) {
+                object value = elem.Field.GetValue(instance);
+                dst.WriteLine(elem.Attrib.Name + " = " + elem.Attrib.Serialise(value));
             }
         }
     }
