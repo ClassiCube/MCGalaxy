@@ -346,84 +346,21 @@ namespace MCGalaxy {
             try {
                 Vec3U16 P = (Vec3U16)pos.BlockCoords;
                 AABB bb = ModelBB.OffsetPosition(Pos);
-                if (level.Config.SurvivalDeath) CheckSurvival(P.X, P.Y, P.Z, bb);
+                int index = level.PosToInt(P.X, P.Y, P.Z);
+                	
+                if (level.Config.SurvivalDeath) {
+                    if (index != oldIndex) PlayerPhysics.Fall(this, bb);
+                    PlayerPhysics.Drown(this, bb);
+                }
                 
-                CheckBlock(bb);
-                oldIndex = level.PosToInt(P.X, P.Y, P.Z);
+                PlayerPhysics.Walkthrough(this, bb);
+                oldIndex = index;
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
         }
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
-
-        void CheckSurvival(ushort x, ushort y, ushort z, AABB bb) {
-            byte bHead = GetSurvivalBlock(x, y, z);
-            if (level.PosToInt(x, y, z) != oldIndex) PlayerPhysics.Fall(this, bb);
-
-            switch (Block.Convert(bHead)) {
-                case Block.water:
-                case Block.waterstill:
-                case Block.lava:
-                case Block.lavastill:
-                    fallCount = 0;
-                    drownCount++;
-                    
-                    // level drown is in 10ths of a second, and there are 100 ticks/second
-                    if (drownCount > level.Config.DrownTime * 10) {
-                        HandleDeath((ExtBlock)Block.water);
-                        drownCount = 0;
-                    }
-                    break;
-                case Block.air:
-                    drownCount = 0;
-                    break;
-                default:
-                    fallCount = 0;
-                    drownCount = 0;
-                    break;
-            }
-        }
-        
-        byte GetSurvivalBlock(ushort x, ushort y, ushort z) {
-            if (y >= ushort.MaxValue - 512) return Block.blackrock;
-            if (y >= level.Height) return Block.air;
-            return level.GetTile(x, y, z);
-        }
-
-        void CheckBlock(AABB bb) {
-            Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
-            bool hitWalkthrough = false;
-            
-            for (int y = min.Y; y <= max.Y; y++)
-                for (int z = min.Z; z <= max.Z; z++)
-                    for (int x = min.X; x <= max.X; x++)
-            {
-                ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ExtBlock block = level.GetBlock(xP, yP, zP);
-                if (block.BlockID == Block.Invalid) continue;
-                
-                AABB blockBB = level.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
-                if (!bb.Intersects(blockBB)) continue;
-                
-                // We can activate only one walkthrough block per movement
-                if (!hitWalkthrough) {
-                    HandleWalkthrough handler = level.walkthroughHandlers[block.Index];
-                    if (handler != null && handler(this, block, xP, yP, zP)) {
-                        lastWalkthrough = level.PosToInt(xP, yP, zP);
-                        hitWalkthrough = true;
-                    }
-                }
-                
-                // Some blocks will cause death of players
-                if (!level.BlockProps[block.Index].KillerBlock) continue;               
-                if (block.BlockID == Block.tntexplosion && PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
-                if (block.BlockID == Block.train && trainInvincible) continue;
-                HandleDeath(block);
-            }
-            
-            if (!hitWalkthrough) lastWalkthrough = -1;
-        }
 
         [Obsolete("Use HandleDeath with ExtBlock attribute")]
         public void HandleDeath(byte b, string customMessage = "", bool explode = false, bool immediate = false) {
