@@ -57,57 +57,66 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
+        
+        const int flowed_xMax = (1 << 0);
+        const int flowed_xMin = (1 << 1);
+        const int flowed_zMax = (1 << 2);
+        const int flowed_zMin = (1 << 3);
+        const int flowed_yMin = (1 << 4);
+        const int flowed_maskAll = 0x1F;
+        
+        
         static void DoWaterRandowFlow(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (!lvl.CheckSpongeWater(x, y, z)) {
-                byte flowed = C.data.Data;
+                byte data = C.data.Data;
                 byte block = lvl.blocks[C.b];
                 if (y < lvl.Height - 1)
                     CheckFallingBlocks(lvl, C.b + lvl.Width * lvl.Length);
                 
-                if ((flowed & (1 << 0)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_xMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
-                    flowed |= (1 << 0);
+                    data |= flowed_xMax;
                 }
-                if ((flowed & (1 << 1)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_xMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
-                    flowed |= (1 << 1);
+                    data |= flowed_xMin;
                 }
-                if ((flowed & (1 << 2)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_zMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
-                    flowed |= (1 << 2);
+                    data |= flowed_zMax;
                 }
-                if ((flowed & (1 << 3)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_zMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
-                    flowed |= (1 << 3);
+                    data |= flowed_zMin;
                 }
-                if ((flowed & (1 << 4)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_yMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
-                    flowed |= (1 << 4);
+                    data |=  flowed_yMin;
                 }
 
-                if ((flowed & (1 << 0)) == 0 && WaterBlocked(lvl, (ushort)(x + 1), y, z)) {
-                    flowed |= (1 << 0);
+                if ((data & flowed_xMax) == 0 && WaterBlocked(lvl, (ushort)(x + 1), y, z)) {
+                    data |= flowed_xMax;
                 }
-                if ((flowed & (1 << 1)) == 0 && WaterBlocked(lvl, (ushort)(x - 1), y, z)) {
-                    flowed |= (1 << 1);
+                if ((data & flowed_xMin) == 0 && WaterBlocked(lvl, (ushort)(x - 1), y, z)) {
+                    data |= flowed_xMin;
                 }
-                if ((flowed & (1 << 2)) == 0 && WaterBlocked(lvl, x, y, (ushort)(z + 1))) {
-                    flowed |= (1 << 2);
+                if ((data & flowed_zMax) == 0 && WaterBlocked(lvl, x, y, (ushort)(z + 1))) {
+                    data |= flowed_zMax;
                 }
-                if ((flowed & (1 << 3)) == 0 && WaterBlocked(lvl, x, y, (ushort)(z - 1))) {
-                    flowed |= (1 << 3);
+                if ((data & flowed_zMin) == 0 && WaterBlocked(lvl, x, y, (ushort)(z - 1))) {
+                    data |= flowed_zMin;
                 }
-                if ((flowed & (1 << 4)) == 0 && WaterBlocked(lvl, x, (ushort)(y - 1), z)) {
-                    flowed |= (1 << 4);
+                if ((data & flowed_yMin) == 0 && WaterBlocked(lvl, x, (ushort)(y - 1), z)) {
+                    data |= flowed_yMin;
                 }
                 
                 // Have we spread now (or been blocked from spreading) in all directions?
-                C.data.Data = flowed;
-                if (!C.data.HasWait && (flowed & 0x1F) == 0x1F) {
+                C.data.Data = data;
+                if (!C.data.HasWait && (data & 0x1F) == 0x1F) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
@@ -167,58 +176,59 @@ namespace MCGalaxy.Blocks.Physics {
             return true;
         }
         
+        
         static void DoLavaRandowFlow(Level lvl, ref Check C, bool checkWait) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
 
             if (!lvl.CheckSpongeLava(x, y, z)) {
-                byte flowed = C.data.Data;
+                byte data = C.data.Data;
                 // Upper 3 bits are time flags - reset random delay
-                flowed &= 0x1F;
-                flowed |= (byte)(rand.Next(3) << 5);
+                data &= flowed_maskAll;
+                data |= (byte)(rand.Next(3) << 5);
                 byte block = lvl.blocks[C.b];
 
-                if ((flowed & (1 << 0)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_xMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
-                    flowed |= (1 << 0);
+                    data |= flowed_xMax;
                 }
-                if ((flowed & (1 << 1)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_xMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
-                    flowed |= (1 << 1);
+                    data |= flowed_xMin;
                 }
-                if ((flowed & (1 << 2)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_zMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
-                    flowed |= (1 << 2);
+                    data |= flowed_zMax;
                 }
-                if ((flowed & (1 << 3)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_zMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
-                    flowed |= (1 << 3);
+                    data |= flowed_zMin;
                 }
-                if ((flowed & (1 << 4)) == 0 && rand.Next(4) == 0) {
+                if ((data & flowed_yMin) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
-                    flowed |= (1 << 4);
+                    data |= flowed_yMin;
                 }
 
-                if ((flowed & (1 << 0)) == 0 && LavaBlocked(lvl, (ushort)(x + 1), y, z)) {
-                    flowed |= (1 << 0);
+                if ((data & flowed_xMax) == 0 && LavaBlocked(lvl, (ushort)(x + 1), y, z)) {
+                    data |= flowed_xMax;
                 }
-                if ((flowed & (1 << 1)) == 0 && LavaBlocked(lvl, (ushort)(x - 1), y, z)) {
-                    flowed |= (1 << 1);
+                if ((data & flowed_xMin) == 0 && LavaBlocked(lvl, (ushort)(x - 1), y, z)) {
+                    data |= flowed_xMin;
                 }
-                if ((flowed & (1 << 2)) == 0 && LavaBlocked(lvl, x, y, (ushort)(z + 1))) {
-                    flowed |= (1 << 2);
+                if ((data & flowed_zMax) == 0 && LavaBlocked(lvl, x, y, (ushort)(z + 1))) {
+                    data |= flowed_zMax;
                 }
-                if ((flowed & (1 << 3)) == 0 && LavaBlocked(lvl, x, y, (ushort)(z - 1))) {
-                    flowed |= (1 << 3);
+                if ((data & flowed_zMin) == 0 && LavaBlocked(lvl, x, y, (ushort)(z - 1))) {
+                    data |= flowed_zMin;
                 }
-                if ((flowed & (1 << 4)) == 0 && LavaBlocked(lvl, x, (ushort)(y - 1), z)) {
-                    flowed |= (1 << 4);
+                if ((data & flowed_yMin) == 0 && LavaBlocked(lvl, x, (ushort)(y - 1), z)) {
+                    data |= flowed_yMin;
                 }
                 
                 // Have we spread now (or been blocked from spreading) in all directions?
-                C.data.Data = flowed;
-                if ((!checkWait || !C.data.HasWait) && (flowed & 0x1F) == 0x1F) {
+                C.data.Data = data;
+                if ((!checkWait || !C.data.HasWait) && (data & flowed_maskAll) == flowed_maskAll) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
