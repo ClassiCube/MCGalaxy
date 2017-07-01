@@ -590,6 +590,7 @@
     <Compile Include="Player\Player.Login.cs" />
     <Compile Include="Player\PlayerActions.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
+    <Compile Include="Player\PlayerPhysics.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Player\TabList.cs" />
     <Compile Include="Database\Undo\UndoFormatCBin.cs" />

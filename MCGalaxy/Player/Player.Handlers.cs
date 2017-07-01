@@ -345,9 +345,10 @@ namespace MCGalaxy {
         void CheckBlocks(Position pos) {
             try {
                 Vec3U16 P = (Vec3U16)pos.BlockCoords;
-                if (level.Config.SurvivalDeath) CheckSurvival(P.X, P.Y, P.Z);
+                AABB bb = ModelBB.OffsetPosition(Pos);
+                if (level.Config.SurvivalDeath) CheckSurvival(P.X, P.Y, P.Z, bb);
                 
-                CheckBlock();
+                CheckBlock(bb);
                 oldIndex = level.PosToInt(P.X, P.Y, P.Z);
             } catch (Exception ex) {
                 Logger.LogError(ex);
@@ -356,31 +357,9 @@ namespace MCGalaxy {
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
 
-        internal void CheckSurvival(ushort x, ushort y, ushort z) {
-            byte bFeet = GetSurvivalBlock(x, (ushort)(y - 2), z);
-            byte bBody = GetSurvivalBlock(x, (ushort)(y - 1), z);
+        void CheckSurvival(ushort x, ushort y, ushort z, AABB bb) {
             byte bHead = GetSurvivalBlock(x, y, z);
-            
-            if (level.PosToInt(x, y, z) != oldIndex || y != oldFallY) {
-                bFeet = Block.Convert(bFeet);
-                
-                if (bFeet == Block.air) {
-                    if (y < oldFallY)
-                        fallCount++;
-                    else if (y > oldFallY) // flying up, for example
-                        fallCount = 0;
-                    oldFallY = y;
-                    drownCount = 0;
-                    return;
-                } else if (!(bFeet == Block.water || bFeet == Block.waterstill ||
-                             bFeet == Block.lava || bFeet == Block.lavastill)) {
-                    if (fallCount > level.Config.FallHeight)
-                        HandleDeath(ExtBlock.Air, null, false, true);
-                    fallCount = 0;
-                    drownCount = 0;
-                    return;
-                }
-            }
+            if (level.PosToInt(x, y, z) != oldIndex) PlayerPhysics.Fall(this, bb);
 
             switch (Block.Convert(bHead)) {
                 case Block.water:
@@ -412,8 +391,7 @@ namespace MCGalaxy {
             return level.GetTile(x, y, z);
         }
 
-        internal void CheckBlock() {
-            AABB bb = ModelBB.OffsetPosition(Pos);
+        void CheckBlock(AABB bb) {
             Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
             bool hitWalkthrough = false;
             

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Fun {
             for (; y <= lvl.Height; y++) {
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (above.IsInvalid) continue;
-                if (Collide(lvl, above) != CollideType.Solid) continue;
+                if (lvl.CollideType(above) != CollideType.Solid) continue;
                 
                 int posY = (y + 1) * 32 - 6;
                 BlockDefinition def = lvl.GetBlockDef(above);
@@ -83,15 +83,6 @@ namespace MCGalaxy.Commands.Fun {
                 return posY;
             }
             return -1;
-        }
-        
-        internal static byte Collide(Level lvl, ExtBlock block) {
-            BlockDefinition def = lvl.GetBlockDef(block);
-            byte collide = def != null ? def.CollideType : CollideType.Solid;
-            
-            if (def == null && !block.IsCustomType)
-                return DefaultSet.Collide(Block.Convert(block.BlockID));
-            return collide;
         }
         
         public override void Help(Player p) {

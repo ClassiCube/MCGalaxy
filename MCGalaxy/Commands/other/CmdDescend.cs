@@ -54,12 +54,12 @@ namespace MCGalaxy.Commands.Misc {
         static int FindYBelow(Level lvl, ushort x, ushort y, ushort z) {
             for (; y > 0; y--) {
                 ExtBlock block = lvl.GetBlock(x, y, z);
-                if (!block.IsInvalid && CmdSlap.Collide(lvl, block) == CollideType.Solid) continue;            
+                if (!block.IsInvalid && lvl.CollideType(block) == CollideType.Solid) continue;            
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (!above.IsInvalid && CmdSlap.Collide(lvl, above) == CollideType.Solid) continue;
+                if (!above.IsInvalid && lvl.CollideType(above) == CollideType.Solid) continue;
 
                 ExtBlock below = lvl.GetBlock(x, (ushort)(y - 1), z);
-                if (!below.IsInvalid && CmdSlap.Collide(lvl, below) == CollideType.Solid)
+                if (!below.IsInvalid && lvl.CollideType(below) == CollideType.Solid)
                     return y;
             }
             return -1;

@@ -457,6 +457,15 @@ namespace MCGalaxy {
             return block.BlockID != Block.custom_block ? Block.Name(block.BlockID).Capitalize() : block.ExtID.ToString();
         }
         
+        public byte CollideType(ExtBlock block) {
+            BlockDefinition def = GetBlockDef(block);
+            byte collide = def != null ? def.CollideType : MCGalaxy.Blocks.CollideType.Solid;
+            
+            if (def == null && !block.IsCustomType)
+                return DefaultSet.Collide(Block.Convert(block.BlockID));
+            return collide;
+        }
+        
         public bool LightPasses(ExtBlock block) {
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return !def.BlocksLight || def.BlockDraw != DrawType.Opaque;
