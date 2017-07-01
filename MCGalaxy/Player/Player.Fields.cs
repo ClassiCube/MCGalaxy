@@ -201,7 +201,8 @@ namespace MCGalaxy {
 
         //Movement
         public int oldIndex = -1, lastWalkthrough = -1, oldFallY = 10000;
-        public int fallCount = 0, drownCount = 0;
+        public int fallCount = 0;
+        public DateTime drownTime = DateTime.MaxValue;
 
         //Games
         public DateTime lastDeath = DateTime.UtcNow;

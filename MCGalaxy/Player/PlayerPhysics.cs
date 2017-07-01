@@ -73,7 +73,7 @@ namespace MCGalaxy.Blocks.Physics {
                     p.HandleDeath(ExtBlock.Air, null, false, true);
                 
                 p.fallCount = 0;
-                p.drownCount = 0;
+                p.drownTime = DateTime.MaxValue;
                 return;
             }
             
@@ -82,12 +82,16 @@ namespace MCGalaxy.Blocks.Physics {
             else if (min.Y > p.oldFallY) p.fallCount = 0; // e.g. flying up
             
             p.oldFallY = min.Y;
-            p.drownCount = 0;
+            p.drownTime = DateTime.MaxValue;
         }
         
         internal static void Drown(Player p, AABB bb) {
-            Vec3S32 P = bb.Max;
-            ExtBlock bHead = GetSurvivalBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            // Want to check block at centre of bounding box
+            bb.Max.X -= (bb.Max.X - bb.Min.X) / 2;
+            bb.Max.Z -= (bb.Max.Z - bb.Min.Z) / 2;
+            
+            Vec3S32 P = bb.BlockMax;
+            ExtBlock bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
             if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
             
             switch (bHead.BlockID) {
@@ -96,18 +100,20 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.lava:
                 case Block.lavastill:
                     p.fallCount = 0;
-                    p.drownCount++;
+                    DateTime now = DateTime.UtcNow;
+                    // level drown is in 10ths of a second
+                    if (p.drownTime == DateTime.MaxValue)
+                        p.drownTime = now.AddSeconds(p.level.Config.DrownTime / 10.0);
                     
-                    // level drown is in 10ths of a second, and there are 100 ticks/second
-                    if (p.drownCount > p.level.Config.DrownTime * 10) {
+                    if (now > p.drownTime) {
                         p.HandleDeath((ExtBlock)Block.water);
-                        p.drownCount = 0;
+                        p.drownTime = DateTime.MaxValue;
                     }
                     break;
                 default:
                     bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
                     if (!isGas) p.fallCount = 0;
-                    p.drownCount = 0;
+                    p.drownTime = DateTime.MaxValue;
                     break;
             }
         }
