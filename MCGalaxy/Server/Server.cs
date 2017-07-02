@@ -31,9 +31,7 @@ using MCGalaxy.Util;
 namespace MCGalaxy {
     public sealed partial class Server {
         
-        public Server() {
-            Server.s = this;
-        }
+        public Server() { Server.s = this; }
         
         //True = cancel event
         //Fale = dont cacnel event
@@ -47,6 +45,12 @@ namespace MCGalaxy {
         
         [Obsolete("Use Logger.Log(LogType, String)")]
         public void Log(string message) { Logger.Log(LogType.SystemActivity, message); }
+                
+        [Obsolete("Use Logger.Log(LogType, String)")]
+        public void Log(string message, bool systemMsg = false) {
+            LogType type = systemMsg ? LogType.BackgroundActivity : LogType.SystemActivity;
+            Logger.Log(type, message);
+        }
         
         static void CheckFile(string file) {
             if (File.Exists(file)) return;
@@ -56,9 +60,9 @@ namespace MCGalaxy {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
                 }
-            	if (File.Exists(file)) {
-            	    Logger.Log(LogType.SystemActivity, file + " download succesful!");
-            	}
+                if (File.Exists(file)) {
+                    Logger.Log(LogType.SystemActivity, file + " download succesful!");
+                }
             } catch {
                 Logger.Log(LogType.Warning, "Downloading {0} failed, please try again later", file);
             }
@@ -262,7 +266,7 @@ namespace MCGalaxy {
         }
 
         static void RandomMessage(SchedulerTask task) {
-        	if (PlayerInfo.Online.Count > 0 && messages.Count > 0) {
+            if (PlayerInfo.Online.Count > 0 && messages.Count > 0) {
                 Chat.MessageGlobal(messages[new Random().Next(0, messages.Count)]);
             }
         }
