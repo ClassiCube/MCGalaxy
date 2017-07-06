@@ -349,7 +349,7 @@ namespace MCGalaxy {
                 int index = level.PosToInt(P.X, P.Y, P.Z);
                 	
                 if (level.Config.SurvivalDeath) {
-                    if (index != oldIndex) PlayerPhysics.Fall(this, bb);
+                    PlayerPhysics.Fall(this, bb);
                     PlayerPhysics.Drown(this, bb);
                 }
                 
