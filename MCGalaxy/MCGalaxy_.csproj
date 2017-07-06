@@ -335,6 +335,7 @@
     <Compile Include="Commands\other\CmdBack.cs" />
     <Compile Include="Commands\other\CmdChain.cs" />
     <Compile Include="Commands\other\cmdCTFADSFD.cs" />
+    <Compile Include="Commands\other\CmdDelay.cs" />
     <Compile Include="Commands\other\CmdDescend.cs" />
     <Compile Include="Commands\other\CmdFakerank.cs" />
     <Compile Include="Commands\other\CmdFly.cs" />
