@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("winfo"), new CommandAlias("worldinfo") }; }
         }
@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Info {
                 data.FromOnlineLevel(lvl);
             }
             
-            if (env) ShowEnv(p, data);
-            else ShowNormal(p, data);
+            if (env) ShowEnv(p, data, data.Config);
+            else ShowNormal(p, data, data.Config);
         }
         
         bool GetFromMap(Player p, MapInfoData data, string map) {
@@ -66,12 +66,12 @@ namespace MCGalaxy.Commands.Info {
             return true;
         }
         
-        void ShowNormal(Player p, MapInfoData data) {
+        void ShowNormal(Player p, MapInfoData data, LevelConfig cfg) {
             Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", data.Name, data.Width, data.Height, data.Length);
-            string physicsState = CmdPhysics.states[data.Physics];
+            string physicsState = CmdPhysics.states[cfg.Physics];
             if (p == null || p.group.CanExecute("gun")) {
                 Player.Message(p, "  Physics are {0}%S, gun usage %Sis {1}",
-                               physicsState, data.Guns ? "&aenabled" : "&cdisabled");
+                               physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
             } else {
                 Player.Message(p, "  Physics are {0}", physicsState);
             }
@@ -90,26 +90,26 @@ namespace MCGalaxy.Commands.Info {
             
             if (data.BlockDBEntries != -1) {
                 Player.Message(p, "  BlockDB (Used for /b) is {0} %Swith {1} entries",
-                               data.BlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
+                               cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             } else {
                 Player.Message(p, "  BlockDB (Used for /b) is {0}",
-                               data.BlockDB ? "&aEnabled" : "&cDisabled");
+                               cfg.UseBlockDB ? "&aEnabled" : "&cDisabled");
             }
             
-            ShowPermissions(p, data);
+            ShowPermissions(p, data, cfg);
             Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
-            ShowZombieSurvival(p, data);
+            ShowZombieSurvival(p, data, cfg);
         }
         
-        void ShowPermissions(Player p, MapInfoData data) {
+        void ShowPermissions(Player p, MapInfoData data, LevelConfig cfg) {
             PrintRanks(p, data.Visit, "  Visitable by ");
             PrintRanks(p, data.Build, "  Modifiable by ");
             
-            if (String.IsNullOrEmpty(data.RealmOwner))
-                data.RealmOwner = GetRealmMapOwner(data.Name);
-            if (String.IsNullOrEmpty(data.RealmOwner)) return;
+            if (String.IsNullOrEmpty(cfg.RealmOwner))
+                cfg.RealmOwner = GetRealmMapOwner(data.Name);
+            if (String.IsNullOrEmpty(cfg.RealmOwner)) return;
             
-            string[] owners = data.RealmOwner.Replace(" ", "").Split(',');
+            string[] owners = cfg.RealmOwner.Replace(" ", "").Split(',');
             Player.Message(p, "  This map is a personal realm of {0}",
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
@@ -135,17 +135,17 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, perms.ToString());
         }
         
-        void ShowZombieSurvival(Player p, MapInfoData data) {
+        void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
             if (!Server.zombie.IsZombieMap(data.Name)) return;
             
-            string[] authors = data.Authors.Replace(" ", "").Split(',');
+            string[] authors = cfg.Authors.Replace(" ", "").Split(',');
             Player.Message(p, "Map authors: {0}",
                            authors.Join(n => PlayerInfo.GetColoredName(p, n)));
-            int winChance = data.TotalRounds == 0 ? 100 : (data.HumanRounds * 100) / data.TotalRounds;
+            int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
             Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
-                           data.TotalRounds, winChance);
+                           cfg.RoundsPlayed, winChance);
             Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes",
-                           data.Likes, data.Dislikes);
+                           cfg.Likes, cfg.Dislikes);
         }
         
         static string GetRealmMapOwner(string lvlName) {
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Info {
             return PlayerInfo.FindName(lvlName);
         }
         
-        void ShowEnv(Player p, MapInfoData data) {
+        void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
             if (data.TerrainUrl != "")
                 Player.Message(p, "Texture: %b" + data.TerrainUrl);
             else
@@ -175,42 +175,28 @@ namespace MCGalaxy.Commands.Info {
                 Player.Message(p, "No custom texture pack set for this map.");
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
-            Player.Message(p, format, Color(data.Fog), Color(data.Sky), Color(data.Clouds),
-                           Color(data.Light), Color(data.Shadow));
+            Player.Message(p, format, Color(cfg.FogColor), Color(cfg.SkyColor), 
+                           Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));
             
             Player.Message(p, "Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
-                           data.EdgeLevel, data.SidesOffset, data.CloudsHeight, data.MaxFog);
-            Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", data.EdgeBlock, data.HorizonBlock);
+                           cfg.EdgeLevel,cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
+            Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", 
+                           cfg.EdgeBlock, cfg.HorizonBlock);
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
-                           (data.CloudsSpeed / 256f).ToString("F2"),
-                           (data.WeatherSpeed / 256f).ToString("F2"));
+                           (cfg.CloudsSpeed / 256f).ToString("F2"),
+                           (cfg.WeatherSpeed / 256f).ToString("F2"));
             Player.Message(p, "Weather fade rate: &b{0}%%S, Exponential fog: {1}",
-                           (data.WeatherFade / 128).ToString("F2"),
-                           data.ExpFog ? "&aON" : "&cOFF");
+                           (cfg.WeatherFade / 128).ToString("F2"),
+                           cfg.ExpFog ? "&aON" : "&cOFF");
         }
         
         class MapInfoData {
             public ushort Width, Height, Length;
-            public int Physics;
-            public bool Guns, BlockDB = true;
-            public string Name, RealmOwner;
+            public string Name;
             public long BlockDBEntries = -1;
-            
-            // Env data
             public string TerrainUrl, TextureUrl;
-            public string Fog, Sky, Clouds, Light, Shadow;
-            public int EdgeLevel, SidesOffset = -2, CloudsHeight, MaxFog;
-            public int CloudsSpeed = 256, WeatherSpeed = 256, WeatherFade = 128;
-            public byte EdgeBlock = Block.blackrock, HorizonBlock = Block.water;
-            public bool ExpFog;
-            
-            // Permissions data
-            public LevelAccessController Visit, Build;
-            
-            // Zombie data
-            public string Authors;
-            public int TotalRounds, HumanRounds;
-            public int Likes, Dislikes;
+            public LevelAccessController Visit, Build;            
+            public LevelConfig Config;
 
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
@@ -226,12 +212,11 @@ namespace MCGalaxy.Commands.Info {
                 string path = LevelInfo.MapPath(name);
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
-                
-                EdgeLevel = Height / 2; CloudsHeight = Height + 2;
                 BlockDBEntries = BlockDBFile.CountEntries(name);
 
                 path = LevelInfo.FindPropertiesFile(name);
                 LevelConfig cfg = new LevelConfig();
+                cfg.EdgeLevel = Height / 2; cfg.CloudsHeight = Height + 2;
                 LevelConfig.Load(path, cfg);
                 LoadConfig(cfg);
                 
@@ -240,23 +225,9 @@ namespace MCGalaxy.Commands.Info {
             }
             
             void LoadConfig(LevelConfig cfg) {
-                Physics = cfg.Physics; Guns = cfg.Guns; BlockDB = cfg.UseBlockDB;
-                RealmOwner = cfg.RealmOwner;
-                
-                Fog = cfg.FogColor; Sky = cfg.SkyColor; Clouds = cfg.CloudColor;
-                Light = cfg.LightColor; Shadow = cfg.ShadowColor;
-                EdgeLevel = cfg.EdgeLevel; SidesOffset = cfg.SidesOffset; CloudsHeight = cfg.CloudsHeight;
-                MaxFog = cfg.MaxFogDistance; ExpFog = cfg.ExpFog;
-                CloudsSpeed = cfg.CloudsSpeed; WeatherSpeed = cfg.WeatherSpeed;
-                EdgeBlock = (byte)cfg.EdgeBlock; HorizonBlock = (byte)cfg.HorizonBlock;
-                WeatherFade = cfg.WeatherFade;
-                
+                Config = cfg;              
                 TerrainUrl = cfg.Terrain != "" ? cfg.Terrain : ServerConfig.DefaultTerrain;
                 TextureUrl = cfg.TexturePack != "" ? cfg.TexturePack : ServerConfig.DefaultTexture;
-                
-                Authors = cfg.Authors;
-                TotalRounds = cfg.RoundsPlayed; HumanRounds = cfg.RoundsHumanWon;
-                Likes = cfg.Likes; Dislikes = cfg.Dislikes;
             }
         }
         
