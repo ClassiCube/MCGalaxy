@@ -27,9 +27,7 @@ namespace MCGalaxy.Network {
     public sealed class ClassiCubeBeat : Heartbeat {
         
         string url = "http://www.classicube.net/heartbeat.jsp";
-        #if NET_20
         string proxyUrl;
-        #endif
         public override string URL { get { return url; } }
         
         public override void Init() {
@@ -57,12 +55,7 @@ namespace MCGalaxy.Network {
             }
             
             if (!useIPv6 || firstIPv4 == null) return;
-            
-            #if !NET_20
-            url = "http://"  + firstIPv4 + ":80/heartbeat.jsp";
-            #else
             proxyUrl = "http://"  + firstIPv4 + ":80";
-            #endif
         }
 
         public override string GetHeartbeatData()  {
@@ -94,12 +87,8 @@ namespace MCGalaxy.Network {
         }
         
         public override void OnRequest(HttpWebRequest request) {
-            #if !NET_20
-            request.Host = "www.classicube.net";
-            #else
             if (proxyUrl == null) return;
             request.Proxy = new WebProxy(proxyUrl);
-            #endif
         }   
         
         public override void OnResponse(string response) {
