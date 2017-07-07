@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MCGalaxy.Blocks;
 using MCGalaxy.Commands.CPE;
 
 namespace MCGalaxy.Commands.Info {
@@ -165,7 +166,8 @@ namespace MCGalaxy.Commands.Info {
                 default:
                     Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
             }
-            Formatter.MessageBlock(p, "use", b);
+            
+            BlockPerms.List[b].MessageCannotUse(p, "use");
             return true;
         }
         

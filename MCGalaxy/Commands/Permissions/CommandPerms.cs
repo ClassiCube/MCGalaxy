@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Commands;
 
 namespace MCGalaxy {
@@ -118,6 +119,7 @@ namespace MCGalaxy.Commands {
             return perms;
         }
         
+        
         /// <summary> Gets the list of all loaded commands that the given rank can use. </summary>
         public static CommandList AllCommandsUsableBy(LevelPermission perm) {
             CommandList commands = new CommandList();
@@ -129,6 +131,13 @@ namespace MCGalaxy.Commands {
                 }
             }
             return commands;
+        }        
+                
+        public void MessageCannotUse(Player p) {
+            StringBuilder builder = new StringBuilder("Only ");
+            Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
+            builder.Append(" can use %T/" + CmdName);
+            Player.Message(p, builder.ToString());
         }
 
 

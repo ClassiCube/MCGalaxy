@@ -79,14 +79,6 @@ namespace MCGalaxy {
             else
                 Player.Message(p, "Can only {0} players ranked below {1}", action, grp.ColoredName);
         }
-        
-        internal void MessageCannotUse(Player p) {
-            CommandPerms perms = CommandPerms.Find(name);
-            StringBuilder builder = new StringBuilder("Only ");
-            Formatter.PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
-            builder.Append(" can use %T/" + name);
-            Player.Message(p, builder.ToString());
-        }
     }
     
     public sealed class CommandTypes {

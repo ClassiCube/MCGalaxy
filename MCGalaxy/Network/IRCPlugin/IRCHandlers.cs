@@ -207,8 +207,14 @@ namespace MCGalaxy.Network {
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
             
             try {
-                if (!p.group.CanExecute(cmd)) { cmd.MessageCannotUse(p); return false; }
-                if (!cmd.SuperUseable) { Player.Message(p, cmd.name + " can only be used in-game."); return false; }
+                if (!p.group.CanExecute(cmd)) { 
+                    CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                    return false; 
+                }                
+                if (!cmd.SuperUseable) { 
+                    Player.Message(p, cmd.name + " can only be used in-game."); 
+                    return false;
+                }
                 cmd.Use(p, cmdArgs);
             } catch (Exception ex) {
                 Player.Message(p, "CMD Error: " + ex);

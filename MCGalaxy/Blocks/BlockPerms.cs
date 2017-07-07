@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.Network;
 
@@ -78,6 +79,15 @@ namespace MCGalaxy.Blocks {
                                                    canAffect && pl.level.CanDelete));
                 }
             }
+        }
+                        
+        public void MessageCannotUse(Player p, string action) {
+            StringBuilder builder = new StringBuilder("Only ");
+            Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
+            
+            builder.Append( " %Scan ").Append(action).Append(' ');
+            builder.Append(Block.Name(BlockID)).Append(".");
+            Player.Message(p, builder.ToString());
         }
         
         

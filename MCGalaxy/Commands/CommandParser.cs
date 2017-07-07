@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands {
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
         public static bool IsBlockAllowed(Player p, string action, ExtBlock block) {
             if (p == null || BlockPerms.CanModify(p, block.BlockID)) return true;
-            Formatter.MessageBlock(p, action, block.BlockID);
+            BlockPerms.List[block.BlockID].MessageCannotUse(p, action);
             return false;
         }
     }

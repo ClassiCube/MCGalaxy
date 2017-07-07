@@ -91,16 +91,6 @@ namespace MCGalaxy {
             }
         }
         
-        public static void MessageBlock(Player p, string action, byte block) {
-            StringBuilder builder = new StringBuilder("Only ");
-            BlockPerms perms = BlockPerms.List[block];
-            PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
-            
-            builder.Append( " %Scan ").Append(action).Append(' ');
-            builder.Append(Block.Name(block)).Append(".");
-            Player.Message(p, builder.ToString());
-        }
-        
         public static void MessageNeedMinPerm(Player p, string action, LevelPermission perm) {
             Player.Message(p, "Only {0}%S{1}", Group.GetColoredName(perm), action);
         }

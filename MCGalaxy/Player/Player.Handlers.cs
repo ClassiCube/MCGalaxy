@@ -135,7 +135,8 @@ namespace MCGalaxy {
         
         internal bool CheckManualChange(ExtBlock old, ExtBlock block, bool replaceMode) {
             if (!BlockPerms.CanModify(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
-                Formatter.MessageBlock(this, replaceMode ? "replace" : "delete", old.BlockID);
+                string action = replaceMode ? "replace" : "delete";
+                BlockPerms.List[old.BlockID].MessageCannotUse(this, action);
                 return false;
             }
             return CommandParser.IsBlockAllowed(this, "place", block);
@@ -347,7 +348,7 @@ namespace MCGalaxy {
                 Vec3U16 P = (Vec3U16)pos.BlockCoords;
                 AABB bb = ModelBB.OffsetPosition(Pos);
                 int index = level.PosToInt(P.X, P.Y, P.Z);
-                	
+                    
                 if (level.Config.SurvivalDeath) {
                     PlayerPhysics.Fall(this, bb);
                     PlayerPhysics.Drown(this, bb);
@@ -702,7 +703,11 @@ namespace MCGalaxy {
                 }
             }
 
-            if (!group.CanExecute(command)) { command.MessageCannotUse(this); return null; }
+            if (!group.CanExecute(command)) {
+                CommandPerms.Find(command.name).MessageCannotUse(this);
+                return null; 
+            }
+            
             string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
                 SendMessage("Command is disabled as " + reason); return null;
