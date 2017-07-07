@@ -36,8 +36,8 @@ namespace MCGalaxy.Gui {
             ServerConfig.AdminsJoinSilently = rank_cbSilentAdmins.Checked;
             ServerConfig.ListEmptyRanks = rank_cbEmpty.Checked;
         }
-		
-				
+        
+                
         List<Group> storedRanks = new List<Group>();
         void LoadRanks() {
             rank_list.Items.Clear();
@@ -55,8 +55,8 @@ namespace MCGalaxy.Gui {
             LoadRanks();
         }
         
-		
-		void btnColor_Click(object sender, EventArgs e) {
+        
+        void btnColor_Click(object sender, EventArgs e) {
             chat_ShowColorDialog(rank_btnColor, storedRanks[rank_list.SelectedIndex].name + " rank color");
             storedRanks[rank_list.SelectedIndex].color = Colors.Parse(rank_btnColor.Text);
         }
@@ -78,6 +78,11 @@ namespace MCGalaxy.Gui {
         }
 
         private void txtRankName_TextChanged(object sender, EventArgs e) {
+            if (rank_txtName.Text.IndexOf(' ') > 0) {
+                rank_txtName.Text = rank_txtName.Text.Replace(" ", "");
+                return;
+            }
+            
             if ( rank_txtName.Text != "" && rank_txtName.Text.ToLower() != "nobody" ) {
                 storedRanks[rank_list.SelectedIndex].trueName = rank_txtName.Text;
                 skip = true;

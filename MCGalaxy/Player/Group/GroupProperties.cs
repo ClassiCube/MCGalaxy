@@ -35,6 +35,7 @@ namespace MCGalaxy {
             
             if (key.ToLower() == "rankname") {
                 if (grp != null) AddGroup(ref grp);
+                value = value.Replace(" ", "");
                 string name = value.ToLower();
 
                 if (name == "adv" || name == "op" || name == "super" || name == "nobody" || name == "noone") {
