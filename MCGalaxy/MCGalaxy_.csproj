@@ -237,7 +237,6 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounties.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounty.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdDisinfect.cs" />
-    <Compile Include="Commands\Fun\ZombieSurvival\CmdEndRound.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdFliphead.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdHuman.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfect.cs" />

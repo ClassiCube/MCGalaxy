@@ -37,6 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                     case "go": HandleGo(p, args); break;
                     case "status": HandleStatus(p, args); break;
                     case "start": HandleStart(p, args); break;
+                    case "end": HandleEnd(p, args); break;
                     case "stop": HandleStop(p, args); break;
                     case "set": HandleSet(p, args); break;
                     default: Help(p); break;
@@ -83,6 +84,14 @@ namespace MCGalaxy.Commands.Fun {
                 Server.zombie.Start(status, lvl, rounds);
             } else {
                 Server.zombie.Start(ZombieGameStatus.SingleRound, lvl, 0);
+            }
+        }
+        
+        static void HandleEnd(Player p, string[] args) {
+            if (Server.zombie.RoundInProgress) {
+                Server.zombie.EndRound();
+            } else {
+                Player.Message(p, "No round is currently in progress.");
             }
         }
         
@@ -141,8 +150,9 @@ namespace MCGalaxy.Commands.Fun {
         public override void Help(Player p) {
             Player.Message(p, "%T/zg status %H- Outputs current status of Zombie Survival.");
             Player.Message(p, "%T/zg go %H- Moves you to the current Zombie Survival map.");
-            Player.Message(p, "%T/zg start 0 %H- Runs Zombie Survival for infinite rounds.");
+            Player.Message(p, "%T/zg start 0 %H- Runs Zombie Survival for infinite rounds.");         
             Player.Message(p, "%T/zg start [x] %H- Runs Zombie Survival for [x] rounds.");
+            Player.Message(p, "%T/zg end %H- Ends current round of Zombie Survival.");
             Player.Message(p, "%T/zg stop %H- Immediately stops Zombie Survival.");
             Player.Message(p, "%T/zg set [property] [value]");
             Player.Message(p, "%HSets a Zombie Survival game property, see %T/help zs set");
