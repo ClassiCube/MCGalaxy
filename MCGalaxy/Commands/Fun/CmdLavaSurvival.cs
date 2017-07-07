@@ -149,10 +149,10 @@ namespace MCGalaxy.Commands.Fun {
 
             if (args[2] == "flood") {
                 Player.Message(p, "Place or destroy the block you want to be the total flood block spawn point.");
-                SetBlockHandler(p, 0);
+                p.MakeSelection(1, null, SetFloodPos);
             } else if (args[2] == "layer") {
                 Player.Message(p, "Place or destroy the block you want to be the layer flood base spawn point.");
-                SetBlockHandler(p, 1);
+                p.MakeSelection(1, null, SetFloodLayerPos);
             } else {
                 SetupHelp(p, "block");
             }
@@ -160,7 +160,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleSetupSafeZone(Player p, string[] args) {
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            SetBlockHandler(p, 2);
+            p.MakeSelection(2, null, SetSafeZone);
         }
         
         void HandleSetupSettings(Player p, string[] args) {
@@ -320,49 +320,36 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void SetBlockHandler(Player p, byte mode) {
-            CatchPos cpos = default(CatchPos); 
-            cpos.mode = mode;
-            p.blockchangeObject = cpos;
-            p.ClearBlockchange();
-            p.Blockchange += PlacedMark1;
-        }
 
-        void PlacedMark1(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-            if (cpos.mode == 2) {
-                cpos.x = x; cpos.y = y; cpos.z = z;
-                p.blockchangeObject = cpos;
-                p.Blockchange += PlacedMark2;
-                return;
-            }
-
+        bool SetFloodPos(Player p, Vec3S32[] m, object state, ExtBlock block) {
             LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
-            if (cpos.mode == 0) settings.blockFlood = new Vec3U16(x, y, z);
-            if (cpos.mode == 1) settings.blockLayer = new Vec3U16(x, y, z);
+            settings.blockFlood = (Vec3U16)m[0];
             Server.lava.SaveMapSettings(settings);
 
-            Player.Message(p, "Position set! &b({0}, {1}, {2})", x, y, z);
+            Player.Message(p, "Position set! &b({0}, {1}, {2})", m[0].X, m[0].Y, m[0].Z);
+            return false;
         }
+                
+        bool SetFloodLayerPos(Player p, Vec3S32[] m, object state, ExtBlock block) {
+            LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
+            settings.blockLayer = (Vec3U16)m[0];
+            Server.lava.SaveMapSettings(settings);
 
-        void PlacedMark2(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
-            CatchPos cpos = (CatchPos)p.blockchangeObject;
-
-            if (cpos.mode == 2) {
-                ushort sx = Math.Min(cpos.x, x), ex = Math.Max(cpos.x, x);
-                ushort sy = Math.Min(cpos.y, y), ey = Math.Max(cpos.y, y);
-                ushort sz = Math.Min(cpos.z, z), ez = Math.Max(cpos.z, z);
-
-                LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
-                settings.safeZone = new Vec3U16[] { new Vec3U16(sx, sy, sz), new Vec3U16(ex, ey, ez) };
-                Server.lava.SaveMapSettings(settings);
-
-                Player.Message(p, "Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})", sx, sy, sz, ex, ey, ez);
-            }
+            Player.Message(p, "Position set! &b({0}, {1}, {2})", m[0].X, m[0].Y, m[0].Z);
+            return false;
         }
+        
+        bool SetSafeZone(Player p, Vec3S32[] m, object state, ExtBlock block) {
+            Vec3S32 min = Vec3S32.Min(m[0], m[1]);
+            Vec3S32 max = Vec3S32.Max(m[0], m[1]);
 
-        struct CatchPos { public ushort x, y, z; public byte mode; }
+            LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
+            settings.safeZone = new Vec3U16[] { (Vec3U16)min, (Vec3U16)max };
+            Server.lava.SaveMapSettings(settings);
+
+            Player.Message(p, "Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})",
+                           min.X, min.Y, min.Z, max.X, max.Y, max.Z);
+            return false;
+        }
     }
 }

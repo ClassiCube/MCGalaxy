@@ -105,7 +105,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void ExitChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            RevertAndClearState(p, x, y, z);
+            p.ClearBlockchange();
+            p.RevertBlock(x, y, z);
             PortalData bp = (PortalData)p.blockchangeObject;
             string dstMap = p.level.name.UnicodeToCp437();
 
