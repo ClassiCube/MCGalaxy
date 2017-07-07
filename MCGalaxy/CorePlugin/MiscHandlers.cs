@@ -54,8 +54,7 @@ namespace MCGalaxy.Core {
             if (p.HasCpeExt(CpeExt.EnvColors))
                 p.SendCurrentEnvColors();
             p.SendCurrentMapAppearance();
-            if (p.HasCpeExt(CpeExt.BlockPermissions))
-                p.SendCurrentBlockPermissions();
+            p.SendCurrentBlockPermissions();
 
             if (!level.Config.Guns && p.aiming) {
                 p.aiming = false;

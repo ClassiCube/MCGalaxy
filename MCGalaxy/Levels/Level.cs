@@ -428,7 +428,6 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != this) continue;
-                if (!p.HasCpeExt(CpeExt.BlockPermissions)) continue;
                 p.SendCurrentBlockPermissions();
             }
         }

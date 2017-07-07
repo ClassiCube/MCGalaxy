@@ -202,6 +202,8 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentBlockPermissions() {
+            if (!HasCpeExt(CpeExt.BlockPermissions)) return;
+            
             // Write the block permissions as one bulk TCP packet
             int count = NumBlockPermissions();
             byte[] bulk = new byte[4 * count];
