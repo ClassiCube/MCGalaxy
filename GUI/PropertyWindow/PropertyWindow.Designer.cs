@@ -91,7 +91,7 @@ namespace MCGalaxy.Gui
             this.afk_cmbKickPerm = new System.Windows.Forms.ComboBox();
             this.afk_txtTimer = new System.Windows.Forms.TextBox();
             this.afk_txtKickTime = new System.Windows.Forms.TextBox();
-            this.bak_txtTime = new System.Windows.Forms.TextBox();
+            this.bak_numTime = new System.Windows.Forms.NumericUpDown();
             this.sql_chkUseSQL = new System.Windows.Forms.CheckBox();
             this.irc_chkEnabled = new System.Windows.Forms.CheckBox();
             this.irc_txtServer = new System.Windows.Forms.TextBox();
@@ -104,17 +104,17 @@ namespace MCGalaxy.Gui
             this.adv_chkLogBeat = new System.Windows.Forms.CheckBox();
             this.srv_txtName = new System.Windows.Forms.TextBox();
             this.srv_txtMOTD = new System.Windows.Forms.TextBox();
-            this.srv_txtPort = new System.Windows.Forms.TextBox();
+            this.srv_numPort = new System.Windows.Forms.NumericUpDown();
             this.srv_chkPublic = new System.Windows.Forms.CheckBox();
             this.rank_cbSilentAdmins = new System.Windows.Forms.CheckBox();
-            this.rank_txtOSMaps = new System.Windows.Forms.TextBox();
+            this.rank_numOSMaps = new System.Windows.Forms.NumericUpDown();
             this.rank_txtPrefix = new System.Windows.Forms.TextBox();
-            this.rank_txtLimit = new System.Windows.Forms.TextBox();
+            this.rank_numLimit = new System.Windows.Forms.NumericUpDown();
             this.rank_txtMOTD = new System.Windows.Forms.TextBox();
             this.rank_txtPerm = new System.Windows.Forms.TextBox();
             this.rank_txtName = new System.Windows.Forms.TextBox();
             this.rank_btnColor = new System.Windows.Forms.Button();
-            this.rank_txtUndo = new System.Windows.Forms.TextBox();
+            this.rank_numUndo = new System.Windows.Forms.NumericUpDown();
             this.rank_cmbOsMap = new System.Windows.Forms.ComboBox();
             this.irc_chkPass = new System.Windows.Forms.CheckBox();
             this.irc_txtPass = new System.Windows.Forms.TextBox();
@@ -912,14 +912,15 @@ namespace MCGalaxy.Gui
             this.afk_txtKickTime.TabIndex = 9;
             this.toolTip.SetToolTip(this.afk_txtKickTime, "How many minutes a player can be AFK before getting auto kicked. (0 = No kick)");
             // 
-            // bak_txtTime
+            // bak_numTime
             // 
-            this.bak_txtTime.Location = new System.Drawing.Point(81, 43);
-            this.bak_txtTime.Name = "bak_txtTime";
-            this.bak_txtTime.Size = new System.Drawing.Size(41, 21);
-            this.bak_txtTime.TabIndex = 5;
-            this.toolTip.SetToolTip(this.bak_txtTime, "How often should backups be taken, in seconds.\nDefault = 300");
-            this.bak_txtTime.TextChanged += new System.EventHandler(this.txtBackup_TextChanged);
+            this.bak_numTime.Location = new System.Drawing.Point(81, 43);
+            this.bak_numTime.Maximum = new decimal(new int[] { 1000000, 0, 0, 0});
+            this.bak_numTime.Name = "bak_numTime";
+            this.bak_numTime.Size = new System.Drawing.Size(41, 21);
+            this.bak_numTime.TabIndex = 5;
+            this.bak_numTime.Value = new decimal(new int[] { 300, 0, 0, 0});
+            this.toolTip.SetToolTip(this.bak_numTime, "How often should backups be taken, in seconds.\nDefault = 300");
             // 
             // sql_chkUseSQL
             // 
@@ -1044,16 +1045,16 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.srv_txtMOTD, "The MOTD of the server.\nUse \"+hax\" to allow any WoM hack, \"-hax\" to disallow any " +
                         "hacks at all and use \"-fly\" and whatnot to disallow other things.");
             // 
-            // srv_txtPort
+            // srv_numPort
             // 
-            this.srv_txtPort.Location = new System.Drawing.Point(83, 73);
-            this.srv_txtPort.MaxLength = 6;
-            this.srv_txtPort.Name = "srv_txtPort";
-            this.srv_txtPort.Size = new System.Drawing.Size(63, 21);
-            this.srv_txtPort.TabIndex = 2;
-            this.toolTip.SetToolTip(this.srv_txtPort, "The port that the server will output on.\nDefault = 25565\n\nChanging will reset you" +
+            this.srv_numPort.Location = new System.Drawing.Point(83, 73);
+            this.srv_numPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0});
+            this.srv_numPort.Name = "srv_numPort";
+            this.srv_numPort.Size = new System.Drawing.Size(60, 21);
+            this.srv_numPort.TabIndex = 2;
+            this.srv_numPort.Value = new decimal(new int[] { 25565, 0, 0, 0});
+            this.toolTip.SetToolTip(this.srv_numPort, "The port that the server will output on.\nDefault = 25565\n\nChanging will reset you" +
                         "r ExternalURL.");
-            this.srv_txtPort.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
             // 
             // srv_chkPublic
             // 
@@ -1077,14 +1078,16 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the game silently");
             this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
             // 
-            // rank_txtOSMaps
+            // rank_numOSMaps
             // 
-            this.rank_txtOSMaps.Location = new System.Drawing.Point(259, 74);
-            this.rank_txtOSMaps.Name = "rank_txtOSMaps";
-            this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtOSMaps.TabIndex = 19;
-            this.toolTip.SetToolTip(this.rank_txtOSMaps, "Maximum number of /os maps players are allowed");
-            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.rank_txtOSMaps_TextChanged);
+            this.rank_numOSMaps.Location = new System.Drawing.Point(259, 74);
+            this.rank_numOSMaps.Maximum = new decimal(new int[] { 255, 0, 0, 0});
+            this.rank_numOSMaps.Name = "rank_numOSMaps";
+            this.rank_numOSMaps.Size = new System.Drawing.Size(81, 21);
+            this.rank_numOSMaps.TabIndex = 19;
+            this.rank_numOSMaps.Value = new decimal(new int[] { 0, 0, 0, 0});
+            this.toolTip.SetToolTip(this.rank_numOSMaps, "Maximum number of /os maps players are allowed");
+            this.rank_numOSMaps.ValueChanged += new System.EventHandler(this.rank_numOSMaps_ValueChanged);
             // 
             // rank_txtPrefix
             // 
@@ -1093,16 +1096,18 @@ namespace MCGalaxy.Gui
             this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
             this.rank_txtPrefix.TabIndex = 21;
             this.toolTip.SetToolTip(this.rank_txtPrefix, "Short prefix showed before player names in chat.");
-            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.rank_txtPrefix_TextChanged);
+            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.rank_txtPrefix_TextChanged);        
             // 
-            // rank_txtLimit
+            // rank_numLimit
             // 
-            this.rank_txtLimit.Location = new System.Drawing.Point(85, 47);
-            this.rank_txtLimit.Name = "rank_txtLimit";
-            this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtLimit.TabIndex = 4;
-            this.toolTip.SetToolTip(this.rank_txtLimit, "Maximum number of blocks players can affect in draw commands.");
-            this.rank_txtLimit.TextChanged += new System.EventHandler(this.rank_txtLimit_TextChanged);
+            this.rank_numLimit.Location = new System.Drawing.Point(85, 47);
+            this.rank_numLimit.Maximum = new decimal(new int[] { 2147483647, 0, 0, 0});
+            this.rank_numLimit.Name = "rank_numLimit";
+            this.rank_numLimit.Size = new System.Drawing.Size(81, 21);
+            this.rank_numLimit.TabIndex = 4;
+            this.rank_numLimit.Value = new decimal(new int[] { 1, 0, 0, 0});
+            this.toolTip.SetToolTip(this.rank_numLimit, "Maximum number of blocks players can affect in draw commands.");
+            this.rank_numLimit.ValueChanged += new System.EventHandler(this.rank_numLimit_ValueChanged);
             // 
             // rank_txtMOTD
             // 
@@ -1141,14 +1146,17 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.rank_btnColor, "Color of this rank name in chat and the tab list");
             this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.rank_btnColor_Click);
             // 
-            // rank_txtUndo
+            // rank_numUndo
             // 
-            this.rank_txtUndo.Location = new System.Drawing.Point(259, 47);
-            this.rank_txtUndo.Name = "rank_txtUndo";
-            this.rank_txtUndo.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtUndo.TabIndex = 15;
-            this.toolTip.SetToolTip(this.rank_txtUndo, "Maximum number of seconds players can undo up to in the past with /undo");
-            this.rank_txtUndo.TextChanged += new System.EventHandler(this.txtMaxUndo_TextChanged);
+            this.rank_numUndo.Location = new System.Drawing.Point(259, 47);
+            this.rank_numUndo.Minimum = new decimal(new int[] { 1, 0, 0, -2147483648});
+            this.rank_numUndo.Maximum = new decimal(new int[] { 2147483647, 0, 0, 0});
+            this.rank_numUndo.Name = "rank_numUndo";
+            this.rank_numUndo.Size = new System.Drawing.Size(81, 21);
+            this.rank_numUndo.TabIndex = 15;
+            this.rank_numUndo.Value = new decimal(new int[] { 0, 0, 0, 0});
+            this.toolTip.SetToolTip(this.rank_numUndo, "Maximum number of seconds players can undo up to in the past with /undo");
+            this.rank_numUndo.ValueChanged += new System.EventHandler(this.rank_numUndo_ValueChanged);
             // 
             // rank_cmbOsMap
             // 
@@ -1523,9 +1531,9 @@ namespace MCGalaxy.Gui
             // 
             this.gbRankSettings.Controls.Add(this.rank_lblPrefix);
             this.gbRankSettings.Controls.Add(this.rank_lblOSMaps);
-            this.gbRankSettings.Controls.Add(this.rank_txtOSMaps);
+            this.gbRankSettings.Controls.Add(this.rank_numOSMaps);
             this.gbRankSettings.Controls.Add(this.rank_txtPrefix);
-            this.gbRankSettings.Controls.Add(this.rank_txtLimit);
+            this.gbRankSettings.Controls.Add(this.rank_numLimit);
             this.gbRankSettings.Controls.Add(this.rank_lblPerm);
             this.gbRankSettings.Controls.Add(this.rank_txtMOTD);
             this.gbRankSettings.Controls.Add(this.rank_txtPerm);
@@ -1535,7 +1543,7 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.rank_lblName);
             this.gbRankSettings.Controls.Add(this.rank_lblDraw);
             this.gbRankSettings.Controls.Add(this.rank_lblColor);
-            this.gbRankSettings.Controls.Add(this.rank_txtUndo);
+            this.gbRankSettings.Controls.Add(this.rank_numUndo);
             this.gbRankSettings.Controls.Add(this.rank_lblUndo);
             this.gbRankSettings.Location = new System.Drawing.Point(142, 6);
             this.gbRankSettings.Name = "gbRankSettings";
@@ -1927,7 +1935,7 @@ namespace MCGalaxy.Gui
             this.bak_grp.Controls.Add(this.bak_lblLocation);
             this.bak_grp.Controls.Add(this.bak_txtLocation);
             this.bak_grp.Controls.Add(this.bak_lblTime);
-            this.bak_grp.Controls.Add(this.bak_txtTime);
+            this.bak_grp.Controls.Add(this.bak_numTime);
             this.bak_grp.Location = new System.Drawing.Point(10, 13);
             this.bak_grp.Name = "bak_grp";
             this.bak_grp.Size = new System.Drawing.Size(332, 84);
@@ -2313,7 +2321,7 @@ namespace MCGalaxy.Gui
             this.srv_grp.Controls.Add(this.srv_lblMotd);
             this.srv_grp.Controls.Add(this.srv_txtMOTD);
             this.srv_grp.Controls.Add(this.srv_lblPort);
-            this.srv_grp.Controls.Add(this.srv_txtPort);
+            this.srv_grp.Controls.Add(this.srv_numPort);
             this.srv_grp.Controls.Add(this.srv_btnPort);
             this.srv_grp.Controls.Add(this.srv_lblOwner);
             this.srv_grp.Controls.Add(this.srv_txtOwner);
@@ -4326,7 +4334,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
         private System.Windows.Forms.PropertyGrid pg_lava;
         private System.Windows.Forms.TextBox rank_txtPrefix;
-        private System.Windows.Forms.TextBox rank_txtOSMaps;
+        private System.Windows.Forms.NumericUpDown rank_numOSMaps;
         private System.Windows.Forms.Label rank_lblOSMaps;
         private System.Windows.Forms.Label rank_lblPrefix;
         private System.Windows.Forms.Label srv_lblOwner;
@@ -4429,7 +4437,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TabPage pageRanks;
         private System.Windows.Forms.Button rank_btnColor;
         private System.Windows.Forms.Label rank_lblColor;
-        private System.Windows.Forms.TextBox rank_txtLimit;
+        private System.Windows.Forms.NumericUpDown rank_numLimit;
         private System.Windows.Forms.TextBox rank_txtPerm;
         private System.Windows.Forms.TextBox rank_txtName;
         private System.Windows.Forms.Label rank_lblDraw;
@@ -4445,7 +4453,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox txtRP;
         private System.Windows.Forms.TextBox afk_txtKickTime;
         private System.Windows.Forms.TextBox afk_txtTimer;
-        private System.Windows.Forms.TextBox bak_txtTime;
+        private System.Windows.Forms.NumericUpDown bak_numTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
         private System.Windows.Forms.TextBox txtMoneys;
         private System.Windows.Forms.TextBox txtRestartTime;
@@ -4479,7 +4487,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown srv_numGuests;
         private System.Windows.Forms.Label srv_lblGuests;
         private System.Windows.Forms.TextBox lvl_txtMain;
-        private System.Windows.Forms.TextBox srv_txtPort;
+        private System.Windows.Forms.NumericUpDown srv_numPort;
         private System.Windows.Forms.TextBox srv_txtMOTD;
         private System.Windows.Forms.TextBox srv_txtName;
         private System.Windows.Forms.Button srv_btnPort;
@@ -4534,7 +4542,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label irc_lblPort;
         private System.Windows.Forms.TextBox irc_txtPort;
         private System.Windows.Forms.CheckBox rank_cbEmpty;
-        private System.Windows.Forms.TextBox rank_txtUndo;
+        private System.Windows.Forms.NumericUpDown rank_numUndo;
         private System.Windows.Forms.Label rank_lblUndo;
         private System.Windows.Forms.GroupBox groupBox20;
         private System.Windows.Forms.Label label54;

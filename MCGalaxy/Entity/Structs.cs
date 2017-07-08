@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 namespace MCGalaxy {
     
     /// <summary> Represents the position of an entity in the world. </summary>
-    public struct Position: IEquatable<Position> {
+    public struct Position : IEquatable<Position> {
         
         /// <summary> X fixed-point location in the world. </summary>
         public int X;

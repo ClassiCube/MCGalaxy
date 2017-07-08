@@ -70,11 +70,11 @@ namespace MCGalaxy.Gui {
 
             rank_txtName.Text = grp.trueName;
             rank_txtPerm.Text = ( (int)grp.Permission ).ToString();
-            rank_txtLimit.Text = grp.maxBlocks.ToString();
-            rank_txtUndo.Text = grp.maxUndo.ToString();
+            rank_numLimit.Value = grp.maxBlocks;
+            rank_numUndo.Value = grp.maxUndo;
             chat_ParseColor(grp.color, rank_btnColor);
-            rank_txtMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? String.Empty : grp.MOTD;
-            rank_txtOSMaps.Text = grp.OverseerMaps.ToString();
+            rank_txtMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? "" : grp.MOTD;
+            rank_numOSMaps.Value = grp.OverseerMaps;
             rank_txtPrefix.Text = grp.prefix;
         }
 
@@ -110,44 +110,17 @@ namespace MCGalaxy.Gui {
                 rankSupressEvents = false;
             }
         }
-
-       void rank_txtLimit_TextChanged(object sender, EventArgs e) {
-            if (rank_txtLimit.Text != "") {
-                int drawLimit;
-                if (!int.TryParse(rank_txtLimit.Text, out drawLimit)) {
-                    rank_txtLimit.Text = rank_txtLimit.Text.Remove(rank_txtLimit.Text.Length - 1);
-                    return;
-                }
-
-                if ( drawLimit < 1 ) { rank_txtLimit.Text = "1"; return; }
-
-                storedRanks[rank_list.SelectedIndex].maxBlocks = drawLimit;
-            }
-        }
-
-       void txtMaxUndo_TextChanged(object sender, EventArgs e) {
-            if (rank_txtUndo.Text != "") {
-                long maxUndo;
-                if (!long.TryParse(rank_txtUndo.Text, out maxUndo)) {
-                    rank_txtUndo.Text = rank_txtUndo.Text.Remove(rank_txtUndo.Text.Length - 1);
-                    return;
-                }
-
-                if ( maxUndo < -1 ) { rank_txtUndo.Text = "0"; return; }
-
-                storedRanks[rank_list.SelectedIndex].maxUndo = maxUndo;
-            }
+        
+        void rank_numLimit_ValueChanged(object sender, EventArgs e) {
+            storedRanks[rank_list.SelectedIndex].maxBlocks = (int)rank_numLimit.Value;
         }
         
-        void rank_txtOSMaps_TextChanged(object sender, EventArgs e) {
-            if (rank_txtOSMaps.Text != "") {
-                byte maxMaps;
-                if (!byte.TryParse(rank_txtOSMaps.Text, out maxMaps)) {
-                    rank_txtOSMaps.Text = rank_txtOSMaps.Text.Remove(rank_txtOSMaps.Text.Length - 1);
-                    return;
-                }
-                storedRanks[rank_list.SelectedIndex].OverseerMaps = maxMaps;
-            }
+        void rank_numOSMaps_ValueChanged(object sender, EventArgs e) {
+            storedRanks[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numOSMaps.Value;
+        }
+        
+        void rank_numUndo_ValueChanged(object sender, EventArgs e) {
+            storedRanks[rank_list.SelectedIndex].maxUndo = (int)rank_numUndo.Value;
         }
         
         void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
@@ -155,7 +128,7 @@ namespace MCGalaxy.Gui {
         }
         
         void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
-            if (rank_txtMOTD.Text != null) storedRanks[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
+            storedRanks[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
         }
 
         void rank_btnAdd_Click(object sender, EventArgs e) {

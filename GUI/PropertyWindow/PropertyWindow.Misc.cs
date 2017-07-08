@@ -21,7 +21,7 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {  
         
         void LoadMiscProps() {
-            bak_txtTime.Text = ServerConfig.BackupInterval.ToString();
+            bak_numTime.Value = ServerConfig.BackupInterval;
             bak_txtLocation.Text = ServerConfig.BackupDirectory;
             hackrank_kick.Checked = ServerConfig.HackrankKicks;
             hackrank_kick_time.Text = ServerConfig.HackrankKickDelay.ToString();
@@ -47,7 +47,7 @@ namespace MCGalaxy.Gui {
         }
         
         void ApplyMiscProps() {
-            ServerConfig.BackupInterval = int.Parse(bak_txtTime.Text);
+            ServerConfig.BackupInterval = (int)bak_numTime.Value;
             ServerConfig.BackupDirectory = bak_txtLocation.Text;
             ServerConfig.HackrankKicks = hackrank_kick.Checked;
             ServerConfig.HackrankKickDelay = int.Parse(hackrank_kick_time.Text);
@@ -84,7 +84,5 @@ namespace MCGalaxy.Gui {
                 form.ShowDialog();
             }
         }
-        
-        void txtBackup_TextChanged(object sender, EventArgs e) { OnlyAddDigit(bak_txtTime); }
     }
 }

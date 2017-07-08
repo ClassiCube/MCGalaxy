@@ -49,7 +49,7 @@ namespace MCGalaxy {
         public string prefix = "";
         public LevelPermission Permission;
         public int maxBlocks;
-        public long maxUndo;
+        public int maxUndo;
         public CommandList commands;
         public string fileName;
         public PlayerList playerList;
@@ -75,7 +75,7 @@ namespace MCGalaxy {
         /// <param name="newColor">The color of the group (Not including the &amp;)</param>
         /// <param name="motd">the custom MOTD for the group</param>
         /// <param name="file">The file path where the current players of this group are stored</param>
-        public Group(LevelPermission Perm, int maxB, long maxUn, string fullName, char newColor, string motd, string file, byte maps = 3, string prefix = "")
+        public Group(LevelPermission Perm, int maxB, int maxUn, string fullName, char newColor, string motd, string file, byte maps = 3, string prefix = "")
         {
             Permission = Perm;
             maxBlocks = maxB;

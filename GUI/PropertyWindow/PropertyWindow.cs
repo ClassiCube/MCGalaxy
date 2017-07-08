@@ -120,16 +120,6 @@ namespace MCGalaxy.Gui {
             return Color.FromArgb(col.R, col.G, col.B);
         }
 
-        void OnlyAddDigit(TextBox box) {
-            if (box.TextLength == 0) return;
-            
-            string lastChar = box.Text[box.TextLength - 1].ToString();
-            byte ignored;
-            if (byte.TryParse(lastChar, out ignored)) return;
-            
-            box.Text = box.Text.Substring(0, box.TextLength - 1);
-        }
-
         void btnSave_Click(object sender, EventArgs e) { SaveChanges(); Dispose(); }
         void btnApply_Click(object sender, EventArgs e) { SaveChanges(); }
 

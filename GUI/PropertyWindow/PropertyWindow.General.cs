@@ -25,7 +25,7 @@ namespace MCGalaxy.Gui {
         void LoadGeneralProps() {
             srv_txtName.Text = ServerConfig.Name;
             srv_txtMOTD.Text = ServerConfig.MOTD;
-            srv_txtPort.Text = ServerConfig.Port.ToString();
+            srv_numPort.Value = ServerConfig.Port;
             srv_txtOwner.Text = ServerConfig.OwnerName;
             srv_chkPublic.Checked = ServerConfig.Public;
             
@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui {
         void ApplyGeneralProps() {
             ServerConfig.Name = srv_txtName.Text;
             ServerConfig.MOTD = srv_txtMOTD.Text;
-            ServerConfig.Port = int.Parse(srv_txtPort.Text);
+            ServerConfig.Port = (int)srv_numPort.Value;
             ServerConfig.OwnerName = srv_txtOwner.Text;
             ServerConfig.Public = srv_chkPublic.Checked;
             
@@ -79,7 +79,7 @@ namespace MCGalaxy.Gui {
         
         void numPlayers_ValueChanged(object sender, EventArgs e) {
             // Ensure that number of guests is never more than number of players
-            if ( srv_numGuests.Value > srv_numPlayers.Value ) {
+            if (srv_numGuests.Value > srv_numPlayers.Value) {
                 srv_numGuests.Value = srv_numPlayers.Value;
             }
             srv_numGuests.Maximum = srv_numPlayers.Value;
@@ -90,8 +90,6 @@ namespace MCGalaxy.Gui {
                 form.ShowDialog();
             }
         }
-		
-		void txtPort_TextChanged(object sender, EventArgs e) { OnlyAddDigit(srv_txtPort); }
 
         void forceUpdateBtn_Click(object sender, EventArgs e) {
             srv_btnForceUpdate.Enabled = false;
