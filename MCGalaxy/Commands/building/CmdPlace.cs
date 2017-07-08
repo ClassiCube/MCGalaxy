@@ -14,11 +14,11 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPlace : Command {        
+    public sealed class CmdPlace : Command {
         public override string name { get { return "place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -29,30 +29,25 @@ namespace MCGalaxy.Commands.Building {
             ExtBlock block = p.GetHeldBlock();
             int x = p.Pos.BlockX, y = (p.Pos.Y - 32) / 32, z = p.Pos.BlockZ;
 
-            try {
-                string[] parts = message.SplitSpaces();
-                switch (parts.Length) {
-                    case 1:
-                        if (message == "") break;
-                        
-                        if (!CommandParser.GetBlock(p, parts[0], out block)) return;
-                        break;
-                    case 3:
-                        x = int.Parse(parts[0]);
-                        y = int.Parse(parts[1]);
-                        z = int.Parse(parts[2]);
-                        break;
-                    case 4:
-                        if (!CommandParser.GetBlock(p, parts[0], out block)) return;
-                        
-                        x = int.Parse(parts[1]);
-                        y = int.Parse(parts[2]);
-                        z = int.Parse(parts[3]);
-                        break;
-                    default: Player.Message(p, "Invalid number of parameters"); return;
-                }
-            } catch { 
-                Player.Message(p, "Invalid parameters"); return; 
+            string[] parts = message.SplitSpaces();
+            switch (parts.Length) {
+                case 1:
+                    if (message == "") break;
+                    if (!CommandParser.GetBlock(p, parts[0], out block)) return;
+                    break;
+                case 3:
+                    if (!CommandParser.GetInt(p, parts[0], "X", ref x)) return;
+                    if (!CommandParser.GetInt(p, parts[1], "Y", ref y)) return;
+                    if (!CommandParser.GetInt(p, parts[2], "Z", ref z)) return;
+                    break;
+                case 4:
+                    if (!CommandParser.GetBlock(p, parts[0], out block)) return;
+                    if (!CommandParser.GetInt(p, parts[1], "X", ref x)) return;
+                    if (!CommandParser.GetInt(p, parts[2], "Y", ref y)) return;
+                    if (!CommandParser.GetInt(p, parts[3], "Z", ref z)) return;
+                    break;
+                default:
+                    Help(p); return;
             }
 
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
@@ -73,8 +68,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/place [block] <x y z>");
-            Player.Message(p, "%HPlaces block at your feet or optionally at <x y z>");
+            Player.Message(p, "%T/place <block>");
+            Player.Message(p, "%HPlaces block at your feet.");
+            Player.Message(p, "%T/place <block> [x y z]");
+            Player.Message(p, "%HPlaces block at [x y z]");
         }
     }
 }

@@ -155,6 +155,7 @@ namespace MCGalaxy.Config {
             object result;
             try {
                 result = Enum.Parse(EnumType, value, true);
+                if (!Enum.IsDefined(EnumType, result)) throw new ArgumentException("value not member of enumeration");
             } catch {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid enum member, using default of {1}", Name, DefaultValue);
                 return DefaultValue;
