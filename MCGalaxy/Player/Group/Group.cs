@@ -86,7 +86,7 @@ namespace MCGalaxy {
             this.prefix = prefix;
         }
         
-        public static void AddAndLoadGroup(Group grp) {
+        public static void Register(Group grp) {
             GroupList.Add(grp);
             grp.LoadPlayers();
             
@@ -125,17 +125,17 @@ namespace MCGalaxy {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks
-                AddAndLoadGroup(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', "", null));
-                AddAndLoadGroup(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', "", null));
-                AddAndLoadGroup(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', "", null));
-                AddAndLoadGroup(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', "", null));
+                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', "", null));
+                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', "", null));
+                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', "", null));
+                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', "", null));
             }
 
             if (BannedRank == null)
-                AddAndLoadGroup(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
+                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
             if (GuestRank == null)
-                AddAndLoadGroup(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
-            AddAndLoadGroup(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
+                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
+            Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
             if (Find(ServerConfig.DefaultRankName) != null) {
@@ -225,10 +225,7 @@ namespace MCGalaxy {
         }
         
         internal static void MapName(ref string name) {
-            if (name == "adv") name = "advbuilder";
             if (name == "op") name = "operator";
-            if (name == "super" || (name == "admin" && !Exists("admin"))) name = "superop";
-            if (name == "noone") name = "nobody";
         }
         
         /// <summary> Finds the group which has the given permission level. </summary>
@@ -251,12 +248,6 @@ namespace MCGalaxy {
             return Group.standard;
         }
 
-        
-        public static string GetName(LevelPermission perm) {
-            Group grp = findPerm(perm);
-            if (grp != null) return grp.trueName;
-            return ((int)perm).ToString();
-        }
         
         public static string GetColoredName(LevelPermission perm) {
             Group grp = findPerm(perm);

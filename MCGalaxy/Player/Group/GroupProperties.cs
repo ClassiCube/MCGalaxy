@@ -38,7 +38,7 @@ namespace MCGalaxy {
                 value = value.Replace(" ", "");
                 string name = value.ToLower();
 
-                if (name == "adv" || name == "op" || name == "super" || name == "nobody" || name == "noone") {
+                if (name == "op" || name == "nobody") {
                     Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", name);
                 } else if (Group.GroupList.Find(g => g.name == name) == null) {
                     grp = new Group();
@@ -111,7 +111,7 @@ namespace MCGalaxy {
         }
         
         static void AddGroup(ref Group grp) {
-            Group.AddAndLoadGroup(
+            Group.Register(
                 new Group(grp.Permission, grp.maxBlocks, grp.maxUndo, grp.trueName,
                           grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps, grp.prefix));
             grp = null;

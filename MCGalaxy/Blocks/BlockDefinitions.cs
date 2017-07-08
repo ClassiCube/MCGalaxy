@@ -104,8 +104,9 @@ namespace MCGalaxy {
             // We don't want to save global blocks in the level's custom blocks list
             if (!global) {
                 BlockDefinition[] realDefs = new BlockDefinition[Block.Count];
-                for (int i = 0; i < Block.Count; i++)
+                for (int i = 0; i < Block.Count; i++) {
                     realDefs[i] = defs[i] == GlobalDefs[i] ? null : defs[i];
+                }
                 defs = realDefs;
             }
             
@@ -171,14 +172,7 @@ namespace MCGalaxy {
                 if (!pl.hasBlockDefs) continue;
                 if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
                 
-                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
-                } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, false, pl.hasCP437));
-                } else {
-                    pl.Send(Packet.DefineBlock(def, pl.hasCP437));
-                }
-                
+                pl.Send(def.MakeDefinePacket(pl));
                 if (pl.HasCpeExt(CpeExt.BlockPermissions))
                     pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
             }
@@ -249,15 +243,17 @@ namespace MCGalaxy {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def == null) continue;
-                
-                if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, true, pl.hasCP437));
-                } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                    pl.Send(Packet.DefineBlockExt(def, false, pl.hasCP437));
-                } else {
-                    pl.Send(Packet.DefineBlock(def, pl.hasCP437));
-                }
+                if (def != null) pl.Send(def.MakeDefinePacket(pl));
+            }
+        }
+        
+        public byte[] MakeDefinePacket(Player pl) {
+            if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
+                return Packet.DefineBlockExt(this, true, pl.hasCP437);
+            } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && Shape != 0) {
+                return Packet.DefineBlockExt(this, false, pl.hasCP437);
+            } else {
+                return Packet.DefineBlock(this, pl.hasCP437);
             }
         }
         
