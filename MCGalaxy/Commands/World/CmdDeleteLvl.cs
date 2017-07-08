@@ -51,8 +51,7 @@ namespace MCGalaxy.Commands.World {
         
         LevelPermission GetPerBuildPermission(string level) {
             string value = LevelInfo.FindOfflineProperty(level, "perbuild");
-            LevelPermission perm = Group.ParsePermOrName(value);
-            return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
+            return Group.ParsePermOrName(value, LevelPermission.Guest);
         }
         
         public override void Help(Player p) {

@@ -76,15 +76,10 @@ namespace MCGalaxy.Commands.Info {
             SearchArgs args = new SearchArgs();
             PropertiesFile.Read(file, ref args, ProcessLine);
             
-            visit = ParseRank(args.Visit);
-            build = ParseRank(args.Build);
+            visit = Group.ParsePermOrName(args.Visit, visit);
+            build = Group.ParsePermOrName(args.Build, build);
             if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
                 loadOnGoto = true;
-        }
-        
-        static LevelPermission ParseRank(string input) {
-            LevelPermission perm = Group.ParsePermOrName(input);
-            return perm != LevelPermission.Null ? perm : LevelPermission.Guest;
         }
         
         static void ProcessLine(string key, string value, ref SearchArgs args) {

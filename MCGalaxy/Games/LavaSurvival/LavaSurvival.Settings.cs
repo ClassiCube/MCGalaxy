@@ -58,12 +58,10 @@ namespace MCGalaxy.Games {
                 case "lives": lifeNum = int.Parse(value); break;
                     
                 case "setup-rank":
-                    perm = Group.ParsePermOrName(value);
-                    if (perm != LevelPermission.Null) setupRank = perm;
+                    setupRank = Group.ParsePermOrName(value, LevelPermission.Admin);
                     break;
                 case "control-rank":
-                    perm = Group.ParsePermOrName(value);
-                    if (perm != LevelPermission.Null) controlRank = perm;
+                    controlRank = Group.ParsePermOrName(value, LevelPermission.Operator);
                     break;
                 case "maps":
                     foreach (string name in value.Split(',')) {

@@ -52,9 +52,7 @@ namespace MCGalaxy.Eco {
                 }
                 rnk.price = int.Parse(args[3]);
             } else if (args[1] == "maxrank") {
-                MaxRank = LevelPermission.AdvBuilder;
-                LevelPermission perm = Group.ParsePermOrName(args[2]);
-                if (perm != LevelPermission.Null) MaxRank = perm;
+                MaxRank = Group.ParsePermOrName(args[2], LevelPermission.AdvBuilder);
             }
         }
         

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
             if (plName == null) return;
             string colName = PlayerInfo.GetColoredName(p, plName);
                         
-            bool banned = Group.IsBanned(plName);
+            bool banned = Group.BannedRank.playerList.Contains(plName);
             string msg = colName;
             string ip = PlayerInfo.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);

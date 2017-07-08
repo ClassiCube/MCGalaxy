@@ -41,12 +41,13 @@ namespace MCGalaxy.Games
         public MapData mapData;
 
         // Settings
-        public bool startOnStartup, sendAfkMain;
-        public byte voteCount;
-        public int lifeNum;
-        public double voteTime;
-        public LevelPermission setupRank, controlRank;
-
+        public bool startOnStartup, sendAfkMain = true;
+        public byte voteCount = 2;
+        public int lifeNum = 3;
+        public double voteTime = 2;
+        public LevelPermission setupRank = LevelPermission.Admin;
+        public LevelPermission controlRank = LevelPermission.Operator;
+        
         // Plugin event delegates
         public delegate void GameStartHandler(Level map);
         public delegate void GameStopHandler();
@@ -72,8 +73,7 @@ namespace MCGalaxy.Games
         public event PlayerDeathHandler OnPlayerDeath;
 
         // Constructors
-        public LavaSurvival()
-        {
+        public LavaSurvival() {
             maps = new List<string>();
             voted = new List<string>();
             votes = new Dictionary<string, int>();
@@ -84,14 +84,6 @@ namespace MCGalaxy.Games
             {
                 if (!flooded) AnnounceTimeLeft(true, false);
             };
-
-            startOnStartup = false;
-            sendAfkMain = true;
-            voteCount = 2;
-            voteTime = 2;
-            lifeNum = 3;
-            setupRank = LevelPermission.Admin;
-            controlRank = LevelPermission.Operator;
             LoadSettings();
         }
 

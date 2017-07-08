@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public string ColoredName { get { return color + trueName; } }
         public byte OverseerMaps = 3;
         public string prefix = "";
-        public LevelPermission Permission;
+        public LevelPermission Permission = LevelPermission.Null;
         public int maxBlocks;
         public int maxUndo;
         public CommandList commands;
@@ -62,10 +62,7 @@ namespace MCGalaxy {
         public static Group NobodyRank { get { return findPerm(LevelPermission.Nobody); } }
         public static Group standard;
         
-        /// <summary> Create a new group object </summary>
-        public Group() {
-            Permission = LevelPermission.Null;
-        }
+        public Group() { }
 
         /// <summary> Create a new group object </summary>
         /// <param name="Perm">The permission of the group</param>
@@ -253,13 +250,7 @@ namespace MCGalaxy {
             }
             return Group.standard;
         }
-        
-        
-        /// <summary> Returns whether the given player is in the banned rank. </summary>
-        public static bool IsBanned(string name) {
-            Group grp = BannedRank;
-            return grp != null && grp.playerList.Contains(name);
-        }
+
         
         public static string GetName(LevelPermission perm) {
             Group grp = findPerm(perm);
@@ -285,15 +276,15 @@ namespace MCGalaxy {
             return Colors.white;
         }
         
-        public static LevelPermission ParsePermOrName(string value) {
-            if (value == null) return LevelPermission.Null;
+        public static LevelPermission ParsePermOrName(string value, LevelPermission defPerm) {
+            if (value == null) return defPerm;
             
             sbyte perm;
             if (sbyte.TryParse(value, out perm))
                 return (LevelPermission)perm;
             
             Group grp = Find(value);
-            return grp != null ? grp.Permission : LevelPermission.Null;
+            return grp != null ? grp.Permission : defPerm;
         }
     }
 }
