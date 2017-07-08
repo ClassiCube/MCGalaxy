@@ -82,7 +82,8 @@ namespace MCGalaxy.Gui {
             blockPermsOrig = BlockPerms.List[blockID];
             blockPerms = blockPermsChanged.Find(p => p.BlockID == blockID);
             BlockInitSpecificArrays();
-
+            blockSupressEvents = true;
+            
             BlockProps props = blockPropsChanged[blockID];
             blk_cbMsgBlock.Checked = props.IsMessageBlock;
             blk_cbPortal.Checked = props.IsPortal;
@@ -95,8 +96,7 @@ namespace MCGalaxy.Gui {
             blk_cbRails.Checked = props.IsRails;
             blk_cbLava.Checked = props.LavaKills;
             blk_cbWater.Checked = props.WaterKills;
-            
-            blockSupressEvents = true;
+                        
             BlockPerms perms = blockPerms != null ? blockPerms : blockPermsOrig;
             GuiPerms.SetDefaultIndex(blk_cmbMin, perms.MinRank);
             GuiPerms.SetSpecificPerms(perms.Allowed, blockAllowBoxes);
@@ -162,48 +162,48 @@ namespace MCGalaxy.Gui {
         
         void blk_cbMsgBlock_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].IsMessageBlock = blk_cbMsgBlock.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbPortal_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].IsPortal = blk_cbPortal.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbDeath_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].KillerBlock = blk_cbDeath.Checked;
             blk_txtDeath.Enabled = blk_cbDeath.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_txtDeath_TextChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].DeathMessage = blk_txtDeath.Text;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbDoor_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].IsDoor = blk_cbDoor.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbTdoor_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].IsTDoor = blk_cbTdoor.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbRails_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].IsRails = blk_cbRails.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbLava_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].LavaKills = blk_cbLava.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
         
         void blk_cbWater_CheckedChanged(object sender, EventArgs e) {
             blockPropsChanged[blockID].WaterKills = blk_cbWater.Checked;
-            blockPropsChanged[blockID].Changed = true;
+            blockPropsChanged[blockID].Changed = !blockSupressEvents;
         }
     }
 }
