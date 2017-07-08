@@ -53,14 +53,14 @@ namespace MCGalaxy.Blocks {
 
 
         /// <summary> Returns whether the given rank can modify the given block. </summary>        
-        public static bool CanModify(Player p, byte block) {
+        public static bool UsableBy(Player p, byte block) {
             BlockPerms b = List[block];
             LevelPermission perm = p.Rank;
             return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
         
         /// <summary> Returns whether the given rank can modify the given block. </summary>
-        public static bool CanModify(LevelPermission perm, byte block) {
+        public static bool UsableBy(LevelPermission perm, byte block) {
             BlockPerms b = List[block];
             return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
@@ -73,10 +73,10 @@ namespace MCGalaxy.Blocks {
                 
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
                 if (block < count) {
-                    bool canAffect = CanModify(pl, block);
+                    bool usable = UsableBy(pl, block);
                     pl.Send(Packet.BlockPermission(block, 
-                                                   canAffect && pl.level.CanPlace, 
-                                                   canAffect && pl.level.CanDelete));
+                                                   usable && pl.level.CanPlace, 
+                                                   usable && pl.level.CanDelete));
                 }
             }
         }
@@ -142,7 +142,7 @@ namespace MCGalaxy.Blocks {
             }
             
             foreach (Group grp in Group.GroupList) {
-                grp.FillBlocks();
+                grp.SetUsableBlocks();
             }
         }
         

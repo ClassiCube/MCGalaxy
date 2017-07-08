@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/undoplayer area [player1] <player2..> <timespan>");
             Player.Message(p, "%HOnly undoes block changes in the specified region.");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
-            if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
+            if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
         }
     }

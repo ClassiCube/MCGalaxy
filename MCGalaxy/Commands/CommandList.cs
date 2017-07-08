@@ -31,16 +31,6 @@ namespace MCGalaxy {
             for (int i = 0; i < perms.Length; i++)
                 CommandExtraPerms.Set(cmd.name, perms[i].Perm, perms[i].Description, i + 1);
         }
-        
-        public void AddRange(List<Command> listCommands) {
-            foreach(Command cmd in listCommands) Add(cmd);
-        }
-        
-        public List<string> commandNames() {
-            List<string> tempList = new List<string>(commands.Count);
-            commands.ForEach(cmd => tempList.Add(cmd.name));
-            return tempList;
-        }
 
         public bool Remove(Command cmd) { return commands.Remove(cmd); }
         public bool Contains(Command cmd) { return commands.Contains(cmd); }

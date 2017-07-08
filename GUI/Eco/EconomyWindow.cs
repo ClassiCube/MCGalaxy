@@ -27,7 +27,7 @@ namespace MCGalaxy.Gui.Eco {
             List<string> groupList = new List<string>();
             foreach (Group group in Group.GroupList)
                 if (group.Permission > LevelPermission.Guest && group.Permission < LevelPermission.Nobody)
-                    groupList.Add(group.name);
+                    groupList.Add(group.Name);
             comboBoxRank.DataSource = groupList;
             comboBoxRank.SelectedItem = rankItem.MaxRank;
 
@@ -75,7 +75,7 @@ namespace MCGalaxy.Gui.Eco {
 
             List<string> ranklist = new List<string>();
             foreach (RankItem.Rank rank in rankItem.RanksList) {
-                ranklist.Add(rank.group.name);
+                ranklist.Add(rank.group.Name);
                 if (rank.group.Permission >= rankItem.MaxRank) break;
             }
             listBoxRank.DataSource = ranklist;

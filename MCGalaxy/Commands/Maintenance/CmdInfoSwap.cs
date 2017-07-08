@@ -83,13 +83,13 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         void SwapGroups(PlayerData src, PlayerData dst, Group srcGroup, Group dstGroup) {
-            srcGroup.playerList.Remove(src.Name);
-            srcGroup.playerList.Add(dst.Name);
-            srcGroup.playerList.Save();
+            srcGroup.Players.Remove(src.Name);
+            srcGroup.Players.Add(dst.Name);
+            srcGroup.Players.Save();
             
-            dstGroup.playerList.Remove(dst.Name);
-            dstGroup.playerList.Add(src.Name);
-            dstGroup.playerList.Save();
+            dstGroup.Players.Remove(dst.Name);
+            dstGroup.Players.Add(src.Name);
+            dstGroup.Players.Save();
         }
         
         public override void Help(Player p) {

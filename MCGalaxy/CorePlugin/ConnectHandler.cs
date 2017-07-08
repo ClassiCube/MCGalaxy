@@ -39,7 +39,7 @@ namespace MCGalaxy.Core {
             Command cmd = Command.all.Find("review");
             LevelPermission perm = CommandExtraPerms.MinPerm("review");
             
-            if (p.group.Permission < perm || !p.group.commands.Contains(cmd)) return;
+            if (p.group.Permission < perm || !p.group.Commands.Contains(cmd)) return;
             int count = Server.reviewlist.Count;
             if (count == 0) return;
             

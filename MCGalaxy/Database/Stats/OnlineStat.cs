@@ -88,7 +88,7 @@ namespace MCGalaxy.DB {
         }
         
         internal static void BanLine(Player p, string name) {
-            if (!Group.BannedRank.playerList.Contains(name)) return;
+            if (!Group.BannedRank.Players.Contains(name)) return;
             
             string[] data = Ban.GetBanData(name);
             if (data != null) {

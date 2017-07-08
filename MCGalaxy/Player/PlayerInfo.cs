@@ -30,7 +30,7 @@ namespace MCGalaxy {
         
         public static Group GetGroup(string name) { return Group.findPlayerGroup(name); }
         
-        public static string GetColor(string name) { return GetGroup(name).color; }
+        public static string GetColor(string name) { return GetGroup(name).Color; }
         
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);

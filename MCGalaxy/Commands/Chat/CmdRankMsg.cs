@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands.Chatting {
             if (!MessageCmd.CanSpeak(p, name)) return;
             
             string[] args = message.SplitSpaces(2);
-            string rank = args.Length == 1 ? p.group.name : args[0];
+            string rank = args.Length == 1 ? p.group.Name : args[0];
             string text = args[args.Length - 1];            
             Group grp = Matcher.FindRanks(p, rank);
             if (grp == null) return;
             
             Chat.MessageWhere("{3}<{2}>{0}: &f{1}", pl => Chat.NotIgnoring(p, pl) && (pl.group == grp || pl == p),
-                              p.ColoredName, text.Trim(), grp.trueName, grp.color);
+                              p.ColoredName, text.Trim(), grp.Name, grp.Color);
             p.CheckForMessageSpam();
         }
         

@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(3);
@@ -80,8 +79,9 @@ namespace MCGalaxy.Commands.Info {
         static void SearchRanks(Player p, string keyword, string modifier) {
             List<string> ranks = new List<string>();
             foreach (Group g in Group.GroupList) {
-                if (g.name.Contains(keyword))
+            	if (g.Name.CaselessContains(keyword)) {
                     ranks.Add(g.ColoredName);
+                }
             }
             
             OutputList(p, keyword, "search ranks", "ranks", 

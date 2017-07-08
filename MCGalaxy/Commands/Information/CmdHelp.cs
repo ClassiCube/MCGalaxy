@@ -67,10 +67,10 @@ namespace MCGalaxy.Commands.Info {
         static void PrintRanks(Player p) {
             foreach (Group grp in Group.GroupList) {
                 if (grp.Permission >= LevelPermission.Nobody) continue; // Note that -1 means max undo.  Undo anything and everything.
-                int count = grp.playerList.Count;
+                int count = grp.Players.Count;
                 Player.Message(p, "{0} %S- Cmd: {2}, Undo: {3}, Perm: {4}", 
-                               grp.ColoredName, count, grp.maxBlocks, 
-                               grp.maxUndo == -1 ? "max" : grp.maxUndo.ToString(), (int)grp.Permission);
+                               grp.ColoredName, count, grp.MaxBlocks, 
+                               grp.MaxUndo == -1 ? "max" : grp.MaxUndo.ToString(), (int)grp.Permission);
             }
         }
         

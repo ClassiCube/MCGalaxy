@@ -581,6 +581,7 @@
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Network\Utils\PingList.cs" />
     <Compile Include="Player\Group\Group.cs" />
+    <Compile Include="Player\Group\Group.List.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
     <Compile Include="Player\List\PlayerList.cs" />

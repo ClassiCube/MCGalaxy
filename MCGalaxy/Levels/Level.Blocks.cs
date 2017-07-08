@@ -253,7 +253,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ExtBlock old, ExtBlock block) {
-            if (!p.group.CanModify[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
+            if (!p.group.Blocks[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
             
             bool inZone = false;

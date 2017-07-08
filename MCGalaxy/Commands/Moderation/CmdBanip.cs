@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, name + "(" + grp.ColoredName + "%S) uses that IP.");
                 
                 Logger.Log(LogType.SuspiciousActivity, 
-                           "{0} failed to ipban {1} - IP is also used by: {2}({3})", p.name, ip, name, grp.name);
+                           "{0} failed to ipban {1} - IP is also used by: {2}({3})", p.name, ip, name, grp.Name);
                 return false;
             }
             return true;

@@ -134,7 +134,7 @@ namespace MCGalaxy {
         }
         
         internal bool CheckManualChange(ExtBlock old, ExtBlock block, bool replaceMode) {
-            if (!BlockPerms.CanModify(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
+            if (!BlockPerms.UsableBy(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
                 string action = replaceMode ? "replace" : "delete";
                 BlockPerms.List[old.BlockID].MessageCannotUse(this, action);
                 return false;

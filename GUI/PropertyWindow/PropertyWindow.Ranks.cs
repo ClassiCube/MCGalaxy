@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui {
             storedRanks.Clear();
             storedRanks.AddRange(Group.GroupList);
             foreach ( Group grp in storedRanks ) {
-                rank_list.Items.Add(grp.trueName + " = " + (int)grp.Permission);
+                rank_list.Items.Add(grp.Name + " = " + (int)grp.Permission);
             }
             rank_list.SelectedIndex = 0;
         }
@@ -59,23 +59,23 @@ namespace MCGalaxy.Gui {
         
         
         void rank_btnColor_Click(object sender, EventArgs e) {
-            chat_ShowColorDialog(rank_btnColor, storedRanks[rank_list.SelectedIndex].name + " rank color");
-            storedRanks[rank_list.SelectedIndex].color = Colors.Parse(rank_btnColor.Text);
+            chat_ShowColorDialog(rank_btnColor, storedRanks[rank_list.SelectedIndex].Name + " rank color");
+            storedRanks[rank_list.SelectedIndex].Color = Colors.Parse(rank_btnColor.Text);
         }
 
         void rank_list_SelectedIndexChanged(object sender, EventArgs e) {
             if ( rankSupressEvents ) return;
-            Group grp = storedRanks.Find(G => G.trueName == rank_list.Items[rank_list.SelectedIndex].ToString().Split('=')[0].Trim());
+            Group grp = storedRanks.Find(G => G.Name == rank_list.Items[rank_list.SelectedIndex].ToString().Split('=')[0].Trim());
             if ( grp.Permission == LevelPermission.Nobody ) { rank_list.SelectedIndex = 0; return; }
 
-            rank_txtName.Text = grp.trueName;
+            rank_txtName.Text = grp.Name;
             rank_txtPerm.Text = ( (int)grp.Permission ).ToString();
-            rank_numLimit.Value = grp.maxBlocks;
-            rank_numUndo.Value = grp.maxUndo;
-            chat_ParseColor(grp.color, rank_btnColor);
+            rank_numLimit.Value = grp.MaxBlocks;
+            rank_numUndo.Value = grp.MaxUndo;
+            chat_ParseColor(grp.Color, rank_btnColor);
             rank_txtMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? "" : grp.MOTD;
             rank_numOSMaps.Value = grp.OverseerMaps;
-            rank_txtPrefix.Text = grp.prefix;
+            rank_txtPrefix.Text = grp.Prefix;
         }
 
         void rank_txtName_TextChanged(object sender, EventArgs e) {
@@ -85,7 +85,7 @@ namespace MCGalaxy.Gui {
             }
             
             if ( rank_txtName.Text != "" && rank_txtName.Text.ToLower() != "nobody" ) {
-                storedRanks[rank_list.SelectedIndex].trueName = rank_txtName.Text;
+                storedRanks[rank_list.SelectedIndex].Name = rank_txtName.Text;
                 rankSupressEvents = true;
                 rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)storedRanks[rank_list.SelectedIndex].Permission;
                 rankSupressEvents = false;
@@ -106,13 +106,13 @@ namespace MCGalaxy.Gui {
 
                 storedRanks[rank_list.SelectedIndex].Permission = (LevelPermission)foundPerm;
                 rankSupressEvents = true;
-                rank_list.Items[rank_list.SelectedIndex] = storedRanks[rank_list.SelectedIndex].trueName + " = " + foundPerm;
+                rank_list.Items[rank_list.SelectedIndex] = storedRanks[rank_list.SelectedIndex].Name + " = " + foundPerm;
                 rankSupressEvents = false;
             }
         }
         
         void rank_numLimit_ValueChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].maxBlocks = (int)rank_numLimit.Value;
+            storedRanks[rank_list.SelectedIndex].MaxBlocks = (int)rank_numLimit.Value;
         }
         
         void rank_numOSMaps_ValueChanged(object sender, EventArgs e) {
@@ -120,11 +120,11 @@ namespace MCGalaxy.Gui {
         }
         
         void rank_numUndo_ValueChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].maxUndo = (int)rank_numUndo.Value;
+            storedRanks[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
         }
         
         void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].prefix = rank_txtPrefix.Text;
+            storedRanks[rank_list.SelectedIndex].Prefix = rank_txtPrefix.Text;
         }
         
         void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
@@ -142,7 +142,7 @@ namespace MCGalaxy.Gui {
             
             Group newGroup = new Group((LevelPermission)freePerm, 600, 30, "CHANGEME", '1', "", null);
             storedRanks.Add(newGroup);
-            rank_list.Items.Add(newGroup.trueName + " = " + (int)newGroup.Permission);
+            rank_list.Items.Add(newGroup.Name + " = " + (int)newGroup.Permission);
         }
 
         void rank_btnDel_Click(object sender, EventArgs e) {

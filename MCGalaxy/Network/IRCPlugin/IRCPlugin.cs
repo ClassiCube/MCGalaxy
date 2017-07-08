@@ -115,7 +115,7 @@ namespace MCGalaxy.Network {
             if (message.Trim(trimChars) == "") return;
             if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerChat, p)) return;
             
-            string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.prefix + p.ColoredName;
+            string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
             Bot.Say(name + "%S: " + message, p.opchat);
         }
     }

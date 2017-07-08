@@ -62,7 +62,7 @@ namespace MCGalaxy.Eco {
             
             writer.WriteLine("rank:maxrank:" + (int)MaxRank);
             foreach (Rank rnk in RanksList) {
-                writer.WriteLine("rank:price:" + rnk.group.name + ":" + rnk.price);
+                writer.WriteLine("rank:price:" + rnk.group.Name + ":" + rnk.price);
                 if (rnk.group.Permission >= MaxRank) break;
             }
         }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Eco {
             
             Command.all.Find("setrank").Use(null, "+up " + p.name);
             Player.Message(p, "You bought the rank " + p.group.ColoredName);
-            Economy.MakePurchase(p, FindRank(p.group.name).price, "%3Rank: " + p.group.ColoredName);
+            Economy.MakePurchase(p, FindRank(p.group.Name).price, "%3Rank: " + p.group.ColoredName);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
@@ -152,16 +152,15 @@ namespace MCGalaxy.Eco {
         
         public Rank FindRank(string name) {
             foreach (Rank rank in RanksList) {
-                if (rank.group.name != null && rank.group.name.CaselessEq(name))
-                    return rank;
+                if (rank.group.Name.CaselessEq(name)) return rank;
             }
             return null;
         }
 
         public Rank NextRank(Player p) {
-            int grpIndex = Group.GroupList.IndexOf(p.group);
-            for (int i = grpIndex + 1; i < Group.GroupList.Count; i++) {
-                Rank rank = FindRank(Group.GroupList[i].name);
+            int curIndex = Group.GroupList.IndexOf(p.group);
+            for (int i = curIndex + 1; i < Group.GroupList.Count; i++) {
+                Rank rank = FindRank(Group.GroupList[i].Name);
                 if (rank != null) return rank;
             }
             return null;
@@ -173,7 +172,7 @@ namespace MCGalaxy.Eco {
                 if (group.Permission > MaxRank) break;
                 if (group.Permission <= Group.standard.Permission) continue;
                 
-                Rank rank = FindRank(group.name);
+                Rank rank = FindRank(group.Name);
                 if (rank == null) {
                     rank = new Rank();
                     rank.group = group;

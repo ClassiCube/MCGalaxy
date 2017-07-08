@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Chatting {
             string color = "";
             if (colName == "") {
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed.", false);
-                who.color = who.group.color;
+                who.color = who.group.Color;
             } else {
                 color = Colors.Parse(colName);
                 if (color == "") { Player.Message(p, "There is no color \"" + colName + "\"."); return; }

@@ -24,31 +24,31 @@ namespace MCGalaxy {
     public sealed class GroupProperties {
         
         public static void InitAll() {
-            Group grp = null;
-            PropertiesFile.Read(Paths.RankPropsFile, ref grp, ParseProperty, '=', false);
-            if (grp != null) AddGroup(ref grp);
+            Group temp = null;
+            PropertiesFile.Read(Paths.RankPropsFile, ref temp, ParseProperty, '=', false);
+            if (temp != null) AddGroup(ref temp);
         }
         
-        static void ParseProperty(string key, string value, ref Group grp) {
+        static void ParseProperty(string key, string value, ref Group temp) {
             string raw = value; // for prefix we need to keep space
             value = value.Trim();
             
             if (key.ToLower() == "rankname") {
-                if (grp != null) AddGroup(ref grp);
+                if (temp != null) AddGroup(ref temp);
                 value = value.Replace(" ", "");
                 string name = value.ToLower();
 
                 if (name == "op" || name == "nobody") {
                     Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", name);
-                } else if (Group.GroupList.Find(g => g.name == name) == null) {
-                    grp = new Group();
-                    grp.trueName = value;
+                } else if (Group.Find(name) == null) {
+                    temp = new Group();
+                    temp.Name = value;
                 } else {
                     Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", value);
                 }
                 return;
             }
-            if (grp == null) return;
+            if (temp == null) return;
 
             switch (key.ToLower()) {
                 case "permission":
@@ -56,65 +56,63 @@ namespace MCGalaxy {
                     
                     if (!int.TryParse(value, out perm)) {
                         Logger.Log(LogType.Warning, "Invalid permission: " + value);
-                        grp = null;
+                        temp = null;
                     } if (perm > 119 || perm < -50) {
                         Logger.Log(LogType.Warning, "Permission must be between -50 and 119 for ranks");
-                        grp = null;
+                        temp = null;
                     } else if (Group.findPermInt(perm) == null) {
-                        grp.Permission = (LevelPermission)perm;
+                        temp.Permission = (LevelPermission)perm;
                     } else {
                         Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + value);
-                        grp = null;
+                        temp = null;
                     } break;
                 case "limit":
-                    grp.maxBlocks = int.Parse(value);
+                    temp.MaxBlocks = int.Parse(value);
                     break;
                 case "maxundo":
-                    grp.maxUndo = int.Parse(value);
+                    temp.MaxUndo = int.Parse(value);
                     break;
                 case "color":
                     char col;
                     char.TryParse(value, out col);
 
                     if (Colors.IsStandardColor(col) || Colors.GetFallback(col) != '\0') {
-                        grp.color = col.ToString(CultureInfo.InvariantCulture);
+                        temp.Color = "&" + col;
                     } else {
                         Logger.Log(LogType.Warning, "Invalid color code: " + value);
-                        grp = null;
+                        temp = null;
                     } break;
                 case "filename":
                     if (value.Contains("\\") || value.Contains("/")) {
                         Logger.Log(LogType.Warning, "Invalid filename: " + value);
-                        grp = null;
+                        temp = null;
                     } else {
-                        grp.fileName = value;
+                        temp.filename = value;
                     } break;
                 case "motd":
-                    grp.MOTD = value;
+                    temp.MOTD = value;
                     break;
                 case "osmaps":
                     byte osmaps;
                     if (!byte.TryParse(value, out osmaps))
                         osmaps = 3;
-                    grp.OverseerMaps = osmaps;
+                    temp.OverseerMaps = osmaps;
                     break;
                 case "prefix":
                     if (!String.IsNullOrEmpty(value))
-                        grp.prefix = raw.TrimStart();
+                        temp.Prefix = raw.TrimStart();
                     
-                    if (Colors.StripColors(grp.prefix).Length > 3) {
+                    if (Colors.StripColors(temp.Prefix).Length > 3) {
                         Logger.Log(LogType.Warning, "Prefixes may only consist of color codes and three letters");
-                        grp.prefix = grp.prefix.Substring(0, 3);
+                        temp.Prefix = temp.Prefix.Substring(0, 3);
                     }
                     break;
             }
         }
         
-        static void AddGroup(ref Group grp) {
-            Group.Register(
-                new Group(grp.Permission, grp.maxBlocks, grp.maxUndo, grp.trueName,
-                          grp.color[0], grp.MOTD, grp.fileName, grp.OverseerMaps, grp.prefix));
-            grp = null;
+        static void AddGroup(ref Group temp) {
+            Group.Register(temp.CopyConfig());
+            temp = null;
         }
         
         /// <summary> Save givenList group </summary>
@@ -158,17 +156,17 @@ namespace MCGalaxy {
                 w.WriteLine();
                 
                 foreach (Group grp in givenList) {
-                    if (grp.name == "nobody") continue;
+                    if (grp.Permission == LevelPermission.Nobody) continue;
                     
-                    w.WriteLine("RankName = " + grp.trueName);
+                    w.WriteLine("RankName = " + grp.Name);
                     w.WriteLine("Permission = " + (int)grp.Permission);
-                    w.WriteLine("Limit = " + grp.maxBlocks);
-                    w.WriteLine("MaxUndo = " + grp.maxUndo);
-                    w.WriteLine("Color = " + grp.color[1]);
+                    w.WriteLine("Limit = " + grp.MaxBlocks);
+                    w.WriteLine("MaxUndo = " + grp.MaxUndo);
+                    w.WriteLine("Color = " + grp.Color[1]);
                     w.WriteLine("MOTD = " + grp.MOTD);
-                    w.WriteLine("FileName = " + grp.fileName);
+                    w.WriteLine("FileName = " + grp.filename);
                     w.WriteLine("OSMaps = " + grp.OverseerMaps);
-                    w.WriteLine("Prefix = " + grp.prefix);
+                    w.WriteLine("Prefix = " + grp.Prefix);
                     w.WriteLine();
                 }
             }

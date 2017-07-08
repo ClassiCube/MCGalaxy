@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
             if (message != "") {
                 Group grp = Matcher.FindRanks(p, message);
                 if(grp == null) return;
-                string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
+                string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 
                 Player[] players = PlayerInfo.Online.Items;
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Info {
             
             List<Section> playerList = new List<Section>();
             foreach (Group grp in Group.GroupList) {
-                string title = ":" + grp.color + GetPlural(grp.trueName) + ":";
+                string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
                 playerList.Add(MakeSection(grp, title));
             }
 
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Info {
             public void Append(Player pl, string name) {
                 builder.Append(' ');
                 if (pl.voice) {
-                    builder.Append("&f+").Append(group.color);
+                    builder.Append("&f+").Append(group.Color);
                 }
                 
                 builder.Append(name);

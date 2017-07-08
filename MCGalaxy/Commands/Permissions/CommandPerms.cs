@@ -121,8 +121,8 @@ namespace MCGalaxy.Commands {
         
         
         /// <summary> Gets the list of all loaded commands that the given rank can use. </summary>
-        public static CommandList AllCommandsUsableBy(LevelPermission perm) {
-            CommandList commands = new CommandList();
+        public static List<Command> AllCommandsUsableBy(LevelPermission perm) {
+            List<Command> commands = new List<Command>();
             foreach (CommandPerms perms in list) {
                 bool canUse = perms.MinRank <= perm && !perms.Disallowed.Contains(perm);
                 if (canUse || perms.Allowed.Contains(perm)) {
@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands {
             }
 
             foreach (Group grp in Group.GroupList) {
-                grp.fillCommands();
+                grp.SetUsableCommands();
             }
         }        
                 

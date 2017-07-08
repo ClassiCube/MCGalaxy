@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands.Info {
             else
                 Player.Message(p, "Commands available to " + group.ColoredName + " %Srank:");
             
-            string type = "cmds " + group.name;
+            string type = "cmds " + group.Name;
             if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,

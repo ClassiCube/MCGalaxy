@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui {
         [Category("Properties")]
         [DisplayName("Rank")]
         [TypeConverter(typeof(RankConverter))]
-        public string Rank { get { return p.group.trueName; } set { DoCmd("setrank", value); } }
+        public string Rank { get { return p.group.Name; } set { DoCmd("setrank", value); } }
         
         [Category("Properties")]
         [DisplayName("Title")]

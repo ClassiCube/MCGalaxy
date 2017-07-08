@@ -187,9 +187,9 @@ namespace MCGalaxy {
         }
         
         [Obsolete("Use BlockPerms.CanModify()")]
-        public static bool canPlace(Player p, byte type) { return BlockPerms.CanModify(p, type); }
+        public static bool canPlace(Player p, byte type) { return BlockPerms.UsableBy(p, type); }
         
         [Obsolete("Use BlockPerms.CanModify()")]
-        public static bool canPlace(LevelPermission perm, byte type) { return BlockPerms.CanModify(perm, type); }
+        public static bool canPlace(LevelPermission perm, byte type) { return BlockPerms.UsableBy(perm, type); }
     }
 }

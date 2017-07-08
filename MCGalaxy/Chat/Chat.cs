@@ -32,7 +32,7 @@ namespace MCGalaxy {
                 message = pre + source.DisplayName + msg; // Titles + Nickname
                 msg_NN = pre + source.truename + msg; // Titles + Account name
                 
-                pre = source.group.prefix == "" ? "" : "&f" + source.group.prefix;
+                pre = source.group.Prefix == "" ? "" : "&f" + source.group.Prefix;
                 msg_NT = pre + source.color + source.DisplayName + msg; // Nickname
                 msg_NNNT = pre + source.color + source.truename + msg; // Account name
             }

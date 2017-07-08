@@ -146,7 +146,7 @@ namespace MCGalaxy.Core {
             } else {
                 if (who != null) who.color = "";
                 Ban.DeleteBan(e.Target);
-                Ban.BanPlayer(e.Actor, e.Target, e.Reason, !e.Announce, e.TargetGroup.name);
+                Ban.BanPlayer(e.Actor, e.Target, e.Reason, !e.Announce, e.TargetGroup.Name);
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
             }
         }
@@ -158,7 +158,7 @@ namespace MCGalaxy.Core {
             if (Server.tempBans.Remove(e.Target)) {
                 Server.tempBans.Save();
             }
-            if (!Group.BannedRank.playerList.Contains(e.Target)) return;
+            if (!Group.BannedRank.Players.Contains(e.Target)) return;
             
             Ban.DeleteUnban(e.Target);
             Ban.UnbanPlayer(e.Actor, e.Target, e.Reason);
@@ -243,12 +243,12 @@ namespace MCGalaxy.Core {
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
 
             string line = e.Target + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-                + " " + year + " " + newRank.name + " " + e.TargetGroup.name + " " + e.Reason.Replace(" ", "%20");
+                + " " + year + " " + newRank.Name + " " + e.TargetGroup.Name + " " + e.Reason.Replace(" ", "%20");
             Server.RankInfo.Append(line);
         }
         
         static void AddTempRank(ModAction e, Group newRank) {
-            string data = FormatModTaskData(e) + " " + e.TargetGroup.name + " " + newRank.name;
+            string data = FormatModTaskData(e) + " " + e.TargetGroup.Name + " " + newRank.Name;
             Server.tempRanks.AddOrReplace(e.Target, data);
             ModerationTasks.TemprankCalcNextRun();
             Server.tempRanks.Save();

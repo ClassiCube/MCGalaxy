@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "timespent":
                     SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.time = v); break;
                 case "color":
-                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.color : v)); break;
+                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.Color : v)); break;
                 case "titlecolor":
                 default:
                     Player.Message(p, Colors.red + "Invalid type.");

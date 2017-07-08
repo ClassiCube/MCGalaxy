@@ -27,8 +27,6 @@ namespace MCGalaxy {
     /// <summary> Finds partial matches of a 'name' against the names of the items an enumerable. </summary>
     /// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
     public static class Matcher {
-        
-        const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
         /// <summary> Finds partial matches of 'name' against the list of all awards. </summary>
         public static string FindAwards(Player p, string name) {
@@ -79,7 +77,7 @@ namespace MCGalaxy {
             
             int matches = 0;
             return Find<Group>(p, name, out matches, Group.GroupList,
-                               null, g => Colors.StripColors(g.name), "ranks");
+                               null, g => Colors.StripColors(g.Name), "ranks");
         }
         
         
@@ -89,6 +87,7 @@ namespace MCGalaxy {
                                 Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
             StringBuilder nameMatches = new StringBuilder();
+            const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
             foreach (T item in items) {
                 if (filter != null && !filter(item)) continue;
@@ -122,6 +121,7 @@ namespace MCGalaxy {
             StringBuilder nameMatches = new StringBuilder();
             List<string> outputtedNames = new List<string>(limit);
             string match = null;
+            const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
             foreach (T item in items) {
                 if (filter != null && !filter(item)) continue;

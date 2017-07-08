@@ -52,7 +52,7 @@ namespace MCGalaxy.DB {
             p.time = new TimeSpan(0, 0, 0, 1);
             p.title = "";
             p.titlecolor = "";
-            p.color = p.group.color;
+            p.color = p.group.Color;
             p.money = 0;
             
             p.firstLogin = DateTime.Now;
@@ -89,7 +89,7 @@ namespace MCGalaxy.DB {
             p.title = data.Title;
             p.titlecolor = data.TitleColor;
             p.color = data.Color;
-            if (p.color == "") p.color = p.group.color;
+            if (p.color == "") p.color = p.group.Color;
             
             p.overallDeath = data.Deaths;
             p.overallBlocks = data.TotalModified;

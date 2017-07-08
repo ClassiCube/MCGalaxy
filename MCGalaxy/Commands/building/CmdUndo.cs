@@ -111,20 +111,20 @@ namespace MCGalaxy.Commands.Building {
         internal static TimeSpan GetDelta(Player p, string name, string[] parts, int offset) {
             TimeSpan delta = TimeSpan.Zero;
             string timespan = parts.Length > offset ? parts[parts.Length - 1] : "30m";
-            bool canAll = p == null || p.name.CaselessEq(name) || p.group.maxUndo == undoMax;            
+            bool canAll = p == null || p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;            
             
             if (timespan.CaselessEq("all")) {
-                return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.maxUndo);
+                return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.MaxUndo);
             } else if (!CommandParser.GetTimespan(p, timespan, ref delta, "undo the past", 's')) {
                 return TimeSpan.MinValue;
             }
 
             if (delta.TotalSeconds == 0) 
                 delta = TimeSpan.FromMinutes(90);
-            if (!canAll && delta.TotalSeconds > p.group.maxUndo) {
+            if (!canAll && delta.TotalSeconds > p.group.MaxUndo) {
                 Player.Message(p, "{0}%Ss may only undo up to {1} seconds.",
-                               p.group.ColoredName, p.group.maxUndo);
-                return TimeSpan.FromSeconds(p.group.maxUndo);
+                               p.group.ColoredName, p.group.MaxUndo);
+                return TimeSpan.FromSeconds(p.group.MaxUndo);
             }
             return delta;
         }
@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/undo %H- Undoes your last draw operation");
             Player.Message(p, "%T/undo [timespan]");
             Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
-            if (p == null || p.group.maxUndo == -1 || p.group.maxUndo == int.MaxValue)
+            if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
             Player.Message(p, "%T/undo physics [seconds] %H- Undoes physics on current map");
         }

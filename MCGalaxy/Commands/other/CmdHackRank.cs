@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Misc {
             Chat.MessageGlobal(rankMsg);
             
             Player.Message(p, "You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
-            p.color = newRank.color;
+            p.color = newRank.Color;
             DoKick(p, newRank);
         }
 

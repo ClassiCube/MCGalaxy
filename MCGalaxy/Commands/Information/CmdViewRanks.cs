@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
             Group grp = message.CaselessEq("banned") ? Group.BannedRank : Matcher.FindRanks(p, args[0]);
             if (grp == null) return;
 
-            List<string> list = grp.playerList.All();
+            List<string> list = grp.Players.All();
             if (list.Count == 0) {
                 Player.Message(p, "No one has the rank of " + grp.ColoredName);
             } else {

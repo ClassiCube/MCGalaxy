@@ -49,12 +49,12 @@ namespace MCGalaxy.Gui {
             Group grp = Group.findPerm(Server.lava.controlRank);
             if (grp == null) 
                 grp = Group.findPerm(LevelPermission.Operator);
-            ControlRank = grp == null ? "Operator" : grp.trueName;
+            ControlRank = grp == null ? "Operator" : grp.Name;
             
             grp = Group.findPerm(Server.lava.setupRank);
             if (grp == null) 
                 grp = Group.findPerm(LevelPermission.Admin);
-            SetupRank = grp == null ? "SuperOP" : grp.trueName;
+            SetupRank = grp == null ? "SuperOP" : grp.Name;
             
             Lives = Server.lava.lifeNum;
             VoteTime = Server.lava.voteTime;

@@ -30,7 +30,7 @@ namespace MCGalaxy.Gui {
             List<LevelPermission> perms = new List<LevelPermission>(Group.GroupList.Count);
             
             foreach (Group group in Group.GroupList) {
-                names.Add(group.name);
+                names.Add(group.Name);
                 perms.Add(group.Permission);
             }
             RankNames = names.ToArray();
@@ -47,7 +47,7 @@ namespace MCGalaxy.Gui {
             if (grp == null) {
                 box.SelectedIndex = 1;
             } else {
-                int idx = Array.IndexOf<string>(RankNames, grp.name);
+                int idx = Array.IndexOf<string>(RankNames, grp.Name);
                 box.SelectedIndex = idx >= 0 ? idx : 1;
             }
         }

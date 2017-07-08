@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         internal static string FindZoneOwner(Player p, string cmd, string name, ref string reason) {
             if (Group.Find(name) != null)
-                return "grp" + Group.Find(name).name;
+                return "grp" + Group.Find(name).Name;
             return ModActionCmd.FindName(p, "zone", cmd, "", name, ref reason);
         }
         

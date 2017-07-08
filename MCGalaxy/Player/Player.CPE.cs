@@ -221,8 +221,8 @@ namespace MCGalaxy {
         void WriteBlockPermissions(byte[] bulk) {
             int coreCount = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
             for (byte i = 0; i < coreCount; i++) {
-                bool place = BlockPerms.CanModify(this, i) && level.CanPlace;
-                bool delete = BlockPerms.CanModify(this, i) && level.CanDelete;
+                bool place = BlockPerms.UsableBy(this, i) && level.CanPlace;
+                bool delete = BlockPerms.UsableBy(this, i) && level.CanDelete;
                 Packet.WriteBlockPermission(i, place, delete, bulk, i * 4);
             }
             

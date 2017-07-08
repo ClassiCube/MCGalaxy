@@ -39,9 +39,9 @@ namespace MCGalaxy.Commands.Building {
             block = p.level.GetBlock(x, y, z);
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
             
-            if (numBlocks > p.group.maxBlocks) {
+            if (numBlocks > p.group.MaxBlocks) {
                 Player.Message(p, "You tried to drill " + numBlocks + " blocks.");
-                Player.Message(p, "You cannot drill more than " + p.group.maxBlocks + ".");
+                Player.Message(p, "You cannot drill more than " + p.group.MaxBlocks + ".");
                 return false;
             }
 

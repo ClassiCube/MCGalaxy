@@ -38,7 +38,7 @@ namespace MCGalaxy.Gui {
             List<string> ranks = new List<string>();
             foreach (Group g in Group.GroupList) {
                 if (g.Permission <= LevelPermission.Banned || g.Permission >= LevelPermission.Nobody) continue;
-                ranks.Add(g.trueName);
+                ranks.Add(g.Name);
             }
             return new StandardValuesCollection(ranks);
         }

@@ -41,9 +41,9 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override bool CanDraw(Vec3S32[] marks, Player p, long affected) {
-            if (affected > p.group.maxBlocks) {
+            if (affected > p.group.MaxBlocks) {
                 Player.Message(p, "You rank can only fill up to {0} blocks. " +
-                               "This fill would affect more than {0} blocks.", p.group.maxBlocks);
+                               "This fill would affect more than {0} blocks.", p.group.MaxBlocks);
                 return false;
             }
             return true;
@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
             int* pos = stackalloc int[max];
             pos[0] = index; count++;
             
-            while (count > 0 && buffer.Count <= p.group.maxBlocks) {
+            while (count > 0 && buffer.Count <= p.group.MaxBlocks) {
                 index = pos[count - 1]; count--;
                 ushort x = (ushort)(index % lvl.Width);
                 ushort y = (ushort)((index / lvl.Width) / lvl.Length);

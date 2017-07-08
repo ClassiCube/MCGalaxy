@@ -65,7 +65,7 @@ namespace MCGalaxy {
             { "$ip", p => p.ip },
             { "$serverip", p => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP },
             { "$color", p => p.color },
-            { "$rank", p => p.group == null ? null : p.group.name },
+            { "$rank", p => p.group == null ? null : p.group.Name },
             { "$level", p => p.level == null ? null : p.level.name },
             
             { "$deaths", p => p.overallDeath.ToString() },
@@ -75,7 +75,7 @@ namespace MCGalaxy {
             { "$kicked", p => p.totalKicked.ToString() },
             { "$server", p => ServerConfig.Name },
             { "$motd", p => ServerConfig.MOTD },
-            { "$banned", p => Group.BannedRank.PlayerCount.ToString() },
+            { "$banned", p => Group.BannedRank.Players.Count.ToString() },
             { "$irc", p => ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels },
             
             { "$infected", p => p.Game.TotalInfected.ToString() },

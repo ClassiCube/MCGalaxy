@@ -90,18 +90,18 @@ namespace MCGalaxy.Commands.Moderation {
         internal static void ChangeRank(string name, Group oldRank, Group newRank,
                                         Player who, bool saveToNewRank = true) {
             Server.reviewlist.Remove(name);
-            oldRank.playerList.Remove(name);
-            oldRank.playerList.Save();
+            oldRank.Players.Remove(name);
+            oldRank.Players.Save();
             
             if (saveToNewRank) {
-                newRank.playerList.Add(name);
-                newRank.playerList.Save();
+                newRank.Players.Add(name);
+                newRank.Players.Save();
             }
             if (who == null) return;
 
             Entities.DespawnEntities(who, false);
-            if (who.color == "" || who.color == who.group.color)
-                who.color = newRank.color;
+            if (who.color == "" || who.color == who.group.Color)
+                who.color = newRank.Color;
             
             who.group = newRank;
             AccessResult access = who.level.BuildAccess.Check(who);

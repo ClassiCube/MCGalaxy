@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort xx = minX; xx <= maxX; ++xx)
             {
                 block = p.level.GetBlock(xx, yy, zz);
-                if (!p.group.CanModify[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
+                if (!p.group.Blocks[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
                 if (block.BlockID != Block.air || cState.PasteAir) 
                     cState.UsedBlocks++;
@@ -119,9 +119,9 @@ namespace MCGalaxy.Commands.Building {
                 index++;
             }
             
-            if (cState.UsedBlocks > p.group.maxBlocks) {
+            if (cState.UsedBlocks > p.group.MaxBlocks) {
                 Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
-                               cState.UsedBlocks, p.group.maxBlocks);
+                               cState.UsedBlocks, p.group.MaxBlocks);
                 cState.Clear(); cState = null;
                 return false;
             }

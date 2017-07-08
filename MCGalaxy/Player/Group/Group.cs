@@ -24,160 +24,123 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
-    public sealed class Group {
+    public sealed partial class Group {
+        
         public delegate void RankSet(Player p, Group newrank);
         [Obsolete("Please use OnPlayerRankSetEvent.Register()")]
         public static event RankSet OnPlayerRankSet;
-        public delegate void GroupSave();
-        [Obsolete("Please use OnGroupSaveEvent.Register()")]
-        public static event GroupSave OnGroupSave;
-        public delegate void GroupLoad();
-        [Obsolete("Please use OnGroupLoadEvent.Register()")]
-        public static event GroupLoad OnGroupLoad;
-        public delegate void GroupLoaded(Group mGroup);
-        [Obsolete("Please use OnGroupLoadedEvent.Register()")]
-        public static event GroupLoaded OnGroupLoaded;
         public static bool cancelrank = false;
         //Move along...nothing to see here...
         internal static void because(Player p, Group newrank) { if (OnPlayerRankSet != null) { OnPlayerRankSet(p, newrank); } OnPlayerRankSetEvent.Call(p, newrank); }
         
-        public string name;
-        public string trueName;
-        public string color;
-        public string ColoredName { get { return color + trueName; } }
-        public byte OverseerMaps = 3;
-        public string prefix = "";
+        /// <summary> Name of this rank. </summary>
+        public string Name;
+        
+        /// <summary> Default color code applied to members of this rank. </summary>
+        public string Color;
+        
+        /// <summary> Name of this rank, prefixed by its color code. </summary>
+        public string ColoredName { get { return Color + Name; } }
+
+        /// <summary> Permission level of this rank. </summary>
         public LevelPermission Permission = LevelPermission.Null;
-        public int maxBlocks;
-        public int maxUndo;
-        public CommandList commands;
-        public string fileName;
-        public PlayerList playerList;
+        
+        /// <summary> Maximum number of blocks members of this group can use in draw commands. </summary>
+        public int MaxBlocks;
+        
+        /// <summary> Maximum number of seconds members of this group can /undo up to. </summary>
+        public int MaxUndo;
+
+        /// <summary> Optional MOTD shown to members of this group, instead of server's default MOTD. </summary>
+        /// <remarks> If a level has a custom MOTD, it overrides this. </remarks>
         public string MOTD = "";
-        public bool[] CanModify = new bool[256];
-        public int PlayerCount { get { return playerList.Count; } }
+
+        /// <summary> Maxmimum number of personal/realm worlds allowed for members of this rank. </summary>
+        public byte OverseerMaps = 3;
         
-        public static Group BannedRank { get { return findPerm(LevelPermission.Banned); } }
-        public static Group GuestRank { get { return findPerm(LevelPermission.Guest); } }
-        public static Group NobodyRank { get { return findPerm(LevelPermission.Nobody); } }
-        public static Group standard;
+        /// <summary> Optional prefix shown in chat before titles and player name. </summary>
+        public string Prefix = "";
         
+        /// <summary> List of players who are members of this group.  </summary>
+        public PlayerList Players;
+        
+        /// <summary> List of commands members of this group can use. </summary>
+        public List<Command> Commands;
+        
+        /// <summary> List of blocks members of this group can use. </summary>
+        public bool[] Blocks = new bool[256];
+        
+        internal string filename;
         public Group() { }
-
-        /// <summary> Create a new group object </summary>
-        /// <param name="Perm">The permission of the group</param>
-        /// <param name="maxB">The maxblocks this group can cuboid</param>
-        /// <param name="maxUn">The max undo this group can do</param>
-        /// <param name="fullName">The group full name</param>
-        /// <param name="newColor">The color of the group (Not including the &amp;)</param>
-        /// <param name="motd">the custom MOTD for the group</param>
-        /// <param name="file">The file path where the current players of this group are stored</param>
-        public Group(LevelPermission Perm, int maxB, int maxUn, string fullName, char newColor, string motd, string file, byte maps = 3, string prefix = "")
-        {
+        
+        public Group(LevelPermission Perm, int maxB, int maxUn, string name, char colorCode, string motd, string file, byte maps = 3, string prefix = "") {
             Permission = Perm;
-            maxBlocks = maxB;
-            maxUndo = maxUn;
-            trueName = fullName;
-            name = trueName.ToLower();
-            color = "&" + newColor;
+            MaxBlocks = maxB;
+            MaxUndo = maxUn;
+            Name = name;
+            Color = "&" + colorCode;
             MOTD = motd;
-            fileName = file;
+            filename = file;
             OverseerMaps = maps;
-            this.prefix = prefix;
+            Prefix = prefix;
         }
         
-        public static void Register(Group grp) {
-            GroupList.Add(grp);
-            grp.LoadPlayers();
-            
-            if (OnGroupLoaded != null)
-                OnGroupLoaded(grp);
-            OnGroupLoadedEvent.Call(grp);
+        
+        /// <summary> Sets all the commands that members of this group can use. </summary>
+        public void SetUsableCommands() {
+            Commands = CommandPerms.AllCommandsUsableBy(Permission);
         }
         
-        /// <summary> Fill the commands that this group can use </summary>
-        public void fillCommands() {
-            commands = CommandPerms.AllCommandsUsableBy(Permission);
-        }
-        
-        /// <summary> Fill the blocks that this group can use </summary>
-        public void FillBlocks() {
-            for (int i = 0; i < CanModify.Length; i++)
-                CanModify[i] = BlockPerms.CanModify(Permission, (byte)i);
+        /// <summary> Sets all the blocks that this group can use. </summary>
+        public void SetUsableBlocks() {
+            for (int i = 0; i < Blocks.Length; i++)
+                Blocks[i] = BlockPerms.UsableBy(Permission, (byte)i);
         }
 
-        /// <summary> Returns true if players in this group can use the given command. </summary>        
+        /// <summary> Returns true if members of this group can use the given command. </summary>
         public bool CanExecute(string cmdName) {
             Command cmd = Command.all.Find(cmdName);
-            return cmd != null && commands.Contains(cmd);
+            return cmd != null && Commands.Contains(cmd);
         }
         
-        /// <summary> Returns true if players in this group can use the given command. </summary>
-        public bool CanExecute(Command cmd) { return commands.Contains(cmd); }
-
-        public static List<Group> GroupList = new List<Group>();
-        static readonly object saveLock = new object();
+        /// <summary> Returns true if members of this group can use the given command. </summary>
+        public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }
         
-        /// <summary> Load up all server groups </summary>
-        public static void InitAll() {
-            GroupList = new List<Group>();
-            if (File.Exists(Paths.RankPropsFile)) {
-                GroupProperties.InitAll();
-            } else {
-                // Add some default ranks
-                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', "", null));
-                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', "", null));
-                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', "", null));
-                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', "", null));
-            }
-
-            if (BannedRank == null)
-                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
-            if (GuestRank == null)
-                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
-            Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
-            GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
-
-            if (Find(ServerConfig.DefaultRankName) != null) {
-                standard = Group.Find(ServerConfig.DefaultRankName);
-            } else {
-                standard = GuestRank;
-            }
-
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                pl.group = findPerm(pl.group.Permission);
-                if (pl.group == null) pl.group = standard;
-            }
+        
+        /// <summary> Creates a copy of this group, except for members list and usable commands and blocks. </summary>
+        public Group CopyConfig() {
+            Group copy = new Group();
+            copy.Name = Name; copy.Color = Color; copy.Permission = Permission;
+            copy.MaxBlocks = MaxBlocks; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
+            copy.OverseerMaps = OverseerMaps; copy.Prefix = Prefix; copy.filename = filename;
+            return copy;            
+        }
+        
+        public static LevelPermission ParsePermOrName(string value, LevelPermission defPerm) {
+            if (value == null) return defPerm;
             
-            if (OnGroupLoad != null) OnGroupLoad();
-            OnGroupLoadEvent.Call();
-            saveGroups(GroupList);
+            sbyte perm;
+            if (sbyte.TryParse(value, out perm))
+                return (LevelPermission)perm;
+            
+            Group grp = Find(value);
+            return grp != null ? grp.Permission : defPerm;
         }
         
-        /// <summary> Save givenList group </summary>
-        /// <param name="givenList">The list of groups to save</param>
-        public static void saveGroups(List<Group> givenList) {
-            lock (saveLock)
-                GroupProperties.SaveGroups(givenList);
-            
-            if (OnGroupSave != null) OnGroupSave();
-            OnGroupSaveEvent.Call();
-        }
         
         void LoadPlayers() {
             string desired = (int)Permission + "_rank";
             // Try to use the auto filename format
-            if (fileName == null || !fileName.StartsWith(desired))
+            if (filename == null || !filename.StartsWith(desired))
                 MoveToDesired(desired);
             
-            playerList = PlayerList.Load(fileName);
+            Players = PlayerList.Load(filename);
         }
         
         void MoveToDesired(string desired) {
             // rank doesn't exist to begin with
-            if (fileName == null || !File.Exists("ranks/" + fileName)) {
-                fileName = desired + ".txt";
+            if (filename == null || !File.Exists("ranks/" + filename)) {
+                filename = desired + ".txt";
                 // TODO: should start backwards from z to a
             } else if (MoveToFile(desired + ".txt")) {
             } else {
@@ -193,89 +156,14 @@ namespace MCGalaxy {
             if (File.Exists("ranks/" + newFile)) return false;
             
             try {
-                File.Move("ranks/" + fileName, "ranks/" + newFile);
-                fileName = newFile;
+                File.Move("ranks/" + filename, "ranks/" + newFile);
+                filename = newFile;
                 return true;
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 return false;
             }
         }
-        
-        
-        /// <summary> Check whether a group with that name exists. </summary>
-        public static bool Exists(string name) {
-            name = name.ToLower();
-            foreach (Group grp in GroupList) {
-                if (grp.name == name) return true;
-            }
-            return false;
-        }
-        
-        
-        /// <summary> Find the group which has the given name. </summary>
-        public static Group Find(string name) {
-            name = name.ToLower();
-            MapName(ref name);
-            
-            foreach (Group grp in GroupList) {
-                if (grp.name == name) return grp;
-            }
-            return null;
-        }
-        
-        internal static void MapName(ref string name) {
-            if (name == "op") name = "operator";
-        }
-        
-        /// <summary> Finds the group which has the given permission level. </summary>
-        public static Group findPerm(LevelPermission Perm) {
-            return GroupList.Find(grp => grp.Permission == Perm);
-        }
 
-        /// <summary> Find the group which has the given permission level. </summary>
-        public static Group findPermInt(int Perm) {
-            return GroupList.Find(grp => (int)grp.Permission == Perm);
-        }
-
-        /// <summary> Find the group object that the player /playerName/ is in </summary>
-        /// <param name="name">The player name</param>
-        /// <returns>The group object that the player is in</returns>
-        public static Group findPlayerGroup(string name) {
-            foreach (Group grp in Group.GroupList) {
-                if (grp.playerList.Contains(name)) return grp;
-            }
-            return Group.standard;
-        }
-
-        
-        public static string GetColoredName(LevelPermission perm) {
-            Group grp = findPerm(perm);
-            if (grp != null) return grp.ColoredName;
-            return Colors.white + ((int)perm);
-        }
-        
-        public static string GetColoredName(string rankName) {
-            Group grp = Find(rankName);
-            if (grp != null) return grp.ColoredName;
-            return Colors.white + rankName;
-        }
-        
-        public static string GetColor(LevelPermission perm) {
-            Group grp = findPerm(perm);
-            if (grp != null) return grp.color;
-            return Colors.white;
-        }
-        
-        public static LevelPermission ParsePermOrName(string value, LevelPermission defPerm) {
-            if (value == null) return defPerm;
-            
-            sbyte perm;
-            if (sbyte.TryParse(value, out perm))
-                return (LevelPermission)perm;
-            
-            Group grp = Find(value);
-            return grp != null ? grp.Permission : defPerm;
-        }
     }
 }
