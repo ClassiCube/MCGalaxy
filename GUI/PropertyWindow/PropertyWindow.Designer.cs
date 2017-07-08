@@ -1084,7 +1084,7 @@ namespace MCGalaxy.Gui
             this.rank_txtOSMaps.Size = new System.Drawing.Size(81, 21);
             this.rank_txtOSMaps.TabIndex = 19;
             this.toolTip.SetToolTip(this.rank_txtOSMaps, "Maximum number of /os maps players are allowed");
-            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.txtOSMaps_TextChanged);
+            this.rank_txtOSMaps.TextChanged += new System.EventHandler(this.rank_txtOSMaps_TextChanged);
             // 
             // rank_txtPrefix
             // 
@@ -1093,7 +1093,7 @@ namespace MCGalaxy.Gui
             this.rank_txtPrefix.Size = new System.Drawing.Size(81, 21);
             this.rank_txtPrefix.TabIndex = 21;
             this.toolTip.SetToolTip(this.rank_txtPrefix, "Short prefix showed before player names in chat.");
-            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.txtPrefix_TextChanged);
+            this.rank_txtPrefix.TextChanged += new System.EventHandler(this.rank_txtPrefix_TextChanged);
             // 
             // rank_txtLimit
             // 
@@ -1102,7 +1102,7 @@ namespace MCGalaxy.Gui
             this.rank_txtLimit.Size = new System.Drawing.Size(81, 21);
             this.rank_txtLimit.TabIndex = 4;
             this.toolTip.SetToolTip(this.rank_txtLimit, "Maximum number of blocks players can affect in draw commands.");
-            this.rank_txtLimit.TextChanged += new System.EventHandler(this.txtLimit_TextChanged);
+            this.rank_txtLimit.TextChanged += new System.EventHandler(this.rank_txtLimit_TextChanged);
             // 
             // rank_txtMOTD
             // 
@@ -1112,7 +1112,7 @@ namespace MCGalaxy.Gui
             this.rank_txtMOTD.TabIndex = 17;
             this.toolTip.SetToolTip(this.rank_txtMOTD, "MOTD shown to players of this rank.\r\nIf left blank, the server MOTD is shown to t" +
                         "hem.");
-            this.rank_txtMOTD.TextChanged += new System.EventHandler(this.txtGrpMOTD_TextChanged);
+            this.rank_txtMOTD.TextChanged += new System.EventHandler(this.rank_txtMOTD_TextChanged);
             // 
             // rank_txtPerm
             // 
@@ -1121,7 +1121,7 @@ namespace MCGalaxy.Gui
             this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
             this.rank_txtPerm.TabIndex = 6;
             this.toolTip.SetToolTip(this.rank_txtPerm, "Permission level of this rank.");
-            this.rank_txtPerm.TextChanged += new System.EventHandler(this.txtPermission_TextChanged);
+            this.rank_txtPerm.TextChanged += new System.EventHandler(this.rank_txtPermission_TextChanged);
             // 
             // rank_txtName
             // 
@@ -1130,7 +1130,7 @@ namespace MCGalaxy.Gui
             this.rank_txtName.Size = new System.Drawing.Size(81, 21);
             this.rank_txtName.TabIndex = 5;
             this.toolTip.SetToolTip(this.rank_txtName, "Name of this rank");
-            this.rank_txtName.TextChanged += new System.EventHandler(this.txtRankName_TextChanged);
+            this.rank_txtName.TextChanged += new System.EventHandler(this.rank_txtName_TextChanged);
             // 
             // rank_btnColor
             // 
@@ -1139,7 +1139,7 @@ namespace MCGalaxy.Gui
             this.rank_btnColor.Size = new System.Drawing.Size(81, 23);
             this.rank_btnColor.TabIndex = 12;
             this.toolTip.SetToolTip(this.rank_btnColor, "Color of this rank name in chat and the tab list");
-            this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnColor_Click);
+            this.rank_btnColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.rank_btnColor_Click);
             // 
             // rank_txtUndo
             // 
@@ -1630,7 +1630,7 @@ namespace MCGalaxy.Gui
             this.rank_btnDel.TabIndex = 2;
             this.rank_btnDel.Text = "Delete";
             this.rank_btnDel.UseVisualStyleBackColor = true;
-            this.rank_btnDel.Click += new System.EventHandler(this.button1_Click);
+            this.rank_btnDel.Click += new System.EventHandler(this.rank_btnDel_Click);
             // 
             // rank_btnAdd
             // 
@@ -1640,7 +1640,7 @@ namespace MCGalaxy.Gui
             this.rank_btnAdd.TabIndex = 1;
             this.rank_btnAdd.Text = "Add";
             this.rank_btnAdd.UseVisualStyleBackColor = true;
-            this.rank_btnAdd.Click += new System.EventHandler(this.btnAddRank_Click);
+            this.rank_btnAdd.Click += new System.EventHandler(this.rank_btnAdd_Click);
             // 
             // rank_list
             // 
@@ -1649,7 +1649,7 @@ namespace MCGalaxy.Gui
             this.rank_list.Name = "rank_list";
             this.rank_list.Size = new System.Drawing.Size(130, 290);
             this.rank_list.TabIndex = 0;
-            this.rank_list.SelectedIndexChanged += new System.EventHandler(this.listRanks_SelectedIndexChanged);
+            this.rank_list.SelectedIndexChanged += new System.EventHandler(this.rank_list_SelectedIndexChanged);
             // 
             // label85
             // 

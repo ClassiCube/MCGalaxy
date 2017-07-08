@@ -152,8 +152,8 @@ namespace MCGalaxy {
                 pl.group = findPerm(pl.group.Permission);
                 if (pl.group == null) pl.group = standard;
             }
-            if (OnGroupLoad != null)
-                OnGroupLoad();
+            
+            if (OnGroupLoad != null) OnGroupLoad();
             OnGroupLoadEvent.Call();
             saveGroups(GroupList);
         }

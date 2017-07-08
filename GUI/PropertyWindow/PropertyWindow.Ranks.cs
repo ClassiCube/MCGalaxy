@@ -19,7 +19,9 @@ using MCGalaxy.Commands;
 
 namespace MCGalaxy.Gui {
 
-    public partial class PropertyWindow : Form {  
+    public partial class PropertyWindow : Form {
+        
+        bool rankSupressEvents = false;
         
         void LoadRankProps() {
             GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.standard.Permission);
@@ -37,7 +39,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.ListEmptyRanks = rank_cbEmpty.Checked;
         }
         
-                
+        
         List<Group> storedRanks = new List<Group>();
         void LoadRanks() {
             rank_list.Items.Clear();
@@ -56,14 +58,13 @@ namespace MCGalaxy.Gui {
         }
         
         
-        void btnColor_Click(object sender, EventArgs e) {
+        void rank_btnColor_Click(object sender, EventArgs e) {
             chat_ShowColorDialog(rank_btnColor, storedRanks[rank_list.SelectedIndex].name + " rank color");
             storedRanks[rank_list.SelectedIndex].color = Colors.Parse(rank_btnColor.Text);
         }
 
-        bool skip = false;
-        void listRanks_SelectedIndexChanged(object sender, EventArgs e) {
-            if ( skip ) return;
+        void rank_list_SelectedIndexChanged(object sender, EventArgs e) {
+            if ( rankSupressEvents ) return;
             Group grp = storedRanks.Find(G => G.trueName == rank_list.Items[rank_list.SelectedIndex].ToString().Split('=')[0].Trim());
             if ( grp.Permission == LevelPermission.Nobody ) { rank_list.SelectedIndex = 0; return; }
 
@@ -77,7 +78,7 @@ namespace MCGalaxy.Gui {
             rank_txtPrefix.Text = grp.prefix;
         }
 
-        private void txtRankName_TextChanged(object sender, EventArgs e) {
+        void rank_txtName_TextChanged(object sender, EventArgs e) {
             if (rank_txtName.Text.IndexOf(' ') > 0) {
                 rank_txtName.Text = rank_txtName.Text.Replace(" ", "");
                 return;
@@ -85,13 +86,13 @@ namespace MCGalaxy.Gui {
             
             if ( rank_txtName.Text != "" && rank_txtName.Text.ToLower() != "nobody" ) {
                 storedRanks[rank_list.SelectedIndex].trueName = rank_txtName.Text;
-                skip = true;
+                rankSupressEvents = true;
                 rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)storedRanks[rank_list.SelectedIndex].Permission;
-                skip = false;
+                rankSupressEvents = false;
             }
         }
 
-        private void txtPermission_TextChanged(object sender, EventArgs e) {
+       void rank_txtPermission_TextChanged(object sender, EventArgs e) {
             if ( rank_txtPerm.Text != "" ) {
                 int foundPerm;
                 if (!int.TryParse(rank_txtPerm.Text, out foundPerm)) {
@@ -104,14 +105,14 @@ namespace MCGalaxy.Gui {
                 else if ( foundPerm > 119 ) { rank_txtPerm.Text = "119"; return; }
 
                 storedRanks[rank_list.SelectedIndex].Permission = (LevelPermission)foundPerm;
-                skip = true;
+                rankSupressEvents = true;
                 rank_list.Items[rank_list.SelectedIndex] = storedRanks[rank_list.SelectedIndex].trueName + " = " + foundPerm;
-                skip = false;
+                rankSupressEvents = false;
             }
         }
 
-        private void txtLimit_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtLimit.Text != "" ) {
+       void rank_txtLimit_TextChanged(object sender, EventArgs e) {
+            if (rank_txtLimit.Text != "") {
                 int drawLimit;
                 if (!int.TryParse(rank_txtLimit.Text, out drawLimit)) {
                     rank_txtLimit.Text = rank_txtLimit.Text.Remove(rank_txtLimit.Text.Length - 1);
@@ -124,8 +125,8 @@ namespace MCGalaxy.Gui {
             }
         }
 
-        private void txtMaxUndo_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtUndo.Text != "" ) {
+       void txtMaxUndo_TextChanged(object sender, EventArgs e) {
+            if (rank_txtUndo.Text != "") {
                 long maxUndo;
                 if (!long.TryParse(rank_txtUndo.Text, out maxUndo)) {
                     rank_txtUndo.Text = rank_txtUndo.Text.Remove(rank_txtUndo.Text.Length - 1);
@@ -138,8 +139,8 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        private void txtOSMaps_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtOSMaps.Text != "" ) {
+        void rank_txtOSMaps_TextChanged(object sender, EventArgs e) {
+            if (rank_txtOSMaps.Text != "") {
                 byte maxMaps;
                 if (!byte.TryParse(rank_txtOSMaps.Text, out maxMaps)) {
                     rank_txtOSMaps.Text = rank_txtOSMaps.Text.Remove(rank_txtOSMaps.Text.Length - 1);
@@ -149,15 +150,15 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        private void txtPrefix_TextChanged(object sender, EventArgs e) {
+        void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
             storedRanks[rank_list.SelectedIndex].prefix = rank_txtPrefix.Text;
-        }        
-                
-        private void txtGrpMOTD_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtMOTD.Text != null ) storedRanks[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
+        }
+        
+        void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
+            if (rank_txtMOTD.Text != null) storedRanks[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
         }
 
-        private void btnAddRank_Click(object sender, EventArgs e) {
+        void rank_btnAdd_Click(object sender, EventArgs e) {
             // Find first free rank permission
             int freePerm = 5;
             for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) {
@@ -171,15 +172,15 @@ namespace MCGalaxy.Gui {
             rank_list.Items.Add(newGroup.trueName + " = " + (int)newGroup.Permission);
         }
 
-        private void button1_Click(object sender, EventArgs e) {
-            if ( rank_list.Items.Count > 1 ) {
-                storedRanks.RemoveAt(rank_list.SelectedIndex);
-                skip = true;
-                rank_list.Items.RemoveAt(rank_list.SelectedIndex);
-                skip = false;
+        void rank_btnDel_Click(object sender, EventArgs e) {
+            if (rank_list.Items.Count <= 1) return;
+            
+            storedRanks.RemoveAt(rank_list.SelectedIndex);
+            rankSupressEvents = true;
+            rank_list.Items.RemoveAt(rank_list.SelectedIndex);
+            rankSupressEvents = false;
 
-                rank_list.SelectedIndex = 0;
-            }
+            rank_list.SelectedIndex = 0;
         }
     }
 }
