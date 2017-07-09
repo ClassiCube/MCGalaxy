@@ -101,7 +101,6 @@ namespace MCGalaxy.Gui
             this.lvl_chkAutoload = new System.Windows.Forms.CheckBox();
             this.lvl_chkWorld = new System.Windows.Forms.CheckBox();
             this.adv_chkVerify = new System.Windows.Forms.CheckBox();
-            this.adv_chkLogBeat = new System.Windows.Forms.CheckBox();
             this.srv_txtName = new System.Windows.Forms.TextBox();
             this.srv_txtMOTD = new System.Windows.Forms.TextBox();
             this.srv_numPort = new System.Windows.Forms.NumericUpDown();
@@ -1013,18 +1012,6 @@ namespace MCGalaxy.Gui
             this.adv_chkVerify.Text = "Verify Names";
             this.toolTip.SetToolTip(this.adv_chkVerify, "Make sure the user is who they claim to be.");
             this.adv_chkVerify.UseVisualStyleBackColor = true;
-            // 
-            // adv_chkLogBeat
-            // 
-            this.adv_chkLogBeat.AutoSize = true;
-            this.adv_chkLogBeat.Location = new System.Drawing.Point(9, 68);
-            this.adv_chkLogBeat.Name = "adv_chkLogBeat";
-            this.adv_chkLogBeat.Size = new System.Drawing.Size(98, 17);
-            this.adv_chkLogBeat.TabIndex = 24;
-            this.adv_chkLogBeat.Text = "Log Heartbeat?";
-            this.toolTip.SetToolTip(this.adv_chkLogBeat, "Debugging feature -- Toggles whether to log heartbeat activity.\r\nUseful when your" +
-                        " server gets a URL slowly or not at all.");
-            this.adv_chkLogBeat.UseVisualStyleBackColor = true;
             // 
             // srv_txtName
             // 
@@ -2281,7 +2268,6 @@ namespace MCGalaxy.Gui
             this.adv_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.adv_grp.Controls.Add(this.adv_chkVerify);
             this.adv_grp.Controls.Add(this.adv_chkRestart);
-            this.adv_grp.Controls.Add(this.adv_chkLogBeat);
             this.adv_grp.Controls.Add(this.adv_btnEditTexts);
             this.adv_grp.Location = new System.Drawing.Point(8, 271);
             this.adv_grp.Name = "adv_grp";
@@ -4491,7 +4477,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox srv_txtMOTD;
         private System.Windows.Forms.TextBox srv_txtName;
         private System.Windows.Forms.Button srv_btnPort;
-        private System.Windows.Forms.CheckBox adv_chkLogBeat;
         private System.Windows.Forms.ComboBox rank_cmbDefault;
         private System.Windows.Forms.Label rank_lblDefault;
         private System.Windows.Forms.CheckBox adv_chkRestart;

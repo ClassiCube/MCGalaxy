@@ -40,7 +40,6 @@ namespace MCGalaxy.Gui {
             
             adv_chkVerify.Checked = ServerConfig.VerifyNames;
             adv_chkRestart.Checked = ServerConfig.restartOnError;
-            adv_chkLogBeat.Checked = ServerConfig.LogHeartbeat;
             
             chkUpdates.Checked = ServerConfig.CheckForUpdates;
             autoUpdate.Checked = ServerConfig.AutoUpdate;
@@ -66,7 +65,6 @@ namespace MCGalaxy.Gui {
             
             ServerConfig.VerifyNames = adv_chkVerify.Checked;
             ServerConfig.restartOnError = adv_chkRestart.Checked;
-            ServerConfig.LogHeartbeat = adv_chkLogBeat.Checked;
             
             ServerConfig.CheckForUpdates = chkUpdates.Checked;
             ServerConfig.AutoUpdate = autoUpdate.Checked;           

@@ -57,10 +57,6 @@ namespace MCGalaxy.Network {
         
         /// <summary> Initialises all heartbeats. </summary>
         public static void InitHeartbeats() {
-            if (ServerConfig.LogHeartbeat && !File.Exists("heartbeat.log")) {
-                using (File.Create("heartbeat.log")) { }
-            }
-
             foreach (Heartbeat beat in Heartbeats) {
                 beat.Init();
                 Pump(beat);
@@ -82,6 +78,7 @@ namespace MCGalaxy.Network {
         /// <summary> Pumps the specified heartbeat. </summary>
         public static void Pump(Heartbeat beat) {
             byte[] data = Encoding.ASCII.GetBytes(beat.GetHeartbeatData());
+            Exception lastEx = null;
 
             for (int i = 0; i < MAX_RETRIES; i++) {
                 try {
@@ -89,20 +86,17 @@ namespace MCGalaxy.Network {
                     req.Method = "POST";
                     req.ContentType = "application/x-www-form-urlencoded";
                     req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                    req.Timeout = 15000;
+                    req.Timeout = 10000;
                     beat.OnRequest(req);
 
                     req.ContentLength = data.Length;
                     using (Stream w = req.GetRequestStream()) {
                         w.Write(data, 0, data.Length);
-                        if (ServerConfig.LogHeartbeat) Logger.Log(LogType.Debug, "Beat " + beat + " was sent");
                     }
 
                     using (StreamReader r = new StreamReader(req.GetResponse().GetResponseStream())) {
                         string response = r.ReadToEnd().Trim();
                         beat.OnResponse(response);
-
-                        if (ServerConfig.LogHeartbeat) Logger.Log(LogType.Debug, "Beat: \"" + response + "\" was recieved");
                     }
                     return;
                 } catch (Exception ex) {
@@ -111,11 +105,14 @@ namespace MCGalaxy.Network {
                         WebException webEx = (WebException)ex;
                         if (webEx.Response != null) webEx.Response.Close();                        
                     }
+                    
+                    lastEx = ex;
                     continue;
                 }            
             }
             
-            if (ServerConfig.LogHeartbeat) Logger.Log(LogType.Debug, "Beat: " + beat + " failed.");
+            string hostUrl = new Uri(beat.URL).Host;
+            Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", hostUrl, lastEx.Message);
         }
     }
 }

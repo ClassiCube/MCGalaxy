@@ -126,8 +126,6 @@ namespace MCGalaxy {
         public static bool unsafe_plugin = true;
         [ConfigString("money-name", "Other", "moneys")]
         public static string Currency = "moneys";        
-        [ConfigBool("log-heartbeat", "Other", false)]
-        public static bool LogHeartbeat = false;
         [ConfigString("server-owner", "Other", "Notch")]
         public static string OwnerName = "Notch";
         
