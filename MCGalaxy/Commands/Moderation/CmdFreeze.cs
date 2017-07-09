@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 if (args.Length < 2) { Help(p); return; }
                 TimeSpan duration = TimeSpan.Zero;
-                if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", 'm')) return;
+                if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", "m")) return;
                 
                 string reason = args.Length > 2 ? args[2] : "";
                 reason = ModActionCmd.ExpandReason(p, reason);

@@ -36,27 +36,6 @@ namespace MCGalaxy {
             return negate ? "-" + time : time;
         }
         
-        public static TimeSpan ParseShort(this string value, char defUnit) {
-            int num = 0;
-            long amount = 0, total = 0;
-            
-            foreach (char c in value) {
-                if (c == ' ') continue;
-                if (c >= '0' && c <= '9') {
-                    num = checked(num * 10); num += (c - '0');
-                    continue;
-                }
-                
-                amount = GetTicks(num, c);
-                total = checked(total + amount);
-                num = 0;
-            }
-            
-            amount = GetTicks(num, defUnit);
-            total = checked(total + amount);
-            return TimeSpan.FromTicks(total);
-        }
-        
         static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;
             
@@ -65,19 +44,53 @@ namespace MCGalaxy {
             else 
                 time = time + (spaces ? " " : "") + amount + suffix;
         }
+
         
-        static long GetTicks(int num, char unit) {
-            if (unit == 's' || unit == 'S')
-                return num * TimeSpan.TicksPerSecond;
-            if (unit == 'm' || unit == 'M')
-                return num * TimeSpan.TicksPerMinute;
-            if (unit == 'h' || unit == 'H')
-                return num * TimeSpan.TicksPerHour;
-            if (unit == 'd' || unit == 'D')
-                return num * TimeSpan.TicksPerDay;
-            if (unit == 'w' || unit == 'W')
-                return num * TimeSpan.TicksPerDay * 7;
-            throw new FormatException(unit.ToString());
+        public static TimeSpan ParseShort(this string value, string defaultUnit) {
+            int num = 0;
+            long amount = 0, total = 0;
+            
+            for (int i = 0; i < value.Length; i++) {
+                char c = value[i];
+                if (c == ' ') continue;
+                
+                if (c >= '0' && c <= '9') {
+                    num = checked(num * 10); num += (c - '0');
+                    continue;
+                }
+                
+                amount = GetTicks(num, GetUnit(value, i));
+                total = checked(total + amount);
+                num = 0;
+            }
+            
+            amount = GetTicks(num, defaultUnit);
+            total = checked(total + amount);
+            return TimeSpan.FromTicks(total);
+        }
+        
+        static long GetTicks(int num, string unit) {            
+            if (unit == "s" || unit == "S") return num * TimeSpan.TicksPerSecond;
+            if (unit == "m" || unit == "M") return num * TimeSpan.TicksPerMinute;
+            if (unit == "h" || unit == "H") return num * TimeSpan.TicksPerHour;
+            if (unit == "d" || unit == "D") return num * TimeSpan.TicksPerDay;
+            if (unit == "w" || unit == "W") return num * TimeSpan.TicksPerDay * 7;
+            
+            if (unit == "ms" || unit == "MS") return num * TimeSpan.TicksPerMillisecond;
+            throw new FormatException(unit);
+        }
+        
+        static string GetUnit(string value, int i) {
+            string unit = "";
+            // Find all alphabetical chars
+            for (; i < value.Length; i++) {
+                char c = value[i];
+                if (c == ' ') continue;
+                
+                if (c >= '0' && c <= '9') break;                
+                unit += value[i];
+            }
+            return unit;
         }
     }
 }

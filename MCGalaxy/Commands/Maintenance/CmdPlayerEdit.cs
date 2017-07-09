@@ -158,7 +158,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
             
             TimeSpan span = TimeSpan.Zero;
-            if (!CommandParser.GetTimespan(p, args[2], ref span, "set time spent to", 'm')) return;
+            if (!CommandParser.GetTimespan(p, args[2], ref span, "set time spent to", "m")) return;
             
             if (who != null) {
                 setter(span);

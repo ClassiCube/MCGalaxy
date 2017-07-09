@@ -39,7 +39,7 @@ namespace MCGalaxy.Network {
                 req.UserAgent = Server.SoftwareNameVersioned;
                 return (WebRequest)req;
             }
-        }        
+        }
         
         static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount) {
             IPAddress localIP = null;

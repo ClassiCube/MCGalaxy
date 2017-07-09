@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (timespan.CaselessEq("all")) {
                 return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.MaxUndo);
-            } else if (!CommandParser.GetTimespan(p, timespan, ref delta, "undo the past", 's')) {
+            } else if (!CommandParser.GetTimespan(p, timespan, ref delta, "undo the past", "s")) {
                 return TimeSpan.MinValue;
             }
 

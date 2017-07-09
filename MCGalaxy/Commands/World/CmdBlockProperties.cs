@@ -198,9 +198,9 @@ namespace MCGalaxy.Commands.World {
                 BlockProps.Save("core", scope, i=> true);
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
-                foreach (Level lvl in loaded) {
+                foreach (Level lvl in loaded) {                    
+                    lvl.BlockProps[block.Index] = Block.Props[block.Index];
                     lvl.UpdateBlockHandler(block);
-                    lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;

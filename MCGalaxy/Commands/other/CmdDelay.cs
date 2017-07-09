@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             TimeSpan duration = TimeSpan.Zero;
-            if (!CommandParser.GetTimespan(p, message, ref duration, "wait for", 's')) return;
+            if (!CommandParser.GetTimespan(p, message, ref duration, "wait for", "ms")) return;
             
             if (duration.TotalSeconds > 60) {
                 Player.Message(p, "Can only wait for a minute at most."); return;
@@ -48,8 +48,9 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "%T/delay [timespan]");
             Player.Message(p, "%HWaits for a certain amount of time.");
-            Player.Message(p, "%HThis is mainly designed for use in %T/mb%H, to run a command after a certain delay.");
-            Player.Message(p, "%H  e.g. %T/mb air /delay 10 |/help me");
+            Player.Message(p, "%HMain use is to run a command after a certain delay in a %T/mb");
+            Player.Message(p, "%H  e.g. %T/mb air /delay 1000ms |/help me %Hruns %T/help me " +
+                           "%H1000 milliseconds (1 second) after the mb is clicked");
         }
     }
 }

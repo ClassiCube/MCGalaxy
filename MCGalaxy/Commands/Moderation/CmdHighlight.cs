@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             string[] parts = message.SplitSpaces();
 
             if (parts.Length >= 2) {
-                if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", 's')) return;
+                if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", "s")) return;
             } else if (ParseTimespan(parts[0], out delta)) {
                 parts[0] = p.name;
             } else {
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static bool ParseTimespan(string input, out TimeSpan delta) {
             delta = TimeSpan.Zero;
-            try { delta = input.ParseShort('s'); return true;
+            try { delta = input.ParseShort("s"); return true;
             } catch (ArgumentException) { return false;
             } catch (FormatException) { return false;
             }

@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as an timespan in short form. </summary>                
         public static bool GetTimespan(Player p, string input, ref TimeSpan span,
-                                       string action, char defUnit) {
+                                       string action, string defUnit) {
             span = TimeSpan.Zero;
             try {
                 span = input.ParseShort(defUnit);

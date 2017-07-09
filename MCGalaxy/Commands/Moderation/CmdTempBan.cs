@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             TimeSpan span = TimeSpan.FromHours(1);
-            if (args.Length > 1 && !CommandParser.GetTimespan(p, args[1], ref span, "temp ban for", 'm')) return;
+            if (args.Length > 1 && !CommandParser.GetTimespan(p, args[1], ref span, "temp ban for", "m")) return;
             if (span.TotalSeconds < 1) { Player.Message(p, "Cannot temp ban someone for less than a second."); return; }
             
             reason = ModActionCmd.ExpandReason(p, reason);
