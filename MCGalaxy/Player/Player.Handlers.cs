@@ -14,26 +14,26 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
-using MCGalaxy.DB;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Chatting;
+using MCGalaxy.DB;
 using MCGalaxy.Events;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
-using MCGalaxy.Maths;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
         
         bool removedFromPending = false;
+        const string mustAgreeMsg = "You must read /rules then agree to them with /agree!";
+        
         internal void RemoveFromPending() {
             if (removedFromPending) return;
             removedFromPending = true;
@@ -56,9 +56,13 @@ namespace MCGalaxy {
             ExtBlock old = level.GetBlock(x, y, z);
             if (old.IsInvalid) return;
             
-            if (jailed || !agreed || !canBuild) { RevertBlock(x, y, z); return; }
-            if (level.IsMuseum && Blockchange == null) return;
+            if (jailed || !canBuild) { RevertBlock(x, y, z); return; }
+            if (!agreed) {
+                SendMessage(mustAgreeMsg);
+                RevertBlock(x, y, z); return;
+            }
             
+            if (level.IsMuseum && Blockchange == null) return;           
             if (action > 1) {
                 const string msg = "Unknown block action!";
                 Leave(msg, msg, true); return;
@@ -658,7 +662,7 @@ namespace MCGalaxy {
         bool CheckCommand(string cmd) {
             if (cmd == "") { SendMessage("No command entered."); return false; }
             if (ServerConfig.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
-                SendMessage("You must read /rules then agree to them with /agree!"); return false;
+                SendMessage(mustAgreeMsg); return false;
             }
             if (jailed) {
                 SendMessage("You cannot use any commands while jailed."); return false;
