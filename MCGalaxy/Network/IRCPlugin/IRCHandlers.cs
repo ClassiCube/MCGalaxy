@@ -249,7 +249,7 @@ namespace MCGalaxy.Network {
             public readonly IRCBot Bot;
             
             public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
-                group = Group.findPerm(ServerConfig.IRCControllerRank);
+                group = Group.Find(ServerConfig.IRCControllerRank);
                 if (group == null) group = Group.NobodyRank;
                 
                 IRCChannel = ircChannel;
@@ -258,7 +258,7 @@ namespace MCGalaxy.Network {
                 Bot = bot;
                 
                 if (ircNick != null)
-                    UserID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
+                    DatabaseID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
             }
             
             public override void SendMessage(byte id, string message, bool colorParse = true) {

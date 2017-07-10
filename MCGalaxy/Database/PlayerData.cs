@@ -43,7 +43,7 @@ namespace MCGalaxy.DB {
         
         public string Name, Color, Title, TitleColor, IP;
         public DateTime FirstLogin, LastLogin;
-        public int UserID, Money, Deaths, Logins, Kicks;
+        public int DatabaseID, Money, Deaths, Logins, Kicks;
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TotalTime;
         
@@ -71,9 +71,9 @@ namespace MCGalaxy.DB {
                                                             "ID", "WHERE Name = @0", p.name)) {
                 if (ids.Rows.Count > 0) {
                     string id = ids.Rows[0]["ID"].ToString();
-                    p.UserID = PlayerData.ParseInt(id);
+                    p.DatabaseID = PlayerData.ParseInt(id);
                 } else {
-                    p.UserID = NameConverter.InvalidNameID(p.name);
+                    p.DatabaseID = NameConverter.InvalidNameID(p.name);
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace MCGalaxy.DB {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
             p.totalLogins = data.Logins + 1;
             p.time = data.TotalTime;
-            p.UserID = data.UserID;
+            p.DatabaseID = data.DatabaseID;
             p.firstLogin = data.FirstLogin;
             p.lastLogin = data.LastLogin;
             
@@ -105,7 +105,7 @@ namespace MCGalaxy.DB {
             PlayerData data = new PlayerData();
             data.Name = row["Name"].ToString().Trim();
             data.IP = row["IP"].ToString().Trim();
-            data.UserID = ParseInt(row["ID"].ToString());
+            data.DatabaseID = ParseInt(row["ID"].ToString());
             
             try {
                 long secs = PlayerData.ParseLong(row[ColumnTimeSpent].ToString());
@@ -165,5 +165,17 @@ namespace MCGalaxy.DB {
 
         public const int LowerBits = 38;
         public const long LowerBitsMask = (1L << LowerBits) - 1;
+        
+        
+        public static string FindDBColor(Player p) {
+             using (DataTable colors = Database.Backend.GetRows(DBTable,
+                                                            "Color", "WHERE ID = @0", p.DatabaseID)) {
+                if (colors.Rows.Count > 0) {
+                    string col = ParseColor(colors.Rows[0]["Color"]);
+                    if (col != "") return col;
+                }
+                return "";
+            }
+        }
     }
 }

@@ -163,7 +163,7 @@ namespace MCGalaxy {
         public GameProps Game = new GameProps();
         
         /// <summary> Persistent ID of this user in the Players table. </summary>
-        public int UserID;
+        public int DatabaseID;
         public const int SessionIDMask = (1 << 20) - 1;
         /// <summary> Temp unique ID for this session only. </summary>
         public int SessionID;

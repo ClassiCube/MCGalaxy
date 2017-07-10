@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using MCGalaxy.DB;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
@@ -100,8 +101,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (who == null) return;
 
             Entities.DespawnEntities(who, false);
-            if (who.color == "" || who.color == who.group.Color)
-                who.color = newRank.Color;
+            string dbCol = PlayerData.FindDBColor(who);
+            if (dbCol == "") who.color = newRank.Color;
             
             who.group = newRank;
             AccessResult access = who.level.BuildAccess.Check(who);

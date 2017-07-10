@@ -51,8 +51,7 @@ namespace MCGalaxy.Commands.Misc {
             Player.Message(p, "You are now ranked " + newRank.ColoredName + "%S, type /help for your new set of commands.");
             p.color = newRank.Color;
             
-            Entities.GlobalDespawn(p, true);
-            Entities.GlobalSpawn(p, true);
+            Entities.GlobalRespawn(p);
             p.SetPrefix();
             
             DoKick(p, newRank);

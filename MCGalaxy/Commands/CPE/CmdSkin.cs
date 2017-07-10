@@ -49,8 +49,7 @@ namespace MCGalaxy.Commands.CPE {
         protected override void SetPlayerData(Player p, Player who, string skin) {
             skin = GetSkin(skin, who.truename);
             who.SkinName = skin;
-            Entities.GlobalDespawn(who, true);
-            Entities.GlobalSpawn(who, true);
+            Entities.GlobalRespawn(p);
             
             if (p != who) {
                 Player.GlobalMessage(who, who.ColoredName + "'s %Sskin was changed to &c" + skin);

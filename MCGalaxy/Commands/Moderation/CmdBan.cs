@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return;
             
             Player who = PlayerInfo.FindExact(target);
-            Group group = who != null ? who.group : Group.findPlayerGroup(args[0]);
+            Group group = who != null ? who.group : Group.GroupIn(args[0]);
             if (!CheckPerms(target, group, p)) return;
 
             ModAction action = new ModAction(target, p, ModActionType.Ban, reason);

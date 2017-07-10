@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands.World {
             if (osPerm == LevelPermission.Nobody)
                 osPerm = CommandPerms.MinPerm(Command.all.Find("overseer"));
             
-            Group grp = Group.findPerm(osPerm);
+            Group grp = Group.Find(osPerm);
             if (grp == null) return;
             
             lvl.BuildAccess.SetMin(null, grp);

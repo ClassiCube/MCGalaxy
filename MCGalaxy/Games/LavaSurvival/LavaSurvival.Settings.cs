@@ -49,7 +49,6 @@ namespace MCGalaxy.Games {
         }
         
         void ProcessSettingsLine(string key, string value) {
-            LevelPermission perm;
             switch (key.ToLower()) {
                 case "start-on-startup": startOnStartup = bool.Parse(value); break;
                 case "send-afk-to-main": sendAfkMain = bool.Parse(value); break;

@@ -44,7 +44,7 @@ namespace MCGalaxy.Core {
                 return false;
             }
             
-            Group group = Group.findPlayerGroup(p.name);
+            Group group = Group.GroupIn(p.name);
             if (!CheckBanned(group, p, whitelisted)) return false;
             if (!CheckPlayersCount(group, p)) return false;
             if (!CheckOnlinePlayers(p)) return false;    

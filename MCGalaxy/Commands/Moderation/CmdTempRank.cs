@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && who != null && p == who) {
                 Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
-            Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
+            Group curRank = who != null ? who.group : Group.GroupIn(target);
             string reason = args.Length > 3 ? args[3] : "assigning temp rank";
             if (!CmdSetRank.CanChangeRank(target, curRank, newRank, who, p, ref reason)) return;
             
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             string[] parts = line.SplitSpaces();
             Player who = PlayerInfo.FindExact(target);
-            Group curRank = who != null ? who.group : Group.findPlayerGroup(target);
+            Group curRank = who != null ? who.group : Group.GroupIn(target);
             
             Group oldRank = Group.Find(parts[4 - 1]); // -1 because data, not whole line
             if (oldRank == null) return;

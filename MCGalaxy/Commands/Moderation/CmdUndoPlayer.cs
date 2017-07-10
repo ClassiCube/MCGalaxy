@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.Moderation {
         sealed class ConsolePlayer : Player {
             public ConsolePlayer() : base("(console)") {
                 group = Group.NobodyRank;
-                UserID = NameConverter.InvalidNameID("(console)");
+                DatabaseID = NameConverter.InvalidNameID("(console)");
             }
             
             public override void SendMessage(byte id, string message, bool colorParse = true) {
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.Moderation {
                 names[i] = PlayerInfo.FindOfflineNameMatches(p, parts[i]);
                 if (names[i] == null) return null;
                 
-                Group grp = Group.findPlayerGroup(names[i]);
+                Group grp = Group.GroupIn(names[i]);
                 if (p != null && grp.Permission >= p.Rank) {
                     MessageTooHighRank(p, "undo", false); return null;
                 }

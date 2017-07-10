@@ -41,7 +41,7 @@ namespace MCGalaxy.DB {
         public void Add(Player p, ushort x, ushort y, ushort z, ushort flags, ExtBlock old, ExtBlock block) {
             if (!Enabled) return;
             BlockDBCacheEntry entry;
-            entry.Packed1 = (uint)p.UserID;
+            entry.Packed1 = (uint)p.DatabaseID;
             int timeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
             entry.Index = x + Dims.X * (z + Dims.Z * y);
             

@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 default:
                     Help(p); return;
             }
-            Group.saveGroups(Group.GroupList);
+            Group.SaveList(Group.GroupList);
         }
         
         static void SetLimit(Player p, string format, ref int target, int value, bool hasValue) {

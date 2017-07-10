@@ -36,7 +36,7 @@ namespace MCGalaxy.Events {
             get {
                 if (targetGroup != null) return targetGroup;
                 Player who = PlayerInfo.FindExact(Target);
-                targetGroup = who != null ? who.group : Group.findPlayerGroup(Target);
+                targetGroup = who != null ? who.group : Group.GroupIn(Target);
                 return targetGroup;
             }
         }

@@ -52,7 +52,7 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveRanks() {
-            Group.saveGroups(storedRanks);
+            Group.SaveList(storedRanks);
             Group.InitAll();
             LoadRanks();
         }
@@ -135,7 +135,7 @@ namespace MCGalaxy.Gui {
             // Find first free rank permission
             int freePerm = 5;
             for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) {
-                if (Group.findPermInt(i) != null) continue;
+                if (Group.Find(i) != null) continue;
                 
                 freePerm = i; break;
             }

@@ -34,9 +34,9 @@ namespace MCGalaxy {
         [Obsolete("Please use OnGroupLoadedEvent.Register()")]
         public static event GroupLoaded OnGroupLoaded;
         
-        public static Group BannedRank { get { return findPerm(LevelPermission.Banned); } }
-        public static Group GuestRank { get { return findPerm(LevelPermission.Guest); } }
-        public static Group NobodyRank { get { return findPerm(LevelPermission.Nobody); } }
+        public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
+        public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
+        public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
         public static Group standard;
         
         public static void Register(Group grp) {
@@ -51,7 +51,7 @@ namespace MCGalaxy {
         public static List<Group> GroupList = new List<Group>();
         static readonly object saveLock = new object();
         
-        /// <summary> Load up all server groups </summary>
+        /// <summary> Load all server groups </summary>
         public static void InitAll() {
             GroupList = new List<Group>();
             if (File.Exists(Paths.RankPropsFile)) {
@@ -71,26 +71,17 @@ namespace MCGalaxy {
             Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
 
-            if (Find(ServerConfig.DefaultRankName) != null) {
-                standard = Group.Find(ServerConfig.DefaultRankName);
-            } else {
-                standard = GuestRank;
-            }
+            standard = Find(ServerConfig.DefaultRankName);
+            if (standard == null) standard = GuestRank;
 
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                pl.group = findPerm(pl.group.Permission);
-                if (pl.group == null) pl.group = standard;
-            }
-            
             if (OnGroupLoad != null) OnGroupLoad();
             OnGroupLoadEvent.Call();
-            saveGroups(GroupList);
+            SaveList(GroupList);
         }
         
         /// <summary> Save givenList group </summary>
         /// <param name="givenList">The list of groups to save</param>
-        public static void saveGroups(List<Group> givenList) {
+        public static void SaveList(List<Group> givenList) {
             lock (saveLock)
                 GroupProperties.SaveGroups(givenList);
             
@@ -115,28 +106,27 @@ namespace MCGalaxy {
         }
         
         /// <summary> Finds the group which has the given permission level. </summary>
-        public static Group findPerm(LevelPermission Perm) {
-            return GroupList.Find(grp => grp.Permission == Perm);
+        public static Group Find(LevelPermission perm) {
+            return GroupList.Find(grp => grp.Permission == perm);
         }
 
         /// <summary> Find the group which has the given permission level. </summary>
-        public static Group findPermInt(int Perm) {
-            return GroupList.Find(grp => (int)grp.Permission == Perm);
+        public static Group Find(int perm) {
+            return GroupList.Find(grp => (int)grp.Permission == perm);
         }
 
-        /// <summary> Find the group object that the player /playerName/ is in </summary>
-        /// <param name="name">The player name</param>
-        /// <returns>The group object that the player is in</returns>
-        public static Group findPlayerGroup(string name) {
-            foreach (Group grp in Group.GroupList) {
-                if (grp.Players.Contains(name)) return grp;
+        /// <summary> Find the group that the given player is a member of. </summary>
+        /// <param name="playerName"> The player name. </param>
+        public static Group GroupIn(string playerName) {
+            foreach (Group grp in GroupList) {
+                if (grp.Players.Contains(playerName)) return grp;
             }
-            return Group.standard;
+            return standard;
         }
 
         
         public static string GetColoredName(LevelPermission perm) {
-            Group grp = findPerm(perm);
+            Group grp = Find(perm);
             if (grp != null) return grp.ColoredName;
             return Colors.white + ((int)perm);
         }
@@ -148,7 +138,7 @@ namespace MCGalaxy {
         }
         
         public static string GetColor(LevelPermission perm) {
-            Group grp = findPerm(perm);
+            Group grp = Find(perm);
             if (grp != null) return grp.Color;
             return Colors.white;
         }

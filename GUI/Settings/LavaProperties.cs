@@ -46,14 +46,14 @@ namespace MCGalaxy.Gui {
         public bool AFKToMain { get; set; }
         
         public void LoadFromServer() {
-            Group grp = Group.findPerm(Server.lava.controlRank);
+            Group grp = Group.Find(Server.lava.controlRank);
             if (grp == null) 
-                grp = Group.findPerm(LevelPermission.Operator);
+                grp = Group.Find(LevelPermission.Operator);
             ControlRank = grp == null ? "Operator" : grp.Name;
             
-            grp = Group.findPerm(Server.lava.setupRank);
+            grp = Group.Find(Server.lava.setupRank);
             if (grp == null) 
-                grp = Group.findPerm(LevelPermission.Admin);
+                grp = Group.Find(LevelPermission.Admin);
             SetupRank = grp == null ? "SuperOP" : grp.Name;
             
             Lives = Server.lava.lifeNum;

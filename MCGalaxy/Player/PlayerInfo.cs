@@ -28,7 +28,7 @@ namespace MCGalaxy {
         [Obsolete("Use PlayerInfo.Online.Items")]
         public static List<Player> players;
         
-        public static Group GetGroup(string name) { return Group.findPlayerGroup(name); }
+        public static Group GetGroup(string name) { return Group.GroupIn(name); }
         
         public static string GetColor(string name) { return GetGroup(name).Color; }
         

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Blocks.Extended;
+using MCGalaxy.DB;
 using MCGalaxy.Events;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -81,8 +82,8 @@ namespace MCGalaxy.Core {
             }
         }
         
-        internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch, 
-                                              byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
+        internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch,
+                                               byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (p.level.Config.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
             
             ExtBlock block = p.level.GetBlock(x, y, z);
@@ -91,6 +92,22 @@ namespace MCGalaxy.Core {
 
             if (isMB) { MessageBlock.Handle(p, x, y, z, true); }
             if (isPortal) { Portal.Handle(p, x, y, z); }
+        }
+        
+        // Update rank colors and rank prefixes for online players
+        internal static void HandleGroupLoad() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                p.group = Group.Find(p.group.Permission);
+                if (p.group == null) p.group = Group.standard;                
+                p.SetPrefix();
+                
+                string dbCol = PlayerData.FindDBColor(p);
+                if (dbCol == "" && p.color != p.group.Color) {
+                    p.color = p.group.Color;
+                    Entities.GlobalRespawn(p);
+                }                
+            }
         }
     }
 }

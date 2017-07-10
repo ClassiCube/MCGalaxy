@@ -43,7 +43,7 @@ namespace MCGalaxy.Gui {
         }
         
         internal static void SetDefaultIndex(ComboBox box, LevelPermission perm) {
-            Group grp = Group.findPerm(perm);
+            Group grp = Group.Find(perm);
             if (grp == null) {
                 box.SelectedIndex = 1;
             } else {

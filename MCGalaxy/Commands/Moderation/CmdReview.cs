@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "&9Players in the review queue:");
             int pos = 1;
             foreach (string name in Server.reviewlist) {
-                Group grp = Group.findPlayerGroup(name);
+                Group grp = Group.GroupIn(name);
                 Player.Message(p, "&a" + pos + ". &f" + name + "&a - Current Rank: " + grp.ColoredName);
                 pos++;
             }

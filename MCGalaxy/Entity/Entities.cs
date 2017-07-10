@@ -28,6 +28,12 @@ namespace MCGalaxy {
         
         #region Spawning / Despawning
         
+        /// <summary> Respawns this player to all players (including self) that can see the player in the current world. </summary>
+        public static void GlobalRespawn(Player p) {
+            GlobalDespawn(p, true);
+            GlobalSpawn(p, true);
+        }
+        
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalSpawn(Player p, bool self, string possession = "") {
             GlobalSpawn(p, p.Pos, p.Rot, self, possession);
