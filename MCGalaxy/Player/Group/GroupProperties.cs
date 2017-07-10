@@ -57,8 +57,8 @@ namespace MCGalaxy {
                     if (!int.TryParse(value, out perm)) {
                         Logger.Log(LogType.Warning, "Invalid permission: " + value);
                         temp = null;
-                    } if (perm > 119 || perm < -50) {
-                        Logger.Log(LogType.Warning, "Permission must be between -50 and 119 for ranks");
+                    } if (perm > 120 || perm < -50) {
+                        Logger.Log(LogType.Warning, "Permission must be between -50 and 120 for ranks");
                         temp = null;
                     } else if (Group.Find(perm) == null) {
                         temp.Permission = (LevelPermission)perm;
@@ -156,8 +156,6 @@ namespace MCGalaxy {
                 w.WriteLine();
                 
                 foreach (Group grp in givenList) {
-                    if (grp.Permission == LevelPermission.Nobody) continue;
-                    
                     w.WriteLine("RankName = " + grp.Name);
                     w.WriteLine("Permission = " + (int)grp.Permission);
                     w.WriteLine("Limit = " + grp.MaxBlocks);

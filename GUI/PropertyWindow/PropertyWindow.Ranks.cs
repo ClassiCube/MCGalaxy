@@ -40,40 +40,40 @@ namespace MCGalaxy.Gui {
         }
         
         
-        List<Group> storedRanks = new List<Group>();
+        List<Group> copiedGroups = new List<Group>();
         void LoadRanks() {
             rank_list.Items.Clear();
-            storedRanks.Clear();
-            storedRanks.AddRange(Group.GroupList);
-            foreach ( Group grp in storedRanks ) {
+            copiedGroups.Clear();
+            
+            foreach (Group grp in Group.GroupList) {
+                copiedGroups.Add(grp.CopyConfig());
                 rank_list.Items.Add(grp.Name + " = " + (int)grp.Permission);
             }
             rank_list.SelectedIndex = 0;
         }
         
         void SaveRanks() {
-            Group.SaveList(storedRanks);
+            Group.SaveList(copiedGroups);
             Group.InitAll();
             LoadRanks();
         }
         
         
         void rank_btnColor_Click(object sender, EventArgs e) {
-            chat_ShowColorDialog(rank_btnColor, storedRanks[rank_list.SelectedIndex].Name + " rank color");
-            storedRanks[rank_list.SelectedIndex].Color = Colors.Parse(rank_btnColor.Text);
+            chat_ShowColorDialog(rank_btnColor, copiedGroups[rank_list.SelectedIndex].Name + " rank color");
+            copiedGroups[rank_list.SelectedIndex].Color = Colors.Parse(rank_btnColor.Text);
         }
 
         void rank_list_SelectedIndexChanged(object sender, EventArgs e) {
-            if ( rankSupressEvents ) return;
-            Group grp = storedRanks.Find(G => G.Name == rank_list.Items[rank_list.SelectedIndex].ToString().Split('=')[0].Trim());
-            if ( grp.Permission == LevelPermission.Nobody ) { rank_list.SelectedIndex = 0; return; }
+            if (rankSupressEvents || rank_list.SelectedIndex == -1) return;
+            Group grp = copiedGroups[rank_list.SelectedIndex];
 
             rank_txtName.Text = grp.Name;
-            rank_txtPerm.Text = ( (int)grp.Permission ).ToString();
+            rank_txtPerm.Text = ((int)grp.Permission).ToString();
             rank_numLimit.Value = grp.MaxBlocks;
             rank_numUndo.Value = grp.MaxUndo;
             chat_ParseColor(grp.Color, rank_btnColor);
-            rank_txtMOTD.Text = String.IsNullOrEmpty(grp.MOTD) ? "" : grp.MOTD;
+            rank_txtMOTD.Text = grp.MOTD;
             rank_numOSMaps.Value = grp.OverseerMaps;
             rank_txtPrefix.Text = grp.Prefix;
         }
@@ -83,17 +83,16 @@ namespace MCGalaxy.Gui {
                 rank_txtName.Text = rank_txtName.Text.Replace(" ", "");
                 return;
             }
+            if (rank_txtName.Text == "") return;
             
-            if ( rank_txtName.Text != "" && rank_txtName.Text.ToLower() != "nobody" ) {
-                storedRanks[rank_list.SelectedIndex].Name = rank_txtName.Text;
-                rankSupressEvents = true;
-                rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)storedRanks[rank_list.SelectedIndex].Permission;
-                rankSupressEvents = false;
-            }
+            copiedGroups[rank_list.SelectedIndex].Name = rank_txtName.Text;
+            rankSupressEvents = true;
+            rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)copiedGroups[rank_list.SelectedIndex].Permission;
+            rankSupressEvents = false;
         }
 
-       void rank_txtPermission_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtPerm.Text != "" ) {
+        void rank_txtPermission_TextChanged(object sender, EventArgs e) {
+            if ( rank_txtPerm.Text == "" ) {
                 int foundPerm;
                 if (!int.TryParse(rank_txtPerm.Text, out foundPerm)) {
                     if ( rank_txtPerm.Text != "-" )
@@ -102,33 +101,33 @@ namespace MCGalaxy.Gui {
                 }
 
                 if ( foundPerm < -50 ) { rank_txtPerm.Text = "-50"; return; }
-                else if ( foundPerm > 119 ) { rank_txtPerm.Text = "119"; return; }
+                else if ( foundPerm > 120 ) { rank_txtPerm.Text = "120"; return; }
 
-                storedRanks[rank_list.SelectedIndex].Permission = (LevelPermission)foundPerm;
+                copiedGroups[rank_list.SelectedIndex].Permission = (LevelPermission)foundPerm;
                 rankSupressEvents = true;
-                rank_list.Items[rank_list.SelectedIndex] = storedRanks[rank_list.SelectedIndex].Name + " = " + foundPerm;
+                rank_list.Items[rank_list.SelectedIndex] = copiedGroups[rank_list.SelectedIndex].Name + " = " + foundPerm;
                 rankSupressEvents = false;
             }
         }
         
         void rank_numLimit_ValueChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].MaxBlocks = (int)rank_numLimit.Value;
+            copiedGroups[rank_list.SelectedIndex].MaxBlocks = (int)rank_numLimit.Value;
         }
         
         void rank_numOSMaps_ValueChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numOSMaps.Value;
+            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numOSMaps.Value;
         }
         
         void rank_numUndo_ValueChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
+            copiedGroups[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
         }
         
         void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].Prefix = rank_txtPrefix.Text;
+            copiedGroups[rank_list.SelectedIndex].Prefix = rank_txtPrefix.Text;
         }
         
         void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
-            storedRanks[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
+            copiedGroups[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
         }
 
         void rank_btnAdd_Click(object sender, EventArgs e) {
@@ -141,19 +140,20 @@ namespace MCGalaxy.Gui {
             }
             
             Group newGroup = new Group((LevelPermission)freePerm, 600, 30, "CHANGEME", '1', "", null);
-            storedRanks.Add(newGroup);
+            copiedGroups.Add(newGroup);
             rank_list.Items.Add(newGroup.Name + " = " + (int)newGroup.Permission);
         }
 
         void rank_btnDel_Click(object sender, EventArgs e) {
-            if (rank_list.Items.Count <= 1) return;
+            if (rank_list.Items.Count == 0) return;
             
-            storedRanks.RemoveAt(rank_list.SelectedIndex);
+            copiedGroups.RemoveAt(rank_list.SelectedIndex);
             rankSupressEvents = true;
             rank_list.Items.RemoveAt(rank_list.SelectedIndex);
             rankSupressEvents = false;
 
-            rank_list.SelectedIndex = 0;
+            int i = rank_list.Items.Count > 0 ? 0 : -1;
+            rank_list.SelectedIndex = i;
         }
     }
 }

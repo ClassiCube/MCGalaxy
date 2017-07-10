@@ -68,9 +68,10 @@ namespace MCGalaxy {
                 Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
             if (GuestRank == null)
                 Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
-            Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
+            if (NobodyRank == null)
+                Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
+            
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
-
             standard = Find(ServerConfig.DefaultRankName);
             if (standard == null) standard = GuestRank;
 
