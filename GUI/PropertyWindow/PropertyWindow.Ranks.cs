@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
             Group grp = copiedGroups[rank_list.SelectedIndex];
 
             rank_txtName.Text = grp.Name;
-            rank_txtPerm.Text = ((int)grp.Permission).ToString();
+            rank_numPerm.Value = (int)grp.Permission;
             rank_numLimit.Value = grp.MaxBlocks;
             rank_numUndo.Value = grp.MaxUndo;
             chat_ParseColor(grp.Color, rank_btnColor);
@@ -91,23 +91,12 @@ namespace MCGalaxy.Gui {
             rankSupressEvents = false;
         }
 
-        void rank_txtPermission_TextChanged(object sender, EventArgs e) {
-            if ( rank_txtPerm.Text == "" ) {
-                int foundPerm;
-                if (!int.TryParse(rank_txtPerm.Text, out foundPerm)) {
-                    if ( rank_txtPerm.Text != "-" )
-                        rank_txtPerm.Text = rank_txtPerm.Text.Remove(rank_txtPerm.Text.Length - 1);
-                    return;
-                }
-
-                if ( foundPerm < -50 ) { rank_txtPerm.Text = "-50"; return; }
-                else if ( foundPerm > 120 ) { rank_txtPerm.Text = "120"; return; }
-
-                copiedGroups[rank_list.SelectedIndex].Permission = (LevelPermission)foundPerm;
-                rankSupressEvents = true;
-                rank_list.Items[rank_list.SelectedIndex] = copiedGroups[rank_list.SelectedIndex].Name + " = " + foundPerm;
-                rankSupressEvents = false;
-            }
+        void rank_numPerm_ValueChanged(object sender, EventArgs e) {
+            int perm = (int)rank_numPerm.Value;
+            copiedGroups[rank_list.SelectedIndex].Permission = (LevelPermission)perm;
+            rankSupressEvents = true;
+            rank_list.Items[rank_list.SelectedIndex] = copiedGroups[rank_list.SelectedIndex].Name + " = " + perm;
+            rankSupressEvents = false;
         }
         
         void rank_numLimit_ValueChanged(object sender, EventArgs e) {
@@ -132,14 +121,12 @@ namespace MCGalaxy.Gui {
 
         void rank_btnAdd_Click(object sender, EventArgs e) {
             // Find first free rank permission
-            int freePerm = 5;
+            int perm = 5;
             for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) {
-                if (Group.Find(i) != null) continue;
-                
-                freePerm = i; break;
+                if (PermissionFree(i)) { perm = i; break; }
             }
             
-            Group newGroup = new Group((LevelPermission)freePerm, 600, 30, "CHANGEME", '1', "", null);
+            Group newGroup = new Group((LevelPermission)perm, 600, 30, "CHANGEME_" + perm, '1', "", null);
             copiedGroups.Add(newGroup);
             rank_list.Items.Add(newGroup.Name + " = " + (int)newGroup.Permission);
         }
@@ -154,6 +141,13 @@ namespace MCGalaxy.Gui {
 
             int i = rank_list.Items.Count > 0 ? 0 : -1;
             rank_list.SelectedIndex = i;
+        }
+        
+        bool PermissionFree(int i) {
+            foreach (Group grp in copiedGroups) {
+                if (grp.Permission == (LevelPermission)i) return false;
+            }
+            return true;
         }
     }
 }

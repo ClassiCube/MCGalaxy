@@ -110,7 +110,7 @@ namespace MCGalaxy.Gui
             this.rank_txtPrefix = new System.Windows.Forms.TextBox();
             this.rank_numLimit = new System.Windows.Forms.NumericUpDown();
             this.rank_txtMOTD = new System.Windows.Forms.TextBox();
-            this.rank_txtPerm = new System.Windows.Forms.TextBox();
+            this.rank_numPerm = new System.Windows.Forms.NumericUpDown();
             this.rank_txtName = new System.Windows.Forms.TextBox();
             this.rank_btnColor = new System.Windows.Forms.Button();
             this.rank_numUndo = new System.Windows.Forms.NumericUpDown();
@@ -1106,14 +1106,17 @@ namespace MCGalaxy.Gui
                         "hem.");
             this.rank_txtMOTD.TextChanged += new System.EventHandler(this.rank_txtMOTD_TextChanged);
             // 
-            // rank_txtPerm
+            // rank_numPerm
             // 
-            this.rank_txtPerm.Location = new System.Drawing.Point(259, 20);
-            this.rank_txtPerm.Name = "rank_txtPerm";
-            this.rank_txtPerm.Size = new System.Drawing.Size(81, 21);
-            this.rank_txtPerm.TabIndex = 6;
-            this.toolTip.SetToolTip(this.rank_txtPerm, "Permission level of this rank.");
-            this.rank_txtPerm.TextChanged += new System.EventHandler(this.rank_txtPermission_TextChanged);
+            this.rank_numPerm.Location = new System.Drawing.Point(259, 20);
+            this.rank_numPerm.Minimum = new decimal(new int[] { 50, 0, 0, -2147483648});
+            this.rank_numPerm.Maximum = new decimal(new int[] { 120, 0, 0, 0});
+            this.rank_numPerm.Name = "rank_numPerm";
+            this.rank_numPerm.Size = new System.Drawing.Size(81, 21);
+            this.rank_numPerm.TabIndex = 6;
+            this.rank_numLimit.Value = new decimal(new int[] { 1, 0, 0, 0});
+            this.toolTip.SetToolTip(this.rank_numPerm, "Permission level of this rank.");
+            this.rank_numPerm.ValueChanged += new System.EventHandler(this.rank_numPerm_ValueChanged);
             // 
             // rank_txtName
             // 
@@ -1523,7 +1526,7 @@ namespace MCGalaxy.Gui
             this.gbRankSettings.Controls.Add(this.rank_numLimit);
             this.gbRankSettings.Controls.Add(this.rank_lblPerm);
             this.gbRankSettings.Controls.Add(this.rank_txtMOTD);
-            this.gbRankSettings.Controls.Add(this.rank_txtPerm);
+            this.gbRankSettings.Controls.Add(this.rank_numPerm);
             this.gbRankSettings.Controls.Add(this.rank_txtName);
             this.gbRankSettings.Controls.Add(this.rank_btnColor);
             this.gbRankSettings.Controls.Add(this.rank_lblMOTD);
@@ -4424,7 +4427,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button rank_btnColor;
         private System.Windows.Forms.Label rank_lblColor;
         private System.Windows.Forms.NumericUpDown rank_numLimit;
-        private System.Windows.Forms.TextBox rank_txtPerm;
+        private System.Windows.Forms.NumericUpDown rank_numPerm;
         private System.Windows.Forms.TextBox rank_txtName;
         private System.Windows.Forms.Label rank_lblDraw;
         private System.Windows.Forms.Label rank_lblPerm;

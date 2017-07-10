@@ -38,7 +38,7 @@ namespace MCGalaxy {
                 value = value.Replace(" ", "");
                 string name = value.ToLower();
 
-                if (name == "op" || name == "nobody") {
+                if (name == "op") {
                     Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", name);
                 } else if (Group.Find(name) == null) {
                     temp = new Group();
