@@ -33,7 +33,9 @@ namespace MCGalaxy.Commands.Fun {
                 p.aiming = false;
             }
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
+            if (!p.level.Config.Guns || !CommandParser.IsBlockAllowed(p, "place", block)) {
+                p.ClearBlockchange(); return;
+            }
             
             WeaponArgs args = new WeaponArgs();
             args.player = p;

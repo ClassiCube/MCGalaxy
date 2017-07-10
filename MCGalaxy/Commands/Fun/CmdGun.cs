@@ -28,7 +28,9 @@ namespace MCGalaxy.Commands.Fun {
         
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             p.RevertBlock(x, y, z);
-            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
+            if (!p.level.Config.Guns || !CommandParser.IsBlockAllowed(p, "place", block)) {
+                p.ClearBlockchange(); return;
+            }
 
             WeaponArgs args = new WeaponArgs();
             args.player = p;
