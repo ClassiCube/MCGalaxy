@@ -17,8 +17,8 @@
  */
 using System;
 using System.IO;
-using System.Net;
 using System.Security.Cryptography;
+using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -41,10 +41,10 @@ namespace MCGalaxy {
         }
         
         public static void Load() {
-            oldPerms = new OldPerms();
-            if (PropertiesFile.Read(Paths.ServerPropsFile, ref oldPerms, LineProcessor))
+            old = new OldPerms();
+            if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
-            if (oldPerms.saveZS)
+            if (old.saveZS)
                 ZSConfig.SaveSettings();
             ZSConfig.LoadSettings();
             
@@ -61,36 +61,90 @@ namespace MCGalaxy {
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
             switch (key.ToLower()) {
-                    // Backwards compatibility with old config, where review permissions where global
+                    // Backwards compatibility: review permissions used to be part of server.properties
                 case "review-enter-perm":
                 case "review-leave-perm":
-                    break;
+                    return;
                 case "review-view-perm":
-                    perms.viewPerm = int.Parse(value); break;
+                    perms.viewPerm = int.Parse(value); return;
                 case "review-next-perm":
-                    perms.nextPerm = int.Parse(value); break;
+                    perms.nextPerm = int.Parse(value); return;
                 case "review-clear-perm":
-                    perms.clearPerm = int.Parse(value); break;
+                    perms.clearPerm = int.Parse(value); return;
                 case "opchat-perm":
-                    perms.opchatPerm = int.Parse(value); break;
+                    perms.opchatPerm = int.Parse(value); return;
                 case "adminchat-perm":
-                    perms.adminchatPerm = int.Parse(value); break;
+                    perms.adminchatPerm = int.Parse(value); return;
                     
-                default:
-                    if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
-                        // ZS used to be part of server.properties
-                        if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
-                            perms.saveZS = true;
-                        } else {
-                            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
-                        }
-                    }
-                    break;
+                    // Backwards compatibility: map generation volume used to be part of server.properties
+                case "map-gen-limit-admin":
+                    perms.mapGenLimitAdmin = int.Parse(value); return;
+                case "map-gen-limit":
+                    perms.mapGenLimit = int.Parse(value);return;
+            }
+            
+            if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
+                // Backwards compatibility: ZS used to be part of server.properties
+                if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
+                    perms.saveZS = true;
+                } else {
+                    Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
+                }
             }
         }
-        internal static OldPerms oldPerms;
-        internal class OldPerms { public int viewPerm = -1, nextPerm = -1,
-            clearPerm = -1, opchatPerm = -1, adminchatPerm = -1; public bool saveZS; }
+        
+        
+        static OldPerms old;
+        class OldPerms {
+            public int viewPerm = -1, nextPerm = -1, clearPerm = -1, opchatPerm = -1, adminchatPerm = -1;
+            public int mapGenLimit = -1, mapGenLimitAdmin = -1;
+            public bool saveZS;
+        }
+        
+        internal static void FixupOldPerms() {
+            SetOldReview();
+            if (old.mapGenLimit != -1) SetOldGenVolume();
+            if (old.mapGenLimitAdmin != -1) SetOldGenVolumeAdmin();
+            
+            if (old.mapGenLimit != -1 || old.mapGenLimitAdmin != -1) {
+                Group.SaveList(Group.GroupList);
+            }
+        }
+        
+        static void SetOldReview() {
+            if (old.clearPerm == -1 && old.nextPerm == -1 && old.viewPerm == -1
+                && old.opchatPerm == -1 && old.adminchatPerm == -1) return;
+            
+            // Apply backwards compatibility
+            if (old.viewPerm != -1)
+                CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)old.viewPerm;
+            if (old.nextPerm != -1)
+                CommandExtraPerms.Find("review", 2).MinRank = (LevelPermission)old.nextPerm;
+            if (old.clearPerm != -1)
+                CommandExtraPerms.Find("review", 3).MinRank = (LevelPermission)old.clearPerm;
+            if (old.opchatPerm != -1)
+                CommandExtraPerms.Find("opchat").MinRank    = (LevelPermission)old.opchatPerm;
+            if (old.adminchatPerm != -1)
+                CommandExtraPerms.Find("adminchat").MinRank = (LevelPermission)old.adminchatPerm;
+            CommandExtraPerms.Save();
+        }
+        
+        static void SetOldGenVolume() {
+            foreach (Group grp in Group.GroupList) {
+                if (grp.Permission < LevelPermission.Admin) {
+                    grp.GenVolume = old.mapGenLimit;
+                }
+            }
+        }
+        
+        static void SetOldGenVolumeAdmin() {
+            foreach (Group grp in Group.GroupList) {
+                if (grp.Permission >= LevelPermission.Admin) {
+                    grp.GenVolume = old.mapGenLimitAdmin;
+                }
+            }
+        }
+        
         
         static readonly object saveLock = new object();
         public static void Save() {

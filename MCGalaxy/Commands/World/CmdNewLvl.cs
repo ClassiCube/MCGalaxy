@@ -104,8 +104,8 @@ namespace MCGalaxy.Commands.World {
         
         internal static bool CheckMapVolume(Player p, int x, int y, int z) {
             if (p == null) return true;
-            int limit = p.Rank < LevelPermission.Admin ? ServerConfig.MapGenLimit : ServerConfig.MapGenLimitAdmin;
-            if ((long)x * y * z <= limit ) return true;
+            int limit = p.group.GenVolume;
+            if ((long)x * y * z <= limit) return true;
             
             string text = "You cannot create a map with over ";
             if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";

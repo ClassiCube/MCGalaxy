@@ -126,7 +126,11 @@ namespace MCGalaxy.Gui {
                 if (PermissionFree(i)) { perm = i; break; }
             }
             
-            Group newGroup = new Group((LevelPermission)perm, 600, 30, "CHANGEME_" + perm, '1', "", null);
+            Group newGroup = Group.standard.CopyConfig();
+            newGroup.Permission = (LevelPermission)perm;
+            newGroup.Name = "CHANGEME_" + perm;
+            newGroup.Color = "&1";
+            
             copiedGroups.Add(newGroup);
             rank_list.Items.Add(newGroup.Name + " = " + (int)newGroup.Permission);
         }

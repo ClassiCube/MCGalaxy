@@ -210,32 +210,13 @@ namespace MCGalaxy {
             ProfanityFilter.Init();
             Team.LoadList();
             ChatTokens.LoadCustom();
-            FixupOldPerms();
+            SrvProperties.FixupOldPerms();
             
             // Reload custom plugins
             foreach (Plugin plugin in plugins) {
                 if (Plugin.core.Contains(plugin)) continue;
                 plugin.Load(false);
             }
-        }
-        
-        static void FixupOldPerms() {
-            SrvProperties.OldPerms perms = SrvProperties.oldPerms;
-            if (perms.clearPerm == -1 && perms.nextPerm == -1 && perms.viewPerm == -1
-                && perms.opchatPerm == -1 && perms.adminchatPerm == -1) return;
-            
-            // Backwards compatibility with old config, where some permissions were global
-            if (perms.viewPerm != -1)
-                CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)perms.viewPerm;
-            if (perms.nextPerm != -1)
-                CommandExtraPerms.Find("review", 2).MinRank = (LevelPermission)perms.nextPerm;
-            if (perms.clearPerm != -1)
-                CommandExtraPerms.Find("review", 3).MinRank = (LevelPermission)perms.clearPerm;
-            if (perms.opchatPerm != -1)
-                CommandExtraPerms.Find("opchat").MinRank    = (LevelPermission)perms.opchatPerm;
-            if (perms.adminchatPerm != -1)
-                CommandExtraPerms.Find("adminchat").MinRank = (LevelPermission)perms.adminchatPerm;
-            CommandExtraPerms.Save();
         }
 
         public static void Exit(bool restarting, string msg) {

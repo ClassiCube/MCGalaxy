@@ -46,16 +46,6 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "physicsundo":
                     SetLimit(p, "Physics undo max entries", ref ServerConfig.PhysicsUndo, limit, hasLimit);
                     return;
-                case "gen":
-                case "genlimit":
-                    SetLimit(p, "Maximum volume of maps players can generate", ref ServerConfig.MapGenLimit, limit, hasLimit);
-                    return;
-                case "genadmin":
-                case "genadminlimit":
-                case "admingen":
-                case "admingenlimit":
-                    SetLimit(p, "Maximum volume of maps admins can generate", ref ServerConfig.MapGenLimitAdmin, limit, hasLimit);
-                    return;
             }
 
             if (args.Length < 2) { Help(p); return; }
@@ -72,6 +62,10 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "maxundo":
                     Chat.MessageGlobal("{0}%S's undo limit set to &b{1}", grp.ColoredName, limit);
                     grp.MaxUndo = limit; break;
+                case "gen":
+                case "genlimit":
+                    Chat.MessageGlobal("{0}%S's map gen volume limit set to &b{1}", grp.ColoredName, limit);
+                    grp.GenVolume = limit; break;
                 default:
                     Help(p); return;
             }
@@ -92,9 +86,8 @@ namespace MCGalaxy.Commands.Maintenance {
             Player.Message(p, "%T/limit [type] [amount] <rank>");
             Player.Message(p, "%HSets the limit for [type]");
             Player.Message(p, "%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
-                           "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), " +
-                           "admingenlimit(admingen)");
-            Player.Message(p, "%H<rank> is required for drawlimit and maxundo types.");
+                           "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen)");
+            Player.Message(p, "%H<rank> is required for drawlimit, maxundo, gen types.");
         }
     }
 }

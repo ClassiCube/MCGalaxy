@@ -106,14 +106,9 @@ namespace MCGalaxy {
         [ConfigInt("afk-kick", "Other", 45)]
         public static int AfkKickMins = 45;
         [ConfigPerm("afk-kick-perm", "Other", LevelPermission.AdvBuilder)]
-        public static LevelPermission AfkKickRank = LevelPermission.AdvBuilder;
-        
+        public static LevelPermission AfkKickRank = LevelPermission.AdvBuilder;       
         [ConfigString("default-rank", "General", "guest")]
         public static string DefaultRankName = "guest";
-        [ConfigInt("map-gen-limit-admin", "Other", 225 * 1000 * 1000)]
-        public static int MapGenLimitAdmin = 225 * 1000 * 1000;
-        [ConfigInt("map-gen-limit", "Other", 30 * 1000 * 1000)]
-        public static int MapGenLimit = 30 * 1000 * 1000;
 
         [ConfigBool("deathcount", "Other", true)]
         public static bool AnnounceDeathCount = true;

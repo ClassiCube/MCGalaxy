@@ -26,6 +26,9 @@ namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
     public sealed partial class Group {
         
+        const int mapGenLimitAdmin = 225 * 1000 * 1000;
+        const int mapGenLimit = 30 * 1000 * 1000;
+        
         public delegate void RankSet(Player p, Group newrank);
         [Obsolete("Please use OnPlayerRankSetEvent.Register()")]
         public static event RankSet OnPlayerRankSet;
@@ -50,6 +53,9 @@ namespace MCGalaxy {
         
         /// <summary> Maximum number of seconds members of this group can /undo up to. </summary>
         public int MaxUndo;
+        
+        /// <summary> Maximum volume of a map that members of this group can generate. </summary>
+        public int GenVolume = mapGenLimit;
 
         /// <summary> Optional MOTD shown to members of this group, instead of server's default MOTD. </summary>
         /// <remarks> If a level has a custom MOTD, it overrides this. </remarks>
@@ -73,16 +79,13 @@ namespace MCGalaxy {
         internal string filename;
         public Group() { }
         
-        public Group(LevelPermission Perm, int maxB, int maxUn, string name, char colorCode, string motd, string file, byte maps = 3, string prefix = "") {
-            Permission = Perm;
+        private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode, int genVolume) {
+            Permission = perm;
             MaxBlocks = maxB;
             MaxUndo = maxUn;
             Name = name;
-            Color = "&" + colorCode;
-            MOTD = motd;
-            filename = file;
-            OverseerMaps = maps;
-            Prefix = prefix;
+            Color = "&" + colCode;
+            GenVolume = genVolume;
         }
         
         
@@ -112,7 +115,8 @@ namespace MCGalaxy {
             Group copy = new Group();
             copy.Name = Name; copy.Color = Color; copy.Permission = Permission;
             copy.MaxBlocks = MaxBlocks; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
-            copy.OverseerMaps = OverseerMaps; copy.Prefix = Prefix; copy.filename = filename;
+            copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps; copy.Prefix = Prefix; 
+            copy.filename = filename;
             return copy;            
         }
         

@@ -58,18 +58,18 @@ namespace MCGalaxy {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks
-                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', "", null));
-                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', "", null));
-                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', "", null));
-                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', "", null));
+                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2', mapGenLimit));
+                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3', mapGenLimit));
+                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c', mapGenLimit));
+                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e', mapGenLimitAdmin));
             }
 
             if (BannedRank == null)
-                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', "", null));
+                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8', mapGenLimit));
             if (GuestRank == null)
-                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', "", null));
+                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7', mapGenLimit));
             if (NobodyRank == null)
-                Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', "", null));
+                Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0', mapGenLimitAdmin));
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             standard = Find(ServerConfig.DefaultRankName);
