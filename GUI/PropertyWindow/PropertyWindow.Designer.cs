@@ -88,9 +88,7 @@ namespace MCGalaxy.Gui
             this.rank_cbTPHigher = new System.Windows.Forms.CheckBox();
             this.rank_cmbDefault = new System.Windows.Forms.ComboBox();
             this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
-            this.afk_cmbKickPerm = new System.Windows.Forms.ComboBox();
             this.afk_txtTimer = new System.Windows.Forms.TextBox();
-            this.afk_txtKickTime = new System.Windows.Forms.TextBox();
             this.bak_numTime = new System.Windows.Forms.NumericUpDown();
             this.sql_chkUseSQL = new System.Windows.Forms.CheckBox();
             this.irc_chkEnabled = new System.Windows.Forms.CheckBox();
@@ -183,9 +181,7 @@ namespace MCGalaxy.Gui
             this.label28 = new System.Windows.Forms.Label();
             this.txtNormRp = new System.Windows.Forms.TextBox();
             this.afk_grp = new System.Windows.Forms.GroupBox();
-            this.afk_lblKickRank = new System.Windows.Forms.Label();
             this.afk_lblTimer = new System.Windows.Forms.Label();
-            this.afk_lblKickTime = new System.Windows.Forms.Label();
             this.bak_grp = new System.Windows.Forms.GroupBox();
             this.bak_lblLocation = new System.Windows.Forms.Label();
             this.bak_txtLocation = new System.Windows.Forms.TextBox();
@@ -885,31 +881,13 @@ namespace MCGalaxy.Gui
                         " join");
             this.sec_cbWhitelist.UseVisualStyleBackColor = true;
             // 
-            // afk_cmbKickPerm
-            // 
-            this.afk_cmbKickPerm.FormattingEnabled = true;
-            this.afk_cmbKickPerm.Location = new System.Drawing.Point(61, 71);
-            this.afk_cmbKickPerm.Name = "afk_cmbKickPerm";
-            this.afk_cmbKickPerm.Size = new System.Drawing.Size(66, 21);
-            this.afk_cmbKickPerm.TabIndex = 46;
-            this.toolTip.SetToolTip(this.afk_cmbKickPerm, "Maximum rank that will be kicked by AFK kick.");
-            // 
             // afk_txtTimer
             // 
             this.afk_txtTimer.Location = new System.Drawing.Point(61, 16);
             this.afk_txtTimer.Name = "afk_txtTimer";
             this.afk_txtTimer.Size = new System.Drawing.Size(66, 21);
             this.afk_txtTimer.TabIndex = 10;
-            this.toolTip.SetToolTip(this.afk_txtTimer, "How many minutes a player can idle before server announces auto afk. (0 = disable" +
-                        "d)");
-            // 
-            // afk_txtKickTime
-            // 
-            this.afk_txtKickTime.Location = new System.Drawing.Point(61, 43);
-            this.afk_txtKickTime.Name = "afk_txtKickTime";
-            this.afk_txtKickTime.Size = new System.Drawing.Size(66, 21);
-            this.afk_txtKickTime.TabIndex = 9;
-            this.toolTip.SetToolTip(this.afk_txtKickTime, "How many minutes a player can be AFK before getting auto kicked. (0 = No kick)");
+            this.toolTip.SetToolTip(this.afk_txtTimer, "How many minutes a player can idle before server announces auto afk. (0 = disabled)");
             // 
             // bak_numTime
             // 
@@ -1878,27 +1856,14 @@ namespace MCGalaxy.Gui
             // afk_grp
             // 
             this.afk_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.afk_grp.Controls.Add(this.afk_lblKickRank);
-            this.afk_grp.Controls.Add(this.afk_cmbKickPerm);
             this.afk_grp.Controls.Add(this.afk_lblTimer);
             this.afk_grp.Controls.Add(this.afk_txtTimer);
-            this.afk_grp.Controls.Add(this.afk_lblKickTime);
-            this.afk_grp.Controls.Add(this.afk_txtKickTime);
             this.afk_grp.Location = new System.Drawing.Point(352, 13);
             this.afk_grp.Name = "afk_grp";
             this.afk_grp.Size = new System.Drawing.Size(133, 100);
             this.afk_grp.TabIndex = 37;
             this.afk_grp.TabStop = false;
             this.afk_grp.Text = "AFK";
-            // 
-            // afk_lblKickRank
-            // 
-            this.afk_lblKickRank.AutoSize = true;
-            this.afk_lblKickRank.Location = new System.Drawing.Point(5, 74);
-            this.afk_lblKickRank.Name = "afk_lblKickRank";
-            this.afk_lblKickRank.Size = new System.Drawing.Size(54, 13);
-            this.afk_lblKickRank.TabIndex = 13;
-            this.afk_lblKickRank.Text = "Kick Rank:";
             // 
             // afk_lblTimer
             // 
@@ -1908,15 +1873,6 @@ namespace MCGalaxy.Gui
             this.afk_lblTimer.Size = new System.Drawing.Size(54, 13);
             this.afk_lblTimer.TabIndex = 12;
             this.afk_lblTimer.Text = "AFK timer:";
-            // 
-            // afk_lblKickTime
-            // 
-            this.afk_lblKickTime.AutoSize = true;
-            this.afk_lblKickTime.Location = new System.Drawing.Point(5, 47);
-            this.afk_lblKickTime.Name = "afk_lblKickTime";
-            this.afk_lblKickTime.Size = new System.Drawing.Size(48, 13);
-            this.afk_lblKickTime.TabIndex = 11;
-            this.afk_lblKickTime.Text = "AFK Kick:";
             // 
             // bak_grp
             // 
@@ -4440,7 +4396,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox hackrank_kick_time;
         private System.Windows.Forms.TextBox txtNormRp;
         private System.Windows.Forms.TextBox txtRP;
-        private System.Windows.Forms.TextBox afk_txtKickTime;
         private System.Windows.Forms.TextBox afk_txtTimer;
         private System.Windows.Forms.NumericUpDown bak_numTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
@@ -4456,7 +4411,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label afk_lblKickTime;
         private System.Windows.Forms.Label afk_lblTimer;
         private System.Windows.Forms.Label bak_lblTime;
         private System.Windows.Forms.Label bak_lblLocation;
@@ -4554,8 +4508,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label lblUpdateSeconds;
         private System.Windows.Forms.CheckBox notifyInGameUpdate;
         private System.Windows.Forms.Button srv_btnForceUpdate;
-        private System.Windows.Forms.Label afk_lblKickRank;
-        private System.Windows.Forms.ComboBox afk_cmbKickPerm;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label label84;

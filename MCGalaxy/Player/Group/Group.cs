@@ -56,7 +56,13 @@ namespace MCGalaxy {
         
         /// <summary> Maximum volume of a map that members of this group can generate. </summary>
         public int GenVolume = mapGenLimit;
-
+        
+        /// <summary> Whether members of this rank are auto kicked for being AFK. </summary>
+        public bool AfkKicked = true;
+        
+        /// <summary> Number of minutes members of this rank can be AFK for, before they are auto kicked. </summary>
+        public int AfkKickMinutes = 45;
+        
         /// <summary> Optional MOTD shown to members of this group, instead of server's default MOTD. </summary>
         /// <remarks> If a level has a custom MOTD, it overrides this. </remarks>
         public string MOTD = "";
@@ -79,13 +85,14 @@ namespace MCGalaxy {
         internal string filename;
         public Group() { }
         
-        private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode, int genVolume) {
+        private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode) {
             Permission = perm;
             MaxBlocks = maxB;
             MaxUndo = maxUn;
             Name = name;
             Color = "&" + colCode;
-            GenVolume = genVolume;
+            GenVolume = perm < LevelPermission.Admin ? mapGenLimit : mapGenLimitAdmin;
+            AfkKicked = perm <= LevelPermission.AdvBuilder;
         }
         
         
@@ -115,8 +122,9 @@ namespace MCGalaxy {
             Group copy = new Group();
             copy.Name = Name; copy.Color = Color; copy.Permission = Permission;
             copy.MaxBlocks = MaxBlocks; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
-            copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps; copy.Prefix = Prefix; 
-            copy.filename = filename;
+            copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps;
+            copy.AfkKicked = AfkKicked; copy.AfkKickMinutes = AfkKickMinutes;
+            copy.Prefix = Prefix; copy.filename = filename;
             return copy;            
         }
         

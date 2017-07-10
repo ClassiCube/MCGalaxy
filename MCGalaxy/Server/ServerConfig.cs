@@ -103,10 +103,6 @@ namespace MCGalaxy {
         
         [ConfigInt("afk-minutes", "Other", 10)]
         public static int AutoAfkMins = 10;
-        [ConfigInt("afk-kick", "Other", 45)]
-        public static int AfkKickMins = 45;
-        [ConfigPerm("afk-kick-perm", "Other", LevelPermission.AdvBuilder)]
-        public static LevelPermission AfkKickRank = LevelPermission.AdvBuilder;       
         [ConfigString("default-rank", "General", "guest")]
         public static string DefaultRankName = "guest";
 

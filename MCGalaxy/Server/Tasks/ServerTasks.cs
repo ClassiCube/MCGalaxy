@@ -105,12 +105,11 @@ namespace MCGalaxy.Tasks {
                 if (DateTime.UtcNow < p.AFKCooldown) return;
                 
                 if (p.IsAfk) {
-                    int time = ServerConfig.AfkKickMins;
+                    int time = p.group.AfkKickMinutes;
                     if (p.AutoAfk) time += ServerConfig.AutoAfkMins;
                     
-                    if (ServerConfig.AfkKickMins > 0 && p.Rank < ServerConfig.AfkKickRank) {
-                        if (p.LastAction.AddMinutes(time) < DateTime.UtcNow)
-                            p.Leave("Auto-kick, AFK for " + ServerConfig.AfkKickMins + " minutes");
+                    if (p.group.AfkKicked && p.LastAction.AddMinutes(time) < DateTime.UtcNow) {
+                        p.Leave("Auto-kick, AFK for " + p.group.AfkKickMinutes + " minutes");
                     }
                 } else {
                     DateTime lastAction = p.LastAction;

@@ -27,9 +27,6 @@ namespace MCGalaxy.Gui {
             hackrank_kick_time.Text = ServerConfig.HackrankKickDelay.ToString();
             
             afk_txtTimer.Text = ServerConfig.AutoAfkMins.ToString();
-            afk_txtKickTime.Text = ServerConfig.AfkKickMins.ToString();
-            GuiPerms.SetDefaultIndex(afk_cmbKickPerm, ServerConfig.AfkKickRank);
-            
             chkPhysicsRest.Checked = ServerConfig.PhysicsRestart;
             txtRP.Text = ServerConfig.PhysicsRestartLimit.ToString();
             txtNormRp.Text = ServerConfig.PhysicsRestartNormLimit.ToString();
@@ -52,10 +49,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.HackrankKicks = hackrank_kick.Checked;
             ServerConfig.HackrankKickDelay = int.Parse(hackrank_kick_time.Text);
             
-            ServerConfig.AutoAfkMins = int.Parse(afk_txtTimer.Text);
-            ServerConfig.AfkKickMins = int.Parse(afk_txtKickTime.Text);
-            ServerConfig.AfkKickRank = GuiPerms.GetPermission(afk_cmbKickPerm, LevelPermission.AdvBuilder);
-            
+            ServerConfig.AutoAfkMins = int.Parse(afk_txtTimer.Text);            
             ServerConfig.PhysicsRestart = chkPhysicsRest.Checked;
             ServerConfig.PhysicsRestartLimit = int.Parse(txtRP.Text);
             ServerConfig.PhysicsRestartNormLimit = int.Parse(txtNormRp.Text);

@@ -61,7 +61,7 @@ namespace MCGalaxy {
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
             switch (key.ToLower()) {
-                    // Backwards compatibility: review permissions used to be part of server.properties
+                    // Backwards compatibility: some ocmmand extra permissions used to be part of server.properties
                 case "review-enter-perm":
                 case "review-leave-perm":
                     return;
@@ -80,7 +80,11 @@ namespace MCGalaxy {
                 case "map-gen-limit-admin":
                     perms.mapGenLimitAdmin = int.Parse(value); return;
                 case "map-gen-limit":
-                    perms.mapGenLimit = int.Parse(value);return;
+                    perms.mapGenLimit = int.Parse(value); return;
+                case "afk-kick":
+                    perms.afkKickMins = int.Parse(value); return;
+                case "afk-kick-perm":
+                    perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder); return;
             }
             
             if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
@@ -98,6 +102,7 @@ namespace MCGalaxy {
         class OldPerms {
             public int viewPerm = -1, nextPerm = -1, clearPerm = -1, opchatPerm = -1, adminchatPerm = -1;
             public int mapGenLimit = -1, mapGenLimitAdmin = -1;
+            public int afkKickMins = -1; public LevelPermission afkKickMax = LevelPermission.Banned;
             public bool saveZS;
         }
         
@@ -105,8 +110,9 @@ namespace MCGalaxy {
             SetOldReview();
             if (old.mapGenLimit != -1) SetOldGenVolume();
             if (old.mapGenLimitAdmin != -1) SetOldGenVolumeAdmin();
+            if (old.afkKickMins != -1) SetOldAfkKick();
             
-            if (old.mapGenLimit != -1 || old.mapGenLimitAdmin != -1) {
+            if (old.mapGenLimit != -1 || old.mapGenLimitAdmin != -1 || old.afkKickMins != -1) {
                 Group.SaveList(Group.GroupList);
             }
         }
@@ -143,6 +149,14 @@ namespace MCGalaxy {
                     grp.GenVolume = old.mapGenLimitAdmin;
                 }
             }
+        }
+        
+        static void SetOldAfkKick() {
+            foreach (Group grp in Group.GroupList) {
+                grp.AfkKickMinutes = old.afkKickMins;
+                // 0 minutes had the special meaning of 'not AFK kicked'
+                grp.AfkKicked = old.afkKickMins > 0 && grp.Permission < old.afkKickMax;
+            }            
         }
         
         

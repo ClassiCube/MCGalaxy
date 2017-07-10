@@ -39,7 +39,6 @@ namespace MCGalaxy.Gui {
             GuiPerms.UpdateRankNames();
             rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);
             rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
-            afk_cmbKickPerm.Items.AddRange(GuiPerms.RankNames);
             blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
             cmd_cmbMin.Items.AddRange(GuiPerms.RankNames);
 
