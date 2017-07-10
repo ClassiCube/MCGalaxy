@@ -57,9 +57,6 @@ namespace MCGalaxy {
         public static void CancelServerEvent(ServerEvents e) {
             switch (e) {
                 case ServerEvents.ConsoleCommand: Server.cancelcommand = true; break;
-                case ServerEvents.ServerAdminLog: Server.canceladmin = true; break;
-                case ServerEvents.ServerLog: Server.cancellog = true; break;
-                case ServerEvents.ServerOpLog: Server.canceloplog = true; break;
             }
         }
 
@@ -67,9 +64,6 @@ namespace MCGalaxy {
         public static bool IsServerEventCanceled(ServerEvents e) {
             switch (e) {
                 case ServerEvents.ConsoleCommand: return Server.cancelcommand;
-                case ServerEvents.ServerAdminLog: return Server.canceladmin;
-                case ServerEvents.ServerLog: return Server.cancellog;
-                case ServerEvents.ServerOpLog: return Server.canceloplog;
             }
             return false;
         }
@@ -79,7 +73,7 @@ namespace MCGalaxy {
         public static void CancelLevelEvent(LevelEvents e, Level l) {
             switch (e) {
                 case LevelEvents.LevelUnload: l.cancelunload = true; break;
-                case LevelEvents.LevelSave: l.cancelsave1 = true; break;
+                case LevelEvents.LevelSave: l.cancelsave = true; break;
             }
         }
         
@@ -87,7 +81,7 @@ namespace MCGalaxy {
         public static bool IsLevelEventCancel(LevelEvents e, Level l) {
             switch (e) {
                 case LevelEvents.LevelUnload: return l.cancelunload;
-                case LevelEvents.LevelSave: return l.cancelsave1;
+                case LevelEvents.LevelSave: return l.cancelsave;
             }
             return false;
         }
@@ -97,7 +91,6 @@ namespace MCGalaxy {
         public static void CancelGlobalLevelEvent(GlobalLevelEvents e) {
             switch (e) {
                 case GlobalLevelEvents.LevelLoad: Level.cancelload = true; break;
-                case GlobalLevelEvents.LevelSave: Level.cancelsave = true; break;
             }
         }
         
@@ -105,7 +98,6 @@ namespace MCGalaxy {
         public static bool IsGlobalLevelEventCanceled(GlobalLevelEvents e) {
             switch (e) {
                 case GlobalLevelEvents.LevelLoad: return Level.cancelload;
-                case GlobalLevelEvents.LevelSave: return Level.cancelsave;
             }
             return false;
         }

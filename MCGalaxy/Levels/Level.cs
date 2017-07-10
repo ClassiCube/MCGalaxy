@@ -241,7 +241,6 @@ namespace MCGalaxy {
             string path = LevelInfo.MapPath(MapName);
             if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
-            if (cancelsave1) { cancelsave1 = false; return; }
             if (cancelsave) { cancelsave = false; return; }
             
             try {

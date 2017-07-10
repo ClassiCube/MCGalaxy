@@ -19,11 +19,6 @@ namespace MCGalaxy.Events {
 
     /// <summary> These are server event that can be canceled </summary>
     public enum ServerEvents {
-        //TODO
-        //Make these do things
-        ServerLog,
-        ServerOpLog,
-        ServerAdminLog,
         ConsoleCommand
     }
     
@@ -43,7 +38,6 @@ namespace MCGalaxy.Events {
     /// <summary> These are Global (static) level events that can be canceled </summary>
     public enum GlobalLevelEvents {
         LevelLoad,
-        LevelSave
     }
     
     /// <summary> These are level events that can be canceled </summary>

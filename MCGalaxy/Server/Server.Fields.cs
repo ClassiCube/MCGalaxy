@@ -24,11 +24,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
     public sealed partial class Server {
-        public static bool cancelcommand;
-        public static bool canceladmin;
-        public static bool cancellog;
-        public static bool canceloplog;
-        
+        public static bool cancelcommand;        
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
         public delegate void MessageEventHandler(string message);

@@ -64,9 +64,7 @@ namespace MCGalaxy {
         }        
         
         public static bool cancelload;
-        public static bool cancelsave;
-        public static bool cancelphysics;
-        public bool cancelsave1;
+        public bool cancelsave;
         public bool cancelunload;
         public bool changed;
         internal bool saveLevel = true;
