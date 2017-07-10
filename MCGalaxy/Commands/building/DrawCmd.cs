@@ -59,7 +59,10 @@ namespace MCGalaxy.Commands.Building {
             BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
             BrushArgs bArgs = GetBrushArgs(dArgs, offset);
             Brush brush = factory.Construct(bArgs);
-            return brush != null && DrawOpPerformer.Do(dArgs.Op, brush, p, marks);
+            if (brush == null) return false;
+            
+            DrawOpPerformer.Do(dArgs.Op, brush, p, marks);
+            return true;
         }
         
         protected virtual string PlaceMessage {

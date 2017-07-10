@@ -39,7 +39,8 @@ namespace MCGalaxy.Commands.Building {
         bool DoMaze(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             MazeDrawOp op = new MazeDrawOp();
             op.randomizer = (int)state;
-            return DrawOpPerformer.Do(op, null, p, marks);
+            DrawOpPerformer.Do(op, null, p, marks);
+            return true;
         }
         
         public override void Help(Player p) {

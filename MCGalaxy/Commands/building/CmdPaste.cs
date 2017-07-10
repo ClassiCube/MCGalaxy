@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands.Building {
 
             PasteDrawOp op = new PasteDrawOp();
             op.CopyState = p.CopyBuffer;
-            return DrawOpPerformer.Do(op, (Brush)state, p, m);
+            DrawOpPerformer.Do(op, (Brush)state, p, m);
+            return true;
         }
         
         public override void Help(Player p) {

@@ -79,7 +79,8 @@ namespace MCGalaxy.Commands.Building {
             
             Brush brush = null;
             if (dArgs.brushMsg != "") brush = ParseBrush(dArgs.brushMsg, p, block);
-            return DrawOpPerformer.Do(op, brush, p, marks);
+            DrawOpPerformer.Do(op, brush, p, marks);
+            return true;
         }
         
         

@@ -55,7 +55,8 @@ namespace MCGalaxy.Commands.Building {
             Brush brush = factory.Construct(bArgs);
             if (brush == null) return false;
             
-            return DrawOpPerformer.Do(op, brush, p, marks);
+            DrawOpPerformer.Do(op, brush, p, marks);
+            return true;
         }
         struct DrawArgs { public ExtBlock target; public string brushArgs; }
 

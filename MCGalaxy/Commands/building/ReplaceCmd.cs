@@ -48,7 +48,8 @@ namespace MCGalaxy.Commands.Building {
             if (brush == null) return false;
             
             DrawOp op = new CuboidDrawOp();
-            return DrawOpPerformer.Do(op, brush, p, marks);
+            DrawOpPerformer.Do(op, brush, p, marks);
+            return true;
         }
         
         public override void Help(Player p) {
