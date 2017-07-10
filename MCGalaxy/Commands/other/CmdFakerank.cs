@@ -49,11 +49,15 @@ namespace MCGalaxy.Commands.Misc {
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
                                newRank.ColoredName);
             }
+            
+            who.color = newRank.Color;
+            Entities.GlobalRespawn(who);
+            who.SetPrefix();
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/fakerank [name] [rank]");
-            Player.Message(p, "%HSends a fake rank change message.");
+            Player.Message(p, "%T/fakerank [player] [rank]");
+            Player.Message(p, "%HGives [player] the appearance of being ranked to [rank].");
         }
     }
 }
