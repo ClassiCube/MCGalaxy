@@ -297,10 +297,6 @@ namespace MCGalaxy {
             buffer[7] = raw;
             Send(buffer);
         }
-        
-        public void SendExtAddPlayerName(byte id, string listName, string displayName, string grp, byte grpRank) {
-            Send(Packet.ExtAddPlayerName(id, listName, displayName, grp, grpRank, hasCP437));
-        }
 
         internal void CloseSocket() { 
             socket.Close();

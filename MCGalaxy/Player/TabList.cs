@@ -34,7 +34,7 @@ namespace MCGalaxy {
             
             string name, group;
             GetEntry(p, dst, out name, out group);
-            dst.SendExtAddPlayerName(id, p.truename, name, group, grpPerm);
+            dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));
         }
         
         /// <summary> Gets the name and the group name for the given player. </summary>
@@ -53,7 +53,7 @@ namespace MCGalaxy {
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
         public static void Add(Player dst, PlayerBot b) {
             if (!dst.hasExtList) return;
-            dst.SendExtAddPlayerName(b.id, b.SkinName, b.color + b.name, "Bots", 0);
+            dst.Send(Packet.ExtAddPlayerName(b.id, b.SkinName, b.color + b.name, "Bots", 0, dst.hasCP437));
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>

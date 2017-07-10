@@ -38,12 +38,8 @@ namespace MCGalaxy.Games {
     public sealed partial class CTFGame {
         public System.Timers.Timer tagging = new System.Timers.Timer(500);
         public bool voting = false;
-        int vote1 = 0;
-        int vote2 = 0;
-        int vote3 = 0;
-        string map1 = "";
-        string map2 = "";
-        string map3 = "";
+        int vote1 = 0, vote2 = 0, vote3 = 0;
+        string map1 = "", map2 = "", map3 = "";
         public bool started = false;
         
         CtfTeam2 red;
@@ -111,7 +107,7 @@ namespace MCGalaxy.Games {
             blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
         }
         
-        bool LoadConfig() {
+        public bool UpdateMapList() {
             //Load some configs
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             if (!File.Exists("CTF/maps.config")) return false;
@@ -185,7 +181,7 @@ namespace MCGalaxy.Games {
             if (started) {
                 Player.Message(p, "CTF game already running."); return false;
             }
-            if (!LoadConfig()) {
+            if (!UpdateMapList()) {
                 Player.Message(p, "No CTF maps were found."); return false;
             }
             
