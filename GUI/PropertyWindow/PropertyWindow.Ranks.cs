@@ -70,12 +70,16 @@ namespace MCGalaxy.Gui {
 
             rank_txtName.Text = grp.Name;
             rank_numPerm.Value = (int)grp.Permission;
-            rank_numLimit.Value = grp.MaxBlocks;
-            rank_numUndo.Value = grp.MaxUndo;
             chat_ParseColor(grp.Color, rank_btnColor);
             rank_txtMOTD.Text = grp.MOTD;
-            rank_numOSMaps.Value = grp.OverseerMaps;
             rank_txtPrefix.Text = grp.Prefix;
+            rank_cbAfk.Checked = grp.AfkKicked;
+            rank_numAfk.Value = grp.AfkKickMinutes;
+            
+            rank_numDraw.Value = grp.MaxBlocks;
+            rank_numUndo.Value = grp.MaxUndo;
+            rank_numMaps.Value = grp.OverseerMaps;
+            rank_numGen.Value = grp.GenVolume;
         }
 
         void rank_txtName_TextChanged(object sender, EventArgs e) {
@@ -98,27 +102,43 @@ namespace MCGalaxy.Gui {
             rank_list.Items[rank_list.SelectedIndex] = copiedGroups[rank_list.SelectedIndex].Name + " = " + perm;
             rankSupressEvents = false;
         }
+
         
-        void rank_numLimit_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MaxBlocks = (int)rank_numLimit.Value;
-        }
-        
-        void rank_numOSMaps_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numOSMaps.Value;
-        }
-        
-        void rank_numUndo_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
+        void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
         }
         
         void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
             copiedGroups[rank_list.SelectedIndex].Prefix = rank_txtPrefix.Text;
         }
         
-        void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
+        void rank_cbAfk_CheckedChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].AfkKicked = rank_cbAfk.Checked;
+            rank_numAfk.Enabled = rank_cbAfk.Checked;
+            rank_lblAfk.Enabled = rank_cbAfk.Checked;
         }
-
+        
+        void rank_numAfk_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].AfkKickMinutes = (int)rank_numAfk.Value;
+        }
+        
+        
+        void rank_numDraw_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].MaxBlocks = (int)rank_numDraw.Value;
+        }
+        
+        void rank_numUndo_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
+        }
+        
+        void rank_numMaps_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numMaps.Value;
+        }
+        
+        void rank_numGen_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].GenVolume = (int)rank_numGen.Value;
+        }
+        
         void rank_btnAdd_Click(object sender, EventArgs e) {
             // Find first free rank permission
             int perm = 5;
