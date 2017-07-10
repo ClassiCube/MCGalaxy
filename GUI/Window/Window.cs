@@ -97,7 +97,6 @@ namespace MCGalaxy.Gui {
             Server s = new Server();
             Logger.LogHandler += LogMessage;
 
-            Server.HeartBeatFail += HeartBeatFail;
             Server.OnURLChange += UpdateUrl;
             Server.OnPlayerListChange += UpdateClientList;
             Server.OnSettingsUpdate += SettingsUpdate;
@@ -180,10 +179,6 @@ namespace MCGalaxy.Gui {
                 Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
                 UpdateNotifyIconText();
             }
-        }
-
-        void HeartBeatFail() {
-            WriteLine("Recent Heartbeat Failed");
         }
 
         delegate void LogDelegate(string message);

@@ -257,10 +257,6 @@ namespace MCGalaxy {
             if (OnPlayerListChange != null) OnPlayerListChange();
         }
 
-        public static void FailBeat()  {
-            if (HeartBeatFail != null) HeartBeatFail();
-        }
-
         public static void UpdateUrl(string url) {
             if (OnURLChange != null) OnURLChange(url);
         }

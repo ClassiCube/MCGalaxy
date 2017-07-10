@@ -31,11 +31,9 @@ namespace MCGalaxy {
         
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;
-        public delegate void HeartBeatHandler();
         public delegate void MessageEventHandler(string message);
         public delegate void VoidHandler();
         
-        public static event HeartBeatHandler HeartBeatFail;
         public static event MessageEventHandler OnURLChange;
         public static event VoidHandler OnPlayerListChange;
         public static event VoidHandler OnSettingsUpdate;
