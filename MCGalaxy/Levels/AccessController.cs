@@ -45,14 +45,17 @@ namespace MCGalaxy {
         
         
         /// <summary> Returns the allowed state for the given player. </summary>
-        public AccessResult Check(Player p) {
-            if (Blacklisted.CaselessContains(p.name))
+        public AccessResult Check(Player p) { return Check(p.name, p.group); }
+        
+        /// <summary> Returns the allowed state for the given player. </summary>
+        public AccessResult Check(string name, Group rank) {
+            if (Blacklisted.CaselessContains(name))
                 return AccessResult.Blacklisted;
-            if (Whitelisted.CaselessContains(p.name))
+            if (Whitelisted.CaselessContains(name))
                 return AccessResult.Whitelisted;
             
-            if (p.Rank < Min) return AccessResult.BelowMinRank;
-            if (p.Rank > Max && MaxCmd != null && !p.group.CanExecute(MaxCmd))
+            if (rank.Permission < Min) return AccessResult.BelowMinRank;
+            if (rank.Permission > Max && MaxCmd != null && !rank.CanExecute(MaxCmd))
                 return AccessResult.AboveMaxRank;
             return AccessResult.Allowed;
         }
@@ -68,13 +71,13 @@ namespace MCGalaxy {
             if (result == AccessResult.BelowMinRank && ignoreRankPerm) return true;
             
             if (result == AccessResult.Blacklisted) {
-                Player.Message(p, "You are blacklisted from {1} {0}%S.", ColoredName, ActionIng);
+                Player.Message(p, "You are blacklisted from {0} {1}%S.", ActionIng, ColoredName);
             } else if (result == AccessResult.BelowMinRank) {
-                Player.Message(p, "Only {2}%S+ may {1} {0}%S.",
-                               ColoredName, Action, Group.GetColoredName(Min));
+                Player.Message(p, "Only {2}%S+ may {0} {1}%S.",
+                               Action, ColoredName, Group.GetColoredName(Min));
             } else if (result == AccessResult.AboveMaxRank) {
-                Player.Message(p, "Only {2} %Sand below may {1} {0}%S.",
-                               ColoredName, Action, Group.GetColoredName(Max));
+                Player.Message(p, "Only {2} %Sand below may {0} {1}%S.",
+                               Action, ColoredName, Group.GetColoredName(Max));
             }
             return false;
         }
@@ -113,7 +116,8 @@ namespace MCGalaxy {
         public bool Whitelist(Player p, string target) {
             if (!CheckList(p, target, true)) return false;
             if (Whitelisted.CaselessContains(target)) {
-                Player.Message(p, "\"{0}\" is already whitelisted.", target); return true;
+                Player.Message(p, "{0} %Sis already whitelisted.", PlayerInfo.GetColoredName(p, target));
+                return true;
             }
             
             bool removed = true;
@@ -131,7 +135,8 @@ namespace MCGalaxy {
         public bool Blacklist(Player p, string target) {
             if (!CheckList(p, target, false)) return false;
             if (Blacklisted.CaselessContains(target)) {
-                Player.Message(p, "\"{0}\" is already blacklisted.", target); return true;
+                Player.Message(p, "{0} %Sis already blacklisted.", PlayerInfo.GetColoredName(p, target));
+                return true;
             }
             
             bool removed = true;
@@ -163,13 +168,21 @@ namespace MCGalaxy {
         /// <summary> Returns true if the player is allowed to modify these access permissions,
         /// and is also allowed to change the access permissions for the target player. </summary>
         bool CheckList(Player p, string name, bool whitelist) {
-            string mode = whitelist ? "whitelist" : "blacklist";
-            
             if (p != null && !CheckDetailed(p)) {
+                string mode = whitelist ? "whitelist" : "blacklist";
                 Player.Message(p, "Hence you cannot modify the {0} {1}.", Type, mode); return false;
             }
-            if (p != null && PlayerInfo.GetGroup(name).Permission > p.Rank) {
-                Player.Message(p, "You cannot {0} players of a higher rank.", mode); return false;
+            
+            bool higherRank = p != null && PlayerInfo.GetGroup(name).Permission > p.Rank;
+            if (!higherRank) return true;
+            
+            if (!whitelist) {
+                Player.Message(p, "You cannot blacklist players of a higher rank.");
+                return false;
+            } else if (Check(name, Group.GroupIn(name)) == AccessResult.Blacklisted) {
+                Player.Message(p, "{0} %Sis blacklisted from {1} {2}%S.",
+                               PlayerInfo.GetColoredName(p, name), ActionIng, ColoredName);
+                return false;
             }
             return true;
         }
@@ -225,7 +238,7 @@ namespace MCGalaxy {
             get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }
         
-        protected override string ColoredName { 
+        protected override string ColoredName {
             get { return lvl != null ? lvl.ColoredName : cfg.Color + lvlName; }
         }
         protected override string Action { get { return IsVisit ? "go to" : "build in"; } }
