@@ -54,6 +54,9 @@ namespace MCGalaxy.Commands.Misc {
                 target.BlockUntilLoad(10);
             }
             
+            // Player wasn't able to join target map, so don't move
+            if (p.level != lvl) return;
+            
             Position pos = bot != null ? bot.Pos : target.Pos;
             Orientation rot = bot != null ? bot.Rot : target.Rot;
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
