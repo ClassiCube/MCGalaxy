@@ -38,7 +38,8 @@ namespace MCGalaxy.Generator {
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     Player.Message(p, "Downloading file from: &f" + url);
-                    client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
+                    string user = p == null ? "(console)" : p.name;
+                    client.DownloadFile(uri, dir + "tempImage_" + user + ".bmp");
                 }
                 Player.Message(p, "Finished downloading image.");
                 return true;
@@ -72,11 +73,12 @@ namespace MCGalaxy.Generator {
             Level lvl = args.Level;
             if (args.Args == "") { Player.Message(p, "You need to provide a url for the image."); return false; }
             
-            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;
-            Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
+            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;            
+            string user = p == null ? "(console)" : p.name;
+            Bitmap bmp = ReadBitmap("tempImage_" + user, "extra/heightmap/", p);
             if (bmp == null) return false;
-            int index = 0, oneY = lvl.Width * lvl.Length;
             
+            int index = 0, oneY = lvl.Width * lvl.Length;            
             using (bmp) {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
                     Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
