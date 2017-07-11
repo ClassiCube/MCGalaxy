@@ -23,6 +23,8 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Events;
+using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
@@ -72,12 +74,12 @@ namespace MCGalaxy.Games {
         }
         
         void HookEvents() {
-            Player.PlayerDeath += HandlePlayerDeath;
-            Player.PlayerChat += HandlePlayerChat;
-            Player.PlayerCommand += HandlePlayerCommand;
-            Player.PlayerBlockChange += HandlePlayerBlockChange;
-            Player.PlayerDisconnect += HandlePlayerDisconnect;
-            Level.LevelUnload += HandleLevelUnload;
+            OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
+            OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
+            OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);
+            OnBlockChangeEvent.Register(HandlePlayerBlockChange, Priority.High);
+            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
         }
         
         
@@ -159,7 +161,7 @@ namespace MCGalaxy.Games {
         void HandleLevelUnload(Level l) {
             if (started && l == map) {
                 Logger.Log(LogType.GameActivity, "Unload Failed!, A ctf game is currently going on!");
-                Plugin.CancelLevelEvent(LevelEvents.LevelUnload, l);
+                l.cancelunload = true;
             }
         }
 
@@ -277,7 +279,8 @@ namespace MCGalaxy.Games {
             if (team == null) {
                 p.RevertBlock(x, y, z);
                 Player.Message(p, "You are not on a team!");
-                Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
+                p.cancelBlock = true;
+                return;
             }
             
             Vec3U16 pos = new Vec3U16(x, y, z);
@@ -294,7 +297,7 @@ namespace MCGalaxy.Games {
         void ReturnFlag(Player p, CtfTeam2 team) {
             Vec3U16 flagPos = team.FlagPos;
             p.RevertBlock(flagPos.X, flagPos.Y, flagPos.Z);
-            Plugin.CancelPlayerEvent(PlayerEvents.BlockChange, p);
+             p.cancelBlock = true;
             
             if (DataOf(p).hasflag) {
                 Chat.MessageLevel(map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
@@ -332,7 +335,7 @@ namespace MCGalaxy.Games {
         }
         
         
-        void HandlePlayerCommand(string cmd, Player p, string message) {
+        void HandlePlayerCommand(Player p, string cmd, string args) {
             if (!started) return;
             
             if (cmd == "teamchat" && p.level == map) {
@@ -345,12 +348,12 @@ namespace MCGalaxy.Games {
                         Player.Message(d.p, "You are now chatting with your team!");
                         d.chatting = !d.chatting;
                     }
-                    Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                    p.cancelcommand = true;
                 }
             }
             
             if (cmd != "goto") return;
-            if (message == "ctf" && p.level != map) {
+            if (args == "ctf" && p.level != map) {
                 if (blue.Members.Count > red.Members.Count) {
                     JoinTeam(p, red);
                 } else if (red.Members.Count > blue.Members.Count) {
@@ -360,7 +363,7 @@ namespace MCGalaxy.Games {
                 } else {
                     JoinTeam(p, blue);
                 }
-            } else if (message != "ctf" && p.level == map) {
+            } else if (args != "ctf" && p.level == map) {
                 CtfTeam2 team = TeamOf(p);
                 if (team == null) return;
                 
@@ -387,19 +390,19 @@ namespace MCGalaxy.Games {
                 if (message == "1" || message.CaselessEq(map1)) {
                     Player.Message(p, "Thanks for voting :D");
                     vote1++;
-                    Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
+                    p.cancelchat = true;
                 } else if (message == "2" || message.CaselessEq(map2)) {
                     Player.Message(p, "Thanks for voting :D");
                     vote2++;
-                    Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
+                    p.cancelchat = true;
                 } else if (message == "3" || message.CaselessEq(map3)) {
                     Player.Message(p, "Thanks for voting :D");
                     vote3++;
-                    Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
+                    p.cancelchat = true;
                 } else {
                     Player.Message(p, "%2VOTE:");
                     Player.Message(p, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
-                    Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
+                    p.cancelchat = true;
                 }
             }
             
@@ -413,7 +416,7 @@ namespace MCGalaxy.Games {
             foreach (Player pl in members) {
                 Player.Message(pl, "({0}) {1}: &f{2}", team.Name, p.ColoredName, message);
             }
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerChat, p);
+            p.cancelchat = true;
         }
         
         void HandlePlayerDeath(Player p, ExtBlock deathblock) {

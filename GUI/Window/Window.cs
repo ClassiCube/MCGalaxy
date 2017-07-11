@@ -21,6 +21,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Generator;
 using MCGalaxy.Tasks;
 
@@ -129,12 +131,12 @@ namespace MCGalaxy.Gui {
             // The first check for updates is run after 10 seconds, subsequent ones every two hours
             Server.Background.QueueRepeat(Updater.UpdaterTask, null, TimeSpan.FromSeconds(10));
 
-            Player.PlayerConnect += Player_PlayerConnect;
-            Player.PlayerDisconnect += Player_PlayerDisconnect;
-            Player.OnSendMap += Player_OnSendMap;
+            OnPlayerConnectEvent.Register(Player_PlayerConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(Player_PlayerDisconnect, Priority.Low);
+            OnJoinedLevelEvent.Register(Player_OnJoinedLevel, Priority.Low);
 
-            Level.LevelLoaded += Level_LevelLoaded;
-            Level.LevelUnload += Level_LevelUnload;
+            OnLevelLoadedEvent.Register(Level_LevelLoaded, Priority.Low);
+            OnLevelUnloadEvent.Register(Level_LevelUnload, Priority.Low);
 
             RunOnUiThread(() => main_btnProps.Enabled = true);
         }
@@ -149,7 +151,7 @@ namespace MCGalaxy.Gui {
             UpdatePlayers();
         }
         
-        void Player_OnSendMap(Player p, byte[] buffer) {
+        void Player_OnJoinedLevel(Player p, Level prevLevel, Level lvl) {
             RunOnUiThread(() => {
                 UpdatePlayerMapCombo();
             });

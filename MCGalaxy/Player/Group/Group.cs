@@ -28,13 +28,7 @@ namespace MCGalaxy {
         
         const int mapGenLimitAdmin = 225 * 1000 * 1000;
         const int mapGenLimit = 30 * 1000 * 1000;
-        
-        public delegate void RankSet(Player p, Group newrank);
-        [Obsolete("Please use OnPlayerRankSetEvent.Register()")]
-        public static event RankSet OnPlayerRankSet;
         public static bool cancelrank = false;
-        //Move along...nothing to see here...
-        internal static void because(Player p, Group newrank) { if (OnPlayerRankSet != null) { OnPlayerRankSet(p, newrank); } OnPlayerRankSetEvent.Call(p, newrank); }
         
         /// <summary> Name of this rank. </summary>
         public string Name;

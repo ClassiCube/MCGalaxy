@@ -19,6 +19,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReview : Command {
@@ -90,7 +91,7 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageWhere(p.ColoredName + " %Sentered the review queue", pl => pl.Rank >= nextPerm);
             Chat.MessageWhere(start + " waiting for a &creview!", pl => pl.Rank >= nextPerm);
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
-            Player.RaisePlayerAction(p, PlayerAction.Review, null, true);
+            OnPlayerActionEvent.Call(p, PlayerAction.Review, null, true);
         }
         
         void HandleView(Player p) {

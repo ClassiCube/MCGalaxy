@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Events;
+using MCGalaxy.Events.GroupEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdSetRank : Command {
@@ -96,8 +97,7 @@ namespace MCGalaxy.Commands.Moderation {
                                PlayerInfo.GetColoredName(p, name), curRank.ColoredName); return false;
             }
             
-            if (who == null) return true;
-            Group.because(who, newRank);
+            OnChangingGroupEvent.Call(name, curRank, newRank);
             if (Group.cancelrank) { Group.cancelrank = false; return false; }
             return true;
         }

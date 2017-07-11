@@ -22,7 +22,7 @@ namespace MCGalaxy.Core {
         internal static void HandleConnecting(Player p, string mppass) {
             bool success = HandleConnectingCore(p, mppass);
             if (success) return;
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerConnecting, p);
+            p.cancelconnecting = true;
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {

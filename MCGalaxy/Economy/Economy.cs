@@ -19,17 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using MCGalaxy.Events;
+using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Eco {
     
     public static partial class Economy {
 
         public static bool Enabled;
-        
-        public delegate void OnMoneyChanged(Player p);
-        
-        public delegate void OnEcoTransaction(EcoTransaction transaction);
 
         public static void Load() {
             if (!File.Exists(Paths.EconomyPropsFile)) {

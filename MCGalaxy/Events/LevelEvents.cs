@@ -17,38 +17,51 @@
  */
 using System;
 using MCGalaxy.Blocks.Physics;
-
-namespace MCGalaxy.Events {
+   
+namespace MCGalaxy.Events.LevelEvents {
     
-    public sealed class OnLevelLoadedEvent : IPluginEvent<Level.OnLevelLoaded> {
-        public static void Call(Level l) {
+    public delegate void OnLevelLoaded(Level lvl);
+    public sealed class OnLevelLoadedEvent : IEvent<OnLevelLoaded> {
+        public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(l));
+            CallImpl(pl => pl(lvl));
         }
     }
     
-    public sealed class OnLevelLoadEvent : IPluginEvent<Level.OnLevelLoad> {
+    public delegate void OnLevelLoad(string level);
+    public sealed class OnLevelLoadEvent : IEvent<OnLevelLoad> {
         public static void Call(string name) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(name));
         }
     }
     
-    public sealed class OnLevelSaveEvent : IPluginEvent<Level.OnLevelSave> {
-        public static void Call(Level l) {
+    public delegate void OnLevelSave(Level lvl);
+    public sealed class OnLevelSaveEvent : IEvent<OnLevelSave> {
+        public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(l));
+            CallImpl(pl => pl(lvl));
         }
     }
     
-    public sealed class OnLevelUnloadEvent : IPluginEvent<Level.OnLevelUnload> {
-        public static void Call(Level l) {
+    public delegate void OnLevelUnload(Level lvl);
+    public sealed class OnLevelUnloadEvent : IEvent<OnLevelUnload> {
+        public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(l));
+            CallImpl(pl => pl(lvl));
         }
     }
     
-    public sealed class OnPhysicsUpdateEvent : IPluginEvent<Level.OnPhysicsUpdate> {
+    public delegate void OnPhysicsStateChanged(Level lvl, PhysicsState state);
+    public sealed class OnPhysicsStateChangedEvent : IEvent<OnPhysicsStateChanged> {
+        public static void Call(Level lvl, PhysicsState state) {
+            if (handlers.Count == 0) return;
+            CallImpl(pl => pl(lvl, state));
+        }
+    }
+    
+    public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level lvl);
+    public sealed class OnPhysicsUpdateEvent : IEvent<OnPhysicsUpdate> {
         public static void Call(ushort x, ushort y, ushort z, PhysicsArgs extraInfo, Level l) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(x, y, z, extraInfo, l));

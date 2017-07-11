@@ -26,11 +26,11 @@ namespace MCGalaxy.Core {
         public override string name { get { return "Core_NotesPlugin"; } }
 
         public override void Load(bool startup) {
-            OnModActionEvent.Register(HandleModerationAction, Priority.Low, this);
+            OnModActionEvent.Register(HandleModerationAction, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnModActionEvent.UnRegister(this);
+            OnModActionEvent.Unregister(HandleModerationAction);
         }
         
         static void HandleModerationAction(ModAction action) {

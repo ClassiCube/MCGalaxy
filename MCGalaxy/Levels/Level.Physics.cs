@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
-using MCGalaxy.Events;
+using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 
@@ -96,9 +96,7 @@ namespace MCGalaxy {
 
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
                             Logger.Log(LogType.Warning, "Physics shutdown on " + name);
-                            if (PhysicsStateChanged != null)
-                                PhysicsStateChanged(this, PhysicsState.Stopped);
-
+                            OnPhysicsStateChangedEvent.Call(this, PhysicsState.Stopped);
                             wait = Config.PhysicsSpeed;
                         } else {
                             Player[] online = PlayerInfo.Online.Items;
@@ -107,9 +105,7 @@ namespace MCGalaxy {
                                 Player.Message(p, "Physics warning!");
                             }
                             Logger.Log(LogType.Warning, "Physics warning on " + name);
-
-                            if (PhysicsStateChanged != null)
-                                PhysicsStateChanged(this, PhysicsState.Warning);
+                            OnPhysicsStateChangedEvent.Call(this, PhysicsState.Warning);
                         }
                     }
                 } catch {
@@ -148,8 +144,6 @@ namespace MCGalaxy {
                 Check C = ListCheck.Items[i];
                 IntToPos(C.b, out x, out y, out z);
                 try {
-                    if (PhysicsUpdate != null)
-                        PhysicsUpdate(x, y, z,  C.data, this);
                     if (OnPhysicsUpdateEvent.handlers.Count > 0)
                         OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                     

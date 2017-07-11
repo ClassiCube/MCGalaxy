@@ -17,7 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
@@ -34,7 +34,7 @@ namespace MCGalaxy.DB {
         public static void Lock() {
             Upgrading = true;
             Logger.Log(LogType.SystemActivity, "Kicking players and unloading levels..");
-            Player.PlayerConnecting += ConnectingHandler;
+            OnPlayerConnectingEvent.Register(ConnectingHandler, Priority.System_Level);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.DB {
         }
         
         public static void Unlock() {
-            Player.PlayerConnecting -= ConnectingHandler;
+            OnPlayerConnectingEvent.Unregister(ConnectingHandler);
             Player.MessageLines(null, CompactMessages);
             Logger.Log(LogType.SystemActivity, "&aUpgrade finished!");
             Upgrading = false;
@@ -57,7 +57,7 @@ namespace MCGalaxy.DB {
         
         static void ConnectingHandler(Player p, string mppass) {
             p.Leave("Upgrading BlockDB (" + Progress + "). Check back later!");
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerConnecting, p);
+            p.cancelconnecting = true;
         }
         
         

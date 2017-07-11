@@ -16,7 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Events;
+using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Games {
     public sealed class CountdownPlugin : Plugin_Simple {
@@ -26,15 +27,15 @@ namespace MCGalaxy.Games {
         public CountdownGame Game;
 
         public override void Load(bool startup) {
-            OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High, this);
-            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High, this);
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High, this);
+            OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
+            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
-            OnPlayerMoveEvent.UnRegister(this);
-            OnPlayerDisconnectEvent.UnRegister(this);
-            OnLevelUnloadEvent.UnRegister(this);
+            OnPlayerMoveEvent.Unregister(HandlePlayerMove);
+            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
         }
         
         
@@ -49,7 +50,7 @@ namespace MCGalaxy.Games {
             
             p.Pos = next;
             p.SetYawPitch(yaw, pitch);
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerMove, p);
+            p.cancelmove = true;
         }
         
         void HandlePlayerDisconnect(Player p, string reason) {

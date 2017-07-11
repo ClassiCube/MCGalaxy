@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Events {
     public enum MouseButton {
         Left = 0,
         Right = 1,

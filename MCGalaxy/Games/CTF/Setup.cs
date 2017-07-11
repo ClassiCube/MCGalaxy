@@ -17,6 +17,7 @@
  */
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Games {
     /// <summary> This plugin creates CTF Config files for you by using /ctfsetup in-game </summary>
@@ -27,17 +28,17 @@ namespace MCGalaxy.Games {
         public override string name { get { return "/ctfsetup"; }  }
 
         public override void Load(bool startup) {
-            Player.PlayerCommand += OnCommand;
-            Player.PlayerChat += OnChat;
-            Player.PlayerBlockChange += OnBlock;
-            Player.PlayerDisconnect += OnDisconnect;
+            OnPlayerCommandEvent.Register(OnCommand, Priority.Critical);
+            OnPlayerChatEvent.Register(OnChat, Priority.Critical);
+            OnBlockChangeEvent.Register(OnBlock, Priority.Critical);
+            OnPlayerDisconnectEvent.Register(OnDisconnect, Priority.Critical);
         }
         
         public override void Unload(bool shutdown) {
-            Player.PlayerCommand -= OnCommand;
-            Player.PlayerChat -= OnChat;
-            Player.PlayerBlockChange -= OnBlock;
-            Player.PlayerDisconnect -= OnDisconnect;
+            OnPlayerCommandEvent.Unregister(OnCommand);
+            OnPlayerChatEvent.Unregister(OnChat);
+            OnBlockChangeEvent.Unregister(OnBlock);
+            OnPlayerDisconnectEvent.Unregister(OnDisconnect);
         }
         
         
@@ -150,7 +151,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void OnCommand(string cmd, Player p, string message) {
+        void OnCommand(Player p, string cmd, string args) {
             if (!cmd.CaselessEq("ctfsetup")) return;
 
             Player.Message(p, "%2Hello and welcome to the noob friendly CTF setup :D");

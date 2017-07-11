@@ -17,6 +17,7 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
 
@@ -121,7 +122,7 @@ namespace MCGalaxy {
             if (p.level.ShouldShowJoinMessage(oldLevel)) {
                 string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
                 Chat.MessageGlobal(p, p.ColoredName + msg + lvl.ColoredName, false, true);
-                Player.RaisePlayerAction(p, PlayerAction.JoinWorld, lvl.name);
+                OnPlayerActionEvent.Call(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;
         }

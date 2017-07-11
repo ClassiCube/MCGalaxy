@@ -21,7 +21,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Chatting;
 using MCGalaxy.DB;
-using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -86,8 +86,6 @@ namespace MCGalaxy {
             if (Blockchange != null) {
                 Blockchange(this, x, y, z, block); return;
             }
-            if (PlayerBlockChange != null)
-                PlayerBlockChange(this, x, y, z, block);
             OnBlockChangeEvent.Call(this, x, y, z, block);
             if (cancelBlock) { cancelBlock = false; return; }
 
@@ -137,9 +135,9 @@ namespace MCGalaxy {
             }
         }
         
-        internal bool CheckManualChange(ExtBlock old, ExtBlock block, bool replaceMode) {
+        internal bool CheckManualChange(ExtBlock old, ExtBlock block, bool deleteMode) {
             if (!BlockPerms.UsableBy(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
-                string action = replaceMode ? "replace" : "delete";
+                string action = deleteMode ? "delete" : "replace";
                 BlockPerms.List[old.BlockID].MessageCannotUse(this, action);
                 return false;
             }
@@ -332,9 +330,7 @@ namespace MCGalaxy {
 
             if (Server.zombie.Running && Server.zombie.HandlesMovement(this, next, yaw, pitch))
                 return;
-            
-            if (OnMove != null) OnMove(this, next, yaw, pitch);
-            if (PlayerMove != null) PlayerMove(this, next, yaw, pitch);
+
             OnPlayerMoveEvent.Call(this, next, yaw, pitch);
             if (cancelmove) { cancelmove = false; return; }
             
@@ -373,8 +369,6 @@ namespace MCGalaxy {
         }
         
         public void HandleDeath(ExtBlock block, string customMessage = "", bool explode = false, bool immediate = false) {
-            if (OnDeath != null) OnDeath(this, block);
-            if (PlayerDeath != null) PlayerDeath(this, block);
             OnPlayerDeathEvent.Call(this, block);
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
@@ -495,8 +489,6 @@ namespace MCGalaxy {
                 Chat.MessageLevel(this, text, true, level);
             } else {
                 Logger.Log(LogType.PlayerChat, "<{0}> {1}", name, text);
-                if (OnChat != null) OnChat(this, text);
-                if (PlayerChat != null) PlayerChat(this, text);
                 OnPlayerChatEvent.Call(this, text);
                 if (cancelchat) { cancelchat = false; return; }
                 
@@ -691,9 +683,7 @@ namespace MCGalaxy {
                 cmdArgs = cmdArgs.TrimEnd(' ');
             }
             
-            if (OnCommand != null) OnCommand(cmd, this, cmdArgs);
-            if (PlayerCommand != null) PlayerCommand(cmd, this, cmdArgs);
-            OnPlayerCommandEvent.Call(cmd, this, cmdArgs);
+            OnPlayerCommandEvent.Call(this, cmd, cmdArgs);
             if (cancelcommand) { cancelcommand = false; return null; }
             
             Command command = Command.all.Find(cmd);

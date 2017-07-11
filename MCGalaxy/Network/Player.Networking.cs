@@ -18,6 +18,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
@@ -55,7 +56,6 @@ namespace MCGalaxy {
             TargetBlockFace face = TargetBlockFace.None;
             if (Face < (byte)face)
                 face = (TargetBlockFace)Face;
-            if (OnPlayerClick != null) OnPlayerClick(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
             OnPlayerClickEvent.Call(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
         }
         
@@ -129,11 +129,7 @@ namespace MCGalaxy {
             message = Chat.Format(message, this, colorParse);
             
             int totalTries = 0;
-            if (MessageRecieve != null)
-                MessageRecieve(this, message);
-            if (OnMessageRecieve != null)
-                OnMessageRecieve(this, message);
-            OnMessageRecieveEvent.Call(this, message);
+            OnMessageRecievedEvent.Call(this, message);
             if (cancelmessage) { cancelmessage = false; return; }
             
             retryTag: try {
@@ -174,7 +170,7 @@ namespace MCGalaxy {
             motd = ChatTokens.Apply(motd, this);
             
             byte[] packet = Packet.Motd(this, motd);
-            if (OnSendMOTD != null) OnSendMOTD(this, packet);
+            OnSendingMotdEvent.Call(this, packet);
             Send(packet);
             
             if (!HasCpeExt(CpeExt.HackControl)) return;
@@ -221,9 +217,7 @@ namespace MCGalaxy {
                 Send(buffer);
                 Loading = false;
                 
-                if (OnJoinedLevel != null) OnJoinedLevel(this, oldLevel, level);
-                OnJoinedLevelEvent.Call(this, oldLevel, level);                
-                if (OnSendMap != null) OnSendMap(this, buffer);
+                OnJoinedLevelEvent.Call(this, oldLevel, level);
             } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);

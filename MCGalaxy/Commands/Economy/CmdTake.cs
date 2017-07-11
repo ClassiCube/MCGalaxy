@@ -17,7 +17,7 @@
  */
 using System;
 using MCGalaxy.Eco;
-using MCGalaxy.Events;
+using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdTake : MoneyCmd {

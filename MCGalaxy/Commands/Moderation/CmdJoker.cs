@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Events.PlayerEvents;
+
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdJoker : Command {       
         public override string name { get { return "joker"; } }
@@ -44,14 +46,14 @@ namespace MCGalaxy.Commands.Moderation {
                 } else {
                     Chat.MessageGlobal(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", false);              
                 }
-                Player.RaisePlayerAction(p, PlayerAction.Joker, null, stealth);
+                OnPlayerActionEvent.Call(p, PlayerAction.Joker, null, stealth);
             } else {
                 if (stealth) { 
                     Chat.MessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
                 } else {
                     Chat.MessageGlobal(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
                 }
-                Player.RaisePlayerAction(p, PlayerAction.Unjoker, null, stealth);
+                OnPlayerActionEvent.Call(p, PlayerAction.Unjoker, null, stealth);
             }
             who.joker = !who.joker;
         }

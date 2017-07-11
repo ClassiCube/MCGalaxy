@@ -23,12 +23,12 @@ namespace MCGalaxy.Core {
 
     internal static class ChatHandler {
         
-        internal static void HandleCommand(string cmd, Player p, string message) {
+        internal static void HandleCommand(Player p, string cmd, string args) {
             if (!ServerConfig.CoreSecretCommands) return;
 
             //DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {
-                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
                 int ponycount = p.Extras.GetInt("MCGalaxy_Core_Pony", 0);                
                             
@@ -42,7 +42,7 @@ namespace MCGalaxy.Core {
                 ponycount++;
                 p.Extras.PutInt("MCGalaxy_Core_RD", ponycount);
             } else if (cmd == "rainbowdashlikescoolthings") {
-                Plugin.CancelPlayerEvent(PlayerEvents.PlayerCommand, p);
+                p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
                 int rdcount = p.Extras.GetInt("MCGalaxy_Core_RD", 0);
                 

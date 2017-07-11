@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Events.PlayerEvents;
+
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdMe : MessageCmd {
         public override string name { get { return "me"; } }
@@ -30,7 +32,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             string msg = p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message;
             if (TryMessage(p, msg))
-                Player.RaisePlayerAction(p, PlayerAction.Me, message);
+                OnPlayerActionEvent.Call(p, PlayerAction.Me, message);
         }
         
         public override void Help(Player p) {

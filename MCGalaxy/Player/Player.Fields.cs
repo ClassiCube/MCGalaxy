@@ -14,16 +14,14 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Security.Cryptography;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Transforms;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Undo;
 using MCGalaxy.Maths;
-using MCGalaxy.Events;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
+using MCGalaxy.Undo;
 
 namespace MCGalaxy {
     
@@ -33,8 +31,6 @@ namespace MCGalaxy {
         
         public Dictionary<string, object> ExtraData = new Dictionary<string, object>();
 
-        public void ClearChat() { OnChat = null; }
-        
         internal class PendingItem {
             public string Name;
             public DateTime Connected;
@@ -253,5 +249,21 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
         public static bool IsSuper(Player p) { return p == null || p.SuperUser; }
+        
+        
+        public bool cancelcommand, cancelchat, cancelmove, cancelBlock, cancelmysql;
+        public bool cancelmessage, cancellogin, cancelconnecting;        
+      
+        /// <summary> Called when a player removes or places a block.
+        /// NOTE: Currently this prevents the OnBlockChange event from being called. </summary>
+        public event OnBlockChange Blockchange;
+        
+        internal bool HasBlockchange { get { return Blockchange != null; } }
+        public void ClearBlockchange() { Blockchange = null; }
+        public object blockchangeObject;
+        
+        /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
+        /// <returns> Whether to repeat this selection, if /static mode is enabled. </returns>
+        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, ExtBlock block);
     }
 }

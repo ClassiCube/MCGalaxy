@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
-using MCGalaxy.Events;
+using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
@@ -157,8 +157,6 @@ namespace MCGalaxy {
         public bool Unload(bool silent = false, bool save = true) {
             if (Server.mainLevel == this || IsMuseum) return false;
             if (Server.lava.active && Server.lava.map == this) return false;
-            if (LevelUnload != null)
-                LevelUnload(this);
             OnLevelUnloadEvent.Call(this);
             if (cancelunload) {
                 Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
@@ -239,7 +237,6 @@ namespace MCGalaxy {
             if (blocks == null || IsMuseum) return; // museums do not save properties
             
             string path = LevelInfo.MapPath(MapName);
-            if (LevelSave != null) LevelSave(this);
             OnLevelSaveEvent.Call(this);
             if (cancelsave) { cancelsave = false; return; }
             
@@ -330,7 +327,6 @@ namespace MCGalaxy {
         public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name)); }
 
         public static Level Load(string name, string path) {
-            if (LevelLoad != null) LevelLoad(name);
             OnLevelLoadEvent.Call(name);
             if (cancelload) { cancelload = false; return null; }
 
@@ -360,8 +356,6 @@ namespace MCGalaxy {
                 }
 
                 Logger.Log(LogType.SystemActivity, "Level \"{0}\" loaded.", lvl.name);
-                if (LevelLoaded != null)
-                    LevelLoaded(lvl);
                 OnLevelLoadedEvent.Call(lvl);
                 return lvl;
             } catch (Exception ex) {

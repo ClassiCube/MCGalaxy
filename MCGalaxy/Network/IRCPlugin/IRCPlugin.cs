@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Network {
 
@@ -27,19 +28,19 @@ namespace MCGalaxy.Network {
         public IRCBot Bot;
 
         public override void Load(bool startup) {
-            OnPlayerConnectEvent.Register(HandleConnect, Priority.Low, this);
-            OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.Low, this);
-            OnPlayerChatEvent.Register(HandleChat, Priority.Low, this);
-            Player.DoPlayerAction += Player_PlayerAction;
-            OnModActionEvent.Register(HandleModerationAction, Priority.Low, this);
+            OnPlayerConnectEvent.Register(HandleConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.Low);
+            OnPlayerChatEvent.Register(HandleChat, Priority.Low);
+            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
+            OnModActionEvent.Register(HandleModerationAction, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnPlayerConnectEvent.UnRegister(this);
-            OnPlayerDisconnectEvent.UnRegister(this);
-            OnPlayerChatEvent.UnRegister(this);
-            Player.DoPlayerAction -= Player_PlayerAction;
-            OnModActionEvent.UnRegister(this);
+            OnPlayerConnectEvent.Unregister(HandleConnect);
+            OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
+            OnPlayerChatEvent.Unregister(HandleChat);
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            OnModActionEvent.Unregister(HandleModerationAction);
         }
         
         
@@ -70,10 +71,11 @@ namespace MCGalaxy.Network {
             return prefix + newRank.ColoredName;
         }
         
-        void Player_PlayerAction(Player p, PlayerAction action,
+        void HandlePlayerAction(Player p, PlayerAction action,
                                  string message, bool stealth) {
             if (!Server.IRC.Enabled || !p.level.SeesServerWideChat) return;
             string msg = null;
+            if (p.muted || (Server.chatmod && !p.voice)) return;
             
             if (action == PlayerAction.AFK && ServerConfig.IRCShowAFK && !p.hidden)
                 msg = p.ColoredName + " %Sis AFK " + message;
@@ -104,7 +106,7 @@ namespace MCGalaxy.Network {
         void HandleConnect(Player p) {
             if (!Server.IRC.Enabled || p.hidden) return;
             if (!ServerConfig.GuestJoinsNotify && p.Rank <= LevelPermission.Guest) return;
-            if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerLogin, p)) return;
+            if (p.cancellogin) return;
             
             Bot.Say(p.ColoredName + " %Sjoined the game", false);
         }
@@ -113,7 +115,7 @@ namespace MCGalaxy.Network {
         void HandleChat(Player p, string message) {
             if (!Server.IRC.Enabled) return;
             if (message.Trim(trimChars) == "") return;
-            if (Plugin.IsPlayerEventCanceled(PlayerEvents.PlayerChat, p)) return;
+            if (p.cancelchat) return;
             
             string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
             Bot.Say(name + "%S: " + message, p.opchat);

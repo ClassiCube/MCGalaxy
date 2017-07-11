@@ -18,7 +18,7 @@ using System.Data;
 using System.IO;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
-using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
@@ -39,7 +39,6 @@ namespace MCGalaxy {
             if (ServerConfig.ClassicubeAccountPlus) name += "+";
             
             string mppass = NetUtils.ReadString(packet, 66);
-            if (PlayerConnecting != null) PlayerConnecting(this, mppass);
             OnPlayerConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
                                    
@@ -143,10 +142,8 @@ namespace MCGalaxy {
                 hidden = true; adminchat = true;
             }
             
-            if (PlayerConnect != null) PlayerConnect(this);
             OnPlayerConnectEvent.Call(this);
-            if (cancellogin) { cancellogin = false; return; }
-            
+            if (cancellogin) { cancellogin = false; return; }           
             
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;

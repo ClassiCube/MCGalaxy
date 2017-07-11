@@ -35,7 +35,7 @@ namespace MCGalaxy.Core {
             p.SetYawPitch(yaw, pitch);
             
             if (movedX || movedY || movedZ) { p.SendPos(Entities.SelfID, p.Pos, p.Rot); }
-            Plugin.CancelPlayerEvent(PlayerEvents.PlayerMove, p);
+            p.cancelmove = true;
         }
         
         internal static void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {

@@ -130,7 +130,7 @@ namespace MCGalaxy.Events {
     }
     
     /// <summary> Raised when a moderation action occurs. </summary>
-    public sealed class OnModActionEvent : IPluginEvent<OnModAction> {
+    public sealed class OnModActionEvent : IEvent<OnModAction> {
         public static void Call(ModAction e) {
             if (handlers.Count == 0) return;
             CallImpl(pl => pl(e));

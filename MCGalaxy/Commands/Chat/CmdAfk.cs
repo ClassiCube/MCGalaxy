@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAfk : MessageCmd {
@@ -49,23 +49,19 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are now marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);
-                    Player.RaisePlayerAction(p, PlayerAction.AFK, message);
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);                    
                     p.CheckForMessageSpam();
                 }
-                
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                p.RaiseONAFK();
-                Player.RaiseAFK(p);
-                OnPlayerAFKEvent.Call(p);
+                OnPlayerActionEvent.Call(p, PlayerAction.AFK, message);
             } else {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");
-                    Player.RaisePlayerAction(p, PlayerAction.UnAFK, message);
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");                    
                     p.CheckForMessageSpam();
                 }
+                OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, message);
             }
         }
         

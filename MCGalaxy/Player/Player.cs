@@ -19,7 +19,8 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.DB;
-using MCGalaxy.Events;
+using MCGalaxy.Events.EconomyEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 using MCGalaxy.Network;
@@ -125,8 +126,7 @@ namespace MCGalaxy {
         }
 
         public void save() {
-            if (MySQLSave != null) MySQLSave(this, "");
-            OnMySQLSaveEvent.Call(this, "");
+            OnSQLSaveEvent.Call(this, "");
             if (cancelmysql) { cancelmysql = false; return; }
 
             long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
@@ -325,9 +325,7 @@ namespace MCGalaxy {
 
                 PlayerInfo.Online.Remove(this);
                 Server.PlayerListUpdate();
-                
                 OnPlayerDisconnectEvent.Call(this, discMsg);
-                if (PlayerDisconnect != null) PlayerDisconnect(this, discMsg);
                 
                 if (ServerConfig.AutoLoadMaps && level.Config.AutoUnload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);

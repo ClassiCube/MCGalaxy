@@ -20,6 +20,9 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Eco;
 using MCGalaxy.Events;
+using MCGalaxy.Events.EconomyEvents;
+using MCGalaxy.Events.GroupEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Core {
@@ -31,41 +34,34 @@ namespace MCGalaxy.Core {
         SchedulerTask clearTask;
 
         public override void Load(bool startup) {
-            OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect,
-                                          Priority.Critical, this);
-            OnPlayerCommandEvent.Register(ChatHandler.HandleCommand,
-                                          Priority.Critical, this);
-            OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting,
-                                          Priority.Critical, this);
+            OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect, Priority.Critical);
+            OnPlayerCommandEvent.Register(ChatHandler.HandleCommand, Priority.Critical);
+            OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting, Priority.Critical);
             
-            OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel,
-                                        Priority.Critical, this);
-            OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove,
-                                       Priority.Critical, this);
-            OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick,
-                                        Priority.Critical, this);
-            OnEcoTransactionEvent.Register(EcoHandlers.HandleEcoTransaction,
-                                           Priority.Critical, this);
-            OnModActionEvent.Register(ModActionHandler.HandleModAction, 
-                                      Priority.Critical, this);
-        	OnGroupLoadEvent.Register(MiscHandlers.HandleGroupLoad,
-        	                          Priority.Critical, this);
+            OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel, Priority.Critical);
+            OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove, Priority.Critical);
+            OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick, Priority.Critical);
+            
+            OnEcoTransactionEvent.Register(EcoHandlers.HandleEcoTransaction, Priority.Critical);
+            OnModActionEvent.Register(ModActionHandler.HandleModAction, Priority.Critical);
+        	OnGroupLoadEvent.Register(MiscHandlers.HandleGroupLoad, Priority.Critical);
             
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));
         }
         
         public override void Unload(bool shutdown) {
-            OnPlayerConnectEvent.UnRegister(this);
-            OnPlayerCommandEvent.UnRegister(this);
-            OnPlayerConnectingEvent.UnRegister(this);
+            OnPlayerConnectEvent.Unregister(ConnectHandler.HandleConnect);
+            OnPlayerCommandEvent.Unregister(ChatHandler.HandleCommand);
+            OnPlayerConnectingEvent.Unregister(ConnectingHandler.HandleConnecting);
             
-            OnJoinedLevelEvent.UnRegister(this);
-            OnPlayerMoveEvent.UnRegister(this);
-            OnPlayerClickEvent.UnRegister(this);
-            OnEcoTransactionEvent.UnRegister(this);
-            OnModActionEvent.UnRegister(this);
-            OnGroupLoadEvent.UnRegister(this);
+            OnJoinedLevelEvent.Unregister(MiscHandlers.HandleOnJoinedLevel);
+            OnPlayerMoveEvent.Unregister(MiscHandlers.HandlePlayerMove);
+            OnPlayerClickEvent.Unregister(MiscHandlers.HandlePlayerClick);
+            
+            OnEcoTransactionEvent.Unregister(EcoHandlers.HandleEcoTransaction);
+            OnModActionEvent.Unregister(ModActionHandler.HandleModAction);
+            OnGroupLoadEvent.Unregister(MiscHandlers.HandleGroupLoad);
             
             Server.Background.Cancel(clearTask);
         }

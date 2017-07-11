@@ -18,21 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using MCGalaxy.Events;
+using MCGalaxy.Events.GroupEvents;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
     public sealed partial class Group {
-        
-        public delegate void GroupSave();
-        [Obsolete("Please use OnGroupSaveEvent.Register()")]
-        public static event GroupSave OnGroupSave;
-        public delegate void GroupLoad();
-        [Obsolete("Please use OnGroupLoadEvent.Register()")]
-        public static event GroupLoad OnGroupLoad;
-        public delegate void GroupLoaded(Group mGroup);
-        [Obsolete("Please use OnGroupLoadedEvent.Register()")]
-        public static event GroupLoaded OnGroupLoaded;
         
         public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
         public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
@@ -42,9 +32,6 @@ namespace MCGalaxy {
         public static void Register(Group grp) {
             GroupList.Add(grp);
             grp.LoadPlayers();
-            
-            if (OnGroupLoaded != null)
-                OnGroupLoaded(grp);
             OnGroupLoadedEvent.Call(grp);
         }
 
@@ -75,7 +62,6 @@ namespace MCGalaxy {
             standard = Find(ServerConfig.DefaultRankName);
             if (standard == null) standard = GuestRank;
 
-            if (OnGroupLoad != null) OnGroupLoad();
             OnGroupLoadEvent.Call();
             SaveList(GroupList);
         }
@@ -86,7 +72,6 @@ namespace MCGalaxy {
             lock (saveLock)
                 GroupProperties.SaveGroups(givenList);
             
-            if (OnGroupSave != null) OnGroupSave();
             OnGroupSaveEvent.Call();
         }
         

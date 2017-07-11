@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Building {
             } else {
                 // We only want to activate blocks in the world
                 ExtBlock old = p.level.GetBlock(P.X, P.Y, P.Z);
-                if (!p.CheckManualChange(old, ExtBlock.Air, false)) return;
+                if (!p.CheckManualChange(old, ExtBlock.Air, true)) return;
                 
                 HandleDelete handler = p.level.deleteHandlers[old.Index];
                 if (handler != null) {
