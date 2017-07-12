@@ -56,6 +56,9 @@ namespace MCGalaxy.Blocks {
             
             int index = p.level.PosToInt(x, y, z);
             if (index != p.lastCheckpointIndex) {
+                Position pos = p.Pos;
+                pos.X = x * 32 + 16; pos.Z = z * 32 + 16;
+                p.SendPos(Entities.SelfID, pos, p.Rot);
                 Entities.Spawn(p, p);
                 p.lastCheckpointIndex = index;
             }
