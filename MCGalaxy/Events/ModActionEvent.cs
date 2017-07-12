@@ -133,7 +133,7 @@ namespace MCGalaxy.Events {
     public sealed class OnModActionEvent : IEvent<OnModAction> {
         public static void Call(ModAction e) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(e));
+            CallCommon(pl => pl(e));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public sealed class OnGroupLoadedEvent : IEvent<GroupLoaded> {
         public static void Call(Group g) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(g));
+            CallCommon(pl => pl(g));
         }
     }
     
@@ -34,7 +34,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public sealed class OnGroupLoadEvent : IEvent<GroupLoad> {
         public static void Call() {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl());
+            CallCommon(pl => pl());
         }
     }
     
@@ -43,7 +43,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public sealed class OnGroupSaveEvent : IEvent<GroupSave> {
         public static void Call() {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl());
+            CallCommon(pl => pl());
         }
     }
     
@@ -52,7 +52,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public sealed class OnChangingGroupEvent : IEvent<OnChangingGroup> {
         public static void Call(string player, Group curRank, Group newRank) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(player, curRank, newRank));
+            CallCommon(pl => pl(player, curRank, newRank));
         }
     }
 }

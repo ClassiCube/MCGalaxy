@@ -140,7 +140,7 @@ namespace MCGalaxy {
 
         public bool staticCommands = false;
         public DateTime ZoneSpam;
-        public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>(false);
+        public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
 
         public bool aiming;
         public bool isFlying = false;
@@ -187,7 +187,7 @@ namespace MCGalaxy {
         public bool spawned = false;
 
         //Undo
-        internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>(false);
+        internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>();
         internal readonly object pendingDrawOpsLock = new object();
         internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();
 

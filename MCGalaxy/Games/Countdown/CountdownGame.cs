@@ -24,10 +24,10 @@ namespace MCGalaxy.Games {
     public sealed class CountdownGame : IGame {
         
         /// <summary> All players who are playing this countdown game. </summary>
-        public VolatileArray<Player> Players = new VolatileArray<Player>(false);
+        public VolatileArray<Player> Players = new VolatileArray<Player>();
         
         /// <summary> Players who are still alive in the current round. </summary>
-        public VolatileArray<Player> Remaining = new VolatileArray<Player>(false);
+        public VolatileArray<Player> Remaining = new VolatileArray<Player>();
         
         /// <summary> Map countdown is running on. </summary>
         public Level Map;

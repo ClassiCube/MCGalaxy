@@ -25,7 +25,7 @@ namespace MCGalaxy.Events.EconomyEvents {
     public sealed class OnMoneyChangedEvent : IEvent<OnMoneyChanged> {
         public static void Call(Player p) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p));
+            CallCommon(pl => pl(p));
         }
     }    
     
@@ -34,7 +34,7 @@ namespace MCGalaxy.Events.EconomyEvents {
     public sealed class OnEcoTransactionEvent : IEvent<OnEcoTransaction> {
         public static void Call(EcoTransaction transaction) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(transaction));
+            CallCommon(pl => pl(transaction));
         }
     }
 }

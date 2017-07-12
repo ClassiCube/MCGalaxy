@@ -70,10 +70,10 @@ namespace MCGalaxy.Games {
         public Level CurLevel = null;
         
         /// <summary> List of alive/human players. </summary>
-        public VolatileArray<Player> Alive = new VolatileArray<Player>(false);
+        public VolatileArray<Player> Alive = new VolatileArray<Player>();
         
         /// <summary> List of dead/infected players. </summary>
-        public VolatileArray<Player> Infected = new VolatileArray<Player>(false);
+        public VolatileArray<Player> Infected = new VolatileArray<Player>();
         
         public List<string> RecentMaps = new List<string>();
         
@@ -92,10 +92,10 @@ namespace MCGalaxy.Games {
         int infectCombo = 0;
         
         /// <summary> List of players who have a bounty on them. </summary>
-        public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>(false);
+        public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
         
         /// <summary> List of players who are in the lottery. </summary>
-        public VolatileArray<string> Lottery = new VolatileArray<string>(false);
+        public VolatileArray<string> Lottery = new VolatileArray<string>();
     }
     
     public static class ZSConfig {

@@ -27,7 +27,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerChatEvent : IEvent<OnPlayerChat> {
         public static void Call(Player p, string message) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, message));
+            CallCommon(pl => pl(p, message));
         }
     }
 
@@ -36,7 +36,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerMoveEvent : IEvent<OnPlayerMove> {
         public static void Call(Player p, Position next, byte yaw, byte pitch) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, next, yaw, pitch));
+            CallCommon(pl => pl(p, next, yaw, pitch));
         }
     }
     
@@ -45,7 +45,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnSQLSaveEvent : IEvent<OnSQLSave> {
         public static void Call(Player p, string ysqlcommand) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, ysqlcommand));
+            CallCommon(pl => pl(p, ysqlcommand));
         }
     }
     
@@ -55,7 +55,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerCommandEvent : IEvent<OnPlayerCommand> {
         public static void Call(Player p, string cmd, string args) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, cmd, args));
+            CallCommon(pl => pl(p, cmd, args));
         }
     }
     
@@ -64,7 +64,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerConnectEvent: IEvent<OnPlayerConnect> {
         public static void Call(Player p) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p));
+            CallCommon(pl => pl(p));
         }
     }
 
@@ -73,7 +73,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerConnectingEvent: IEvent<OnPlayerConnecting> {
         public static void Call(Player p, string mppass) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, mppass));
+            CallCommon(pl => pl(p, mppass));
         }
     }
 
@@ -82,7 +82,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> {
         public static void Call(Player p, ExtBlock block) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, block));
+            CallCommon(pl => pl(p, block));
         }
     }
     
@@ -91,7 +91,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnPlayerDisconnectEvent : IEvent<OnPlayerDisconnect> {
         public static void Call(Player p, string reason) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, reason));
+            CallCommon(pl => pl(p, reason));
         }
     }
 
@@ -100,7 +100,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnBlockChangeEvent : IEvent<OnBlockChange> {
         public static void Call(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, x, y, z, block));
+            CallCommon(pl => pl(p, x, y, z, block));
         }
     }
 
@@ -113,7 +113,7 @@ namespace MCGalaxy.Events.PlayerEvents {
                                 ushort yaw, ushort pitch, byte entity, 
                                 ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, button, action, yaw,
+            CallCommon(pl => pl(p, button, action, yaw,
                               pitch, entity, x, y, z, face));
         }
     }
@@ -123,7 +123,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnMessageRecievedEvent : IEvent<OnMessageReceived> {
         public static void Call(Player p, string message) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, message));
+            CallCommon(pl => pl(p, message));
         }
     }
 
@@ -132,7 +132,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnJoinedLevelEvent : IEvent<OnJoinedLevel> {
         public static void Call(Player p, Level prevLevl, Level level) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, prevLevl, level));
+            CallCommon(pl => pl(p, prevLevl, level));
         }
     }
 
@@ -143,7 +143,7 @@ namespace MCGalaxy.Events.PlayerEvents {
         public static void Call(Player p, PlayerAction action, 
     	                        string message = null, bool stealth = false) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, action, message, stealth));
+            CallCommon(pl => pl(p, action, message, stealth));
         }
     }
 
@@ -152,7 +152,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public sealed class OnSendingMotdEvent : IEvent<OnSendingMotd> {
     	public static void Call(Player p, byte[] packet) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(p, packet));
+            CallCommon(pl => pl(p, packet));
         }
     } 
 }

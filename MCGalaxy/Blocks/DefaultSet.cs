@@ -17,7 +17,6 @@
  */
 using System;
 using System.Text;
-using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Blocks {
     

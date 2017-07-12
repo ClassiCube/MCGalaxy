@@ -275,7 +275,7 @@ namespace MCGalaxy.Commands.Fun {
         
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cd joins/leave %H- joins/leaves the game");
+            Player.Message(p, "%T/cd join/leave %H- joins/leaves the game");
             Player.Message(p, "%T/cd players %H- lists players currently playing");
             Player.Message(p, "%T/cd rules %H- view the rules of countdown");
             if (CheckExtraPerm(p, 1)) {
@@ -289,7 +289,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%H  speed can be: slow, normal, fast, extreme or ultimate");
             Player.Message(p, "%H  mode can be: normal or freeze");
             Player.Message(p, "%T/cd end %H- force ends current round of countdown");
-            Player.Message(p, "%T/cd reset %H- resets the map. Note %T/cd start %Hauto does this.");
+            Player.Message(p, "%T/cd reset %H- resets the map. %T/cd start %Halso resets map.");
         }
     }
 }

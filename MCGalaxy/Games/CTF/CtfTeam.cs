@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
         public int Points;
         
         /// <summary> Players on this team. </summary>
-        public VolatileArray<Player> Members = new VolatileArray<Player>(false);
+        public VolatileArray<Player> Members = new VolatileArray<Player>();
         
         
         /// <summary> Position in the world the flag is located at. </summary>

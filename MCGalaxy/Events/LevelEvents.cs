@@ -24,7 +24,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnLevelLoadedEvent : IEvent<OnLevelLoaded> {
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(lvl));
+            CallCommon(pl => pl(lvl));
         }
     }
     
@@ -32,7 +32,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnLevelLoadEvent : IEvent<OnLevelLoad> {
         public static void Call(string name) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(name));
+            CallCommon(pl => pl(name));
         }
     }
     
@@ -40,7 +40,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnLevelSaveEvent : IEvent<OnLevelSave> {
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(lvl));
+            CallCommon(pl => pl(lvl));
         }
     }
     
@@ -48,7 +48,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnLevelUnloadEvent : IEvent<OnLevelUnload> {
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(lvl));
+            CallCommon(pl => pl(lvl));
         }
     }
     
@@ -56,7 +56,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnPhysicsStateChangedEvent : IEvent<OnPhysicsStateChanged> {
         public static void Call(Level lvl, PhysicsState state) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(lvl, state));
+            CallCommon(pl => pl(lvl, state));
         }
     }
     
@@ -64,7 +64,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public sealed class OnPhysicsUpdateEvent : IEvent<OnPhysicsUpdate> {
         public static void Call(ushort x, ushort y, ushort z, PhysicsArgs extraInfo, Level l) {
             if (handlers.Count == 0) return;
-            CallImpl(pl => pl(x, y, z, extraInfo, l));
+            CallCommon(pl => pl(x, y, z, extraInfo, l));
         }
     }
 }

@@ -36,7 +36,7 @@ namespace MCGalaxy {
         
         readonly bool useList;
         
-        public VolatileArray(bool useList) {
+        public VolatileArray(bool useList = false) {
             this.useList = useList;
             if (useList) list = new List<T>();
         }

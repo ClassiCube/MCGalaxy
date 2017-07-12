@@ -17,10 +17,9 @@
 */
 using System;
 
-namespace MCGalaxy
-{
-    public sealed partial class Block
-    {
+namespace MCGalaxy {
+    public sealed partial class Block {
+		
         public static string Name(byte block) { return Props[block].Name; }
         
         public static byte Byte(string type) {
