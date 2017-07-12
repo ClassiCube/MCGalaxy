@@ -28,10 +28,16 @@ namespace MCGalaxy {
         public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
         public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
         public static Group standard;
+        static bool reloading;
         
         public static void Register(Group grp) {
             GroupList.Add(grp);
             grp.LoadPlayers();
+            
+            if (reloading) {
+                grp.SetUsableBlocks();
+                grp.SetUsableCommands();
+            }
             OnGroupLoadedEvent.Call(grp);
         }
 
@@ -60,9 +66,10 @@ namespace MCGalaxy {
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             standard = Find(ServerConfig.DefaultRankName);
-            if (standard == null) standard = GuestRank;
+            if (standard == null) standard = GuestRank;            
 
             OnGroupLoadEvent.Call();
+            reloading = true;
             SaveList(GroupList);
         }
         
