@@ -479,7 +479,9 @@
     <Compile Include="Entity\Entities.cs" />
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="Entity\Structs.cs" />
+    <Compile Include="Entity\TabList.cs" />
     <Compile Include="Events\EconomyEvents.cs" />
+    <Compile Include="Events\EntityEvents.cs" />
     <Compile Include="Events\GroupEvents.cs" />
     <Compile Include="Events\IPluginEvent.cs" />
     <Compile Include="Events\LevelEvents.cs" />
@@ -597,7 +599,6 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\PlayerPhysics.cs" />
     <Compile Include="Player\SpamChecker.cs" />
-    <Compile Include="Player\TabList.cs" />
     <Compile Include="Database\Undo\UndoFormatCBin.cs" />
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />

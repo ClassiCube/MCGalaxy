@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Games;
+using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
@@ -37,14 +38,12 @@ namespace MCGalaxy {
             dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));
         }
         
-        /// <summary> Gets the name and the group name for the given player. </summary>
-        public static void GetEntry(Player p, Player dst, out string name, out string group) {
+        static void GetEntry(Player p, Player dst, out string name, out string group) {
             string col = Entities.GetSupportedCol(dst, p.color);          
             group = ServerConfig.TablistGlobal ? "On " + p.level.name : "&fPlayers";
             name = col + p.truename;
-            IGame game = p.level.CurrentGame();
-            if (game != null) game.GetTabName(p, dst, ref name, ref group);
-            
+            OnTabListEntryAddedEvent.Call(p, ref name, ref group, dst);
+
             if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }
             if (p.hidden) name += " &f(Hid)";
             if (p.IsAfk) name += " &7(AFK)";
@@ -53,7 +52,10 @@ namespace MCGalaxy {
         /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
         public static void Add(Player dst, PlayerBot b) {
             if (!dst.hasExtList) return;
-            dst.Send(Packet.ExtAddPlayerName(b.id, b.SkinName, b.color + b.name, "Bots", 0, dst.hasCP437));
+            
+            string name = b.color + b.name, group = "Bots";
+            OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
+            dst.Send(Packet.ExtAddPlayerName(b.id, b.SkinName, name, group, 0, dst.hasCP437));
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
@@ -61,6 +63,7 @@ namespace MCGalaxy {
             if (!dst.hasExtList) return;
             dst.Send(Packet.ExtRemovePlayerName(id));
         }
+        
         
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) who can see the player in the tab list. </summary>
