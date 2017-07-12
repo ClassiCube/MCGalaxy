@@ -24,7 +24,7 @@ namespace MCGalaxy.Events {
     /// This is because the static event lists are unique to each new generic type instantiation, not each new subclass. </remarks>
     public class IEvent<IMethod> {
         protected internal static VolatileArray<IEvent<IMethod>> handlers = new VolatileArray<IEvent<IMethod>>();
-        protected IMethod method;
+        protected internal IMethod method;
         protected Priority priority;
         
         /// <summary> Registers the given handler to this event. </summary>

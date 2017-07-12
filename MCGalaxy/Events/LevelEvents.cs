@@ -22,6 +22,7 @@ namespace MCGalaxy.Events.LevelEvents {
     
     public delegate void OnLevelLoaded(Level lvl);
     public sealed class OnLevelLoadedEvent : IEvent<OnLevelLoaded> {
+        
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(lvl));
@@ -30,6 +31,7 @@ namespace MCGalaxy.Events.LevelEvents {
     
     public delegate void OnLevelLoad(string level);
     public sealed class OnLevelLoadEvent : IEvent<OnLevelLoad> {
+        
         public static void Call(string name) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(name));
@@ -38,6 +40,7 @@ namespace MCGalaxy.Events.LevelEvents {
     
     public delegate void OnLevelSave(Level lvl);
     public sealed class OnLevelSaveEvent : IEvent<OnLevelSave> {
+        
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(lvl));
@@ -46,6 +49,7 @@ namespace MCGalaxy.Events.LevelEvents {
     
     public delegate void OnLevelUnload(Level lvl);
     public sealed class OnLevelUnloadEvent : IEvent<OnLevelUnload> {
+        
         public static void Call(Level lvl) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(lvl));
@@ -54,6 +58,7 @@ namespace MCGalaxy.Events.LevelEvents {
     
     public delegate void OnPhysicsStateChanged(Level lvl, PhysicsState state);
     public sealed class OnPhysicsStateChangedEvent : IEvent<OnPhysicsStateChanged> {
+        
         public static void Call(Level lvl, PhysicsState state) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(lvl, state));
@@ -63,6 +68,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public delegate void OnPhysicsUpdate(ushort x, ushort y, ushort z, PhysicsArgs args, Level lvl);
     public sealed class OnPhysicsUpdateEvent : IEvent<OnPhysicsUpdate> {
         public static void Call(ushort x, ushort y, ushort z, PhysicsArgs extraInfo, Level l) {
+            
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(x, y, z, extraInfo, l));
         }

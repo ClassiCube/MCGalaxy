@@ -23,6 +23,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public delegate void GroupLoaded(Group group);
     /// <summary> Raised when a particular group is loaded.</summary>
     public sealed class OnGroupLoadedEvent : IEvent<GroupLoaded> {
+        
         public static void Call(Group g) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(g));
@@ -32,6 +33,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public delegate void GroupLoad();
     /// <summary> Raised when list of groups has been loaded or reloaded. </summary>
     public sealed class OnGroupLoadEvent : IEvent<GroupLoad> {
+        
         public static void Call() {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl());
@@ -41,6 +43,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public delegate void GroupSave();
     /// <summary> Raised when list of groups has been saved. </summary>
     public sealed class OnGroupSaveEvent : IEvent<GroupSave> {
+        
         public static void Call() {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl());
@@ -50,6 +53,7 @@ namespace MCGalaxy.Events.GroupEvents {
     public delegate void OnChangingGroup(string player, Group curRank, Group newRank);
     /// <summary> Raised when a player is about to have their rank changed. Cancelable. </summary>
     public sealed class OnChangingGroupEvent : IEvent<OnChangingGroup> {
+        
         public static void Call(string player, Group curRank, Group newRank) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(player, curRank, newRank));
