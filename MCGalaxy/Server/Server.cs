@@ -85,6 +85,7 @@ namespace MCGalaxy {
             StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
             Logger.Log(LogType.SystemActivity, "Starting Server");
+            ServicePointManager.Expect100Continue = false;
             try {
                 if (File.Exists("Restarter.exe"))
                     File.Delete("Restarter.exe");
