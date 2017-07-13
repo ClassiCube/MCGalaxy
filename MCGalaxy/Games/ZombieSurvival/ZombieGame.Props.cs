@@ -91,6 +91,7 @@ namespace MCGalaxy.Games {
         string lastPlayerToInfect = "";
         int infectCombo = 0;
         
+        
         /// <summary> List of players who have a bounty on them. </summary>
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
         

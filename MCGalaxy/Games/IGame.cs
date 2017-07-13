@@ -30,11 +30,6 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        /// <summary> Returns whether this game handled the player moving to a new position. </summary>
-        public virtual bool HandlesMovement(Player p, Position pos, byte rotX, byte rotY) {
-            return false;
-        }
-        
         /// <summary> Returns whether this game handled the player sending a chat message. </summary>
         public virtual bool HandlesChatMessage(Player p, string message) {
             return false;
@@ -42,9 +37,6 @@ namespace MCGalaxy.Games {
         
         /// <summary> Raised when a player joins the server. </summary>
         public virtual void PlayerJoinedServer(Player p) { }
-        
-        /// <summary> Raised when a player leaves the server. </summary>
-        public virtual void PlayerLeftServer(Player p) { }
         
         /// <summary> Raised when a player joins this game. </summary>
         public virtual void PlayerJoinedGame(Player p) { }
@@ -59,18 +51,10 @@ namespace MCGalaxy.Games {
             return true;
         }
         
-        /// <summary> Raised when a player's money amount changes. </summary>
-        public virtual void PlayerMoneyChanged(Player p) { }
-        
         /// <summary> Raised when the server is about to send a heartbeat. </summary>
         public virtual void OnHeartbeat(ref string name) { }
         
         /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
-        
-        /// <summary> Gets the player's name shown in the tab list 
-        /// (for clients that support a separate tab list) that are in this game. </summary>
-        public virtual void GetTabName(Player p, Player dst,
-                                       ref string name, ref string group) { }
     }
 }

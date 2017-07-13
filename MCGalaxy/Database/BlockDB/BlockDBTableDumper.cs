@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using MCGalaxy.Levels.IO;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
-using MCGalaxy.Maths;
 
 namespace MCGalaxy.DB {
     

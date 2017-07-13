@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands.Maintenance {
             Server.voteKickInProgress = false;
             Server.voteKickVotesNeeded = 0;
 
-            Server.zombie.ResetState();
+            Server.zombie.End();
             SrvProperties.GenerateSalt();
 
             ServerConfig.RestartTime = DateTime.Now;

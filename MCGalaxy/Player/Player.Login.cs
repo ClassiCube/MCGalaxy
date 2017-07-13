@@ -184,7 +184,6 @@ namespace MCGalaxy {
                 Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
             }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
-            Server.zombie.PlayerJoinedServer(this);
             Server.lava.PlayerJoinedServer(this);
             
             Pos = level.SpawnPos;

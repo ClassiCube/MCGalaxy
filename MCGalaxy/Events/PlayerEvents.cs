@@ -16,10 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 
 namespace MCGalaxy.Events.PlayerEvents {
-    public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me, Review };
+    public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me, Review, Referee, UnReferee };
     
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player chats on the server. </summary>

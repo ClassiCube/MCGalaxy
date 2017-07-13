@@ -328,9 +328,6 @@ namespace MCGalaxy {
             Position next = new Position(x, y, z);
             CheckBlocks(next);
 
-            if (Server.zombie.Running && Server.zombie.HandlesMovement(this, next, yaw, pitch))
-                return;
-
             OnPlayerMoveEvent.Call(this, next, yaw, pitch);
             if (cancelmove) { cancelmove = false; return; }
             

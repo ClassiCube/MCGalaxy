@@ -33,6 +33,7 @@ namespace MCGalaxy.Games {
     }
     
     public sealed partial class ZombieGame {
+        ZSPlugin plugin = new ZSPlugin();
         
         public void Start(ZombieGameStatus status, Level level, int rounds) {
             Status = status;
@@ -42,6 +43,8 @@ namespace MCGalaxy.Games {
             if (!SetStartLevel(level)) return;
             
             HookStats();
+            if (plugin.Game == null) { plugin.Game = this; plugin.Load(false); }
+            
             Thread t = new Thread(MainLoop);
             t.Name = "MCG_ZombieGame";
             t.Start();
@@ -179,14 +182,15 @@ namespace MCGalaxy.Games {
             }
         }
 
-        public void ResetState() {
+        public void End() {
             Status = ZombieGameStatus.NotStarted;
             MaxRounds = 0;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            Player[] online = PlayerInfo.Online.Items;
+            if (plugin.Game != null) { plugin.Game = null; plugin.Unload(false); }
             
+            Player[] online = PlayerInfo.Online.Items;           
             Alive.Clear();
             Infected.Clear();
             

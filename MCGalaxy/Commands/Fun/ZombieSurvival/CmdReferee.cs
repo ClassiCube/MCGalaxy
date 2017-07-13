@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using MCGalaxy.Games;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Fun {    
@@ -30,26 +31,13 @@ namespace MCGalaxy.Commands.Fun {
         public override void Use(Player p, string message) {
             if (p.Game.Referee) {
                 Chat.MessageGlobal(p, p.ColoredName + " %Sis no longer a referee", false);
-                p.Game.Referee = !p.Game.Referee;
-                if (p.level == Server.zombie.CurLevel)
-                    Server.zombie.PlayerJoinedLevel(p, Server.zombie.CurLevel, Server.zombie.CurLevel);
-                
-                if (p.HasCpeExt(CpeExt.HackControl))
-                    p.Send(Hacks.MakeHackControl(p));
-                Command.all.Find("spawn").Use(p, "");
+                OnPlayerActionEvent.Call(p, PlayerAction.UnReferee);
+                p.Game.Referee = false;
             } else {
-                Chat.MessageGlobal(p, p.ColoredName + " %Sis now a referee", false);               
-                Server.zombie.PlayerLeftServer(p);
-                Entities.GlobalDespawn(p, false, true);
-                p.Game.Referee = !p.Game.Referee;
-                
-                if (p.HasCpeExt(CpeExt.HackControl))
-                    p.Send(Packet.HackControl(true, true, true, true, true, -1));
+                Chat.MessageGlobal(p, p.ColoredName + " %Sis now a referee", false);
+                OnPlayerActionEvent.Call(p, PlayerAction.Referee);
+                p.Game.Referee = true;
             }
-            
-            Entities.GlobalSpawn(p, false, "");
-            TabList.Add(p, p, Entities.SelfID);
-            p.SetPrefix();
         }
         
         public override void Help(Player p) {

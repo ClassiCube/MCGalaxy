@@ -309,7 +309,6 @@ namespace MCGalaxy {
                     return;
                 }
 
-                Server.zombie.PlayerLeftServer(this);
                 if ( Game.team != null ) Game.team.RemoveMember(this);
                 TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
                 if ( tntwarsgame != null ) {
@@ -452,9 +451,6 @@ namespace MCGalaxy {
    
         public void SetMoney(int amount) {
             money = amount;
-            
-            if (Server.zombie.Running) Server.zombie.PlayerMoneyChanged(this);
-            if (Server.lava.active) Server.lava.PlayerMoneyChanged(this);
             OnMoneyChangedEvent.Call(this);
         }
 

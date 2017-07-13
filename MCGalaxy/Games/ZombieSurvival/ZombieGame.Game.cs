@@ -53,14 +53,6 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public override bool HandlesMovement(Player p, Position next, byte rotX, byte rotY) {
-            if (!Running || !RoundInProgress) return false;
-            if (p.level == null || !p.level.name.CaselessEq(CurLevelName)) return false;
-            
-            return MovementCheck.DetectNoclip(p, next) 
-                || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
-        }
-        
         public override bool HandlesChatMessage(Player p, string message) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (Server.votingforlevel && HandleVote(p, message)) return true;
@@ -94,17 +86,7 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public override void PlayerLeftServer(Player p) {
-            Alive.Remove(p);
-            Infected.Remove(p);
-            p.Game.Infected = false;
-            RemoveBounties(p);
-            
-            AssignFirstZombie();
-            HUD.UpdateAllPrimary(this);
-        }
-        
-        void RemoveBounties(Player p) {
+        internal void RemoveBounties(Player p) {
             BountyData[] bounties = Bounties.Items;
             foreach (BountyData b in bounties) {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
@@ -116,11 +98,6 @@ namespace MCGalaxy.Games {
                 Player setter = PlayerInfo.FindExact(b.Origin);
                 if (setter != null) setter.SetMoney(setter.money + b.Amount);
             }
-        }
-        
-        public override void PlayerJoinedServer(Player p) {
-            if (!Running || ZSConfig.SetMainLevel) return;
-            Player.Message(p, "Zombie Survival is running! Type %T/zs go %Sto join.");
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
@@ -177,11 +154,6 @@ namespace MCGalaxy.Games {
             return true;
         }
         
-        public override void PlayerMoneyChanged(Player p) {
-            if (!Running || !p.level.name.CaselessEq(CurLevelName)) return;
-            HUD.UpdateTertiary(p);
-        }
-        
         public override void OnHeartbeat(ref string name) {
             if (!Running || !ZSConfig.IncludeMapInHeartbeat || CurLevelName == null) return;
             name += " (map: " + CurLevelName + ")";
@@ -194,22 +166,6 @@ namespace MCGalaxy.Games {
             else if (winStreak == 2) prefix += "&7*"+ p.color;
             else if (winStreak == 3) prefix += "&6*"+ p.color;
             else if (winStreak > 0) prefix += "&6" + winStreak + p.color;
-        }
-        
-        public override void GetTabName(Player p, Player dst,
-                                        ref string name, ref string group) {
-            if (p.Game.Referee) {
-                group = "&2Referees";
-            } else if (p.Game.Infected) {
-                group = "&cZombies";
-                if (ZSConfig.ZombieName != "" && !dst.Game.Aka) {
-                    name = "&c" + ZSConfig.ZombieName;
-                } else {
-                    name = "&c" + p.truename;
-                }
-            } else {
-                group = "&fHumans";
-            }
         }
     }
 }

@@ -511,6 +511,7 @@
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
+    <Compile Include="Games\ZombieSurvival\ZSPlugin.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
     <Compile Include="Generator\fCraft\MapGenerator.cs" />
     <Compile Include="Generator\fCraft\MapGeneratorArgs.cs" />

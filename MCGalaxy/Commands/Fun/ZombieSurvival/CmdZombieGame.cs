@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Fun {
             
             src = p == null ? "(console)" : p.name;
             Logger.Log(LogType.GameActivity, "Zombie Survival stopped by " + src);
-            Server.zombie.ResetState();
+            Server.zombie.End();
         }
         
        void HandleSet(Player p, string[] args) {

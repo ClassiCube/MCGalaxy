@@ -18,9 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using System.Timers;
 using MCGalaxy.Games.ZS;
 using MCGalaxy.Network;
 
@@ -36,7 +34,7 @@ namespace MCGalaxy.Games {
                 Logger.LogError(ex);
                 Chat.MessageGlobal("&cZombie survival disabled due to an error.");
                 try {
-                    ResetState();
+                    End();
                 } catch (Exception ex2) {
                     Logger.LogError(ex2);
                 }
@@ -57,17 +55,17 @@ namespace MCGalaxy.Games {
                         LevelPicker.ChooseNextLevel(this);
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
-                    ResetState(); return;
+                    End(); return;
                 } else if (Status == ZombieGameStatus.VariableRounds) {
                     if (RoundsDone == MaxRounds) {
-                        ResetState(); return;
+                        End(); return;
                     } else {
                         DoRound();
                         if (ZSConfig.ChangeLevels)
                             LevelPicker.ChooseNextLevel(this);
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
-                    ResetState(); return;
+                    End(); return;
                 }
             }
         }
