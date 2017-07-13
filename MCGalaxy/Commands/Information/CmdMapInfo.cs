@@ -105,11 +105,12 @@ namespace MCGalaxy.Commands.Info {
             PrintRanks(p, data.Visit, "  Visitable by ");
             PrintRanks(p, data.Build, "  Modifiable by ");
             
+            string realmOwner = cfg.RealmOwner;
             if (String.IsNullOrEmpty(cfg.RealmOwner))
-                cfg.RealmOwner = GetRealmMapOwner(data.Name);
-            if (String.IsNullOrEmpty(cfg.RealmOwner)) return;
+                realmOwner = GetRealmMapOwner(data.Name);
+            if (String.IsNullOrEmpty(realmOwner)) return;
             
-            string[] owners = cfg.RealmOwner.Replace(" ", "").Split(',');
+            string[] owners = realmOwner.Replace(" ", "").Split(',');
             Player.Message(p, "  This map is a personal realm of {0}",
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
