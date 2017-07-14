@@ -89,7 +89,7 @@ namespace MCGalaxy {
         public static ExtrasCollection Extras = new ExtrasCollection();
 
         // Games
-        public static ZombieGame zombie;
+        public static ZSGame zombie;
         
         public static int YesVotes = 0, NoVotes = 0;
         public static bool voting = false, votingforlevel = false;

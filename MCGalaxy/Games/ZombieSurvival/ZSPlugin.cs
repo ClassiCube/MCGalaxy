@@ -27,7 +27,7 @@ namespace MCGalaxy.Games.ZS {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.VersionString; } }
         public override string name { get { return "Core_ZSPlugin"; } }
-        public ZombieGame Game;
+        public ZSGame Game;
 
         public override void Load(bool startup) {
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
@@ -36,6 +36,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
+            OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
@@ -45,6 +46,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
@@ -114,6 +116,14 @@ namespace MCGalaxy.Games.ZS {
             Entities.GlobalSpawn(p, false, "");
             TabList.Add(p, p, Entities.SelfID);
             p.SetPrefix();
+        }
+        
+        void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
+            if (p.level != Game.CurLevel) return;
+            
+            if (!p.Game.Referee && !p.Game.Infected && Game.RoundInProgress) {
+                 Game.InfectPlayer(p, null);
+            }
         }
     }
 }

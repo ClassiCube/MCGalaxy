@@ -20,24 +20,24 @@ using System;
 namespace MCGalaxy.Games.ZS {
     internal static class HUD {
         
-        internal static void UpdateAllPrimary(ZombieGame game) {
+        internal static void UpdateAllPrimary(ZSGame game) {
             int left = (int)(game.RoundEnd - DateTime.UtcNow).TotalSeconds;
             string status = FormatPrimary(game, left);
             MessageAll(game, CpeMessageType.Status1, status);
         }
         
-        internal static void UpdatePrimary(ZombieGame game, Player p) {
+        internal static void UpdatePrimary(ZSGame game, Player p) {
             int left = (int)(game.RoundEnd - DateTime.UtcNow).TotalSeconds;
             string status = FormatPrimary(game, left);
             p.SendCpeMessage(CpeMessageType.Status1, status);
         }
 
-        internal static void UpdateAllSecondary(ZombieGame game) {
+        internal static void UpdateAllSecondary(ZSGame game) {
             string status = FormatSecondary(game);
             MessageAll(game, CpeMessageType.Status2, status);
         }
         
-        internal static void UpdateSecondary(ZombieGame game, Player p) {
+        internal static void UpdateSecondary(ZSGame game, Player p) {
             string status = FormatSecondary(game);
             p.SendCpeMessage(CpeMessageType.Status2, status);
         }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Games.ZS {
         }
 
         
-        static string FormatPrimary(ZombieGame game, int seconds) {
+        static string FormatPrimary(ZSGame game, int seconds) {
             string timespan = GetTimeLeft(seconds);
             if (timespan.Length > 0) {
                 const string format = "&a{0} %Salive %S({2}, map: {1})";
@@ -77,7 +77,7 @@ namespace MCGalaxy.Games.ZS {
             }
         }
         
-        static string FormatSecondary(ZombieGame game) {
+        static string FormatSecondary(ZSGame game) {
             string pillar = "%SPillaring " + (game.CurLevel.Config.Pillaring ? "&aYes" : "&cNo");
             string type = "%S, Type is &a" + game.CurLevel.Config.BuildType;
             return pillar + type;
@@ -89,7 +89,7 @@ namespace MCGalaxy.Games.ZS {
             return money + state;
         }
         
-        static void MessageAll(ZombieGame game, CpeMessageType type, string message) {
+        static void MessageAll(ZSGame game, CpeMessageType type, string message) {
             if (!game.Running) return;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {

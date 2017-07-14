@@ -23,7 +23,7 @@ namespace MCGalaxy.Games.ZS {
     
     internal static class Rewards {
 
-        public static void HandOut(ZombieGame game) {
+        public static void HandOut(ZSGame game) {
             Player[] alive = game.Alive.Items, dead = game.Infected.Items;
             game.CurLevel.ChatLevel("&aThe game has ended!");
             
@@ -43,7 +43,7 @@ namespace MCGalaxy.Games.ZS {
             DoLottery(game);
         }
 
-        static void AnnounceWinners(ZombieGame game, Player[] alive, Player[] dead) {
+        static void AnnounceWinners(ZSGame game, Player[] alive, Player[] dead) {
             if (alive.Length > 0) {
                 string winners = alive.Join(p => p.ColoredName);
                 game.CurLevel.ChatLevel(winners);
@@ -66,7 +66,7 @@ namespace MCGalaxy.Games.ZS {
                                     + suffix + "%S)&8: " + dead.Join(formatter));
         }
 
-        static void IncreaseAliveStats(Player p, ZombieGame game) {
+        static void IncreaseAliveStats(Player p, ZSGame game) {
             if (p.Game.PledgeSurvive) {
                 Player.Message(p, "You received &a5 %3" + ServerConfig.Currency +
                               " %Sfor successfully pledging that you would survive.");
@@ -79,7 +79,7 @@ namespace MCGalaxy.Games.ZS {
             p.SetPrefix(); // stars before name
         }
 
-        static void GiveMoney(ZombieGame game, Player[] alive) {
+        static void GiveMoney(ZSGame game, Player[] alive) {
             Player[] online = PlayerInfo.Online.Items;
             Random rand = new Random();
             
@@ -108,7 +108,7 @@ namespace MCGalaxy.Games.ZS {
             }
         }
 
-        static void DoLottery(ZombieGame game) {
+        static void DoLottery(ZSGame game) {
             string[] players = game.Lottery.Items;
             if (players.Length == 0) return;
             

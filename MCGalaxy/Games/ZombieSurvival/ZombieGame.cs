@@ -32,7 +32,7 @@ namespace MCGalaxy.Games {
         public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
     }
     
-    public sealed partial class ZombieGame {
+    public sealed partial class ZSGame {
         ZSPlugin plugin = new ZSPlugin();
         
         public void Start(ZombieGameStatus status, Level level, int rounds) {

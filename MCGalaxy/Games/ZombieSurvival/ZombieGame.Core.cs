@@ -24,7 +24,7 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class ZombieGame {
+    public sealed partial class ZSGame {
         
         void MainLoop() {
             // Make sure that in the worst case, we do not crash the entire server.

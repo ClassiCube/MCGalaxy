@@ -72,7 +72,9 @@ namespace MCGalaxy.Commands.World {
                     byte extBlock = lvl.GetExtTileNoCheck(x, y, z);
                     temp.SetExtTileNoCheck(x, y, z, extBlock);
                 }
+                
                 temp.spawnx = lvl.spawnx; temp.spawny = lvl.spawny; temp.spawnz = lvl.spawnz;
+                temp.rotx = lvl.rotx; temp.roty = lvl.roty;
                 
                 lock (lvl.saveLock) {
                     lvl.Backup(true);

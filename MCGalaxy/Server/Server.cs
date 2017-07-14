@@ -107,7 +107,7 @@ namespace MCGalaxy {
             MoveOutdatedFiles();
 
             lava = new LavaSurvival();
-            zombie = new ZombieGame();
+            zombie = new ZSGame();
             Countdown = new CountdownGame();
             LoadAllSettings();
             SrvProperties.GenerateSalt();

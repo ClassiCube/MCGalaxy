@@ -177,5 +177,26 @@ namespace MCGalaxy.Events.PlayerEvents {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p, packet));
         }
-    } 
+    }
+    
+
+    public delegate void OnPlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning);
+    /// <summary> Called when a player is being initially spawned in a map, 
+    /// or is respawning (e.g. died from a killer block). </summary>
+    public sealed class OnPlayerSpawningEvent : IEvent<OnPlayerSpawning> {
+        
+        public static void Call(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
+            IEvent<OnPlayerSpawning>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                IEvent<OnPlayerSpawning> handler = items[i];
+                
+                try {
+                    handler.method(p, ref pos, ref yaw, ref pitch, respawning);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, handler);
+                }
+            }
+        }
+    }
 }

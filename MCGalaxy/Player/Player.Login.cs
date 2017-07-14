@@ -186,8 +186,11 @@ namespace MCGalaxy {
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             Server.lava.PlayerJoinedServer(this);
             
-            Pos = level.SpawnPos;
-            SetYawPitch(level.rotx, level.roty);
+            Position pos = level.SpawnPos;
+            byte yaw = level.rotx, pitch = level.roty;
+            OnPlayerSpawningEvent.Call(this, ref pos, ref yaw, ref pitch, true);
+            Pos = pos;
+            SetYawPitch(yaw, pitch);
             
             Entities.SpawnEntities(this, true);
             PlayerActions.CheckGamesJoin(this, null);

@@ -74,7 +74,7 @@ namespace MCGalaxy {
             if (target == null) return true; // not a player
             
             bool mayBeHidden = target.hidden;
-            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;            
+            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
             if (!mayBeHidden || this == other) return true;
             
             if (target.Game.Referee && !Game.Referee && Server.zombie.Running) return false;

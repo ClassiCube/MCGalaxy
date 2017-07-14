@@ -113,7 +113,7 @@ namespace MCGalaxy {
         /// saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
             if (!saveLevel) return false;
-            ZombieGame zs = Server.zombie;
+            ZSGame zs = Server.zombie;
             
             if (zs.Running && !ZSConfig.SaveLevelBlockchanges &&
                 (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName)))
@@ -124,7 +124,7 @@ namespace MCGalaxy {
         }
         
         public bool ShouldShowJoinMessage(Level prev) {
-            ZombieGame zs = Server.zombie;
+            ZSGame zs = Server.zombie;
             if (zs.Running && name.CaselessEq(zs.CurLevelName) &&
                 (prev == this || zs.LastLevelName == "" || prev.name.CaselessEq(zs.LastLevelName)))
                 return false;

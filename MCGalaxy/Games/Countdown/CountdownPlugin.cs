@@ -30,12 +30,14 @@ namespace MCGalaxy.Games {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
+            OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
+            OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
         }
         
         
@@ -66,6 +68,11 @@ namespace MCGalaxy.Games {
         void HandleLevelUnload(Level lvl) {
             if (Game.Status == CountdownGameStatus.Disabled || lvl != Game.Map) return;
             Game.Disable();
+        }        
+        
+        void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
+            if (!respawning || !Game.Remaining.Contains(p)) return;
+            Game.PlayerDied(p);
         }
     }
 }

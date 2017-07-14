@@ -116,7 +116,10 @@ namespace MCGalaxy {
             p.level = lvl; 
             p.SendMap(oldLevel);
 
-            Entities.SpawnEntities(p, lvl.SpawnPos, lvl.SpawnRot);
+            Position pos = lvl.SpawnPos;
+            byte yaw = lvl.rotx, pitch = lvl.roty;
+            OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, false);
+            Entities.SpawnEntities(p, pos, new Orientation(yaw, pitch));
             CheckGamesJoin(p, oldLevel);
             
             if (p.level.ShouldShowJoinMessage(oldLevel)) {

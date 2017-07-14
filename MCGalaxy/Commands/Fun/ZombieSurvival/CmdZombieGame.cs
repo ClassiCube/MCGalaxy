@@ -33,26 +33,28 @@ namespace MCGalaxy.Commands.Fun {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
+            ZSGame game = Server.zombie;
+            
             switch (args[0]) {
-                    case "go": HandleGo(p, args); break;
-                    case "status": HandleStatus(p, args); break;
-                    case "start": HandleStart(p, args); break;
-                    case "end": HandleEnd(p, args); break;
-                    case "stop": HandleStop(p, args); break;
-                    case "set": HandleSet(p, args); break;
+                    case "go": HandleGo(p, game, args); break;
+                    case "status": HandleStatus(p, game, args); break;
+                    case "start": HandleStart(p, game, args); break;
+                    case "end": HandleEnd(p, game, args); break;
+                    case "stop": HandleStop(p, game, args); break;
+                    case "set": HandleSet(p, game, args); break;
                     default: Help(p); break;
             }
         }
 
-        static void HandleGo(Player p, string[] args) {
-            if (Server.zombie.Status == ZombieGameStatus.NotStarted) {
+        static void HandleGo(Player p, ZSGame game, string[] args) {
+            if (game.Status == ZombieGameStatus.NotStarted) {
                 Player.Message(p, "Zombie Survival is not currently running."); return;
             }
-            PlayerActions.ChangeMap(p, Server.zombie.CurLevel);
+            PlayerActions.ChangeMap(p, game.CurLevel);
         }
         
-        static void HandleStatus(Player p, string[] args) {
-            switch (Server.zombie.Status) {
+        static void HandleStatus(Player p, ZSGame game, string[] args) {
+            switch (game.Status) {
                 case ZombieGameStatus.NotStarted:
                     Player.Message(p, "Zombie Survival is not currently running."); break;
                 case ZombieGameStatus.InfiniteRounds:
@@ -60,17 +62,17 @@ namespace MCGalaxy.Commands.Fun {
                 case ZombieGameStatus.SingleRound:
                     Player.Message(p, "Zombie Survival game currently in progress."); break;
                 case ZombieGameStatus.VariableRounds:
-                    Player.Message(p, "Zombie Survival game currently in progress with " + Server.zombie.MaxRounds + " rounds."); break;
+                    Player.Message(p, "Zombie Survival game currently in progress with " + game.MaxRounds + " rounds."); break;
                 case ZombieGameStatus.LastRound:
                     Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); break;
             }
             
-            if (Server.zombie.Status == ZombieGameStatus.NotStarted || Server.zombie.CurLevelName == "") return;
-            Player.Message(p, "Running on map: " + Server.zombie.CurLevelName);
+            if (game.Status == ZombieGameStatus.NotStarted || game.CurLevelName == "") return;
+            Player.Message(p, "Running on map: " + game.CurLevelName);
         }
         
-        static void HandleStart(Player p, string[] args) {
-            if (Server.zombie.Running) {
+        static void HandleStart(Player p, ZSGame game, string[] args) {
+            if (game.Running) {
                 Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
             }
             Level lvl = Player.IsSuper(p) ? null : p.level;
@@ -81,45 +83,45 @@ namespace MCGalaxy.Commands.Fun {
 
                 ZombieGameStatus status = rounds == 0 ?
                     ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
-                Server.zombie.Start(status, lvl, rounds);
+                game.Start(status, lvl, rounds);
             } else {
-                Server.zombie.Start(ZombieGameStatus.SingleRound, lvl, 0);
+                game.Start(ZombieGameStatus.SingleRound, lvl, 0);
             }
         }
         
-        static void HandleEnd(Player p, string[] args) {
-            if (Server.zombie.RoundInProgress) {
-                Server.zombie.EndRound();
+        static void HandleEnd(Player p, ZSGame game, string[] args) {
+            if (game.RoundInProgress) {
+                game.EndRound();
             } else {
                 Player.Message(p, "No round is currently in progress.");
             }
         }
         
-        static void HandleStop(Player p, string[] args) {
-            if (!Server.zombie.Running) {
+        static void HandleStop(Player p, ZSGame game, string[] args) {
+            if (!game.Running) {
                 Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
             
             string src = p == null ? "(console)" : p.ColoredName;
-            Level lvl = Server.zombie.CurLevel;
+            Level lvl = game.CurLevel;
             if (lvl != null) {
-                Chat.MessageLevel(Server.zombie.CurLevel, "Zombie Survival was stopped by " + src);
+                Chat.MessageLevel(game.CurLevel, "Zombie Survival was stopped by " + src);
             }
             
             src = p == null ? "(console)" : p.name;
             Logger.Log(LogType.GameActivity, "Zombie Survival stopped by " + src);
-            Server.zombie.End();
+            game.End();
         }
         
-       void HandleSet(Player p, string[] args) {
+       void HandleSet(Player p, ZSGame game, string[] args) {
             if (args.Length == 1) { Help(p, "set"); return; }
             
-            if (args[1].CaselessEq("hitbox")) { HandleHitbox(p, args); return; }
-            if (args[1].CaselessEq("maxmove")) { HandleMaxMove(p, args); return; }
+            if (args[1].CaselessEq("hitbox")) { HandleHitbox(p, game, args); return; }
+            if (args[1].CaselessEq("maxmove")) { HandleMaxMove(p, game, args); return; }
             Help(p, "set");
         }
         
-        static void HandleHitbox(Player p, string[] args) {
+        static void HandleHitbox(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
                 Player.Message(p, "Hitbox detection is currently &a" + ZSConfig.HitboxPrecision + " %Sunits apart.");
                 return;
@@ -133,7 +135,7 @@ namespace MCGalaxy.Commands.Fun {
             ZSConfig.SaveSettings();
         }
         
-        static void HandleMaxMove(Player p, string[] args) {
+        static void HandleMaxMove(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
                 Player.Message(p, "Maxmium move distance is currently &a" + ZSConfig.MaxMoveDistance + " %Sunits apart.");
                 return;

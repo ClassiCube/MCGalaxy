@@ -24,7 +24,7 @@ namespace MCGalaxy.Games.ZS {
     internal static class Pillaring {
         
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
-                                     byte action, byte block, byte old, ZombieGame game) {
+                                     byte action, byte block, byte old, ZSGame game) {
             
             if (action == 1 && !game.CurLevel.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(block, old)) {

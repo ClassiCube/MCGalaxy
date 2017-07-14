@@ -24,7 +24,7 @@ using System.Threading;
 namespace MCGalaxy.Games.ZS {
     internal static class LevelPicker {
         
-        internal static void ChooseNextLevel(ZombieGame game) {
+        internal static void ChooseNextLevel(ZSGame game) {
             if (game.QueuedLevel != null) { game.ChangeLevel(game.QueuedLevel); return; }
             if (!ZSConfig.ChangeLevels) return;
             
@@ -49,7 +49,7 @@ namespace MCGalaxy.Games.ZS {
             }
         }
         
-        static void RemoveRecentLevels(List<string> maps, ZombieGame game) {
+        static void RemoveRecentLevels(List<string> maps, ZSGame game) {
             // Try to avoid recently played levels, avoiding most recent
             List<string> recent = game.RecentMaps;
             for (int i = recent.Count - 1; i >= 0; i--) {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Games.ZS {
                 maps.CaselessRemove(game.Candidate3);
         }
         
-        static void DoLevelVote(ZombieGame game) {
+        static void DoLevelVote(ZSGame game) {
             Server.votingforlevel = true;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -78,7 +78,7 @@ namespace MCGalaxy.Games.ZS {
             Server.votingforlevel = false;
         }
         
-        static void VoteCountdown(ZombieGame game) {
+        static void VoteCountdown(ZSGame game) {
             // Show message for non-CPE clients
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -98,7 +98,7 @@ namespace MCGalaxy.Games.ZS {
         
         
         /// <summary> Moves all players to the level which has the highest number of votes. </summary>
-        static void MoveToNextLevel(Random r, List<string> levels, ZombieGame game) {
+        static void MoveToNextLevel(Random r, List<string> levels, ZSGame game) {
             int v1 = game.Votes1, v2 = game.Votes2, v3 = game.Votes3;
             
             if (v1 >= v2) {
@@ -167,7 +167,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         /// <summary> Sends the formatted vote message to the player (using bottom right if supported) </summary>
-        internal static void SendVoteMessage(Player p, ZombieGame game) {
+        internal static void SendVoteMessage(Player p, ZSGame game) {
             const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
             string line2 = "&a" + game.Candidate1 + "&e, &b"
                 + game.Candidate2 + "&e, &c" + game.Candidate3;

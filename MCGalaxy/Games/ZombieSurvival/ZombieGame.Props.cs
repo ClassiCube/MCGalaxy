@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
     
     public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
     
-    public sealed partial class ZombieGame {
+    public sealed partial class ZSGame {
         
         public const string InfectCol = "&infect";
         

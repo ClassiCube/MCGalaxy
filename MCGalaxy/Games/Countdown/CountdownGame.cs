@@ -269,7 +269,7 @@ namespace MCGalaxy.Games {
         #endregion
         
 
-        public void Death(Player p) {
+        public void PlayerDied(Player p) {
             Map.ChatLevel(p.ColoredName + " %Sis out of countdown!");
             Remaining.Remove(p);
             UpdatePlayersLeft();
