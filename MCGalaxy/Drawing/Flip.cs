@@ -20,46 +20,69 @@ using System.IO;
 
 namespace MCGalaxy.Drawing {
     public static class Flip {
-        
-        public static CopyState RotateX(CopyState state, int angle) {
+
+        static string[] rotX_90_270 = new string[] { "NS", "UD" };
+        static string[] rotX_180 = new string[] { "N", "S",  "NE", "SE",  "NW", "SW" };
+        public static CopyState RotateX(CopyState state, int angle, BlockDefinition[] defs) {
             CopyState newState = Clone(state);
             newState.Height = angle == 180 ? state.Height : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Height;
             
+            ExtBlock[] transform;
+            if (angle == 90 || angle == 270) transform = Transform(defs, rotX_90_270, null);
+            else if (angle == 180) transform = Transform(defs, rotX_180, null);
+            else transform = Transform(defs, null, null);
+            
             int[] m = new int[] { posX, negZ, posY };
             if (angle == 180) { m[1] = negY; m[2] = negZ; }
             if (angle == 270) { m[1] = posZ; m[2] = negY; }
-            return Rotate(state, newState, m);
+            return Rotate(state, newState, m, transform);
         }
-        
-        public static CopyState RotateY(CopyState state, int angle) {
+
+        static string[] rotY_90 = new string[] { "N", "E", "S", "W",  "NE", "SE", "SW", "NW",  "WE", "NS", "WE", "NS" };
+        static string[] rotY_180 = new string[] { "W", "E",  "N", "S",  "NS", "WE",  "NE", "SW", "NW", "SE" };
+        static string[] rotY_270 = new string[] { "N", "W", "S", "E",  "NE", "NW", "SW", "SE",  "WE", "NS", "WE", "NS" };
+        public static CopyState RotateY(CopyState state, int angle, BlockDefinition[] defs) {
             CopyState newState = Clone(state);
             newState.Width = angle == 180 ? state.Width : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Width;
+            
+            ExtBlock[] transform;
+            if (angle == 90) transform = Transform(defs, null, rotY_90);
+            else if (angle == 180) transform = Transform(defs, rotY_180, null);
+            else if (angle == 270) transform = Transform(defs, null, rotY_270);
+            else transform = Transform(defs, null, null);
 
             int[] m = new int[] { negZ, posY, posX };
             if (angle == 180) { m[0] = negX; m[2] = negZ; }
             if (angle == 270) { m[0] = posZ; m[2] = negX; }
-            return Rotate(state, newState, m);
+            return Rotate(state, newState, m, transform);
         }
         
-        public static CopyState RotateZ(CopyState state, int angle) {
+        static string[] rotZ_90_270 = new string[] { "WE", "UD" };
+        static string[] rotZ_180 = new string[] { "W", "E",  "NW", "NE",  "SW", "SE" };
+        public static CopyState RotateZ(CopyState state, int angle, BlockDefinition[] defs) {
             CopyState newState = Clone(state);
             newState.Width = angle == 180 ? state.Width : state.Height;
             newState.Height = angle == 180 ? state.Height : state.Width;
             
+            ExtBlock[] transform;
+            if (angle == 90 || angle == 270) transform = Transform(defs, rotZ_90_270, null);
+            else if (angle == 180) transform = Transform(defs, rotZ_180,null);
+            else transform = Transform(defs, null, null);
+            
             int[] m = new int[] { posY, negX, posZ };
             if (angle == 180) { m[0] = negX; m[1] = negY; }
             if (angle == 270) { m[0] = negY; m[1] = posX; }
-            return Rotate(state, newState, m);
+            return Rotate(state, newState, m, transform);
         }
 
-        static CopyState Rotate(CopyState state, CopyState flipped, int[] m) {
+        static CopyState Rotate(CopyState state, CopyState flipped, int[] m, ExtBlock[] transform) {
             int volume = state.Volume;
             for (int i = 0; i < volume; i++) {
                 ushort x, y, z;
                 state.GetCoords(i, out x, out y, out z);
-                ExtBlock block = state.Get(i);
+                ExtBlock block = transform[state.Get(i).Index];
                 
                 flipped.Set(block,
                             Rotate(m[0], x, y, z, state),
@@ -101,19 +124,24 @@ namespace MCGalaxy.Drawing {
             return newState;
         }
         
-        
-        public static void MirrorX(CopyState state) {
-            int midZ = state.Length / 2, maxZ = state.Length - 1;
+        static string[] mirrorX = new string[] { "N", "S",  "NW", "SW",  "NE", "SE" };
+        public static void MirrorX(CopyState state, BlockDefinition[] defs) {
+            // ceiling division by 2, because for odd length, we still want to
+            // mirror the middle row to rotate directional blocks
+            int midZ = (state.Length + 1) / 2, maxZ = state.Length - 1;
             state.OriginZ = state.OppositeOriginZ;
             state.Offset.Z = -state.Offset.Z;
+            ExtBlock[] transform = Transform(defs, mirrorX, null);
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < midZ; z++) {
                     int endZ = maxZ - z;
                     int start = state.GetIndex(0, y, z);
                     int end = state.GetIndex(0, y, endZ);
+                    
                     for (int x = 0; x < state.Width; x++) {
-                        ExtBlock blockA = state.Get(start), blockB = state.Get(end);
+                        ExtBlock blockA = transform[state.Get(start).Index];
+                        ExtBlock blockB = transform[state.Get(end).Index];
                         state.Set(blockB, start); state.Set(blockA, end);
                         start++; end++;
                     }
@@ -121,18 +149,22 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        public static void MirrorY(CopyState state) {
-            int midY = state.Height / 2, maxY = state.Height - 1;
+        static string[] mirrorY = new string[] { "D", "U" };
+        public static void MirrorY(CopyState state, BlockDefinition[] defs) {
+            int midY = (state.Height + 1) / 2, maxY = state.Height - 1;
             state.OriginY = state.OppositeOriginY;
             state.Offset.Y = -state.Offset.Y;
+            ExtBlock[] transform = Transform(defs, mirrorY, null);
             
             for (int y = 0; y < midY; y++) {
                 int endY = maxY - y;
                 int start = state.GetIndex(0, y, 0);
                 int end = state.GetIndex(0, endY, 0);
+                
                 for (int z = 0; z < state.Length; z++) {
                     for (int x = 0; x < state.Width; x++) {
-                        ExtBlock blockA = state.Get(start), blockB = state.Get(end);
+                        ExtBlock blockA = transform[state.Get(start).Index];
+                        ExtBlock blockB = transform[state.Get(end).Index];
                         state.Set(blockB, start); state.Set(blockA, end);
                         start++; end++;
                     }
@@ -140,10 +172,12 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        public static void MirrorZ(CopyState state) {
-            int midX = state.Width / 2, maxX = state.Width - 1;
+        static string[] mirrorZ = new string[] { "W", "E",  "NW", "NE",  "SW", "SE" };
+        public static void MirrorZ(CopyState state, BlockDefinition[] defs) {
+            int midX = (state.Width + 1) / 2, maxX = state.Width - 1;
             state.OriginX = state.OppositeOriginX;
             state.Offset.X = -state.Offset.X;
+            ExtBlock[] transform = Transform(defs, mirrorZ, null);
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < state.Length; z++) {
@@ -152,11 +186,76 @@ namespace MCGalaxy.Drawing {
                         int start = state.GetIndex(x, y, z);
                         int end = state.GetIndex(endX, y, z);
                         
-                        ExtBlock blockA = state.Get(start), blockB = state.Get(end);
+                        ExtBlock blockA = transform[state.Get(start).Index];
+                        ExtBlock blockB = transform[state.Get(end).Index];
                         state.Set(blockB, start); state.Set(blockA, end);
                     }
                 }
             }
+        }
+        
+        
+        static ExtBlock[] Transform(BlockDefinition[] defs, string[] mirrorDirs, string[] rotateDirs) {
+            ExtBlock[] transform = new ExtBlock[Block.Count * 2];
+            for (int i = 0; i < transform.Length; i++) {
+                transform[i] = ExtBlock.FromIndex(i);
+            }
+            if (mirrorDirs == null && rotateDirs == null) return transform;
+            
+            // Rotate/Mirror directional blocks
+            for (int i = 0; i < defs.Length; i++) {
+                if (defs[i] == null) continue;
+                int dirIndex = defs[i].Name.LastIndexOf('-');
+                if (dirIndex == -1) continue;
+                
+                BlockDefinition transformed = null;
+                if (mirrorDirs != null) {
+                    transformed = MirrorTransform(defs, i, dirIndex, mirrorDirs);
+                } else {
+                    transformed = RotateTransform(defs, i, dirIndex, rotateDirs);
+                }
+                
+                if (transformed == null) continue;
+                ExtBlock src = ExtBlock.FromRaw(defs[i].BlockID);
+                transform[src.Index] = ExtBlock.FromRaw(transformed.BlockID);
+            }
+            return transform;
+        }
+        
+        static BlockDefinition MirrorTransform(BlockDefinition[] defs, int i, int dirIndex, string[] mirrorDirs) {
+            string dir = defs[i].Name.Substring(dirIndex + 1);
+            for (int j = 0; j < mirrorDirs.Length; j++) {
+                if (!mirrorDirs[j].CaselessEq(dir)) continue;
+                
+                // Find the mirrored directional block opposite to this one
+                string name = defs[i].Name.Substring(0, dirIndex);
+                int mirrorIdx = (j & 1) == 0 ? 1 : -1;
+                string mirrorDir = mirrorDirs[j + mirrorIdx];
+                return Find(defs, name + "-" + mirrorDir);
+            }
+            return null;
+        }
+        
+        static BlockDefinition RotateTransform(BlockDefinition[] defs, int i, int dirIndex, string[] rotateDirs) {
+            string dir = defs[i].Name.Substring(dirIndex + 1);
+            for (int j = 0; j < rotateDirs.Length; j++) {
+                if (!rotateDirs[j].CaselessEq(dir)) continue;
+                
+                // Find the next directional block to this one in sequence
+                // Each sequence is a group of 4 directional blocks
+                string name = defs[i].Name.Substring(0, dirIndex);
+                int sequence = (j / 4) * 4;
+                string rotateDir = rotateDirs[sequence + ((j + 1) % 4)];
+                return Find(defs, name + "-" + rotateDir);
+            }
+            return null;
+        }
+        
+        static BlockDefinition Find(BlockDefinition[] defs, string name) {
+            for (int i = 0; i < defs.Length; i++) {
+                if (defs[i] != null && defs[i].Name.CaselessEq(name)) return defs[i];
+            }
+            return null;
         }
     }
 }

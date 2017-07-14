@@ -35,16 +35,17 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "You haven't copied anything yet"); return;
             }
             string opt = message.ToLower();
+            BlockDefinition[] defs = p.level.CustomBlockDefs;
             
             // Mirroring
             if (opt == "mirrorx" || opt == "mirror x") {
-                Flip.MirrorX(p.CopyBuffer);
+                Flip.MirrorX(p.CopyBuffer, defs);
                 Player.Message(p, "Flipped copy across the X (east/west) axis.");
             } else if (opt == "mirrory" || opt == "mirror y" || opt == "u") {
-                Flip.MirrorY(p.CopyBuffer);
+                Flip.MirrorY(p.CopyBuffer, defs);
                 Player.Message(p, "Flipped copy across the Y (vertical) axis.");
             } else if (opt == "mirrorz" || opt == "mirror z" || opt == "m") {
-                Flip.MirrorZ(p.CopyBuffer);
+                Flip.MirrorZ(p.CopyBuffer, defs);
                 Player.Message(p, "Flipped copy across the Z (north/south) axis.");
             } else {
                 string[] args = opt.SplitSpaces();
@@ -55,11 +56,11 @@ namespace MCGalaxy.Commands.Building {
                 
                 if (angle == 0) {
                 } else if (axis == 'X') {
-                    p.CopyBuffer = Flip.RotateX(p.CopyBuffer, angle);
+                    p.CopyBuffer = Flip.RotateX(p.CopyBuffer, angle, defs);
                 } else if (axis == 'Y') {
-                    p.CopyBuffer = Flip.RotateY(p.CopyBuffer, angle);
+                    p.CopyBuffer = Flip.RotateY(p.CopyBuffer, angle, defs);
                 } else if (axis == 'Z') {
-                    p.CopyBuffer = Flip.RotateZ(p.CopyBuffer, angle);
+                    p.CopyBuffer = Flip.RotateZ(p.CopyBuffer, angle, defs);
                 }
                 Player.Message(p, "Rotated copy {0} degrees around the {1} axis", angle, axis);
             }            
