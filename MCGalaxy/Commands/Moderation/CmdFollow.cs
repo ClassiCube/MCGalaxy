@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.following = who.name;
             Player.Message(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
-            Entities.Despawn(p, who.id);
+            Entities.Despawn(p, who);
         }
         
         public override void Help(Player p) {

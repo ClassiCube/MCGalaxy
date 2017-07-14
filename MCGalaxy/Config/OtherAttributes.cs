@@ -19,53 +19,6 @@ using System;
 
 namespace MCGalaxy.Config {
     
-    public class ConfigIntAttribute : ConfigAttribute {
-        
-        /// <summary> Minimum integer allowed for a value. </summary>
-        public int MinValue;
-        
-        /// <summary> Maximum value integer allowed for a value. </summary>
-        public int MaxValue;
-        
-        public ConfigIntAttribute(string name, string section, int defValue,
-                                  int min = int.MinValue, int max = int.MaxValue)
-            : base(name, section, defValue) {
-            MinValue = min; MaxValue = max;
-        }
-        
-        public override object Parse(string value) {
-            int intValue;
-            if (!int.TryParse(value, out intValue)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid integer, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
-            }
-            
-            if (intValue < MinValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small an integer, using {1}", Name, MinValue);
-                return MinValue;
-            }
-            if (intValue > MaxValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big an integer, using {1}", Name, MaxValue);
-                return MaxValue;
-            }
-            return intValue;
-        }
-    }
-    
-    
-    public class ConfigByteAttribute : ConfigIntAttribute {
-        
-        public ConfigByteAttribute(string name, string section, int defValue,
-                                  int min = byte.MinValue, int max = byte.MaxValue)
-            : base(name, section, defValue, min, max) {
-        }
-        
-        public override object Parse(string value) {
-            int intValue = (int)base.Parse(value);
-            return (byte)intValue; // Can't directly unbox object to byte - must unbox to int, then cast to byte
-        }
-    }
-    
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         
         public ConfigBoolAttribute(string name, string section, bool defValue)

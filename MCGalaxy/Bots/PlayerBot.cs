@@ -126,7 +126,7 @@ namespace MCGalaxy {
         public void GlobalDespawn() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == level) Entities.Despawn(p, id);
+                if (p.level == level) Entities.Despawn(p, this);
             }
         }
         

@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Moderation {
                 bool result = (skin == "#") ? who.MarkPossessed() : who.MarkPossessed(p.name);
                 if (!result) return;
                 
-                Entities.Despawn(p, who.id);
+                Entities.Despawn(p, who);
                 who.canBuild = false;
                 Player.Message(p, "Successfully possessed {0}%S.", who.ColoredName);
             }

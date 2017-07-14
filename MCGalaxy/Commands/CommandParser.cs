@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands {
         }
         
         /// <summary> Attempts to parse the given argument as an enumeration member. </summary>
-        public static bool GetEnum<TEnum>(Player p, string input, string argName, 
+        public static bool GetEnum<TEnum>(Player p, string input, string argName,
                                           ref TEnum result) where TEnum : struct {
             try {
                 result = (TEnum)Enum.Parse(typeof(TEnum), input, true);
@@ -47,12 +47,12 @@ namespace MCGalaxy.Commands {
             } catch {
             }
             
-             string[] names = Enum.GetNames(typeof(TEnum));
-             Player.Message(p, argName + " must be one of the following: " + names.Join());
-             return false;
+            string[] names = Enum.GetNames(typeof(TEnum));
+            Player.Message(p, argName + " must be one of the following: " + names.Join());
+            return false;
         }
         
-        /// <summary> Attempts to parse the given argument as an timespan in short form. </summary>                
+        /// <summary> Attempts to parse the given argument as an timespan in short form. </summary>
         public static bool GetTimespan(Player p, string input, ref TimeSpan span,
                                        string action, string defUnit) {
             span = TimeSpan.Zero;
@@ -90,6 +90,21 @@ namespace MCGalaxy.Commands {
                 return false;
             }
             
+            result = value; return true;
+        }
+        
+        /// <summary> Attempts to parse the given argument as a real number. </summary>
+        public static bool GetReal(Player p, string input, string argName, ref float result,
+                                   float min, float max) {
+            float value;
+            if (!Utils.TryParseDecimal(input, out value)) {
+                Player.Message(p, "\"{0}\" is not a valid number.", input); return false;
+            }
+            
+            if (value < min || value > max) {
+                Player.Message(p, "{0} must be between {1} and {2}", argName, min, max);
+                return false;
+            }           
             result = value; return true;
         }
         

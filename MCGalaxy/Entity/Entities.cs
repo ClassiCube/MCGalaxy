@@ -71,9 +71,9 @@ namespace MCGalaxy {
                 if (!toVisible) despawn = !despawn;
                 
                 if (p != other && despawn) {
-                    Despawn(other, p.id);
+                    Despawn(other, p);
                 } else if (p == other && self) {
-                    Despawn(other, Entities.SelfID);
+                    Despawn(other, p);
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace MCGalaxy {
         internal static void DespawnEntities(Player p, bool bots = true) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
-                if (p.level == other.level && p != other) Despawn(p, other.id);
+                if (p.level == other.level && p != other) Despawn(p, other);
             }
             GlobalDespawn(p, true, true);
             
@@ -165,16 +165,17 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void Despawn(Player dst, byte id) {
+        internal static void Despawn(Player dst, Player other) {
+            byte id = other == dst ? SelfID : other.id;
             dst.Send(Packet.RemoveEntity(id));
             if (!ServerConfig.TablistGlobal)
-                TabList.Remove(dst, id);
+                TabList.Remove(dst, other);
         }
         
         internal static void Despawn(Player dst, PlayerBot b) {
             dst.Send(Packet.RemoveEntity(b.id));
             if (ServerConfig.TablistBots)
-                TabList.Remove(dst, b.id);
+                TabList.Remove(dst, b);
         }
 
         #endregion

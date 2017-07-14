@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Fun {
             foreach (Player other in players) {
                 if (other.level != p.level || p == other || !p.CanSeeEntity(other)) continue;
                 
-                Entities.Despawn(p, other.id);
+                Entities.Despawn(p, other);
                 Entities.Spawn(p, other);
             }
             TabList.Add(p, p, Entities.SelfID);

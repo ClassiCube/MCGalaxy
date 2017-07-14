@@ -59,8 +59,11 @@ namespace MCGalaxy {
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
-        public static void Remove(Player dst, byte id) {
+        public static void Remove(Player dst, Entity entity) {
             if (!dst.hasExtList) return;
+            
+            OnTabListEntryRemovedEvent.Call(entity, dst);
+            byte id = dst == entity ? Entities.SelfID : entity.EntityID;
             dst.Send(Packet.ExtRemovePlayerName(id));
         }
         
@@ -90,17 +93,17 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {               
                 if (p == other) {
-                    if (self) Remove(other, Entities.SelfID); 
+                    if (self) Remove(other, p); 
                     continue;
                 }
                 
                 bool despawn = other.CanSeeEntity(p);
                 if (!toVisible) despawn = !despawn;
-                if (despawn) Remove(other, p.id);
+                if (despawn) Remove(other, p);
                 
                 despawn = p.CanSeeEntity(other);
                 if (!toVisible) despawn = !despawn;
-                if (despawn) Remove(p, other.id);
+                if (despawn) Remove(p, other);
             }
         }
     }

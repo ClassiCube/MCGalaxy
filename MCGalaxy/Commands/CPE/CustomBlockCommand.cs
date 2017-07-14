@@ -670,7 +670,7 @@ namespace MCGalaxy.Commands.CPE {
             new string[] { "Enter the three maximum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
                 "Maximum coordinates for a normal block are &416 &216 &116." },
             
-            new string[] { "Type a number between '0' and '2' for collision type of this block..",
+            new string[] { "Type a number between '0' and '2' for collision type of this block.",
                 "0 - block is walk-through (e.g. air).", "1 - block is swim-through (e.g. water).",
                 "2 - block is solid (e.g. dirt).",
             },
