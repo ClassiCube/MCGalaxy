@@ -659,7 +659,7 @@ namespace MCGalaxy.Games
                     foreach (player p in Players)
                     {
                         if (p.spec) continue;
-                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score));
+                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score);
                     }
                     Thread.Sleep(1000);
                 }
