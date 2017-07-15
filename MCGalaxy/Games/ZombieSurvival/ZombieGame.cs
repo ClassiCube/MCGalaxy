@@ -195,8 +195,7 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;           
             Alive.Clear();
             Infected.Clear();
-            
-            Lottery.Clear();
+
             Bounties.Clear();
             RecentMaps.Clear();
             

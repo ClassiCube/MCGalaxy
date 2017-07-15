@@ -40,7 +40,6 @@ namespace MCGalaxy.Games.ZS {
             }
             
             GiveMoney(game, alive);
-            DoLottery(game);
         }
 
         static void AnnounceWinners(ZSGame game, Player[] alive, Player[] dead) {
@@ -106,35 +105,6 @@ namespace MCGalaxy.Games.ZS {
                 TabList.Add(pl, pl, Entities.SelfID);
                 HUD.UpdateTertiary(pl);
             }
-        }
-
-        static void DoLottery(ZSGame game) {
-            string[] players = game.Lottery.Items;
-            if (players.Length == 0) return;
-            
-            // Ensure the players are actually online
-            List<Player> online = new List<Player>(players.Length);
-            foreach (string name in players) {
-                Player pl = PlayerInfo.FindExact(name);
-                if (pl == null) continue;
-                online.Add(pl);
-            }
-            if (online.Count == 0) return;
-            
-            int amount = 10;
-            Player winner = online[0];
-            if (online.Count == 1) {
-                winner.SendMessage("Your money was refunded as you were " +
-                                   "the only player still in the lottery.");
-            } else {
-                Random rand = new Random();
-                winner = online[rand.Next(online.Count)];
-                amount = 9 * online.Count;
-                game.CurLevel.ChatLevel(winner.ColoredName + " %Swon the lottery for &6"
-                                        + amount + " " + ServerConfig.Currency);
-            }
-            game.Lottery.Clear();
-            winner.SetMoney(winner.money + amount);
         }
 
         static int GetMoneyReward(Player pl, Player[] alive, Random rand) {

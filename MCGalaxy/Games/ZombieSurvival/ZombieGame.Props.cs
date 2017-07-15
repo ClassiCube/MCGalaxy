@@ -94,8 +94,5 @@ namespace MCGalaxy.Games {
         
         /// <summary> List of players who have a bounty on them. </summary>
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
-        
-        /// <summary> List of players who are in the lottery. </summary>
-        public VolatileArray<string> Lottery = new VolatileArray<string>();
     }
 }
