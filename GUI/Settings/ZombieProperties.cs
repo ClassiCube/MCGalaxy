@@ -46,12 +46,6 @@ namespace MCGalaxy.Gui {
         [DisplayName("Levels list")]
         public string LevelsList { get; set; }
         
-        [Description("Whether changes made to a map during a round of zombie survival are permanently saved. " +
-                     "It is HIGHLY recommended that you leave this as false.")]
-        [Category("Levels settings")]
-        [DisplayName("Save level changes")]
-        public bool SaveLevelChanges { get; set; }
-        
         
         [Description("Whether players are allowed to pillar in zombie survival. " +
                      "Note this can be overriden for specific maps using /mset.")]
@@ -162,7 +156,6 @@ namespace MCGalaxy.Gui {
             ChangeLevels = ZSConfig.ChangeLevels;
             IgnoredLevelsList = ZSConfig.IgnoredLevelList.Join(",");
             LevelsList = ZSConfig.LevelList.Join(",");
-            SaveLevelChanges = ZSConfig.SaveLevelBlockchanges;
             IgnorePersonalWorlds = ZSConfig.IgnorePersonalWorlds;
             
             Pillaring = !ZSConfig.NoPillaring;
@@ -198,7 +191,6 @@ namespace MCGalaxy.Gui {
             list = LevelsList.Replace(" ", "");
             if (list == "") ZSConfig.LevelList = new List<string>();
             else ZSConfig.LevelList = new List<string>(list.Replace(" ", "").Split(','));
-            ZSConfig.SaveLevelBlockchanges = SaveLevelChanges;
             ZSConfig.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
             ZSConfig.NoPillaring = !Pillaring;

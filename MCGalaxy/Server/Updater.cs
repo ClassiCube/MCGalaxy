@@ -140,7 +140,7 @@ namespace MCGalaxy {
                     if (!lvl.ShouldSaveChanges()) continue;
                     
                     lvl.Save();
-                    lvl.saveChanges();
+                    lvl.SaveBlockDBChanges();
                 }
 
                 Player[] players = PlayerInfo.Online.Items;

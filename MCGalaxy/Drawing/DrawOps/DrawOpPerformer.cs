@@ -175,7 +175,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 // Set the block (inlined)
                 lvl.blocks[index] = b.Block.BlockID;
-                lvl.changed = true;
+                lvl.Changed = true;
                 if (old.BlockID == Block.custom_block && b.Block.BlockID != Block.custom_block) {
                     lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
                 }

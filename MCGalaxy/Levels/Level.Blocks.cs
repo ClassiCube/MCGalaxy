@@ -132,14 +132,14 @@ namespace MCGalaxy {
         public void SetTile(int index, byte block) {
             if (blocks == null || index < 0 || index >= blocks.Length) return;
             blocks[index] = block;
-            changed = true;
+            Changed = true;
         }
         
         public void SetTile(ushort x, ushort y, ushort z, byte block) {
             int index = PosToInt(x, y, z);
             if (blocks == null || index < 0) return;
             blocks[index] = block;
-            changed = true;
+            Changed = true;
         }
         
         public void SetExtTile(ushort x, ushort y, ushort z, byte extBlock) {
@@ -307,7 +307,7 @@ namespace MCGalaxy {
                 if (p.PlayingTntWars && block.BlockID == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
                 if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
-                changed = true;
+                Changed = true;
                 backedup = false;
                 
                 return old.VisuallyEquals(block) ? 1 : 2;
@@ -380,7 +380,7 @@ namespace MCGalaxy {
                 }
 
                 blocks[b] = block.BlockID;
-                changed = true;
+                Changed = true;
                 if (block.BlockID == Block.custom_block) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);

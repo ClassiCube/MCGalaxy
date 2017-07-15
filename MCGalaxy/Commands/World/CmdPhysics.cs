@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.World {
             stateDesc = stateDesc.Substring( 2 );
             string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";
             Logger.Log(LogType.SystemActivity, logInfo);
-            lvl.changed = true;
+            lvl.Changed = true;
         }
 
         public override void Help(Player p) {

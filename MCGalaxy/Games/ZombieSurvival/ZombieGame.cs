@@ -64,6 +64,7 @@ namespace MCGalaxy.Games {
                 CurLevel = level;
             }
             
+        	CurLevel.SaveChanges = false;
             Chat.MessageGlobal("A game of zombie survival is starting on: {0}", CurLevelName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
@@ -151,6 +152,7 @@ namespace MCGalaxy.Games {
             QueuedLevel = null;
             CmdLoad.LoadLevel(null, next);
             CurLevel = LevelInfo.FindExact(next);
+            CurLevel.SaveChanges = ZSConfig.ChangeLevels;
             if (ZSConfig.SetMainLevel)
                 Server.mainLevel = CurLevel;
             

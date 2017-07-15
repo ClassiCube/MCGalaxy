@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.World {
         static void DoRestore(Level lvl, string backup) {
             lock (lvl.saveLock) {
                 File.Copy(LevelInfo.BackupPath(lvl.name, backup), LevelInfo.MapPath(lvl.name), true);
-                lvl.saveLevel = false;
+                lvl.SaveChanges = false;
             }
             
             Level restore = Level.Load(lvl.name);

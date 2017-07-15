@@ -109,15 +109,9 @@ namespace MCGalaxy {
             return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }
 
-        /// <summary> Whether block changes made on this level should be
-        /// saved to the BlockDB and .lvl files. </summary>
+        /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
-            if (!saveLevel) return false;
-            ZSGame zs = Server.zombie;
-            
-            if (zs.Running && !ZSConfig.SaveLevelBlockchanges &&
-                (name.CaselessEq(zs.CurLevelName) || name.CaselessEq(zs.LastLevelName)))
-                return false;
+            if (!SaveChanges) return false;
             if (Server.lava.active && Server.lava.HasMap(name))
                 return false;
             return true;
@@ -164,8 +158,8 @@ namespace MCGalaxy {
             }
             MovePlayersToMain();
 
-            if (save && changed && ShouldSaveChanges()) Save(false, true);
-            if (save && ShouldSaveChanges()) saveChanges();
+            if (save && Changed && ShouldSaveChanges()) Save(false, true);
+            if (save && ShouldSaveChanges()) SaveBlockDBChanges();
             
             if (TntWarsGame.Find(this) != null) {
                 foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players) {
@@ -245,7 +239,7 @@ namespace MCGalaxy {
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
-                if (changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
+                if (Changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
                     lock (saveLock)
                         SaveCore(path);
                     
@@ -276,7 +270,7 @@ namespace MCGalaxy {
 
             Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
                        name, players.Count, PlayerInfo.Online.Count, ServerConfig.MaxPlayers);
-            changed = false;
+            Changed = false;
         }
 
         public int Backup(bool Forced = false, string backupName = "") {
@@ -433,9 +427,8 @@ namespace MCGalaxy {
         }
         
         readonly object dbLock = new object();
-        public void saveChanges() {
-            lock (dbLock)
-                LevelDB.SaveBlockDB(this);
+        public void SaveBlockDBChanges() {
+            lock (dbLock) LevelDB.SaveBlockDB(this);
         }
 
         public List<Player> getPlayers() {

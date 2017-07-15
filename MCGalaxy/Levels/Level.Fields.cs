@@ -65,8 +65,8 @@ namespace MCGalaxy {
         public static bool cancelload;
         public bool cancelsave;
         public bool cancelunload;
-        public bool changed;
-        internal bool saveLevel = true;
+        public bool Changed;
+        public bool SaveChanges = true;
         
         /// <summary> Whether this map sees server-wide chat. </summary>
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>

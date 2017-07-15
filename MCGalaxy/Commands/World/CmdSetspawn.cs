@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.World {
             p.level.spawnz = (ushort)p.Pos.BlockZ;
             p.level.rotx = p.Rot.RotY;
             p.level.roty = p.Rot.HeadX;
-            p.level.changed = true;
+            p.level.Changed = true;
             Entities.Spawn(p, p);
         }
         

@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
                     if (!lvl.ShouldSaveChanges()) continue;
                     level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
                     lvl.Save(false, true);
-                    lvl.saveChanges();
+                    lvl.SaveBlockDBChanges();
                 }
                 
                 if (Server.ServerSetupFinished && !ServerConfig.AutoLoadMaps) {

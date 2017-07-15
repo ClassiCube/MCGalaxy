@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
 
         
         /// <summary> Load a map into CTF </summary>
-        public void LoadMap(string mapName) {
+        public void SetMap(string mapName) {
             Command.all.Find("unload").Use(null, "ctf");
             if (File.Exists("levels/ctf.lvl"))
                 File.Delete("levels/ctf.lvl");
@@ -79,6 +79,7 @@ namespace MCGalaxy.Games {
             File.Copy("CTF/maps/" + mapName + ".lvl", "levels/ctf.lvl");
             CmdLoad.LoadLevel(null, "ctf");
             Map = LevelInfo.FindExact("ctf");
+            Map.SaveChanges = false;
             UpdateConfig();
         }
         
@@ -159,7 +160,7 @@ namespace MCGalaxy.Games {
             
             Blue = new CtfTeam2("Blue", Colors.blue);
             Red = new CtfTeam2("Red", Colors.red);
-            LoadMap(maps[new Random().Next(maps.Count)]);
+            SetMap(maps[new Random().Next(maps.Count)]);
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
             started = true;
@@ -246,7 +247,7 @@ namespace MCGalaxy.Games {
             Blue.Members.Clear();
             Red.Members.Clear();
             Thread.Sleep(2000);
-            LoadMap(nextmap);
+            SetMap(nextmap);
         }
         
         
