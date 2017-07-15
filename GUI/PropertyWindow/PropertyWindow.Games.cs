@@ -34,9 +34,9 @@ namespace MCGalaxy.Gui {
 
         private void UpdateLavaControls() {
             try {
-                lsBtnStartGame.Enabled = !Server.lava.active;
-                lsBtnStopGame.Enabled = Server.lava.active;
-                lsBtnEndRound.Enabled = Server.lava.roundActive;
+                ls_btnStartGame.Enabled = !Server.lava.active;
+                ls_btnStopGame.Enabled = Server.lava.active;
+                ls_btnEndRound.Enabled = Server.lava.roundActive;
                 lsBtnEndVote.Enabled = Server.lava.voteActive;
             }
             catch { }
@@ -65,13 +65,13 @@ namespace MCGalaxy.Gui {
                     return;
                 }
 
-                int useIndex = lsMapUse.SelectedIndex, noUseIndex = lsMapNoUse.SelectedIndex;
-                if ( useList ) lsMapUse.Items.Clear();
-                if ( noUseList ) lsMapNoUse.Items.Clear();
+                int useIndex = ls_lstUsed.SelectedIndex, noUseIndex = ls_lstNotUsed.SelectedIndex;
+                if ( useList ) ls_lstUsed.Items.Clear();
+                if ( noUseList ) ls_lstNotUsed.Items.Clear();
 
                 if ( useList ) {
-                    lsMapUse.Items.AddRange(Server.lava.Maps.ToArray());
-                    try { if ( useIndex > -1 ) lsMapUse.SelectedIndex = useIndex; }
+                    ls_lstUsed.Items.AddRange(Server.lava.Maps.ToArray());
+                    try { if ( useIndex > -1 ) ls_lstUsed.SelectedIndex = useIndex; }
                     catch { }
                 }
                 if ( noUseList ) {
@@ -80,11 +80,11 @@ namespace MCGalaxy.Gui {
                         try {
                             string name = Path.GetFileNameWithoutExtension(file);
                             if ( name.ToLower() != Server.mainLevel.name && !Server.lava.HasMap(name) )
-                                lsMapNoUse.Items.Add(name);
+                                ls_lstNotUsed.Items.Add(name);
                         }
                         catch ( NullReferenceException ) { }
                     }
-                    try { if ( noUseIndex > -1 ) lsMapNoUse.SelectedIndex = noUseIndex; }
+                    try { if ( noUseIndex > -1 ) ls_lstNotUsed.SelectedIndex = noUseIndex; }
                     catch { }
                 }
             }
@@ -98,7 +98,7 @@ namespace MCGalaxy.Gui {
                 UpdateLavaControls();
 
                 string name;
-                try { name = lsMapNoUse.Items[lsMapNoUse.SelectedIndex].ToString(); }
+                try { name = ls_lstNotUsed.Items[ls_lstNotUsed.SelectedIndex].ToString(); }
                 catch { return; }
 
                 if ( LevelInfo.FindExact(name) == null )
@@ -133,7 +133,7 @@ namespace MCGalaxy.Gui {
                 UpdateLavaControls();
 
                 string name;
-                try { name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString(); }
+                try { name = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString(); }
                 catch { return; }
 
                 if ( LevelInfo.FindExact(name) == null )
@@ -156,14 +156,14 @@ namespace MCGalaxy.Gui {
 
         private void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
             SaveLavaMapSettings();
-            if (lsMapUse.SelectedIndex == -1) {
-                groupBox22.Text = "Map settings";
+            if (ls_lstUsed.SelectedIndex == -1) {
+                ls_grpMapSettings.Text = "Map settings";
                 pg_lavaMap.SelectedObject = null;
                 return;
             }
             
-            string name = lsMapUse.Items[lsMapUse.SelectedIndex].ToString();
-            groupBox22.Text = "Map settings (" + name + ")";
+            string name = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString();
+            ls_grpMapSettings.Text = "Map settings (" + name + ")";
             
             try {
                 LavaSurvival.MapSettings m = Server.lava.LoadMapSettings(name);
@@ -190,25 +190,25 @@ namespace MCGalaxy.Gui {
                 //Clear all
                 //Top
                 SlctdTntWrsLvl.Text = "";
-                SlctdTntWrdStatus.Text = "";
-                SlctdTntWrsPlyrs.Text = "";
+                tw_txtStatus.Text = "";
+                tw_txtPlayers.Text = "";
                 //Difficulty
                 TntWrsDiffCombo.Text = "";
                 TntWrsDiffCombo.Enabled = false;
                 TntWrsDiffSlctBt.Enabled = false;
                 //scores
-                TntWrsScrLmtUpDwn.Value = 150;
-                TntWrsScrLmtUpDwn.Enabled = false;
-                TntWrsScrPrKlUpDwn.Value = 10;
-                TntWrsScrPrKlUpDwn.Enabled = false;
-                TntWrsAsstChck.Checked = true;
-                TntWrsAsstChck.Enabled = false;
-                TntWrsAstsScrUpDwn.Value = 5;
-                TntWrsAstsScrUpDwn.Enabled = false;
-                TntWrsMltiKlChck.Checked = true;
-                TntWrsMltiKlChck.Enabled = false;
-                TntWrsMltiKlScPrUpDown.Value = 5;
-                TntWrsMltiKlScPrUpDown.Enabled = false;
+                tw_numScoreLimit.Value = 150;
+                tw_numScoreLimit.Enabled = false;
+                tw_numScorePerKill.Value = 10;
+                tw_numScorePerKill.Enabled = false;
+                tw_cbScoreAssists.Checked = true;
+                tw_cbScoreAssists.Enabled = false;
+                tw_numScoreAssists.Value = 5;
+                tw_numScoreAssists.Enabled = false;
+                tw_cbMultiKills.Checked = true;
+                tw_cbMultiKills.Enabled = false;
+                tw_numMultiKills.Value = 5;
+                tw_numMultiKills.Enabled = false;
                 //Grace period
                 TntWrsGracePrdChck.Checked = true;
                 TntWrsGracePrdChck.Enabled = false;
@@ -217,23 +217,23 @@ namespace MCGalaxy.Gui {
                 //Teams
                 TntWrsTmsChck.Checked = true;
                 TntWrsTmsChck.Enabled = false;
-                TntWrsBlnceTeamsChck.Checked = true;
-                TntWrsBlnceTeamsChck.Enabled = false;
-                TntWrsTKchck.Checked = false;
-                TntWrsTKchck.Enabled = false;
+                tw_cbBalanceTeams.Checked = true;
+                tw_cbBalanceTeams.Enabled = false;
+                tw_cbTeamKills.Checked = false;
+                tw_cbTeamKills.Enabled = false;
                 //Status
-                TntWrsStrtGame.Enabled = false;
-                TntWrsEndGame.Enabled = false;
-                TntWrsRstGame.Enabled = false;
-                TntWrsDltGame.Enabled = false;
+                tw_btnStartGame.Enabled = false;
+                tw_btnEndGame.Enabled = false;
+                tw_btnResetGame.Enabled = false;
+                tw_btnDeleteGame.Enabled = false;
                 //Other
-                TntWrsStreaksChck.Checked = true;
-                TntWrsStreaksChck.Enabled = false;
+                tw_cbStreaks.Checked = true;
+                tw_cbStreaks.Enabled = false;
                 //New game
                 if ( TntWrsMpsList.SelectedIndex < 0 ) TntWrsCrtNwTntWrsBt.Enabled = false;
                 //Load lists
                 TntWrsMpsList.Items.Clear();
-                TntWarsGamesList.Items.Clear();
+                tw_lstGames.Items.Clear();
                 TntWrsDiffCombo.Items.Clear();
                 foreach ( Level lvl in Server.levels ) {
                     if ( TntWarsGame.Find(lvl) == null ) {
@@ -255,7 +255,7 @@ namespace MCGalaxy.Gui {
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod ) msg += "(Started)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress ) msg += "(In Progress)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.Finished ) msg += "(Finished)";
-                        TntWarsGamesList.Items.Add(msg);
+                        tw_lstGames.Items.Add(msg);
                     }
                 }
                 TntWrsDiffCombo.Items.Add("Easy");
@@ -267,12 +267,12 @@ namespace MCGalaxy.Gui {
                 //Load settings
                 //Top
                 SlctdTntWrsLvl.Text = TntWarsGame.GuiLoaded.lvl.name;
-                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers ) SlctdTntWrdStatus.Text = "Waiting For Players";
-                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart ) SlctdTntWrdStatus.Text = "Starting";
-                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod ) SlctdTntWrdStatus.Text = "Started";
-                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress ) SlctdTntWrdStatus.Text = "In Progress";
-                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.Finished ) SlctdTntWrdStatus.Text = "Finished";
-                SlctdTntWrsPlyrs.Text = TntWarsGame.GuiLoaded.PlayingPlayers().ToString(CultureInfo.InvariantCulture);
+                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers ) tw_txtStatus.Text = "Waiting For Players";
+                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart ) tw_txtStatus.Text = "Starting";
+                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod ) tw_txtStatus.Text = "Started";
+                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress ) tw_txtStatus.Text = "In Progress";
+                if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.Finished ) tw_txtStatus.Text = "Finished";
+                tw_txtPlayers.Text = TntWarsGame.GuiLoaded.PlayingPlayers().ToString(CultureInfo.InvariantCulture);
                 //Difficulty
                 if ( TntWarsGame.GuiLoaded.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers ) {
                     TntWrsDiffCombo.Enabled = true;
@@ -284,31 +284,31 @@ namespace MCGalaxy.Gui {
                 }
                 TntWrsDiffCombo.SelectedIndex = TntWrsDiffCombo.FindString(TntWarsGame.GuiLoaded.Difficulty.ToString());
                 //scores
-                TntWrsScrLmtUpDwn.Value = TntWarsGame.GuiLoaded.ScoreLimit;
-                TntWrsScrLmtUpDwn.Enabled = true;
-                TntWrsScrPrKlUpDwn.Value = TntWarsGame.GuiLoaded.ScorePerKill;
-                TntWrsScrPrKlUpDwn.Enabled = true;
+                tw_numScoreLimit.Value = TntWarsGame.GuiLoaded.ScoreLimit;
+                tw_numScoreLimit.Enabled = true;
+                tw_numScorePerKill.Value = TntWarsGame.GuiLoaded.ScorePerKill;
+                tw_numScorePerKill.Enabled = true;
                 if ( TntWarsGame.GuiLoaded.ScorePerAssist == 0 ) {
-                    TntWrsAsstChck.Checked = false;
-                    TntWrsAsstChck.Enabled = true;
-                    TntWrsAstsScrUpDwn.Enabled = false;
+                    tw_cbScoreAssists.Checked = false;
+                    tw_cbScoreAssists.Enabled = true;
+                    tw_numScoreAssists.Enabled = false;
                 }
                 else {
-                    TntWrsAstsScrUpDwn.Value = TntWarsGame.GuiLoaded.ScorePerAssist;
-                    TntWrsAstsScrUpDwn.Enabled = true;
-                    TntWrsAsstChck.Checked = true;
-                    TntWrsAsstChck.Enabled = true;
+                    tw_numScoreAssists.Value = TntWarsGame.GuiLoaded.ScorePerAssist;
+                    tw_numScoreAssists.Enabled = true;
+                    tw_cbScoreAssists.Checked = true;
+                    tw_cbScoreAssists.Enabled = true;
                 }
                 if ( TntWarsGame.GuiLoaded.MultiKillBonus == 0 ) {
-                    TntWrsMltiKlChck.Checked = false;
-                    TntWrsMltiKlChck.Enabled = true;
-                    TntWrsMltiKlScPrUpDown.Enabled = false;
+                    tw_cbMultiKills.Checked = false;
+                    tw_cbMultiKills.Enabled = true;
+                    tw_numMultiKills.Enabled = false;
                 }
                 else {
-                    TntWrsMltiKlScPrUpDown.Value = TntWarsGame.GuiLoaded.MultiKillBonus;
-                    TntWrsMltiKlScPrUpDown.Enabled = true;
-                    TntWrsMltiKlChck.Checked = true;
-                    TntWrsMltiKlChck.Enabled = true;
+                    tw_numMultiKills.Value = TntWarsGame.GuiLoaded.MultiKillBonus;
+                    tw_numMultiKills.Enabled = true;
+                    tw_cbMultiKills.Checked = true;
+                    tw_cbMultiKills.Enabled = true;
                 }
                 //Grace period
                 TntWrsGracePrdChck.Checked = TntWarsGame.GuiLoaded.GracePeriod;
@@ -318,44 +318,44 @@ namespace MCGalaxy.Gui {
                 //Teams
                 TntWrsTmsChck.Checked = TntWarsGame.GuiLoaded.GameMode == TntWarsGame.TntWarsGameMode.TDM;
                 TntWrsTmsChck.Enabled = true;
-                TntWrsBlnceTeamsChck.Checked = TntWarsGame.GuiLoaded.BalanceTeams;
-                TntWrsBlnceTeamsChck.Enabled = true;
-                TntWrsTKchck.Checked = TntWarsGame.GuiLoaded.TeamKills;
-                TntWrsTKchck.Enabled = true;
+                tw_cbBalanceTeams.Checked = TntWarsGame.GuiLoaded.BalanceTeams;
+                tw_cbBalanceTeams.Enabled = true;
+                tw_cbTeamKills.Checked = TntWarsGame.GuiLoaded.TeamKills;
+                tw_cbTeamKills.Enabled = true;
                 //Status
                 switch ( TntWarsGame.GuiLoaded.GameStatus ) {
                     case TntWarsGame.TntWarsGameStatus.WaitingForPlayers:
-                        if ( TntWarsGame.GuiLoaded.CheckAllSetUp(null, false, false) ) TntWrsStrtGame.Enabled = true;
-                        TntWrsEndGame.Enabled = false;
-                        TntWrsRstGame.Enabled = false;
-                        TntWrsDltGame.Enabled = true;
+                        if ( TntWarsGame.GuiLoaded.CheckAllSetUp(null, false, false) ) tw_btnStartGame.Enabled = true;
+                        tw_btnEndGame.Enabled = false;
+                        tw_btnResetGame.Enabled = false;
+                        tw_btnDeleteGame.Enabled = true;
                         break;
 
                     case TntWarsGame.TntWarsGameStatus.AboutToStart:
                     case TntWarsGame.TntWarsGameStatus.GracePeriod:
                     case TntWarsGame.TntWarsGameStatus.InProgress:
-                        TntWrsStrtGame.Enabled = false;
-                        TntWrsEndGame.Enabled = true;
-                        TntWrsRstGame.Enabled = false;
-                        TntWrsDltGame.Enabled = false;
+                        tw_btnStartGame.Enabled = false;
+                        tw_btnEndGame.Enabled = true;
+                        tw_btnResetGame.Enabled = false;
+                        tw_btnDeleteGame.Enabled = false;
                         break;
 
                     case TntWarsGame.TntWarsGameStatus.Finished:
-                        TntWrsStrtGame.Enabled = false;
-                        TntWrsEndGame.Enabled = false;
-                        TntWrsRstGame.Enabled = true;
-                        TntWrsDltGame.Enabled = true;
+                        tw_btnStartGame.Enabled = false;
+                        tw_btnEndGame.Enabled = false;
+                        tw_btnResetGame.Enabled = true;
+                        tw_btnDeleteGame.Enabled = true;
                         break;
 
                 }
                 //Other
-                TntWrsStreaksChck.Checked = TntWarsGame.GuiLoaded.Config.Streaks;
-                TntWrsStreaksChck.Enabled = true;
+                tw_cbStreaks.Checked = TntWarsGame.GuiLoaded.Config.Streaks;
+                tw_cbStreaks.Enabled = true;
                 //New game
                 if ( TntWrsMpsList.SelectedIndex < 0 ) TntWrsCrtNwTntWrsBt.Enabled = false;
                 //Load lists
                 TntWrsMpsList.Items.Clear();
-                TntWarsGamesList.Items.Clear();
+                tw_lstGames.Items.Clear();
                 TntWrsDiffCombo.Items.Clear();
                 foreach ( Level lvl in Server.levels ) {
                     if ( TntWarsGame.Find(lvl) == null ) {
@@ -379,7 +379,7 @@ namespace MCGalaxy.Gui {
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod ) msg += "(Started)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress ) msg += "(In Progress)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.Finished ) msg += "(Finished)";
-                        TntWarsGamesList.Items.Add(msg);
+                        tw_lstGames.Items.Add(msg);
                     }
                 }
                 TntWrsDiffCombo.Items.Add("Easy");
@@ -393,21 +393,21 @@ namespace MCGalaxy.Gui {
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
                     //scores
-                    TntWrsScrLmtUpDwn.Enabled = false;
-                    TntWrsScrPrKlUpDwn.Enabled = false;
-                    TntWrsAsstChck.Enabled = false;
-                    TntWrsAstsScrUpDwn.Enabled = false;
-                    TntWrsMltiKlChck.Enabled = false;
-                    TntWrsMltiKlScPrUpDown.Enabled = false;
+                    tw_numScoreLimit.Enabled = false;
+                    tw_numScorePerKill.Enabled = false;
+                    tw_cbScoreAssists.Enabled = false;
+                    tw_numScoreAssists.Enabled = false;
+                    tw_cbMultiKills.Enabled = false;
+                    tw_numMultiKills.Enabled = false;
                     //Grace period
                     TntWrsGracePrdChck.Enabled = false;
                     TntWrsGraceTimeChck.Enabled = false;
                     //Teams
                     TntWrsTmsChck.Enabled = false;
-                    TntWrsBlnceTeamsChck.Enabled = false;
-                    TntWrsTKchck.Enabled = false;
+                    tw_cbBalanceTeams.Enabled = false;
+                    tw_cbTeamKills.Enabled = false;
                     //Other
-                    TntWrsStreaksChck.Enabled = false;
+                    tw_cbStreaks.Enabled = false;
                 }
             }
         }
@@ -422,7 +422,7 @@ namespace MCGalaxy.Gui {
 
         private void EditTntWarsGameBT_Click(object sender, EventArgs e) {
             try {
-                string slctd = TntWarsGamesList.Items[TntWarsGamesList.SelectedIndex].ToString();
+                string slctd = tw_lstGames.Items[tw_lstGames.SelectedIndex].ToString();
                 if ( slctd.StartsWith("-->") ) {
                     LoadTNTWarsTab(sender, e);
                     return;
@@ -482,51 +482,51 @@ namespace MCGalaxy.Gui {
 
         private void TntWrsScrLmtUpDwn_ValueChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.ScoreLimit = (int)TntWrsScrLmtUpDwn.Value;
+            TntWarsGame.GuiLoaded.ScoreLimit = (int)tw_numScoreLimit.Value;
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsScrPrKlUpDwn_ValueChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.ScorePerKill = (int)TntWrsScrPrKlUpDwn.Value;
+            TntWarsGame.GuiLoaded.ScorePerKill = (int)tw_numScorePerKill.Value;
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsAsstChck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            if ( TntWrsAsstChck.Checked == false ) {
+            if ( tw_cbScoreAssists.Checked == false ) {
                 TntWarsGame.GuiLoaded.ScorePerAssist = 0;
-                TntWrsAstsScrUpDwn.Enabled = false;
+                tw_numScoreAssists.Enabled = false;
             }
             else {
-                TntWarsGame.GuiLoaded.ScorePerAssist = (int)TntWrsAstsScrUpDwn.Value;
-                TntWrsAstsScrUpDwn.Enabled = true;
+                TntWarsGame.GuiLoaded.ScorePerAssist = (int)tw_numScoreAssists.Value;
+                tw_numScoreAssists.Enabled = true;
             }
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsAstsScrUpDwn_ValueChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.ScorePerAssist = (int)TntWrsAstsScrUpDwn.Value;
+            TntWarsGame.GuiLoaded.ScorePerAssist = (int)tw_numScoreAssists.Value;
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsMltiKlChck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            if ( TntWrsMltiKlChck.Checked == false ) {
+            if ( tw_cbMultiKills.Checked == false ) {
                 TntWarsGame.GuiLoaded.MultiKillBonus = 0;
-                TntWrsMltiKlScPrUpDown.Enabled = false;
+                tw_numMultiKills.Enabled = false;
             }
             else {
-                TntWarsGame.GuiLoaded.MultiKillBonus = (int)TntWrsMltiKlScPrUpDown.Value;
-                TntWrsMltiKlScPrUpDown.Enabled = true;
+                TntWarsGame.GuiLoaded.MultiKillBonus = (int)tw_numMultiKills.Value;
+                tw_numMultiKills.Enabled = true;
             }
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsMltiKlScPrUpDown_ValueChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.MultiKillBonus = (int)TntWrsMltiKlScPrUpDown.Value;
+            TntWarsGame.GuiLoaded.MultiKillBonus = (int)tw_numMultiKills.Value;
             LoadTNTWarsTab(sender, e);
         }
 
@@ -606,19 +606,19 @@ namespace MCGalaxy.Gui {
 
         private void TntWrsBlnceTeamsChck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.BalanceTeams = TntWrsBlnceTeamsChck.Checked;
+            TntWarsGame.GuiLoaded.BalanceTeams = tw_cbBalanceTeams.Checked;
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsTKchck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.TeamKills = TntWrsTKchck.Checked;
+            TntWarsGame.GuiLoaded.TeamKills = tw_cbTeamKills.Checked;
             LoadTNTWarsTab(sender, e);
         }
 
         private void TntWrsStreaksChck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.Config.Streaks = TntWrsStreaksChck.Checked;
+            TntWarsGame.GuiLoaded.Config.Streaks = tw_cbStreaks.Checked;
             LoadTNTWarsTab(sender, e);
         }
 
