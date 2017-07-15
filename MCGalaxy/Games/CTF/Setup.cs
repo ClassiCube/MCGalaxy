@@ -77,8 +77,6 @@ namespace MCGalaxy.Games {
             
             using (StreamWriter w = new StreamWriter("CTF/maps.config", true))
                 w.WriteLine(cache[p].current.name);
-            if (!Directory.Exists("CTF/maps")) Directory.CreateDirectory("CTF/maps");
-            File.Copy("levels/" + cache[p].current.name + ".lvl", "CTF/maps/" + cache[p].current.name + ".lvl", true);
         }
         
         static void WriteMapConfig(Player p, int bx, int by, int bz, int rx, int ry, int rz) {

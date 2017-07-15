@@ -67,6 +67,7 @@ namespace MCGalaxy.Gui {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
                     if (!lvl.ShouldSaveChanges()) continue;
+                    
                     level = level + lvl.name + "=" + lvl.physics + Environment.NewLine;
                     lvl.Save(false, true);
                     lvl.SaveBlockDBChanges();

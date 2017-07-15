@@ -43,8 +43,6 @@ namespace MCGalaxy.Games {
         
         public CtfTeam2 Red, Blue;
         public Level Map;
-        
-        List<string> maps = new List<string>();
         List<CtfData> cache = new List<CtfData>();
         
         public CTFConfig Config = new CTFConfig();
@@ -72,13 +70,8 @@ namespace MCGalaxy.Games {
         
         /// <summary> Load a map into CTF </summary>
         public void SetMap(string mapName) {
-            Command.all.Find("unload").Use(null, "ctf");
-            if (File.Exists("levels/ctf.lvl"))
-                File.Delete("levels/ctf.lvl");
-            
-            File.Copy("CTF/maps/" + mapName + ".lvl", "levels/ctf.lvl");
-            CmdLoad.LoadLevel(null, "ctf");
-            Map = LevelInfo.FindExact("ctf");
+            CmdLoad.LoadLevel(null, mapName);
+            Map = LevelInfo.FindExact(mapName);
             Map.SaveChanges = false;
             UpdateConfig();
         }
@@ -97,14 +90,13 @@ namespace MCGalaxy.Games {
             Blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
         }
         
-        public bool UpdateMapList() {
+        List<string> GetCtfMaps() {
             //Load some configs
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            if (!File.Exists("CTF/maps.config")) return false;
+            if (!File.Exists("CTF/maps.config")) return new List<string>();
             
             string[] lines = File.ReadAllLines("CTF/maps.config");
-            maps = new List<string>(lines);
-            return maps.Count > 0;
+            return new List<string>(lines);
         }
         
         
@@ -146,15 +138,12 @@ namespace MCGalaxy.Games {
         
         /// <summary> Start the CTF game </summary>
         public bool Start(Player p) {
-            if (LevelInfo.FindExact("ctf") != null) {
-                Command.all.Find("unload").Use(null, "ctf");
-                Thread.Sleep(1000);
-            }
-            
             if (started) {
                 Player.Message(p, "CTF game already running."); return false;
             }
-            if (!UpdateMapList()) {
+        	
+        	List<string> maps = GetCtfMaps();
+            if (maps.Count == 0) {
                 Player.Message(p, "No CTF maps were found."); return false;
             }
             
@@ -172,11 +161,8 @@ namespace MCGalaxy.Games {
         public void Stop() {
             tagging.Stop();
             tagging.Dispose();
-            
             Map = null;
             started = false;
-            if (LevelInfo.FindExact("ctf") != null)
-                Command.all.Find("unload").Use(null, "ctf");
         }
         
         string Vote() {
@@ -185,12 +171,12 @@ namespace MCGalaxy.Games {
             vote2 = 0;
             vote3 = 0;
             Random rand = new Random();
-            List<string> maps1 = maps;
-            map1 = maps1[rand.Next(maps1.Count)];
-            maps1.Remove(map1);
-            map2 = maps1[rand.Next(maps1.Count)];
-            maps1.Remove(map2);
-            map3 = maps1[rand.Next(maps1.Count)];
+            List<string> maps = GetCtfMaps();
+            map1 = maps[rand.Next(maps.Count)];
+            maps.Remove(map1);
+            map2 = maps[rand.Next(maps.Count)];
+            maps.Remove(map2);
+            map3 = maps[rand.Next(maps.Count)];
             Chat.MessageLevel(Map, "%2VOTE:");
             Chat.MessageLevel(Map, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
             voting = true;
@@ -226,7 +212,6 @@ namespace MCGalaxy.Games {
         /// <summary> Ends the current round of CTF. </summary>
         public void EndRound() {
             started = false;
-            string nextmap = "";
             if (Blue.Points >= Config.RoundPoints || Blue.Points > Red.Points) {
                 Chat.MessageLevel(Map, Blue.ColoredName + " %Swon this round of CTF!");
             } else if (Red.Points >= Config.RoundPoints || Red.Points > Blue.Points) {
@@ -242,7 +227,8 @@ namespace MCGalaxy.Games {
                               Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
                                                           "WHERE Name = @0", d.p.name, d.Points, d.Captures, d.Tags);
                           });
-            nextmap = Vote();
+            
+            string nextmap = Vote();
             Chat.MessageLevel(Map, "Starting a new game!");
             Blue.Members.Clear();
             Red.Members.Clear();

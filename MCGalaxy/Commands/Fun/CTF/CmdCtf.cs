@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             if (!Server.ctf.Start(p)) return;
-            Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE /goto CTF to join!");
+            Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE %T/goto " + Server.ctf.Map.name + " %Sto join!");
         }
         
         static void HandleStop(Player p) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 Player.Message(p, "Added {0} %Sto the list of CTF maps.", p.level.ColoredName);
                 maps.Add(p.level.name);
-                UpdateCtfMaps(maps);
+                File.WriteAllLines("CTF/maps.config", maps.ToArray());
             }
         }
         
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "{0} %Swas not in the list of CTF maps.", p.level.ColoredName);
             } else {
                 Player.Message(p, "Removed {0} %Sfrom the list of CTF maps.", p.level.ColoredName);
-                UpdateCtfMaps(maps);
+                File.WriteAllLines("CTF/maps.config", maps.ToArray());
             }
         }
         
@@ -93,11 +93,6 @@ namespace MCGalaxy.Commands.Fun {
             if (!File.Exists("CTF/maps.config")) return new List<string>();
             string[] lines = File.ReadAllLines("CTF/maps.config");
             return new List<string>(lines);
-        }
-        
-        static void UpdateCtfMaps(List<string> maps) {
-            File.WriteAllLines("CTF/maps.config", maps.ToArray());
-            if (Server.ctf != null) Server.ctf.UpdateMapList();
         }
 
         
