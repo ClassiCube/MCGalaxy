@@ -54,7 +54,7 @@ namespace MCGalaxy.Games {
         
         
         void HandlePlayerDeath(Player p, ExtBlock deathblock) {
-            if (!Game.started || p.level != Game.map) return;
+            if (!Game.started || p.level != Game.Map) return;
             if (!Game.Get(p).hasflag) return;
             
             CtfTeam2 team = Game.TeamOf(p);
@@ -82,7 +82,7 @@ namespace MCGalaxy.Games {
                 }
             }
             
-            if (!Game.started || p.level != Game.map) return;
+            if (!Game.started || p.level != Game.Map) return;
             if (!Game.Get(p).TeamChatting) return;
             
             CtfTeam2 team = Game.TeamOf(p);
@@ -96,7 +96,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            if (!Game.started || p.level != Game.map) return;
+            if (!Game.started || p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
@@ -106,33 +106,33 @@ namespace MCGalaxy.Games {
             }
             
             Vec3U16 pos = new Vec3U16(x, y, z);
-            if (pos == Game.Opposing(team).FlagPos && !Game.map.IsAirAt(x, y, z)) {
+            if (pos == Game.Opposing(team).FlagPos && !Game.Map.IsAirAt(x, y, z)) {
                 Game.TakeFlag(p, team);
             }
-            if (pos == team.FlagPos && !Game.map.IsAirAt(x, y, z)) {
+            if (pos == team.FlagPos && !Game.Map.IsAirAt(x, y, z)) {
                 Game.ReturnFlag(p, team);
             }
         }
         
         void HandleDisconnect(Player p, string reason) {
-            if (p.level != Game.map) return;
+            if (p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             if (team == null) return;
             
             Game.DropFlag(p, team);
             team.Remove(p);
-            Chat.MessageLevel(Game.map, team.Color + p.DisplayName + " %Sleft the ctf game");
+            Chat.MessageLevel(Game.Map, team.Color + p.DisplayName + " %Sleft the ctf game");
         }
 
         void HandleLevelUnload(Level lvl) {
-            if (Game.started && lvl == Game.map) {
+            if (Game.started && lvl == Game.Map) {
                 Logger.Log(LogType.GameActivity, "Unload Failed!, A ctf game is currently going on!");
                 lvl.cancelunload = true;
             }
         }        
                 
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (!Game.started || p.level != Game.map) return;
+            if (!Game.started || p.level != Game.Map) return;
             
             CtfTeam2 team = Game.TeamOf(p);
             if (team != null) pos = team.SpawnPos;
@@ -141,7 +141,7 @@ namespace MCGalaxy.Games {
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
-            if (p == null || !Game.started || p.level != Game.map) return;
+            if (p == null || !Game.started || p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             
             if (p.Game.Referee) {
@@ -156,7 +156,7 @@ namespace MCGalaxy.Games {
         void HandlePlayerCommand(Player p, string cmd, string args) {
             if (!Game.started) return;
             
-            if (cmd == "teamchat" && p.level == Game.map) {
+            if (cmd == "teamchat" && p.level == Game.Map) {
                 CtfData data = Game.Get(p);
                 if (data != null) {
                     if (data.TeamChatting) {
@@ -170,7 +170,7 @@ namespace MCGalaxy.Games {
             }
             
             if (cmd != "goto") return;
-            if (args == "ctf" && p.level != Game.map) {
+            if (args == "ctf" && p.level != Game.Map) {
                 if (Game.Blue.Members.Count > Game.Red.Members.Count) {
                     Game.JoinTeam(p, Game.Red);
                 } else if (Game.Red.Members.Count > Game.Blue.Members.Count) {
@@ -180,13 +180,13 @@ namespace MCGalaxy.Games {
                 } else {
                     Game.JoinTeam(p, Game.Blue);
                 }
-            } else if (args != "ctf" && p.level == Game.map) {
+            } else if (args != "ctf" && p.level == Game.Map) {
                 CtfTeam2 team = Game.TeamOf(p);
                 if (team == null) return;
                 
                 Game.DropFlag(p, team);
                 team.Remove(p);
-                Chat.MessageLevel(Game.map, team.Color + p.DisplayName + " %Sleft the ctf game");
+                Chat.MessageLevel(Game.Map, team.Color + p.DisplayName + " %Sleft the ctf game");
             }
         }
     }

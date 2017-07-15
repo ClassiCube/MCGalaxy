@@ -26,6 +26,16 @@ namespace MCGalaxy.Games {
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
         
+        public override void PlayerLeftGame(Player p) {
+            Alive.Remove(p);
+            Infected.Remove(p);
+            p.Game.Infected = false;
+            RemoveBounties(p);
+            
+            AssignFirstZombie();
+            HUD.UpdateAllPrimary(this);
+        }
+        
         public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
                                                  byte action, byte block, byte old) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
@@ -111,6 +121,9 @@ namespace MCGalaxy.Games {
                     InfectPlayer(p, null);
                 }
             }
+            if (RoundInProgress && oldLvl == CurLevel) {
+                PlayerLeftGame(p);
+            }
             
             if (lvl.name.CaselessEq(CurLevelName)) {
                 double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
@@ -141,17 +154,6 @@ namespace MCGalaxy.Games {
             Infected.Remove(p);
             if (oldLvl != null && oldLvl.name.CaselessEq(CurLevelName))
                 HUD.UpdateAllPrimary(this);
-        }
-        
-        public override bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
-            if (!oldLvl.name.CaselessEq(CurLevelName)) return true;
-            if (lvl.name.CaselessEq(CurLevelName)) return true;
-            
-            if (RoundInProgress && !p.Game.Referee) {
-                Player.Message(p, "Sorry, you cannot leave a zombie survival map until the current round has ended.");
-                return false;
-            }
-            return true;
         }
         
         public override void OnHeartbeat(ref string name) {

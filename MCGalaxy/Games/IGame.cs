@@ -47,10 +47,6 @@ namespace MCGalaxy.Games {
         /// <summary> Raised when a player moves to a different map/level. </summary>
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
         
-        public virtual bool PlayerCanJoinLevel(Player p, Level lvl, Level oldLvl) {
-            return true;
-        }
-        
         /// <summary> Raised when the server is about to send a heartbeat. </summary>
         public virtual void OnHeartbeat(ref string name) { }
         

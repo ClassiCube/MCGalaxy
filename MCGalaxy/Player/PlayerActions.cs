@@ -108,7 +108,6 @@ namespace MCGalaxy {
         static bool GotoLevel(Player p, Level lvl) {
             if (p.level == lvl) { Player.Message(p, "You are already in {0}%S.", lvl.ColoredName); return false; }
             if (!lvl.CanJoin(p)) return false;
-            if (!Server.zombie.PlayerCanJoinLevel(p, lvl, p.level)) return false;
 
             p.Loading = true;
             Entities.DespawnEntities(p);

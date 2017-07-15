@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
         public bool started = false;
         
         public CtfTeam2 Red, Blue;
-        public Level map;
+        public Level Map;
         
         List<string> maps = new List<string>();
         List<CtfData> cache = new List<CtfData>();
@@ -78,13 +78,13 @@ namespace MCGalaxy.Games {
             
             File.Copy("CTF/maps/" + mapName + ".lvl", "levels/ctf.lvl");
             CmdLoad.LoadLevel(null, "ctf");
-            map = LevelInfo.FindExact("ctf");
+            Map = LevelInfo.FindExact("ctf");
             UpdateConfig();
         }
         
         public void UpdateConfig() {
-            Config.SetDefaults(map);
-            Config.Retrieve(map.name);
+            Config.SetDefaults(Map);
+            Config.Retrieve(Map.name);
             CTFConfig cfg = Config;
             
             Red.FlagBlock = ExtBlock.FromRaw(cfg.RedFlagBlock);
@@ -110,7 +110,7 @@ namespace MCGalaxy.Games {
         void CheckTagging(object sender, System.Timers.ElapsedEventArgs e) {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p.level != map) continue;
+                if (p.level != Map) continue;
                 
                 CtfTeam2 team = TeamOf(p);
                 if (team == null || Get(p).tagging) continue;
@@ -172,7 +172,7 @@ namespace MCGalaxy.Games {
             tagging.Stop();
             tagging.Dispose();
             
-            map = null;
+            Map = null;
             started = false;
             if (LevelInfo.FindExact("ctf") != null)
                 Command.all.Find("unload").Use(null, "ctf");
@@ -190,34 +190,34 @@ namespace MCGalaxy.Games {
             map2 = maps1[rand.Next(maps1.Count)];
             maps1.Remove(map2);
             map3 = maps1[rand.Next(maps1.Count)];
-            Chat.MessageLevel(map, "%2VOTE:");
-            Chat.MessageLevel(map, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
+            Chat.MessageLevel(Map, "%2VOTE:");
+            Chat.MessageLevel(Map, "1. " + map1 + " 2. " + map2 + " 3. " + map3);
             voting = true;
             int seconds = rand.Next(15, 61);
-            Chat.MessageLevel(map, "You have " + seconds + " seconds to vote!");
+            Chat.MessageLevel(Map, "You have " + seconds + " seconds to vote!");
             Thread.Sleep(seconds * 1000);
             voting = false;
-            Chat.MessageLevel(map, "VOTING ENDED!");
+            Chat.MessageLevel(Map, "VOTING ENDED!");
             Thread.Sleep(rand.Next(1, 10) * 1000);
             if (vote1 > vote2 && vote1 > vote3)
             {
-                Chat.MessageLevel(map, map1 + " WON!");
+                Chat.MessageLevel(Map, map1 + " WON!");
                 return map1;
             }
             if (vote2 > vote1 && vote2 > vote3)
             {
-                Chat.MessageLevel(map, map2 + " WON!");
+                Chat.MessageLevel(Map, map2 + " WON!");
                 return map2;
             }
             if (vote3 > vote2 && vote3 > vote1)
             {
-                Chat.MessageLevel(map, map3 + " WON!");
+                Chat.MessageLevel(Map, map3 + " WON!");
                 return map3;
             }
             else
             {
-                Chat.MessageLevel(map, "There was a tie!");
-                Chat.MessageLevel(map, "I'll choose!");
+                Chat.MessageLevel(Map, "There was a tie!");
+                Chat.MessageLevel(Map, "I'll choose!");
                 return maps[rand.Next(maps.Count)];
             }
         }
@@ -227,11 +227,11 @@ namespace MCGalaxy.Games {
             started = false;
             string nextmap = "";
             if (Blue.Points >= Config.RoundPoints || Blue.Points > Red.Points) {
-                Chat.MessageLevel(map, Blue.ColoredName + " %Swon this round of CTF!");
+                Chat.MessageLevel(Map, Blue.ColoredName + " %Swon this round of CTF!");
             } else if (Red.Points >= Config.RoundPoints || Red.Points > Blue.Points) {
-                Chat.MessageLevel(map, Red.ColoredName + " %Swon this round of CTF!");
+                Chat.MessageLevel(Map, Red.ColoredName + " %Swon this round of CTF!");
             } else {
-                Chat.MessageLevel(map, "The round ended in a tie!");
+                Chat.MessageLevel(Map, "The round ended in a tie!");
             }
             
             Thread.Sleep(4000);
@@ -242,7 +242,7 @@ namespace MCGalaxy.Games {
                                                           "WHERE Name = @0", d.p.name, d.Points, d.Captures, d.Tags);
                           });
             nextmap = Vote();
-            Chat.MessageLevel(map, "Starting a new game!");
+            Chat.MessageLevel(Map, "Starting a new game!");
             Blue.Members.Clear();
             Red.Members.Clear();
             Thread.Sleep(2000);
@@ -253,7 +253,7 @@ namespace MCGalaxy.Games {
         /// <summary> Called when the given player takes the opposing team's flag. </summary>
         public void TakeFlag(Player p, CtfTeam2 team) {
             CtfTeam2 opposing = Opposing(team);
-            Chat.MessageLevel(map, team.Color + p.DisplayName + " took the " + Blue.ColoredName + " %Steam's FLAG");
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + Blue.ColoredName + " %Steam's FLAG");
             Get(p).hasflag = true;
         }
         
@@ -265,7 +265,7 @@ namespace MCGalaxy.Games {
             
             CtfData data = Get(p);
             if (data.hasflag) {
-                Chat.MessageLevel(map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
+                Chat.MessageLevel(Map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
                 data.hasflag = false;
                 data.Points += Config.Capture_PointsGained;
                 data.Captures++;
@@ -273,7 +273,7 @@ namespace MCGalaxy.Games {
                 CtfTeam2 opposing = Opposing(team);
                 team.Points++;
                 flagPos = opposing.FlagPos;
-                map.Blockchange(flagPos.X, flagPos.Y, flagPos.Z, opposing.FlagBlock);
+                Map.Blockchange(flagPos.X, flagPos.Y, flagPos.Z, opposing.FlagBlock);
                 
                 if (team.Points >= Config.RoundPoints) EndRound();
             } else {
@@ -287,12 +287,12 @@ namespace MCGalaxy.Games {
             if (!data.hasflag) return;
             
             data.hasflag = false;
-            Chat.MessageLevel(map, team.Color + p.DisplayName + " DROPPED THE FLAG!");
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " DROPPED THE FLAG!");
             data.Points -= Config.Capture_PointsLost;
             
             CtfTeam2 opposing = Opposing(team);
             Vec3U16 pos = opposing.FlagPos;
-            map.Blockchange(pos.X, pos.Y, pos.Z, opposing.FlagBlock);
+            Map.Blockchange(pos.X, pos.Y, pos.Z, opposing.FlagBlock);
         }
         
 
@@ -304,7 +304,7 @@ namespace MCGalaxy.Games {
             }
             
             team.Members.Add(p);
-            Chat.MessageLevel(map, p.ColoredName + " joined the " + team.ColoredName + " %Steam");
+            Chat.MessageLevel(Map, p.ColoredName + " joined the " + team.ColoredName + " %Steam");
             Player.Message(p, team.Color + "You are now on the " + team.Name + " team!");
         }
         

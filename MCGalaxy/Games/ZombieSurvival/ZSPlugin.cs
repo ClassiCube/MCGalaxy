@@ -78,13 +78,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandlePlayerDisconnect(Player p, string reason) {
-            Game.Alive.Remove(p);
-            Game.Infected.Remove(p);
-            p.Game.Infected = false;
-            Game.RemoveBounties(p);
-            
-            Game.AssignFirstZombie();
-            HUD.UpdateAllPrimary(Game);
+            Game.PlayerLeftGame(p);
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
