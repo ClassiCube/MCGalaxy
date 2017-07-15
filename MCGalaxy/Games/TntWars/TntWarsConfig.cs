@@ -27,17 +27,18 @@ using System.Threading;
 namespace MCGalaxy.Games {
     public sealed class TntWarsConfig {
         
-        public bool GracePeriodAtStart = true;        
+        public bool InitialGracePeriod = true;        
         public int GracePeriodSeconds = 30;
         
-        public int TntPerPlayerAtATime = 1;
+        public int MaxPlayerActiveTnt = 1;
         public bool BalanceTeams = true;
         
-        public int FFAmaxScore = 75;
-        public int TDMmaxScore = 150;
+        public int ScoreMaxFFA = 75;
+        public int ScoreMaxTDM = 150;
         public int ScorePerKill = 10;
         public int MultiKillBonus = 5; // Amount of extra points per player killed (if more than one) per TNT
         public int AssistScore = 5;
+        public bool TeamKills;
         
         public bool Streaks = true;
         public int StreakOneAmount = 3;
@@ -47,20 +48,22 @@ namespace MCGalaxy.Games {
         public int StreakThreeAmount = 7;
         public float StreakThreeMultiplier = 2f;
         
-                
+        public static TntWarsConfig Default = new TntWarsConfig();
+        
         public TntWarsConfig Copy() {
             TntWarsConfig copy = new TntWarsConfig();
-            copy.GracePeriodAtStart = GracePeriodAtStart;
+            copy.InitialGracePeriod = InitialGracePeriod;
             copy.GracePeriodSeconds = GracePeriodSeconds;
             
-            copy.TntPerPlayerAtATime = TntPerPlayerAtATime;
+            copy.MaxPlayerActiveTnt = MaxPlayerActiveTnt;
             copy.BalanceTeams = BalanceTeams;
             
-            copy.FFAmaxScore = FFAmaxScore;
-            copy.TDMmaxScore = TDMmaxScore;
+            copy.ScoreMaxFFA = ScoreMaxFFA;
+            copy.ScoreMaxTDM = ScoreMaxTDM;
             copy.ScorePerKill = ScorePerKill;
             copy.MultiKillBonus = MultiKillBonus;
             copy.AssistScore = AssistScore;
+            copy.TeamKills = TeamKills;
             
             copy.Streaks = Streaks;
             copy.StreakOneAmount = StreakOneAmount;

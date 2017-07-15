@@ -41,27 +41,10 @@ namespace MCGalaxy.Games
         public ushort[] BlueSpawn = null;
         
         public TntWarsConfig Config = new TntWarsConfig();
-            //incase they don't want the default
-        public int TntPerPlayerAtATime = Properties.DefaultTntPerPlayerAtATime;
-        public bool GracePeriod = Properties.DefaultGracePeriodAtStart;
-        public int GracePeriodSecs = Properties.DefaultGracePeriodSecs;
-        public bool BalanceTeams = Properties.DefaultBalanceTeams;
-            //scores/streaks
-        public int ScoreLimit = Properties.DefaultTDMmaxScore;
-        public bool Streaks = true;
-        public int MultiKillBonus = Properties.DefaultMultiKillBonus; 
-        public int ScorePerKill = Properties.DefaultScorePerKill;
-        public int ScorePerAssist = Properties.DefaultAssistScore;
-        public bool TeamKills = false;
+        //scores/streaks
+        public int ScoreLimit = TntWarsConfig.Default.ScoreMaxTDM;
         public Thread Starter;
 
-        public static TntWarsGame GuiLoaded = null;
-        //======PLUGIN EVENTS======
-        public delegate void Starting(TntWarsGame t);
-        public delegate void Started(TntWarsGame t);
-        public delegate void Death(Player killer, List<Player> deadplayers);
-        public delegate void End(TntWarsGame t);
-        //======PLUGIN EVENTS======
         public TntWarsGame(Level level)
         {
             Starter = new Thread(Start);
@@ -135,7 +118,7 @@ namespace MCGalaxy.Games
                     if (Difficulty == TntWarsDifficulty.Easy || Difficulty == TntWarsDifficulty.Normal) p.p.TntWarsHealth = 2;
                     else p.p.TntWarsHealth = 1;
                     p.p.HarmedBy = null;
-                    if (GracePeriod)
+                    if (Config.InitialGracePeriod)
                     {
                         p.p.canBuild = false;
                     }
@@ -149,7 +132,7 @@ namespace MCGalaxy.Games
                     p.p.TNTWarsLastKillStreakAnnounced = 0;
                     SetTitlesAndColor(p);
                 }
-                if (GracePeriod)
+                if (Config.InitialGracePeriod)
                 {
                     SendAllPlayersMessage("TNT Wars: Disabled building during Grace Period!");
                 }
@@ -200,18 +183,18 @@ namespace MCGalaxy.Games
                     break;
             }
             string teamkillling = "Disabled";
-            if (TeamKills) teamkillling = "Enabled";
+            if (Config.TeamKills) teamkillling = "Enabled";
             Chat.MessageGlobal("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
                             difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
                             " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
-                            ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 
+                            ", team killing is &3" + teamkillling + " %Sand you can place &3" + Config.MaxPlayerActiveTnt 
                             + " %STNT at a time and there is a score limit of &3" + ScoreLimit + "%S!!");
             if (GameMode == TntWarsGameMode.TDM) SendAllPlayersMessage("TNT Wars: Start your message with ':' to send it as a team chat!");
             //GracePeriod
-            if (GracePeriod) //Check This Grace Stuff
+            if (Config.InitialGracePeriod) //Check This Grace Stuff
             {
                 GameStatus = TntWarsGameStatus.GracePeriod;
-                int GracePeriodSecsRemaining = GracePeriodSecs;
+                int GracePeriodSecsRemaining = Config.GracePeriodSeconds;
                 SendAllPlayersMessage("TNT Wars: Grace Period of &a" + GracePeriodSecsRemaining + " %Sseconds");
                 while (GracePeriodSecsRemaining > 0)
                 {
@@ -272,7 +255,7 @@ namespace MCGalaxy.Games
                     p.p.canBuild = true;
                 }
             }
-            if (GracePeriod)
+            if (Config.InitialGracePeriod)
             {
                 SendAllPlayersMessage("TNT Wars: You can now build!!");
             }
@@ -407,15 +390,15 @@ namespace MCGalaxy.Games
             
             foreach (Player Kld in Killed) {
                 if (FindPlayer(Kld).spec) continue;
-                if (!TeamKills && TeamKill(Killer, Kld)) continue;
+                if (!Config.TeamKills && TeamKill(Killer, Kld)) continue;
                 
                 if (Kld.TntWarsHealth - HealthDamage <= 0)
                 {
                     Kld.TntWarsHealth = 0;
                     Dead.Add(Kld);
-                    if (TeamKills && TeamKill(Killer, Kld))
+                    if (Config.TeamKills && TeamKill(Killer, Kld))
                     {
-                        minusfromscore += ScorePerKill;
+                        minusfromscore += Config.ScorePerKill;
                     }
                 }
                 else
@@ -459,13 +442,13 @@ namespace MCGalaxy.Games
                     {
                         if (TeamKill(Died.HarmedBy, Died))
                         {
-                            Player.Message(Died.HarmedBy, "TNT Wars: - " + ScorePerAssist + " point(s) for team kill assist!");
-                            ChangeScore(Died.HarmedBy, -ScorePerAssist);
+                            Player.Message(Died.HarmedBy, "TNT Wars: - " + Config.AssistScore + " point(s) for team kill assist!");
+                            ChangeScore(Died.HarmedBy, -Config.AssistScore);
                         }
                         else
                         {
-                            Player.Message(Died.HarmedBy, "TNT Wars: + " + ScorePerAssist + " point(s) for assist!");
-                            ChangeScore(Died.HarmedBy, ScorePerAssist);
+                            Player.Message(Died.HarmedBy, "TNT Wars: + " + Config.AssistScore + " point(s) for assist!");
+                            ChangeScore(Died.HarmedBy, Config.AssistScore);
                         }
                     }
                     Died.HarmedBy = null;
@@ -513,11 +496,11 @@ namespace MCGalaxy.Games
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak);
                 }
             }
-            AddToScore += kills * ScorePerKill;
+            AddToScore += kills * Config.ScorePerKill;
             //multikill
             if (kills > 1)
             {
-                AddToScore += kills * MultiKillBonus;
+                AddToScore += kills * Config.MultiKillBonus;
             }
             //Add to score
             if (AddToScore > 0)
@@ -813,20 +796,6 @@ namespace MCGalaxy.Games
             if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);
             return it;
-        }
-
-        //Static Stuff
-        public static class Properties
-        {
-            public static bool DefaultGracePeriodAtStart = true;
-            public static int DefaultGracePeriodSecs = 30;
-            public static int DefaultTntPerPlayerAtATime = 1;
-            public static bool DefaultBalanceTeams = true;
-            public static int DefaultFFAmaxScore = 75;
-            public static int DefaultTDMmaxScore = 150;
-            public static int DefaultScorePerKill = 10;
-            public static int DefaultMultiKillBonus = 5;
-            public static int DefaultAssistScore = 5;
         }
     }
 }

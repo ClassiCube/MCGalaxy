@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Fun {
                     case "red":
                     case "r":
                     case "1":
-                        if (it.BalanceTeams && red > blue) {
+                        if (it.Config.BalanceTeams && red > blue) {
                             Player.Message(p, "TNT Wars Error: Red has too many players!"); return;
                         }
                         pl.Red = true; break;
@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands.Fun {
                     case "blue":
                     case "b":
                     case "2":
-                        if (it.BalanceTeams && blue > red) {
+                        if (it.Config.BalanceTeams && blue > red) {
                             Player.Message(p, "TNT Wars Error: Blue has too many players!"); return;
                         }
                         pl.Blue = true; break;
@@ -513,7 +513,7 @@ namespace MCGalaxy.Commands.Fun {
                             break;
                         }
                     }
-                    if (SetBool(p, ref it.GracePeriod, text[2], "Grace period"))
+                    if (SetBool(p, ref it.Config.InitialGracePeriod, text[2], "Grace period"))
                         it.CheckAllSetUp(p);
                     break;
 
@@ -530,7 +530,7 @@ namespace MCGalaxy.Commands.Fun {
                         case "ATM":
                         case "c":
                         case "t":
-                            Player.Message(p, "TNT Wars: Current grace time is " + it.GracePeriodSecs + " seconds long!");
+                            Player.Message(p, "TNT Wars: Current grace time is " + it.Config.GracePeriodSeconds + " seconds long!");
                             break;
 
                         default:
@@ -546,7 +546,7 @@ namespace MCGalaxy.Commands.Fun {
                             if (numb <= 9) { Player.Message(p, "TNT Wars Error: Grace time cannot be lower than 10 seconds!!"); return; }
                             else
                             {
-                                it.GracePeriodSecs = numb;
+                                it.Config.GracePeriodSeconds = numb;
                                 Player.Message(p, "TNT Wars: Grace period is now " + numb + " seconds long!");
                                 return;
                             }
@@ -705,7 +705,7 @@ namespace MCGalaxy.Commands.Fun {
                                     int numb = -1;
                                     if (!int.TryParse(text[3], out numb))
                                     { Player.Message(p, "TNT Wars Error: Invalid number '" + text[3] + "'"); return; }
-                                    if (numb <= it.ScorePerKill) { Player.Message(p, "TNT Wars Error: Minimum score limit of " + it.ScorePerKill + " points"); return; }
+                                    if (numb <= it.Config.ScorePerKill) { Player.Message(p, "TNT Wars Error: Minimum score limit of " + it.Config.ScorePerKill + " points"); return; }
                                     else
                                     {
                                         it.ScoreLimit = numb;
@@ -736,7 +736,7 @@ namespace MCGalaxy.Commands.Fun {
                         case "mk":
                         case "d":
                         case "t":
-                            SetInt(p, it, ref it.ScorePerAssist, TntWarsGame.Properties.DefaultMultiKillBonus,
+                            SetInt(p, it, ref it.Config.MultiKillBonus, TntWarsConfig.Default.MultiKillBonus,
                                    text, "Mulitkill bonuses", "Mulitkill bonus per extra kill");
                             break;
 
@@ -752,7 +752,7 @@ namespace MCGalaxy.Commands.Fun {
                                 case "ATM":
                                 case "c":
                                 case "t":
-                                    Player.Message(p, "TNT Wars: Score per kill is " + it.ScorePerKill + " points!");
+                                    Player.Message(p, "TNT Wars: Score per kill is " + it.Config.ScorePerKill + " points!");
                                     break;
 
                                 default:
@@ -763,7 +763,7 @@ namespace MCGalaxy.Commands.Fun {
                                     int numb = -1;
                                     if (!CommandParser.GetInt(p, text[3], "Score per kill", ref numb, 0)) return;
                                     
-                                    it.ScorePerKill = numb;
+                                    it.Config.ScorePerKill = numb;
                                     Player.Message(p, "TNT Wars: Score per kill is now " + numb + " points!");
                                     return;
                                     //break;
@@ -775,7 +775,7 @@ namespace MCGalaxy.Commands.Fun {
                         case "assists":
                         case "assistscore":
                         case "a":
-                            SetInt(p, it, ref it.ScorePerAssist, TntWarsGame.Properties.DefaultAssistScore,
+                            SetInt(p, it, ref it.Config.AssistScore, TntWarsConfig.Default.AssistScore,
                                    text, "Assist bonuses", "Score per assist");
                             break;
 
@@ -796,7 +796,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "balanceteams":
                 case "bt":
                 case "b":
-                    if (SetBool(p, ref it.BalanceTeams, text[2], "Team balancing"))
+                    if (SetBool(p, ref it.Config.BalanceTeams, text[2], "Team balancing"))
                         it.CheckAllSetUp(p);
                     break;
 
@@ -809,7 +809,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "ff":
                 case "friendlyf":
                 case "ffire":
-                    if (SetBool(p, ref it.TeamKills, text[2], "Team killing"))
+                    if (SetBool(p, ref it.Config.TeamKills, text[2], "Team killing"))
                         it.CheckAllSetUp(p);
                     break;
 
@@ -888,6 +888,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "info":
                 case "c":
                     Player.Message(p, "TNT Wars: Current Setup:");
+                    TntWarsConfig cfg = it.Config;
                     //1
                     if (it.lvl == null) { Player.Message(p, "Level: " + Colors.red + "NONE"); }
                     else { Player.Message(p, "Level: " + Colors.green + it.lvl.name); }
@@ -900,32 +901,32 @@ namespace MCGalaxy.Commands.Fun {
                     if (it.Difficulty == TntWarsGame.TntWarsDifficulty.Hard) { Player.Message(p, "Game difficulty: " + Colors.green + "Hard"); }
                     if (it.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) { Player.Message(p, "Game difficulty: " + Colors.green + "Extreme"); }
                     //4
-                    if (it.TntPerPlayerAtATime >= 1) { Player.Message(p, "TNT per player at a time: " + Colors.green + it.TntPerPlayerAtATime); }
-                    else if (it.TntPerPlayerAtATime == 0) { Player.Message(p, "TNT per player at a time: " + Colors.green + "unlimited"); }
+                    if (cfg.MaxPlayerActiveTnt >= 1) { Player.Message(p, "TNT per player at a time: " + Colors.green + cfg.MaxPlayerActiveTnt); }
+                    else if (cfg.MaxPlayerActiveTnt == 0) { Player.Message(p, "TNT per player at a time: " + Colors.green + "unlimited"); }
                     //5
-                    if (it.GracePeriod) { Player.Message(p, "Grace period: " + Colors.green + "enabled"); }
-                    if (!it.GracePeriod) { Player.Message(p, "Grace period: " + Colors.green + "disabled"); }
+                    if (cfg.InitialGracePeriod) { Player.Message(p, "Grace period: " + Colors.green + "enabled"); }
+                    if (!cfg.InitialGracePeriod) { Player.Message(p, "Grace period: " + Colors.green + "disabled"); }
                     //6
-                    Player.Message(p, "Grace period time: " + Colors.green + it.GracePeriodSecs + " seconds");
+                    Player.Message(p, "Grace period time: " + Colors.green + cfg.GracePeriodSeconds + " seconds");
                     //7
-                    if (it.BalanceTeams) { Player.Message(p, "Balance teams: " + Colors.green + "enabled"); }
-                    if (!it.BalanceTeams) { Player.Message(p, "Balance teams: " + Colors.green + "disabled"); }
+                    if (cfg.BalanceTeams) { Player.Message(p, "Balance teams: " + Colors.green + "enabled"); }
+                    if (!cfg.BalanceTeams) { Player.Message(p, "Balance teams: " + Colors.green + "disabled"); }
                     //8
                     Player.Message(p, "Score limit: " + Colors.green + it.ScoreLimit + " points");
                     //9
-                    if (it.Config.Streaks) { Player.Message(p, "Streaks: " + Colors.green + "enabled"); }
-                    if (!it.Config.Streaks) { Player.Message(p, "Streaks: " + Colors.green + "disabled"); }
+                    if (cfg.Streaks) { Player.Message(p, "Streaks: " + Colors.green + "enabled"); }
+                    if (!cfg.Streaks) { Player.Message(p, "Streaks: " + Colors.green + "disabled"); }
                     //10
-                    if (it.MultiKillBonus == 0) { Player.Message(p, "Multikill bonus: " + Colors.green + "disabled"); }
-                    if (it.MultiKillBonus != 0) { Player.Message(p, "Multikill bonus: " + Colors.green + "enabled"); }
+                    if (cfg.MultiKillBonus == 0) { Player.Message(p, "Multikill bonus: " + Colors.green + "disabled"); }
+                    if (cfg.MultiKillBonus != 0) { Player.Message(p, "Multikill bonus: " + Colors.green + "enabled"); }
                     //11
-                    Player.Message(p, "Score per kill: " + Colors.green + it.ScorePerKill + " points");
+                    Player.Message(p, "Score per kill: " + Colors.green + cfg.ScorePerKill + " points");
                     //12
-                    if (it.ScorePerAssist == 0) { Player.Message(p, "Assists: " + Colors.green + "disabled"); }
-                    if (it.ScorePerAssist != 0) { Player.Message(p, "Assists : " + Colors.green + "enabled (at " + it.ScorePerAssist + " points)"); }
+                    if (cfg.AssistScore == 0) { Player.Message(p, "Assists: " + Colors.green + "disabled"); }
+                    if (cfg.AssistScore != 0) { Player.Message(p, "Assists : " + Colors.green + "enabled (at " + cfg.AssistScore + " points)"); }
                     //13
-                    if (it.TeamKills) { Player.Message(p, "Team killing: " + Colors.green + "enabled"); }
-                    if (!it.TeamKills) { Player.Message(p, "Team killing: " + Colors.green + "disabled"); }
+                    if (cfg.TeamKills) { Player.Message(p, "Team killing: " + Colors.green + "enabled"); }
+                    if (!cfg.TeamKills) { Player.Message(p, "Team killing: " + Colors.green + "disabled"); }
                     //14
                     it.CheckAllSetUp(p);
                     //15
@@ -989,9 +990,9 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "TNT Wars: Changed difficulty to {0}", name);
             it.SendAllPlayersMessage("TNT Wars: Changed difficulty to " + name + "!");
             
-            if (it.TeamKills == teamKill) return;
+            if (it.Config.TeamKills == teamKill) return;
             Player.Message(p, "TNT Wars: Team killing is now {0}", teamKill ? "&aon" : "&coff");
-            it.TeamKills = teamKill;
+            it.Config.TeamKills = teamKill;
         }
         
         static void AssignAutoTeam(TntWarsGame.player pl, TntWarsGame it, int red, int blue) {
@@ -1028,8 +1029,8 @@ namespace MCGalaxy.Commands.Fun {
                 Chat.MessageGlobal(msg);
             }
             
-            if (it.ScoreLimit == TntWarsGame.Properties.DefaultFFAmaxScore) {
-                it.ScoreLimit = TntWarsGame.Properties.DefaultTDMmaxScore;
+            if (it.ScoreLimit == TntWarsConfig.Default.ScoreMaxFFA) {
+                it.ScoreLimit = TntWarsConfig.Default.ScoreMaxTDM;
                 Player.Message(p, "TNT Wars: Score limit is now " + it.ScoreLimit + " points!");
             } else {
                 Player.Message(p, "TNT Wars: Score limit is still " + it.ScoreLimit + " points!");
@@ -1043,8 +1044,8 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             it.SendAllPlayersMessage("TNT Wars: Changed gamemode to Free For All");
-            if (it.ScoreLimit == TntWarsGame.Properties.DefaultTDMmaxScore) {
-                it.ScoreLimit = TntWarsGame.Properties.DefaultFFAmaxScore;
+            if (it.ScoreLimit == TntWarsConfig.Default.ScoreMaxTDM) {
+                it.ScoreLimit = TntWarsConfig.Default.ScoreMaxFFA;
                 Player.Message(p, "TNT Wars: Score limit is now " + it.ScoreLimit + " points!");
             } else {
                 Player.Message(p, "TNT Wars: Score limit is still " + it.ScoreLimit + " points!");

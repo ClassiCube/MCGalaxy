@@ -77,7 +77,7 @@ namespace MCGalaxy.Gui {
         void PropertyWindow_Unload(object sender, EventArgs e) {
             lavaUpdateTimer.Dispose();
             Window.prevLoaded = false;
-            TntWarsGame.GuiLoaded = null;
+            tw_selected = null;
         }
 
         void LoadProperties() {

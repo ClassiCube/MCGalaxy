@@ -177,10 +177,10 @@ namespace MCGalaxy {
             if (game.InZone(x, y, z, true))
                 return false;
             
-            if (p.CurrentAmountOfTnt == game.TntPerPlayerAtATime) {
+            if (p.CurrentAmountOfTnt == game.Config.MaxPlayerActiveTnt) {
                 Player.Message(p, "TNT Wars: Maximum amount of TNT placed"); return false;
             }
-            if (p.CurrentAmountOfTnt > game.TntPerPlayerAtATime) {
+            if (p.CurrentAmountOfTnt > game.Config.MaxPlayerActiveTnt) {
                 Player.Message(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
             }
             p.TntAtATime();
