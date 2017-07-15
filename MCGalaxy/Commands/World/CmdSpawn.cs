@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.World {
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
             
             if (p.PlayingTntWars) {
-                TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
+                TntWarsGame game = TntWarsGame.GameIn(p);
                 if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers
                     && game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
                     bool blue = game.FindPlayer(p).Blue;

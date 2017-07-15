@@ -66,8 +66,8 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
-                TntWarsGame game = TntWarsGame.GetTntWarsGame(p);
-                switch (game.GameDifficulty) {
+                TntWarsGame game = TntWarsGame.GameIn(p);
+                switch (game.Difficulty) {
                     case TntWarsGame.TntWarsDifficulty.Easy:
                         threshold = 7; break;
                     case TntWarsGame.TntWarsDifficulty.Normal:
@@ -81,7 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
                     ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     return;
                 }
-                if (p.TntWarsKillStreak >= TntWarsGame.Properties.DefaultStreakTwoAmount && game.Streaks)
+                if (p.TntWarsKillStreak >= game.Config.StreakTwoAmount && game.Config.Streaks)
                     power++;
                 MakeExplosion(lvl, x, y, z, power - 2, true, game);
                 

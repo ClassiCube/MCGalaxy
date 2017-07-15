@@ -462,7 +462,7 @@ namespace MCGalaxy {
 
             if (text[0] == ':' && PlayingTntWars) {
                 string newtext = text.Remove(0, 1).Trim();
-                TntWarsGame it = TntWarsGame.GetTntWarsGame(this);
+                TntWarsGame it = TntWarsGame.GameIn(this);
                 if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
                     TntWarsGame.player pl = it.FindPlayer(this);
                     foreach ( TntWarsGame.player p in it.Players ) {

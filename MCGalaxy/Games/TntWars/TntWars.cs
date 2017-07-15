@@ -35,10 +35,12 @@ namespace MCGalaxy.Games
         public int BackupNumber;
         public bool AllSetUp = false;
         public TntWarsGameMode GameMode = TntWarsGameMode.TDM;
-        public TntWarsDifficulty GameDifficulty = TntWarsDifficulty.Normal;
+        public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
         public int GameNumber;
         public ushort[] RedSpawn = null;
         public ushort[] BlueSpawn = null;
+        
+        public TntWarsConfig Config = new TntWarsConfig();
             //incase they don't want the default
         public int TntPerPlayerAtATime = Properties.DefaultTntPerPlayerAtATime;
         public bool GracePeriod = Properties.DefaultGracePeriodAtStart;
@@ -47,7 +49,7 @@ namespace MCGalaxy.Games
             //scores/streaks
         public int ScoreLimit = Properties.DefaultTDMmaxScore;
         public bool Streaks = true;
-        public int MultiKillBonus = Properties.DefaultMultiKillBonus; //This is the amount of extra points per each player that is killed per 1 tnt (if playerskilledforthistnt > 1)
+        public int MultiKillBonus = Properties.DefaultMultiKillBonus; 
         public int ScorePerKill = Properties.DefaultScorePerKill;
         public int ScorePerAssist = Properties.DefaultAssistScore;
         public bool TeamKills = false;
@@ -130,7 +132,7 @@ namespace MCGalaxy.Games
                     p.p.PlayingTntWars = true;
                     p.p.CurrentAmountOfTnt = 0;
                     p.p.CurrentTntGameNumber = GameNumber;
-                    if (GameDifficulty == TntWarsDifficulty.Easy || GameDifficulty == TntWarsDifficulty.Normal) p.p.TntWarsHealth = 2;
+                    if (Difficulty == TntWarsDifficulty.Easy || Difficulty == TntWarsDifficulty.Normal) p.p.TntWarsHealth = 2;
                     else p.p.TntWarsHealth = 1;
                     p.p.HarmedBy = null;
                     if (GracePeriod)
@@ -170,37 +172,37 @@ namespace MCGalaxy.Games
             //Announcing Etc.
             string Gamemode = "Free For All";
             if (GameMode == TntWarsGameMode.TDM) Gamemode = "Team Deathmatch";
-            string Difficulty = "Normal";
+            string difficulty = "Normal";
             string HitsToDie = "2";
             string explosiontime = "medium";
             string explosionsize = "normal";
-            switch (GameDifficulty)
+            switch (Difficulty)
             {
                 case TntWarsDifficulty.Easy:
-                    Difficulty = "Easy";
+                    difficulty = "Easy";
                     explosiontime = "long";
                     break;
 
                 case TntWarsDifficulty.Normal:
-                    Difficulty = "Normal";
+                    difficulty = "Normal";
                     break;
 
                 case TntWarsDifficulty.Hard:
                     HitsToDie = "1";
-                    Difficulty = "Hard";
+                    difficulty = "Hard";
                     break;
 
                 case TntWarsDifficulty.Extreme:
                     HitsToDie = "1";
                     explosiontime = "short";
                     explosionsize = "big";
-                    Difficulty = "Extreme";
+                    difficulty = "Extreme";
                     break;
             }
             string teamkillling = "Disabled";
             if (TeamKills) teamkillling = "Enabled";
             Chat.MessageGlobal("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
-                            Difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
+                            difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
                             " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
                             ", team killing is &3" + teamkillling + " %Sand you can place &3" + TntPerPlayerAtATime 
                             + " %STNT at a time and there is a score limit of &3" + ScoreLimit + "%S!!");
@@ -372,7 +374,7 @@ namespace MCGalaxy.Games
                 }
             }
             //Reset map
-            Command.all.Find("restore").Use(null, BackupNumber.ToString() + " " + lvl.name);
+            Command.all.Find("restore").Use(null, BackupNumber + " " + lvl.name);
             if (lvl.Config.PhysicsOverload == 2501)
             {
                 lvl.Config.PhysicsOverload = 1500;
@@ -399,7 +401,7 @@ namespace MCGalaxy.Games
             int HealthDamage = 1;
             int kills = 0;
             int minusfromscore = 0;
-            if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme) {
+            if (Difficulty == TntWarsDifficulty.Hard || Difficulty == TntWarsDifficulty.Extreme) {
                 HealthDamage = 2;
             }
             
@@ -457,12 +459,12 @@ namespace MCGalaxy.Games
                     {
                         if (TeamKill(Died.HarmedBy, Died))
                         {
-                            Player.Message(Died.HarmedBy, "TNT Wars: - " + ScorePerAssist.ToString() + " point(s) for team kill assist!");
+                            Player.Message(Died.HarmedBy, "TNT Wars: - " + ScorePerAssist + " point(s) for team kill assist!");
                             ChangeScore(Died.HarmedBy, -ScorePerAssist);
                         }
                         else
                         {
-                            Player.Message(Died.HarmedBy, "TNT Wars: + " + ScorePerAssist.ToString() + " point(s) for assist!");
+                            Player.Message(Died.HarmedBy, "TNT Wars: + " + ScorePerAssist + " point(s) for assist!");
                             ChangeScore(Died.HarmedBy, ScorePerAssist);
                         }
                     }
@@ -475,29 +477,29 @@ namespace MCGalaxy.Games
             int AddToScore = 0;
             //streaks
             Killer.TntWarsKillStreak += kills;
-            if (kills >= 1 && Streaks)
+            if (kills >= 1 && Config.Streaks)
             {
-                if (Killer.TntWarsKillStreak >= Properties.DefaultStreakOneAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakTwoAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakOneAmount)
+                if (Killer.TntWarsKillStreak >= Config.StreakOneAmount && Killer.TntWarsKillStreak < Config.StreakTwoAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakOneAmount)
                 {
-                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakOneMultiplier.ToString() + ")");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString());
-                    Killer.TntWarsScoreMultiplier = Properties.DefaultStreakOneMultiplier;
-                    Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakOneAmount;
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakOneMultiplier + ")");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak);
+                    Killer.TntWarsScoreMultiplier = Config.StreakOneMultiplier;
+                    Killer.TNTWarsLastKillStreakAnnounced = Config.StreakOneAmount;
                 }
-                else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakTwoAmount && Killer.TntWarsKillStreak < Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakTwoAmount)
+                else if (Killer.TntWarsKillStreak >= Config.StreakTwoAmount && Killer.TntWarsKillStreak < Config.StreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakTwoAmount)
                 {
-                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakTwoMultiplier.ToString() + " and a bigger explosion!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has a bigger explosion for their TNT!");
-                    Killer.TntWarsScoreMultiplier = Properties.DefaultStreakTwoMultiplier;
-                    Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakTwoAmount;
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakTwoMultiplier + " and a bigger explosion!)");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has a bigger explosion for their TNT!");
+                    Killer.TntWarsScoreMultiplier = Config.StreakTwoMultiplier;
+                    Killer.TNTWarsLastKillStreakAnnounced = Config.StreakTwoAmount;
                 }
-                else if (Killer.TntWarsKillStreak >= Properties.DefaultStreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Properties.DefaultStreakThreeAmount)
+                else if (Killer.TntWarsKillStreak >= Config.StreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakThreeAmount)
                 {
-                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString() + " (Multiplier of " + Properties.DefaultStreakThreeMultiplier.ToString() + " and you now have 1 extra health!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak.ToString() + " and now has 1 extra health!");
-                    Killer.TntWarsScoreMultiplier = Properties.DefaultStreakThreeMultiplier;
-                    Killer.TNTWarsLastKillStreakAnnounced = Properties.DefaultStreakThreeAmount;
-                    if (GameDifficulty == TntWarsDifficulty.Hard || GameDifficulty == TntWarsDifficulty.Extreme)
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakThreeMultiplier + " and you now have 1 extra health!)");
+                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has 1 extra health!");
+                    Killer.TntWarsScoreMultiplier = Config.StreakThreeMultiplier;
+                    Killer.TNTWarsLastKillStreakAnnounced = Config.StreakThreeAmount;
+                    if (Difficulty == TntWarsDifficulty.Hard || Difficulty == TntWarsDifficulty.Extreme)
                     {
                         Killer.TntWarsHealth += 2;
                     }
@@ -508,7 +510,7 @@ namespace MCGalaxy.Games
                 }
                 else
                 {
-                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak.ToString());
+                    Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak);
                 }
             }
             AddToScore += kills * ScorePerKill;
@@ -521,12 +523,12 @@ namespace MCGalaxy.Games
             if (AddToScore > 0)
             {
                 ChangeScore(Killer, AddToScore, Killer.TntWarsScoreMultiplier);
-                Player.Message(Killer, "TNT Wars: + " + ((int)(AddToScore * Killer.TntWarsScoreMultiplier)).ToString() + " point(s) for " + kills.ToString() + " kills");
+                Player.Message(Killer, "TNT Wars: + " + ((int)(AddToScore * Killer.TntWarsScoreMultiplier)) + " point(s) for " + kills + " kills");
             }
             if (minusfromscore != 0)
             {
                 ChangeScore(Killer, - minusfromscore);
-                Player.Message(Killer, "TNT Wars: - " + minusfromscore.ToString() + " point(s) for team kill(s)!");
+                Player.Message(Killer, "TNT Wars: - " + minusfromscore + " point(s) for team kill(s)!");
             }
         }
 
@@ -635,8 +637,8 @@ namespace MCGalaxy.Games
                 if (TotalTeamScores)
                 {
                     SendAllPlayersMessage("TNT Wars Scores:");
-                    SendAllPlayersMessage(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (ScoreLimit - RedScore).ToString() + " needed)");
-                    SendAllPlayersMessage(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (ScoreLimit - BlueScore).ToString() + " needed)");
+                    SendAllPlayersMessage(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (ScoreLimit - RedScore) + " needed)");
+                    SendAllPlayersMessage(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (ScoreLimit - BlueScore) + " needed)");
                     Thread.Sleep(1000);
                 }
                 if (TopScores)
@@ -657,7 +659,7 @@ namespace MCGalaxy.Games
                     foreach (player p in Players)
                     {
                         if (p.spec) continue;
-                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score.ToString());
+                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score));
                     }
                     Thread.Sleep(1000);
                 }
@@ -805,7 +807,7 @@ namespace MCGalaxy.Games
             return null;
         }
 
-        public static TntWarsGame GetTntWarsGame(Player p)
+        public static TntWarsGame GameIn(Player p)
         {
             TntWarsGame it = TntWarsGame.Find(p.level);
             if (it != null) return it;
@@ -816,7 +818,6 @@ namespace MCGalaxy.Games
         //Static Stuff
         public static class Properties
         {
-            public static bool Enable = true;
             public static bool DefaultGracePeriodAtStart = true;
             public static int DefaultGracePeriodSecs = 30;
             public static int DefaultTntPerPlayerAtATime = 1;
@@ -826,12 +827,6 @@ namespace MCGalaxy.Games
             public static int DefaultScorePerKill = 10;
             public static int DefaultMultiKillBonus = 5;
             public static int DefaultAssistScore = 5;
-            public static int DefaultStreakOneAmount = 3;
-            public static float DefaultStreakOneMultiplier = 1.25f;
-            public static int DefaultStreakTwoAmount = 5;
-            public static float DefaultStreakTwoMultiplier = 1.5f;
-            public static int DefaultStreakThreeAmount = 7;
-            public static float DefaultStreakThreeMultiplier = 2f;
         }
     }
 }

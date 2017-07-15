@@ -310,7 +310,7 @@ namespace MCGalaxy {
                 }
 
                 if ( Game.team != null ) Game.team.RemoveMember(this);
-                TntWarsGame tntwarsgame = TntWarsGame.GetTntWarsGame(this);
+                TntWarsGame tntwarsgame = TntWarsGame.GameIn(this);
                 if ( tntwarsgame != null ) {
                     tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
                     tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
@@ -458,7 +458,7 @@ namespace MCGalaxy {
             CurrentAmountOfTnt++;
             int delay = 0;
 
-            switch (TntWarsGame.GetTntWarsGame(this).GameDifficulty) {
+            switch (TntWarsGame.GameIn(this).Difficulty) {
                 case TntWarsGame.TntWarsDifficulty.Easy:
                     delay = 3250; break;
                 case TntWarsGame.TntWarsDifficulty.Normal:

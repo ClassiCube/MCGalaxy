@@ -245,10 +245,10 @@ namespace MCGalaxy.Gui {
                         if ( T.GameMode == TntWarsGame.TntWarsGameMode.FFA ) msg += "FFA";
                         if ( T.GameMode == TntWarsGame.TntWarsGameMode.TDM ) msg += "TDM";
                         msg += " - ";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Easy ) msg += "(Easy)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Normal ) msg += "(Normal)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Hard ) msg += "(Hard)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Extreme ) msg += "(Extreme)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Easy ) msg += "(Easy)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Normal ) msg += "(Normal)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Hard ) msg += "(Hard)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme ) msg += "(Extreme)";
                         msg += " - ";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers ) msg += "(Waiting For Players)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart ) msg += "(Starting)";
@@ -282,7 +282,7 @@ namespace MCGalaxy.Gui {
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
                 }
-                TntWrsDiffCombo.SelectedIndex = TntWrsDiffCombo.FindString(TntWarsGame.GuiLoaded.GameDifficulty.ToString());
+                TntWrsDiffCombo.SelectedIndex = TntWrsDiffCombo.FindString(TntWarsGame.GuiLoaded.Difficulty.ToString());
                 //scores
                 TntWrsScrLmtUpDwn.Value = TntWarsGame.GuiLoaded.ScoreLimit;
                 TntWrsScrLmtUpDwn.Enabled = true;
@@ -349,7 +349,7 @@ namespace MCGalaxy.Gui {
 
                 }
                 //Other
-                TntWrsStreaksChck.Checked = TntWarsGame.GuiLoaded.Streaks;
+                TntWrsStreaksChck.Checked = TntWarsGame.GuiLoaded.Config.Streaks;
                 TntWrsStreaksChck.Enabled = true;
                 //New game
                 if ( TntWrsMpsList.SelectedIndex < 0 ) TntWrsCrtNwTntWrsBt.Enabled = false;
@@ -369,10 +369,10 @@ namespace MCGalaxy.Gui {
                         if ( T.GameMode == TntWarsGame.TntWarsGameMode.FFA ) msg += "FFA";
                         if ( T.GameMode == TntWarsGame.TntWarsGameMode.TDM ) msg += "TDM";
                         msg += " - ";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Easy ) msg += "(Easy)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Normal ) msg += "(Normal)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Hard ) msg += "(Hard)";
-                        if ( T.GameDifficulty == TntWarsGame.TntWarsDifficulty.Extreme ) msg += "(Extreme)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Easy ) msg += "(Easy)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Normal ) msg += "(Normal)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Hard ) msg += "(Hard)";
+                        if ( T.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme ) msg += "(Extreme)";
                         msg += " - ";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers ) msg += "(Waiting For Players)";
                         if ( T.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart ) msg += "(Starting)";
@@ -454,25 +454,25 @@ namespace MCGalaxy.Gui {
             if ( TntWarsGame.GuiLoaded == null ) return;
             switch ( TntWrsDiffCombo.Items[TntWrsDiffCombo.SelectedIndex].ToString() ) {
                 case "Easy":
-                    TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Easy;
+                    TntWarsGame.GuiLoaded.Difficulty = TntWarsGame.TntWarsDifficulty.Easy;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to easy!");
                     TntWarsGame.GuiLoaded.TeamKills = false;
                     break;
 
                 case "Normal":
-                    TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Normal;
+                    TntWarsGame.GuiLoaded.Difficulty = TntWarsGame.TntWarsDifficulty.Normal;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to normal!");
                     TntWarsGame.GuiLoaded.TeamKills = false;
                     break;
 
                 case "Hard":
-                    TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Hard;
+                    TntWarsGame.GuiLoaded.Difficulty = TntWarsGame.TntWarsDifficulty.Hard;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to hard!");
                     TntWarsGame.GuiLoaded.TeamKills = true;
                     break;
 
                 case "Extreme":
-                    TntWarsGame.GuiLoaded.GameDifficulty = TntWarsGame.TntWarsDifficulty.Extreme;
+                    TntWarsGame.GuiLoaded.Difficulty = TntWarsGame.TntWarsDifficulty.Extreme;
                     TntWarsGame.GuiLoaded.SendAllPlayersMessage("TNT Wars: Changed difficulty to extreme!");
                     TntWarsGame.GuiLoaded.TeamKills = true;
                     break;
@@ -618,7 +618,7 @@ namespace MCGalaxy.Gui {
 
         private void TntWrsStreaksChck_CheckedChanged(object sender, EventArgs e) {
             if ( TntWarsGame.GuiLoaded == null ) return;
-            TntWarsGame.GuiLoaded.Streaks = TntWrsStreaksChck.Checked;
+            TntWarsGame.GuiLoaded.Config.Streaks = TntWrsStreaksChck.Checked;
             LoadTNTWarsTab(sender, e);
         }
 
