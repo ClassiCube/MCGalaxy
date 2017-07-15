@@ -52,9 +52,5 @@ namespace MCGalaxy.Games {
         
         /// <summary> Removes a player from this team. </summary>
         public bool Remove(Player p) { return Members.Remove(p); }
-        
-        public void SendToSpawn(Player p) {
-            p.SendPos(Entities.SelfID, SpawnPos, p.Rot);
-        }
     }
 }

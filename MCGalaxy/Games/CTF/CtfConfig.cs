@@ -60,7 +60,7 @@ namespace MCGalaxy.Games {
         [ConfigInt("map.line.z", null, 0)]
         public int ZDivider;
         [ConfigInt("game.maxpoints", null, 0)]
-        public int MaxPoints;
+        public int RoundPoints;
         [ConfigInt("game.tag.points-gain", null, 0)]
         public int Tag_PointsGained;
         [ConfigInt("game.tag.points-lose", null, 0)]
@@ -86,7 +86,7 @@ namespace MCGalaxy.Games {
             BlueFlagY = 6;    BlueSpawnY = 4 * 32 + Entities.CharacterHeight;
             BlueFlagZ = maxZ; BlueSpawnZ = maxZ * 32;
             
-            MaxPoints = 3;
+            RoundPoints = 3;
             Tag_PointsGained = 5;
             Tag_PointsLost = 5;
             Capture_PointsGained = 10;
