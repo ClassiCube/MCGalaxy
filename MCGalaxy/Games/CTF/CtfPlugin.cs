@@ -18,6 +18,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
@@ -37,6 +38,7 @@ namespace MCGalaxy.Games {
             OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.High);
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
@@ -47,6 +49,7 @@ namespace MCGalaxy.Games {
             OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
         }
         
         
@@ -133,6 +136,21 @@ namespace MCGalaxy.Games {
             
             CtfTeam2 team = Game.TeamOf(p);
             if (team != null) pos = team.SpawnPos;
+            if (team != null && respawning) Game.DropFlag(p, team);
+        }        
+        
+        void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
+            Player p = entity as Player;
+            if (p == null || !Game.started || p.level != Game.map) return;
+            CtfTeam2 team = Game.TeamOf(p);
+            
+            if (p.Game.Referee) {
+                tabGroup = "&2Referees";
+            } else if (team != null) {
+                tabGroup = team.ColoredName + " &fteam";
+            } else {
+                tabGroup = "&7Spectators";
+            }
         }
         
         void HandlePlayerCommand(Player p, string cmd, string args) {

@@ -157,8 +157,8 @@ namespace MCGalaxy.Games {
                 Player.Message(p, "No CTF maps were found."); return false;
             }
             
-            Blue = new CtfTeam2("blue", Colors.blue);
-            Red = new CtfTeam2("red", Colors.red);
+            Blue = new CtfTeam2("Blue", Colors.blue);
+            Red = new CtfTeam2("Red", Colors.red);
             LoadMap(maps[new Random().Next(maps.Count)]);
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");

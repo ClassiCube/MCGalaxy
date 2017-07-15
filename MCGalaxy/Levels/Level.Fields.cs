@@ -81,7 +81,6 @@ namespace MCGalaxy {
         public bool backedup;
         public BlockDB BlockDB;
         public LevelAccessController VisitAccess, BuildAccess;
-        public bool ctfmode;
         
         // Physics fields and settings
         public int physics {

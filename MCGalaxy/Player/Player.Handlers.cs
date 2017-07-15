@@ -391,14 +391,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if ( Game.team != null && this.level.ctfmode ) {
-                //if (carryingFlag)
-                //{
-                // level.ctfgame.DropFlag(this, hasflag);
-                //}
-                Game.team.SpawnPlayer(this);
-                //this.health = 100;
-            } else if ( PlayingTntWars ) {
+            if (PlayingTntWars) {
                 TntWarsKillStreak = 0;
                 TntWarsScoreMultiplier = 1f;
             } else if ( Server.lava.active && Server.lava.HasPlayer(this) ) {
