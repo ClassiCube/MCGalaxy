@@ -304,8 +304,8 @@ namespace MCGalaxy.Games {
             }
             
             team.Members.Add(p);
-            Chat.MessageLevel(Map, p.ColoredName + " joined the " + team.ColoredName + " %Steam");
-            Player.Message(p, team.Color + "You are now on the " + team.Name + " team!");
+            Chat.MessageLevel(Map, p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
+            Player.Message(p, "You are now on the " + team.ColoredName + " team!");
         }
         
         bool OnOwnTeamSide(int z, CtfTeam2 team) {
