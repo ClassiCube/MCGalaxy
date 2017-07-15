@@ -42,7 +42,6 @@ namespace MCGalaxy.Gui {
             adv_chkRestart.Checked = ServerConfig.restartOnError;
             
             chkUpdates.Checked = ServerConfig.CheckForUpdates;
-            autoUpdate.Checked = ServerConfig.AutoUpdate;
             notifyInGameUpdate.Checked = ServerConfig.NotifyUpdating;
             updateTimeNumeric.Value = ServerConfig.UpdateRestartDelay;
         }
@@ -66,8 +65,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.VerifyNames = adv_chkVerify.Checked;
             ServerConfig.restartOnError = adv_chkRestart.Checked;
             
-            ServerConfig.CheckForUpdates = chkUpdates.Checked;
-            ServerConfig.AutoUpdate = autoUpdate.Checked;           
+            ServerConfig.CheckForUpdates = chkUpdates.Checked;         
             ServerConfig.NotifyUpdating = notifyInGameUpdate.Checked;
             ServerConfig.UpdateRestartDelay = (int)updateTimeNumeric.Value;
             //ServerConfig.reportBack = ;  //No setting for this?                

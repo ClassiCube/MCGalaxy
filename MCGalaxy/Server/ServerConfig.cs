@@ -75,8 +75,6 @@ namespace MCGalaxy {
         
         [ConfigBool("check-updates", "Update", false)]
         public static bool CheckForUpdates = true;
-        [ConfigBool("auto-update", "Update", false)]
-        public static bool AutoUpdate;
         [ConfigBool("in-game-update-notify", "Server", false)]
         public static bool NotifyUpdating;
         [ConfigInt("update-countdown", "Update", 10)]

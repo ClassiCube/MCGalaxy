@@ -242,7 +242,6 @@ namespace MCGalaxy.Gui
             this.updateTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.lblUpdateSeconds = new System.Windows.Forms.Label();
             this.notifyInGameUpdate = new System.Windows.Forms.CheckBox();
-            this.autoUpdate = new System.Windows.Forms.CheckBox();
             this.chkUpdates = new System.Windows.Forms.CheckBox();
             this.grpPlayers = new System.Windows.Forms.GroupBox();
             this.srv_lblPlayers = new System.Windows.Forms.Label();
@@ -2515,7 +2514,6 @@ namespace MCGalaxy.Gui
             this.srv_grpUpdate.Controls.Add(this.updateTimeNumeric);
             this.srv_grpUpdate.Controls.Add(this.lblUpdateSeconds);
             this.srv_grpUpdate.Controls.Add(this.notifyInGameUpdate);
-            this.srv_grpUpdate.Controls.Add(this.autoUpdate);
             this.srv_grpUpdate.Controls.Add(this.chkUpdates);
             this.srv_grpUpdate.Location = new System.Drawing.Point(220, 271);
             this.srv_grpUpdate.Name = "srv_grpUpdate";
@@ -2571,16 +2569,6 @@ namespace MCGalaxy.Gui
             this.notifyInGameUpdate.TabIndex = 7;
             this.notifyInGameUpdate.Text = "Notify In-Game";
             this.notifyInGameUpdate.UseVisualStyleBackColor = true;
-            // 
-            // autoUpdate
-            // 
-            this.autoUpdate.AutoSize = true;
-            this.autoUpdate.Location = new System.Drawing.Point(6, 68);
-            this.autoUpdate.Name = "autoUpdate";
-            this.autoUpdate.Size = new System.Drawing.Size(85, 17);
-            this.autoUpdate.TabIndex = 6;
-            this.autoUpdate.Text = "Auto Update";
-            this.autoUpdate.UseVisualStyleBackColor = true;
             // 
             // chkUpdates
             // 
@@ -4643,7 +4631,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox srv_grpUpdate;
-        private System.Windows.Forms.CheckBox autoUpdate;
         private System.Windows.Forms.NumericUpDown updateTimeNumeric;
         private System.Windows.Forms.Label lblUpdateSeconds;
         private System.Windows.Forms.CheckBox notifyInGameUpdate;

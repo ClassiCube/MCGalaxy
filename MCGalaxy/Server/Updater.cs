@@ -56,7 +56,7 @@ namespace MCGalaxy {
                     return;
                 }
                 
-                if (ServerConfig.AutoUpdate || p != null) {
+                if (p != null) {
                     if (ServerConfig.NotifyUpdating || p != null) {
                         NotifyPlayersOfUpdate(p);
                     } else {
@@ -101,7 +101,7 @@ namespace MCGalaxy {
             countDown.Start();
             
             countDown.Elapsed += delegate {
-                if (ServerConfig.AutoUpdate || p != null) {
+                if (p != null) {
                     Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
                     Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
                     
