@@ -42,13 +42,13 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLevl) {
-            if (Server.lava.active && !Server.lava.sendingPlayers && Server.lava.map == lvl) {
-                if (Server.lava.roundActive) {
-                    Server.lava.AnnounceRoundInfo(p);
-                    Server.lava.AnnounceTimeLeft(!Server.lava.flooded, true, p);
+            if (active && !sendingPlayers && map == lvl) {
+                if (roundActive) {
+                    AnnounceRoundInfo(p);
+                    AnnounceTimeLeft(!flooded, true, p);
                 } else {
                     Player.Message(p, "Vote for the next map!");
-                    Player.Message(p, "Choices: " + Server.lava.VoteString);
+                    Player.Message(p, "Choices: " + VoteString);
                 }
             }
         }
