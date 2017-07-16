@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public static string lastMSG = "";
         
         //TpA
-        internal bool Request = false;
+        internal bool Request;
         internal string senderName = "";
         internal string currentTpa = "";
 
@@ -57,13 +57,13 @@ namespace MCGalaxy {
         public PingList Ping = new PingList();
         
         public DateTime LastAction, AFKCooldown;
-        public bool IsAfk = false, AutoAfk;
-        public bool cmdTimer = false;
-        public bool UsingWom = false;
+        public bool IsAfk, AutoAfk;
+        public bool cmdTimer;
+        public bool UsingWom;
         public string BrushName = "normal", DefaultBrushArgs = "";
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
-        public bool disconnected = false;
+        public bool disconnected;
 
         public string name;
         public string DisplayName;
@@ -73,19 +73,18 @@ namespace MCGalaxy {
         public string color;
         public Group group;
         public LevelPermission oHideRank = LevelPermission.Null;
-        public bool otherRankHidden = false;
-        public bool hidden = false;
-        public bool painting = false;
-        public bool muted = false;
-        public bool jailed = false;
+        public bool otherRankHidden;
+        public bool hidden;
+        public bool painting;
+        public bool muted;
+        public bool jailed;
         public bool agreed = true;
-        public bool invincible = false;
+        public bool invincible;
         public string prefix = "";
         public string title = "";
-        public string titlecolor;
-        public int TotalMessagesSent = 0;
+        public string titlecolor = "";
         public int passtries = 0;
-        public bool hasreadrules = false;
+        public bool hasreadrules;
         public DateTime NextReviewTime, NextEat;
         public float ReachDistance = 5;
         public bool hackrank;
@@ -95,24 +94,23 @@ namespace MCGalaxy {
         
         public string ColoredName { get { return color + DisplayName; } }
 
-        public bool deleteMode = false;
-        public bool ignorePermission = false;
-        public bool ignoreGrief = false;
+        public bool deleteMode;
+        public bool ignorePermission;
+        public bool ignoreGrief;
         public bool parseEmotes = ServerConfig.ParseEmotes;
-        public bool opchat = false;
-        public bool adminchat = false;
-        public bool onWhitelist = false;
-        public bool whisper = false;
+        public bool opchat;
+        public bool adminchat;
+        public bool onWhitelist;
+        public bool whisper;
         public string whisperTo = "";
         public bool ignoreAll, ignoreGlobal, ignoreIRC, ignoreTitles, ignoreNicks, ignore8ball;
 
         public string storedMessage = "";
 
-        public bool trainGrab = false;
-        public bool onTrain = false, trainInvincible = false;
-        public bool allowTnt = true;
+        public bool trainGrab;
+        public bool onTrain, trainInvincible;
 
-        public bool frozen = false;
+        public bool frozen;
         public string following = "";
         public string possess = "";
 
@@ -126,6 +124,7 @@ namespace MCGalaxy {
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public int SessionModified;
         public int TimesVisited, TimesBeenKicked, TimesDied;
+        public int TotalMessagesSent; // TODO: implement this
         
         DateTime startTime;
         public TimeSpan TotalTime {
@@ -135,24 +134,23 @@ namespace MCGalaxy {
         public DateTime SessionStartTime;
         public DateTime FirstLogin, LastLogin;
 
-        public bool staticCommands = false;
+        public bool staticCommands;
         public DateTime ZoneSpam;
         public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
 
         public bool aiming;
-        public bool isFlying = false;
+        public bool isFlying;
 
-        public bool joker = false;
-        public bool adminpen = false;
+        public bool joker;
+        public bool adminpen;
+        public bool voice;
 
-        public bool voice = false;
-
-        public bool useCheckpointSpawn = false;
+        public bool useCheckpointSpawn;
         public int lastCheckpointIndex = -1;
         public ushort checkpointX, checkpointY, checkpointZ;
         public byte checkpointRotX, checkpointRotY;
-        public bool voted = false;
-        public bool flipHead = false;
+        public bool voted;
+        public bool flipHead;
         public GameProps Game = new GameProps();
         
         /// <summary> Persistent ID of this user in the Players table. </summary>
@@ -166,14 +164,14 @@ namespace MCGalaxy {
         public int CountdownFreezeZ;
 
         //Tnt Wars
-        public bool PlayingTntWars = false;
+        public bool PlayingTntWars;
         public int CurrentAmountOfTnt = 0;
         public int CurrentTntGameNumber; //For keeping track of which game is which
         public int TntWarsHealth = 2;
         public int TntWarsKillStreak = 0;
         public float TntWarsScoreMultiplier = 1f;
         public int TNTWarsLastKillStreakAnnounced = 0;
-        public bool inTNTwarsMap = false;
+        public bool inTNTwarsMap;
         public Player HarmedBy = null; //For Assists
 
         public CopyState CopyBuffer;
@@ -181,16 +179,16 @@ namespace MCGalaxy {
         // BlockDefinitions
         internal int gbStep = 0, lbStep = 0;
         internal BlockDefinition gbBlock, lbBlock;
-        public bool spawned = false;
+        public bool spawned;
 
         //Undo
         internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>();
         internal readonly object pendingDrawOpsLock = new object();
         internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();
 
-        public bool showPortals = false, showMBs = false;
+        public bool showPortals, showMBs;
         public string prevMsg = "";
-        internal bool showedWelcome = false;
+        internal bool showedWelcome;
 
         //Movement
         public int oldIndex = -1, lastWalkthrough = -1, oldFallY = 10000;
