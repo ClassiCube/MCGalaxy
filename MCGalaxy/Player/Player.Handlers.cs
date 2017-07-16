@@ -471,19 +471,17 @@ namespace MCGalaxy {
             text = HandleJoker(text);
             if (Chatroom != null) { Chat.MessageChatRoom(this, text, true, Chatroom); return; }
 
-            if (!level.Config.ServerWideChat) {
-                Logger.Log(LogType.PlayerChat, "<{0}>[level] {1}", name, text);
+            bool levelOnly = !level.SeesServerWideChat;
+            string format = levelOnly ? "<{0}>[level] {1}" : "<{0}> {1}";
+            Logger.Log(LogType.PlayerChat, format, name, text);
+            
+            OnPlayerChatEvent.Call(this, text);
+            if (cancelchat) { cancelchat = false; return; }
+            
+            if (levelOnly) {
                 Chat.MessageLevel(this, text, true, level);
             } else {
-                Logger.Log(LogType.PlayerChat, "<{0}> {1}", name, text);
-                OnPlayerChatEvent.Call(this, text);
-                if (cancelchat) { cancelchat = false; return; }
-                
-                if (ServerConfig.ServerWideChat) {
-                    SendChatFrom(this, text);
-                } else {
-                    Chat.MessageLevel(this, text, true, level);
-                }
+                SendChatFrom(this, text);
             }
             CheckForMessageSpam();
         }
