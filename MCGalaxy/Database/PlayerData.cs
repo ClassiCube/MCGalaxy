@@ -51,7 +51,7 @@ namespace MCGalaxy.DB {
             p.prefix = "";
             p.color = p.group.Color;         
             p.FirstLogin = DateTime.Now;
-            p.totalLogins = 1;
+            p.TimesVisited = 1;
             
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");            
             Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
@@ -71,7 +71,7 @@ namespace MCGalaxy.DB {
         
         internal static void Load(DataTable playerDb, Player p) {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
-            p.totalLogins = data.Logins + 1;
+            p.TimesVisited = data.Logins + 1;
             p.TotalTime = data.TotalTime;
             p.DatabaseID = data.DatabaseID;
             p.FirstLogin = data.FirstLogin;
@@ -81,14 +81,14 @@ namespace MCGalaxy.DB {
             p.color = data.Color;
             if (p.color == "") p.color = p.group.Color;
             
-            p.overallDeath = data.Deaths;
-            p.overallBlocks = data.TotalModified;
+            p.TimesDied = data.Deaths;
+            p.TotalModified = data.TotalModified;
             p.TotalDrawn = data.TotalDrawn;
             p.TotalPlaced = data.TotalPlaced;
             p.TotalDeleted = data.TotalDeleted;
             
             p.money = data.Money;
-            p.totalKicked = data.Kicks;
+            p.TimesBeenKicked = data.Kicks;
         }
         
         public static PlayerData Fill(DataRow row) {

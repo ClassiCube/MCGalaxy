@@ -65,19 +65,19 @@ namespace MCGalaxy.Gui {
 
         [Category("Stats")]
         [DisplayName("Blocks modified")]
-        public long BlocksModified { get { return p.overallBlocks; } set { p.overallBlocks = value; } }
+        public long BlocksModified { get { return p.TotalModified; } set { p.TotalModified = value; } }
         
         [Category("Stats")]
         [DisplayName("Number of deaths")]
-        public int TimesDied { get { return p.overallDeath; } set { p.overallDeath = value; } }
+        public int TimesDied { get { return p.TimesDied; } set { p.TimesDied = value; } }
         
         [Category("Stats")]
         [DisplayName("Times been kicked")]
-        public int TimesKicked { get { return p.totalKicked; } set { p.totalKicked = value; } }
+        public int TimesKicked { get { return p.TimesBeenKicked; } set { p.TimesBeenKicked = value; } }
 
         [Category("Stats")]
         [DisplayName("Number of logins")]
-        public int TimesLogins { get { return p.totalLogins; } set { p.totalLogins = value; } }
+        public int TimesLogins { get { return p.TimesVisited; } set { p.TimesVisited = value; } }
         
 
         [Category("Status")]

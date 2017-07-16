@@ -123,21 +123,17 @@ namespace MCGalaxy {
         public bool AllowBuild = true;
 
         public int money;
-        public long overallBlocks, TotalDrawn, TotalPlaced, TotalDeleted;
-        public int loginBlocks;
-
+        public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
+        public int SessionModified;
+        public int TimesVisited, TimesBeenKicked, TimesDied;
         
         DateTime startTime;
         public TimeSpan TotalTime {
             get { return DateTime.UtcNow - startTime; }
             set { startTime = DateTime.UtcNow.Subtract(value); }
         }
-        public DateTime SessionStart;
+        public DateTime SessionStartTime;
         public DateTime FirstLogin, LastLogin;
-        
-        public int totalLogins;
-        public int totalKicked;
-        public int overallDeath;
 
         public bool staticCommands = false;
         public DateTime ZoneSpam;

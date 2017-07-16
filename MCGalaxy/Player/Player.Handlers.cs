@@ -401,13 +401,13 @@ namespace MCGalaxy {
                 }
             } else {
                 Command.all.Find("spawn").Use(this, "");
-                overallDeath++;
+                TimesDied++;
                 // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
-                if (overallDeath > short.MaxValue) overallDeath = short.MaxValue;
+                if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
             }
 
-            if (ServerConfig.AnnounceDeathCount && (overallDeath > 0 && overallDeath % 10 == 0))
-                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + overallDeath + " times", false, level);
+            if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0))
+                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + TimesDied + " times", false, level);
             lastDeath = DateTime.UtcNow;
         }
 

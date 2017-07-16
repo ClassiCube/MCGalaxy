@@ -57,11 +57,11 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "totallogin":
                 case "totallogins":
                     SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
-                               v => who.totalLogins = v, UpdateDB); break;
+                               v => who.TimesVisited = v, UpdateDB); break;
                 case "deaths":
                 case "totaldeaths":
                     SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
-                               v => who.overallDeath = v, UpdateDB); break;
+                               v => who.TimesDied = v, UpdateDB); break;
                 case "money":
                     SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
                                v => who.money = v, UpdateDB); break;
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "modified":
                 case "totalblocks":
                     SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
-                               v => who.overallBlocks = v, UpdateDBLo); break;
+                               v => who.TotalModified = v, UpdateDBLo); break;
                 case "drawn":
                 case "totalcuboided":
                 case "totalcuboid":
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     
                 case "totalkicked":
                     SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
-                               v => who.totalKicked = v, UpdateDB); break;
+                               v => who.TimesBeenKicked = v, UpdateDB); break;
                 case "timespent":
                     SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v); break;
                 case "color":

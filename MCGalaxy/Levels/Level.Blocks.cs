@@ -289,8 +289,8 @@ namespace MCGalaxy {
                 if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
-                p.loginBlocks++;
-                p.overallBlocks++;
+                p.SessionModified++;
+                p.TotalModified++;
             
                 if (drawn) p.TotalDrawn++;
                 else if (block.BlockID == Block.air) p.TotalDeleted++;

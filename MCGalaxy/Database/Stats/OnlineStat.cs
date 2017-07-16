@@ -30,12 +30,12 @@ namespace MCGalaxy.DB {
         /// <summary> List of stats that can be output to /whois. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
             OnlineCoreLine,
-            (p, who) => MiscLine(p, who.name, who.overallDeath, who.money),
+            (p, who) => MiscLine(p, who.name, who.TimesDied, who.money),
             BlocksModifiedLine,
             (p, who) => BlockStatsLine(p, who.TotalPlaced, who.TotalDeleted, who.TotalDrawn),
             TimeSpentLine,
             LoginLine,
-            (p, who) => LoginsLine(p, who.totalLogins, who.totalKicked),
+            (p, who) => LoginsLine(p, who.TimesVisited, who.TimesBeenKicked),
             (p, who) => BanLine(p, who.name),
             (p, who) => SpecialGroupLine(p, who.name),
             (p, who) => IPLine(p, who.name, who.ip),
@@ -64,7 +64,7 @@ namespace MCGalaxy.DB {
         }
         
         static void BlocksModifiedLine(Player p, Player who) {
-            Player.Message(p, "  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.overallBlocks, who.loginBlocks);
+            Player.Message(p, "  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.TotalModified, who.SessionModified);
         }
         
         internal static void BlockStatsLine(Player p, long placed, long deleted, long drawn) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.DB {
         }
         
         static void TimeSpentLine(Player p, Player who) {
-            TimeSpan timeOnline = DateTime.UtcNow - who.SessionStart;
+            TimeSpan timeOnline = DateTime.UtcNow - who.SessionStartTime;
             Player.Message(p, "  Spent &a{0} %Son the server, &a{1} %Sthis session",
                            who.TotalTime.Shorten(), timeOnline.Shorten());
         }

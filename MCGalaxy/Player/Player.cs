@@ -131,13 +131,13 @@ namespace MCGalaxy {
 
             // Player disconnected before SQL data was retrieved
             if (!gotSQLData) return;
-            long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
+            long blocks = PlayerData.BlocksPacked(TotalPlaced, TotalModified);
             long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
             Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
                                         "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8", "WHERE Name=@9", 
                                         ip, LastLogin.ToString("yyyy-MM-dd HH:mm:ss"),
-                                        totalLogins, overallDeath, money, blocks,
-                                        cuboided, totalKicked, (long)TotalTime.TotalSeconds, name);
+                                        TimesVisited, TimesDied, money, blocks,
+                                        cuboided, TimesBeenKicked, (long)TotalTime.TotalSeconds, name);
             
             Server.zombie.SaveZombieStats(this);
         }
@@ -299,7 +299,7 @@ namespace MCGalaxy {
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
                 Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
                 disconnected = true;
-                if (isKick) totalKicked++;
+                if (isKick) TimesBeenKicked++;
                 
                 if (!loggedIn) {
                     connections.Remove(this);

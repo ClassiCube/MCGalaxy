@@ -185,7 +185,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 if (p != null) {
                     lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, b.Block);
-                    p.loginBlocks++; p.overallBlocks++; p.TotalDrawn++; // increment block stats inline
+                    p.SessionModified++; p.TotalModified++; p.TotalDrawn++; // increment block stats inline
                 }
                 
                 // Potentially buffer the block change

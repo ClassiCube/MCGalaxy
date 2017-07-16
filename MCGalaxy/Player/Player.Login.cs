@@ -105,7 +105,7 @@ namespace MCGalaxy {
             RemoveFromPending();
             Server.PlayerListUpdate();
             
-            SessionStart = DateTime.UtcNow;
+            SessionStartTime = DateTime.UtcNow;
             LastLogin = DateTime.Now;
             TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
@@ -216,7 +216,7 @@ namespace MCGalaxy {
                 SendMessage("Welcome " + DisplayName + "! This is your first visit.");
             } else {
                 PlayerData.Load(data, this);
-                SendMessage("Welcome back " + FullName + "%S! You've been here " + totalLogins + " times!");
+                SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
             }
             data.Dispose();
             gotSQLData = true;
