@@ -382,7 +382,7 @@ namespace MCGalaxy {
                 lvl.UpdateCustomBlock((byte)i, defs[i]);
             }
             
-            MCGalaxy.Blocks.BlockProps.Load("lvl_" + lvl.MapName, lvl.BlockProps, true);
+            lvl.UpdateBlockProps();
             lvl.UpdateBlockHandlers();
         }
 
@@ -470,14 +470,21 @@ namespace MCGalaxy {
             public ushort smallX, smallY, smallZ;
         }
         
-        public void UpdateBlockHandlers() {            
+        public void UpdateBlockProps() {
+            for (int i = 0; i < BlockProps.Length; i++) {
+                BlockProps[i] = BlockDefinition.GlobalProps[i];
+            }
+            MCGalaxy.Blocks.BlockProps.Load("lvl_" + MapName, BlockProps, true);
+        }
+        
+        public void UpdateBlockHandlers() {
             for (int i = 0; i < BlockProps.Length; i++) {
                 UpdateBlockHandler(ExtBlock.FromIndex(i));
             }
         }
         
         public void UpdateBlockHandler(ExtBlock block) {
-        	bool nonSolid = CollideType(block) != MCGalaxy.Blocks.CollideType.Solid;
+            bool nonSolid = CollideType(block) != MCGalaxy.Blocks.CollideType.Solid;
             
             int i = block.Index;
             deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);

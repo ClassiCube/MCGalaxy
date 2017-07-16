@@ -178,12 +178,17 @@ namespace MCGalaxy {
         public static void SetBlocks() {
             SetCoreProperties();
             BlockProps.Load("core", Block.Props, false);
+            BlockDefinition.UpdateGlobalBlockProps();
             BlockPerms.Load();
-            
+            UpdateLoadedLevels();
+        }
+        
+        public static void UpdateLoadedLevels() {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
+                lvl.UpdateBlockProps();
                 lvl.UpdateBlockHandlers();
-            }
+            }            
         }
         
         [Obsolete("Use BlockPerms.CanModify()")]

@@ -46,7 +46,7 @@ namespace MCGalaxy {
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefs;
-        public static Blocks.BlockProps[] GlobalProps;
+        public static BlockProps[] GlobalProps = new BlockProps[Block.Count * 2];
         
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
@@ -134,8 +134,7 @@ namespace MCGalaxy {
             if (oldDefs != null) UpdateLoadedLevels(oldDefs);
         }
         
-        public static void LoadGlobalProps() {
-            GlobalProps = new BlockProps[Block.Count * 2];
+        public static void UpdateGlobalBlockProps() {
             for (int i = 0; i < Block.Count; i++) {
                 GlobalProps[i] = Block.Props[i];
                 GlobalProps[i + Block.Count] = BlockProps.MakeDefault();
