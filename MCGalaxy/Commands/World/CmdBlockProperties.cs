@@ -192,14 +192,16 @@ namespace MCGalaxy.Commands.World {
         
 
         static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block) {
-            scope[block.Index].Changed = true;
+            int idx = block.Index;
+            scope[idx].Changed = true;
             
             if (scope == Block.Props) {
-                BlockProps.Save("core", scope, i=> true);
+                BlockProps.Save("core", scope, i => true);
                 Level[] loaded = LevelInfo.Loaded.Items;
+                BlockDefinition.GlobalProps[idx] = BlockDefinition.DefaultProps(block);
                 
                 foreach (Level lvl in loaded) {                    
-                    lvl.BlockProps[block.Index] = Block.Props[block.Index];
+                    lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
                     lvl.UpdateBlockHandler(block);
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
@@ -208,8 +210,8 @@ namespace MCGalaxy.Commands.World {
                 
                 byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
-                    if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;                    
-                    lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                    if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
+                    lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
                     lvl.UpdateBlockHandler(block);
                 }                
             } else {

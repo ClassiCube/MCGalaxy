@@ -53,9 +53,8 @@ namespace MCGalaxy {
 
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
-            for (int i = 0; i < BlockProps.Length; i++)
-                BlockProps[i] = BlockDefinition.GlobalProps[i];
             
+            LoadCoreProps();          
             for (int i = 0; i < blockAABBs.Length; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 blockAABBs[i] = Block.BlockAABB(block, this);
@@ -470,10 +469,15 @@ namespace MCGalaxy {
             public ushort smallX, smallY, smallZ;
         }
         
-        public void UpdateBlockProps() {
+        void LoadCoreProps() {
             for (int i = 0; i < BlockProps.Length; i++) {
-                BlockProps[i] = BlockDefinition.GlobalProps[i];
-            }
+                ExtBlock block = ExtBlock.FromIndex(i);
+                BlockProps[i] = BlockDefinition.DefaultProps(block);
+            }            
+        }
+        
+        public void UpdateBlockProps() {
+            LoadCoreProps();
             MCGalaxy.Blocks.BlockProps.Load("lvl_" + MapName, BlockProps, true);
         }
         
@@ -484,9 +488,9 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlockHandler(ExtBlock block) {
-            bool nonSolid = CollideType(block) != MCGalaxy.Blocks.CollideType.Solid;
-            
+            bool nonSolid = CollideType(block) != MCGalaxy.Blocks.CollideType.Solid;           
             int i = block.Index;
+            
             deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);
             placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, BlockProps);
             walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, BlockProps, nonSolid);

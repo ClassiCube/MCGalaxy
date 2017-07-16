@@ -135,11 +135,20 @@ namespace MCGalaxy {
         }
         
         public static void UpdateGlobalBlockProps() {
-            for (int i = 0; i < Block.Count; i++) {
-                GlobalProps[i] = Block.Props[i];
-                GlobalProps[i + Block.Count] = BlockProps.MakeDefault();
+            for (int i = 0; i < GlobalProps.Length; i++) {
+                ExtBlock block = ExtBlock.FromIndex(i);
+                GlobalProps[i] = BlockProps.MakeDefault();
+                GlobalProps[i] = DefaultProps(block);
             }
             BlockProps.Load("global", GlobalProps, true);
+        }
+        
+        internal static BlockProps DefaultProps(ExtBlock block) {
+            if (block.IsPhysicsType) return Block.Props[block.Index];
+            
+            if (block.IsCustomType || GlobalDefs[block.BlockID] != null)
+                return GlobalProps[block.Index];
+            return Block.Props[block.Index];
         }
         
         static void UpdateLoadedLevels(BlockDefinition[] oldGlobalDefs) {
@@ -158,7 +167,7 @@ namespace MCGalaxy {
         public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
             byte raw = def.BlockID;
             bool global = defs == GlobalDefs;
-            if (global) UpdateGlobalCustom(def);
+            if (global) UpdateGlobalCustom(raw, def);
             
             defs[raw] = def;
             if (global) Block.SetDefaultNames();
@@ -180,7 +189,7 @@ namespace MCGalaxy {
         public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
             byte raw = def.BlockID;
             bool global = defs == GlobalDefs;
-            if (global) UpdateGlobalCustom(def);
+            if (global) UpdateGlobalCustom(raw, null);
             
             defs[raw] = null;
             if (global) Block.SetDefaultNames();
@@ -197,10 +206,8 @@ namespace MCGalaxy {
             Save(global, level);
         }
         
-        static void UpdateGlobalCustom(BlockDefinition def) {
-            byte raw = def.BlockID;
-            Level[] loaded = LevelInfo.Loaded.Items;
-            
+        static void UpdateGlobalCustom(byte raw, BlockDefinition def) {
+            Level[] loaded = LevelInfo.Loaded.Items;          
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
                 lvl.UpdateCustomBlock(raw, def);

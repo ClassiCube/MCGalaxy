@@ -477,9 +477,9 @@ namespace MCGalaxy.Commands.CPE {
             string scope = global ? "global" : "level";
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
-            block = ExtBlock.FromRaw(def.BlockID);
-            UpdateBlockProps(global, p, block, props);
+            block = ExtBlock.FromRaw(def.BlockID);            
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
+            UpdateBlockProps(global, p, block, props);
             return true;
         }
         
@@ -568,36 +568,39 @@ namespace MCGalaxy.Commands.CPE {
         static void UpdateBlockProps(bool global, Player p, ExtBlock block, BlockProps props) {
             if (!global) {
                 p.level.BlockProps[block.Index] = props;
+                p.level.UpdateBlockHandler(block);
                 return;
-            }           
+            }      
+			
             BlockDefinition.GlobalProps[block.Index] = props;
-            
             Level[] loaded = LevelInfo.Loaded.Items;
-            byte raw = block.BlockID;
+            byte raw = block.RawID;
+            
             foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
+                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;             
                 lvl.BlockProps[block.Index] = props;
+                lvl.UpdateBlockHandler(block);
             }
         }
         
         static void RemoveBlockProps(bool global, ExtBlock block, Player p) {
             // Level block reverts to using global block
             if (!global) {
-                p.level.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                p.level.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
+                p.level.UpdateBlockHandler(block);
                 return;
             }
             
-            if (block.BlockID < Block.CpeCount) {
-                BlockDefinition.GlobalProps[block.Index] = Block.Props[block.Index];
-            } else {
-                BlockDefinition.GlobalProps[block.Index] = BlockProps.MakeDefault();
-            }
-            
+            BlockProps props = BlockProps.MakeDefault();
+            BlockDefinition.GlobalProps[block.Index] = props; 
             Level[] loaded = LevelInfo.Loaded.Items;
-            byte raw = block.BlockID;
+            byte raw = block.RawID;
+            if (!block.IsCustomType) props = Block.Props[raw];
+            
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
                 lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                lvl.UpdateBlockHandler(block);
             }
         }
         
