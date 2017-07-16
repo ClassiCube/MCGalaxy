@@ -51,13 +51,13 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
     
-    public delegate void OnSQLSave(Player p, string sqlCommand);
+    public delegate void OnSQLSave(Player p);
     /// <summary> This event is called whenever the server saves player's data to MySQL or SQLite </summary>
     public sealed class OnSQLSaveEvent : IEvent<OnSQLSave> {
         
-        public static void Call(Player p, string ysqlcommand) {
+        public static void Call(Player p) {
             if (handlers.Count == 0) return;
-            CallCommon(pl => pl(p, ysqlcommand));
+            CallCommon(pl => pl(p));
         }
     }
     

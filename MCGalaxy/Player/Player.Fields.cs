@@ -246,6 +246,7 @@ namespace MCGalaxy {
         public bool loggedIn;
         public bool isDev, isMod;
         public bool verifiedName;
+        bool gotSQLData;
         
         /// <summary> Returns whether the given player is console or IRC. </summary>
         public static bool IsSuper(Player p) { return p == null || p.SuperUser; }

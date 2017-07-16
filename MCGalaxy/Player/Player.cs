@@ -126,9 +126,11 @@ namespace MCGalaxy {
         }
 
         public void save() {
-            OnSQLSaveEvent.Call(this, "");
+            OnSQLSaveEvent.Call(this);
             if (cancelmysql) { cancelmysql = false; return; }
 
+            // Player disconnected before SQL data was retrieved
+            if (!gotSQLData) return;
             long blocks = PlayerData.BlocksPacked(TotalPlaced, overallBlocks);
             long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
             Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
@@ -318,9 +320,7 @@ namespace MCGalaxy {
 
                 Entities.DespawnEntities(this, false);
                 ShowDisconnectInChat(chatMsg, isKick);
-
-                try { save(); }
-                catch ( Exception e ) { Logger.LogError(e); }
+                save();
 
                 PlayerInfo.Online.Remove(this);
                 Server.PlayerListUpdate();

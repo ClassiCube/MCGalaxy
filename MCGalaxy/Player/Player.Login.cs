@@ -108,13 +108,7 @@ namespace MCGalaxy {
             timeLogged = DateTime.Now;
             lastLogin = DateTime.Now;
             time = TimeSpan.FromSeconds(1);
-            DataTable playerDb = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
-            
-            if (playerDb.Rows.Count == 0) {
-                InitPlayerStats(playerDb);
-            } else {
-                LoadPlayerStats(playerDb);
-            }
+            GetPlayerStats();
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
@@ -126,8 +120,7 @@ namespace MCGalaxy {
                 Directory.CreateDirectory("players");
             PlayerDB.Load(this);
             Game.Team = Team.FindTeam(this);
-            SetPrefix();
-            playerDb.Dispose();
+            SetPrefix();            
             LoadCpeData();
             
             if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.VerifyAdminsRank)
@@ -216,15 +209,17 @@ namespace MCGalaxy {
             Rot = rot;
         }
         
-        void InitPlayerStats(DataTable playerDb) {
-            SendMessage("Welcome " + DisplayName + "! This is your first visit.");
-            PlayerData.Create(this);
-        }
-        
-        void LoadPlayerStats(DataTable playerDb) {
-            PlayerData.Load(playerDb, this);
-            SendMessage("Welcome back " + FullName + "%S! You've been here " 
-                        + totalLogins + " times!");
+        void GetPlayerStats() {
+            DataTable data = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
+            if (data.Rows.Count == 0) {
+                PlayerData.Create(this);
+                SendMessage("Welcome " + DisplayName + "! This is your first visit.");
+            } else {
+                PlayerData.Load(data, this);
+                SendMessage("Welcome back " + FullName + "%S! You've been here " + totalLogins + " times!");
+            }
+            data.Dispose();
+            gotSQLData = true;
         }
         
         void CheckState() {
