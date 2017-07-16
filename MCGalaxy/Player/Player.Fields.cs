@@ -199,7 +199,7 @@ namespace MCGalaxy {
         public DateTime lastDeath = DateTime.UtcNow;
 
         public ExtBlock ModeBlock;
-        public ExtBlock RawHeldBlock = (ExtBlock)Block.rock;
+        public ExtBlock RawHeldBlock = (ExtBlock)Block.Stone;
         public ExtBlock[] BlockBindings = new ExtBlock[Block.Count];        
         public string[] CmdBindings = new string[10];
         public string[] CmdArgsBindings = new string[10];

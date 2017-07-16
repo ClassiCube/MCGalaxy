@@ -42,7 +42,7 @@ namespace MCGalaxy.Levels.IO {
             int size = dims.X * dims.Y * dims.Z, i = 0;
             while (i < size) {
                 byte value = reader.ReadByte(), count = reader.ReadByte();
-                if (value == Block.air) { i += count; continue; } // skip redundantly changing air
+                if (value == Block.Air) { i += count; continue; } // skip redundantly changing air
                 
                 for (int j = 0; j < count; j++) {
                     int index = i + j;

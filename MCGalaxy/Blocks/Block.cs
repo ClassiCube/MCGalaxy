@@ -23,96 +23,96 @@ namespace MCGalaxy {
     public sealed partial class Block {
 
         public static bool Walkthrough(byte block) {
-            return block == air || block == shrub || block == Block.snow
-                || block == fire || block == rope
-                || (block >= water && block <= lavastill)
-                || (block >= yellowflower && block <= redmushroom);
+            return block == Air || block == Sapling || block == Block.Snow
+                || block == Fire || block == Rope
+                || (block >= Water && block <= StillLava)
+                || (block >= Dandelion && block <= RedMushroom);
         }
 
         public static bool AllowBreak(byte block) {
             switch (block) {
-                case blue_portal:
-                case orange_portal:
+                case Portal_Blue:
+                case Portal_Orange:
 
-                case MsgWhite:
-                case MsgBlack:
+                case MB_White:
+                case MB_Black:
 
-                case door_tree:
-                case door_obsidian:
-                case door_glass:
-                case door_stone:
-                case door_leaves:
-                case door_sand:
-                case door_wood:
-                case door_green:
-                case door_tnt:
-                case door_stair:
-                case door_iron:
-                case door_gold:
-                case door_dirt:
-                case door_grass:
-                case door_blue:
-                case door_book:
-                case door_cobblestone:
-                case door_red:
+                case Door_Log:
+                case Door_Obsidian:
+                case Door_Glass:
+                case Door_Stone:
+                case Door_Leaves:
+                case Door_Sand:
+                case Door_Wood:
+                case Door_Green:
+                case Door_TNT:
+                case Door_Slab:
+                case Door_Iron:
+                case Door_Gold:
+                case Door_Dirt:
+                case Door_Grass:
+                case Door_Blue:
+                case Door_Bookshelf:
+                case Door_Cobblestone:
+                case Door_Red:
 
-                case door_orange:
-                case door_yellow:
-                case door_lightgreen:
-                case door_aquagreen:
-                case door_cyan:
-                case door_lightblue:
-                case door_purple:
-                case door_lightpurple:
-                case door_pink:
-                case door_darkpink:
-                case door_darkgrey:
-                case door_lightgrey:
-                case door_white:
+                case Door_Orange:
+                case Door_Yellow:
+                case Door_Lime:
+                case Door_Teal:
+                case Door_Aqua:
+                case Door_Cyan:
+                case Door_Indigo:
+                case Door_Purple:
+                case Door_Magenta:
+                case Door_Pink:
+                case Door_Black:
+                case Door_Gray:
+                case Door_White:
 
-                case c4:
-                case smalltnt:
-                case bigtnt:
-                case nuketnt:
-                case rocketstart:
-                case firework:
+                case C4:
+                case TNT_Small:
+                case TNT_Big:
+                case TNT_Nuke:
+                case RocketStart:
+                case Fireworks:
 
-                case zombiebody:
-                case creeper:
-                case zombiehead:
+                case ZombieBody:
+                case Creeper:
+                case ZombieHead:
                     return true;
             }
             return false;
         }
 
         public static bool Placable(byte block) {
-            return !(block == blackrock || (block >= water && block <= lavastill))
+            return !(block == Bedrock || (block >= Water && block <= StillLava))
                 && block < CpeCount;
         }
 
         public static bool RightClick(byte block, bool countAir = false) {
-            if (countAir && block == air) return true;
-            return block >= water && block <= lavastill;
+            if (countAir && block == Air) return true;
+            return block >= Water && block <= StillLava;
         }
 
         public static bool BuildIn(byte block) {
-            if (block == op_water || block == op_lava
+            if (block == Op_Water || block == Op_Lava
                 || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
-            return block >= water && block <= lavastill;
+            return block >= Water && block <= StillLava;
         }
 
         public static bool LightPass(byte block) {
             switch (Convert(block)) {
-                case air:
-                case glass:
-                case leaf:
-                case redflower:
-                case yellowflower:
-                case mushroom:
-                case redmushroom:
-                case shrub:
-                case rope:
+                case Air:
+                case Glass:
+                case Leaves:
+                case Rose:
+                case Dandelion:
+                case Mushroom:
+                case RedMushroom:
+                case Sapling:
+                case Rope:
                     return true;
             }
             return false;
@@ -122,40 +122,40 @@ namespace MCGalaxy {
         {
             switch (block)
             {
-                case train:
+                case Train:
 
-                case snake:
-                case snaketail:
+                case Snake:
+                case SnakeTail:
 
-                case air_flood:
-                case air_flood_down:
-                case air_flood_up:
-                case air_flood_layer:
+                case Air_Flood:
+                case Air_FloodDown:
+                case Air_FloodUp:
+                case Air_FloodLayer:
                     
-                case lava_fire:
-                case rockethead:
-                case firework:
+                case LavaFire:
+                case RocketHead:
+                case Fireworks:
 
-                case creeper:
-                case zombiebody:
-                case zombiehead:
+                case Creeper:
+                case ZombieBody:
+                case ZombieHead:
 
-                case birdblack:
-                case birdblue:
-                case birdkill:
-                case birdlava:
-                case birdred:
-                case birdwater:
-                case birdwhite:
+                case Bird_Black:
+                case Bird_Blue:
+                case Bird_Killer:
+                case Bird_Lava:
+                case Bird_Red:
+                case Bird_Water:
+                case Bird_White:
 
-                case fishbetta:
-                case fishgold:
-                case fishsalmon:
-                case fishshark:
-                case fishlavashark:
-                case fishsponge:
+                case Fish_Betta:
+                case Fish_Gold:
+                case Fish_Salmon:
+                case Fish_Shark:
+                case Fish_LavaShark:
+                case Fish_Sponge:
 
-                case tntexplosion:
+                case TNT_Explosion:
                     return true;
             }
             return false;

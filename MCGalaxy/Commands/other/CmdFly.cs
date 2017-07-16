@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Misc {
 
             int x = p.Pos.BlockX, z = p.Pos.BlockZ;
             int y = (p.Pos.Y - 60) / 32;
-            ExtBlock glass = (ExtBlock)Block.glass;
+            ExtBlock glass = (ExtBlock)Block.Glass;
 
             for (int yy = y - 1; yy <= y; yy++)
                 for (int zz = z - 2; zz <= z + 2; zz++)

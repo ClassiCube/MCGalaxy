@@ -112,46 +112,46 @@ namespace MCGalaxy.Drawing {
 
         
         static PaletteEntry[] Color = new PaletteEntry[] {
-            new PaletteEntry(128, 86,   57, Block.dirt),
-            new PaletteEntry(162, 129,  75, Block.wood),
-            new PaletteEntry(244, 237, 174, Block.sand),
-            new PaletteEntry(226,  31,  38, Block.red),
-            new PaletteEntry(223, 135,  37, Block.orange),
-            new PaletteEntry(230, 241,  25, Block.yellow),
-            new PaletteEntry(127, 234,  26, Block.lightgreen),
-            new PaletteEntry(25,  234,  20, Block.green),
-            new PaletteEntry(31,  234, 122, Block.aquagreen),
-            new PaletteEntry(27,  239, 225, Block.cyan),
-            new PaletteEntry(99,  166, 226, Block.lightblue),
-            new PaletteEntry(111, 124, 235, Block.blue),
-            new PaletteEntry(126,  34, 218, Block.purple),
-            new PaletteEntry(170,  71, 219, Block.lightpurple),
-            new PaletteEntry(227,  39, 225, Block.pink),
-            new PaletteEntry(234,  39, 121, Block.darkpink),
-            new PaletteEntry(46,   68,  47, Block.darkgrey),
-            new PaletteEntry(135, 145, 130, Block.lightgrey),
-            new PaletteEntry(230, 240, 225, Block.white),
-            new PaletteEntry(163, 163, 163, Block.staircasefull),
-            new PaletteEntry(0,    0,    0, Block.obsidian),
+            new PaletteEntry(128, 86,   57, Block.Dirt),
+            new PaletteEntry(162, 129,  75, Block.Wood),
+            new PaletteEntry(244, 237, 174, Block.Sand),
+            new PaletteEntry(226,  31,  38, Block.Red),
+            new PaletteEntry(223, 135,  37, Block.Orange),
+            new PaletteEntry(230, 241,  25, Block.Yellow),
+            new PaletteEntry(127, 234,  26, Block.Lime),
+            new PaletteEntry(25,  234,  20, Block.Green),
+            new PaletteEntry(31,  234, 122, Block.Teal),
+            new PaletteEntry(27,  239, 225, Block.Aqua),
+            new PaletteEntry(99,  166, 226, Block.Cyan),
+            new PaletteEntry(111, 124, 235, Block.Blue),
+            new PaletteEntry(126,  34, 218, Block.Indigo),
+            new PaletteEntry(170,  71, 219, Block.Violet),
+            new PaletteEntry(227,  39, 225, Block.Magenta),
+            new PaletteEntry(234,  39, 121, Block.Pink),
+            new PaletteEntry(46,   68,  47, Block.Black),
+            new PaletteEntry(135, 145, 130, Block.Gray),
+            new PaletteEntry(230, 240, 225, Block.White),
+            new PaletteEntry(163, 163, 163, Block.DoubleSlab),
+            new PaletteEntry(0,    0,    0, Block.Obsidian),
         };      
         
         static PaletteEntry[] Grayscale = new PaletteEntry[] {
-            new PaletteEntry(0,     0,   0, Block.obsidian),
-            new PaletteEntry(46,   68,  47, Block.darkgrey),
-            new PaletteEntry(135, 145, 130, Block.lightgrey),
-            new PaletteEntry(230, 240, 225, Block.white),
+            new PaletteEntry(0,     0,   0, Block.Obsidian),
+            new PaletteEntry(46,   68,  47, Block.Black),
+            new PaletteEntry(135, 145, 130, Block.Gray),
+            new PaletteEntry(230, 240, 225, Block.White),
         };
         
         static PaletteEntry[] GrayscaleSimple = new PaletteEntry[] {
-            new PaletteEntry(32,   32,  32, Block.obsidian),
-            new PaletteEntry(96,   96,  96, Block.darkgrey),
-            new PaletteEntry(160, 160, 160, Block.lightgrey),
-            new PaletteEntry(224, 224, 224, Block.white),
+            new PaletteEntry(32,   32,  32, Block.Obsidian),
+            new PaletteEntry(96,   96,  96, Block.Black),
+            new PaletteEntry(160, 160, 160, Block.Gray),
+            new PaletteEntry(224, 224, 224, Block.White),
         };
         
         static PaletteEntry[] BlackWhite = new PaletteEntry[] {
-            new PaletteEntry(255, 255, 255, Block.white),
-            new PaletteEntry(0,     0,   0, Block.obsidian),
+            new PaletteEntry(255, 255, 255, Block.White),
+            new PaletteEntry(0,     0,   0, Block.Obsidian),
         };
     }
     

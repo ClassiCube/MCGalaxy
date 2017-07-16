@@ -28,12 +28,12 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             byte tileBelow = lvl.GetTile(x, (ushort)(y - 1), z);
-            if (tileBelow == Block.air) {
+            if (tileBelow == Block.Air) {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], false, C.data);
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
                 C.data.ResetTypes();
-            } else if (tileBelow == Block.waterstill || tileBelow == Block.lavastill) {
-                lvl.AddUpdate(C.b, Block.air);
+            } else if (tileBelow == Block.StillWater || tileBelow == Block.StillLava) {
+                lvl.AddUpdate(C.b, Block.Air);
                 C.data.ResetTypes();
             } else {
                 const int count = 25;
@@ -67,10 +67,10 @@ namespace MCGalaxy.Blocks.Physics {
                         }
 
                         int index = lvl.PosToInt(posX, y, posZ);
-                        if (index >= 0 && lvl.blocks[index] == Block.air &&
+                        if (index >= 0 && lvl.blocks[index] == Block.Air &&
                             lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data))
                         {
-                            lvl.AddUpdate(C.b, Block.air);
+                            lvl.AddUpdate(C.b, Block.Air);
                             C.data.ResetTypes();
                             return;
                         }
@@ -81,8 +81,8 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool Expand(Level lvl, int x, int y, int z) {
             int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index >= 0 && lvl.blocks[index] == Block.air &&
-                lvl.AddUpdate(index, Block.finiteWater)) {
+            if (index >= 0 && lvl.blocks[index] == Block.Air &&
+                lvl.AddUpdate(index, Block.FiniteWater)) {
                 return true;
             }
             return false;

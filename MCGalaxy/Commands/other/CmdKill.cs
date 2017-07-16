@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Misc {
             
             string[] args = message.SplitSpaces(2);
             Player target = PlayerInfo.FindMatches(p, args[0]);
-            ExtBlock rock = (ExtBlock)Block.rock;
+            ExtBlock rock = (ExtBlock)Block.Stone;
             
             if (target == null) {
                 if (p != null) p.HandleDeath(rock, " killed themselves in their confusion");

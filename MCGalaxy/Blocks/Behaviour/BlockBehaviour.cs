@@ -40,25 +40,25 @@ namespace MCGalaxy.Blocks {
         /// <summary> Retrieves the default place block handler for the given block. </summary>
         internal static HandlePlace GetPlaceHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {
-                case Block.dirt: return PlaceBehaviour.Dirt;
-                case Block.grass: return PlaceBehaviour.Grass;
-                case Block.c4: return PlaceBehaviour.C4;
-                case Block.c4det: return PlaceBehaviour.C4Det;
+                case Block.Dirt: return PlaceBehaviour.Dirt;
+                case Block.Grass: return PlaceBehaviour.Grass;
+                case Block.C4: return PlaceBehaviour.C4;
+                case Block.C4Detonator: return PlaceBehaviour.C4Det;
             }
         	
-        	if (props[block.Index].StackId != Block.air) return PlaceBehaviour.Stack(block);
+        	if (props[block.Index].StackId != Block.Air) return PlaceBehaviour.Stack(block);
             return null;
         }
         
         /// <summary> Retrieves the default delete block handler for the given block. </summary>
         internal static HandleDelete GetDeleteHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {
-                case Block.rocketstart: return DeleteBehaviour.RocketStart;
-                case Block.firework: return DeleteBehaviour.Firework;
-                case Block.c4det: return DeleteBehaviour.C4Det;
-                case Block.door_tree_air: return DeleteBehaviour.RevertDoor;
-                case Block.door_tnt_air: return DeleteBehaviour.RevertDoor;
-                case Block.door_green_air: return DeleteBehaviour.RevertDoor;
+                case Block.RocketStart: return DeleteBehaviour.RocketStart;
+                case Block.Fireworks: return DeleteBehaviour.Firework;
+                case Block.C4Detonator: return DeleteBehaviour.C4Det;
+                case Block.Door_Log_air: return DeleteBehaviour.RevertDoor;
+                case Block.Door_TNT_air: return DeleteBehaviour.RevertDoor;
+                case Block.Door_Green_air: return DeleteBehaviour.RevertDoor;
             }
             
             int i = block.Index;
@@ -74,12 +74,12 @@ namespace MCGalaxy.Blocks {
         /// <summary> Retrieves the default walkthrough block handler for the given block. </summary>
         internal static HandleWalkthrough GetWalkthroughHandler(ExtBlock block, BlockProps[] props, bool nonSolid) {
             switch (block.BlockID) {
-                case Block.checkpoint: return WalkthroughBehaviour.Checkpoint;
-                case Block.air_switch: return WalkthroughBehaviour.Door;
-                case Block.air_door: return WalkthroughBehaviour.Door;
-                case Block.water_door: return WalkthroughBehaviour.Door;
-                case Block.lava_door: return WalkthroughBehaviour.Door;
-                case Block.train: return WalkthroughBehaviour.Train;
+                case Block.Checkpoint: return WalkthroughBehaviour.Checkpoint;
+                case Block.Door_Air2: return WalkthroughBehaviour.Door;
+                case Block.Door_Air: return WalkthroughBehaviour.Door;
+                case Block.Door_Water: return WalkthroughBehaviour.Door;
+                case Block.Door_Lava: return WalkthroughBehaviour.Door;
+                case Block.Train: return WalkthroughBehaviour.Train;
             }
             
             int i = block.Index;
@@ -92,18 +92,18 @@ namespace MCGalaxy.Blocks {
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {
-                case Block.snaketail: return SnakePhysics.DoTail;
-                case Block.snake: return SnakePhysics.Do;
-                case Block.rockethead: return RocketPhysics.Do;
-                case Block.firework: return FireworkPhysics.Do;
-                case Block.zombiebody: return ZombiePhysics.Do;
-                case Block.zombiehead: return ZombiePhysics.DoHead;
-                case Block.creeper: return ZombiePhysics.Do;
+                case Block.SnakeTail: return SnakePhysics.DoTail;
+                case Block.Snake: return SnakePhysics.Do;
+                case Block.RocketHead: return RocketPhysics.Do;
+                case Block.Fireworks: return FireworkPhysics.Do;
+                case Block.ZombieBody: return ZombiePhysics.Do;
+                case Block.ZombieHead: return ZombiePhysics.DoHead;
+                case Block.Creeper: return ZombiePhysics.Do;
                     
-                case Block.water: return SimpleLiquidPhysics.DoWater;
-                case Block.activedeathwater: return SimpleLiquidPhysics.DoWater;
-                case Block.lava: return SimpleLiquidPhysics.DoLava;
-                case Block.activedeathlava: return SimpleLiquidPhysics.DoLava;
+                case Block.Water: return SimpleLiquidPhysics.DoWater;
+                case Block.Deadly_ActiveWater: return SimpleLiquidPhysics.DoWater;
+                case Block.Lava: return SimpleLiquidPhysics.DoLava;
+                case Block.Deadly_ActiveLava: return SimpleLiquidPhysics.DoLava;
                 case Block.WaterDown: return ExtLiquidPhysics.DoWaterfall;
                 case Block.LavaDown: return ExtLiquidPhysics.DoLavafall;
                 
@@ -112,47 +112,47 @@ namespace MCGalaxy.Blocks {
                 case Block.LavaFaucet: return (Level lvl, ref Check C) =>
                     ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.LavaDown);
                     
-                case Block.finiteWater: return FinitePhysics.DoWaterOrLava;
-                case Block.finiteLava: return FinitePhysics.DoWaterOrLava;
-                case Block.finiteFaucet: return FinitePhysics.DoFaucet;
-                case Block.magma: return ExtLiquidPhysics.DoMagma;
-                case Block.geyser: return ExtLiquidPhysics.DoGeyser;
-                case Block.lava_fast: return SimpleLiquidPhysics.DoFastLava;
-                case Block.fastdeathlava: return SimpleLiquidPhysics.DoFastLava;
+                case Block.FiniteWater: return FinitePhysics.DoWaterOrLava;
+                case Block.FiniteLava: return FinitePhysics.DoWaterOrLava;
+                case Block.FiniteFaucet: return FinitePhysics.DoFaucet;
+                case Block.Magma: return ExtLiquidPhysics.DoMagma;
+                case Block.Geyser: return ExtLiquidPhysics.DoGeyser;
+                case Block.FastLava: return SimpleLiquidPhysics.DoFastLava;
+                case Block.Deadly_FastLava: return SimpleLiquidPhysics.DoFastLava;
                     
-                case Block.air: return AirPhysics.DoAir;
-                case Block.dirt: return OtherPhysics.DoDirt;
-                case Block.grass: return OtherPhysics.DoGrass;
-                case Block.leaf: return LeafPhysics.DoLeaf;
-                case Block.shrub: return OtherPhysics.DoShrub;
-                case Block.fire: return FirePhysics.Do;
-                case Block.lava_fire: return FirePhysics.Do;
-                case Block.sand: return OtherPhysics.DoFalling;
-                case Block.gravel: return OtherPhysics.DoFalling;
-                case Block.wood_float: return OtherPhysics.DoFloatwood;
+                case Block.Air: return AirPhysics.DoAir;
+                case Block.Dirt: return OtherPhysics.DoDirt;
+                case Block.Grass: return OtherPhysics.DoGrass;
+                case Block.Leaves: return LeafPhysics.DoLeaf;
+                case Block.Sapling: return OtherPhysics.DoShrub;
+                case Block.Fire: return FirePhysics.Do;
+                case Block.LavaFire: return FirePhysics.Do;
+                case Block.Sand: return OtherPhysics.DoFalling;
+                case Block.Gravel: return OtherPhysics.DoFalling;
+                case Block.FloatWood: return OtherPhysics.DoFloatwood;
 
-                case Block.sponge: return (Level lvl, ref Check C) => 
+                case Block.Sponge: return (Level lvl, ref Check C) => 
                     OtherPhysics.DoSponge(lvl, ref C, false);
-                case Block.lava_sponge: return (Level lvl, ref Check C) => 
+                case Block.LavaSponge: return (Level lvl, ref Check C) => 
                     OtherPhysics.DoSponge(lvl, ref C, true);
 
                 // Special blocks that are not saved
-                case Block.air_flood: return (Level lvl, ref Check C) =>
-                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.air_flood);
-                case Block.air_flood_layer: return (Level lvl, ref Check C) =>
-                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.air_flood_layer);
-                case Block.air_flood_down: return (Level lvl, ref Check C) =>
-                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.air_flood_down);
-                case Block.air_flood_up: return (Level lvl, ref Check C) =>
-                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.air_flood_up);
+                case Block.Air_Flood: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.Air_Flood);
+                case Block.Air_FloodLayer: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.Air_FloodLayer);
+                case Block.Air_FloodDown: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.Air_FloodDown);
+                case Block.Air_FloodUp: return (Level lvl, ref Check C) =>
+                    AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.Air_FloodUp);
                     
-                case Block.smalltnt: return TntPhysics.DoSmallTnt;
-                case Block.bigtnt: return (Level lvl, ref Check C) =>
+                case Block.TNT_Small: return TntPhysics.DoSmallTnt;
+                case Block.TNT_Big: return (Level lvl, ref Check C) =>
                     TntPhysics.DoLargeTnt(lvl, ref C, 1);
-                case Block.nuketnt: return (Level lvl, ref Check C) => 
+                case Block.TNT_Nuke: return (Level lvl, ref Check C) => 
                     TntPhysics.DoLargeTnt(lvl, ref C, 4);
-                case Block.tntexplosion: return TntPhysics.DoTntExplosion;
-                case Block.train: return TrainPhysics.Do;
+                case Block.TNT_Explosion: return TntPhysics.DoTntExplosion;
+                case Block.Train: return TrainPhysics.Do;
             }
 
             int i = block.Index;
@@ -162,7 +162,7 @@ namespace MCGalaxy.Blocks {
             
             i = block.BlockID; // TODO: should this be checking WaterKills/LavaKills
             // Adv physics updating anything placed next to water or lava
-            if ((i >= Block.red && i <= Block.redmushroom) || i == Block.wood || i == Block.trunk || i == Block.bookcase) {
+            if ((i >= Block.Red && i <= Block.RedMushroom) || i == Block.Wood || i == Block.Log || i == Block.Bookshelf) {
                 return OtherPhysics.DoOther;
             }
             return null;
@@ -178,19 +178,19 @@ namespace MCGalaxy.Blocks {
             if (ai == AnimalAI.Fly) return BirdPhysics.Do;
 
             if (ai == AnimalAI.FleeAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.air);
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Air);
             } else if (ai == AnimalAI.FleeWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.water);
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Water);
             } else if (ai == AnimalAI.FleeLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.lava);
+                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Lava);
             }
             
             if (ai == AnimalAI.KillerAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.air);
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Air);
             } else if (ai == AnimalAI.KillerWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.water);
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Water);
             } else if (ai == AnimalAI.KillerLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.lava);
+                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Lava);
             }
             return null;
         }

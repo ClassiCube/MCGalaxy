@@ -62,12 +62,12 @@ namespace MCGalaxy.Commands.Building {
             
             // Hardcoded aliases for backwards compatibility
             block.BlockID = Block.Invalid; block.ExtID = 0;
-            if (name == "") block.BlockID = Block.blue_portal;
-            if (name == "blue") block.BlockID = Block.blue_portal;
-            if (name == "orange") block.BlockID = Block.orange_portal;
-            if (name == "air") block.BlockID = Block.air_portal;
-            if (name == "water") block.BlockID = Block.water_portal;
-            if (name == "lava") block.BlockID = Block.lava_portal;
+            if (name == "") block.BlockID = Block.Portal_Blue;
+            if (name == "blue") block.BlockID = Block.Portal_Blue;
+            if (name == "orange") block.BlockID = Block.Portal_Orange;
+            if (name == "air") block.BlockID = Block.Portal_Air;
+            if (name == "water") block.BlockID = Block.Portal_Water;
+            if (name == "lava") block.BlockID = Block.Portal_Lava;
             
             if (p.level.BlockProps[block.Index].IsPortal) return block;            
             Help(p); return ExtBlock.Invalid;
@@ -81,12 +81,12 @@ namespace MCGalaxy.Commands.Building {
             }
             p.ClearBlockchange();
 
-            if (data.Multi && block.BlockID == Block.red && data.Entries.Count > 0) { 
+            if (data.Multi && block.BlockID == Block.Red && data.Entries.Count > 0) { 
                 ExitChange(p, x, y, z, block); return; 
             }
 
             p.level.UpdateBlock(p, x, y, z, data.Block);
-            p.SendBlockchange(x, y, z, (ExtBlock)Block.green);
+            p.SendBlockchange(x, y, z, (ExtBlock)Block.Green);
             PortalPos Port;
 
             Port.Map = p.level.name;
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Building {
             } else {
                 p.Blockchange += EntryChange;
                 Player.Message(p, "&aEntry block placed. &c{0} block for exit",
-                               p.Level.BlockName((ExtBlock)Block.red));
+                               p.Level.BlockName((ExtBlock)Block.Red));
             }
         }
         
@@ -162,9 +162,9 @@ namespace MCGalaxy.Commands.Building {
         static void ShowPortals(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
                 if (row["ExitMap"].ToString() == p.level.name) {
-                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), (ExtBlock)Block.red);
+                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), (ExtBlock)Block.Red);
                 }
-                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.green);
+                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.Green);
             }
 
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %Sportals.");
@@ -187,11 +187,11 @@ namespace MCGalaxy.Commands.Building {
             if (!props[block.Index].IsPortal) return null;
             
             // We want to use the simple aliases if possible
-            if (block.BlockID == Block.orange_portal) return "orange";
-            if (block.BlockID == Block.blue_portal)   return "blue";
-            if (block.BlockID == Block.air_portal)    return "air";
-            if (block.BlockID == Block.lava_portal)   return "lava";
-            if (block.BlockID == Block.water_portal)  return "water";
+            if (block.BlockID == Block.Portal_Orange) return "orange";
+            if (block.BlockID == Block.Portal_Blue)   return "blue";
+            if (block.BlockID == Block.Portal_Air)    return "air";
+            if (block.BlockID == Block.Portal_Lava)   return "lava";
+            if (block.BlockID == Block.Portal_Water)  return "water";
             
             return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
         }
@@ -207,7 +207,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void GetCoreNames(List<string> names, Level lvl) {
             BlockProps[] props = lvl != null ? lvl.BlockProps : Block.Props;
-            for (int i = Block.air; i < Block.Count; i++) {
+            for (int i = Block.Air; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 if (block.BlockID == Block.custom_block) continue;
                 

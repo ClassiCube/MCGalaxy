@@ -74,8 +74,8 @@ namespace MCGalaxy.Games {
         /// <summary> Sets the default CTF config values for the given map. </summary>
         public void SetDefaults(Level map) {
             ZDivider = map.Length / 2;
-            RedFlagBlock = Block.red;
-            BlueFlagBlock = Block.blue;
+            RedFlagBlock = Block.Red;
+            BlueFlagBlock = Block.Blue;
             int midX = map.Width / 2, maxZ = map.Length - 1;
             
             RedFlagX = midX; RedSpawnX = midX * 32;

@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.Fun {
             foreach (Vec3U16 cP in state.glassCoords) {
                 if (state.lastGlass.Contains(cP)) continue;
                 state.lastGlass.Add(cP);
-                p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.glass);
+                p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.Glass);
             }
             state.glassCoords.Clear();
         }
@@ -193,12 +193,12 @@ namespace MCGalaxy.Commands.Fun {
             if (p.level.physics < 2 || ending == WeaponType.Teleport || ending == WeaponType.Normal) return true;
             
             if (ending == WeaponType.Destroy) {
-                bool fireKills = block.BlockID != Block.air && p.level.BlockProps[block.Index].LavaKills;
-                if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.glass) {
+                bool fireKills = block.BlockID != Block.Air && p.level.BlockProps[block.Index].LavaKills;
+                if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.Glass) {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-                if (block.BlockID != Block.glass && doExplode) {
+                if (block.BlockID != Block.Glass && doExplode) {
                     p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }

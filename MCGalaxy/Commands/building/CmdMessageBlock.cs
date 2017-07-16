@@ -71,14 +71,14 @@ namespace MCGalaxy.Commands.Building {
                 return block;
             
             // Hardcoded aliases for backwards compatibility
-            block.BlockID = Block.MsgWhite; block.ExtID = 0;
-            if (name == "white") block.BlockID = Block.MsgWhite;      
-            if (name == "black") block.BlockID = Block.MsgBlack;
-            if (name == "air") block.BlockID = Block.MsgAir;
-            if (name == "water") block.BlockID = Block.MsgWater;
-            if (name == "lava") block.BlockID = Block.MsgLava;
+            block.BlockID = Block.MB_White; block.ExtID = 0;
+            if (name == "white") block.BlockID = Block.MB_White;      
+            if (name == "black") block.BlockID = Block.MB_Black;
+            if (name == "air") block.BlockID = Block.MB_Air;
+            if (name == "water") block.BlockID = Block.MB_Water;
+            if (name == "lava") block.BlockID = Block.MB_Lava;
             
-            allMessage = block.BlockID == Block.MsgWhite && name != "white";
+            allMessage = block.BlockID == Block.MB_White && name != "white";
             if (p.level.BlockProps[block.Index].IsMessageBlock) return block;
             
             Help(p); return ExtBlock.Invalid;
@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void ShowMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
-                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.green);
+                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.Green);
             }
             Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
         }
@@ -184,11 +184,11 @@ namespace MCGalaxy.Commands.Building {
             if (!props[block.Index].IsMessageBlock) return null;
             
             // We want to use the simple aliases if possible
-            if (block.BlockID == Block.MsgBlack) return "black";
-            if (block.BlockID == Block.MsgWhite) return "white";
-            if (block.BlockID == Block.MsgAir)   return "air";
-            if (block.BlockID == Block.MsgLava)  return "lava";
-            if (block.BlockID == Block.MsgWater) return "water";
+            if (block.BlockID == Block.MB_Black) return "black";
+            if (block.BlockID == Block.MB_White) return "white";
+            if (block.BlockID == Block.MB_Air)   return "air";
+            if (block.BlockID == Block.MB_Lava)  return "lava";
+            if (block.BlockID == Block.MB_Water) return "water";
             
             return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
         }
@@ -204,7 +204,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void GetCoreNames(List<string> names, Level lvl) {
             BlockProps[] props = lvl != null ? lvl.BlockProps : Block.Props;
-            for (int i = Block.air; i < Block.Count; i++) {
+            for (int i = Block.Air; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 if (block.BlockID == Block.custom_block) continue;
                 

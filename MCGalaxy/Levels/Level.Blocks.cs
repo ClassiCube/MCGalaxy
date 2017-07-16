@@ -54,7 +54,7 @@ namespace MCGalaxy {
             ExtBlock block;
             
             block.BlockID = blocks[x + Width * (z + y * Length)];
-            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.Air;
             return block;
         }       
         
@@ -66,14 +66,14 @@ namespace MCGalaxy {
             
             index = x + Width * (z + y * Length);
             block.BlockID = blocks[index];
-            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.air;
+            block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.Air;
             return block;
         }   
    
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return false; 
-            return blocks[x + Width * (z + y * Length)] == Block.air;
+            return blocks[x + Width * (z + y * Length)] == Block.Air;
         }
 
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
@@ -81,7 +81,7 @@ namespace MCGalaxy {
             if (x < 0 || y < 0 || z < 0 || blocks == null) return false;
             if (x >= Width || y >= Height || z >= Length)  return false;
             
-            return blocks[x + Width * (z + y * Length)] == Block.air;
+            return blocks[x + Width * (z + y * Length)] == Block.Air;
         }
 
         public byte GetTile(int b) {
@@ -96,7 +96,7 @@ namespace MCGalaxy {
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? Block.air :
+            return chunk == null ? Block.Air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
@@ -106,27 +106,27 @@ namespace MCGalaxy {
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? Block.air :
+            return chunk == null ? Block.Air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
         public byte GetExtTileNoCheck(ushort x, ushort y, ushort z) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? Block.air :
+            return chunk == null ? Block.Air :
                 chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
         public byte GetFallbackExtTile(int index) {
             byte tile = GetExtTile(index);
             BlockDefinition def = CustomBlockDefs[tile];
-            return def == null ? Block.air : def.FallBack;
+            return def == null ? Block.Air : def.FallBack;
         }
         
         public byte RawFallback(byte raw) {
             BlockDefinition def = CustomBlockDefs[raw];
             if (def != null) return def.FallBack;
-            return raw < Block.CpeCount ? raw : Block.air;
+            return raw < Block.CpeCount ? raw : Block.Air;
         }
         
         public void SetTile(int index, byte block) {
@@ -170,7 +170,7 @@ namespace MCGalaxy {
         }
 
         bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
-            if (!(block == Block.tnt || block == Block.bigtnt || block == Block.nuketnt || block == Block.smalltnt))
+            if (!(block == Block.TNT || block == Block.TNT_Big || block == Block.TNT_Nuke || block == Block.TNT_Small))
                 return true;
             
             TntWarsGame game = TntWarsGame.GameIn(p);
@@ -184,7 +184,7 @@ namespace MCGalaxy {
                 Player.Message(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
             }
             p.TntAtATime();
-            block = Block.smalltnt;
+            block = Block.TNT_Small;
             return true;
         }
         
@@ -284,16 +284,16 @@ namespace MCGalaxy {
                 }
                 if (old == block) return 0;
 
-                if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
+                if (old.BlockID == Block.Sponge && physics > 0 && block.BlockID != Block.Sponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), false);
-                if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
+                if (old.BlockID == Block.LavaSponge && physics > 0 && block.BlockID != Block.LavaSponge)
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
 
                 p.SessionModified++;
                 p.TotalModified++;
             
                 if (drawn) p.TotalDrawn++;
-                else if (block.BlockID == Block.air) p.TotalDeleted++;
+                else if (block.BlockID == Block.Air) p.TotalDeleted++;
                 else p.TotalPlaced++;
             
                 errorLocation = "Setting tile";
@@ -304,7 +304,7 @@ namespace MCGalaxy {
                     SetExtTileNoCheck(x, y, z, block.ExtID);
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && block.BlockID == Block.smalltnt) AddTntCheck(PosToInt(x, y, z), p);
+                if (p.PlayingTntWars && block.BlockID == Block.TNT_Small) AddTntCheck(PosToInt(x, y, z), p);
                 if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
                 Changed = true;
@@ -349,7 +349,7 @@ namespace MCGalaxy {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
             ExtBlock old;
             old.BlockID = blocks[b];
-            old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.air;
+            old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.Air;
             
             try
             {
@@ -358,10 +358,10 @@ namespace MCGalaxy {
                         return false;
                 }
 
-                if (old.BlockID == Block.sponge && physics > 0 && block.BlockID != Block.sponge)
+                if (old.BlockID == Block.Sponge && physics > 0 && block.BlockID != Block.Sponge)
                     OtherPhysics.DoSpongeRemoved(this, b, false);
 
-                if (old.BlockID == Block.lava_sponge && physics > 0 && block.BlockID != Block.lava_sponge)
+                if (old.BlockID == Block.LavaSponge && physics > 0 && block.BlockID != Block.LavaSponge)
                     OtherPhysics.DoSpongeRemoved(this, b, true);
 
                 if (addUndo) {
@@ -446,7 +446,7 @@ namespace MCGalaxy {
         
         public BlockDefinition GetBlockDef(ExtBlock block) {
             if (block.BlockID == Block.custom_block) return CustomBlockDefs[block.ExtID];
-            if (block.BlockID >= Block.CpeCount || block.BlockID == Block.air) return null;
+            if (block.BlockID >= Block.CpeCount || block.BlockID == Block.Air) return null;
             return CustomBlockDefs[block.BlockID];
         }
         

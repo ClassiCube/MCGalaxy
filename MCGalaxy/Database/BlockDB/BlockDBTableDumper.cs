@@ -130,7 +130,7 @@ namespace MCGalaxy.DB {
             entry.Flags = BlockDBFlags.ManualPlace;
             
             if ((blockFlags & 1) != 0) { // deleted block
-                entry.NewRaw = Block.air;
+                entry.NewRaw = Block.Air;
             }
             if ((blockFlags & 2) != 0) { // new block is custom
                 entry.Flags |= BlockDBFlags.NewCustom;

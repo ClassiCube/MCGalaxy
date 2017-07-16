@@ -257,7 +257,7 @@ namespace MCGalaxy {
 
                 if (!listUpdateExists.Get(x, y, z)) {
                     listUpdateExists.Set(x, y, z, true);
-                } else if (type == Block.sand || type == Block.gravel)  {
+                } else if (type == Block.Sand || type == Block.Gravel)  {
                     RemoveUpdatesAtPos(b);
                 } else {
                     return false;
@@ -314,10 +314,10 @@ namespace MCGalaxy {
         void RevertPhysics(Check C) {
             //attemps on shutdown to change blocks back into normal selves that are active, hopefully without needing to send into to clients.
             switch (blocks[C.b]) {
-                case Block.air_flood:
-                case Block.air_flood_layer:
-                case Block.air_flood_down:
-                case Block.air_flood_up:
+                case Block.Air_Flood:
+                case Block.Air_FloodLayer:
+                case Block.Air_FloodDown:
+                case Block.Air_FloodUp:
                     blocks[C.b] = 0; break;
             }
 
@@ -358,7 +358,7 @@ namespace MCGalaxy {
                     if (zz < 0 || zz >= Length) continue;
                     for (int xx = x - 2; xx <= x + 2; ++xx) {
                         if (xx < 0 || xx >= Width) continue;
-                        if (blocks[xx + Width * (zz + yy * Length)] == Block.sponge)
+                        if (blocks[xx + Width * (zz + yy * Length)] == Block.Sponge)
                             return true;
                     }
                 }
@@ -373,7 +373,7 @@ namespace MCGalaxy {
                     if (zz < 0 || zz >= Length) continue;
                     for (int xx = x - 2; xx <= x + 2; ++xx) {
                         if (xx < 0 || xx >= Width) continue;
-                        if (blocks[xx + Width * (zz + yy * Length)] == Block.lava_sponge)
+                        if (blocks[xx + Width * (zz + yy * Length)] == Block.LavaSponge)
                             return true;
                     }
                 }

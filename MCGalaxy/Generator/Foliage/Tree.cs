@@ -56,7 +56,7 @@ namespace MCGalaxy.Generator.Foliage {
                     for (int dx = -size; dx <= size; ++dx)
             {
                 byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-                if (tile == Block.trunk || tile == Block.green) return true;
+                if (tile == Block.Log || tile == Block.Green) return true;
             }
             return false;
         }

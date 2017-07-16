@@ -126,7 +126,7 @@ namespace MCGalaxy.Generator.Foliage {
         protected void FoilageCluster(Vec3S32 center) {
             float[] level_radius = foliage_shape;
             foreach (float i in level_radius) {
-                CrossSection(center, i, 1, Block.leaf);
+                CrossSection(center, i, 1, Block.Leaves);
                 center.Y += 1;
             }
         }
@@ -179,7 +179,7 @@ namespace MCGalaxy.Generator.Foliage {
                 
                 float primdist = Math.Abs(delta[primidx]);
                 float radius = endsize + (startsize - endsize) * Math.Abs(delta[primidx] - primoffset) / primdist;
-                CrossSection(coord, radius, primidx, Block.trunk);
+                CrossSection(coord, radius, primidx, Block.Log);
             }
         }
 
@@ -189,7 +189,7 @@ namespace MCGalaxy.Generator.Foliage {
                 FoilageCluster(coord);
             }
             foreach (Vec3S32 coord in foliage_coords) {
-                Place(coord.X, coord.Y, coord.Z, Block.leaf);
+                Place(coord.X, coord.Y, coord.Z, Block.Leaves);
             }
         }
 
@@ -454,12 +454,12 @@ namespace MCGalaxy.Generator.Foliage {
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++) {
                 ushort yy = (ushort)(y + dy);
-                if (dy < height) output(x, yy, z, Block.trunk);
+                if (dy < height) output(x, yy, z, Block.Log);
                 
                 for (int i = 0; i < 2; i++) {
                     int dx = rnd.NextDouble() >= 0.5 ? 1 : -1;
                     int dz = rnd.NextDouble() >= 0.5 ? 1 : -1;
-                    output((ushort)(x + dx), yy, (ushort)(z + dz), Block.leaf);
+                    output((ushort)(x + dx), yy, (ushort)(z + dz), Block.Leaves);
                 }
             }
         }
@@ -479,13 +479,13 @@ namespace MCGalaxy.Generator.Foliage {
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
-                if (dy < height) output(x, (ushort)(y + dy), z, Block.trunk);
+                if (dy < height) output(x, (ushort)(y + dy), z, Block.Log);
             
             for (int dz = -2; dz <= 2; dz++)
                 for (int dx = -2; dx <= 2; dx++)
             {
                 if (Math.Abs(dx) != Math.Abs(dz)) continue;
-                output((ushort)(x + dx), (ushort)(y + height), (ushort)(z + dz), Block.leaf);
+                output((ushort)(x + dx), (ushort)(y + height), (ushort)(z + dz), Block.Leaves);
             }
         }
     }

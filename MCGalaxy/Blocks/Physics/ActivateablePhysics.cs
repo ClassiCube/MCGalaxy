@@ -27,31 +27,31 @@ namespace MCGalaxy.Blocks.Physics {
                     for (int xx = -1; xx <= 1; xx++)
             {
                 byte b = lvl.GetTile(lvl.IntOffset(index, xx, yy, zz));
-                if (b == Block.rocketstart) {
+                if (b == Block.RocketStart) {
                     int b1 = lvl.IntOffset(index, xx * 3, yy * 3, zz * 3);
                     int b2 = lvl.IntOffset(index, xx * 2, yy * 2, zz * 2);
-                    bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
+                    bool unblocked = lvl.GetTile(b1) == Block.Air && lvl.GetTile(b2) == Block.Air &&
                         !lvl.listUpdateExists.Get(x + xx * 3, y + yy * 3, z + zz * 3) &&
                         !lvl.listUpdateExists.Get(x + xx * 2, y + yy * 2, z + zz * 2);
                     
                     if (unblocked) {
-                        lvl.AddUpdate(b1, Block.rockethead);
-                        lvl.AddUpdate(b2, Block.lava_fire);
+                        lvl.AddUpdate(b1, Block.RocketHead);
+                        lvl.AddUpdate(b2, Block.LavaFire);
                     }
-                } else if (b == Block.firework) {
+                } else if (b == Block.Fireworks) {
                     int b1 = lvl.IntOffset(index, xx, yy + 1, zz);
                     int b2 = lvl.IntOffset(index, xx, yy + 2, zz);
-                    bool unblocked = lvl.GetTile(b1) == Block.air && lvl.GetTile(b2) == Block.air &&
+                    bool unblocked = lvl.GetTile(b1) == Block.Air && lvl.GetTile(b2) == Block.Air &&
                         !lvl.listUpdateExists.Get(x + xx, y + yy + 1, z + zz) &&
                         !lvl.listUpdateExists.Get(x + xx, y + yy + 2, z + zz);
                     
                     if (unblocked) {
-                        lvl.AddUpdate(b2, Block.firework);
+                        lvl.AddUpdate(b2, Block.Fireworks);
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
-                        lvl.AddUpdate(b1, Block.lavastill, false, args);
+                        lvl.AddUpdate(b1, Block.StillLava, false, args);
                     }
-                } else if (b == Block.tnt) {
+                } else if (b == Block.TNT) {
                     lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
                 }
             }
@@ -71,7 +71,7 @@ namespace MCGalaxy.Blocks.Physics {
                 else lvl.Blockchange(index, (ExtBlock)physForm, false, args);
             } else if (lvl.BlockProps[i].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block);
-                lvl.AddUpdate(index, Block.air, false, args);
+                lvl.AddUpdate(index, Block.Air, false, args);
             } else {
                 byte oDoor = lvl.BlockProps[i].ODoorId;
                 if (oDoor != Block.Invalid)
@@ -87,13 +87,13 @@ namespace MCGalaxy.Blocks.Physics {
             args.Door = true;
             args.ExtBlock = block.BlockID == Block.custom_block;
             
-            physForm = Block.door_tree_air; // air
-            if (block.BlockID == Block.air_door || block.BlockID == Block.air_switch) {
+            physForm = Block.Door_Log_air; // air
+            if (block.BlockID == Block.Door_Air || block.BlockID == Block.Door_Air2) {
                 args.Value1 = 4 - 1;
-            } else if (block.BlockID == Block.door_green) {
-                physForm = Block.door_green_air; // red wool
-            } else if (block.BlockID == Block.door_tnt) {
-                args.Value1 = 4 - 1; physForm = Block.door_tnt_air; // lava
+            } else if (block.BlockID == Block.Door_Green) {
+                physForm = Block.Door_Green_air; // red wool
+            } else if (block.BlockID == Block.Door_TNT) {
+                args.Value1 = 4 - 1; physForm = Block.Door_TNT_air; // lava
             }
             return args;
         }
@@ -121,19 +121,19 @@ namespace MCGalaxy.Blocks.Physics {
             if (index == -1) return;
             byte block = lvl.blocks[index];
             byte convBlock = Block.Convert(block);
-            if (convBlock == Block.water || convBlock == Block.lava ||
-                (block >= Block.red && block <= Block.white)) {
+            if (convBlock == Block.Water || convBlock == Block.Lava ||
+                (block >= Block.Red && block <= Block.White)) {
                 lvl.AddCheck(index); return;
             }
 
             switch (block) {
                     //case Block.water:
                     //case Block.lava:
-                case Block.shrub:
-                case Block.sand:
-                case Block.gravel:
-                case Block.leaf:
-                case Block.wood_float:
+                case Block.Sapling:
+                case Block.Sand:
+                case Block.Gravel:
+                case Block.Leaves:
+                case Block.FloatWood:
                     /*case Block.lava_fast:
                     case Block.WaterDown:
                     case Block.LavaDown:

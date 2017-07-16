@@ -34,22 +34,22 @@ namespace MCGalaxy.Blocks.Physics {
                     for (int cz = -dirZ; cz != 2 * dirZ; cz += dirZ)
             {                
                 byte rocketTail = lvl.GetTile((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
-                if (rocketTail != Block.lava_fire) continue;
+                if (rocketTail != Block.LavaFire) continue;
                 
                 int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));
                 byte rocketHead = headIndex < 0 ? Block.Invalid : lvl.blocks[headIndex];                
                 bool unblocked = !lvl.listUpdateExists.Get(x, y, z) && 
                     (headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
                 
-                if (unblocked && (rocketHead == Block.air || rocketHead == Block.rocketstart)) {
-                    lvl.AddUpdate(headIndex, Block.rockethead);
-                    lvl.AddUpdate(C.b, Block.lava_fire);
-                } else if (rocketHead == Block.lava_fire) {
+                if (unblocked && (rocketHead == Block.Air || rocketHead == Block.RocketStart)) {
+                    lvl.AddUpdate(headIndex, Block.RocketHead);
+                    lvl.AddUpdate(C.b, Block.LavaFire);
+                } else if (rocketHead == Block.LavaFire) {
                 } else {
                     if (lvl.physics > 2)
                         lvl.MakeExplosion(x, y, z, 2);
                     else
-                        lvl.AddUpdate(C.b, Block.lava_fire);
+                        lvl.AddUpdate(C.b, Block.LavaFire);
                 }
             }
         }

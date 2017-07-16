@@ -33,10 +33,10 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime Start = DateTime.MinValue;
         
         /// <summary> Block to highlight placements with. </summary>
-        public ExtBlock PlaceHighlight = (ExtBlock)Block.green;
+        public ExtBlock PlaceHighlight = (ExtBlock)Block.Green;
         
         /// <summary> Block to highlight deletions with. </summary>
-        public ExtBlock DeleteHighlight = (ExtBlock)Block.red;
+        public ExtBlock DeleteHighlight = (ExtBlock)Block.Red;
         
         
         internal string who;
@@ -79,9 +79,9 @@ namespace MCGalaxy.Drawing.Ops {
             if (oldBlock.BlockID == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             ExtBlock newBlock = ExtBlock.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
-            ExtBlock highlight = (newBlock.BlockID == Block.air
-                                  || Block.Convert(oldBlock.BlockID) == Block.water || oldBlock.BlockID == Block.waterstill
-                                  || Block.Convert(oldBlock.BlockID) == Block.lava || oldBlock.BlockID == Block.lavastill)
+            ExtBlock highlight = (newBlock.BlockID == Block.Air
+                                  || Block.Convert(oldBlock.BlockID) == Block.Water || oldBlock.BlockID == Block.StillWater
+                                  || Block.Convert(oldBlock.BlockID) == Block.Lava || oldBlock.BlockID == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;
             
             int x = e.Index % dims.X;
@@ -114,9 +114,9 @@ namespace MCGalaxy.Drawing.Ops {
             if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
             DrawOpBlock block;
-            block.Block = (newBlock.BlockID == Block.air
-                           || Block.Convert(old.BlockID) == Block.water || old.BlockID == Block.waterstill
-                           || Block.Convert(old.BlockID) == Block.lava || old.BlockID == Block.lavastill)
+            block.Block = (newBlock.BlockID == Block.Air
+                           || Block.Convert(old.BlockID) == Block.Water || old.BlockID == Block.StillWater
+                           || Block.Convert(old.BlockID) == Block.Lava || old.BlockID == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;
                         
             block.X = P.X; block.Y = P.Y; block.Z = P.Z;

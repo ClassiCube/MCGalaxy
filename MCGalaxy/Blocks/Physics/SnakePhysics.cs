@@ -103,25 +103,25 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoTail(Level lvl, ref Check C) {
-            if (lvl.GetTile(lvl.IntOffset(C.b, -1, 0, 0)) != Block.snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.snake) {
-                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
+            if (lvl.GetTile(lvl.IntOffset(C.b, -1, 0, 0)) != Block.Snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.Snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.Snake
+                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.Snake) {
+                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
             }
         }
         
         static bool MoveSnake(Level lvl, ref Check C, int index) {
             if (
-                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.air &&
-                lvl.GetTile(index) == Block.air) {
+                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.Air &&
+                lvl.GetTile(index) == Block.Air) {
                 index = lvl.IntOffset(index, 0, -1, 0);
             } else if (
-                lvl.GetTile(index) == Block.air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.air) {
+                lvl.GetTile(index) == Block.Air &&
+                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
             } else if (
-                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.air) {
+                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.Air &&
+                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
                 index = lvl.IntOffset(index, 0, 1, 0);
             } else {
                 return false;
@@ -130,8 +130,8 @@ namespace MCGalaxy.Blocks.Physics {
             if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
-                args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.air;
-                lvl.AddUpdate(C.b, Block.snaketail, true, args);
+                args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
+                lvl.AddUpdate(C.b, Block.SnakeTail, true, args);
                 return true;
             }
             return false;
@@ -142,14 +142,14 @@ namespace MCGalaxy.Blocks.Physics {
             byte blockAbove = lvl.GetTile(lvl.IntOffset(index, 0, 1, 0));
             byte block2Above = lvl.GetTile(lvl.IntOffset(index, 0, 2, 0));
             
-            if (block == Block.air &&
-                (blockAbove == Block.grass ||
-                 blockAbove == Block.dirt && block2Above == Block.air)) {
+            if (block == Block.Air &&
+                (blockAbove == Block.Grass ||
+                 blockAbove == Block.Dirt && block2Above == Block.Air)) {
                 if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
-                    args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.air;
-                    lvl.AddUpdate(C.b, Block.snaketail, true, args);
+                    args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
+                    lvl.AddUpdate(C.b, Block.SnakeTail, true, args);
                     return true;
                 }            
             }

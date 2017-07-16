@@ -25,7 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static bool DoDoorsOnly(Level lvl, ref Check C) {
             if (C.data.Type1 == PhysicsArgs.Custom) return true;
-            if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
+            if (!C.data.HasWait && lvl.blocks[C.b] == Block.Air)
                 C.data.ResetTypes();
             if (!C.data.HasWait) return false;
             
@@ -58,7 +58,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static bool DoNormal(Level lvl, ref Check C) {
             if (C.data.Type1 == PhysicsArgs.Custom) return true;
-            if (!C.data.HasWait && lvl.blocks[C.b] == Block.air)
+            if (!C.data.HasWait && lvl.blocks[C.b] == Block.Air)
                 C.data.ResetTypes();
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
@@ -124,7 +124,7 @@ namespace MCGalaxy.Blocks.Physics {
             // drop can generate another block with no dissipate/explode information.
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
                 if (!lvl.listUpdateExists.Get(x, y, z)) {
-                    lvl.AddUpdate(C.b, Block.air);
+                    lvl.AddUpdate(C.b, Block.Air);
                     C.data.ResetTypes();
                     args.Drop = false;
                 } else {
@@ -145,14 +145,14 @@ namespace MCGalaxy.Blocks.Physics {
         static void DoRainbow(Level lvl, ref Check C, Random rand, int rainbownum) {
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
-                if (block < Block.red || block > Block.darkpink) {
-                    lvl.AddUpdate(C.b, Block.red, false, C.data);
+                if (block < Block.Red || block > Block.Pink) {
+                    lvl.AddUpdate(C.b, Block.Red, false, C.data);
                 } else {
-                    byte next = block == Block.darkpink ? Block.red : (byte)(block + 1);
+                    byte next = block == Block.Pink ? Block.Red : (byte)(block + 1);
                     lvl.AddUpdate(C.b, next);
                 }
             } else {
-                lvl.AddUpdate(C.b, (byte)rand.Next(Block.red, Block.darkpink + 1));
+                lvl.AddUpdate(C.b, (byte)rand.Next(Block.Red, Block.Pink + 1));
             }
         }
         
@@ -161,11 +161,11 @@ namespace MCGalaxy.Blocks.Physics {
             if (index < 0) return;
             
             byte below = lvl.blocks[index];
-            if (!(below == Block.air || below == Block.lava || below == Block.water))
+            if (!(below == Block.Air || below == Block.Lava || below == Block.Water))
                 return;
             
             if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data)) {
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
                 C.data.ResetTypes();
             }
         }

@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Misc {
                     for (int dz = -1; dz <= 1; dz++)
             {
                 ushort xx = (ushort)(P.X + dx), yy = (ushort)(P.Y + dy), zz = (ushort)(P.Z + dz);
-                if (p.level.GetTile(xx, yy, zz) != Block.train) continue;
+                if (p.level.GetTile(xx, yy, zz) != Block.Train) continue;
                 p.trainGrab = true;
                 
                 byte yaw, pitch;

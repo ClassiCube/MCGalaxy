@@ -117,8 +117,8 @@ namespace MCGalaxy {
         public static void LoadGlobal() {
             BlockDefinition[] oldDefs = GlobalDefs;
             GlobalDefs = Load(true, null);
-            GlobalDefs[Block.air] = DefaultSet.MakeCustomBlock(Block.air);
-            GlobalDefs[Block.air].Name = "Air fallback";
+            GlobalDefs[Block.Air] = DefaultSet.MakeCustomBlock(Block.Air);
+            GlobalDefs[Block.Air].Name = "Air fallback";
             
             try {
                 if (File.Exists(GlobalPath)) {

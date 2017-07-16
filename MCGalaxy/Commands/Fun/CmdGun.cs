@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Fun {
 
                 ExtBlock cur = args.player.level.GetBlock(pos.X, pos.Y, pos.Z);
                 if (cur.IsInvalid) return false;
-                if (cur.BlockID != Block.air && !args.allBlocks.Contains(pos) && HandlesHitBlock(args.player, cur, args.weaponType, pos, true))
+                if (cur.BlockID != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(args.player, cur, args.weaponType, pos, true))
                     return false;
 
                 args.player.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            ExtBlock stone = (ExtBlock)Block.stone;
+            ExtBlock stone = (ExtBlock)Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
                 pl.HandleDeath(stone, " was blown up by " + p.ColoredName, true);

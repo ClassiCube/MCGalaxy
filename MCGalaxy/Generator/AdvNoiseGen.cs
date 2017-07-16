@@ -105,15 +105,15 @@ namespace MCGalaxy.Generator {
                 double noise = module.GetValue(x / 100.0, 0.1, z / 100.0);
                 int dirtHeight = (int)System.Math.Floor((noise + 2) * 10) + (half - 20);
                 int sandHeight = (int)System.Math.Floor((noise + 2) * 15) + (half - 30);
-                byte topBlock = dirtHeight < sandHeight ? Block.grass : Block.sand;
+                byte topBlock = dirtHeight < sandHeight ? Block.Grass : Block.Sand;
                 lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
                 
                 if (dirtHeight < waterHeight) {
                     for (int y = waterHeight; y >= dirtHeight; y--)
-                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.waterstill);
+                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.StillWater);
                 }
                 for (int y = dirtHeight - 1; y >= 0; y--) {
-                    byte block = (y > dirtHeight * 3 / 4) ? Block.dirt : Block.rock;
+                    byte block = (y > dirtHeight * 3 / 4) ? Block.Dirt : Block.Stone;
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
                 }
             }
@@ -129,7 +129,7 @@ namespace MCGalaxy.Generator {
             {
                 double value = System.Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
                 if (value > 20)
-                    lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
+                    lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }
             return true;
         }
@@ -143,7 +143,7 @@ namespace MCGalaxy.Generator {
             {
                 double value = System.Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
                 if (value > 30 * y / height)
-                    lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.grass);
+                    lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }
             return true;
         }

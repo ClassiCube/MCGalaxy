@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
             selector = null;
             
             // Put all the blocks in shadow
-            ExtBlock rock = (ExtBlock)Block.rock;
+            ExtBlock rock = (ExtBlock)Block.Stone;
             if (DualLayer) {
                 ushort y = (ushort)(Origin.Y + Source.Height);
                 for (int i = 0; i < Source.Width; i++) {

@@ -41,8 +41,8 @@ namespace MCGalaxy.Blocks {
             bool headFree = p.level.IsAirAt(head.X, head.Y, head.Z) && p.level.CheckClear(head.X, head.Y, head.Z);
             bool tailFree = p.level.IsAirAt(tail.X, tail.Y, tail.Z) && p.level.CheckClear(tail.X, tail.Y, tail.Z);
             if (headFree && tailFree) {
-                p.level.Blockchange(head.X, head.Y, head.Z, (ExtBlock)Block.rockethead);
-                p.level.Blockchange(tail.X, tail.Y, tail.Z, (ExtBlock)Block.lava_fire);
+                p.level.Blockchange(head.X, head.Y, head.Z, (ExtBlock)Block.RocketHead);
+                p.level.Blockchange(tail.X, tail.Y, tail.Z, (ExtBlock)Block.LavaFire);
             }
         }
         
@@ -59,12 +59,12 @@ namespace MCGalaxy.Blocks {
             bool headFree = p.level.IsAirAt(pos.X, headY, pos.Z) && p.level.CheckClear(pos.X, headY, pos.Z);
             bool tailFree = p.level.IsAirAt(pos.X, tailY, pos.Z) && p.level.CheckClear(pos.X, tailY, pos.Z);            
             if (headFree && tailFree) {
-                p.level.Blockchange(pos.X, headY, pos.Z, (ExtBlock)Block.firework);
+                p.level.Blockchange(pos.X, headY, pos.Z, (ExtBlock)Block.Fireworks);
                 
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
                 args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
-                p.level.Blockchange(pos.X, tailY, pos.Z, (ExtBlock)Block.lavastill, false, args);
+                p.level.Blockchange(pos.X, tailY, pos.Z, (ExtBlock)Block.StillLava, false, args);
             }
             p.RevertBlock(x, y, z);
         }
@@ -90,7 +90,7 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static void ODoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (block.BlockID == Block.odoor8 || block.BlockID == Block.odoor8_air) {
+            if (block.BlockID == Block.oDoor_Green || block.BlockID == Block.oDoor_Green_air) {
                 p.level.Blockchange(x, y, z, (ExtBlock)p.level.BlockProps[block.Index].ODoorId);
             } else {
                 p.RevertBlock(x, y, z);

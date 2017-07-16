@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
                 int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
-                if (index >= 0 && p.level.blocks[index] != Block.air)
+                if (index >= 0 && p.level.blocks[index] != Block.Air)
                     buffer.Add(index);
             }
 

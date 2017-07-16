@@ -100,23 +100,23 @@ namespace MCGalaxy.Generator {
                 int pos = x + Lvl.Width * (z + y * Lvl.Length);
                 for (ushort yy = 0; y - yy >= 0; yy++) {
                     if (genParams.SimpleColumns) {
-                        Lvl.blocks[pos] = Block.sand;
+                        Lvl.blocks[pos] = Block.Sand;
                     } else if (overlay[index] < 0.72f) {
                         if (genParams.IslandColumns) { //increase sand height for island
                             if (y > LiquidLevel + 2) {
-                                if (yy == 0) Lvl.blocks[pos] = Block.grass;     //top layer
-                                else if (yy < 3) Lvl.blocks[pos] = Block.dirt;  //next few
-                                else Lvl.blocks[pos] = Block.rock;              //ten rock it
+                                if (yy == 0) Lvl.blocks[pos] = Block.Grass;     //top layer
+                                else if (yy < 3) Lvl.blocks[pos] = Block.Dirt;  //next few
+                                else Lvl.blocks[pos] = Block.Stone;              //ten rock it
                             } else {
-                                Lvl.blocks[pos] = Block.sand;                   //SAAAND extra for islands
+                                Lvl.blocks[pos] = Block.Sand;                   //SAAAND extra for islands
                             }
                         } else {
-                            if (yy == 0) Lvl.blocks[pos] = Block.grass;
-                            else if (yy < 3) Lvl.blocks[pos] = Block.dirt;
-                            else Lvl.blocks[pos] = Block.rock;
+                            if (yy == 0) Lvl.blocks[pos] = Block.Grass;
+                            else if (yy < 3) Lvl.blocks[pos] = Block.Dirt;
+                            else Lvl.blocks[pos] = Block.Stone;
                         }
                     } else {
-                        Lvl.blocks[pos] = Block.rock;
+                        Lvl.blocks[pos] = Block.Stone;
                     }
                     pos -= Lvl.Width * Lvl.Length;
                 }
@@ -124,9 +124,9 @@ namespace MCGalaxy.Generator {
                 if (genParams.GenFlowers && overlay[index] < 0.25f) {
                     switch (rand.Next(12)) {
                         case 10:
-                            Lvl.SetTile(x, (ushort)(y + 1), z, Block.redflower); break;
+                            Lvl.SetTile(x, (ushort)(y + 1), z, Block.Rose); break;
                         case 11:
-                            Lvl.SetTile(x, (ushort)(y + 1), z, Block.yellowflower); break;
+                            Lvl.SetTile(x, (ushort)(y + 1), z, Block.Dandelion); break;
                         default:
                             break;
                     }
@@ -134,7 +134,7 @@ namespace MCGalaxy.Generator {
                 
                 if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-                        if (Lvl.GetTile(x, y, z) == Block.grass || genParams.UseCactus) {
+                        if (Lvl.GetTile(x, y, z) == Block.Grass || genParams.UseCactus) {
                             if (rand.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
                                 Tree tree = null;
                                 if (genParams.UseCactus) tree = new CactusTree();
@@ -154,12 +154,12 @@ namespace MCGalaxy.Generator {
                 int pos = x + Lvl.Width * (z + LiquidLevel * Lvl.Length);
                 for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
                     if (LiquidLevel - yy > y) {
-                        Lvl.blocks[pos] = Block.waterstill;    //better fill the water above me
+                        Lvl.blocks[pos] = Block.StillWater;    //better fill the water above me
                     } else if (LiquidLevel - yy > y - 3) {
-                        byte block = overlay[index] < 0.75f ? Block.sand : Block.gravel; // sand on top
+                        byte block = overlay[index] < 0.75f ? Block.Sand : Block.Gravel; // sand on top
                         Lvl.blocks[pos] = block;
                     } else {
-                        Lvl.blocks[pos] = Block.rock;
+                        Lvl.blocks[pos] = Block.Stone;
                     }
                     pos -= Lvl.Width * Lvl.Length;
                 }
@@ -170,12 +170,12 @@ namespace MCGalaxy.Generator {
             if (y > LiquidLevel) {
                 for (ushort yy = 0; y - yy >= 0; yy++) {
                     if (y > (LiquidLevel - 1)) {
-                        if (yy == 0) Lvl.SetTile(x, (ushort)(y - yy), z, Block.rock);      //top layer
-                        else if (yy < 3) Lvl.SetTile(x, (ushort)(y - yy), z, Block.rock);
-                        else if (yy < 2) Lvl.SetTile(x, (ushort)(y - yy), z, Block.lava);//next few
-                        else Lvl.SetTile(x, (ushort)(y - yy), z, Block.obsidian);
+                        if (yy == 0) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Stone);      //top layer
+                        else if (yy < 3) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Stone);
+                        else if (yy < 2) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Lava);//next few
+                        else Lvl.SetTile(x, (ushort)(y - yy), z, Block.Obsidian);
                     } else {
-                        Lvl.SetTile(x, (ushort)(y - yy), z, Block.lava);
+                        Lvl.SetTile(x, (ushort)(y - yy), z, Block.Lava);
                     }
                     
                     if (overlay[index] < 0.3f) {
@@ -184,27 +184,27 @@ namespace MCGalaxy.Generator {
                             case 10:
                             case 11:
                             case 12:
-                                Lvl.SetTile(x, (ushort)(y + 1), z, Block.lava); //change to lava when time
+                                Lvl.SetTile(x, (ushort)(y + 1), z, Block.Lava); //change to lava when time
                                 break;
                             default:
                                 break;
                         }
                     }
-                    Lvl.SetTile(x, (ushort)(y), z, (rand.Next(100) % 3 == 1 ? Block.darkgrey : Block.obsidian));
+                    Lvl.SetTile(x, (ushort)(y), z, (rand.Next(100) % 3 == 1 ? Block.Black : Block.Obsidian));
                 }
             } else {
                 for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
                     if (LiquidLevel - yy > y - 1) {
-                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.lava); //better fill the water above me
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.Lava); //better fill the water above me
                     } else if (LiquidLevel - yy > y - 3) {
                         if (overlay[index] < 0.9f) {
-                            byte block = yy < y ? Block.lava : Block.rock;
+                            byte block = yy < y ? Block.Lava : Block.Stone;
                             Lvl.SetTile(x, (ushort)(y - yy), z, block);
                         } else {
-                            Lvl.SetTile(x, (ushort)(LiquidLevel - yy), (ushort)(z - 5), Block.lava);  //killer lava
+                            Lvl.SetTile(x, (ushort)(LiquidLevel - yy), (ushort)(z - 5), Block.Lava);  //killer lava
                         }
                     } else {
-                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.stone); //and just make the rest cobblestone
+                        Lvl.SetTile(x, (ushort)(LiquidLevel - yy), z, Block.Cobblestone); //and just make the rest cobblestone
                     }
                 }
             }

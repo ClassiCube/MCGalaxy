@@ -32,7 +32,7 @@ namespace MCGalaxy.DB {
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
             name = PlayerInfo.GetColoredName(p, name);
             
-            if (newBlock.BlockID == Block.air) {
+            if (newBlock.BlockID == Block.Air) {
                 Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
                                delta.Shorten(true, false), name,
                                p.level.BlockName(oldBlock),

@@ -55,7 +55,7 @@ namespace MCGalaxy.Blocks.Physics {
                     FlyTo(lvl, ref C, x, y, z + 1);
                     break;
             }
-            lvl.AddUpdate(C.b, Block.air);
+            lvl.AddUpdate(C.b, Block.Air);
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
@@ -64,15 +64,15 @@ namespace MCGalaxy.Blocks.Physics {
             if (index < 0) return;
             
             switch (lvl.blocks[index]) {
-                case Block.air:
+                case Block.Air:
                     lvl.AddUpdate(index, lvl.blocks[C.b]);
                     break;
-                case Block.op_air:
+                case Block.Op_Air:
                     break;
                 default:
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 25;
-                    lvl.AddUpdate(C.b, Block.red, false, args);
+                    lvl.AddUpdate(C.b, Block.Red, false, args);
                     break;
             }
         }

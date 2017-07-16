@@ -37,11 +37,11 @@ namespace MCGalaxy.Blocks.Physics {
                 ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
                 bool isRails = lvl.BlockProps[below.BlockID].IsRails;
                 
-                if (isRails && (block.BlockID == Block.air || block.BlockID == Block.water) 
+                if (isRails && (block.BlockID == Block.Air || block.BlockID == Block.Water) 
                     && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
-                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz)), Block.train);
-                    lvl.AddUpdate(C.b, Block.air);                    
-                    byte newBlock = below.BlockID == Block.op_air ? Block.glass : Block.obsidian;
+                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz)), Block.Train);
+                    lvl.AddUpdate(C.b, Block.Air);                    
+                    byte newBlock = below.BlockID == Block.Op_Air ? Block.Glass : Block.Obsidian;
                     
                     below = lvl.GetBlock(x, (ushort)(y - 1), z);
                     PhysicsArgs args = default(PhysicsArgs);

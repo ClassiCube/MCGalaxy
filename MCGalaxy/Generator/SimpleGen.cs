@@ -46,22 +46,22 @@ namespace MCGalaxy.Generator {
             
             fixed (byte* ptr = lvl.blocks) {
                 if (grassHeight > 0)
-                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassHeight - 1, Block.dirt);
+                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassHeight - 1, Block.Dirt);
                 if (grassHeight < lvl.Height)
-                    MapSet(lvl.Width, lvl.Length, ptr, grassHeight, grassHeight, Block.grass);
+                    MapSet(lvl.Width, lvl.Length, ptr, grassHeight, grassHeight, Block.Grass);
             }
             return true;
         }
 
         static bool GenEmpty(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxZ = args.Level.Length - 1;
-            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.blackrock);
+            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             return true;
         }
         
         static bool GenPixel(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
-            NextBlock nextBlock = () => Block.white;
+            NextBlock nextBlock = () => Block.White;
             
             // Cuboid the four walls
             Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
@@ -70,14 +70,14 @@ namespace MCGalaxy.Generator {
             Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base
-            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.blackrock);
+            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             return true;
         }
         
         static bool GenSpace(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            NextBlock nextBlock = () => rand.Next(100) == 0 ? Block.iron : Block.obsidian;
+            NextBlock nextBlock = () => rand.Next(100) == 0 ? Block.Iron : Block.Obsidian;
 
             // Cuboid the four walls
             Cuboid(args, 0, 2, 0,    maxX, maxY, 0, nextBlock);
@@ -86,7 +86,7 @@ namespace MCGalaxy.Generator {
             Cuboid(args, maxX, 2, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base and top
-            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, () => Block.blackrock);
+            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, () => Block.Bedrock);
             Cuboid(args, 0, 1, 0,    maxX, 1, maxZ, nextBlock);
             Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
@@ -95,7 +95,7 @@ namespace MCGalaxy.Generator {
         static bool GenRainbow(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
             Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            NextBlock nextBlock = () => (byte)rand.Next(Block.red, Block.white);
+            NextBlock nextBlock = () => (byte)rand.Next(Block.Red, Block.White);
 
             // Cuboid the four walls
             Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
@@ -120,16 +120,16 @@ namespace MCGalaxy.Generator {
                     for (int x = 0; x < width; ++x)
             {
                 if (y == 0) {
-                    blocks[index] = Block.blackrock;
+                    blocks[index] = Block.Bedrock;
                 } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
-                    blocks[index] = Block.obsidian;
+                    blocks[index] = Block.Obsidian;
                 } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
                     if (rand.Next(1000) != 7) { index++; continue; }
                     
                     int colIndex = z * width + x;
                     for (int i = 1; i < (height - y); ++i) {
                         int yy = height - i;
-                        blocks[colIndex + yy * width * length] = Block.lava;
+                        blocks[colIndex + yy * width * length] = Block.Lava;
                     }
                 }
                 index++;

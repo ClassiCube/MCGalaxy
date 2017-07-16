@@ -28,9 +28,9 @@ namespace MCGalaxy.Blocks.Physics {
             
             // Make zombie fall down
             if (lvl.IsAirAt(x, (ushort)(y - 1), z)) {
-                lvl.AddUpdate(C.b, Block.zombiehead);
+                lvl.AddUpdate(C.b, Block.ZombieHead);
                 lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), lvl.blocks[C.b]);
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);
+                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
                 return;
             }
             bool checkTime = true;
@@ -101,37 +101,37 @@ namespace MCGalaxy.Blocks.Physics {
                     if (dirsVisited >= 4) return;
                     goto case 1;
             }
-            lvl.AddUpdate(C.b, Block.air);
-            lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);
+            lvl.AddUpdate(C.b, Block.Air);
+            lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
         }
         
         public static void DoHead(Level lvl, ref Check C) {
-            if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.zombiebody
-                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.creeper) {
-                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.air;
+            if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.ZombieBody
+                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.Creeper) {
+                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
             }
         }
         
         static bool MoveZombie(Level lvl, ref Check C, int index) {
             if(
-                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.air &&
-                lvl.GetTile(index) == Block.air) {
+                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.Air &&
+                lvl.GetTile(index) == Block.Air) {
                 index = lvl.IntOffset(index, 0, -1, 0);
             } else if (
-                lvl.GetTile(index) == Block.air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.air) {
+                lvl.GetTile(index) == Block.Air &&
+                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
             } else if (
-                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.air) {
+                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.Air &&
+                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
                 index = lvl.IntOffset(index, 0, 1, 0);
             } else {
                 return false;
             }
 
             if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
-                lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), Block.zombiehead);
-                lvl.AddUpdate(C.b, Block.air);
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.air);
+                lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), Block.ZombieHead);
+                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
                 return true;
             }
             return false;

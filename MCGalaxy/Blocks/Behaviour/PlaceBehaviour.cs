@@ -23,11 +23,11 @@ namespace MCGalaxy.Blocks {
     internal static class PlaceBehaviour {
 
         internal static void Grass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            DirtGrass(p, (ExtBlock)Block.grass, x, y, z);
+            DirtGrass(p, (ExtBlock)Block.Grass, x, y, z);
         }
         
         internal static void Dirt(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            DirtGrass(p, (ExtBlock)Block.dirt, x, y, z);
+            DirtGrass(p, (ExtBlock)Block.Dirt, x, y, z);
         }
         
         static void DirtGrass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
@@ -35,12 +35,12 @@ namespace MCGalaxy.Blocks {
             if (!lvl.Config.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
                 p.ChangeBlock(x, y, z, block); return;
             }
-            if (p.ModeBlock.BlockID == Block.dirt || p.ModeBlock.BlockID == Block.grass) {
+            if (p.ModeBlock.BlockID == Block.Dirt || p.ModeBlock.BlockID == Block.Grass) {
                 p.ChangeBlock(x, y, z, block); return;
             }
             
             ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-            block.BlockID = (above.BlockID == Block.Invalid || lvl.LightPasses(above)) ? Block.grass : Block.dirt;
+            block.BlockID = (above.BlockID == Block.Invalid || lvl.LightPasses(above)) ? Block.Grass : Block.Dirt;
             p.ChangeBlock(x, y, z, block);
         }
         
@@ -64,9 +64,9 @@ namespace MCGalaxy.Blocks {
             
             // Use red wool to detonate c4
             ExtBlock held = p.GetHeldBlock();
-            if (held.BlockID == Block.red) {
+            if (held.BlockID == Block.Red) {
                 Player.Message(p, "Placed detonator block, delete it to detonate.");
-                C4Det(p, (ExtBlock)Block.c4det, x, y, z); return;
+                C4Det(p, (ExtBlock)Block.C4Detonator, x, y, z); return;
             }
             
             if (p.c4circuitNumber == -1) {
@@ -74,14 +74,14 @@ namespace MCGalaxy.Blocks {
                 p.level.C4list.Add(new C4Data(num));
                 p.c4circuitNumber = num;
                 
-                string detonatorName = p.level.BlockName((ExtBlock)Block.red);
+                string detonatorName = p.level.BlockName((ExtBlock)Block.Red);
                 Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
                                detonatorName);
             }
             
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.list.Add(p.level.PosToInt(x, y, z));
-            p.ChangeBlock(x, y, z, (ExtBlock)Block.c4);
+            p.ChangeBlock(x, y, z, (ExtBlock)Block.C4);
         }
         
         internal static void C4Det(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
@@ -93,7 +93,7 @@ namespace MCGalaxy.Blocks {
             C4Data c4 = C4Physics.Find(p.level, p.c4circuitNumber);
             if (c4 != null) c4.detIndex = p.level.PosToInt(x, y, z);
             p.c4circuitNumber = -1;
-            p.ChangeBlock(x, y, z, (ExtBlock)Block.c4det);
+            p.ChangeBlock(x, y, z, (ExtBlock)Block.C4Detonator);
         }
     }
 }

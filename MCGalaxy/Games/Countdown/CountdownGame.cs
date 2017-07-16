@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
         public void BeginRound(Player p) {
             Status = CountdownGameStatus.RoundCountdown;
             ResetMap();
-            SetGlassTube(Block.glass, Block.glass);
+            SetGlassTube(Block.Glass, Block.Glass);
             Map.ChatLevel("Countdown is about to start!");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
@@ -79,13 +79,13 @@ namespace MCGalaxy.Games {
             Map.ChatLevel("-----&b5%S-----");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.air, Map);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air, Map);
             Thread.Sleep(1000);
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
-            Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.air, Map);
+            Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air, Map);
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
@@ -182,24 +182,24 @@ namespace MCGalaxy.Games {
         }
 
         void CloseOffBoard() {
-            SetGlassTube(Block.air, Block.glass);
+            SetGlassTube(Block.Air, Block.Glass);
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             
             // Cuboid the borders around game board with air
-            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.air, Map);
-            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.air, Map);
-            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.air, Map);
-            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.air, Map);
+            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.Air, Map);
+            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.Air, Map);
+            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air, Map);
+            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air, Map);
         }
         
         
         void RemoveAllSquareBorders() {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             for (int xx = 6 - 1; xx <= Map.Width - 6; xx += 3) {
-                Cuboid(xx, 4, 4, xx, 4, maxZ - 4, Block.air, Map);
+                Cuboid(xx, 4, 4, xx, 4, maxZ - 4, Block.Air, Map);
             }
             for (int zz = 6 - 1; zz <= Map.Length - 6; zz += 3) {
-                Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.air, Map);
+                Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.Air, Map);
             }
         }
         
@@ -220,13 +220,13 @@ namespace MCGalaxy.Games {
         
         void RemoveSquare(SquarePos pos) {
             ushort minX = pos.X, maxX = (ushort)(pos.X + 1), y = 4, minZ = pos.Z, maxZ = (ushort)(pos.Z + 1);
-            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.yellow, Map);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.Yellow, Map);
             Thread.Sleep(Interval);
-            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.orange, Map);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.Orange, Map);
             Thread.Sleep(Interval);
-            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.red, Map);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.Red, Map);
             Thread.Sleep(Interval);
-            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.air, Map);
+            Cuboid(minX, y, minZ, maxX, y, maxZ, Block.Air, Map);
             // Remove glass borders if neighbouring squared were previously removed.
             
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
@@ -371,13 +371,13 @@ namespace MCGalaxy.Games {
         }
         
         public void ResetMap() {
-            SetGlassTube(Block.air, Block.air);
+            SetGlassTube(Block.Air, Block.Air);
 
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, Map);
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass, Map);
             for(int zz = 6; zz < maxZ - 6; zz += 3)
                 for (int xx = 6; xx < maxX - 6; xx += 3)
-                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, Map);
+                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green, Map);
             
             Map.ChatLevel("Countdown map has been reset");
         }

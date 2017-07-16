@@ -68,7 +68,7 @@ namespace MCGalaxy {
                     ulong flags = lvl.blockqueue[i];
                     int index = (int)(flags >> 32);
                     byte block = (flags & 0x100) != 0 ? Block.custom_block : (byte)flags;
-                    byte extBlock = (flags & 0x100) != 0 ? (byte)flags : Block.air;
+                    byte extBlock = (flags & 0x100) != 0 ? (byte)flags : Block.Air;
                     bulkSender.Add(index, block, extBlock);
                 }
                 bulkSender.Send(true);

@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Brushes {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
             if (offset < 0) offset += 13;
             
-            block.BlockID = (byte)(Block.red + offset);
+            block.BlockID = (byte)(Block.Red + offset);
             return block;
         }
     }
@@ -39,8 +39,8 @@ namespace MCGalaxy.Drawing.Brushes {
         ExtBlock block = default(ExtBlock);
         public override string Name { get { return "BWRainbow"; } }
         
-        static byte[] blocks = new byte[] { Block.iron, Block.white, Block.lightgrey,
-            Block.darkgrey, Block.obsidian, Block.darkgrey, Block.lightgrey, Block.white };
+        static byte[] blocks = new byte[] { Block.Iron, Block.White, Block.Gray,
+            Block.Black, Block.Obsidian, Block.Black, Block.Gray, Block.White };
         
         public override ExtBlock NextBlock(DrawOp op) {
             int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 8;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
         public override ExtBlock NextBlock(DrawOp op) {
-            block.BlockID = (byte)rnd.Next(Block.red, Block.darkgrey);
+            block.BlockID = (byte)rnd.Next(Block.Red, Block.Black);
             return block;
         }
     }

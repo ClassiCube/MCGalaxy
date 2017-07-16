@@ -33,11 +33,11 @@ namespace MCGalaxy.Commands.Building {
             if (message.CaselessStarts("tnt ")) {
                 string[] parts = message.SplitSpaces(2);
                 if (parts[1].CaselessEq("small")) {
-                    message = Block.Name(Block.smalltnt);
+                    message = Block.Name(Block.TNT_Small);
                 } else if (parts[1].CaselessEq("big")) {
-                    message = Block.Name(Block.bigtnt);
+                    message = Block.Name(Block.TNT_Big);
                 } else if (parts[1].CaselessEq("nuke")) {
-                    message = Block.Name(Block.nuketnt);
+                    message = Block.Name(Block.TNT_Nuke);
                 }
             }
             

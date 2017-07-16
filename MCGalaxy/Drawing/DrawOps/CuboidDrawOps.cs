@@ -114,7 +114,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
                         if (!Level.IsAirAt(x, y, z)) {
-                            block.BlockID = (byte)(Block.red + i);
+                            block.BlockID = (byte)(Block.Red + i);
                             output(Place(x, y, z, block));
                         }
                     }

@@ -28,7 +28,7 @@ namespace MCGalaxy {
             BlockID = block; ExtID = extBlock;
         }
         
-        public static ExtBlock Air = new ExtBlock(Block.air, 0);
+        public static ExtBlock Air = new ExtBlock(Block.Air, 0);
         public static ExtBlock Invalid = new ExtBlock(Block.Invalid, 0);
         
         
@@ -45,7 +45,7 @@ namespace MCGalaxy {
         public bool IsInvalid { get { return BlockID == Block.Invalid; } }
         
         /// <summary> Returns whether the type of this extended block is the air block. </summary>
-        public bool IsAir { get { return BlockID == Block.air; } }
+        public bool IsAir { get { return BlockID == Block.Air; } }
         
         /// <summary> Returns the index of this block within an array. </summary>
         public int Index { get { return BlockID != Block.custom_block ? BlockID : (ExtID + Block.Count); } }

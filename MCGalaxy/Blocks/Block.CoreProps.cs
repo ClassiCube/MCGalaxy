@@ -30,79 +30,79 @@ namespace MCGalaxy {
             for (int i = 0; i < Block.Count; i++)
                 Props[i] = BlockProps.MakeDefault();
             for (int i = 0; i < Block.Count; i++) {                
-                if ((i >= op_glass && i <= op_lava) || i == Invalid || i == rocketstart || i == blackrock)
+                if ((i >= Op_Glass && i <= Op_Lava) || i == Invalid || i == RocketStart || i == Bedrock)
                     Props[i].OPBlock = true;
                 
-                if ((i >= tdoor && i <= tdoor8) || (i >= tdoor9 && i <= tdoor13))
+                if ((i >= tDoor_Log && i <= tDoor_Green) || (i >= tDoor_TNT && i <= tDoor_Lava))
                     Props[i].IsTDoor = true;
                 
-                if (i >= MsgWhite && i <= MsgLava)
+                if (i >= MB_White && i <= MB_Lava)
                     Props[i].IsMessageBlock = true;
                 
-                if (i == blue_portal || i == orange_portal || (i >= air_portal && i <= lava_portal))
+                if (i == Portal_Blue || i == Portal_Orange || (i >= Portal_Air && i <= Portal_Lava))
                     Props[i].IsPortal = true;
                 
                 // ODoor blocks
-                if (i >= odoor1 && i <= odoor7)
-                    Props[i].ODoorId = (byte)(odoor1_air + (i - odoor1));
-                if (i >= odoor8 && i <= odoor12)
-                    Props[i].ODoorId = (byte)(odoor8_air + (i - odoor8));
-                if (i >= odoor1_air && i <= odoor7_air)
-                    Props[i].ODoorId = (byte)(odoor1 + (i - odoor1_air));
-                if (i >= odoor8_air && i <= odoor12_air)
-                    Props[i].ODoorId = (byte)(odoor8 + (i - odoor8_air));
+                if (i >= oDoor_Log && i <= oDoor_Wood)
+                    Props[i].ODoorId = (byte)(oDoor_Log_air + (i - oDoor_Log));
+                if (i >= oDoor_Green && i <= oDoor_Water)
+                    Props[i].ODoorId = (byte)(oDoor_Green_air + (i - oDoor_Green));
+                if (i >= oDoor_Log_air && i <= oDoor_Wood_air)
+                    Props[i].ODoorId = (byte)(oDoor_Log + (i - oDoor_Log_air));
+                if (i >= oDoor_Green_air && i <= oDoor_Water_air)
+                    Props[i].ODoorId = (byte)(oDoor_Green + (i - oDoor_Green_air));
                 
-                if ((i >= red && i <= white) || (i >= lightpink && i <= turquoise))
+                if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise))
                     Props[i].LavaKills = true;
-                if (i == air || i == shrub || (i >= yellowflower && i <= redmushroom)) {
+                if (i == Air || i == Sapling || (i >= Dandelion && i <= RedMushroom)) {
                     Props[i].LavaKills = true;
                     Props[i].WaterKills = true;
                 }
                 
                 // Door blocks
-                if (i >= door_obsidian && i <= door_stair)
+                if (i >= Door_Obsidian && i <= Door_Slab)
                     Props[i].IsDoor = true;
-                if (i >= door_iron && i <= door_book)
+                if (i >= Door_Iron && i <= Door_Bookshelf)
                     Props[i].IsDoor = true;
-                if (i >= door_orange && i <= door_white)
+                if (i >= Door_Orange && i <= Door_White)
                     Props[i].IsDoor = true;
             }
             
             // Other door blocks, since they aren't in a consistent order
-            Props[door_tree].IsDoor = true;
-            Props[door_red].IsDoor = true;
-            Props[door_cobblestone].IsDoor = true;
-            Props[door_gold].IsDoor = true;
-            Props[air_door].IsDoor = true;
-            Props[air_switch].IsDoor = true;
-            Props[water_door].IsDoor = true;
-            Props[lava_door].IsDoor = true;
+            Props[Door_Log].IsDoor = true;
+            Props[Door_Red].IsDoor = true;
+            Props[Door_Cobblestone].IsDoor = true;
+            Props[Door_Gold].IsDoor = true;
+            Props[Door_Air].IsDoor = true;
+            Props[Door_Air2].IsDoor = true;
+            Props[Door_Water].IsDoor = true;
+            Props[Door_Lava].IsDoor = true;
             
             // Block specific properties
-            Props[wood].LavaKills = true; Props[trunk].LavaKills = true;
-            Props[sponge].LavaKills = true; Props[bookcase].LavaKills = true;
-            Props[leaf].LavaKills = true; Props[crate].LavaKills = true;
-            Props[red].IsRails = true; Props[op_air].IsRails = true;
-            Props[staircasestep].StackId = staircasefull;
-            Props[cobblestoneslab].StackId = stone;
+            Props[Wood].LavaKills = true; Props[Log].LavaKills = true;
+            Props[Sponge].LavaKills = true; Props[Bookshelf].LavaKills = true;
+            Props[Leaves].LavaKills = true; Props[Crate].LavaKills = true;
+            Props[Red].IsRails = true; Props[Op_Air].IsRails = true;
+            Props[Slab].StackId = DoubleSlab;
+            Props[CobblestoneSlab].StackId = Cobblestone;
             
             // Block specific physics properties
-            Props[Block.birdblack].AnimalAI = AnimalAI.Fly;
-            Props[Block.birdwhite].AnimalAI = AnimalAI.Fly;
-            Props[Block.birdlava].AnimalAI = AnimalAI.Fly;
-            Props[Block.birdwater].AnimalAI = AnimalAI.Fly;
+            Props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;
+            Props[Block.Bird_White].AnimalAI = AnimalAI.Fly;
+            Props[Block.Bird_Lava].AnimalAI = AnimalAI.Fly;
+            Props[Block.Bird_Water].AnimalAI = AnimalAI.Fly;
             
-            Props[Block.birdred].AnimalAI = AnimalAI.KillerAir;
-            Props[Block.birdblue].AnimalAI = AnimalAI.KillerAir;
-            Props[Block.birdkill].AnimalAI = AnimalAI.KillerAir;
+            Props[Block.Bird_Red].AnimalAI = AnimalAI.KillerAir;
+            Props[Block.Bird_Blue].AnimalAI = AnimalAI.KillerAir;
+            Props[Block.Bird_Killer].AnimalAI = AnimalAI.KillerAir;
 
-            Props[Block.fishbetta].AnimalAI = AnimalAI.KillerWater;
-            Props[Block.fishshark].AnimalAI = AnimalAI.KillerWater;
-            Props[Block.fishlavashark].AnimalAI = AnimalAI.KillerLava;
+            Props[Block.Fish_Betta].AnimalAI = AnimalAI.KillerWater;
+            Props[Block.Fish_Shark].AnimalAI = AnimalAI.KillerWater;
+            Props[Block.Fish_LavaShark].AnimalAI = AnimalAI.KillerLava;
             
-            Props[Block.fishgold].AnimalAI = AnimalAI.FleeWater;
-            Props[Block.fishsalmon].AnimalAI = AnimalAI.FleeWater;
-            Props[Block.fishsponge].AnimalAI = AnimalAI.FleeWater;
+            Props[Block.Fish_Gold].AnimalAI = AnimalAI.FleeWater;
+            Props[Block.Fish_Salmon].AnimalAI = AnimalAI.FleeWater;
+            Props[Block.Fish_Sponge].AnimalAI = AnimalAI.FleeWater;
             
             SetDefaultNames();
             SetDefaultDeaths();
@@ -174,76 +174,76 @@ namespace MCGalaxy {
         
         static void SetDefaultAliases() {
             // Add old MCGalaxy names
-            Aliases["purple"] = purple; Aliases["blueviolet"] = blue;
-            Aliases["adminium"] = blackrock; Aliases["bookcase"] = bookcase;
-            Aliases["plant"] = shrub; Aliases["mossy_cobblestone"] = stonevine;
-            Aliases["springgreen"] = aquagreen; Aliases["greenyellow"] = lightgreen;
-            Aliases["red_flower"] = redflower; Aliases["yellow_flower"] = yellowflower;
-            Aliases["stair"] = staircasestep; Aliases["double_stair"] = staircasefull;
+            Aliases["purple"] = Indigo; Aliases["blueviolet"] = Blue;
+            Aliases["adminium"] = Bedrock; Aliases["bookcase"] = Bookshelf;
+            Aliases["plant"] = Sapling; Aliases["mossy_cobblestone"] = MossyRocks;
+            Aliases["springgreen"] = Teal; Aliases["greenyellow"] = Lime;
+            Aliases["red_flower"] = Rose; Aliases["yellow_flower"] = Dandelion;
+            Aliases["stair"] = Slab; Aliases["double_stair"] = DoubleSlab;
             // Add other aliases
-            Aliases["planks"] = wood; Aliases["tree"] = trunk;
-            Aliases["stairs"] = staircasestep; Aliases["slab"] = staircasestep;
-            Aliases["doubleslab"] = staircasefull; Aliases["slabfull"] = staircasefull;
-            Aliases["solid"] = blackrock; Aliases["admintite"] = blackrock;
-            Aliases["blackrock"] = blackrock; Aliases["activewater"] = water;
-            Aliases["activelava"] = lava; Aliases["fhl"] = fastdeathlava;
-            Aliases["water_door"] = water_door; Aliases["lava_door"] = lava_door;
-            Aliases["acw"] = activedeathwater; Aliases["ahl"] = activedeathlava;
+            Aliases["planks"] = Wood; Aliases["tree"] = Log;
+            Aliases["stairs"] = Slab; Aliases["slab"] = Slab;
+            Aliases["doubleslab"] = DoubleSlab; Aliases["slabfull"] = DoubleSlab;
+            Aliases["solid"] = Bedrock; Aliases["admintite"] = Bedrock;
+            Aliases["blackrock"] = Bedrock; Aliases["activewater"] = Water;
+            Aliases["activelava"] = Lava; Aliases["fhl"] = Deadly_FastLava;
+            Aliases["water_door"] = Door_Water; Aliases["lava_door"] = Door_Lava;
+            Aliases["acw"] = Deadly_ActiveWater; Aliases["ahl"] = Deadly_ActiveLava;
             
-            Aliases["door_tree"] = door_tree; Aliases["door2"] = door_obsidian;
-            Aliases["door3"] = door_glass; Aliases["door4"] = door_stone;
-            Aliases["door5"] = door_leaves; Aliases["door6"] = door_sand;
-            Aliases["door7"] = door_wood; Aliases["door8"] = door_green;
-            Aliases["door9"] = door_tnt; Aliases["door10"] = door_stair;
-            Aliases["door11"] = door_iron; Aliases["door12"] = door_dirt;
-            Aliases["door13"] = door_grass; Aliases["door14"] = door_blue;
-            Aliases["door15"] = door_book; Aliases["door16"] = door_gold;
-            Aliases["door17"] = door_cobblestone; Aliases["door18"] = door_red;
+            Aliases["door_tree"] = Door_Log; Aliases["door2"] = Door_Obsidian;
+            Aliases["door3"] = Door_Glass; Aliases["door4"] = Door_Stone;
+            Aliases["door5"] = Door_Leaves; Aliases["door6"] = Door_Sand;
+            Aliases["door7"] = Door_Wood; Aliases["door8"] = Door_Green;
+            Aliases["door9"] = Door_TNT; Aliases["door10"] = Door_Slab;
+            Aliases["door11"] = Door_Iron; Aliases["door12"] = Door_Dirt;
+            Aliases["door13"] = Door_Grass; Aliases["door14"] = Door_Blue;
+            Aliases["door15"] = Door_Bookshelf; Aliases["door16"] = Door_Gold;
+            Aliases["door17"] = Door_Cobblestone; Aliases["door18"] = Door_Red;
             
-            Aliases["tdoor_tree"] = tdoor; Aliases["tdoor2"] = tdoor2;
-            Aliases["tdoor3"] = tdoor3; Aliases["tdoor4"] = tdoor4;
-            Aliases["tdoor5"] = tdoor5; Aliases["tdoor6"] = tdoor6;
-            Aliases["tdoor7"] = tdoor7; Aliases["tdoor8"] = tdoor8;
-            Aliases["tdoor9"] = tdoor9; Aliases["tdoor10"] = tdoor10;
-            Aliases["tair_switch"] = tdoor11; Aliases["tdoor11"] = tdoor11;
-            Aliases["tdoor12"] = tdoor12; Aliases["tdoor13"] = tdoor13;
+            Aliases["tdoor_tree"] = tDoor_Log; Aliases["tdoor2"] = tDoor_Obsidian;
+            Aliases["tdoor3"] = tDoor_Glass; Aliases["tdoor4"] = tDoor_Stone;
+            Aliases["tdoor5"] = tDoor_Leaves; Aliases["tdoor6"] = tDoor_Sand;
+            Aliases["tdoor7"] = tDoor_Wood; Aliases["tdoor8"] = tDoor_Green;
+            Aliases["tdoor9"] = tDoor_TNT; Aliases["tdoor10"] = tDoor_Slab;
+            Aliases["tair_switch"] = tDoor_Air; Aliases["tdoor11"] = tDoor_Air;
+            Aliases["tdoor12"] = tDoor_Water; Aliases["tdoor13"] = tDoor_Lava;
             
-            Aliases["odoor_tree"] = odoor1; Aliases["odoor2"] = odoor2;
-            Aliases["odoor3"] = odoor3; Aliases["odoor4"] = odoor4;
-            Aliases["odoor5"] = odoor5; Aliases["odoor6"] = odoor6;
-            Aliases["odoor7"] = odoor7; Aliases["odoor8"] = odoor8;
-            Aliases["odoor9"] = odoor9; Aliases["odoor10"] = odoor10;
-            Aliases["odoor11"] = odoor11; Aliases["odoor12"] = odoor12;
+            Aliases["odoor_tree"] = oDoor_Log; Aliases["odoor2"] = oDoor_Obsidian;
+            Aliases["odoor3"] = oDoor_Glass; Aliases["odoor4"] = oDoor_Stone;
+            Aliases["odoor5"] = oDoor_Leaves; Aliases["odoor6"] = oDoor_Sand;
+            Aliases["odoor7"] = oDoor_Wood; Aliases["odoor8"] = oDoor_Green;
+            Aliases["odoor9"] = oDoor_TNT; Aliases["odoor10"] = oDoor_Slab;
+            Aliases["odoor11"] = oDoor_Lava; Aliases["odoor12"] = oDoor_Water;
             
-            Aliases["steps"] = staircasestep; Aliases["double_steps"] = staircasefull;
-            Aliases["step"] = staircasestep; Aliases["double_step"] = staircasefull;
-            Aliases["grey"] = lightgrey; Aliases["door_darkgray"] = door_darkgrey;
-            Aliases["door_lightgray"] = door_lightgrey;
+            Aliases["steps"] = Slab; Aliases["double_steps"] = DoubleSlab;
+            Aliases["step"] = Slab; Aliases["double_step"] = DoubleSlab;
+            Aliases["grey"] = Gray; Aliases["door_darkgray"] = Door_Black;
+            Aliases["door_lightgray"] = Door_Gray;
         }
         
         static void SetDefaultDeaths() {
-            SetDeath(Block.tntexplosion, "@p %S&cblew into pieces.");
-            SetDeath(Block.deathair, "@p %Swalked into &cnerve gas and suffocated.");
-            SetDeath(Block.deathwater, "@p %Sstepped in &dcold water and froze.");
-            SetDeath(Block.activedeathwater, Props[Block.deathwater].DeathMessage);
-            SetDeath(Block.deathlava, "@p %Sstood in &cmagma and melted.");
-            SetDeath(Block.activedeathlava, Props[Block.deathlava].DeathMessage);
-            SetDeath(Block.fastdeathlava, Props[Block.deathlava].DeathMessage);
+            SetDeath(Block.TNT_Explosion, "@p %S&cblew into pieces.");
+            SetDeath(Block.Deadly_Air, "@p %Swalked into &cnerve gas and suffocated.");
+            SetDeath(Block.Deadly_Water, "@p %Sstepped in &dcold water and froze.");
+            SetDeath(Block.Deadly_ActiveWater, Props[Block.Deadly_Water].DeathMessage);
+            SetDeath(Block.Deadly_Lava, "@p %Sstood in &cmagma and melted.");
+            SetDeath(Block.Deadly_ActiveLava, Props[Block.Deadly_Lava].DeathMessage);
+            SetDeath(Block.Deadly_FastLava, Props[Block.Deadly_Lava].DeathMessage);
             
-            SetDeath(Block.magma, "@p %Swas hit by &cflowing magma and melted.");
-            SetDeath(Block.geyser, "@p %Swas hit by &cboiling water and melted.");
-            SetDeath(Block.birdkill, "@p %Swas hit by a &cphoenix and burnt.");
-            SetDeath(Block.train, "@p %Swas hit by a &ctrain.");
-            SetDeath(Block.fishshark, "@p %Swas eaten by a &cshark.");
-            SetDeath(Block.lava_fire, "@p %Sburnt to a &ccrisp.");
-            SetDeath(Block.rockethead, "@p %Swas &cin a fiery explosion.");
-            SetDeath(Block.zombiebody, "@p %Sdied due to lack of &5brain.");
-            SetDeath(Block.creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");
-            SetDeath(Block.fishlavashark, "@p %Swas eaten by a ... LAVA SHARK?!");
-            SetDeath(Block.snake, "@p %Swas bit by a deadly snake.");
+            SetDeath(Block.Magma, "@p %Swas hit by &cflowing magma and melted.");
+            SetDeath(Block.Geyser, "@p %Swas hit by &cboiling water and melted.");
+            SetDeath(Block.Bird_Killer, "@p %Swas hit by a &cphoenix and burnt.");
+            SetDeath(Block.Train, "@p %Swas hit by a &ctrain.");
+            SetDeath(Block.Fish_Shark, "@p %Swas eaten by a &cshark.");
+            SetDeath(Block.LavaFire, "@p %Sburnt to a &ccrisp.");
+            SetDeath(Block.RocketHead, "@p %Swas &cin a fiery explosion.");
+            SetDeath(Block.ZombieBody, "@p %Sdied due to lack of &5brain.");
+            SetDeath(Block.Creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");
+            SetDeath(Block.Fish_LavaShark, "@p %Swas eaten by a ... LAVA SHARK?!");
+            SetDeath(Block.Snake, "@p %Swas bit by a deadly snake.");
             
-            SetDeath(Block.air, "@p %Shit the floor &chard.", false);
-            SetDeath(Block.water, "@p %S&cdrowned.", false);
+            SetDeath(Block.Air, "@p %Shit the floor &chard.", false);
+            SetDeath(Block.Water, "@p %S&cdrowned.", false);
             SetDeath(Block.Invalid, "@p %Swas &cterminated.", false);
         }
         

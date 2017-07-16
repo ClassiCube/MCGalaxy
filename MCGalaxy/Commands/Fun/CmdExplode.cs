@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             ExtBlock old = lvl.GetBlock(x, y, z);
-            if (!lvl.CheckAffectPermissions(p, x, y, z, old, (ExtBlock)Block.tnt)) return false;
+            if (!lvl.CheckAffectPermissions(p, x, y, z, old, (ExtBlock)Block.TNT)) return false;
             lvl.MakeExplosion(x, y, z, 1);
             return true;
         }

@@ -142,14 +142,14 @@ namespace MCGalaxy.Levels.IO {
             for (int i = 0; i < blocks.Length; i++) {
                 if (blocks[i] >= 50) blocks[i] = 0;
                 switch (blocks[i]) {
-                    case Block.waterstill:
-                        blocks[i] = Block.water; break;
-                    case Block.water:
-                        blocks[i] = Block.waterstill; break;
-                    case Block.lava:
-                        blocks[i] = Block.lavastill; break;
-                    case Block.lavastill:
-                        blocks[i] = Block.lava; break;
+                    case Block.StillWater:
+                        blocks[i] = Block.Water; break;
+                    case Block.Water:
+                        blocks[i] = Block.StillWater; break;
+                    case Block.Lava:
+                        blocks[i] = Block.StillLava; break;
+                    case Block.StillLava:
+                        blocks[i] = Block.Lava; break;
                 }
             }
             lvl.blocks = blocks;

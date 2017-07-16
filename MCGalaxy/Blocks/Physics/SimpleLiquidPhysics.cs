@@ -120,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
                 if (!C.data.HasWait) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
@@ -141,7 +141,7 @@ namespace MCGalaxy.Blocks.Physics {
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
             }
             if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
@@ -154,16 +154,16 @@ namespace MCGalaxy.Blocks.Physics {
                 return true;
 
             switch (block.BlockID) {
-                case Block.air:
-                case Block.lava:
-                case Block.lava_fast:
-                case Block.activedeathlava:
+                case Block.Air:
+                case Block.Lava:
+                case Block.FastLava:
+                case Block.Deadly_ActiveLava:
                     if (!lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
 
-                case Block.sand:
-                case Block.gravel:
-                case Block.wood_float:
+                case Block.Sand:
+                case Block.Gravel:
+                case Block.FloatWood:
                     return false;
                     
                 default:
@@ -232,7 +232,7 @@ namespace MCGalaxy.Blocks.Physics {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
                 if (!checkWait || !C.data.HasWait) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
@@ -251,7 +251,7 @@ namespace MCGalaxy.Blocks.Physics {
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
             }
             
             if (!checkWait || !C.data.HasWait) {
@@ -267,16 +267,16 @@ namespace MCGalaxy.Blocks.Physics {
                 return true;
             
             switch (block.BlockID) {
-                case Block.air:
+                case Block.Air:
                     return false;
 
-                case Block.water:
-                case Block.activedeathwater:
+                case Block.Water:
+                case Block.Deadly_ActiveWater:
                     if (!lvl.CheckSpongeLava(x, y, z)) return false;
                     break;
 
-                case Block.sand:
-                case Block.gravel:
+                case Block.Sand:
+                case Block.Gravel:
                     return false;
 
                 default:
@@ -291,9 +291,9 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void CheckFallingBlocks(Level lvl, int b) {
             switch (lvl.blocks[b]) {
-                case Block.sand:
-                case Block.gravel:
-                case Block.wood_float:
+                case Block.Sand:
+                case Block.Gravel:
+                case Block.FloatWood:
                     lvl.AddCheck(b); break;
                 default:
                     break;

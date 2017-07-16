@@ -95,11 +95,11 @@ namespace MCGalaxy {
         [ConfigInt("weather-fade", "Env", 128, short.MinValue, short.MaxValue)]
         public int WeatherFade = 128;
         /// <summary> The block which will be displayed on the horizon. </summary>
-        [ConfigByte("HorizonBlock", "Env", Block.water)]
-        public byte HorizonBlock = Block.water;
+        [ConfigByte("HorizonBlock", "Env", Block.Water)]
+        public byte HorizonBlock = Block.Water;
         /// <summary> The block which will be displayed on the edge of the map. </summary>
-        [ConfigByte("EdgeBlock", "Env", Block.blackrock)]
-        public byte EdgeBlock = Block.blackrock;
+        [ConfigByte("EdgeBlock", "Env", Block.Bedrock)]
+        public byte EdgeBlock = Block.Bedrock;
          /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBool("ExpFog", "Env", false)]
         public bool ExpFog;

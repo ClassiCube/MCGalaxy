@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static bool Train(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.train);
+            if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.Train);
             return true;
         }       
         

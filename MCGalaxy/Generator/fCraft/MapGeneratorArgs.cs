@@ -60,59 +60,59 @@ namespace MCGalaxy.Generator {
         public void ApplyTheme( fCraftMapGenerator gen ) {
             switch( Theme ) {
                 case MapGenTheme.Arctic:
-                    gen.bWaterSurface = Block.glass;
-                    gen.bDeepWaterSurface = Block.waterstill;
-                    gen.bGroundSurface = Block.white;
-                    gen.bWater = Block.waterstill;
-                    gen.bGround = Block.white;
-                    gen.bSeaFloor = Block.white;
-                    gen.bBedrock = Block.rock;
-                    gen.bCliff = Block.rock;
+                    gen.bWaterSurface = Block.Glass;
+                    gen.bDeepWaterSurface = Block.StillWater;
+                    gen.bGroundSurface = Block.White;
+                    gen.bWater = Block.StillWater;
+                    gen.bGround = Block.White;
+                    gen.bSeaFloor = Block.White;
+                    gen.bBedrock = Block.Stone;
+                    gen.bCliff = Block.Stone;
                     gen.groundThickness = 1;
                     break;
                     
                 case MapGenTheme.Desert:
-                    gen.bWaterSurface = Block.waterstill;
-                    gen.bDeepWaterSurface = Block.waterstill;
-                    gen.bGroundSurface = Block.sand;
-                    gen.bWater = Block.waterstill;
-                    gen.bGround = Block.sand;
-                    gen.bSeaFloor = Block.sand;
-                    gen.bBedrock = Block.rock;
-                    gen.bCliff = Block.gravel;
+                    gen.bWaterSurface = Block.StillWater;
+                    gen.bDeepWaterSurface = Block.StillWater;
+                    gen.bGroundSurface = Block.Sand;
+                    gen.bWater = Block.StillWater;
+                    gen.bGround = Block.Sand;
+                    gen.bSeaFloor = Block.Sand;
+                    gen.bBedrock = Block.Stone;
+                    gen.bCliff = Block.Gravel;
                     break;
                     
                 case MapGenTheme.Hell:
-                    gen.bWaterSurface = Block.lavastill;
-                    gen.bDeepWaterSurface = Block.lavastill;
-                    gen.bGroundSurface = Block.obsidian;
-                    gen.bWater = Block.lavastill;
-                    gen.bGround = Block.rock;
-                    gen.bSeaFloor = Block.obsidian;
-                    gen.bBedrock = Block.rock;
-                    gen.bCliff = Block.rock;
+                    gen.bWaterSurface = Block.StillLava;
+                    gen.bDeepWaterSurface = Block.StillLava;
+                    gen.bGroundSurface = Block.Obsidian;
+                    gen.bWater = Block.StillLava;
+                    gen.bGround = Block.Stone;
+                    gen.bSeaFloor = Block.Obsidian;
+                    gen.bBedrock = Block.Stone;
+                    gen.bCliff = Block.Stone;
                     break;
                     
                 case MapGenTheme.Forest:
-                    gen.bWaterSurface = Block.waterstill;
-                    gen.bDeepWaterSurface = Block.waterstill;
-                    gen.bGroundSurface = Block.grass;
-                    gen.bWater = Block.waterstill;
-                    gen.bGround = Block.dirt;
-                    gen.bSeaFloor = Block.sand;
-                    gen.bBedrock = Block.rock;
-                    gen.bCliff = Block.rock;
+                    gen.bWaterSurface = Block.StillWater;
+                    gen.bDeepWaterSurface = Block.StillWater;
+                    gen.bGroundSurface = Block.Grass;
+                    gen.bWater = Block.StillWater;
+                    gen.bGround = Block.Dirt;
+                    gen.bSeaFloor = Block.Sand;
+                    gen.bBedrock = Block.Stone;
+                    gen.bCliff = Block.Stone;
                     break;
                     
                 case MapGenTheme.Swamp:
-                    gen.bWaterSurface = Block.waterstill;
-                    gen.bDeepWaterSurface = Block.waterstill;
-                    gen.bGroundSurface = Block.dirt;
-                    gen.bWater = Block.waterstill;
-                    gen.bGround = Block.dirt;
-                    gen.bSeaFloor = Block.leaf;
-                    gen.bBedrock = Block.rock;
-                    gen.bCliff = Block.rock;
+                    gen.bWaterSurface = Block.StillWater;
+                    gen.bDeepWaterSurface = Block.StillWater;
+                    gen.bGroundSurface = Block.Dirt;
+                    gen.bWater = Block.StillWater;
+                    gen.bGround = Block.Dirt;
+                    gen.bSeaFloor = Block.Leaves;
+                    gen.bBedrock = Block.Stone;
+                    gen.bCliff = Block.Stone;
                     break;
             }
         }

@@ -111,8 +111,8 @@ namespace MCGalaxy.Drawing.Ops {
             if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
             byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
-            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.water
-                || Block.Convert(lvlBlock) == Block.lava || lvlBlock == Block.grass) {
+            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.Water
+                || Block.Convert(lvlBlock) == Block.Lava || lvlBlock == Block.Grass) {
                 
                 DrawOpBlock block;
                 block.X = P.X; block.Y = P.Y; block.Z = P.Z;

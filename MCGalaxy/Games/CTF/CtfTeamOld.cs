@@ -126,11 +126,11 @@ namespace MCGalaxy.Games
 
                 tfb.type = mapOn.GetBlock(x, y, z);
 
-                if (mapOn.GetBlock(x, y, z) != (ExtBlock)Block.flagbase) { 
-                    mapOn.Blockchange(x, y, z, (ExtBlock)Block.flagbase); 
+                if (mapOn.GetBlock(x, y, z) != (ExtBlock)Block.FlagBase) { 
+                    mapOn.Blockchange(x, y, z, (ExtBlock)Block.FlagBase); 
                 }
-                if (mapOn.GetBlock(x, (ushort)(y + 1), z) != (ExtBlock)Block.mushroom) {
-                    mapOn.Blockchange(x, (ushort)(y + 1), z, (ExtBlock)Block.mushroom); 
+                if (mapOn.GetBlock(x, (ushort)(y + 1), z) != (ExtBlock)Block.Mushroom) {
+                    mapOn.Blockchange(x, (ushort)(y + 1), z, (ExtBlock)Block.Mushroom); 
                 }
                 if (mapOn.GetBlock(x, (ushort)(y + 2), z) != (ExtBlock)GetColorBlock(color)) {
                     mapOn.Blockchange(x, (ushort)(y + 2), z, (ExtBlock)GetColorBlock(color)); 
@@ -166,21 +166,21 @@ namespace MCGalaxy.Games
         public static byte GetColorBlock(char color)
         {
             if (color == '2')
-                return Block.green;
+                return Block.Green;
             if (color == '5')
-                return Block.purple;
+                return Block.Indigo;
             if (color == '8')
-                return Block.darkgrey;
+                return Block.Black;
             if (color == '9')
-                return Block.blue;
+                return Block.Blue;
             if (color == 'c')
-                return Block.red;
+                return Block.Red;
             if (color == 'e')
-                return Block.yellow;
+                return Block.Yellow;
             if (color == 'f')
-                return Block.white;
+                return Block.White;
             else
-                return Block.air;
+                return Block.Air;
         }
 
         public struct CatchPos { public ushort x, y, z; public ExtBlock type; }

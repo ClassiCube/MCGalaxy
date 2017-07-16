@@ -90,7 +90,7 @@ namespace MCGalaxy.Generator {
                     for (int x = 0; x < bmp.Width; x++)
                 {
                     int height = bmp.GetPixel(x, z).R;     
-                    byte layer = Block.dirt, top = Block.grass;
+                    byte layer = Block.Dirt, top = Block.Grass;
                     
                     if (
                         IsShorterBy(height, bmp, x - 1, z) ||
@@ -98,7 +98,7 @@ namespace MCGalaxy.Generator {
                         IsShorterBy(height, bmp, x, z - 1) ||
                         IsShorterBy(height, bmp, x, z + 1)) 
                     {
-                        layer = Block.rock; top = Block.rock;
+                        layer = Block.Stone; top = Block.Stone;
                     }
                     
                     height = height * lvl.Height / 255;

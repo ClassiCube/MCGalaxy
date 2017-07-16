@@ -55,85 +55,85 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Gets the default height of a block. A value of 16 is full height. </summary>
         public static byte Height(byte b) {
-            if (b == Block.staircasestep) return 8;
-            if (b == Block.cobblestoneslab) return 8;
-            if (b == Block.snow) return 2;
+            if (b == Block.Slab) return 8;
+            if (b == Block.CobblestoneSlab) return 8;
+            if (b == Block.Snow) return 2;
             return 16;
         }
         
         /// <summary> Gets whether a block is full bright / light emitting by default. </summary>
         public static bool FullBright(byte b) {
-            return b == Block.lava || b == Block.lavastill
-                || b == Block.magmablock || b == Block.fire;
+            return b == Block.Lava || b == Block.StillLava
+                || b == Block.MagmaBlock || b == Block.Fire;
         }
         
         /// <summary> Gets the default fog density of a block, in packed form. </summary>
         public static byte FogDensity(byte b) {
-            if (b == Block.water || b == Block.waterstill)
+            if (b == Block.Water || b == Block.StillWater)
                 return 11; // (128 * 0.1f - 1);
-            if (b == Block.lava || b == Block.lavastill)
+            if (b == Block.Lava || b == Block.StillLava)
                 return 255; // (128 * 2 - 1);
             return 0;
         }
         
         /// <summary> Gets the default fog colour of a block. </summary>
         public static CustomColor FogColor(byte b) {
-            if (b == Block.water || b == Block.waterstill)
+            if (b == Block.Water || b == Block.StillWater)
                 return new CustomColor(5, 5, 51);
-            if (b == Block.lava || b == Block.lavastill)
+            if (b == Block.Lava || b == Block.StillLava)
                 return new CustomColor(153, 25, 0);
             return default(CustomColor);
         }
         
         /// <summary> Gets the default collide type of a block, see CollideType class. </summary>
         public static byte Collide(byte b) {
-            if (b >= Block.water && b <= Block.lavastill)
+            if (b >= Block.Water && b <= Block.StillLava)
                 return CollideType.SwimThrough;
-            if (b == Block.snow || b == Block.air || Draw(b) == DrawType.Sprite)
+            if (b == Block.Snow || b == Block.Air || Draw(b) == DrawType.Sprite)
                 return CollideType.WalkThrough;
             return CollideType.Solid;
         }
         
         /// <summary> Gets whether a block blocks light (prevents light passing through) by default. </summary>
         public static bool BlocksLight(byte b) {
-            return !(b == Block.glass || b == Block.leaf
-                     || b == Block.air || Draw(b) == DrawType.Sprite);
+            return !(b == Block.Glass || b == Block.Leaves
+                     || b == Block.Air || Draw(b) == DrawType.Sprite);
         }
         
 
         /// <summary> Gets the default step sound of a block. </summary>
         public static SoundType StepSound(byte b) {
-            if (b == Block.glass) return SoundType.Stone;
-            if (b == Block.rope) return SoundType.Cloth;
+            if (b == Block.Glass) return SoundType.Stone;
+            if (b == Block.Rope) return SoundType.Cloth;
             if (Draw(b) == DrawType.Sprite) return SoundType.None;
             
-            if (b >= Block.red && b <= Block.white)
+            if (b >= Block.Red && b <= Block.White)
                 return SoundType.Cloth;
-            if (b >= Block.lightpink && b <= Block.turquoise)
+            if (b >= Block.LightPink && b <= Block.turquoise)
                 return SoundType.Cloth;
-            if (b == Block.iron || b == Block.goldsolid)
+            if (b == Block.Iron || b == Block.Gold)
                 return SoundType.Metal;
             
-            if (b == Block.bookcase || b == Block.wood
-                || b == Block.trunk || b == Block.crate || b == Block.fire)
+            if (b == Block.Bookshelf || b == Block.Wood
+                || b == Block.Log || b == Block.Crate || b == Block.Fire)
                 return SoundType.Wood;
             
-            if (b == Block.rope) return SoundType.Cloth;
-            if (b == Block.sand) return SoundType.Sand;
-            if (b == Block.snow) return SoundType.Snow;
-            if (b == Block.glass) return SoundType.Glass;
-            if (b == Block.dirt || b == Block.gravel)
+            if (b == Block.Rope) return SoundType.Cloth;
+            if (b == Block.Sand) return SoundType.Sand;
+            if (b == Block.Snow) return SoundType.Snow;
+            if (b == Block.Glass) return SoundType.Glass;
+            if (b == Block.Dirt || b == Block.Gravel)
                 return SoundType.Gravel;
             
-            if (b == Block.grass || b == Block.shrub || b == Block.tnt
-                || b == Block.leaf || b == Block.sponge)
+            if (b == Block.Grass || b == Block.Sapling || b == Block.TNT
+                || b == Block.Leaves || b == Block.Sponge)
                 return SoundType.Grass;
             
-            if (b >= Block.yellowflower && b <= Block.redmushroom)
+            if (b >= Block.Dandelion && b <= Block.RedMushroom)
                 return SoundType.Grass;
-            if (b >= Block.water && b <= Block.lavastill)
+            if (b >= Block.Water && b <= Block.StillLava)
                 return SoundType.None;
-            if (b >= Block.rock && b <= Block.stonebrick)
+            if (b >= Block.Stone && b <= Block.StoneBrick)
                 return SoundType.Stone;
             return SoundType.None;
         }
@@ -141,17 +141,17 @@ namespace MCGalaxy.Blocks {
 
         /// <summary> Gets the default draw type of a block, see Draw class. </summary>        
         public static byte Draw(byte b) {
-            if (b == Block.air || b == Block.Invalid) return DrawType.Gas;
-            if (b == Block.leaf) return DrawType.TransparentThick;
+            if (b == Block.Air || b == Block.Invalid) return DrawType.Gas;
+            if (b == Block.Leaves) return DrawType.TransparentThick;
 
-            if (b == Block.ice || b == Block.water || b == Block.waterstill)
+            if (b == Block.Ice || b == Block.Water || b == Block.StillWater)
                 return DrawType.Translucent;
-            if (b == Block.glass || b == Block.leaf)
+            if (b == Block.Glass || b == Block.Leaves)
                 return DrawType.Transparent;
             
-            if (b >= Block.yellowflower && b <= Block.redmushroom)
+            if (b >= Block.Dandelion && b <= Block.RedMushroom)
                 return DrawType.Sprite;
-            if (b == Block.shrub || b == Block.rope || b == Block.fire)
+            if (b == Block.Sapling || b == Block.Rope || b == Block.Fire)
                 return DrawType.Sprite;
             return DrawType.Opaque;
         }

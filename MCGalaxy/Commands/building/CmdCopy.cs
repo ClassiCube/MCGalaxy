@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.Building {
                 block = p.level.GetBlock(xx, yy, zz);
                 if (!p.group.Blocks[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
-                if (block.BlockID != Block.air || cState.PasteAir) 
+                if (block.BlockID != Block.Air || cState.PasteAir) 
                     cState.UsedBlocks++;
                 cState.Set(block, index);
                 index++;

@@ -24,17 +24,17 @@ namespace MCGalaxy.Blocks.Physics {
     public static class TntPhysics {
         
         static void ToggleFuse(Level lvl, ushort x, ushort y, ushort z) {
-            if (lvl.GetTile(x, y, z) == Block.lavastill) {
+            if (lvl.GetTile(x, y, z) == Block.StillLava) {
                 lvl.Blockchange(x, y, z, ExtBlock.Air);
             } else {
-                lvl.Blockchange(x, y, z, (ExtBlock)Block.lavastill);
+                lvl.Blockchange(x, y, z, (ExtBlock)Block.StillLava);
             }
         }
         
         public static void DoTntExplosion(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;
             if (rand.Next(1, 11) <= 7)
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
         }
         
         public static void DoLargeTnt(Level lvl, ref Check C, int power) {
@@ -125,7 +125,7 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             ExtBlock block = lvl.GetBlock(x, y, z, out index);
             if (index >= 0 && !lvl.BlockProps[block.Index].OPBlock)
-                lvl.AddUpdate(index, Block.tntexplosion, true);
+                lvl.AddUpdate(index, Block.TNT_Explosion, true);
 
             Explode(lvl, x, y, z, size + 1, rand, -1, game);
             Explode(lvl, x, y, z, size + 2, rand, 7, game);
@@ -143,26 +143,26 @@ namespace MCGalaxy.Blocks.Physics {
                 byte b = lvl.blocks[index];
                 
                 bool doDestroy = prob < 0 || rand.Next(1, 10) < prob;
-                if (doDestroy && Block.Convert(b) != Block.tnt) {
-                    if (game != null && b != Block.air) {
+                if (doDestroy && Block.Convert(b) != Block.TNT) {
+                    if (game != null && b != Block.Air) {
                         if (game.InZone((ushort)xx, (ushort)yy, (ushort)zz, false))
                             continue;
                     }
                     
                     int mode = rand.Next(1, 11);
                     if (mode <= 4) {
-                        lvl.AddUpdate(index, Block.tntexplosion);
+                        lvl.AddUpdate(index, Block.TNT_Explosion);
                     } else if (mode <= 8) {
-                        lvl.AddUpdate(index, Block.air);
+                        lvl.AddUpdate(index, Block.Air);
                     } else {
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
                         lvl.AddCheck(index, false, args);
                     }
-                } else if (b == Block.tnt) {
-                    lvl.AddUpdate(index, Block.smalltnt);
-                } else if (b == Block.smalltnt || b == Block.bigtnt || b == Block.nuketnt) {
+                } else if (b == Block.TNT) {
+                    lvl.AddUpdate(index, Block.TNT_Small);
+                } else if (b == Block.TNT_Small || b == Block.TNT_Big || b == Block.TNT_Nuke) {
                     lvl.AddCheck(index);
                 }
             }

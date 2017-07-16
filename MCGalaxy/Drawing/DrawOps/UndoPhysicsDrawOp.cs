@@ -60,7 +60,7 @@ namespace MCGalaxy.Drawing.Ops {
             if (time < Start) return false;
             
             byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRaw;
-            if (b == newType || Block.Convert(b) == Block.water || Block.Convert(b) == Block.lava) {
+            if (b == newType || Block.Convert(b) == Block.Water || Block.Convert(b) == Block.Lava) {
                 ushort x, y, z;
                 lvl.IntToPos(undo.index, out x, out y, out z);
                 int undoIndex = lvl.currentUndo;

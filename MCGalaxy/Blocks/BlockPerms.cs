@@ -215,75 +215,75 @@ namespace MCGalaxy.Blocks {
         static LevelPermission DefaultPerm(int i) {
             switch (i)
             {
-                case Block.blackrock:
-                case Block.air_flood:
-                case Block.air_flood_down:
-                case Block.air_flood_layer:
-                case Block.air_flood_up:
+                case Block.Bedrock:
+                case Block.Air_Flood:
+                case Block.Air_FloodDown:
+                case Block.Air_FloodLayer:
+                case Block.Air_FloodUp:
 
-                case Block.bigtnt:
-                case Block.nuketnt:
-                case Block.rocketstart:
-                case Block.rockethead:
+                case Block.TNT_Big:
+                case Block.TNT_Nuke:
+                case Block.RocketStart:
+                case Block.RocketHead:
 
-                case Block.creeper:
-                case Block.zombiebody:
-                case Block.zombiehead:
+                case Block.Creeper:
+                case Block.ZombieBody:
+                case Block.ZombieHead:
 
-                case Block.birdred:
-                case Block.birdkill:
-                case Block.birdblue:
+                case Block.Bird_Red:
+                case Block.Bird_Killer:
+                case Block.Bird_Blue:
 
-                case Block.fishgold:
-                case Block.fishsponge:
-                case Block.fishshark:
-                case Block.fishsalmon:
-                case Block.fishbetta:
-                case Block.fishlavashark:
+                case Block.Fish_Gold:
+                case Block.Fish_Sponge:
+                case Block.Fish_Shark:
+                case Block.Fish_Salmon:
+                case Block.Fish_Betta:
+                case Block.Fish_LavaShark:
 
-                case Block.snake:
-                case Block.snaketail:
-                case Block.flagbase:
+                case Block.Snake:
+                case Block.SnakeTail:
+                case Block.FlagBase:
                     return LevelPermission.Operator;
 
-                case Block.wood_float:
-                case Block.lava_sponge:
-                case Block.door_tree_air:
-                case Block.door_green_air:
-                case Block.door_tnt_air:
+                case Block.FloatWood:
+                case Block.LavaSponge:
+                case Block.Door_Log_air:
+                case Block.Door_Green_air:
+                case Block.Door_TNT_air:
 
-                case Block.water:
-                case Block.lava:
-                case Block.lava_fast:
+                case Block.Water:
+                case Block.Lava:
+                case Block.FastLava:
                 case Block.WaterDown:
                 case Block.LavaDown:
                 case Block.WaterFaucet:
                 case Block.LavaFaucet:
-                case Block.finiteWater:
-                case Block.finiteLava:
-                case Block.finiteFaucet:
-                case Block.magma:
-                case Block.geyser:
-                case Block.deathlava:
-                case Block.deathwater:
-                case Block.deathair:
-                case Block.activedeathwater:
-                case Block.activedeathlava:
-                case Block.fastdeathlava:
-                case Block.lava_fire:
+                case Block.FiniteWater:
+                case Block.FiniteLava:
+                case Block.FiniteFaucet:
+                case Block.Magma:
+                case Block.Geyser:
+                case Block.Deadly_Lava:
+                case Block.Deadly_Water:
+                case Block.Deadly_Air:
+                case Block.Deadly_ActiveWater:
+                case Block.Deadly_ActiveLava:
+                case Block.Deadly_FastLava:
+                case Block.LavaFire:
 
-                case Block.c4:
-                case Block.c4det:
-                case Block.smalltnt:
-                case Block.tntexplosion:
-                case Block.firework:
-                case Block.checkpoint:
-                case Block.train:
+                case Block.C4:
+                case Block.C4Detonator:
+                case Block.TNT_Small:
+                case Block.TNT_Explosion:
+                case Block.Fireworks:
+                case Block.Checkpoint:
+                case Block.Train:
 
-                case Block.birdwhite:
-                case Block.birdblack:
-                case Block.birdwater:
-                case Block.birdlava:
+                case Block.Bird_White:
+                case Block.Bird_Black:
+                case Block.Bird_Water:
+                case Block.Bird_Lava:
                     return LevelPermission.AdvBuilder;
             }
             return LevelPermission.Banned;

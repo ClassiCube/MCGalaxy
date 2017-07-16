@@ -89,7 +89,7 @@ namespace MCGalaxy {
             OnBlockChangeEvent.Call(this, x, y, z, block);
             if (cancelBlock) { cancelBlock = false; return; }
 
-            if (old.BlockID >= Block.air_flood && old.BlockID <= Block.air_door_air) {
+            if (old.BlockID >= Block.Air_Flood && old.BlockID <= Block.Door_Air_air) {
                 SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
@@ -181,11 +181,11 @@ namespace MCGalaxy {
             if (!autoGrass) return type;
             
             byte below = level.GetTile(x, (ushort)(y - 1), z);
-            if (below == Block.dirt && block.BlockID == Block.air) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.grass);
+            if (below == Block.Dirt && block.BlockID == Block.Air) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.Grass);
             }
-            if (below == Block.grass && !level.LightPasses(block)) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.dirt);
+            if (below == Block.Grass && !level.LightPasses(block)) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.Dirt);
             }
             return type;
         }
@@ -193,7 +193,7 @@ namespace MCGalaxy {
         
         static bool Replacable(byte block) {
             block = Block.Convert(block);
-            return block == Block.air || (block >= Block.water && block <= Block.lavastill);
+            return block == Block.Air || (block >= Block.Water && block <= Block.StillLava);
         }
         
         internal byte[] ProcessReceived(byte[] buffer) {
@@ -283,7 +283,7 @@ namespace MCGalaxy {
                 ExtBlock held = ExtBlock.FromRaw(packet[8]);
                 RawHeldBlock = held;
                 
-                if ((action == 0 || held.BlockID == Block.air) && !level.Config.Deletable) {
+                if ((action == 0 || held.BlockID == Block.Air) && !level.Config.Deletable) {
                     SendMessage("Deleting blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Config.Buildable) {
@@ -380,11 +380,11 @@ namespace MCGalaxy {
                 Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
             }
             
-            if (block.BlockID == Block.rockethead) level.MakeExplosion(x, y, z, 0);
-            if (block.BlockID == Block.creeper) level.MakeExplosion(x, y, z, 1);
-            if (block.BlockID == Block.rock || block.BlockID == Block.stone) {
+            if (block.BlockID == Block.RocketHead) level.MakeExplosion(x, y, z, 0);
+            if (block.BlockID == Block.Creeper) level.MakeExplosion(x, y, z, 1);
+            if (block.BlockID == Block.Stone || block.BlockID == Block.Cobblestone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
-                if (block.BlockID == Block.rock) {
+                if (block.BlockID == Block.Stone) {
                     Chat.MessageGlobal(this, ColoredName + "%S" + customMessage, false);
                 } else {
                     Chat.MessageLevel(this, ColoredName + "%S" + customMessage, false, level);

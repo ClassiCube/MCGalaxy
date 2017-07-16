@@ -66,7 +66,7 @@ namespace MCGalaxy.Generator.Foliage {
                 new Vec3S32(x + dx + R, y + branchMax + R, z + dz + R) };
             
             DrawOp op = new EllipsoidDrawOp();
-            Brush brush = new RandomBrush(new ExtBlock[] { new ExtBlock(Block.leaf, 0) });
+            Brush brush = new RandomBrush(new ExtBlock[] { new ExtBlock(Block.Leaves, 0) });
             op.SetMarks(marks);
             op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, b.Block.BlockID));
             
@@ -79,7 +79,7 @@ namespace MCGalaxy.Generator.Foliage {
             LineDrawOp.DrawLine(p1.X, p1.Y, p1.Z, 10000, p2.X, p2.Y, p2.Z, branch);
             
             foreach (Vec3S32 P in branch) {
-                output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.trunk);
+                output((ushort)P.X, (ushort)P.Y, (ushort)P.Z, Block.Log);
             }
             branch.Clear();
         }

@@ -46,72 +46,72 @@ namespace MCGalaxy.Games {
         
         static void MakeBoundaries(Level lvl) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Cuboid(0, maxY, 0, maxX, maxY, maxZ, Block.glass, lvl);
-            Cuboid(0, 0, 0, maxX, 0, maxZ, Block.rock, lvl);
-            Cuboid(0, 1, 0, maxX, 1, maxZ, Block.magma, lvl);
+            Cuboid(0, maxY, 0, maxX, maxY, maxZ, Block.Glass, lvl);
+            Cuboid(0, 0, 0, maxX, 0, maxZ, Block.Stone, lvl);
+            Cuboid(0, 1, 0, maxX, 1, maxZ, Block.Magma, lvl);
             
-            Cuboid(0, 0, 0, maxX, maxY, 0, Block.rock, lvl);
-            Cuboid(0, 0, maxZ, maxX, maxY, maxZ, Block.rock, lvl);
-            Cuboid(0, 0, 0, 0, maxY, maxZ, Block.rock, lvl);
-            Cuboid(maxX, 0, 0, maxX, maxY, maxZ, Block.rock, lvl);
+            Cuboid(0, 0, 0, maxX, maxY, 0, Block.Stone, lvl);
+            Cuboid(0, 0, maxZ, maxX, maxY, maxZ, Block.Stone, lvl);
+            Cuboid(0, 0, 0, 0, maxY, maxZ, Block.Stone, lvl);
+            Cuboid(maxX, 0, 0, maxX, maxY, maxZ, Block.Stone, lvl);
         }
         
         static void MakeViewAreaRoof(Level lvl) {
             int maxX = lvl.Width - 1, midY = lvl.Height / 2, maxZ = lvl.Length - 1;
-            Cuboid(1, midY, 1, maxX - 1, midY, maxZ - 1, Block.glass, lvl);
-            Cuboid(1, midY, 0, 3, midY, maxZ, Block.rock, lvl);
-            Cuboid(maxX - 3, midY, 1, maxX - 1, midY, maxZ, Block.rock, lvl);
-            Cuboid(0, midY, 1, maxX, midY, 3, Block.rock, lvl);
-            Cuboid(0, midY, maxZ - 3, maxX, midY, maxZ - 1, Block.rock, lvl);
+            Cuboid(1, midY, 1, maxX - 1, midY, maxZ - 1, Block.Glass, lvl);
+            Cuboid(1, midY, 0, 3, midY, maxZ, Block.Stone, lvl);
+            Cuboid(maxX - 3, midY, 1, maxX - 1, midY, maxZ, Block.Stone, lvl);
+            Cuboid(0, midY, 1, maxX, midY, 3, Block.Stone, lvl);
+            Cuboid(0, midY, maxZ - 3, maxX, midY, maxZ - 1, Block.Stone, lvl);
         }
         
         static void MakeViewAreaWalls(Level lvl) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
-            Cuboid(3, 4, 3, 3, 10, maxZ - 3, Block.rock, lvl);
-            Cuboid(maxX - 3, 4, 3, maxX - 3, 10, maxZ - 3, Block.rock, lvl);
-            Cuboid(3, 4, 3, maxX - 3, 10, 3, Block.rock, lvl);
-            Cuboid(3, 4, maxZ - 3, maxX - 3, 10, maxZ - 3, Block.rock, lvl);
+            Cuboid(3, 4, 3, 3, 10, maxZ - 3, Block.Stone, lvl);
+            Cuboid(maxX - 3, 4, 3, maxX - 3, 10, maxZ - 3, Block.Stone, lvl);
+            Cuboid(3, 4, 3, maxX - 3, 10, 3, Block.Stone, lvl);
+            Cuboid(3, 4, maxZ - 3, maxX - 3, 10, maxZ - 3, Block.Stone, lvl);
             
-            Cuboid(3, 6, 3, 3, 7, maxZ - 3, Block.glass, lvl);
-            Cuboid(maxX - 3, 6, 3, maxX - 3, 7, maxZ - 3, Block.glass, lvl);
-            Cuboid(3, 6, 3, maxX - 3, 7, 3, Block.glass, lvl);
-            Cuboid(3, 6, maxZ - 3, maxX - 3, 7, maxZ - 3, Block.glass, lvl);
+            Cuboid(3, 6, 3, 3, 7, maxZ - 3, Block.Glass, lvl);
+            Cuboid(maxX - 3, 6, 3, maxX - 3, 7, maxZ - 3, Block.Glass, lvl);
+            Cuboid(3, 6, 3, maxX - 3, 7, 3, Block.Glass, lvl);
+            Cuboid(3, 6, maxZ - 3, maxX - 3, 7, maxZ - 3, Block.Glass, lvl);
         }
         
         static void MakeViewAreaFloor(Level lvl) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
-            Cuboid(1, 4, 0, 3, 4, maxZ, Block.rock, lvl);
-            Cuboid(maxX - 3, 4, 1, maxX - 1, 4, maxZ, Block.rock, lvl);
-            Cuboid(0, 4, 1, maxX, 4, 3, Block.rock, lvl);
-            Cuboid(0, 4, maxZ - 3, maxX, 4, maxZ - 1, Block.rock, lvl);
+            Cuboid(1, 4, 0, 3, 4, maxZ, Block.Stone, lvl);
+            Cuboid(maxX - 3, 4, 1, maxX - 1, 4, maxZ, Block.Stone, lvl);
+            Cuboid(0, 4, 1, maxX, 4, 3, Block.Stone, lvl);
+            Cuboid(0, 4, maxZ - 3, maxX, 4, maxZ - 1, Block.Stone, lvl);
         }
         
         static void MakeChutesAndElevators(Level lvl) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Cuboid(1, 5, 1, 1, maxY - 1, 1, Block.waterstill, lvl);
-            Cuboid(maxX - 1, 5, 1, maxX - 1, maxY - 1, 1, Block.waterstill, lvl);
-            Cuboid(1, 5, maxZ - 1, 1, maxY - 1, maxZ - 1, Block.waterstill, lvl);
-            Cuboid(maxX - 1, 5, maxZ - 1, maxX - 1, maxY - 1, maxZ - 1, Block.waterstill, lvl);
+            Cuboid(1, 5, 1, 1, maxY - 1, 1, Block.StillWater, lvl);
+            Cuboid(maxX - 1, 5, 1, maxX - 1, maxY - 1, 1, Block.StillWater, lvl);
+            Cuboid(1, 5, maxZ - 1, 1, maxY - 1, maxZ - 1, Block.StillWater, lvl);
+            Cuboid(maxX - 1, 5, maxZ - 1, maxX - 1, maxY - 1, maxZ - 1, Block.StillWater, lvl);
             
             int midX = lvl.Width / 2, midY = lvl.Height / 2, midZ = lvl.Length / 2;
-            Cuboid(midX - 2, midY + 1, midZ - 2, midX + 1, maxY, midZ - 2, Block.glass, lvl);
-            Cuboid(midX - 2, midY + 1, midZ + 1, midX + 1, maxY, midZ + 1, Block.glass, lvl);
-            Cuboid(midX - 2, midY + 1, midZ - 2, midX - 2, maxY, midZ + 1, Block.glass, lvl);
-            Cuboid(midX + 1, midY + 1, midZ - 2, midX + 1, maxY, midZ + 1, Block.glass, lvl);
+            Cuboid(midX - 2, midY + 1, midZ - 2, midX + 1, maxY, midZ - 2, Block.Glass, lvl);
+            Cuboid(midX - 2, midY + 1, midZ + 1, midX + 1, maxY, midZ + 1, Block.Glass, lvl);
+            Cuboid(midX - 2, midY + 1, midZ - 2, midX - 2, maxY, midZ + 1, Block.Glass, lvl);
+            Cuboid(midX + 1, midY + 1, midZ - 2, midX + 1, maxY, midZ + 1, Block.Glass, lvl);
             // make some holes in the chutes
-            Cuboid(midX - 1, maxY, midZ - 1, midX, maxY, midZ, Block.air, lvl);
-            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, Block.air, lvl);
-            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, Block.air, lvl);
-            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, Block.air, lvl);
-            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, Block.air, lvl);
+            Cuboid(midX - 1, maxY, midZ - 1, midX, maxY, midZ, Block.Air, lvl);
+            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, Block.Air, lvl);
+            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, Block.Air, lvl);
+            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, Block.Air, lvl);
+            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, Block.Air, lvl);
         }
         
         static void MakeSquares(Level lvl) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.glass, lvl);        
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass, lvl);        
             for(int zz = 6; zz < lvl.Length - 6; zz += 3)
                 for (int xx = 6; xx < lvl.Width - 6; xx += 3)
-                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.green, lvl);
+                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green, lvl);
         }
         
         static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte block, Level lvl) {

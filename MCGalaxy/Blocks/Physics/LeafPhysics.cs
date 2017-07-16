@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
             }
             
             // Perform actual leaf decay, then remove from physics list
-            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.b, Block.air);
+            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.b, Block.Air);
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
@@ -59,9 +59,9 @@ namespace MCGalaxy.Blocks.Physics {
                 if (index < 0) continue;
                 byte type = lvl.blocks[index];
                 
-                if (type == Block.trunk)
+                if (type == Block.Log)
                     lvl.leaves[index] = 0;
-                else if (type == Block.leaf)
+                else if (type == Block.Leaves)
                     lvl.leaves[index] = -2;
                 else
                     lvl.leaves[index] = -1;

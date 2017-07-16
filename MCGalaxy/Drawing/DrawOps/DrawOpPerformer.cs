@@ -197,9 +197,9 @@ namespace MCGalaxy.Drawing.Ops {
                     if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
 
                     if (lvl.physics > 0) {
-                        if (old.BlockID == Block.sponge && b.Block.BlockID != Block.sponge)
+                        if (old.BlockID == Block.Sponge && b.Block.BlockID != Block.Sponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, false);
-                        if (old.BlockID == Block.lava_sponge && b.Block.BlockID != Block.lava_sponge)
+                        if (old.BlockID == Block.LavaSponge && b.Block.BlockID != Block.LavaSponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, true);
 
                         if (lvl.ActivatesPhysics(b.Block)) lvl.AddCheck(index);

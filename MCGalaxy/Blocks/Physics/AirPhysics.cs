@@ -43,7 +43,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static void DoFlood(Level lvl, ref Check C, AirFlood mode, byte block) {           
             if (C.data.Data >= 1) {
-                lvl.AddUpdate(C.b, Block.air);
+                lvl.AddUpdate(C.b, Block.Air);
                 C.data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
             ushort x, y, z;
@@ -74,7 +74,7 @@ namespace MCGalaxy.Blocks.Physics {
         static void FloodAir(Level lvl, int index, byte block) {
             if (index == -1) return;
             byte curBlock = Block.Convert(lvl.blocks[index]);
-            if (curBlock == Block.water || curBlock == Block.lava)
+            if (curBlock == Block.Water || curBlock == Block.Lava)
                 lvl.AddUpdate(index, block);
         }
     }

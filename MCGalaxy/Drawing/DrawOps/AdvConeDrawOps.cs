@@ -118,7 +118,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (!Level.IsAirAt(x, y, z)) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
-                block.BlockID = layer ? Block.grass : Block.lavastill;
+                block.BlockID = layer ? Block.Grass : Block.StillLava;
                 output(Place(x, y, z, block));
             }
         }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Games.ZS {
         static bool NotPillaring(byte b, byte old) {
             if (Block.Walkthrough(b)) return true;
             old = Block.Convert(old);
-            return old >= Block.water && old <= Block.lavastill;
+            return old >= Block.Water && old <= Block.StillLava;
         }
         
         static bool CheckCoords(Player p, ushort x, ushort y, ushort z) {

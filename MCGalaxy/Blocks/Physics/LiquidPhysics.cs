@@ -29,19 +29,19 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
 
             switch (block.BlockID) {
-                case Block.air:
+                case Block.Air:
                     if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, type);
                     break;
 
-                case Block.lava:
-                case Block.lava_fast:
-                case Block.activedeathlava:
-                    if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, Block.rock);
+                case Block.Lava:
+                case Block.FastLava:
+                case Block.Deadly_ActiveLava:
+                    if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, Block.Stone);
                     break;
 
-                case Block.sand:
-                case Block.gravel:
-                case Block.wood_float:
+                case Block.Sand:
+                case Block.Gravel:
+                case Block.FloatWood:
                     lvl.AddCheck(b); break;
                     
                 default:
@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (!lvl.BlockProps[block.Index].WaterKills) break;
                     
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) 
-                        lvl.AddUpdate(b, Block.air);
+                        lvl.AddUpdate(b, Block.Air);
                     break;
             }
         }
@@ -62,23 +62,23 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
 
             switch (block.BlockID) {
-                case Block.air:
+                case Block.Air:
                     if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, type);
                     break;
                     
-                case Block.water:
-                case Block.activedeathwater:
-                    if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.rock); 
+                case Block.Water:
+                case Block.Deadly_ActiveWater:
+                    if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.Stone); 
                     break;
                     
-                case Block.sand:
+                case Block.Sand:
                     if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
-                        if (lvl.physics != 5) lvl.AddUpdate(b, Block.glass);
+                        if (lvl.physics != 5) lvl.AddUpdate(b, Block.Glass);
                     } else {
                         lvl.AddCheck(b);
                     } break;
                     
-                case Block.gravel:
+                case Block.Gravel:
                     lvl.AddCheck(b); break;
 
                 default:
@@ -86,7 +86,7 @@ namespace MCGalaxy.Blocks.Physics {
                     if (!lvl.BlockProps[block.Index].LavaKills) break;
                     
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) 
-                        lvl.AddUpdate(b, Block.air);
+                        lvl.AddUpdate(b, Block.Air);
                     break;
             }
         }

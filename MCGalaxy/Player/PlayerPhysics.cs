@@ -48,8 +48,8 @@ namespace MCGalaxy.Blocks.Physics {
                 
                 // Some blocks will cause death of players
                 if (!p.level.BlockProps[block.Index].KillerBlock) continue;               
-                if (block.BlockID == Block.tntexplosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
-                if (block.BlockID == Block.train && p.trainInvincible) continue;
+                if (block.BlockID == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (block.BlockID == Block.Train && p.trainInvincible) continue;
                 p.HandleDeath(block);
             }
             
@@ -95,10 +95,10 @@ namespace MCGalaxy.Blocks.Physics {
             if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
             
             switch (bHead.BlockID) {
-                case Block.water:
-                case Block.waterstill:
-                case Block.lava:
-                case Block.lavastill:
+                case Block.Water:
+                case Block.StillWater:
+                case Block.Lava:
+                case Block.StillLava:
                     p.fallCount = 0;
                     DateTime now = DateTime.UtcNow;
                     // level drown is in 10ths of a second
@@ -106,7 +106,7 @@ namespace MCGalaxy.Blocks.Physics {
                         p.drownTime = now.AddSeconds(p.level.Config.DrownTime / 10.0);
                     
                     if (now > p.drownTime) {
-                        p.HandleDeath((ExtBlock)Block.water);
+                        p.HandleDeath((ExtBlock)Block.Water);
                         p.drownTime = DateTime.MaxValue;
                     }
                     break;
@@ -119,7 +119,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static ExtBlock GetSurvivalBlock(Player p, int x, int y, int z) {
-            if (y < 0) return (ExtBlock)Block.blackrock;
+            if (y < 0) return (ExtBlock)Block.Bedrock;
             if (y >= p.level.Height) return ExtBlock.Air;
             return p.level.GetBlock((ushort)x, (ushort)y, (ushort)z);
         }

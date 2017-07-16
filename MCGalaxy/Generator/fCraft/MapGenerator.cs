@@ -249,7 +249,7 @@ namespace MCGalaxy.Generator {
                     int index = (level * length + z) * width + x;
                     if( level >= 0 && level < mapHeight ) {
                         if( slope < args.CliffThreshold ) {
-                            map.blocks[index] = (snow ? Block.white : bGroundSurface);
+                            map.blocks[index] = (snow ? Block.White : bGroundSurface);
                         } else {
                             map.blocks[index] = bCliff;
                         }
@@ -262,7 +262,7 @@ namespace MCGalaxy.Generator {
                         if( level - yy < groundThickness ) {
                             if( slope < args.CliffThreshold ) {
                                 if( snow ) {
-                                    map.blocks[index] = Block.white;
+                                    map.blocks[index] = Block.White;
                                 } else {
                                     map.blocks[index] = bGround;
                                 }
@@ -340,7 +340,7 @@ namespace MCGalaxy.Generator {
 
                         // Generate the trunk of the tree
                         for( int dy = 1; dy <= nh; dy++ )
-                            map.SetTile( (ushort)nx, (ushort)(ny + dy), (ushort)nz, Block.trunk );
+                            map.SetTile( (ushort)nx, (ushort)(ny + dy), (ushort)nz, Block.Log );
 
                         for( int i = -1; i < nh / 2; i++ ) {
                             // Should we draw thin (2x2) or thicker (4x4) foliage
@@ -353,8 +353,8 @@ namespace MCGalaxy.Generator {
                                 if( rn.NextDouble() > odds && Math.Abs( dx ) == Math.Abs( dz ) && Math.Abs( dx ) == radius )
                                     continue;
                                 // By default only replace an existing block if its air
-                                if( map.GetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz) ) == Block.air )
-                                    map.SetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz), Block.leaf );
+                                if( map.GetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz) ) == Block.Air )
+                                    map.SetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz), Block.Leaves );
                             }
                         }
                     }
@@ -374,14 +374,14 @@ namespace MCGalaxy.Generator {
                 for( int y = (map.Height - 1); y >= 0; y-- ) {
                     index -= map.Length * map.Width;
                     switch( map.blocks[index] ) {
-                        case Block.air:
-                        case Block.mushroom:
-                        case Block.glass:
-                        case Block.leaf:
-                        case Block.redflower:
-                        case Block.redmushroom:
-                        case Block.shrub:
-                        case Block.yellowflower:
+                        case Block.Air:
+                        case Block.Mushroom:
+                        case Block.Glass:
+                        case Block.Leaves:
+                        case Block.Rose:
+                        case Block.RedMushroom:
+                        case Block.Sapling:
+                        case Block.Dandelion:
                             continue;
                         default:
                             shadows[x, z] = (short)y;
