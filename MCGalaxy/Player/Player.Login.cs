@@ -105,9 +105,9 @@ namespace MCGalaxy {
             RemoveFromPending();
             Server.PlayerListUpdate();
             
-            timeLogged = DateTime.Now;
-            lastLogin = DateTime.Now;
-            time = TimeSpan.FromSeconds(1);
+            SessionStart = DateTime.UtcNow;
+            LastLogin = DateTime.Now;
+            TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);

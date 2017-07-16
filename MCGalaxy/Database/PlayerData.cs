@@ -49,23 +49,14 @@ namespace MCGalaxy.DB {
         
         internal static void Create(Player p) {
             p.prefix = "";
-            p.time = new TimeSpan(0, 0, 0, 1);
-            p.title = "";
-            p.titlecolor = "";
-            p.color = p.group.Color;
-            p.money = 0;
-            
-            p.firstLogin = DateTime.Now;
+            p.color = p.group.Color;         
+            p.FirstLogin = DateTime.Now;
             p.totalLogins = 1;
-            p.totalKicked = 0;
-            p.overallDeath = 0;
-            p.overallBlocks = 0;
-            p.TotalDrawn = 0;
-            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
+            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");            
             Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
-                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, (long)p.time.TotalSeconds);
+                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
             
             using (DataTable ids = Database.Backend.GetRows(DBTable,
                                                             "ID", "WHERE Name = @0", p.name)) {
@@ -81,10 +72,9 @@ namespace MCGalaxy.DB {
         internal static void Load(DataTable playerDb, Player p) {
             PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
             p.totalLogins = data.Logins + 1;
-            p.time = data.TotalTime;
+            p.TotalTime = data.TotalTime;
             p.DatabaseID = data.DatabaseID;
-            p.firstLogin = data.FirstLogin;
-            p.lastLogin = data.LastLogin;
+            p.FirstLogin = data.FirstLogin;
             
             p.title = data.Title;
             p.titlecolor = data.TitleColor;

@@ -64,12 +64,6 @@ namespace MCGalaxy {
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
         public bool disconnected = false;
-        
-        DateTime startTime;
-        public TimeSpan time {
-            get { return DateTime.UtcNow - startTime; }
-            set { startTime = DateTime.UtcNow.Subtract(value); }
-        }
 
         public string name;
         public string DisplayName;
@@ -128,12 +122,19 @@ namespace MCGalaxy {
         /// <summary> Whether the player has build permission in the current world. </summary>
         public bool AllowBuild = true;
 
-        public int money, loginMoney;
+        public int money;
         public long overallBlocks, TotalDrawn, TotalPlaced, TotalDeleted;
         public int loginBlocks;
 
-        public DateTime timeLogged;
-        public DateTime firstLogin, lastLogin;
+        
+        DateTime startTime;
+        public TimeSpan TotalTime {
+            get { return DateTime.UtcNow - startTime; }
+            set { startTime = DateTime.UtcNow.Subtract(value); }
+        }
+        public DateTime SessionStart;
+        public DateTime FirstLogin, LastLogin;
+        
         public int totalLogins;
         public int totalKicked;
         public int overallDeath;

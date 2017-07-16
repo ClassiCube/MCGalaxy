@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             if (matches == 1) {
-                Show(p, pl.ColoredName, pl.firstLogin, pl.lastLogin);
+                Show(p, pl.ColoredName, pl.FirstLogin, pl.LastLogin);
                 Player.Message(p, pl.ColoredName + " %Sis currently online.");
                 return;
             }

@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[1].ToLower()) {
                 case "firstlogin":
                     SetDate(p, args, PlayerData.ColumnFirstLogin, who, 
-                            v => who.firstLogin = v); break;
+                            v => who.FirstLogin = v); break;
                 case "lastlogin":
                     SetDate(p, args, PlayerData.ColumnLastLogin, who, 
-                            v => who.timeLogged = v); break;
+                            v => who.LastLogin = v); break;
                     
                 case "logins":
                 case "totallogin":
@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
                                v => who.totalKicked = v, UpdateDB); break;
                 case "timespent":
-                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.time = v); break;
+                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v); break;
                 case "color":
                     SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.Color : v)); break;
                 case "titlecolor":

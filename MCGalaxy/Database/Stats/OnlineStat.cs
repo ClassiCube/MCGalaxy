@@ -73,14 +73,14 @@ namespace MCGalaxy.DB {
         }
         
         static void TimeSpentLine(Player p, Player who) {
-            TimeSpan timeOnline = DateTime.Now - who.timeLogged;
+            TimeSpan timeOnline = DateTime.UtcNow - who.SessionStart;
             Player.Message(p, "  Spent &a{0} %Son the server, &a{1} %Sthis session",
-                           who.time.Shorten(), timeOnline.Shorten());
+                           who.TotalTime.Shorten(), timeOnline.Shorten());
         }
         
         static void LoginLine(Player p, Player who) {
             Player.Message(p, "  First login &a{0}%S, and is currently &aonline",
-                           who.firstLogin.ToString("yyyy-MM-dd"));
+                           who.FirstLogin.ToString("yyyy-MM-dd"));
         }
         
         internal static void LoginsLine(Player p, int logins, int kicks) {
