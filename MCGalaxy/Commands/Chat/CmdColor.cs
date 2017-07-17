@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Chatting {
                 who.color = color;
             }
             
-            Entities.GlobalRespawn(p);
+            Entities.GlobalRespawn(who);
             who.SetPrefix();
             Database.Backend.UpdateRows("Players", "color = @1", "WHERE Name = @0", who.name, color);
         }
