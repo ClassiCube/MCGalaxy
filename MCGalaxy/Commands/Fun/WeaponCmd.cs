@@ -84,9 +84,9 @@ namespace MCGalaxy.Commands.Fun {
             Player p = state.player;
             if (state.player.aiming) { DoAim(state); return; }
             
-            foreach (Vec3U16 cP in state.lastGlass) {
-                if (!p.level.IsValidPos(cP)) continue;
-                p.RevertBlock(cP.X, cP.Y, cP.Z);
+            foreach (Vec3U16 pos in state.lastGlass) {
+                if (!p.level.IsValidPos(pos)) continue;
+                p.RevertBlock(pos.X, pos.Y, pos.Z);
             }
             task.Repeating = false;
         }
@@ -106,19 +106,19 @@ namespace MCGalaxy.Commands.Fun {
 
             // Revert all glass blocks now not in the ray from the player's direction
             for (int i = 0; i < state.lastGlass.Count; i++) {
-                Vec3U16 cP = state.lastGlass[i];
-                if (state.glassCoords.Contains(cP)) continue;
+                Vec3U16 pos = state.lastGlass[i];
+                if (state.glassCoords.Contains(pos)) continue;
                 
-                if (p.level.IsValidPos(cP))
-                    p.RevertBlock(cP.X, cP.Y, cP.Z);
+                if (p.level.IsValidPos(pos))
+                    p.RevertBlock(pos.X, pos.Y, pos.Z);
                 state.lastGlass.RemoveAt(i); i--;
             }
 
             // Place the new glass blocks that are in the ray from the player's direction
-            foreach (Vec3U16 cP in state.glassCoords) {
-                if (state.lastGlass.Contains(cP)) continue;
-                state.lastGlass.Add(cP);
-                p.SendBlockchange(cP.X, cP.Y, cP.Z, (ExtBlock)Block.Glass);
+            foreach (Vec3U16 pos in state.glassCoords) {
+                if (state.lastGlass.Contains(pos)) continue;
+                state.lastGlass.Add(pos);
+                p.SendBlockchange(pos.X, pos.Y, pos.Z, (ExtBlock)Block.Glass);
             }
             state.glassCoords.Clear();
         }

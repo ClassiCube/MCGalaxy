@@ -194,6 +194,9 @@ namespace MCGalaxy.Commands.CPE {
             RemoveBlockProps(global, block, p);
             BlockDefinition.Remove(def, defs, p == null ? null : p.level);
             
+            string scope = global ? "global" : "level";
+            Player.Message(p, "Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
+            
             BlockDefinition globalDef = BlockDefinition.GlobalDefs[block.RawID];
             if (!global && globalDef != null)
                 BlockDefinition.Add(globalDef, defs, p.level);

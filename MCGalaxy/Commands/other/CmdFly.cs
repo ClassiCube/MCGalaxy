@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (!Hacks.CanUseHacks(p, p.level)) {
-                Player.Message(p, "You cannot use /fly on this map.");
+                Player.Message(p, "You cannot use %T/fly %Son this map.");
                 p.isFlying = false; return;
             }
             
@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Misc {
             Player p = state.player;
             if (state.player.isFlying) { DoFly(state); return; }
             
-            foreach (Vec3U16 cP in state.lastGlass) {
-                p.SendBlockchange(cP.X, cP.Y, cP.Z, ExtBlock.Air);
+            foreach (Vec3U16 pos in state.lastGlass) {
+                p.SendBlockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air);
             }            
             Player.Message(p, "Stopped flying");
             task.Repeating = false;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Misc {
             {
                 Vec3U16 pos;
                 pos.X = (ushort)xx; pos.Y = (ushort)yy; pos.Z = (ushort)zz;
-                if (!p.level.IsAirAt(pos.X, pos.Y, pos.Z)) state.glassCoords.Add(pos);
+                if (p.level.IsAirAt(pos.X, pos.Y, pos.Z)) state.glassCoords.Add(pos);
             }
             
             foreach (Vec3U16 P in state.glassCoords) {
@@ -102,10 +102,10 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
             Player.Message(p, "%T/fly");
-            Player.Message(p, "%HThe old method of flight before custom clients.");
-            Player.Message(p, "%HMay not work at all depending on your connection.");
-            Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
-                           "(unless you are {0}%H+ and the motd also has +ophax)", name);
+            Player.Message(p, "%HCreates a grass platform underneath you that moves with you.");
+            Player.Message(p, "%H  May not work if you have high latency.");
+            Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
+                           "(unless you are {0}%H+ and the motd has +ophax)", name);
         }
     }
 }
