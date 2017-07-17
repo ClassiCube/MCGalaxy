@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands.Misc {
             string name = Group.GetColoredName(LevelPermission.Operator);
             Player.Message(p, "%T/descend");
             Player.Message(p, "%HTeleports you to the first free space below you.");
-            Player.Message(p, "%H  Does not work on maps which have -hax in their motd. " +
-                           "(unless you are {0}%H+ and the motd also has +ophax)", name);
+            Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
+                           "(unless you are {0}%H+ and the motd has +ophax)", name);
         }
     }
 }
