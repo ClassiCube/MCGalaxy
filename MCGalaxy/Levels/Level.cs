@@ -472,8 +472,14 @@ namespace MCGalaxy {
         void LoadCoreProps() {
             for (int i = 0; i < BlockProps.Length; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
-                BlockProps[i] = BlockDefinition.DefaultProps(block);
-            }            
+                byte raw = block.RawID;
+                
+                if (block.IsPhysicsType || CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
+                    BlockProps[i] = BlockDefinition.DefaultProps(block);
+                } else {
+                    BlockProps[i] = MCGalaxy.Blocks.BlockProps.MakeDefault();
+                }
+            }
         }
         
         public void UpdateBlockProps() {
