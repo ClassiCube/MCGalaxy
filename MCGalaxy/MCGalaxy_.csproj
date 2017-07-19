@@ -125,6 +125,7 @@
     <Compile Include="Commands\Bots\CmdBotSet.cs" />
     <Compile Include="Commands\Bots\CmdBotSummon.cs" />
     <Compile Include="Commands\building\CmdAbort.cs" />
+    <Compile Include="Commands\building\CmdBezier.cs" />
     <Compile Include="Commands\building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
     <Compile Include="Commands\building\CmdCenter.cs" />
@@ -434,6 +435,7 @@
     <Compile Include="Drawing\DrawOps\AdvConeDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\AdvDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\AdvPyramidDrawOps.cs" />
+    <Compile Include="Drawing\DrawOps\BezierDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\CuboidDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\DrawOpPerformer.cs" />
