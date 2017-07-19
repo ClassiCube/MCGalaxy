@@ -154,6 +154,7 @@ namespace MCGalaxy.Commands.Building {
             copy.Offset.X = copy.OriginX - marks[0].X;
             copy.Offset.Y = copy.OriginY - marks[0].Y;
             copy.Offset.Z = copy.OriginZ - marks[0].Z;
+            Player.Message(p, "Set offset of where to paste from.");
             return false;
         }
 
