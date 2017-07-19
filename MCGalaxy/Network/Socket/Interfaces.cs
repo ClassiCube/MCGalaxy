@@ -26,6 +26,9 @@ namespace MCGalaxy.Network {
         /// <summary> Gets the remote IP of this socket. </summary>
         string RemoteIP { get; }
         
+        /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
+        bool LowLatency { set; }
+        
         /// <summary> Receives next block of received data, asynchronously. </summary>
         void ReceiveNextAsync();
         

@@ -33,6 +33,10 @@ namespace MCGalaxy.Network {
             get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
         }
         
+        public bool LowLatency {
+            set { socket.NoDelay = value; }
+        }
+        
         static AsyncCallback recvCallback = new AsyncCallback(ReceiveCallback);
         public void ReceiveNextAsync() {
             socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, recvCallback, this);
