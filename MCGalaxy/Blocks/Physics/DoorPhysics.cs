@@ -25,7 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             byte block = C.data.Value2;
-            bool instant = !C.data.ExtBlock && (block == Block.Door_Air || block == Block.Door_Air2);
+            bool instant = !C.data.ExtBlock && (block == Block.Door_Air || block == Block.Door_AirActivatable);
             
             ActivateablePhysics.DoDoors(lvl, (ushort)(x + 1), y, z, instant);
             ActivateablePhysics.DoDoors(lvl, (ushort)(x - 1), y, z, instant);

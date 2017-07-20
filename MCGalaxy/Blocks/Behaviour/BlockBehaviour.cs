@@ -75,8 +75,7 @@ namespace MCGalaxy.Blocks {
         internal static HandleWalkthrough GetWalkthroughHandler(ExtBlock block, BlockProps[] props, bool nonSolid) {
             switch (block.BlockID) {
                 case Block.Checkpoint: return WalkthroughBehaviour.Checkpoint;
-                case Block.Door_Air2: return WalkthroughBehaviour.Door;
-                case Block.Door_Air: return WalkthroughBehaviour.Door;
+                case Block.Door_AirActivatable: return WalkthroughBehaviour.Door;
                 case Block.Door_Water: return WalkthroughBehaviour.Door;
                 case Block.Door_Lava: return WalkthroughBehaviour.Door;
                 case Block.Train: return WalkthroughBehaviour.Train;

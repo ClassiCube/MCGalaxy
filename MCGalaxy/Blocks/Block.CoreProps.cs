@@ -74,7 +74,7 @@ namespace MCGalaxy {
             Props[Door_Cobblestone].IsDoor = true;
             Props[Door_Gold].IsDoor = true;
             Props[Door_Air].IsDoor = true;
-            Props[Door_Air2].IsDoor = true;
+            Props[Door_AirActivatable].IsDoor = true;
             Props[Door_Water].IsDoor = true;
             Props[Door_Lava].IsDoor = true;
             

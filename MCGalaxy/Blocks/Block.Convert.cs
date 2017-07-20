@@ -153,7 +153,7 @@ namespace MCGalaxy {
                 case Portal_Lava: return StillLava;
 
                 case Door_Air: return Air;
-                case Door_Air2: return Air;
+                case Door_AirActivatable: return Air;
                 case Door_Water: return StillWater;
                 case Door_Lava: return StillLava;
 

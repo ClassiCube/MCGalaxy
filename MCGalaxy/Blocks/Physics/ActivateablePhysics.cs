@@ -88,7 +88,7 @@ namespace MCGalaxy.Blocks.Physics {
             args.ExtBlock = block.BlockID == Block.custom_block;
             
             physForm = Block.Door_Log_air; // air
-            if (block.BlockID == Block.Door_Air || block.BlockID == Block.Door_Air2) {
+            if (block.BlockID == Block.Door_Air || block.BlockID == Block.Door_AirActivatable) {
                 args.Value1 = 4 - 1;
             } else if (block.BlockID == Block.Door_Green) {
                 physForm = Block.Door_Green_air; // red wool

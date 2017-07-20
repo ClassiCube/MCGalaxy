@@ -215,7 +215,7 @@ namespace MCGalaxy
         
         // Movement doors
         public const byte Door_Air = 164;
-        public const byte Door_Air2 = 165; // air_switch, really just another Door_Air
+        public const byte Door_AirActivatable = 165; // air_switch
         public const byte Door_Water = 166;
         public const byte Door_Lava = 167;
 
