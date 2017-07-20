@@ -73,7 +73,7 @@ namespace MCGalaxy.Network {
                 if (p.level != level) continue;
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
                                            ref noBlockDefs, ref original);
-                p.Send(packet);
+                p.Socket.SendLowPriority(packet);
             }
         }
         
@@ -81,7 +81,7 @@ namespace MCGalaxy.Network {
             byte[] bulk = null, normal = null, noBlockDefs = null, original = null;
             byte[] packet = MakePacket(player, ref bulk, ref normal,
                                        ref noBlockDefs, ref original);
-            player.Send(packet);
+            player.Socket.SendLowPriority(packet);
         }
         
         #region Packet construction

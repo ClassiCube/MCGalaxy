@@ -79,7 +79,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void Send(byte[] buffer, bool sync = false) { socket.Send(buffer, sync); }
+        public void Send(byte[] buffer, bool sync = false) { Socket.Send(buffer, sync); }
         
         public static void MessageLines(Player p, IEnumerable<string> lines) {
             foreach (string line in lines)
@@ -289,11 +289,11 @@ namespace MCGalaxy {
             }
             
             buffer[7] = raw;
-            Send(buffer);
+            Socket.SendLowPriority(buffer);
         }
 
         internal void CloseSocket() { 
-            socket.Close();
+            Socket.Close();
             RemoveFromPending();            
         }
     }

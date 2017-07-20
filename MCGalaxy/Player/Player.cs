@@ -51,8 +51,8 @@ namespace MCGalaxy {
         public Player(Socket s) {
             spamChecker = new SpamChecker(this);
             try {
-                socket = new TcpSocket(this, s);
-                ip = socket.RemoteIP;
+                Socket = new TcpSocket(this, s);
+                ip = Socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
 
@@ -60,7 +60,7 @@ namespace MCGalaxy {
                     BlockBindings[i] = ExtBlock.FromRaw((byte)i);
                 }
 
-                socket.ReceiveNextAsync();
+                Socket.ReceiveNextAsync();
                 connections.Add(this);
             }
             catch ( Exception e ) { Leave("Login failed!"); Logger.LogError(e); }
@@ -276,7 +276,7 @@ namespace MCGalaxy {
             
             //Umm...fixed?
             if (name == "") {
-                if (socket != null) CloseSocket();
+                if (Socket != null) CloseSocket();
                 connections.Remove(this);
                 disconnected = true;
                 return;

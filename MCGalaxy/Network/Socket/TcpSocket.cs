@@ -100,6 +100,11 @@ namespace MCGalaxy.Network {
             }
         }
         
+        // TODO: do this seprately
+        public void SendLowPriority(byte[] buffer, bool sync = false) {
+            Send(buffer, sync);
+        }
+        
         static void SendCallback(IAsyncResult result) {
             // TODO: call EndSend, need to check if all data was sent or not!
             /*TcpSocket s = (TcpSocket)result.AsyncState;

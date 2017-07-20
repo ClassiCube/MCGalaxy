@@ -53,7 +53,7 @@ namespace MCGalaxy {
 
         public string truename;
         internal bool dontmindme = false;
-        INetworkSocket socket;
+        public INetworkSocket Socket;
         public PingList Ping = new PingList();
         
         public DateTime LastAction, AFKCooldown;
