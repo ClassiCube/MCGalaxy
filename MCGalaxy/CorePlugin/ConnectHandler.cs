@@ -79,6 +79,7 @@ namespace MCGalaxy.Core {
                     if (line == "&all") p.ignoreAll = true;
                     else if (line == "&irc") p.ignoreIRC = true;
                     else if (line == "&8ball") p.ignore8ball = true;
+                    else if (line == "&drawouput") p.ignoreDrawOutput = true;
                     else if (line == "&titles") p.ignoreTitles = true;
                     else if (line == "&nicks") p.ignoreNicks = true;
                     else p.listignored.Add(line);
@@ -88,8 +89,10 @@ namespace MCGalaxy.Core {
                 Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
             }
             
-            if (p.ignoreAll || p.ignoreIRC || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0)
+            if (p.ignoreAll || p.ignoreIRC || p.ignore8ball || p.ignoreDrawOutput
+                || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0) {
                 Player.Message(p, "&cType &a/ignore list &cto see who you are still ignoring");
+            }
         }
         
         static void CheckLoginJailed(Player p) {

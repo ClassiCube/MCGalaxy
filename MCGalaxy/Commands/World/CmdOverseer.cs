@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.World {
                 Player.MessageLines(p, subCmd.Value.Help);
                 return;
             }
-           Player.Message(p, "Unrecognised command \"{0}\".", message);
+            Player.Message(p, "Unrecognised command \"{0}\".", message);
         }
         
         public override void Help(Player p) {
@@ -124,13 +124,15 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool OwnsMap(Player p, Level lvl) {
-            if (lvl.name.CaselessStarts(p.name)) return true;
             string[] owners = lvl.Config.RealmOwner.Replace(" ", "").Split(',');
             
-            foreach (string owner in owners) {
-                if (owner.CaselessEq(p.name)) return true;
+            if (owners.Length > 0 && owners[0] != "") {
+                foreach (string owner in owners) {
+                    if (owner.CaselessEq(p.name)) return true;
+                }
+                return false;
             }
-            return false;
+            return lvl.name.CaselessStarts(p.name);
         }
         
         

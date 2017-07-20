@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (names != "") Player.Message(p, names);
                 if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
                 if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
-                if (p.ignore8ball) Player.Message(p, "&cIgnoring %T/8ball");                
+                if (p.ignore8ball) Player.Message(p, "&cIgnoring %T/8ball");
                 if (p.ignoreTitles) Player.Message(p, "&cPlayer titles do not show before names in chat.");
                 if (p.ignoreNicks) Player.Message(p, "&cCustom player nicks do not show in chat.");
                 return;
