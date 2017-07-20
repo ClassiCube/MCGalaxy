@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
                         args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
                         
-                        lvl.AddUpdate(bAbove, Block.Fireworks, false);
+                        lvl.AddUpdate(bAbove, Block.Fireworks);
                         lvl.AddUpdate(C.b, Block.StillLava, false, args);
                         args.Data = C.data.Data;
                         C.data = args;

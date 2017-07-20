@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : Command {
@@ -107,9 +108,29 @@ namespace MCGalaxy.Commands.Fun {
                 cfg.RedSpawnX = p.Pos.X; cfg.RedSpawnY = p.Pos.Y; cfg.RedSpawnZ = p.Pos.Z;
                 Player.Message(p, "Set spawn of red team to your position.");
                 UpdateConfig(p, cfg);
+            } else if (property.CaselessEq("blueflag")) {
+                Player.Message(p, "Place or delete a block to set blue team's flag.");
+                p.MakeSelection(1, null, BlueFlagCallback);
+            } else if (property.CaselessEq("redflag")) {
+                Player.Message(p, "Place or delete a block to set red team's flag.");
+                p.MakeSelection(1, null, RedFlagCallback);
             } else {
                 Help(p, "set");
             }
+        }
+        
+        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            CTFConfig cfg = RetrieveConfig(p);
+            cfg.BlueFlagX = marks[0].X; cfg.BlueFlagY = marks[0].Y; cfg.BlueFlagZ = marks[0].Z;
+            UpdateConfig(p, cfg);
+            return false;
+        }
+        
+        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+            CTFConfig cfg = RetrieveConfig(p);
+            cfg.RedFlagX = marks[0].X; cfg.RedFlagY = marks[0].Y; cfg.RedFlagZ = marks[0].Z;
+            UpdateConfig(p, cfg);
+            return false;
         }
         
         static CTFConfig RetrieveConfig(Player p) {

@@ -96,7 +96,7 @@ namespace MCGalaxy.Tasks {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.hasTwoWayPing) {
-                    p.Send(Packet.TwoWayPing(true, p.Ping.NextTwoWayPingData()));                    
+                    p.Send(Packet.TwoWayPing(true, p.Ping.NextTwoWayPingData()));
                 } else {
                     p.Send(Packet.Ping());
                 }
