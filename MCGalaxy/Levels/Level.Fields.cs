@@ -60,7 +60,11 @@ namespace MCGalaxy {
         
         public bool IsMuseum {
             get { return name.StartsWith("&cMuseum " + ServerConfig.DefaultColor, StringComparison.Ordinal); }
-        }        
+        }
+
+        public int ReloadThreshold {
+            get { return Math.Max(10000, (int)(ServerConfig.DrawReloadThreshold * Width * Height * Length)); }
+        }
         
         public static bool cancelload;
         public bool cancelsave;

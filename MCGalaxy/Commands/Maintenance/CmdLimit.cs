@@ -25,16 +25,20 @@ namespace MCGalaxy.Commands.Maintenance {
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (message == "") { Help(p); return; }
+            bool hasLimit = args.Length > 1;
+            
+            if (args[0].CaselessEq("rt") || args[0].CaselessEq("reloadthreshold")) {
+                float threshold = 0;
+                if (hasLimit && !CommandParser.GetReal(p, args[1], "Limit", ref threshold, 0, 100)) return;
+                
+                SetLimitPercent(p, ref ServerConfig.DrawReloadThreshold, threshold, hasLimit);
+                return;
+            }
             
             int limit = 0;
-            bool hasLimit = args.Length > 1;          
             if (hasLimit && !CommandParser.GetInt(p, args[1], "Limit", ref limit, 1)) return;
             
             switch (args[0].ToLower()) {
-                case "rt":
-                case "reloadthreshold":
-                    SetLimit(p, "Threshold before drawing reloads map", ref ServerConfig.DrawReloadLimit, limit, hasLimit);
-                    return;
                 case "rp":
                 case "restartphysics":
                     SetLimit(p, "Custom /rp limit", ref ServerConfig.PhysicsRestartLimit, limit, hasLimit);
@@ -72,12 +76,25 @@ namespace MCGalaxy.Commands.Maintenance {
             Group.SaveList(Group.GroupList);
         }
         
-        static void SetLimit(Player p, string format, ref int target, int value, bool hasValue) {
+        static void SetLimitPercent(Player p, ref float target, float value, bool hasValue) {
+            const string type = "Threshold before drawing reloads map";
+            if (hasValue) target = value / 100.0f;
+            string percent = (target * 100).ToString("F2") + "%";
+            
             if (!hasValue) {
-                Player.Message(p, format + ": &b" + target);
+                Player.Message(p, type + ": &b" + percent);
+            } else {
+                Chat.MessageGlobal(type + " set to &b" + percent);
+                SrvProperties.Save();
+            }
+        }
+        
+        static void SetLimit(Player p, string type, ref int target, int value, bool hasValue) {
+            if (!hasValue) {
+                Player.Message(p, type + ": &b" + target);
             } else {
                 target = value;
-                Chat.MessageGlobal(format + " set to &b" + target);                
+                Chat.MessageGlobal(type + " set to &b" + target);                
                 SrvProperties.Save();
             }
         }

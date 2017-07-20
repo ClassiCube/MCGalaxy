@@ -24,7 +24,7 @@ namespace MCGalaxy {
     public static class BlockQueue {
         
         public static int time = 100;
-        public static int blockupdates = 250;
+        public static int blockupdates = 1000;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
 
         public static void Loop(SchedulerTask task) {

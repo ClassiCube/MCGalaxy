@@ -122,20 +122,19 @@ namespace MCGalaxy.Drawing.Ops {
                 entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
                 if (item.Brush != null) item.Brush.Configure(item.Op, p);
-                DoDrawOp(item, p);
+                bool needReload = DoDrawOp(item, p);
                 timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
                 entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
                 
                 if (item.Op.Undoable) p.DrawOps.Add(entry);
                 if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
                 
-                if (item.Op.TotalModified > ServerConfig.DrawReloadLimit)
-                    DoReload(p, item.Op.Level);
+                if (needReload) DoReload(p, item.Op.Level);
                 item.Op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
             }
         }
         
-        static void DoDrawOp(PendingDrawOp item, Player p) {
+        static bool DoDrawOp(PendingDrawOp item, Player p) {
             Level lvl = item.Op.Level;
             DrawOpOutputter outputter = new DrawOpOutputter(item.Op);
             
@@ -144,6 +143,7 @@ namespace MCGalaxy.Drawing.Ops {
             } else {
                 item.Op.Perform(item.Marks, item.Brush, outputter.Output);
             }
+            return item.Op.TotalModified >= outputter.reloadThreshold;
         }
 
         static void DoReload(Player p, Level lvl) {
@@ -158,8 +158,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         class DrawOpOutputter {
             readonly DrawOp op;
+            internal readonly int reloadThreshold;
             
-            public DrawOpOutputter(DrawOp op) { this.op = op; }
+            public DrawOpOutputter(DrawOp op) { 
+                this.op = op;
+                reloadThreshold = op.Level.ReloadThreshold;
+            }
             
             public void Output(DrawOpBlock b) {
                 if (b.Block.BlockID == Block.Invalid) return;
@@ -192,13 +196,14 @@ namespace MCGalaxy.Drawing.Ops {
                 }
                 
                 // Potentially buffer the block change
-                if (op.TotalModified == ServerConfig.DrawReloadLimit) {
+                if (op.TotalModified == reloadThreshold) {
                     if (p == null || !p.ignoreDrawOutput) {
-                        Player.Message(p, "Changed over {0} blocks, preparing to reload map..", ServerConfig.DrawReloadLimit);
+                	    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
+
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
-                } else if (op.TotalModified < ServerConfig.DrawReloadLimit) {
+                } else if (op.TotalModified < reloadThreshold) {
                     if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
 
                     if (lvl.physics > 0) {
