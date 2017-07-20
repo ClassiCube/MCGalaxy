@@ -67,15 +67,18 @@ namespace MCGalaxy.Drawing.Ops {
             long affected = op.BlocksAffected(lvl, marks);
             if (p != null && op.AffectedByTransform)
                 p.Transform.GetBlocksAffected(ref affected);
+            if (checkLimit && !op.CanDraw(marks, p, affected)) return false;
             
-            if (checkLimit && !op.CanDraw(marks, p, affected))
-                return false;
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
-                Player.Message(p, format, op.Name, brush.Name, affected);
+                if (p == null || !p.ignoreDrawOutput) {
+                    Player.Message(p, format, op.Name, brush.Name, affected);
+                }
             } else if (affected != -1) {
                 const string format = "{0}: affecting up to {1} blocks";
-                Player.Message(p, format, op.Name, affected);
+                if (p == null || !p.ignoreDrawOutput) {
+                    Player.Message(p, format, op.Name, affected);
+                }
             }
             
             DoQueuedDrawOp(p, op, brush, marks);
@@ -190,7 +193,9 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == ServerConfig.DrawReloadLimit) {
-                    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", ServerConfig.DrawReloadLimit);
+                    if (p == null || !p.ignoreDrawOutput) {
+                        Player.Message(p, "Changed over {0} blocks, preparing to reload map..", ServerConfig.DrawReloadLimit);
+                    }
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
                 } else if (op.TotalModified < ServerConfig.DrawReloadLimit) {

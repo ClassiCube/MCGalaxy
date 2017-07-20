@@ -21,7 +21,7 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdIgnore : Command {       
+    public sealed class CmdIgnore : Command {
         public override string name { get { return "ignore"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
@@ -36,34 +36,29 @@ namespace MCGalaxy.Commands.Chatting {
             string action = args[0].ToLower();
             
             if (action == "all") {
-                p.ignoreAll = !p.ignoreAll;
-                Player.Message(p, "{0} ignoring all chat", p.ignoreAll ? "&cNow" : "&aNo longer");
-                SaveIgnores(p); return;
+                Toggle(p, ref p.ignoreAll, "{0} ignoring all chat"); return;
             } else if (action == "irc") {
-                p.ignoreIRC = !p.ignoreIRC;
-                Player.Message(p, "{0} ignoring IRC chat", p.ignoreIRC ? "&cNow" : "&aNo longer");
-                SaveIgnores(p); return;
+               Toggle(p, ref p.ignoreIRC, "{0} ignoring IRC chat"); return;
             } else if (action == "titles") {
-                p.ignoreTitles = !p.ignoreTitles;
-                Player.Message(p, "{0} show before names in chat", 
-                               p.ignoreTitles ? "&cPlayer titles no longer" : "&aPlayer titles now");
-                SaveIgnores(p); return;
+                Toggle(p, ref p.ignoreTitles, "{1}Player titles {0} show before names in chat"); return;
             } else if (action == "nicks") {
-                p.ignoreNicks = !p.ignoreNicks;
-                Player.Message(p, "{0} show in chat", 
-                               p.ignoreNicks ? "&cCustom player nicks no longer" : "&aCustom player nicks");
-                SaveIgnores(p); return;
+                Toggle(p, ref p.ignoreNicks, "{1}Custom player nicks {0} show in chat"); return;
             } else if (action == "8ball") {
-                p.ignore8ball = !p.ignore8ball;
-                Player.Message(p, "{0} ignoring %T/8ball", p.ignore8ball ? "&cNow" : "&aNo longer");
-                SaveIgnores(p); return;
-            } else if (action == "list") {
-                Player.Message(p, "&cCurrently ignoring the following players:");
+                Toggle(p, ref p.ignore8ball, "{0} ignoring %T/8ball"); return;
+            } else if (action == "drawoutput") {
+                Toggle(p, ref p.ignoreDrawOutput, "{0} ignoring draw command output"); return;
+            } else if (action == "list") {                
                 string names = p.listignored.Join();
-                if (names != "") Player.Message(p, names);
+                if (names != "") {
+                    Player.Message(p, "&cCurrently ignoring the following players:");
+                    Player.Message(p, names);
+                }
+                
                 if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
                 if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
                 if (p.ignore8ball) Player.Message(p, "&cIgnoring %T/8ball");
+                
+                if (p.ignoreDrawOutput) Player.Message(p, "&cIgnoring draw command output.");
                 if (p.ignoreTitles) Player.Message(p, "&cPlayer titles do not show before names in chat.");
                 if (p.ignoreNicks) Player.Message(p, "&cCustom player nicks do not show in chat.");
                 return;
@@ -99,9 +94,18 @@ namespace MCGalaxy.Commands.Chatting {
             SaveIgnores(p);
         }
         
+        static void Toggle(Player p, ref bool ignore, string format) {
+            ignore = !ignore;
+            if (format.StartsWith("{0}")) {
+                Player.Message(p, format, ignore ? "&cNow" : "&aNo longer");
+            } else {
+                Player.Message(p, format, ignore ? "now" : "no longer", ignore ? "&c" : "&a");
+            }
+            SaveIgnores(p);
+        }
         static void SaveIgnores(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
-            if (!Directory.Exists("ranks/ignore")) 
+            if (!Directory.Exists("ranks/ignore"))
                 Directory.CreateDirectory("ranks/ignore");
             
             try {
@@ -109,6 +113,8 @@ namespace MCGalaxy.Commands.Chatting {
                     if (p.ignoreAll) w.WriteLine("&all");
                     if (p.ignoreIRC) w.WriteLine("&irc");
                     if (p.ignore8ball) w.WriteLine("&8ball");
+                    
+                    if (p.ignoreDrawOutput) w.WriteLine("&drawoutput");
                     if (p.ignoreTitles) w.WriteLine("&titles");
                     if (p.ignoreNicks) w.WriteLine("&nicks");
                     
@@ -126,7 +132,8 @@ namespace MCGalaxy.Commands.Chatting {
             Player.Message(p, "%HUsing the same name again will unignore.");
             Player.Message(p, "%H If name is \"all\", all chat is ignored.");
             Player.Message(p, "%H If name is \"irc\", IRC chat is ignored.");
-            Player.Message(p, "%H If name is \"8ball\", %T/8ball %Sis ignored.");
+            Player.Message(p, "%H If name is \"8ball\", %T/8ball %His ignored.");
+            Player.Message(p, "%H If name is \"drawoutput\", drawing command output is ignored.");
             Player.Message(p, "%H If name is \"titles\", player titles before names are ignored.");
             Player.Message(p, "%H If name is \"nicks\", custom player nicks do not show in chat.");
             Player.Message(p, "%HOtherwise, all chat from the player with [name] is ignored.");
