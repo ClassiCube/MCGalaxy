@@ -105,7 +105,7 @@ namespace MCGalaxy {
         public string whisperTo = "";
         public bool ignoreAll, ignoreGlobal, ignoreIRC, ignoreTitles, ignoreNicks, ignore8ball, ignoreDrawOutput;
 
-        public string storedMessage = "";
+        string partialMessage = "";
 
         public bool trainGrab;
         public bool onTrain, trainInvincible;

@@ -495,8 +495,8 @@ namespace MCGalaxy {
             }
             
             if (HasCpeExt(CpeExt.LongerMessages) && continued != 0) {
-                if (text.Length < NetUtils.StringSize) storedMessage = storedMessage + text + " ";
-                else storedMessage = storedMessage + text;
+                partialMessage += text;
+                if (text.Length < NetUtils.StringSize) partialMessage += " ";
                 return true;
             }
 
@@ -505,18 +505,18 @@ namespace MCGalaxy {
                 text = text.Replace("^detail.user=", "");
             }
 
-            if (storedMessage != "" && !text.EndsWith(">") && !text.EndsWith("<")) {
-                text = storedMessage.Replace("|>|", " ").Replace("|<|", "") + text;
-                storedMessage = "";
+            if (partialMessage != "" && !text.EndsWith(">") && !text.EndsWith("<")) {
+                text = partialMessage + text;
+                partialMessage = "";
             }
 
             if (text.EndsWith(">")) {
-                storedMessage += text.Substring(0, text.Length - 1) + "|>|";
-                SendMessage(Colors.teal + "Partial message: &f" + storedMessage.Replace("|>|", " ").Replace("|<|", ""));
+                partialMessage += text.Substring(0, text.Length - 1) + " ";
+                SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
                 return true;
             } else if (text.EndsWith("<")) {
-                storedMessage += text.Substring(0, text.Length - 1) + "|<|";
-                SendMessage(Colors.teal + "Partial message: &f" + storedMessage.Replace("|<|", "").Replace("|>|", " "));
+                partialMessage += text.Substring(0, text.Length - 1);
+                SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
                 return true;
             }
 
