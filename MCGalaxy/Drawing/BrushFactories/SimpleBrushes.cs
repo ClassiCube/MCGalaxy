@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message == "") {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
-                return new CheckeredBrush(args.Block, ExtBlock.Air);
+                return new CheckeredBrush(args.Block, ExtBlock.Invalid);
             }
             string[] parts = args.Message.SplitSpaces();
             
