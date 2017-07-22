@@ -121,14 +121,30 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             CTFConfig cfg = RetrieveConfig(p);
-            cfg.BlueFlagX = marks[0].X; cfg.BlueFlagY = marks[0].Y; cfg.BlueFlagZ = marks[0].Z;
+            Vec3S32 P = marks[0];           
+            cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
+            Player.Message(p, "Set flag position of blue team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
+            
+            block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            if (block.IsAir) block = (ExtBlock)Block.Blue;
+            cfg.BlueFlagBlock = block.RawID;
+            Player.Message(p, "Set flag block of blue team to {0}", p.level.BlockName(block));
+            
             UpdateConfig(p, cfg);
             return false;
         }
         
         static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             CTFConfig cfg = RetrieveConfig(p);
-            cfg.RedFlagX = marks[0].X; cfg.RedFlagY = marks[0].Y; cfg.RedFlagZ = marks[0].Z;
+            Vec3S32 P = marks[0];            
+            cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
+            Player.Message(p, "Set flag position of red team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
+            
+            block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            if (block.IsAir) block = (ExtBlock)Block.Red;
+            cfg.RedFlagBlock = block.RawID;
+            Player.Message(p, "Set flag block of red team to {0}", p.level.BlockName(block));
+            
             UpdateConfig(p, cfg);
             return false;
         }
@@ -159,6 +175,8 @@ namespace MCGalaxy.Commands.Fun {
             if (message.CaselessEq("set")) {
                 Player.Message(p, "%T/ctf set redspawn/bluespawn");
                 Player.Message(p, "%HSets spawn of red/blue team to your position.");
+                Player.Message(p, "%T/ctf set redflag/blueflag");
+                Player.Message(p, "%HSets flag position and block of red/blue team to the next block you place or delete.");
             } else {
                 Help(p);
             }
