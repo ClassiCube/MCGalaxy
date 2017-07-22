@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
             if (message != "" && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             
             Player.Message(p, "Destroy the block you wish to drill.");
-            p.MakeSelection(1, dist, DoDrill);
+            p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);
         }
         
         bool DoDrill(Player p, Vec3S32[] marks, object state, ExtBlock block) {

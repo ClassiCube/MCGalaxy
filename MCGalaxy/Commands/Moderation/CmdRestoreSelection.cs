@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (LevelInfo.ExistsBackup(p.level.name, message)) {
                 Player.Message(p, "Select two corners for restore.");
-                p.MakeSelection(2, message, DoRestore);
+                p.MakeSelection(2, "Selecting region for %SRestore", message, DoRestore);
             } else {
                 Player.Message(p, "Backup " + message + " does not exist.");
             }

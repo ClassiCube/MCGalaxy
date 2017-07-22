@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
             if (brush == null) return;
             
             Player.Message(p, "Place a block in the corner of where you want to paste.");
-            p.MakeSelection(1, brush, DoPaste);
+            p.MakeSelection(1, "Selecting location for %SPaste", brush, DoPaste);
         }
 
         bool DoPaste(Player p, Vec3S32[] m, object state, ExtBlock block) {

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             if (message != "" && !CommandParser.GetBlock(p, message, out skip)) return;
             
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, skip, DoMeasure);
+            p.MakeSelection(2, "Selecting region for %SMeasure", skip, DoMeasure);
         }
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {

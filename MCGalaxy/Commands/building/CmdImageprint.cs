@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "The URL entered was invalid!"); return;
             }            
             Player.Message(p, "Place or break two blocks to determine direction.");
-            p.MakeSelection(2, dArgs, DoImage);
+            p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
         }
         
         bool DownloadWebFile(string url, Player p) {

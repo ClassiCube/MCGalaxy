@@ -64,7 +64,6 @@ namespace MCGalaxy.Commands.World {
             Level.LoadMetadata(lvl);
             
             if (!PlayerActions.ChangeMap(p, lvl)) return;
-            p.ClearBlockchange();
         }
         
         static void SetLevelProps(Level lvl) {

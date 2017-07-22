@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
 
             if (!CheckBrush(p, dArgs.brushMsg)) return;           
             Player.Message(p, "Select where you wish your tree to grow");
-            p.MakeSelection(1, dArgs, DoTree);
+            p.MakeSelection(1, "Selecting location for %STree", dArgs, DoTree);
         }
         
         static bool CheckBrush(Player p, string brushMsg) {

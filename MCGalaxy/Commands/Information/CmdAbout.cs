@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Info {
             
         public override void Use(Player p, string message) {
             Player.Message(p, "Break/build a block to display information.");
-            p.MakeSelection(1, null, PlacedMark);
+            p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
         }
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {

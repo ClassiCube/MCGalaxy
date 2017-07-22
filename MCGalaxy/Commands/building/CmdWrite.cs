@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Building {
             wArgs.scale = scale; wArgs.spacing = spacing;
             wArgs.message = args[2].ToUpper();
             Player.Message(p, "Place or break two blocks to determine direction.");
-            p.MakeSelection(2, wArgs, DoWrite);
+            p.MakeSelection(2, "Selecting direction for %SWrite", wArgs, DoWrite);
         }
 
         bool DoWrite(Player p, Vec3S32[] marks, object state, ExtBlock block) {

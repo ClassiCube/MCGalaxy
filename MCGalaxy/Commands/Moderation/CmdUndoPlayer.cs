@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Place or break two blocks to determine the edges.");
                 UndoAreaArgs args = new UndoAreaArgs();
                 args.ids = ids; args.names = names; args.delta = delta;
-                p.MakeSelection(2, args, DoUndoArea);
+                p.MakeSelection(2, "Selecting region for %SUndo player", args, DoUndoArea);
             }
         }
         

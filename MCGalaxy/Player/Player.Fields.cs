@@ -255,7 +255,7 @@ namespace MCGalaxy {
         public event OnBlockChange Blockchange;
         
         internal bool HasBlockchange { get { return Blockchange != null; } }
-        public void ClearBlockchange() { Blockchange = null; }
+        public void ClearBlockchange() { ClearSelection(); }
         public object blockchangeObject;
         
         /// <summary> Called when the player has finished providing all the marks for a selection. </summary>

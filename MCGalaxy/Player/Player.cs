@@ -485,19 +485,40 @@ namespace MCGalaxy {
             return false;
         }
         
+        public void CheckForMessageSpam() {
+            if (spamChecker != null) spamChecker.CheckChatSpam();
+        }        
+        
+        string selTitle;
         readonly object selLock = new object();
         Vec3S32[] selMarks;
         object selState;
         SelectionHandler selCallback;
         int selIndex;
 
-        public void MakeSelection(int marks, object state, SelectionHandler callback) {
+        public void MakeSelection(int marks, string title, object state, SelectionHandler callback) {
             lock (selLock) {
                 selMarks = new Vec3S32[marks];
+                selTitle = title;
                 selState = state;
                 selCallback = callback;
                 selIndex = 0;
                 Blockchange = SelectionBlockChange;
+                if (title != null) InitSelectionHUD();
+            }
+        }
+        
+        public void MakeSelection(int marks, object state, SelectionHandler callback) {
+            MakeSelection(marks, null, state, callback);
+        }
+        
+        public void ClearSelection() {
+            lock (selLock) {
+                if (selTitle != null) ResetSelectionHUD();
+                selTitle = null;
+                selState = null;
+                selCallback = null;
+                Blockchange = null;
             }
         }
         
@@ -508,23 +529,43 @@ namespace MCGalaxy {
                 
                 selMarks[selIndex] = new Vec3S32(x, y, z);
                 selIndex++;
+                
+                if (selIndex == 1) {
+                    SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1" + FormatSelectionMark(selMarks[0]));
+                } else if (selIndex == 2) {
+                    SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2" + FormatSelectionMark(selMarks[0]));
+                }               
                 if (selIndex != selMarks.Length) return;
                 
-                object state = selState; selState = null;
-                SelectionHandler callback = selCallback; selCallback = null;
-                
-                Blockchange = null;
+                string title = selTitle;
+                object state = selState;
+                SelectionHandler callback = selCallback;
+                ClearSelection();
+
                 if (!block.IsPhysicsType) block = p.BlockBindings[block.RawID];
                 bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {
-                    MakeSelection(selIndex, state, callback);
+                    MakeSelection(selIndex, title, state, callback);
                 }
             }
-        }        
+        }
         
-        public void CheckForMessageSpam() {
-            if (spamChecker != null) spamChecker.CheckChatSpam();
+        string FormatSelectionMark(Vec3S32 P) {
+            return ": %S(" + P.X + ", " + P.Y + ", " + P.Z + ")";
+        }
+        
+        void InitSelectionHUD() {
+            SendCpeMessage(CpeMessageType.BottomRight3, selTitle);
+            int marks = selMarks.Length;
+            if (marks >= 1) SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1: %S(Not yet set)");
+            if (marks >= 2) SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2: %S(Not yet set)");
+        }
+        
+        void ResetSelectionHUD() {
+            SendCpeMessage(CpeMessageType.BottomRight3, "");
+            SendCpeMessage(CpeMessageType.BottomRight2, "");
+            SendCpeMessage(CpeMessageType.BottomRight1, "");
         }        
     }
 }

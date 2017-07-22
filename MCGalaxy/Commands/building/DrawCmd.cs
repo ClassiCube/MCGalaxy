@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Building {
             if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, PlaceMessage);
-            p.MakeSelection(MarksCount, dArgs, DoDraw);
+            p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
         protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {

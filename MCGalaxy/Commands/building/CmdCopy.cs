@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, cArgs, DoCopy);
+            p.MakeSelection(2, "Selecting region for %SCopy", cArgs, DoCopy);
         }
 
         bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) {
@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, format, cState.UsedBlocks);
             if (cArgs.offsetIndex != -1) {
                 Player.Message(p, "Place a block to determine where to paste from");
-                p.MakeSelection(1, null, PlacedOffsetMark);
+                p.MakeSelection(1, "Selecting paste offset for %SCopy", null, PlacedOffsetMark);
             }
             return false;
         }
