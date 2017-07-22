@@ -91,9 +91,9 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         bool CheckTwoArgs(Player p, ref int radius, ref int height, string[] parts) {

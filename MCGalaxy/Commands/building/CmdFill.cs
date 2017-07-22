@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawOp GetDrawOp(DrawArgs dArg) { return new FillDrawOp(); }
 
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             if (IsConfirmed(dArgs.Message)) offset++;
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {

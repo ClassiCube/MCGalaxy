@@ -20,22 +20,13 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdRainbow : Command {
+    public sealed class CmdRainbow : DrawCmd {
         public override string name { get { return "rainbow"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
-            Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, null, DoRainbow);
-        }
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new RainbowDrawOp(); }
         
-        bool DoRainbow(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            DrawOpPerformer.Do(new RainbowDrawOp(), null, p, marks);
-            return true;
-        }
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/rainbow");

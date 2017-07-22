@@ -27,10 +27,10 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
         }
         
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             if (dArgs.Mode == DrawMode.solid) return "normal";
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         protected override DrawMode GetMode(string[] parts) {

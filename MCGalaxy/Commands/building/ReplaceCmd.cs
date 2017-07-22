@@ -21,35 +21,18 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {  
-    public class CmdReplace : Command {        
+    public class CmdReplace : DrawCmd {        
         public override string name { get { return "replace"; } }
         public override string shortcut { get { return "r"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected virtual bool ReplaceNot { get { return false; } }
         
-        public override void Use(Player p, string message) {
-            string brushMsg = message.ToLower();
-            ExtBlock held = p.GetHeldBlock();
-            
-            BrushArgs args = new BrushArgs(p, brushMsg, held);
-            string name = ReplaceNot ? "replacenot" : "replace";
-            if (!BrushFactory.Find(name).Validate(args)) return;
-            
-            Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, message.ToLower(), DoReplace);
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            return new CuboidDrawOp();
         }
         
-        bool DoReplace(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            BrushArgs args = new BrushArgs(p, (string)state, block);
-            string name = ReplaceNot ? "replacenot" : "replace";
-            Brush brush = BrushFactory.Find(name).Construct(args);
-            if (brush == null) return false;
-            
-            DrawOp op = new CuboidDrawOp();
-            DrawOpPerformer.Do(op, brush, p, marks);
-            return true;
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
+            return ReplaceNot ? "replacenot" : "replace";
         }
         
         public override void Help(Player p) {

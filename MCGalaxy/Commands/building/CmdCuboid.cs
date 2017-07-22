@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands.Building {
             return new CuboidDrawOp();
         }
         
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             if (dArgs.Mode == DrawMode.solid) return "normal";
             if (dArgs.Mode == DrawMode.holes) return "checkered";
             if (dArgs.Mode == DrawMode.random) return "random";
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         public override void Help(Player p) {

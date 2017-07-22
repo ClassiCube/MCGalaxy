@@ -41,8 +41,10 @@ namespace MCGalaxy.Commands.Building {
             
             // Validate the brush syntax is correct
             int offset = 0;
-            BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
-            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
+            BrushFactory factory = BrushFactory.Find(GetBrush(dArgs, ref offset));
+            
+            string brushArgs = GetBrushArgs(dArgs, offset);
+            BrushArgs bArgs = new BrushArgs(p, brushArgs, dArgs.Block);
             if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, PlaceMessage);
@@ -56,8 +58,10 @@ namespace MCGalaxy.Commands.Building {
             if (marks == null) return false;
             
             int offset = 0;
-            BrushFactory factory = BrushFactory.Find(GetBrush(p, dArgs, ref offset));
-            BrushArgs bArgs = GetBrushArgs(dArgs, offset);
+            BrushFactory factory = BrushFactory.Find(GetBrush(dArgs, ref offset));
+            
+            string brushArgs = GetBrushArgs(dArgs, offset);
+            BrushArgs bArgs = new BrushArgs(p, brushArgs, dArgs.Block);
             Brush brush = factory.Construct(bArgs);
             if (brush == null) return false;
             
@@ -76,12 +80,12 @@ namespace MCGalaxy.Commands.Building {
         
         protected virtual void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) { }
         
-        protected virtual string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected virtual string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
-        protected static BrushArgs GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
+        protected virtual string GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
             int end = dArgs.Message.Length;
             string brushMsg = "";
             for (int i = 0; i < usedFromEnd; i++) {
@@ -91,7 +95,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
             if (brushMsg == "") brushMsg = dArgs.Player.DefaultBrushArgs;
-            return new BrushArgs(dArgs.Player, brushMsg, dArgs.Block);
+            return brushMsg;
         }
         
         protected struct DrawArgs {

@@ -58,10 +58,10 @@ namespace MCGalaxy.Commands.Building {
             m[0] = p0 - radius; m[1] = p0 + radius;
         }
         
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             if (dArgs.Mode == DrawMode.solid) return "normal";
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {

@@ -16,35 +16,28 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdHollow : Command {
+    public sealed class CmdHollow : DrawCmd {
         public override string name { get { return "hollow"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             byte skip = Block.Invalid;
-            if (message != "") {
-                skip = Block.Byte(message);
-                if (skip == Block.Invalid) { Player.Message(p, "Cannot find block entered."); return; }
+            if (dArgs.Message != "") {
+                skip = Block.Byte(dArgs.Message);
+                
+                if (skip == Block.Invalid) { 
+                    Player.Message(dArgs.Player, "Cannot find block entered."); return null; 
+                }
             }
-
-            Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, skip, DoHollow);
+            
+            HollowDrawOp op = new HollowDrawOp();
+            op.Skip = skip;
+            return op;
         }
         
-        bool DoHollow(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            HollowDrawOp op = new HollowDrawOp();
-            op.Skip = (byte)state;
-            DrawOpPerformer.Do(op, null, p, marks);
-            return true;
-        }
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/hollow");

@@ -14,51 +14,35 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdOutline : Command {
+    public sealed class CmdOutline : DrawCmd {
         public override string name { get { return "outline"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public override bool SuperUseable { get { return false; } }
-
-        public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces(2);
-            DrawArgs dArgs = default(DrawArgs);
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            if (dArgs.Message == "") {
+                Player.Message(dArgs.Player, "Block name is required."); return null;
+            }
             
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out dArgs.target)) return;
-            string brushArgs = args.Length > 1 ? args[1] : "";
-            dArgs.brushArgs = brushArgs;
+            ExtBlock target;
+            string[] parts = dArgs.Message.SplitSpaces(2);
+            if (!CommandParser.GetBlockIfAllowed(dArgs.Player, parts[0], out target)) return null;
             
-            BrushFactory factory = BrushFactory.Find(p.BrushName);
-            ExtBlock held = p.GetHeldBlock();
-            BrushArgs bArgs = new BrushArgs(p, brushArgs, held);
-            if (!factory.Validate(bArgs)) return;
-            
-            Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, dArgs, DoOutline);
+            OutlineDrawOp op = new OutlineDrawOp();
+            op.Target = target;
+            return op;
         }
         
-        bool DoOutline(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            DrawArgs dArgs = (DrawArgs)state;
-            OutlineDrawOp op = new OutlineDrawOp();
-            op.Target = dArgs.target;
-            
-            BrushFactory factory = BrushFactory.Find(p.BrushName);
-            BrushArgs bArgs = new BrushArgs(p, dArgs.brushArgs, block);
-            Brush brush = factory.Construct(bArgs);
-            if (brush == null) return false;
-            
-            DrawOpPerformer.Do(op, brush, p, marks);
-            return true;
+        protected override string GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
+            string[] parts = dArgs.Message.SplitSpaces(2);
+            return parts.Length == 1 ? "" : parts[1];
         }
-        struct DrawArgs { public ExtBlock target; public string brushArgs; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/outline [block] <brush args>");

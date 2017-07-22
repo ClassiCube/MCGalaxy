@@ -72,12 +72,12 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        protected override string GetBrush(Player p, DrawArgs dArgs, ref int offset) {
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
             LineDrawOp line = (LineDrawOp)dArgs.Op;
             offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
             
             if (line.MaxLength != int.MaxValue) offset++;
-            return p.BrushName;
+            return dArgs.Player.BrushName;
         }
         
         public override void Help(Player p) {

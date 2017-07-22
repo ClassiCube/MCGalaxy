@@ -14,34 +14,26 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdMaze : Command {
+    public sealed class CmdMaze : DrawCmd {
         public override string name { get { return "maze"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        
-        public override void Use(Player p, string message) {
+
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            if (dArgs.Message == "") return new MazeDrawOp();            
             int randomizer = 0;
-            if (message.Length > 0 && !int.TryParse(message, out randomizer)) {
-                Help(p); return;
-            }
+            if (!CommandParser.GetInt(dArgs.Player, dArgs.Message, "Randomizer", ref randomizer)) return null;
             
-            Player.Message(p, "Place or break two blocks to determine the edges.");           
-            p.MakeSelection(2, randomizer, DoMaze);
+            MazeDrawOp op = new MazeDrawOp();
+            op.randomizer = randomizer;
+            return op;
         }
         
-        bool DoMaze(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            MazeDrawOp op = new MazeDrawOp();
-            op.randomizer = (int)state;
-            DrawOpPerformer.Do(op, null, p, marks);
-            return true;
-        }
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/maze");
