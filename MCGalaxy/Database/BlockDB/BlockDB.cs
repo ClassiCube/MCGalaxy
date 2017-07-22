@@ -65,12 +65,12 @@ namespace MCGalaxy.DB {
         public void WriteEntries() {
             if (Cache.Head == null) return;
             
-            ValidateBackingFile();
+            BlockDBFile format = ValidateBackingFile();
             using (Stream s = OpenWrite()) {
                 // This truncates the lower 4 bits off - so e.g. if a power off occurred
                 // and 21 bytes were in the file, this sets the position to byte 16
                 s.Position = s.Length & ~0x0F;
-                BlockDBFile.WriteEntries(s, Cache);
+                format.WriteEntries(s, Cache);
                 Cache.Clear();
             }
         }
@@ -93,11 +93,11 @@ namespace MCGalaxy.DB {
             Vec3U16 dims;
             
             using (Stream s = OpenRead()) {
-                BlockDBFile.ReadHeader(s, out dims);
+                BlockDBFile format = BlockDBFile.ReadHeader(s, out dims);
                 if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                 
                 int index = (y * dims.Z + z) * dims.X + x;
-                BlockDBFile.FindChangesAt(s, index, output);
+                format.FindChangesAt(s, index, output);
             }
             FindInMemoryAt(x, y, z, output);
         }
@@ -131,8 +131,8 @@ namespace MCGalaxy.DB {
             
             if (!File.Exists(FilePath)) return false;
             using (Stream s = OpenRead()) {
-                BlockDBFile.ReadHeader(s, out dims);
-                return BlockDBFile.FindChangesBy(s, ids, startDelta, endDelta, output);
+                BlockDBFile format = BlockDBFile.ReadHeader(s, out dims);
+                return format.FindChangesBy(s, ids, startDelta, endDelta, output);
             }
         }
         
@@ -175,9 +175,10 @@ namespace MCGalaxy.DB {
 
         /// <summary> Checks if the backing file exists on disc, and if not, creates it.
         /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
-        void ValidateBackingFile() {
+        BlockDBFile ValidateBackingFile() {
             Vec3U16 fileDims;
 
+            BlockDBFile format = BlockDBFile.V1;
             if (!File.Exists(FilePath)) {
                 using (Stream s = OpenWrite()) {
                     fileDims = Dims;
@@ -185,12 +186,13 @@ namespace MCGalaxy.DB {
                 }
             } else {
                 using (Stream s = OpenRead()) {
-                    BlockDBFile.ReadHeader(s, out fileDims);
+                    format = BlockDBFile.ReadHeader(s, out fileDims);
                 }
                 if (fileDims.X < Dims.X || fileDims.Y < Dims.Y || fileDims.Z < Dims.Z) {
                     BlockDBFile.ResizeBackingFile(this);
                 }
             }
+            return format;
         }
         
                 

@@ -407,6 +407,7 @@
     <Compile Include="Database\BlockDB\BlockDBFile.cs" />
     <Compile Include="Database\BlockDB\BlockDBEntry.cs" />
     <Compile Include="Database\BlockDB\BlockDBChange.cs" />
+    <Compile Include="Database\BlockDB\BlockDBFile.V1.cs" />
     <Compile Include="Database\BlockDB\DBUpgrader.cs" />
     <Compile Include="Database\BlockDB\BlockDBTableDumper.cs" />
     <Compile Include="Database\BlockDB\NameConverter.cs" />

@@ -93,7 +93,7 @@ namespace MCGalaxy.DB {
             if (buffer.Count == 0) return;
             if (!force && buffer.Count < 4096) return;
             
-            BlockDBFile.WriteEntries(stream, buffer);
+            BlockDBFile.V1.WriteEntries(stream, buffer);
             buffer.Count = 0;
         }
         
