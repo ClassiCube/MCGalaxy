@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (args.Length > 3) { Help(p); return; }
+            if (message == "" || args.Length > 3) { Help(p); return; }
             if (args.Length == 3) { TeleportCoords(p, args); return; }
             
             Player target = null;

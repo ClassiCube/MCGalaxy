@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 3) { Help(p); return; }
             
             BlockProps[] scope = GetScope(p, args[0]);
-            if (scope == null) return;            
+            if (scope == null) return;
             ExtBlock block = GetBlock(p, scope, args[1]);
             if (block.IsInvalid) return;
             
@@ -152,13 +152,13 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, string msg) {
-            Level lvl = Player.IsSuper(p) ? null : p.level;            
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             AnimalAI ai = AnimalAI.None;
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
             
             scope[block.Index].AnimalAI = ai;
             Player.Message(p, "Animal AI for {0} set to: {1}",
-                               BlockName(scope, lvl, block), ai);
+                           BlockName(scope, lvl, block), ai);
             OnPropsChanged(scope, lvl, block);
         }
         
@@ -177,17 +177,26 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, string msg) {
-            Level lvl = Player.IsSuper(p) ? null : p.level;            
+            Level lvl = Player.IsSuper(p) ? null : p.level;
+            
             ExtBlock stackBlock;
-            if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
-            
+            if (msg == null) {
+                stackBlock = ExtBlock.Air;
+            } else {
+                if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
+            }
             scope[block.Index].StackId = stackBlock.RawID;
-            string stackBlockName = Player.IsSuper(p) ? 
-                BlockName(scope, lvl, stackBlock) : p.level.BlockName(stackBlock);
             
-            Player.Message(p, "Stack block for {0} set to: {1}",
-                           BlockName(scope, lvl, block), stackBlockName);
-            OnPropsChanged(scope, lvl, block);    
+            if (stackBlock.IsAir) {
+                Player.Message(p, "Removed stack block for {0}",
+                               BlockName(scope, lvl, block));
+            } else {
+                string stackBlockName = Player.IsSuper(p) ?
+                    BlockName(scope, lvl, stackBlock) : p.level.BlockName(stackBlock);
+                Player.Message(p, "Stack block for {0} set to: {1}",
+                               BlockName(scope, lvl, block), stackBlockName);
+            }
+            OnPropsChanged(scope, lvl, block);
         }
         
 
@@ -200,7 +209,7 @@ namespace MCGalaxy.Commands.World {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 BlockDefinition.GlobalProps[idx] = BlockDefinition.DefaultProps(block);
                 
-                foreach (Level lvl in loaded) {                    
+                foreach (Level lvl in loaded) {
                     lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
                     lvl.UpdateBlockHandler(block);
                 }
@@ -213,7 +222,7 @@ namespace MCGalaxy.Commands.World {
                     if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
                     lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
                     lvl.UpdateBlockHandler(block);
-                }                
+                }
             } else {
                 BlockProps.Save("lvl_" + level.name, scope, i => SelectLevel(level, i));
                 level.UpdateBlockHandler(block);
@@ -227,7 +236,7 @@ namespace MCGalaxy.Commands.World {
         
         static bool SelectLevel(Level lvl, int i) {
             ExtBlock block = ExtBlock.FromIndex(i);
-            return !block.IsPhysicsType && 
+            return !block.IsPhysicsType &&
                 lvl.CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
         }
         
@@ -278,7 +287,10 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "%HSets the flying or swimming animal AI for this block.");
                 string[] aiNames = Enum.GetNames(typeof(AnimalAI));
                 Player.Message(p, "%H  Types: &f{0}", aiNames.Join());
-            } else {
+            } else if (message.CaselessEq("stackblock")) {
+                Player.Message(p, "%HSets the block this block is converted into, when placed on top of " +
+                               "another of the same block. (e.g. placing two slabs on each other becomes a double slab)");
+            }  else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }
         }
