@@ -124,7 +124,8 @@ namespace MCGalaxy {
         
         /// <summary> Load all plugins </summary>
         public static void Load() {
-            LoadInternalPlugins();
+            LoadCorePlugin(new CorePlugin());
+            LoadCorePlugin(new NotesPlugin());
             
             if (Directory.Exists("plugins")) {
                 foreach (string path in Directory.GetFiles("plugins", "*.dll")) {
@@ -134,14 +135,6 @@ namespace MCGalaxy {
             } else {
                 Directory.CreateDirectory("plugins");
             }
-        }
-        
-        static void LoadInternalPlugins() {
-            Games.CtfSetup ctf = new Games.CtfSetup();
-            ctf.Load(true);
-            Plugin.all.Add(ctf);
-            LoadCorePlugin(new CorePlugin());
-            LoadCorePlugin(new NotesPlugin());
         }
         
         internal static void LoadCorePlugin(Plugin plugin) {

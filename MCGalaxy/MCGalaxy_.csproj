@@ -616,7 +616,6 @@
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
-    <Compile Include="Games\CTF\Setup.cs" />
     <Compile Include="Database\BulkTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\CtfGame.cs" />

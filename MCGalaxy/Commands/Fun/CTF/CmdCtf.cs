@@ -114,7 +114,11 @@ namespace MCGalaxy.Commands.Fun {
             } else if (property.CaselessEq("redflag")) {
                 Player.Message(p, "Place or delete a block to set red team's flag.");
                 p.MakeSelection(1, null, RedFlagCallback);
-            } else {
+            } else if (property.CaselessEq("divider")) {
+                cfg.ZDivider = p.Pos.BlockZ;
+                Player.Message(p, "Set Z line divider to {0}.", cfg.ZDivider);
+                UpdateConfig(p, cfg);
+            }  else {
                 Help(p, "set");
             }
         }
@@ -177,6 +181,10 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "%HSets spawn of red/blue team to your position.");
                 Player.Message(p, "%T/ctf set redflag/blueflag");
                 Player.Message(p, "%HSets flag position and block of red/blue team to the next block you place or delete.");
+                Player.Message(p, "%T/ctf set divider");
+                Player.Message(p, "%HSets the divider line to your current Z position.");
+                Player.Message(p, "   %HRed team tags blue team when the Z position is less than the divider, " +
+                               "blue teams tags when Z position is more.");
             } else {
                 Help(p);
             }
