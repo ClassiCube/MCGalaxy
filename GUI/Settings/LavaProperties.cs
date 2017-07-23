@@ -21,14 +21,6 @@ using System.ComponentModel;
 
 namespace MCGalaxy.Gui {
     public sealed class LavaProperties {
-
-        [DisplayName("Control rank")]
-        [TypeConverter(typeof(RankConverter))]
-        public string ControlRank { get; set; }
-        
-        [DisplayName("Setup rank")]
-        [TypeConverter(typeof(RankConverter))]
-        public string SetupRank { get; set; }
         
         [DisplayName("Lives")]
         public int Lives { get; set; }
@@ -45,17 +37,7 @@ namespace MCGalaxy.Gui {
         [DisplayName("Send AFK to main")]
         public bool AFKToMain { get; set; }
         
-        public void LoadFromServer() {
-            Group grp = Group.Find(Server.lava.controlRank);
-            if (grp == null) 
-                grp = Group.Find(LevelPermission.Operator);
-            ControlRank = grp == null ? "Operator" : grp.Name;
-            
-            grp = Group.Find(Server.lava.setupRank);
-            if (grp == null) 
-                grp = Group.Find(LevelPermission.Admin);
-            SetupRank = grp == null ? "SuperOP" : grp.Name;
-            
+        public void LoadFromServer() {            
             Lives = Server.lava.lifeNum;
             VoteTime = Server.lava.voteTime;
             VoteCount = Server.lava.voteCount;
@@ -64,12 +46,6 @@ namespace MCGalaxy.Gui {
         }
         
         public void ApplyToServer() {
-            Group grp = Group.Find(ControlRank);
-            if (grp != null) Server.lava.controlRank = grp.Permission;
-            
-            grp = Group.Find(SetupRank);
-            if (grp != null) Server.lava.setupRank = grp.Permission;
-            
             Server.lava.lifeNum = Lives;
             Server.lava.voteTime = VoteTime;
             Server.lava.voteCount = VoteCount;

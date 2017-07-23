@@ -45,8 +45,6 @@ namespace MCGalaxy.Games
         public byte voteCount = 2;
         public int lifeNum = 3;
         public double voteTime = 2;
-        public LevelPermission setupRank = LevelPermission.Admin;
-        public LevelPermission controlRank = LevelPermission.Operator;
         
         // Plugin event delegates
         public delegate void GameStartHandler(Level map);

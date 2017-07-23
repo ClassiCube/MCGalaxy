@@ -27,7 +27,11 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can setup lava survival"),
+                    new CommandPerm(LevelPermission.Operator, "+ can start/stop lava survival") }; }
+        }
+        
         public override void Use(Player p, string message)  {
             if (message == "") { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
@@ -57,9 +61,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleStart(Player p, string[] args) {
-            if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "+ can start lava survival", Server.lava.controlRank); return;
-            }
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
             string map = args.Length > 1 ? args[1] : "";
             switch (Server.lava.Start(map)) {
@@ -72,9 +74,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleStop(Player p, string[] args) {
-            if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "+ can stop lava survival", Server.lava.controlRank); return;
-            }
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
             switch (Server.lava.Stop()) {
                 case 0: Chat.MessageGlobal("Lava Survival has ended! We hope you had fun!"); return;
@@ -84,9 +84,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnd(Player p, string[] args) {
-            if (p != null && p.Rank < Server.lava.controlRank) {
-                Formatter.MessageNeedMinPerm(p, "+ can end a round", Server.lava.controlRank); return;
-            }
+            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
             
             if (!Server.lava.active) { Player.Message(p, "There isn't an active Lava Survival game."); return; }
             if (Server.lava.roundActive) Server.lava.EndRound();
@@ -95,9 +93,7 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         void HandleSetup(Player p, string[] args) {
-            if (p != null && p.Rank < Server.lava.setupRank) {
-                Formatter.MessageNeedMinPerm(p, "+ can setup lava survival", Server.lava.setupRank); return;
-            }
+            if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
             if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }            
             if (args.Length < 2) { SetupHelp(p); return; }
             if (Server.lava.active) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
@@ -166,8 +162,6 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetupSettings(Player p, string[] args) {
             if (args.Length < 3) {
                 Player.Message(p, "Maps: &b" + Server.lava.Maps.Join(", "));
-                Player.Message(p, "Setup rank: " + Group.GetColoredName(Server.lava.setupRank));
-                Player.Message(p, "Control rank: " + Group.GetColoredName(Server.lava.controlRank));
                 Player.Message(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
                 Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
                 Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
@@ -269,12 +263,12 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/ls go %H- Join the fun!");
             Player.Message(p, "%T/ls info %H- View current round info and time.");
             
-            if (p == null || p.Rank >= Server.lava.controlRank)  {
+            if (CheckExtraPerm(p, 1))  {
                 Player.Message(p, "%T/ls start <map> %H- Starts Lava Survival, optionally on the given map.");
                 Player.Message(p, "%T/ls stop %H- Stops the current Lava Survival game.");
                 Player.Message(p, "%T/ls end %H- End the current round or vote.");
             }
-            if (p == null || p.Rank >= Server.lava.setupRank) {
+            if (CheckExtraPerm(p, 2)) {
                 Player.Message(p, "%T/ls setup %H- Setup lava survival, use it for more info.");
             }
         }

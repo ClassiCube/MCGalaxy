@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Timers;
+using MCGalaxy.Commands;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
@@ -38,11 +39,13 @@ namespace MCGalaxy.Games {
             return data;
         }
 
+        bool needsSaveSettings;
         public void LoadSettings() {
             if (!File.Exists("properties/lavasurvival.properties")) { SaveSettings(); return; }
 
             try {
                 PropertiesFile.Read("properties/lavasurvival.properties", ProcessSettingsLine);
+                if (needsSaveSettings) SaveSettings();
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -57,10 +60,12 @@ namespace MCGalaxy.Games {
                 case "lives": lifeNum = int.Parse(value); break;
                     
                 case "setup-rank":
-                    setupRank = Group.ParsePermOrName(value, LevelPermission.Admin);
+                    LevelPermission setupRank = Group.ParsePermOrName(value, LevelPermission.Admin);
+                    UpdateExtraPerms(setupRank, 1);
                     break;
                 case "control-rank":
-                    controlRank = Group.ParsePermOrName(value, LevelPermission.Operator);
+                    LevelPermission controlRank = Group.ParsePermOrName(value, LevelPermission.Operator);
+                    UpdateExtraPerms(controlRank, 2);
                     break;
                 case "maps":
                     foreach (string name in value.Split(',')) {
@@ -72,6 +77,13 @@ namespace MCGalaxy.Games {
             }
         }
         
+        void UpdateExtraPerms(LevelPermission perm, int num) {
+            CommandExtraPerms.Load();
+            CommandExtraPerms.Set("lavasurvival", perm, "temp desc", num);
+            CommandExtraPerms.Save();
+            needsSaveSettings = true;
+        }
+        
         public void SaveSettings() {
             using (StreamWriter w = new StreamWriter("properties/lavasurvival.properties")) {
                 w.WriteLine("#Lava Survival main properties");
@@ -80,8 +92,6 @@ namespace MCGalaxy.Games {
                 w.WriteLine("vote-count = " + voteCount);
                 w.WriteLine("vote-time = " + voteTime);
                 w.WriteLine("lives = " + lifeNum);
-                w.WriteLine("setup-rank = " + (int)setupRank);
-                w.WriteLine("control-rank = " + (int)controlRank);
                 w.WriteLine("maps = " + maps.Join());
             }
         }

@@ -61,7 +61,7 @@ namespace MCGalaxy {
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
             switch (key.ToLower()) {
-                    // Backwards compatibility: some ocmmand extra permissions used to be part of server.properties
+                    // Backwards compatibility: some command extra permissions used to be part of server.properties
                 case "review-enter-perm":
                 case "review-leave-perm":
                     return;
