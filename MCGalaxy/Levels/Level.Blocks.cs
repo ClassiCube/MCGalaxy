@@ -468,7 +468,7 @@ namespace MCGalaxy {
         
         public bool LightPasses(ExtBlock block) {
             BlockDefinition def = GetBlockDef(block);
-            if (def != null) return !def.BlocksLight || def.BlockDraw != DrawType.Opaque;
+            if (def != null) return !def.BlocksLight || def.BlockDraw != DrawType.Opaque || def.MinZ > 0;
             return Block.LightPass(block.BlockID);
         }
     }
