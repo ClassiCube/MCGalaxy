@@ -36,7 +36,6 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class UndoDrawOp : DrawOp {
         public override string Name { get { return "Undo"; } }
-        public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;
@@ -50,6 +49,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public UndoDrawOp() {
             Flags = BlockDBFlags.UndoOther;
+            AffectedByTransform = false;
         }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }

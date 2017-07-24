@@ -76,7 +76,7 @@ namespace MCGalaxy.Gui {
             rank_cbAfk.Checked = grp.AfkKicked;
             rank_numAfk.Value = grp.AfkKickMinutes;
             
-            rank_numDraw.Value = grp.MaxBlocks;
+            rank_numDraw.Value = grp.DrawLimit;
             rank_numUndo.Value = grp.MaxUndo;
             rank_numMaps.Value = grp.OverseerMaps;
             rank_numGen.Value = grp.GenVolume;
@@ -124,7 +124,7 @@ namespace MCGalaxy.Gui {
         
         
         void rank_numDraw_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MaxBlocks = (int)rank_numDraw.Value;
+            copiedGroups[rank_list.SelectedIndex].DrawLimit = (int)rank_numDraw.Value;
         }
         
         void rank_numUndo_ValueChanged(object sender, EventArgs e) {

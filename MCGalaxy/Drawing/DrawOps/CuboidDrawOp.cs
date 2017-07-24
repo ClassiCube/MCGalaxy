@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
 
-    public class CuboidDrawOp : DrawOp {        
+    public class CuboidDrawOp : DrawOp {
         public override string Name { get { return "Cuboid"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

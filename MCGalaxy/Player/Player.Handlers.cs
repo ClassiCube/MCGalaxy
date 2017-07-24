@@ -598,7 +598,6 @@ namespace MCGalaxy {
         public void HandleCommand(string cmd, string message) {
             cmd = cmd.ToLower();
             try {
-                if (!CheckCommand(cmd)) return;
                 Command command = GetCommand(ref cmd, ref message);
                 if (command == null) return;
                 
@@ -620,7 +619,6 @@ namespace MCGalaxy {
                     string cmd = parts[0].ToLower();
                     string message = parts.Length > 1 ? parts[1] : "";
                     
-                    if (!CheckCommand(cmd)) return;
                     Command command = GetCommand(ref cmd, ref message);
                     if (command == null) return;
                     
@@ -658,6 +656,7 @@ namespace MCGalaxy {
         }
         
         Command GetCommand(ref string cmd, ref string cmdArgs) {
+            if (!CheckCommand(cmd)) return null;
             Command.Search(ref cmd, ref cmdArgs);
             
             byte bindIndex;

@@ -153,6 +153,7 @@
     <Compile Include="Commands\building\CmdPyramid.cs" />
     <Compile Include="Commands\building\CmdRainbow.cs" />
     <Compile Include="Commands\building\CmdRedo.cs" />
+    <Compile Include="Commands\building\CmdReplaceAll.cs" />
     <Compile Include="Commands\building\CmdReplaceBrush.cs" />
     <Compile Include="Commands\building\CmdSphere.cs" />
     <Compile Include="Commands\building\CmdTransform.cs" />

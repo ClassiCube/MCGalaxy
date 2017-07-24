@@ -24,7 +24,6 @@ namespace MCGalaxy.Drawing.Ops {
 
     public class RestoreSelectionDrawOp : DrawOp {        
         public override string Name { get { return "RestoreSelection"; } }
-        public override bool AffectedByTransform { get { return false; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
@@ -32,6 +31,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public RestoreSelectionDrawOp() {
             Flags = BlockDBFlags.Restored;
+            AffectedByTransform = false;
         }
         
         public Level Source;

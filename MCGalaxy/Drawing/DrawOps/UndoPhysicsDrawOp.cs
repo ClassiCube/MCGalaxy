@@ -23,10 +23,12 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Drawing.Ops {
 
     public class UndoPhysicsDrawOp : DrawOp {
-        public override string Name { get { return "UndoPhysics"; } }
-        public override bool AffectedByTransform { get { return false; } }
-        
+        public override string Name { get { return "UndoPhysics"; } }        
         internal DateTime Start;
+
+        public UndoPhysicsDrawOp() {
+            AffectedByTransform = false;
+        }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }
         

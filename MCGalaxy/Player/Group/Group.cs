@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public LevelPermission Permission = LevelPermission.Null;
         
         /// <summary> Maximum number of blocks members of this group can use in draw commands. </summary>
-        public int MaxBlocks;
+        public int DrawLimit;
         
         /// <summary> Maximum number of seconds members of this group can /undo up to. </summary>
         public int MaxUndo;
@@ -81,7 +81,7 @@ namespace MCGalaxy {
         
         private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode) {
             Permission = perm;
-            MaxBlocks = maxB;
+            DrawLimit = maxB;
             MaxUndo = maxUn;
             Name = name;
             Color = "&" + colCode;
@@ -115,7 +115,7 @@ namespace MCGalaxy {
         public Group CopyConfig() {
             Group copy = new Group();
             copy.Name = Name; copy.Color = Color; copy.Permission = Permission;
-            copy.MaxBlocks = MaxBlocks; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
+            copy.DrawLimit = DrawLimit; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
             copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps;
             copy.AfkKicked = AfkKicked; copy.AfkKickMinutes = AfkKickMinutes;
             copy.Prefix = Prefix; copy.filename = filename;

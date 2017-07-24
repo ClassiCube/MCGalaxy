@@ -92,6 +92,7 @@ namespace MCGalaxy.Maths {
     
     public struct Vec3S32 : IEquatable<Vec3S32> {        
         public int X, Y, Z;
+        public static Vec3S32 Zero = new Vec3S32(0);
         
         public Vec3S32(int x, int y, int z) {
             X = x; Y = y; Z = z;

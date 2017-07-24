@@ -119,9 +119,9 @@ namespace MCGalaxy.Commands.Building {
                 index++;
             }
             
-            if (cState.UsedBlocks > p.group.MaxBlocks) {
+            if (cState.UsedBlocks > p.group.DrawLimit) {
                 Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
-                               cState.UsedBlocks, p.group.MaxBlocks);
+                               cState.UsedBlocks, p.group.DrawLimit);
                 cState.Clear(); cState = null;
                 return false;
             }

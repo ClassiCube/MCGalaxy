@@ -68,7 +68,7 @@ namespace MCGalaxy {
                     } break;
                     
                 case "limit":
-                    temp.MaxBlocks = int.Parse(value);
+                    temp.DrawLimit = int.Parse(value);
                     break;
                 case "maxundo":
                     temp.MaxUndo = int.Parse(value);
@@ -173,7 +173,7 @@ namespace MCGalaxy {
                 foreach (Group grp in givenList) {
                     w.WriteLine("RankName = " + grp.Name);
                     w.WriteLine("Permission = " + (int)grp.Permission);
-                    w.WriteLine("Limit = " + grp.MaxBlocks);
+                    w.WriteLine("Limit = " + grp.DrawLimit);
                     w.WriteLine("MaxUndo = " + grp.MaxUndo);
                     w.WriteLine("Color = " + grp.Color[1]);
                     w.WriteLine("MOTD = " + grp.MOTD);

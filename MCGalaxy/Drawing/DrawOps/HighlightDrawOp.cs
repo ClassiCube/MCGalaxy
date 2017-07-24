@@ -27,7 +27,6 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class HighlightDrawOp : DrawOp {
         public override string Name { get { return "Highlight"; } }
-        public override bool AffectedByTransform { get { return false; } }
         
         /// <summary> Point in time that the /highlight should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;
@@ -46,6 +45,7 @@ namespace MCGalaxy.Drawing.Ops {
         public HighlightDrawOp() {
             Flags = 0;
             Undoable = false;
+            AffectedByTransform = false;
         }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return -1; }

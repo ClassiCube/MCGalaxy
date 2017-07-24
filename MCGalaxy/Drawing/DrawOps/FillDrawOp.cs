@@ -31,19 +31,19 @@ namespace MCGalaxy.Drawing.Ops {
         
         public FillDrawOp() {
             Flags = BlockDBFlags.Filled;
+            AffectedByTransform = false;
         }
         
         public override string Name { get { return "Fill"; } }
-        public override bool AffectedByTransform { get { return false; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             return Positions.Count;
         }
         
         public override bool CanDraw(Vec3S32[] marks, Player p, long affected) {
-            if (affected > p.group.MaxBlocks) {
+            if (affected > p.group.DrawLimit) {
                 Player.Message(p, "You rank can only fill up to {0} blocks. " +
-                               "This fill would affect more than {0} blocks.", p.group.MaxBlocks);
+                               "This fill would affect more than {0} blocks.", p.group.DrawLimit);
                 return false;
             }
             return true;
@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
             int* pos = stackalloc int[max];
             pos[0] = index; count++;
             
-            while (count > 0 && buffer.Count <= p.group.MaxBlocks) {
+            while (count > 0 && buffer.Count <= p.group.DrawLimit) {
                 index = pos[count - 1]; count--;
                 ushort x = (ushort)(index % lvl.Width);
                 ushort y = (ushort)((index / lvl.Width) / lvl.Length);

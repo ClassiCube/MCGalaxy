@@ -74,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
         public abstract string Name { get; }
         
         /// <summary> Whether the output blocks this draw operation are affected by the player's current Transform. </summary>
-        public virtual bool AffectedByTransform { get { return true; } }
+        public bool AffectedByTransform = true;
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
         /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
@@ -83,9 +83,9 @@ namespace MCGalaxy.Drawing.Ops {
         public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
-            if (p != null && affected > p.group.MaxBlocks) {
+            if (p != null && affected > p.group.DrawLimit) {
                 Player.Message(p, "You tried to draw " + affected + " blocks.");
-                Player.Message(p, "You cannot draw more than " + p.group.MaxBlocks + ".");
+                Player.Message(p, "You cannot draw more than " + p.group.DrawLimit + ".");
                 return false;
             }
             return true;

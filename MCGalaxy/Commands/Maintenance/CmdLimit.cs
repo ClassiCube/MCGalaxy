@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "dl":
                 case "drawlimit":
                     Chat.MessageGlobal("{0}%S's draw limit set to &b{1}", grp.ColoredName, limit);
-                    grp.MaxBlocks = limit; break;
+                    grp.DrawLimit = limit; break;
                 case "mu":
                 case "maxundo":
                     Chat.MessageGlobal("{0}%S's undo limit set to &b{1}", grp.ColoredName, limit);

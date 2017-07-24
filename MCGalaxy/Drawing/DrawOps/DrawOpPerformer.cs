@@ -37,12 +37,6 @@ namespace MCGalaxy.Drawing.Ops {
     
     public static class DrawOpPerformer {
         
-        public static bool Do(DrawOp op, Brush brush, Player p,
-                              ushort x1, ushort y1, ushort z1, ushort x2, ushort y2, ushort z2) {
-            Vec3S32[] marks = new Vec3S32[] { new Vec3S32(x1, y1, z1), new Vec3S32(x2, y2, z2) };
-            return Do(op, brush, p, marks);
-        }
-        
         public static Level Setup(DrawOp op, Player p, Vec3S32[] marks) {
             op.SetMarks(marks);
             Level lvl = p == null ? null : p.level;

@@ -55,34 +55,4 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
         }
     }
-    
-    public sealed class CmdReplaceAll : Command {      
-        public override string name { get { return "replaceall"; } }
-        public override string shortcut { get { return "ra"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
-        
-        public override void Use(Player p, string message) {
-            ushort x2 = (ushort)(p.level.Width - 1);
-            ushort y2 = (ushort)(p.level.Height - 1);
-            ushort z2 = (ushort)(p.level.Length - 1);
-
-            BrushArgs args = new BrushArgs(p, message.ToLower(), ExtBlock.Air);
-            Brush brush = BrushFactory.Find("replace").Construct(args);
-            if (brush == null) return;
-            
-            DrawOp op = new CuboidDrawOp();
-            if (!DrawOpPerformer.Do(op, brush, p, 0, 0, 0, x2, y2, z2))
-                return;
-            Player.Message(p, "&4/replaceall finished!");
-        }
-
-        public override void Help(Player p) {
-            Player.Message(p, "%T/replaceall [block] [block2].. [new]");
-            Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
-            Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
-            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
-        }
-    }
 }
