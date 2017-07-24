@@ -65,10 +65,10 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int x = min.X; x <= max.X; x++)
             {
                 ExtBlock block = GetSurvivalBlock(p, x, min.Y, z);
-                byte collideType = p.level.CollideType(block);
-                allGas = allGas && collideType == CollideType.WalkThrough;
+                byte collide = p.level.CollideType(block);
+                allGas = allGas && collide == CollideType.WalkThrough;
                 
-                if (collideType != CollideType.Solid) continue;
+                if (!CollideType.IsSolid(collide)) continue;
                 if (p.fallCount > p.level.Config.FallHeight)
                     p.HandleDeath(ExtBlock.Air, null, false, true);
                 

@@ -112,13 +112,14 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block);    
+    public delegate void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block);
+    public delegate void OnBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing);
     /// <summary> Called whenever a player places or deletes a block. </summary>
     public sealed class OnBlockChangeEvent : IEvent<OnBlockChange> {
         
-        public static void Call(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        public static void Call(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
             if (handlers.Count == 0) return;
-            CallCommon(pl => pl(p, x, y, z, block));
+            CallCommon(pl => pl(p, x, y, z, block, placing));
         }
     }
 

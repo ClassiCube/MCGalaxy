@@ -37,6 +37,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
@@ -47,6 +48,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnBlockChangeEvent.Unregister(HandleBlockChange);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
@@ -116,7 +118,35 @@ namespace MCGalaxy.Games.ZS {
             if (p.level != Game.CurLevel) return;
             
             if (!p.Game.Referee && !p.Game.Infected && Game.RoundInProgress) {
-                 Game.InfectPlayer(p, null);
+                Game.InfectPlayer(p, null);
+            }
+        }
+        
+        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
+            if (p.level != Game.CurLevel) return;
+            ExtBlock old = Game.CurLevel.GetBlock(x, y, z);
+            
+            if (Game.CurLevel.Config.BuildType == BuildType.NoModify) {
+                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+            }
+            if (Game.CurLevel.Config.BuildType == BuildType.ModifyOnly && Game.CurLevel.BlockProps[old.Index].OPBlock) {
+                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+            }
+            
+            if (Pillaring.Handles(p, x, y, z, placing, block, old, Game)) {
+                 p.cancelBlock = true; return;
+            }
+            
+            if (placing || (!placing && p.painting)) {
+                if (p.Game.Referee) return;                
+                if (p.Game.BlocksLeft == 0) {
+                    Player.Message(p, "You have no blocks left.");
+                    p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+                }
+
+                p.Game.BlocksLeft--;
+                if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
+                    Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
             }
         }
     }

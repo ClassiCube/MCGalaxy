@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Games.ZS {
@@ -24,10 +25,10 @@ namespace MCGalaxy.Games.ZS {
     internal static class Pillaring {
         
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
-                                     byte action, byte block, byte old, ZSGame game) {
+                                     bool placing, ExtBlock block, ExtBlock old, ZSGame game) {
             
-            if (action == 1 && !game.CurLevel.Config.Pillaring && !p.Game.Referee) {
-                if (NotPillaring(block, old)) {
+            if (placing && !game.CurLevel.Config.Pillaring && !p.Game.Referee) {
+                if (NotPillaring(game.CurLevel, block, old)) {
                     p.Game.BlocksStacked = 0;
                 } else if (CheckCoords(p, x, y, z)) {
                     p.Game.BlocksStacked++;
@@ -41,10 +42,13 @@ namespace MCGalaxy.Games.ZS {
             return false;
         }
 
-        static bool NotPillaring(byte b, byte old) {
-            if (Block.Walkthrough(b)) return true;
-            old = Block.Convert(old);
-            return old >= Block.Water && old <= Block.StillLava;
+        static bool NotPillaring(Level lvl, ExtBlock b, ExtBlock old) {
+            byte collide = lvl.CollideType(b);
+            if (collide == CollideType.WalkThrough) return true;
+            
+            collide = lvl.CollideType(old);
+            return collide == CollideType.SwimThrough || collide == CollideType.LiquidWater
+                || collide == CollideType.LiquidLava;
         }
         
         static bool CheckCoords(Player p, ushort x, ushort y, ushort z) {

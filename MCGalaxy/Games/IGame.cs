@@ -24,12 +24,6 @@ namespace MCGalaxy.Games {
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
         public virtual bool TeleportAllowed { get { return true; } }
         
-        /// <summary> Returns whether this game handed the player manually placing a block. </summary>
-        public virtual bool HandlesManualChange(Player p, ushort x, ushort y, ushort z, 
-                                                byte action, byte block, byte old) {
-            return false;
-        }
-        
         /// <summary> Returns whether this game handled the player sending a chat message. </summary>
         public virtual bool HandlesChatMessage(Player p, string message) {
             return false;

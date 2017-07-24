@@ -196,7 +196,7 @@ namespace MCGalaxy {
                 case 209:
                 case 210:
                 case 213:
-                case Door_Air2_air:
+                case 214:
                 case 215:
                 case 216:
                 case Door_Air_air:

@@ -101,7 +101,7 @@ namespace MCGalaxy.Games {
             p.cancelchat = true;
         }
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
             if (!Game.started || p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             if (team == null) {

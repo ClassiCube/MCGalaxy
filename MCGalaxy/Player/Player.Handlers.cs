@@ -46,12 +46,8 @@ namespace MCGalaxy {
                 }
             }
         }
-        
-        public void ManualChange(ushort x, ushort y, ushort z, byte action, ExtBlock block) {
-            ManualChange(x, y, z, action, block, true);
-        }
-        
-        public void ManualChange(ushort x, ushort y, ushort z, byte action,
+
+        public void ManualChange(ushort x, ushort y, ushort z, bool placing,
                                  ExtBlock block, bool checkPlaceDist) {
             ExtBlock old = level.GetBlock(x, y, z);
             if (old.IsInvalid) return;
@@ -62,20 +58,13 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
             
-            if (level.IsMuseum && Blockchange == null) return;           
-            if (action > 1) {
-                const string msg = "Unknown block action!";
-                Leave(msg, msg, true); return;
-            }
-            bool doDelete = !painting && action == 0;
+            if (level.IsMuseum && Blockchange == null) return;
+            bool deletingBlock = !painting && !placing;
 
             if (ServerConfig.verifyadmins && adminpen) {
                 SendMessage("&cYou must first verify with %T/pass [Password]");
                 RevertBlock(x, y, z); return;
             }
-
-            if (Server.zombie.Running && Server.zombie.HandlesManualChange(this, x, y, z, action, block.BlockID, old.BlockID))
-                return;
 
             if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
@@ -86,7 +75,7 @@ namespace MCGalaxy {
             if (Blockchange != null) {
                 Blockchange(this, x, y, z, block); return;
             }
-            OnBlockChangeEvent.Call(this, x, y, z, block);
+            OnBlockChangeEvent.Call(this, x, y, z, block, placing);
             if (cancelBlock) { cancelBlock = false; return; }
 
             if (old.BlockID >= Block.Air_Flood && old.BlockID <= Block.Door_Air_air) {
@@ -94,7 +83,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
             
-            if (!deleteMode) {
+            if (!deletingBlock) {
                 PhysicsArgs args = level.foundInfo(x, y, z);
                 if (args.HasWait) return;
             }
@@ -113,19 +102,19 @@ namespace MCGalaxy {
 
             ExtBlock held = block;
             block = BlockBindings[block.RawID];
-            if (!CheckManualChange(old, block, doDelete)) {
+            if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
             if (!ModeBlock.IsAir) block = ModeBlock;
             
             //Ignores updating blocks that are the same and revert block back only to the player
-            ExtBlock newB = (painting || action == 1) ? block : ExtBlock.Air;
+            ExtBlock newB = deletingBlock ? ExtBlock.Air : block;
             if (old == newB) {
                 if (painting || !old.VisuallyEquals(held)) RevertBlock(x, y, z);
                 return;
             }
             
-            if (doDelete) {
+            if (deletingBlock) {
                 bool deleted = DeleteBlock(old, x, y, z, block);
             } else {
                 bool placed = PlaceBlock(old, x, y, z, block);
@@ -280,6 +269,11 @@ namespace MCGalaxy {
                 if (frozen) { RevertBlock(x, y, z); return; }
                 
                 byte action = packet[7];
+                if (action > 1) {
+                    const string msg = "Unknown block action!";
+                    Leave(msg, msg, true); return;
+                }
+                
                 ExtBlock held = ExtBlock.FromRaw(packet[8]);
                 RawHeldBlock = held;
                 
@@ -297,7 +291,7 @@ namespace MCGalaxy {
                         RevertBlock(x, y, z); return;
                     }
                 }
-                ManualChange(x, y, z, action, held);
+                ManualChange(x, y, z, action != 0, held, true);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.MessageOps(DisplayName + " has triggered a block change error");

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Fun {
             for (; y <= lvl.Height; y++) {
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (above.IsInvalid) continue;
-                if (lvl.CollideType(above) != CollideType.Solid) continue;
+                if (!CollideType.IsSolid(lvl.CollideType(above))) continue;
                 
                 int posY = (y + 1) * 32 - 6;
                 BlockDefinition def = lvl.GetBlockDef(above);

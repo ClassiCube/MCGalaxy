@@ -36,33 +36,6 @@ namespace MCGalaxy.Games {
             HUD.UpdateAllPrimary(this);
         }
         
-        public override bool HandlesManualChange(Player p, ushort x, ushort y, ushort z,
-                                                 byte action, byte block, byte old) {
-            if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
-            if (CurLevel.Config.BuildType == BuildType.NoModify) {
-                p.RevertBlock(x, y, z); return true;
-            }
-            if (CurLevel.Config.BuildType == BuildType.ModifyOnly && Block.Props[old].OPBlock) {
-                p.RevertBlock(x, y, z); return true;
-            }
-            
-            if (Pillaring.Handles(p, x, y, z, action, block, old, this)) return true;
-            
-            if (action == 1 || (action == 0 && p.painting)) {
-                if (!p.level.name.CaselessEq(CurLevelName) || p.Game.Referee) return false;
-                
-                if (p.Game.BlocksLeft == 0) {
-                    Player.Message(p, "You have no blocks left.");
-                    p.RevertBlock(x, y, z); return true;
-                }
-
-                p.Game.BlocksLeft--;
-                if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
-                    Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
-            }
-            return false;
-        }
-        
         public override bool HandlesChatMessage(Player p, string message) {
             if (!Running || (p.level == null || !p.level.name.CaselessEq(CurLevelName))) return false;
             if (Server.votingforlevel && HandleVote(p, message)) return true;

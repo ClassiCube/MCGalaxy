@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.CPE {
             
             bool tinted = (def.FogR != 0 || def.FogG != 0 || def.FogB != 0) && def.Name.IndexOf('#') >= 0;
             if (tinted) {
-                Player.Message(p, "  Tint color: {0}", Utils.Hex(def.FogR, def.FogG, def.FogB));                
+                Player.Message(p, "  Tint color: {0}", Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
             if (def.Shape == 0) {
@@ -297,9 +297,9 @@ namespace MCGalaxy.Commands.CPE {
         static void EditHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1) {
-                    Player.Message(p, "Valid properties: name, collide, speed, toptex, alltex, sidetex, " +
-                                   "bottomtex, blockslight, sound, fullbright, shape, blockdraw, min, max, " +
-                                   "fogdensity, fogcolor, fallback, lefttex, righttex, fronttex, backtex");
+                    Player.Message(p, "Valid properties: " + helpSections.Keys.Join());
+                } else if (parts.Length == 3) {
+                    Help(p, cmd, "edit " + parts[2]);
                 } else {
                     Help(p, cmd);
                 }
@@ -307,7 +307,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             ExtBlock block;
-            if (!CheckBlock(p, parts[1], out block)) return;          
+            if (!CheckBlock(p, parts[1], out block)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[block.RawID];
             
@@ -321,125 +321,89 @@ namespace MCGalaxy.Commands.CPE {
             float fTemp;
             bool temp = false, changedFallback = false;
             
-            switch (parts[2].ToLower()) {
+            string arg = MapPropertyName(parts[2].ToLower());
+            switch (arg) {
                 case "name":
                     def.Name = value; break;
-                    
                 case "collide":
-                    if (!EditByte(p, value, "Collide type", ref def.CollideType, 9, 1, 0, 6)) return;
+                    if (!EditByte(p, value, "Collide type", ref def.CollideType, "collide", 0, 6)) return;
                     break;
-                    
                 case "speed":
                     if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
-                        SendEditHelp(p, 10, 0); return;
+                        SendEditHelp(p, "speed"); return;
                     }
                     def.Speed = fTemp; break;
                     
-                case "top":
                 case "toptex":
-                    if (!EditByte(p, value, "Top texture", ref def.TopTex)) return;
+                    if (!EditByte(p, value, "Top texture", ref def.TopTex, "top")) return;
                     break;
-                    
-                case "all":
                 case "alltex":
-                    if (!EditByte(p, value, "All textures", ref def.SideTex)) return;
+                    if (!EditByte(p, value, "All textures", ref def.SideTex, "all")) return;
                     def.SetAllTex(def.SideTex);
                     break;
-                    
-                case "side":
                 case "sidetex":
-                    if (!EditByte(p, value, "Side texture", ref def.SideTex)) return;
+                    if (!EditByte(p, value, "Side texture", ref def.SideTex, "sides")) return;
                     def.SetSideTex(def.SideTex);
                     break;
-                    
-                case "left":
                 case "lefttex":
-                    if (!EditByte(p, value, "Left texture", ref def.LeftTex)) return;
+                    if (!EditByte(p, value, "Left texture", ref def.LeftTex, "left")) return;
                     break;
-                    
-                case "right":
                 case "righttex":
-                    if (!EditByte(p, value, "Right texture", ref def.RightTex)) return;
+                    if (!EditByte(p, value, "Right texture", ref def.RightTex, "right")) return;
                     break;
-                    
-                case "front":
                 case "fronttex":
-                    if (!EditByte(p, value, "Front texture", ref def.FrontTex)) return;
+                    if (!EditByte(p, value, "Front texture", ref def.FrontTex, "front")) return;
                     break;
-                    
-                case "back":
                 case "backtex":
-                    if (!EditByte(p, value, "Back texture", ref def.BackTex)) return;
+                    if (!EditByte(p, value, "Back texture", ref def.BackTex, "back")) return;
                     break;
-                    
-                case "bottom":
                 case "bottomtex":
-                    if (!EditByte(p, value, "Bottom texture", ref def.BottomTex)) return;
+                    if (!EditByte(p, value, "Bottom texture", ref def.BottomTex, "bottom")) return;
                     break;
                     
-                case "light":
                 case "blockslight":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, 11, 0); return;
+                        SendEditHelp(p, "shadow"); return;
                     }
                     def.BlocksLight = temp;
                     break;
-                    
                 case "sound":
-                case "walksound":
-                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, 12, 1, 0, 11)) return;
+                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, "sound", 0, 11)) return;
                     break;
-                    
-                case "bright":
                 case "fullbright":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, 13, 0); return;
+                        SendEditHelp(p, "bright"); return;
                     }
                     def.FullBright = temp;
                     break;
                     
                 case "shape":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, 3, 0); return;
+                        SendEditHelp(p,"shape"); return;
                     }
                     def.Shape = temp ? (byte)0 : def.MaxZ;
                     break;
-                    
-                case "draw":
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, 14, 1, 0, 255)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, "draw", 0, 255)) return;
                     break;
-                    
                 case "min":
-                case "mincoords":
                     if (!ParseCoords(value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
-                        SendEditHelp(p, 7, 0); return;
-                    }
-                    
-                    break;
+                        SendEditHelp(p, "min"); return;
+                    } break;
                 case "max":
-                case "maxcoords":
                     if (!ParseCoords(value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
-                        SendEditHelp(p, 8, 0); return;
-                    }
-                    break;
+                        SendEditHelp(p, "max"); return;
+                    } break;
                     
-                case "density":
                 case "fogdensity":
-                    if (!EditByte(p, value, "Fog density", ref def.FogDensity)) return;
+                    if (!EditByte(p, value, "Fog density", ref def.FogDensity, "fog")) return;
                     break;
-                    
-                case "col":
-                case "fogcol":
                 case "fogcolor":
                     CustomColor rgb = default(CustomColor);
                     if (!CommandParser.GetHex(p, value, ref rgb)) return;
                     def.FogR = rgb.R; def.FogG = rgb.G; def.FogB = rgb.B;
                     break;
-                    
                 case "fallback":
-                case "fallbackid":
-                case "fallbackblock":
                     byte fallback = GetFallback(p, value);
                     if (fallback == Block.Invalid) return;
                     changedFallback = true;
@@ -447,10 +411,10 @@ namespace MCGalaxy.Commands.CPE {
                     value = Block.Name(fallback);
                     def.FallBack = fallback; break;
                 default:
-                    Player.Message(p, "Unrecognised property: " + parts[2]); return;
+                    Player.Message(p, "Unrecognised property: " + arg); return;
             }
             
-            Player.Message(p, "Set {0} for {1} to {2}", parts[2], blockName, value);
+            Player.Message(p, "Set {0} for {1} to {2}", arg, blockName, value);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             if (changedFallback)
                 BlockDefinition.UpdateFallback(global, def.BlockID, p == null ? null : p.level);
@@ -480,7 +444,7 @@ namespace MCGalaxy.Commands.CPE {
             string scope = global ? "global" : "level";
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
-            block = ExtBlock.FromRaw(def.BlockID);            
+            block = ExtBlock.FromRaw(def.BlockID);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             UpdateBlockProps(global, p, block, props);
             return true;
@@ -530,18 +494,17 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
-        static bool EditByte(Player p, string arg, string propName, ref byte target) {
-            return EditByte(p, arg, propName, ref target, -1, 0, 0, 255);
+        static bool EditByte(Player p, string arg, string propName, ref byte target, string help) {
+            return EditByte(p, arg, propName, ref target, help, 0, 255);
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target,
-                             int step, int offset, byte min, byte max) {
+                             string help, byte min, byte max) {
             int temp = 0;
             if (!CommandParser.GetInt(p, value, propName, ref temp, min, max)) {
-                if (step != -1) SendEditHelp(p, step, offset);
+                SendEditHelp(p, help);
                 return false;
             }
-            
             target = (byte)temp; return true;
         }
         
@@ -573,14 +536,14 @@ namespace MCGalaxy.Commands.CPE {
                 p.level.BlockProps[block.Index] = props;
                 p.level.UpdateBlockHandler(block);
                 return;
-            }      
-			
+            }
+            
             BlockDefinition.GlobalProps[block.Index] = props;
             Level[] loaded = LevelInfo.Loaded.Items;
             byte raw = block.RawID;
             
             foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;             
+                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
                 lvl.BlockProps[block.Index] = props;
                 lvl.UpdateBlockHandler(block);
             }
@@ -595,7 +558,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             BlockProps props = BlockProps.MakeDefault();
-            BlockDefinition.GlobalProps[block.Index] = props; 
+            BlockDefinition.GlobalProps[block.Index] = props;
             Level[] loaded = LevelInfo.Loaded.Items;
             byte raw = block.RawID;
             if (!block.IsCustomType) props = Block.Props[raw];
@@ -638,7 +601,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static void SendStepHelp(Player p, bool global) {
             int step = GetStep(p, global);
-            string[] help = stepsHelp[step];
+            string[] help = helpSections[stepsHelp[step]];
             
             BlockDefinition bd = GetBD(p, global);
             if (step == 4 && bd.Shape == 0)
@@ -649,58 +612,79 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "%f--------------------------");
         }
         
-        static void SendEditHelp(Player p, int step, int offset) {
-            string[] help = stepsHelp[step];
-            for (int i = offset; i < help.Length; i++)
+        static void SendEditHelp(Player p, string section) {
+            string[] help = helpSections[section];
+            for (int i = 0; i < help.Length; i++)
                 Player.Message(p, help[i].Replace("Type", "Use"));
         }
         
-        static string[][] stepsHelp = new string[][] {
-            null, // step 0
-            null, // step 1
-            new string[] { "Type the name for the block." },
-            new string[] { "Type '0' if the block is a cube, '1' if a sprite (e.g roses)." },
+        static string MapPropertyName(string prop) {
+            if (prop == "side" || prop == "all" || prop == "top" || prop == "bottom"
+                || prop == "left" || prop == "right" || prop == "front" || prop == "back") return prop + "tex";
             
-            new string[] { "Type a number between '0' and '255' for the top texture.",
-                "Textures in terrain.png are numbered from left to right, increasing downwards",
-            },
-            new string[] { "Type a number between '0' and '255' for the sides texture.",
-                "Textures in terrain.png are numbered from left to right, increasing downwards.",
-            },
-            new string[] { "Type a number between '0' and '255' for the bottom texture.",
-                "Textures in terrain.png are numbered from left to right, increasing downwards.",
-            },
+            if (prop == "sides" || prop == "sidestex") return "sidetex";
+            if (prop == "light") return "blockslight";
+            if (prop == "bright") return "fullbright";
+            if (prop == "walksound") return "sound";
+            if (prop == "draw") return "blockdraw";
+            if (prop == "mincoords") return "min";
+            if (prop == "maxcoords") return "max";
+            if (prop == "density") return "fogdensity";
+            if (prop == "col" || prop == "fogcol")  return "fogcolor";
+            if (prop == "fallbackid" || prop == "fallbackblock") return "fallback";
             
-            new string[] { "Enter the three minimum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
-                "Minimum coordinates for a normal block are &40 &20 &10." },
-            new string[] { "Enter the three maximum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
-                "Maximum coordinates for a normal block are &416 &216 &116." },
+            return prop;
+        }
+        
+        
+        static string[] stepsHelp = new string[] {
+            null, null, "name", "shape", "toptex", "sidetex", "bottomtex", "min", "max", "collide",
+            "speed", "blockslight", "sound", "fullbright", "blockdraw", "fogdensity", "fogcolor", "fallback" };
+        
+        const string texLine = "Textures in terrain.png are numbered from left to right, increasing downwards";
+        static Dictionary<string, string[]> helpSections = new Dictionary<string, string[]>() {
+            { "name", new string[] { "Type the name for the block." } },
+            { "shape", new string[] { "Type '0' if the block is a cube, '1' if a sprite (e.g roses)." } },
+            { "blockslight", new string[] { "Type 'yes' if the block casts a shadow, 'no' if it doesn't." } },
+            { "fullbright", new string[] { "Type 'yes' if the block is fully lit (e.g. lava), 'no' if not." } },
             
-            new string[] { "Type a number between '0' and '6' for collision type of this block.",
-                "0 - block is walk-through (e.g. air).", "1 - block is swim-through/climable (e.g. rope).",
-                "2 - block is solid (e.g. dirt).",
+            { "alltex", new string[] { "Type a number between '0' and '255' for all textures.", texLine } },
+            { "sidetex", new string[] { "Type a number between '0' and '255' for sides texture.", texLine } },
+            { "lefttex", new string[] { "Type a number between '0' and '255' for the left side texture.", texLine } },
+            { "righttex", new string[] { "Type a number between '0' and '255' for the right side texture.", texLine } },
+            { "fronttex", new string[] { "Type a number between '0' and '255' for the front side texture.", texLine } },
+            { "backtex", new string[] { "Type a number between '0' and '255' for the back side texture.", texLine } },
+            { "toptex", new string[] { "Type a number between '0' and '255' for the top texture.", texLine } },
+            { "bottomtex", new string[] { "Type a number between '0' and '255' for the bottom texture.", texLine } },
+            
+            { "min", new string[] { "Enter the three minimum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
+                    "Minimum coordinates for a normal block are &40 &20 &10." } },
+            { "max", new string[] { "Enter the three maximum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
+                    "Maximum coordinates for a normal block are &416 &216 &116." } },
+            { "collide", new string[] { "Type a number between '0' and '6' for collision type.",
+                    "0 - block is walk-through (e.g. air).", "1 - block is swim-through/climbable (e.g. rope).",
+                    "2 - block is solid (e.g. dirt).", "3 - block is solid, but slippery like ice",
+                    "4 - block is solid, but even slipperier than ice", "5 - block is swim-through like water",
+                    "6 - block is swim-through like lava" } },
+            { "speed", new string[] { "Type a number between '0.25' (25% speed) and '3.96' (396% speed).",
+                    "This speed is used when inside or walking on the block. Default speed is 1" }
             },
-            new string[] { "Type a number between '0.25' (25% speed) and '3.96' (396% speed).",
-                "This speed is used when inside or walking on the block. Default speed is 1",
+            { "sound", new string[] { "Type a number between '0' and '9' for the sound played when walking on it and breaking.",
+                    "0 = None, 1 = Wood, 2 = Gravel, 3 = Grass, 4 = Stone",
+                    "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow" }
             },
-            new string[] { "Type 'yes' if the block casts a shadow, 'no' if it doesn't" },
-            new string[] { "Type a number between '0' and '9' for the sound played when walking on it and breaking.",
-                "0 = None, 1 = Wood, 2 = Gravel, 3 = Grass, 4 = Stone",
-                "5 = Metal, 6 = Glass, 7 = Cloth, 8 = Sand, 9 = Snow",
+            { "blockdraw", new string[] { "Enter the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
+                    "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)" }
             },
-            new string[] { "Type 'yes' if the block is fully lit (e.g. lava), 'no' if not." },
-            new string[] { "Enter the block's draw method.", "0 = Opaque, 1 = Transparent (Like glass)",
-                "2 = Transparent (Like leaves), 3 = Translucent (Like ice), 4 = Gas (Like air)",
+            { "fogdensity", new string[] { "Enter the fog density for the block. 0 = No fog at all",
+                    "1 - 255 = Increasing density (e.g. water has 12, lava 255)" }
             },
-
-            new string[] { "Enter the fog density for the block. 0 = No fog at all",
-                "1 - 255 = Increasing density (e.g. water has 12, lava 255)",
-            },
-            new string[] { "Enter the fog color (hex color)", },
-            new string[] { "Enter the fallback block (Block shown to players who can't see custom blocks).",
-                "You can use any block name or block ID from the normal blocks.",
+            { "fogcolor", new string[] { "Enter the fog color (hex color)" } },
+            { "fallback", new string[] { "Enter the fallback block (Block shown to players who can't see custom blocks).",
+                    "You can use any block name or block ID from the normal blocks." }
             },
         };
+        
         
         internal static void Help(Player p, string cmd) {
             Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block.", cmd);
@@ -710,6 +694,18 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "%T{0} remove [id] %H- removes that custom block.", cmd);
             Player.Message(p, "%T{0} info [id] %H- shows info about that custom block.", cmd);
             Player.Message(p, "%HTo see the list of editable properties, type {0} edit.", cmd);
+        }
+        
+        internal static void Help(Player p, string cmd, string args) {
+            if (!args.CaselessStarts("edit ")) { Help(p, cmd); return; }            
+            string prop = args.Substring(args.IndexOf(' ') + 1);
+            prop = MapPropertyName(prop.ToLower());
+
+            if (!helpSections.ContainsKey(prop)) {
+                Player.Message(p, "Valid properties: " + helpSections.Keys.Join());
+            } else {
+                SendEditHelp(p, prop);
+            }
         }
     }
     
@@ -727,6 +723,10 @@ namespace MCGalaxy.Commands.CPE {
         public override void Help(Player p) {
             CustomBlockCommand.Help(p, "/gb");
         }
+        
+        public override void Help(Player p, string message) {
+            CustomBlockCommand.Help(p, "/gb", message);
+        }
     }
     
     public sealed class CmdLevelBlock : Command {
@@ -743,6 +743,10 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p) {
             CustomBlockCommand.Help(p, "/lb");
+        }
+        
+        public override void Help(Player p, string message) {
+            CustomBlockCommand.Help(p, "/lb", message);
         }
     }
 }

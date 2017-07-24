@@ -278,7 +278,7 @@ namespace MCGalaxy
         public const byte Door_Green_air = 211;
         public const byte Door_TNT_air = 212;
         //public const byte Door_Slab_air = 213;     // unused in core
-        public const byte Door_Air2_air = 214;
+        //public const byte Door_AirActivatable_air = 214;
         //public const byte Door_Water_air = 215;    // unused in core
         //public const byte Door_Lava_air = 216;     // unused in core
         public const byte Door_Air_air = 217;

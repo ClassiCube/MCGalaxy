@@ -252,7 +252,7 @@ namespace MCGalaxy {
       
         /// <summary> Called when a player removes or places a block.
         /// NOTE: Currently this prevents the OnBlockChange event from being called. </summary>
-        public event OnBlockChange Blockchange;
+        public event SelectionBlockChange Blockchange;
         
         internal bool HasBlockchange { get { return Blockchange != null; } }
         public void ClearBlockchange() { ClearSelection(); }

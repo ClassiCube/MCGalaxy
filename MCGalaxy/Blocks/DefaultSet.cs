@@ -216,9 +216,17 @@ namespace MCGalaxy.Blocks {
     }
     
     public static class CollideType {
-        public const byte WalkThrough = 0; // i.e. gas or sprite
-        public const byte SwimThrough = 1; // i.e. liquid
-        public const byte Solid       = 2; // i.e. solid
+        public const byte WalkThrough = 0; // Gas (usually also used by sprite)
+        public const byte SwimThrough = 1; // Liquid
+        public const byte Solid       = 2; // Solid
+        public const byte Ice         = 3; // Solid and partially slidable on.
+        public const byte SlipperyIce = 4; // Solid and fully slidable on.        
+        public const byte LiquidWater = 5; // Water style 'swimming'/'bobbing'    
+        public const byte LiquidLava  = 6; // Lava style 'swimming'/'bobbing'
+        
+        public static bool IsSolid(byte collide) {
+            return collide >= Solid && collide <= SlipperyIce;
+        }
     }
     
     public enum SoundType : byte {

@@ -494,7 +494,7 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlockHandler(ExtBlock block) {
-            bool nonSolid = CollideType(block) != MCGalaxy.Blocks.CollideType.Solid;           
+            bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
             int i = block.Index;
             
             deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);
