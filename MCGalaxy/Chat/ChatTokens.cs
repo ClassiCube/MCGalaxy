@@ -19,6 +19,16 @@ using System.Text;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
+    public sealed class ChatToken {
+        public readonly string Trigger;
+        public readonly string Description;
+        public readonly StringFormatter<Player> Formatter;
+        
+        public ChatToken(string trigger, string desc, StringFormatter<Player> formatter) {
+            Trigger = trigger; Description = desc; Formatter = formatter;
+        }
+    }
+    
     public static class ChatTokens {
         
         public static string Apply(string text, Player p) {
@@ -32,59 +42,71 @@ namespace MCGalaxy {
             // only apply standard $tokens when necessary
             for (int i = 0; i < sb.Length; i++) {
                 if (sb[i] != '$') continue;
-                
-                foreach (var token in standardTokens) {
-                    if (ServerConfig.DisabledChatTokens.Contains(token.Key)) continue;
-                    string value = token.Value(p);
-                    if (value == null) continue;
-                    sb.Replace(token.Key, value);
-                }
-                break;
+                ApplyStandard(sb, p); break;
             }
-            foreach (var token in CustomTokens)
-                sb.Replace(token.Key, token.Value);
+            ApplyCustom(sb);
         }
         
         public static string ApplyCustom(string text) {
-            if (CustomTokens.Count == 0) return text;
+            if (Custom.Count == 0) return text;
             StringBuilder sb = new StringBuilder(text);
-            foreach (var token in CustomTokens)
-                sb.Replace(token.Key, token.Value);
+            ApplyCustom(sb);
             return sb.ToString();
         }
         
+        static void ApplyStandard(StringBuilder sb, Player p) {
+            foreach (ChatToken token in Standard) {
+                if (ServerConfig.DisabledChatTokens.Contains(token.Trigger)) continue;
+                string value = token.Formatter(p);
+                if (value != null) sb.Replace(token.Trigger, value);
+            }
+        }
         
-        internal static Dictionary<string, StringFormatter<Player>> standardTokens
-            = new Dictionary<string, StringFormatter<Player>> {
-            { "$name", p => p.DisplayName == null ? null :
-                    (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.StripColors(p.DisplayName) },
-            { "$truename", p => p.truename == null ? null :
-                    (ServerConfig.DollarBeforeNamesToken ? "$" : "") + p.truename },
-            { "$date", p => DateTime.Now.ToString("yyyy-MM-dd") },
-            { "$time", p => DateTime.Now.ToString("HH:mm:ss") },
-            { "$ip", p => p.ip },
-            { "$serverip", p => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP },
-            { "$color", p => p.color },
-            { "$rank", p => p.group == null ? null : p.group.Name },
-            { "$level", p => p.level == null ? null : p.level.name },
+        static void ApplyCustom(StringBuilder sb) {
+            foreach (ChatToken token in Custom) {
+                sb.Replace(token.Trigger, token.Description);
+            }
+        }
+        
+        
+        public static List<ChatToken> Standard = new List<ChatToken>() {
+            new ChatToken("$name", "Nickname of the player",
+                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.StripColors(p.DisplayName)),
+            new ChatToken("$truename", "Account name of the player",
+                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + p.truename),
+            new ChatToken("$date", "Current date (year-month-day)",
+                          p => DateTime.Now.ToString("yyyy-MM-dd")),
+            new ChatToken("$time", "Current time of day (hour:minute:second)",
+                          p => DateTime.Now.ToString("HH:mm:ss")),
+            new ChatToken("$ip", "IP of the player", p => p.ip),
+            new ChatToken("$serverip", "IP player connected to the server via",
+                          p => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP),
+            new ChatToken("$color", "Color code of the player's nick", p => p.color),
+            new ChatToken("$rank", "Name of player's rank/group", p => p.group.Name),
+            new ChatToken("$level", "Name of level/map player is on",
+                          p => p.level == null ? null : p.level.name),
             
-            { "$deaths", p => p.TimesDied.ToString() },
-            { "$money", p => p.money.ToString() },
-            { "$blocks", p => p.TotalModified.ToString() },
-            { "$first", p => p.FirstLogin.ToString() },
-            { "$kicked", p => p.TimesBeenKicked.ToString() },
-            { "$server", p => ServerConfig.Name },
-            { "$motd", p => ServerConfig.MOTD },
-            { "$banned", p => Group.BannedRank.Players.Count.ToString() },
-            { "$irc", p => ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels },
-            
-            { "$infected", p => p.Game.TotalInfected.ToString() },
-            { "$survived", p => p.Game.TotalRoundsSurvived.ToString() },
+            new ChatToken("$deaths", "Times the player died",
+                          p => p.TimesDied.ToString()),
+            new ChatToken("$money", "Amount of server currency player has",
+                          p => p.money.ToString()),
+            new ChatToken("$blocks", "Number of blocks modified by the player",
+                          p => p.TotalModified.ToString()),
+            new ChatToken("$first", "Date player first logged in",
+                          p => p.FirstLogin.ToString()),
+            new ChatToken("$kicked", "Times the player was kicked",
+                          p => p.TimesBeenKicked.ToString()),
+            new ChatToken("$server", "Server's name", p => ServerConfig.Name),
+            new ChatToken("$motd", "Server's motd", p => ServerConfig.MOTD),
+            new ChatToken("$banned", "Number of banned players",
+                          p => Group.BannedRank.Players.Count.ToString()),
+            new ChatToken("$irc", "IRC server and channels",
+                          p => ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels),
         };
         
-        public static Dictionary<string, string> CustomTokens = new Dictionary<string, string>();
+        public static List<ChatToken> Custom = new List<ChatToken>();
         internal static void LoadCustom() {
-            CustomTokens.Clear();
+            Custom.Clear();
             TextFile tokensFile = TextFile.Files["Custom $s"];
             tokensFile.EnsureExists();
             
@@ -99,7 +121,7 @@ namespace MCGalaxy {
                 
                 string key = parts[0].Trim(), value = parts[1].Trim();
                 if (key.Length == 0) continue;
-                CustomTokens.Add(key, value);
+                Custom.Add(new ChatToken(key, value, null));
             }
         }
     }

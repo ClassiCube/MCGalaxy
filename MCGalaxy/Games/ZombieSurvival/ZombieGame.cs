@@ -64,7 +64,7 @@ namespace MCGalaxy.Games {
                 CurLevel = level;
             }
             
-        	CurLevel.SaveChanges = false;
+            CurLevel.SaveChanges = false;
             Chat.MessageGlobal("A game of zombie survival is starting on: {0}", CurLevelName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
@@ -312,6 +312,7 @@ namespace MCGalaxy.Games {
         TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
         OfflineStatPrinter offlineZSStats;
         OnlineStatPrinter onlineZSStats;
+        ChatToken infectedToken, survivedToken;
         void HookStats() {
             if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
             
@@ -324,11 +325,18 @@ namespace MCGalaxy.Games {
             statMaxSurvived = new TopStat("ConsecutiveSurvived", "ZombieStats", "MaxRounds",
                                           () => "Most consecutive rounds survived", TopStat.FormatInteger);
             
+            infectedToken = new ChatToken("$infected", "Total number of players infected",
+                                          p => p.Game.TotalInfected.ToString());
+            survivedToken = new ChatToken("$survived", "Total number of rounds survived",
+                                          p => p.Game.TotalRoundsSurvived.ToString());
+            
             offlineZSStats = PrintOfflineZSStats;
             onlineZSStats = PrintOnlineZSStats;
             OfflineStat.Stats.Add(offlineZSStats);
             OnlineStat.Stats.Add(onlineZSStats);
-
+            ChatTokens.Standard.Add(infectedToken);
+            ChatTokens.Standard.Add(survivedToken);
+            
             TopStat.Stats.Add(statMostInfected);
             TopStat.Stats.Add(statMostSurvived);
             TopStat.Stats.Add(statMaxInfected);
@@ -338,6 +346,8 @@ namespace MCGalaxy.Games {
         void UnhookStats() {
             OfflineStat.Stats.Remove(offlineZSStats);
             OnlineStat.Stats.Remove(onlineZSStats);
+            ChatTokens.Standard.Remove(infectedToken);
+            ChatTokens.Standard.Remove(survivedToken);
             
             TopStat.Stats.Remove(statMostInfected);
             TopStat.Stats.Remove(statMostSurvived);
