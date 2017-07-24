@@ -240,10 +240,10 @@ namespace MCGalaxy.Commands.CPE {
                 if (CommandParser.GetByte(p, value, "Texture ID", ref bd.BottomTex))
                     step++;
             } else if (step == 7) {
-                if (ParseCoords(value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
+                if (ParseCoords(p, value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
                     step++;
             } else if (step == 8) {
-                if (ParseCoords(value, ref bd.MaxX, ref bd.MaxY, ref bd.MaxZ))
+                if (ParseCoords(p, value, ref bd.MaxX, ref bd.MaxY, ref bd.MaxZ))
                     step++;
                 bd.Shape = bd.MaxY;
             } else if (step == 9) {
@@ -387,11 +387,11 @@ namespace MCGalaxy.Commands.CPE {
                     if (!EditByte(p, value, "Block draw", ref def.BlockDraw, "draw", 0, 255)) return;
                     break;
                 case "min":
-                    if (!ParseCoords(value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
+                    if (!ParseCoords(p, value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
                         SendEditHelp(p, "min"); return;
                     } break;
                 case "max":
-                    if (!ParseCoords(value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
+                    if (!ParseCoords(p, value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
                         SendEditHelp(p, "max"); return;
                     } break;
                     
@@ -500,22 +500,22 @@ namespace MCGalaxy.Commands.CPE {
         
         static bool EditByte(Player p, string value, string propName, ref byte target,
                              string help, byte min, byte max) {
-            int temp = 0;
-            if (!CommandParser.GetInt(p, value, propName, ref temp, min, max)) {
+            byte temp = 0;
+            if (!CommandParser.GetByte(p, value, propName, ref temp, min, max)) {
                 SendEditHelp(p, help);
                 return false;
             }
-            target = (byte)temp; return true;
+            target = temp; return true;
         }
         
-        static bool ParseCoords(string parts, ref byte x, ref byte y, ref byte z) {
+        static bool ParseCoords(Player p, string parts, ref byte x, ref byte y, ref byte z) {
             string[] coords = parts.SplitSpaces();
             if (coords.Length != 3) return false;
             
             byte tx = 0, ty = 0, tz = 0;
-            if (!byte.TryParse(coords[0], out tx) || !byte.TryParse(coords[1], out ty)
-                || !byte.TryParse(coords[2], out tz)) return false;
-            if (tx > 16 || ty > 16 || tz > 16) return false;
+            if (!CommandParser.GetByte(p, coords[0], "X", ref tx, 0, 16)) return false;
+            if (!CommandParser.GetByte(p, coords[1], "Y", ref ty, 0, 16)) return false;
+            if (!CommandParser.GetByte(p, coords[2], "Z", ref tz, 0, 16)) return false;
             
             x = tx; z = ty; y = tz; // blockdef files have z being height, we use y being height
             return true;
