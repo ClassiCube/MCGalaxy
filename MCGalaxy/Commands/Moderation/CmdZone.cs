@@ -68,8 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
             } else if (args[0].CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone,
-                                       "zone list", "zones", modifier, true);
+                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone, "zone list", "zones", modifier, true);
             } else {
                 Help(p);
             }

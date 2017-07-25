@@ -442,12 +442,16 @@ namespace MCGalaxy {
             if (buffered) BlockQueue.Addblock(p, index, block);
             else Player.GlobalBlockchange(this, x, y, z, block);
         }
-                
         
         public BlockDefinition GetBlockDef(ExtBlock block) {
             if (block.BlockID == Block.custom_block) return CustomBlockDefs[block.ExtID];
-            if (block.BlockID >= Block.CpeCount || block.BlockID == Block.Air) return null;
-            return CustomBlockDefs[block.BlockID];
+            if (block.BlockID == Block.Air) return null;
+            
+            if (block.BlockID >= Block.CpeCount) {
+                return CustomBlockDefs[Block.Convert(block.BlockID)];
+            } else {
+                return CustomBlockDefs[block.BlockID];
+            }
         }
         
         public string BlockName(ExtBlock block) {
