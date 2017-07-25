@@ -80,15 +80,24 @@ namespace MCGalaxy.Gui.Popups {
             using (ColorSelector sel = new ColorSelector("Insert color", '\0')) {
                 DialogResult result = sel.ShowDialog();
                 if (result == DialogResult.Cancel) return;
-                
-                string color = "&" + sel.ColorCode;
-                int selStart = txtEdit.SelectionStart, selLength = txtEdit.SelectionLength;
-                
-                txtEdit.Paste(color);
-                // re highlight now replaced text
-                if (selLength > 0) txtEdit.Select(selStart, 2);
-                txtEdit.Focus();
+                InsertText("&" + sel.ColorCode);
             }
+        }
+        
+        void btnToken_Click(object sender, EventArgs e) {
+            using (TokenSelector sel = new TokenSelector("Insert token")) {
+                DialogResult result = sel.ShowDialog();
+                if (result == DialogResult.Cancel || sel.Token == null) return;
+                InsertText(sel.Token);
+            }
+        }
+        
+        void InsertText(string text) {
+            int selStart = txtEdit.SelectionStart, selLength = txtEdit.SelectionLength;            
+            txtEdit.Paste(text);
+            // re highlight now replaced text
+            if (selLength > 0) txtEdit.Select(selStart, text.Length);
+            txtEdit.Focus();
         }
         
         void EditTxt_Unload(object sender, EventArgs e) {

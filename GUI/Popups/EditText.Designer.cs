@@ -58,7 +58,7 @@ namespace MCGalaxy.Gui.Popups
         	this.btnColor.Name = "btnColor";
         	this.btnColor.Size = new System.Drawing.Size(75, 23);
         	this.btnColor.TabIndex = 3;
-        	this.btnColor.Text = "Insert  color";
+        	this.btnColor.Text = "Insert color";
         	this.btnColor.UseVisualStyleBackColor = true;
         	this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
         	// 
@@ -70,7 +70,7 @@ namespace MCGalaxy.Gui.Popups
         	this.btnToken.TabIndex = 4;
         	this.btnToken.Text = "Insert token";
         	this.btnToken.UseVisualStyleBackColor = true;
-        	this.btnToken.Enabled = false;
+        	this.btnToken.Click += new System.EventHandler(this.btnToken_Click);
         	// 
         	// EditText
         	// 

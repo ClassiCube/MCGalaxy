@@ -67,11 +67,15 @@
     <Compile Include="Popups\EditText.Designer.cs">
       <DependentUpon>EditText.cs</DependentUpon>
     </Compile>
+    <Compile Include="Popups\TokenSelector.cs" />
     <Compile Include="Popups\PortTools.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Popups\PortTools.Designer.cs">
       <DependentUpon>PortTools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\TokenSelector.Designer.cs">
+      <DependentUpon>TokenSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs" />

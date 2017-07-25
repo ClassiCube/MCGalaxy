@@ -64,7 +64,7 @@ namespace MCGalaxy.Gui.Popups {
             index++;
             
             Button btn = new Button();
-            Color textCol;          
+            Color textCol;
             btn.BackColor = LookupColor(colCode, out textCol);
             btn.ForeColor = textCol;
             btn.Location = new Point(9 + row * btnWidth, 7 + col * btnHeight);
