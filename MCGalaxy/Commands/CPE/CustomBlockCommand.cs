@@ -313,7 +313,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (def == null && block.BlockID < Block.CpeCount) {
                 def = DefaultSet.MakeCustomBlock(block.BlockID);
-                AddBlock(p, def, global, cmd, BlockDefinition.GlobalProps[block.Index]);
+                AddBlock(p, def, global, cmd, BlockDefinition.DefaultProps(block));
             }
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             

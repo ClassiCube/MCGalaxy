@@ -25,7 +25,7 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         
-        const int btnWidth = 130, btnHeight = 40, btnsPerCol = 8;
+        const int btnWidth = 110, btnHeight = 40, btnsPerCol = 9;
         int index = 0;
         void MakeButton(ChatToken token) {
             int row = index / btnsPerCol, col = index % btnsPerCol;
