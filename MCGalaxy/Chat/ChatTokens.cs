@@ -84,8 +84,7 @@ namespace MCGalaxy {
             new ChatToken("$color", "Color code of the player's nick", p => p.color),
             new ChatToken("$rank", "Name of player's rank/group", p => p.group.Name),
             new ChatToken("$level", "Name of level/map player is on",
-                          p => p.level == null ? null : p.level.name),
-            
+                          p => p.level == null ? null : p.level.name),            
             new ChatToken("$deaths", "Times the player died",
                           p => p.TimesDied.ToString()),
             new ChatToken("$money", "Amount of server currency player has",
@@ -97,7 +96,7 @@ namespace MCGalaxy {
             new ChatToken("$kicked", "Times the player was kicked",
                           p => p.TimesBeenKicked.ToString()),
             new ChatToken("$server", "Server's name", p => ServerConfig.Name),
-            new ChatToken("$motd", "Server's motd", p => ServerConfig.MOTD),
+            new ChatToken("$motd", "Server's MOTD", p => ServerConfig.MOTD),
             new ChatToken("$banned", "Number of banned players",
                           p => Group.BannedRank.Players.Count.ToString()),
             new ChatToken("$irc", "IRC server and channels",

@@ -54,7 +54,7 @@ namespace MCGalaxy {
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             
-            LoadCoreProps();          
+            LoadCoreProps();
             for (int i = 0; i < blockAABBs.Length; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 blockAABBs[i] = Block.BlockAABB(block, this);
