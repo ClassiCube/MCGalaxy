@@ -66,9 +66,20 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageOps(p.name + " tried to delete a zone that is above their rank!");
                     Logger.Log(LogType.SuspiciousActivity, "{0} tried to delete a zone that is above their rank!", p.name);
                 }
+            } else if (args[0].CaselessEq("list")) {
+                string modifier = args.Length > 1 ? args[1] : "";
+                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone,
+                                       "zone list", "zones", modifier, true);
             } else {
                 Help(p);
             }
+        }      
+                
+        static string FormatZone(Level.Zone zone) {
+            return "&b(" +
+                zone.smallX + "-" + zone.bigX + ", " +
+                zone.smallY + "-" + zone.bigY + ", " +
+                zone.smallZ + "-" + zone.bigZ + ") &f" + zone.Owner;
         }
         
         internal static void ZoneAll(Level lvl, string owner) {
@@ -170,8 +181,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/zone add [name] %H- Creates a zone only [name] can build in");
             Player.Message(p, "%T/zone add [rank] %H- Creates a zone only [rank]+ can build in");
-            Player.Message(p, "%T/zone map [name/rank] %H- /zone add across the entire map");       
+            Player.Message(p, "%T/zone map [name/rank] %H- /zone add across the entire map");
             Player.Message(p, "%T/zone del %H- Deletes the zone clicked");
+            Player.Message(p, "%T/zone list %H- Lists zones in the map");
         }
     }
 }
