@@ -455,6 +455,7 @@ namespace MCGalaxy {
         }
         
         public string BlockName(ExtBlock block) {
+            if (block.IsPhysicsType) return Block.Name(block.BlockID);
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return def.Name.Replace(" ", "");
             
