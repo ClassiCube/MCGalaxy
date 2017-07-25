@@ -172,8 +172,10 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level.name.CaselessEq(lvl.name))
+                if (pl.level.name.CaselessEq(lvl.name) && pl.aiming) {
                     pl.aiming = false;
+                    pl.ClearBlockchange();
+                }
             }
         }
         

@@ -530,9 +530,9 @@ namespace MCGalaxy {
                 selMarks[selIndex] = new Vec3S32(x, y, z);
                 selIndex++;
                 
-                if (selIndex == 1) {
+                if (selIndex == 1 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1" + FormatSelectionMark(selMarks[0]));
-                } else if (selIndex == 2) {
+                } else if (selIndex == 2 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2" + FormatSelectionMark(selMarks[0]));
                 }               
                 if (selIndex != selMarks.Length) return;
@@ -557,9 +557,9 @@ namespace MCGalaxy {
         
         void InitSelectionHUD() {
             SendCpeMessage(CpeMessageType.BottomRight3, selTitle);
-            int marks = selMarks.Length;
-            if (marks >= 1) SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1: %S(Not yet set)");
-            if (marks >= 2) SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2: %S(Not yet set)");
+            SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1: %S(Not yet set)");
+            string mark2Msg = selMarks.Length >= 2 ? "Mark #2: %S(Not yet set)" : "";
+            SendCpeMessage(CpeMessageType.BottomRight1, mark2Msg);
         }
         
         void ResetSelectionHUD() {

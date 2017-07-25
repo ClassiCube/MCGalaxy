@@ -149,6 +149,7 @@ namespace MCGalaxy.Commands {
             }
             
             block = RawGetBlock(p, input);
+            if (block.IsInvalid) Player.Message(p, "&cThere is no block \"{0}\".", input);
             return !block.IsInvalid;
         }
         
@@ -162,8 +163,6 @@ namespace MCGalaxy.Commands {
             // find custom block
             byte raw = BlockDefinition.GetBlock(input, p);
             if (raw != Block.Invalid) return ExtBlock.FromRaw(raw);
-            
-            Player.Message(p, "&cThere is no block \"{0}\".", input);
             return ExtBlock.Invalid;
         }
 
