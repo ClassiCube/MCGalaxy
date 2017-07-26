@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
                 if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
                 
                 string path = FindCopy(p.name, parts[1]);
-                if (path == null) { Player.Message(p, "No such copy exists."); return; }                
+                if (path == null) { Player.Message(p, "No such copy exists."); return; }
                 File.Delete(path);
                 Player.Message(p, "Deleted copy " + parts[1]);
             } else if (opt == "list") {
@@ -90,40 +90,52 @@ namespace MCGalaxy.Commands.Building {
             }
 
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SCopy", cArgs, DoCopy);
+            int marks = cArgs.offsetIndex != -1 ? 3 : 2;
+            p.MakeSelection(marks, "Selecting region for %SCopy", cArgs, DoCopy, DoCopyMark);
         }
 
-        bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ExtBlock block) {
+            if (i == 2) {
+                CopyState copy = p.CopyBuffer;
+                copy.Offset.X = copy.OriginX - m[0].X;
+                copy.Offset.Y = copy.OriginY - m[0].Y;
+                copy.Offset.Z = copy.OriginZ - m[0].Z;
+                Player.Message(p, "Set offset of where to paste from.");
+                return;
+            }           
+            if (i != 1) return;
+            
             CopyArgs cArgs = (CopyArgs)state;
             ushort minX = (ushort)Math.Min(m[0].X, m[1].X), maxX = (ushort)Math.Max(m[0].X, m[1].X);
             ushort minY = (ushort)Math.Min(m[0].Y, m[1].Y), maxY = (ushort)Math.Max(m[0].Y, m[1].Y);
             ushort minZ = (ushort)Math.Min(m[0].Z, m[1].Z), maxZ = (ushort)Math.Max(m[0].Z, m[1].Z);
             
             CopyState cState = new CopyState(minX, minY, minZ, maxX - minX + 1,
-                                            maxY - minY + 1, maxZ - minZ + 1);
+                                             maxY - minY + 1, maxZ - minZ + 1);
             cState.OriginX = m[0].X; cState.OriginY = m[0].Y; cState.OriginZ = m[0].Z;
             
             int index = 0; cState.UsedBlocks = 0;
             cState.PasteAir = cArgs.type == 2;
             
-            for (ushort yy = minY; yy <= maxY; ++yy)
-                for (ushort zz = minZ; zz <= maxZ; ++zz)
-                    for (ushort xx = minX; xx <= maxX; ++xx)
+            for (ushort y = minY; y <= maxY; ++y)
+                for (ushort z = minZ; z <= maxZ; ++z)
+                    for (ushort x = minX; x <= maxX; ++x)
             {
-                block = p.level.GetBlock(xx, yy, zz);
+                block = p.level.GetBlock(x, y, z);
                 if (!p.group.Blocks[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
-                if (block.BlockID != Block.Air || cState.PasteAir) 
+                if (block.BlockID != Block.Air || cState.PasteAir)
                     cState.UsedBlocks++;
                 cState.Set(block, index);
                 index++;
             }
             
             if (cState.UsedBlocks > p.group.DrawLimit) {
-                Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.", 
+                Player.Message(p, "You tried to copy {0} blocks. You cannot copy more than {1} blocks.",
                                cState.UsedBlocks, p.group.DrawLimit);
                 cState.Clear(); cState = null;
-                return false;
+                p.ClearSelection();
+                return;
             }
             
             p.CopyBuffer = cState;
@@ -132,9 +144,9 @@ namespace MCGalaxy.Commands.Building {
                 op.Flags = BlockDBFlags.Cut;
                 Brush brush = new SolidBrush(ExtBlock.Air);
                 
-                Vec3S32[] marks = new Vec3S32[] { 
+                Vec3S32[] marks = new Vec3S32[] {
                     new Vec3S32(minX, minY, minZ),
-                    new Vec3S32(maxX, maxY, maxZ) 
+                    new Vec3S32(maxX, maxY, maxZ)
                 };
                 DrawOpPerformer.Do(op, brush, p, marks, false);
             }
@@ -144,22 +156,11 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, format, cState.UsedBlocks);
             if (cArgs.offsetIndex != -1) {
                 Player.Message(p, "Place a block to determine where to paste from");
-                p.MakeSelection(1, "Selecting paste offset for %SCopy", null, PlacedOffsetMark);
             }
-            return false;
         }
-
-        bool PlacedOffsetMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            CopyState copy = p.CopyBuffer;          
-            copy.Offset.X = copy.OriginX - marks[0].X;
-            copy.Offset.Y = copy.OriginY - marks[0].Y;
-            copy.Offset.Z = copy.OriginZ - marks[0].Z;
-            Player.Message(p, "Set offset of where to paste from.");
-            return false;
-        }
-
-        struct CopyArgs { public int type, offsetIndex; }
         
+        bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) { return false; }
+        struct CopyArgs { public int type, offsetIndex; }        
         
         void SaveCopy(Player p, string file) {
             if (!Directory.Exists("extra/savecopy"))

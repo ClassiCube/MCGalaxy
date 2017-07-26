@@ -261,5 +261,9 @@ namespace MCGalaxy {
         /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
         /// <returns> Whether to repeat this selection, if /static mode is enabled. </returns>
         public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, ExtBlock block);
+        
+        /// <summary> Called when the player has provided a mark for a selection. </summary>
+        /// <remarks> i is the index of the mark, so the 'first' mark has i of 0. </remarks>
+        public delegate void SelectionMarkHandler(Player p, Vec3S32[] marks, int i, object state, ExtBlock block);
     }
 }

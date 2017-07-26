@@ -494,14 +494,17 @@ namespace MCGalaxy {
         Vec3S32[] selMarks;
         object selState;
         SelectionHandler selCallback;
+        SelectionMarkHandler selMarkCallback;
         int selIndex;
 
-        public void MakeSelection(int marks, string title, object state, SelectionHandler callback) {
+        public void MakeSelection(int marks, string title, object state, 
+                                  SelectionHandler callback, SelectionMarkHandler markCallback = null) {
             lock (selLock) {
                 selMarks = new Vec3S32[marks];
                 selTitle = title;
                 selState = state;
                 selCallback = callback;
+                selMarkCallback = markCallback;
                 selIndex = 0;
                 Blockchange = SelectionBlockChange;
                 if (title != null) InitSelectionHUD();
@@ -518,6 +521,7 @@ namespace MCGalaxy {
                 selTitle = null;
                 selState = null;
                 selCallback = null;
+                selMarkCallback = null;
                 Blockchange = null;
             }
         }
@@ -528,17 +532,21 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z);
                 
                 selMarks[selIndex] = new Vec3S32(x, y, z);
-                selIndex++;
+                if (selMarkCallback != null) selMarkCallback(p, selMarks, selIndex, selState, block);
+                // Mark callback cancelled selection
+                if (selCallback == null) return;
                 
+                selIndex++;                
                 if (selIndex == 1 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1" + FormatSelectionMark(selMarks[0]));
                 } else if (selIndex == 2 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2" + FormatSelectionMark(selMarks[0]));
-                }               
+                }
                 if (selIndex != selMarks.Length) return;
                 
                 string title = selTitle;
                 object state = selState;
+                SelectionMarkHandler markCallback = selMarkCallback;
                 SelectionHandler callback = selCallback;
                 ClearSelection();
 
@@ -546,7 +554,7 @@ namespace MCGalaxy {
                 bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {
-                    MakeSelection(selIndex, title, state, callback);
+                    MakeSelection(selIndex, title, state, callback, markCallback);
                 }
             }
         }
