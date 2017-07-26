@@ -687,7 +687,7 @@ namespace MCGalaxy.Gui
             this.chat_btnDefault.Name = "chat_btnDefault";
             this.chat_btnDefault.Size = new System.Drawing.Size(95, 23);
             this.chat_btnDefault.TabIndex = 10;
-            this.toolTip.SetToolTip(this.chat_btnDefault, "The colour of the default chat used in the server.\nFor example, when you are aske" +
+            this.toolTip.SetToolTip(this.chat_btnDefault, "The default color of server messages (excluding player chat).\nFor example, when you are aske" +
                         "d to select two corners in a cuboid.");
             this.chat_btnDefault.Click += new System.EventHandler(this.chat_cmbDefault_Click);
             // 
@@ -706,7 +706,7 @@ namespace MCGalaxy.Gui
             this.chat_btnIRC.Name = "chat_btnIRC";
             this.chat_btnIRC.Size = new System.Drawing.Size(95, 23);
             this.chat_btnIRC.TabIndex = 24;
-            this.toolTip.SetToolTip(this.chat_btnIRC, "The colour of the IRC nicks used in the IRC.");
+            this.toolTip.SetToolTip(this.chat_btnIRC, "The color of messages from IRC, and nicknames of IRC users.");
             this.chat_btnIRC.Click += new System.EventHandler(this.chat_btnIRC_Click);
             // 
             // chat_lblSyntax
@@ -724,7 +724,7 @@ namespace MCGalaxy.Gui
             this.chat_btnSyntax.Name = "chat_btnSyntax";
             this.chat_btnSyntax.Size = new System.Drawing.Size(95, 23);
             this.chat_btnSyntax.TabIndex = 30;
-            this.toolTip.SetToolTip(this.chat_btnSyntax, "The colour for the description of a command in /help.");
+            this.toolTip.SetToolTip(this.chat_btnSyntax, "The color of the /cmdname [args] in /help.");
             this.chat_btnSyntax.Click += new System.EventHandler(this.chat_btnSyntax_Click);
             // 
             // chat_lblDesc
@@ -742,7 +742,7 @@ namespace MCGalaxy.Gui
             this.chat_btnDesc.Name = "chat_btnDesc";
             this.chat_btnDesc.Size = new System.Drawing.Size(95, 23);
             this.chat_btnDesc.TabIndex = 33;
-            this.toolTip.SetToolTip(this.chat_btnDesc, "The colour of the /cmdname [args] in /help.");
+            this.toolTip.SetToolTip(this.chat_btnDesc, "The color for the description of a command in /help.");
             this.chat_btnDesc.Click += new System.EventHandler(this.chat_btnDesc_Click);
             // 
             // main_btnSave

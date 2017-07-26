@@ -22,8 +22,8 @@ namespace MCGalaxy.Network {
     public sealed class TcpSocket : INetworkSocket {
         readonly Player player;
         readonly Socket socket;
-        byte[] leftBuffer = new byte[0];
-        byte[] tempbuffer = new byte[0xFF];
+        byte[] unprocessed = new byte[0];
+        byte[] recvBuffer = new byte[256];
         
         public TcpSocket(Player p, Socket s) {
             player = p; socket = s;
@@ -39,7 +39,7 @@ namespace MCGalaxy.Network {
         
         static AsyncCallback recvCallback = new AsyncCallback(ReceiveCallback);
         public void ReceiveNextAsync() {
-            socket.BeginReceive(tempbuffer, 0, tempbuffer.Length, SocketFlags.None, recvCallback, this);
+            socket.BeginReceive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, recvCallback, this);
         }
         
         static void ReceiveCallback(IAsyncResult result) {
@@ -51,12 +51,12 @@ namespace MCGalaxy.Network {
                 int length = s.socket.EndReceive(result);
                 if (length == 0) { p.Disconnect(); return; }
 
-                byte[] allData = new byte[s.leftBuffer.Length + length];
-                Buffer.BlockCopy(s.leftBuffer, 0, allData, 0, s.leftBuffer.Length);
-                Buffer.BlockCopy(s.tempbuffer, 0, allData, s.leftBuffer.Length, length);
-                s.leftBuffer = p.ProcessReceived(allData);
+                byte[] allData = new byte[s.unprocessed.Length + length];
+                Buffer.BlockCopy(s.unprocessed, 0, allData, 0, s.unprocessed.Length);
+                Buffer.BlockCopy(s.recvBuffer, 0, allData, s.unprocessed.Length, length);
+                s.unprocessed = p.ProcessReceived(allData);
                 
-                if (p.dontmindme && s.leftBuffer.Length == 0) {
+                if (p.dontmindme && s.unprocessed.Length == 0) {
                     s.Close();
                     p.disconnected = true;
                     return;
