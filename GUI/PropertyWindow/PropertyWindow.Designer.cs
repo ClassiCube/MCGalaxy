@@ -2404,7 +2404,7 @@ namespace MCGalaxy.Gui
             this.adv_grp.Controls.Add(this.adv_btnEditTexts);
             this.adv_grp.Location = new System.Drawing.Point(8, 271);
             this.adv_grp.Name = "adv_grp";
-            this.adv_grp.Size = new System.Drawing.Size(206, 120);
+            this.adv_grp.Size = new System.Drawing.Size(206, 98);
             this.adv_grp.TabIndex = 42;
             this.adv_grp.TabStop = false;
             this.adv_grp.Text = "Advanced Configuration";
@@ -2424,7 +2424,7 @@ namespace MCGalaxy.Gui
             this.adv_btnEditTexts.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.adv_btnEditTexts.Cursor = System.Windows.Forms.Cursors.Hand;
             this.adv_btnEditTexts.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.adv_btnEditTexts.Location = new System.Drawing.Point(6, 91);
+            this.adv_btnEditTexts.Location = new System.Drawing.Point(6, 68);
             this.adv_btnEditTexts.Name = "adv_btnEditTexts";
             this.adv_btnEditTexts.Size = new System.Drawing.Size(80, 23);
             this.adv_btnEditTexts.TabIndex = 35;
@@ -2517,7 +2517,7 @@ namespace MCGalaxy.Gui
             this.srv_grpUpdate.Controls.Add(this.chkUpdates);
             this.srv_grpUpdate.Location = new System.Drawing.Point(220, 271);
             this.srv_grpUpdate.Name = "srv_grpUpdate";
-            this.srv_grpUpdate.Size = new System.Drawing.Size(271, 120);
+            this.srv_grpUpdate.Size = new System.Drawing.Size(271, 98);
             this.srv_grpUpdate.TabIndex = 44;
             this.srv_grpUpdate.TabStop = false;
             this.srv_grpUpdate.Text = "Update Settings";
@@ -2536,7 +2536,7 @@ namespace MCGalaxy.Gui
             // 
             // updateTimeNumeric
             // 
-            this.updateTimeNumeric.Location = new System.Drawing.Point(129, 89);
+            this.updateTimeNumeric.Location = new System.Drawing.Point(129, 67);
             this.updateTimeNumeric.Maximum = new decimal(new int[] {
                                     128,
                                     0,
@@ -2554,7 +2554,7 @@ namespace MCGalaxy.Gui
             // lblUpdateSeconds
             // 
             this.lblUpdateSeconds.AutoSize = true;
-            this.lblUpdateSeconds.Location = new System.Drawing.Point(3, 91);
+            this.lblUpdateSeconds.Location = new System.Drawing.Point(3, 68);
             this.lblUpdateSeconds.Name = "lblUpdateSeconds";
             this.lblUpdateSeconds.Size = new System.Drawing.Size(120, 13);
             this.lblUpdateSeconds.TabIndex = 5;
