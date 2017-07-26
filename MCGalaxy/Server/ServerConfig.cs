@@ -90,8 +90,8 @@ namespace MCGalaxy {
         public static int PhysicsRestartNormLimit = 10000;
         [ConfigBool("physicsrestart", "Other", true)]
         public static bool PhysicsRestart = true;
-        [ConfigInt("physics-undo-max", "Other", 20000)]
-        public static int PhysicsUndo = 20000;
+        [ConfigInt("physics-undo-max", "Other", 50000)]
+        public static int PhysicsUndo = 50000;
         
         [ConfigInt("backup-time", "Backup", 300, 1)]
         public static int BackupInterval = 300;

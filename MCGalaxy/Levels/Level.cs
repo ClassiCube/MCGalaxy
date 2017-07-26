@@ -465,8 +465,8 @@ namespace MCGalaxy {
 
         public struct Zone {
             public string Owner;
-            public ushort bigX, bigY, bigZ;
-            public ushort smallX, smallY, smallZ;
+            public ushort MaxX, MaxY, MaxZ;
+            public ushort MinX, MinY, MinZ;
         }
         
         void LoadCoreProps() {

@@ -43,12 +43,12 @@ namespace MCGalaxy {
             using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {
                 Level.Zone Zn;
                 foreach (DataRow row in table.Rows) {
-                    Zn.smallX = ushort.Parse(row["SmallX"].ToString());
-                    Zn.smallY = ushort.Parse(row["SmallY"].ToString());
-                    Zn.smallZ = ushort.Parse(row["SmallZ"].ToString());
-                    Zn.bigX = ushort.Parse(row["BigX"].ToString());
-                    Zn.bigY = ushort.Parse(row["BigY"].ToString());
-                    Zn.bigZ = ushort.Parse(row["BigZ"].ToString());
+                    Zn.MinX = ushort.Parse(row["SmallX"].ToString());
+                    Zn.MinY = ushort.Parse(row["SmallY"].ToString());
+                    Zn.MinZ = ushort.Parse(row["SmallZ"].ToString());
+                    Zn.MaxX = ushort.Parse(row["BigX"].ToString());
+                    Zn.MaxY = ushort.Parse(row["BigY"].ToString());
+                    Zn.MaxZ = ushort.Parse(row["BigZ"].ToString());
                     Zn.Owner = row["Owner"].ToString();
                     level.ZoneList.Add(Zn);
                 }
@@ -97,7 +97,7 @@ namespace MCGalaxy {
                 if (!Database.TableExists("Zone" + level)) return;
                 Database.Backend.DeleteRows("Zone" + level, "WHERE Owner=@0 AND SmallX=@1 AND SMALLY=@2 " +
                                             "AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
-                                            zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+                                            zn.Owner, zn.MinX, zn.MinY, zn.MinZ, zn.MaxX, zn.MaxY, zn.MaxZ);
             }
         }
         
@@ -106,7 +106,7 @@ namespace MCGalaxy {
             lock (locker) {
                 Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
                 Database.Backend.AddRow("Zone" + level, "Owner, SmallX, SmallY, SmallZ, BigX, BigY, BigZ",
-                                        zn.Owner, zn.smallX, zn.smallY, zn.smallZ, zn.bigX, zn.bigY, zn.bigZ);
+                                        zn.Owner, zn.MinX, zn.MinY, zn.MinZ, zn.MaxX, zn.MaxY, zn.MaxZ);
             }
         }
 

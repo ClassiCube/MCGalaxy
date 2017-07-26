@@ -75,17 +75,15 @@ namespace MCGalaxy.Commands.Moderation {
         }      
                 
         static string FormatZone(Level.Zone zone) {
-            return "&b(" +
-                zone.smallX + "-" + zone.bigX + ", " +
-                zone.smallY + "-" + zone.bigY + ", " +
-                zone.smallZ + "-" + zone.bigZ + ") &f" + zone.Owner;
+            return "&b(" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ 
+                + ") to (" + zone.MaxX + ", " + zone.MaxY + ", " + zone.MaxZ + ") &F" + zone.Owner;
         }
         
         internal static void ZoneAll(Level lvl, string owner) {
             Level.Zone zn = default(Level.Zone);
-            zn.bigX = (ushort)(lvl.Width - 1);
-            zn.bigY = (ushort)(lvl.Height - 1);
-            zn.bigZ = (ushort)(lvl.Length - 1);
+            zn.MaxX = (ushort)(lvl.Width - 1);
+            zn.MaxY = (ushort)(lvl.Height - 1);
+            zn.MaxZ = (ushort)(lvl.Length - 1);
             zn.Owner = owner;
             
             lvl.ZoneList.Add(zn);
@@ -134,7 +132,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             for (int i = 0; i < lvl.ZoneList.Count; i++) {
                 Level.Zone zn = lvl.ZoneList[i];
-                if (P.X < zn.smallX || P.X > zn.bigX || P.Y < zn.smallY || P.Y > zn.bigY || P.Z < zn.smallZ || P.Z > zn.bigZ)
+                if (P.X < zn.MinX || P.X > zn.MaxX || P.Y < zn.MinY || P.Y > zn.MaxY || P.Z < zn.MinZ || P.Z > zn.MaxZ)
                     continue;
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
@@ -157,12 +155,12 @@ namespace MCGalaxy.Commands.Moderation {
         
         bool AddZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             Level.Zone Zn;
-            Zn.smallX = (ushort)Math.Min(marks[0].X, marks[1].X);
-            Zn.smallY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
-            Zn.smallZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
-            Zn.bigX = (ushort)Math.Max(marks[0].X, marks[1].X);
-            Zn.bigY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
-            Zn.bigZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
+            Zn.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
+            Zn.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
+            Zn.MinZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
+            Zn.MaxX = (ushort)Math.Max(marks[0].X, marks[1].X);
+            Zn.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
+            Zn.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
             Zn.Owner = (string)state;
 
             p.level.ZoneList.Add(Zn);

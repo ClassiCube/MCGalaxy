@@ -207,7 +207,7 @@ namespace MCGalaxy {
             
             for (int i = 0; i < ZoneList.Count; i++) {
                 Zone zn = ZoneList[i];
-                if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
+                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ)
                     continue;
                 
                 inZone = true;
@@ -226,7 +226,7 @@ namespace MCGalaxy {
             string owners = "";
             for (int i = 0; i < ZoneList.Count; i++) {
                 Zone zn = ZoneList[i];
-                if (x < zn.smallX || x > zn.bigX || y < zn.smallY || y > zn.bigY || z < zn.smallZ || z > zn.bigZ)
+                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ)
                     continue;
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {

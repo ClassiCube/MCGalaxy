@@ -97,9 +97,9 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%aSuccessfully created your map: '%f" + name + "%a'");
                 try {
                     Level.Zone zn = default(Level.Zone);
-                    zn.bigX = (ushort)(level.Width - 1);
-                    zn.bigY = (ushort)(level.Height - 1);
-                    zn.bigZ = (ushort)(level.Length - 1);
+                    zn.MaxX = (ushort)(level.Width - 1);
+                    zn.MaxY = (ushort)(level.Height - 1);
+                    zn.MaxZ = (ushort)(level.Length - 1);
                     zn.Owner = p.name;
                     level.ZoneList.Add(zn);
                     LevelDB.CreateZone(level.name, zn);
