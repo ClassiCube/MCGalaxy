@@ -104,10 +104,16 @@ namespace MCGalaxy {
         };
         
         public static List<ChatToken> Custom = new List<ChatToken>();
+        static bool hookedCustom;
         internal static void LoadCustom() {
             Custom.Clear();
             TextFile tokensFile = TextFile.Files["Custom $s"];
             tokensFile.EnsureExists();
+            
+            if (!hookedCustom) {
+                hookedCustom = true;
+                tokensFile.OnTextChanged += LoadCustom;
+            }
             
             string[] lines = tokensFile.GetText();
             char[] colon = null;

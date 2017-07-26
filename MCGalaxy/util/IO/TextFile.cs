@@ -30,6 +30,9 @@ namespace MCGalaxy.Util {
         /// <summary> Default text that the file contains. </summary>
         public readonly string[] DefaultText;
         
+        /// <summary> Callback invoked when contents of this file are changed. </summary>
+        public Action OnTextChanged;
+        
         public TextFile(string filename, params string[] defaultText) {
             Filename = filename;
             DefaultText = defaultText;
@@ -59,6 +62,7 @@ namespace MCGalaxy.Util {
         /// <summary> Updates the text in this text file. </summary>
         public void SetText(string[] text) {
             File.WriteAllLines(Filename, text);
+            if (OnTextChanged != null) OnTextChanged();
         }
         
         

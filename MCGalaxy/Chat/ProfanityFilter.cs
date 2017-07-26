@@ -27,6 +27,7 @@ namespace MCGalaxy {
     public static class ProfanityFilter {
         static string[] reduceKeys, reduceValues;
         static List<string> filters;
+        static bool hookedFilter;
         
         public static void Init() {
             InitReduceTable();
@@ -69,6 +70,11 @@ namespace MCGalaxy {
         static void LoadBadWords() {
             TextFile filterFile = TextFile.Files["Profanity filter"];
             filterFile.EnsureExists();
+            
+            if (!hookedFilter) {
+                hookedFilter = true;
+                filterFile.OnTextChanged += LoadBadWords;
+            }
 
             string[] lines = filterFile.GetText();
             filters = new List<string>();            
