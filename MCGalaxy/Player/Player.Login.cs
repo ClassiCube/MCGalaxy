@@ -28,24 +28,24 @@ using MCGalaxy.Maths;
 namespace MCGalaxy {
     public partial class Player : IDisposable {
         
-        void HandleLogin(byte[] packet) {
+        void HandleLogin(byte[] buffer, int offset) {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
-            byte version = packet[1];
+            byte version = buffer[offset + 1];
             if (version != Server.version) { Leave(null, "Wrong version!", true); return; }
             
-            name = NetUtils.ReadString(packet, 2);
+            name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
             if (ServerConfig.ClassicubeAccountPlus) name += "+";
             
-            string mppass = NetUtils.ReadString(packet, 66);
+            string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
                                    
             isDev = Server.Devs.CaselessContains(truename);
             isMod = Server.Mods.CaselessContains(truename);
             
-            byte protocolType = packet[130];
+            byte protocolType = buffer[offset + 130];
             Loading = true;
             if (disconnected) return;
             

@@ -192,7 +192,7 @@ namespace MCGalaxy {
                 if (size == -1) return new byte[0]; // invalid packet
                 
                 if (buffer.Length < size) return buffer;
-                HandlePacket(buffer);
+                HandlePacket(buffer, 0);
                 if (buffer.Length == size) return new byte[0];
                 
                 byte[] remaining = new byte[buffer.Length - size];
@@ -206,8 +206,8 @@ namespace MCGalaxy {
         
         int PacketSize(byte[] buffer) {
             switch (buffer[0]) {
-                    case (byte)'G': return -2; //For wom
-                    case Opcode.Handshake: return 131;
+                case (byte)'G': return -2; //For wom
+                case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
                     return 9;
@@ -225,7 +225,7 @@ namespace MCGalaxy {
                     case Opcode.CpeTwoWayPing: return 4;
 
                 default:
-                    if (!dontmindme) {
+                    if (!nonPlayerClient) {
                         string msg = "Unhandled message id \"" + buffer[0] + "\"!";
                         Leave(msg, msg, true);
                     }
@@ -233,48 +233,48 @@ namespace MCGalaxy {
             }
         }
         
-        void HandlePacket(byte[] buffer) {
-            switch (buffer[0]) {
-                    case Opcode.Ping: break;
+        void HandlePacket(byte[] buffer, int offset) {
+            switch (buffer[offset]) {
+                case Opcode.Ping: break;
                 case Opcode.Handshake:
-                    HandleLogin(buffer); break;
+                    HandleLogin(buffer, offset); break;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) break;
-                    HandleBlockchange(buffer); break;
+                    HandleBlockchange(buffer, offset); break;
                 case Opcode.EntityTeleport:
                     if (!loggedIn) break;
-                    HandleMovement(buffer); break;
+                    HandleMovement(buffer, offset); break;
                 case Opcode.Message:
                     if (!loggedIn) break;
-                    HandleChat(buffer); break;
+                    HandleChat(buffer, offset); break;
                 case Opcode.CpeExtInfo:
-                    HandleExtInfo(buffer); break;
+                    HandleExtInfo(buffer, offset); break;
                 case Opcode.CpeExtEntry:
-                    HandleExtEntry(buffer); break;
+                    HandleExtEntry(buffer, offset); break;
                 case Opcode.CpeCustomBlockSupportLevel:
-                    customBlockSupportLevel = buffer[1]; break;
+                    customBlockSupportLevel = buffer[offset + 1]; break;
                 case Opcode.CpePlayerClick:
-                    HandlePlayerClicked(buffer); break;
+                    HandlePlayerClicked(buffer, offset); break;
                 case Opcode.CpeTwoWayPing:
-                    HandleTwoWayPing(buffer); break;
+                    HandleTwoWayPing(buffer, offset); break;
             }
         }
 
-        void HandleBlockchange(byte[] packet) {
+        void HandleBlockchange(byte[] buffer, int offset) {
             try {
                 if (!loggedIn || spamChecker.CheckBlockSpam()) return;
-                ushort x = NetUtils.ReadU16(packet, 1);
-                ushort y = NetUtils.ReadU16(packet, 3);
-                ushort z = NetUtils.ReadU16(packet, 5);
+                ushort x = NetUtils.ReadU16(buffer, offset + 1);
+                ushort y = NetUtils.ReadU16(buffer, offset + 3);
+                ushort z = NetUtils.ReadU16(buffer, offset + 5);
                 if (frozen) { RevertBlock(x, y, z); return; }
                 
-                byte action = packet[7];
+                byte action = buffer[offset + 7];
                 if (action > 1) {
                     const string msg = "Unknown block action!";
                     Leave(msg, msg, true); return;
                 }
                 
-                ExtBlock held = ExtBlock.FromRaw(packet[8]);
+                ExtBlock held = ExtBlock.FromRaw(buffer[offset + 8]);
                 RawHeldBlock = held;
                 
                 if ((action == 0 || held.BlockID == Block.Air) && !level.Config.Deletable) {
@@ -300,25 +300,25 @@ namespace MCGalaxy {
             }
         }
         
-        void HandleMovement(byte[] packet) {
+        void HandleMovement(byte[] buffer, int offset) {
             if (!loggedIn || trainGrab || following != "") { CheckBlocks(Pos); return; }
             if (HasCpeExt(CpeExt.HeldBlock)) {
-                RawHeldBlock = ExtBlock.FromRaw(packet[1]);
+                RawHeldBlock = ExtBlock.FromRaw(buffer[offset + 1]);
             }
             
             int x, y, z;
             if (hasExtPositions) {
-                x = NetUtils.ReadI32(packet, 2);
-                y = NetUtils.ReadI32(packet, 6);
-                z = NetUtils.ReadI32(packet, 10);
+                x = NetUtils.ReadI32(buffer, offset + 2);
+                y = NetUtils.ReadI32(buffer, offset + 6);
+                z = NetUtils.ReadI32(buffer, offset + 10);
+                offset += 6; // for yaw/pitch offset below
             } else {
-                x = NetUtils.ReadI16(packet, 2);
-                y = NetUtils.ReadI16(packet, 4);
-                z = NetUtils.ReadI16(packet, 6);
+                x = NetUtils.ReadI16(buffer, offset + 2);
+                y = NetUtils.ReadI16(buffer, offset + 4);
+                z = NetUtils.ReadI16(buffer, offset + 6);
             }
             
-            int offset = 8 + (hasExtPositions ? 6 : 0);
-            byte yaw = packet[offset + 0], pitch = packet[offset + 1];
+            byte yaw = buffer[offset + 8], pitch = buffer[offset + 9];
             Position next = new Position(x, y, z);
             CheckBlocks(next);
 
@@ -405,10 +405,10 @@ namespace MCGalaxy {
             lastDeath = DateTime.UtcNow;
         }
 
-        void HandleChat(byte[] packet) {
+        void HandleChat(byte[] buffer, int offset) {
             if (!loggedIn) return;
-            byte continued = packet[1];
-            string text = NetUtils.ReadString(packet, 2);
+            byte continued = buffer[offset + 1];
+            string text = NetUtils.ReadString(buffer, offset + 2);
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 

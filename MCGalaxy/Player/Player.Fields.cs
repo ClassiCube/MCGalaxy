@@ -52,7 +52,7 @@ namespace MCGalaxy {
         internal string currentTpa = "";
 
         public string truename;
-        internal bool dontmindme = false;
+        internal bool nonPlayerClient = false;
         public INetworkSocket Socket;
         public PingList Ping = new PingList();
         

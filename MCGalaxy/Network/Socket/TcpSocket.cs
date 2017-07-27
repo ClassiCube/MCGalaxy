@@ -56,7 +56,7 @@ namespace MCGalaxy.Network {
                 Buffer.BlockCopy(s.recvBuffer, 0, allData, s.unprocessed.Length, length);
                 s.unprocessed = p.ProcessReceived(allData);
                 
-                if (p.dontmindme && s.unprocessed.Length == 0) {
+                if (p.nonPlayerClient && s.unprocessed.Length == 0) {
                     s.Close();
                     p.disconnected = true;
                     return;

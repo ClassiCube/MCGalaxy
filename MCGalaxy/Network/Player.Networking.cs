@@ -30,38 +30,38 @@ namespace MCGalaxy {
         public List<string> extensions = new List<string>();
         public int customBlockSupportLevel;
         
-        void HandleExtInfo(byte[] packet) {
-            appName = NetUtils.ReadString(packet, 1);
-            extensionCount = packet[66];
+        void HandleExtInfo(byte[] buffer, int offset) {
+            appName = NetUtils.ReadString(buffer, offset + 1);
+            extensionCount = buffer[offset + 66];
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
         }
 
-        void HandleExtEntry(byte[] packet) {
-            AddExtension(NetUtils.ReadString(packet, 1), NetUtils.ReadI32(packet, 65));
+        void HandleExtEntry(byte[] buffer, int offset) {
+            string extName = NetUtils.ReadString(buffer, offset + 1);
+            int extVersion = NetUtils.ReadI32(buffer, offset + 65));
+            AddExtension(extName, extVersion);
             extensionCount--;
             CheckReadAllExtensions();
         }
 
-        void HandlePlayerClicked(byte[] packet) {
-            MouseButton Button = (MouseButton)packet[1];
-            MouseAction Action = (MouseAction)packet[2];
-            ushort Yaw = NetUtils.ReadU16(packet, 3);
-            ushort Pitch = NetUtils.ReadU16(packet, 5);
-            byte EntityID = packet[7];
-            ushort X = NetUtils.ReadU16(packet, 8);
-            ushort Y = NetUtils.ReadU16(packet, 10);
-            ushort Z = NetUtils.ReadU16(packet, 12);
-            byte Face = packet[14];
-
-            TargetBlockFace face = TargetBlockFace.None;
-            if (Face < (byte)face)
-                face = (TargetBlockFace)Face;
-            OnPlayerClickEvent.Call(this, Button, Action, Yaw, Pitch, EntityID, X, Y, Z, face);
+        void HandlePlayerClicked(byte[] buffer, int offset) {
+            MouseButton Button = (MouseButton)buffer[offset + 1];
+            MouseAction Action = (MouseAction)buffer[offset + 2];
+            ushort yaw = NetUtils.ReadU16(buffer, offset + 3);
+            ushort pitch = NetUtils.ReadU16(buffer, offset + 5);
+            byte entityID = buffer[offset + 7];
+            ushort x = NetUtils.ReadU16(buffer, offset + 8);
+            ushort y = NetUtils.ReadU16(buffer, offset + 10);
+            ushort z = NetUtils.ReadU16(buffer, offset + 12);
+            
+            TargetBlockFace face = (TargetBlockFace)buffer[offset + 14];
+            if (face > TargetBlockFace.None) face = TargetBlockFace.None;
+            OnPlayerClickEvent.Call(this, Button, Action, yaw, pitch, entityID, x, y, z, face);
         }
         
-        void HandleTwoWayPing(byte[] packet) {
-            bool serverToClient = packet[1] != 0;
-            ushort data = NetUtils.ReadU16(packet, 2);
+        void HandleTwoWayPing(byte[] buffer, int offset) {
+            bool serverToClient = buffer[offset + 1] != 0;
+            ushort data = NetUtils.ReadU16(buffer, offset + 2);
             
             if (!serverToClient) {
                 // Client-> server ping, immediately send reply.
