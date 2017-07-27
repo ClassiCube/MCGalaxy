@@ -38,7 +38,7 @@ namespace MCGalaxy {
 
         void HandleExtEntry(byte[] buffer, int offset) {
             string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer, offset + 65));
+            int extVersion = NetUtils.ReadI32(buffer, offset + 65);
             AddExtension(extName, extVersion);
             extensionCount--;
             CheckReadAllExtensions();

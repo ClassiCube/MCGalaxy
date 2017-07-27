@@ -41,12 +41,12 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        /// <summary> Constructs a ping packet. </remarks>
+        /// <summary> Constructs a ping packet. </summary>
         public static byte[] Ping() {
             return new byte[] { Opcode.Ping };
         }
         
-        /// <summary> Constructs a packet that specified map data is about to be sent. </remarks>
+        /// <summary> Constructs a packet that specified map data is about to be sent. </summary>
         public static byte[] LevelInitalise() {
             return new byte[] { Opcode.LevelInitialise };
         }
