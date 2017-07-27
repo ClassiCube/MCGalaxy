@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("brushes", "list") }; }
+            get { return new CommandAlias[] { new CommandAlias("brushes", "list") }; }
         }
 
         public override void Use(Player p, string message) {

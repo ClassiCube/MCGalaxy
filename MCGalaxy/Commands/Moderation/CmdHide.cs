@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide/unhide without showing a message to ops") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xhide", "silent") }; }
+            get { return new CommandAlias[] { new CommandAlias("xhide", "silent") }; }
         }
 
         public override void Use(Player p, string message) {

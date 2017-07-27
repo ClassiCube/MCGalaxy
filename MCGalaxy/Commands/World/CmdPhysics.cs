@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("killphysics", "kill") }; }
+            get { return new CommandAlias[] { new CommandAlias("killphysics", "kill") }; }
         }
 
         public override void Use(Player p, string message) {

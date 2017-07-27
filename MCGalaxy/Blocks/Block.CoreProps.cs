@@ -109,10 +109,10 @@ namespace MCGalaxy {
         }
         
         internal static void SetDefaultNames() {
-            string[] names = { "air", "stone", "grass", "dirt", "cobblestone", "wood", "sapling",
-                "bedrock", "active_water", "water", "active_lava", "lava", "sand", "gravel",
-                "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", "glass", "red",
-                "orange", "yellow", "lime", "green", "teal", "aqua", "cyan",
+            string[] names = new string[] { "air", "stone", "grass", "dirt", "cobblestone", 
+                "wood", "sapling", "bedrock", "active_water", "water", "active_lava", "lava", 
+                "sand", "gravel", "gold_ore", "iron_ore", "coal", "log", "leaves", "sponge", 
+                "glass", "red", "orange", "yellow", "lime", "green", "teal", "aqua", "cyan",
                 "blue", "indigo", "violet", "magenta", "pink", "black", "gray", "white",
                 "dandelion", "rose", "brown_shroom", "red_shroom", "gold", "iron",
                 "doubleslab", "slab", "brick", "tnt", "bookshelf", "mossyrocks",

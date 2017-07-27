@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints, then another for the control point"; } }
         public override int MarksCount { get { return 3; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("curve") }; }
+            get { return new CommandAlias[] { new CommandAlias("curve") }; }
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {

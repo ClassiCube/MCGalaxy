@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wresize"), new CommandAlias("worldresoze") }; }
+            get { return new[] { new CommandAlias("wresize"), new CommandAlias("worldresize") }; }
         }
 
         public override void Use(Player p, string message) {

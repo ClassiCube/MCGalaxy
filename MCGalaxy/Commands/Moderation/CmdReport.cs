@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can check, view and delete reports") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("reports", "list") }; }
+            get { return new CommandAlias[] { new CommandAlias("reports", "list") }; }
         }
 
         public override void Use(Player p, string message) {

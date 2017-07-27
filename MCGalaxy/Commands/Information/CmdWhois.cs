@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see player's IP and if on whitelist") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("info"), new CommandAlias("i") }; }
+            get { return new CommandAlias[] { new CommandAlias("info"), new CommandAlias("i") }; }
         }
         
         public override void Use(Player p, string message) {

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
                     new CommandPerm(LevelPermission.Operator, "+ can change the nick of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xnick", "-own") }; }
+            get { return new CommandAlias[] { new CommandAlias("xnick", "-own") }; }
         }
         
         public override void Use(Player p, string message) {

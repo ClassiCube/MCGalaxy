@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("godmode") }; }
+            get { return new CommandAlias[] { new CommandAlias("godmode") }; }
         }
 
         public override void Use(Player p, string message) {

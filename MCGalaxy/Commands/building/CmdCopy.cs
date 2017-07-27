@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cut", "cut") }; }
+            get { return new CommandAlias[] { new CommandAlias("cut", "cut") }; }
         }
 
         public override void Use(Player p, string message) {
