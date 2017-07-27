@@ -21,6 +21,7 @@ using System.Threading;
 namespace MCGalaxy.Gui {
     public static class Handlers {
         
+        static string lastCMD = "";
         public static void HandleChat(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) return;
@@ -31,26 +32,39 @@ namespace MCGalaxy.Gui {
             Logger.Log(LogType.PlayerChat, "(console): " + text);
         }
         
+        public static Thread RepeatCommand() {
+            if (lastCMD == "") {
+                Logger.Log(LogType.CommandUsage, "(console): Cannot repeat command - no commands used yet.");
+                return null;
+            }
+            Logger.Log(LogType.CommandUsage, "Repeating %T/" + lastCMD);
+            return HandleCommand(lastCMD);
+        }
+        
         public static Thread HandleCommand(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) {
-                Logger.Log(LogType.CommandUsage, "(console): Whitespace commands are not allowed."); return null; 
+                Logger.Log(LogType.CommandUsage, "(console): Whitespace commands are not allowed."); 
+                return null;
             }
             if (text[0] == '/' && text.Length > 1)
                 text = text.Substring(1);
             
+            lastCMD = text;
             int sep = text.IndexOf(' ');
             string name = "", args = "";
+            
             if (sep >= 0) {
                 name = text.Substring(0, sep);
                 args = text.Substring(sep + 1);
             } else {
                 name = text;
             }
-            Command.Search(ref name, ref args);
-            if (Server.Check(name, args)) { Server.cancelcommand = false; return null; }
             
+            Command.Search(ref name, ref args);
+            if (Server.Check(name, args)) { Server.cancelcommand = false; return null; }            
             Command cmd = Command.all.Find(name);
+            
             if (cmd == null) { 
                 Logger.Log(LogType.CommandUsage, "(console): Unknown command \"{0}\"", name); return null; 
             }

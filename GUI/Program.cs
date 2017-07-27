@@ -141,13 +141,17 @@ namespace MCGalaxy.Gui {
             while (true) {
                 try {
                     string msg = Console.ReadLine().Trim(); // Make sure we have no whitespace!
-                    if (msg.Length > 0 && msg[0] == '/') {
-                        msg = msg.Remove(0, 1);
-                        Thread t = Handlers.HandleCommand(msg);
-                        if (msg.CaselessEq("restart")) { t.Join(); break; }
+                    Thread t = null;
+                    
+                    if (msg == "/") {
+                        t = Handlers.RepeatCommand();
+                    } else if (msg.Length > 0 && msg[0] == '/') {
+                        t = Handlers.HandleCommand(msg.Substring(1));                        
                     } else {
                         Handlers.HandleChat(msg);
                     }
+                    
+                    if (t != null && msg.CaselessEq("/restart")) { t.Join(); break; }
                 } catch (Exception ex) {
                     Logger.LogError(ex);
                 }

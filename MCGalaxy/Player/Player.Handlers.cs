@@ -526,7 +526,7 @@ namespace MCGalaxy {
             // Typing / repeats last command executed
             if (text == "/") {
                 if (lastCMD == "") {
-                    Player.Message(this, "Cannot repeat command: You haven't used any commands yet.");
+                    Player.Message(this, "Cannot repeat command - no commands used yet.");
                     return true;
                 }
                 text = lastCMD;

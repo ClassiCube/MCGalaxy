@@ -110,7 +110,9 @@ namespace MCGalaxy.Gui {
             if (inputLog.Count > 20) 
                 inputLog.RemoveAt(20);
             
-            if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
+            if (text == "/") {
+                Handlers.RepeatCommand();
+            } else if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
                 Handlers.HandleChat(text.Substring(1));
             } else if (text[0] == '/') {
                 Handlers.HandleCommand(text.Substring(1));
