@@ -199,6 +199,9 @@ namespace MCGalaxy.Maths {
             X = x; Y = y; Z = z;
         }
         
+        public Vec3F32(float value) {
+            X = value; Y = value; Z = value;
+        }        
         
         public float LengthSquared {
             get { return X * X + Y * Y + Z * Z; }
