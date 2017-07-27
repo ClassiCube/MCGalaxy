@@ -82,7 +82,8 @@ namespace MCGalaxy.Commands.Building {
                 p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, held, BlockDBFlags.Drawn, true);
             }
 
-            Player.Message(p, "Placed stone blocks {0} apart.", interval > 0 ? interval : distance);
+            Player.Message(p, "Placed {1} blocks {0} apart.", 
+                           interval > 0 ? interval : distance, p.level.BlockName(held));
             return true;
         }
         
