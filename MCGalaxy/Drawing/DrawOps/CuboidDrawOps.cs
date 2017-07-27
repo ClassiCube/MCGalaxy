@@ -105,6 +105,8 @@ namespace MCGalaxy.Drawing.Ops {
             
             int i = 12;
             ExtBlock block = default(ExtBlock);
+            brush = new RainbowBrush();
+            
             for (ushort y = p1.Y; y <= p2.Y; y++) {
                 i = (i + stepY) % 13;
                 int startZ = i;
@@ -114,7 +116,9 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % 13;
                         if (!Level.IsAirAt(x, y, z)) {
-                            block.BlockID = (byte)(Block.Red + i);
+                            // Need this because RainbowBrush works on world coords
+                            Coords.X = (ushort)i; Coords.Y = 0; Coords.Z = 0;
+                            block = brush.NextBlock(this);
                             output(Place(x, y, z, block));
                         }
                     }
