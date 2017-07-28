@@ -32,6 +32,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override ExtBlock NextBlock(DrawOp op) { return block; }
     }
     
+    // CheckeredPaletteBrush of { b1, b1, b2, b2 }
     public sealed class StripedBrush : Brush {
         readonly ExtBlock b1, b2;
         
@@ -46,6 +47,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
+    // CheckeredPaletteBrush of { b1, b2 }
     public sealed class CheckeredBrush : Brush {
         readonly ExtBlock b1, b2;
         
@@ -57,6 +59,20 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override ExtBlock NextBlock(DrawOp op) {
             return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? b1 : b2;
+        }
+    }
+    
+    public class CheckeredPaletteBrush : Brush {
+        readonly ExtBlock[] blocks;
+        
+        public CheckeredPaletteBrush(ExtBlock[] blocks) { this.blocks = blocks; }
+        
+        public override string Name { get { return "Checkered"; } }
+        
+        public override ExtBlock NextBlock(DrawOp op) {
+            int i = (op.Coords.X + op.Coords.Y + op.Coords.Z) % blocks.Length;
+            if (i < 0) i += blocks.Length;
+            return blocks[i];
         }
     }
 }

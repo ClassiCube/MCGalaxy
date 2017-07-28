@@ -20,35 +20,28 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    public sealed class RainbowBrush : Brush {
-        
-        ExtBlock block = default(ExtBlock);
+    public sealed class RainbowBrush : CheckeredPaletteBrush {
+
         public override string Name { get { return "Rainbow"; } }
+        public RainbowBrush() : base(blocks) {}
         
-        public override ExtBlock NextBlock(DrawOp op) {
-            int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 13;
-            if (offset < 0) offset += 13;
-            
-            block.BlockID = (byte)(Block.Red + offset);
-            return block;
-        }
+        static ExtBlock[] blocks = new ExtBlock[] { 
+            (ExtBlock)Block.Red,   (ExtBlock)Block.Orange,  (ExtBlock)Block.Yellow,
+            (ExtBlock)Block.Lime,  (ExtBlock)Block.Green,   (ExtBlock)Block.Teal,
+            (ExtBlock)Block.Aqua,  (ExtBlock)Block.Cyan,    (ExtBlock)Block.Blue,
+            (ExtBlock)Block.Indigo, (ExtBlock)Block.Violet, (ExtBlock)Block.Magenta,
+            (ExtBlock)Block.Pink };
     }
     
-    public sealed class BWRainbowBrush : Brush {
+    public sealed class BWRainbowBrush : CheckeredPaletteBrush {
         
-        ExtBlock block = default(ExtBlock);
         public override string Name { get { return "BWRainbow"; } }
+        public BWRainbowBrush() : base(blocks) {}
         
-        static byte[] blocks = new byte[] { Block.Iron, Block.White, Block.Gray,
-            Block.Black, Block.Obsidian, Block.Black, Block.Gray, Block.White };
-        
-        public override ExtBlock NextBlock(DrawOp op) {
-            int offset = (op.Coords.X + op.Coords.Y + op.Coords.Z) % 8;
-            if (offset < 0) offset += 8;
-            
-            block.BlockID = blocks[offset];
-            return block;
-        }
+        static ExtBlock[] blocks = new ExtBlock[] { 
+            (ExtBlock)Block.Iron,  (ExtBlock)Block.White,    (ExtBlock)Block.Gray,
+            (ExtBlock)Block.Black, (ExtBlock)Block.Obsidian, (ExtBlock)Block.Black, 
+            (ExtBlock)Block.Gray,  (ExtBlock)Block.White };
     }
     
     internal sealed class RandomRainbowBrush : Brush {

@@ -26,11 +26,11 @@ namespace MCGalaxy.Drawing.Brushes {
     public static class FrequencyBrush {
         
         public static ExtBlock[] GetBlocks(BrushArgs args, out int[] count,
-                                           Predicate<string> filter, Predicate<string> handler) {
+                                           Predicate<string> argFilter, Predicate<string> argHandler) {
             string[] parts = args.Message.SplitSpaces();
             Player p = args.Player;
             ExtBlock[] blocks;
-            GetRaw(parts, filter, args, out blocks, out count);
+            GetRaw(parts, argFilter, args, out blocks, out count);
             
             // check if we're allowed to place the held block
             if (!blocks[0].IsInvalid && !CommandParser.IsBlockAllowed(p, "draw with", blocks[0])) return null;
@@ -39,8 +39,8 @@ namespace MCGalaxy.Drawing.Brushes {
                 if (parts[i] == "") continue;
                 
                 // Brush specific args
-                if (!filter(parts[i])) {
-                    if (!handler(parts[i])) return null;
+                if (argFilter(parts[i])) {
+                    if (!argHandler(parts[i])) return null;
                     continue;
                 }
                 
@@ -107,7 +107,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override Brush Construct(BrushArgs args) {
             int[] count;
-            ExtBlock[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => true, null);
+            ExtBlock[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
             
             if (toAffect == null) return null;
             ExtBlock[] blocks = FrequencyBrush.Combine(toAffect, count);

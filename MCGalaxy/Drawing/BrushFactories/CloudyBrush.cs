@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         // Only want to handle non block options.
-        static bool Filter(string arg) { return arg.Length < 2 || !(arg[1] == '_' || arg[1] == '='); }
+        static bool Filter(string arg) { return arg.Length >= 2 && (arg[1] == '_' || arg[1] == '='); }
         
         static bool Handler(string arg, Player p, ref NoiseArgs args) {
             char opt = arg[0];
