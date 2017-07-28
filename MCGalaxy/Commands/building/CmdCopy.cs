@@ -97,9 +97,9 @@ namespace MCGalaxy.Commands.Building {
         void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ExtBlock block) {
             if (i == 2) {
                 CopyState copy = p.CopyBuffer;
-                copy.Offset.X = copy.OriginX - m[0].X;
-                copy.Offset.Y = copy.OriginY - m[0].Y;
-                copy.Offset.Z = copy.OriginZ - m[0].Z;
+                copy.Offset.X = copy.OriginX - m[i].X;
+                copy.Offset.Y = copy.OriginY - m[i].Y;
+                copy.Offset.Z = copy.OriginZ - m[i].Z;
                 Player.Message(p, "Set offset of where to paste from.");
                 return;
             }           
