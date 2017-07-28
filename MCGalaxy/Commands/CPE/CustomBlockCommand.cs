@@ -282,7 +282,7 @@ namespace MCGalaxy.Commands.CPE {
                 bd.FallBack = fallback;
                 
                 ExtBlock block = ExtBlock.FromRaw(bd.BlockID);
-                BlockProps props = BlockDefinition.GlobalProps[block.Index];
+                BlockProps props = BlockDefinition.DefaultProps(block);
                 if (!AddBlock(p, bd, global, cmd, props)) return;
                 
                 SetBD(p, global, null);

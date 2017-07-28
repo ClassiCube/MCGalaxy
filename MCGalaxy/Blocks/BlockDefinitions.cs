@@ -171,7 +171,7 @@ namespace MCGalaxy {
             
             defs[raw] = def;
             if (global) Block.SetDefaultNames();
-            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
+            if (!global) level.UpdateCustomBlock(raw, def);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -193,7 +193,7 @@ namespace MCGalaxy {
             
             defs[raw] = null;
             if (global) Block.SetDefaultNames();
-            if (!global) level.UpdateBlockHandler(ExtBlock.FromRaw(raw));
+            if (!global) level.UpdateCustomBlock(raw, null);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
