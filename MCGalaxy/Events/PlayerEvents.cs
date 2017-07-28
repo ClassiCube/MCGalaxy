@@ -22,7 +22,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player chats on the server. </summary>
-    /// <remarks> You must cancel this event to prevent the message being sent to the user. </remarks>
+    /// <remarks> You must cancel this event to prevent the message being sent to the user (and others). </remarks>
     public sealed class OnPlayerChatEvent : IEvent<OnPlayerChat> {
         
         public static void Call(Player p, string message) {

@@ -33,7 +33,6 @@ namespace MCGalaxy.Commands.Eco {
             Item item = Economy.GetItem(parts[0]);
             if (item == null) { Help(p); return; }
 
-
             if (!item.Enabled) {
                 Player.Message(p, "%cThe {0} item is not currently buyable.", item.Name); return;
             }

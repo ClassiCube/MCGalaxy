@@ -185,28 +185,27 @@ namespace MCGalaxy {
             return block == Block.Air || (block >= Block.Water && block <= Block.StillLava);
         }
         
-        internal byte[] ProcessReceived(byte[] buffer) {
+        internal int ProcessReceived(byte[] buffer, int bufferLen) {
+            int processedLen = 0;
             try {
-                int size = PacketSize(buffer);
-                if (size == -2) return new byte[1]; // WoM get request
-                if (size == -1) return new byte[0]; // invalid packet
-                
-                if (buffer.Length < size) return buffer;
-                HandlePacket(buffer, 0);
-                if (buffer.Length == size) return new byte[0];
-                
-                byte[] remaining = new byte[buffer.Length - size];
-                Buffer.BlockCopy(buffer, size, remaining, 0, remaining.Length);
-                return ProcessReceived(remaining);
+                while (processedLen < bufferLen) {
+            	    int packetLen = PacketSize(buffer[processedLen]);
+                    if (packetLen == -1) return -1;
+                    
+                    // Partial packet data received
+                    if (processedLen + packetLen > bufferLen) return processedLen;
+                    HandlePacket(buffer, processedLen);
+                    processedLen += packetLen;
+                }
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
-            return buffer;
+            return processedLen;
         }
         
-        int PacketSize(byte[] buffer) {
-            switch (buffer[0]) {
-                case (byte)'G': return -2; //For wom
+        int PacketSize(byte opcode) {
+            switch (opcode) {
+                case (byte)'G': return -1; // HTTP GET, ignore it
                 case Opcode.Handshake: return 131;
                 case Opcode.SetBlockClient:
                     if (!loggedIn) goto default;
@@ -226,7 +225,7 @@ namespace MCGalaxy {
 
                 default:
                     if (!nonPlayerClient) {
-                        string msg = "Unhandled message id \"" + buffer[0] + "\"!";
+                        string msg = "Unhandled message id \"" + opcode + "\"!";
                         Leave(msg, msg, true);
                     }
                     return -1;

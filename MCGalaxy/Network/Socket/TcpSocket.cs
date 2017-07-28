@@ -22,8 +22,10 @@ namespace MCGalaxy.Network {
     public sealed class TcpSocket : INetworkSocket {
         readonly Player player;
         readonly Socket socket;
-        byte[] unprocessed = new byte[0];
+        
+        byte[] unprocessed = new byte[352];
         byte[] recvBuffer = new byte[256];
+        int unprocessedLen;
         
         public TcpSocket(Player p, Socket s) {
             player = p; socket = s;
@@ -48,19 +50,25 @@ namespace MCGalaxy.Network {
             if (p.disconnected) return;
             
             try {
-                int length = s.socket.EndReceive(result);
-                if (length == 0) { p.Disconnect(); return; }
+                int recvLen = s.socket.EndReceive(result);
+                if (recvLen == 0) { p.Disconnect(); return; }
 
-                byte[] allData = new byte[s.unprocessed.Length + length];
-                Buffer.BlockCopy(s.unprocessed, 0, allData, 0, s.unprocessed.Length);
-                Buffer.BlockCopy(s.recvBuffer, 0, allData, s.unprocessed.Length, length);
-                s.unprocessed = p.ProcessReceived(allData);
+                // Packets may not always be fully received in a Receive call
+                // As such, we may need to retain a little bit of partial packet data
+                Buffer.BlockCopy(s.recvBuffer, 0, s.unprocessed, s.unprocessedLen, recvLen);
+                s.unprocessedLen += recvLen;
+                int processedLen = p.ProcessReceived(s.unprocessed, s.unprocessedLen);
                 
-                if (p.nonPlayerClient && s.unprocessed.Length == 0) {
-                    s.Close();
-                    p.disconnected = true;
-                    return;
+                // Disconnect invalid clients
+                if (p.nonPlayerClient && processedLen == -1) { s.Close(); p.disconnected = true; }
+                if (processedLen == -1) return;
+                
+                // move remaining partial packet data back to start of unprocessed buffer
+                for (int i = processedLen; i < s.unprocessedLen; i++) {
+                    s.unprocessed[i - processedLen] = s.unprocessed[i];
                 }
+                s.unprocessedLen -= processedLen;
+                
                 if (!p.disconnected) s.ReceiveNextAsync();
             } catch (SocketException) {
                 p.Disconnect();
