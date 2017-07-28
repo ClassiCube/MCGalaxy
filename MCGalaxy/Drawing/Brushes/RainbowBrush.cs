@@ -25,7 +25,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Rainbow"; } }
         public RainbowBrush() : base(blocks) {}
         
-        static ExtBlock[] blocks = new ExtBlock[] { 
+        internal static ExtBlock[] blocks = new ExtBlock[] { 
             (ExtBlock)Block.Red,   (ExtBlock)Block.Orange,  (ExtBlock)Block.Yellow,
             (ExtBlock)Block.Lime,  (ExtBlock)Block.Green,   (ExtBlock)Block.Teal,
             (ExtBlock)Block.Aqua,  (ExtBlock)Block.Cyan,    (ExtBlock)Block.Blue,
@@ -46,17 +46,14 @@ namespace MCGalaxy.Drawing.Brushes {
     
     internal sealed class RandomRainbowBrush : Brush {
         readonly Random rnd;
-        ExtBlock block = default(ExtBlock);
         
         public override string Name { get { return "RandomRainbow"; } }
         
-        public RandomRainbowBrush() { rnd = new Random(); }
-        
+        public RandomRainbowBrush() { rnd = new Random(); }        
         public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
         public override ExtBlock NextBlock(DrawOp op) {
-            block.BlockID = (byte)rnd.Next(Block.Red, Block.Black);
-            return block;
+            return RainbowBrush.blocks[rnd.Next(RainbowBrush.blocks.Length)];
         }
     }
 }

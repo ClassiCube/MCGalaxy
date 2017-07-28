@@ -53,8 +53,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1] [block2]",
-            "%HDraws an alternating pattern of block1 and block2.",
+            "%TArguments: [block1] [block2] <block3>..",
+            "%HDraws an alternating pattern of blocks.",
             "%H  If [block1] is not given, your currently held block is used.",
             "%H  If [block2] is not given, skip block is used.",
         };
@@ -71,9 +71,17 @@ namespace MCGalaxy.Drawing.Brushes {
             if (parts.Length == 1)
                 return new CheckeredBrush(block1, ExtBlock.Invalid);
             
-            ExtBlock block2;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
-            return new CheckeredBrush(block1, block2);
+            if (parts.Length == 2) {
+                ExtBlock block2;
+                if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
+                return new CheckeredBrush(block1, block2);
+            }
+            
+            ExtBlock[] blocks = new ExtBlock[parts.Length];
+            for (int i = 0; i < blocks.Length; i++) {
+                if (!CommandParser.GetBlockIfAllowed(args.Player, parts[i], out blocks[i], true)) return null;
+            }            
+            return new CheckeredPaletteBrush(blocks);
         }
     }
     
@@ -97,7 +105,7 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             
             if (args.Message == "")
-                return new SimplePasteBrush(args.Player.CopyBuffer);            
+                return new SimplePasteBrush(args.Player.CopyBuffer);
             string[] parts = args.Message.SplitSpaces();
             PasteBrush brush = new PasteBrush(args.Player.CopyBuffer);
             
