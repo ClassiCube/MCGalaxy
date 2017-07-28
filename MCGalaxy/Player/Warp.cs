@@ -46,9 +46,9 @@ namespace MCGalaxy {
             Warp wp = Find(warp);
             if (wp == null) return;
             
-            Level lvl = LevelInfo.FindExact(wp.lvlname);
-            if (p.level != lvl)
-                PlayerActions.ChangeMap(p, lvl);
+            if (!wp.lvlname.CaselessEq(p.level.name)) {
+                PlayerActions.ChangeMap(p, wp.lvlname);
+            }
             
             if (p.level.name.CaselessEq(wp.lvlname)) {
                 p.SendPos(Entities.SelfID, 
