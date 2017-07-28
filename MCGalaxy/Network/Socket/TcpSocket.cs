@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
@@ -24,8 +25,13 @@ namespace MCGalaxy.Network {
         readonly Socket socket;
         
         byte[] unprocessed = new byte[352];
-        byte[] recvBuffer = new byte[256];
+        byte[] recvBuffer = new byte[256];        
         int unprocessedLen;
+        
+        byte[] sendBuffer = new byte[1536];
+        readonly object sendLock = new object();
+        readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
+        volatile bool sendInProgress;
         
         public TcpSocket(Player p, Socket s) {
             player = p; socket = s;
@@ -38,6 +44,7 @@ namespace MCGalaxy.Network {
         public bool LowLatency {
             set { socket.NoDelay = value; }
         }
+        
         
         static AsyncCallback recvCallback = new AsyncCallback(ReceiveCallback);
         public void ReceiveNextAsync() {
@@ -73,8 +80,7 @@ namespace MCGalaxy.Network {
             } catch (SocketException) {
                 p.Disconnect();
             }  catch (ObjectDisposedException) {
-                // Player is no longer connected, socket was closed
-                // Mark this as disconnected and remove them from active connection list
+                // Socket was closed by another thread, mark as disconnected
                 Player.connections.Remove(p);
                 p.RemoveFromPending();
                 p.disconnected = true;
@@ -91,68 +97,63 @@ namespace MCGalaxy.Network {
             if (player.disconnected || !socket.Connected) return;
 
             try {
-                if (sync)
+                if (sync) {
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-                else
-                    socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, sendCallback, this);
-                buffer = null;
-            } catch (SocketException e) {
-                buffer = null;
+                    return;
+                }
+                
+                lock (sendLock) {
+                    if (sendInProgress) { sendQueue.Enqueue(buffer); }
+                    else { DoSendAsync(buffer); }
+                }
+            } catch (SocketException) {
                 player.Disconnect();
-                #if DEBUG
-                Logger.LogError(e);
-                #endif
             } catch (ObjectDisposedException) {
-                // socket was already closed by another thread.
-                buffer = null;
+                // Socket was already closed by another thread
             }
         }
         
         // TODO: do this seprately
-        public void SendLowPriority(byte[] buffer, bool sync = false) {
-            Send(buffer, sync);
+        public void SendLowPriority(byte[] buffer) { Send(buffer, false); }
+        
+        void DoSendAsync(byte[] buffer) {
+            sendInProgress = true;
+            // BlockCopy has some overhead, not worth using for very small data
+            if (buffer.Length <= 16) {
+                for (int i = 0; i < buffer.Length; i++) {
+                    sendBuffer[i] = buffer[i];
+                }
+            } else {
+                Buffer.BlockCopy(buffer, 0, sendBuffer, 0, buffer.Length);
+            }
+            
+            socket.BeginSend(sendBuffer, 0, buffer.Length, SocketFlags.None, sendCallback, this);
         }
         
         static void SendCallback(IAsyncResult result) {
-            // TODO: call EndSend, need to check if all data was sent or not!
-            /*TcpSocket s = (TcpSocket)result.AsyncState;
-            
+            TcpSocket s = (TcpSocket)result.AsyncState;
             try {
+                // TODO: Need to check if all data was sent or not?
                 int sent = s.socket.EndSend(result);
-            } catch (SocketException e) {
+                lock (s.sendLock) {
+                    s.sendInProgress = false;
+                    if (s.sendQueue.Count > 0) {
+                        s.DoSendAsync(s.sendQueue.Dequeue());
+                    }
+                }
+            } catch (SocketException) {
                 s.player.Disconnect();
-                #if DEBUG
-                Logger.LogError(e);
-                #endif
             } catch (ObjectDisposedException) {
-                // socket was already closed by another thread.
-            }*/
+                // Socket was already closed by another thread
+            }
         }
         
         
         public void Close() {
             // Try to close the socket. Sometimes socket is already closed, so just hide this.
-            #if !DEBUG
             try { socket.Shutdown(SocketShutdown.Both); } catch { }
             try { socket.Close(); } catch { }
-            
-            #else
-            try {
-                socket.Shutdown(SocketShutdown.Both);
-                Logger.Log(LogType.Debug, "Socket was shutdown for " + name ?? ip);
-            } catch (Exception e) {
-                Exception ex = new Exception("Failed to shutdown socket for " + name ?? ip, e);
-                Logger.LogError(ex);
-            }
-            
-            try {
-                socket.Close();
-                Logger.Log(LogType.Debug, "Socket was closed for " + name ?? ip);
-            } catch (Exception e) {
-                Exception ex = new Exception("Failed to close socket for " + name ?? ip, e);
-                Logger.LogError(ex);
-            }
-            #endif
+            lock (sendLock) { sendQueue.Clear(); }
         }
     }
 }

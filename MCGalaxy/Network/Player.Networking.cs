@@ -294,7 +294,7 @@ namespace MCGalaxy {
 
         internal void CloseSocket() { 
             Socket.Close();
-            RemoveFromPending();            
+            RemoveFromPending();
         }
     }
 }

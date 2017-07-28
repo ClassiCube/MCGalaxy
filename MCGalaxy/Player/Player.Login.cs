@@ -54,42 +54,42 @@ namespace MCGalaxy {
         }
         
         void SendCpeExtensions() {
-            Send(Packet.ExtInfo(26), true);
+            Send(Packet.ExtInfo(26));
             
-            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1), true); // fix for classicube client, doesn't reply if only send EnvMapAppearance with version 2
-            Send(Packet.ExtEntry(CpeExt.ClickDistance, 1), true);
-            Send(Packet.ExtEntry(CpeExt.CustomBlocks, 1), true);
+            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1)); // fix for classicube client, doesn't reply if only send EnvMapAppearance with version 2
+            Send(Packet.ExtEntry(CpeExt.ClickDistance, 1));
+            Send(Packet.ExtEntry(CpeExt.CustomBlocks, 1));
             
-            Send(Packet.ExtEntry(CpeExt.HeldBlock, 1), true);
-            Send(Packet.ExtEntry(CpeExt.TextHotkey, 1), true);
-            Send(Packet.ExtEntry(CpeExt.EnvColors, 1), true);
+            Send(Packet.ExtEntry(CpeExt.HeldBlock, 1));
+            Send(Packet.ExtEntry(CpeExt.TextHotkey, 1));
+            Send(Packet.ExtEntry(CpeExt.EnvColors, 1));
             
-            Send(Packet.ExtEntry(CpeExt.SelectionCuboid, 1), true);
-            Send(Packet.ExtEntry(CpeExt.BlockPermissions, 1), true);
-            Send(Packet.ExtEntry(CpeExt.ChangeModel, 1), true);
+            Send(Packet.ExtEntry(CpeExt.SelectionCuboid, 1));
+            Send(Packet.ExtEntry(CpeExt.BlockPermissions, 1));
+            Send(Packet.ExtEntry(CpeExt.ChangeModel, 1));
             
-            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 2), true);
-            Send(Packet.ExtEntry(CpeExt.EnvWeatherType, 1), true);
-            Send(Packet.ExtEntry(CpeExt.HackControl, 1), true);
+            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 2));
+            Send(Packet.ExtEntry(CpeExt.EnvWeatherType, 1));
+            Send(Packet.ExtEntry(CpeExt.HackControl, 1));
             
-            Send(Packet.ExtEntry(CpeExt.EmoteFix, 1), true);
-            Send(Packet.ExtEntry(CpeExt.FullCP437, 1), true);
-            Send(Packet.ExtEntry(CpeExt.LongerMessages, 1), true);
+            Send(Packet.ExtEntry(CpeExt.EmoteFix, 1));
+            Send(Packet.ExtEntry(CpeExt.FullCP437, 1));
+            Send(Packet.ExtEntry(CpeExt.LongerMessages, 1));
             
-            Send(Packet.ExtEntry(CpeExt.BlockDefinitions, 1), true);
-            Send(Packet.ExtEntry(CpeExt.BlockDefinitionsExt, 2), true);
-            Send(Packet.ExtEntry(CpeExt.TextColors, 1), true);
+            Send(Packet.ExtEntry(CpeExt.BlockDefinitions, 1));
+            Send(Packet.ExtEntry(CpeExt.BlockDefinitionsExt, 2));
+            Send(Packet.ExtEntry(CpeExt.TextColors, 1));
             
-            Send(Packet.ExtEntry(CpeExt.BulkBlockUpdate, 1), true);
-            Send(Packet.ExtEntry(CpeExt.MessageTypes, 1), true);
-            Send(Packet.ExtEntry(CpeExt.ExtPlayerList, 2), true);
+            Send(Packet.ExtEntry(CpeExt.BulkBlockUpdate, 1));
+            Send(Packet.ExtEntry(CpeExt.MessageTypes, 1));
+            Send(Packet.ExtEntry(CpeExt.ExtPlayerList, 2));
             
-            Send(Packet.ExtEntry(CpeExt.EnvMapAspect, 1), true);
-            Send(Packet.ExtEntry(CpeExt.PlayerClick, 1), true);
-            Send(Packet.ExtEntry(CpeExt.EntityProperty, 1), true);
+            Send(Packet.ExtEntry(CpeExt.EnvMapAspect, 1));
+            Send(Packet.ExtEntry(CpeExt.PlayerClick, 1));
+            Send(Packet.ExtEntry(CpeExt.EntityProperty, 1));
             
-            Send(Packet.ExtEntry(CpeExt.ExtEntityPositions, 1), true);
-            Send(Packet.ExtEntry(CpeExt.TwoWayPing, 1), true);
+            Send(Packet.ExtEntry(CpeExt.ExtEntityPositions, 1));
+            Send(Packet.ExtEntry(CpeExt.TwoWayPing, 1));
         }
         
         void CompleteLoginProcess() {

@@ -36,7 +36,7 @@ namespace MCGalaxy.Network {
         void Send(byte[] buffer, bool sync = false);
         
         /// <summary> Sends a block of low-priority data, either synchronously or asynchronously. </summary>
-        void SendLowPriority(byte[] buffer, bool sync = false);
+        void SendLowPriority(byte[] buffer);
         
         /// <summary> Closes this network socket. </summary>
         void Close();
