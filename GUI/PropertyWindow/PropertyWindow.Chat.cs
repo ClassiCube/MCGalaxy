@@ -99,7 +99,7 @@ namespace MCGalaxy.Gui {
                 DialogResult result = sel.ShowDialog();
                 if (result == DialogResult.Cancel) return;
                 
-                target.Text = Colors.Name("&" + sel.ColorCode).Capitalize();                
+                target.Text = Colors.Name(sel.ColorCode);     
                 Color textCol;
                 target.BackColor = ColorSelector.LookupColor(sel.ColorCode, out textCol);
                 target.ForeColor = textCol;

@@ -9,30 +9,24 @@ namespace MCGalaxy.Gui.Popups {
         public char ColorCode;
 
         internal static Color LookupColor(char colCode, out Color textCol) {
-            Color col = default(Color);
-            CustomColor custom = Colors.ExtColors[colCode];
+            Color rgb = default(Color);
+            ColorDesc col = Colors.List[colCode];
             
-            if (Colors.IsStandardColor(colCode)) {
-                int hex = Colors.Hex(colCode);
-                col = Color.FromArgb(
-                    191 * ((hex >> 2) & 1) + 64 * (hex >> 3),
-                    191 * ((hex >> 1) & 1) + 64 * (hex >> 3),
-                    191 * ((hex >> 0) & 1) + 64 * (hex >> 3));
-            } else if (custom.Undefined) {
-                col = Color.White;
+            if (col.Undefined) {
+                rgb = Color.White;
             } else {
-                col = Color.FromArgb( custom.R, custom.G, custom.B );
+                rgb = Color.FromArgb(col.R, col.G, col.B);
             }
             
-            double r = Map(col.R), g = Map(col.G), b = Map(col.B);
+            double r = Map(rgb.R), g = Map(rgb.G), b = Map(rgb.B);
             double L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
             textCol = L > 0.179 ? Color.Black : Color.White;
-            return col;
+            return rgb;
         }
 
         static double Map(double c) {
             c /= 255.0;
-            if (c <= 0.03928 ) return c / 12.92;
+            if (c <= 0.03928) return c / 12.92;
             return Math.Pow((c + 0.055) / 1.055, 2.4);
         }
         
@@ -43,13 +37,9 @@ namespace MCGalaxy.Gui.Popups {
             Text = title;
             
             SuspendLayout();
-            for (char code = '0'; code <= '9'; code++)
-                MakeButton(code);
-            for (char code = 'a'; code <= 'f'; code++)
-                MakeButton(code);           
-            for (int i = 0; i < Colors.ExtColors.Length; i++) {
-                if (Colors.ExtColors[i].Undefined) continue;
-                MakeButton(Colors.ExtColors[i].Code);
+            for (int i = 0; i < Colors.List.Length; i++) {
+                if (Colors.List[i].Undefined) continue;
+                MakeButton(Colors.List[i].Code);
             }
             
             UpdateBaseLayout();
@@ -72,8 +62,7 @@ namespace MCGalaxy.Gui.Popups {
             btn.Name = "b" + index;
             btn.TabIndex = index;
             
-            string colName = Colors.Name("&" + colCode).Capitalize();
-            btn.Text = colName + " - " + colCode;
+            btn.Text = Colors.Name(colCode) + " - " + colCode;
             btn.Click += delegate { ColorCode = colCode; DialogResult = DialogResult.OK; Close(); };
             btn.Margin = new Padding(0);
             btn.UseVisualStyleBackColor = false;

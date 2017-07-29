@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void ParseRule(string rule, Dictionary<int, string> sections) {
             int ruleNum = -1;
-            rule = Colors.StripColors(rule);
+            rule = Colors.Strip(rule);
             
             for (int i = 0; i < rule.Length; i++) {
                 char c = rule[i];

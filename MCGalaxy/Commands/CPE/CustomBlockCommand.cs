@@ -271,7 +271,7 @@ namespace MCGalaxy.Commands.CPE {
                     step += (bd.FogDensity == 0 ? 2 : 1);
                 }
             } else if (step == 16) {
-                CustomColor rgb = default(CustomColor);
+                ColorDesc rgb = default(ColorDesc);
                 if (CommandParser.GetHex(p, value, ref rgb)) {
                     bd.FogR = rgb.R; bd.FogG = rgb.G; bd.FogB = rgb.B;
                     step++;
@@ -399,7 +399,7 @@ namespace MCGalaxy.Commands.CPE {
                     if (!EditByte(p, value, "Fog density", ref def.FogDensity, "fog")) return;
                     break;
                 case "fogcolor":
-                    CustomColor rgb = default(CustomColor);
+                    ColorDesc rgb = default(ColorDesc);
                     if (!CommandParser.GetHex(p, value, ref rgb)) return;
                     def.FogR = rgb.R; def.FogG = rgb.G; def.FogB = rgb.B;
                     break;

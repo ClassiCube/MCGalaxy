@@ -30,7 +30,7 @@ namespace MCGalaxy {
             if (hex.Length != 6) return false;
             
             for (int i = 0; i < hex.Length; i++) {
-                if (!Colors.IsStandardColor(hex[i])) return false;
+                if (!Colors.IsStandard(hex[i])) return false;
             }
             return true;
         }

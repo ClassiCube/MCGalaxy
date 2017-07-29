@@ -90,7 +90,7 @@ namespace MCGalaxy {
         /// <remarks> Optionally prefixes message by &lt;ChatRoom: [chatRoom]&gt; [source name]: </remarks>
         public static void MessageChatRoom(Player source, string message, bool showPrefix, string chatRoom) {
             Logger.Log(LogType.ChatroomChat, "<ChatRoom {0}>{1}: {2}", 
-        	           chatRoom, source.name, message);
+                       chatRoom, source.name, message);
             string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.FullName + ": &f" + message;
             if (showPrefix)
                 message = "<ChatRoom: " + chatRoom + "> " + source.FullName + ": &f" + message;
@@ -154,9 +154,9 @@ namespace MCGalaxy {
         
         public static string Format(string message, Player p, bool colors = true,
                                     bool tokens = true, bool emotes = true) {
-            if (colors) message = Colors.EscapeColors(message);
+            if (colors) message = Colors.Escape(message);
             StringBuilder sb = new StringBuilder(message);
-            if (colors) ParseColors(p, sb);
+            if (colors) Colors.Cleanup(sb, p.hasTextColors);
             if (tokens) ChatTokens.Apply(sb, p);
             if (!emotes) return sb.ToString();
             
@@ -168,26 +168,6 @@ namespace MCGalaxy {
             message = EmotesHandler.Replace(sb.ToString());
             message = FullCP437Handler.Replace(message);
             return message;
-        }
-        
-        static void ParseColors(Player p, StringBuilder sb) {
-            for (int i = 0; i < sb.Length; i++) {
-                char c = sb[i];
-                if (c != '&' || i == sb.Length - 1) continue;
-                
-                char code = sb[i + 1];
-                if (Colors.IsStandardColor(code)) {
-                    if (code >= 'A' && code <= 'F')
-                        sb[i + 1] += ' '; // WoM does not work with uppercase color codes.
-                } else {
-                    char fallback = Colors.GetFallback(code);
-                    if (fallback == '\0') {
-                        sb.Remove(i, 2); i--; // now need to check char at i again
-                    } else if (!p.hasTextColors) {
-                        sb[i + 1] = fallback;
-                    }
-                }
-            }
         }
         
         /// <summary> Returns true if the target player can see chat messags by source. </summary>

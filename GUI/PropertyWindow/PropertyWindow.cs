@@ -113,9 +113,9 @@ namespace MCGalaxy.Gui {
         Color GetColor(string name) {
             string code = Colors.Parse(name);
             if (code == "") return SystemColors.Control;
-            if (Colors.IsStandardColor(code[1])) return Color.FromName(name);
+            if (Colors.IsStandard(code[1])) return Color.FromName(name);
             
-            CustomColor col = Colors.ExtColors[code[1]];
+            ColorDesc col = Colors.List[code[1]];
             return Color.FromArgb(col.R, col.G, col.B);
         }
 
@@ -146,7 +146,7 @@ namespace MCGalaxy.Gui {
             ConsoleHelpPlayer player = new ConsoleHelpPlayer();
             Command.all.Find("help").Use(player, toHelp);
             
-            MessageBox.Show(Colors.StripColors(player.HelpOutput),
+            MessageBox.Show(Colors.Strip(player.HelpOutput),
                             "Help information for " + toHelp);
         }
         

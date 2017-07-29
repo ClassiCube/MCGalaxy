@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (message == "") { Player.Message(p, "You"); return; }
             if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
             
-            string msg = p.color + "*" + Colors.StripColors(p.DisplayName) + " " + message;
+            string msg = p.color + "*" + Colors.Strip(p.DisplayName) + " " + message;
             if (TryMessage(p, msg))
                 OnPlayerActionEvent.Call(p, PlayerAction.Me, message);
         }

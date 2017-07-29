@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands.CPE {
             if (args.Length <= 4) { Help(p); return; }
             
             char code = args[1][0];
-            if (Colors.IsStandardColor(code)) {
-                Player.Message(p, code + " is a standard color code, and thus cannot be replaced."); return;
+            if (Colors.IsStandard(code)) {
+                Player.Message(p, "You may only edit standard codes using %T/ccols edit"); return;
             }
             if (code <= ' ' || code > '~' || code == '%' || code == '&') {
                 Player.Message(p, "{0} must be a standard ASCII character.", code);
@@ -65,69 +65,61 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             char code2 = code;
-            if (Colors.MapColor(ref code2)) {
-                Player.Message(p, "There is already a custom or server defined color with the code " + code +
+            if (Colors.Map(ref code2)) {
+                Player.Message(p, "There is already an existing or server defined color with the code " + code +
                                ", you must either use a different code or use \"%T/ccols remove " + code + "%S\"");
                 return;
             }
             
             char fallback;
             if (!CheckName(p, args[2]) || !CheckFallback(p, args[3], out fallback)) return;
-            CustomColor col = default(CustomColor);
+            ColorDesc col = default(ColorDesc);
             if (!CommandParser.GetHex(p, args[4], ref col)) return;
             
             col.Code = code; col.Fallback = fallback; col.Name = args[2];
-            Colors.AddExtColor(col);
-            Player.Message(p, "Successfully added a custom color.");
+            Colors.Update(col);
+            Player.Message(p, "Successfully added a color.");
         }
         
         void RemoveHandler(Player p, string[] args) {
             if (args.Length < 2) { Help(p); return; }
             
             char code = args[1][0];
-            if (Colors.IsStandardColor(code)) {
-                Player.Message(p,"{0} is a standard color, and thus cannot be removed.", code); return;
-            }
-            
-            if ((int)code >= 256 || Colors.ExtColors[code].Undefined) {
-                Player.Message(p, "There is no custom color with the code {0}.", code);
-                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of custom colors.");
+            if (!Colors.IsDefined(code)) {
+                Player.Message(p, "There is no color with the code {0}.", code);
+                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of colors.");
                 return;
             }
-            Colors.RemoveExtColor(code);
-            Player.Message(p, "Successfully removed a custom color.");
+            
+            Colors.Update(Colors.DefaultCol(code));
+            Player.Message(p, "Successfully removed a color.");
         }
         
-        internal static void ListHandler(Player p, string cmd, string modifier) {
-            List<CustomColor> validCols = new List<CustomColor>(Colors.ExtColors.Length);
-            foreach (CustomColor col in Colors.ExtColors) {
-                if (col.Undefined) continue;
-                validCols.Add(col);
+        static void ListHandler(Player p, string cmd, string modifier) {
+            List<ColorDesc> validCols = new List<ColorDesc>(Colors.List.Length);
+            foreach (ColorDesc col in Colors.List) {
+                if (!col.Undefined) validCols.Add(col);
             }
             MultiPageOutput.Output(p, validCols, FormatColor, cmd, "colors", modifier, true);
         }
         
         // Not very elegant, because we don't want the % to be escaped like everywhere else
-        static string FormatColor(CustomColor col) {
+        internal static string FormatColor(ColorDesc col) {
             const string format = "{0} &{1}({2})%S - %&S{1}, falls back to &{3}%&{3}{3}";
-            return String.Format(format, col.Name, col.Code, col.Hex(), col.Fallback);
+            return String.Format(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
         }
         
         void EditHandler(Player p, string[] args) {
             if (args.Length < 4) { Help(p); return; }
             
-            char code = args[1][0];
-            if (Colors.IsStandardColor(code)) {
-                Player.Message(p, "{0} is a standard color, and thus cannot be edited.", code); return;
-            }
-            
-            if ((int)code >= 256 || Colors.ExtColors[code].Undefined) {
-                Player.Message(p, "There is no custom color with the code {0}.", code);
-                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of custom colors.");
+            char code = args[1][0];            
+            if (!Colors.IsDefined(code)) {
+                Player.Message(p, "There is no color with the code {0}.", code);
+                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of colors.");
                 return;
             }
             
-            CustomColor col = Colors.ExtColors[code];
+            ColorDesc col = Colors.List[code];
             char fallback;
             switch (args[2]) {
                 case "name":
@@ -138,7 +130,7 @@ namespace MCGalaxy.Commands.CPE {
                     col.Fallback = fallback; break;
                 case "hex":
                 case "color":
-                    CustomColor rgb = default(CustomColor);
+                    ColorDesc rgb = default(ColorDesc);
                     if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
                     col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
                     break;
@@ -146,14 +138,13 @@ namespace MCGalaxy.Commands.CPE {
                     Help(p); return;
             }
             
-            Colors.AddExtColor(col);
-            Player.Message(p, "Successfully edited a custom color.");
+            Colors.Update(col);
+            Player.Message(p, "Successfully edited a color.");
         }
         
         static bool CheckName(Player p, string arg) {
             if (Colors.Parse(arg) != "") {
-                Player.Message(p, "There is already an existing standard or " +
-                               "custom color with the name \"{0}\".", arg);
+                Player.Message(p, "There is already an existing color with the name \"{0}\".", arg);
                 return false;
             }
             return true;
@@ -161,7 +152,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static bool CheckFallback(Player p, string arg, out char fallback) {
             fallback = arg[0];
-            if (!Colors.IsStandardColor(fallback)) {
+            if (!Colors.IsStandard(fallback)) {
                 Player.Message(p, "{0} must be a standard color code.", fallback); return false;
             }
             if (fallback >= 'A' && fallback <= 'F') fallback += ' ';

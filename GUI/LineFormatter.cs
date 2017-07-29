@@ -30,8 +30,8 @@ namespace MCGalaxy.Gui {
                 OutputPart(ref col, ref index, message, output);
         }
         
-        static void OutputPart(ref char col, ref int start, 
-                                   string message, Action<char, string> output) {
+        static void OutputPart(ref char col, ref int start,
+                               string message, Action<char, string> output) {
             int next = Next(start, message);
             if (next == -1) {
                 string part = message.Substring(start);
@@ -40,7 +40,7 @@ namespace MCGalaxy.Gui {
             } else {
                 string part = message.Substring(start, next - start);
                 if (part.Length > 0) output(col, part);
-                start = next + 2; 
+                start = next + 2;
                 col = message[next + 1];
             }
         }
@@ -53,10 +53,10 @@ namespace MCGalaxy.Gui {
                 
                 // Check following character is an actual colour code
                 char col = message[i + 1];
-                if (Colors.MapColor(ref col)) return i;
+                if (Colors.Map(ref col)) return i;
             }
             return -1;
-        }        
+        }
         
         public static void FormatConsole(char col, string message) {
             Console.ForegroundColor = GetConsoleCol(col);
@@ -65,77 +65,51 @@ namespace MCGalaxy.Gui {
 
         static ConsoleColor GetConsoleCol(char c) {
             if (c == 'S') return ConsoleColor.White;
-            Colors.MapColor(ref c);
+            Colors.Map(ref c);
             
             switch (c) {
-                case '0': return ConsoleColor.Black;
-                case '1': return ConsoleColor.DarkBlue;
-                case '2': return ConsoleColor.DarkGreen;
-                case '3': return ConsoleColor.DarkCyan;
-                case '4': return ConsoleColor.DarkRed;
-                case '5': return ConsoleColor.DarkMagenta;
-                case '7': return ConsoleColor.Gray;
-                case '6': return ConsoleColor.DarkYellow;
-                case '8': return ConsoleColor.DarkGray;
-                case '9': return ConsoleColor.Blue;
-                case 'a': return ConsoleColor.Green;
-                case 'b': return ConsoleColor.Cyan;
-                case 'c': return ConsoleColor.Red;
-                case 'd': return ConsoleColor.Magenta;
-                case 'e': return ConsoleColor.Yellow;
-                case 'f': return ConsoleColor.White;
+                    case '0': return ConsoleColor.Black;
+                    case '1': return ConsoleColor.DarkBlue;
+                    case '2': return ConsoleColor.DarkGreen;
+                    case '3': return ConsoleColor.DarkCyan;
+                    case '4': return ConsoleColor.DarkRed;
+                    case '5': return ConsoleColor.DarkMagenta;
+                    case '7': return ConsoleColor.Gray;
+                    case '6': return ConsoleColor.DarkYellow;
+                    case '8': return ConsoleColor.DarkGray;
+                    case '9': return ConsoleColor.Blue;
+                    case 'a': return ConsoleColor.Green;
+                    case 'b': return ConsoleColor.Cyan;
+                    case 'c': return ConsoleColor.Red;
+                    case 'd': return ConsoleColor.Magenta;
+                    case 'e': return ConsoleColor.Yellow;
+                    case 'f': return ConsoleColor.White;
+                    
                 default:
-                    char fallback = Colors.GetFallback(c);
-                    return fallback == '\0' ? 
-                        ConsoleColor.White : GetConsoleCol(fallback);
+                    if (!Colors.IsDefined(c)) return ConsoleColor.White;
+                    return GetConsoleCol(Colors.List[c].Fallback);
             }
         }
         
-        public static void FormatGui(char col, string message, 
+        public static void FormatGui(char col, string message,
                                      ColoredTextBox box, Color foreCol) {
             box.AppendColoredText(message, GetGuiCol(col, foreCol));
         }
         
         static Color GetGuiCol(char c, Color foreCol) {
-            if (c == 'S') return foreCol;
-            Colors.MapColor(ref c);
-            
-            switch (c) {
-                case '0': return Color.Black;
-                case '1': return Color.FromArgb( 255, 0, 0, 161 );
-                case '2': return Color.FromArgb( 255, 0, 161, 0 );
-                case '3': return Color.FromArgb( 255, 0, 161, 161 );
-                case '4': return Color.FromArgb( 255, 161, 0, 0 );
-                case '5': return Color.FromArgb( 255, 161, 0, 161 );
-                case '6': return Color.FromArgb( 255, 161, 161, 0 );
-                case '7': return Color.FromArgb( 255, 161, 161, 161 );
-                case '8': return Color.FromArgb( 255, 34, 34, 34 );
-                case '9': return Color.FromArgb( 255, 34, 34, 225 );
-                case 'a': return Color.FromArgb( 255, 34, 225, 34 );
-                case 'b': return Color.FromArgb( 255, 34, 225, 225 );
-                case 'c': return Color.FromArgb( 255, 225, 34, 34 );
-                case 'd': return Color.FromArgb( 255, 225, 34, 225 );
-                case 'e': return Color.FromArgb( 255, 225, 225, 34 );
-                case 'f': return Color.Black;
-                
-                default:
-                    char fallback = Colors.GetFallback(c);
-                    if (fallback == '\0') return foreCol;
-                    
-                    CustomColor col = Colors.ExtColors[c];
-                    return Color.FromArgb(col.R, col.G, col.B);
-            }
+            if (c == 'S' || c == 'f' || c == 'F' || c == '0') return foreCol;
+            Colors.Map(ref c);
+
+            if (!Colors.IsDefined(c)) return foreCol;
+            ColorDesc col = Colors.List[c];
+            return Color.FromArgb(col.R, col.G, col.B);
         }
         
         public static List<string> GetColorsList() {
-            List<string> colors = new List<string>() { 
-                "black", "navy", "green", "teal", "maroon",
-                "purple", "gold", "silver", "gray", "blue", 
-                "lime", "aqua", "red", "pink", "yellow", "white" };
-            
-            for (int i = 0; i < 256; i++) {
-                if (Colors.ExtColors[i].Undefined) continue;
-                colors.Add(Colors.ExtColors[i].Name);
+            List<string> colors = new List<string>();
+            for (int i = 0; i < Colors.List.Length; i++) {
+                if (Colors.List[i].Undefined) continue;
+                colors.Add(Colors.List[i].Name);
             }
             return colors;
         }

@@ -50,11 +50,21 @@ namespace MCGalaxy.Commands.Info {
                 case "colors":
                     Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
                     Player.Message(p, "Colors Available:");
-                    Player.Message(p, "0 - &0Black %S| 1 - &1Navy %S| 2 - &2Green %S| 3 - &3Teal");
-                    Player.Message(p, "4 - &4Maroon %S| 5 - &5Purple %S| 6 - &6Gold %S| 7 - &7Silver");
-                    Player.Message(p, "8 - &8Gray %S| 9 - &9Blue %S| a - &aLime %S| b - &bAqua");
-                    Player.Message(p, "c - &cRed %S| d - &dPink %S| e - &eYellow %S| f - &fWhite");
-                    CmdCustomColors.ListHandler(p, "help colors", "all");
+                    
+                    Player.Message(p, "0 - &0{0} %S| 1 - &1{1} %S| 2 - &2{2} %S| 3 - &3{3}",
+                                   Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
+                    Player.Message(p, "4 - &4{0} %S| 5 - &5{1} %S| 6 - &6{2} %S| 7 - &7{3}",
+                                   Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
+                                   
+                    Player.Message(p, "8 - &8{0} %S| 9 - &9{1} %S| a - &a{2} %S| b - &b{3}",
+                                   Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
+                    Player.Message(p, "c - &c{0} %S| d - &d{1} %S| e - &e{2} %S| f - &f{3}",
+                                   Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
+                    
+                    foreach (ColorDesc col in Colors.List) {
+                        if (col.Undefined || Colors.IsStandard(col.Code)) continue;
+                        Player.Message(p, CmdCustomColors.FormatColor(col));
+                    }
                     break;
                 default:
                     if (CmdCommands.DoCommand(p, message)) break;
@@ -68,8 +78,8 @@ namespace MCGalaxy.Commands.Info {
             foreach (Group grp in Group.GroupList) {
                 if (grp.Permission >= LevelPermission.Nobody) continue; // Note that -1 means max undo.  Undo anything and everything.
                 int count = grp.Players.Count;
-                Player.Message(p, "{0} %S- Cmd: {2}, Undo: {3}, Perm: {4}", 
-                               grp.ColoredName, count, grp.DrawLimit, 
+                Player.Message(p, "{0} %S- Cmd: {2}, Undo: {3}, Perm: {4}",
+                               grp.ColoredName, count, grp.DrawLimit,
                                grp.MaxUndo == -1 ? "max" : grp.MaxUndo.ToString(), (int)grp.Permission);
             }
         }

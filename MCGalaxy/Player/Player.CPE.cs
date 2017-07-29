@@ -80,9 +80,9 @@ namespace MCGalaxy {
                     hasTextColors = true;
                     TextColors = version;
                     
-                    for (int i = 0; i < Colors.ExtColors.Length; i++) {
-                        if (Colors.ExtColors[i].Undefined) continue;
-                        Send(Packet.SetTextColor(Colors.ExtColors[i]));
+                    for (int i = 0; i < Colors.List.Length; i++) {
+                        if (!Colors.List[i].IsModified()) continue;
+                        Send(Packet.SetTextColor(Colors.List[i]));
                     }
                     break;
                 case CpeExt.BulkBlockUpdate:
@@ -194,7 +194,7 @@ namespace MCGalaxy {
             }
             
             try {
-                CustomColor c = Colors.ParseHex(hex);
+                ColorDesc c = Colors.ParseHex(hex);
                 Send(Packet.EnvColor(type, c.R, c.G, c.B));
             } catch (ArgumentException) {
                 Send(Packet.EnvColor(type, -1, -1, -1));

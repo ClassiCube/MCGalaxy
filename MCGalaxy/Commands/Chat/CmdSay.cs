@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message) {
             if (message == "") { Help(p); return; }
 
-            message = Colors.EscapeColors(message);
+            message = Colors.Escape(message);
             Chat.MessageGlobal(message);
             Server.IRC.Say(message);
         }

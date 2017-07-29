@@ -35,13 +35,15 @@ namespace MCGalaxy {
             
             string name, group;
             GetEntry(p, dst, out name, out group);
+            
+            name = Colors.Cleanup(name, dst.hasTextColors);
+            group = Colors.Cleanup(group, dst.hasTextColors);
             dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
-            string col = Entities.GetSupportedCol(dst, p.color);          
             group = ServerConfig.TablistGlobal ? "On " + p.level.name : "&fPlayers";
-            name = col + p.truename;
+            name = p.color + p.truename;
             OnTabListEntryAddedEvent.Call(p, ref name, ref group, dst);
 
             if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }

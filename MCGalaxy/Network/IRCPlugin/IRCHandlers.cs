@@ -125,7 +125,7 @@ namespace MCGalaxy.Network {
         }
 
         void Listener_OnPrivate(UserInfo user, string message) {
-            message = Colors.IrcToMinecraftColors(message);
+            message = Colors.ConvertIRCToMC(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
             string cmdArgs = parts.Length > 1 ? parts[1] : "";
@@ -148,7 +148,7 @@ namespace MCGalaxy.Network {
             if (message.Length == 0) return;
             bool opchat = bot.opchannels.CaselessContains(channel);
             
-            message = Colors.IrcToMinecraftColors(message);
+            message = Colors.ConvertIRCToMC(message);
             string[] parts = message.SplitSpaces(3);
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;

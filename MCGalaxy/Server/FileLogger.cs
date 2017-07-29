@@ -90,7 +90,7 @@ namespace MCGalaxy {
             using (StreamWriter w = new StreamWriter(path, true)) {
                 while (cache.Count > 0) {
                     string item = cache.Dequeue();
-                    item = Colors.StripColors(item);
+                    item = Colors.Strip(item);
                     w.WriteLine(item);
                 }
             }

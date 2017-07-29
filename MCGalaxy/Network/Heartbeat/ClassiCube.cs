@@ -61,7 +61,7 @@ namespace MCGalaxy.Network {
         public override string GetHeartbeatData()  {
             string name = ServerConfig.Name;
             Server.zombie.OnHeartbeat(ref name);
-            name = Colors.StripColors(name);
+            name = Colors.Strip(name);
             
             return "&port="  + ServerConfig.Port +
                 "&max="      + ServerConfig.MaxPlayers +

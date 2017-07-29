@@ -87,8 +87,7 @@ namespace MCGalaxy {
             if (!ServerConfig.TablistGlobal)
                 TabList.Add(dst, p, id);
             if (!Server.zombie.Running || !p.Game.Infected) {
-                string col = GetSupportedCol(dst, p.color);
-                SpawnRaw(dst, id, p.SkinName, col + p.truename + possession, p.Model, p.Pos, p.Rot);
+                SpawnRaw(dst, id, p.SkinName, p.color + p.truename + possession, p.Model, p.Pos, p.Rot);
                 return;
             }
             
@@ -148,6 +147,7 @@ namespace MCGalaxy {
                                     string model, Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
+            name = Colors.Cleanup(name, dst.hasTextColors);
             
             if (dst.hasExtList) {
                 dst.Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
@@ -180,13 +180,6 @@ namespace MCGalaxy {
 
         #endregion
         
-        internal static string GetSupportedCol(Player dst, string col) {
-            if (col == null) return null;
-            if (col.Length >= 2 && !Colors.IsStandardColor(col[1]) && !dst.HasCpeExt(CpeExt.TextColors))
-                col = "&" + Colors.GetFallback(col[1]);
-            return col;
-        }
-
         
         /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
         public static bool CanSee(Player p, Player target) {

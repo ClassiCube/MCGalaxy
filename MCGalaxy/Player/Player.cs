@@ -182,7 +182,7 @@ namespace MCGalaxy {
         public static void GlobalMessage(string message, bool global) { Chat.MessageGlobal(message); }
         
         public static void GlobalIRCMessage(string message) {
-            message = Colors.EscapeColors(message);
+            message = Colors.Escape(message);
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
                 if (p.ignoreAll || p.ignoreIRC) continue;
@@ -270,8 +270,8 @@ namespace MCGalaxy {
         void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {
             if (leftServer) return;
             leftServer = true;
-            if (chatMsg != null) chatMsg = Colors.EscapeColors(chatMsg);
-            discMsg = Colors.EscapeColors(discMsg);
+            if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
+            discMsg = Colors.Escape(discMsg);
             CriticalTasks.Clear();
             
             //Umm...fixed?

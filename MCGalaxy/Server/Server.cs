@@ -193,7 +193,7 @@ namespace MCGalaxy {
             }
             
             zombie.LoadInfectMessages();
-            Colors.LoadExtColors();
+            Colors.LoadList();
             Alias.Load();
             Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();

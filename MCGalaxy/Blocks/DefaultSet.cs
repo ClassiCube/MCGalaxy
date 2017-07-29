@@ -44,7 +44,7 @@ namespace MCGalaxy.Blocks {
                 def.BlockDraw = DrawType.Transparent;
             
             def.FogDensity = FogDensity(b);
-            CustomColor fog = FogColor(b);
+            ColorDesc fog = FogColor(b);
             def.FogR = fog.R; def.FogG = fog.G; def.FogB = fog.B;
             def.FallBack = b;
             
@@ -77,12 +77,12 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets the default fog colour of a block. </summary>
-        public static CustomColor FogColor(byte b) {
+        public static ColorDesc FogColor(byte b) {
             if (b == Block.Water || b == Block.StillWater)
-                return new CustomColor(5, 5, 51);
+                return new ColorDesc(5, 5, 51);
             if (b == Block.Lava || b == Block.StillLava)
-                return new CustomColor(153, 25, 0);
-            return default(CustomColor);
+                return new ColorDesc(153, 25, 0);
+            return default(ColorDesc);
         }
         
         /// <summary> Gets the default collide type of a block, see CollideType class. </summary>

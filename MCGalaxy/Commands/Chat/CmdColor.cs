@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Chatting {
             string color = colName == "" ? "&1" : Colors.Parse(colName);
             if (color == "") { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
-                              + color + Colors.Name(color));            
+                              + color + Colors.Name(color));
             bot.color = color;
             
             bot.GlobalDespawn();

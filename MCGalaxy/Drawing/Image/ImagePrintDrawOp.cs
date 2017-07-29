@@ -76,8 +76,8 @@ namespace MCGalaxy.Drawing.Ops {
             PaletteEntry[] front = new PaletteEntry[Palette.Entries.Length];
             PaletteEntry[] back  = new PaletteEntry[Palette.Entries.Length];
             
-            CustomColor sun  = Colors.ParseHex("FFFFFF");
-            CustomColor dark = Colors.ParseHex("9B9B9B");
+            ColorDesc sun  = Colors.ParseHex("FFFFFF");
+            ColorDesc dark = Colors.ParseHex("9B9B9B");
             if (Utils.IsValidHex(Level.Config.LightColor)) {
                 sun = Colors.ParseHex(Level.Config.LightColor);
             }
@@ -101,7 +101,7 @@ namespace MCGalaxy.Drawing.Ops {
             selector.SetPalette(front, back);
         }
         
-        static PaletteEntry Multiply(PaletteEntry entry, CustomColor rgb) {
+        static PaletteEntry Multiply(PaletteEntry entry, ColorDesc rgb) {
             entry.R = (byte)(entry.R * rgb.R / 255);
             entry.G = (byte)(entry.G * rgb.G / 255);
             entry.B = (byte)(entry.B * rgb.B / 255);

@@ -72,14 +72,14 @@ namespace MCGalaxy {
                 if ( index != -1 ) {
                     if ( index < lines[lines.Count - 1].Length - 1 ) {
                         char next = lines[lines.Count - 1][index + 1];
-                        if ( Colors.MapColor(ref next) ) color = "&" + next;
+                        if ( Colors.Map(ref next) ) color = "&" + next;
                         if ( index == lines[lines.Count - 1].Length - 1 ) {
                             lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 2);
                         }
                     }
                     else if ( message.Length != 0 ) {
                         char next = message[0];
-                        if ( Colors.MapColor(ref next) ) color = "&" + next;
+                        if ( Colors.Map(ref next) ) color = "&" + next;
                         lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 1);
                         message = message.Substring(1);
                     }
@@ -97,6 +97,8 @@ namespace MCGalaxy {
             return lines;
         }
         
+        static bool ValidColor(char c) { return Colors.IsStandard(c) || Colors.IsDefined(c); }
+        
         static string CleanupColorCodes(string value) {
             if (value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
@@ -108,7 +110,7 @@ namespace MCGalaxy {
                 if (value[i] != '&') { 
                     output[used++] = value[i]; continue;
                 }
-                if (i == value.Length - 1 || !Colors.ValidColor(value[i + 1])) {
+                if (i == value.Length - 1 || !ValidColor(value[i + 1])) {
                     output[used++] = value[i]; continue;
                 }
                 char col = value[i + 1];
@@ -132,7 +134,7 @@ namespace MCGalaxy {
             int j = value.Length;
             while ((j - 2) >= 0) {
                 if (value[j - 2] != '&') break;
-                if (!Colors.ValidColor(value[j - 1])) break;
+                if (!ValidColor(value[j - 1])) break;
                 j -= 2; used -= 2;
             }
             return new string(output, 0, used);

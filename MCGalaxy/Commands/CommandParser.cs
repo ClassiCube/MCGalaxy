@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands {
         }
         
         /// <summary> Attempts to parse the given argument as a hex color. </summary>
-        public static bool GetHex(Player p, string input, ref CustomColor col) {
+        public static bool GetHex(Player p, string input, ref ColorDesc col) {
             if (input.Length > 0 && input[0] == '#')
                 input = input.Substring(1);
             

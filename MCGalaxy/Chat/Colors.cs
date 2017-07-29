@@ -42,73 +42,100 @@ namespace MCGalaxy {
         public const string pink = "&d";
         public const string yellow = "&e";
         public const string white = "&f";
-
-        public static string Parse(string name) {
-            name = name.ToLower();
-            switch (name) {
-                case "black": return black;
-                case "navy": return navy;
-                case "green": return green;
-                case "teal": return teal;
-                case "maroon": return maroon;
-                case "purple": return purple;
-                case "gold": return gold;
-                case "silver": return silver;
-                case "gray": return gray;
-                case "blue": return blue;
-                case "lime": return lime;
-                case "aqua": return aqua;
-                case "red": return red;
-                case "pink": return pink;
-                case "yellow": return yellow;
-                case "white": return white;
-                default: return GetExtColor(name);
+        
+        public static ColorDesc[] List = new ColorDesc[256];
+        static Colors() {
+            for (int i = 0; i < List.Length; i++) {
+                List[i] = DefaultCol((char)i);
             }
         }
         
-        public static string Name(string str) {
-            if (str.Length != 2 || str[0] != '&') return "";
-            switch (str) {
-                case black: return "black";
-                case navy: return "navy";
-                case green: return "green";
-                case teal: return "teal";
-                case maroon: return "maroon";
-                case purple: return "purple";
-                case gold: return "gold";
-                case silver: return "silver";
-                case gray: return "gray";
-                case blue: return "blue";
-                case lime: return "lime";
-                case aqua: return "aqua";
-                case red: return "red";
-                case pink: return "pink";
-                case yellow: return "yellow";
-                case white: return "white";
-                default:
-                    char fallback = GetFallback(str[1]);
-                    return fallback == '\0' ? "" : ExtColors[str[1]].Name;
-            }
+        
+        /// <summary> Returns whether the given color code is defined. </summary>
+        /// <remarks> NOTE: This returns false for A to F, be warned! </remarks>
+        public static bool IsDefined(char c) { return c <= '\xff' && List[c].Fallback != '\0'; }
+        
+        /// <summary> Returns whether c is a colour code in 0-9, a-f, or A-F. </summary>
+        public static bool IsStandard(char c) {
+            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
+        
+
+        /// <summary> Gets the default color description for the given color code. </summary>
+        public static ColorDesc DefaultCol(char code) {
+            switch (code) {
+                case '0': return new ColorDesc('0', "Black");
+                case '1': return new ColorDesc('1', "Navy");
+                case '2': return new ColorDesc('2', "Green");
+                case '3': return new ColorDesc('3', "Teal");
+                case '4': return new ColorDesc('4', "Maroon");
+                case '5': return new ColorDesc('5', "Purple");
+                case '6': return new ColorDesc('6', "Gold");
+                case '7': return new ColorDesc('7', "Silver");
+                case '8': return new ColorDesc('8', "Gray");
+                case '9': return new ColorDesc('9', "Blue");
+                case 'a': return new ColorDesc('a', "Lime");
+                case 'b': return new ColorDesc('b', "Aqua");
+                case 'c': return new ColorDesc('c', "Red");
+                case 'd': return new ColorDesc('d', "Pink");
+                case 'e': return new ColorDesc('e', "Yellow");
+                case 'f': return new ColorDesc('f', "White");
+            }
+            
+            ColorDesc col = default(ColorDesc);
+            col.Code = code;
+            return col;
+        }
+        
+        /// <summary> Updates the colors list array, sends change to all players, then saves color list. </summary>
+        public static void Update(ColorDesc col) {
+            List[col.Code] = col;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (!p.HasCpeExt(CpeExt.TextColors)) continue;
+                p.Send(Packet.SetTextColor(col));
+            }
+            SaveList();
+        }
+
+        /// <summary> Finds the color code which has the given name, or empty string if not found. </summary>
+        public static string Parse(string name) {
+            for (int i = 0; i < List.Length; i++) {
+                if (List[i].Undefined) continue;
+                if (!List[i].Name.CaselessEq(name)) continue;
+                return "&" + List[i].Code;
+            }
+            return "";
+        }
+        
+        /// <summary> Gets the name of the given color code. </summary>
+        public static string Name(string color) {
+            if (color.Length != 2 || color[0] != '&') return "";
+            return Name(color[1]);
+        }
+        
+        /// <summary> Gets the name of the given color code. </summary>
+        public static string Name(char code) {
+            if (code >= 'A' && code <= 'F') code += ' ';
+            return IsDefined(code) ? List[code].Name : "";
+        }
+            
         
         static readonly Dictionary<string, string> ircColors = new Dictionary<string, string> {
-            { white, "\u000300" }, { black, "\u000301" }, { navy, "\u000302" },
-            { green, "\u000303" }, { red, "\u000304" }, { maroon, "\u000305" },
-            { purple, "\u000306" }, { gold, "\u000307" }, { yellow, "\u000308" },
-            { lime, "\u000309" }, { teal, "\u000310" }, { aqua, "\u000311" },
-            { blue, "\u000312" }, { pink, "\u000313" }, { gray, "\u000314" },
-            { silver, "\u000315" },
+            { white, "\u000300" }, { black, "\u000301" }, { navy, "\u000302" }, { green, "\u000303" }, 
+            { red, "\u000304" }, { maroon, "\u000305" }, { purple, "\u000306" }, { gold, "\u000307" },
+            { yellow, "\u000308" }, { lime, "\u000309" }, { teal, "\u000310" }, { aqua, "\u000311" },
+            { blue, "\u000312" }, { pink, "\u000313" }, { gray, "\u000314" }, { silver, "\u000315" },
         };
         static readonly Dictionary<string, string> ircSingleColors = new Dictionary<string, string> {
-            { white, "\u00030" }, { black, "\u00031" }, { navy, "\u00032" },
-            { green, "\u00033" }, { red, "\u00034" }, { maroon, "\u00035" },
-            { purple, "\u00036" }, { gold, "\u00037" }, { yellow, "\u00038" },
-            { lime, "\u00039" },
-        };        
+            { white, "\u00030" }, { black, "\u00031" }, { navy, "\u00032" }, { green, "\u00033" }, 
+            { red, "\u00034" }, { maroon, "\u00035" }, { purple, "\u00036" }, { gold, "\u00037" },
+            { yellow, "\u00038" }, { lime, "\u00039" },
+        };
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        /// <summary> Converts IRC colour codes into normal colour codes. </summary>
-        public static string IrcToMinecraftColors(string input) {
+        /// <summary> Converts IRC color codes into normal color codes. </summary>
+        public static string ConvertIRCToMC(string input) {
             if (input == null) throw new ArgumentNullException("input");
             // get rid of background colour component of some IRC colour codes.
             input = IrcTwoColorCode.Replace(input, "$1");
@@ -126,15 +153,15 @@ namespace MCGalaxy {
             return sb.ToString();
         }
 
-        /// <summary> Escapces then converts colour codes into IRC colour codes. </summary>
-        public static string MinecraftToIrcColors(string input) {
+        /// <summary> Escapes then converts color codes into IRC color codes. </summary>
+        public static string ConvertMCToIRC(string input) {
             if (input == null) throw new ArgumentNullException("input");
-            input = EscapeColors(input);
+            input = Escape(input);
             StringBuilder sb = new StringBuilder(input);
             
-            for (int i = 0; i < ExtColors.Length; i++) {
-                CustomColor col = ExtColors[i];
-                if (col.Undefined) continue;
+            for (int i = 0; i < List.Length; i++) {
+                ColorDesc col = List[i];
+                if (col.Undefined || col.Code == col.Fallback) continue;
                 sb.Replace("&" + col.Code, "&" + col.Fallback);
             }
             
@@ -144,13 +171,25 @@ namespace MCGalaxy {
             return sb.ToString();
         }
         
-        /// <summary> Returns whether c is a colour code in 0-9, a-f, or A-F. </summary>
-        public static bool IsStandardColor(char c) {
-            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+        /// <summary> Maps internal system color codes to their actual color codes. </summary>
+        /// <remarks> Also converts uppercase standard color codes to lowercase. </remarks>
+        /// <returns> Whether given color code was a valid color code. </returns>
+        public static bool Map(ref char col) {
+            if (IsStandard(col)) {
+                if (col >= 'A' && col <= 'F') col += ' ';
+                return true;
+            }
+            
+            if (col == 'S') { col = ServerConfig.DefaultColor[1]; return true; }
+            if (col == 'H') { col = ServerConfig.HelpDescriptionColor[1]; return true; }
+            if (col == 'T') { col = ServerConfig.HelpSyntaxColor[1]; return true; }
+            if (col == 'I') { col = ServerConfig.IRCColour[1]; return true; }
+            return IsDefined(col);
         }
-
-        /// <summary> Converts percentage colour codes to actual/real colour codes. </summary>
-        public static string EscapeColors(string value) {
+        
+        
+        /// <summary> Converts percentage colour codes to their actual/real color codes. </summary>
+        public static string Escape(string value) {
             if (value.IndexOf('%') == -1) return value;
             char[] chars = new char[value.Length];
             
@@ -160,7 +199,7 @@ namespace MCGalaxy {
                 if (!validCode) { chars[i] = c; continue; }
                 
                 char color = value[i + 1];
-                if (MapColor(ref color)) {
+                if (Map(ref color)) {
                     chars[i] = '&';
                     chars[i + 1] = color;
                     i++; continue;
@@ -170,112 +209,90 @@ namespace MCGalaxy {
             return new string(chars);
         }
         
-        /// <summary> Maps internal system colour codes to their actual colour code. </summary>
-        /// <remarks> Also converts uppercase standard colour codes to lowercase. </remarks>
-        /// <returns> Whether color was a valid colour code. </returns>
-        public static bool MapColor(ref char color) {
-            if (IsStandardColor(color)) {
-                if (color >= 'A' && color <= 'F') color += ' ';
-                return true;
-            }
-            
-            if (color == 'S') { color = ServerConfig.DefaultColor[1]; return true; }
-            if (color == 'H') { color = ServerConfig.HelpDescriptionColor[1]; return true; }
-            if (color == 'T') { color = ServerConfig.HelpSyntaxColor[1]; return true; }
-            if (color == 'I') { color = ServerConfig.IRCColour[1]; return true; }    
-            return Colors.GetFallback(color) != '\0';
-        }        
-        
-        public static string StripColors(string value) {
-            if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1)
-                return value;
+        /// <summary> Removes all percentage and actual color codes from the given string. </summary>
+        public static string Strip(string value) {
+            if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
             int usedChars = 0;
             
             for (int i = 0; i < value.Length; i++) {
                 char token = value[i];
-                if( token == '%' || token == '&' ) {
+                if (token == '%' || token == '&') {
                     i++; // Skip over the following colour code.
                 } else {
                     output[usedChars++] = token;
                 }
             }
             return new string(output, 0, usedChars);
+        }        
+       
+        /// <summary> Removes all non-existent color codes, and converts
+        /// custom colors to their standard color codes if required. </summary>
+        public static string Cleanup(string value, bool supportsCustomCols) {
+            StringBuilder sb = new StringBuilder(value);
+            Cleanup(sb, supportsCustomCols);
+            return sb.ToString();
         }
         
-        
-        public static CustomColor[] ExtColors = new CustomColor[256];
-        
-        public static char GetFallback(char c) {
-            return (int)c >= 256 ? '\0' : ExtColors[c].Fallback;
-        }
-        
-        public static bool ValidColor(char c) {
-            return IsStandardColor(c) || GetFallback(c) != '\0';
-        }
-        
-        static string GetExtColor(string name) {
-            for (int i = 0; i < ExtColors.Length; i++) {
-                CustomColor col = ExtColors[i];
-                if (col.Undefined) continue;
-                if (col.Name.CaselessEq(name))
-                    return "&" + col.Code;
-            }
-            return "";
-        }
-        
-        public static void AddExtColor(CustomColor col) { SetExtCol(col); }
-        
-        public static void RemoveExtColor(char code) {
-            CustomColor col = default(CustomColor);
-            col.Code = code;
-            SetExtCol(col);
-        }
-        
-        static void SetExtCol(CustomColor col) {
-            ExtColors[col.Code] = col;
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player p in players) {
-                if (!p.HasCpeExt(CpeExt.TextColors)) continue;
-                p.Send(Packet.SetTextColor(col));
-            }
-            SaveExtColors();
-        }
-
-        internal static void SaveExtColors() {
-            using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
-                foreach (CustomColor col in ExtColors) {
-                    if (col.Undefined) continue;
-                    w.WriteLine(col.Code + " " + col.Fallback + " " + col.Name + " " +
-                            col.R + " " + col.G + " " + col.B + " " + col.A);              
+        /// <summary> Removes all non-existent color codes, and converts
+        /// custom colors to their standard color codes if required. </summary>
+        public static void Cleanup(StringBuilder value, bool supportsCustomCols) {
+            for (int i = 0; i < value.Length; i++) {
+                char c = value[i];
+                if (c != '&' || i == value.Length - 1) continue;
+                
+                char code = value[i + 1];
+                if (IsStandard(code)) {
+                    if (code >= 'A' && code <= 'F') {
+                        value[i + 1] += ' '; // WoM doesn't work with uppercase colors
+                    }
+                } else if (!IsDefined(code)) {
+                    value.Remove(i, 2); i--; // now need to check char at i again
+                } else if (!supportsCustomCols) {
+                    value[i + 1] = List[code].Fallback;
                 }
             }
         }
         
-        internal static void LoadExtColors() {
+
+        /// <summary> Saves the list of all colors. </summary>
+        internal static void SaveList() {
+            using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
+                foreach (ColorDesc col in List) {
+                    if (!col.IsModified()) continue;
+                    
+                    w.WriteLine(col.Code + " " + col.Fallback + " " + col.Name +
+                                " " + col.R + " " + col.G + " " + col.B + " " + col.A);
+                }
+            }
+        }
+        
+        /// <summary> Loads the list of all colors. </summary>
+        internal static void LoadList() {
             if (!File.Exists(Paths.CustomColorsFile)) return;
             string[] lines = File.ReadAllLines(Paths.CustomColorsFile);
-            CustomColor col = default(CustomColor);
+            ColorDesc col = default(ColorDesc);
             
             for (int i = 0; i < lines.Length; i++) {
                 string[] parts = lines[i].SplitSpaces();
                 if (parts.Length != 7) continue;
-                col.Code = parts[0][0]; col.Fallback = parts[1][0];
-                col.Name = parts[2];
+                col.Code = parts[0][0]; col.Fallback = parts[1][0]; col.Name = parts[2];
                 
-                if (!Byte.TryParse(parts[3], out col.R) || !Byte.TryParse(parts[4], out col.G) ||
-                    !Byte.TryParse(parts[5], out col.B) || !Byte.TryParse(parts[6], out col.A))
-                    continue;
-                ExtColors[col.Code] = col;
+                if (Byte.TryParse(parts[3], out col.R) && Byte.TryParse(parts[4], out col.G)
+                    && Byte.TryParse(parts[5], out col.B) && Byte.TryParse(parts[6], out col.A)) {
+                    List[col.Code] = col;
+                }
             }
         }
+
         
-        public static CustomColor ParseHex(string hex) {
+        /// <summary> Parses an #RRGGBB hex color string. </summary>
+        public static ColorDesc ParseHex(string hex) {
             if (hex.Length > 0 && hex[0] == '#') hex = hex.Remove(0, 1);
             if (hex.Length != 3 && hex.Length != 6)
                 throw new ArgumentException("hex must be either 3 or 6 chars long");
             
-            CustomColor c = default(CustomColor);
+            ColorDesc c = default(ColorDesc);
             int R, G, B;
             if (hex.Length == 6) {
                 R = (Hex(hex[0]) << 4) | Hex(hex[1]);
@@ -291,6 +308,7 @@ namespace MCGalaxy {
             return c;
         }
         
+        /// <summary> Gets the index of the given hex character. </summary>
         public static int Hex(char value) {
             if (value >= '0' && value <= '9')
                 return (int)(value - '0');
@@ -300,19 +318,42 @@ namespace MCGalaxy {
                 return (int)(value - 'A') + 10;
             throw new ArgumentException("Non hex char: " + value);
         }
-    }    
+    }
     
-    public struct CustomColor {
+	/// <summary> Describes information about a color code. </summary>
+    public struct ColorDesc {
         public char Code, Fallback;
         public byte R, G, B, A;
         public string Name;
+        public bool Undefined { get { return Fallback == '\0'; } }
         
-        public CustomColor(byte r, byte g, byte b) {
+        public ColorDesc(byte r, byte g, byte b) {
             Code = '\0'; Fallback = '\0'; Name = null;
             R = r; G = g; B = b; A = 255;
         }
         
-        public bool Undefined { get { return Fallback == '\0'; } }        
-        public string Hex() { return Utils.Hex(R, G, B); }
+        internal ColorDesc(char code, string name) {
+            Code = code; Fallback = code; Name = name; A = 255;
+            
+            if (code >= '0' && code <= '9') {
+                HexDecode(code - '0', out R, out G, out B);
+            } else {
+                HexDecode(code - 'a' + 10, out R, out G, out B);
+            }
+        }
+        
+        static void HexDecode(int hex, out byte r, out byte g, out byte b) {
+            r = (byte)(191 * ((hex >> 2) & 1) + 64 * (hex >> 3));
+            g = (byte)(191 * ((hex >> 1) & 1) + 64 * (hex >> 3));
+            b = (byte)(191 * ((hex >> 0) & 1) + 64 * (hex >> 3));
+        }      
+        
+        public bool IsModified() {
+            if ((Code >= '0' && Code <= '9') || (Code >= 'a' && Code <= 'f')) {
+                ColorDesc def = Colors.DefaultCol(Code);
+                return R != def.R || G != def.G || B != def.B || Name != def.Name;
+            }
+            return !Undefined;
+        }
     }
 }

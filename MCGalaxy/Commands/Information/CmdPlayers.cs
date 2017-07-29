@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
                 foreach (Player pl in players) {
                     if (pl.group != grp) continue;
                     if (p == pl || Entities.CanSee(p, pl)) {
-                        string name = Colors.StripColors(pl.DisplayName);
+                        string name = Colors.Strip(pl.DisplayName);
                         AddStates(pl, ref name);
                         rankSec.Append(pl, name);
                     }
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Info {
             foreach (Player pl in online) {
                 if (p == pl || Entities.CanSee(p, pl)) {
                     totalPlayers++;
-                    string name = Colors.StripColors(pl.DisplayName);
+                    string name = Colors.Strip(pl.DisplayName);
                     AddStates(pl, ref name);
                     playerList.Find(grp => grp.group == pl.group).Append(pl, name);
                 }
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Info {
                 }
                 
                 builder.Append(name);
-                string lvlName = Colors.StripColors(pl.level.name); // for museums
+                string lvlName = Colors.Strip(pl.level.name); // for museums
                 builder.Append(" (").Append(lvlName).Append("),");
             }
         }

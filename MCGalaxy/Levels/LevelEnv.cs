@@ -89,7 +89,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Reset {0} color for {1} %Sto normal", envTypeName, p.level.ColoredName);
                 target = "";
             } else {
-                CustomColor rgb = default(CustomColor);
+                ColorDesc rgb = default(ColorDesc);
                 if (!CommandParser.GetHex(p, value, ref rgb)) return;
                 
                 Player.Message(p, "Set {0} color for {1} %Sto #{2}", envTypeName, p.level.ColoredName, value);

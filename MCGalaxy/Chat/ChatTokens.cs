@@ -71,7 +71,7 @@ namespace MCGalaxy {
         
         public static List<ChatToken> Standard = new List<ChatToken>() {
             new ChatToken("$name", "Nickname of the player",
-                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.StripColors(p.DisplayName)),
+                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.Strip(p.DisplayName)),
             new ChatToken("$truename", "Account name of the player",
                           p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + p.truename),
             new ChatToken("$date", "Current date (year-month-day)",

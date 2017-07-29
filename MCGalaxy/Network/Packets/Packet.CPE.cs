@@ -215,7 +215,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] SetTextColor(CustomColor col) {
+        public static byte[] SetTextColor(ColorDesc col) {
             byte[] buffer = new byte[6];
             buffer[0] = Opcode.CpeSetTextColor;
             buffer[1] = col.R; buffer[2] = col.G; buffer[3] = col.B; buffer[4] = col.A; 

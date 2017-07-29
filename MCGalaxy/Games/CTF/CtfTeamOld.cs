@@ -49,7 +49,7 @@ namespace MCGalaxy.Games
                 p.color = "&" + color;
                 //p.carryingFlag = false;
                 p.Game.hasflag = null;
-                p.prefix = p.color + "[" + Colors.Name("&" + color).ToUpper() + "] ";
+                p.prefix = p.color + "[" + Colors.Name(color).ToUpper() + "] ";
                 players.Add(p);
                 mapOn.ChatLevel(p.ColoredName + " %Shas joined the " + teamstring + ".");
                 Entities.GlobalSpawn(p, false);

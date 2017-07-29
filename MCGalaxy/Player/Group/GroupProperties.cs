@@ -87,7 +87,7 @@ namespace MCGalaxy {
                     char col;
                     char.TryParse(value, out col);
 
-                    if (Colors.IsStandardColor(col) || Colors.GetFallback(col) != '\0') {
+                    if (Colors.IsDefined(col)) {
                         temp.Color = "&" + col;
                     } else {
                         Logger.Log(LogType.Warning, "Invalid color code: " + value);
@@ -113,7 +113,7 @@ namespace MCGalaxy {
                     if (!String.IsNullOrEmpty(value))
                         temp.Prefix = raw.TrimStart();
                     
-                    if (Colors.StripColors(temp.Prefix).Length > 3) {
+                    if (Colors.Strip(temp.Prefix).Length > 3) {
                         Logger.Log(LogType.Warning, "Prefixes may only consist of color codes and three letters");
                         temp.Prefix = temp.Prefix.Substring(0, 3);
                     }

@@ -135,7 +135,7 @@ namespace MCGalaxy {
             message = ChatTokens.ApplyCustom(message);
             
             if (color)
-                message = Colors.MinecraftToIrcColors(message.Replace("%S", ResetSignal));
+                message = Colors.ConvertMCToIRC(message.Replace("%S", ResetSignal));
             return message;
         }
         
