@@ -98,12 +98,14 @@ namespace MCGalaxy.Games.ZS {
             if (action == PlayerAction.UnReferee) {
                 Game.PlayerJoinedLevel(p, Game.CurLevel, Game.CurLevel);
                 Command.all.Find("spawn").Use(p, "");
+                p.Game.Referee = false;
                 
                 if (p.HasCpeExt(CpeExt.HackControl))
                     p.Send(Hacks.MakeHackControl(p));
             } else {
                 HandlePlayerDisconnect(p, null);
                 Entities.GlobalDespawn(p, false, true);
+                p.Game.Referee = true;
                 
                 if (p.HasCpeExt(CpeExt.HackControl))
                     p.Send(Packet.HackControl(true, true, true, true, true, -1));
