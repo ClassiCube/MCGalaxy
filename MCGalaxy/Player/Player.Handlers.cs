@@ -343,6 +343,7 @@ namespace MCGalaxy {
                     PlayerPhysics.Fall(this, bb);
                     PlayerPhysics.Drown(this, bb);
                 }
+                lastFallY = bb.Min.Y;
                 
                 PlayerPhysics.Walkthrough(this, bb);
                 oldIndex = index;

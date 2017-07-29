@@ -66,22 +66,22 @@ namespace MCGalaxy.Blocks.Physics {
             {
                 ExtBlock block = GetSurvivalBlock(p, x, min.Y, z);
                 byte collide = p.level.CollideType(block);
-                allGas = allGas && collide == CollideType.WalkThrough;
-                
+                allGas = allGas && collide == CollideType.WalkThrough;                
                 if (!CollideType.IsSolid(collide)) continue;
-                if (p.fallCount > p.level.Config.FallHeight)
+                
+                int fallHeight = (p.startFallY - bb.Min.Y) / 32;
+                if (fallHeight > p.level.Config.FallHeight)
                     p.HandleDeath(ExtBlock.Air, null, false, true);
                 
-                p.fallCount = 0;
-                p.drownTime = DateTime.MaxValue;
+                if (fallHeight > 0) p.drownTime = DateTime.MaxValue;
+                p.startFallY = -1;          
                 return;
             }
             
             if (!allGas) return;
-            if (min.Y < p.oldFallY) p.fallCount++;
-            else if (min.Y > p.oldFallY) p.fallCount = 0; // e.g. flying up
+            if (bb.Min.Y > p.lastFallY) p.startFallY = -1; // flying up resets fall height
             
-            p.oldFallY = min.Y;
+            p.startFallY = Math.Max(bb.Min.Y, p.startFallY);
             p.drownTime = DateTime.MaxValue;
         }
         
@@ -99,7 +99,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.StillWater:
                 case Block.Lava:
                 case Block.StillLava:
-                    p.fallCount = 0;
+                    p.startFallY = -1;
                     DateTime now = DateTime.UtcNow;
                     // level drown is in 10ths of a second
                     if (p.drownTime == DateTime.MaxValue)
@@ -112,7 +112,7 @@ namespace MCGalaxy.Blocks.Physics {
                     break;
                 default:
                     bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
-                    if (!isGas) p.fallCount = 0;
+                    if (!isGas) p.startFallY = -1;
                     p.drownTime = DateTime.MaxValue;
                     break;
             }

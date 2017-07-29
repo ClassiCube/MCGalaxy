@@ -191,8 +191,7 @@ namespace MCGalaxy {
         internal bool showedWelcome;
 
         //Movement
-        public int oldIndex = -1, lastWalkthrough = -1, oldFallY = 10000;
-        public int fallCount = 0;
+        internal int oldIndex = -1, lastWalkthrough = -1, startFallY = -1, lastFallY = -1;
         public DateTime drownTime = DateTime.MaxValue;
 
         //Games
