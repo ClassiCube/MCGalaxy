@@ -1,3 +1,59 @@
+v 1.8.9.5
+Added: /bezier command to draw a bezier curve
+Added: /ignore output, to ignore output of draw commands
+Added: /delay for use in MBs
+Added: spin/mirror/rotate account for direectional blocks
+Added: Extended collide types to lb/gb
+Added: Document lb/gb properties
+Added: indev map importer
+Added: /zone list
+Added: Can open chat tokens popup list in EditText gui
+Added: CPE message in bottom right displaying status of drawops
+Fixed: Physics blocks should use blockdef of their core block representation
+Fixed: Changing profanity filter or custom$s list not updating in-game immediately
+Fixed: /z holes without any args, should leave every other block untouched.
+Fixed: lb shouldn't inherit gb blockprops
+Fixed: Air_switch should be activatable by users, but not Air_door
+Fixed: gb/lb remove not showing message
+Fixed: blockprops changed from gui not updating loaded levels
+Fixed: Very rare case where players would have stats reset
+Fixed: /fly to actually work
+Fixed: /gun handler still being called, after turning off /map guns
+Fixed: /static mode being reset if draw op exceeds rank limit
+Fixed: Don't allow opchat/adminchat when muted
+Fixed: Own position still being moved with /tp, even if couldn't join map target was on
+Fixed: Being able to whitelist higher ranked players
+Fixed: /gen with heightmap theme erroring from console
+Fixed: Ranks losing their block perms after modifying ranks in gui
+Fixed: Checkpoint blocks setting client-side spawn point incorrectly
+Fixed: Changing rank colors/prefix in gui updates online players
+Fixed: Changing ranks in gui doesn't affect actual server state when discarded
+Fixed: hackrank/fakerank changes entity nametag and tablist color
+Fixed: /fixgrass is only usable in-game
+Fixed: CommandParser.GetEnum only allows actual values of the enum
+Fixed: Drowning not being accurate time, custom gas blocks not counting as 'air'
+Fixed: Don't allow spaces in rank names.
+Fixed: Sending BlockPermissions packet when changing rank, without checking client support.
+Fixed: Selecting block in gui marking it as having props changed, even if they werent' actually
+Improved: Default physics undo limit increased to 50,000
+Improved: Make /map work with unloaded maps
+Improved: Visit permission checked before map itself is loaded, avoiding unncessary level load
+Improved: help of mute/freeze
+Improved: GUI uses numerical updowns in more places
+Improved: Message loged to console when heartbeat send fails
+Improved: Deadly hug rank is configurable
+Improved: AFK kick time, AFK kicked, map volume generation configurable per rank
+Improved: Don't see 100 continue for heartbeats, reduces network overhead
+Improved: If map has realm owner, only specifically check that for /os
+Improved: Show message when setting offset of where to paste from for /copy @
+Improved: Reload threshold now based on volume of map
+Improved: Document /blockprops stackblock, add way to remove stackblock
+Improved: /replaceall only counts blocks that will actually be replaced against draw limit
+Improved: Grass doesn't die by upper slabs
+Removed: /endround, is now /zs endround
+Removed: auto updating (check for updates automatically still supported)
+Removed: Pointless /lottery command
+
 v 1.8.9.4
 Fixed: Having 30-35 bots causing 10-20% CPU usage on mono
 Fixed: Opchat/Adminchat showing to IRC

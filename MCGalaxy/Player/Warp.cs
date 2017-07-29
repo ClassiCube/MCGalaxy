@@ -46,7 +46,7 @@ namespace MCGalaxy {
             Warp wp = Find(warp);
             if (wp == null) return;
             
-            if (!wp.lvlname.CaselessEq(p.level.name)) {
+            if (!p.level.name.CaselessEq(wp.lvlname)) {
                 PlayerActions.ChangeMap(p, wp.lvlname);
             }
             
