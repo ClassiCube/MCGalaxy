@@ -73,16 +73,13 @@ namespace MCGalaxy.Blocks.Physics {
                 if (fallHeight > p.level.Config.FallHeight)
                     p.HandleDeath(ExtBlock.Air, null, false, true);
                 
-                if (fallHeight > 0) p.drownTime = DateTime.MaxValue;
                 p.startFallY = -1;          
                 return;
             }
             
             if (!allGas) return;
-            if (bb.Min.Y > p.lastFallY) p.startFallY = -1; // flying up resets fall height
-            
+            if (bb.Min.Y > p.lastFallY) p.startFallY = -1; // flying up resets fall height            
             p.startFallY = Math.Max(bb.Min.Y, p.startFallY);
-            p.drownTime = DateTime.MaxValue;
         }
         
         internal static void Drown(Player p, AABB bb) {
