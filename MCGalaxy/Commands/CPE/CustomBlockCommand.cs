@@ -384,7 +384,7 @@ namespace MCGalaxy.Commands.CPE {
                     def.Shape = temp ? (byte)0 : def.MaxZ;
                     break;
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, "draw", 0, 255)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, "blockdraw", 0, 255)) return;
                     break;
                 case "min":
                     if (!ParseCoords(p, value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
