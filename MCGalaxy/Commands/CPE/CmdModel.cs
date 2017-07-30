@@ -76,9 +76,17 @@ namespace MCGalaxy.Commands.CPE {
         public override void Help(Player p) {
             Player.Message(p, "%T/model [name] [model] %H- Sets the model of that player.");
             Player.Message(p, "%T/model bot [name] [model] %H- Sets the model of that bot.");
-            Player.Message(p, "%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sitting");
-            Player.Message(p, "%HTo set a block model, use a block ID for the model name.");
-            Player.Message(p, "%HFor setting a scaled model, put \"|[scale]\" after the model name. (e.g. pig|0.5)");
+            Player.Message(p, "%HType %T/help model models %Hfor a list of models.");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("models")) {
+                Player.Message(p, "%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sitting");
+                Player.Message(p, "%HTo set a block model, use a block ID for the model name.");
+                Player.Message(p, "%HFor setting a scaled model, put \"|[scale]\" after the model name. (e.g. pig|0.5)");
+            } else {
+                Help(p);
+            }
         }
     }
 }
