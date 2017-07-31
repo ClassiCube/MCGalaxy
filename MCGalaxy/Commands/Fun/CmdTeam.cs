@@ -165,6 +165,11 @@ namespace MCGalaxy.Commands.Fun {
             Team team = p.Game.Team;
             if (team == null) { Player.Message(p, "You need to be in a team first to leave one."); return; }
             
+            // handle /team leave me alone
+            if (args.Length > 1) {
+                team.Chat(p, args.Join(" ")); return;
+            }
+            
             team.Action(p, "left the team.");
             team.Remove(p.name);
             p.Game.Team = null;
