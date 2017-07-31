@@ -23,14 +23,13 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            string name = message.ToLower();
             if (CheckSuper(p, message, "level name")) return;
             
-            if (name.Length == 0) {
+            if (message.Length == 0) {
                 if (!p.level.Unload()) {
                     Player.Message(p, "You cannot unload this level.");
                 }
-            } else if (name == "empty") {
+            } else if (message.CaselessEq("empty")) {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 for (int i = 0; i < loaded.Length; i++) {
                     Level lvl = loaded[i];
@@ -38,7 +37,7 @@ namespace MCGalaxy.Commands.World {
                     lvl.Unload(true);
                 }
             } else {
-                Level level = Matcher.FindLevels(p, name);
+                Level level = Matcher.FindLevels(p, message);
                 if (level == null) return;
                 
                 if (!level.Unload()) {

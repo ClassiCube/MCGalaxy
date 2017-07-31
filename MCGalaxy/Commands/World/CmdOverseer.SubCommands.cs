@@ -97,10 +97,10 @@ namespace MCGalaxy.Commands.World {
             } else if (cmd == "DELETE" || cmd == "REMOVE") {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
-                Command.all.Find("save").Use(p, "");
+                Command.all.FindByName("save").Use(p, "");
                 Player.Message(p, "Map has been saved.");
             } else if (cmd == "RESTORE") {
-                Command.all.Find("restore").Use(p, value);
+                Command.all.FindByName("restore").Use(p, value);
             } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
                 string[] args = value.SplitSpaces();
@@ -117,15 +117,15 @@ namespace MCGalaxy.Commands.World {
                 Command.all.Find("perbuild").Use(p, rank);
             } else if (cmd == "TEXTURE") {
                 if (value.Length == 0) {
-                    Command.all.Find("texture").Use(p, "level normal");
+                    Command.all.FindByName("texture").Use(p, "level normal");
                 } else {
-                    Command.all.Find("texture").Use(p, "level " + value);
+                    Command.all.FindByName("texture").Use(p, "level " + value);
                 }
             } else if (cmd == "TEXTUREZIP") {
                 if (value.Length == 0) {
-                    Command.all.Find("texture").Use(p, "levelzip normal");
+                    Command.all.FindByName("texture").Use(p, "levelzip normal");
                 } else {
-                    Command.all.Find("texture").Use(p, "levelzip " + value);
+                    Command.all.FindByName("texture").Use(p, "levelzip " + value);
                 }
             } else {
                 cmd = LevelOptions.Map(cmd.ToLower());

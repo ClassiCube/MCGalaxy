@@ -196,8 +196,10 @@
     <Compile Include="Commands\Chat\MessageCmd.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\Command.Helpers.cs" />
+    <Compile Include="Commands\CommandExtraPerms.cs" />
     <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandParser.cs" />
+    <Compile Include="Commands\CommandPerms.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
     <Compile Include="Commands\CPE\CmdEntityRot.cs" />
     <Compile Include="Commands\CPE\CmdEnvironment.cs" />
@@ -351,8 +353,6 @@
     <Compile Include="Commands\other\CmdWarp.cs" />
     <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
-    <Compile Include="Commands\Permissions\CommandExtraPerms.cs" />
-    <Compile Include="Commands\Permissions\CommandPerms.cs" />
     <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
@@ -728,7 +728,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
-    <Folder Include="Commands\Permissions" />
     <Folder Include="Database\Stats" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />

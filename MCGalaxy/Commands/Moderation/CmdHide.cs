@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "check") {
+            if (message.CaselessEq("check")) {
                 string state = p.hidden ? "" : "not ";
                 Player.Message(p, "You are " + state + "currently hidden!"); return;
             }

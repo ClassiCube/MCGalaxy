@@ -24,17 +24,13 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool museumUsable { get { return true; } }
         
         public override void Use(Player p, string message) {
-            string[] param = message.SplitSpaces();
+            string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
 
-            if (param.Length == 1) {
-                Command.all.Find("compile").Use(p, message);
-                Command.all.Find("cmdload").Use(p, message);
-                Command.all.Find("help").Use(p, message);
-            } else if (param[1].CaselessEq("vb")) {
-                Command.all.Find("compile").Use(p, message + " vb");
-                Command.all.Find("cmdload").Use(p, message + " vb");
-                Command.all.Find("help").Use(p, message);
+            if (args.Length == 1 || args[1].CaselessEq("vb")) {
+                Command.all.FindByName("compile").Use(p, message);
+                Command.all.FindByName("cmdload").Use(p, args[0]);
+                Command.all.FindByName("help").Use(p, args[0]);
             } else { 
                 Help(p);
             }

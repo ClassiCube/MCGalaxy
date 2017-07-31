@@ -357,7 +357,7 @@ namespace MCGalaxy.Games
                 }
             }
             //Reset map
-            Command.all.Find("restore").Use(null, BackupNumber + " " + lvl.name);
+            Command.all.FindByName("restore").Use(null, BackupNumber + " " + lvl.name);
             if (lvl.Config.PhysicsOverload == 2501)
             {
                 lvl.Config.PhysicsOverload = 1500;

@@ -114,8 +114,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (p == null) { Player.Message(p, "Console cannot leave the review queue."); return; }
 
             bool inQueue = false;
-            foreach (string who in Server.reviewlist)
-                inQueue |= who == p.name;
+            foreach (string who in Server.reviewlist) {
+                inQueue |= who.CaselessEq(p.name);
+            }
+            
             if (!inQueue) {
                 Player.Message(p, "You aren't in the review queue so you cannot leave it."); return;
             }

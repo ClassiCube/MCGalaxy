@@ -36,10 +36,10 @@ namespace MCGalaxy.Core {
         }
         
         static void CheckReviewList(Player p) {
-            Command cmd = Command.all.Find("review");
+            Command cmd = Command.all.FindByName("review");
             LevelPermission perm = CommandExtraPerms.MinPerm("review");
             
-            if (p.group.Permission < perm || !p.group.Commands.Contains(cmd)) return;
+            if (p.group.Permission < perm || !p.group.CanExecute(cmd)) return;
             int count = Server.reviewlist.Count;
             if (count == 0) return;
             

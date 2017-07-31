@@ -111,30 +111,28 @@ namespace MCGalaxy.Commands.CPE {
             if (args.Length < 4) { Help(p); return; }
             
             char code = ParseColor(p, args[1]);
-            if (code == '\0') return;            
+            if (code == '\0') return;
             ColorDesc col = Colors.List[code];
             
-            switch (args[2]) {
-                case "name":
-                    if (!CheckName(p, args[3])) return;                  
+            if (args[2].CaselessEq("name")) {
+                if (!CheckName(p, args[3])) return;
 
-                    Player.Message(p, "Set name of {0} to {1}", col.Name, args[3]);
-                    col.Name = args[3];break;
-                case "fallback":
-                    char fallback;
-                    if (!CheckFallback(p, args[3], code, out fallback)) return;                    
-                    
-                    Player.Message(p, "Set fallback of {0} to %&S{1}", col.Name, fallback);
-                    col.Fallback = fallback; break;
-                case "hex":
-                case "color":
-                    ColorDesc rgb = default(ColorDesc);
-                    if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
-                    
-                    Player.Message(p, "Set hex color of {0} to {1}", col.Name, Utils.Hex(rgb.R, rgb.G, rgb.B));
-                    col.R = rgb.R; col.G = rgb.G; col.B = rgb.B; break;
-                default:
-                    Help(p); return;
+                Player.Message(p, "Set name of {0} to {1}", col.Name, args[3]);
+                col.Name = args[3];
+            } else if (args[2].CaselessEq("fallback")) {
+                char fallback;
+                if (!CheckFallback(p, args[3], code, out fallback)) return;
+                
+                Player.Message(p, "Set fallback of {0} to %&S{1}", col.Name, fallback);
+                col.Fallback = fallback;
+            } else if (args[2].CaselessEq("hex") || args[2].CaselessEq("color")) {
+                ColorDesc rgb = default(ColorDesc);
+                if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
+                
+                Player.Message(p, "Set hex color of {0} to {1}", col.Name, Utils.Hex(rgb.R, rgb.G, rgb.B));
+                col.R = rgb.R; col.G = rgb.G; col.B = rgb.B;
+            } else {
+                Help(p); return;
             }
             
             Colors.Update(col);

@@ -161,8 +161,8 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Message == "random") return new RandomRainbowBrush();
-            if (args.Message == "bw") return new BWRainbowBrush();
+            if (args.Message.CaselessEq("random")) return new RandomRainbowBrush();
+            if (args.Message.CaselessEq("bw")) return new BWRainbowBrush();
             return new RainbowBrush();
         }
     }

@@ -57,7 +57,7 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             string script = (string)data.Metadata;
             if (File.Exists("bots/" + script)) {
-                Command.all.Find("botset").Use(null, bot.name + " " + script);
+                Command.all.FindByName("botset").Use(null, bot.name + " " + script);
                 return true;
             }
             bot.NextInstruction(); return true;

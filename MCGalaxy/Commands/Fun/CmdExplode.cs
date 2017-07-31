@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Fun {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }
-            if (message == "me" && p != null) args[0] = p.name;
+            if (message.CaselessEq("me") && p != null) args[0] = p.name;
             
             ushort x, y, z;
             if (args.Length == 1) {

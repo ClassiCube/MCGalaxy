@@ -180,7 +180,7 @@ namespace MCGalaxy.Commands {
 
             if (File.Exists(Paths.CmdPermsFile)) {
                 string[] lines = File.ReadAllLines(Paths.CmdPermsFile);
-                if (lines.Length > 0 && lines[0] == "#Version 2") {
+                if (lines.Length > 0 && lines[0].CaselessEq("#Version 2")) {
                     LoadVersion2(lines);
                 } else {
                     LoadVersion1(lines);

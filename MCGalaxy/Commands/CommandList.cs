@@ -38,9 +38,8 @@ namespace MCGalaxy {
         
         /// <summary> Finds the command which has the given name or shortcut, or null if not found. </summary>        
         public Command Find(string name) {
-            name = name.ToLower();
             foreach (Command cmd in commands) {
-                if (cmd.name == name || cmd.shortcut == name) return cmd;
+        	    if (cmd.name.CaselessEq(name) || cmd.shortcut.CaselessEq(name)) return cmd;
             }
             return null;
         }

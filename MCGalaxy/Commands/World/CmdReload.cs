@@ -34,9 +34,9 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or level name")) return;
             if (message.Length == 0) message = p.name;
-            string[] parts = message.ToLower().SplitSpaces();
+            string[] parts = message.SplitSpaces();
             
-            if (parts[0] == "all") {
+            if (parts[0].CaselessEq("all")) {
                 if (!ReloadAll(p, parts)) return;
             } else {
                 Player who = PlayerInfo.FindMatches(p, parts[0]);

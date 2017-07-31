@@ -67,20 +67,21 @@ namespace MCGalaxy.Commands {
                 sw.WriteLine("# it is treated as /help me <args given by user>.");
                 
                 foreach (Alias a in aliases) {
-                    if (a.Prefix == null)
+                    if (a.Prefix == null) {
                         sw.WriteLine(a.Trigger + " : " + a.Target);
-                    else
+                    } else {
                         sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Prefix);
+                    }
                 }                   
             }
         }
 
         public static Alias Find(string cmd) {
             foreach (Alias alias in aliases) {
-                if (alias.Trigger == cmd) return alias;
+        	    if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
             foreach (Alias alias in coreAliases) {
-                if (alias.Trigger == cmd) return alias;
+        	    if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
             return null;
         }

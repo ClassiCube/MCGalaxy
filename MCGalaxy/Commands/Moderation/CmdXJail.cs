@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.Moderation {
                 MessageTooHighRank(p, "xjail", false); return;
             }
 
-            Command spawn = Command.all.Find("spawn");
-            Command freeze = Command.all.Find("freeze");
-            Command mute = Command.all.Find("mute");
+            Command spawn = Command.all.FindByName("spawn");
+            Command freeze = Command.all.FindByName("freeze");
+            Command mute = Command.all.FindByName("mute");
             
             if (!Server.jailed.Contains(who.name)) {
                 if (!who.muted) mute.Use(p, message + " 10000d");

@@ -74,7 +74,7 @@ namespace MCGalaxy.Games.ZS {
             } else if (p.Game.BlocksStacked == 4) {
                 if (!p.Game.PillarFined) {
                     Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
-                    Command.all.Find("take").Use(null, p.name + " 10 Auto fine for pillaring");
+                    Command.all.FindByName("take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
                 } else {                   
                     ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");

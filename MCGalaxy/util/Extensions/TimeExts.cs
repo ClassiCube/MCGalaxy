@@ -70,13 +70,13 @@ namespace MCGalaxy {
         }
         
         static long GetTicks(int num, string unit) {            
-            if (unit == "s" || unit == "S") return num * TimeSpan.TicksPerSecond;
-            if (unit == "m" || unit == "M") return num * TimeSpan.TicksPerMinute;
-            if (unit == "h" || unit == "H") return num * TimeSpan.TicksPerHour;
-            if (unit == "d" || unit == "D") return num * TimeSpan.TicksPerDay;
-            if (unit == "w" || unit == "W") return num * TimeSpan.TicksPerDay * 7;
+            if (unit.CaselessEq("s")) return num * TimeSpan.TicksPerSecond;
+            if (unit.CaselessEq("m")) return num * TimeSpan.TicksPerMinute;
+            if (unit.CaselessEq("h")) return num * TimeSpan.TicksPerHour;
+            if (unit.CaselessEq("d")) return num * TimeSpan.TicksPerDay;
+            if (unit.CaselessEq("w")) return num * TimeSpan.TicksPerDay * 7;
             
-            if (unit == "ms" || unit == "MS") return num * TimeSpan.TicksPerMillisecond;
+            if (unit.CaselessEq("ms")) return num * TimeSpan.TicksPerMillisecond;
             throw new FormatException(unit);
         }
         
