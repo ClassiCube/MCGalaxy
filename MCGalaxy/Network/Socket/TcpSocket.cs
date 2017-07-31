@@ -25,39 +25,48 @@ namespace MCGalaxy.Network {
         readonly Socket socket;
         
         byte[] unprocessed = new byte[352];
-        byte[] recvBuffer = new byte[256];        
+        byte[] recvBuffer = new byte[256];
         int unprocessedLen;
+        readonly SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
         
         byte[] sendBuffer = new byte[1536];
         readonly object sendLock = new object();
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
         volatile bool sendInProgress;
+        readonly SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
         
         public TcpSocket(Player p, Socket s) {
             player = p; socket = s;
+            
+            recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);
+            recvArgs.Completed += recvCallback;
+            recvArgs.UserToken = this;
+            
+            sendArgs.SetBuffer(sendBuffer, 0, sendBuffer.Length);
+            sendArgs.Completed += sendCallback;
+            sendArgs.UserToken = this;
         }
         
         public string RemoteIP {
             get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
         }
         
-        public bool LowLatency {
-            set { socket.NoDelay = value; }
-        }
+        public bool LowLatency { set { socket.NoDelay = value; } }
         
         
-        static AsyncCallback recvCallback = new AsyncCallback(ReceiveCallback);
+        static EventHandler<SocketAsyncEventArgs> recvCallback = RecvCallback;
         public void ReceiveNextAsync() {
-            socket.BeginReceive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, recvCallback, this);
+            // ReceiveAsync returns false if completed sync
+            if (!socket.ReceiveAsync(recvArgs)) RecvCallback(null, recvArgs);
         }
         
-        static void ReceiveCallback(IAsyncResult result) {
-            TcpSocket s = (TcpSocket)result.AsyncState;
+        static void RecvCallback(object sender, SocketAsyncEventArgs e) {
+            TcpSocket s = (TcpSocket)e.UserToken;
             Player p = s.player;
             if (p.disconnected) return;
             
             try {
-                int recvLen = s.socket.EndReceive(result);
+                int recvLen = e.BytesTransferred;
                 if (recvLen == 0) { p.Disconnect(); return; }
 
                 // Packets may not always be fully received in a Receive call
@@ -84,14 +93,14 @@ namespace MCGalaxy.Network {
                 Player.connections.Remove(p);
                 p.RemoveFromPending();
                 p.disconnected = true;
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
                 p.Leave("Error!");
             }
         }
         
         
-        static AsyncCallback sendCallback = new AsyncCallback(SendCallback);
+        static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
         public void Send(byte[] buffer, bool sync = false) {
             // Abort if socket has been closed
             if (player.disconnected || !socket.Connected) return;
@@ -127,14 +136,16 @@ namespace MCGalaxy.Network {
                 Buffer.BlockCopy(buffer, 0, sendBuffer, 0, buffer.Length);
             }
             
-            socket.BeginSend(sendBuffer, 0, buffer.Length, SocketFlags.None, sendCallback, this);
+            sendArgs.SetBuffer(0, buffer.Length);
+            // SendAsync returns false if completed sync
+            if (!socket.SendAsync(sendArgs)) SendCallback(null, sendArgs);
         }
         
-        static void SendCallback(IAsyncResult result) {
-            TcpSocket s = (TcpSocket)result.AsyncState;
+        static void SendCallback(object sender, SocketAsyncEventArgs e) {
+            TcpSocket s = (TcpSocket)e.UserToken;
             try {
                 // TODO: Need to check if all data was sent or not?
-                int sent = s.socket.EndSend(result);
+                int sent = e.BytesTransferred;
                 lock (s.sendLock) {
                     s.sendInProgress = false;
                     if (s.sendQueue.Count > 0) {
@@ -154,6 +165,8 @@ namespace MCGalaxy.Network {
             try { socket.Shutdown(SocketShutdown.Both); } catch { }
             try { socket.Close(); } catch { }
             lock (sendLock) { sendQueue.Clear(); }
+            try { recvArgs.Dispose(); } catch { }
+            try { sendArgs.Dispose(); } catch { }
         }
     }
 }
