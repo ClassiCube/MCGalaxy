@@ -45,7 +45,7 @@ namespace MCGalaxy.Gui {
                 try {
                     string args = name + " " + x + " " + y + " " + z + " " + type;
                     if (!String.IsNullOrEmpty(seed)) args += " " + seed;
-                    Command.all.Find("newlvl").Use(null, args);
+                    Command.all.FindByName("NewLvl").Use(null, args);
                 } catch (Exception ex) {
                     Logger.LogError(ex);
                     MessageBox.Show("Failed to generate level. Check error logs for details.");
@@ -82,7 +82,7 @@ namespace MCGalaxy.Gui {
         
         void map_BtnLoad_Click(object sender, EventArgs e) {
             try {
-                Command.all.Find("load").Use(null, map_lbUnloaded.SelectedItem.ToString());
+                Command.all.FindByName("Load").Use(null, map_lbUnloaded.SelectedItem.ToString());
             } catch { 
             }
             UpdateUnloadedList();

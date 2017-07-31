@@ -97,7 +97,7 @@ namespace MCGalaxy.Games.ZS {
             
             if (action == PlayerAction.UnReferee) {
                 Game.PlayerJoinedLevel(p, Game.CurLevel, Game.CurLevel);
-                Command.all.Find("spawn").Use(p, "");
+                Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
                 
                 if (p.HasCpeExt(CpeExt.HackControl))

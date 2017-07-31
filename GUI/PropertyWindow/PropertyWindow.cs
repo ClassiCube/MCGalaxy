@@ -144,7 +144,7 @@ namespace MCGalaxy.Gui {
 
         void GetHelp(string toHelp) {
             ConsoleHelpPlayer player = new ConsoleHelpPlayer();
-            Command.all.Find("help").Use(player, toHelp);
+            Command.all.FindByName("Help").Use(player, toHelp);
             
             MessageBox.Show(Colors.Strip(player.HelpOutput),
                             "Help information for " + toHelp);

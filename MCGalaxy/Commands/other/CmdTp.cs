@@ -25,6 +25,9 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("Teleport") }; }
+        }
         
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

@@ -106,7 +106,7 @@ namespace MCGalaxy.Core {
             Server.jailed.Remove(who.name);
             LogAction(e, who, "&afreed from jail");
             
-            Command.all.Find("spawn").Use(who, "");
+            Command.all.FindByName("Spawn").Use(who, "");
             Server.jailed.Save(true);
         }
         

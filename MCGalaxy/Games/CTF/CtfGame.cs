@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
 
                     Get(other).tagging = true;
                     Player.Message(other, p.ColoredName + " %Stagged you!");
-                    Command.all.Find("spawn").Use(other, "");
+                    Command.all.FindByName("Spawn").Use(other, "");
                     Thread.Sleep(300);
                     
                     if (Get(other).hasflag) DropFlag(p, opposing);

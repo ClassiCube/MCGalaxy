@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (!who.MarkPossessed()) return;
                 
                 p.invincible = false;
-                Command.all.Find("hide").Use(p, "");
+                Command.all.FindByName("Hide").Use(p, "");
                 Player.Message(p, "Stopped possessing " + who.ColoredName + "%S.");
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
@@ -73,8 +73,8 @@ namespace MCGalaxy.Commands.Moderation {
                     }
                 }
                 
-                Command.all.Find("tp").Use(p, who.name);
-                if (!p.hidden) Command.all.Find("hide").Use(p, "");
+                Command.all.FindByName("TP").Use(p, who.name);
+                if (!p.hidden) Command.all.FindByName("Hide").Use(p, "");
                 p.possess = who.name;
                 who.following = p.name;
                 if (!p.invincible) p.invincible = true;

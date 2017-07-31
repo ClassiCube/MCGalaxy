@@ -27,7 +27,7 @@ namespace MCGalaxy.Core {
         
         internal static void HandleConnect(Player p) {
             CheckReviewList(p);
-            if (p.group.CanExecute("reachdistance"))
+            if (p.group.CanExecute("ReachDistance"))
                 LoadReach(p);
             
             LoadWaypoints(p);
@@ -36,8 +36,8 @@ namespace MCGalaxy.Core {
         }
         
         static void CheckReviewList(Player p) {
-            Command cmd = Command.all.FindByName("review");
-            LevelPermission perm = CommandExtraPerms.MinPerm("review");
+            Command cmd = Command.all.FindByName("Review");
+            LevelPermission perm = CommandExtraPerms.MinPerm("Review");
             
             if (p.group.Permission < perm || !p.group.CanExecute(cmd)) return;
             int count = Server.reviewlist.Count;

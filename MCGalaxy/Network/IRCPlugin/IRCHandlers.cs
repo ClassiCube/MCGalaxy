@@ -188,7 +188,7 @@ namespace MCGalaxy.Network {
             try {
                 Player p = new IRCPlayer(channel, user.Nick, bot);
                 p.group = Group.GuestRank;
-                Command.all.Find("players").Use(p, "");
+                Command.all.FindByName("Players").Use(p, "");
             } catch (Exception e) {
                 Logger.LogError(e);
             }

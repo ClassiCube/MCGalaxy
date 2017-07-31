@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
                                Group.GetColoredName(perm));
             } else {
                 Player target = candidates[new Random().Next(candidates.Count)];
-                Command.all.Find("tp").Use(p, target.name);
+                Command.all.FindByName("TP").Use(p, target.name);
                 Player.Message(p, "Now visiting " + target.ColoredName + "%S.");
             }
         }

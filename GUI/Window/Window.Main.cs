@@ -133,17 +133,17 @@ namespace MCGalaxy.Gui {
         }
         
         void main_BtnSaveAll_Click(object sender, EventArgs e) {
-            Command.all.Find("save").Use(null, "all");
+            Command.all.FindByName("Save").Use(null, "all");
         }
 
         void main_BtnKillPhysics_Click(object sender, EventArgs e) {
-            Command.all.Find("physics").Use(null, "kill");
+            Command.all.FindByName("Physics").Use(null, "kill");
             try { UpdateMapList(); }
             catch { }
         }
 
         void main_BtnUnloadEmpty_Click(object sender, EventArgs e) {
-            Command.all.Find("unload").Use(null, "empty");
+            Command.all.FindByName("Unload").Use(null, "empty");
             try { UpdateMapList(); }
             catch { }
         }

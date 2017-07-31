@@ -46,8 +46,8 @@ namespace MCGalaxy.Commands.Moderation {
                 messageOps = false;
             }
             
-            Command opchat = Command.all.Find("opchat");
-            Command adminchat = Command.all.Find("adminchat");
+            Command opchat = Command.all.FindByName("OpChat");
+            Command adminchat = Command.all.FindByName("AdminChat");
             p.hidden = !p.hidden;
 
             //Possible to use /hide myrank, but it accomplishes the same as regular /hide if you use it on yourself.

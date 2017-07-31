@@ -391,7 +391,7 @@ namespace MCGalaxy.Commands.Fun {
                     }
                     
                     it.GameStatus = TntWarsGame.TntWarsGameStatus.WaitingForPlayers;
-                    Command.all.FindByName("restore").Use(null, it.BackupNumber + it.lvl.name);
+                    Command.all.FindByName("Restore").Use(null, it.BackupNumber + it.lvl.name);
                     it.RedScore = 0;
                     it.BlueScore = 0;
                     

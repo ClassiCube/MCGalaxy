@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands.Scripting {
             if (message.Length == 0) { Help(p); return; }
 
             if (args.Length == 1 || args[1].CaselessEq("vb")) {
-                Command.all.FindByName("compile").Use(p, message);
-                Command.all.FindByName("cmdload").Use(p, args[0]);
-                Command.all.FindByName("help").Use(p, args[0]);
+                Command.all.FindByName("Compile").Use(p, message);
+                Command.all.FindByName("CmdLoad").Use(p, args[0]);
+                Command.all.FindByName("Help").Use(p, args[0]);
             } else { 
                 Help(p);
             }

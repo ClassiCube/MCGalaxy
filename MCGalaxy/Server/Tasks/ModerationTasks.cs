@@ -40,7 +40,7 @@ namespace MCGalaxy.Tasks {
         internal static void TemprankCalcNextRun() { CalcNextRun(temprankTask, Server.tempRanks); }
         
         static void TemprankCallback(string[] args) {
-            Command.all.Find("temprank").Use(null, args[0] + " delete");
+            Command.all.FindByName("TempRank").Use(null, args[0] + " delete");
             // Handle case of old rank no longer existing
             if (Server.tempRanks.Remove(args[0])) {
                 Server.tempRanks.Save();

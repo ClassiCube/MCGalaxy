@@ -148,7 +148,7 @@ namespace MCGalaxy.Games
                 if (GameMode == TntWarsGameMode.TDM) { Command.all.Find("reveal").Use(null, "all " + lvl.name); }//So peoples names apear above their heads in the right color!
                 foreach (player p in Players)
                 {
-                    Command.all.Find("spawn").Use(p.p, ""); //This has to be after reveal so that they spawn in the correct place!!
+                    Command.all.FindByName("Spawn").Use(p.p, ""); //This has to be after reveal so that they spawn in the correct place!!
                     Thread.Sleep(250);
                 }
             }
@@ -295,7 +295,7 @@ namespace MCGalaxy.Games
             foreach (player p in Players)
             {
                 p.p.canBuild = true;
-                Command.all.Find("spawn").Use(p.p, "");
+                Command.all.FindByName("Spawn").Use(p.p, "");
                 p.p.PlayingTntWars = false;
             }
             //Message about winners etc.
@@ -357,7 +357,7 @@ namespace MCGalaxy.Games
                 }
             }
             //Reset map
-            Command.all.FindByName("restore").Use(null, BackupNumber + " " + lvl.name);
+            Command.all.FindByName("Restore").Use(null, BackupNumber + " " + lvl.name);
             if (lvl.Config.PhysicsOverload == 2501)
             {
                 lvl.Config.PhysicsOverload = 1500;
@@ -453,7 +453,7 @@ namespace MCGalaxy.Games
                     }
                     Died.HarmedBy = null;
                 }
-                Command.all.Find("spawn").Use(Died, "");
+                Command.all.FindByName("Spawn").Use(Died, "");
                 Died.TntWarsHealth = 2;
             }
             //Scoring

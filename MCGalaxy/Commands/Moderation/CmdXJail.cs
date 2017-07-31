@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (xjailMap == "(main)") xjailMap = Server.mainLevel.name;
             if (message.Length == 0) { Help(p); return; }
             
-            Command jail = Command.all.Find("jail");
+            Command jail = Command.all.FindByName("Jail");
             if (message == "set") {
                 if (!p.level.IsMuseum) {
                     jail.Use(p, "set");
@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.Moderation {
                 MessageTooHighRank(p, "xjail", false); return;
             }
 
-            Command spawn = Command.all.FindByName("spawn");
-            Command freeze = Command.all.FindByName("freeze");
-            Command mute = Command.all.FindByName("mute");
+            Command spawn = Command.all.FindByName("Spawn");
+            Command freeze = Command.all.FindByName("Freeze");
+            Command mute = Command.all.FindByName("Mute");
             
             if (!Server.jailed.Contains(who.name)) {
                 if (!who.muted) mute.Use(p, message + " 10000d");

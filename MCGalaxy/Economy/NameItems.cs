@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.Find("title").Use(null, p.name);
+                Command.all.FindByName("Title").Use(null, p.name);
                 Player.Message(p, "%aYour title was removed for free."); return;
             }
             
@@ -42,7 +42,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cTitles must be under 20 characters."); return;
             }
             
-            Command.all.Find("title").Use(null, p.name + " " + title);
+            Command.all.FindByName("Title").Use(null, p.name + " " + title);
             Player.Message(p, "%aYour title was changed to [" + p.titlecolor + title + "%a]");
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.Find("nick").Use(null, p.name);
+                Command.all.FindByName("Nick").Use(null, p.name);
                 Player.Message(p, "%aYour nickname was removed for free."); return;
             }
             
@@ -71,7 +71,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cNicknames must be under 30 characters."); return;
             }
             
-            Command.all.Find("nick").Use(null, p.name + " " + nick);
+            Command.all.FindByName("Nick").Use(null, p.name + " " + nick);
             Player.Message(p, "%aYour nickname was changed to [" + p.color + nick + "%a]");
             Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
@@ -94,7 +94,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
             }
             
-            Command.all.Find("tcolor").Use(null, p.name + " " + Colors.Name(args[1]));
+            Command.all.FindByName("TColor").Use(null, p.name + " " + Colors.Name(args[1]));
             Player.Message(p, "%aYour titlecolor was changed to " + args[1] + Colors.Name(args[1]));
             Economy.MakePurchase(p, Price, "%3Titlecolor: " + args[1] + Colors.Name(args[1]));
         }
@@ -117,7 +117,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;
             }
             
-            Command.all.Find("color").Use(null, p.name + " " + Colors.Name(args[1]));
+            Command.all.FindByName("Color").Use(null, p.name + " " + Colors.Name(args[1]));
             Economy.MakePurchase(p, Price, "%3Color: " + args[1] + Colors.Name(args[1]));
         }
     }

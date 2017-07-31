@@ -38,10 +38,10 @@ namespace MCGalaxy.Commands.Moderation
             
             if (args.Length >= 2 && args[1].CaselessEq("myrank")) {
                 who.oHideRank = p == null ? LevelPermission.Admin : p.Rank;
-                Command.all.Find("hide").Use(who, "myrank");
+                Command.all.FindByName("Hide").Use(who, "myrank");
                 Player.Message(p, "Used /hide myrank on " + who.ColoredName + "%S.");
             } else {
-                Command.all.Find("hide").Use(who, "");
+                Command.all.FindByName("Hide").Use(who, "");
                 Player.Message(p, "Used /hide on " + who.ColoredName + "%S.");
             }
         }

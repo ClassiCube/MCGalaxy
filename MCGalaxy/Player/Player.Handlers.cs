@@ -391,10 +391,10 @@ namespace MCGalaxy {
             } else if ( Server.lava.active && Server.lava.HasPlayer(this) ) {
                 if (!Server.lava.IsPlayerDead(this)) {
                     Server.lava.KillPlayer(this);
-                    Command.all.Find("spawn").Use(this, "");
+                    Command.all.FindByName("Spawn").Use(this, "");
                 }
             } else {
-                Command.all.Find("spawn").Use(this, "");
+                Command.all.FindByName("Spawn").Use(this, "");
                 TimesDied++;
                 // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
                 if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
@@ -668,7 +668,7 @@ namespace MCGalaxy {
             if (command == null) {
                 if (Block.Byte(cmd) != Block.Invalid) {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
-                    command = Command.all.Find("mode");
+                    command = Command.all.FindByName("Mode");
                 } else {
                     Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmd, cmdArgs);
                     SendMessage("Unknown command \"" + cmd + "\"."); return null;

@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {
             string args = ("level " + arg1 + " " + arg2).Trim();
-            Command.all.Find("blockproperties").Use(p, args);
+            Command.all.FindByName("BlockProperties").Use(p, args);
         }
         
         static void HandleEnv(Player p, string type, string value) {
@@ -97,35 +97,35 @@ namespace MCGalaxy.Commands.World {
             } else if (cmd == "DELETE" || cmd == "REMOVE") {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
-                Command.all.FindByName("save").Use(p, "");
+                Command.all.FindByName("Save").Use(p, "");
                 Player.Message(p, "Map has been saved.");
             } else if (cmd == "RESTORE") {
-                Command.all.FindByName("restore").Use(p, value);
+                Command.all.FindByName("Restore").Use(p, value);
             } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
                 string[] args = value.SplitSpaces();
-                if (args.Length < 4) { Command.all.Find("resizelvl").Help(p); return; }
+                if (args.Length < 4) { Command.all.FindByName("ResizeLvl").Help(p); return; }
 
                 if (CmdResizeLvl.DoResize(p, args)) return;
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Command.all.Find("pervisit").Use(p, rank);
+                Command.all.FindByName("PerVisit").Use(p, rank);
             } else if (cmd == "PERBUILD") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Command.all.Find("perbuild").Use(p, rank);
+                Command.all.FindByName("PerBuild").Use(p, rank);
             } else if (cmd == "TEXTURE") {
                 if (value.Length == 0) {
-                    Command.all.FindByName("texture").Use(p, "level normal");
+                    Command.all.FindByName("Texture").Use(p, "level normal");
                 } else {
-                    Command.all.FindByName("texture").Use(p, "level " + value);
+                    Command.all.FindByName("Texture").Use(p, "level " + value);
                 }
             } else if (cmd == "TEXTUREZIP") {
                 if (value.Length == 0) {
-                    Command.all.FindByName("texture").Use(p, "levelzip normal");
+                    Command.all.FindByName("Texture").Use(p, "levelzip normal");
                 } else {
-                    Command.all.FindByName("texture").Use(p, "levelzip " + value);
+                    Command.all.FindByName("Texture").Use(p, "levelzip " + value);
                 }
             } else {
                 cmd = LevelOptions.Map(cmd.ToLower());
@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands.World {
             string[] args = value.TrimEnd().SplitSpaces();
             if (args.Length == 3) value += " flat";
 
-            CmdNewLvl newLvl = (CmdNewLvl)Command.all.Find("newlvl"); // TODO: this is a nasty hack, find a better way
+            CmdNewLvl newLvl = (CmdNewLvl)Command.all.FindByName("NewLvl"); // TODO: this is a nasty hack, find a better way
             args = (level + " " + value).SplitSpaces();
             Level lvl = newLvl.GenerateMap(p, args);
             if (lvl == null) return;
@@ -198,18 +198,18 @@ namespace MCGalaxy.Commands.World {
 
 
         static void HandlePreset(Player p, string preset, string ignored) {
-            Command.all.Find("env").Use(p, "preset " + preset);
+            Command.all.FindByName("Environment").Use(p, "preset " + preset);
         }
 
         static void HandleSpawn(Player p, string ignored1, string ignored2) {
-            Command.all.Find("setspawn").Use(p, "");
+            Command.all.FindByName("SetSpawn").Use(p, "");
         }
         
         
         static void HandleZone(Player p, string cmd, string name) {
             cmd = cmd.ToUpper();
             if (cmd == "LIST") {
-                Command.all.Find("zone").Use(p, "");
+                Command.all.FindByName("Zone").Use(p, "");
             } else if (cmd == "ADD") {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);

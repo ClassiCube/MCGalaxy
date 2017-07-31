@@ -79,7 +79,7 @@ namespace MCGalaxy.Gui {
             }
 
             try {
-                Command.all.Find("undoplayer").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
+                Command.all.FindByName("UndoPlayer").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
                 AppendPlayerStatus("Undid player for " + pl_txtUndo.Text + " seconds");
             } catch {
                 AppendPlayerStatus("Something went wrong!!");
@@ -131,13 +131,13 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnRules_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
-            Command.all.Find("rules").Use(curPlayer, "");
+            Command.all.FindByName("Rules").Use(curPlayer, "");
             AppendPlayerStatus("Sent rules to player");
         }
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
-            Command.all.Find("spawn").Use(curPlayer, "");
+            Command.all.FindByName("Spawn").Use(curPlayer, "");
             AppendPlayerStatus("Sent player to spawn");
         }
 
