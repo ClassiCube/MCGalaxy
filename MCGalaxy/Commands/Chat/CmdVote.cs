@@ -20,7 +20,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdVote : Command {
-        public override string name { get { return "vote"; } }
+        public override string name { get { return "Vote"; } }
         public override string shortcut { get { return "vo"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return false; } }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/vote [message]");
+            Player.Message(p, "%T/Vote [message]");
             Player.Message(p, "%HStarts a vote for 15 seconds.");
             Player.Message(p, "%HType %TY %Hor %TN %Hinto chat to vote.");
         }

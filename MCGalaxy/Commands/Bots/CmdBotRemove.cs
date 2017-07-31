@@ -18,7 +18,7 @@
 using System;
 namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotRemove : Command {
-        public override string name { get { return "botremove"; } }
+        public override string name { get { return "BotRemove"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botremove [name]");
+            Player.Message(p, "%T/BotRemove [name]");
             Player.Message(p, "%HRemove a bot on the same level as you");
             Player.Message(p, "%HIf [name] is \"all\", all bots on your map are removed");
         }

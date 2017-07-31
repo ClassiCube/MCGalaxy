@@ -18,7 +18,7 @@
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdXJail : Command {        
-        public override string name { get { return "xjail"; } }
+        public override string name { get { return "XJail"; } }
         public override string shortcut { get { return "xj"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -74,10 +74,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/xjail [player]");
+            Player.Message(p, "%T/XJail [player]");
             Player.Message(p, "%HMutes, freezes, and sends <player> to the XJail map");
             Player.Message(p, "%HIf [player] is already jailed, [player] will be spawned, unfrozen and unmuted");
-            Player.Message(p, "%T/xjail set");
+            Player.Message(p, "%T/XJail set");
             Player.Message(p, "%HSets the xjail map to your current map and sets jail to current location");
         }
     }

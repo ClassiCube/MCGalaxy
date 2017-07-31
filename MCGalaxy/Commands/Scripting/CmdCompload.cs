@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCompLoad : Command {
-        public override string name { get { return "compload"; } }
+        public override string name { get { return "CompLoad"; } }
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/compload [command]");
+            Player.Message(p, "%T/CompLoad [command]");
             Player.Message(p, "%HCompiles and loads a C# command into the server for use.");
-            Player.Message(p, "%T/compload [command] vb");
+            Player.Message(p, "%T/CompLoad [command] vb");
             Player.Message(p, "%HCompiles and loads a Visual basic command into the server for use.");
         }        
     }

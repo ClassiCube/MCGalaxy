@@ -22,13 +22,13 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdSphere : DrawCmd {
-        public override string name { get { return "sphere"; } }
+        public override string name { get { return "Sphere"; } }
         public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("sphereh", null, "hollow"),
-                    new CommandAlias("sph", null, "hollow"), new CommandAlias("circle", null, "circle" ),
-                    new CommandAlias("circleh", null, "hollowcircle") }; }
+            get { return new[] { new CommandAlias("SphereH", null, "hollow"),
+                    new CommandAlias("sph", null, "hollow"), new CommandAlias("Circle", null, "circle" ),
+                    new CommandAlias("CircleH", null, "hollowcircle") }; }
         }
         protected override string PlaceMessage {
             get { return "Place a block for the centre, then another for the radius."; }
@@ -86,11 +86,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/sphere <brush args> <mode>");
+            Player.Message(p, "%T/Sphere <brush args> <mode>");
             Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
                            "and second being the radius.");
             Player.Message(p, "   %HModes: &fsolid/hollow/circle/hollowcircle");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

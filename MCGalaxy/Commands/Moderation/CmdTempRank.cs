@@ -20,15 +20,15 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdTempRank : Command {
-        public override string name { get { return "temprank"; } }
+        public override string name { get { return "TempRank"; } }
         public override string shortcut { get { return "tr"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("deltemprank", null, "delete"),
-                    new CommandAlias("dtr", null, "delete"), new CommandAlias("temprankinfo", null, "info"),
-                    new CommandAlias("trl", null, "list"), new CommandAlias("tempranklist", null, "list") }; }
+            get { return new[] { new CommandAlias("DelTempRank", null, "delete"),
+                    new CommandAlias("dtr", null, "delete"), new CommandAlias("TempRankInfo", null, "info"),
+                    new CommandAlias("trl", null, "list"), new CommandAlias("TempRankList", null, "list") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -143,12 +143,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/temprank [player] [rank] [timespan] <reason>");
+            Player.Message(p, "%T/TempRank [player] [rank] [timespan] <reason>");
             Player.Message(p, "%HSets a temporary rank for the specified player.");
-            Player.Message(p, "%T/temprank [player] info");
+            Player.Message(p, "%T/TempRank [player] info");
             Player.Message(p, "%HLists information about the temp rank for the given player.");
-            Player.Message(p, "%T/temprank [player] delete %H- Removes player's temp rank.");
-            Player.Message(p, "%T/temprank list %H- Lists all current temp ranks.");
+            Player.Message(p, "%T/TempRank [player] delete %H- Removes player's temp rank.");
+            Player.Message(p, "%T/TempRank list %H- Lists all current temp ranks.");
         }
     }
 }

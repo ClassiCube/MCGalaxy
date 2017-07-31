@@ -24,8 +24,8 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdServer : Command {
-        public override string name { get { return "server"; } }
-        public override string shortcut { get { return "serv"; } }
+        public override string name { get { return "Server"; } }
+        public override string shortcut { get { return "Serv"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 Player.Message(p, "This will export all the BlockDB tables in the database to more efficient .cbdb files.");
                 Player.Message(p, "Note: This is only useful if you have updated from older {0} versions", Server.SoftwareName);
                 Player.MessageLines(p, DBUpgrader.CompactMessages);
-                Player.Message(p, "Type %T/server upgradeblockdb confirm %Sto begin");
+                Player.Message(p, "Type %T/Server upgradeblockdb confirm %Sto begin");
             } else if (DBUpgrader.Upgrading) {
                 Player.Message(p, "BlockDB upgrade is already in progress.");
             } else {
@@ -185,20 +185,20 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/server reset %H- Reset everything to defaults. (Owner only)");
+            Player.Message(p, "%T/Server reset %H- Reset everything to defaults. (Owner only)");
             Player.Message(p, "  &cWARNING: This will erase ALL properties. Use with caution. (Likely requires restart)");
-            Player.Message(p, "%T/server reload %H- Reload the server files. (May require restart) (Owner only)");
-            Player.Message(p, "%T/server public/private %H- Make the server public or private.");
-            Player.Message(p, "%T/server restore %H- Restore the server from a backup.");
-            Player.Message(p, "%T/server backup all/db/files/lite/litedb %H- Make a backup.");
+            Player.Message(p, "%T/Server reload %H- Reload the server files. (May require restart) (Owner only)");
+            Player.Message(p, "%T/Server public/private %H- Make the server public or private.");
+            Player.Message(p, "%T/Server restore %H- Restore the server from a backup.");
+            Player.Message(p, "%T/Server backup all/db/files/lite/litedb %H- Make a backup.");
             Player.Message(p, "  %Hall - Backups everything (default)");
             Player.Message(p, "  %Hdb - Only backups the database.");
             Player.Message(p, "  %Hfiles - Backups everything, except the database.");
             Player.Message(p, "  %Hlite - Backups everything, except BlockDB and undo files.");
             Player.Message(p, "  %Hlitedb - Backups database, except BlockDB tables.");
-            Player.Message(p, "%T/server backup table [name] %H- Backups that database table");
-            Player.Message(p, "%T/server import [name] %H- Imports a backed up database table");
-            Player.Message(p, "%T/server upgradeblockdb %H- Dumps BlockDB tables from database");
+            Player.Message(p, "%T/Server backup table [name] %H- Backups that database table");
+            Player.Message(p, "%T/Server import [name] %H- Imports a backed up database table");
+            Player.Message(p, "%T/Server upgradeblockdb %H- Dumps BlockDB tables from database");
         }
     }
 }

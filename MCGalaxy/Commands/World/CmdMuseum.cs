@@ -22,7 +22,7 @@ using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMuseum : Command {
-        public override string name { get { return "museum"; } }
+        public override string name { get { return "Museum"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/museum [map] [restore]");
+            Player.Message(p, "%T/Museum [map] [restore]");
             Player.Message(p, "%HAllows you to access a restore of the map entered. Works on unloaded maps");
         }
     }

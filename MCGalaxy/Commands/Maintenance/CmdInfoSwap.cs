@@ -21,7 +21,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdInfoSwap : Command {       
-        public override string name { get { return "infoswap"; } }
+        public override string name { get { return "InfoSwap"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/infoswap [source] [other]");
+            Player.Message(p, "%T/InfoSwap [source] [other]");
             Player.Message(p, "%HSwaps all the player's info from [source] to [other].");
             Player.Message(p, "%HNote that both players must be offline for this to work.");
         }

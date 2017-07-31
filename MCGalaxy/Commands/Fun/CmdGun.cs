@@ -23,7 +23,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdGun : WeaponCmd {
-        public override string name { get { return "gun"; } }
+        public override string name { get { return "Gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/gun [at end]");
+            Player.Message(p, "%T/Gun [at end]");
             Player.Message(p, "%HAllows you to fire bullets at people");
             Player.Message(p, "%HAvailable [at end] types: %Sexplode, destroy, laser, tp");
         }

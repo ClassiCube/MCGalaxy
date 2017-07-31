@@ -21,7 +21,7 @@ using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdPay : MoneyCmd {
-        public override string name { get { return "pay"; } }
+        public override string name { get { return "Pay"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pay [player] [amount] <reason>");
+            Player.Message(p, "%T/Pay [player] [amount] <reason>");
             Player.Message(p, "%HPays [amount] &3{0} %Hto [player]", ServerConfig.Currency);
         }
     }

@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {    
     public class CmdWriteText : Command {        
-        public override string name { get { return "writetext"; } }
+        public override string name { get { return "WriteText"; } }
         public override string shortcut { get { return "wrt"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -67,14 +67,14 @@ namespace MCGalaxy.Commands.Building {
         struct WriteArgs { public byte scale, spacing; public string message; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/wrt [scale] [spacing] [message]");
+            Player.Message(p, "%T/WriteText [scale] [spacing] [message]");
             Player.Message(p, "%HWrites the given message in blocks.");
             Player.Message(p, "%Hspacing specifies the number of blocks between each letter.");
         }
     }
     
     public sealed class CmdWrite : CmdWriteText {       
-        public override string name { get { return "write"; } }
+        public override string name { get { return "Write"; } }
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
@@ -82,9 +82,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/write [message]");
+            Player.Message(p, "%T/Write [message]");
             Player.Message(p, "%HWrites [message] in blocks");
-            Player.Message(p, "%HNote that this command has been deprecated by /writetext.");
+            Player.Message(p, "%HNote that this has been deprecated by %T/WriteText.");
         }
     }
 }

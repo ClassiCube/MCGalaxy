@@ -22,14 +22,14 @@ using MCGalaxy.Events.GroupEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdSetRank : Command {
-        public override string name { get { return "setrank"; } }
-        public override string shortcut { get { return "rank"; } }
+        public override string name { get { return "SetRank"; } }
+        public override string shortcut { get { return "Rank"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("pr", "+up"), new CommandAlias("de", "-down"),
-                    new CommandAlias("promote", "+up"), new CommandAlias("demote", "-down") }; }
+                    new CommandAlias("Promote", "+up"), new CommandAlias("Demote", "-down") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -40,13 +40,13 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args[0].CaselessEq("+up")) {
                 rank = args[0];
-                name = ModActionCmd.FindName(p, "promote", "promote", "", args[1], ref reason);
+                name = ModActionCmd.FindName(p, "promote", "Promote", "", args[1], ref reason);
             } else if (args[0].CaselessEq("-down")) {
                 rank = args[0];
-                name = ModActionCmd.FindName(p, "demote", "demote", "", args[1], ref reason);
+                name = ModActionCmd.FindName(p, "demote", "Demote", "", args[1], ref reason);
             } else {
                 rank = args[1];
-                name = ModActionCmd.FindName(p, "rank", "rank", " " + rank, args[0], ref reason);
+                name = ModActionCmd.FindName(p, "rank", "Rank", " " + rank, args[0], ref reason);
             }
             if (name == null) return;
             
@@ -127,9 +127,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/rank [player] [rank] <reason>");
+            Player.Message(p, "%T/SetRank [player] [rank] <reason>");
             Player.Message(p, "%HSets that player's rank/group, with an optional reason.");
-            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
+            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }

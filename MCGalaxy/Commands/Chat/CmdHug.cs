@@ -18,7 +18,7 @@
 
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdHug : MessageCmd {
-        public override string name { get { return "hug"; } }
+        public override string name { get { return "Hug"; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can death hug") }; }
         }
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/hug [player] <type>");
+            Player.Message(p, "%T/Hug [player] <type>");
             Player.Message(p, "%HValid types are: &floving, friendly, creepy and deadly.");
             Player.Message(p, "%HSpecifying no type or a non-existent type results in a normal hug.");
         }

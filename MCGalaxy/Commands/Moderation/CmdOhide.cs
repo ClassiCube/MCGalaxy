@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Moderation
 {
     public sealed class CmdOHide : Command
     {
-        public override string name { get { return "ohide"; } }
+        public override string name { get { return "OHide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands.Moderation
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/ohide [player] %H- Hides/unhides the player specified.");
-            Player.Message(p, "%T/ohide [player] myrank %H- Hides/unhides the player specified to players below your rank.");
+            Player.Message(p, "%T/OHide [player] %H- Hides/unhides the player specified.");
+            Player.Message(p, "%T/OHide [player] myrank %H- Hides/unhides the player specified to players below your rank.");
             Player.Message(p, "%HOnly works on players of lower rank.");
         }
     }

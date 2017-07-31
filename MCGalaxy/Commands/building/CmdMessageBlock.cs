@@ -26,7 +26,8 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMessageBlock : Command {
-        public override string name { get { return "mb"; } }
+        public override string name { get { return "MB"; } }
+        public override string shortcut { get { return "MessageBlock"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -214,7 +215,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/mb [block] [message]");
+            Player.Message(p, "%T/MB [block] [message]");
             Player.Message(p, "%HPlaces a message in your next block.");
             
             List<string> names = new List<string>();
@@ -224,7 +225,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");
             Player.Message(p, "%H  Note: \"@p\" is a placeholder for player who clicked.");
-            Player.Message(p, "%T/mb show %H- Shows or hides message blocks");
+            Player.Message(p, "%T/MB show %H- Shows or hides message blocks");
         }
     }
 }

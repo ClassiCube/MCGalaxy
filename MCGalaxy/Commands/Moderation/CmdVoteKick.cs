@@ -21,7 +21,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVoteKick : Command {
-        public override string name { get { return "votekick"; } }
+        public override string name { get { return "VoteKick"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/votekick [player]");
+            Player.Message(p, "%T/VoteKick [player]");
             Player.Message(p, "%HCalls a 30sec vote to kick [player]");
         }
     }

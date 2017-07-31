@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdFill : DrawCmd {
-        public override string name { get { return "fill"; } }
+        public override string name { get { return "Fill"; } }
         public override string shortcut { get { return "f"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Building {
             bool confirmed = IsConfirmed(dArgs.Message), success = true;
             if (count < p.group.DrawLimit && count > p.level.ReloadThreshold && !confirmed) {
                 Player.Message(p, "This fill would affect {0} blocks.", count);
-                Player.Message(p, "If you still want to fill, type %T/fill {0} confirm", dArgs.Message);
+                Player.Message(p, "If you still want to fill, type %T/Fill {0} confirm", dArgs.Message);
             } else {
                 success = base.DoDraw(p, marks, state, block);
             }            
@@ -81,10 +81,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/fill [brush args] <mode>");
+            Player.Message(p, "%T/Fill [brush args] <mode>");
             Player.Message(p, "%HFills the area specified with the output of the current brush.");
             Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
         }
     }
 }

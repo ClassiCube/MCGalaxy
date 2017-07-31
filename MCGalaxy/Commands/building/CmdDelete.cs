@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDelete : Command {        
-        public override string name { get { return "delete"; } }
+        public override string name { get { return "Delete"; } }
         public override string shortcut { get { return "d"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/delete");
+            Player.Message(p, "%T/Delete");
             Player.Message(p, "%HDeletes any block you click");
-            Player.Message(p, "%H\"any block\" meaning door_air, portals, mb's, etc");
+            Player.Message(p, "%H\"any block\" meaning Door_Air, Portals, MBs, etc");
         }
     }
 }

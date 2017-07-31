@@ -17,8 +17,8 @@
 */
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdDevs : Command {
-        public override string name { get { return "devs"; } }
-        public override string shortcut { get { return "dev"; } }
+        public override string name { get { return "Devs"; } }
+        public override string shortcut { get { return "Dev"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/devs");
+            Player.Message(p, "%T/Devs");
             Player.Message(p, "%HDisplays the {0} team (Developers and moderators).", Server.SoftwareName);
         }
     }

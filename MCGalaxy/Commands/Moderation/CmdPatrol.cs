@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPatrol : Command {
-        public override string name { get { return "patrol"; } }
+        public override string name { get { return "Patrol"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/patrol");
+            Player.Message(p, "%T/Patrol");
             LevelPermission perm = CommandExtraPerms.MinPerm(name);
             Player.Message(p, "%HTeleports you to a random {0} %Sor lower",
                            Group.GetColoredName(perm));

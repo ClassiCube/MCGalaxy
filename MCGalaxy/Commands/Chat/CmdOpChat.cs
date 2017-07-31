@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdOpChat : Command {
-        public override string name { get { return "opchat"; } }
+        public override string name { get { return "OpChat"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -34,9 +34,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/opchat [message]");
+            Player.Message(p, "%T/OpChat [message]");
             Player.Message(p, "%HSends a message to online OPs");
-            Player.Message(p, "%T/opchat");
+            Player.Message(p, "%T/OpChat");
             Player.Message(p, "%HMakes all messages sent go to OPs by default");
         }
     }

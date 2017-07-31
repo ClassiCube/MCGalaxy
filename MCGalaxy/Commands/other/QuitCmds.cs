@@ -21,7 +21,7 @@ using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {    
     public sealed class CmdRagequit : Command {        
-        public override string name { get { return "ragequit"; } }
+        public override string name { get { return "RageQuit"; } }
         public override string shortcut { get { return "rq"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/ragequit");
+            Player.Message(p, "%T/RageQuit");
             Player.Message(p, "%HMakes you ragequit");
         }
     }
     
     public sealed class CmdQuit : Command {        
-        public override string name { get { return "quit"; } }
+        public override string name { get { return "Quit"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -50,14 +50,14 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/quit <reason>");
+            Player.Message(p, "%T/Quit <reason>");
             Player.Message(p, "%HLeave the server.");
         }
     }
     
     public sealed class CmdCrashServer : Command {        
-        public override string name { get { return "crashserver"; } }
-        public override string shortcut { get { return "crash"; } }
+        public override string name { get { return "CrashServer"; } }
+        public override string shortcut { get { return "Crash"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -69,14 +69,14 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/crashserver");
+            Player.Message(p, "%T/CrashServer");
             Player.Message(p, "%HCrash the server with a generic error");
         }
     }
     
     public sealed class CmdHacks : Command {
-        public override string name { get { return "hacks"; } }
-        public override string shortcut { get { return "hax"; } }
+        public override string name { get { return "Hacks"; } }
+        public override string shortcut { get { return "Hax"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/hacks");
+            Player.Message(p, "%T/Hacks");
             Player.Message(p, "%HPerforms various server hacks. OPERATORS ONLY!!!");
         }
     }

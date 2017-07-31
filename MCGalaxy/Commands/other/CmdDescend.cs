@@ -21,7 +21,7 @@ using MCGalaxy.Commands.Fun;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdDescend : Command {
-        public override string name { get { return "descend"; } }
+        public override string name { get { return "Descend"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (!Hacks.CanUseHacks(p, p.level)) {
-                Player.Message(p, "You cannot use /descend on this map."); return;
+                Player.Message(p, "You cannot use %T/Descend %Son this map."); return;
             }
 
             // Move starting position down half a block since players are a little bit above the ground.
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
-            Player.Message(p, "%T/descend");
+            Player.Message(p, "%T/Descend");
             Player.Message(p, "%HTeleports you to the first free space below you.");
             Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
                            "(unless you are {0}%H+ and the motd has +ophax)", name);

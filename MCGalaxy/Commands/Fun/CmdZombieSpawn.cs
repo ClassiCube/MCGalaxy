@@ -22,7 +22,7 @@ using System.Threading;
 {
     public class CmdZombieSpawn : Command
     {
-        public override string name { get { return "zombiespawn"; } }
+        public override string name { get { return "Zombiespawn"; } }
         public override string shortcut { get { return "zs"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }

@@ -19,7 +19,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdFaq : Command {        
-        public override string name { get { return "faq"; } }
+        public override string name { get { return "Faq"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/faq");
+            Player.Message(p, "%T/FAQ");
             Player.Message(p, "%HDisplays frequently asked questions");
         }
     }

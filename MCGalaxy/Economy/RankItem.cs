@@ -120,9 +120,9 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
-            Player.Message(p, "%T/eco rank price [rank] [amount]");
+            Player.Message(p, "%T/Eco rank price [rank] [amount]");
             Player.Message(p, "%HSets how many &3{0} %Hthat rank costs.", ServerConfig.Currency);
-            Player.Message(p, "%T/eco rank maxrank [rank]");
+            Player.Message(p, "%T/Eco rank maxrank [rank]");
             Player.Message(p, "%HSets the maximum rank that can be bought.", ServerConfig.Currency);
         }
 
@@ -140,7 +140,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/buy rankup");
+            Player.Message(p, "%T/Buy rankup");
             Player.Message(p, "%fThe highest buyable rank is: {0}", Group.GetColoredName(MaxRank));
             Player.Message(p, "%cYou can only buy ranks one at a time, in sequential order.");
             

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {  
     public sealed class CmdPerbuildMax : PermissionCmd {        
-        public override string name { get { return "perbuildmax"; } }
+        public override string name { get { return "PerBuildMax"; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
@@ -35,9 +35,9 @@ namespace MCGalaxy.Commands.World {
     }
     
     public sealed class CmdPermissionBuild : PermissionCmd {        
-        public override string name { get { return "perbuild"; } }
+        public override string name { get { return "PerBuild"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wbuild"), new CommandAlias("worldbuild") }; }
+            get { return new[] { new CommandAlias("WBuild"), new CommandAlias("WorldBuild") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.World {
     }
     
     public sealed class CmdPervisitMax : PermissionCmd {        
-        public override string name { get { return "pervisitmax"; } }
+        public override string name { get { return "PerVisitMax"; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
@@ -73,9 +73,9 @@ namespace MCGalaxy.Commands.World {
     }
     
     public sealed class CmdPermissionVisit : PermissionCmd {       
-        public override string name { get { return "pervisit"; } }
+        public override string name { get { return "PerVisit"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("waccess"), new CommandAlias("worldaccess") }; }
+            get { return new[] { new CommandAlias("WAccess"), new CommandAlias("WorldAccess") }; }
         }
 
         public override void Use(Player p, string message) {

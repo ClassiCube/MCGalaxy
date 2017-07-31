@@ -18,13 +18,13 @@
 using System;
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdInvincible : Command {
-        public override string name { get { return "invincible"; } }
-        public override string shortcut { get { return "inv"; } }
+        public override string name { get { return "Invincible"; } }
+        public override string shortcut { get { return "Inv"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("godmode") }; }
+            get { return new CommandAlias[] { new CommandAlias("GodMode") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/invincible <name>");
+            Player.Message(p, "%T/Invincible <name>");
             Player.Message(p, "%HTurns invincible mode on/off.");
             Player.Message(p, "%HIf <name> is given, that player's invincibility is toggled");
         }

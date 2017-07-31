@@ -17,12 +17,12 @@
  */
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdIRCBot : Command {
-        public override string name { get { return "ircbot"; } }
+        public override string name { get { return "IRCBot"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("resetbot", "reset"), new CommandAlias("resetirc", "reset") }; }
+            get { return new[] { new CommandAlias("ResetBot", "reset"), new CommandAlias("ResetIRC", "reset") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -40,11 +40,11 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ircbot connect");
+            Player.Message(p, "%T/IRCBot connect");
             Player.Message(p, "%HCauses the IRC bot to connect to IRC.");
-            Player.Message(p, "%T/ircbot disconnect");
+            Player.Message(p, "%T/IRCBot disconnect");
             Player.Message(p, "%HCauses the IRC bot to disconnect from IRC.");
-            Player.Message(p, "%T/ircbot reset");
+            Player.Message(p, "%T/IRCBot reset");
             Player.Message(p, "%HCauses the IRC bot to disconnect then reconnect.");
         }
     }

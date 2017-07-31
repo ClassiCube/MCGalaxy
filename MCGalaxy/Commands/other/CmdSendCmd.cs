@@ -19,9 +19,8 @@
  */
 namespace MCGalaxy.Commands.Misc {
     
-    public sealed class CmdSendCmd : Command {
-        
-        public override string name { get { return "sendcmd"; } }
+    public sealed class CmdSendCmd : Command {        
+        public override string name { get { return "SendCmd"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -46,8 +45,8 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/sendcmd [player] [command] <arguments>");
-            Player.Message(p, "%HMake another user use a command. (e.g /sendcmd bob tp bob2)");
+            Player.Message(p, "%T/SendCmd [player] [command] <arguments>");
+            Player.Message(p, "%HMake another user use a command. (e.g %T/SendCmd bob tp bob2%H)");
         }
     }
 }

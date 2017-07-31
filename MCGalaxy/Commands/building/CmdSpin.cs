@@ -20,13 +20,13 @@ using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdSpin : Command {
-        public override string name { get { return "spin"; } }
+        public override string name { get { return "Spin"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("mirror", "mirror"), new CommandAlias("rotate") }; }
+            get { return new [] { new CommandAlias("Mirror", "mirror"), new CommandAlias("Rotate") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -81,9 +81,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/spin mirrorx/mirrory/mirrorz");
+            Player.Message(p, "%T/Spin mirrorx/mirrory/mirrorz");
             Player.Message(p, "%HFlips/Mirrors the copied object around that axis.");
-            Player.Message(p, "%T/spin X/Y/Z 90/180/270");
+            Player.Message(p, "%T/Spin X/Y/Z 90/180/270");
             Player.Message(p, "%HRotates the copied object around that axis by the given angle. " +
                            "If no angle is given, 90 degrees is used.");
         }

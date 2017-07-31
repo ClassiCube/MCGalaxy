@@ -20,7 +20,7 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAfk : MessageCmd {
-        public override string name { get { return "afk"; } }
+        public override string name { get { return "AFK"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }
 
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/afk <reason>");
+            Player.Message(p, "%T/AFK <reason>");
             Player.Message(p, "%HMarks yourself as AFK. Use again to mark yourself as back");
         }
     }

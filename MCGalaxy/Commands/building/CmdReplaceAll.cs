@@ -23,7 +23,7 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Commands.Building {
     
     public sealed class CmdReplaceAll : Command {
-        public override string name { get { return "replaceall"; } }
+        public override string name { get { return "ReplaceAll"; } }
         public override string shortcut { get { return "ra"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/replaceall [block] [block2].. [new]");
+            Player.Message(p, "%T/ReplaceAll [block] [block2].. [new]");
             Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
             Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
             Player.Message(p, "%H  If only [block] is given, replaces with your held block.");

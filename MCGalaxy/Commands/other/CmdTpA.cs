@@ -20,12 +20,12 @@ using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {  
     public sealed class CmdTpA : Command {        
-        public override string name { get { return "tpa"; } }
+        public override string name { get { return "TPA"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("tpaccept", "accept"), new CommandAlias("tpdeny", "deny") }; }
+            get { return new[] { new CommandAlias("TPAccept", "accept"), new CommandAlias("TPDeny", "deny") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -124,9 +124,9 @@ namespace MCGalaxy.Commands.Misc {
         } 
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/tpa [player] %H- Sends a teleport request to that player");
-            Player.Message(p, "%T/tpa accept %H- Accepts a teleport request");
-            Player.Message(p, "%T/tpa deny %H- Denies a teleport request");
+            Player.Message(p, "%T/TPA [player] %H- Sends a teleport request to that player");
+            Player.Message(p, "%T/TPA accept %H- Accepts a teleport request");
+            Player.Message(p, "%T/TPA deny %H- Denies a teleport request");
         }
     }
 }

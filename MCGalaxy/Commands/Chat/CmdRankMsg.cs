@@ -21,7 +21,7 @@ using System;
 
 namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRankMsg : Command {        
-        public override string name { get { return "rankmsg"; } }
+        public override string name { get { return "RankMsg"; } }
         public override string shortcut { get { return "rm"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/rankmsg [Rank] [Message]");
+            Player.Message(p, "%T/RankMsg [Rank] [Message]");
             Player.Message(p, "%HSends a message to the specified rank.");
             Player.Message(p, "%HNote: If no [rank] is given, player's rank is taken.");
         }

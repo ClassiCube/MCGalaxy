@@ -19,21 +19,21 @@ using System;
 
 namespace MCGalaxy.Commands.Info {   
     public sealed class CmdLevels : Command {       
-        public override string name { get { return "levels"; } }
-        public override string shortcut { get { return "maps"; } }
+        public override string name { get { return "Levels"; } }
+        public override string shortcut { get { return "Maps"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("worlds") }; }
+            get { return new[] { new CommandAlias("Worlds") }; }
         }
 
         public override void Use(Player p, string message) {
             Level[] loaded = LevelInfo.Loaded.Items;
             Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
-                                   "levels", "maps", message, false);
-            Player.Message(p, "Use %T/unloaded %Sfor unloaded levels.");
+                                   "Levels", "maps", message, false);
+            Player.Message(p, "Use %T/Unloaded %Sfor unloaded levels.");
         }
         
         static string FormatMap(Player p, Level lvl) {            
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/levels");
+            Player.Message(p, "%T/Levels");
             Player.Message(p, "%HLists all loaded levels and their physics levels.");
         }
     }

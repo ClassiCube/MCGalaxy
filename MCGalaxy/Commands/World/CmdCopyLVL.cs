@@ -22,12 +22,12 @@ using System.IO;
 
 namespace MCGalaxy.Commands.World {   
     public class CmdCopyLVL : Command {        
-        public override string name { get { return "copylvl"; } }
+        public override string name { get { return "CopyLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wcopy"), new CommandAlias("worldcopy") }; }
+            get { return new[] { new CommandAlias("WCopy"), new CommandAlias("WorldCopy") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/copylvl [level] [copied level]");
+            Player.Message(p, "%T/CopyLvl [level] [copied level]");
             Player.Message(p, "%HMakes a copy of [level] called [copied Level].");
             Player.Message(p, "%HNote: The level's BlockDB is not copied.");
         }

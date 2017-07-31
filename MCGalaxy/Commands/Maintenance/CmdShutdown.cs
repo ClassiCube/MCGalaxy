@@ -24,7 +24,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdShutdown : Command {
-        public override string name { get { return "shutdown"; } }
+        public override string name { get { return "Shutdown"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Maintenance {
             } else {
                 if (shutdownTask != null) {
                     Player.Message(p, "Server is already shutting down, use " +
-                                   "%T/shutdown abort %Sto abort the shutdown."); return;
+                                   "%T/Shutdown abort %Sto abort the shutdown."); return;
                 }
                 
                 string reason = "";
@@ -95,9 +95,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/shutdown [delay] <reason>");
+            Player.Message(p, "%T/Shutdown [delay] <reason>");
             Player.Message(p, "%HShuts the server down after [delay] seconds.");
-            Player.Message(p, "%T/shutdown abort");
+            Player.Message(p, "%T/Shutdown abort");
             Player.Message(p, "%HAborts the current server shutdown.");
         }
     }

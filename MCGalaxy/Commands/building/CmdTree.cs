@@ -23,7 +23,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdTree : Command {
-        public override string name { get { return "tree"; } }
+        public override string name { get { return "Tree"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
             if (brushMsg.Length == 0) return true;
             
             if (!p.group.CanExecute("brush")) {
-                Player.Message(p, "You cannot use %T/brush%S, so therefore cannot use %T/tree%S with a brush."); return false;
+                Player.Message(p, "You cannot use %T/Brush%S, so therefore cannot use %T/Tree%S with a brush."); return false;
             }        
             return ParseBrush(brushMsg, p, ExtBlock.Air) != null;
         }
@@ -101,12 +101,12 @@ namespace MCGalaxy.Commands.Building {
         struct DrawArgs { public Tree tree; public string brushMsg; public int size; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/tree [type] %H- Draws a tree.");
-            Player.Message(p, "%T/tree [type] [size] %H- Draws a tree of given size.");
-            Player.Message(p, "%T/tree [type] [brush name] <brush args>");
-            Player.Message(p, "%T/tree [type] [size] [brush name] <brush args>");
+            Player.Message(p, "%T/Tree [type] %H- Draws a tree.");
+            Player.Message(p, "%T/Tree [type] [size] %H- Draws a tree of given size.");
+            Player.Message(p, "%T/Tree [type] [brush name] <brush args>");
+            Player.Message(p, "%T/Tree [type] [size] [brush name] <brush args>");
             Player.Message(p, "%H  Types: &f{0}", Tree.TreeTypes.Join(t => t.Key));
-            Player.Message(p, "%H  For help about brushes, type %T/help brush%H.");
+            Player.Message(p, "%H  For help about brushes, type %T/Help Brush%H.");
         }
     }
 }

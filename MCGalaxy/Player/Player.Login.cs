@@ -147,22 +147,22 @@ namespace MCGalaxy {
             }
 
             if (ServerConfig.AgreeToRulesOnEntry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
-                SendMessage("&9You must read the &c/rules&9 and &c/agree&9 to them before you can build and use commands!");
+                SendMessage("&9You must read the &c/Rules&9 and &c/Agree&9 to them before you can build and use commands!");
                 agreed = false;
             }
 
             if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
-                    SendMessage("&cPlease set your admin verification password with &a/setpass [Password]!");
+                    SendMessage("&cPlease set your admin verification password with %T/SetPass [Password]!");
                 else
-                    SendMessage("&cPlease complete admin verification with &a/pass [Password]!");
+                    SendMessage("&cPlease complete admin verification with %T/Pass [Password]!");
             }
             
            try {
                 if (group.CanExecute("inbox") && Database.TableExists("Inbox" + name) ) {
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
-                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in /inbox");
+                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in %T/Inbox");
                     }
                 }
             } catch {

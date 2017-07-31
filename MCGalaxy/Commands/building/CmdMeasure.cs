@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Commands.Building {    
     public sealed class CmdMeasure : Command {
        
-        public override string name { get { return "measure"; } }
+        public override string name { get { return "Measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/measure [ignore]");
+            Player.Message(p, "%T/Measure [ignore]");
             Player.Message(p, "%HMeasures all the blocks between two points");
             Player.Message(p, "%H [ignore] is optional, and specifies the block which is not counted.");
         }

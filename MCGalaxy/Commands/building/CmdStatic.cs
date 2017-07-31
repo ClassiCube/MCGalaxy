@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Building {   
     public sealed class CmdStatic : Command {      
-        public override string name { get { return "static"; } }
+        public override string name { get { return "Static"; } }
         public override string shortcut { get { return "t"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/static [command]");
+            Player.Message(p, "%T/Static [command]");
             Player.Message(p, "%HMakes every command a toggle.");
             Player.Message(p, "%HIf [command] is given, then that command is used");
         }

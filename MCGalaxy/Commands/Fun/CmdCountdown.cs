@@ -28,8 +28,8 @@ namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdCountdown : Command {
         
-        public override string name { get { return "countdown"; } }
-        public override string shortcut { get { return "cd"; } }
+        public override string name { get { return "CountDown"; } }
+        public override string shortcut { get { return "CD"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -275,21 +275,21 @@ namespace MCGalaxy.Commands.Fun {
         
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cd join/leave %H- joins/leaves the game");
-            Player.Message(p, "%T/cd players %H- lists players currently playing");
-            Player.Message(p, "%T/cd rules %H- view the rules of countdown");
+            Player.Message(p, "%T/CD join/leave %H- joins/leaves the game");
+            Player.Message(p, "%T/CD players %H- lists players currently playing");
+            Player.Message(p, "%T/CD rules %H- view the rules of countdown");
             if (CheckExtraPerm(p, 1)) {
-                Player.Message(p, "%T/cd rules [player] %H- sends rules to that player.");
+                Player.Message(p, "%T/CD rules [player] %H- sends rules to that player.");
             }
             
             if (!CheckExtraPerm(p, 2)) return;
-            Player.Message(p, "%T/cd generate [width] [height] [length] %H- generates the countdown map (default is 32x32x32)");
-            Player.Message(p, "%T/cd enable/disable %H- enables/disables countdown");
-            Player.Message(p, "%T/cd start <speed> <mode> %H- starts a round of countdown");
+            Player.Message(p, "%T/CD generate [width] [height] [length] %H- generates the countdown map (default is 32x32x32)");
+            Player.Message(p, "%T/CD enable/disable %H- enables/disables countdown");
+            Player.Message(p, "%T/CD start <speed> <mode> %H- starts a round of countdown");
             Player.Message(p, "%H  speed can be: slow, normal, fast, extreme or ultimate");
             Player.Message(p, "%H  mode can be: normal or freeze");
-            Player.Message(p, "%T/cd end %H- force ends current round of countdown");
-            Player.Message(p, "%T/cd reset %H- resets the map. %T/cd start %Halso resets map.");
+            Player.Message(p, "%T/CD end %H- force ends current round of countdown");
+            Player.Message(p, "%T/CD reset %H- resets the map. %T/CD start %Halso resets map.");
         }
     }
 }

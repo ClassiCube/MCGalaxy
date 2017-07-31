@@ -20,8 +20,8 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdBuy : Command {
-        public override string name { get { return "buy"; } }
-        public override string shortcut { get { return "purchase"; } }
+        public override string name { get { return "Buy"; } }
+        public override string shortcut { get { return "Purchase"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -43,9 +43,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/buy [item] [value] <map name>");
-            Player.Message(p, "%Hmap name is only used for %T/buy map%H.");
-            Player.Message(p, "%HUse %T/store [item] %Hto see more information for an item.");
+            Player.Message(p, "%T/Buy [item] [value] <map name>");
+            Player.Message(p, "%Hmap name is only used for %T/Buy map%H.");
+            Player.Message(p, "%HUse %T/Store [item] %Hto see more information for an item.");
             Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
         }
     }

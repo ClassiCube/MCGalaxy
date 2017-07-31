@@ -20,8 +20,8 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.CPE {
     public class CmdModel : EntityPropertyCmd {
-        public override string name { get { return "model"; } }
-        public override string shortcut { get { return "setmodel"; } }
+        public override string name { get { return "Model"; } }
+        public override string shortcut { get { return "SetModel"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.CPE {
                     new CommandPerm(LevelPermission.Operator, "+ can change the model of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xmodel") }; }
+            get { return new[] { new CommandAlias("XModel") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -74,9 +74,9 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/model [name] [model] %H- Sets the model of that player.");
-            Player.Message(p, "%T/model bot [name] [model] %H- Sets the model of that bot.");
-            Player.Message(p, "%HType %T/help model models %Hfor a list of models.");
+            Player.Message(p, "%T/Model [name] [model] %H- Sets the model of that player.");
+            Player.Message(p, "%T/Model bot [name] [model] %H- Sets the model of that bot.");
+            Player.Message(p, "%HType %T/Help Model models %Hfor a list of models.");
         }
         
         public override void Help(Player p, string message) {

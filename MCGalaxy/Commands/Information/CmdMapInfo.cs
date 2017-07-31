@@ -26,13 +26,13 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdMapInfo : Command {
-        public override string name { get { return "mapinfo"; } }
+        public override string name { get { return "MapInfo"; } }
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("winfo"), new CommandAlias("worldinfo") }; }
+            get { return new[] { new CommandAlias("WInfo"), new CommandAlias("WorldInfo") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -237,9 +237,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "%T/mapinfo [map]");
+            Player.Message(p, "%T/MapInfo [map]");
             Player.Message(p, "%HDisplay details of [map]");
-            Player.Message(p, "%T/mapinfo env [map]");
+            Player.Message(p, "%T/MapInfo env [map]");
             Player.Message(p, "%HDisplay environment details of [map]");
         }
     }

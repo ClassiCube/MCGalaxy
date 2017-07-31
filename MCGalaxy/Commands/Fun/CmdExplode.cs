@@ -20,7 +20,7 @@
 using System;
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdExplode : Command {
-        public override string name { get { return "explode"; } }
+        public override string name { get { return "Explode"; } }
         public override string shortcut { get { return "ex"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -69,10 +69,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/explode - Satisfying all your exploding needs :)");
-            Player.Message(p, "/explode me - Explodes at your location");
-            Player.Message(p, "/explode [Player] - Explode the specified player");
-            Player.Message(p, "/explode [x y z] - Explode at the specified co-ordinates");
+            Player.Message(p, "%T/Explode %H- Satisfying all your exploding needs :)");
+            Player.Message(p, "%T/Explode me %H- Explodes at your location");
+            Player.Message(p, "%T/Explode [Player] %H- Explode the specified player");
+            Player.Message(p, "%T/Explode [x y z] %H- Explode at the specified co-ordinates");
         }
     }
 }

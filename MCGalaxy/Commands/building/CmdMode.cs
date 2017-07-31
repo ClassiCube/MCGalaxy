@@ -19,13 +19,13 @@ using System.Text;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMode : Command {
-        public override string name { get { return "mode"; } }
+        public override string name { get { return "Mode"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("tnt", "tnt") }; }
+            get { return new CommandAlias[] { new CommandAlias("TNT", "tnt") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -66,12 +66,12 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/mode");
-            Player.Message(p, "%HReverts the last %T/mode [block].");
-            Player.Message(p, "%T/mode [block]");
+            Player.Message(p, "%T/Mode");
+            Player.Message(p, "%HReverts the last %T/Mode [block].");
+            Player.Message(p, "%T/Mode [block]");
             Player.Message(p, "%HMakes every block placed into [block].");
             Player.Message(p, "%H/[block] also works");
-            Player.Message(p, "%T/mode tnt small/big/nuke %H");
+            Player.Message(p, "%T/Mode tnt small/big/nuke %H");
             Player.Message(p, "%HMakes every block placed into exploding TNT (if physics on).");
         }
     }

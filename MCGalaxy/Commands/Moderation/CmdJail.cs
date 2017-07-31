@@ -20,7 +20,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdJail : Command {
-        public override string name { get { return "jail"; } }
+        public override string name { get { return "Jail"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -56,12 +56,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/jail [user] <reason>");
+            Player.Message(p, "%T/Jail [user] <reason>");
             Player.Message(p, "%HPlaces [user] in jail unable to use commands.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
-            Player.Message(p, "%T/jail set");
+            Player.Message(p, "%T/Jail set");
             Player.Message(p, "%HCreates the jail point for the map.");
-            Player.Message(p, "%H  This has been deprecated in favor of /xjail.");
+            Player.Message(p, "%H  This has been deprecated in favor of %T/XJail");
         }
     }
 }

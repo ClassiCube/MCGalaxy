@@ -19,8 +19,8 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBots : Command {
-        public override string name { get { return "bots"; } }
-        public override string shortcut { get { return "botlist"; } }
+        public override string name { get { return "Bots"; } }
+        public override string shortcut { get { return "BotList"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Bots {
             
             string group = lvl == null ? "All bots:" : "Bots in " + lvl.ColoredName + ":";
             Player.Message(p, group);
-            MultiPageOutput.Output(p, inScope, FormatBot, cmd, "bots", modifier, false);
+            MultiPageOutput.Output(p, inScope, FormatBot, cmd, "Bots", modifier, false);
         }
         
         static string FormatBot(PlayerBot bot) {
@@ -62,8 +62,10 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bots %H- Shows a list of bots on your level, and their AIs and levels");
-            Player.Message(p, "%T/bots [level] %H- Shows bots on the given level");
+            Player.Message(p, "%T/Bots");
+            Player.Message(p, "%HShows a list of bots on your level, and their AIs and levels");
+            Player.Message(p, "%T/Bots [level]");
+            Player.Message(p, "%HShows bots on the given level");
         }
     }
 }

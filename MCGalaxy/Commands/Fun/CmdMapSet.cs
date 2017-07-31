@@ -20,15 +20,15 @@ using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMapSet : Command {
-        public override string name { get { return "mapset"; } }
-        public override string shortcut { get { return "mset"; } }
+        public override string name { get { return "MapSet"; } }
+        public override string shortcut { get { return "MSet"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("roundtime", null, "roundtime") }; }
+            get { return new[] { new CommandAlias("RoundTime", null, "roundtime") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -109,13 +109,13 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p) {
             Player.Message(p, "%HThis sets the various options for games on this map.");
-            Player.Message(p, "%T/mapset authors [name1] <name2> <name3>...");
+            Player.Message(p, "%T/MapSet authors [name1] <name2> <name3>...");
             Player.Message(p, "%HThis is shown to players at the start of rounds.");
-            Player.Message(p, "%T/mapset pillaring [yes/no]");
-            Player.Message(p, "%T/mapset build [normal/modifyonly/nomodify]");
-            Player.Message(p, "%T/mapset minroundtime [minutes]");
-            Player.Message(p, "%T/mapset maxroundtime [minutes]");
-            Player.Message(p, "%T/mapset drawingallowed [yes/no]");
+            Player.Message(p, "%T/MapSet pillaring [yes/no]");
+            Player.Message(p, "%T/MapSet build [normal/modifyonly/nomodify]");
+            Player.Message(p, "%T/MapSet minroundtime [minutes]");
+            Player.Message(p, "%T/MapSet maxroundtime [minutes]");
+            Player.Message(p, "%T/MapSet drawingallowed [yes/no]");
         }
     }
 }

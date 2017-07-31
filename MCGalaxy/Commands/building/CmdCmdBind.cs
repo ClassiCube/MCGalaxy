@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Building {   
     public sealed class CmdCmdBind : Command {        
-        public override string name { get { return "cmdbind"; } }
+        public override string name { get { return "CmdBind"; } }
         public override string shortcut { get { return "cb"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdbind [num] [command]%H- Binds [num] to [command]");
+            Player.Message(p, "%T/CmdBind [num] [command]%H- Binds [num] to [command]");
             Player.Message(p, "%H  Use with \"%T/[num]%H\" &b(example: %T/2&b)");
-            Player.Message(p, "%T/cmdbind [num] %H- Lists the command currently bound to [num]");
-            Player.Message(p, "%T/cmdbind %H- Lists all bound commands");
+            Player.Message(p, "%T/CmdBind [num] %H- Lists the command currently bound to [num]");
+            Player.Message(p, "%T/CmdBind %H- Lists all bound commands");
             Player.Message(p, "%H[num] must be between 0 and 9");
         }
     }

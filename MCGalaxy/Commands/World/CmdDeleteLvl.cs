@@ -21,12 +21,12 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdDeleteLvl : Command {
-        public override string name { get { return "deletelvl"; } }
+        public override string name { get { return "DeleteLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wdelete"), new CommandAlias("worlddelete"), new CommandAlias("wremove") }; }
+            get { return new[] { new CommandAlias("WDelete"), new CommandAlias("WorldDelete"), new CommandAlias("WRemove") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/deletelvl [map]");
+            Player.Message(p, "%T/DeleteLvl [map]");
             Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything");
             Player.Message(p, "%HA backup of the map will be placed in the levels/deleted folder");
         }

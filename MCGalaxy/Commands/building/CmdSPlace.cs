@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {    
     public sealed class CmdSPlace : Command {       
-        public override string name { get { return "splace"; } }
+        public override string name { get { return "SPlace"; } }
         public override string shortcut { get { return "set"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Building {
         struct DrawArgs { public ushort distance, interval; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/splace [distance] <interval>");
+            Player.Message(p, "%T/SPlace [distance] <interval>");
             Player.Message(p, "%HMeasures a set [distance] and places your held block at each end.");
             Player.Message(p, "%HOptionally place a block at set <interval> between them.");
         }

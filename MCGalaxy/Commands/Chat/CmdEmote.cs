@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdEmote : Command {
-        public override string name { get { return "emote"; } }
+        public override string name { get { return "Emote"; } }
         public override string shortcut { get { return "<3"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/emote");
+            Player.Message(p, "%T/Emote");
             Player.Message(p, "%HEnables or disables emoticon parsing");
         }
     }

@@ -19,8 +19,8 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {    
     public sealed class CmdReachDistance : Command {        
-        public override string name { get { return "reachdistance"; } }
-        public override string shortcut { get { return "reach"; } }
+        public override string name { get { return "ReachDistance"; } }
+        public override string shortcut { get { return "Reach"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/reachdistance [distance]");
+            Player.Message(p, "%T/ReachDistance [distance]");
             Player.Message(p, "%HSets the reach distance for how far away you can modify blocks.");
             Player.Message(p, "%H  The default reach distance is 5.");
         }

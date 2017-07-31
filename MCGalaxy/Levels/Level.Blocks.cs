@@ -459,7 +459,7 @@ namespace MCGalaxy {
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block.BlockID != Block.custom_block ? Block.Name(block.BlockID).Capitalize() : block.ExtID.ToString();
+            return block.BlockID != Block.custom_block ? Block.Name(block.BlockID) : block.ExtID.ToString();
         }
         
         public byte CollideType(ExtBlock block) {

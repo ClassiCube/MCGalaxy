@@ -20,7 +20,7 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBlockSet : Command {
-        public override string name { get { return "blockset"; } }
+        public override string name { get { return "BlockSet"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -94,13 +94,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/blockset [block] [rank]");
+            Player.Message(p, "%T/BlockSet [block] [rank]");
             Player.Message(p, "%HSets lowest rank that can modify/use [block] to [rank]");
-            Player.Message(p, "%T/blockset [block] +[rank]");
+            Player.Message(p, "%T/BlockSet [block] +[rank]");
             Player.Message(p, "%HAllows a specific rank to modify/use [block]");
-            Player.Message(p, "%T/blockset [block] -[rank]");
+            Player.Message(p, "%T/BlockSet [block] -[rank]");
             Player.Message(p, "%HPrevents a specific rank from modifying/using [block]");
-            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
+            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

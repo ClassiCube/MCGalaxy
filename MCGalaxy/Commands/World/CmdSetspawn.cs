@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.World {    
     public sealed class CmdSetspawn : Command {        
-        public override string name { get { return "setspawn"; } }
+        public override string name { get { return "SetSpawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/setspawn");
+            Player.Message(p, "%T/SetSpawn");
             Player.Message(p, "%HSets the default spawn location of the map you are currently located in.");  
         }
     }

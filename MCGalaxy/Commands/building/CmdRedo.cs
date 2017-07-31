@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {   
     public sealed class CmdRedo : Command {   
-        public override string name { get { return "redo"; } }
+        public override string name { get { return "Redo"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
         static void PerformRedo(Player p) {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
-                Player.Message(p, "You have no %T/undo %Sor %T/undo [seconds] %Sto redo."); return;
+                Player.Message(p, "You have no %T/Undo %Sor %T/Undo [seconds] %Sto redo."); return;
             }
             
             for (int i = entries.Length - 1; i >= 0; i--) {
@@ -50,13 +50,13 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Redo performed.");
                 return;
             }          
-            Player.Message(p, "No %T/undo %Sor %T/undo [seconds] %Scalls were " +
+            Player.Message(p, "No %T/Undo %Sor %T/Undo [seconds] %Scalls were " +
                                "found in the last 200 draw operations.");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/redo");
-            Player.Message(p, "%HRedoes the last /undo or /undo [seconds] you performed.");
+            Player.Message(p, "%T/Redo");
+            Player.Message(p, "%HRedoes the last %T/Undo %Hor %T/Undo [seconds] %Hyou performed.");
         }
     }
 }

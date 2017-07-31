@@ -20,14 +20,14 @@ using System.IO;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdGoto : Command {
-        public override string name { get { return "goto"; } }
+        public override string name { get { return "Goto"; } }
         public override string shortcut { get { return "g"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("j"), new CommandAlias("join"),
-                    new CommandAlias("gr", "-random"), new CommandAlias("gotorandom", "-random") }; }
+            get { return new[] { new CommandAlias("j"), new CommandAlias("Join"),
+                    new CommandAlias("gr", "-random"), new CommandAlias("GotoRandom", "-random") }; }
         }
         public override bool SuperUseable { get { return false; } }
 
@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/goto [map name]");
+            Player.Message(p, "%T/Goto [map name]");
             Player.Message(p, "%HTeleports yourself to a different level.");
-            Player.Message(p, "%T/goto -random");
+            Player.Message(p, "%T/Goto -random");
             Player.Message(p, "%HTeleports yourself to a random level.");
         }
     }

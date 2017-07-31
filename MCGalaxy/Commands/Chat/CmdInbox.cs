@@ -21,7 +21,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdInbox : Command {
-        public override string name { get { return "inbox"; } }
+        public override string name { get { return "Inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -86,11 +86,11 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/inbox");
+            Player.Message(p, "%T/Inbox");
             Player.Message(p, "%HDisplays all your messages.");
-            Player.Message(p, "%T/inbox [num]");
+            Player.Message(p, "%T/Inbox [num]");
             Player.Message(p, "%HDisplays the message at [num]");
-            Player.Message(p, "%T/inbox del [num]/all");
+            Player.Message(p, "%T/Inbox del [num]/all");
             Player.Message(p, "%HDeletes the message at [num], deletes all messages if \"all\".");
         }
     }

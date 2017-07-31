@@ -24,7 +24,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPortal : Command {
-        public override string name { get { return "portal"; } }
+        public override string name { get { return "Portal"; } }
         public override string shortcut { get { return "o"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -217,9 +217,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/portal [block]");
+            Player.Message(p, "%T/Portal [block]");
             Player.Message(p, "%HPlace a block for the entry, then another block for exit.");
-            Player.Message(p, "%T/portal [block] multi");
+            Player.Message(p, "%T/Portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             
             List<string> names = new List<string>();
@@ -227,7 +227,7 @@ namespace MCGalaxy.Commands.Building {
             else GetAllNames(p, names);
             
             Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
-            Player.Message(p, "%T/portal show %H- Shows portals (green = entry, red = exit)");
+            Player.Message(p, "%T/Portal show %H- Shows portals (green = entry, red = exit)");
         }
     }
 }

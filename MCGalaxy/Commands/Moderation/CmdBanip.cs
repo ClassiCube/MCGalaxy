@@ -22,13 +22,13 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanip : Command {
-        public override string name { get { return "banip"; } }
+        public override string name { get { return "BanIP"; } }
         public override string shortcut { get { return "bi"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("ipban") }; }
+            get { return new CommandAlias[] { new CommandAlias("IPBan") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/banip [ip/player] <reason>");
+            Player.Message(p, "%T/BanIP [ip/player] <reason>");
             Player.Message(p, "%HBans an IP, or the IP the given player is on.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

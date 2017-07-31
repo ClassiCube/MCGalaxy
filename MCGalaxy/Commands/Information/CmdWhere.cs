@@ -19,8 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhere : Command {
-        public override string name { get { return "where"; } }
-        public override string shortcut { get { return "where"; } }
+        public override string name { get { return "Where"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -45,8 +44,8 @@ namespace MCGalaxy.Commands.Info {
         }      
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/where [name] %H- Displays level, position, " +
-                           "and orienatation of that player.");
+            Player.Message(p, "%T/Where [name]");
+            Player.Message(p, "%HDisplays level, position, and orienatation of that player.");
         }
     }
 }

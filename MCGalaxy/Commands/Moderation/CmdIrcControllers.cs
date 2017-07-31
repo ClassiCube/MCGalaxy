@@ -20,8 +20,8 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdIrcControllers : Command {
-        public override string name { get { return "irccontrollers"; } }
-        public override string shortcut { get { return "ircctrl"; } }
+        public override string name { get { return "IRCControllers"; } }
+        public override string shortcut { get { return "IRCCtrl"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -91,11 +91,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/irccontrollers add/remove [name]");
+            Player.Message(p, "%T/IRCControllers add/remove [name]");
             Player.Message(p, "%HAdds or removes [name] from list of IRC controllers");
-            Player.Message(p, "%T/irccontrollers reload/list");
+            Player.Message(p, "%T/IRCControllers reload/list");
             Player.Message(p, "%HReloads or outputs list of IRC controllers");
-            Player.Message(p, "%T/irccontrollers rank [rank]");
+            Player.Message(p, "%T/IRCControllers rank [rank]");
             Player.Message(p, "%HSets which rank IRC controllers are treated as having in-game.");
         }
     }

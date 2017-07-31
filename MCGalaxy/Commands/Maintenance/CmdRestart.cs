@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdRestart : Command {
-        public override string name { get { return "restart"; } }
+        public override string name { get { return "Restart"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/restart");
+            Player.Message(p, "%T/Restart");
             Player.Message(p, "%HRestarts the server! Use carefully!");
         }
     }

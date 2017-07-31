@@ -19,8 +19,8 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTp : Command {
-        public override string name { get { return "tp"; } }
-        public override string shortcut { get { return "move"; } }
+        public override string name { get { return "TP"; } }
+        public override string shortcut { get { return "Move"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -100,12 +100,12 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/tp [x y z]");
+            Player.Message(p, "%T/TP [x y z]");
             Player.Message(p, "%HTeleports yourself to the given block coordinates.");
             Player.Message(p, "%H  Use ~ before a coordinate to move relative to current position.");
-            Player.Message(p, "%T/tp [player]");
+            Player.Message(p, "%T/TP [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
-            Player.Message(p, "%T/tp bot [name]");
+            Player.Message(p, "%T/TP bot [name]");
             Player.Message(p, "%HTeleports yourself to that bot.");
             Player.Message(p, "%H  Use /p2p to teleport a given player to a different player.");
         }

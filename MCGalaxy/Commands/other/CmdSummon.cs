@@ -20,14 +20,14 @@ using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdSummon : Command {
-        public override string name { get { return "summon"; } }
+        public override string name { get { return "Summon"; } }
         public override string shortcut { get { return "s"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }        
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("fetch"), new CommandAlias("bring"), new CommandAlias("bringall", "all") }; }
+            get { return new[] { new CommandAlias("Fetch"), new CommandAlias("Bring"), new CommandAlias("BringAll", "all") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can summon all players") }; }
@@ -101,14 +101,14 @@ namespace MCGalaxy.Commands.Misc {
                                who.ColoredName, who.group.ColoredName);
             }
             
-            Player.Message(p, "If you still want to summon them, type %T/summon {0} confirm", who.name);
+            Player.Message(p, "If you still want to summon them, type %T/Summon {0} confirm", who.name);
             return false;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/summon [player]");
+            Player.Message(p, "%T/Summon [player]");
             Player.Message(p, "%HSummons [player] to your position.");
-            Player.Message(p, "%T/summon all");
+            Player.Message(p, "%T/Summon all");
             Player.Message(p, "%HSummons all players in your map");
         }
     }

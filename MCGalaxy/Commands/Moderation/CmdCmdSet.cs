@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdCmdSet : Command {        
-        public override string name { get { return "cmdset"; } }
+        public override string name { get { return "CmdSet"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -111,15 +111,15 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdset [cmd] [rank]");
+            Player.Message(p, "%T/CmdSet [cmd] [rank]");
             Player.Message(p, "%HSets lowest rank that can use [cmd] to [rank]");
-            Player.Message(p, "%T/cmdset [cmd] +[rank]");
+            Player.Message(p, "%T/CmdSet [cmd] +[rank]");
             Player.Message(p, "%HAllows a specific rank to use [cmd]");
-            Player.Message(p, "%T/cmdset [cmd] -[rank]");
+            Player.Message(p, "%T/CmdSet [cmd] -[rank]");
             Player.Message(p, "%HPrevents a specific rank from using [cmd]");
-            Player.Message(p, "%T/cmdset [cmd] [rank] [extra permission number]");
+            Player.Message(p, "%T/CmdSet [cmd] [rank] [extra permission number]");
             Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
-            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
+            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

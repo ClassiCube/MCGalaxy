@@ -23,7 +23,7 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReview : Command {
-        public override string name { get { return "review"; } }
+        public override string name { get { return "Review"; } }
         public override string shortcut { get { return "rvw"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -168,7 +168,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/review enter/view/leave/next/clear");
+            Player.Message(p, "%T/Review enter/view/leave/next/clear");
             Player.Message(p, "%HLets you enter, view, leave, or clear the review queue, or " +
                                "teleport you to the next player in the review queue.");
         }

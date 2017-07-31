@@ -20,7 +20,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdBounties : Command {       
-        public override string name { get { return "bounties"; } }
+        public override string name { get { return "Bounties"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bounties");
+            Player.Message(p, "%T/Bounties");
             Player.Message(p, "%HOutputs a list of all active bounties on players.");
         }
     }

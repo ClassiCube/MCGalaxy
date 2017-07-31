@@ -20,8 +20,8 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco { 
     public sealed class CmdBalance : Command {        
-        public override string name { get { return "balance"; } }
-        public override string shortcut { get { return "money"; } }
+        public override string name { get { return "Balance"; } }
+        public override string shortcut { get { return "Money"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Eco {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/balance [player]");
+            Player.Message(p, "%T/Balance [player]");
             Player.Message(p, "%HShows how much %3" + ServerConfig.Currency + " %H[player] has, " +
                            "plus their most recent transactions.");
             Player.Message(p, "%HIf [player] is not given, shows your own balance.");

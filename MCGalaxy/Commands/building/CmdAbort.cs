@@ -19,7 +19,7 @@ using MCGalaxy.Drawing.Transforms;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdAbort : Command {
-        public override string name { get { return "abort"; } }
+        public override string name { get { return "Abort"; } }
         public override string shortcut { get { return "a"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/abort");
+            Player.Message(p, "%T/Abort");
             Player.Message(p, "%HCancels an action.");
         }
     }

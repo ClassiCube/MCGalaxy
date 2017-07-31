@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotAdd : Command {
-        public override string name { get { return "botadd"; } }
+        public override string name { get { return "BotAdd"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Bots {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/botadd [name]");
+            Player.Message(p, "%T/BotAdd [name]");
             Player.Message(p, "%HAdds a new bot at your position.");
         }
     }

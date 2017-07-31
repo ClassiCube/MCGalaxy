@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMoveAll : Command {
-        public override string name { get { return "moveall"; } }
+        public override string name { get { return "MoveAll"; } }
         public override string shortcut { get { return "ma"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) { 
-            Player.Message(p, "%T/moveall [level]");
+            Player.Message(p, "%T/MoveAll [level]");
             Player.Message(p, "%HMoves all players to that level."); 
         }
     }

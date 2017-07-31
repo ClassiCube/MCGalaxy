@@ -21,15 +21,15 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdCenter : Command {
-        public override string name { get { return "center"; } }
-        public override string shortcut { get { return "centre"; } }
+        public override string name { get { return "Center"; } }
+        public override string shortcut { get { return "Centre"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SCentre", null, DoCentre);
+            p.MakeSelection(2, "Selecting region for %SCenter", null, DoCentre);
         }
         
         bool DoCentre(Player p, Vec3S32[] m, object state, ExtBlock block) {
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/center");
+            Player.Message(p, "%T/Center");
             Player.Message(p, "%HPlaces gold blocks at the center of your selection");
         }
     }

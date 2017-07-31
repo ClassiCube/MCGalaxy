@@ -20,7 +20,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdSpawn : Command {
-        public override string name { get { return "spawn"; } }
+        public override string name { get { return "Spawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/spawn");
+            Player.Message(p, "%T/Spawn");
             Player.Message(p, "%HTeleports you to the spawn location of the level.");
         }
     }

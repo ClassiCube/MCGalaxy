@@ -21,13 +21,13 @@ using System.Text;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdViewRanks : Command {
-        public override string name { get { return "viewranks"; } }
+        public override string name { get { return "ViewRanks"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ops", "operator"), new CommandAlias("admins", "superop"),
-                    new CommandAlias("banned", "banned"), new CommandAlias("banlist", "banned") }; }
+            get { return new[] { new CommandAlias("Ops", "operator"), new CommandAlias("Admins", "superop"),
+                    new CommandAlias("Banned", "banned"), new CommandAlias("BanList", "banned") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Info {
             } else {
                 Player.Message(p, "People with the rank of " + grp.ColoredName + ":");
                 MultiPageOutput.Output(p, list, (name) => name,
-                                       "viewranks " + args[0], "players", modifer, false);
+                                       "ViewRanks " + args[0], "players", modifer, false);
             }
         }
         

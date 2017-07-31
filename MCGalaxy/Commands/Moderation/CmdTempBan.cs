@@ -20,7 +20,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdTempBan : Command {       
-        public override string name { get { return "tempban"; } }
+        public override string name { get { return "TempBan"; } }
         public override string shortcut { get { return "tb"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             string reason = args.Length > 2 ? args[2] : "";
             
-            string target = ModActionCmd.FindName(p, "temp ban", "tempban",
+            string target = ModActionCmd.FindName(p, "temp ban", "TempBan",
                                                  args.Length == 1 ? "" : " " + args[1],
                                                  args[0], ref reason);
             if (target == null) return;
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/tempban [name] [timespan] <reason>");
+            Player.Message(p, "%T/TempBan [name] [timespan] <reason>");
             Player.Message(p, "%HBans [name] for [timespan]. Default is 1 hour.");
             Player.Message(p, "%H e.g. to tempban for 90 minutes, [timespan] would be %S1h30m");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");

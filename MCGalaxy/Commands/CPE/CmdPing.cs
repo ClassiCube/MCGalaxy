@@ -19,7 +19,7 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdPing : Command {
-        public override string name { get { return "ping"; } }
+        public override string name { get { return "Ping"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/ping %H- Outputs details about your ping to the server.");
-            Player.Message(p, "%T/ping all %H- Outputs ping details for all players.");
+            Player.Message(p, "%T/Ping %H- Outputs details about your ping to the server.");
+            Player.Message(p, "%T/Ping all %H- Outputs ping details for all players.");
             Player.Message(p, "&cNOTE: %HNot all clients support measuring ping.");
         }
     }

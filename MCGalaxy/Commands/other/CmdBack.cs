@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdBack : Command {
-        public override string name { get { return "back"; } }
+        public override string name { get { return "Back"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/back");
+            Player.Message(p, "%T/Back");
             Player.Message(p, "%HTakes you back to the position you were in before teleportation");
         }
     }

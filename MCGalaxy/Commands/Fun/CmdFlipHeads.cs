@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdFlipHeads : Command {        
-        public override string name { get { return "flipheads"; } }
+        public override string name { get { return "FlipHeads"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/flipheads");
+            Player.Message(p, "%T/FlipHeads");
             Player.Message(p, "%HMakes all players have upside down heads");
         }
     }

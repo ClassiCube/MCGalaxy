@@ -22,14 +22,14 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdTop : Command {
-        public override string name { get { return "top"; } }
-        public override string shortcut { get { return "most"; } }
+        public override string name { get { return "Top"; } }
+        public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("topten", null, "10"), new CommandAlias("topfive", null, "5"),
-                    new CommandAlias("top10", null, "10"), }; }
+            get { return new [] { new CommandAlias("TopTen", null, "10"), new CommandAlias("TopFive", null, "5"),
+                    new CommandAlias("Top10", null, "10"), }; }
         }
         
         public override void Use(Player p, string message) {
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/top [stat] <offset> [number of players to show] ");
+            Player.Message(p, "%T/Top [stat] <offset> [number of players to show] ");
             Player.Message(p, "%HPrints a list of players who have the " +
                            "most/top of a particular stat. Available stats:");
             Player.Message(p, "&f" + TopStat.Stats.Join(stat => stat.Identifier));

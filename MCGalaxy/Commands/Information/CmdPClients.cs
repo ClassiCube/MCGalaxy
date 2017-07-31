@@ -21,8 +21,8 @@ using System.Text;
 
 namespace MCGalaxy.Commands.Info {  
     public sealed class CmdPClients : Command {        
-        public override string name { get { return "pclients"; } }
-        public override string shortcut { get { return "clients"; } }
+        public override string name { get { return "PClients"; } }
+        public override string shortcut { get { return "Clients"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/pclients");
+            Player.Message(p, "%T/PClients");
             Player.Message(p, "%HLists the clients players are using, and who uses which client.");
         }
     }

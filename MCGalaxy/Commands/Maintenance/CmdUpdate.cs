@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdUpdate : Command {
-        public override string name { get { return "update"; } }
+        public override string name { get { return "Update"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/update");
+            Player.Message(p, "%T/Update");
             Player.Message(p, "%HUpdates the server if it's out of date");
-            Player.Message(p, "%T/update force");
+            Player.Message(p, "%T/Update force");
             Player.Message(p, "%HForces the server to update");
         }
     }

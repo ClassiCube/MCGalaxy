@@ -24,14 +24,14 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
-        public override string name { get { return "about"; } }
+        public override string name { get { return "About"; } }
         public override string shortcut { get { return "b"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("binfo"), new CommandAlias("whodid") }; }
+            get { return new [] { new CommandAlias("BInfo"), new CommandAlias("WhoDid") }; }
         }
             
         public override void Use(Player p, string message) {
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/about");
+            Player.Message(p, "%T/About");
             Player.Message(p, "%HOutputs the change/edit history for a block.");
         }
     }

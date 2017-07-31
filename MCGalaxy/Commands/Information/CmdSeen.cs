@@ -20,7 +20,7 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdSeen : Command {
-        public override string name { get { return "seen"; } }
+        public override string name { get { return "Seen"; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/seen [player]");
+            Player.Message(p, "%T/Seen [player]");
             Player.Message(p, "%HSays when a player was first and last seen on the server");
         }
     }

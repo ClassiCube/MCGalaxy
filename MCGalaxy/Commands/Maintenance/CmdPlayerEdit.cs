@@ -22,13 +22,13 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdPlayerEdit : Command {
-        public override string name { get { return "playeredit"; } }
+        public override string name { get { return "PlayerEdit"; } }
         public override string shortcut { get { return "pe"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("setinfo") }; }
+            get { return new [] { new CommandAlias("SetInfo") }; }
         }
 
         delegate void DBSetter(string name, string column, string data);
@@ -229,7 +229,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pe [username] [type] <value>");
+            Player.Message(p, "%T/PlayerEdit [username] [type] <value>");
             Player.Message(p, "%HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
             Player.Message(p, "%HTo see value format for a specific type, leave <value> blank.");

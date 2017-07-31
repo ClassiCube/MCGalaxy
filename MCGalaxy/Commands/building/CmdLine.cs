@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdLine : DrawCmd {
-        public override string name { get { return "line"; } }
+        public override string name { get { return "Line"; } }
         public override string shortcut { get { return "l"; } }
         protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints."; } }
         
@@ -81,11 +81,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/line <brush args> <mode> <length>");
+            Player.Message(p, "%T/Line <brush args> <mode> <length>");
             Player.Message(p, "%HCreates a line between two points.");
             Player.Message(p, "   %HModes: &fnormal/walls/straight");
             Player.Message(p, "   %HLength specifies the max number of blocks in the line.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
         }
     }
 }

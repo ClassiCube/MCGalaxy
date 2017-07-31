@@ -91,11 +91,11 @@ namespace MCGalaxy.Drawing.Brushes {
         
         static string[] HelpString = new string[] {
             "%TArguments: none",
-            "%HDraws by pasting blocks from current /copy.",
+            "%HDraws by pasting blocks from current %T/Copy.",
             "%TArguments: [block1] [block2]..",
-            "%HDraws by pasting only the specified blocks from current /copy.",
+            "%HDraws by pasting only the given blocks from current %T/Copy.",
             "%TArguments: not [block1] [block2]..",
-            "%HDraws by pasting blocks from current /copy, except for the specified blocks.",
+            "%HDraws by pasting blocks from current %T/Copy, %Sexcept for the given blocks.",
         };
         
         public override Brush Construct(BrushArgs args) {

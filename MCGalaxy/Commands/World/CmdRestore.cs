@@ -21,7 +21,7 @@ using System.Text;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRestore : Command {        
-        public override string name { get { return "restore"; } }
+        public override string name { get { return "Restore"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -95,8 +95,8 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/restore %H- lists all backups for the current map");
-            Player.Message(p, "%T/restore [number] [name]");
+            Player.Message(p, "%T/Restore %H- lists all backups for the current map");
+            Player.Message(p, "%T/Restore [number] [name]");
             Player.Message(p, "%HRestores a previous backup for the given map.");
             Player.Message(p, "%H  If [name] is not given, your current map is used.");
         }

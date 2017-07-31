@@ -17,13 +17,13 @@
 */
 namespace MCGalaxy.Commands.Moderation {   
     public sealed class CmdXban : Command {       
-        public override string name { get { return "xban"; } }
-        public override string shortcut { get { return "banx"; } }
+        public override string name { get { return "XBan"; } }
+        public override string shortcut { get { return "BanX"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("uban", "-noip") }; }
+            get { return new [] { new CommandAlias("UBan", "-noip") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/xban [name] [message]");
+            Player.Message(p, "%T/XBan [name] [message]");
             Player.Message(p, "%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
-            Player.Message(p, "%T/uban [name] [message]");
-            Player.Message(p, "%HSame as /xban, but does not ban the IP.");
+            Player.Message(p, "%T/UBan [name] [message]");
+            Player.Message(p, "%HSame as %T/XBan%H, but does not ban the IP.");
         }
     }
 }

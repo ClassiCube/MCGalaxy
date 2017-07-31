@@ -18,14 +18,14 @@
 using MCGalaxy.SQL;
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdTitle : EntityPropertyCmd {        
-        public override string name { get { return "title"; } }
+        public override string name { get { return "Title"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of others") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xtitle", "-own") }; }
+            get { return new[] { new CommandAlias("XTitle", "-own") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/title [player] [title]");
+            Player.Message(p, "%T/Title [player] [title]");
             Player.Message(p, "%HSets the title of [player]");
             Player.Message(p, "%H  If [title] is not given, removes [player]'s title.");
         }

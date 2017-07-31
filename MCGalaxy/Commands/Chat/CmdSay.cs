@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdSay : Command {        
-        public override string name { get { return "say"; } }
+        public override string name { get { return "Say"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/say [message]");
+            Player.Message(p, "%T/Say [message]");
             Player.Message(p, "%HBroadcasts a global message to everyone in the server.");
         }
     }

@@ -18,7 +18,7 @@
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMain : Command {
         
-        public override string name { get { return "main"; } }
+        public override string name { get { return "Main"; } }
         public override string shortcut { get { return "h"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the main level") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wmain"), new CommandAlias("worldmain") }; }
+            get { return new[] { new CommandAlias("WMain"), new CommandAlias("WorldMain") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/main");
+            Player.Message(p, "%T/Main");
             Player.Message(p, "%HSends you to the main level.");
-            Player.Message(p, "%T/main [level]");
+            Player.Message(p, "%T/Main [level]");
             Player.Message(p, "%HSets the main level to that level.");
         }
     }

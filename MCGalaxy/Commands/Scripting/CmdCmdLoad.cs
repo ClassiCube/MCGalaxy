@@ -20,7 +20,7 @@ using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCmdLoad : Command {
-        public override string name { get { return "cmdload"; } }
+        public override string name { get { return "CmdLoad"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdload [command name]");
+            Player.Message(p, "%T/CmdLoad [command name]");
             Player.Message(p, "%HLoads a compiled command into the server for use.");
             Player.Message(p, "%H  Loads both C# and Visual Basic compiled commands.");
         }

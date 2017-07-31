@@ -21,8 +21,8 @@ using System.Text;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdPlayers : Command {
-        public override string name { get { return "players"; } }
-        public override string shortcut { get { return "who"; } }
+        public override string name { get { return "Players"; } }
+        public override string shortcut { get { return "Who"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -132,9 +132,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/players");
+            Player.Message(p, "%T/Players");
             Player.Message(p, "%HLists name and rank of all online players");
-            Player.Message(p, "%T/players [rank]");
+            Player.Message(p, "%T/Players [rank]");
             Player.Message(p, "%HLists all online players who have that rank");
         }
     }

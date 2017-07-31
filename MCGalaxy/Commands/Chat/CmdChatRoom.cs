@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdChatRoom : Command {        
-        public override string name { get { return "chatroom"; } }
+        public override string name { get { return "ChatRoom"; } }
         public override string shortcut { get { return "cr"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }

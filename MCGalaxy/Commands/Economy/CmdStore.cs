@@ -20,14 +20,14 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdStore : Command {
-        public override string name { get { return "store"; } }
-        public override string shortcut { get { return "shop"; } }
+        public override string name { get { return "Store"; } }
+        public override string shortcut { get { return "Shop"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("item") }; }
+            get { return new[] { new CommandAlias("Item") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Eco {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p);
                 }
-                Player.Message(p, "%HUse %T/store [item] %Hto see more information about that item.");
+                Player.Message(p, "%HUse %T/Store [item] %Hto see more information about that item.");
             } else {
                 Item item = Economy.GetItem(message);
                 if (item == null) { Help(p); return; }                
@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/store [item]");
+            Player.Message(p, "%T/Store [item]");
             Player.Message(p, "%HViews information about the specific item, such as its cost.");
-            Player.Message(p, "%T/store");
+            Player.Message(p, "%T/Store");
             Player.Message(p, "%HViews information about all enabled items.");
             Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
         }

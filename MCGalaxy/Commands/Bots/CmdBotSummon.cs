@@ -19,7 +19,7 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotSummon : Command {
-        public override string name { get { return "botsummon"; } }
+        public override string name { get { return "BotSummon"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botsummon [name]");
+            Player.Message(p, "%T/BotSummon [name]");
             Player.Message(p, "%HSummons a bot to your position.");
         }
     }

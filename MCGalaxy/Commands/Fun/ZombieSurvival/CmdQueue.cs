@@ -18,7 +18,7 @@
 using System.IO;
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdQueue : Command {
-        public override string name { get { return "queue"; } }
+        public override string name { get { return "Queue"; } }
         public override string shortcut { get { return "qz"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/queue zombie [name]");
+            Player.Message(p, "%T/Queue zombie [name]");
             Player.Message(p, "%HNext round [name] will be infected/start zombie");
-            Player.Message(p, "%T/queue level [name]");
+            Player.Message(p, "%T/Queue level [name]");
             Player.Message(p, "%HNext round [name] will be the level used");
         }
     }

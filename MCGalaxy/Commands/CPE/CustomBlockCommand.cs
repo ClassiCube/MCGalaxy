@@ -710,7 +710,7 @@ namespace MCGalaxy.Commands.CPE {
     }
     
     public sealed class CmdGlobalBlock : Command {
-        public override string name { get { return "globalblock"; } }
+        public override string name { get { return "GlobalBlock"; } }
         public override string shortcut { get { return "gb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
@@ -730,7 +730,7 @@ namespace MCGalaxy.Commands.CPE {
     }
     
     public sealed class CmdLevelBlock : Command {
-        public override string name { get { return "levelblock"; } }
+        public override string name { get { return "LevelBlock"; } }
         public override string shortcut { get { return "lb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }

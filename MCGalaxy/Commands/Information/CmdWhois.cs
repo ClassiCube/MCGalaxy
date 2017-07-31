@@ -20,8 +20,8 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhois : Command {
-        public override string name { get { return "whois"; } }
-        public override string shortcut { get { return "whowas"; } }
+        public override string name { get { return "WhoIs"; } }
+        public override string shortcut { get { return "WhoWas"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see player's IP and if on whitelist") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("info"), new CommandAlias("i") }; }
+            get { return new CommandAlias[] { new CommandAlias("Info"), new CommandAlias("i") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/whois [name]");
+            Player.Message(p, "%T/WhoIs [name]");
             Player.Message(p, "%HDisplays information about that player.");
             Player.Message(p, "%HNote: Works for both online and offline players.");
         }

@@ -21,7 +21,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdHuman : Command {
-        public override string name { get { return "human"; } }
+        public override string name { get { return "Human"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You cannot un-pledge that you will be infected."); return;
             }
             if (p.Game.Infected) {
-                Player.Message(p, "You cannot use /human as you are currently infected."); return;
+                Player.Message(p, "You cannot use %T/human %Sas you are currently infected."); return;
             }
             
             if (Economy.Enabled && p.money < 5) {
@@ -41,12 +41,12 @@ namespace MCGalaxy.Commands.Fun {
                                    " %Sto pledge that you will not be infected."); return;
             }
             if (!Server.zombie.RoundInProgress) {
-                Player.Message(p, "Can only use /human when a round is in progress."); return;
+                Player.Message(p, "Can only use %T/human %Swhen a round is in progress."); return;
             }
             
             TimeSpan delta = Server.zombie.RoundEnd - DateTime.UtcNow;
             if (delta < TimeSpan.FromMinutes(3)) {
-                Player.Message(p, "Cannot use /human in last three minutes of a round."); return;
+                Player.Message(p, "Cannot use %T/human %Sin last three minutes of a round."); return;
             }
             
             p.Game.PledgeSurvive = true;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/human %H- pledges that you will not be infected.");
+            Player.Message(p, "%T/Human %H- pledges that you will not be infected.");
             Player.Message(p, "%HIf you survive, you receive an &aextra 5 %3" + ServerConfig.Currency);
             Player.Message(p, "%HHowever, if you are infected, you will &close 2 %3" + ServerConfig.Currency);
         }

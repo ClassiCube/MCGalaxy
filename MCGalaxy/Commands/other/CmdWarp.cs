@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdWarp : Command {
-        public override string name { get { return "warp"; } }
+        public override string name { get { return "Warp"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -81,14 +81,14 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/warp [name] %H- Move to that warp");
-            Player.Message(p, "%T/warp list %H- List all the warps");
+            Player.Message(p, "%T/Warp [name] %H- Move to that warp");
+            Player.Message(p, "%T/Warp list %H- List all the warps");
             if (CheckExtraPerm(p, 1))
-                Player.Message(p, "%T/warp create [name] <player> %H- Create a warp, if a <player> is given, it will be created where they are");
+                Player.Message(p, "%T/Warp create [name] <player> %H- Create a warp, if a <player> is given, it will be created where they are");
             if (CheckExtraPerm(p, 2))
-                Player.Message(p, "%T/warp delete [name] %H- Deletes a warp");
+                Player.Message(p, "%T/Warp delete [name] %H- Deletes a warp");
             if (CheckExtraPerm(p, 3))
-                Player.Message(p, "%T/warp move [name] <player> %H- Moves a warp, if a <player> is given, it will be created where they are");
+                Player.Message(p, "%T/Warp move [name] <player> %H- Moves a warp, if a <player> is given, it will be created where they are");
         }
     }
 }

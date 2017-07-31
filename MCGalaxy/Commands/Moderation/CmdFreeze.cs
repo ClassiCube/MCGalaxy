@@ -20,7 +20,7 @@ using System;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdFreeze : Command {
-        public override string name { get { return "freeze"; } }
+        public override string name { get { return "Freeze"; } }
         public override string shortcut { get { return "fz"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/freeze [name] [timespan] <reason>");
+            Player.Message(p, "%T/Freeze [name] [timespan] <reason>");
             Player.Message(p, "%HPrevents [name] from moving for [timespan], or until manually unfrozen.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

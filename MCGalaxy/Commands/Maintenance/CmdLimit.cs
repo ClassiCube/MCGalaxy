@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdLimit : Command {        
-        public override string name { get { return "limit"; } }
+        public override string name { get { return "Limit"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/limit [type] [amount] <rank>");
+            Player.Message(p, "%T/Limit [type] [amount] <rank>");
             Player.Message(p, "%HSets the limit for [type]");
             Player.Message(p, "%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
                            "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen)");

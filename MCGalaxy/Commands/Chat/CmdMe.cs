@@ -20,7 +20,7 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdMe : MessageCmd {
-        public override string name { get { return "me"; } }
+        public override string name { get { return "Me"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }

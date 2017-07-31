@@ -19,7 +19,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdInfected : Command {
-        public override string name { get { return "infected"; } }
+        public override string name { get { return "Infected"; } }
         public override string shortcut { get { return "dead"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/infected");
+            Player.Message(p, "%T/Infected");
             Player.Message(p, "%HShows who is infected/a zombie");
         }
     }

@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdDisInfect : Command {        
-        public override string name { get { return "disinfect"; } }
+        public override string name { get { return "DisInfect"; } }
         public override string shortcut { get { return "di"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/disinfect [name]");
+            Player.Message(p, "%T/DisInfect [name]");
             Player.Message(p, "%HTurns [name] back into a human");
         }
     }

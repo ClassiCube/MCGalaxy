@@ -28,14 +28,14 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdCopy : Command {
-        public override string name { get { return "copy"; } }
+        public override string name { get { return "Copy"; } }
         public override string shortcut { get { return "c"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("cut", "cut") }; }
+            get { return new CommandAlias[] { new CommandAlias("Cut", "cut") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             string format = "Copied &a{0} %Sblocks." +
-                (cState.PasteAir ? "" : " To also copy air blocks, use %T/copy air");
+                (cState.PasteAir ? "" : " To also copy air blocks, use %T/Copy Air");
             Player.Message(p, format, cState.UsedBlocks);
             if (cArgs.offsetIndex != -1) {
                 Player.Message(p, "Place a block to determine where to paste from");
@@ -210,14 +210,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/copy %H- Copies the blocks in an area.");
-            Player.Message(p, "%T/copy save [name] %H- Saves what you have copied.");
-            Player.Message(p, "%T/copy load [name] %H- Loads what you have saved.");
-            Player.Message(p, "%T/copy delete [name] %H- Deletes the specified copy.");
-            Player.Message(p, "%T/copy list %H- Lists all saved copies you have");
-            Player.Message(p, "%T/copy cut %H- Copies the blocks in an area, then removes them.");
-            Player.Message(p, "%T/copy air %H- Copies the blocks in an area, including air.");
-            Player.Message(p, "/copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
+            Player.Message(p, "%T/Copy %H- Copies the blocks in an area.");
+            Player.Message(p, "%T/Copy save [name] %H- Saves what you have copied.");
+            Player.Message(p, "%T/Copy load [name] %H- Loads what you have saved.");
+            Player.Message(p, "%T/Copy delete [name] %H- Deletes the specified copy.");
+            Player.Message(p, "%T/Copy list %H- Lists all saved copies you have");
+            Player.Message(p, "%T/Copy cut %H- Copies the blocks in an area, then removes them.");
+            Player.Message(p, "%T/Copy air %H- Copies the blocks in an area, including air.");
+            Player.Message(p, "/Copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
         }
     }
 }

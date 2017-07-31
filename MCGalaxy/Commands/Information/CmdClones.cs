@@ -20,13 +20,13 @@ using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdClones : Command {
-        public override string name { get { return "clones"; } }
-        public override string shortcut { get { return "alts"; } }
+        public override string name { get { return "Clones"; } }
+        public override string shortcut { get { return "Alts"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("whoip") }; }
+            get { return new[] { new CommandAlias("WhoIP") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -47,9 +47,9 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/clones [name]");
+            Player.Message(p, "%T/Clones [name]");
             Player.Message(p, "%HFinds everyone with the same IP as [name]");
-            Player.Message(p, "%T/clones [ip address]");
+            Player.Message(p, "%T/Clones [ip address]");
             Player.Message(p, "%HFinds everyone who last played or is playing on the given IP");
         }
     }

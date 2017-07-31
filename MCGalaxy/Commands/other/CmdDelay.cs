@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdDelay : Command {
-        public override string name { get { return "delay"; } }
+        public override string name { get { return "Delay"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -46,11 +46,11 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/delay [timespan]");
+            Player.Message(p, "%T/Delay [timespan]");
             Player.Message(p, "%HWaits for a certain amount of time.");
-            Player.Message(p, "%HMain use is to run a command after a certain delay in a %T/mb");
-            Player.Message(p, "%H  e.g. %T/mb air /delay 1000ms |/help me %Hruns %T/help me " +
-                           "%H1000 milliseconds (1 second) after the mb is clicked");
+            Player.Message(p, "%HMain use is to run a command after a certain delay in a %T/MB");
+            Player.Message(p, "%H  e.g. %T/MB air /Delay 1000ms |/Help Me %Hruns %T/Help Me " +
+                           "%H1000 milliseconds (1 second) after the MB is clicked");
         }
     }
 }

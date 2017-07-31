@@ -20,8 +20,8 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.CPE {
     public class CmdEntityRot : EntityPropertyCmd {
-        public override string name { get { return "entityrot"; } }
-        public override string shortcut { get { return "entrot"; } }
+        public override string name { get { return "EntityTot"; } }
+        public override string shortcut { get { return "EntRot"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
@@ -73,9 +73,9 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/entityrot [name] x/z [angle].");
+            Player.Message(p, "%T/EntityRot [name] x/z [angle].");
             Player.Message(p, "%HSets X or Z axis rotation (in degrees) of that player.");
-            Player.Message(p, "%T/entityrot bot [name] x/z [angle]");
+            Player.Message(p, "%T/EntityRot bot [name] x/z [angle]");
             Player.Message(p, "%HSets the X or Z axis rotation (in degrees) of that bot.");
         }
     }

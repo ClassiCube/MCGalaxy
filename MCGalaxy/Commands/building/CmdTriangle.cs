@@ -20,7 +20,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdTriangle : DrawCmd {
-        public override string name { get { return "triangle"; } }
+        public override string name { get { return "Triangle"; } }
         public override string shortcut { get { return "tri"; } }
         public override int MarksCount { get { return 3; } }
         
@@ -33,9 +33,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/triangle <brush args>");
+            Player.Message(p, "%T/Triangle <brush args>");
             Player.Message(p, "%HDraws a triangle between three points.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

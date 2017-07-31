@@ -24,7 +24,7 @@ using MCGalaxy.Tasks;
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMissile : WeaponCmd {
 
-        public override string name { get { return "missile"; } }
+        public override string name { get { return "Missile"; } }
         protected override string Weapon { get { return "Missile"; } }
 
         protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
@@ -142,8 +142,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/missile [at end]");
-            Player.Message(p, "%HAllows you to fire missiles at people. Differs from /gun in that the missile is guided.");
+            Player.Message(p, "%T/Missile [at end]");
+            Player.Message(p, "%HAllows you to fire missiles at people. Differs from %T/gun %Hin that the missile is guided.");
             Player.Message(p, "%HAvailable [at end] types: %Sexplode, destroy, tp");
         }
     }

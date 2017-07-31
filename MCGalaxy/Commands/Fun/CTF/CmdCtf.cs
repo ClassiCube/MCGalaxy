@@ -23,8 +23,8 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : Command {
-        public override string name { get { return "ctf"; } }
-        public override string shortcut { get { return "ctfsetup"; } }
+        public override string name { get { return "CTF"; } }
+        public override string shortcut { get { return "CTFSetup"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             if (!Server.ctf.Start(p)) return;
-            Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE %T/goto " + Server.ctf.Map.name + " %Sto join!");
+            Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE %T/Goto " + Server.ctf.Map.name + " %Sto join!");
         }
         
         static void HandleStop(Player p) {
@@ -167,21 +167,21 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ctf start/stop");
+            Player.Message(p, "%T/CTF start/stop");
             Player.Message(p, "%HStarts/stops the CTF game.");
-            Player.Message(p, "%T/ctf add/remove");
+            Player.Message(p, "%T/CTF add/remove");
             Player.Message(p, "%HAdds or removes current map from list of CTF maps.");
-            Player.Message(p, "%T/ctf set [property]");
-            Player.Message(p, "%HSets a CTF game property, see %T/help ctf set");
+            Player.Message(p, "%T/CTF set [property]");
+            Player.Message(p, "%HSets a CTF game property, see %T/Help CTF set");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                Player.Message(p, "%T/ctf set redspawn/bluespawn");
+                Player.Message(p, "%T/CTF set redspawn/bluespawn");
                 Player.Message(p, "%HSets spawn of red/blue team to your position.");
-                Player.Message(p, "%T/ctf set redflag/blueflag");
+                Player.Message(p, "%T/CTF set redflag/blueflag");
                 Player.Message(p, "%HSets flag position and block of red/blue team to the next block you place or delete.");
-                Player.Message(p, "%T/ctf set divider");
+                Player.Message(p, "%T/CTF set divider");
                 Player.Message(p, "%HSets the divider line to your current Z position.");
                 Player.Message(p, "   %HRed team tags blue team when the Z position is less than the divider, " +
                                "blue teams tags when Z position is more.");

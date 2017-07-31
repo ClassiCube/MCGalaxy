@@ -57,7 +57,7 @@ namespace MCGalaxy.Bots {
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
-            "%T/botai add [name] teleport",
+            "%T/BotAI add [name] teleport",
             "%HCauses the bot to instantly teleport to a position.",
             "%H  Note: The position saved to the AI is your current position.",
         };
@@ -83,7 +83,7 @@ namespace MCGalaxy.Bots {
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
-            "%T/botai add [name] walk",
+            "%T/BotAI add [name] walk",
             "%HCauses the bot to walk towards to a position.",
             "%H  Note: The position saved to the AI is your current position.",
         };
@@ -100,7 +100,7 @@ namespace MCGalaxy.Bots {
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
-            "%T/botai add [name] jump",
+            "%T/BotAI add [name] jump",
             "%HCauses the bot to perform a jump.",
             "%H  Note bots can also do other instructions while jumping",
             "%H  (e.g. For a \"jump\" then a \"walk\" instruction, the bot will jump while also walking",
@@ -130,7 +130,7 @@ namespace MCGalaxy.Bots {
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
-            "%T/botai add [name] speed [percentage]",
+            "%T/BotAI add [name] speed [percentage]",
             "%HSets how fast the bot moves, relative to its normal speed.",
             "%H  100 means it moves at normal speed",
             "%H  50 means it moves at half speed",

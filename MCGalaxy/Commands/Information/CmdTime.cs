@@ -20,7 +20,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdTime : Command {
-        public override string name { get { return "time"; } }
+        public override string name { get { return "Time"; } }
         public override string shortcut { get { return "ti"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/time");
+            Player.Message(p, "%T/Time");
             Player.Message(p, "%HShows the server time.");
             Player.Message(p, "%HIf zombie survival is running, shows time left until round end or start.");
         }

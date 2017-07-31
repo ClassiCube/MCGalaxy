@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdView : Command {        
-        public override string name { get { return "view"; } }
+        public override string name { get { return "View"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }

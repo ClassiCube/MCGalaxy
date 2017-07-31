@@ -21,8 +21,8 @@ using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Commands.CPE {
     public sealed class CmdEnvironment : Command {
-        public override string name { get { return "environment"; } }
-        public override string shortcut { get { return "env"; } }
+        public override string name { get { return "Environment"; } }
+        public override string shortcut { get { return "Env"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         static void SendPresetsMessage(Player p) {
-            Player.Message(p, "/env preset [type] -- Uses an env preset on your current map");
+            Player.Message(p, "%T/Env preset [type] %H- Uses an env preset on your current map");
             Player.Message(p, "Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");           
             if (!Directory.Exists("presets")) return;
             
@@ -208,12 +208,12 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/env [variable] [value]");
+            Player.Message(p, "%T/Environment [variable] [value]");
             Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level");
             Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight");
             Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade, expfog, sidesoffset");
             Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
-            Player.Message(p, "%T/env normal %H- resets all variables");
+            Player.Message(p, "%T/Environment normal %H- resets all variables");
         }
     }
 }

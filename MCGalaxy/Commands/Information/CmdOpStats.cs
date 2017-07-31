@@ -24,7 +24,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info { 
     public sealed class CmdOpStats : Command {
-        public override string name { get { return "opstats"; } }
+        public override string name { get { return "OpStats"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/opstats [player] today/yesterday/thismonth/lastmonth/all");
+            Player.Message(p, "%T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
             Player.Message(p, "%HDisplays information about operator command usage.");
         }
     }

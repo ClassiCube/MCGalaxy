@@ -18,7 +18,7 @@
 using System;
 namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRoll : MessageCmd {
-        public override string name { get { return "roll"; } }
+        public override string name { get { return "Roll"; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/roll [min] [max]");
+            Player.Message(p, "%T/Roll [min] [max]");
             Player.Message(p, "%HRolls a random number between [min] and [max].");
         }
     }

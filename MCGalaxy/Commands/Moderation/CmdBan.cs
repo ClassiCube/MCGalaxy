@@ -20,7 +20,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdBan : Command {
-        public override string name { get { return "ban"; } }
+        public override string name { get { return "Ban"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             string[] args = message.SplitSpaces(2);
             string reason = args.Length > 1 ? args[1] : "";            
-            string target = ModActionCmd.FindName(p, "ban", "ban", "", args[0], ref reason);
+            string target = ModActionCmd.FindName(p, "ban", "Ban", "", args[0], ref reason);
             if (target == null) return;
             
             reason = ModActionCmd.ExpandReason(p, reason);
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ban [player] <reason>");
+            Player.Message(p, "%T/Ban [player] <reason>");
             Player.Message(p, "%HBans a player without kicking them.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

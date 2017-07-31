@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
     public class CmdNotes : Command {
-        public override string name { get { return "notes"; } }
+        public override string name { get { return "Notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -72,13 +72,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/notes [name] %H- views that player's notes.");
+            Player.Message(p, "%T/Notes [name] %H- views that player's notes.");
             Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
     
     public sealed class CmdMyNotes : CmdNotes {
-        public override string name { get { return "mynotes"; } }
+        public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) { base.Use(p, p.name); }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/mynotes %H- views your own notes.");
+            Player.Message(p, "%T/MyNotes %H- views your own notes.");
             Player.Message(p, "%HNotes are things such as bans, kicks, warns, mutes.");
         }
     }

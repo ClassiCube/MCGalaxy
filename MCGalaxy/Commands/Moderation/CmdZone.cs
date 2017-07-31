@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdZone : Command {
-        public override string name { get { return "zone"; } }
+        public override string name { get { return "Zone"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ozone", "map"), new CommandAlias("oz", "map") }; }
+            get { return new[] { new CommandAlias("OZone", "map"), new CommandAlias("oz", "map") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -42,13 +42,13 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {
-                if (!CheckAdd(p, args, "zone add")) return;
+                if (!CheckAdd(p, args, "Zone add")) return;
 
                 Player.Message(p, "Place or break two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
             } else if (args[0].CaselessEq("map")) {
-                if (!CheckAdd(p, args, "zone map")) return;
+                if (!CheckAdd(p, args, "Zone map")) return;
 
                 ZoneAll(p.level, args[1]);
                 Player.Message(p, "Added zone for &b" + args[1]);
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
             } else if (args[0].CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone, "zone list", "zones", modifier, true);
+                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone, "Zone list", "zones", modifier, true);
             } else {
                 Help(p);
             }
@@ -176,11 +176,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/zone add [name] %H- Creates a zone only [name] can build in");
-            Player.Message(p, "%T/zone add [rank] %H- Creates a zone only [rank]+ can build in");
-            Player.Message(p, "%T/zone map [name/rank] %H- /zone add across the entire map");
-            Player.Message(p, "%T/zone del %H- Deletes the zone clicked");
-            Player.Message(p, "%T/zone list %H- Lists zones in the map");
+            Player.Message(p, "%T/Zone add [name] %H- Creates a zone only [name] can build in");
+            Player.Message(p, "%T/Zone add [rank] %H- Creates a zone only [rank]+ can build in");
+            Player.Message(p, "%T/Zone map [name/rank] %H- /zone add across the entire map");
+            Player.Message(p, "%T/Zone del %H- Deletes the zone clicked");
+            Player.Message(p, "%T/Zone list %H- Lists zones in the map");
         }
     }
 }

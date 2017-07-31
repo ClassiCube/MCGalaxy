@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdShowQueue : Command {      
-        public override string name { get { return "showqueue"; } }
+        public override string name { get { return "ShowQueue"; } }
         public override string shortcut { get { return "sq"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/showqueue");
+            Player.Message(p, "%T/ShowQueue");
             Player.Message(p, "%HLists the currently queued level and zombie.");
         }
     }

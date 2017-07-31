@@ -24,8 +24,8 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdRestoreSelection : Command {        
-        public override string name { get { return "rs"; } }
-        public override string shortcut { get { return "restoreselection"; } }
+        public override string name { get { return "RS"; } }
+        public override string shortcut { get { return "RestoreSelection"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/restoreselection [backup name]");
+            Player.Message(p, "%T/RestoreSelection [backup name]");
             Player.Message(p, "%HRestores a previous backup of the current selection");
         }
     }

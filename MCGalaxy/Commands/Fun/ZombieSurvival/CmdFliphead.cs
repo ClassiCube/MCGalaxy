@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdFlipHead : Command {    
-        public override string name { get { return "fliphead"; } }
+        public override string name { get { return "FlipHead"; } }
         public override string shortcut { get { return "fh"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }

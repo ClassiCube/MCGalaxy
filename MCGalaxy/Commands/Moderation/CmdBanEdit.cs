@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBanEdit : Command {
-        public override string name { get { return "banedit"; } }
+        public override string name { get { return "BanEdit"; } }
         public override string shortcut { get { return "be"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -30,12 +30,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (!Ban.ChangeBanReason(args[0], args[1])) {
                 Player.Message(p, "That player isn't banned.");
             } else {
-                Player.Message(p, "Succesfully edited baninfo about &0{0} %Sto: &2{1}", args[0], args[1]);
+                Player.Message(p, "Set ban reason for &0{0} %Sto: &2{1}", args[0], args[1]);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/banedit [username] [reason]");
+            Player.Message(p, "%T/BanEdit [username] [reason]");
             Player.Message(p, "%HEdits reason of ban for the user.");
         }
     }

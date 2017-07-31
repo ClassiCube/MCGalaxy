@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPlace : Command {
-        public override string name { get { return "place"; } }
+        public override string name { get { return "Place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
@@ -68,9 +68,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/place <block>");
+            Player.Message(p, "%T/Place <block>");
             Player.Message(p, "%HPlaces block at your feet.");
-            Player.Message(p, "%T/place <block> [x y z]");
+            Player.Message(p, "%T/Place <block> [x y z]");
             Player.Message(p, "%HPlaces block at [x y z]");
         }
     }

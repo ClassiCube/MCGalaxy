@@ -23,12 +23,12 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command {
-        public override string name { get { return "pass"; } }
+        public override string name { get { return "Pass"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("setpass", "set"), new CommandAlias("resetpass", "reset") }; }
+            get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p != null && p.adminpen) {
-                Player.Message(p, "&cYou must first verify with %T/pass [Password]"); return;
+                Player.Message(p, "&cYou must first verify with %T/Pass [Password]"); return;
             }
             
             if (p != null && (ServerConfig.OwnerName == "Notch" || ServerConfig.OwnerName.Length == 0)) {
@@ -105,11 +105,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {         
-            Player.Message(p, "%T/pass reset [Player] %H- Resets the password for that player");
+            Player.Message(p, "%T/Pass reset [Player] %H- Resets the password for that player");
             Player.Message(p, "%H Note: Can only be used by console and the server owner.");            
-            Player.Message(p, "%T/pass set [Password] %H- Sets your password to [password]");
+            Player.Message(p, "%T/Pass set [Password] %H- Sets your password to [password]");
             Player.Message(p, "%H Note: &cDo NOT set this as your Minecraft password!");
-            Player.Message(p, "%T/pass [Password]");
+            Player.Message(p, "%T/Pass [Password]");
             Player.Message(p, "%HIf you are an admin, use this command to verify your login.");
             Player.Message(p, "%H You will need to be verified to be able to use commands.");
         }

@@ -21,11 +21,11 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdCuboid : DrawCmd {
-        public override string name { get { return "cuboid"; } }
+        public override string name { get { return "Cuboid"; } }
         public override string shortcut { get { return "z"; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("cw", null, "wire"),
-                    new CommandAlias("ch", null, "hollow"), new CommandAlias("walls", null, "walls"),
+                    new CommandAlias("ch", null, "hollow"), new CommandAlias("Walls", null, "walls"),
                     new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
         }
         
@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/cuboid <brush args> <mode>");
+            Player.Message(p, "%T/Cuboid <brush args> <mode>");
             Player.Message(p, "%HDraws a cuboid between two points.");
             Player.Message(p, "   %HModes: &fsolid/hollow/walls/holes/wire/random");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

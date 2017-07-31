@@ -14,7 +14,7 @@ permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdAdminChat : Command {
-        public override string name { get { return "adminchat"; } }
+        public override string name { get { return "AdminChat"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/adminchat [message]");
+            Player.Message(p, "%T/AdminChat [message]");
             Player.Message(p, "%HSends a message to online Admins");
-            Player.Message(p, "%T/adminchat");
+            Player.Message(p, "%T/AdminChat");
             Player.Message(p, "%HMakes all messages sent go to Admins by default");
         }
     }

@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdChain : Command {
-        public override string name { get { return "chain"; } }
+        public override string name { get { return "Chain"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/chain");
+            Player.Message(p, "%T/Chain");
             Player.Message(p, "%HShoots a chain of brown mushrooms and grabs a block and brings it back to the start.");
         }
     }

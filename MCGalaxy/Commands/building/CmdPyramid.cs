@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPyramid : DrawCmd {
-        public override string name { get { return "pyramid"; } }
+        public override string name { get { return "Pyramid"; } }
         public override string shortcut { get { return "pd"; } }
         
         protected override DrawMode GetMode(string[] parts) {
@@ -47,10 +47,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pyramid <brush args> <mode>");
+            Player.Message(p, "%T/Pyramid <brush args> <mode>");
             Player.Message(p, "%HDraws a square pyramid, using two points for the base.");
             Player.Message(p, "   %HModes: &fsolid/hollow/reverse");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

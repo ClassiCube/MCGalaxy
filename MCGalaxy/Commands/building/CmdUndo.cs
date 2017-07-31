@@ -24,7 +24,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public class CmdUndo : Command {
-        public override string name { get { return "undo"; } }
+        public override string name { get { return "Undo"; } }
         public override string shortcut { get { return "u"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
             
             TimeSpan delta = GetDelta(p, p.name, parts, undoPhysics ? 1 : 0);
             if (delta == TimeSpan.MinValue || (!undoPhysics && parts.Length > 1)) {
-                Player.Message(p, "If you are trying to undo another player, use %T/undoplayer");
+                Player.Message(p, "If you are trying to undo another player, use %T/UndoPlayer");
                 return;
             }
             
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Building {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
                 Player.Message(p, "You have no draw operations to undo.");
-                Player.Message(p, "Try using %T/undo [seconds] %Sinstead.");
+                Player.Message(p, "Try using %T/Undo [seconds] %Sinstead.");
                 return;
             }
             
@@ -71,14 +71,14 @@ namespace MCGalaxy.Commands.Building {
             }
             
             Player.Message(p, "Unable to undo any draw operations, as all of the " +
-                               "past 50 draw operations are %T/undo %Sor %T/undo [seconds].");
-            Player.Message(p, "Try using %T/undo [seconds] %Sinstead.");
+                               "past 50 draw operations are %T/Undo %Sor %T/Undo [seconds].");
+            Player.Message(p, "Try using %T/Undo [seconds] %Sinstead.");
         }
         
         void UndoPhysics(Player p, TimeSpan delta) {
             if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
             if (p != null && !p.group.CanExecute("physics")) {
-                Player.Message(p, "You can only undo physics if you can use /physics."); return;
+                Player.Message(p, "You can only undo physics if you can use %T/Physics."); return;
             }
             
             CmdPhysics.SetPhysics(p.level, 0);
@@ -130,12 +130,12 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/undo %H- Undoes your last draw operation");
-            Player.Message(p, "%T/undo [timespan]");
+            Player.Message(p, "%T/Undo %H- Undoes your last draw operation");
+            Player.Message(p, "%T/Undo [timespan]");
             Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
             if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
-            Player.Message(p, "%T/undo physics [seconds] %H- Undoes physics on current map");
+            Player.Message(p, "%T/Undo physics [seconds] %H- Undoes physics on current map");
         }
     }
 }

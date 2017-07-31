@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdInfect : Command {        
-        public override string name { get { return "infect"; } }
+        public override string name { get { return "Infect"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/infect [name]");
+            Player.Message(p, "%T/Infect [name]");
             Player.Message(p, "%HTurns [name] into a zombie");
         }
     }

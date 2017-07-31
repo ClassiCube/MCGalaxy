@@ -74,7 +74,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             int time = ZSConfig.ReviveNoTime, expiry = ZSConfig.ReviveTooSlow;
             int potions = ZSConfig.ReviveTimes;
-            Player.Message(p, "%T/buy " + Name);
+            Player.Message(p, "%T/Buy " + Name);
             OutputItemInfo(p);
             
             Player.Message(p, "Lets you rejoin the humans - &cnot guaranteed to always work");

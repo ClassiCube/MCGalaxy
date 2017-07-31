@@ -20,7 +20,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdRules : Command {
-        public override string name { get { return "rules"; } }
+        public override string name { get { return "Rules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.Builder, "+ can send rules to other players") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("agree", "agree"), new CommandAlias("disagree", "disagree") }; }
+            get { return new[] { new CommandAlias("Agree", "agree"), new CommandAlias("Disagree", "disagree") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Info {
         void Agree(Player p) {
             if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
             if (!ServerConfig.AgreeToRulesOnEntry) { Player.Message(p, "agree-to-rules-on-entry is not enabled."); return; }            
-            if (!p.hasreadrules) { Player.Message(p, "&9You must read %T/rules &9before agreeing."); return; }
+            if (!p.hasreadrules) { Player.Message(p, "&9You must read %T/Rules &9before agreeing."); return; }
             if (Server.agreed.Contains(p.name)) { Player.Message(p, "You have already agreed to the rules."); return; }
             
             p.agreed = true;
@@ -80,15 +80,15 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Help(Player p) {
             if (CheckExtraPerm(p)) {
-                Player.Message(p, "%T/rules <player>");
+                Player.Message(p, "%T/Rules <player>");
                 Player.Message(p, "%HDisplays server rules to <player>.");
                 Player.Message(p, "%HIf <player> is not given, the rules are displayed to you.");
             } else {
-                Player.Message(p, "%T/rules");
+                Player.Message(p, "%T/Rules");
                 Player.Message(p, "%HDisplays the server rules.");
             }
-            Player.Message(p, "%T/rules agree %H- Agrees to the server's rules");
-            Player.Message(p, "%T/rules disagree %H- Disagrees with the server's rules");
+            Player.Message(p, "%T/Rules agree %H- Agrees to the server's rules");
+            Player.Message(p, "%T/Rules disagree %H- Disagrees with the server's rules");
         }
     }
 }

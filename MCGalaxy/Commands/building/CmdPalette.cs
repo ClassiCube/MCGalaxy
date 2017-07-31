@@ -21,8 +21,8 @@ using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPalette : Command {
-        public override string name { get { return "palette"; } }
-        public override string shortcut { get { return "imgpalette"; } }
+        public override string name { get { return "Palette"; } }
+        public override string shortcut { get { return "ImgPalette"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Building {
             
             string modifer = args.Length > 2 ? args[2] : "";
             MultiPageOutput.Output(p, palette.Entries, (e) => FormatEntry(e, p.level), 
-                                   "palette entries", "entries", modifer, true);
+                                   "Palette entries", "entries", modifer, true);
         }
         
         static string FormatEntry(PaletteEntry e, Level lvl) {
@@ -164,13 +164,13 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/palette create/delete [name]");
-            Player.Message(p, "%HCreates or deletes a palette for %T/imageprint");
-            Player.Message(p, "%T/palette add [name] [block] [hex color]");
+            Player.Message(p, "%T/Palette create/delete [name]");
+            Player.Message(p, "%HCreates or deletes a palette for %T/ImagePrint");
+            Player.Message(p, "%T/Palette add [name] [block] [hex color]");
             Player.Message(p, "%HAdds a block to a palette's entries.");
-            Player.Message(p, "%T/palette remove [name] [block]");
+            Player.Message(p, "%T/Palette remove [name] [block]");
             Player.Message(p, "%HRemoves a block from a palette's entries.");
-            Player.Message(p, "%T/palette entries [name]");
+            Player.Message(p, "%T/Palette entries [name]");
             Player.Message(p, "%HLists the entries of that palette.");
             Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
         }

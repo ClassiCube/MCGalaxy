@@ -19,7 +19,7 @@ using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdFakeRank : Command {
-        public override string name { get { return "fakerank"; } }
+        public override string name { get { return "FakeRank"; } }
         public override string shortcut { get { return "frk"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/fakerank [player] [rank]");
+            Player.Message(p, "%T/FakeRank [player] [rank]");
             Player.Message(p, "%HGives [player] the appearance of being ranked to [rank].");
         }
     }

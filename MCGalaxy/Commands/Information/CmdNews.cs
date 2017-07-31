@@ -19,7 +19,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdNews : Command {
-        public override string name { get { return "news"; } }
+        public override string name { get { return "News"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/news");
+            Player.Message(p, "%T/News");
             Player.Message(p, "%HShows server news.");
         }
     }

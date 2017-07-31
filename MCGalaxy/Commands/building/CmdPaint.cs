@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPaint : Command {
-        public override string name { get { return "paint"; } }
+        public override string name { get { return "Paint"; } }
         public override string shortcut { get { return "p"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/paint");
+            Player.Message(p, "%T/Paint");
             Player.Message(p, "%HTurns painting mode on/off.");
             Player.Message(p, "%HWhen paint mode is on, any block you delete is replaced by the block you are holding.");
         }

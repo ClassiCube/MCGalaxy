@@ -21,13 +21,13 @@ using MCGalaxy.Drawing.Transforms;
 
 namespace MCGalaxy.Commands.Building {  
     public sealed class CmdTransform : Command {
-        public override string name { get { return "transform"; } }
+        public override string name { get { return "Transform"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("transforms", "list"), new CommandAlias("scale", "scale") }; }
+            get { return new[] { new CommandAlias("Transforms", "list"), new CommandAlias("Scale", "scale") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -51,11 +51,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/transform [name] <transform args>");
+            Player.Message(p, "%T/Transform [name] <transform args>");
             Player.Message(p, "%HSets your current transform to the transform with that name.");
-            Player.Message(p, "%T/help transform [name]");
+            Player.Message(p, "%T/Help Transform [name]");
             Player.Message(p, "%HOutputs the help for the transform with that name.");
-            Player.Message(p, "%HAvailable transform: %S" + TransformFactory.Available);
+            Player.Message(p, "%HAvailable transforms: %S" + TransformFactory.Available);
         }
         
         public override void Help(Player p, string message) {

@@ -19,7 +19,7 @@ using MCGalaxy.Commands.Chatting;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdKill : Command {
-        public override string name { get { return "kill"; } }
+        public override string name { get { return "Kill"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/kill [name] <message>");
+            Player.Message(p, "%T/Kill [name] <message>");
             Player.Message(p, "%HKills [name], with <message> if given.");
             Player.Message(p, "%HCauses an explosion if \"explode\" is used for <message>");
         }

@@ -20,8 +20,8 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdSpheroid : DrawCmd {        
-        public override string name { get { return "spheroid"; } }
+    public sealed class CmdSpheroid : DrawCmd {
+        public override string name { get { return "Spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
@@ -50,10 +50,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/spheroid <brush args> <mode>");
+            Player.Message(p, "%T/Spheroid <brush args> <mode>");
             Player.Message(p, "%HDraws a spheroid between two points.");
             Player.Message(p, "   %HModes: &fsolid/hollow/vertical(a vertical tube)");    
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

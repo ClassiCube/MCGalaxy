@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdTrust : Command {
-        public override string name { get { return "trust"; } }
+        public override string name { get { return "Trust"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/trust [name]");
+            Player.Message(p, "%T/Trust [name]");
             Player.Message(p, "%HTurns off the anti-grief for [name]");
         }
     }

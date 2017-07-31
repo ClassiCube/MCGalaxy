@@ -76,7 +76,7 @@ namespace MCGalaxy.Games.ZS {
         
         void HandlePlayerConnect(Player p) {
             if (!ZSConfig.SetMainLevel) return;
-            Player.Message(p, "Zombie Survival is running! Type %T/zs go %Sto join.");
+            Player.Message(p, "Zombie Survival is running! Type %T/ZS go %Sto join.");
         }
         
         void HandlePlayerDisconnect(Player p, string reason) {

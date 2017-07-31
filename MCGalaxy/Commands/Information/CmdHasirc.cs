@@ -17,8 +17,8 @@
  */
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdHasirc : Command {
-        public override string name { get { return "hasirc"; } }
-        public override string shortcut { get { return "irc"; } }
+        public override string name { get { return "HasIRC"; } }
+        public override string shortcut { get { return "IRC"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/hasirc");
+            Player.Message(p, "%T/HasIRC");
             Player.Message(p, "%HOutputs whether the server has IRC enabled or not.");
             Player.Message(p, "%HIf IRC is enabled, server and channel are also displayed.");
         }

@@ -18,7 +18,7 @@
 using System;
 namespace MCGalaxy.Commands.World {
     public sealed class CmdUnflood : Command {
-        public override string name { get { return "unflood"; } }
+        public override string name { get { return "Unflood"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/unflood [liquid]");
+            Player.Message(p, "%T/Unflood [liquid]");
             Player.Message(p, "%HUnfloods the map you are currently in of [liquid].");
             Player.Message(p, "%H  If [liquid] is \"all\", unfloods the map of all liquids.");
         }

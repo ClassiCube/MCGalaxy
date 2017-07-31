@@ -23,13 +23,13 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHighlight : Command {
-        public override string name { get { return "highlight"; } }
+        public override string name { get { return "Highlight"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }        
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("highlightarea", "area") }; }
+            get { return new CommandAlias[] { new CommandAlias("HighlightArea", "area") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -105,12 +105,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/highlight [player] <timespan>");
+            Player.Message(p, "%T/Highlight [player] <timespan>");
             Player.Message(p, "%HHighlights blocks changed by [player] in the past <timespan>");
-            Player.Message(p, "%T/highlight area [player] <timespan>");
+            Player.Message(p, "%T/Highlight area [player] <timespan>");
             Player.Message(p, "%HOnly highlights in the specified region.");
             Player.Message(p, "%H If <timespan> is not given, highlights for last 30 minutes");
-            Player.Message(p, "&c/highlight cannot be disabled, use /reload to un-highlight");
+            Player.Message(p, "&c/Highlight cannot be disabled, use /reload to un-highlight");
         }
     }
 }

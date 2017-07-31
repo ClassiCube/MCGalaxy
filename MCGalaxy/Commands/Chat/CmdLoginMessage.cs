@@ -20,8 +20,8 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdLoginMessage : EntityPropertyCmd {
-        public override string name { get { return "loginmessage"; } }
-        public override string shortcut { get { return "loginmsg"; } }
+        public override string name { get { return "LoginMessage"; } }
+        public override string shortcut { get { return "LoginMsg"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/loginmessage [player] [message]");
+            Player.Message(p, "%T/LoginMessage [player] [message]");
             Player.Message(p, "%HSets the login message shown for that player.");
         }
     }

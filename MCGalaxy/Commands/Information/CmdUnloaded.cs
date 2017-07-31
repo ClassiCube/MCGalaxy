@@ -22,7 +22,7 @@ using System.Text;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdUnloaded : Command {
-        public override string name { get { return "unloaded"; } }
+        public override string name { get { return "Unloaded"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
             string[] files = LevelInfo.AllMapFiles();
             Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, GetMaps(files), (map) => FormatMap(p, map),
-                                   "unloaded", "maps", message, false);
+                                   "Unloaded", "maps", message, false);
         }
         
         static List<string> GetMaps(string[] files) {
@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Info {
         struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/unloaded");
+            Player.Message(p, "%T/Unloaded");
             Player.Message(p, "%H Lists unloaded maps/levels, and their accessible state.");
         }
     }

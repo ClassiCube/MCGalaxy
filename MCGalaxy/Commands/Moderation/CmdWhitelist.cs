@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdWhitelist : Command {
-        public override string name { get { return "whitelist"; } }
+        public override string name { get { return "Whitelist"; } }
         public override string shortcut { get { return "w"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -79,14 +79,14 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Whitelisted players:");
                 MultiPageOutput.Output(p, list, 
                                        (name) => PlayerInfo.GetColoredName(p, name),
-                                       "whitelist list", "players", modifier, false);
+                                       "Whitelist list", "players", modifier, false);
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/whitelist add/del [player]");
+            Player.Message(p, "%T/Whitelist add/del [player]");
             Player.Message(p, "%HAdds or removes [player] from the whitelist.");
-            Player.Message(p, "%T/whitelist list");
+            Player.Message(p, "%T/Whitelist list");
             Player.Message(p, "%HLists all players who are on the whitelist.");
         }
     }

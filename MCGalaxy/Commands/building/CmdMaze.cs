@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMaze : DrawCmd {
-        public override string name { get { return "maze"; } }
+        public override string name { get { return "Maze"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             if (dArgs.Message.Length == 0) return new MazeDrawOp();            
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/maze");
+            Player.Message(p, "%T/Maze");
             Player.Message(p, "%HGenerates a random maze between two points.");
         }
     }

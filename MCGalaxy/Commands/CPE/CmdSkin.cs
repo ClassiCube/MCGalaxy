@@ -20,7 +20,7 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.CPE {
     public class CmdSkin : EntityPropertyCmd {
-        public override string name { get { return "skin"; } }
+        public override string name { get { return "Skin"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
@@ -73,8 +73,8 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/skin [name] [skin] %H- Sets the skin of that player.");
-            Player.Message(p, "%T/skin bot [name] [skin] %H- Sets the skin of that bot.");
+            Player.Message(p, "%T/Skin [name] [skin] %H- Sets the skin of that player.");
+            Player.Message(p, "%T/Skin bot [name] [skin] %H- Sets the skin of that bot.");
             Player.Message(p, "%H e.g the player \"Test\" by default has the skin \"Test\".");
             Player.Message(p, "%H If you put a + before [skin], players will retrieve [skin] " +
                            "from minecraft.net instead of classicube.net.");

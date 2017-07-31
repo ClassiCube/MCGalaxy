@@ -21,7 +21,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
-        public override string name { get { return "eat"; } }
+        public override string name { get { return "Eat"; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
      
         public override void Help(Player p) {
-            Player.Message(p, "%T/eat %H- Eats a random snack.");
+            Player.Message(p, "%T/Eat %H- Eats a random snack.");
             Player.Message(p, "%HIf economy is enabled, costs 1 &3" + ServerConfig.Currency);
         }
     }

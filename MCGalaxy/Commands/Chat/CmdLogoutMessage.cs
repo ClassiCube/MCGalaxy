@@ -20,8 +20,8 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdLogoutMessage : EntityPropertyCmd {
-        public override string name { get { return "logoutmessage"; } }
-        public override string shortcut { get { return "logoutmsg"; } }
+        public override string name { get { return "LogoutMessage"; } }
+        public override string shortcut { get { return "LogoutMsg"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/logoutmessage [player] [message]");
+            Player.Message(p, "%T/LogoutMessage [player] [message]");
             Player.Message(p, "%HSets the logout message shown for that player.");
         }
     }

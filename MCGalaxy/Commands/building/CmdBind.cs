@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Building {    
     public sealed class CmdBind : Command {
-        public override string name { get { return "bind"; } }
+        public override string name { get { return "Bind"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -63,10 +63,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bind [block] [replacement block]");
+            Player.Message(p, "%T/Bind [block] [replacement block]");
             Player.Message(p, "%HCauses [replacement] to be placed, whenever you place [block].");
-            Player.Message(p, "%T/bind [block] %H- Removes binding for [block].");
-            Player.Message(p, "%T/bind clear %H- Clears all binds.");
+            Player.Message(p, "%T/Bind [block] %H- Removes binding for [block].");
+            Player.Message(p, "%T/Bind clear %H- Clears all binds.");
         }
     }
 }

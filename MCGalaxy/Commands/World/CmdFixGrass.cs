@@ -20,7 +20,7 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdFixGrass : Command {
-        public override string name { get { return "fixgrass"; } }
+        public override string name { get { return "FixGrass"; } }
         public override string shortcut { get { return "fg"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
@@ -196,7 +196,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/fixgrass [type] %H- Fixes grass based on type");
+            Player.Message(p, "%T/FixGrass [type] %H- Fixes grass based on type");
             Player.Message(p, "%H[type] is \"\": Any grass with something on top is made into dirt, dirt with nothing on top is made grass");
             Player.Message(p, "%H[type] is \"light\": Only dirt/grass in sunlight becomes grass");
             Player.Message(p, "%H[type] is \"grass\": Only turns grass to dirt when under stuff");

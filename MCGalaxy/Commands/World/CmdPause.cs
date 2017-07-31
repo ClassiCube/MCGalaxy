@@ -20,7 +20,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdPause : Command {
-        public override string name { get { return "pause"; } }
+        public override string name { get { return "Pause"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/pause [map] [seconds]");
+            Player.Message(p, "%T/Pause [map] [seconds]");
             Player.Message(p, "%HPauses physics on the given map for the specified number of seconds.");
             Player.Message(p, "%H  If [map] is not given, pauses physics on the current map.");
             Player.Message(p, "%H  If [seconds] is not given, pauses physics for 30 seconds.");

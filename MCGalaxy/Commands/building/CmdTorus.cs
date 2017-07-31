@@ -21,11 +21,11 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {   
     public sealed class CmdTorus : DrawCmd {       
-        public override string name { get { return "torus"; } }
+        public override string name { get { return "Torus"; } }
         public override string shortcut { get { return "tor"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("donut"), new CommandAlias("bagel") }; }
+            get { return new[] { new CommandAlias("Donut"), new CommandAlias("Bagel") }; }
         }
         protected override string PlaceMessage { 
             get { return "Place a block for the centre, then another for the radius."; } 
@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/torus <brush args>");
+            Player.Message(p, "%T/Torus <brush args>");
             Player.Message(p, "%HDraws a torus(circular tube), with the first point as the centre, " +
                            "and second being the radius.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
-            Player.Message(p, "   %HNote: radius of the tube itself is the vertical difference between the two points.");
+            Player.Message(p, "   %HNote: radius of the tube itself is the vertical difference between the two points.");            
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

@@ -20,13 +20,13 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdScripting : Command {
-        public override string name { get { return "scripting"; } }
+        public override string name { get { return "Scripting"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("pcreate", "pcreate"),
-                    new CommandAlias("pload", "pload"), new CommandAlias("punload", "punload") }; }
+            get { return new[] { new CommandAlias("PCreate", "pcreate"),
+                    new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -111,11 +111,11 @@ namespace MCGalaxy
 }}";
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/scripting pcreate [name]");
+            Player.Message(p, "%T/Scripting pcreate [name]");
             Player.Message(p, "%HCreate a example .cs file!");
-            Player.Message(p, "%T/scripting pload [filename]");
+            Player.Message(p, "%T/Scripting pload [filename]");
             Player.Message(p, "%HLoad a plugin from your plugins folder.");
-            Player.Message(p, "%T/scripting punload [name]");
+            Player.Message(p, "%T/Scripting punload [name]");
             Player.Message(p, "%HUnloads a currently loaded plugin.");
         }
     }

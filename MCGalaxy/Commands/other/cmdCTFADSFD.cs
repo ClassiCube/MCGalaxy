@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands
 {
     public class CmdCtf : Command
     {
-        public override string name { get { return "ctf"; } }
+        public override string name { get { return "CTF"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

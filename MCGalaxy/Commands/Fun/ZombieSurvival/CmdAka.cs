@@ -19,9 +19,8 @@ using System;
 
 namespace MCGalaxy.Commands.Fun {
     
-    public sealed class CmdAka : Command {
-        
-        public override string name { get { return "aka"; } }
+    public sealed class CmdAka : Command {        
+        public override string name { get { return "AKA"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -41,7 +40,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/aka");
+            Player.Message(p, "%T/AKA");
             Player.Message(p, "%HToggles whether infected players show their actual names.");
         }
     }

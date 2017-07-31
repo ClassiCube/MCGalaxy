@@ -27,16 +27,16 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdImageprint : Command {
-        public override string name { get { return "imageprint"; } }
-        public override string shortcut { get { return "img"; } }
+        public override string name { get { return "ImagePrint"; } }
+        public override string shortcut { get { return "Img"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("imgprint"), new CommandAlias("printimg"),
-                    new CommandAlias("imgdraw"), new CommandAlias("drawimg"),
-                    new CommandAlias("drawimage"), new CommandAlias("printimage") }; }
+            get { return new[] { new CommandAlias("ImgPrint"), new CommandAlias("PrintImg"),
+                    new CommandAlias("ImgDraw"), new CommandAlias("DrawImg"),
+                    new CommandAlias("DrawImage"), new CommandAlias("PrintImage") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Building {
                 
                 if (dArgs.palette.Entries == null || dArgs.palette.Entries.Length == 0) {
                     Player.Message(p, "Palette {0} does not have any entries", dArgs.palette.Name);
-                    Player.Message(p, "Use %T/palette %Sto add entries to it"); return;
+                    Player.Message(p, "Use %T/Palette %Sto add entries to it"); return;
                 }
             }
             
@@ -129,8 +129,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/imageprint [file] [palette] <mode> %H- Prints image in extra/images/ folder. (File must have .bmp extension)");
-            Player.Message(p, "%T/imageprint [url] [palette] <mode> %H- Downloads then prints the given image. (transparency supported)");
+            Player.Message(p, "%T/ImagePrint [file] [palette] <mode> %H- Prints image in extra/images/ folder. (File must have .bmp extension)");
+            Player.Message(p, "%T/ImagePrint [url] [palette] <mode> %H- Downloads then prints the given image. (transparency supported)");
             Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
             Player.Message(p, "%HModes: &fVertical, Vertical2Layer, Horizontal");
         }

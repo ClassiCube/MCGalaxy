@@ -22,7 +22,7 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
     public class CmdLocation : Command {
-        public override string name { get { return "location"; } }
+        public override string name { get { return "Location"; } }
         public override string shortcut { get { return "lo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/location [name]");
+            Player.Message(p, "%T/Location [name]");
             Player.Message(p, "%HTracks down the country of the IP associated with [name].");
         }
     }

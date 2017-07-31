@@ -22,7 +22,7 @@ using System.IO;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReport : Command {
-        public override string name { get { return "report"; } }
+        public override string name { get { return "Report"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can check, view and delete reports") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("reports", "list") }; }
+            get { return new CommandAlias[] { new CommandAlias("Reports", "list") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (foundone) {
-                Player.Message(p, "Use %T/report check [Player] %Sto view report info.");
-                Player.Message(p, "Use %T/report delete [Player] %Sto delete a report");
+                Player.Message(p, "Use %T/Report check [Player] %Sto view report info.");
+                Player.Message(p, "Use %T/Report delete [Player] %Sto delete a report");
             } else {
                 Player.Message(p, "No reports were found.");
             }
@@ -146,16 +146,16 @@ namespace MCGalaxy.Commands.Moderation {
             }
             File.WriteAllText("extra/reported/" + target + ".txt", reason + " - Reported by " + p.name + " on " + DateTime.Now);
             Player.Message(p, "%aYour report has been sent, it should be viewed when an operator is online!");
-            Chat.MessageOps(p.ColoredName + " %Shas made a report, view it with %T/report check " + target);
+            Chat.MessageOps(p.ColoredName + " %Shas made a report, view it with %T/Report check " + target);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/report [Player] [Reason] %H- Reports that player for the given reason.");
+            Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
             if (!CheckExtraPerm(p)) return;
-            Player.Message(p, "%T/report list %H- Outputs the list of reported players.");
-            Player.Message(p, "%T/report check [Player] %H- Views report for that player.");
-            Player.Message(p, "%T/report delete [Player] %H- Deletes report for that player.");
-            Player.Message(p, "%T/report clear %H- Clears &call%H reports.");
+            Player.Message(p, "%T/Report list %H- Outputs the list of reported players.");
+            Player.Message(p, "%T/Report check [Player] %H- Views report for that player.");
+            Player.Message(p, "%T/Report delete [Player] %H- Deletes report for that player.");
+            Player.Message(p, "%T/Report clear %H- Clears &call%H reports.");
         }
     }
 }

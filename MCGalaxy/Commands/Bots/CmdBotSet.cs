@@ -21,7 +21,7 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotSet : Command {
-        public override string name { get { return "botset"; } }
+        public override string name { get { return "BotSet"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botset [bot] <AI script>");
+            Player.Message(p, "%T/BotSet [bot] <AI script>");
             Player.Message(p, "%HMakes [bot] do the instructions in <AI script>");
             Player.Message(p, "%H  Special AI scripts: Kill and Hunt");
             Player.Message(p, "%HIf <AI script> is not given, turns off the bot's AI.");

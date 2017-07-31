@@ -20,13 +20,13 @@ using MCGalaxy.Commands.CPE;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdHelp : Command {
-        public override string name { get { return "help"; } }
+        public override string name { get { return "Help"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cmdhelp"), new CommandAlias("ranks", "ranks"),
-                    new CommandAlias("colors", "colors") }; }
+            get { return new[] { new CommandAlias("CmdHelp"), new CommandAlias("Ranks", "ranks"),
+                    new CommandAlias("Colors", "colors") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -36,12 +36,12 @@ namespace MCGalaxy.Commands.Info {
                     Player.Message(p, "  %TBuilding Chat Economy Games Info Moderation Other World");
                     Player.Message(p, "%HOther Categories:");
                     Player.Message(p, "  %TRanks Colors Shortcuts Commands");
-                    Player.Message(p, "%HTo view help for a category, type %T/help CategoryName");
-                    Player.Message(p, "%HTo see detailed help for a command, type %T/help CommandName");
-                    Player.Message(p, "%HTo see your stats, type %T/whois");
-                    Player.Message(p, "%HTo see loaded maps, type %T/maps");
-                    Player.Message(p, "%HTo view your personal world options, use %T/realm");
-                    Player.Message(p, "%HTo join a map, type %T/goto WorldName");
+                    Player.Message(p, "%HTo view help for a category, type %T/Help CategoryName");
+                    Player.Message(p, "%HTo see detailed help for a command, type %T/Help CommandName");
+                    Player.Message(p, "%HTo see your stats, type %T/Info");
+                    Player.Message(p, "%HTo see loaded maps, type %T/Maps");
+                    Player.Message(p, "%HTo view your personal world options, use %T/Realm");
+                    Player.Message(p, "%HTo join a map, type %T/Goto WorldName");
                     Player.Message(p, "%HTo send private messages, type %T@PlayerName Message");
                     break;
                 case "ranks":

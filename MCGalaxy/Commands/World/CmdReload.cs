@@ -18,14 +18,14 @@
 using System;
 namespace MCGalaxy.Commands.World {
     public sealed class CmdReload : Command {
-        public override string name { get { return "reload"; } }
-        public override string shortcut { get { return "reveal"; } }
+        public override string name { get { return "Reload"; } }
+        public override string shortcut { get { return "Reveal"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("rejoin"), new CommandAlias("rd"), 
-                    new CommandAlias("wflush"), new CommandAlias("worldflush") }; }
+            get { return new [] { new CommandAlias("ReJoin"), new CommandAlias("rd"), 
+                    new CommandAlias("WFlush"), new CommandAlias("WorldFlush") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for all players") }; }
@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/reload %H- Reloads the map you are in, just for you.");
-            Player.Message(p, "%T/reload [name] %H- Reloads the map for [name].");
-            Player.Message(p, "%T/reload all %H- Reloads for all players in map you are in.");
-            Player.Message(p, "%T/reload all [map] %H- Reloads for all players in [map]");
+            Player.Message(p, "%T/Reload %H- Reloads the map you are in, just for you.");
+            Player.Message(p, "%T/Reload [name] %H- Reloads the map for [name].");
+            Player.Message(p, "%T/Reload all %H- Reloads for all players in map you are in.");
+            Player.Message(p, "%T/Reload all [map] %H- Reloads for all players in [map]");
         }
     }
 }

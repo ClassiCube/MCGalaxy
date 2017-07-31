@@ -20,7 +20,7 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHide : Command {
-        public override string name { get { return "hide"; } }
+        public override string name { get { return "Hide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide/unhide without showing a message to ops") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("xhide", "silent") }; }
+            get { return new CommandAlias[] { new CommandAlias("XHide", "silent") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -85,10 +85,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/hide %H- Toggles your visibility to other players, also toggles opchat.");
-            Player.Message(p, "%T/hide check %H- Checks your hidden status.");
-            Player.Message(p, "%T/hide silent %H- hides without sending a message to other ops/admins.");
-            Player.Message(p, "%HUse %T/ohide %Hto hide other players.");
+            Player.Message(p, "%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
+            Player.Message(p, "%T/Hide check %H- Checks your hidden status.");
+            Player.Message(p, "%T/Hide silent %H- hides without sending a message to other ops/admins.");
+            Player.Message(p, "%HUse %T/OHide %Hto hide other players.");
         }
     }
 }

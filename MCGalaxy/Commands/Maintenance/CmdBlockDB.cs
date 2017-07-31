@@ -19,12 +19,12 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdBlockDB : Command {
-        public override string name { get { return "blockdb"; } }
+        public override string name { get { return "BlockDB"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("clearblockchanges", "clear"),
+            get { return new [] { new CommandAlias("ClearBlockChanges", "clear"),
                     new CommandAlias("cbc", "clear") }; }
         }
 
@@ -62,11 +62,11 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/blockdb clear [map]");
+            Player.Message(p, "%T/BlockDB clear [map]");
             Player.Message(p, "%HClears the BlockDB (block changes stored in /about) for [map]");
-            Player.Message(p, "%T/blockdb disable [map]");
+            Player.Message(p, "%T/BlockDB disable [map]");
             Player.Message(p, "%HDisables recording block changes to the BlockDB for [map]");
-            Player.Message(p, "%T/blockdb enable [map]");
+            Player.Message(p, "%T/BlockDB enable [map]");
             Player.Message(p, "%HEnables %Hrecording block changes to the BlockDB for [map]");
             Player.Message(p, "%HIf no map name is given, uses your current map.");
             Player.Message(p, "%CUse these commands with great caution!");

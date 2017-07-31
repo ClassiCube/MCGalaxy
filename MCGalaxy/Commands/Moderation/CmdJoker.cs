@@ -19,7 +19,7 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdJoker : Command {       
-        public override string name { get { return "joker"; } }
+        public override string name { get { return "Joker"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -59,9 +59,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/joker [player]");
+            Player.Message(p, "%T/Joker [player]");
             Player.Message(p, "%HMakes that player become a joker!");
-            Player.Message(p, "%T/joker #[player]");
+            Player.Message(p, "%T/Joker #[player]");
             Player.Message(p, "%HMakes that player silently become a joker!");
         }
     }

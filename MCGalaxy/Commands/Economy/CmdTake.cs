@@ -21,8 +21,7 @@ using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdTake : MoneyCmd {
-        public override string name { get { return "take"; } }
-        public override string shortcut { get { return ""; } }
+        public override string name { get { return "Take"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }     
 
         public override void Use(Player p, string message) {
@@ -65,9 +64,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p){
-            Player.Message(p, "%T/take [player] [amount] <reason>");
+            Player.Message(p, "%T/Take [player] [amount] <reason>");
             Player.Message(p, "%HTakes [amount] of &3" + ServerConfig.Currency + " %Sfrom [player]");
-            Player.Message(p, "%T/take [player] all <reason>");
+            Player.Message(p, "%T/Take [player] all <reason>");
             Player.Message(p, "%HTakes all the &3" + ServerConfig.Currency + " %Sfrom [player]");
         }
     }

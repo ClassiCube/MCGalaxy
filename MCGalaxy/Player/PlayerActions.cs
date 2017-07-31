@@ -89,7 +89,7 @@ namespace MCGalaxy {
             LevelConfig.Load(propsPath, cfg);
             
             if (!cfg.LoadOnGoto) {
-                Player.Message(p, "Level \"{0}\" cannot be loaded using /goto.", name);
+                Player.Message(p, "Level \"{0}\" cannot be loaded using %T/Goto.", name);
                 return false;
             }
             

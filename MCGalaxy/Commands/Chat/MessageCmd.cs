@@ -57,21 +57,21 @@ namespace MCGalaxy.Commands.Chatting {
                 Player.Message(p, "Cannot use %T/{0} %Swhile muted.", cmd); return false; 
             }
             if (Server.chatmod && !p.voice) { 
-                Player.Message(p, "Cannot use %T/{0} %Swhile chat moderation is on without %T/voice%S.", cmd); return false; 
+                Player.Message(p, "Cannot use %T/{0} %Swhile chat moderation is on without %T/Voice%S.", cmd); return false; 
             }
             return true;
         }
     }
     
     public sealed class CmdHigh5 : MessageCmd {
-        public override string name { get { return "high5"; } }
+        public override string name { get { return "High5"; } }
         
         public override void Use(Player p, string message) {
             TryMessageAction(p, message, "{0} %Sjust highfived {1}", true);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/high5 [player]");
+            Player.Message(p, "%T/High5 [player]");
             Player.Message(p, "%HHigh five someone! :D");
         }
     }

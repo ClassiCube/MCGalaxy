@@ -19,7 +19,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {   
     public sealed class CmdAwardMod : Command {        
-        public override string name { get { return "awardmod"; } }
+        public override string name { get { return "AwardMod"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -54,9 +54,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/awardmod add/del [award name] : [description]");
+            Player.Message(p, "%T/AwardMod add/del [award name] : [description]");
             Player.Message(p, "%HAdds or deletes a reward with the name [award name]");
-            Player.Message(p, "%T/awardmod add Bomb joy : Bomb lots of people %His an example");
+            Player.Message(p, "%T/AwardMod add Bomb joy : Bomb lots of people %His an example");
         }
     }
 }

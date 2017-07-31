@@ -23,14 +23,14 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPaste : Command {
-        public override string name { get { return "paste"; } }
+        public override string name { get { return "Paste"; } }
         public override string shortcut { get { return "v"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("pastenot", "not"), new CommandAlias("pn", "not") }; }
+            get { return new[] { new CommandAlias("PasteNot", "not"), new CommandAlias("pn", "not") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/paste %H- Pastes the stored copy.");
-            Player.Message(p, "%T/paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
-            Player.Message(p, "%T/paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
+            Player.Message(p, "%T/Paste %H- Pastes the stored copy.");
+            Player.Message(p, "%T/Paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
+            Player.Message(p, "%T/Paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
             Player.Message(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
         }
     }

@@ -20,7 +20,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdColor : EntityPropertyCmd {
-        public override string name { get { return "color"; } }
+        public override string name { get { return "Color"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Chatting {
                     new CommandPerm(LevelPermission.Operator, "+ can change the color of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("colour"), new CommandAlias("xcolor", "-own") }; }
+            get { return new[] { new CommandAlias("Colour"), new CommandAlias("XColor", "-own") }; }
         }        
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
@@ -69,12 +69,12 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/color [player] [color]");
+            Player.Message(p, "%T/Color [player] [color]");
             Player.Message(p, "%HSets the nick color of that player");
             Player.Message(p, "%H  If [color] is not given, reverts to player's rank color.");
-            Player.Message(p, "%H/color bot [bot] [color]");
+            Player.Message(p, "%H/Color bot [bot] [color]");
             Player.Message(p, "%TSets the name color of that bot.");
-            Player.Message(p, "%HTo see a list of all colors, use /help colors.");
+            Player.Message(p, "%HTo see a list of all colors, use /Help colors.");
         }
     }
 }

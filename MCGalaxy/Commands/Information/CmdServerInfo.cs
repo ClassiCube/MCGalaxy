@@ -22,13 +22,13 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdServerInfo : Command {
-        public override string name { get { return "serverinfo"; } }
-        public override string shortcut { get { return "sinfo"; } }
+        public override string name { get { return "ServerInfo"; } }
+        public override string shortcut { get { return "SInfo"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("host"), new CommandAlias("zall") }; }
+            get { return new[] { new CommandAlias("Host"), new CommandAlias("ZAll") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can see server CPU and memory usage") }; }
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/serverinfo");
+            Player.Message(p, "%T/ServerInfo");
             Player.Message(p, "%HDisplays the server information.");
         }
     }

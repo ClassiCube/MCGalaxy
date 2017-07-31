@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMap : Command {
-        public override string name { get { return "map"; } }
+        public override string name { get { return "Map"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.World {
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ps", "physicspeed"),
-                    new CommandAlias("allowguns", null, "guns") }; }
+                    new CommandAlias("AllowGuns", null, "guns") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -147,16 +147,16 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/map [level] [option] <value> %H- Sets [option] on [level]");
+            Player.Message(p, "%T/Map [level] [option] <value> %H- Sets [option] on [level]");
             Player.Message(p, "%HPossible options: %S{0}", LevelOptions.Options.Keys.Join());
-            Player.Message(p, "%HUse %T/help map [option] %Hto see a description for that option.");
+            Player.Message(p, "%HUse %T/Help map [option] %Hto see a description for that option.");
         }
         
         public override void Help(Player p, string message) {
             string opt = LevelOptions.Map(message.ToLower());
             foreach (var help in LevelOptions.Help) {
                 if (!help.Key.CaselessEq(opt)) continue;
-                Player.Message(p, "%T/map [level] {0}{1}", opt, Suffix(opt));
+                Player.Message(p, "%T/Map [level] {0}{1}", opt, Suffix(opt));
                 Player.Message(p, "%H" + help.Value);
                 
                 if (help.Key.CaselessEq("motd")) ShowMotdRules(p);

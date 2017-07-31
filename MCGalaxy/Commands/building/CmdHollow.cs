@@ -20,7 +20,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdHollow : DrawCmd {
-        public override string name { get { return "hollow"; } }
+        public override string name { get { return "Hollow"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             byte skip = Block.Invalid;
@@ -40,9 +40,9 @@ namespace MCGalaxy.Commands.Building {
         protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/hollow");
+            Player.Message(p, "%T/Hollow");
             Player.Message(p, "%HHollows out an area without flooding it");
-            Player.Message(p, "%T/hollow [block]");
+            Player.Message(p, "%T/Hollow [block]");
             Player.Message(p, "%HHollows around [block]");
         }
     }

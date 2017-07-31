@@ -21,8 +21,8 @@ using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdNewLvl : Command {
-        public override string name { get { return "newlvl"; } }
-        public override string shortcut { get { return "gen"; } }
+        public override string name { get { return "NewLvl"; } }
+        public override string shortcut { get { return "Gen"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -118,11 +118,11 @@ namespace MCGalaxy.Commands.World {
         
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/newlvl [name] [width] [height] [length] [theme] <seed>");
+            Player.Message(p, "%T/NewLvl [name] [width] [height] [length] [theme] <seed>");
             Player.Message(p, "%HCreates/generates a new level.");
             Player.Message(p, "  %HSizes must be >= 16 and <= 8192, and divisible by 16.");
             Player.Message(p, "  %HNOTE: Other players on older clients don't show past 1024.");
-            Player.Message(p, "  %HType %T/help newlvl themes %Hto see a list of themes.");
+            Player.Message(p, "  %HType %T/Help NewLvl themes %Hto see a list of themes.");
             Player.Message(p, "%HSeed is optional, and controls how the level is generated.");
             Player.Message(p, "  %HFlat theme: Seed specifies the grass height.");
             Player.Message(p, "  %HHeightmap theme: Seed specifies url of heightmap image.");            

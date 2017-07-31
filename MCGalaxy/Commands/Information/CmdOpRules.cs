@@ -19,7 +19,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdOpRules : Command {
-        public override string name { get { return "oprules"; } }
+        public override string name { get { return "OpRules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
                 if (p != null && p.Rank < who.Rank) {
-                    MessageTooHighRank(p, "send /oprules", false); return;
+                    MessageTooHighRank(p, "send oprules to", false); return;
                 }
             }
 
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/oprules [player]");
+            Player.Message(p, "%T/OpRules [player]");
             Player.Message(p, "%HDisplays server oprules to a player");
         }
     }

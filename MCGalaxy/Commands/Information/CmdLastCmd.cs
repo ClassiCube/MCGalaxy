@@ -19,8 +19,8 @@ using System;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdLastCmd : Command {
-        public override string name { get { return "lastcmd"; } }
-        public override string shortcut { get { return "last"; } }
+        public override string name { get { return "LastCmd"; } }
+        public override string shortcut { get { return "Last"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -51,9 +51,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/last [user]");
+            Player.Message(p, "%T/Last [user]");
             Player.Message(p, "%H Shows last command used by [user]");
-            Player.Message(p, "%T/last");
+            Player.Message(p, "%T/Last");
             Player.Message(p, "%HShows last commands for all users (SPAMMY)");
         }
     }

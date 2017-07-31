@@ -21,7 +21,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMute : Command {
-        public override string name { get { return "mute"; } }
+        public override string name { get { return "Mute"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/mute [player] [timespan] <reason>");
+            Player.Message(p, "%T/Mute [player] [timespan] <reason>");
             Player.Message(p, "%HMutes player for [timespan], or unmutes that player.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

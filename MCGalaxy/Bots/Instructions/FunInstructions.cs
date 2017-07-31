@@ -55,7 +55,7 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { "%T/botai add [name] spin <interval> <speed>",
+        static string[] help = new string[] { "%T/BotAI add [name] spin <interval> <speed>",
             "%HCauses the bot to spin around for a period of time.",
             "%H  <interval> is in tenths of a second, so an interval of 20 means " +
             "spin for two seconds. (defaults to 1 second)",
@@ -96,7 +96,7 @@ namespace MCGalaxy.Bots {
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { "%T/botai add [name] nod <interval> <speed>",
+        static string[] help = new string[] { "%T/BotAI add [name] nod <interval> <speed>",
             "%HCauses the bot to nod up and down for a period of time.",
             "%H  <interval> is in tenths of a second, so an interval of 20 means " +
             "nod for two seconds. (defaults to 1 second)",

@@ -19,7 +19,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdWarn : Command {        
-        public override string name { get { return "warn"; } }
+        public override string name { get { return "Warn"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/warn [player] <reason>");
+            Player.Message(p, "%T/Warn [player] <reason>");
             Player.Message(p, "%HWarns a player. Players are kicked after 3 warnings.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

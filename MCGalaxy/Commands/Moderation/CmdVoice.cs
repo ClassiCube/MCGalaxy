@@ -17,7 +17,7 @@
  */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVoice : Command {        
-        public override string name { get { return "voice"; } }
+        public override string name { get { return "Voice"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/voice [name]");
+            Player.Message(p, "%T/Voice [name]");
             Player.Message(p, "%HToggles voice status on or off for the given player.");
             Player.Message(p, "%HIf no name is given, toggles your own voice status.");
         }

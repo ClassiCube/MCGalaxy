@@ -20,7 +20,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTimer : Command {
-        public override string name { get { return "timer"; } }
+        public override string name { get { return "Timer"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "%T/timer [time] [message]");
+            Player.Message(p, "%T/Timer [time] [message]");
             Player.Message(p, "%HStarts a timer which repeats [message] every 5 seconds.");
             Player.Message(p, "%HRepeats constantly until [time] has passed");
         }

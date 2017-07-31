@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdFollow : Command {
-        public override string name { get { return "follow"; } }
+        public override string name { get { return "Follow"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -76,15 +76,15 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             p.following = who.name;
-            Player.Message(p, "Following " + who.ColoredName + "%S. Use \"/follow\" to stop.");
+            Player.Message(p, "Following " + who.ColoredName + "%S. Use %T/Follow %Sto stop.");
             Entities.Despawn(p, who);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/follow [name]");
+            Player.Message(p, "%T/Follow [name]");
             Player.Message(p, "%HFollows <name> until the command is cancelled");
-            Player.Message(p, "%T/follow # [name]");
-            Player.Message(p, "%HWill cause /hide not to be toggled");
+            Player.Message(p, "%T/Follow # [name]");
+            Player.Message(p, "%HWill cause %T/Hide %Hnot to be toggled");
         }
     }
 }

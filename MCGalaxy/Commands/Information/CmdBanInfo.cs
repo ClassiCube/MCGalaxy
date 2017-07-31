@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdBanInfo : Command {
-        public override string name { get { return "baninfo"; } }
+        public override string name { get { return "BanInfo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/baninfo [player]");
+            Player.Message(p, "%T/BanInfo [player]");
             Player.Message(p, "%HOutputs information about current and/or previous ban/unban for that player.");
         }
     }

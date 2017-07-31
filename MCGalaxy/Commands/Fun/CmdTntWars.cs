@@ -23,7 +23,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdTntWars : Command {
-        public override string name { get { return "tntwars"; } }
+        public override string name { get { return "TntWars"; } }
         public override string shortcut { get { return "tw"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }

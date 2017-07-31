@@ -21,12 +21,12 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnbanip : Command {
-        public override string name { get { return "unbanip"; } }
+        public override string name { get { return "UnbanIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("unipban") }; }
+            get { return new CommandAlias[] { new CommandAlias("UnIPBan") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "%T/unbanip [ip/player]");
+            Player.Message(p, "%T/UnbanIP [ip/player]");
             Player.Message(p, "%HUn-bans an IP, or the IP the given player is on.");
         }
     }

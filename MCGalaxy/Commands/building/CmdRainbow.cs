@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRainbow : DrawCmd {
-        public override string name { get { return "rainbow"; } }
+        public override string name { get { return "Rainbow"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new RainbowDrawOp(); }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "normal"; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/rainbow");
+            Player.Message(p, "%T/Rainbow");
             Player.Message(p, "%HTaste the rainbow");
         }
     }

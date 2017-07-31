@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Maintenance { 
     public sealed class CmdBlockSpeed : Command {        
-        public override string name { get { return "blockspeed"; } }
+        public override string name { get { return "BlockSpeed"; } }
         public override string shortcut { get { return "bs"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -80,9 +80,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bs [option] [value].");
+            Player.Message(p, "%T/BlockSpeed [option] [value].");
             Player.Message(p, "%HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), clear");
-            Player.Message(p, "%T/bs net [2,4,8,12,16,20,24]");
+            Player.Message(p, "%T/BlockSpeed net [2,4,8,12,16,20,24]");
             Player.Message(p, "%HPresets, divide by 8 and times by 1000 to get blocks per second.");
         }
     }

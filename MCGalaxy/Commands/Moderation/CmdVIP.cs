@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVIP : Command {
-        public override string name { get { return "vip"; } }
+        public override string name { get { return "VIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -85,14 +85,14 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "VIPs:");
                 MultiPageOutput.Output(p, list, 
                                        (name) => PlayerInfo.GetColoredName(p, name),
-                                       "vip list", "players", modifier, false);
+                                       "VIP list", "players", modifier, false);
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/vip add/remove [player]");
+            Player.Message(p, "%T/VIP add/remove [player]");
             Player.Message(p, "%HAdds or removes [player] from the VIP list.");
-            Player.Message(p, "%T/vip list");
+            Player.Message(p, "%T/VIP list");
             Player.Message(p, "%HLists all players who are on the VIP list.");
             Player.Message(p, "%H  VIPs can join regardless of the player limit.");
         }

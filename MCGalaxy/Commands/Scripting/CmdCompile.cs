@@ -21,7 +21,7 @@ using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCompile : Command {        
-        public override string name { get { return "compile"; } }
+        public override string name { get { return "Compile"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -58,9 +58,9 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/compile [class name]");
+            Player.Message(p, "%T/Compile [class name]");
             Player.Message(p, "%HCompiles a command class file into a DLL.");
-            Player.Message(p, "%T/compile [class name] vb");
+            Player.Message(p, "%T/Compile [class name] vb");
             Player.Message(p, "%HCompiles a command class (written in visual basic) file into a DLL.");
             Player.Message(p, "%H  class name: &9Cmd&e<class name>&9.cs");
         }

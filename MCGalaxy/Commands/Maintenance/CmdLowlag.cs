@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdLowlag : Command {
-        public override string name { get { return "lowlag"; } }
+        public override string name { get { return "LowLag"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/lowlag [interval in milliseconds]");
+            Player.Message(p, "%T/LowLag [interval in milliseconds]");
             Player.Message(p, "%HSets the interval between sending of position packets.");
             Player.Message(p, "%HIf no interval is given, then 2000 ms is used if the current interval" + 
                                " is less than 1000 ms, otherwise 200 ms is used for the interval.");

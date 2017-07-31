@@ -21,12 +21,12 @@ using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdResizeLvl : Command {
-        public override string name { get { return "resizelvl"; } }
+        public override string name { get { return "ResizeLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wresize"), new CommandAlias("worldresize") }; }
+            get { return new[] { new CommandAlias("WResize"), new CommandAlias("WorldResize") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 4) { Help(p); return; }
             
             if (DoResize(p, args)) return;
-            Player.Message(p, "Type %T/resizelvl {0} {1} {2} {3} confirm %Sif you're sure.",
+            Player.Message(p, "Type %T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
                            args[0], args[1], args[2], args[3]);
         }
         
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/resizelvl [level] [width] [height] [length]");
+            Player.Message(p, "%T/ResizeLvl [level] [width] [height] [length]");
             Player.Message(p, "%HResizes the given level.");
         }
     }

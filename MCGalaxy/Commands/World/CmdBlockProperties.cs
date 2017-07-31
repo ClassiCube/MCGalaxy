@@ -20,8 +20,8 @@ using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdBlockProperties : Command {
-        public override string name { get { return "blockproperties"; } }
-        public override string shortcut { get { return "blockprops"; } }
+        public override string name { get { return "BlockProperties"; } }
+        public override string shortcut { get { return "BlockProps"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", input);
                 
                 if (p.level.CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
-                    Player.Message(p, "&cUse %T/blockprops global &cto modify this custom block."); return ExtBlock.Invalid;
+                    Player.Message(p, "&cUse %T/BlockProps global &cto modify this custom block."); return ExtBlock.Invalid;
                 }
                 return ExtBlock.FromRaw(raw);
             }
@@ -254,20 +254,20 @@ namespace MCGalaxy.Commands.World {
         
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/blockprops [scope] [id/name] [property] <value>");
+            Player.Message(p, "%T/BlockProps [scope] [id/name] [property] <value>");
             Player.Message(p, "%HSets various properties for blocks.");
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
                            "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock");
-            Player.Message(p, "%HType %T/help blockprops [property] %Hfor more details");
+            Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("portal")) {
-                Player.Message(p, "%HToggles whether the block is a %T/portal");
+                Player.Message(p, "%HToggles whether the block is a %T/Portal");
             } else if (message.CaselessEq("messageblock")) {
-                Player.Message(p, "%HToggles whether the block is a %T/messageblock");
+                Player.Message(p, "%HToggles whether the block is a %T/MessageBlock");
             } else if (message.CaselessEq("rails")) {
                 Player.Message(p, "%HToggles whether %Strain %Hblocks can run over this block");
             } else if (message.CaselessEq("waterkills")) {

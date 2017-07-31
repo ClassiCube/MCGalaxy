@@ -77,9 +77,9 @@ namespace MCGalaxy.Eco {
         
         /// <summary> Called when the player does /eco help [item name] </summary>
         protected internal virtual void OnSetupCommandHelp(Player p) {
-            Player.Message(p, "%T/eco {0} enable/disable", Name.ToLower());
+            Player.Message(p, "%T/Eco {0} enable/disable", Name.ToLower());
             Player.Message(p, "%HEnables/disables purchasing this item.");
-            Player.Message(p, "%T/eco {0} purchaserank [rank]", Name.ToLower());
+            Player.Message(p, "%T/Eco {0} purchaserank [rank]", Name.ToLower());
             Player.Message(p, "%HSets the lowest rank which can purchase this item.");
         }
 
@@ -138,7 +138,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
-            Player.Message(p, "%T/eco {0} price [amount]", Name.ToLower());
+            Player.Message(p, "%T/Eco {0} price [amount]", Name.ToLower());
             Player.Message(p, "%HSets how many &3{0} %Hthis item costs.", ServerConfig.Currency);
         }
         
@@ -152,7 +152,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/buy {0} [value]", Name);
+            Player.Message(p, "%T/Buy {0} [value]", Name);
             OutputItemInfo(p);
         }
         

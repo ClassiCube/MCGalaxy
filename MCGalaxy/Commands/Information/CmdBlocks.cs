@@ -21,12 +21,12 @@ using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdBlocks : Command {
-        public override string name { get { return "blocks"; } }
+        public override string name { get { return "Blocks"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("materials") }; }
+            get { return new[] { new CommandAlias("Materials") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -36,18 +36,18 @@ namespace MCGalaxy.Commands.Info {
             if (args[0].Length == 0 || args[0].CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
                 MultiPageOutput.Output(p, BasicBlocks(), FormatBlockName,
-                                       "blocks basic", "blocks", modifier, false);
+                                       "Blocks basic", "blocks", modifier, false);
             } else if (args[0].CaselessEq("all") || args[0].CaselessEq("complex")) {
                 Player.Message(p, "Complex blocks: ");
                 MultiPageOutput.Output(p, ComplexBlocks(), FormatBlockName,
-                                       "blocks complex", "blocks", modifier, false);
+                                       "Blocks complex", "blocks", modifier, false);
             } else if (Block.Byte(args[0]) != Block.Invalid) {
                 OutputBlockData(p, args[0]);
             } else if (Group.Find(args[0]) != null) {
                 Group grp = Group.Find(args[0]);
                 Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
                 MultiPageOutput.Output(p, RankBlocks(grp.Permission), FormatBlockName,
-                                       "blocks " + args[0], "blocks", modifier, false);
+                                       "Blocks " + args[0], "blocks", modifier, false);
             } else if (args.Length > 1) {
                 Help(p);
             } else {
@@ -148,12 +148,12 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/blocks %H- Lists all basic blocks");
-            Player.Message(p, "%T/blocks complex %H- Lists all complex blocks");
-            Player.Message(p, "%T/blocks [basic block] %H- Lists all blocks which look the same");
-            Player.Message(p, "%T/blocks [complex block] %H- Lists specific info on that block");
-            Player.Message(p, "%T/blocks [rank] %H- Lists all blocks [rank] can use");
-            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
+            Player.Message(p, "%T/Blocks %H- Lists all basic blocks");
+            Player.Message(p, "%T/Blocks complex %H- Lists all complex blocks");
+            Player.Message(p, "%T/Blocks [basic block] %H- Lists all blocks which look the same");
+            Player.Message(p, "%T/Blocks [complex block] %H- Lists specific info on that block");
+            Player.Message(p, "%T/Blocks [rank] %H- Lists all blocks [rank] can use");
+            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

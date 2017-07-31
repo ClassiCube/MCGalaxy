@@ -18,7 +18,7 @@
 
 namespace MCGalaxy.Commands.World {  
     public sealed class CmdTexture : Command {        
-        public override string name { get { return "texture"; } }
+        public override string name { get { return "Texture"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/texture [scope] [url]");
+            Player.Message(p, "%T/Texture [scope] [url]");
             Player.Message(p, "%H  global/globalzip scope: Changes server's default texture.");
             Player.Message(p, "%H  level/levelzip scope: Changes current level's texture.");
             Player.Message(p, "%HUsing 'reset' as a url will reset the texture to default.");

@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.World {
     public sealed class CmdUnload : Command {
-        public override string name { get { return "unload"; } }
+        public override string name { get { return "Unload"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/unload [map name]");
+            Player.Message(p, "%T/Unload [map name]");
             Player.Message(p, "%HUnloads the given map.");
             Player.Message(p, "%H  If map name is \"empty\", unloads all maps with no players in them.");
             Player.Message(p, "%H  If no map name is given, unloads the current map."); 

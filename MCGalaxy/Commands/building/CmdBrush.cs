@@ -21,13 +21,13 @@ using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Commands.Building {  
     public sealed class CmdBrush : Command {
-        public override string name { get { return "brush"; } }
+        public override string name { get { return "Brush"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("brushes", "list") }; }
+            get { return new CommandAlias[] { new CommandAlias("Brushes", "list") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/brush [name] <default brush args>");
+            Player.Message(p, "%T/Brush [name] <default brush args>");
             Player.Message(p, "%HSets your current brush to the brush with that name.");
-            Player.Message(p, "%T/help brush [name]");
+            Player.Message(p, "%T/Help Brush [name]");
             Player.Message(p, "%HOutputs the help for the brush with that name.");
             Player.Message(p, "%HAvailable brushes: %S" + BrushFactory.Available);
             Player.Message(p, "%H- If \"skip\" is used for a block name, " +

@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDraw : DrawCmd {
-        public override string name { get { return "draw"; } }
+        public override string name { get { return "Draw"; } }
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
         public override int MarksCount { get { return 1; } }
         
@@ -112,14 +112,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/draw <brush args> [height] [baseradius] [mode]");
-            Player.Message(p, "%T/draw <brush args> [radius] [mode]");
+            Player.Message(p, "%T/Draw <brush args> [height] [baseradius] [mode]");
+            Player.Message(p, "%T/Draw <brush args> [radius] [mode]");
             Player.Message(p, "%HDraws an object at the specified point.");
             Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
             Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
             Player.Message(p, "   %HObjects with only radius: &fsphere/hsphere");
             Player.Message(p, "   %HNote 'h' means hollow, 'i' means inverse");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

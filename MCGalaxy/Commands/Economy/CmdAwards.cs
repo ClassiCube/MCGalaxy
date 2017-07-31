@@ -21,7 +21,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdAwards : Command {        
-        public override string name { get { return "awards"; } }
+        public override string name { get { return "Awards"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Eco {
             
             string cmd = plName.Length == 0 ? "awards" : "awards " + plName;
             MultiPageOutput.Output(p, awards, FormatAward,
-                                   cmd, "awards", modifier, true);
+                                   cmd, "Awards", modifier, true);
         }
         
         static List<Awards.Award> GetAwards(string plName) {
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/awards <player> %H- Lists awards that player has.");
+            Player.Message(p, "%T/Awards <player> %H- Lists awards that player has.");
             Player.Message(p, "%H  If <player> is not given, lists all awards the server has.");
         }
     }

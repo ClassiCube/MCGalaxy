@@ -48,7 +48,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/buy 10blocks [num]");
+            Player.Message(p, "%T/Buy 10blocks [num]");
             Player.Message(p, "%HCosts &a{0} * [num] %H{1}", Price, ServerConfig.Currency);
             Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
         }
@@ -75,7 +75,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/buy {0} [map name]", Name);
+            Player.Message(p, "%T/Buy {0} [map name]", Name);
             OutputItemInfo(p);
             Player.Message(p, "The map used for the next round of " +
                            "zombie survival will be the given map.");
@@ -135,10 +135,10 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
             }
             if (ForHumans && p.Game.Infected) {
-                Player.Message(p, "Use %T/buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
+                Player.Message(p, "Use %T/Buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
             }
             if (!ForHumans && !p.Game.Infected) {
-                Player.Message(p, "Use %T/buy invisibility %Sfor buying invisibility when you are a human."); return;
+                Player.Message(p, "Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
             }
             
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
@@ -165,7 +165,7 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/buy " + Name);
+            Player.Message(p, "%T/Buy " + Name);
             OutputItemInfo(p);
             
             Player.Message(p, "Makes you invisibile to {0} - &cyou can still {1}",

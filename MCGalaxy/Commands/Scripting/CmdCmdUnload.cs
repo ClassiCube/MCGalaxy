@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdCmdUnload : Command {
-        public override string name { get { return "cmdunload"; } }
+        public override string name { get { return "CmdUnload"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdunload [command]");
+            Player.Message(p, "%T/CmdUnload [command]");
             Player.Message(p, "%HUnloads a command from the server.");
         }
     }

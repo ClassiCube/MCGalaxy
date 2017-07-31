@@ -62,7 +62,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (ServerConfig.verifyadmins && adminpen) {
-                SendMessage("&cYou must first verify with %T/pass [Password]");
+                SendMessage("&cYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -637,7 +637,7 @@ namespace MCGalaxy {
                 SendMessage("You cannot use any commands while jailed."); return false;
             }
             if (ServerConfig.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
-                SendMessage("&cYou must verify first with %T/pass [Password]"); return false;
+                SendMessage("&cYou must verify first with %T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;

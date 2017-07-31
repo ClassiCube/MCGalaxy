@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdWaypoint : Command {
-        public override string name { get { return "waypoint"; } }
+        public override string name { get { return "Waypoint"; } }
         public override string shortcut { get { return "wp"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
@@ -66,12 +66,12 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/waypoint create [name] %H- Create a new waypoint");
-            Player.Message(p, "%T/waypoint update [name] %H- Update a waypoint");
-            Player.Message(p, "%T/waypoint remove [name] %H- Remove a waypoint");
-            Player.Message(p, "%T/waypoint list %H- Shows a list of waypoints");
-            Player.Message(p, "%T/waypoint goto [name] %H- Goto a waypoint");
-            Player.Message(p, "%T/waypoint [name] %H- Goto a waypoint");
+            Player.Message(p, "%T/Waypoint create [name] %H- Create a new waypoint");
+            Player.Message(p, "%T/Waypoint update [name] %H- Update a waypoint");
+            Player.Message(p, "%T/Waypoint remove [name] %H- Remove a waypoint");
+            Player.Message(p, "%T/Waypoint list %H- Shows a list of waypoints");
+            Player.Message(p, "%T/Waypoint goto [name] %H- Goto a waypoint");
+            Player.Message(p, "%T/Waypoint [name] %H- Goto a waypoint");
         }
     }
 }

@@ -20,7 +20,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdLastLevels : Command {
-        public override string name { get { return "lastlevels"; } }
+        public override string name { get { return "LastLevels"; } }
         public override string shortcut { get { return "ll"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/lastlevels");
+            Player.Message(p, "%T/LastLevels");
             Player.Message(p, "%HShows the maps most recently used for zombie survival rounds.");
         }
     }

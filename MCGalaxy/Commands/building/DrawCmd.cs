@@ -27,6 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public virtual int MarksCount { get { return 2; } }
         public override bool SuperUseable { get { return false; } }
+        protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush%H.";
         
         public override void Use(Player p, string message) {
             message = message.ToLower();

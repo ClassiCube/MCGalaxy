@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdModerate : Command {
-        public override string name { get { return "moderate"; } }
+        public override string name { get { return "Moderate"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/moderate %H- Toggles chat moderation status.");
-            Player.Message(p, "%HWhen enabled, only players with %T/voice %Hmay speak.");
+            Player.Message(p, "%T/Moderate %H- Toggles chat moderation status.");
+            Player.Message(p, "%HWhen enabled, only players with %T/Voice %Hmay speak.");
         }
     }
 }

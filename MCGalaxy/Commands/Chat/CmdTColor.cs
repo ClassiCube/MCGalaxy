@@ -19,14 +19,14 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Chatting {
     public class CmdTColor : EntityPropertyCmd {
-        public override string name { get { return "tcolor"; } }
+        public override string name { get { return "TColor"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the title color of others") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("tcolour"), new CommandAlias("xtcolor", "-own") }; }
+            get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
         }
         public override void Use(Player p, string message) { UsePlayer(p, message, "title color"); }
         
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/tcolor [player] [color]");
+            Player.Message(p, "%T/TColor [player] [color]");
             Player.Message(p, "%HSets the title color of [player]");
             Player.Message(p, "%H  If [color] is not given, title color is removed.");
-            Player.Message(p, "%HTo see a list of all colors, use /help colors.");
+            Player.Message(p, "%HTo see a list of all colors, use %T/Help colors.");
         }
     }
 }

@@ -21,7 +21,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Commands.Building {    
     public class CmdReplaceBrush : DrawCmd {
-        public override string name { get { return "replacebrush"; } }
+        public override string name { get { return "ReplaceBrush"; } }
         public override string shortcut { get { return "rb"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected virtual bool ReplaceNot { get { return false; } }
@@ -65,24 +65,24 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/rb [block] [brush name] <brush args>");
+            Player.Message(p, "%T/ReplaceBrush [block] [brush name] <brush args>");
             Player.Message(p, "%HReplaces all blocks of the given type, " +
                                "in the specified area with the output of the given brush.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
     
     public class CmdReplaceNotBrush : CmdReplaceBrush {
-        public override string name { get { return "replacenotbrush"; } }
+        public override string name { get { return "ReplaceNotBrush"; } }
         public override string shortcut { get { return "rnb"; } }
         
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/rnb [block] [brush name] <brush args>");
+            Player.Message(p, "%T/ReplaceNotBrush [block] [brush name] <brush args>");
             Player.Message(p, "%HReplaces all blocks (except for the given block), " +
                                "in the specified area with the output of the given brush.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

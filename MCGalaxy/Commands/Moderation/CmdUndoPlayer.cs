@@ -24,14 +24,14 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Moderation {
     public class CmdUndoPlayer : Command {
-        public override string name { get { return "undoplayer"; } }
+        public override string name { get { return "UndoPlayer"; } }
         public override string shortcut { get { return "up"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("xundo", null, "all"),
-                    new CommandAlias("undoarea", "area"), new CommandAlias("ua", "area") }; }
+            get { return new[] { new CommandAlias("XUndo", null, "all"),
+                    new CommandAlias("UndoArea", "area"), new CommandAlias("ua", "area") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -129,9 +129,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/undoplayer [player1] <player2..> <timespan>");
+            Player.Message(p, "%T/UndoPlayer [player1] <player2..> <timespan>");
             Player.Message(p, "%HUndoes the block changes of [players] in the past <timespan>");
-            Player.Message(p, "%T/undoplayer area [player1] <player2..> <timespan>");
+            Player.Message(p, "%T/UndoPlayer area [player1] <player2..> <timespan>");
             Player.Message(p, "%HOnly undoes block changes in the specified region.");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
             if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)

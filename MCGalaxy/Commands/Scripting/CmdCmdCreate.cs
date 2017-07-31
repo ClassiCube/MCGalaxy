@@ -20,9 +20,8 @@ using System.IO;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdCmdCreate : Command {
-        
-        public override string name { get { return "cmdcreate"; } }
+    public sealed class CmdCmdCreate : Command {      
+        public override string name { get { return "CmdCreate"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -55,9 +54,9 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/cmdcreate [name]");
+            Player.Message(p, "%T/CmdCreate [name]");
             Player.Message(p, "%HCreates a dummy C# command named Cmd[Name]");
-            Player.Message(p, "%T/cmdcreate [name] vb");
+            Player.Message(p, "%T/CmdCreate [name] vb");
             Player.Message(p, "%HCreates a dummy Visual Basic command named Cmd[Name].");
             Player.Message(p, "%This file can be used as the basis for creating a new command.");
         }

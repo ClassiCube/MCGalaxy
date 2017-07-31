@@ -25,7 +25,7 @@ using MCGalaxy.Tasks;
 namespace MCGalaxy.Commands.Misc {
     
     public sealed class CmdHackRank : Command {
-        public override string name { get { return "hackrank"; } }
+        public override string name { get { return "HackRank"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -78,8 +78,8 @@ namespace MCGalaxy.Commands.Misc {
         struct HackRankArgs { public string name; public Group newRank; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/hackrank [rank] %H- Hacks a rank");
-            Player.Message(p, "%HTo see available ranks, type %T/viewranks");
+            Player.Message(p, "%T/HackRank [rank] %H- Hacks a rank");
+            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

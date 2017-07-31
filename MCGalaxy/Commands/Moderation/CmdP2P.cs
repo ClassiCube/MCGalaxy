@@ -19,9 +19,8 @@
  */
 namespace MCGalaxy.Commands.Moderation {
     
-    public sealed class CmdP2P : Command {
-        
-        public override string name { get { return "p2p"; } }
+    public sealed class CmdP2P : Command {     
+        public override string name { get { return "P2P"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -43,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/p2p [source] [target]");
+            Player.Message(p, "%T/P2P [source] [target]");
             Player.Message(p, "%HTeleports the source player to the target player.");
         }
     }

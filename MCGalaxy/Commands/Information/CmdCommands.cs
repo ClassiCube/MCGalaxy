@@ -17,13 +17,13 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdCommands : Command {       
-        public override string name { get { return "commands"; } }
-        public override string shortcut { get { return "cmds"; } }
+        public override string name { get { return "Commands"; } }
+        public override string shortcut { get { return "Cmds"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cmdlist") }; }
+            get { return new[] { new CommandAlias("CmdList") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Info {
             
             MultiPageOutput.Output(p, shortcuts,
                                    (cmd) => "&b" + cmd.shortcut + " %S[" + cmd.name + "]",
-                                   "cmds shortcuts", "shortcuts", modifier, false);
+                                   "Commands shortcuts", "shortcuts", modifier, false);
         }
         
         static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
@@ -120,12 +120,12 @@ namespace MCGalaxy.Commands.Info {
             else
                 Player.Message(p, "Commands available to " + group.ColoredName + " %Srank:");
             
-            string type = "cmds " + group.Name;
+            string type = "Commands " + group.Name;
             if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
-            Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
+            Player.Message(p, "Type %T/Help <command> %Sfor more help on a command.");
         }
         
         static void PrintAllCommands(Player p, string sort, string modifier) {
@@ -138,12 +138,12 @@ namespace MCGalaxy.Commands.Info {
             SortCommands(cmds, sort);
             Player.Message(p, "All commands:");
             
-            string type = "cmds all";
+            string type = "Commands all";
             if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);            
-            Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
+            Player.Message(p, "Type %T/Help <command> %Sfor more help on a command.");
         }
         
         static void PrintHelpForGroup(Player p, string sort, string modifier,
@@ -163,12 +163,12 @@ namespace MCGalaxy.Commands.Info {
             SortCommands(cmds, sort);            
             Player.Message(p, category + " commands you may use:");
 
-            type = "cmds " + category;
+            type = "Commands " + category;
             if (sort != "") type += " " + sort;            
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
-            Player.Message(p, "Type %T/help <command> %Sfor more help on a command.");
+            Player.Message(p, "Type %T/Help <command> %Sfor more help on a command.");
         }
         
         static void SortCommands(List<Command> cmds, string sort) {
@@ -183,7 +183,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/commands [category] <sort>");
+            Player.Message(p, "%T/Commands [category] <sort>");
             Player.Message(p, "%HIf no category is given, outputs all commands you can use.");
             Player.Message(p, "  %H\"shortcuts\" category outputs all command shortcuts.");
             Player.Message(p, "  %H\"all\" category outputs all commands.");

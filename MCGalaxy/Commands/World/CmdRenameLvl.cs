@@ -20,13 +20,12 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command {
-        public override string name { get { return "renamelvl"; } }
-        public override string shortcut { get { return ""; } }
+        public override string name { get { return "RenameLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wrename"), new CommandAlias("worldrename") }; }
+            get { return new[] { new CommandAlias("WRename"), new CommandAlias("WorldRename") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -53,7 +52,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/renamelvl [level] [new name]");
+            Player.Message(p, "%T/RenameLvl [level] [new name]");
             Player.Message(p, "%HRenames [level] to [new name]");
             Player.Message(p, "%HNote: Portals going to [level] will no longer work.");
         }

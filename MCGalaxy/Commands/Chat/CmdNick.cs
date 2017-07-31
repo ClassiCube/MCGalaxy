@@ -22,8 +22,8 @@ using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdNick : EntityPropertyCmd {       
-        public override string name { get { return "nick"; } }
-        public override string shortcut { get { return "nickname"; } }
+        public override string name { get { return "Nick"; } }
+        public override string shortcut { get { return "Nickname"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
@@ -71,10 +71,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/nick [player] [nick]");
+            Player.Message(p, "%T/Nick [player] [nick]");
             Player.Message(p, "%HSets the nick of that player.");
             Player.Message(p, "%H  If [nick] is not given, reverts [player]'s nick to their account name.");
-            Player.Message(p, "%T/nick bot [bot] [name]");
+            Player.Message(p, "%T/Nick bot [bot] [name]");
             Player.Message(p, "%HSets the name shown above that bot in game.");
             Player.Message(p, "%H  If [name] is \"empty\", the bot will not have a name shown.");
         }

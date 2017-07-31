@@ -21,7 +21,7 @@ using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdImport : Command {
-        public override string name { get { return "import"; } }
+        public override string name { get { return "Import"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/import [name]");
+            Player.Message(p, "%T/Import [name]");
             Player.Message(p, "%HImports a map file with that name.");
             Player.Message(p, "%HSupported formats: %S{0}",
                            IMapImporter.Formats.Join(imp => imp.Extension));

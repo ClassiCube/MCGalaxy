@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdOutline : DrawCmd {
-        public override string name { get { return "outline"; } }
+        public override string name { get { return "Outline"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
@@ -45,9 +45,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/outline [block] <brush args>");
+            Player.Message(p, "%T/Outline [block] <brush args>");
             Player.Message(p, "%HOutlines [block] with output of your current brush.");
-            Player.Message(p, "   %HFor help about brushes, type %T/help brush%H.");
+            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
         }
     }
 }

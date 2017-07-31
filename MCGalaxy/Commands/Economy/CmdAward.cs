@@ -19,7 +19,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdAward : Command {      
-        public override string name { get { return "award"; } }
+        public override string name { get { return "Award"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Eco {
             
             string award = args.Length > 1 ? args[1] : "";
             award = Matcher.FindAwards(p, award);
-            if (award == null) { Player.Message(p, "Use %T/awards %Sfor a list of awards"); return; }
+            if (award == null) { Player.Message(p, "Use %T/Awards %Sfor a list of awards"); return; }
 
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
@@ -61,9 +61,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/award give/take [player] [award] %H- Gives/Takes [player] the [award]");
-            Player.Message(p, "%HIf only [player] and [award] are given, Give is used.");
-            Player.Message(p, "%H[award] needs to be the full award's name. Not partial");
+            Player.Message(p, "%T/Award give/take [player] [award]");
+            Player.Message(p, "%HGives/takes [award] award to/from [player]");
+            Player.Message(p, "%H  If only [player] and [award] are provided award is given.");
         }
     }
 }

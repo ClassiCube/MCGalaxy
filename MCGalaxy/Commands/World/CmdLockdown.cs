@@ -20,13 +20,13 @@ using System.Threading;
 namespace MCGalaxy.Commands.World {
     
     public sealed class CmdLockdown : Command {
-        public override string name { get { return "lockdown"; } }
+        public override string name { get { return "Lockdown"; } }
         public override string shortcut { get { return "ld"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("wlock", "map"), new CommandAlias("wunlock", "map") }; }
+            get { return new[] { new CommandAlias("WLock", "map"), new CommandAlias("WUnlock", "map") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/lockdown map/player [name]");
+            Player.Message(p, "%T/Lockdown map/player [name]");
             Player.Message(p, "%H\"map\" - prevents new players from joining that map.");
             Player.Message(p, "%H\"player\" - prevents that player from using commands.");
             Player.Message(p, "%HUsing /lockdown again will unlock that map/player.");

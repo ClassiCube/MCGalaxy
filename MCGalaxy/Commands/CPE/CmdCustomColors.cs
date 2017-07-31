@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.CPE {
     
     public sealed class CmdCustomColors : Command {
         
-        public override string name { get { return "customcolors"; } }
+        public override string name { get { return "CustomColors"; } }
         public override string shortcut { get { return "ccols"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char code = args[1][0];
             if (Colors.IsStandard(code)) {
-                Player.Message(p, "You may only edit standard codes using %T/ccols edit"); return;
+                Player.Message(p, "You may only edit standard codes using %T/CustomColors edit"); return;
             }
             if (code <= ' ' || code > '~' || code == '%' || code == '&') {
                 Player.Message(p, "{0} must be a standard ASCII character.", code);
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.CPE {
             char code2 = code;
             if (Colors.Map(ref code2)) {
                 Player.Message(p, "There is already an existing or server defined color with the code " + code +
-                               ", you must either use a different code or use \"%T/ccols remove " + code + "%S\"");
+                               ", you must either use a different code or use %T/CustomColors remove " + code);
                 return;
             }
             
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.CPE {
             foreach (ColorDesc col in Colors.List) {
                 if (!col.Undefined) validCols.Add(col);
             }
-            MultiPageOutput.Output(p, validCols, FormatColor, cmd, "colors", modifier, true);
+            MultiPageOutput.Output(p, validCols, FormatColor, cmd, "Colors", modifier, true);
         }
         
         // Not very elegant, because we don't want the % to be escaped like everywhere else
@@ -158,7 +158,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (Colors.IsDefined(code)) return code;
                 
                 Player.Message(p, "There is no color with the code {0}.", code);
-                Player.Message(p, "Use \"%T/ccols list\" %Sto see a list of colors.");
+                Player.Message(p, "Use %T/CustomColors list %Sto see a list of colors.");
             }
             return '\0';
         }
@@ -177,12 +177,12 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/customcolors add [code] [name] [fallback] [hex]");
+            Player.Message(p, "%T/CustomColors add [code] [name] [fallback] [hex]");
             Player.Message(p, "%H  code is a single ascii character.");
             Player.Message(p, "%H  fallback is the color code shown to non-supporting clients.");
-            Player.Message(p, "%T/customcolors remove [code] %H- Removes that custom color.");
-            Player.Message(p, "%T/customcolors list [offset] %H- lists all custom colors.");
-            Player.Message(p, "%T/customcolors edit [code] [name/fallback/hex] [value]");
+            Player.Message(p, "%T/CustomColors remove [code] %H- Removes that custom color.");
+            Player.Message(p, "%T/CustomColors list [offset] %H- lists all custom colors.");
+            Player.Message(p, "%T/CustomColors edit [code] [name/fallback/hex] [value]");
         }
     }
 }

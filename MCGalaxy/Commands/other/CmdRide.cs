@@ -21,7 +21,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdRide : Command {
-        public override string name { get { return "ride"; } }
+        public override string name { get { return "Ride"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/ride");
+            Player.Message(p, "%T/Ride");
             Player.Message(p, "%HRides a nearby train.");
         }
     }

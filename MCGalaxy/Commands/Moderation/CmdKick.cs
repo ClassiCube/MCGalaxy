@@ -20,7 +20,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdKick : Command {
-        public override string name { get { return "kick"; } }
+        public override string name { get { return "Kick"; } }
         public override string shortcut { get { return "k"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/kick [player] <reason>");
+            Player.Message(p, "%T/Kick [player] <reason>");
             Player.Message(p, "%HKicks a player.");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }

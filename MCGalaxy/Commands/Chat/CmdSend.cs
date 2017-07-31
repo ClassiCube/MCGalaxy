@@ -21,7 +21,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdSend : Command {
-        public override string name { get { return "send"; } }
+        public override string name { get { return "Send"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands.Chatting {
         };
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/send [name] [message]");
-            Player.Message(p, "%HSends [message] to [name], which can be read with /inbox");
+            Player.Message(p, "%T/Send [name] [message]");
+            Player.Message(p, "%HSends [message] to [name], which can be read with %T/inbox");
         }
     }
 }

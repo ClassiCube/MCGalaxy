@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Fun {
     
     public sealed class CmdBounty : Command {
         
-        public override string name { get { return "bounty"; } }
+        public override string name { get { return "Bounty"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/bounty [name] [amount]");
+            Player.Message(p, "%T/Bounty [name] [amount]");
             Player.Message(p, "%HSets a bounty on the given player.");
         }
     }

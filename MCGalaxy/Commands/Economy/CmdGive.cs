@@ -21,8 +21,8 @@ using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdGive : MoneyCmd {
-        public override string name { get { return "give"; } }
-        public override string shortcut { get { return "gib"; } }
+        public override string name { get { return "Give"; } }
+        public override string shortcut { get { return "Gib"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }       
 
         public override void Use(Player p, string message) {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/give [player] [amount] <reason>");
+            Player.Message(p, "%T/Give [player] [amount] <reason>");
             Player.Message(p, "%HGives [player] [amount] %3" + ServerConfig.Currency);
         }
     }

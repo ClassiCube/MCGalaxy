@@ -17,12 +17,12 @@
  */
 namespace MCGalaxy.Commands.World {
     public sealed class CmdPhysics : Command {
-        public override string name { get { return "physics"; } }
+        public override string name { get { return "Physics"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("killphysics", "kill") }; }
+            get { return new CommandAlias[] { new CommandAlias("KillPhysics", "kill") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -75,11 +75,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/physics [map] [0/1/2/3/4/5]");
+            Player.Message(p, "%T/Physics [map] [0/1/2/3/4/5]");
             Player.Message(p, "%HSets the physics state for the given map.");
             Player.Message(p, "%H  If no map name is given, uses the current map.");
             Player.Message(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
-            Player.Message(p, "%T/physics kill %H- Sets physics to 0 on all loaded levels.");
+            Player.Message(p, "%T/Physics kill %H- Sets physics to 0 on all loaded levels.");
         }
     }
 }

@@ -17,7 +17,7 @@
 */
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdKickban : Command {
-        public override string name { get { return "kickban"; } }
+        public override string name { get { return "KickBan"; } }
         public override string shortcut { get { return "kb"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return true; } }
@@ -25,12 +25,12 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
-            Command.all.Find("ban").Use(p, message);
-            Command.all.Find("kick").Use(p, message);
+            Command.all.FindByName("Ban").Use(p, message);
+            Command.all.FindByName("Kick").Use(p, message);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/kickban [player] <reason>");
+            Player.Message(p, "%T/KickBan [player] <reason>");
             Player.Message(p, "%HKicks and bans a player with an optional message.");
         }
     }

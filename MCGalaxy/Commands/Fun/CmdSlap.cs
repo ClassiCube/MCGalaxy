@@ -19,7 +19,7 @@ using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdSlap : Command {
-        public override string name { get { return "slap"; } }
+        public override string name { get { return "Slap"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -86,9 +86,9 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/slap [name]");
+            Player.Message(p, "%T/Slap [name]");
             Player.Message(p, "%HSlaps [name], knocking them into the air");
-            Player.Message(p, "%T/slap [level]");
+            Player.Message(p, "%T/Slap [level]");
             Player.Message(p, "%HSlaps all players on [level] that are a lower rank, knocking them into the air");
         }
     }

@@ -20,8 +20,8 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdEconomy : Command {
-        public override string name { get { return "economy"; } }
-        public override string shortcut { get { return "eco"; } }
+        public override string name { get { return "Economy"; } }
+        public override string shortcut { get { return "Eco"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -59,16 +59,16 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/eco apply %H- Reload changes made to 'economy.properties'.");
-            Player.Message(p, "%T/eco enable/disable %H- Enables/disables the economy system.");
-            Player.Message(p, "%T/eco help [item] %H- Outputs help for setting up that item.");
+            Player.Message(p, "%T/Eco apply %H- Reload changes made to 'economy.properties'.");
+            Player.Message(p, "%T/Eco enable/disable %H- Enables/disables the economy system.");
+            Player.Message(p, "%T/Eco help [item] %H- Outputs help for setting up that item.");
             Player.Message(p, "   %HAll items: %S" + Economy.Items.Join(item => item.Name));
         }
         
         public override void Help(Player p, string message) {
             Item item = Economy.GetItem(message);
             if (item == null) {
-                Player.Message(p, "No item has that name, see %T/eco help %Sfor a list of items.");
+                Player.Message(p, "No item has that name, see %T/Eco help %Sfor a list of items.");
             } else {
                 item.OnSetupCommandHelp(p);
             }

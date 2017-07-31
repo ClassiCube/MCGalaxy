@@ -22,7 +22,7 @@ using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots{
     public sealed class CmdBotAI : Command {
-        public override string name { get { return "botai"; } }
+        public override string name { get { return "BotAI"; } }
         public override string shortcut { get { return "bai"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands.Bots{
                 files[i] = Path.GetFileNameWithoutExtension(files[i]);
             }
             
-            MultiPageOutput.Output(p, files, f => f, "botai list", "bot AIs", modifier, false);
+            MultiPageOutput.Output(p, files, f => f, "BotAI list", "bot AIs", modifier, false);
         }
         
         void HandleInfo(Player p, string ai) {
@@ -149,15 +149,15 @@ namespace MCGalaxy.Commands.Bots{
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/botai del [name] %H- deletes that AI");
-            Player.Message(p, "%T/botai del [name] last%H- deletes last instruction of that AI");
-            Player.Message(p, "%T/botai info [name] %H- prints list of instructions that AI has");
-            Player.Message(p, "%T/botai list %H- lists all current AIs");
-            Player.Message(p, "%T/botai add [name] [instruction] <args>");
+            Player.Message(p, "%T/BotAI del [name] %H- deletes that AI");
+            Player.Message(p, "%T/BotAI del [name] last%H- deletes last instruction of that AI");
+            Player.Message(p, "%T/BotAI info [name] %H- prints list of instructions that AI has");
+            Player.Message(p, "%T/BotAI list %H- lists all current AIs");
+            Player.Message(p, "%T/BotAI add [name] [instruction] <args>");
             
             Player.Message(p, "%HInstructions: %S{0}, reverse",
                            BotInstruction.Instructions.Join(ins => ins.Name.ToLower()));
-            Player.Message(p, "%HTo see detailed help, type %T/help botai [instruction]");
+            Player.Message(p, "%HTo see detailed help, type %T/Help BotAI [instruction]");
         }
         
         public override void Help(Player p, string message) {

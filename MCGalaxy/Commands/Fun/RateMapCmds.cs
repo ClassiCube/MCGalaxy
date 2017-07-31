@@ -19,8 +19,8 @@ using System;
 
 namespace MCGalaxy.Commands.Fun {
     public class CmdMapLike : Command {
-        public override string name { get { return "maplike"; } }
-        public override string shortcut { get { return "like"; } }
+        public override string name { get { return "MapLike"; } }
+        public override string shortcut { get { return "Like"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
@@ -60,18 +60,18 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/maplike");
+            Player.Message(p, "%T/MapLike");
             Player.Message(p, "%HIncrements the number of times this map has been liked.");
         }
     }
     
     public sealed class CmdMapDislike : CmdMapLike {
-        public override string name { get { return "mapdislike"; } }
-        public override string shortcut { get { return "dislike"; } }        
+        public override string name { get { return "MapDislike"; } }
+        public override string shortcut { get { return "Dislike"; } }        
         public override void Use(Player p, string message) { RateMap(p, false); }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/mapdislike");
+            Player.Message(p, "%T/MapDislike");
             Player.Message(p, "%HIncrements the number of times this map has been disliked.");
         }
     }

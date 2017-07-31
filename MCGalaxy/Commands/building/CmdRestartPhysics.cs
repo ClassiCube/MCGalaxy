@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRestartPhysics : Command {
-        public override string name { get { return "restartphysics"; } }
+        public override string name { get { return "RestartPhysics"; } }
         public override string shortcut { get { return "rp"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
