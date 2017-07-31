@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Use(Player p, string message) {
-            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
+            Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 
             if (p != null && who.Rank > p.Rank) {

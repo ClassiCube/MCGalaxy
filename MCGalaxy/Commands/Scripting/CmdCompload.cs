@@ -25,13 +25,13 @@ namespace MCGalaxy.Commands.Scripting {
         
         public override void Use(Player p, string message) {
             string[] param = message.SplitSpaces();
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             if (param.Length == 1) {
                 Command.all.Find("compile").Use(p, message);
                 Command.all.Find("cmdload").Use(p, message);
                 Command.all.Find("help").Use(p, message);
-            } else if (param[1] == "vb") {
+            } else if (param[1].CaselessEq("vb")) {
                 Command.all.Find("compile").Use(p, message + " vb");
                 Command.all.Find("cmdload").Use(p, message + " vb");
                 Command.all.Find("help").Use(p, message);

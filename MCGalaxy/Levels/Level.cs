@@ -119,7 +119,7 @@ namespace MCGalaxy {
         public bool ShouldShowJoinMessage(Level prev) {
             ZSGame zs = Server.zombie;
             if (zs.Running && name.CaselessEq(zs.CurLevelName) &&
-                (prev == this || zs.LastLevelName == "" || prev.name.CaselessEq(zs.LastLevelName)))
+                (prev == this || zs.LastLevelName.Length == 0 || prev.name.CaselessEq(zs.LastLevelName)))
                 return false;
             if (Server.lava.active && Server.lava.HasMap(name))
                 return false;

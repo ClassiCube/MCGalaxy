@@ -31,7 +31,7 @@ namespace MCGalaxy.Gui {
         public static void ExitProgram(bool restarting, string msg) {
             Server.restarting = restarting;
             Server.shuttingDown = true;
-            if (msg == "")
+            if (msg.Length == 0)
                 msg = restarting ? "Server restarted. Sign in again and rejoin." : ServerConfig.DefaultShutdownMessage;
             Server.Exit(restarting, msg);
             new Thread(() => ShutdownThread(restarting, msg)).Start();

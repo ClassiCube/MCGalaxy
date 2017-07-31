@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Bots{
                 try {
                     if (args.Length == 2) {
                         DeleteAI(p, ai, attempt); return;
-                    } else if (args[2].ToLower() == "last") {
+                    } else if (args[2].CaselessEq("last")) {
                         DeleteLast(p, ai); return;
                     } else {
                         Help(p); return;

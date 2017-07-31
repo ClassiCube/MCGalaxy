@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") message = p.name;
+            if (message.Length == 0) message = p.name;
             int matches;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;

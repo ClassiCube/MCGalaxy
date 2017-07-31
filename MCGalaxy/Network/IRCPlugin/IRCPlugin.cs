@@ -114,7 +114,7 @@ namespace MCGalaxy.Network {
         static char[] trimChars = new char[] { ' ' };
         void HandleChat(Player p, string message) {
             if (!Server.IRC.Enabled) return;
-            if (message.Trim(trimChars) == "") return;
+            if (message.Trim(trimChars).Length == 0) return;
             if (p.cancelchat || !p.level.SeesServerWideChat) return;
             
             string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;

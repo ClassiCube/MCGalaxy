@@ -28,7 +28,7 @@ namespace MCGalaxy.Config {
         
         public override object Parse(string value) {
             string color = Colors.Parse(value);
-            if (color == "") {
+            if (color.Length == 0) {
                 color = Colors.Name(value);
                 if (color != "") return value;
                 
@@ -77,7 +77,7 @@ namespace MCGalaxy.Config {
         }
         
         public override object Parse(string value) {
-            if (value == "") {
+            if (value.Length == 0) {
                 if (!AllowEmpty) {
                     Logger.Log(LogType.Warning, "Config key \"{0}\" has no value, using default of {1}", Name, DefaultValue);
                     return DefaultValue;
@@ -115,7 +115,7 @@ namespace MCGalaxy.Config {
         }
         
         public override object Parse(string value) {
-            if (value == "") return new List<string>();
+            if (value.Length == 0) return new List<string>();
             
             string[] split = value.Replace(" ", "").Split(',');
             return new List<string>(split);

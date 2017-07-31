@@ -168,15 +168,15 @@ namespace MCGalaxy {
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
-                string url = level.Config.Terrain == "" ? ServerConfig.DefaultTerrain : level.Config.Terrain;
+                string url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, level.Config.EdgeLevel, hasCP437));
             }
         }
         
         public string GetTextureUrl() {
-            string url = level.Config.TexturePack == "" ? level.Config.Terrain : level.Config.TexturePack;
-            if (url == "")
-                url = ServerConfig.DefaultTexture == "" ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
+            string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
+            if (url.Length == 0)
+                url = ServerConfig.DefaultTexture.Length == 0 ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
             return url;
         }
         

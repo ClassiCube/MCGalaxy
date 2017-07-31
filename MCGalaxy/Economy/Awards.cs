@@ -57,12 +57,12 @@ namespace MCGalaxy.Eco {
         }
         
         static void AwardsListLineProcessor(string key, string value) {
-            if (value == "") return;
+            if (value.Length == 0) return;
             Add(key, value);
         }
         
         static void PlayerAwardsLineProcessor(string key, string value) {
-            if (value == "") return;
+            if (value.Length == 0) return;
             PlayerAward pl;
             pl.Name = key.ToLower();
             pl.Awards = new List<string>();

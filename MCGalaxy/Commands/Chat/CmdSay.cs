@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             message = Colors.Escape(message);
             Chat.MessageGlobal(message);

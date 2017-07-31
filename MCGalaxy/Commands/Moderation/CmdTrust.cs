@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
+            if (message.Length == 0 || message.IndexOf(' ') != -1) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             

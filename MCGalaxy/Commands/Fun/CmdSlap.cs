@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             int matches;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;

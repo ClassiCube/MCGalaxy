@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
         public override void Use(Player p, string message) {
             string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0];
-            if (cmd == "") { Help(p); return; }
+            if (cmd.Length == 0) { Help(p); return; }
             
             if (args.Length == 1 && cmd == "list") {
                 Player.Message(p, "Waypoints:");

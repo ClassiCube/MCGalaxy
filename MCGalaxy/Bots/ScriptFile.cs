@@ -32,7 +32,7 @@ namespace MCGalaxy.Bots {
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
             foreach (string line in codes) {
-                if (line == "" || line[0] == '#') continue;
+                if (line.Length == 0 || line[0] == '#') continue;
                 string[] args = line.SplitSpaces();
 
                 try {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Bots {
         
         public static void Append(Player p, string ai, string action, string[] args) {
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                if (action == "") action = "walk";
+                if (action.Length == 0) action = "walk";
                 if (action.CaselessEq("tp")) action = "teleport";
 
                 BotInstruction ins = BotInstruction.Find(action);

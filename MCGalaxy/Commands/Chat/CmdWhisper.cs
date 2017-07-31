@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 p.whisper = !p.whisper; p.whisperTo = "";
                 if (p.whisper) Player.Message(p, "All messages sent will now auto-whisper");
                 else Player.Message(p, "Whisper chat turned off");

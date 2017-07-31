@@ -33,7 +33,7 @@ namespace MCGalaxy {
             if (text[0] == '@' || (p != null && p.whisper)) {
                 if (text[0] == '@') text = text.Remove(0, 1).Trim();
 
-                if (p == null || p.whisperTo == "") {
+                if (p == null || p.whisperTo.Length == 0) {
                     int sepIndex = text.IndexOf(' ');
                     if (sepIndex != -1) {
                         string target = text.Substring(0, sepIndex);
@@ -79,7 +79,7 @@ namespace MCGalaxy {
             string name = p == null ? "(console)" : p.name;
             string format = "To " + group + " &f-{0}&f- {1}";
             
-            if (message == "") { Player.Message(p, "No message to send."); return; }
+            if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             
             Chat.MessageWhere(format, 
                               pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),

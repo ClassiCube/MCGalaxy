@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands
                 p.level.teams.Clear();
                 p.level.ChatLevel("Capture the flag data has been reset.");
             }
-            else if (message == "")
+            else if (message.Length == 0)
             {
                 if (!p.level.ctfmode)
                 {

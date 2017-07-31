@@ -24,11 +24,11 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
-            string[] args = message.ToLower().SplitSpaces();
+            if (message.Length == 0) { Help(p); return; }
+            string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
             
-            if (args[0] == "clear") {
+            if (args[0].CaselessEq("clear")) {
                 for (int i = 0; i < p.BlockBindings.Length; i++) {
                     p.BlockBindings[i] = ExtBlock.FromRaw((byte)i);
                 }
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length == 2) {
                 ExtBlock src, dst;
                 if (!CommandParser.GetBlock(p, args[0], out src)) return;
-                if (!CommandParser.GetBlock(p, args[1], out dst)) return;                
+                if (!CommandParser.GetBlock(p, args[1], out dst)) return;
                 if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;              
                 if (src.IsPhysicsType) { 
                     Player.Message(p, "Physics blocks cannot be bound to another block."); return; 

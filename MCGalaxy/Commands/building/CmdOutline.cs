@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            if (dArgs.Message == "") {
+            if (dArgs.Message.Length == 0) {
                 Player.Message(dArgs.Player, "Block name is required."); return null;
             }
             

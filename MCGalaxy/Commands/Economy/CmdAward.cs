@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Eco {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
         public override void Use(Player p, string message) {
-            if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }
+            if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }
             bool take = false;
             if (message.CaselessStarts("give ")) {
                 message = message.Substring(5);

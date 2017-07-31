@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message)  {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
 
             switch (args[0]) {

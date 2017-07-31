@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string cmdName = message.SplitSpaces()[0];
             
             Command cmd = Command.all.Find(cmdName);

@@ -157,7 +157,7 @@ namespace MCGalaxy.Scripting {
             string[] list = File.ReadAllLines(AutoloadFile);
             
             foreach (string cmdName in list) {
-                if (cmdName == "") continue;
+                if (cmdName.Length == 0) continue;
                 string error = IScripting.Load("Cmd" + cmdName);
                 if (error != null) { Logger.Log(LogType.Warning, error); continue; }
                 

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.CPE {
             for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
             
-            if (message == "") {
+            if (message.Length == 0) {
                 if (GetBD(p, global) != null) {
                     SendStepHelp(p, global);
                 } else {

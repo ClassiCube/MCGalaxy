@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string GetModel(string model) {
-            if (model == "") model = "humanoid";
+            if (model.Length == 0) model = "humanoid";
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
             return model;

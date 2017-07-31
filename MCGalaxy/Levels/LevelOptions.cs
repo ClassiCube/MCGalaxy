@@ -93,7 +93,7 @@ namespace MCGalaxy {
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         static void SetMotd(Player p, Level lvl, string value) {
-            lvl.Config.MOTD = value == "" ? "ignore" : value;
+            lvl.Config.MOTD = value.Length == 0 ? "ignore" : value;
             lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.Config.MOTD);
             
             Player[] players = PlayerInfo.Online.Items;
@@ -105,12 +105,12 @@ namespace MCGalaxy {
         
         static void SetRealmOwner(Player p, Level lvl, string value) {
             lvl.Config.RealmOwner = value.Replace(' ', ',');
-            if (value == "") Player.Message(p, "Removed realm owner for this level.");
+            if (value.Length == 0) Player.Message(p, "Removed realm owner for this level.");
             else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
         }
         
         static void SetTreeType(Player p, Level lvl, string value) {
-            if (value == "") {
+            if (value.Length == 0) {
                 Player.Message(p, "Reset tree type to default.");
                 lvl.Config.TreeType = "fern";
                 return;
@@ -156,7 +156,7 @@ namespace MCGalaxy {
         
         static void SetInt(Player p, Level lvl, ref int target, string value, string name,
                            OptionIntValidator validator = null) {
-            if (value == "") { Player.Message(p, "You must provide an integer."); return; }
+            if (value.Length == 0) { Player.Message(p, "You must provide an integer."); return; }
             int raw = 0;
             if (!CommandParser.GetInt(p, value, name, ref raw)) return;
             

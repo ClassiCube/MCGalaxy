@@ -24,13 +24,11 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (p != null && who.name == p.name) {
-                Player.Message(p, "You cannot hug yourself, silly!"); return;
-            }
+            if (p != null && p == who) { Player.Message(p, "You cannot hug yourself, silly!"); return; }
             
             string hugType = null;
             if (args.Length > 1) {

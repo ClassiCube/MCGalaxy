@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "You must be able to use /write to use /writetext."); return;
             }
             
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             if (args.Length < 3) { Help(p); return; }
             
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "write"; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             base.Use(p, "1 1 " + message);
         }
 

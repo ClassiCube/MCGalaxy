@@ -41,8 +41,8 @@ namespace MCGalaxy.DB {
         
         static void OfflineCoreLine(Player p, PlayerData data) {
             Group group = Group.GroupIn(data.Name);
-            string color = data.Color == "" ? group.Color : data.Color;
-            string prefix = data.Title == "" ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
+            string color = data.Color.Length == 0 ? group.Color : data.Color;
+            string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
             string fullName = prefix + color + data.Name.RemoveLastPlus();
             OnlineStat.CoreLine(p, fullName, data.Name, group);
         }

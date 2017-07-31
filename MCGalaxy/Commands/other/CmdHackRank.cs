@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Misc {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             if (p.hackrank) {
                 Player.Message(p, Colors.red + "You have already hacked a rank!"); return;

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
             if (args.Length < 2) {
                 Player.Message(p, "You did not specify the destination level name."); return;

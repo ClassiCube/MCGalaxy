@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "maze"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            if (dArgs.Message == "") return new MazeDrawOp();            
+            if (dArgs.Message.Length == 0) return new MazeDrawOp();            
             int randomizer = 0;
             if (!CommandParser.GetInt(dArgs.Player, dArgs.Message, "Randomizer", ref randomizer)) return null;
             

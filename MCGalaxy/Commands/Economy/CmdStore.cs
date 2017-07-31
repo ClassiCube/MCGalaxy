@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Eco {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 foreach (Item item in Economy.Items) {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p);

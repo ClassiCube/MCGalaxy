@@ -134,7 +134,7 @@ namespace MCGalaxy.Blocks {
                 
                 scope[idx].Changed = true;
                 scope[idx].DeathMessage = parts[9].Replace("\\;", ":");
-                if (scope[idx].DeathMessage == "")
+                if (scope[idx].DeathMessage.Length == 0)
                     scope[idx].DeathMessage = null;
                 
                 if (parts.Length > 10) {

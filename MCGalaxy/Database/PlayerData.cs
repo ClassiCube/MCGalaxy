@@ -79,7 +79,7 @@ namespace MCGalaxy.DB {
             p.title = data.Title;
             p.titlecolor = data.TitleColor;
             p.color = data.Color;
-            if (p.color == "") p.color = p.group.Color;
+            if (p.color.Length == 0) p.color = p.group.Color;
             
             p.TimesDied = data.Deaths;
             p.TotalModified = data.TotalModified;
@@ -127,21 +127,21 @@ namespace MCGalaxy.DB {
         
         
         internal static long ParseLong(string value) {
-            return (value == "" || value.CaselessEq("null")) ? 0 : long.Parse(value);
+            return (value.Length == 0 || value.CaselessEq("null")) ? 0 : long.Parse(value);
         }
         
         internal static int ParseInt(string value) {
-            return (value == "" || value.CaselessEq("null")) ? 0 : int.Parse(value);
+            return (value.Length == 0 || value.CaselessEq("null")) ? 0 : int.Parse(value);
         }
         
         static string ParseColor(object value) {
             string col = value.ToString().Trim();
-            if (col == "") return col;
+            if (col.Length == 0) return col;
             
             // Try parse color name, then color code
             string parsed = Colors.Parse(col);
             if (parsed != "") return parsed;
-            return Colors.Name(col) == "" ? "" : col;
+            return Colors.Name(col).Length == 0 ? "" : col;
         }
         
         

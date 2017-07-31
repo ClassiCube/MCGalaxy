@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             switch (args[0].ToLower()) {
                 case "add":

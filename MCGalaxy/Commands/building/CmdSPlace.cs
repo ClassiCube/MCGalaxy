@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             ushort distance = 0, interval = 0;
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             string[] parts = message.SplitSpaces();
             if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance)) return;

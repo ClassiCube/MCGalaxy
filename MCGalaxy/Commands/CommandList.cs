@@ -55,7 +55,7 @@ namespace MCGalaxy {
 
         /// <summary> Finds the command which has the given shortcut, or null if not found. </summary>
         public Command FindByShortcut(string shortcut) {
-            if (shortcut == "") return null;
+            if (shortcut.Length == 0) return null;
             foreach (Command cmd in commands) {
                 if (cmd.shortcut.CaselessEq(shortcut)) return cmd;
             }

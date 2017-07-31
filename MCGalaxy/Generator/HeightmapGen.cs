@@ -71,7 +71,7 @@ namespace MCGalaxy.Generator {
         public static bool Generate(MapGenArgs args) {
             Player p = args.Player;
             Level lvl = args.Level;
-            if (args.Args == "") { Player.Message(p, "You need to provide a url for the image."); return false; }
+            if (args.Args.Length == 0) { Player.Message(p, "You need to provide a url for the image."); return false; }
             
             if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;            
             string user = p == null ? "(console)" : p.name;

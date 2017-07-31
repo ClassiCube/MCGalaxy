@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);

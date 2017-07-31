@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (message == "") {
+            if (message.Length == 0) {
                 Player.Message(p, "Place a block where you would like to check for zones.");
                 p.MakeSelection(1, null, CheckZone);
             } else if (args[0].CaselessEq("add")) {

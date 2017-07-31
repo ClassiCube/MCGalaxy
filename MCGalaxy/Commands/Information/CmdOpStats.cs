@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Info {
             string start = "thismonth", name = null;
             string[] args = message.SplitSpaces();
             
-            if (message == "" || ValidTimespan(message.ToLower())) {
+            if (message.Length == 0 || ValidTimespan(message.ToLower())) {
                 if (p == null) { Help(p); return; }
                 
                 name = p.name;

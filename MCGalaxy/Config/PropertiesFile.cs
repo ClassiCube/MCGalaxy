@@ -58,7 +58,7 @@ namespace MCGalaxy {
         }
         
         static int ParseLine(string line, string path, char separator) {
-            if (line == "" || line[0] == '#') return -1;
+            if (line.Length == 0 || line[0] == '#') return -1;
             int index = line.IndexOf(separator);
             if (index == -1) {
                 Logger.Log(LogType.Warning, "Line \"{0}\" in {1} is missing a value", line, path);

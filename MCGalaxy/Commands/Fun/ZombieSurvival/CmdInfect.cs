@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
         
         public override void Use(Player p, string message) {
-            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message);
+            Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
             if (who.Game.Infected || !Server.zombie.RoundInProgress) {

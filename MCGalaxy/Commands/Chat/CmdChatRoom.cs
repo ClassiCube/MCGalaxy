@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message) {
             string[] parts = message.ToLower().SplitSpaces();
             
-            if (message == "") {
+            if (message.Length == 0) {
                 if (Chatrooms.Count == 0) {
                     Player.Message(p, "There are currently no chatrooms");
                 } else {

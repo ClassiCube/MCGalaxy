@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             bool area = message.CaselessStarts("area ");
             if (area) message = message.Substring("area ".Length);
             
-            if (message == "") message = p.name + " 1800";
+            if (message.Length == 0) message = p.name + " 1800";
             string[] parts = message.SplitSpaces();
 
             if (parts.Length >= 2) {

@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.World {
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
             
-            if (name == "") {
+            if (name.Length == 0) {
                 Player.Message(p, "You must provide a player name to {0}.", mode); return;
             }
             if (!Formatter.ValidName(p, name, "player")) return;

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Maintenance {
         delegate void DBSetter(string name, string column, string data);
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             args[0] = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "timespent":
                     SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v); break;
                 case "color":
-                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v == "" ? who.group.Color : v)); break;
+                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v.Length == 0 ? who.group.Color : v)); break;
                 case "titlecolor":
                 default:
                     Player.Message(p, Colors.red + "Invalid type.");
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
             
             string col = args[2] == "null" ? "" : Colors.Parse(args[2]);
-            if (col == "" && args[2] != "null") {
+            if (col.Length == 0 && args[2] != "null") {
                 Player.Message(p, "There is no color \"" + args[2] + "\"."); return;
             }
             
@@ -218,7 +218,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
             name = PlayerInfo.GetColoredName(p, name);
-            string msg = value == "" ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
+            string msg = value.Length == 0 ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
                 : String.Format("The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
             Player.Message(p, msg);
         }

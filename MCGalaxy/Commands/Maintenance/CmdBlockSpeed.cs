@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string text) {
-            if (text == "") { SendEstimation(p); return; }            
+            if (text.Length == 0) { SendEstimation(p); return; }            
             string[] args = text.SplitSpaces();
             string cmd = args[0].ToLower();
             if (cmd == "clear") {

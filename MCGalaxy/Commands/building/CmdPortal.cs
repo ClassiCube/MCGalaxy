@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             PortalData data;
             data.Multi = false;
             string[] args = message.SplitSpaces();
-            string block = message == "" ? "" : args[0].ToLower();
+            string block = message.Length == 0 ? "" : args[0].ToLower();
 
             if (args.Length >= 2 && args[1].CaselessEq("multi")) {
                 data.Multi = true;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Building {
             
             // Hardcoded aliases for backwards compatibility
             block.BlockID = Block.Invalid; block.ExtID = 0;
-            if (name == "") block.BlockID = Block.Portal_Blue;
+            if (name.Length == 0) block.BlockID = Block.Portal_Blue;
             if (name == "blue") block.BlockID = Block.Portal_Blue;
             if (name == "orange") block.BlockID = Block.Portal_Orange;
             if (name == "air") block.BlockID = Block.Portal_Air;

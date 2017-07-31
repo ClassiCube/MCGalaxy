@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
             string[] args = message.SplitSpaces();
             string modifier = args.Length > 1 ? args[1] : "";
             
-            if (args[0] == "" || args[0].CaselessEq("basic")) {
+            if (args[0].Length == 0 || args[0].CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
                 MultiPageOutput.Output(p, BasicBlocks(), FormatBlockName,
                                        "blocks basic", "blocks", modifier, false);

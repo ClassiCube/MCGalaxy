@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Moderation {
 
             string skin = (args.Length == 2) ? args[1] : "";
             message = args[0];
-            if (message == "" || message == p.possess) {
-                if (message == "" && p.possess == "") { Help(p); return; }
+            if (message.Length == 0 || message == p.possess) {
+                if (message.Length == 0 && p.possess.Length == 0) { Help(p); return; }
                 
                 Player who = PlayerInfo.FindExact(p.possess);
                 if (who == null) {

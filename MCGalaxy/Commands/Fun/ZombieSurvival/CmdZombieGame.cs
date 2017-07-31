@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.ToLower().SplitSpaces();
             ZSGame game = Server.zombie;
             
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Fun {
                     Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); break;
             }
             
-            if (game.Status == ZombieGameStatus.NotStarted || game.CurLevelName == "") return;
+            if (game.Status == ZombieGameStatus.NotStarted || game.CurLevelName.Length == 0) return;
             Player.Message(p, "Running on map: " + game.CurLevelName);
         }
         

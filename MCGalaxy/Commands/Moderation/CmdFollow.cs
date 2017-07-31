@@ -39,8 +39,8 @@ namespace MCGalaxy.Commands.Moderation {
                 name = args[1];
             }
             
-            if (name == "" && p.following == "") { Help(p); return; }
-            if (name.CaselessEq(p.following) || (name == "" && p.following != ""))
+            if (name.Length == 0 && p.following.Length == 0) { Help(p); return; }
+            if (name.CaselessEq(p.following) || (name.Length == 0 && p.following != ""))
                 Unfollow(p, stealth);
             else
                 Follow(p, name, stealth);

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
                 message = message.Substring("-noip ".Length);
                 banIP = false;
             }            
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             string name = message.SplitSpaces()[0];
             Command.all.Find("undoplayer").Use(p, name + " all");

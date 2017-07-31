@@ -32,14 +32,14 @@ namespace MCGalaxy {
             if (value.TotalMinutes <= 1 || (seconds && value.Days < 1))
                 Add(ref time, value.Seconds, 's', spaces);
             
-            if (time == "") time = seconds ? "0s" : "0m";
+            if (time.Length == 0) time = seconds ? "0s" : "0m";
             return negate ? "-" + time : time;
         }
         
         static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;
             
-            if (time == "") 
+            if (time.Length == 0) 
                 time = "" + amount + suffix;
             else 
                 time = time + (spaces ? " " : "") + amount + suffix;

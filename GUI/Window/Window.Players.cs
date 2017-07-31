@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
-            if (pl_txtUndo.Text.Trim() == "")  {
+            if (pl_txtUndo.Text.Trim().Length == 0)  {
                 AppendPlayerStatus("You didn't specify a time"); return;
             }
 

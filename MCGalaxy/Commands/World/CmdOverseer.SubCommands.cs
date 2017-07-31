@@ -30,14 +30,14 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleEnv(Player p, string type, string value) {
-            string arg = value == "" ? "normal" : value;
+            string arg = value.Length == 0 ? "normal" : value;
             if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
             Player.MessageLines(p, envHelp);
         }
 
         static void HandleGoto(Player p, string map, string ignored) {
             byte mapNum = 0;
-            if (map == "" || map == "1") {
+            if (map.Length == 0 || map == "1") {
                 map = FirstMapName(p);
             } else {
                 if (!byte.TryParse(map, out mapNum)) {
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleKick(Player p, string name, string ignored) {
-            if (name == "") { Player.Message(p, "You must specify a player to kick."); return; }
+            if (name.Length == 0) { Player.Message(p, "You must specify a player to kick."); return; }
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleMap(Player p, string cmd, string value) {
             cmd = cmd.ToUpper();
-            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd == "");
+            bool mapOnly = !(cmd == "ADD" || cmd == "DELETE" || cmd.Length == 0);
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
@@ -110,19 +110,19 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
-                string rank = value == "" ? ServerConfig.DefaultRankName : value;
+                string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Command.all.Find("pervisit").Use(p, rank);
             } else if (cmd == "PERBUILD") {
-                string rank = value == "" ? ServerConfig.DefaultRankName : value;
+                string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Command.all.Find("perbuild").Use(p, rank);
             } else if (cmd == "TEXTURE") {
-                if (value == "") {
+                if (value.Length == 0) {
                     Command.all.Find("texture").Use(p, "level normal");
                 } else {
                     Command.all.Find("texture").Use(p, "level " + value);
                 }
             } else if (cmd == "TEXTUREZIP") {
-                if (value == "") {
+                if (value.Length == 0) {
                     Command.all.Find("texture").Use(p, "levelzip normal");
                 } else {
                     Command.all.Find("texture").Use(p, "levelzip " + value);
@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands.World {
             string level = NextLevel(p);
             if (level == null) return;
 
-            if (value == "") value = "128 64 128 flat";
+            if (value.Length == 0) value = "128 64 128 flat";
             else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
             
             string[] args = value.TrimEnd().SplitSpaces();
@@ -211,20 +211,20 @@ namespace MCGalaxy.Commands.World {
             if (cmd == "LIST") {
                 Command.all.Find("zone").Use(p, "");
             } else if (cmd == "ADD") {
-                if (name == "") { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
             } else if (cmd == "DEL") {
-                if (name == "") { Player.Message(p, "You need to provide a player name, or \"ALL\"."); return; }
+                if (name.Length == 0) { Player.Message(p, "You need to provide a player name, or \"ALL\"."); return; }
                 DeleteBuildPlayer(p, name);
             } else if (cmd == "BLOCK") {
-                if (name == "") { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 name = PlayerInfo.FindMatchesPreferOnline(p, name);
                 if (name == null) return;
                 
                 if (name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }
                 RemoveVisitPlayer(p, name);
             } else if (cmd == "UNBLOCK") {
-                if (name == "") { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 if (!Formatter.ValidName(p, name, "player")) return;
                 AddVisitPlayer(p, name);
             } else if (cmd == "BLACKLIST") {

@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         void DoBackup(Player p, string[] args) {
             string type = args.Length == 1 ? "" : args[1].ToLower();
-            if (type == "" || type == "all") {
+            if (type.Length == 0 || type == "all") {
                 Player.Message(p, "Server backup started. Please wait while backup finishes.");
                 Backup.CreatePackage(p, true, true, false);
             } else if (type == "database" || type == "sql" || type == "db") {

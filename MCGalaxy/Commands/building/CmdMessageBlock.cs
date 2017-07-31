@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             bool allMessage = false;
             MBData data;

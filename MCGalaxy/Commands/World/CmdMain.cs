@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 if (Player.IsSuper(p)) {
                     Player.Message(p, "Main level is {0}", Server.mainLevel.ColoredName);
                 } else if (p.level.name == Server.mainLevel.name) {

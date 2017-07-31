@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(2);
-            if (message == "") { 
+            if (message.Length == 0) { 
                 Player.Message(p, "Available ranks: " +Group.GroupList.Join(g => g.ColoredName)); return; 
             }
             string modifer = args.Length > 1 ? args[1] : "";

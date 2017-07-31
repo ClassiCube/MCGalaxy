@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] parts = message.SplitSpaces(3);
             string cmd = parts[0].ToUpper();
             string arg = parts.Length > 1 ? parts[1] : "";

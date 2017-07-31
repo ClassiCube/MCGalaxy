@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }            
+            if (message.Length == 0) { Help(p); return; }            
             if (!message.CaselessEq("all") && Block.Byte(message) == Block.Invalid) {
                 Player.Message(p, "There is no block \"" + message + "\"."); return;
             }            

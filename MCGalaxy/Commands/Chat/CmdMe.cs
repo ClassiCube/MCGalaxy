@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Player.Message(p, "You"); return; }
+            if (message.Length == 0) { Player.Message(p, "You"); return; }
             if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
             
             string msg = p.color + "*" + Colors.Strip(p.DisplayName) + " " + message;

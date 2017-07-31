@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/images/"))
                 Directory.CreateDirectory("extra/images/");
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] parts = message.SplitSpaces(3);
             
             DrawArgs dArgs = default(DrawArgs);

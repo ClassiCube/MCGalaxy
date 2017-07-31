@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Misc {
             WarpList warps = WarpList.Global;
             string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0];
-            if (cmd == "") { Help(p); return; }
+            if (cmd.Length == 0) { Help(p); return; }
             
             if (args.Length == 1 && (cmd == "list" || cmd == "view")) {
                 Player.Message(p, "Warps:");

@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool ParseArgs(Player p, string args, Entity entity) {
-            if (args == "") {
+            if (args.Length == 0) {
                 Entities.UpdateEntityProp(entity, EntityProp.RotX, 0);
                 Entities.UpdateEntityProp(entity, EntityProp.RotZ, 0);
                 return true;

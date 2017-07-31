@@ -87,9 +87,9 @@ namespace MCGalaxy {
             
             cmd = alias.Target;
             if (alias.Prefix != null)
-                cmdArgs = cmdArgs == "" ? alias.Prefix : alias.Prefix + " " + cmdArgs;
+                cmdArgs = cmdArgs.Length == 0 ? alias.Prefix : alias.Prefix + " " + cmdArgs;
             if (alias.Suffix != null)
-                cmdArgs = cmdArgs == "" ? alias.Suffix : cmdArgs + " " + alias.Suffix;
+                cmdArgs = cmdArgs.Length == 0 ? alias.Suffix : cmdArgs + " " + alias.Suffix;
         }
     }
     

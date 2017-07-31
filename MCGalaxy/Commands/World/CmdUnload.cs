@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
             string name = message.ToLower();
             if (CheckSuper(p, message, "level name")) return;
             
-            if (name == "") {
+            if (name.Length == 0) {
                 if (!p.level.Unload()) {
                     Player.Message(p, "You cannot unload this level.");
                 }

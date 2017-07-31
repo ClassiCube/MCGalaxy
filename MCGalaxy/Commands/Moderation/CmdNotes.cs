@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (CheckSuper(p, message, "player name")) return;
-            if (message == "") message = p.name;
+            if (message.Length == 0) message = p.name;
             string name = PlayerInfo.FindMatchesPreferOnline(p, message);
             if (name == null) return;
             

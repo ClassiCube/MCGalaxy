@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Brushes {
             if (!blocks[0].IsInvalid && !CommandParser.IsBlockAllowed(p, "draw with", blocks[0])) return null;
             
             for (int i = 0, j = 0; i < parts.Length; i++ ) {
-                if (parts[i] == "") continue;
+                if (parts[i].Length == 0) continue;
                 
                 // Brush specific args
                 if (argFilter(parts[i])) {
@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
                            out ExtBlock[] blocks, out int[] count) {
             int bCount = 0;
             for (int i = 0; i < parts.Length; i++) {
-                if (parts[i] == "" || !filter(parts[i])) continue;
+                if (parts[i].Length == 0 || !filter(parts[i])) continue;
                 bCount++;
             }
             

@@ -363,7 +363,7 @@ namespace MCGalaxy.Gui {
             catch { }
             
             try {
-                if (logs_txtGeneral.Text == "")
+                if (logs_txtGeneral.Text.Length == 0)
                     logs_dateGeneral.Value = DateTime.Now;
             } catch { }
             

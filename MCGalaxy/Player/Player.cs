@@ -117,7 +117,7 @@ namespace MCGalaxy {
                 (devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color) :
                 isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
             prefix = prefix + viptitle;
-            prefix = (title == "") ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
+            prefix = (title.Length == 0) ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }
         
         public bool CheckIfInsideBlock() {
@@ -275,7 +275,7 @@ namespace MCGalaxy {
             CriticalTasks.Clear();
             
             //Umm...fixed?
-            if (name == "") {
+            if (name.Length == 0) {
                 if (Socket != null) CloseSocket();
                 connections.Remove(this);
                 disconnected = true;

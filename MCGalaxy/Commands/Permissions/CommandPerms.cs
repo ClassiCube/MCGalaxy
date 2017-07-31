@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands {
         /// <summary> Expands a comma separated string into a list of rank permissions. </summary>
         public static List<LevelPermission> ExpandPerms(string input) {
             List<LevelPermission> perms = new List<LevelPermission>();
-            if (input == null || input == "") return perms;
+            if (input == null || input.Length == 0) return perms;
             
             foreach (string perm in input.Split(',')) {
                 perms.Add((LevelPermission)int.Parse(perm));
@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands {
         static void LoadVersion2(string[] lines) {
             char[] colon = new char[] { ':' };
             foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
+                if (line.Length == 0 || line[0] == '#') continue;
                 //Name : Lowest : Disallow : Allow
                 string[] args = line.Replace(" ", "").Split(colon);
                 
@@ -217,7 +217,7 @@ namespace MCGalaxy.Commands {
         
         static void LoadVersion1(string[] lines) {
             foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
+                if (line.Length == 0 || line[0] == '#') continue;
                 
                 string cmd = line.Split('=')[0].Trim();
                 string value = line.Split('=')[1].Trim();

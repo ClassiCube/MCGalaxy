@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 bool anyBinds = false;
                 for (int i = 0; i < p.CmdBindings.Length; i++)  {
                     if (p.CmdBindings[i] != null) {

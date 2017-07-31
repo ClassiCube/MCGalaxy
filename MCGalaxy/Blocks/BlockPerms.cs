@@ -132,7 +132,7 @@ namespace MCGalaxy.Blocks {
             // Custom permissions set by the user.
             if (File.Exists(Paths.BlockPermsFile)) {
                 string[] lines = File.ReadAllLines(Paths.BlockPermsFile);
-                if (lines.Length > 0 && lines[0] == "#Version 2") {
+                if (lines.Length > 0 && lines[0].CaselessEq("#Version 2")) {
                     LoadVersion2(lines);
                 } else {
                     LoadVersion1(lines);
@@ -149,7 +149,7 @@ namespace MCGalaxy.Blocks {
         static void LoadVersion2(string[] lines) {
             char[] colon = new char[] { ':' };
             foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
+                if (line.Length == 0 || line[0] == '#') continue;
                 //Name : Lowest : Disallow : Allow
                 string[] args = line.Replace(" ", "").Split(colon);
                 
@@ -174,7 +174,7 @@ namespace MCGalaxy.Blocks {
         
         static void LoadVersion1(string[] lines) {
             foreach (string line in lines) {
-                if (line == "" || line[0] == '#') continue;
+                if (line.Length == 0 || line[0] == '#') continue;
                 
                 try {
                     byte block = Block.Byte(line.SplitSpaces()[0]);

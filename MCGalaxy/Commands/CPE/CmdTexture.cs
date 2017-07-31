@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             string scope = args[0].ToLower();
             if (scope == "local") scope = "level";
@@ -52,17 +52,17 @@ namespace MCGalaxy.Commands.World {
             }
             FilterURL(ref url);
             
-            if ((scope == "global" || scope == "level") && !(url == "" || url.EndsWith(".png"))) {
+            if ((scope == "global" || scope == "level") && !(url.Length == 0 || url.EndsWith(".png"))) {
                 Player.Message(p, "The terrain URL must end in a .png"); return;
             }
-            if ((scope == "globalzip" || scope == "levelzip") && !(url == "" || url.EndsWith(".zip"))) {
+            if ((scope == "globalzip" || scope == "levelzip") && !(url.Length == 0 || url.EndsWith(".zip"))) {
                 Player.Message(p, "The texture pack URL must end in a .zip"); return;
             }
             if (url.Length > NetUtils.StringSize) { 
                 Player.Message(p, "The URL must be " + NetUtils.StringSize + " characters or less."); return; 
             }
             
-            string path = url == "" ? "normal" : url;
+            string path = url.Length == 0 ? "normal" : url;
             if (scope == "global") {
                 ServerConfig.DefaultTerrain = url;
                 Player.Message(p, "Set server's default terrain to " + path);
@@ -95,13 +95,13 @@ namespace MCGalaxy.Commands.World {
             } 
         }
         
-        static string GetPath(string url) { return url == "" ? "(none)" : url; }
+        static string GetPath(string url) { return url.Length == 0 ? "(none)" : url; }
         
         void UpdateGlobally(Player p, bool zip) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 string url = zip ? pl.level.Config.TexturePack : pl.level.Config.Terrain;
-                if (url == "") pl.SendCurrentMapAppearance();
+                if (url.Length == 0) pl.SendCurrentMapAppearance();
             }
             SrvProperties.Save();
         }

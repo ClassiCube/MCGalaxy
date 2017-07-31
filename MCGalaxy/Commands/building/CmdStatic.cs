@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
             p.ModeBlock = ExtBlock.Air;
 
             Player.Message(p, "Static mode: &a" + p.staticCommands);
-            if (message == "" || !p.staticCommands) return;
+            if (message.Length == 0 || !p.staticCommands) return;
 
             string[] parts = message.SplitSpaces(2);
             Command cmd = Command.all.Find(parts[0]);

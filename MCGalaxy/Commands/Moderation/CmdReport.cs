@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             if (!Directory.Exists("extra/reported"))
                 Directory.CreateDirectory("extra/reported");

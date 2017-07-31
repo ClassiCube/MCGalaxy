@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
-            if (brushMsg == "") brushMsg = dArgs.Player.DefaultBrushArgs;
+            if (brushMsg.Length == 0) brushMsg = dArgs.Player.DefaultBrushArgs;
             return brushMsg;
         }
         

@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Fun {
             
             TntWarsGame it;
             if (text[1] == "red" || text[1] == "r" || text[1] == "1" || text[1] == "blue"
-                || text[1] == "b" || text[1] == "2" || text[1] == "auto" || text[1] == "a" || text[1] == "") {
+                || text[1] == "b" || text[1] == "2" || text[1] == "auto" || text[1] == "a" || text[1].Length == 0) {
                 it = TntWarsGame.Find(p.level);
                 if (it == null) {
                     Player.Message(p, "TNT Wars Error: There isn't a game on your current level!"); return;
@@ -478,7 +478,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "level":
                 case "l":
                 case "lvl":
-                    if (text[2] == "") {
+                    if (text[2].Length == 0) {
                         it.lvl = p.level;
                     } else {
                         it.lvl = Matcher.FindLevels(p, text[2]);

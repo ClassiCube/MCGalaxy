@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Player.Message(p, "Your inbox is empty."); return;
             }
 
-            if (message == "") {
+            if (message.Length == 0) {
                 using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
                     foreach (DataRow row in Inbox.Rows) {

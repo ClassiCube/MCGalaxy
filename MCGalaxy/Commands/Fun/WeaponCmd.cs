@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You can't use a " + Weapon.ToLower() + " while you have the flag!"); return;
             }
 
-            if (p.aiming && message == "") {
+            if (p.aiming && message.Length == 0) {
                 p.aiming = false;
                 p.ClearBlockchange();
                 Player.Message(p, "Disabled " + Weapon.ToLower() );
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         WeaponType GetWeaponType(Player p, string mode) {
-            if (mode == "") return WeaponType.Normal;
+            if (mode.Length == 0) return WeaponType.Normal;
             if (mode.CaselessEq("destroy")) return WeaponType.Destroy;
             if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return WeaponType.Teleport;
             if (mode.CaselessEq("explode")) return WeaponType.Explode;

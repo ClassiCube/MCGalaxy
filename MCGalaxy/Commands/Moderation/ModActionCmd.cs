@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             Entities.DespawnEntities(who, false);
             string dbCol = PlayerData.FindDBColor(who);
-            if (dbCol == "") who.color = newRank.Color;
+            if (dbCol.Length == 0) who.color = newRank.Color;
             
             who.group = newRank;
             AccessResult access = who.level.BuildAccess.Check(who);

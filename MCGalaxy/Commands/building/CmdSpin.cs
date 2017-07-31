@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") message = "y";
+            if (message.Length == 0) message = "y";
             if (p.CopyBuffer == null) {
                 Player.Message(p, "You haven't copied anything yet"); return;
             }

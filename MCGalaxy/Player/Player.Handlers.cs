@@ -525,7 +525,7 @@ namespace MCGalaxy {
         bool DoCommand(string text) {
             // Typing / repeats last command executed
             if (text == "/") {
-                if (lastCMD == "") {
+                if (lastCMD.Length == 0) {
                     Player.Message(this, "Cannot repeat command - no commands used yet.");
                     return true;
                 }
@@ -629,7 +629,7 @@ namespace MCGalaxy {
         }
         
         bool CheckCommand(string cmd) {
-            if (cmd == "") { SendMessage("No command entered."); return false; }
+            if (cmd.Length == 0) { SendMessage("No command entered."); return false; }
             if (ServerConfig.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree")) {
                 SendMessage(mustAgreeMsg); return false;
             }
@@ -693,7 +693,7 @@ namespace MCGalaxy {
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
             if (cmd != "repeat" && cmd != "pass") {
-                lastCMD = message == "" ? cmd : cmd + " " + message;
+                lastCMD = message.Length == 0 ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
             }
             if (cmd != "pass") Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);

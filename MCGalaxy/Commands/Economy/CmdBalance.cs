@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Eco {
             if (CheckSuper(p, message, "player name")) return;
             if (!Formatter.ValidName(p, message, "player")) return;
             int matches = 1;
-            Player who = message == "" ? p : PlayerInfo.FindMatches(p, message, out matches);
+            Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             
             string target = null;

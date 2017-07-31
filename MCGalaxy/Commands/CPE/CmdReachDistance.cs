@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.CPE {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             float dist;
             if (!Utils.TryParseDecimal(message, out dist)) {

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string GetSkin(string skin, string defSkin) {
-            if (skin == "") skin = defSkin;
+            if (skin.Length == 0) skin = defSkin;
             if (skin[0] == '+')
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             return skin;

@@ -34,7 +34,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         internal static Brush ProcessReplace(BrushArgs args, bool not) {
             string[] parts = args.Message.SplitSpaces();
-            if (args.Message == "") {
+            if (args.Message.Length == 0) {
                 args.Player.SendMessage("You need at least one block to replace."); return null;
             }
             

@@ -31,7 +31,7 @@ namespace MCGalaxy.Gui {
         [Description("Message shown to users when they join this level.")]
         [Category("General")]
         [DisplayName("MOTD")]
-        public string MOTD { get { return cfg.MOTD; } set { cfg.MOTD = value == "" ? "ignore" : value; } }
+        public string MOTD { get { return cfg.MOTD; } set { cfg.MOTD = value.Length == 0 ? "ignore" : value; } }
         
         [Description("Whether this map automatically loads when the server is started.")]
         [Category("General")]

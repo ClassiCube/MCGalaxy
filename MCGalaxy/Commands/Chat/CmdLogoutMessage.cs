@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         protected override void SetPlayerData(Player p, Player who, string logoutMsg) {
-            if (logoutMsg == "") {
+            if (logoutMsg.Length == 0) {
                 string path = PlayerDB.LogoutPath(who.name);
                 if (File.Exists(path)) File.Delete(path);
                 Player.Message(p, "The logout message of {0} %Shas been removed.",

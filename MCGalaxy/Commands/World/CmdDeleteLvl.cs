@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "" || message.SplitSpaces().Length > 1) { Help(p); return; }
+            if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             string map = Matcher.FindMaps(p, message);
             if (map == null) return;

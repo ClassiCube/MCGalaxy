@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player name")) return;
-            if (message == "") message = p.name;
+            if (message.Length == 0) message = p.name;
             
             string plName = PlayerInfo.FindMatchesPreferOnline(p, message);
             if (plName == null) return;

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (p.cmdTimer) { Player.Message(p, "Can only have one timer at a time. Use /abort to cancel your previous timer."); return; }
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
 
             int TotalTime = 0;
             try

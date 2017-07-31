@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawMode GetMode(string[] parts) {
             string mode = parts[parts.Length - 1];
-            if (mode == "") return DrawMode.normal;
+            if (mode.Length == 0) return DrawMode.normal;
             DrawMode dMode = ParseMode(mode);
             if (dMode != DrawMode.normal) return dMode;
             

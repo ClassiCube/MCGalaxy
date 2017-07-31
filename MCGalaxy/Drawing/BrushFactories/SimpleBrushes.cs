@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Message == "") {
+            if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
                 return new SolidBrush(args.Block);
             }
@@ -42,7 +42,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         public override bool Validate(BrushArgs args) {
-            if (args.Message == "") return true;
+            if (args.Message.Length == 0) return true;
             ExtBlock block;
             return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block);
         }
@@ -60,7 +60,7 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Message == "") {
+            if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
                 return new CheckeredBrush(args.Block, ExtBlock.Invalid);
             }
@@ -104,7 +104,7 @@ namespace MCGalaxy.Drawing.Brushes {
                 return null;
             }
             
-            if (args.Message == "")
+            if (args.Message.Length == 0)
                 return new SimplePasteBrush(args.Player.CopyBuffer);
             string[] parts = args.Message.SplitSpaces();
             PasteBrush brush = new PasteBrush(args.Player.CopyBuffer);
@@ -132,7 +132,7 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Message == "") {
+            if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
                 return new StripedBrush(args.Block, ExtBlock.Air);
             }

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 
             switch (args[0].ToLower()) {
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             string color = Colors.Parse(args[1]);
-            if (color == "") {
+            if (color.Length == 0) {
                 Player.Message(p, "\"" + color + "\" is not a valid color."); return;
             }
             team.Color = color;

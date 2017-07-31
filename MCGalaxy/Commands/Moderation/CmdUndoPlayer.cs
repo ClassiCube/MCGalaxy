@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (area) message = message.Substring("area ".Length);
 
             if (CheckSuper(p, message, "player name")) return;
-            if (message == "") { Player.Message(p, "You need to provide a player name."); return; }
+            if (message.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
             
             string[] parts = message.SplitSpaces(), names = null;
             int[] ids = GetIds(p, parts, out names);

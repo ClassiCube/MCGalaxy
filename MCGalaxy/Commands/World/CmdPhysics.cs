@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") { ShowPhysics(p); return; }
+            if (message.Length == 0) { ShowPhysics(p); return; }
             if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             
             string[] args = message.SplitSpaces();

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 Player.Message(p, "Your current transform is: " + p.Transform.Name); return;
             }
             string[] args = message.SplitSpaces(2);

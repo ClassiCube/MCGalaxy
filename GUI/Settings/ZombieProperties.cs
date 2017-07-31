@@ -185,11 +185,11 @@ namespace MCGalaxy.Gui {
         public void ApplyToServer() {
             ZSConfig.ChangeLevels = ChangeLevels;
             string list = IgnoredLevelsList.Replace(" ", "");
-            if (list == "") ZSConfig.IgnoredLevelList = new List<string>();
+            if (list.Length == 0) ZSConfig.IgnoredLevelList = new List<string>();
             else ZSConfig.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
                 
             list = LevelsList.Replace(" ", "");
-            if (list == "") ZSConfig.LevelList = new List<string>();
+            if (list.Length == 0) ZSConfig.LevelList = new List<string>();
             else ZSConfig.LevelList = new List<string>(list.Replace(" ", "").Split(','));
             ZSConfig.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
@@ -204,7 +204,7 @@ namespace MCGalaxy.Gui {
             
             ZSConfig.ZombieName = Name.Trim();
             ZSConfig.ZombieModel = Model.Trim();
-            if (ZSConfig.ZombieModel == "")
+            if (ZSConfig.ZombieModel.Length == 0)
                 ZSConfig.ZombieModel = "zombie";
             ZSConfig.InvisibilityDuration = InvisibilityDuration;
             ZSConfig.InvisibilityPotions = InvisibilityPotions;

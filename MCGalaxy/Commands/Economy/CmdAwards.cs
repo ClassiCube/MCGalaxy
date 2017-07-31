@@ -54,13 +54,13 @@ namespace MCGalaxy.Commands.Eco {
                 return;
             }
             
-            string cmd = plName == "" ? "awards" : "awards " + plName;
+            string cmd = plName.Length == 0 ? "awards" : "awards " + plName;
             MultiPageOutput.Output(p, awards, FormatAward,
                                    cmd, "awards", modifier, true);
         }
         
         static List<Awards.Award> GetAwards(string plName) {
-            if (plName == "") return Awards.AwardsList;
+            if (plName.Length == 0) return Awards.AwardsList;
             
             List<Awards.Award> awards = new List<Awards.Award>();
             foreach (string s in Awards.GetPlayerAwards(plName)) {

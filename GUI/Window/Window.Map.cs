@@ -73,7 +73,7 @@ namespace MCGalaxy.Gui {
             object selected = box.SelectedItem;
             string value = selected == null ? "" : selected.ToString().ToLower();
             
-            if (value == "") {
+            if (value.Length == 0) {
                 MessageBox.Show("Map " + propName + " cannot be blank.");
                 return null;
             }

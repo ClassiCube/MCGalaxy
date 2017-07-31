@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Moderation {
         public static string keywords { get { return ""; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             bool stealth = false;
             if (message[0] == '#') {
                 message = message.Remove(0, 1).Trim();

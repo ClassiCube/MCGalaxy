@@ -62,7 +62,7 @@ namespace MCGalaxy.Events {
         
         /// <summary> Returns " (reason)" if reason is given, "" if not. </summary>
         public string ReasonSuffixed {
-            get { return Reason == "" ? "" : " (" + Reason + "%S)"; }
+            get { return Reason.Length == 0 ? "" : " (" + Reason + "%S)"; }
         }
         
         /// <summary> Returns a formatted moderation action message. </summary>

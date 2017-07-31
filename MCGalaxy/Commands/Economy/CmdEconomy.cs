@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Eco {
                 if (item != null) {
                     item.Setup(p, args);
                     Economy.Save();
-                } else if (args[1] == "") {
+                } else if (args[1].Length == 0) {
                     Help(p);
                 } else {
                     Help(p, args[1]);

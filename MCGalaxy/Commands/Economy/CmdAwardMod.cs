@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Eco {
         static char[] awardArgs = new char[] { ':' };
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.IndexOf(' ') == -1) { Help(p); return; }            
+            if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }            
             string[] args = message.SplitSpaces(2);
             if (!(args[0].CaselessEq("add") || args[0].CaselessEq("del"))) { Help(p); return; }
 

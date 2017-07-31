@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {
-            if (nick == "") {
+            if (nick.Length == 0) {
                 bot.DisplayName = bot.name;
                 Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + " %Sreverted to their original name.");
             } else {
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         protected override void SetPlayerData(Player p, Player who, string nick) {
-            if (nick == "") {                
+            if (nick.Length == 0) {                
                 Chat.MessageGlobal(who, who.FullName + " %Sreverted their nick to their original name.", false);
                 who.DisplayName = who.truename;
             } else {

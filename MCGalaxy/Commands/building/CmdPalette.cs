@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(5);
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             if (args[0].CaselessEq("create")) {
                 HandleCreate(p, args);

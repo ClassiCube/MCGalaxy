@@ -93,7 +93,7 @@ namespace MCGalaxy.Gui {
         
         void chat_ShowColorDialog(Button target, string title) {
             string parsed = Colors.Parse(target.Text);
-            char col = parsed == "" ? 'f' : parsed[1];
+            char col = parsed.Length == 0 ? 'f' : parsed[1];
             
             using (ColorSelector sel = new ColorSelector(title, col)) {
                 DialogResult result = sel.ShowDialog();

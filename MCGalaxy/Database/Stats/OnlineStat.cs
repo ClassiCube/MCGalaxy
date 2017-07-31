@@ -43,7 +43,7 @@ namespace MCGalaxy.DB {
         };
         
         static void OnlineCoreLine(Player p, Player who) {
-            string prefix = who.title == "" ? "" : who.color + "[" + who.titlecolor + who.title + who.color + "] ";
+            string prefix = who.title.Length == 0 ? "" : who.color + "[" + who.titlecolor + who.title + who.color + "] ";
             string fullName = prefix + who.ColoredName;
             CoreLine(p, fullName, who.name, who.group);
         }

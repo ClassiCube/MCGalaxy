@@ -112,7 +112,7 @@ namespace MCGalaxy.Gui {
         
         Color GetColor(string name) {
             string code = Colors.Parse(name);
-            if (code == "") return SystemColors.Control;
+            if (code.Length == 0) return SystemColors.Control;
             if (Colors.IsStandard(code[1])) return Color.FromName(name);
             
             ColorDesc col = Colors.List[code[1]];

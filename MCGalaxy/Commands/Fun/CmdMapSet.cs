@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 Player.Message(p, "Map authors: " + p.level.Config.Authors);
                 Player.Message(p, "Pillaring allowed: " + p.level.Config.Pillaring);
                 Player.Message(p, "Build type: " + p.level.Config.BuildType);

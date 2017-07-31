@@ -71,7 +71,7 @@ namespace MCGalaxy.Bots {
         
         public override void Output(Player p, string[] args, StreamWriter w) {
             string script = args.Length > 3 ? args[3] : "";
-            if (script == "") {
+            if (script.Length == 0) {
                 Player.Message(p, "LinkScript requires a script name as a parameter");
             } else {
                 w.WriteLine(Name + " " + script);

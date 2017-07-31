@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Bots {
             string[] args = message.SplitSpaces(2);
             int ignored, offset = 0;
             
-            if (args.Length == 2 || !(message == "" || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
+            if (args.Length == 2 || !(message.Length == 0 || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
                 lvl = Matcher.FindLevels(p, args[0]);
                 offset = 1;
                 if (lvl == null) return;

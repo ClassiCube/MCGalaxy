@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message.CaselessEq("all")) { SaveAll(); return; }
-            if (message == "") {
+            if (message.Length == 0) {
                 if (Player.IsSuper(p)) { SaveAll(); } 
                 else { Save(p, p.level, ""); }
                 return;
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
             
-            if (restoreName == "") {
+            if (restoreName.Length == 0) {
                 Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, num);
                 lvl.ChatLevel("Backup " + num + " saved for " + lvl.ColoredName);
             } else {

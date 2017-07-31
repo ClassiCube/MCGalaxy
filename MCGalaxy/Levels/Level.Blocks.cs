@@ -236,7 +236,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if (owners == "") return "No zones affect this block";
+            if (owners.Length == 0) return "No zones affect this block";
             return "This zone belongs to " + owners.Remove(0, 2) + ".";
         }
         

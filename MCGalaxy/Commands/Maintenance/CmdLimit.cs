@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Maintenance {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             bool hasLimit = args.Length > 1;
             
             if (args[0].CaselessEq("rt") || args[0].CaselessEq("reloadthreshold")) {

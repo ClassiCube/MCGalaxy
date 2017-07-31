@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
             bool env = args[0].CaselessEq("env");
             string map = env ? (args.Length > 1 ? args[1] : "") : args[0];
 
-            Level lvl = map == "" ? p.level : null;
+            Level lvl = map.Length == 0 ? p.level : null;
             MapInfoData data = new MapInfoData();
             
             if (lvl == null) {
@@ -233,7 +233,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string Color(string src) {
-            return (src == null || src == "" || src == "-1") ? "%bnone%e" : "%b" + src + "%e";
+            return (src == null || src.Length == 0 || src == "-1") ? "%bnone%e" : "%b" + src + "%e";
         }
         
         public override void Help(Player p)  {

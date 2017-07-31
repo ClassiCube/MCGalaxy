@@ -33,7 +33,7 @@ namespace MCGalaxy.Gui {
         }
         
         public static Thread RepeatCommand() {
-            if (lastCMD == "") {
+            if (lastCMD.Length == 0) {
                 Logger.Log(LogType.CommandUsage, "(console): Cannot repeat command - no commands used yet.");
                 return null;
             }

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { OutputBackups(p); return; }
+            if (message.Length == 0) { OutputBackups(p); return; }
             
             Level lvl;
             string[] args = message.SplitSpaces();

@@ -203,7 +203,7 @@ namespace MCGalaxy.Network {
             Player p = new IRCPlayer(channel, user.Nick, bot);
             if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
-            string logCmd = cmdArgs == "" ? cmdName : cmdName + " " + cmdArgs;
+            string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
             
             try {
@@ -312,7 +312,7 @@ namespace MCGalaxy.Network {
             // We have successfully reclaimed our nick, so try to sign in again.
             if (newNick == bot.nick) Authenticate();
 
-            if (newNick.Trim() == "") return;
+            if (newNick.Trim().Length == 0) return;
             
             foreach (var kvp in userMap) {
                 int index = GetNickIndex(user.Nick, kvp.Value);
@@ -424,7 +424,7 @@ namespace MCGalaxy.Network {
             
             if (verify == IRCControllerVerify.HalfOp) {
                 string prefix = GetPrefix(chanNicks[index]);
-                if (prefix == "" || prefix == "+") {
+                if (prefix.Length == 0 || prefix == "+") {
                     error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
                 }
                 return true;

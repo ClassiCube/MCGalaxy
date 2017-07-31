@@ -109,7 +109,7 @@ namespace MCGalaxy {
             
             foreach (string line in lines) {
                 try {
-                    if (line == "" || line[0] == '#') continue;
+                    if (line.Length == 0 || line[0] == '#') continue;
                     int index = line.IndexOf(" = ");
                     if (index == -1) continue;
                     

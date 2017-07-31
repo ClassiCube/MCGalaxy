@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             
             IScripting engine = null;
             if (args.Length == 1) {
                 engine = IScripting.CS;
-            } else if (args[1] == "vb") {
+            } else if (args[1].CaselessEq("vb")) {
                 engine = IScripting.VB;
             } else {
                 Help(p); return;

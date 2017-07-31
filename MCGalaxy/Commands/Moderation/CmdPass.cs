@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", ServerConfig.VerifyAdminsRank); return;
             }
             if (!ServerConfig.verifyadmins) { Player.Message(p, "Admin verficiation is not currently enabled."); return; }
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
             if (args.Length == 2 && args[0].CaselessEq("set"))
@@ -82,14 +82,14 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void ResetPassword(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p != null && p.adminpen) {
                 Player.Message(p, "&cYou must first verify with %T/pass [Password]"); return;
             }
             
-            if (p != null && (ServerConfig.OwnerName == "Notch" || ServerConfig.OwnerName == "")) {
+            if (p != null && (ServerConfig.OwnerName == "Notch" || ServerConfig.OwnerName.Length == 0)) {
                 Player.Message(p, "Please tell the server owner to set the 'Server Owner' property.");
                 return;
             }

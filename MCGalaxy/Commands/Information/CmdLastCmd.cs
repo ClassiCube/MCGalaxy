@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") {
+            if (message.Length == 0) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (Entities.CanSee(p, pl))
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void ShowLastCommand(Player p, Player who) {
-            if (who.lastCMD == "") {
+            if (who.lastCMD.Length == 0) {
                 Player.Message(p, "{0} %Shas not used any commands yet.", 
                                who.ColoredName);
             } else {

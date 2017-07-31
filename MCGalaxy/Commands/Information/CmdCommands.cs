@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Info {
         static void PrintShortcuts(Player p, string modifier) {
             List<Command> shortcuts = new List<Command>();
             foreach (Command cmd in Command.all.commands) {
-                if (cmd.shortcut == "") continue;
+                if (cmd.shortcut.Length == 0) continue;
                 if (p != null && !p.group.CanExecute(cmd)) continue;
                 shortcuts.Add(cmd);
             }

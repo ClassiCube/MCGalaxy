@@ -105,7 +105,7 @@ namespace MCGalaxy.Core {
                     Server.tempBans.Remove(p.name);
                     Server.tempBans.Save();
                 } else {
-                    reason = reason == "" ? "" :" (" + reason + ")";
+                    reason = reason.Length == 0 ? "" :" (" + reason + ")";
                     string delta = (expiry - DateTime.UtcNow).Shorten(true);
                     
                     p.Kick(null, "Banned by " + banner + " for another " + delta + reason, true);

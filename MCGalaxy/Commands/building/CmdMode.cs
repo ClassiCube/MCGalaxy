@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
             
-            if (message == "") {
+            if (message.Length == 0) {
                 if (p.ModeBlock != ExtBlock.Air) {
                     Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
                     p.ModeBlock = ExtBlock.Air;

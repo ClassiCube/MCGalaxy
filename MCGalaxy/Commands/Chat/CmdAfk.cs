@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "list") {
+            if (message.CaselessEq("list")) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(p, pl) || !pl.IsAfk) continue;

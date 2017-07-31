@@ -88,7 +88,7 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {            
             if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
                 args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
+                if (args[1].Length == 0) { Player.Message(p, "%cThat wasn't a color"); return; }
             }
             if (args[1] == p.titlecolor) {
                 Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
@@ -111,7 +111,7 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
                 args[1] = Colors.Parse(args[1]);
-                if (args[1] == "") { Player.Message(p, "%cThat wasn't a color"); return; }
+                if (args[1].Length == 0) { Player.Message(p, "%cThat wasn't a color"); return; }
             }
             if (args[1] == p.color) {
                 Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;

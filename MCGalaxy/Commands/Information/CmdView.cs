@@ -28,11 +28,11 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/text/")) 
                 Directory.CreateDirectory("extra/text");
-            if (message == "") {
+            if (message.Length == 0) {
                 string[] files = Directory.GetFiles("extra/text", "*.txt");
                 string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
 
-                if (all == "") {
+                if (all.Length == 0) {
                     Player.Message(p, "No files are viewable by you");
                 } else {
                     Player.Message(p, "Available files:");

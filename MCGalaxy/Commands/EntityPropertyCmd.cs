@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands {
         public override bool museumUsable { get { return true; } }
         
         protected void UseBotOrPlayer(Player p, string message, string type) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
             if (!CheckOwn(p, args, "player or bot name")) return;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands {
         }
         
         protected void UsePlayer(Player p, string message, string type) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             if (!CheckOwn(p, args, "player name")) return;
             

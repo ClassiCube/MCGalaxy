@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "" || message.IndexOf(' ') != -1) { Help(p); return; }
+            if (message.Length == 0 || message.IndexOf(' ') != -1) { Help(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;
 
             if (Server.voteKickInProgress) { Player.Message(p, "Please wait for the current vote to finish!"); return; }

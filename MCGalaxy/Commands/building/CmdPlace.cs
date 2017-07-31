@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             string[] parts = message.SplitSpaces();
             switch (parts.Length) {
                 case 1:
-                    if (message == "") break;
+                    if (message.Length == 0) break;
                     if (!CommandParser.GetBlock(p, parts[0], out block)) return;
                     break;
                 case 3:

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             string xjailMap = ServerConfig.XJailLevel;
             if (xjailMap == "(main)") xjailMap = Server.mainLevel.name;
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             
             Command jail = Command.all.Find("jail");
             if (message == "set") {

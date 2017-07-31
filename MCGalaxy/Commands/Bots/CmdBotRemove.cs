@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Bots {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message == "") { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             if (!p.level.BuildAccess.CheckDetailed(p)) {
                 Player.Message(p, "Hence, you cannot change remove bots from this map.");
                 return;

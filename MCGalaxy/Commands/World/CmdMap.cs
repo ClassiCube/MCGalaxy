@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "level name")) return;
-            if (message == "") message = p.level.name;
+            if (message.Length == 0) message = p.level.name;
             string[] args = message.SplitSpaces(3);
             Level lvl = null;
             string opt = null, value = null;

@@ -87,7 +87,7 @@ namespace MCGalaxy.Gui {
                 rank_txtName.Text = rank_txtName.Text.Replace(" ", "");
                 return;
             }
-            if (rank_txtName.Text == "") return;
+            if (rank_txtName.Text.Length == 0) return;
             
             copiedGroups[rank_list.SelectedIndex].Name = rank_txtName.Text;
             rankSupressEvents = true;

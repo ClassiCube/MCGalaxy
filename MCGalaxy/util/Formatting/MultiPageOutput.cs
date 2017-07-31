@@ -30,7 +30,7 @@ namespace MCGalaxy {
             int page = 0, total = items.Count;
             int perPage = lines ? 10 : 30;
             
-            if (modifier == "") {
+            if (modifier.Length == 0) {
                 OutputPage(p, items, formatter, cmd, type, 1, lines);
                 if (total <= perPage) return;
                 Player.Message(p, "To see all {0}, use %T/{1} all", type, cmd);

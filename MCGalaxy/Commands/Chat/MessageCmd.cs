@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         protected bool TryMessageAction(Player p, string target, string message, bool messageWho) {
-            if (target == "") { Help(p); return false; }
+            if (target.Length == 0) { Help(p); return false; }
             Player who = PlayerInfo.FindMatches(p, target);
             if (who == null) return false;
 

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player or level name")) return;
-            if (message == "") message = p.name;
+            if (message.Length == 0) message = p.name;
             string[] parts = message.ToLower().SplitSpaces();
             
             if (parts[0] == "all") {

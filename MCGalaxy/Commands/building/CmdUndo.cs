@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message) {
-            if (message == "") { UndoLastDrawOp(p); return; }
+            if (message.Length == 0) { UndoLastDrawOp(p); return; }
             string[] parts = message.SplitSpaces();
             bool undoPhysics = parts[0].CaselessEq("physics");
             
