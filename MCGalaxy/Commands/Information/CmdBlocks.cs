@@ -56,19 +56,20 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static List<string> BasicBlocks() {
-            List<string> items = new List<string>(Block.CpeCount);
-            for (int i = 0; i < Block.CpeCount; i++)
-                items.Add(Block.Props[i].Name);
-            return items;
+            List<string> names = new List<string>(Block.CpeCount);
+            for (int i = 0; i < Block.CpeCount; i++) {
+                names.Add(Block.Name((byte)i));
+            }
+            return names;
         }
         
         static List<string> ComplexBlocks() {
-            List<string> items = new List<string>(Block.Count);
+            List<string> names = new List<string>(Block.Count);
             for (int i = Block.CpeCount; i < Block.Invalid; i++) {
-                if (Block.Props[i].Name.CaselessEq("unknown")) continue;
-                items.Add(Block.Props[i].Name);
+                string name = Block.Name((byte)i);
+                if (!name.CaselessEq("unknown")) names.Add(name);
             }
-            return items;
+            return names;
         }
         
         static List<string> RankBlocks(LevelPermission perm) {
@@ -129,7 +130,7 @@ namespace MCGalaxy.Commands.Info {
 
             if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
-            if (props.ODoorId != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
+            if (props.oDoorId != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
 
             if (Mover(b)) Player.Message(p, "Block can be activated by walking through it");
         }

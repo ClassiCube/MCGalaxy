@@ -66,7 +66,7 @@ namespace MCGalaxy.Blocks {
             if (props[i].IsPortal) return DeleteBehaviour.DoPortal;
             
             if (props[i].IsTDoor) return DeleteBehaviour.RevertDoor;
-            if (props[i].ODoorId != Block.Invalid) return DeleteBehaviour.ODoor;
+            if (props[i].oDoorId != Block.Invalid) return DeleteBehaviour.ODoor;
             if (props[i].IsDoor) return DeleteBehaviour.Door;
             return null;
         }
@@ -157,7 +157,7 @@ namespace MCGalaxy.Blocks {
             int i = block.Index;
             HandlePhysics animalAI = AnimalAIHandler(props[i].AnimalAI);
             if (animalAI != null) return animalAI;
-            if (props[i].ODoorId != Block.Invalid) return DoorPhysics.oDoor;
+            if (props[i].oDoorId != Block.Invalid) return DoorPhysics.oDoor;
             
             i = block.BlockID; // TODO: should this be checking WaterKills/LavaKills
             // Adv physics updating anything placed next to water or lava
@@ -169,7 +169,7 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsDoorsHandler(ExtBlock block, BlockProps[] props) {
-            if (props[block.Index].ODoorId != Block.Invalid) return DoorPhysics.oDoor;
+            if (props[block.Index].oDoorId != Block.Invalid) return DoorPhysics.oDoor;
             return null;
         }
         

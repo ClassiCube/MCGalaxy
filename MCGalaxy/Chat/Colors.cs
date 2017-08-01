@@ -227,7 +227,7 @@ namespace MCGalaxy {
         }        
        
         /// <summary> Removes all non-existent color codes, and converts
-        /// custom colors to their standard color codes if required. </summary>
+        /// custom colors to their fallback standard color codes if required. </summary>
         public static string Cleanup(string value, bool supportsCustomCols) {
             StringBuilder sb = new StringBuilder(value);
             Cleanup(sb, supportsCustomCols);
@@ -235,7 +235,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Removes all non-existent color codes, and converts
-        /// custom colors to their standard color codes if required. </summary>
+        /// custom colors to their fallback standard color codes if required. </summary>
         public static void Cleanup(StringBuilder value, bool supportsCustomCols) {
             for (int i = 0; i < value.Length; i++) {
                 char c = value[i];

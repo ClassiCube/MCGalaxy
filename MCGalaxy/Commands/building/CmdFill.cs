@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/Fill [brush args] <mode>");
             Player.Message(p, "%HFills the area specified with the output of the current brush.");
             Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");
-            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

@@ -44,13 +44,13 @@ namespace MCGalaxy {
                 
                 // ODoor blocks
                 if (i >= oDoor_Log && i <= oDoor_Wood)
-                    Props[i].ODoorId = (byte)(oDoor_Log_air + (i - oDoor_Log));
+                    Props[i].oDoorId = (byte)(oDoor_Log_air + (i - oDoor_Log));
                 if (i >= oDoor_Green && i <= oDoor_Water)
-                    Props[i].ODoorId = (byte)(oDoor_Green_air + (i - oDoor_Green));
+                    Props[i].oDoorId = (byte)(oDoor_Green_air + (i - oDoor_Green));
                 if (i >= oDoor_Log_air && i <= oDoor_Wood_air)
-                    Props[i].ODoorId = (byte)(oDoor_Log + (i - oDoor_Log_air));
+                    Props[i].oDoorId = (byte)(oDoor_Log + (i - oDoor_Log_air));
                 if (i >= oDoor_Green_air && i <= oDoor_Water_air)
-                    Props[i].ODoorId = (byte)(oDoor_Green + (i - oDoor_Green_air));
+                    Props[i].oDoorId = (byte)(oDoor_Green + (i - oDoor_Green_air));
                 
                 if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise))
                     Props[i].LavaKills = true;
@@ -162,7 +162,7 @@ namespace MCGalaxy {
                     BlockDefinition def = BlockDefinition.GlobalDefs[i];
                     if (def != null) name = def.Name;
                 }               
-                Props[i].Name = name;
+                coreNames[i] = name;
                 
                 name = name.ToLower();
                 if (name != "unknown")

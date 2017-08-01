@@ -54,7 +54,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void ActivateODoor(Level lvl, ref Check C, int index) {
-            byte block = Block.Props[lvl.blocks[index]].ODoorId;
+            byte block = Block.Props[lvl.blocks[index]].oDoorId;
             if (block == lvl.blocks[C.b]) {
                 lvl.AddUpdate(index, block, true);
             }

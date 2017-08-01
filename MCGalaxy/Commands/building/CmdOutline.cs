@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/Outline [block] <brush args>");
             Player.Message(p, "%HOutlines [block] with output of your current brush.");
-            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

@@ -28,19 +28,16 @@ namespace MCGalaxy.Blocks {
     /// <summary> Extended and physics properties of a block. </summary>
     public struct BlockProps {
         
-        /// <summary> Block name used for in commands. </summary>
-        public string Name;
-        
         /// <summary> Message shown to the level when the player is killed by this block. Can be null. </summary>
         public string DeathMessage;
         
         /// <summary> Whether colliding/walking through this block kills the player. </summary>
         public bool KillerBlock;
         
-        /// <summary> Whether this block is considered a tdoor. </summary>
+        /// <summary> Whether this block is considered a tDoor. </summary>
         public bool IsTDoor;
         /// <summary> Block id this block is converted to when toggled by a neighbouring door. </summary>
-        public byte ODoorId;
+        public byte oDoorId;
         /// <summary> Whether this block is considered a door. </summary>
         public bool IsDoor;
         
@@ -71,8 +68,7 @@ namespace MCGalaxy.Blocks {
         
         public static BlockProps MakeDefault() {
             BlockProps props = default(BlockProps);
-            props.Name = "unknown";
-            props.ODoorId = Block.Invalid;
+            props.oDoorId = Block.Invalid;
             return props;
         }
         

@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HCreates a line between two points.");
             Player.Message(p, "   %HModes: &fnormal/walls/straight");
             Player.Message(p, "   %HLength specifies the max number of blocks in the line.");
-            Player.Message(p, "   %HFor help about brushes, type %T/Help Brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

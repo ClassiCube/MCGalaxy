@@ -134,10 +134,6 @@ namespace MCGalaxy.Gui {
 
             SrvProperties.Load(); // loads when saving?
             CommandPerms.Load();
-
-            // Trigger profanity filter reload
-            // Not the best way of doing things, but it kinda works
-            ProfanityFilter.Init();
         }
 
         void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }

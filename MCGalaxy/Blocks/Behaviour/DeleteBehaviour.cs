@@ -91,7 +91,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void ODoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (block.BlockID == Block.oDoor_Green || block.BlockID == Block.oDoor_Green_air) {
-                p.level.Blockchange(x, y, z, (ExtBlock)p.level.BlockProps[block.Index].ODoorId);
+                p.level.Blockchange(x, y, z, (ExtBlock)p.level.BlockProps[block.Index].oDoorId);
             } else {
                 p.RevertBlock(x, y, z);
             }

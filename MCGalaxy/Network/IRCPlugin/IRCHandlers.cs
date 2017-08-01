@@ -153,7 +153,7 @@ namespace MCGalaxy.Network {
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
             
-            if (ircCmd == ServerConfig.IRCCommandPrefix && !HandleChannelCommand(user, channel, message, parts)) return;
+            if (ircCmd.CaselessEq(ServerConfig.IRCCommandPrefix) && !HandleChannelCommand(user, channel, message, parts)) return;
 
             if (opchat) {
                 Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);

@@ -40,9 +40,8 @@ namespace MCGalaxy.Gui {
                 blockPropsChanged[i] = Block.Props[i];
                 blockPropsChanged[i].Changed = false;
                 
-                if (Block.Props[i].Name != "unknown") {
-                    blk_list.Items.Add(Block.Props[i].Name);
-                }
+                string name = Block.Name((byte)i);
+                if (name != "unknown") blk_list.Items.Add(name);
             }
             
             if (blk_list.SelectedIndex == -1)
