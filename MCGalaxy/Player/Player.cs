@@ -270,15 +270,14 @@ namespace MCGalaxy {
         void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {
             if (leftServer) return;
             leftServer = true;
-            if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
-            discMsg = Colors.Escape(discMsg);
             CriticalTasks.Clear();
             
             //Umm...fixed?
-            if (name.Length == 0) {
+            if (name == null || name.Length == 0) {
                 if (Socket != null) CloseSocket();
                 connections.Remove(this);
                 disconnected = true;
+                Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
                 return;
             }
             
@@ -296,6 +295,9 @@ namespace MCGalaxy {
                 isFlying = false;
                 aiming = false;
                 
+                if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
+                discMsg = Colors.Escape(discMsg);
+                
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
                 Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
                 disconnected = true;
@@ -306,7 +308,7 @@ namespace MCGalaxy {
                     RemoveFromPending();
                     PlayerInfo.Online.Remove(this);
                     
-                    string user = String.IsNullOrEmpty(name) ? ip : name + " (" + ip + ")";
+                    string user = name + " (" + ip + ")";
                     Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
                 }
@@ -329,7 +331,7 @@ namespace MCGalaxy {
                 if (ServerConfig.AutoLoadMaps && level.Config.AutoUnload && !level.IsMuseum && !level.HasPlayers())
                     level.Unload(true);
                 Dispose();
-            } catch ( Exception e ) { 
+            } catch (Exception e) { 
                 Logger.LogError(e); 
             } finally {
                 CloseSocket();
