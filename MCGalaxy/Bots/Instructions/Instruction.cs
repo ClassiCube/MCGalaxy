@@ -25,7 +25,7 @@ namespace MCGalaxy.Bots {
     public abstract class BotInstruction {
         
         /// <summary> Gets the identifying name for this instruction. </summary>
-        public abstract string Name { get; }
+        public string Name;
         
         /// <summary> Performs a tick for this instruction. </summary>
         /// <returns> false if the bot should proceed to execute the 

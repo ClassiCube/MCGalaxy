@@ -42,6 +42,7 @@ namespace MCGalaxy {
         public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.Count];
         public BlockProps[] BlockProps = new BlockProps[Block.Count * 2];
         public ExtrasCollection Extras = new ExtrasCollection();
+        public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
         
         internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
         internal HandlePlace[] placeHandlers = new HandlePlace[Block.Count * 2];

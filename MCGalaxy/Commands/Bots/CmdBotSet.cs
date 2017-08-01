@@ -25,6 +25,7 @@ namespace MCGalaxy.Commands.Bots {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can set bots to be killer") }; }
         }
@@ -32,7 +33,7 @@ namespace MCGalaxy.Commands.Bots {
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
-            PlayerBot bot = Matcher.FindBotsInLevel(p, args[0]);
+            PlayerBot bot = Matcher.FindBots(p, args[0]);
             if (bot == null) return;
             
             if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {

@@ -36,18 +36,11 @@ namespace MCGalaxy {
             return award == null ? null : award.Name;
         }
         
-        /// <summary> Finds partial matches of 'name' against the list of all bots. </summary>
+        /// <summary> Finds partial matches of 'name' against the list of bots in same level as player. </summary>
         public static PlayerBot FindBots(Player p, string name) {
             int matches = 0;
-            return Find<PlayerBot>(p, name, out matches, PlayerBot.Bots.Items,
-                                   null, b => b.name, "bots");
-        }
-        
-        /// <summary> Finds partial matches of 'name' against the list of bots in same level as player. </summary>
-        public static PlayerBot FindBotsInLevel(Player p, string name) {
-            int matches = 0;
-            return Find<PlayerBot>(p, name, out matches, PlayerBot.Bots.Items,
-                                   b => b.level == p.level, b => b.name, "bots in this level");
+            return Find<PlayerBot>(p, name, out matches, p.level.Bots.Items,
+                                   b => b.level == p.level, b => b.name, "bots");
         }
         
         /// <summary> Find partial matches of 'name' against the list of loaded maps/levels. </summary>

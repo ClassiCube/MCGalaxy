@@ -113,9 +113,8 @@ namespace MCGalaxy {
             GlobalSpawn(p, pos, rot, true);
 
             if (!bots) return;
-            PlayerBot[] botsList = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in botsList)
-                if (b.level == p.level) Spawn(p, b);
+            PlayerBot[] botsList = p.level.Bots.Items;
+            foreach (PlayerBot b in botsList) { Spawn(p, b); }
         }
         
         /// <summary> Despawns this player to all other players, and despawns all others players to this player. </summary>
@@ -127,10 +126,8 @@ namespace MCGalaxy {
             GlobalDespawn(p, true, true);
             
             if (!bots) return;
-            PlayerBot[] botsList = PlayerBot.Bots.Items;
-            foreach (PlayerBot b in botsList) {
-                if (p.level == b.level) Despawn(p, b);
-            }
+            PlayerBot[] botsList = p.level.Bots.Items;
+            foreach (PlayerBot b in botsList) { Despawn(p, b); }
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {

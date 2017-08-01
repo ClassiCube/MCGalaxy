@@ -23,10 +23,6 @@ using MCGalaxy.Maths;
 namespace MCGalaxy {
     
     public sealed class PlayerBot : Entity {
-        
-        [Obsolete("Use PlayerBot.Bots.Items instead")]
-        public static List<PlayerBot> playerbots;
-        public static VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(true);
 
         public bool hunt = false, kill = false;
 
@@ -42,8 +38,6 @@ namespace MCGalaxy {
         public List<InstructionData> Instructions = new List<InstructionData>();
         
         public Position TargetPos;
-        public ushort[] pos = new ushort[3];
-        public byte[] rot = new byte[2];
         public bool movement = false;
         public int movementSpeed = 3;
         internal bool jumping = false;
@@ -72,26 +66,14 @@ namespace MCGalaxy {
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
         
-        protected override void OnSetPos() {
-            Position p = Pos;
-            pos[0] = (ushort)p.X; pos[1] = (ushort)p.Y; pos[2] = (ushort)p.Z;
-        }
-        
-        protected override void OnSetRot() {
-            Orientation r = Rot;
-            rot[0] = r.RotY; rot[1] = r.HeadX;
-        }
-        
         public static void Add(PlayerBot bot, bool save = true) {
-            Bots.Add(bot);
-            bot.GlobalSpawn();
-            
-            if (save)
-                BotsFile.UpdateBot(bot);
+            bot.level.Bots.Add(bot);
+            bot.GlobalSpawn();            
+            if (save) BotsFile.UpdateBot(bot);
         }
 
         public static void Remove(PlayerBot bot, bool save = true) {
-            Bots.Remove(bot);
+            bot.level.Bots.Remove(bot);
             bot.GlobalDespawn();
             bot.jumping = false;
             if (save) BotsFile.RemoveBot(bot);
@@ -108,10 +90,9 @@ namespace MCGalaxy {
         }
         
         static void RemoveLoadedBots(Level lvl, bool save) {
-            PlayerBot[] bots = Bots.Items;
+            PlayerBot[] bots = lvl.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
-                PlayerBot bot = bots[i];
-                if (bots[i].level == lvl) Remove(bot, save);
+                Remove(bots[i], save);
             }
         }
         
@@ -131,22 +112,11 @@ namespace MCGalaxy {
         }
         
         public static void GlobalUpdatePosition() {
-            PlayerBot[] bots = Bots.Items;
-            foreach (PlayerBot b in bots) b.UpdatePosition();
-        }
-        
-        
-        public static PlayerBot Find(string name) {
-            PlayerBot match = null; int matches = 0;
-            PlayerBot[] bots = Bots.Items;
-
-            foreach (PlayerBot bot in bots) {
-                if (bot.name.CaselessEq(name)) return bot;
-                if (bot.name.CaselessContains(name)) {
-                    match = bot; matches++;
-                }
+            Level[] levels = LevelInfo.Loaded.Items;
+            for (int i = 0; i < levels.Length; i++) {
+                PlayerBot[] bots = levels[i].Bots.Items;
+                for (int j = 0; j < bots.Length; j++) { bots[j].UpdatePosition(); }
             }
-            return matches == 1 ? match : null;
         }
         
         void UpdatePosition() {
@@ -179,10 +149,9 @@ namespace MCGalaxy {
                 used[i] = 0;
 
             // Lock to ensure that no two bots can end up with the same playerid
-            lock (Bots.locker) {
-                PlayerBot[] bots = Bots.Items;
+            lock (bot.level.Bots.locker) {
+                PlayerBot[] bots = bot.level.Bots.Items;
                 for (int i = 0; i < bots.Length; i++) {
-                    if (bots[i].level != bot.level) continue;
                     byte id = bots[i].id;
                     used[id] = 1;
                 }

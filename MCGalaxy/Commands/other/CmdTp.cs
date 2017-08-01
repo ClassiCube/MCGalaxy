@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Misc {
                 if (target == null) return;
                 if (!CheckPlayer(p, target)) return;
             } else if (args[0].CaselessEq("bot")) {
-                bot = Matcher.FindBotsInLevel(p, args[1]);
+                bot = Matcher.FindBots(p, args[1]);
                 if (bot == null) return;
             } else {
                 Help(p); return;

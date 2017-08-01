@@ -36,19 +36,12 @@ namespace MCGalaxy.Commands.Bots {
                 if (lvl == null) return;
             }
             
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            List<PlayerBot> inScope = new List<PlayerBot>();
-            foreach (PlayerBot bot in bots) {
-                if (lvl != null && bot.level != lvl) continue;
-                inScope.Add(bot);
-            }
-            
-            string cmd = (lvl == null || lvl == p.level) ? "bots" : "bots " + lvl.name;
+            PlayerBot[] bots = lvl.Bots.Items;            
+            string cmd = (lvl == p.level) ? "bots" : "bots " + lvl.name;
             string modifier = args.Length > offset ? args[offset] : "";
-            
-            string group = lvl == null ? "All bots:" : "Bots in " + lvl.ColoredName + ":";
-            Player.Message(p, group);
-            MultiPageOutput.Output(p, inScope, FormatBot, cmd, "Bots", modifier, false);
+
+            Player.Message(p, "Bots in " + lvl.ColoredName + ":");
+            MultiPageOutput.Output(p, bots, FormatBot, cmd, "Bots", modifier, false);
         }
         
         static string FormatBot(PlayerBot bot) {

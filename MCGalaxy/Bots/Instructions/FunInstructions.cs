@@ -22,7 +22,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to nod spin around for a certain interval. </summary>
     public class SpinInstruction : BotInstruction {
-        public override string Name { get { return "spin"; } }
+        public SpinInstruction() { Name = "spin"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Metadata meta = (Metadata)data.Metadata;
@@ -65,7 +65,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to nod down up and down for a certain interval. </summary>
     public sealed class NodInstruction : SpinInstruction {
-        public override string Name { get { return "nod"; } }
+        public NodInstruction() { Name = "nod"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Metadata meta = (Metadata)data.Metadata;

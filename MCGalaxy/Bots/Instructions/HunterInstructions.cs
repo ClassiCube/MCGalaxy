@@ -23,7 +23,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to move towards the closest player, within a defined search radius. </summary>
     public sealed class HuntInstruction : BotInstruction {
-        public override string Name { get { return "hunt"; } }
+        public HuntInstruction() { Name = "hunt"; }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
             int search = 75;
@@ -99,7 +99,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to kill nearby players. </summary>
     public sealed class KillInstruction : BotInstruction {
-        public override string Name { get { return "kill"; } }
+        public KillInstruction() { Name = "kill"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Player[] players = PlayerInfo.Online.Items;
@@ -123,7 +123,7 @@ namespace MCGalaxy.Bots {
     }
     
     public sealed class StareInstruction : BotInstruction {
-        public override string Name { get { return "stare"; } }
+        public StareInstruction() { Name = "stare"; }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
             int search = 20000;

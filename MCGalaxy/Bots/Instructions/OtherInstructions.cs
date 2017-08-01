@@ -22,7 +22,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to reset to the and execute first instruction. </summary>
     public sealed class ResetInstruction : BotInstruction {
-        public override string Name { get { return "reset"; } }
+        public ResetInstruction() { Name = "reset"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             bot.cur = 0; return false;
@@ -37,7 +37,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to be removed from the world. </summary>
     public sealed class RemoveInstruction : BotInstruction {
-        public override string Name { get { return "remove"; } }
+        public RemoveInstruction() { Name = "remove"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             PlayerBot.Remove(bot); return true;
@@ -52,7 +52,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to switch to a different AI. </summary>
     public sealed class LinkScriptInstruction : BotInstruction {
-        public override string Name { get { return "linkscript"; } }
+        public LinkScriptInstruction() { Name = "linkscript"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             string script = (string)data.Metadata;
@@ -87,7 +87,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
     public sealed class WaitInstruction : BotInstruction {
-        public override string Name { get { return "wait"; } }
+        public WaitInstruction() { Name = "wait"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             if (bot.countdown == 0) {

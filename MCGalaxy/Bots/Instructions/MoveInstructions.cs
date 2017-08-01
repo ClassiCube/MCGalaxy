@@ -22,7 +22,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to instantly teleport to a position. </summary>
     public class TeleportInstruction : BotInstruction {
-        public override string Name { get { return "teleport"; } }
+        public TeleportInstruction() { Name = "teleport"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords coords = (Coords)data.Metadata;
@@ -65,7 +65,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to gradually move to to a position. </summary>
     public sealed class WalkInstruction : TeleportInstruction {
-        public override string Name { get { return "walk"; } }
+        public WalkInstruction() { Name = "walk"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords target = (Coords)data.Metadata;
@@ -91,7 +91,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to begin jumping. </summary>
     public sealed class JumpInstruction : BotInstruction {
-        public override string Name { get { return "jump"; } }
+        public JumpInstruction() { Name = "jump"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             bot.jumping = true;
@@ -109,7 +109,7 @@ namespace MCGalaxy.Bots {
     
     /// <summary> Causes the bot to change how fast it moves. </summary>
     public sealed class SpeedInstruction : BotInstruction {
-        public override string Name { get { return "speed"; } }
+        public SpeedInstruction() { Name = "speed"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             bot.movementSpeed = (int)Math.Round(3m * (short)data.Metadata / 100m);

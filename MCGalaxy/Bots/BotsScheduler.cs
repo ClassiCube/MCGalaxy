@@ -37,11 +37,12 @@ namespace MCGalaxy {
         }
         
         static void BotsTick(SchedulerTask task) {
-            PlayerBot[] bots = PlayerBot.Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-                BotTick(bots[i]);
+            Level[] levels = LevelInfo.Loaded.Items;
+            for (int i = 0; i < levels.Length; i++) {
+                PlayerBot[] bots = levels[i].Bots.Items;
+                for (int j = 0; j < bots.Length; j++) { BotTick(bots[j]); }
             }
-        }       
+        }
 
         static void BotTick(PlayerBot bot) {
             if (bot.kill) {
@@ -72,17 +73,17 @@ namespace MCGalaxy {
             BotInstruction ins = BotInstruction.Find(bot.Instructions[bot.cur].Name);
             if (ins == null) return false;
             return ins.Execute(bot, bot.Instructions[bot.cur]);
-        }        
-                
+        }
+        
         static void DoJump(PlayerBot bot) {
             bot.currentjump++;
             Position pos = bot.Pos;
             switch (bot.currentjump) {
-                 case 1: pos.Y += 24; break;
-                 case 2: pos.Y += 12; break;
-                 case 3: break;
-                 case 4: pos.Y -= 12; break;
-                 case 5: pos.Y -= 24; bot.jumping = false; bot.currentjump = 0; break;
+                    case 1: pos.Y += 24; break;
+                    case 2: pos.Y += 12; break;
+                    case 3: break;
+                    case 4: pos.Y -= 12; break;
+                    case 5: pos.Y -= 24; bot.jumping = false; bot.currentjump = 0; break;
             }
             bot.Pos = pos;
         }

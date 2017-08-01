@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Bots {
             if (message.CaselessEq("all")) {
                 PlayerBot.RemoveAllFromLevel(p.level); return;
             } else {
-                PlayerBot bot = Matcher.FindBotsInLevel(p, message);
+                PlayerBot bot = Matcher.FindBots(p, message);
                 if (bot == null) return;
                 
                 PlayerBot.Remove(bot);

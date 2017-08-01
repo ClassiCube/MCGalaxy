@@ -93,15 +93,12 @@ namespace MCGalaxy.Bots {
         
         public static void UnloadBots(Level lvl) {
             lock (locker) {
-                PlayerBot[] bots = PlayerBot.Bots.Items;
-                bool hasBots = false;
+                PlayerBot[] bots = lvl.Bots.Items;
                 
                 foreach (PlayerBot bot in bots) {
-                    if (bot.level != lvl) continue;
                     DoUpdateBot(bot, false);
-                    hasBots = true;
                 }
-                if (hasBots) Save();
+                if (bots.Length > 0) Save();
             }
         }
         

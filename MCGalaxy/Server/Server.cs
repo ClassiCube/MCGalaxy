@@ -78,7 +78,6 @@ namespace MCGalaxy {
             Player.players = PlayerInfo.Online.list;
             PlayerInfo.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
-            PlayerBot.playerbots = PlayerBot.Bots.list;
             #pragma warning restore 0618
             
             StartTime = DateTime.UtcNow;
