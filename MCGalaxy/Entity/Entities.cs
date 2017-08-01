@@ -235,11 +235,6 @@ namespace MCGalaxy {
         
         #region Position updates
         
-        public static byte[] GetPositionPacket(PlayerBot bot, bool extPos) {
-            // TODO: not sure why bots only work with absolute packets
-            return Packet.Teleport(bot.id, bot.Pos, bot.Rot, extPos);
-        }
-        
         public unsafe static void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
                                                     Position pos, Position oldPos, Orientation rot, Orientation oldRot) {
             Position delta = GetDelta(pos, oldPos, srcExtPos);

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Bots;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     
@@ -127,11 +128,13 @@ namespace MCGalaxy {
                     DoMove();
             }
             
-            // TODO: check if external code modified pos/rot
-            byte[] packet = Entities.GetPositionPacket(this, false);
-            lastPos = Pos; lastRot = Rot;
-            if (packet == null) return;
-            byte[] extPacket = Entities.GetPositionPacket(this, true);
+            Position pos = Pos; Orientation rot = Rot;
+            if (pos == lastPos && rot.HeadX == lastRot.HeadX && rot.RotY == lastRot.RotY) return;
+            lastPos = pos; lastRot = rot;
+            
+            // TODO: relative position updates, combine packets
+            byte[] packet = Packet.Teleport(id, pos, rot, false);
+            byte[] extPacket = Packet.Teleport(id, pos, rot, true);
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
