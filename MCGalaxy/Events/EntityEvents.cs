@@ -28,12 +28,10 @@ namespace MCGalaxy.Events.EntityEvents {
             IEvent<OnTabListEntryAdded>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
-                IEvent<OnTabListEntryAdded> handler = items[i];
-                
                 try {
-                    handler.method(entity, ref tabName, ref tabGroup, dst);
+                    items[i].method(entity, ref tabName, ref tabGroup, dst);
                 } catch (Exception ex) {
-                    LogHandlerException(ex, handler);
+                    LogHandlerException(ex, items[i]);
                 }
             }
         }

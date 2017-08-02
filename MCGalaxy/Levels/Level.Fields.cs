@@ -58,10 +58,7 @@ namespace MCGalaxy {
         [Obsolete] public ushort height;
         [Obsolete] public ushort depth;
         [Obsolete] public ushort length;
-        
-        public bool IsMuseum {
-            get { return name.StartsWith("&cMuseum " + ServerConfig.DefaultColor, StringComparison.Ordinal); }
-        }
+        public bool IsMuseum;
 
         public int ReloadThreshold {
             get { return Math.Max(10000, (int)(ServerConfig.DrawReloadThreshold * Width * Height * Length)); }

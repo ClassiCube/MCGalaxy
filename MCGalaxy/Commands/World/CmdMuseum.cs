@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.World {
         
         static void JoinMuseum(Player p, string name, string mapName, string path) {
             Level lvl = IMapImporter.Formats[0].Read(path, name, false);
-            lvl.MapName = mapName;
+            lvl.MapName = mapName;           
             SetLevelProps(lvl);
             Level.LoadMetadata(lvl);
             
@@ -70,6 +70,7 @@ namespace MCGalaxy.Commands.World {
             lvl.setPhysics(0);
             lvl.backedup = true;
             lvl.BuildAccess.Min = LevelPermission.Nobody;
+            lvl.IsMuseum = true;
 
             lvl.Config.JailX = lvl.spawnx * 32;
             lvl.Config.JailY = lvl.spawny * 32;
