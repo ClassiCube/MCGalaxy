@@ -116,7 +116,7 @@ namespace MCGalaxy.SQL {
             ValidateTable(table);
             string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
                 + col.Column + " " + col.FormatType();
-            if (colAfter != "") syntax += " AFTER " + colAfter;
+            if (colAfter.Length > 0) syntax += " AFTER " + colAfter;
             Database.Execute(syntax);
         }
         

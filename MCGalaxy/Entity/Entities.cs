@@ -92,7 +92,7 @@ namespace MCGalaxy {
             }
             
             string name = p.truename, skinName = p.SkinName;
-            if (ZSConfig.ZombieName != "" && !dst.Game.Aka) {
+            if (ZSConfig.ZombieName.Length > 0 && !dst.Game.Aka) {
                 name = ZSConfig.ZombieName; skinName = name;
             }
             

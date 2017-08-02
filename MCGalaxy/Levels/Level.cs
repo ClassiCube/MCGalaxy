@@ -274,13 +274,11 @@ namespace MCGalaxy {
 
         public int Backup(bool Forced = false, string backupName = "") {
             if (!backedup || Forced) {
-                int backupNumber = 1;
                 string dir = Path.Combine(ServerConfig.BackupDirectory, name);
-                backupNumber = IncrementBackup(dir);
+                int backupNum = NextBackup(dir);
 
-                string path = Path.Combine(dir, backupNumber.ToString());
-                if (backupName != "")
-                    path = Path.Combine(dir, backupName);
+                string path = Path.Combine(dir, backupNum.ToString());
+                if (backupName.Length > 0) path = Path.Combine(dir, backupName);
                 Directory.CreateDirectory(path);
 
                 string backup = Path.Combine(path, name + ".lvl");
@@ -288,7 +286,7 @@ namespace MCGalaxy {
                 try {
                     File.Copy(current, backup, true);
                     backedup = true;
-                    return backupNumber;
+                    return backupNum;
                 } catch (Exception e) {
                     Logger.LogError(e);
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
@@ -299,7 +297,7 @@ namespace MCGalaxy {
             return -1;
         }
         
-        int IncrementBackup(string dir) {
+        int NextBackup(string dir) {
             if (Directory.Exists(dir)) {
                 int max = 0;
                 string[] backups = Directory.GetDirectories(dir);

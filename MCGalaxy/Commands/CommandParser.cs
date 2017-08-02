@@ -25,11 +25,13 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as a boolean. </summary>
         public static bool GetBool(Player p, string input, ref bool result) {
-            if (input == "1" || input.CaselessEq("true") || input.CaselessEq("yes") || input.CaselessEq("on")) {
+            if (input.CaselessEq("1") || input.CaselessEq("true") 
+                || input.CaselessEq("yes") || input.CaselessEq("on")) {
                 result = true; return true;
             }
             
-            if (input == "0" || input.CaselessEq("false") || input.CaselessEq("no") || input.CaselessEq("off")) {
+            if (input.CaselessEq("0") || input.CaselessEq("false")
+                || input.CaselessEq("no") || input.CaselessEq("off")) {
                 result = false; return true;
             }
             

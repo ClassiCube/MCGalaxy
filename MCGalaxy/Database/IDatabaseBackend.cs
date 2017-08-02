@@ -114,7 +114,7 @@ namespace MCGalaxy.SQL {
                                          string modifier = "", params object[] args) {
             ValidateTable(table);
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
-            if (modifier != "") syntax += " " + modifier;
+            if (modifier.Length > 0) syntax += " " + modifier;
             return Database.Fill(syntax, args);
         }
         
@@ -124,7 +124,7 @@ namespace MCGalaxy.SQL {
                                        string modifier = "", params object[] args) {
             ValidateTable(table);
             string syntax = "UPDATE `" + table + "` SET " + columns;
-            if (modifier != "") syntax += " " + modifier;
+            if (modifier.Length > 0) syntax += " " + modifier;
             Database.Execute(syntax, args);
         }
         
@@ -133,7 +133,7 @@ namespace MCGalaxy.SQL {
         public virtual void DeleteRows(string table, string modifier = "", params object[] args) {
             ValidateTable(table);
             string syntax = "DELETE FROM `" + table + "`";
-            if (modifier != "") syntax += " " + modifier;
+            if (modifier.Length > 0) syntax += " " + modifier;
             Database.Execute(syntax, args);
         }
 

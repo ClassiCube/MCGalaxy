@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.World {
                 if (!MapGen.Generate(lvl, args[4], seed, p)) { lvl.Dispose(); return null; }
 
                 name = lvl.ColoredName;
-                string format = seed != "" ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
+                string format = seed.Length > 0 ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
                 string pName = p == null ? "(console)" : p.ColoredName;
                 Chat.MessageGlobal(format, pName, name, seed);
             } finally {

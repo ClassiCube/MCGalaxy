@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
                 if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
                     Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
                 }
-                if (cmd.shortcut != "" && IsCommand(message, cmd.shortcut)) {
+                if (cmd.shortcut.Length > 0 && IsCommand(message, cmd.shortcut)) {
                     Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
                 }
             }

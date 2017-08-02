@@ -84,7 +84,7 @@ namespace MCGalaxy.Gui {
         
         void chat_ParseColor(string value, Button target) {
             char code = value[1];
-            target.Text = Colors.Name(value).Capitalize();
+            target.Text = Colors.Name(value);
             
             Color textCol;
             target.BackColor = ColorSelector.LookupColor(code, out textCol);

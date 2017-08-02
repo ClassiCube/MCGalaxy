@@ -27,12 +27,19 @@ namespace MCGalaxy.Tasks {
         internal static void UpdateStaffList(SchedulerTask task) {
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
-                    string[] result = client.DownloadString(staffUrl).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    foreach (string line in result) {
-                        string type = line.Split(':')[0].ToLower();
-                        List<string> list = (type == "devs") ? Server.Devs : (type == "mods") ? Server.Mods : null;
-                        foreach (string name in line.Split(':')[1].Split())
-                            list.Add(name.RemoveLastPlus());
+                    string raw = client.DownloadString(staffUrl);
+                    string[] list = raw.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    
+                    foreach (string line in list) {
+                        string[] bits = line.Split(':');
+                        List<string> group = null;
+                        if (bits[0].CaselessEq("devs")) group = Server.Devs;
+                        if (bits[0].CaselessEq("mods")) group = Server.Mods;
+                        
+                        if (group == null) continue;
+                        foreach (string name in bits[1].SplitSpaces()) {
+                            group.Add(name.RemoveLastPlus());
+                        }
                     }
                 }
             } catch (Exception e) {

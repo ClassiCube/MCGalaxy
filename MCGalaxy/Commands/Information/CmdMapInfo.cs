@@ -165,15 +165,17 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
-            if (data.TerrainUrl != "")
+            if (data.TerrainUrl.Length > 0) {
                 Player.Message(p, "Texture: %b" + data.TerrainUrl);
-            else
+            } else {
                 Player.Message(p, "No custom texture set for this map.");
+            }
             
-            if (data.TextureUrl != "")
+            if (data.TextureUrl.Length > 0) {
                 Player.Message(p, "Texture pack: %b" + data.TextureUrl);
-            else
+            } else {
                 Player.Message(p, "No custom texture pack set for this map.");
+            }
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
             Player.Message(p, format, Color(cfg.FogColor), Color(cfg.SkyColor), 
@@ -227,8 +229,8 @@ namespace MCGalaxy.Commands.Info {
             
             void LoadConfig(LevelConfig cfg) {
                 Config = cfg;              
-                TerrainUrl = cfg.Terrain != "" ? cfg.Terrain : ServerConfig.DefaultTerrain;
-                TextureUrl = cfg.TexturePack != "" ? cfg.TexturePack : ServerConfig.DefaultTexture;
+                TerrainUrl = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
+                TextureUrl = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
             }
         }
         

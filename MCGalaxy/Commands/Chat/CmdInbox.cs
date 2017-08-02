@@ -27,12 +27,12 @@ namespace MCGalaxy.Commands.Chatting {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
-            string[] parts = message.ToLower().SplitSpaces(2);
+        public override void Use(Player p, string message) {          
             if (!Database.TableExists("Inbox" + p.name)) {
                 Player.Message(p, "Your inbox is empty."); return;
             }
 
+            string[] args = message.SplitSpaces(2);
             if (message.Length == 0) {
                 using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
                     if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
@@ -40,48 +40,56 @@ namespace MCGalaxy.Commands.Chatting {
                         OutputMessage(p, row);
                     }
                 }
-            } else if (parts[0] == "del" || parts[0] == "delete") {
-                int num = -1;
-                if (parts.Length == 1) {
+            } else if (args[0].CaselessEq("del") || args[0].CaselessEq("delete")) {
+                if (args.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
-                }               
-                if (parts[1] != "all" && !CommandParser.GetInt(p, parts[1], "Message number", ref num, 0)) return;
-                
-                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
-                    if (num != -1 && num >= Inbox.Rows.Count) {
-                        Player.Message(p, "\"" + num + "\" does not exist."); return;
-                    }
-
-                    if (num == -1) {
-                        Database.Backend.ClearTable("Inbox" + p.name);
-                    } else {
-                        DataRow row = Inbox.Rows[num];
-                        string time = Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss");
-                        Database.Backend.DeleteRows("Inbox" + p.name, 
-                                                    "WHERE PlayerFrom=@0 AND TimeSent=@1", row["PlayerFrom"], time);
-                    }
-
-                    if (num == -1) Player.Message(p, "Deleted all messages.");
-                    else Player.Message(p, "Deleted message.");
+                } else if (args[1].CaselessEq("all")) {
+                    Database.Backend.ClearTable("Inbox" + p.name);
+                    Player.Message(p, "Deleted all messages.");
+                } else {
+                    DeleteMessageByID(p, args[1]);
                 }
             } else {
-                int num = 0;
-                if (!CommandParser.GetInt(p, message, "Message number", ref num, 0)) return;
-
-                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
-                    if (num >= Inbox.Rows.Count) {
-                        Player.Message(p, "Message number \"" + num + "\" does not exist."); return;
-                    }
-                    OutputMessage(p, Inbox.Rows[num]);
+                OutputMessageByID(p, message);
+            }
+        }
+        
+        static void DeleteMessageByID(Player p, string value) {
+            int num = 0;
+            if (!CommandParser.GetInt(p, value, "Message number", ref num, 0)) return;
+            
+            using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
+                if (num >= Inbox.Rows.Count) {
+                    Player.Message(p, "Message #{0} does not exist.", num); return;
                 }
+
+                DataRow row = Inbox.Rows[num];
+                string time = Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss");
+                Database.Backend.DeleteRows("Inbox" + p.name,
+                                            "WHERE PlayerFrom=@0 AND TimeSent=@1", row["PlayerFrom"], time);
+
+                Player.Message(p, "Deleted message #{0}", num);
+            }
+        }
+        
+        static void OutputMessageByID(Player p, string value) {
+            int num = 0;
+            if (!CommandParser.GetInt(p, value, "Message number", ref num, 0)) return;
+
+            using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
+                if (num >= Inbox.Rows.Count) {
+                    Player.Message(p, "Message #{0} does not exist.", num); return;
+                }
+            	
+                OutputMessage(p, Inbox.Rows[num]);
             }
         }
         
         static void OutputMessage(Player p, DataRow row) {
             DateTime time = Convert.ToDateTime(row["TimeSent"]);
             TimeSpan delta = DateTime.Now - time;
-            Player.Message(p, "From {0} &a{1} ago:", 
-                           PlayerInfo.GetColoredName(p, row["PlayerFrom"].ToString()), delta.Shorten());
+            string sender = PlayerInfo.GetColoredName(p, row["PlayerFrom"].ToString());
+            Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());
             Player.Message(p, row["Contents"].ToString());
         }
         

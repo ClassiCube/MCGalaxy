@@ -54,7 +54,7 @@ namespace MCGalaxy.Tasks {
         }
         
         static void TickPlayer(Player p) {
-            if (p.following != "") {
+            if (p.following.Length > 0) {
                 Player who = PlayerInfo.FindExact(p.following);
                 if (who == null || who.level != p.level) {
                     p.following = "";
@@ -66,7 +66,7 @@ namespace MCGalaxy.Tasks {
                 }
                 
                 p.SendPos(Entities.SelfID, who.Pos, who.Rot);
-            } else if (p.possess != "") {
+            } else if (p.possess.Length > 0) {
                 Player who = PlayerInfo.FindExact(p.possess);
                 if (who == null || who.level != p.level)
                     p.possess = "";

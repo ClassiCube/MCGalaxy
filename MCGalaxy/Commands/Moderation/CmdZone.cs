@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
                     Group grp = Group.Find(zn.Owner.Substring(3));
                     if (grp != null && p.Rank < grp.Permission) continue;
-                } else if (zn.Owner != "" && !zn.Owner.CaselessEq(p.name)) {
+                } else if (zn.Owner.Length > 0 && !zn.Owner.CaselessEq(p.name)) {
                     Group group = Group.GroupIn(zn.Owner);
                     if (p.Rank < group.Permission) continue;
                 }

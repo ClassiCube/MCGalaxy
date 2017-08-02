@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             byte skip = Block.Invalid;
-            if (dArgs.Message != "") {
+            if (dArgs.Message.Length > 0) {
                 skip = Block.Byte(dArgs.Message);
                 
                 if (skip == Block.Invalid) { 

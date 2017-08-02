@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Maintenance {
             args.Delay = secTime - 1;
             args.Reason = reason;
             
-            if (reason != "") reason = ": " + reason;
+            if (reason.Length > 0) reason = ": " + reason;
             Log("Server shutdown started" + reason);
             Log("Server shutdown in " + secTime + " seconds");
             

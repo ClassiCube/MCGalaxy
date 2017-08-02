@@ -402,7 +402,7 @@ namespace MCGalaxy.Generator {
         
         static bool GenerateMap(MapGenArgs genArgs) {
             MapGenTheme theme = MapGenTheme.Forest;
-            if (genArgs.Args != "" && 
+            if (genArgs.Args.Length > 0 && 
                 !CommandParser.GetEnum(genArgs.Player, genArgs.Args, "Seed", ref theme)) return false;
 
             MapGenTemplate templ = (MapGenTemplate)Enum.Parse(typeof(MapGenTemplate), genArgs.Theme.Substring(3), true);

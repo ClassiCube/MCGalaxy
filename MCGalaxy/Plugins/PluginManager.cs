@@ -39,11 +39,10 @@ namespace MCGalaxy {
             List<Plugin> tempList = new List<Plugin>();
             tempList.AddRange(all);
             Plugin match = null; int matches = 0;
-            name = name.ToLower();
 
             foreach (Plugin p in tempList) {
-                if (p.name.ToLower() == name) return p;
-                if (p.name.ToLower().Contains(name)) {
+                if (p.name.CaselessEq(name)) return p;
+                if (p.name.CaselessContains(name)) {
                     match = p; matches++;
                 }
             }
@@ -96,7 +95,7 @@ namespace MCGalaxy {
             } catch (Exception e) {
                 Logger.LogError(e);
                 Logger.Log(LogType.Warning, "The plugin {0} failed to load!", name);
-                if (creator != "") Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
+                if (creator.Length > 0) Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
                 Thread.Sleep(1000);
             }
         }

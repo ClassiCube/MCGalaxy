@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Info {
                 Player.Message(p, "Commands available to " + group.ColoredName + " %Srank:");
             
             string type = "Commands " + group.Name;
-            if (sort != "") type += " " + sort;
+            if (sort.Length > 0) type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "All commands:");
             
             string type = "Commands all";
-            if (sort != "") type += " " + sort;
+            if (sort.Length > 0) type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);            
@@ -160,11 +160,11 @@ namespace MCGalaxy.Commands.Info {
             if (cmds.Count == 0) {
                 Player.Message(p, "You cannot use any of the " + category + " commands."); return;
             }            
-            SortCommands(cmds, sort);            
+            SortCommands(cmds, sort);
             Player.Message(p, category + " commands you may use:");
 
             type = "Commands " + category;
-            if (sort != "") type += " " + sort;
+            if (sort.Length > 0) type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);

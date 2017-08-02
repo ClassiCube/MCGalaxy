@@ -57,7 +57,7 @@ namespace MCGalaxy.Core {
              
              string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
              string data = action.Target + " " + type + " " + src + " " + time;
-             if (action.Reason != "") {
+             if (action.Reason.Length > 0) {
                  data += " " + action.Reason.Replace(" ", "%20");
              }
              Server.Notes.Append(data);

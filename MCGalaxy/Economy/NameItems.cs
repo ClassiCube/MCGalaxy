@@ -86,17 +86,17 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "TitleColor"; } }
         
         protected override void DoPurchase(Player p, string message, string[] args) {            
-            if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
-                args[1] = Colors.Parse(args[1]);
-                if (args[1].Length == 0) { Player.Message(p, "%cThat wasn't a color"); return; }
-            }
-            if (args[1] == p.titlecolor) {
-                Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c titlecolor"); return;
+        	string color = Colors.Parse(args[1]);
+        	if (color.Length == 0) { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+        	string colName = Colors.Name(color);
+        	
+            if (color == p.titlecolor) {
+                Player.Message(p, "%cYou already have a " + color + colName + "%c titlecolor"); return;
             }
             
-            Command.all.FindByName("TColor").Use(null, p.name + " " + Colors.Name(args[1]));
-            Player.Message(p, "%aYour titlecolor was changed to " + args[1] + Colors.Name(args[1]));
-            Economy.MakePurchase(p, Price, "%3Titlecolor: " + args[1] + Colors.Name(args[1]));
+            Command.all.FindByName("TColor").Use(null, p.name + " " + colName);
+            Player.Message(p, "%aYour titlecolor was changed to " + color + colName);
+            Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + colName);
         }
     }
     
@@ -109,16 +109,16 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Color"; } }
 
         protected override void DoPurchase(Player p, string message, string[] args) {
-            if (!(args[1].StartsWith("&") || args[1].StartsWith("%"))) {
-                args[1] = Colors.Parse(args[1]);
-                if (args[1].Length == 0) { Player.Message(p, "%cThat wasn't a color"); return; }
-            }
-            if (args[1] == p.color) {
-                Player.Message(p, "%cYou already have a " + args[1] + Colors.Name(args[1]) + "%c color"); return;
+        	string color = Colors.Parse(args[1]);
+        	if (color.Length == 0) { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+        	string colName = Colors.Name(color);
+        	
+            if (color == p.color) {
+                Player.Message(p, "%cYou already have a " + color + colName + "%c color"); return;
             }
             
-            Command.all.FindByName("Color").Use(null, p.name + " " + Colors.Name(args[1]));
-            Economy.MakePurchase(p, Price, "%3Color: " + args[1] + Colors.Name(args[1]));
+            Command.all.FindByName("Color").Use(null, p.name + " " + colName);
+            Economy.MakePurchase(p, Price, "%3Color: " + color + colName);
         }
     }
 }

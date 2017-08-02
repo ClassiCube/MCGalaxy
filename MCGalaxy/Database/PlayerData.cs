@@ -140,7 +140,7 @@ namespace MCGalaxy.DB {
             
             // Try parse color name, then color code
             string parsed = Colors.Parse(col);
-            if (parsed != "") return parsed;
+            if (parsed.Length > 0) return parsed;
             return Colors.Name(col).Length == 0 ? "" : col;
         }
         
@@ -162,7 +162,7 @@ namespace MCGalaxy.DB {
                                                             "Color", "WHERE ID = @0", p.DatabaseID)) {
                 if (colors.Rows.Count > 0) {
                     string col = ParseColor(colors.Rows[0]["Color"]);
-                    if (col != "") return col;
+                    if (col.Length > 0) return col;
                 }
                 return "";
             }

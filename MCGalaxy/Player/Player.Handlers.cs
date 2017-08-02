@@ -300,7 +300,7 @@ namespace MCGalaxy {
         }
         
         void HandleMovement(byte[] buffer, int offset) {
-            if (!loggedIn || trainGrab || following != "") { CheckBlocks(Pos); return; }
+            if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos); return; }
             if (HasCpeExt(CpeExt.HeldBlock)) {
                 RawHeldBlock = ExtBlock.FromRaw(buffer[offset + 1]);
             }
@@ -482,7 +482,7 @@ namespace MCGalaxy {
         
         bool FilterChat(ref string text, byte continued) {
             // handles the /womid client message, which displays the WoM vrersion
-            if (text.Truncate(6) == "/womid") {
+            if (text.StartsWith("/womid") {
                 string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
                 UsingWom = true;
                 return true;
@@ -499,7 +499,7 @@ namespace MCGalaxy {
                 text = text.Replace("^detail.user=", "");
             }
 
-            if (partialMessage != "" && !text.EndsWith(">") && !text.EndsWith("<")) {
+            if (partialMessage.Length > 0 && !text.EndsWith(">") && !text.EndsWith("<")) {
                 text = partialMessage + text;
                 partialMessage = "";
             }

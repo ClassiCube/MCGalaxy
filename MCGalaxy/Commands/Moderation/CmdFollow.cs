@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             bool stealth = false;
             if (message == "#") {
-                if (p.following != "") { stealth = true; name = ""; }
+                if (p.following.Length > 0) { stealth = true; name = ""; }
                 else { Help(p); return; }
             } else if (args.Length > 1 && args[0] == "#") {
                 if (p.hidden) stealth = true;
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (name.Length == 0 && p.following.Length == 0) { Help(p); return; }
-            if (name.CaselessEq(p.following) || (name.Length == 0 && p.following != ""))
+            if (name.CaselessEq(p.following) || (name.Length == 0 && p.following.Length > 0))
                 Unfollow(p, stealth);
             else
                 Follow(p, name, stealth);
@@ -65,12 +65,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (who == null) return;
             if (who == p) { Player.Message(p, "Cannot follow yourself."); return; }
             if (who.Rank >= p.Rank) { MessageTooHighRank(p, "follow", false); return;}
-            if (who.following != "") { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
+            if (who.following.Length > 0) { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
 
             if (!p.hidden) Command.all.FindByName("Hide").Use(p, "");
 
             if (p.level != who.level) Command.all.FindByName("TP").Use(p, who.name);
-            if (p.following != "") {
+            if (p.following.Length > 0) {
                 Player old = PlayerInfo.FindExact(p.following);
                 if (old != null) Entities.Spawn(p, old);
             }

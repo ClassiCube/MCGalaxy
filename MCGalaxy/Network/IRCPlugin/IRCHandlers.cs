@@ -297,7 +297,7 @@ namespace MCGalaxy.Network {
         }
         
         void Authenticate() {
-            if (ServerConfig.IRCIdentify && ServerConfig.IRCPassword != "") {
+            if (ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0) {
                 Logger.Log(LogType.IRCCActivity, "Identifying with NickServ");
                 bot.connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + ServerConfig.IRCPassword);
             }
@@ -342,7 +342,7 @@ namespace MCGalaxy.Network {
             List<string> chanNicks = GetNicks(channel);
             RemoveNick(user.Nick, chanNicks);
             
-            if (reason != "") reason = " (" + reason + ")";
+            if (reason.Length > 0) reason = " (" + reason + ")";
             Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
             Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }

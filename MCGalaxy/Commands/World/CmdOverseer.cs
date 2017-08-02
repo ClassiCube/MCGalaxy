@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands.World {
         static bool OwnsMap(Player p, Level lvl) {
             string[] owners = lvl.Config.RealmOwner.Replace(" ", "").Split(',');
             
-            if (owners.Length > 0 && owners[0] != "") {
+            if (owners.Length > 0 && owners[0].Length > 0) {
                 foreach (string owner in owners) {
                     if (owner.CaselessEq(p.name)) return true;
                 }

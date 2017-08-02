@@ -68,7 +68,7 @@ namespace MCGalaxy.Generator {
             genArgs.Level = lvl; genArgs.Player = p;
             genArgs.Theme = theme; genArgs.Args = args;
             
-            genArgs.UseSeed = args != "";
+            genArgs.UseSeed = args.Length > 0;
             if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
                 genArgs.Seed = args.GetHashCode();
             MapGenerator generator = null;

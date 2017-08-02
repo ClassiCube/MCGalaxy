@@ -33,14 +33,13 @@ namespace MCGalaxy {
             string raw = value; // for prefix we need to keep space
             value = value.Trim();
             
-            if (key.ToLower() == "rankname") {
+            if (key.CaselessEq("rankname")) {
                 if (temp != null) AddGroup(ref temp);
                 value = value.Replace(" ", "");
-                string name = value.ToLower();
 
-                if (name == "op") {
-                    Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", name);
-                } else if (Group.Find(name) == null) {
+                if (value.CaselessEq("op")) {
+                    Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", value);
+                } else if (Group.Find(value) == null) {
                     temp = new Group();
                     temp.Name = value;
                 } else {

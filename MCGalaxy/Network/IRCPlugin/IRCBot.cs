@@ -148,7 +148,8 @@ namespace MCGalaxy {
             args = new ConnectionArgs(nick, server);
             args.RealName = Server.SoftwareNameVersioned;
             args.Port = ServerConfig.IRCPort;
-            args.ServerPassword = ServerConfig.IRCIdentify && ServerConfig.IRCPassword != "" ? ServerConfig.IRCPassword : "*";
+            bool usePass = ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0;
+            args.ServerPassword = usePass ? ServerConfig.IRCPassword : "*";
         }
         
         static string[] GetChannels(string names) {

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
                 string state = p.hidden ? "" : "not ";
                 Player.Message(p, "You are " + state + "currently hidden!"); return;
             }
-            if (message != "" && p.possess != "") {
+            if (message.Length > 0 && p.possess.Length > 0) {
                 Player.Message(p, "Stop your current possession first."); return;
             }
             bool messageOps = true;

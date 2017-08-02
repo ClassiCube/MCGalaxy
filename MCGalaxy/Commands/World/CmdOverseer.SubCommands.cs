@@ -183,7 +183,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void DeleteMap(Player p, string value) {
-            if (value != "") {
+            if (value.Length > 0) {
                 Player.Message(p, "To delete your current map, type %T/os map delete");
                 return;
             }

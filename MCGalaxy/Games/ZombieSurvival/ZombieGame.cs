@@ -167,8 +167,9 @@ namespace MCGalaxy.Games {
             }
             JoinInRandomOrder(players, next);
             
-            if (LastLevelName != "")
+            if (LastLevelName.Length > 0) {
                 Command.all.FindByName("Unload").Use(null, LastLevelName);
+            }
             LastLevelName = next;
         }
         

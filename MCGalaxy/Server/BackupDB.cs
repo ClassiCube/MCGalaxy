@@ -78,7 +78,7 @@ namespace MCGalaxy {
                     }
                 }
                 
-                if (pri != "") {
+                if (pri.Length > 0) {
                     string[] tmp = pri.Substring(0, pri.Length - 1).Split(';');
                     sql.Write("PRIMARY KEY (`");
                     foreach (string prim in tmp) {

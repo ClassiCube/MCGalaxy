@@ -59,7 +59,7 @@ namespace MCGalaxy.Games.ZS {
                 tabGroup = "&2Referees";
             } else if (p.Game.Infected) {
                 tabGroup = "&cZombies";
-                if (ZSConfig.ZombieName != "" && !dst.Game.Aka) {
+                if (ZSConfig.ZombieName.Length > 0 && !dst.Game.Aka) {
                     tabName = "&c" + ZSConfig.ZombieName;
                 } else {
                     tabName = "&c" + p.truename;

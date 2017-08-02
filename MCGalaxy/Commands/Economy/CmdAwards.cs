@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Eco {
 
             List<Awards.Award> awards = GetAwards(plName);
             if (awards.Count == 0) {
-                if (plName != "") {
+                if (plName.Length > 0) {
                     Player.Message(p, "{0} %Shas no awards.", 
                                    PlayerInfo.GetColoredName(p, plName));
                 } else {

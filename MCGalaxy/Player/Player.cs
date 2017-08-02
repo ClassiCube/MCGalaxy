@@ -102,7 +102,7 @@ namespace MCGalaxy {
         
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
-            if (group.Prefix != "") prefix += "&f" + group.Prefix + color;
+            if (group.Prefix.Length > 0) prefix += "&f" + group.Prefix + color;
             Team team = Game.Team;
             prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
             
@@ -212,7 +212,7 @@ namespace MCGalaxy {
         public static void GlobalDespawn(Player p, bool self) { Entities.GlobalDespawn(p, self); }
 
         public bool MarkPossessed(string marker = "") {
-            if (marker != "") {
+            if (marker.Length > 0) {
                 Player controller = PlayerInfo.FindExact(marker);
                 if (controller == null) return false;
                 marker = " (" + controller.color + controller.name + color + ")";
@@ -241,7 +241,7 @@ namespace MCGalaxy {
         public void Kick(string discMsg) { Kick(discMsg, false); }
         public void Kick(string discMsg, bool sync = false) {
             string chatMsg = discMsg;
-            if (chatMsg != "") chatMsg = "(" + chatMsg + ")"; // old format
+            if (chatMsg.Length > 0) chatMsg = "(" + chatMsg + ")"; // old format
             LeaveServer(chatMsg, discMsg, true, sync);
         }
         
@@ -261,7 +261,7 @@ namespace MCGalaxy {
         [Obsolete("Use Leave() or Kick() instead")]
         public void leftGame(string discMsg = "") {
             string chatMsg = discMsg;
-            if (chatMsg != "") chatMsg = "(" + chatMsg + ")"; // old format
+            if (chatMsg.Length > 0) chatMsg = "(" + chatMsg + ")"; // old format
             LeaveServer(chatMsg, discMsg, true); 
         }
         

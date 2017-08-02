@@ -58,13 +58,13 @@ namespace MCGalaxy.Commands.Moderation {
                     MessageTooHighRank(p, "possess", false); return;
                 }
                 
-                if (who.possess != "") {
+                if (who.possess.Length > 0) {
                     Player.Message(p, "That player is currently possessing someone!"); return;
                 }
-                if (who.following != "") {
+                if (who.following.Length > 0) {
                     Player.Message(p, "That player is either following someone or already possessed."); return;
                 }                
-                if (p.possess != "") {
+                if (p.possess.Length > 0) {
                     Player prev = PlayerInfo.FindExact(p.possess);
                     if (prev != null) {
                         prev.following = "";

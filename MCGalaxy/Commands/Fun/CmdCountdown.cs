@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleRules(Player p, string target) {
             Player who = p;
-            if (target != "" && CheckExtraPerm(p, 1)) {
+            if (target.Length > 0 && CheckExtraPerm(p, 1)) {
                 who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return;
                 

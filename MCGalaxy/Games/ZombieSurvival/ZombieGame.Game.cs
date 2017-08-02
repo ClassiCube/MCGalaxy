@@ -106,7 +106,7 @@ namespace MCGalaxy.Games {
                               " likes %Sand &c" + CurLevel.Config.Dislikes + " dislikes");
                 Player.Message(p, "This map's win chance is &a" + CurLevel.WinChance + "%S%");
                 
-                if (CurLevel.Config.Authors != "") {
+                if (CurLevel.Config.Authors.Length > 0) {
                     string[] authors = CurLevel.Config.Authors.Replace(" ", "").Split(',');
                     Player.Message(p, "It was created by {0}",
                                    authors.Join(n => PlayerInfo.GetColoredName(p, n)));
