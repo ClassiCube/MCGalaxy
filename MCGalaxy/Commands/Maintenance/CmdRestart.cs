@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
+            if (message.Length > 0) { Help(p); return; }
             MCGalaxy.Gui.App.ExitProgram(true);
         }
         

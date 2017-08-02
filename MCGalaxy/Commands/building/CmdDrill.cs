@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             ushort dist = 20;
-            if (message != "" && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
+            if (message.Length > 0 && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             
             Player.Message(p, "Destroy the block you wish to drill.");
             p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);

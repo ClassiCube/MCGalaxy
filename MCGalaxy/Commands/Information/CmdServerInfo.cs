@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
         static PerformanceCounter cpuPCounter = null;
         
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
+            if (message.Length > 0) { Help(p); return; }
             
             Player.Message(p, "Server's name: &b{0}%S", ServerConfig.Name);
             Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",

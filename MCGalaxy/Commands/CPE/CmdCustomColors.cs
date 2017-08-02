@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands.CPE {
         
         
         static bool CheckName(Player p, string arg) {
-            if (Colors.Parse(arg) != "") {
+            if (Colors.Parse(arg).Length > 0) {
                 Player.Message(p, "There is already an existing color with the name \"{0}\".", arg);
                 return false;
             }
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.CPE {
         static char ParseColor(Player p, string arg) {
             if (arg.Length != 1) {
                 string colCode = Colors.Parse(arg);
-                if (colCode != "") return colCode[1];
+                if (colCode.Length > 0) return colCode[1];
                 
                 Player.Message(p, "There is no color \"" + arg + "\".");
             } else {

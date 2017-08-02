@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Toggle(p, ref p.ignoreDrawOutput, "{0} ignoring draw command output"); return;
             } else if (action == "list") {                
                 string names = p.listignored.Join();
-                if (names != "") {
+                if (names.Length > 0) {
                     Player.Message(p, "&cCurrently ignoring the following players:");
                     Player.Message(p, names);
                 }

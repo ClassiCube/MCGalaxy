@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             oprulesFile.EnsureExists();
 
             Player who = p;
-            if (message != "") {
+            if (message.Length > 0) {
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
                 if (p != null && p.Rank < who.Rank) {

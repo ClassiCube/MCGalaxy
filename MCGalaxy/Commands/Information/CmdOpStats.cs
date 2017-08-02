@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
                 if (p == null) { Help(p); return; }
                 
                 name = p.name;
-                if (message != "") start = message.ToLower();
+                if (message.Length > 0) start = message.ToLower();
             } else {
                 name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 if (args.Length > 1 && ValidTimespan(args[1].ToLower()))

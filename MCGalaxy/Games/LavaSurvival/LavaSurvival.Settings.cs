@@ -70,7 +70,7 @@ namespace MCGalaxy.Games {
                 case "maps":
                     foreach (string name in value.Split(',')) {
                         string map = name.Trim();
-                        if (map != "" && !maps.Contains(map))
+                        if (map.Length > 0 && !maps.CaselessContains(map))
                             maps.Add(map);
                     }
                     break;

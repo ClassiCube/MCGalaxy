@@ -203,8 +203,7 @@ namespace MCGalaxy.Commands.CPE {
             
             string[] files = Directory.GetFiles("presets", "*.env");
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
-            if (all != "")
-                Player.Message(p, "Custom preset types: " + all);
+            if (all.Length > 0) Player.Message(p, "Custom preset types: " + all);
         }
         
         public override void Help(Player p) {

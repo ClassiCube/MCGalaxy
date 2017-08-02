@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
-            if (message != "") {
+            if (message.Length > 0) {
                 Group grp = Matcher.FindRanks(p, message);
-                if(grp == null) return;
+                if (grp == null) return;
                 string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
                 Section rankSec = MakeSection(grp, title);                
                 

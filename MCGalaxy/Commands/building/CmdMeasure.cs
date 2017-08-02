@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (message.IndexOf(' ') != -1) { Help(p); return; }
             ExtBlock skip = ExtBlock.Air;
-            if (message != "" && !CommandParser.GetBlock(p, message, out skip)) return;
+            if (message.Length > 0 && !CommandParser.GetBlock(p, message, out skip)) return;
             
             Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for %SMeasure", skip, DoMeasure);

@@ -40,7 +40,7 @@ namespace MCGalaxy {
         }
         
         protected bool CheckSuper(Player p, string message, string type) {
-            if (message != "" || !Player.IsSuper(p)) return false;
+            if (message.Length > 0 || !Player.IsSuper(p)) return false;
             SuperRequiresArgs(name, p, type); 
             return true;
         }

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Eco {
             if (args.Length == 2) {
                 plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 if (plName == null) return;
-            } else if (message != "" && !message.CaselessEq("all")) {
+            } else if (message.Length > 0 && !message.CaselessEq("all")) {
                 if (!int.TryParse(args[0], out ignored)) {
                     modifier = "";
                     plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);

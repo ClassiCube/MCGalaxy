@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return;  }
+            if (message.Length > 0) { Help(p); return;  }
             
             Player.Message(p, "Spawn location set to your current position.");
             p.level.spawnx = (ushort)p.Pos.BlockX;

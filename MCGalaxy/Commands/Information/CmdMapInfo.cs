@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.Info {
             // Early out when accounts have + and map doesn't.
             if (plus && lvlName.IndexOf('+') == -1) return null;
             
-            while (lvlName != "" && Char.IsNumber(lvlName[lvlName.Length - 1])) {
+            while (lvlName.Length > 0 && Char.IsNumber(lvlName[lvlName.Length - 1])) {
                 // If the server does not have account with +, we have to account for the
                 // that say Player123's second level is Player1232, and the realm owner is Player123
                 string pName = plus ? null : PlayerInfo.FindName(lvlName);

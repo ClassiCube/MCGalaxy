@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
+            if (message.Length > 0) { Help(p); return; }
 
             List<Player> candidates = GetPatrolCandidates(p);
             if (candidates.Count == 0) {

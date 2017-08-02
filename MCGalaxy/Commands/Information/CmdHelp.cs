@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Info {
         
         bool ParseCommand(Player p, string message) {
             string[] args = message.SplitSpaces(2);
-            Alias alias = Alias.Find(args[0].ToLower());
+            Alias alias = Alias.Find(args[0]);
             if (alias != null) args[0] = alias.Target;
             
             Command cmd = Command.all.Find(args[0]);

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             PhysicsArgs extraInfo = default(PhysicsArgs);
             message = message.ToLower();
-            if (message != "" && !ParseArgs(p, message, ref extraInfo)) return;
+            if (message.Length > 0 && !ParseArgs(p, message, ref extraInfo)) return;
 
             Player.Message(p, "Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for %SRestart physics", extraInfo, DoRestart);

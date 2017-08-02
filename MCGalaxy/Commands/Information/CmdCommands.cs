@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, category + " commands you may use:");
 
             type = "Commands " + category;
-            if (sort != "") type += " " + sort;            
+            if (sort != "") type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);

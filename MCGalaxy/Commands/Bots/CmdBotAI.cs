@@ -119,8 +119,9 @@ namespace MCGalaxy.Commands.Bots{
                 
                 using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
                     for (int i = allLines.Length - 1; i > 0; i--) {
-                        if (allLines[i][0] != '#' && allLines[i] != "")
+                        if (allLines[i].Length > 0 && allLines[i][0] != '#') {
                             w.WriteLine(allLines[i]);
+                        }
                     }
                 }
             } catch {

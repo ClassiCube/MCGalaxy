@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             
             // convert player pos to block coords
             Vec3U16 P = ClampPos(p.Pos, p.level);
-            if (message != "" && !ParseCoords(message, p, ref P)) return;            
+            if (message.Length > 0 && !ParseCoords(message, p, ref P)) return;            
             P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
             
             if (p.HasBlockchange) {

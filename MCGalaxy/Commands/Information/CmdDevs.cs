@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
+            if (message.Length > 0) { Help(p); return; }
             Player.Message(p, "&9{1} devs: %S{0}", Server.Devs.Join(), Server.SoftwareName);
             Player.Message(p, "&2{1} mods: %S{0}", Server.Mods.Join(), Server.SoftwareName);
         }

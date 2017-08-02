@@ -67,11 +67,13 @@ namespace MCGalaxy.Eco {
             pl.Name = key.ToLower();
             pl.Awards = new List<string>();
             
-            if (value.IndexOf(',') != -1)
-                foreach (string award in value.Split(','))
+            if (value.IndexOf(',') != -1) {
+                foreach (string award in value.Split(',')) {
                     pl.Awards.Add(award);
-            else if (value != "")
+            	}
+            } else {
                 pl.Awards.Add(value);
+            }
             PlayerAwards.Add(pl);
         }
 

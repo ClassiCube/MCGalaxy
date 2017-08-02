@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             int seconds = 30;
             Level lvl = p != null ? p.level : Server.mainLevel;
-            if (message != "") {
+            if (message.Length > 0) {
                 string[] parts = message.SplitSpaces();
                 if (parts.Length == 1) {
                     if (!int.TryParse(parts[0], out seconds)) {

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
-            if (message != "") { Help(p); return; }
+            if (message.Length > 0) { Help(p); return; }
 
             if (ServerConfig.UseIRC) {
                 Player.Message(p, "IRC is &aEnabled%S.");

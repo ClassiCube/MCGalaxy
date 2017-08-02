@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Info {
                     msg += Block.Name(i) + ", ";
             }
 
-            if (msg != "") {
+            if (msg.Length > 0) {
                 Player.Message(p, "Blocks which look like \"{0}\":", block);
                 Player.Message(p, msg.Remove(msg.Length - 2));
             } else {

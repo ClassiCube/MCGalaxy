@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Info {
             if (message.CaselessEq("disagree")) { Disagree(p); return; }
             
             Player who = p;
-            if (message != "") {
+            if (message.Length > 0) {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
