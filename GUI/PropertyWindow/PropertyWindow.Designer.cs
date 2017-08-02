@@ -239,9 +239,6 @@ namespace MCGalaxy.Gui
             this.srv_txtOwner = new System.Windows.Forms.TextBox();
             this.srv_grpUpdate = new System.Windows.Forms.GroupBox();
             this.srv_btnForceUpdate = new System.Windows.Forms.Button();
-            this.updateTimeNumeric = new System.Windows.Forms.NumericUpDown();
-            this.lblUpdateSeconds = new System.Windows.Forms.Label();
-            this.notifyInGameUpdate = new System.Windows.Forms.CheckBox();
             this.chkUpdates = new System.Windows.Forms.CheckBox();
             this.grpPlayers = new System.Windows.Forms.GroupBox();
             this.srv_lblPlayers = new System.Windows.Forms.Label();
@@ -418,7 +415,6 @@ namespace MCGalaxy.Gui
             this.adv_grp.SuspendLayout();
             this.srv_grp.SuspendLayout();
             this.srv_grpUpdate.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).BeginInit();
             this.grpPlayers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numGuests)).BeginInit();
@@ -2511,9 +2507,6 @@ namespace MCGalaxy.Gui
             // 
             this.srv_grpUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.srv_grpUpdate.Controls.Add(this.srv_btnForceUpdate);
-            this.srv_grpUpdate.Controls.Add(this.updateTimeNumeric);
-            this.srv_grpUpdate.Controls.Add(this.lblUpdateSeconds);
-            this.srv_grpUpdate.Controls.Add(this.notifyInGameUpdate);
             this.srv_grpUpdate.Controls.Add(this.chkUpdates);
             this.srv_grpUpdate.Location = new System.Drawing.Point(220, 271);
             this.srv_grpUpdate.Name = "srv_grpUpdate";
@@ -2533,42 +2526,6 @@ namespace MCGalaxy.Gui
             this.srv_btnForceUpdate.Text = "Force update";
             this.srv_btnForceUpdate.UseVisualStyleBackColor = true;
             this.srv_btnForceUpdate.Click += new System.EventHandler(this.forceUpdateBtn_Click);
-            // 
-            // updateTimeNumeric
-            // 
-            this.updateTimeNumeric.Location = new System.Drawing.Point(129, 67);
-            this.updateTimeNumeric.Maximum = new decimal(new int[] {
-                                    128,
-                                    0,
-                                    0,
-                                    0});
-            this.updateTimeNumeric.Name = "updateTimeNumeric";
-            this.updateTimeNumeric.Size = new System.Drawing.Size(39, 21);
-            this.updateTimeNumeric.TabIndex = 29;
-            this.updateTimeNumeric.Value = new decimal(new int[] {
-                                    10,
-                                    0,
-                                    0,
-                                    0});
-            // 
-            // lblUpdateSeconds
-            // 
-            this.lblUpdateSeconds.AutoSize = true;
-            this.lblUpdateSeconds.Location = new System.Drawing.Point(3, 68);
-            this.lblUpdateSeconds.Name = "lblUpdateSeconds";
-            this.lblUpdateSeconds.Size = new System.Drawing.Size(120, 13);
-            this.lblUpdateSeconds.TabIndex = 5;
-            this.lblUpdateSeconds.Text = "Restart time in seconds:";
-            // 
-            // notifyInGameUpdate
-            // 
-            this.notifyInGameUpdate.AutoSize = true;
-            this.notifyInGameUpdate.Location = new System.Drawing.Point(6, 43);
-            this.notifyInGameUpdate.Name = "notifyInGameUpdate";
-            this.notifyInGameUpdate.Size = new System.Drawing.Size(95, 17);
-            this.notifyInGameUpdate.TabIndex = 7;
-            this.notifyInGameUpdate.Text = "Notify In-Game";
-            this.notifyInGameUpdate.UseVisualStyleBackColor = true;
             // 
             // chkUpdates
             // 
@@ -4274,7 +4231,6 @@ namespace MCGalaxy.Gui
             this.srv_grp.PerformLayout();
             this.srv_grpUpdate.ResumeLayout(false);
             this.srv_grpUpdate.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updateTimeNumeric)).EndInit();
             this.grpPlayers.ResumeLayout(false);
             this.grpPlayers.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).EndInit();
@@ -4631,9 +4587,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox srv_grpUpdate;
-        private System.Windows.Forms.NumericUpDown updateTimeNumeric;
-        private System.Windows.Forms.Label lblUpdateSeconds;
-        private System.Windows.Forms.CheckBox notifyInGameUpdate;
         private System.Windows.Forms.Button srv_btnForceUpdate;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
         private System.Windows.Forms.NumericUpDown nudCooldownTime;

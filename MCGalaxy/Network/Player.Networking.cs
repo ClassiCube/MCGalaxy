@@ -122,7 +122,7 @@ namespace MCGalaxy {
         public void SendMessage(string message, bool colorParse) { SendMessage(0, message, colorParse); }
         
         public virtual void SendMessage(byte id, string message, bool colorParse = true) {
-            // Message should start with server colour if no custom colour
+            // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
                 message = ServerConfig.DefaultColor + message;
             }

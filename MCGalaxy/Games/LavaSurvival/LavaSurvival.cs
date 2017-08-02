@@ -433,7 +433,7 @@ namespace MCGalaxy.Games
 
         public void AddMap(string name)
         {
-            if (!String.IsNullOrEmpty(name) && !maps.Contains(name.ToLower()))
+            if (!String.IsNullOrEmpty(name) && !HasMap(name))
             {
                 maps.Add(name.ToLower());
                 SaveSettings();
@@ -441,15 +441,14 @@ namespace MCGalaxy.Games
         }
         public void RemoveMap(string name)
         {
-            if (maps.Contains(name.ToLower()))
+            if (maps.CaselessRemove(name))
             {
-                maps.Remove(name.ToLower());
                 SaveSettings();
             }
         }
         public bool HasMap(string name)
         {
-            return maps.Contains(name.ToLower());
+            return maps.CaselessContains(name);
         }
 
         public bool InSafeZone(Vec3U16 pos)

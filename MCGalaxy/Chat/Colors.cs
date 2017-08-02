@@ -55,7 +55,7 @@ namespace MCGalaxy {
         /// <remarks> NOTE: This returns false for A to F, be warned! </remarks>
         public static bool IsDefined(char c) { return c <= '\xff' && List[c].Fallback != '\0'; }
         
-        /// <summary> Returns whether c is a colour code in 0-9, a-f, or A-F. </summary>
+        /// <summary> Returns whether c is a color code in 0-9, a-f, or A-F. </summary>
         public static bool IsStandard(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
@@ -137,7 +137,7 @@ namespace MCGalaxy {
         /// <summary> Converts IRC color codes into normal color codes. </summary>
         public static string ConvertIRCToMC(string input) {
             if (input == null) throw new ArgumentNullException("input");
-            // get rid of background colour component of some IRC colour codes.
+            // get rid of background color component of some IRC color codes.
             input = IrcTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
             
@@ -183,12 +183,12 @@ namespace MCGalaxy {
             if (col == 'S') { col = ServerConfig.DefaultColor[1]; return true; }
             if (col == 'H') { col = ServerConfig.HelpDescriptionColor[1]; return true; }
             if (col == 'T') { col = ServerConfig.HelpSyntaxColor[1]; return true; }
-            if (col == 'I') { col = ServerConfig.IRCColour[1]; return true; }
+            if (col == 'I') { col = ServerConfig.IRCColor[1]; return true; }
             return IsDefined(col);
         }
         
         
-        /// <summary> Converts percentage colour codes to their actual/real color codes. </summary>
+        /// <summary> Converts percentage color codes to their actual/real color codes. </summary>
         public static string Escape(string value) {
             if (value.IndexOf('%') == -1) return value;
             char[] chars = new char[value.Length];
@@ -218,7 +218,7 @@ namespace MCGalaxy {
             for (int i = 0; i < value.Length; i++) {
                 char token = value[i];
                 if (token == '%' || token == '&') {
-                    i++; // Skip over the following colour code.
+                    i++; // Skip over the following color code.
                 } else {
                     output[usedChars++] = token;
                 }

@@ -106,7 +106,7 @@ namespace MCGalaxy {
             char lastCol = 'f';
             
             for (int i = 0; i < value.Length; i++) {
-                // Not a colour code so do nothing
+                // Not a color code so do nothing
                 if (value[i] != '&') { 
                     output[used++] = value[i]; continue;
                 }
@@ -116,21 +116,21 @@ namespace MCGalaxy {
                 char col = value[i + 1];
                 if (col >= 'A' && col <= 'F') col += ' ';
                 
-                // Check for double colour codes in a row
+                // Check for double color codes in a row
                 if (last == i - 2) {
                     used--;
                     output[used++] = col;
                 }
-                // Check for same colour codes but not in a row
+                // Check for same color codes but not in a row
                 if (lastCol != col) {
                     output[used++] = '&';
                     output[used++] = col;
                 }
-                last = i; i++; // skip over colour code
+                last = i; i++; // skip over color code
                 lastCol = col;
             }
             
-            // Trim trailing colour codes
+            // Trim trailing color codes
             int j = value.Length;
             while ((j - 2) >= 0) {
                 if (value[j - 2] != '&') break;

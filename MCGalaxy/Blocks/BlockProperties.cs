@@ -80,7 +80,8 @@ namespace MCGalaxy.Blocks {
             using (StreamWriter w = new StreamWriter("blockprops/" + group + ".txt")) {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
-                            "Killed by water : Killed by lava : Kills players : death message : Animal AI type");
+                            "Killed by water : Killed by lava : Kills players : death message : " +
+                            "Animal AI type : Stack block : Is OP block");
                 for (int i = 0; i < scope.Length; i++) {
                     if (!scope[i].Changed || !selector(i)) continue;
                     BlockProps props = scope[i];
@@ -91,7 +92,7 @@ namespace MCGalaxy.Blocks {
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
-                                + (byte)props.AnimalAI + ":" + props.StackId);
+                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock);
                 }
             }
         }
@@ -140,6 +141,9 @@ namespace MCGalaxy.Blocks {
                 if (parts.Length > 11) {
                     byte stackId; byte.TryParse(parts[11], out stackId);
                     scope[idx].StackId = stackId;
+                }
+                if (parts.Length > 12) {
+                    bool.TryParse(parts[12], out scope[idx].OPBlock);
                 }
             }
         }

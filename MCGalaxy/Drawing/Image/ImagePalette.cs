@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy.Drawing {
     
-    /// <summary> Represents a mapping of block ids to RGB colours. </summary>
+    /// <summary> Represents a mapping of block ids to RGB colors. </summary>
     public sealed class ImagePalette {
         
         /// <summary> The name of this palette. </summary>

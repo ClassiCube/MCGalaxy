@@ -57,7 +57,7 @@ namespace MCGalaxy.Levels.IO {
         
         void ReadMetadata(NbtCompound root, Level lvl) {
             NbtCompound env = (NbtCompound)root["Environment"];
-            // TODO: Work out sun/shadow colour from Skylight and TimeOfDay
+            // TODO: Work out sun/shadow color from Skylight and TimeOfDay
             lvl.Config.SkyColor = env["SkyColor"].IntValue.ToString("X6");
             lvl.Config.FogColor = env["FogColor"].IntValue.ToString("X6");
             lvl.Config.CloudColor = env["CloudColor"].IntValue.ToString("X6");            

@@ -22,15 +22,15 @@ namespace MCGalaxy.Drawing {
 
     public interface IPaletteMatcher {
         
-        /// <summary> Sets the palette of blocks used to match colours from. </summary>
+        /// <summary> Sets the palette of blocks used to match colors from. </summary>
         void SetPalette(PaletteEntry[] front, PaletteEntry[] back);
         
         /// <summary> Returns the best matching block for the given color,
-        /// based on this palette's colourspace. </summary>
+        /// based on this palette's colorspace. </summary>
         byte BestMatch(byte R, byte G, byte B);
         
         /// <summary> Returns the best matching block for the given color,
-        /// based on this palette's colourspace. </summary>
+        /// based on this palette's colorspace. </summary>
         byte BestMatch(byte R, byte G, byte B, out bool backLayer);
     }
     

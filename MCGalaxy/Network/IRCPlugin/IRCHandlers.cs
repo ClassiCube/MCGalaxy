@@ -308,7 +308,7 @@ namespace MCGalaxy.Network {
         }
 
         void Listener_OnNick(UserInfo user, string newNick) {
-            //Player.GlobalMessage(Server.IRCColour + "(IRC) " + user.Nick + " changed nick to " + newNick);
+            //Player.GlobalMessage(Server.IRCColor + "(IRC) " + user.Nick + " changed nick to " + newNick);
             // We have successfully reclaimed our nick, so try to sign in again.
             if (newNick == bot.nick) Authenticate();
 

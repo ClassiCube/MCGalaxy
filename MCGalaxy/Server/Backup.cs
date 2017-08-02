@@ -128,7 +128,7 @@ namespace MCGalaxy {
                 PackagePartCollection parts = zip.GetParts();
                 foreach (ZipPackagePart item in parts) {
                     ExtractItem(item, ref errors);
-                    if (item.Uri.ToString().ToLower().Contains("sql.sql")) {
+                    if (item.Uri.ToString().CaselessContains("sql.sql")) {
                         // If it's in there, they backed it up, meaning they want it restored
                         Backup.ReplaceDatabase(item.GetStream());
                     }

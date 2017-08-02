@@ -77,8 +77,6 @@ namespace MCGalaxy {
         public static bool CheckForUpdates = true;
         [ConfigBool("in-game-update-notify", "Server", false)]
         public static bool NotifyUpdating;
-        [ConfigInt("update-countdown", "Update", 10)]
-        public static int UpdateRestartDelay = 10;
         [ConfigBool("auto-restart", "Server", false)]
         public static bool AutoRestart;
         [ConfigDateTime("restarttime", "Server")]
@@ -206,7 +204,7 @@ namespace MCGalaxy {
         [ConfigColor("defaultColor", "Colors", "&e")]
         public static string DefaultColor = "&e";
         [ConfigColor("irc-color", "Colors", "&5")]
-        public static string IRCColour = "&5";
+        public static string IRCColor = "&5";
         [ConfigColor("global-chat-color", "Colors", "&6")]
         public static string GlobalChatColor = "&6";
         [ConfigColor("help-syntax-color", "Colors", "&a")]

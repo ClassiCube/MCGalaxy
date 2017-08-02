@@ -23,7 +23,7 @@ namespace MCGalaxy.Gui {
         
         void LoadChatProps() {
             chat_ParseColor(ServerConfig.DefaultColor, chat_btnDefault);
-            chat_ParseColor(ServerConfig.IRCColour, chat_btnIRC);
+            chat_ParseColor(ServerConfig.IRCColor, chat_btnIRC);
             chat_ParseColor(ServerConfig.HelpSyntaxColor, chat_btnSyntax);
             chat_ParseColor(ServerConfig.HelpDescriptionColor, chat_btnDesc);
             
@@ -43,7 +43,7 @@ namespace MCGalaxy.Gui {
         
         void ApplyChatProps() {
             ServerConfig.DefaultColor = Colors.Parse(chat_btnDefault.Text);
-            ServerConfig.IRCColour = Colors.Parse(chat_btnIRC.Text);
+            ServerConfig.IRCColor = Colors.Parse(chat_btnIRC.Text);
             ServerConfig.HelpSyntaxColor = Colors.Parse(chat_btnSyntax.Text);
             ServerConfig.HelpDescriptionColor = Colors.Parse(chat_btnDesc.Text);
             

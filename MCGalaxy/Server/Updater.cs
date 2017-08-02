@@ -34,17 +34,14 @@ namespace MCGalaxy {
         const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
         const string ChangelogLocation = BaseURL + "Changelog.txt";
         const string EXELocation = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
-
-        public static bool CurrentUpdate = false;
         static bool msgOpen = false;
         
         public static void UpdaterTask(SchedulerTask task) {
-            UpdateCheck(null);
+            UpdateCheck();
             task.Delay = TimeSpan.FromHours(2);
         }
 
-        public static void UpdateCheck(Player p = null) {
-            CurrentUpdate = true;
+        static void UpdateCheck() {
             if (!ServerConfig.CheckForUpdates) return;
             WebClient client = HttpUtil.CreateWebClient();
 
@@ -52,17 +49,11 @@ namespace MCGalaxy {
                 string raw = client.DownloadString(CurrentVersionFile);
                 Version latestVersion = new Version(raw);
                 if (latestVersion <= Server.Version) {
-                    Player.Message(p, "No update found!");
+                    Logger.Log(LogType.SystemActivity, "No update found!");
                     return;
                 }
                 
-                if (p != null) {
-                    if (ServerConfig.NotifyUpdating || p != null) {
-                        NotifyPlayersOfUpdate(p);
-                    } else {
-                        PerformUpdate();
-                    }
-                } else if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
+                if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
                     // don't want message box blocking background scheduler thread
                     Thread thread = new Thread(ShowUpdateMessageAsync);
                     thread.Name = "MCGalaxy_UpdateMsgBox";
@@ -80,7 +71,6 @@ namespace MCGalaxy {
             }
             
             client.Dispose();
-            CurrentUpdate = false;
         }
         
         static void ShowUpdateMessageAsync() {
@@ -89,37 +79,6 @@ namespace MCGalaxy {
                 PerformUpdate();
             }
             msgOpen = false;
-        }
-        
-        static void NotifyPlayersOfUpdate(Player p) {
-            Chat.MessageAll("Update found. Prepare for restart in &f" + ServerConfig.UpdateRestartDelay + " %Sseconds.");
-            Logger.Log(LogType.SystemActivity, "Update found. Prepare for restart in {0} seconds.", ServerConfig.UpdateRestartDelay);
-            
-            int timeLeft = ServerConfig.UpdateRestartDelay;
-            System.Timers.Timer countDown = new System.Timers.Timer();
-            countDown.Interval = 1000;
-            countDown.Start();
-            
-            countDown.Elapsed += delegate {
-                if (p != null) {
-                    Chat.MessageAll("Updating in &f" + timeLeft + " %Sseconds.");
-                    Logger.Log(LogType.SystemActivity, "Updating in {0} seconds.", timeLeft);
-                    
-                    timeLeft = timeLeft - 1;
-                    if (timeLeft < 0) {
-                        Chat.MessageAll("---UPDATING SERVER---");
-                        Logger.Log(LogType.SystemActivity, "---UPDATING SERVER---");
-                        countDown.Stop();
-                        countDown.Dispose();
-                        PerformUpdate();
-                    }
-                } else {
-                    Chat.MessageGlobal("Stopping auto restart.");
-                    Logger.Log(LogType.SystemActivity, "Stopping auto restart.");
-                    countDown.Stop();
-                    countDown.Dispose();
-                }
-            };
         }
 
         public static void PerformUpdate() {

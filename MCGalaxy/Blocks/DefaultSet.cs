@@ -76,7 +76,7 @@ namespace MCGalaxy.Blocks {
             return 0;
         }
         
-        /// <summary> Gets the default fog colour of a block. </summary>
+        /// <summary> Gets the default fog color of a block. </summary>
         public static ColorDesc FogColor(byte b) {
             if (b == Block.Water || b == Block.StillWater)
                 return new ColorDesc(5, 5, 51);
