@@ -195,16 +195,15 @@ namespace MCGalaxy.Commands {
         }        
                 
         static void LoadVersion2(string[] lines) {
-            char[] colon = new char[] { ':' };
+            string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 //Name : Lowest : Disallow : Allow
-                string[] args = line.Replace(" ", "").Split(colon);
+                line.Replace(" ", "").FixedSplit(args, ':');
                 
                 try {                    
                     LevelPermission minRank = (LevelPermission)int.Parse(args[1]);                    
-                    string disallowRaw = args.Length > 2 ? args[2] : null;
-                    string allowRaw = args.Length > 3 ? args[3] : null;
+                    string disallowRaw = args[2], allowRaw = args[3];
                     
                     List<LevelPermission> allow = ExpandPerms(allowRaw);
                     List<LevelPermission> disallow = ExpandPerms(disallowRaw);

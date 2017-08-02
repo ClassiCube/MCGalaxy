@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         void DoFakeRank(Player p, Group newRank) {
-            p.hackrank = true;            
+            p.hackrank = true;
             string rankMsg = ModActionCmd.FormatRankChange(p.group, newRank, p.name, "Congratulations!");
             Chat.MessageGlobal(rankMsg);
             

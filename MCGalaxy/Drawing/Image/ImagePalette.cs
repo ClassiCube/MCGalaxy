@@ -68,12 +68,13 @@ namespace MCGalaxy.Drawing {
 
             string[] lines = File.ReadAllLines(file);
             List<PaletteEntry> entries = new List<PaletteEntry>();
+            string[] parts = new string[5];
             
             foreach (string line in lines) {
                 if (line.StartsWith("#") || line.Length == 0) continue;
                 
-                string[] parts = line.Split(':');
-                if (parts.Length != 4) continue;
+                line.FixedSplit(parts, ':');
+                if (parts[3] == null || parts[4] != null) continue; // not a proper line
                 entries.Add(ParseEntry(parts));
             }
 

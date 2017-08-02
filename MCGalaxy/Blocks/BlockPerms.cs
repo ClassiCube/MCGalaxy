@@ -147,11 +147,11 @@ namespace MCGalaxy.Blocks {
         }
         
         static void LoadVersion2(string[] lines) {
-            char[] colon = new char[] { ':' };
+            string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 //Name : Lowest : Disallow : Allow
-                string[] args = line.Replace(" ", "").Split(colon);
+                line.Replace(" ", "").FixedSplit(args, ':');
                 
                 BlockPerms perms = new BlockPerms();
                 if (Block.Byte(args[0]) == Block.Invalid) continue;
@@ -159,8 +159,7 @@ namespace MCGalaxy.Blocks {
 
                 try {
                     perms.MinRank = (LevelPermission)int.Parse(args[1]);
-                    string disallowRaw = args.Length > 2 ? args[2] : null;
-                    string allowRaw = args.Length > 3 ? args[3] : null;
+                    string disallowRaw = args[2], allowRaw = args[3];
                     
                     perms.Allowed = CommandPerms.ExpandPerms(allowRaw);
                     perms.Disallowed = CommandPerms.ExpandPerms(disallowRaw);

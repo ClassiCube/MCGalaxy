@@ -139,14 +139,15 @@ namespace MCGalaxy.Commands {
         }
         
         static void LoadCore() {
+            string[] args = new string[4];
             using (StreamReader r = new StreamReader(Paths.CmdExtraPermsFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     if (line.Length == 0 || line[0] == '#' || line.IndexOf(':') == -1) continue;
                     
                     try {
-                        string[] parts = line.Split(':');
-                        LoadExtraPerm(parts);
+                        line.FixedSplit(args, ':');
+                        LoadExtraPerm(args);
                     } catch (Exception ex) {
                         Logger.Log(LogType.Warning, "Loading an additional command permission failed!!");
                         Logger.LogError(ex);
@@ -155,10 +156,10 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void LoadExtraPerm(string[] parts) {
-            string cmdName = parts[0];
-            int number = int.Parse(parts[1]), minPerm = int.Parse(parts[2]);
-            string desc = parts.Length > 3 ? parts[3] : "";
+        static void LoadExtraPerm(string[] args) {
+            string cmdName = args[0];
+            int number = int.Parse(args[1]), minPerm = int.Parse(args[2]);
+            string desc = args[3] == null ? "" : args[3];
             
             CommandExtraPerms existing = Find(cmdName, number);
             if (existing != null) desc = existing.Description;

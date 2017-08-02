@@ -25,7 +25,7 @@ namespace MCGalaxy {
     public sealed class ExtrasCollection : Dictionary<string, object> {
 
         /// <summary> Returns the value associated with the given key as an object, or null if no value exists for this key </summary>
-        public object Get(string key){
+        public object Get(string key) {
             object value;
             TryGetValue(key, out value);
             return value;

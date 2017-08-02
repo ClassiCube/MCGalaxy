@@ -80,7 +80,11 @@ namespace MCGalaxy.Gui {
         void UpdateNotifyIconText() {
             int playerCount = PlayerInfo.Online.Count;
             string players = " (" + playerCount + " players)";
-            notifyIcon.Text = (ServerConfig.Name + players).Truncate(63);
+            
+            // ArgumentException thrown if text length is > 63
+            string text = (ServerConfig.Name + players);
+            if (text.Length > 63) text = text.Substring(0, 63);
+            notifyIcon.Text = text;
         }
         
         void MakeNotifyIcon() {

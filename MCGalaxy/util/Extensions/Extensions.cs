@@ -24,7 +24,7 @@ using System.IO.Compression;
 using System.Text;
 
 namespace MCGalaxy {
-	
+    
     /// <summary> Converts an object into a string. </summary>
     public delegate string StringFormatter<T>(T value);
     
@@ -39,10 +39,18 @@ namespace MCGalaxy {
             return value.Split(trimChars, maxParts);
         }
         
-        public static string Truncate(this string source, int maxLength) {
-            if (source.Length > maxLength)
-                source = source.Substring(0, maxLength);
-            return source;
+        public static void FixedSplit(this string value, string[] split, char splitter) {
+            int start = 0, i = 0;
+            for (; i < split.Length && start <= value.Length; i++) {
+                int end = value.IndexOf(splitter, start);
+                if (end == -1) end = value.Length;
+                
+                split[i] = value.Substring(start, end - start);
+                start = end + 1;
+            }
+            
+            // If not enough split strings, set remaining to null
+            for (; i < split.Length; i++) { split[i] = null; }
         }
         
         public static byte[] GZip(this byte[] bytes) {
