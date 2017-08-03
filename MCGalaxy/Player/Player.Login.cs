@@ -41,9 +41,6 @@ namespace MCGalaxy {
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
-                                   
-            isDev = Server.Devs.CaselessContains(truename);
-            isMod = Server.Mods.CaselessContains(truename);
             
             byte protocolType = buffer[offset + 130];
             Loading = true;

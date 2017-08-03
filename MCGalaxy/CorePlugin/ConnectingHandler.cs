@@ -74,7 +74,6 @@ namespace MCGalaxy.Core {
         }
         
         static bool VerifyName(Player p, string mppass) {
-            p.verifiedName = false;
             if (!ServerConfig.VerifyNames) return true;
             
             byte[] hash = null;

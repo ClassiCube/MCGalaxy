@@ -109,13 +109,13 @@ namespace MCGalaxy {
             IGame game = level == null ? null : level.CurrentGame();
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
-            bool isOwner = ServerConfig.OwnerName.CaselessEq(name);
+            bool isDev = Server.Devs.CaselessContains(truename);
+            bool isMod = Server.Mods.CaselessContains(truename);
             bool devPrefix = ServerConfig.SoftwareStaffPrefixes;
             
             string viptitle =
                 (devPrefix && isMod) ? string.Format("{0}[&aInfo{0}] ", color) :
-                (devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color) :
-                isOwner ? string.Format("{0}[&cOwner{0}] ", color) : "";
+            	(devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color)  : "";
             prefix = prefix + viptitle;
             prefix = (title.Length == 0) ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }

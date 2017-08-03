@@ -177,7 +177,6 @@ namespace MCGalaxy {
         // BlockDefinitions
         internal int gbStep = 0, lbStep = 0;
         internal BlockDefinition gbBlock, lbBlock;
-        public bool spawned;
 
         //Undo
         internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>();
@@ -236,7 +235,6 @@ namespace MCGalaxy {
         public LevelPermission Rank { get { return group.Permission; } }
 
         public bool loggedIn;
-        public bool isDev, isMod;
         public bool verifiedName;
         bool gotSQLData;
         
