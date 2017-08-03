@@ -33,7 +33,7 @@ namespace MCGalaxy.Network {
         void ReceiveNextAsync();
         
         /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
-        void Send(byte[] buffer, bool sync = false);
+        void Send(byte[] buffer, bool sync);
         
         /// <summary> Sends a block of low-priority data, either synchronously or asynchronously. </summary>
         void SendLowPriority(byte[] buffer);

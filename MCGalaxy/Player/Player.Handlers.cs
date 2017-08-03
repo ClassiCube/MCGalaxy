@@ -189,7 +189,7 @@ namespace MCGalaxy {
             int processedLen = 0;
             try {
                 while (processedLen < bufferLen) {
-            	    int packetLen = PacketSize(buffer[processedLen]);
+                    int packetLen = PacketSize(buffer[processedLen]);
                     if (packetLen == -1) return -1;
                     
                     // Partial packet data received
@@ -499,17 +499,17 @@ namespace MCGalaxy {
                 text = text.Replace("^detail.user=", "");
             }
 
-            if (partialMessage.Length > 0 && !text.EndsWith(">") && !text.EndsWith("<")) {
+            if (partialMessage.Length > 0 && !(IsPartialSpaced(text) || IsPartialJoined(text))) {
                 text = partialMessage + text;
                 partialMessage = "";
             }
 
-            if (text.EndsWith(">")) {
-                partialMessage += text.Substring(0, text.Length - 1) + " ";
+            if (IsPartialSpaced(text)) {
+                partialMessage += text.Substring(0, text.Length - 2) + " ";
                 SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
                 return true;
-            } else if (text.EndsWith("<")) {
-                partialMessage += text.Substring(0, text.Length - 1);
+            } else if (IsPartialJoined(text)) {
+                partialMessage += text.Substring(0, text.Length - 2);
                 SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
                 return true;
             }
@@ -520,6 +520,14 @@ namespace MCGalaxy {
                 Leave(msg, msg, true); return true;
             }
             return text.Length == 0;
+        }
+        
+        static bool IsPartialSpaced(string text) {
+            return text.EndsWith(" >") || text.EndsWith(" /");
+        }
+        
+        static bool IsPartialJoined(string text) {
+            return text.EndsWith(" <") || text.EndsWith(" \\");
         }
         
         bool DoCommand(string text) {
