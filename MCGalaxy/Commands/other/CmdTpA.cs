@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands.Misc {
             Player target = PlayerInfo.FindMatches(p, message);
             if (target == null) return;
             if (target == p) { Player.Message(p, "You cannot /tpa to yourself."); return; }
-            if (target.listignored.Contains(p.name)) { ShowSentMessage(p, target); return; }
+            if (target.listignored.CaselessContains(p.name)) { ShowSentMessage(p, target); return; }
             
-            if (target.name == p.currentTpa) { 
+            if (target.name.CaselessEq(p.currentTpa)) {
                 Player.Message(p, "You still have a pending teleport request with this player."); return; 
             }
             if (p.level != target.level && target.level.IsMuseum) {

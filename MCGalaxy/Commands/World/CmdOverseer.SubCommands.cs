@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.World {
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             
-            if (pl.level.name == p.level.name) {
+            if (pl.level == p.level) {
                 PlayerActions.ChangeMap(pl, Server.mainLevel);
             } else {
                 Player.Message(p, "Player is not on your level!");

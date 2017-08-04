@@ -81,10 +81,9 @@ namespace MCGalaxy.Commands.Chatting {
                         Player.Message(p, "You must use the full name when unignoring offline players.");
                     return;
                 }
-                if (p.name == who.name) { Player.Message(p, "You cannot ignore yourself."); return; }
+                if (p == who) { Player.Message(p, "You cannot ignore yourself."); return; }
                 
-                if (p.listignored.Contains(who.name)) {
-                    p.listignored.Remove(who.name);
+                if (p.listignored.CaselessRemove(who.name)) {
                     Player.Message(p, "&aNo longer ignoring {0}", who.ColoredName);
                 } else {
                     p.listignored.Add(who.name);

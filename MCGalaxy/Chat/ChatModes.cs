@@ -97,7 +97,7 @@ namespace MCGalaxy {
             if (who.ignoreAll) {
                 DoFakePM(p, who, message); return;
             }          
-            if (p != null && who.listignored.Contains(p.name)) {
+            if (p != null && who.listignored.CaselessContains(p.name)) {
                 DoFakePM(p, who, message); return;
             }
             DoPM(p, who, message);

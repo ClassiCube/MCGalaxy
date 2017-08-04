@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) {
                 if (Player.IsSuper(p)) {
                     Player.Message(p, "Main level is {0}", Server.mainLevel.ColoredName);
-                } else if (p.level.name == Server.mainLevel.name) {
+                } else if (p.level == Server.mainLevel) {
                     Command.all.FindByName("Spawn").Use(p, "");
                 } else {
                     PlayerActions.ChangeMap(p, Server.mainLevel);

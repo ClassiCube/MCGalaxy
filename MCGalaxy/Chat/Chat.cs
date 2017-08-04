@@ -174,7 +174,7 @@ namespace MCGalaxy {
         public static bool NotIgnoring(Player source, Player target) {
             if (target.ignoreAll) return source == target; // don't ignore messages from self
             
-            return source == null || !target.listignored.Contains(source.name);
+            return source == null || !target.listignored.CaselessContains(source.name);
         }
         
         

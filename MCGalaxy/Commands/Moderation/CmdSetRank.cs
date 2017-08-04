@@ -103,8 +103,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static Group TargetRank(Player p, string name, Group curRank) {
-            if (name == "+up") return NextRankUp(p, curRank);
-            if (name == "-down") return NextRankDown(p, curRank);
+            if (name.CaselessEq("+up"))   return NextRankUp(p, curRank);
+            if (name.CaselessEq("-down")) return NextRankDown(p, curRank);
             return Matcher.FindRanks(p, name);
         }
         
