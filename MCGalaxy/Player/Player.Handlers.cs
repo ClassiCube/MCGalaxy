@@ -700,14 +700,14 @@ namespace MCGalaxy {
         
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
-            if (cmd != "repeat" && cmd != "pass") {
+            if (!cmd.CaselessEq("pass")) {
                 lastCMD = message.Length == 0 ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
+                Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);
             }
-            if (cmd != "pass") Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);
 
             try { //opstats patch (since 5.5.11)
-                if (Server.Opstats.Contains(cmd) || (cmd == "review" && message.CaselessEq("next") && Server.reviewlist.Count > 0)) {
+                if (Server.Opstats.Contains(cmd) || (cmd.CaselessEq("review") && message.CaselessEq("next") && Server.reviewlist.Count > 0)) {
                     Database.Backend.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
                                             DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), name, cmd, message);
                 }
