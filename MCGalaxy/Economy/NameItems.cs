@@ -86,8 +86,8 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "TitleColor"; } }
         
         protected override void DoPurchase(Player p, string message, string[] args) {            
-        	string color = Colors.Parse(args[1]);
-        	if (color.Length == 0) { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+            string color = Matcher.FindColor(p, args[1]);
+        	if (color == null) return;
         	string colName = Colors.Name(color);
         	
             if (color == p.titlecolor) {
@@ -109,8 +109,8 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Color"; } }
 
         protected override void DoPurchase(Player p, string message, string[] args) {
-        	string color = Colors.Parse(args[1]);
-        	if (color.Length == 0) { Player.Message(p, "There is no color \"" + args[1] + "\"."); return; }
+        	string color = Matcher.FindColor(p, args[1]);
+        	if (color == null) return;
         	string colName = Colors.Name(color);
         	
             if (color == p.color) {

@@ -35,9 +35,9 @@ namespace MCGalaxy.Commands.Chatting {
             if (colName.Length == 0) {
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed.", false);
             } else  {
-                color = Colors.Parse(colName);
-                if (color.Length == 0) { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
-                else if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " %Salready has that title color."); return; }
+                color = Matcher.FindColor(p, colName);
+                if (color == null) return;
+                if (color == who.titlecolor) { Player.Message(p, who.DisplayName + " %Salready has that title color."); return; }
                 
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                
             }

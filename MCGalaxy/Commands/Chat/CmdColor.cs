@@ -38,8 +38,9 @@ namespace MCGalaxy.Commands.Chatting {
                 return;
             }
             
-            string color = colName.Length == 0 ? "&1" : Colors.Parse(colName);
-            if (color.Length == 0) { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
+        	string color = colName.Length == 0 ? "&1" : Matcher.FindColor(p, colName);
+        	if (color == null) return;
+        	
             Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
                               + color + Colors.Name(color));
             bot.color = color;
@@ -55,9 +56,9 @@ namespace MCGalaxy.Commands.Chatting {
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed.", false);
                 who.color = who.group.Color;
             } else {
-                color = Colors.Parse(colName);
-                if (color.Length == 0) { Player.Message(p, "There is no color \"" + colName + "\"."); return; }
-                else if (color == who.color) { Player.Message(p, who.DisplayName + " %Salready has that color."); return; }
+                color = Matcher.FindColor(p, colName);
+            	if (color == null) return;
+                if (color == who.color) { Player.Message(p, who.DisplayName + " %Salready has that color."); return; }
                 
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;

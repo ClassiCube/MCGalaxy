@@ -149,10 +149,8 @@ namespace MCGalaxy.Commands.CPE {
         
         static char ParseColor(Player p, string arg) {
             if (arg.Length != 1) {
-                string colCode = Colors.Parse(arg);
-                if (colCode.Length > 0) return colCode[1];
-                
-                Player.Message(p, "There is no color \"" + arg + "\".");
+                string colCode = Matcher.FindColor(p, arg);
+                if (colCode != null) return colCode[1];
             } else {
                 char code = arg[0];
                 if (Colors.IsDefined(code)) return code;

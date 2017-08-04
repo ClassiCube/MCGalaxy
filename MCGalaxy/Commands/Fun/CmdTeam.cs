@@ -102,10 +102,9 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You need to provide the new color."); return;
             }
             
-            string color = Colors.Parse(args[1]);
-            if (color.Length == 0) {
-                Player.Message(p, "\"" + color + "\" is not a valid color."); return;
-            }
+            string color = Matcher.FindColor(p, args[1]);
+            if (color == null) return;
+            
             team.Color = color;
             team.Action(p, "changed the team color to: " + args[1]);
             team.UpdatePrefix();

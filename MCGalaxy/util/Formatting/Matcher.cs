@@ -36,6 +36,14 @@ namespace MCGalaxy {
             return award == null ? null : award.Name;
         }
         
+        /// <summary> Finds partial matches of 'color' against the list of colors. </summary>
+        public static string FindColor(Player p, string color) {
+            int matches = 0;
+            ColorDesc desc = Find<ColorDesc>(p, color, out matches, Colors.List,
+                                             col => !col.Undefined, col => col.Name, "colors", 20);
+            return desc.Undefined ? null : "&" + desc.Code;
+        }
+        
         /// <summary> Finds partial matches of 'name' against the list of bots in same level as player. </summary>
         public static PlayerBot FindBots(Player p, string name) {
             int matches = 0;
