@@ -52,6 +52,7 @@ namespace MCGalaxy.Network {
         }
         
         public bool LowLatency { set { socket.NoDelay = value; } }
+        bool Connected { get { return !player.disconnected && socket.Connected; } }
         
         
         static EventHandler<SocketAsyncEventArgs> recvCallback = RecvCallback;
@@ -63,7 +64,7 @@ namespace MCGalaxy.Network {
         static void RecvCallback(object sender, SocketAsyncEventArgs e) {
             TcpSocket s = (TcpSocket)e.UserToken;
             Player p = s.player;
-            if (p.disconnected) return;
+            if (!s.Connected) return;
             
             try {
                 int recvLen = e.BytesTransferred;
@@ -102,8 +103,7 @@ namespace MCGalaxy.Network {
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
         public void Send(byte[] buffer, bool sync = false) {
-            // Abort if socket has been closed
-            if (player.disconnected || !socket.Connected) return;
+            if (!Connected) return;
 
             try {
                 if (sync) {
@@ -148,8 +148,12 @@ namespace MCGalaxy.Network {
                 int sent = e.BytesTransferred;
                 lock (s.sendLock) {
                     s.sendInProgress = false;
-                    if (s.sendQueue.Count > 0) {
+                    if (s.sendQueue.Count == 0) return;
+                    
+                    if (s.Connected) {
                         s.DoSendAsync(s.sendQueue.Dequeue());
+                    } else {
+                        s.sendQueue.Clear();
                     }
                 }
             } catch (SocketException) {
@@ -164,6 +168,7 @@ namespace MCGalaxy.Network {
             // Try to close the socket. Sometimes socket is already closed, so just hide this.
             try { socket.Shutdown(SocketShutdown.Both); } catch { }
             try { socket.Close(); } catch { }
+            
             lock (sendLock) { sendQueue.Clear(); }
             try { recvArgs.Dispose(); } catch { }
             try { sendArgs.Dispose(); } catch { }
