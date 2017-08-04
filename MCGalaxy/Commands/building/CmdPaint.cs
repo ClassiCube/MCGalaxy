@@ -30,7 +30,6 @@ namespace MCGalaxy.Commands.Building {
             
             string type = p.painting ? "&aON" : "&cOFF";
             Player.Message(p, "Painting mode: " + type + "%S.");
-            p.ModeBlock = ExtBlock.Air;
         }
         
         public override void Help(Player p) {

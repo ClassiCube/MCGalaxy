@@ -87,9 +87,9 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {            
             string color = Matcher.FindColor(p, args[1]);
-        	if (color == null) return;
-        	string colName = Colors.Name(color);
-        	
+            if (color == null) return;
+            string colName = Colors.Name(color);
+            
             if (color == p.titlecolor) {
                 Player.Message(p, "%cYou already have a " + color + colName + "%c titlecolor"); return;
             }
@@ -109,10 +109,10 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Color"; } }
 
         protected override void DoPurchase(Player p, string message, string[] args) {
-        	string color = Matcher.FindColor(p, args[1]);
-        	if (color == null) return;
-        	string colName = Colors.Name(color);
-        	
+            string color = Matcher.FindColor(p, args[1]);
+            if (color == null) return;
+            string colName = Colors.Name(color);
+            
             if (color == p.color) {
                 Player.Message(p, "%cYou already have a " + color + colName + "%c color"); return;
             }
