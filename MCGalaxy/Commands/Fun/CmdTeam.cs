@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Fun {
             Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;
             
-            if (p.name != team.Owner) {
+            if (!p.name.CaselessEq(team.Owner)) {
                 Player.Message(p, "Only the team owner can set a new team owner."); return;
             }
             team.Owner = who.name;
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Fun {
             if (args.Length == 1) {
                 Player.Message(p, "You need to provide the name of the player to kick."); return;
             }
-            if (p.name != team.Owner) {
+            if (!p.name.CaselessEq(team.Owner)) {
                 Player.Message(p, "Only the team owner can kick players from the team."); return;
             }
             
@@ -165,7 +165,7 @@ namespace MCGalaxy.Commands.Fun {
             Team team = p.Game.Team;
             if (team == null) { Player.Message(p, "You need to be in a team first to leave one."); return; }
             
-            // handle /team leave me alone
+            // handle '/team leave me alone', for example
             if (args.Length > 1) {
                 team.Chat(p, args.Join(" ")); return;
             }

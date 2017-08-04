@@ -89,11 +89,11 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "&cYou must first verify with %T/Pass [Password]"); return;
             }
             
-            if (p != null && (ServerConfig.OwnerName == "Notch" || ServerConfig.OwnerName.Length == 0)) {
-                Player.Message(p, "Please tell the server owner to set the 'Server Owner' property.");
-                return;
+            string owner = ServerConfig.OwnerName;
+            if (p != null && (owner.CaselessEq("Notch") || owner.Length == 0)) {
+                Player.Message(p, "Please tell the server owner to set the 'Server Owner' property."); return;
             }
-            if (p != null && ServerConfig.OwnerName != p.name)  {
+            if (p != null && !owner.CaselessEq(p.name))  {
                 Player.Message(p, "Only console and the server owner may reset passwords."); return;
             }
             

@@ -90,16 +90,16 @@ namespace MCGalaxy.Commands.Bots{
         }
 
         void HandleAdd(Player p, string ai, string[] args) {
-            string[] allLines;
-            try { allLines = File.ReadAllLines("bots/" + ai); }
-            catch { allLines = new string[1]; }
+            string[] instructions;
+            try { instructions = File.ReadAllLines("bots/" + ai); }
+            catch { instructions = new string[1]; }
 
             try {
                 if (!File.Exists("bots/" + ai)) {
                     Player.Message(p, "Created new bot AI: &b" + ai);
                     using (StreamWriter w = new StreamWriter("bots/" + ai))
                         w.WriteLine("#Version 2");
-                } else if (allLines[0] != "#Version 2") {
+                } else if (instructions[0] != "#Version 2") {
                     Player.Message(p, "File found is out-of-date. Overwriting");
                     File.Delete("bots/" + ai);
                     using (StreamWriter w = new StreamWriter("bots/" + ai))
@@ -113,14 +113,14 @@ namespace MCGalaxy.Commands.Bots{
 
             try {
                 string action = args.Length > 2 ? args[2] : "";
-                if (action != "reverse") {
+                if (!action.CaselessEq("reverse")) {
                     ScriptFile.Append(p, ai, action, args); return;
                 }
                 
                 using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                    for (int i = allLines.Length - 1; i > 0; i--) {
-                        if (allLines[i].Length > 0 && allLines[i][0] != '#') {
-                            w.WriteLine(allLines[i]);
+                    for (int i = instructions.Length - 1; i > 0; i--) {
+                        if (instructions[i].Length > 0 && instructions[i][0] != '#') {
+                            w.WriteLine(instructions[i]);
                         }
                     }
                 }

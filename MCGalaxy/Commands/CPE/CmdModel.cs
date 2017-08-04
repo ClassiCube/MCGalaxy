@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(who, "Changed your own model to a &c" + model);
             }
             
-            if (model != "humanoid") {
+            if (!model.CaselessEq("humanoid")) {
                 Server.models.AddOrReplace(who.name, model);
             } else {
                 Server.models.Remove(who.name);

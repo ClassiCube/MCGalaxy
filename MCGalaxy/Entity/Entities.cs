@@ -152,7 +152,7 @@ namespace MCGalaxy {
                 dst.Send(Packet.AddEntity(id, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             }
             
-            if (dst.hasChangeModel && model != "humanoid") {
+            if (dst.hasChangeModel && !model.CaselessEq("humanoid")) {
                 dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
             }
             

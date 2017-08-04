@@ -23,15 +23,19 @@ namespace MCGalaxy.Bots {
     public static class ScriptFile {
         
         public static bool Parse(Player p, PlayerBot bot, string file) {
-            if (!File.Exists(file)) { Player.Message(p, "Could not find specified AI."); return false; }
+            if (!File.Exists(file)) { 
+                Player.Message(p, "Could not find specified AI."); return false; 
+            }
 
-            string[] codes = File.ReadAllLines(file);
-            if (codes[0] != "#Version 2") { Player.Message(p, "Invalid file version. Remake"); return false; }
+            string[] instructions = File.ReadAllLines(file);
+            if (instructions.Length == 0 || !instructions[0].CaselessEq("#Version 2")) {
+                Player.Message(p, "Invalid file version. Remake"); return false; 
+            }
 
             bot.Instructions.Clear();
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
-            foreach (string line in codes) {
+            foreach (string line in instructions) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 string[] args = line.SplitSpaces();
 

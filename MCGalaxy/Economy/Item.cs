@@ -165,7 +165,7 @@ namespace MCGalaxy.Eco {
                 // Find if there are any custom aliases for this item
                 bool matchFound = false;
                 foreach (string alias in Aliases) {
-                    if (a.Prefix != alias) continue;
+                    if (!a.Prefix.CaselessEq(alias)) continue;
                     matchFound = true; break;
                 }
                 

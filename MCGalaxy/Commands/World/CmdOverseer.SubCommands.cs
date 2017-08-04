@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.World {
         static void HandleKickAll(Player p, string ignored1, string ignored2) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level == p.level && pl.name != p.name)
+                if (pl.level == p.level && pl != p)
                     PlayerActions.ChangeMap(pl, Server.mainLevel);
             }
         }

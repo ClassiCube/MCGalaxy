@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             foreach (string name in Server.reviewlist) {
-                if (name != p.name) continue;
+                if (!name.CaselessEq(p.name)) continue;
                 Player.Message(p, "You already entered the review queue!"); return;
             }
 
