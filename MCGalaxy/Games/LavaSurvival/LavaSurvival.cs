@@ -203,7 +203,6 @@ namespace MCGalaxy.Games
 
         public void DoFloodLayer()
         {
-            map.ChatLevel("&4Layer " + mapData.currentLayer + " flooding...");
             Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
             map.Blockchange(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z, mapData.block, true);
             if (OnLayerFlood != null)
