@@ -52,7 +52,6 @@ namespace MCGalaxy.Network {
         }
         
         public bool LowLatency { set { socket.NoDelay = value; } }
-        bool Connected { get { return !player.disconnected && socket.Connected; } }
         
         
         static EventHandler<SocketAsyncEventArgs> recvCallback = RecvCallback;
@@ -64,7 +63,7 @@ namespace MCGalaxy.Network {
         static void RecvCallback(object sender, SocketAsyncEventArgs e) {
             TcpSocket s = (TcpSocket)e.UserToken;
             Player p = s.player;
-            if (!s.Connected) return;
+            if (p.disconnected) return;
             
             try {
                 int recvLen = e.BytesTransferred;
@@ -103,7 +102,7 @@ namespace MCGalaxy.Network {
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
         public void Send(byte[] buffer, bool sync = false) {
-            if (!Connected) return;
+            if (player.disconnected || !socket.Connected) return;
 
             try {
                 if (sync) {
@@ -125,7 +124,7 @@ namespace MCGalaxy.Network {
         // TODO: do this seprately
         public void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
-        void DoSendAsync(byte[] buffer) {
+        bool DoSendAsync(byte[] buffer) {
             sendInProgress = true;
             // BlockCopy has some overhead, not worth using for very small data
             if (buffer.Length <= 16) {
@@ -138,7 +137,7 @@ namespace MCGalaxy.Network {
             
             sendArgs.SetBuffer(0, buffer.Length);
             // SendAsync returns false if completed sync
-            if (!socket.SendAsync(sendArgs)) SendCallback(null, sendArgs);
+            return socket.SendAsync(sendArgs);
         }
         
         static void SendCallback(object sender, SocketAsyncEventArgs e) {
@@ -148,12 +147,11 @@ namespace MCGalaxy.Network {
                 int sent = e.BytesTransferred;
                 lock (s.sendLock) {
                     s.sendInProgress = false;
-                    if (s.sendQueue.Count == 0) return;
-                    
-                    if (s.Connected) {
-                        s.DoSendAsync(s.sendQueue.Dequeue());
-                    } else {
-                        s.sendQueue.Clear();
+
+                    while (s.sendQueue.Count > 0) {
+                        // DoSendAsync returns false if SendAsync completed sync
+                        // If that happens, SendCallback isn't called so we need to send data here instead
+                        if (s.DoSendAsync(s.sendQueue.Dequeue())) return;
                     }
                 }
             } catch (SocketException) {
