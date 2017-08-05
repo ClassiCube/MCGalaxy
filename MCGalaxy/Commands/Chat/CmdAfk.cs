@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(p, pl) || !pl.IsAfk) continue;
-                    Player.Message(p, p.name);
+                    Player.Message(p, pl.ColoredName);
                 }
                 return;
             }

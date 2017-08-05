@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.DB {
     
-	public unsafe sealed class BlockDBFile_V1 : BlockDBFile {
+    public unsafe sealed class BlockDBFile_V1 : BlockDBFile {
                 
         public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
@@ -38,6 +38,10 @@ namespace MCGalaxy.DB {
                 lock (cache.Locker)
                     node = node.Next;
             }
+        }
+
+        public override long CountEntries(Stream s) { 
+            return (s.Length / BlockDBFile.EntrySize) - BlockDBFile.HeaderEntries;
         }
         
         static void WriteEntries(Stream s, byte[] bulk, BlockDBEntry[] entries, int count) {

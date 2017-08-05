@@ -74,6 +74,8 @@ namespace MCGalaxy.DB {
         /// <returns> whether an entry before start time was reached. </returns>
         public abstract bool FindChangesBy(Stream s, int[] ids, int start, int end, Action<BlockDBEntry> output);
         
+        /// <summary> Returns number of entries in the backing file. </summary>
+        public abstract long CountEntries(Stream s);      
 
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public static void DeleteBackingFile(string map) {
@@ -95,8 +97,9 @@ namespace MCGalaxy.DB {
             string path = FilePath(map);
             if (!File.Exists(path)) return 0;
 
-            using (Stream src = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
-                return (src.Length / 16) - 1;
+            using (Stream src = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite)) {
+                return V1.CountEntries(src);
+            }
         }
         
         
