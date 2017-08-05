@@ -155,7 +155,7 @@ namespace MCGalaxy.Network {
                         // DoSendAsync returns false if SendAsync completed sync
                         // If that happens, SendCallback isn't called so we need to send data here instead
                         if (s.DoSendAsync(s.sendQueue.Dequeue())) return;
-                        
+
                         if (s.player.disconnected) s.sendQueue.Clear();
                     }
                 }

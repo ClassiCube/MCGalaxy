@@ -116,11 +116,12 @@ namespace MCGalaxy {
             }
             
             string[] lines = tokensFile.GetText();
-            string[] parts = new string[2];
+            char[] colon = new char[] {':'};
+            
             foreach (string line in lines) {
                 if (line.StartsWith("//")) continue;
-                line.FixedSplit(parts, ':');
-                if (parts[1] == null) continue; // not a proper line
+                string[] parts = line.Split(colon, 2);
+                if (parts.Length == 1) continue; // not a proper line
                 
                 string key = parts[0].Trim(), value = parts[1].Trim();
                 if (key.Length == 0) continue;
