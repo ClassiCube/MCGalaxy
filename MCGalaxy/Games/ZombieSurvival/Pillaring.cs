@@ -27,8 +27,8 @@ namespace MCGalaxy.Games.ZS {
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
                                      bool placing, ExtBlock block, ExtBlock old, ZSGame game) {
             
-            if (placing && !game.CurLevel.Config.Pillaring && !p.Game.Referee) {
-                if (NotPillaring(game.CurLevel, block, old)) {
+            if (placing && !game.Map.Config.Pillaring && !p.Game.Referee) {
+                if (NotPillaring(game.Map, block, old)) {
                     p.Game.BlocksStacked = 0;
                 } else if (CheckCoords(p, x, y, z)) {
                     p.Game.BlocksStacked++;

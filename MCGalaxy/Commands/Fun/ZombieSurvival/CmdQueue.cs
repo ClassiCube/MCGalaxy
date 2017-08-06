@@ -36,16 +36,16 @@ namespace MCGalaxy.Commands.Fun {
                 
                 Player.Message(p, value + " was queued.");
                 Server.zombie.QueuedZombie = who.name;
-                if (Server.zombie.CurLevel != null)
-                    Server.zombie.CurLevel.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
+                if (Server.zombie.Map != null)
+                    Server.zombie.Map.ChatLevel(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
                 string map = Matcher.FindMaps(p, value);
                 if (map == null) return;
                 
                 Player.Message(p, map + " was queued.");
-                Server.zombie.QueuedLevel = map.ToLower();
-                if (Server.zombie.CurLevel != null)
-                    Server.zombie.CurLevel.ChatLevel(map + " was queued as the next map.");
+                Server.zombie.Picker.QueuedMap = map.ToLower();
+                if (Server.zombie.Map != null)
+                    Server.zombie.Map.ChatLevel(map + " was queued as the next map.");
             } else {
                 Help(p);
             }

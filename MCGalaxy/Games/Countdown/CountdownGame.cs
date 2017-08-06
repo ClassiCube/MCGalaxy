@@ -29,9 +29,6 @@ namespace MCGalaxy.Games {
         /// <summary> Players who are still alive in the current round. </summary>
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
         
-        /// <summary> Map countdown is running on. </summary>
-        public Level Map;
-        
         /// <summary> Current status of the countdown game. </summary>
         public CountdownGameStatus Status = CountdownGameStatus.Disabled;
         
@@ -323,6 +320,7 @@ namespace MCGalaxy.Games {
             plugin.Game = this;
             plugin.Load(false);
             
+            MapName = "countdown";
             CmdLoad.LoadLevel(null, "countdown");
             Map = LevelInfo.FindExact("countdown");
             

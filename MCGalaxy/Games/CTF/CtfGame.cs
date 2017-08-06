@@ -34,7 +34,7 @@ namespace MCGalaxy.Games {
         public CtfData(Player p) { this.p = p; }
     }
 
-    public sealed partial class CTFGame {
+    public sealed partial class CTFGame : IGame {
         public System.Timers.Timer tagging = new System.Timers.Timer(500);
         public bool voting = false;
         internal int vote1 = 0, vote2 = 0, vote3 = 0;
@@ -42,7 +42,6 @@ namespace MCGalaxy.Games {
         public bool started = false;
         
         public CtfTeam2 Red, Blue;
-        public Level Map;
         List<CtfData> cache = new List<CtfData>();
         
         public CTFConfig Config = new CTFConfig();
@@ -70,6 +69,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Load a map into CTF </summary>
         public void SetMap(string mapName) {
+            MapName = mapName;
             CmdLoad.LoadLevel(null, mapName);
             Map = LevelInfo.FindExact(mapName);
             Map.SaveChanges = false;
@@ -141,8 +141,8 @@ namespace MCGalaxy.Games {
             if (started) {
                 Player.Message(p, "CTF game already running."); return false;
             }
-        	
-        	List<string> maps = GetCtfMaps();
+            
+            List<string> maps = GetCtfMaps();
             if (maps.Count == 0) {
                 Player.Message(p, "No CTF maps were found."); return false;
             }

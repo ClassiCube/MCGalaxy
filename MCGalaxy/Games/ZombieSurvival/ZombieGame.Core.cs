@@ -51,8 +51,7 @@ namespace MCGalaxy.Games {
                     return;
                 } else if (Status == ZombieGameStatus.InfiniteRounds) {
                     DoRound();
-                    if (ZSConfig.ChangeLevels)
-                        LevelPicker.ChooseNextLevel(this);
+                    MoveToNextLevel();
                 } else if (Status == ZombieGameStatus.SingleRound) {
                     DoRound();
                     End(); return;
@@ -61,13 +60,18 @@ namespace MCGalaxy.Games {
                         End(); return;
                     } else {
                         DoRound();
-                        if (ZSConfig.ChangeLevels)
-                            LevelPicker.ChooseNextLevel(this);
+                        MoveToNextLevel();
                     }
                 } else if (Status == ZombieGameStatus.LastRound) {
                     End(); return;
                 }
             }
+        }
+        
+        void MoveToNextLevel() {
+            if (!ZSConfig.ChangeLevels) return;
+            string map = Picker.ChooseNextLevel(this);
+            if (map != null) ChangeLevel(map);
         }
 
         void DoRound() {
@@ -77,29 +81,29 @@ namespace MCGalaxy.Games {
             Random random = new Random();
 
             RoundInProgress = true;
-            int roundMins = random.Next(CurLevel.Config.MinRoundTime, CurLevel.Config.MaxRoundTime);
+            int roundMins = random.Next(Map.Config.MinRoundTime, Map.Config.MaxRoundTime);
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
-            CurLevel.ChatLevel("This round will last for &a" + roundMins + suffix);
+            Map.ChatLevel("This round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p.level == null || p.level != CurLevel || p.Game.Referee) continue;
+                if (p.level == null || p.level != Map || p.Game.Referee) continue;
                 Alive.Add(p);
             }
             Infected.Clear();
 
             Player first = PickFirstZombie(random, players);
-            CurLevel.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
+            Map.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
             InfectPlayer(first, null);
 
             DoCoreGame(random);
             if (!Running) { Status = ZombieGameStatus.LastRound; return; }
             
             EndRound();
-            if (RecentMaps.Count > 20)
-                RecentMaps.RemoveAt(0);
-            RecentMaps.Add(CurLevelName);
+            if (Picker.RecentMaps.Count > 20)
+                Picker.RecentMaps.RemoveAt(0);
+            Picker.RecentMaps.Add(MapName);
         }
         
         Player PickFirstZombie(Random random, List<Player> players) {
@@ -108,7 +112,7 @@ namespace MCGalaxy.Games {
                 first = QueuedZombie != null ?
                     PlayerInfo.FindExact(QueuedZombie) : players[random.Next(players.Count)];
                 QueuedZombie = null;
-            } while (first == null || !first.level.name.CaselessEq(CurLevelName));
+            } while (first == null || !first.level.name.CaselessEq(MapName));
             return first;
         }
         
@@ -138,7 +142,7 @@ namespace MCGalaxy.Games {
                 
                 Player[] online = PlayerInfo.Online.Items;
                 foreach (Player p in online) {
-                    if (!p.Game.Referee && p.level.name.CaselessEq(CurLevelName)) {
+                    if (!p.Game.Referee && p.level.name.CaselessEq(MapName)) {
                         players.Add(p);
                         nonRefPlayers++;
                     }
@@ -146,7 +150,7 @@ namespace MCGalaxy.Games {
                 
                 if (!Running) return null;
                 if (nonRefPlayers >= 2) return players;
-                CurLevel.ChatLevel("&cNeed 2 or more non-ref players to start a round.");
+                Map.ChatLevel("&cNeed 2 or more non-ref players to start a round.");
             }
         }
         
@@ -198,8 +202,8 @@ namespace MCGalaxy.Games {
                     
                     if (killer.Game.Infected && !alive.Game.Infected
                         && !alive.Game.Referee && !killer.Game.Referee
-                        && killer.level.name.CaselessEq(CurLevelName)
-                        && alive.level.name.CaselessEq(CurLevelName))
+                        && killer.level.name.CaselessEq(MapName)
+                        && alive.level.name.CaselessEq(MapName))
                     {
                         InfectPlayer(alive, killer);
                         alive.Game.LastInfecter = killer.name;
@@ -209,7 +213,7 @@ namespace MCGalaxy.Games {
                             if (infectCombo >= 2) {
                                 killer.SendMessage("You gained " + (2 + infectCombo) + " " + ServerConfig.Currency);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
-                                CurLevel.ChatLevel("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                Map.ChatLevel("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
                         } else {
                             infectCombo = 0;
@@ -231,7 +235,7 @@ namespace MCGalaxy.Games {
         void SendLevelRaw(string message, bool announce = false) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level != CurLevel) continue;
+                if (p.level != Map) continue;
                 CpeMessageType type = announce && p.HasCpeExt(CpeExt.MessageTypes)
                     ? CpeMessageType.Announcement : CpeMessageType.Normal;
                 
@@ -243,7 +247,7 @@ namespace MCGalaxy.Games {
             DateTime now = DateTime.UtcNow;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!p.Game.Invisible || p.level != CurLevel) continue;
+                if (!p.Game.Invisible || p.level != Map) continue;
                 DateTime end = p.Game.InvisibilityEnd;
                 if (now >= end) {
                     Player.Message(p, "&cYou are &bvisible &cagain");
@@ -267,7 +271,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player p, Player killer) {
             if (!p.Game.PledgeSurvive) return;
             p.Game.PledgeSurvive = false;
-            CurLevel.ChatLevel("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
+            Map.ChatLevel("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
                 Player.Message(p, "As this was an automatic infection, you have not lost any &3" + ServerConfig.Currency);
@@ -283,12 +287,12 @@ namespace MCGalaxy.Games {
             
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {
-                CurLevel.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active.");
+                Map.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active.");
                 if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
-                CurLevel.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
+                Map.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
                                    bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName + "%S.");
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
@@ -303,7 +307,7 @@ namespace MCGalaxy.Games {
                 text = infectMessages[random.Next(infectMessages.Count)];
             }
             
-            CurLevel.ChatLevel(String.Format(text,
+            Map.ChatLevel(String.Format(text,
                                              "&c" + pKiller.DisplayName + "%S",
                                              pAlive.ColoredName + "%S"));
         }

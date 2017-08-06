@@ -21,6 +21,12 @@ namespace MCGalaxy.Games {
 
     public abstract class IGame {
         
+        /// <summary> Name of the map this game is running on. </summary>
+        public string MapName;
+        
+        /// <summary> Level instance of the map this game is running on. </summary>
+        public Level Map;
+        
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
         public virtual bool TeleportAllowed { get { return true; } }
         

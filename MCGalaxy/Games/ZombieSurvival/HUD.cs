@@ -70,16 +70,16 @@ namespace MCGalaxy.Games.ZS {
             string timespan = GetTimeLeft(seconds);
             if (timespan.Length > 0) {
                 const string format = "&a{0} %Salive %S({2}, map: {1})";
-                return String.Format(format, game.Alive.Count, game.CurLevelName, timespan);
+                return String.Format(format, game.Alive.Count, game.MapName, timespan);
             } else {
                 const string format = "&a{0} %Salive %S(map: {1})";
-                return String.Format(format, game.Alive.Count, game.CurLevelName);
+                return String.Format(format, game.Alive.Count, game.MapName);
             }
         }
         
         static string FormatSecondary(ZSGame game) {
-            string pillar = "%SPillaring " + (game.CurLevel.Config.Pillaring ? "&aYes" : "&cNo");
-            string type = "%S, Type is &a" + game.CurLevel.Config.BuildType;
+            string pillar = "%SPillaring " + (game.Map.Config.Pillaring ? "&aYes" : "&cNo");
+            string type = "%S, Type is &a" + game.Map.Config.BuildType;
             return pillar + type;
         }
 
@@ -93,7 +93,7 @@ namespace MCGalaxy.Games.ZS {
             if (!game.Running) return;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (!p.level.name.CaselessEq(game.CurLevelName)) continue;
+                if (!p.level.name.CaselessEq(game.MapName)) continue;
                 p.SendCpeMessage(type, message);
             }
         }

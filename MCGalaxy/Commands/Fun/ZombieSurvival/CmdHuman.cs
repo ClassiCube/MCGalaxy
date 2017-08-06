@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             p.Game.PledgeSurvive = true;
-            Server.zombie.CurLevel
+            Server.zombie.Map
                 .ChatLevel(p.ColoredName + " %Spledges that they will not succumb to the infection!");
         }
         

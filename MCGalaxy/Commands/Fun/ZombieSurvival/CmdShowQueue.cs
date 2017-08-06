@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
 
         public override void Use(Player p, string message) {
-            ShowQueued(p, Server.zombie.QueuedLevel, "level");
+            ShowQueued(p, Server.zombie.Picker.QueuedMap, "level");
             ShowQueued(p, Server.zombie.QueuedZombie, "zombie");
         }
         

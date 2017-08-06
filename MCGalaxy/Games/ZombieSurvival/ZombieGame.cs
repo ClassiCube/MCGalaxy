@@ -52,28 +52,28 @@ namespace MCGalaxy.Games {
         
         bool SetStartLevel(Level level) {
             if (level == null) {
-                List<string> levels = LevelPicker.GetCandidateLevels();
+                List<string> levels = Picker.GetCandidateLevels();
                 if (levels == null) return false;
                 
-                CurLevelName = LevelPicker.GetRandomLevel(new Random(), levels);
-                CurLevel = LevelInfo.FindExact(CurLevelName)
-                    ?? CmdLoad.LoadLevel(null, CurLevelName);
-                if (CurLevel == null) return false;
+                MapName = LevelPicker.GetRandomLevel(new Random(), levels);
+                Map = LevelInfo.FindExact(MapName)
+                    ?? CmdLoad.LoadLevel(null, MapName);
+                if (Map == null) return false;
             } else {
-                CurLevelName = level.name;
-                CurLevel = level;
+                MapName = level.name;
+                Map = level;
             }
             
-            CurLevel.SaveChanges = false;
-            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", CurLevelName);
+            Map.SaveChanges = false;
+            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", MapName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level != CurLevel) continue;
+                if (p.level != Map) continue;
                 PlayerJoinedLevel(p, p.level, p.level);
             }
             
             if (ZSConfig.SetMainLevel)
-                Server.mainLevel = CurLevel;
+                Server.mainLevel = Map;
             return true;
         }
 
@@ -85,7 +85,7 @@ namespace MCGalaxy.Games {
             if (alive.Length == 0) return;
             int index = random.Next(alive.Length);
             
-            while (alive[index].Game.Referee || !alive[index].level.name.CaselessEq(CurLevelName)) {
+            while (alive[index].Game.Referee || !alive[index].level.name.CaselessEq(MapName)) {
                 if (index >= alive.Length - 1) {
                     index = 0;
                     alive = Alive.Items;
@@ -96,7 +96,7 @@ namespace MCGalaxy.Games {
             }
             
             Player zombie = alive[index];
-            CurLevel.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
+            Map.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
             InfectPlayer(zombie, null);
         }
 
@@ -141,20 +141,20 @@ namespace MCGalaxy.Games {
 
         internal void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
-            if (CurLevel != null) {
-                Level.SaveSettings(CurLevel);
-                CurLevel.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
-                CurLevel.ChatLevel("Please wait while you are transfered.");
+            if (Map != null) {
+                Level.SaveSettings(Map);
+                Map.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
+                Map.ChatLevel("Please wait while you are transfered.");
             }
-            string lastLevel = CurLevelName;
+            string lastLevel = MapName;
             
-            CurLevelName = next;
-            QueuedLevel = null;
+            MapName = next;
+            Picker.QueuedMap = null;
             CmdLoad.LoadLevel(null, next);
-            CurLevel = LevelInfo.FindExact(next);
-            CurLevel.SaveChanges = ZSConfig.ChangeLevels;
+            Map = LevelInfo.FindExact(next);
+            Map.SaveChanges = ZSConfig.ChangeLevels;
             if (ZSConfig.SetMainLevel)
-                Server.mainLevel = CurLevel;
+                Server.mainLevel = Map;
             
             online = PlayerInfo.Online.Items;
             List<Player> players = new List<Player>(online.Length);
@@ -198,7 +198,7 @@ namespace MCGalaxy.Games {
             Infected.Clear();
 
             Bounties.Clear();
-            RecentMaps.Clear();
+            Picker.RecentMaps.Clear();
             
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
@@ -207,14 +207,13 @@ namespace MCGalaxy.Games {
                 ResetInvisibility(pl);
                 pl.SetPrefix();
                 
-                if (pl.level == null || !pl.level.name.CaselessEq(CurLevelName))
-                    continue;
+                if (pl.level == null || !pl.level.name.CaselessEq(MapName)) continue;
                 HUD.Reset(pl);
             }
             
             LastLevelName = "";
-            CurLevelName = "";
-            CurLevel = null;
+            MapName = "";
+            Map = null;
             UnhookStats();
         }
         

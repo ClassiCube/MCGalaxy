@@ -61,9 +61,9 @@ namespace MCGalaxy.Eco {
             int chance = new Random().Next(1, 101);
             if (chance <= ZSConfig.ReviveChance) {
                 Server.zombie.DisinfectPlayer(p);
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZSConfig.ReviveSuccessMessage);
+                Server.zombie.Map.ChatLevel(p.ColoredName + " %S" + ZSConfig.ReviveSuccessMessage);
             } else {
-                Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %S" + ZSConfig.ReviveFailureMessage);
+                Server.zombie.Map.ChatLevel(p.ColoredName + " %S" + ZSConfig.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
             p.Game.RevivesUsed++;

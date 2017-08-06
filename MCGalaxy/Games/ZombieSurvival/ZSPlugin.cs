@@ -53,7 +53,7 @@ namespace MCGalaxy.Games.ZS {
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
-            if (p == null || p.level != Game.CurLevel) return;
+            if (p == null || p.level != Game.Map) return;
             
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";
@@ -70,7 +70,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandleMoneyChanged(Player p) {
-            if (p.level != Game.CurLevel) return;
+            if (p.level != Game.Map) return;
             HUD.UpdateTertiary(p);
         }
         
@@ -84,7 +84,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
-            if (!Game.RoundInProgress || p.level != Game.CurLevel) return;
+            if (!Game.RoundInProgress || p.level != Game.Map) return;
             
             bool reverted = MovementCheck.DetectNoclip(p, next)
                 || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
@@ -93,10 +93,10 @@ namespace MCGalaxy.Games.ZS {
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (!(action == PlayerAction.Referee || action == PlayerAction.UnReferee)) return;
-            if (p.level != Game.CurLevel) return;
+            if (p.level != Game.Map) return;
             
             if (action == PlayerAction.UnReferee) {
-                Game.PlayerJoinedLevel(p, Game.CurLevel, Game.CurLevel);
+                Game.PlayerJoinedLevel(p, Game.Map, Game.Map);
                 Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
                 
@@ -117,7 +117,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (p.level != Game.CurLevel) return;
+            if (p.level != Game.Map) return;
             
             if (!p.Game.Referee && !p.Game.Infected && Game.RoundInProgress) {
                 Game.InfectPlayer(p, null);
@@ -125,13 +125,13 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
-            if (p.level != Game.CurLevel) return;
-            ExtBlock old = Game.CurLevel.GetBlock(x, y, z);
+            if (p.level != Game.Map) return;
+            ExtBlock old = Game.Map.GetBlock(x, y, z);
             
-            if (Game.CurLevel.Config.BuildType == BuildType.NoModify) {
+            if (Game.Map.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
-            if (Game.CurLevel.Config.BuildType == BuildType.ModifyOnly && Game.CurLevel.BlockProps[old.Index].OPBlock) {
+            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.BlockProps[old.Index].OPBlock) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
             

@@ -63,34 +63,19 @@ namespace MCGalaxy.Games {
         /// <summary> The name of the level that the last round of zombie survival was played on. </summary>
         public string LastLevelName = "";
         
-        /// <summary> The name of the level that the current round of zombie survival is being played on. </summary>
-        public string CurLevelName = "";
-        
-        /// <summary> The level that the current round of zombie survival is being played on. </summary>
-        public Level CurLevel = null;
-        
         /// <summary> List of alive/human players. </summary>
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         
         /// <summary> List of dead/infected players. </summary>
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         
-        public List<string> RecentMaps = new List<string>();
-        
         /// <summary> Name of the player queued to be the first zombie in the next round. </summary>
         public string QueuedZombie;
         
-        /// <summary> Name of the level queued to be used for the next round. </summary>
-        public string QueuedLevel;
-        
         List<string> infectMessages = new List<string>();
-        
-        internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
-        internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
-        
+
         string lastPlayerToInfect = "";
-        int infectCombo = 0;
-        
+        int infectCombo = 0;      
         
         /// <summary> List of players who have a bounty on them. </summary>
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();

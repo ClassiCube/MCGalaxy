@@ -25,16 +25,16 @@ namespace MCGalaxy.Games.ZS {
 
         public static void HandOut(ZSGame game) {
             Player[] alive = game.Alive.Items, dead = game.Infected.Items;
-            game.CurLevel.ChatLevel("&aThe game has ended!");
+            game.Map.ChatLevel("&aThe game has ended!");
             
-            if (alive.Length == 0) game.CurLevel.ChatLevel("&4Zombies have won this round.");
-            else if (alive.Length == 1) game.CurLevel.ChatLevel("&2Congratulations to the sole survivor:");
-            else game.CurLevel.ChatLevel("&2Congratulations to the survivors:");
+            if (alive.Length == 0) game.Map.ChatLevel("&4Zombies have won this round.");
+            else if (alive.Length == 1) game.Map.ChatLevel("&2Congratulations to the sole survivor:");
+            else game.Map.ChatLevel("&2Congratulations to the survivors:");
             AnnounceWinners(game, alive, dead);
             
-            game.CurLevel.Config.RoundsPlayed++;
+            game.Map.Config.RoundsPlayed++;
             if (alive.Length > 0) {
-                game.CurLevel.Config.RoundsHumanWon++;
+                game.Map.Config.RoundsHumanWon++;
                 foreach (Player p in alive)
                     IncreaseAliveStats(p, game);
             }
@@ -45,7 +45,7 @@ namespace MCGalaxy.Games.ZS {
         static void AnnounceWinners(ZSGame game, Player[] alive, Player[] dead) {
             if (alive.Length > 0) {
                 string winners = alive.Join(p => p.ColoredName);
-                game.CurLevel.ChatLevel(winners);
+                game.Map.ChatLevel(winners);
                 return;
             }
             
@@ -61,7 +61,7 @@ namespace MCGalaxy.Games.ZS {
             string suffix = maxKills == 1 ? " %Skill" : " %Skills";
             StringFormatter<Player> formatter = p => p.Game.CurrentInfected == maxKills ? p.ColoredName : null;
             
-            game.CurLevel.ChatLevel("&8Best" + group + "%S(&b" + maxKills
+            game.Map.ChatLevel("&8Best" + group + "%S(&b" + maxKills
                                     + suffix + "%S)&8: " + dead.Join(formatter));
         }
 
@@ -83,7 +83,7 @@ namespace MCGalaxy.Games.ZS {
             Random rand = new Random();
             
             foreach (Player pl in online) {
-                if (!pl.level.name.CaselessEq(game.CurLevelName)) continue;
+                if (!pl.level.name.CaselessEq(game.MapName)) continue;
                 pl.Game.ResetInvisibility();
                 int reward = GetMoneyReward(pl, alive, rand);
                 

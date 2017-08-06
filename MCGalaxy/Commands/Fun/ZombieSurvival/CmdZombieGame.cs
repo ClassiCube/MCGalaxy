@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Fun {
             if (game.Status == ZombieGameStatus.NotStarted) {
                 Player.Message(p, "Zombie Survival is not currently running."); return;
             }
-            PlayerActions.ChangeMap(p, game.CurLevel);
+            PlayerActions.ChangeMap(p, game.Map);
         }
         
         static void HandleStatus(Player p, ZSGame game, string[] args) {
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands.Fun {
                     Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); break;
             }
             
-            if (game.Status == ZombieGameStatus.NotStarted || game.CurLevelName.Length == 0) return;
-            Player.Message(p, "Running on map: " + game.CurLevelName);
+            if (game.Status == ZombieGameStatus.NotStarted || game.MapName.Length == 0) return;
+            Player.Message(p, "Running on map: " + game.MapName);
         }
         
         static void HandleStart(Player p, ZSGame game, string[] args) {
@@ -103,9 +103,9 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             string src = p == null ? "(console)" : p.ColoredName;
-            Level lvl = game.CurLevel;
+            Level lvl = game.Map;
             if (lvl != null) {
-                Chat.MessageLevel(game.CurLevel, "Zombie Survival was stopped by " + src);
+                Chat.MessageLevel(game.Map, "Zombie Survival was stopped by " + src);
             }
             
             src = p == null ? "(console)" : p.name;

@@ -64,7 +64,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "QueueLevel"; } }
         
         protected override void DoPurchase(Player p, string message, string[] args) {
-            if (Server.zombie.QueuedLevel != null) {
+            if (Server.zombie.Picker.QueuedMap != null) {
                 Player.Message(p, "Someone else has already queued a level."); return;
             }
             string map = Matcher.FindMaps(p, args[1]);
@@ -157,7 +157,7 @@ namespace MCGalaxy.Eco {
             int left = MaxPotions - p.Game.InvisibilityPotions;
             
             Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
-            Server.zombie.CurLevel.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
+            Server.zombie.Map.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
         }

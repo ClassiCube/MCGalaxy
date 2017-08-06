@@ -503,6 +503,7 @@
     <Compile Include="Games\LavaSurvival\LavaSurvival.Game.cs" />
     <Compile Include="Games\LavaSurvival\LavaSurvival.cs" />
     <Compile Include="Games\LavaSurvival\LavaSurvival.Settings.cs" />
+    <Compile Include="Games\LevelPicker.cs" />
     <Compile Include="Games\MovementCheck.cs" />
     <Compile Include="Games\Team.cs" />
     <Compile Include="Games\Team.List.cs" />
