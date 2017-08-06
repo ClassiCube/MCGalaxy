@@ -101,9 +101,7 @@ namespace MCGalaxy.Games {
             if (!Running) { Status = ZombieGameStatus.LastRound; return; }
             
             EndRound();
-            if (Picker.RecentMaps.Count > 20)
-                Picker.RecentMaps.RemoveAt(0);
-            Picker.RecentMaps.Add(MapName);
+            Picker.AddRecentMap(MapName);
         }
         
         Player PickFirstZombie(Random random, List<Player> players) {

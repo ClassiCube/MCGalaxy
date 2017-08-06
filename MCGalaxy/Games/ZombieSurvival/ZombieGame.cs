@@ -198,7 +198,7 @@ namespace MCGalaxy.Games {
             Infected.Clear();
 
             Bounties.Clear();
-            Picker.RecentMaps.Clear();
+            Picker.Clear();
             
             foreach (Player pl in online) {
                 pl.Game.Referee = false;

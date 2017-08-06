@@ -49,7 +49,7 @@ namespace MCGalaxy.Games {
         public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
         
         /// <summary> Gets whether zombie survival is currently running. </summary>
-        public bool Running { get { return Status != ZombieGameStatus.NotStarted; } }
+        public override bool Running { get { return Status != ZombieGameStatus.NotStarted; } }
         
         /// <summary> Whether a round is currently in progress. </summary>
         public bool RoundInProgress = false;

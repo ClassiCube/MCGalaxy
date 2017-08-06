@@ -32,6 +32,8 @@ namespace MCGalaxy.Games {
         /// <summary> Current status of the countdown game. </summary>
         public CountdownGameStatus Status = CountdownGameStatus.Disabled;
         
+        // <summary> Gets whether countdown is currently running. </summary>
+        public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }        
         
         /// <summary> Whether the game is running in freeze mode or not. </summary>
         public bool FreezeMode = false;

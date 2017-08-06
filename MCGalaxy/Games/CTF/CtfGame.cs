@@ -41,6 +41,9 @@ namespace MCGalaxy.Games {
         internal string map1 = "", map2 = "", map3 = "";
         public bool started = false;
         
+        /// <summary> Gets whether CTF is currently running. </summary>
+        public override bool Running { get { return started; } }
+        
         public CtfTeam2 Red, Blue;
         List<CtfData> cache = new List<CtfData>();
         

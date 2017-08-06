@@ -39,6 +39,9 @@ namespace MCGalaxy.Games
         public Level map;
         public MapSettings mapSettings;
         public MapData mapData;
+        
+        /// <summary> Gets whether lava survival is currently running. </summary>
+        public override bool Running { get { return active; } }
 
         // Settings
         public bool startOnStartup, sendAfkMain = true;

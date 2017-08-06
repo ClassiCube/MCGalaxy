@@ -32,7 +32,18 @@ namespace MCGalaxy.Games {
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
         internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
         
-        public string ChooseNextLevel(ZSGame game) {
+        public void AddRecentMap(string map) {
+            if (RecentMaps.Count >= 20)
+                RecentMaps.RemoveAt(0);
+            RecentMaps.Add(map);
+        }
+        
+        public void Clear() {
+            QueuedMap = null;
+            RecentMaps.Clear();
+        }
+        
+        public string ChooseNextLevel(IGame game) {
             if (QueuedMap != null) return QueuedMap;
             
             try {
@@ -51,7 +62,7 @@ namespace MCGalaxy.Games {
                 DoLevelVote(game);
                 if (!game.Running) return null;
                 
-                return NextLevel(r, maps, game);
+                return NextLevel(r, maps);
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 return null;
@@ -102,7 +113,7 @@ namespace MCGalaxy.Games {
             }
         }
                 
-        string NextLevel(Random r, List<string> levels, ZSGame game) {
+        string NextLevel(Random r, List<string> levels) {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) pl.voted = false;
             

@@ -27,6 +27,9 @@ namespace MCGalaxy.Games {
         /// <summary> Level instance of the map this game is running on. </summary>
         public Level Map;
         
+        /// <summary> Gets whether this game is currently running. </summary>
+        public abstract bool Running { get; }
+        
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
         public virtual bool TeleportAllowed { get { return true; } }
         
