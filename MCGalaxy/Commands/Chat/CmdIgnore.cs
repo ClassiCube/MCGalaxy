@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (format.StartsWith("{0}")) {
                 Player.Message(p, format, ignore ? "&cNow" : "&aNo longer");
             } else {
-                Player.Message(p, format, ignore ? "now" : "no longer", ignore ? "&c" : "&a");
+                Player.Message(p, format, ignore ? "no longer" : "now", ignore ? "&c" : "&a");
             }
             SaveIgnores(p);
         }
