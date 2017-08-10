@@ -39,12 +39,7 @@ namespace MCGalaxy.Commands.World {
             if (parts[0].CaselessEq("all")) {
                 if (!ReloadAll(p, parts)) return;
             } else {
-                Player who = PlayerInfo.FindMatches(p, parts[0]);
-                if (who == null) return;
-                if (p != null && who.Rank > p.Rank) {
-                    MessageTooHighRank(p, "reload the map for", true); return;
-                }
-                LevelActions.ReloadMap(p, who, true);
+                LevelActions.ReloadMap(p, p, true);
             }
             Server.DoGC();
         }
@@ -71,7 +66,6 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Reload %H- Reloads the map you are in, just for you.");
-            Player.Message(p, "%T/Reload [name] %H- Reloads the map for [name].");
             Player.Message(p, "%T/Reload all %H- Reloads for all players in map you are in.");
             Player.Message(p, "%T/Reload all [map] %H- Reloads for all players in [map]");
         }
