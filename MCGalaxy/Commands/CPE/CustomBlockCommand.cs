@@ -396,7 +396,7 @@ namespace MCGalaxy.Commands.CPE {
                     } break;
                     
                 case "fogdensity":
-                    if (!EditByte(p, value, "Fog density", ref def.FogDensity, "fog")) return;
+                    if (!EditByte(p, value, "Fog density", ref def.FogDensity, "fogdensity")) return;
                     break;
                 case "fogcolor":
                     ColorDesc rgb = default(ColorDesc);
