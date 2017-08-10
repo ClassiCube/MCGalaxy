@@ -85,8 +85,8 @@ namespace MCGalaxy {
             List<string> maps = AutoloadMaps.AllNames();
             
             foreach (string map in maps) {
-                string name = map.ToLower();               
-                if (name != mainLevel.name) CmdLoad.LoadLevel(null, name);
+                if (map.CaselessEq(mainLevel.name)) continue;
+                CmdLoad.LoadLevel(null, map);
             }
         }
         

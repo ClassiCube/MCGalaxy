@@ -53,13 +53,13 @@ namespace MCGalaxy.Commands.Bots {
             }
 
             string ai = args[1].ToLower();
-            if (ai == "hunt") {
+            if (ai.CaselessEq("hunt")) {
                 bot.hunt = !bot.hunt;
                 bot.Instructions.Clear();
                 bot.AIName = "";
                 UpdateBot(p, bot, "'s hunt instinct: " + bot.hunt);
                 return;
-            } else if (ai == "kill") {
+            } else if (ai.CaselessEq("kill")) {
                 if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
                 bot.kill = !bot.kill;
                 UpdateBot(p, bot, "'s kill instinct: " + bot.kill);

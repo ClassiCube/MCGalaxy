@@ -31,7 +31,7 @@ namespace MCGalaxy {
                 //if (Regex.IsMatch(message, "&a")) break;
 
                 if ( lines.Count > 0 ) {
-                    if ( message[0].ToString() == "&" )
+                    if ( message[0] == '&' )
                         message = "> " + message.Trim();
                     else
                         message = "> " + color + message.Trim();
