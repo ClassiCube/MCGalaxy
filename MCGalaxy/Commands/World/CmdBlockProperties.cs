@@ -129,7 +129,11 @@ namespace MCGalaxy.Commands.World {
             }  else if (prop == "stackid" || prop == "stackblock") {
                 string msg = args.Length > 3 ? args[3] : null;
                 SetStackId(p, scope, block, msg);
-            } else {
+            } else if (prop == "opblock" || prop == "op") {
+                Toggle(p, scope, block, "an OP block",
+                       (ref BlockProps props) => props.OPBlock = !props.OPBlock,
+                       (BlockProps props) => props.OPBlock);
+            }  else {
                 Help(p);
             }
         }
@@ -259,7 +263,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
-                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock");
+                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock, opblock");
             Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
@@ -290,7 +294,10 @@ namespace MCGalaxy.Commands.World {
             } else if (message.CaselessEq("stackblock")) {
                 Player.Message(p, "%HSets the block this block is converted into, when placed on top of " +
                                "another of the same block. (e.g. placing two slabs on each other becomes a double slab)");
-            }  else {
+            } else if (message.CaselessEq("opblock")) {
+                Player.Message(p, "%HMarks the block as being on OP block. OP blocks can't be blown up by explosions, " +
+                               "and can't be replaced in games when build type is ModifyOnly.");
+            } else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }
         }
