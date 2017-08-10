@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
             SetProperty(p, scope, block, prop, args);
         }
         
-        BlockProps[] GetScope(Player p, string scope) {
+        static BlockProps[] GetScope(Player p, string scope) {
             if (scope.CaselessEq("core")) return Block.Props;
             if (scope.CaselessEq("global")) return BlockDefinition.GlobalProps;
             
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.World {
             return null;
         }
         
-        ExtBlock GetBlock(Player p, BlockProps[] scope, string input) {
+        static ExtBlock GetBlock(Player p, BlockProps[] scope, string input) {
             if (scope == Block.Props) {
                 byte raw;
                 if (!byte.TryParse(input, out  raw))
@@ -70,13 +70,17 @@ namespace MCGalaxy.Commands.World {
                 return new ExtBlock(raw, 0);
             } else if (scope == BlockDefinition.GlobalProps) {
                 byte raw = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
-                if (raw == Block.Invalid)
+                if (raw == Block.Invalid) {
                     Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", input);
+                    return ExtBlock.Invalid;
+                }
                 return ExtBlock.FromRaw(raw);
             } else {
                 byte raw = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
-                if (raw == Block.Invalid)
+                if (raw == Block.Invalid) {
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", input);
+                    return ExtBlock.Invalid;
+                }
                 
                 if (p.level.CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
                     Player.Message(p, "&cUse %T/BlockProps global &cto modify this custom block."); return ExtBlock.Invalid;
@@ -85,10 +89,14 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
+        static int GetIndex(BlockProps[] scope, ExtBlock block) {
+            return scope == BlockDefinition.GlobalProps ? block.RawID : block.Index;
+        }
+        
         
         void SetProperty(Player p, BlockProps[] scope, ExtBlock block,
                          string prop, string[] args) {
-            int i = block.Index;
+            int i = GetIndex(scope, block);
             if (prop == "portal") {
                 scope[i].IsPortal = !scope[i].IsPortal;
                 OnToggleSet(p, scope, block, "a portal", scope[i].IsPortal);
@@ -115,13 +123,13 @@ namespace MCGalaxy.Commands.World {
                 OnToggleSet(p, scope, block, "a killer block", scope[i].KillerBlock);
             } else if (prop == "deathmsg" || prop == "deathmessage") {
                 string msg = args.Length > 3 ? args[3] : null;
-                SetDeathMessage(p, scope, block, msg);
+                SetDeathMessage(p, scope, block, i, msg);
             } else if (prop == "animalai" || prop == "animal") {
                 string msg = args.Length > 3 ? args[3] : null;
-                SetEnum(p, scope, block, msg);
+                SetEnum(p, scope, block, i, msg);
             }  else if (prop == "stackid" || prop == "stackblock") {
                 string msg = args.Length > 3 ? args[3] : null;
-                SetStackId(p, scope, block, msg);
+                SetStackId(p, scope, block, i, msg);
             } else if (prop == "opblock" || prop == "op") {
                 scope[i].OPBlock = !scope[i].OPBlock;
                 OnToggleSet(p, scope, block, "an OP block", scope[i].OPBlock);
@@ -131,28 +139,27 @@ namespace MCGalaxy.Commands.World {
         }
 
         
-        static void OnToggleSet(Player p, BlockProps[] scope, ExtBlock block, 
-                                string type, bool toggled) {
-            Level lvl = Player.IsSuper(p) ? null : p.level;            
+        static void OnToggleSet(Player p, BlockProps[] scope, ExtBlock block, string type, bool on) {
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             Player.Message(p, "Block {0} is {1}: {2}",
                            BlockName(scope, lvl, block),
-                           type, toggled ? "&aYes" : "&cNo");
+                           type, on ? "&aYes" : "&cNo");
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, string msg) {
+        static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             AnimalAI ai = AnimalAI.None;
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
             
-            scope[block.Index].AnimalAI = ai;
+            scope[i].AnimalAI = ai;
             Player.Message(p, "Animal AI for {0} set to: {1}",
                            BlockName(scope, lvl, block), ai);
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, string msg) {
-            scope[block.Index].DeathMessage = msg;
+        static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+            scope[i].DeathMessage = msg;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
             if (msg == null) {
@@ -165,7 +172,7 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, string msg) {
+        static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
             ExtBlock stackBlock;
@@ -174,7 +181,7 @@ namespace MCGalaxy.Commands.World {
             } else {
                 if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
             }
-            scope[block.Index].StackId = stackBlock.RawID;
+            scope[i].StackId = stackBlock.RawID;
             
             if (stackBlock.IsAir) {
                 Player.Message(p, "Removed stack block for {0}",
@@ -190,43 +197,39 @@ namespace MCGalaxy.Commands.World {
         
 
         static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block) {
-            int idx = block.Index;
-            scope[idx].Changed = true;
-            
+            scope[GetIndex(scope, block)].Changed = true;            
             if (scope == Block.Props) {
-                BlockProps.Save("core", scope, i => true);
-                Level[] loaded = LevelInfo.Loaded.Items;
-                BlockDefinition.GlobalProps[idx] = BlockDefinition.DefaultProps(block);
+                BlockProps.Save("core", scope, null);
+                Level[] loaded = LevelInfo.Loaded.Items;                
+                if (!block.IsPhysicsType)
+                    BlockDefinition.GlobalProps[block.RawID] = BlockDefinition.DefaultProps(block);
                 
                 foreach (Level lvl in loaded) {
-                    lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
+                    if (lvl.HasCustomProps(block)) continue;
+                    
+                    lvl.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
                     lvl.UpdateBlockHandler(block);
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                BlockProps.Save("global", scope, SelectGlobal);
+                BlockProps.Save("global", scope, null);
                 
                 byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                    lvl.BlockProps[idx] = BlockDefinition.GlobalProps[idx];
+                    if (lvl.HasCustomProps(block)) continue;
+                    
+                    lvl.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
                     lvl.UpdateBlockHandler(block);
                 }
             } else {
-                BlockProps.Save("lvl_" + level.name, scope, i => SelectLevel(level, i));
+                BlockProps.Save("lvl_" + level.name, scope, idx => SelectLevel(level, idx));
                 level.UpdateBlockHandler(block);
             }
         }
         
-        static bool SelectGlobal(int i) {
-            ExtBlock block = ExtBlock.FromIndex(i);
-            return !block.IsPhysicsType && BlockDefinition.GlobalDefs[block.RawID] != null;
-        }
-        
         static bool SelectLevel(Level lvl, int i) {
-            ExtBlock block = ExtBlock.FromIndex(i);
-            return !block.IsPhysicsType &&
-                lvl.CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
+            return lvl.HasCustomProps(ExtBlock.FromIndex(i));
         }
         
         static string BlockName(BlockProps[] scope, Level lvl, ExtBlock block) {

@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.CPE {
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
             if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
             
-            BlockProps props = global ? BlockDefinition.GlobalProps[src.Index] : p.level.BlockProps[src.Index];
+            BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.BlockProps[src.Index];
             dstDef = srcDef.Copy();
             dstDef.BlockID = (byte)dst.RawID;
             
@@ -538,7 +538,7 @@ namespace MCGalaxy.Commands.CPE {
                 return;
             }
             
-            BlockDefinition.GlobalProps[block.Index] = props;
+            BlockDefinition.GlobalProps[block.RawID] = props;
             Level[] loaded = LevelInfo.Loaded.Items;
             byte raw = block.RawID;
             
@@ -558,14 +558,15 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             BlockProps props = BlockProps.MakeDefault();
-            BlockDefinition.GlobalProps[block.Index] = props;
+            if (!block.IsCustomType) props = Block.Props[block.RawID];
+            
+            BlockDefinition.GlobalProps[block.RawID] = props;
             Level[] loaded = LevelInfo.Loaded.Items;
             byte raw = block.RawID;
-            if (!block.IsCustomType) props = Block.Props[raw];
             
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.Index];
+                lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.RawID];
                 lvl.UpdateBlockHandler(block);
             }
         }

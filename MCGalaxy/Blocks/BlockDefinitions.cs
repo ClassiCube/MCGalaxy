@@ -46,7 +46,7 @@ namespace MCGalaxy {
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefs;
-        public static BlockProps[] GlobalProps = new BlockProps[Block.Count * 2];
+        public static BlockProps[] GlobalProps = new BlockProps[Block.Count];
         
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
@@ -136,19 +136,21 @@ namespace MCGalaxy {
         
         public static void UpdateGlobalBlockProps() {
             for (int i = 0; i < GlobalProps.Length; i++) {
-                ExtBlock block = ExtBlock.FromIndex(i);
+                ExtBlock block = ExtBlock.FromRaw((byte)i);
                 GlobalProps[i] = BlockProps.MakeDefault();
                 GlobalProps[i] = DefaultProps(block);
             }
-            BlockProps.Load("global", GlobalProps, true);
+            BlockProps.Load("global", GlobalProps, false);
         }
         
         internal static BlockProps DefaultProps(ExtBlock block) {
-            if (block.IsPhysicsType) return Block.Props[block.Index];
-            
-            if (block.IsCustomType || GlobalDefs[block.BlockID] != null)
-                return GlobalProps[block.Index];
-            return Block.Props[block.Index];
+            if (block.IsPhysicsType) {
+                return Block.Props[block.Index];
+            } else if (!block.IsCustomType && GlobalDefs[block.RawID] == null) {
+                return Block.Props[block.RawID];
+            } else {
+                return GlobalProps[block.RawID];
+            }
         }
         
         static void UpdateLoadedLevels(BlockDefinition[] oldGlobalDefs) {
@@ -157,8 +159,9 @@ namespace MCGalaxy {
                 for (int i = 0; i < lvl.CustomBlockDefs.Length; i++) {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
-                    lvl.BlockProps[i] = GlobalProps[i];
-                    lvl.UpdateCustomBlock((byte)i, GlobalDefs[i]);
+                    ExtBlock block = ExtBlock.FromRaw((byte)i);
+                    lvl.BlockProps[block.Index] = DefaultProps(block);
+                    lvl.UpdateCustomBlock(block.RawID, GlobalDefs[i]);
                 }
             }
         }

@@ -83,7 +83,7 @@ namespace MCGalaxy.Blocks {
                             "Killed by water : Killed by lava : Kills players : death message : " +
                             "Animal AI type : Stack block : Is OP block");
                 for (int i = 0; i < scope.Length; i++) {
-                    if (!scope[i].Changed || !selector(i)) continue;
+                    if (!scope[i].Changed || (selector != null && !selector(i))) continue;
                     BlockProps props = scope[i];
                     // Convert ext to raw ids
                     int id = i >= Block.Count ? (i - Block.Count) : i;
@@ -97,7 +97,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        public static void Load(string group, BlockProps[] scope, bool custom) {
+        public static void Load(string group, BlockProps[] scope, bool lbScope) {
             if (!Directory.Exists("blockprops")) return;
             if (!File.Exists("blockprops/" + group + ".txt")) return;
             
@@ -118,7 +118,7 @@ namespace MCGalaxy.Blocks {
                     continue;
                 }
                 int idx = raw;
-                if (custom && raw >= Block.CpeCount) idx += Block.Count;
+                if (lbScope && raw >= Block.CpeCount) idx += Block.Count;
                 
                 bool.TryParse(parts[1], out scope[idx].IsRails);
                 bool.TryParse(parts[2], out scope[idx].IsTDoor);
