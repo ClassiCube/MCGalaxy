@@ -467,12 +467,15 @@ namespace MCGalaxy {
             public ushort MinX, MinY, MinZ;
         }
         
+        internal bool HasCustomProps(ExtBlock block) {
+            if (block.IsPhysicsType) return false;
+            return CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
+        }
+        
         void LoadCoreProps() {
             for (int i = 0; i < BlockProps.Length; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
-                byte raw = block.RawID;
-                
-                if (block.IsPhysicsType || CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
+                if (!HasCustomProps(block)) {
                     BlockProps[i] = BlockDefinition.DefaultProps(block);
                 } else {
                     BlockProps[i] = MCGalaxy.Blocks.BlockProps.MakeDefault();
