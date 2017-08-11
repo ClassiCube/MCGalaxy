@@ -205,6 +205,8 @@ namespace MCGalaxy.Commands.World {
             } else {
                 ExtBlock other = GetBlock(p, scope, msg);
                 if (other.IsInvalid) return;
+                if (other == block) { Player.Message(p, "ID of oDoor must be different."); return; }
+                
                 scope[i].oDoorIndex = (ushort)other.Index;
                 
                 Player.Message(p, "oDoor for {0} set to: {1}",
@@ -268,7 +270,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
-                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock, opblock");
+                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock, opblock, odoor");
             Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
@@ -302,6 +304,8 @@ namespace MCGalaxy.Commands.World {
             } else if (message.CaselessEq("opblock")) {
                 Player.Message(p, "%HMarks the block as being on OP block. OP blocks can't be blown up by explosions, " +
                                "and can't be replaced in games when build type is ModifyOnly.");
+            } else if (message.CaselessEq("odoor")) {
+                Player.Message(p, "%HSets the block that this block is changed into, when activated by a neighbouring door.");
             } else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }
