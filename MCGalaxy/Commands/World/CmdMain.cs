@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             } else {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+                if (!CheckExtraPerm(p, 1)) return;
                 if (!Formatter.ValidName(p, message, "level")) return;
                 
                 string map = Matcher.FindMaps(p, message);

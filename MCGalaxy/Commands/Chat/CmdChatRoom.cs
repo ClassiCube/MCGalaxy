@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleCreate(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
+            if (!CheckExtraPerm(p, 1)) return;
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a new chatroom name."); return;
             }
@@ -127,8 +127,8 @@ namespace MCGalaxy.Commands.Chatting {
                 return;
             }
             string room = parts[1];
-            bool canDeleteForce = CheckExtraPerm(p, 3);
-            bool canDelete = CheckExtraPerm(p, 2);
+            bool canDeleteForce = HasExtraPerm(p, 3);
+            bool canDelete = HasExtraPerm(p, 2);
             if (!canDelete && !canDeleteForce) {
                 Player.Message(p, "You aren't a high enough rank to delete a chatroon.");
                 return;
@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleSpy(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 4)) { MessageNeedExtra(p, 4); return; }
+            if (!CheckExtraPerm(p, 4)) return;
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a chatroom name to spy on."); return;
             }
@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleForceJoin(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 5)) { MessageNeedExtra(p, 5); return; }
+            if (!CheckExtraPerm(p, 5)) return;
             if (parts.Length <= 2) {
                 Player.Message(p, "You need to provide a player name, then a chatroom name."); return;
             }
@@ -219,7 +219,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleKick(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 6)) { MessageNeedExtra(p, 6); return; }
+            if (!CheckExtraPerm(p, 6)) return;
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a player name.");
                 return;
@@ -241,7 +241,7 @@ namespace MCGalaxy.Commands.Chatting {
         void HandleAll(Player p, string[] parts, string message) {
             int length = parts.Length > 1 ? parts[0].Length + 1 : parts[0].Length;
             message = message.Substring( length );
-            if (CheckExtraPerm(p, 7)) {
+            if (HasExtraPerm(p, 7)) {
                 Chat.MessageAllChatRooms(p, message, true);
                 return;
             }
@@ -276,21 +276,21 @@ namespace MCGalaxy.Commands.Chatting {
             Player.Message(p, "/chatroom join [room] - joins a room");
             Player.Message(p, "/chatroom leave [room] - leaves a room");
             
-            if (CheckExtraPerm(p, 1))
+            if (HasExtraPerm(p, 1))
                 Player.Message(p, "/chatroom create [room] - creates a new room");
-            if (CheckExtraPerm(p, 3))
+            if (HasExtraPerm(p, 3))
                 Player.Message(p, "/chatroom delete [room] - deletes a room");
-            else if (CheckExtraPerm(p, 2))
+            else if (HasExtraPerm(p, 2))
                 Player.Message(p, "/chatroom delete [room] - deletes a room only if all people have left");
             
-            if (CheckExtraPerm(p, 4))
+            if (HasExtraPerm(p, 4))
                 Player.Message(p, "/chatroom spy [room] - spy on a chatroom");
-            if (CheckExtraPerm(p, 5))
+            if (HasExtraPerm(p, 5))
                 Player.Message(p, "/chatroom forcejoin [player] [room] - forces a player to join a room");
-            if (CheckExtraPerm(p, 6))
+            if (HasExtraPerm(p, 6))
                 Player.Message(p, "/chatroom kick [player] - kicks the player from their current room");
             
-            if (CheckExtraPerm(p, 7))
+            if (HasExtraPerm(p, 7))
                 Player.Message(p, "/chatroom all [message] - sends a global message to all rooms");
             else
                 Player.Message(p, "/chatroom all [message] - sends a global message to all rooms " +

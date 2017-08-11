@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Misc {
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }            
             if (message.CaselessEq("all")) {
-                if (CheckExtraPerm(p)) SummonAll(p);
+                if (HasExtraPerm(p, 1)) SummonAll(p);
             } else {
                 SummonPlayer(p, message);
             }

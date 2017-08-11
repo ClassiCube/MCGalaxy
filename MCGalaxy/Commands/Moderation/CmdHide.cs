@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             bool messageOps = true;
             if (message.CaselessEq("silent")) {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+                if (!CheckExtraPerm(p, 1)) return;
                 messageOps = false;
             }
             

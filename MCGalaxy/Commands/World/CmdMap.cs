@@ -60,10 +60,8 @@ namespace MCGalaxy.Commands.World {
                 value = args.Length > 2 ? args[2] : "";
             }
             
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
-            if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) {
-                MessageNeedExtra(p, 2); return;
-            }
+            if (!CheckExtraPerm(p, 1)) return;
+            if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) return;
             
             if (SetMapOption(p, lvl, opt, value)) return;
             Player.Message(p, "Could not find option entered.");

@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Misc {
             
             string name = args[1];
             if (cmd == "create" || cmd == "add") {
-                if (CheckExtraPerms && !CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
+                if (CheckExtraPerms && !CheckExtraPerm(p, 1)) return;
                 if (warps.Exists(name)) { Player.Message(p, "{0} already exists", group); return; }
                 
                 Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
@@ -67,14 +67,14 @@ namespace MCGalaxy.Commands.Misc {
                 warps.Create(name, who);
                 Player.Message(p, "{0} {1} created.", group, name);
             } else if (cmd == "delete" || cmd == "remove") {
-                if (CheckExtraPerms && !CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+                if (CheckExtraPerms && !CheckExtraPerm(p, 2)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
                 
                 warps.Remove(warp, p);
                 Player.Message(p, "{0} {1} deleted.", group, warp.Name);
             } else if (cmd == "move" || cmd == "update") {
-                if (CheckExtraPerms && !CheckExtraPerm(p, 3)) { MessageNeedExtra(p, 3); return; }
+                if (CheckExtraPerms && !CheckExtraPerm(p, 3)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
                 
@@ -94,11 +94,11 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             Player.Message(p, "%T/Warp [name] %H- Move to that warp");
             Player.Message(p, "%T/Warp list %H- List all the warps");
-            if (CheckExtraPerm(p, 1))
+            if (HasExtraPerm(p, 1))
                 Player.Message(p, "%T/Warp create [name] <player> %H- Create a warp, if a <player> is given, it will be created where they are");
-            if (CheckExtraPerm(p, 2))
+            if (HasExtraPerm(p, 2))
                 Player.Message(p, "%T/Warp delete [name] %H- Deletes a warp");
-            if (CheckExtraPerm(p, 3))
+            if (HasExtraPerm(p, 3))
                 Player.Message(p, "%T/Warp move [name] <player> %H- Moves a warp, if a <player> is given, it will be created where they are");
         }
     }

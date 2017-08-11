@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
         protected override bool CheckExtraPerms { get { return false; } }
                 
         public override void Use(Player p, string message) {
-        	UseCore(p, message, p.Waypoints, "Waypoint");
+            UseCore(p, message, p.Waypoints, "Waypoint");
         }
 
         public override void Help(Player p) {

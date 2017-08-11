@@ -58,8 +58,7 @@ namespace MCGalaxy.Commands.Info {
             else
                 Player.Message(p, "Console state: &3{0}", ServerConfig.ConsoleName);
             
-            if (CheckExtraPerm(p))
-                ShowServerStats(p);
+            if (HasExtraPerm(p, 1)) ShowServerStats(p);
         }
         
         static int GetPlayerCount() {

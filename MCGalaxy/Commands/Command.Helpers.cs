@@ -41,7 +41,7 @@ namespace MCGalaxy {
         
         protected bool CheckSuper(Player p, string message, string type) {
             if (message.Length > 0 || !Player.IsSuper(p)) return false;
-            SuperRequiresArgs(name, p, type); 
+            SuperRequiresArgs(name, p, type);
             return true;
         }
         
@@ -52,14 +52,17 @@ namespace MCGalaxy {
             Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", cmd, type, src);
         }
         
-        protected bool CheckExtraPerm(Player p, int num = 1) {
+        protected bool HasExtraPerm(Player p, int num) {
             return p == null || p.Rank >= CommandExtraPerms.MinPerm(name, num);
         }
         
-        protected void MessageNeedExtra(Player p, int num = 1) {
+        protected bool CheckExtraPerm(Player p, int num) {
+            if (HasExtraPerm(p, num)) return true;
+            
             LevelPermission perm = CommandExtraPerms.MinPerm(name, num);
             string action = ExtraPerms[num - 1].Description;
             Formatter.MessageNeedMinPerm(p, action, perm);
+            return false;
         }
         
         protected static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {

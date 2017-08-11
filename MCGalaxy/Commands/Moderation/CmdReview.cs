@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleView(Player p) {
-            if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
+            if (!CheckExtraPerm(p, 1)) return;
 
             if (Server.reviewlist.Count == 0) {
                 Player.Message(p, "There are no players in the review queue."); return;
@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void HandleNext(Player p) {
             if (p == null) { Player.Message(p, "Console cannot answer the review queue."); return; }
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             if (Server.reviewlist.Count == 0) {
                 Player.Message(p, "There are no players in the review queue."); return;
             }
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleClear(Player p) {
-            if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, 3); return; }
+            if (!CheckExtraPerm(p, 3)) return;
             Server.reviewlist.Clear();
             Player.Message(p, "The review queue has been cleared");
         }

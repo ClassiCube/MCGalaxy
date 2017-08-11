@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}.", false); return; }
             
             if (hugType == "deadly") {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+                if (!CheckExtraPerm(p, 1)) return;
                 if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }

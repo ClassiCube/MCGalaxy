@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool CheckCommand(Player p, string message) {
-            bool allCmds = CheckExtraPerm(p);
+            bool allCmds = HasExtraPerm(p, 1);
             string[] parts = message.SplitSpaces(2);
             string alias = parts[0], cmdArgs = "";
             Command.Search(ref alias, ref cmdArgs);

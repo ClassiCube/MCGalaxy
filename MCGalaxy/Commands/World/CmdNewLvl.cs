@@ -62,9 +62,7 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.MapExists(name)) {
                 Player.Message(p, "Level \"{0}\" already exists", name); return null;
             }
-            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p)) { 
-                MessageNeedExtra(p, 1); return null;
-            }
+            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p, 1)) return null;
 
             if (p != null && Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
                 Player.Message(p, "You are already generating a map, please wait until that map has finished generating first.");

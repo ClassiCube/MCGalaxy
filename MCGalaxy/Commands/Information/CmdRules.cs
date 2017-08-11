@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player who = p;
             if (message.Length > 0) {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+                if (!CheckExtraPerm(p, 1)) return;
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
             }           
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            if (CheckExtraPerm(p)) {
+            if (HasExtraPerm(p, 1)) {
                 Player.Message(p, "%T/Rules <player>");
                 Player.Message(p, "%HDisplays server rules to <player>.");
                 Player.Message(p, "%HIf <player> is not given, the rules are displayed to you.");

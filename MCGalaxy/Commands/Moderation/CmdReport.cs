@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         void HandleList(Player p, string[] args) {
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+            if (!CheckExtraPerm(p, 1)) return;
 
             bool foundone = false;
             string[] files = Directory.GetFiles("extra/reported", "*.txt");
@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+            if (!CheckExtraPerm(p, 1)) return;
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+            if (!CheckExtraPerm(p, 1)) return;
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleClear(Player p, string[] args) {
-           if (!CheckExtraPerm(p)) { MessageNeedExtra(p, 1); return; }
+           if (!CheckExtraPerm(p, 1)) return;
            if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");            
             string[] files = Directory.GetFiles("extra/reported", "*.txt");
@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
-            if (!CheckExtraPerm(p)) return;
+            if (!HasExtraPerm(p, 1)) return;
             Player.Message(p, "%T/Report list %H- Outputs the list of reported players.");
             Player.Message(p, "%T/Report check [Player] %H- Views report for that player.");
             Player.Message(p, "%T/Report delete [Player] %H- Deletes report for that player.");

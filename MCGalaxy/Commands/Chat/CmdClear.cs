@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
                 ClearChat(p);
                 Player.Message(p, "%4Chat cleared.");
             } else {
-                if (!CheckExtraPerm(p)) { MessageNeedExtra(p); return; }
+                if (!CheckExtraPerm(p, 1)) return;
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {

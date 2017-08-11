@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "TNT Wars Rules:");
                 SendRules(p); return;
             }
-            if (!CheckExtraPerm(p)) return;
+            if (!HasExtraPerm(p, 1)) return;
             
             switch (text[1]) {
                 case "all":
@@ -329,7 +329,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void DoSetup(Player p, string[] text) {
-            if (!CheckExtraPerm(p)) {
+            if (!HasExtraPerm(p, 1)) {
                 Player.Message(p, "Sorry, you aren't a high enough rank for that!"); return;
             }
             
@@ -1138,7 +1138,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "/tw players {p} - view the current players in your game");
             Player.Message(p, "/tw health {hp} - view your currrent amount of health left");
             
-            if (CheckExtraPerm(p)) {
+            if (HasExtraPerm(p, 1)) {
                 Player.Message(p, "/tw rules <all/level/players/<playername>> - send the rules to yourself, all, your map, all players in your game or to one person!");
                 Player.Message(p, "/tw setup {s} - setup the game (do '/tntwars setup help' for more info!");
             } else {

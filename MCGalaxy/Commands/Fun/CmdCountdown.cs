@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleRules(Player p, string target) {
             Player who = p;
-            if (target.Length > 0 && CheckExtraPerm(p, 1)) {
+            if (target.Length > 0 && HasExtraPerm(p, 1)) {
                 who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return;
                 
@@ -177,7 +177,7 @@ namespace MCGalaxy.Commands.Fun {
         
         
         void HandleGenerate(Player p, CountdownGame game, string x, string y, string z) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             
             int width, height, length;
             if(!int.TryParse(x, out width) || !int.TryParse(y, out height) || !int.TryParse(z, out length)) {
@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnable(Player p, CountdownGame game) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             
             if (game.Status == CountdownGameStatus.Disabled) {
                 game.Enable(p);
@@ -202,7 +202,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleDisable(Player p, CountdownGame game) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             
             if (game.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "Countdown is not running."); return;
@@ -212,7 +212,7 @@ namespace MCGalaxy.Commands.Fun {
         
         
         void HandleStart(Player p, CountdownGame game, string speed, string mode) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             
             switch (game.Status) {
                 case CountdownGameStatus.Disabled:
@@ -245,7 +245,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnd(Player p, CountdownGame game) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
  
             switch (game.Status) {
                 case CountdownGameStatus.Disabled:
@@ -258,7 +258,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleReset(Player p, CountdownGame game, string type) {
-            if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+            if (!CheckExtraPerm(p, 2)) return;
             
             switch (game.Status) {
                 case CountdownGameStatus.Disabled:
@@ -278,11 +278,11 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/CD join/leave %H- joins/leaves the game");
             Player.Message(p, "%T/CD players %H- lists players currently playing");
             Player.Message(p, "%T/CD rules %H- view the rules of countdown");
-            if (CheckExtraPerm(p, 1)) {
+            if (HasExtraPerm(p, 1)) {
                 Player.Message(p, "%T/CD rules [player] %H- sends rules to that player.");
             }
             
-            if (!CheckExtraPerm(p, 2)) return;
+            if (!HasExtraPerm(p, 2)) return;
             Player.Message(p, "%T/CD generate [width] [height] [length] %H- generates the countdown map (default is 32x32x32)");
             Player.Message(p, "%T/CD enable/disable %H- enables/disables countdown");
             Player.Message(p, "%T/CD start <speed> <mode> %H- starts a round of countdown");
