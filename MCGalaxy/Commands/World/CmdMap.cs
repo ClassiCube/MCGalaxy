@@ -140,9 +140,7 @@ namespace MCGalaxy.Commands.World {
                            GetBool(cfg.Buildable), GetBool(cfg.Deletable));
         }
         
-        static string GetBool(bool value, bool console = false) {
-            return console ? (value ? "ON" : "OFF") : (value ? "&aON" : "&cOFF");
-        }
+        static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Map [level] [option] <value> %H- Sets [option] on [level]");

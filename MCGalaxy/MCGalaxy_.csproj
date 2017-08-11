@@ -349,8 +349,6 @@
     <Compile Include="Commands\other\CmdTimer.cs" />
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
-    <Compile Include="Commands\other\CmdWarp.cs" />
-    <Compile Include="Commands\other\CmdWaypoint.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
     <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
@@ -373,6 +371,8 @@
     <Compile Include="Commands\World\CmdOverseer.cs" />
     <Compile Include="Commands\World\CmdOverseer.SubCommands.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
+    <Compile Include="Commands\World\CmdWarp.cs" />
+    <Compile Include="Commands\World\CmdWaypoint.cs" />
     <Compile Include="Commands\World\PermissionCmds.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdRenameLvl.cs" />

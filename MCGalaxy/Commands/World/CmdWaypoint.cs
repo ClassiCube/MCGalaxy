@@ -21,23 +21,19 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdWaypoint : CmdWarp {
         public override string name { get { return "Waypoint"; } }
         public override string shortcut { get { return "wp"; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms { get { return null; } }
-        protected override bool CheckExtraPerms { get { return false; } }
                 
         public override void Use(Player p, string message) {
-            UseCore(p, message, p.Waypoints, "Waypoint");
+            UseCore(p, message, p.Waypoints, "Waypoint", false);
         }
 
         public override void Help(Player p) {
+            Player.Message(p, "%HWaypoints are warps only usable by you.");
             Player.Message(p, "%T/Waypoint create [name] %H- Create a new waypoint");
             Player.Message(p, "%T/Waypoint update [name] %H- Update a waypoint");
             Player.Message(p, "%T/Waypoint remove [name] %H- Remove a waypoint");
             Player.Message(p, "%T/Waypoint list %H- Shows a list of waypoints");
-            Player.Message(p, "%T/Waypoint goto [name] %H- Goto a waypoint");
             Player.Message(p, "%T/Waypoint [name] %H- Goto a waypoint");
         }
     }
