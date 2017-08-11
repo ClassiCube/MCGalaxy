@@ -36,10 +36,10 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Whether this block is considered a tDoor. </summary>
         public bool IsTDoor;
-        /// <summary> Block id this block is converted to when toggled by a neighbouring door. </summary>
-        public byte oDoorId;
         /// <summary> Whether this block is considered a door. </summary>
         public bool IsDoor;
+        /// <summary> Block index of the block this is converted to when toggled by a neighbouring door. </summary>
+        public ushort oDoorIndex;
         
         /// <summary> Whether this block is considered a message block. </summary>
         public bool IsMessageBlock;
@@ -68,7 +68,7 @@ namespace MCGalaxy.Blocks {
         
         public static BlockProps MakeDefault() {
             BlockProps props = default(BlockProps);
-            props.oDoorId = Block.Invalid;
+            props.oDoorIndex = Block.Invalid;
             return props;
         }
         
@@ -92,7 +92,7 @@ namespace MCGalaxy.Blocks {
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
-                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock);
+                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock + ":" + props.oDoorIndex);
                 }
             }
         }
@@ -144,6 +144,10 @@ namespace MCGalaxy.Blocks {
                 }
                 if (parts.Length > 12) {
                     bool.TryParse(parts[12], out scope[idx].OPBlock);
+                }
+                if (parts.Length > 13) {
+                    ushort oDoor; ushort.TryParse(parts[13], out oDoor);
+                    scope[idx].oDoorIndex = oDoor;
                 }
             }
         }

@@ -30,42 +30,46 @@ namespace MCGalaxy {
             for (int i = 0; i < Block.Count; i++)
                 Props[i] = BlockProps.MakeDefault();
             for (int i = 0; i < Block.Count; i++) {                
-                if ((i >= Op_Glass && i <= Op_Lava) || i == Invalid || i == RocketStart || i == Bedrock)
+                if ((i >= Op_Glass && i <= Op_Lava) || i == Invalid || i == RocketStart || i == Bedrock) {
                     Props[i].OPBlock = true;
+                }
                 
-                if ((i >= tDoor_Log && i <= tDoor_Green) || (i >= tDoor_TNT && i <= tDoor_Lava))
+                if ((i >= tDoor_Log && i <= tDoor_Green) || (i >= tDoor_TNT && i <= tDoor_Lava)) {
                     Props[i].IsTDoor = true;
-                
-                if (i >= MB_White && i <= MB_Lava)
+                }                
+                if (i >= MB_White && i <= MB_Lava) {
                     Props[i].IsMessageBlock = true;
-                
-                if (i == Portal_Blue || i == Portal_Orange || (i >= Portal_Air && i <= Portal_Lava))
+                }             
+                if (i == Portal_Blue || i == Portal_Orange || (i >= Portal_Air && i <= Portal_Lava)) {
                     Props[i].IsPortal = true;
+                }
                 
-                // ODoor blocks
-                if (i >= oDoor_Log && i <= oDoor_Wood)
-                    Props[i].oDoorId = (byte)(oDoor_Log_air + (i - oDoor_Log));
-                if (i >= oDoor_Green && i <= oDoor_Water)
-                    Props[i].oDoorId = (byte)(oDoor_Green_air + (i - oDoor_Green));
-                if (i >= oDoor_Log_air && i <= oDoor_Wood_air)
-                    Props[i].oDoorId = (byte)(oDoor_Log + (i - oDoor_Log_air));
-                if (i >= oDoor_Green_air && i <= oDoor_Water_air)
-                    Props[i].oDoorId = (byte)(oDoor_Green + (i - oDoor_Green_air));
+                // oDoor blocks
+                if (i >= oDoor_Log && i <= oDoor_Wood) {
+                    Props[i].oDoorIndex = (byte)(oDoor_Log_air + (i - oDoor_Log));
+                }
+                if (i >= oDoor_Green && i <= oDoor_Water) {
+                    Props[i].oDoorIndex = (byte)(oDoor_Green_air + (i - oDoor_Green));
+                }
+                if (i >= oDoor_Log_air && i <= oDoor_Wood_air) {
+                    Props[i].oDoorIndex = (byte)(oDoor_Log + (i - oDoor_Log_air));
+                }
+                if (i >= oDoor_Green_air && i <= oDoor_Water_air) {
+                    Props[i].oDoorIndex = (byte)(oDoor_Green + (i - oDoor_Green_air));
+                }
                 
-                if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise))
+                if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise)) {
                     Props[i].LavaKills = true;
+                }
                 if (i == Air || i == Sapling || (i >= Dandelion && i <= RedMushroom)) {
                     Props[i].LavaKills = true;
                     Props[i].WaterKills = true;
                 }
                 
                 // Door blocks
-                if (i >= Door_Obsidian && i <= Door_Slab)
-                    Props[i].IsDoor = true;
-                if (i >= Door_Iron && i <= Door_Bookshelf)
-                    Props[i].IsDoor = true;
-                if (i >= Door_Orange && i <= Door_White)
-                    Props[i].IsDoor = true;
+                if (i >= Door_Obsidian && i <= Door_Slab) Props[i].IsDoor = true;
+                if (i >= Door_Iron && i <= Door_Bookshelf) Props[i].IsDoor = true;
+                if (i >= Door_Orange && i <= Door_White) Props[i].IsDoor = true;
             }
             
             // Other door blocks, since they aren't in a consistent order
@@ -137,7 +141,7 @@ namespace MCGalaxy {
                 "oDoor_Stone", "oDoor_Leaves", "oDoor_Sand", "oDoor_Wood", "oDoor_Green",
                 "oDoor_TNT", "oDoor_Stair", "oDoor_Lava", "oDoor_Water", "Air_Portal", "Water_Portal",
                 "Lava_Portal", "Custom_Block", "Air_Door", "Air_Switch", "Door_Water", "Door_Lava",
-                "oDoor_Wood_Air", "oDoor_Obsidian_Air", "oDoor_Glass_Air", "oDoor_Stone_Air",
+                "oDoor_Air", "oDoor_Obsidian_Air", "oDoor_Glass_Air", "oDoor_Stone_Air",
                 "oDoor_Leaves_Air", "oDoor_Sand_Air", "oDoor_Wood_Air", "Blue_Portal", "Orange_Portal",
                 "oDoor_Red", "oDoor_TNT_Air", "oDoor_Stair_Air", "oDoor_Lava_Air", "oDoor_Water_Air",
                 "Small_TNT", "Big_TNT", "TNT_Explosion", "Lava_Fire", "Nuke_TNT", "RocketStart",

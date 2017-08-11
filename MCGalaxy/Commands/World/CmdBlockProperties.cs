@@ -133,7 +133,10 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "opblock" || prop == "op") {
                 scope[i].OPBlock = !scope[i].OPBlock;
                 OnToggleSet(p, scope, block, "an OP block", scope[i].OPBlock);
-            }  else {
+            } else if (prop == "odoor") {
+                string odoor = args.Length > 3 ? args[3] : null;
+                SetODoor(p, scope, block, i, odoor);
+            } else {
                 Help(p);
             }
         }
@@ -184,8 +187,7 @@ namespace MCGalaxy.Commands.World {
             scope[i].StackId = stackBlock.RawID;
             
             if (stackBlock.IsAir) {
-                Player.Message(p, "Removed stack block for {0}",
-                               BlockName(scope, lvl, block));
+                Player.Message(p, "Removed stack block for {0}", BlockName(scope, lvl, block));
             } else {
                 string stackBlockName = Player.IsSuper(p) ?
                     BlockName(scope, lvl, stackBlock) : p.level.BlockName(stackBlock);
@@ -195,6 +197,21 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
+        static void SetODoor(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+            Level lvl = Player.IsSuper(p) ? null : p.level;           
+            if (msg == null) {
+                scope[i].oDoorIndex = Block.Invalid;
+                Player.Message(p, "oDoor for {0} removed.", BlockName(scope, lvl, block));
+            } else {
+                ExtBlock other = GetBlock(p, scope, msg);
+                if (other.IsInvalid) return;
+                scope[i].oDoorIndex = (ushort)other.Index;
+                
+                Player.Message(p, "oDoor for {0} set to: {1}",
+                               BlockName(scope, lvl, block), BlockName(scope, lvl, other));
+            }
+            OnPropsChanged(scope, lvl, block);
+        }        
 
         static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block) {
             scope[GetIndex(scope, block)].Changed = true;            

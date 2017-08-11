@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands.Info {
 
             if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
-            if (props.oDoorId != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
+            if (props.oDoorIndex != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
 
             if (Mover(b)) Player.Message(p, "Block can be activated by walking through it");
         }

@@ -89,9 +89,10 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        internal static void ODoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void oDoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (block.BlockID == Block.oDoor_Green || block.BlockID == Block.oDoor_Green_air) {
-                p.level.Blockchange(x, y, z, (ExtBlock)p.level.BlockProps[block.Index].oDoorId);
+                ushort oDoorOpposite = p.level.BlockProps[block.Index].oDoorIndex;
+                p.level.Blockchange(x, y, z, ExtBlock.FromIndex(oDoorOpposite));
             } else {
                 p.RevertBlock(x, y, z);
             }
