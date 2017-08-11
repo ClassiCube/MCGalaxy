@@ -36,7 +36,7 @@ namespace MCGalaxy {
         
         public static IRCBot IRC;
         public static Thread locationChecker;
-        public static DateTime StartTime, StartTimeLocal;
+        public static DateTime StartTime;
         
         public static PlayerExtList AutoloadMaps;
         public static PlayerMetaList RankInfo = new PlayerMetaList("text/rankinfo.txt");

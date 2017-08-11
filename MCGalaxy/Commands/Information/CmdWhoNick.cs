@@ -28,11 +28,18 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
-            Player nick = PlayerInfo.FindNick(p, message);
-            if (nick == null) {
-                Player.Message(p, "The player is not online."); return;
-            }
+            Player nick = FindNick(p, message);
+            
+            if (nick == null) return;
             Player.Message(p, "This player's real username is " + nick.name);
+        }      
+                
+        static Player FindNick(Player p, string nick) {
+            nick = Colors.Strip(nick);
+            Player[] players = PlayerInfo.Online.Items;
+            int matches = 0;
+            return Matcher.Find<Player>(p, nick, out matches, players, pl => Entities.CanSee(p, pl), 
+                                        pl => Colors.Strip(pl.DisplayName), "online player nicks");
         }
         
         public override void Help(Player p) {

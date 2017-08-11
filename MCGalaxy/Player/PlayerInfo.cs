@@ -25,8 +25,6 @@ namespace MCGalaxy {
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
-        [Obsolete("Use PlayerInfo.Online.Items")]
-        public static List<Player> players;
         
         public static Group GetGroup(string name) { return Group.GroupIn(name); }
         
@@ -88,23 +86,6 @@ namespace MCGalaxy {
                 if (p.name.CaselessEq(name)) return p;
             }
             return null;
-        }
-        
-        public static Player FindNick(Player p, string nick) {
-            nick = Colors.Strip(nick);
-            Player[] players = PlayerInfo.Online.Items;
-            Player match = null; int matches = 0;
-
-            foreach (Player pl in players) {
-                if (!Entities.CanSee(p, pl)) continue;
-                string name = Colors.Strip(pl.DisplayName);
-                
-                if (name.CaselessEq(nick)) return pl;
-                if (name.CaselessContains(nick)) {
-                    match = pl; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
         }
  
         

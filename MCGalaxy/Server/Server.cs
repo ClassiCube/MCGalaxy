@@ -76,12 +76,10 @@ namespace MCGalaxy {
             
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
-            PlayerInfo.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;
             #pragma warning restore 0618
             
             StartTime = DateTime.UtcNow;
-            StartTimeLocal = StartTime.ToLocalTime();
             shuttingDown = false;
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;

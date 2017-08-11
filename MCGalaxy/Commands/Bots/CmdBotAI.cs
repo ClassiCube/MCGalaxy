@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Bots{
                     Player.Message(p, "Created new bot AI: &b" + ai);
                     using (StreamWriter w = new StreamWriter("bots/" + ai))
                         w.WriteLine("#Version 2");
-                } else if (instructions[0] != "#Version 2") {
+                } else if (!instructions[0].CaselessEq("#Version 2")) {
                     Player.Message(p, "File found is out-of-date. Overwriting");
                     File.Delete("bots/" + ai);
                     using (StreamWriter w = new StreamWriter("bots/" + ai))

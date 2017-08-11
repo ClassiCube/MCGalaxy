@@ -46,7 +46,7 @@ namespace MCGalaxy.Core {
                 case ModActionType.Warned:
                     AddNote(action, "W"); break;                    
                 case ModActionType.Ban:
-                    string banType = action.Duration.Ticks == 0 ? "B" : "T";
+                    string banType = action.Duration.Ticks != 0 ? "T" : "B";
                     AddNote(action, banType); break;
             }
         }

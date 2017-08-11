@@ -378,9 +378,6 @@ namespace MCGalaxy {
         [Obsolete("Use PlayerInfo.FindExact(name)")]
         public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
         
-        [Obsolete("Use PlayerInfo.FindNick(name)")]
-        public static Player FindNick(string name) { return PlayerInfo.FindNick(null, name); }
-        
         unsafe static byte NextFreeId() {
             byte* used = stackalloc byte[256];
             for (int i = 0; i < 256; i++)
