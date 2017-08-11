@@ -31,14 +31,9 @@ namespace MCGalaxy {
     }
     
     public sealed class WarpList {
-        public static WarpList Global = new WarpList(false);
-        
+        public static WarpList Global = new WarpList();
         public List<Warp> Items = new List<Warp>();
-        bool playerWarp;
-        
-        public WarpList(bool playerWarp) {
-            this.playerWarp = playerWarp;
-        }
+        public string Filename;
         
         /// <summary> Finds the warp whose name caselessly equals the given name. </summary>
         public Warp Find(string name) {
@@ -46,6 +41,37 @@ namespace MCGalaxy {
                 if (wp.Name.CaselessEq(name)) return wp;
             }
             return null;
+        }
+
+        /// <summary> Returns whether a warp with the given name exists. </summary>
+        public bool Exists(string name) { return Find(name) != null; }
+
+        /// <summary> Creates a new warp with the given name, located at the 
+        /// player's current position, orientation, and level. </summary>
+        public void Create(string name, Player p) {
+            Warp warp = new Warp();
+            InitWarp(warp, name, p);
+            Items.Add(warp);
+            Save();
+        }
+        
+        void InitWarp(Warp warp, string name, Player p) {
+            warp.Pos = p.Pos; warp.Name = name;
+            warp.Yaw = p.Rot.RotY; warp.Pitch = p.Rot.HeadX;            
+            warp.Level = p.level.name;
+        }
+
+        /// <summary> Moves the given warp to the target 
+        /// player's position, orientation, and map. </summary>
+        public void Update(Warp warp, Player p) {
+            InitWarp(warp, warp.Name, p);
+            Save();
+        }
+
+        /// <summary> Removes the given warp. </summary>
+        public void Remove(Warp warp, Player p) {
+            Items.Remove(warp);
+            Save();
         }
         
         /// <summary> Attempts to move the given player to the given warp. </summary>
@@ -61,73 +87,41 @@ namespace MCGalaxy {
                 Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");
             }
         }
-
-        /// <summary> Creates a new warp with the given name, located at the 
-        /// player's current position, orientation, and level. </summary>
-        public void Create(string name, Player p) {
-            Warp warp = new Warp();
-            InitWarp(warp, name, p);
-            Items.Add(warp);
-            Save(p);
-        }
-        
-        void InitWarp(Warp warp, string name, Player p) {
-            warp.Pos = p.Pos; warp.Name = name;
-            warp.Yaw = p.Rot.RotY; warp.Pitch = p.Rot.HeadX;            
-            warp.Level = p.level.name;
-        }
-
-        /// <summary> Moves the given warp to the target 
-        /// player's position, orientation, and map. </summary>
-        public void Update(Warp warp, Player p) {
-            InitWarp(warp, warp.Name, p);
-            Save(p);
-        }
-
-        /// <summary> Removes the given warp. </summary>
-        public void Remove(Warp warp, Player p) {
-            Items.Remove(warp);
-            Save(p);
-        }
-
-        /// <summary> Returns whether a warp with the given name exists. </summary>
-        public bool Exists(string name) { return Find(name) != null; }
         
 
-        public void Load(Player p) {
-            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
-            if (!File.Exists(file)) return;
-            
-            using (StreamReader r = new StreamReader(file)) {
+        /// <summary> Loads the list of warps from the file located at Filename. </summary>
+        public void Load() {
+            if (!File.Exists(Filename)) return;          
+            using (StreamReader r = new StreamReader(Filename)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     line = line.Trim();
                     if (line.StartsWith("#") || !line.Contains(":")) continue;
                     
                     string[] parts = line.Split(':');
-                    Warp wp = new Warp();
+                    Warp warp = new Warp();
                     try {
-                        wp.Name = parts[0];
-                        wp.Level = parts[1];
-                        wp.Pos.X = int.Parse(parts[2]);
-                        wp.Pos.Y = int.Parse(parts[3]);
-                        wp.Pos.Z = int.Parse(parts[4]);
-                        wp.Yaw = byte.Parse(parts[5]);
-                        wp.Pitch = byte.Parse(parts[6]);
-                        Items.Add(wp);
+                        warp.Name = parts[0];
+                        warp.Level = parts[1];
+                        warp.Pos.X = int.Parse(parts[2]);
+                        warp.Pos.Y = int.Parse(parts[3]);
+                        warp.Pos.Z = int.Parse(parts[4]);
+                        warp.Yaw = byte.Parse(parts[5]);
+                        warp.Pitch = byte.Parse(parts[6]);
+                        Items.Add(warp);
                     } catch {
-                        Logger.Log(LogType.Warning, "Failed loading a warp from " + file);
+                        Logger.Log(LogType.Warning, "Failed loading a warp from " + Filename);
                     }
                 }
             }
         }
 
-        public void Save(Player p) {
-            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
-            using (StreamWriter w = new StreamWriter(file)) {
+        /// <summary> Saves this list of warps to Filename. </summary>
+        public void Save() {
+            using (StreamWriter w = new StreamWriter(Filename)) {
                 foreach (Warp warp in Items) {
                     w.WriteLine(warp.Name + ":" + warp.Level + ":" + warp.Pos.X + ":" + 
-            		            warp.Pos.Y + ":" + warp.Pos.Z + ":" + warp.Yaw + ":" + warp.Pitch);
+                                warp.Pos.Y + ":" + warp.Pos.Z + ":" + warp.Yaw + ":" + warp.Pitch);
                 }
             }
         }

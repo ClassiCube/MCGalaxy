@@ -229,7 +229,7 @@ namespace MCGalaxy {
         public List<string> spyChatRooms = new List<string>();
         public DateTime lastchatroomglobal;
 
-        public WarpList Waypoints = new WarpList(true);
+        public WarpList Waypoints = new WarpList();
 
         public Random random = new Random();
         public LevelPermission Rank { get { return group.Permission; } }

@@ -206,7 +206,8 @@ namespace MCGalaxy {
             BlockDefinition.UpdateGlobalBlockProps();
             Awards.Load();
             Economy.Load();
-            WarpList.Global.Load(null);
+            WarpList.Global.Filename = "extra/warps.save";
+            WarpList.Global.Load();
             CommandExtraPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();
