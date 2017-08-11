@@ -35,6 +35,13 @@ namespace MCGalaxy {
             return target != null && Entities.CanSee(p, target) ? 
                 target.ColoredName : GetColor(name) + name.RemoveLastPlus(); // TODO: select color from database?
         }
+                
+        public static int NonHiddenCount() {
+            Player[] players = Online.Items;
+            int count = 0;
+            foreach (Player p in players) { if (!p.hidden) count++; }
+            return count;
+        }
         
         
         [Obsolete("Prefer FindMatches() or FindExact()")]

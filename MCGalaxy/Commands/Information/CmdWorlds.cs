@@ -21,29 +21,22 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdUnloaded : Command {
-        public override string name { get { return "Unloaded"; } }
+    public sealed class CmdWorlds : Command {
+        public override string name { get { return "Worlds"; } }
+        public override string shortcut { get { return "Unloaded"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             string[] files = LevelInfo.AllMapFiles();
-            Player.Message(p, "Unloaded maps (&c[no] %Sif not visitable): ");
-            MultiPageOutput.Output(p, GetMaps(files), (map) => FormatMap(p, map),
-                                   "Unloaded", "maps", message, false);
-        }
-        
-        static List<string> GetMaps(string[] files) {
-            List<string> maps = new List<string>(files.Length);
-            Level[] loaded = LevelInfo.Loaded.Items;
-            
-            foreach (string file in files) {
-                string map = Path.GetFileNameWithoutExtension(file);
-                if (IsLoaded(loaded, map)) continue;
-                maps.Add(map);
+            for (int i = 0; i < files.Length; i++) {
+                files[i] = Path.GetFileNameWithoutExtension(files[i]);
             }
-            return maps;
+            
+            Player.Message(p, "Maps (&c[no] %Sif not visitable): ");
+            MultiPageOutput.Output(p, files, (map) => FormatMap(p, map),
+                                   "Worlds", "maps", message, false);
         }
         
         static string FormatMap(Player p, string map) {
@@ -56,13 +49,6 @@ namespace MCGalaxy.Commands.Info {
             
             string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]";
             return Group.GetColor(maxPerm) + map + visit;
-        }
-        
-        static bool IsLoaded(Level[] loaded, string level) {
-            foreach (Level lvl in loaded) {
-                if (lvl.name.CaselessEq(level)) return true;
-            }
-            return false;
         }
         
         static void RetrieveProps(string level, out LevelPermission visit,
@@ -95,8 +81,8 @@ namespace MCGalaxy.Commands.Info {
         struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Unloaded");
-            Player.Message(p, "%H Lists unloaded maps/levels, and their accessible state.");
+            Player.Message(p, "%T/Worlds");
+            Player.Message(p, "%HLists maps/levels, and their accessible state.");
         }
     }
 }

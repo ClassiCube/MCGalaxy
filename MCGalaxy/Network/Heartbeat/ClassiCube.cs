@@ -74,12 +74,8 @@ namespace MCGalaxy.Network {
         }
         
         static int PlayerCount() {
-            Player[] players = PlayerInfo.Online.Items;
-            int count = 0;
-            foreach (Player p in players) {
-                if (!p.hidden) count++;
-            }
-            // This may happen if a VIP or a dev/mod joins an already full server.
+            int count = PlayerInfo.NonHiddenCount();
+            // This may happen if a VIP joins an already full server.
             if (count > ServerConfig.MaxPlayers)
                 count = ServerConfig.MaxPlayers;
             return count;

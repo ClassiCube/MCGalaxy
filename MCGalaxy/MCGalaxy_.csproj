@@ -273,7 +273,7 @@
     <Compile Include="Commands\Information\CmdDevs.cs" />
     <Compile Include="Commands\Information\CmdTime.cs" />
     <Compile Include="Commands\Information\CmdTop.cs" />
-    <Compile Include="Commands\Information\CmdUnloaded.cs" />
+    <Compile Include="Commands\Information\CmdWorlds.cs" />
     <Compile Include="Commands\Information\CmdView.cs" />
     <Compile Include="Commands\Information\CmdViewRanks.cs" />
     <Compile Include="Commands\Information\CmdWhere.cs" />
