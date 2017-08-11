@@ -35,17 +35,24 @@ namespace MCGalaxy {
         
         public static string FormatBan(string banner, string reason) {
             return "Banned by " + banner + ": " + reason;
-        }        
+        }
         
         public static string PackTempBanData(string reason, string banner, DateTime expiry) {
             if (reason == null) reason = "-";
-            return banner + " " + expiry.Ticks + " " + reason;
+            return banner + " " + expiry.ToUnixTime() + " " + reason;
         }
         
         public static void UnpackTempBanData(string line, out string reason, out string banner, out DateTime expiry) {
             string[] parts = line.SplitSpaces(3);
             banner = parts[0];
-            expiry = new DateTime(long.Parse(parts[1]), DateTimeKind.Utc);
+            
+            // Timestamp used to be raw DateTime ticks, is now UTC timestamp
+            long timestamp = long.Parse(parts[1]);
+            try {
+                expiry = timestamp.FromUnixTime();
+            } catch (ArgumentOutOfRangeException) {
+                expiry = new DateTime(long.Parse(parts[1]), DateTimeKind.Utc);
+            }
             reason = parts.Length > 2 ? parts[2] : "";
         }
         
@@ -70,11 +77,11 @@ namespace MCGalaxy {
         
         static string FormatDate() {
             DateTime now = DateTime.Now;
-            return now.DayOfWeek + "%20" + now.Day + "%20" + now.Month + 
+            return now.DayOfWeek + "%20" + now.Day + "%20" + now.Month +
                 "%20" + now.Year + ",%20at%20" + now.Hour + ":" + now.Minute;
         }
         
-        static void AddBanEntry(string pl, string who, string reason, 
+        static void AddBanEntry(string pl, string who, string reason,
                                 string stealth, string datetime, string oldrank) {
             string data = pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank;
             bans.Append(data);
