@@ -18,53 +18,20 @@
 using System;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdWaypoint : Command {
+    public sealed class CmdWaypoint : CmdWarp {
         public override string name { get { return "Waypoint"; } }
         public override string shortcut { get { return "wp"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
-
+        public override CommandPerm[] ExtraPerms { get { return null; } }
+        protected override bool CheckExtraPerms { get { return false; } }
+                
         public override void Use(Player p, string message) {
-            string[] args = message.ToLower().SplitSpaces();
-            string cmd = args[0];
-            if (cmd.Length == 0) { Help(p); return; }
-            
-            if (args.Length == 1 && cmd == "list") {
-                Player.Message(p, "Waypoints:");
-                foreach (Warp wp in p.Waypoints.Items) {
-                    if (LevelInfo.FindExact(wp.lvlname) != null)
-                        Player.Message(p, wp.name + " : " + wp.lvlname);
-                }
-                return;
-            } else if (args.Length == 1) {
-                if (!p.Waypoints.Exists(cmd)) { Player.Message(p, "That waypoint does not exist"); return; }
-                p.Waypoints.Goto(cmd, p);
-                return;
-            }
-            
-            string name = args[1];
-            if (cmd == "create" || cmd == "new" || cmd == "add") {
-                if (p.Waypoints.Exists(name)) { Player.Message(p, "That waypoint already exists"); return; }
-                p.Waypoints.Create(name, p);
-                Player.Message(p, "Created waypoint");
-            } else if (cmd == "goto") {
-                if (!p.Waypoints.Exists(name)) { Player.Message(p, "That waypoint does not exist"); return; }
-                p.Waypoints.Goto(name, p);
-            } else if (cmd == "replace" || cmd == "update" || cmd == "edit") {
-                if (!p.Waypoints.Exists(name)) { Player.Message(p, "That waypoint does not exist"); return; }
-                p.Waypoints.Update(name, p);
-                Player.Message(p, "Updated waypoint");
-            } else if (cmd == "delete" || cmd == "remove") {
-                if (!p.Waypoints.Exists(name)) { Player.Message(p, "That waypoint does not exist"); return; }
-                p.Waypoints.Remove(name, p);
-                Player.Message(p, "Deleted waypoint");
-            } else {
-                Help(p);
-            }
+        	UseCore(p, message, p.Waypoints, "Waypoint");
         }
-        
+
         public override void Help(Player p) {
             Player.Message(p, "%T/Waypoint create [name] %H- Create a new waypoint");
             Player.Message(p, "%T/Waypoint update [name] %H- Update a waypoint");

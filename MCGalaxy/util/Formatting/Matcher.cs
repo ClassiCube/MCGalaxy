@@ -79,6 +79,14 @@ namespace MCGalaxy {
                                null, g => Colors.Strip(g.Name), "ranks");
         }
         
+        /// <summary> Find partial matches of 'name' against a list of warps. </summary>
+        public static Warp FindWarps(Player p, WarpList warps, string name) {
+            string group = (warps == WarpList.Global) ? "warps" : "waypoints";
+            int matches;
+            return Find<Warp>(p, name, out matches, warps.Items,
+                              null, wp => wp.Name, group);
+        }
+        
         
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
         /// <returns> If exactly one match, the matching item. </returns>

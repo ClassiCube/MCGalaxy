@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdWarp : Command {
+    public class CmdWarp : Command {
         public override string name { get { return "Warp"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
@@ -32,49 +32,60 @@ namespace MCGalaxy.Commands.Misc {
                     new CommandPerm(LevelPermission.Operator, "+ can move/edit warps"),
                 }; }
         }
+        protected virtual bool CheckExtraPerms { get { return true; } }
         
         public override void Use(Player p, string message) {
-            WarpList warps = WarpList.Global;
+            UseCore(p, message, WarpList.Global, "Warp");
+        }
+        
+        protected void UseCore(Player p, string message, WarpList warps, string group) {
             string[] args = message.ToLower().SplitSpaces();
             string cmd = args[0];
             if (cmd.Length == 0) { Help(p); return; }
             
             if (args.Length == 1 && (cmd == "list" || cmd == "view")) {
-                Player.Message(p, "Warps:");
+                Player.Message(p, "{0}s:", group);
                 foreach (Warp wr in warps.Items) {
-                    if (LevelInfo.FindExact(wr.lvlname) != null)
-                        Player.Message(p, wr.name + " : " + wr.lvlname);
+                    if (LevelInfo.FindExact(wr.Level) != null)
+                        Player.Message(p, wr.Name + " : " + wr.Level);
                 }
                 return;
             } else if (args.Length == 1) {
-                if (!warps.Exists(cmd)) { Player.Message(p, "That warp does not exist"); }
-                warps.Goto(cmd, p);
+                Warp warp = Matcher.FindWarps(p, warps, cmd);
+                if (warp != null) warps.Goto(warp, p);
                 return;
             }
             
             string name = args[1];
             if (cmd == "create" || cmd == "add") {
-                if (!CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
-                if (warps.Exists(name)) { Player.Message(p, "That warp already exists"); return; }                
+                if (CheckExtraPerms && !CheckExtraPerm(p, 1)) { MessageNeedExtra(p, 1); return; }
+                if (warps.Exists(name)) { Player.Message(p, "{0} already exists", group); return; }
+                
                 Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
                 if (who == null) return;
 
                 warps.Create(name, who);
-                Player.Message(p, "Warp created.");
+                Player.Message(p, "{0} {1} created.", group, name);
             } else if (cmd == "delete" || cmd == "remove") {
-                if (!CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
-                if (!warps.Exists(name)) { Player.Message(p, "That warp does not exist"); return; }
+                if (CheckExtraPerms && !CheckExtraPerm(p, 2)) { MessageNeedExtra(p, 2); return; }
+                Warp warp = Matcher.FindWarps(p, warps, name);
+                if (warp == null) return;
                 
-                warps.Remove(name, p);
-                Player.Message(p, "Warp deleted.");
-            } else if (cmd == "move" || cmd == "change" || cmd == "edit") {
-                if (!CheckExtraPerm(p, 3)) { MessageNeedExtra(p, 3); return; }
-                if (!warps.Exists(name)) { Player.Message(p, "Warp doesn't exist!!"); return; }
+                warps.Remove(warp, p);
+                Player.Message(p, "{0} {1} deleted.", group, warp.Name);
+            } else if (cmd == "move" || cmd == "update") {
+                if (CheckExtraPerms && !CheckExtraPerm(p, 3)) { MessageNeedExtra(p, 3); return; }
+                Warp warp = Matcher.FindWarps(p, warps, name);
+                if (warp == null) return;
+                
                 Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
                 if (who == null) return;
                 
-                warps.Update(name, who);
-                Player.Message(p, "Warp moved.");
+                warps.Update(warp, who);
+                Player.Message(p, "{0} {1} moved.", group, warp.Name);
+            } else if (cmd == "goto") {
+                Warp warp = Matcher.FindWarps(p, warps, name);
+                if (warp != null) warps.Goto(warp, p);
             } else {
                 Help(p);
             }

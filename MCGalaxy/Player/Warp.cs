@@ -18,14 +18,19 @@ using System.IO;
 
 namespace MCGalaxy {
     
+    /// <summary> A named pair of position and orientation, located on a particular map. </summary>
     public class Warp {
-        public int x, y, z;
-        public byte rotx, roty;
-        public string name;
-        public string lvlname;
+        /// <summary> Position of this warp. </summary>
+        public Position Pos;
+        /// <summary> Orientation of this warp. </summary>
+        public byte Yaw, Pitch;
+        /// <summary> The name of this warp. </summary>
+        public string Name;
+        /// <summary> The name of the level this warp is located on. </summary>
+        public string Level;
     }
     
-    public sealed class WarpList {        
+    public sealed class WarpList {
         public static WarpList Global = new WarpList(false);
         
         public List<Warp> Items = new List<Warp>();
@@ -35,60 +40,58 @@ namespace MCGalaxy {
             this.playerWarp = playerWarp;
         }
         
+        /// <summary> Finds the warp whose name caselessly equals the given name. </summary>
         public Warp Find(string name) {
             foreach (Warp wp in Items) {
-                if (wp.name.CaselessEq(name)) return wp;
+                if (wp.Name.CaselessEq(name)) return wp;
             }
             return null;
         }
         
-        public void Goto(string warp, Player p) {
-            Warp wp = Find(warp);
-            if (wp == null) return;
-            
-            if (!p.level.name.CaselessEq(wp.lvlname)) {
-                PlayerActions.ChangeMap(p, wp.lvlname);
+        /// <summary> Attempts to move the given player to the given warp. </summary>
+        public void Goto(Warp warp, Player p) {
+            if (!p.level.name.CaselessEq(warp.Level)) {
+                PlayerActions.ChangeMap(p, warp.Level);
             }
             
-            if (p.level.name.CaselessEq(wp.lvlname)) {
-                p.SendPos(Entities.SelfID, 
-                          new Position(wp.x, wp.y, wp.z),
-                          new Orientation(wp.rotx, wp.roty));
+            if (p.level.name.CaselessEq(warp.Level)) {
+                p.SendPos(Entities.SelfID, warp.Pos, new Orientation(warp.Yaw, warp.Pitch));
                 Player.Message(p, "Sent you to waypoint/warp");
             } else {
                 Player.Message(p, "Unable to send you to the warp as the map it is on is not loaded.");
             }
         }
 
-        public void Create(string warp, Player p) {
-            Warp wp = new Warp();
-            wp.x = p.Pos.X; wp.y = p.Pos.Y; wp.z = p.Pos.Z;
-            wp.rotx = p.Rot.RotY; wp.roty = p.Rot.HeadX;
-            
-            wp.name = warp;
-            wp.lvlname = p.level.name;
-            Items.Add(wp);
+        /// <summary> Creates a new warp with the given name, located at the 
+        /// player's current position, orientation, and level. </summary>
+        public void Create(string name, Player p) {
+            Warp warp = new Warp();
+            InitWarp(warp, name, p);
+            Items.Add(warp);
+            Save(p);
+        }
+        
+        void InitWarp(Warp warp, string name, Player p) {
+            warp.Pos = p.Pos; warp.Name = name;
+            warp.Yaw = p.Rot.RotY; warp.Pitch = p.Rot.HeadX;            
+            warp.Level = p.level.name;
+        }
+
+        /// <summary> Moves the given warp to the target 
+        /// player's position, orientation, and map. </summary>
+        public void Update(Warp warp, Player p) {
+            InitWarp(warp, warp.Name, p);
             Save(p);
         }
 
-        public void Update(string warp, Player p) {
-            Warp wp = Find(warp);
-            Items.Remove(wp);
-            Create(warp, p);
-        }
-
-        public void Remove(string warp, Player p) {
-            Warp wp = Find(warp);
-            Items.Remove(wp);
+        /// <summary> Removes the given warp. </summary>
+        public void Remove(Warp warp, Player p) {
+            Items.Remove(warp);
             Save(p);
         }
 
-        public bool Exists(string warp) {
-            foreach (Warp wp in Items) {
-                if (wp.name.CaselessEq(warp)) return true;
-            }
-            return false;
-        }
+        /// <summary> Returns whether a warp with the given name exists. </summary>
+        public bool Exists(string name) { return Find(name) != null; }
         
 
         public void Load(Player p) {
@@ -98,19 +101,19 @@ namespace MCGalaxy {
             using (StreamReader r = new StreamReader(file)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
-                    line = line.ToLower().Trim();
+                    line = line.Trim();
                     if (line.StartsWith("#") || !line.Contains(":")) continue;
                     
-                    string[] parts = line.ToLower().Split(':');
+                    string[] parts = line.Split(':');
                     Warp wp = new Warp();
                     try {
-                        wp.name = parts[0];
-                        wp.lvlname = parts[1];
-                        wp.x = ushort.Parse(parts[2]);
-                        wp.y = ushort.Parse(parts[3]);
-                        wp.z = ushort.Parse(parts[4]);
-                        wp.rotx = byte.Parse(parts[5]);
-                        wp.roty = byte.Parse(parts[6]);                        
+                        wp.Name = parts[0];
+                        wp.Level = parts[1];
+                        wp.Pos.X = int.Parse(parts[2]);
+                        wp.Pos.Y = int.Parse(parts[3]);
+                        wp.Pos.Z = int.Parse(parts[4]);
+                        wp.Yaw = byte.Parse(parts[5]);
+                        wp.Pitch = byte.Parse(parts[6]);
                         Items.Add(wp);
                     } catch {
                         Logger.Log(LogType.Warning, "Failed loading a warp from " + file);
@@ -120,10 +123,11 @@ namespace MCGalaxy {
         }
 
         public void Save(Player p) {
-            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";            
+            string file = playerWarp ? "extra/Waypoints/" + p.name + ".save" : "extra/warps.save";
             using (StreamWriter w = new StreamWriter(file)) {
-                foreach (Warp wp in Items) {
-                    w.WriteLine(wp.name + ":" + wp.lvlname + ":" + wp.x + ":" + wp.y + ":" + wp.z + ":" + wp.rotx + ":" + wp.roty);
+                foreach (Warp warp in Items) {
+                    w.WriteLine(warp.Name + ":" + warp.Level + ":" + warp.Pos.X + ":" + 
+            		            warp.Pos.Y + ":" + warp.Pos.Z + ":" + warp.Yaw + ":" + warp.Pitch);
                 }
             }
         }
