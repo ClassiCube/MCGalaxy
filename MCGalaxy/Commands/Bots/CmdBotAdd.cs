@@ -32,12 +32,24 @@ namespace MCGalaxy.Commands.Bots {
             }
             
             if (!Formatter.ValidName(p, message, "bot")) return;
+            if (BotExists(p.level, message)) {
+                Player.Message(p, "A bot with that name already exists."); return;
+            }
+                        
             PlayerBot bot = new PlayerBot(message, p.level);
             bot.Pos = p.Pos;
             bot.SetYawPitch(p.Rot.RotY, 0);
             
             Player.Message(p, "You added the bot " + bot.ColoredName + "%S.");
             PlayerBot.Add(bot);
+        }
+        
+        static bool BotExists(Level lvl, string name) {
+            PlayerBot[] bots = lvl.Bots.Items;
+            foreach (PlayerBot bot in bots) {
+                if (bot.name.CaselessEq(name)) return true;
+            }
+            return false;
         }
 
         public override void Help(Player p) {
