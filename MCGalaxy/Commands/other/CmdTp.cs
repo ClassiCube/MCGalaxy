@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands.Misc {
                 Help(p); return;
             }
             
-            p.lastTeleportMap = p.level.name;
-            p.beforeTeleportPos = p.Pos;
+            p.PreTeleportMap = p.level.name;
+            p.PreTeleportPos = p.Pos;
             Level lvl = bot != null ? bot.level : target.level;
 
             if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
@@ -72,6 +72,7 @@ namespace MCGalaxy.Commands.Misc {
             if (!ParseCoord(p, args[1], p.Pos.Y - Entities.CharacterHeight, "Y", out y)) return;
             if (!ParseCoord(p, args[2], p.Pos.Z,                            "Z", out z)) return;
 
+            p.PreTeleportPos = p.Pos;
             PlayerActions.MoveCoords(p, x, y, z, p.Rot.RotY, p.Rot.HeadX);
         }
         
@@ -105,7 +106,7 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             Player.Message(p, "%T/TP [x y z]");
             Player.Message(p, "%HTeleports yourself to the given block coordinates.");
-            Player.Message(p, "%H  Use ~ before a coordinate to move relative to current position.");
+            Player.Message(p, "%HUse ~ before a coordinate to move relative to current position");
             Player.Message(p, "%T/TP [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
             Player.Message(p, "%T/TP bot [name]");
