@@ -38,13 +38,13 @@ namespace MCGalaxy.Network {
         public TcpSocket(Player p, Socket s) {
             player = p; socket = s;
             
+            recvArgs.UserToken = this;            
             recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);
             recvArgs.Completed += recvCallback;
-            recvArgs.UserToken = this;
             
+            sendArgs.UserToken = this;            
             sendArgs.SetBuffer(sendBuffer, 0, sendBuffer.Length);
             sendArgs.Completed += sendCallback;
-            sendArgs.UserToken = this;
         }
         
         public string RemoteIP {
