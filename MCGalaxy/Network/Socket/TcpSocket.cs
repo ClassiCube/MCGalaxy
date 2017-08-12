@@ -29,22 +29,23 @@ namespace MCGalaxy.Network {
         int unprocessedLen;
         readonly SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
         
-        byte[] sendBuffer = new byte[1536];
+        byte[] sendBuffer = new byte[2048];
         readonly object sendLock = new object();
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
         volatile bool sendInProgress;
         readonly SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
         
         public TcpSocket(Player p, Socket s) {
-            player = p; socket = s;
-            
-            recvArgs.UserToken = this;            
-            recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);
-            recvArgs.Completed += recvCallback;
-            
-            sendArgs.UserToken = this;            
+            player = p; socket = s;            
+            recvArgs.UserToken = this;
+            recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);           
+            sendArgs.UserToken = this;
             sendArgs.SetBuffer(sendBuffer, 0, sendBuffer.Length);
-            sendArgs.Completed += sendCallback;
+        }
+        
+        public void RegisterCallbacks() {
+            recvArgs.Completed += recvCallback; 
+            sendArgs.Completed += sendCallback;            
         }
         
         public string RemoteIP {

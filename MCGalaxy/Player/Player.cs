@@ -51,7 +51,10 @@ namespace MCGalaxy {
         public Player(Socket s) {
             spamChecker = new SpamChecker(this);
             try {
-                Socket = new TcpSocket(this, s);
+                TcpSocket tcp = new TcpSocket(this, s);
+                Socket = tcp;
+                tcp.RegisterCallbacks();
+                
                 ip = Socket.RemoteIP;
                 SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
@@ -115,7 +118,7 @@ namespace MCGalaxy {
             
             string viptitle =
                 (devPrefix && isMod) ? string.Format("{0}[&aInfo{0}] ", color) :
-            	(devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color)  : "";
+                (devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color)  : "";
             prefix = prefix + viptitle;
             prefix = (title.Length == 0) ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }
