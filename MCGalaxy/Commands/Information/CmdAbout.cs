@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.DB;
-using MCGalaxy.SQL;
 using MCGalaxy.Maths;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
@@ -33,7 +33,10 @@ namespace MCGalaxy.Commands.Info {
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("BInfo"), new CommandAlias("WhoDid") }; }
         }
-            
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see portal/MB data of a block") }; }
+        }
+        
         public override void Use(Player p, string message) {
             Player.Message(p, "Break/build a block to display information.");
             p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
@@ -42,11 +45,11 @@ namespace MCGalaxy.Commands.Info {
         bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetBlock(x, y, z);
-            p.RevertBlock(x, y, z);            
+            p.RevertBlock(x, y, z);
             Dictionary<int, string> names = new Dictionary<int, string>();
 
             Player.Message(p, "Retrieving block change records..");
-            bool foundAny = false;            
+            bool foundAny = false;
             ListFromDatabase(p, ref foundAny, x, y, z);
             using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead(30 * 1000)) {
                 if (rLock != null) {
@@ -61,11 +64,13 @@ namespace MCGalaxy.Commands.Info {
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             
             string blockName = p.level.BlockName(block);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", 
+            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.",
                            x, y, z, block.RawID, blockName);
             
-            BlockDBChange.OutputMessageBlock(p, block, x, y, z);
-            BlockDBChange.OutputPortal(p, block, x, y, z);           
+            if (HasExtraPerm(p, 1)) {
+                BlockDBChange.OutputMessageBlock(p, block, x, y, z);
+                BlockDBChange.OutputPortal(p, block, x, y, z);
+            }
             Server.DoGC();
             return true;
         }
