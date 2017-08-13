@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
                            out ExtBlock[] blocks, out int[] count) {
             int bCount = 0;
             for (int i = 0; i < parts.Length; i++) {
-                if (parts[i].Length == 0 || !filter(parts[i])) continue;
+                if (parts[i].Length == 0 || filter(parts[i])) continue;
                 bCount++;
             }
             
