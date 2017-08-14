@@ -21,6 +21,13 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public partial class Player {
+        
+        class CPEExt {
+            public string ExtName;
+            public int ExtVersion;
+            public CPEExt(string extName) { ExtName = extName; }
+        }
+
         public int ClickDistance, CustomBlocks, HeldBlock, TextHotKey;
         public int ExtPlayerList, EnvColors, SelectionCuboid, BlockPermissions;
         public int ChangeModel, EnvMapAppearance, EnvWeatherType, HackControl;
@@ -162,7 +169,7 @@ namespace MCGalaxy {
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
                     Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel, 
-                	                            level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
+                                                level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 }
                 Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel, 
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
@@ -262,6 +269,7 @@ namespace MCGalaxy {
         public const string EntityProperty = "EntityProperty";
         public const string ExtEntityPositions = "ExtEntityPositions";
         public const string TwoWayPing = "TwoWayPing";
+        public const string InventoryOrder = "InventoryOrder";
     }
     
     public enum CpeMessageType : byte {

@@ -22,11 +22,11 @@ namespace MCGalaxy.Network {
 
     public static partial class Packet {
         
-        public static byte[] ExtInfo(byte count) {
+        public static byte[] ExtInfo(byte extsCount) {
             byte[] buffer = new byte[67];
             buffer[0] = Opcode.CpeExtInfo;
             NetUtils.Write(Server.SoftwareNameVersioned, buffer, 1, false);
-            NetUtils.WriteI16((short)count, buffer, 65);
+            NetUtils.WriteI16((short)extsCount, buffer, 65);
             return buffer;
         }
         
@@ -68,20 +68,20 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] ExtAddEntity(byte id, string name, string displayname, bool hasCP437) {
+        public static byte[] ExtAddEntity(byte entityID, string name, string displayname, bool hasCP437) {
             byte[] buffer = new byte[130];
             buffer[0] = Opcode.CpeExtAddEntity;
-            buffer[1] = id;
+            buffer[1] = entityID;
             NetUtils.Write(name, buffer, 2, hasCP437);
             NetUtils.Write(displayname, buffer, 66, hasCP437);
             return buffer;
         }
         
-        public static byte[] ExtAddPlayerName(byte id, string listName, string displayName, 
+        public static byte[] ExtAddPlayerName(byte nameID, string listName, string displayName, 
                                               string grp, byte grpRank, bool hasCP437) {
             byte[] buffer = new byte[196];
             buffer[0] = Opcode.CpeExtAddPlayerName;
-            NetUtils.WriteI16(id, buffer, 1);
+            NetUtils.WriteI16(nameID, buffer, 1);
             NetUtils.Write(listName, buffer, 3, hasCP437);
             NetUtils.Write(displayName, buffer, 67, hasCP437);
             NetUtils.Write(grp, buffer, 131, hasCP437);
@@ -89,10 +89,10 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] ExtRemovePlayerName(byte id) {
+        public static byte[] ExtRemovePlayerName(byte nameID) {
             byte[] buffer = new byte[3];
             buffer[0] = Opcode.CpeExtRemovePlayerName;
-            NetUtils.WriteI16(id, buffer, 1);
+            NetUtils.WriteI16(nameID, buffer, 1);
             return buffer;
         }
 
@@ -106,11 +106,11 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] MakeSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2,
+        public static byte[] MakeSelection(byte selID, string label, Vec3U16 p1, Vec3U16 p2,
                                            short r, short g, short b, short opacity, bool hasCP437) {
             byte[] buffer = new byte[86];
             buffer[0] = Opcode.CpeMakeSelection;
-            buffer[1] = id;
+            buffer[1] = selID;
             NetUtils.Write(label, buffer, 2, hasCP437);
             
             NetUtils.WriteU16(p1.X, buffer, 66);
@@ -127,30 +127,30 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] DeleteSelection(byte id) {
+        public static byte[] DeleteSelection(byte selID) {
             byte[] buffer = new byte[2];
             buffer[0] = Opcode.CpeRemoveSelection;
-            buffer[1] = id;
+            buffer[1] = selID;
             return buffer;
         }
         
-        public static byte[] BlockPermission(byte rawBlock, bool place, bool delete) {
+        public static byte[] BlockPermission(byte block, bool place, bool delete) {
             byte[] buffer = new byte[4];
-            WriteBlockPermission(rawBlock, place, delete, buffer, 0);
+            WriteBlockPermission(block, place, delete, buffer, 0);
             return buffer;
         }
         
-        public static void WriteBlockPermission(byte rawBlock, bool place, bool delete, byte[] buffer, int index) {
+        public static void WriteBlockPermission(byte block, bool place, bool delete, byte[] buffer, int index) {
             buffer[index + 0] = Opcode.CpeSetBlockPermission;
-            buffer[index + 1] = rawBlock;
+            buffer[index + 1] = block;
             buffer[index + 2] = place ? (byte)1 : (byte)0;
-            buffer[index + 3] = delete ? (byte)1 : (byte)0;            
+            buffer[index + 3] = delete ? (byte)1 : (byte)0;
         }
         
-        public static byte[] ChangeModel(byte id, string model, bool hasCP437) {
+        public static byte[] ChangeModel(byte entityID, string model, bool hasCP437) {
             byte[] buffer = new byte[66];
             buffer[0] = Opcode.CpeChangeModel;
-            buffer[1] = id;
+            buffer[1] = entityID;
             NetUtils.Write(model, buffer, 2, hasCP437);
             return buffer;
         }
@@ -201,11 +201,11 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] ExtAddEntity2(byte id, string skinName, string displayName, 
+        public static byte[] ExtAddEntity2(byte entityID, string skinName, string displayName, 
                                            Position pos, Orientation rot, bool hasCP437, bool extPos) {
             byte[] buffer = new byte[138 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.CpeExtAddEntity2;
-            buffer[1] = id;
+            buffer[1] = entityID;
             NetUtils.Write(displayName.RemoveLastPlus(), buffer, 2, hasCP437);
             NetUtils.Write(skinName.RemoveLastPlus(), buffer, 66, hasCP437);
             
@@ -239,10 +239,10 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] EntityProperty(byte id, EntityProp prop, int value) {
+        public static byte[] EntityProperty(byte entityID, EntityProp prop, int value) {
             byte[] buffer = new byte[7];
             buffer[0] = Opcode.CpeSetEntityProperty;
-            buffer[1] = id;
+            buffer[1] = entityID;
             buffer[2] = (byte)prop;
             NetUtils.WriteI32(value, buffer, 3);
             return buffer;
@@ -254,6 +254,10 @@ namespace MCGalaxy.Network {
             buffer[1] = (byte)(serverToClient ? 1 : 0);
             NetUtils.WriteU16(data, buffer, 2);
             return buffer;
+        }
+        
+        public static byte[] SetInventoryOrder(byte block, byte position) {
+            return new byte[] { Opcode.CpeSetInventoryOrder, block, position };
         }
     }
 }

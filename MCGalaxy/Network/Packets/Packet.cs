@@ -62,11 +62,11 @@ namespace MCGalaxy.Network {
         }
         
         /// <summary> Constructs a packet that adds/spawns an entity. </summary>
-        public static byte[] AddEntity(byte id, string name, Position pos, 
+        public static byte[] AddEntity(byte entityID, string name, Position pos, 
                                        Orientation rot, bool hasCP437, bool extPos) {
             byte[] buffer = new byte[74 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.AddEntity;
-            buffer[1] = id;
+            buffer[1] = entityID;
             NetUtils.Write(name.RemoveLastPlus(), buffer, 2, hasCP437);
             
             int offset = NetUtils.WritePos(pos, buffer, 66, extPos);
@@ -76,10 +76,10 @@ namespace MCGalaxy.Network {
         }
         
         /// <summary> Constructs an absolute position/teleport and rotation movement packet. </summary>
-        public static byte[] Teleport(byte id, Position pos, Orientation rot, bool extPos) {
+        public static byte[] Teleport(byte entityID, Position pos, Orientation rot, bool extPos) {
             byte[] buffer = new byte[10 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.EntityTeleport;
-            buffer[1] = id;
+            buffer[1] = entityID;
             
             int offset = NetUtils.WritePos(pos, buffer, 2, extPos);
             buffer[2 + offset] = rot.RotY;
@@ -88,8 +88,8 @@ namespace MCGalaxy.Network {
         }
 
         /// <summary> Constructs a packet that removes/despawns an entity. </summary>        
-        public static byte[] RemoveEntity(byte id) {
-            return new byte[] { Opcode.RemoveEntity, id };
+        public static byte[] RemoveEntity(byte entityID) {
+            return new byte[] { Opcode.RemoveEntity, entityID };
         }
         
         /// <summary> Constructs a chat message packet with an empty message. </summary>
