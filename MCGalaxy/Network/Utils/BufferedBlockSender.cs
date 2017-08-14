@@ -89,7 +89,7 @@ namespace MCGalaxy.Network {
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
                           ref byte[] noBlockDefs, ref byte[] original) {
             // Different clients support varying types of blocks
-            if (p.HasCpeExt(CpeExt.BulkBlockUpdate) && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
+            if (p.hasBulkBlockUpdate && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
                 if (bulk == null) bulk = MakeBulk();
                 return bulk;
             } else if (p.hasCustomBlocks && p.hasBlockDefs) {

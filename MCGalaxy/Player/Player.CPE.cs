@@ -16,129 +16,85 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
     public partial class Player {
         
-        class CPEExt {
+        class ExtEntry {
             public string ExtName;
-            public int ExtVersion;
-            public CPEExt(string extName) { ExtName = extName; }
+            public byte ClientExtVersion, ServerExtVersion = 1;
+            
+            public ExtEntry(string extName) { ExtName = extName; }
+            public ExtEntry(string extName, byte extVersion) {
+                ExtName = extName; ServerExtVersion = extVersion;
+            }
         }
-
-        public int ClickDistance, CustomBlocks, HeldBlock, TextHotKey;
-        public int ExtPlayerList, EnvColors, SelectionCuboid, BlockPermissions;
-        public int ChangeModel, EnvMapAppearance, EnvWeatherType, HackControl;
-        public int EmoteFix, MessageTypes, LongerMessages, FullCP437;
-        public int BlockDefinitions, BlockDefinitionsExt, TextColors, BulkBlockUpdate;
-        public int EnvMapAspect, PlayerClick, EntityProperty, ExtEntityPositions, TwoWayPing;
-
+        
+        ExtEntry[] extensions = new ExtEntry[] {
+            new ExtEntry(CpeExt.ClickDistance), new ExtEntry(CpeExt.CustomBlocks),
+            new ExtEntry(CpeExt.HeldBlock), new ExtEntry(CpeExt.TextHotkey),
+            new ExtEntry(CpeExt.ExtPlayerList, 2), new ExtEntry(CpeExt.EnvColors),
+            new ExtEntry(CpeExt.SelectionCuboid), new ExtEntry(CpeExt.BlockPermissions),
+            new ExtEntry(CpeExt.ChangeModel), new ExtEntry(CpeExt.EnvMapAppearance, 2),
+            new ExtEntry(CpeExt.EnvWeatherType), new ExtEntry(CpeExt.HackControl),
+            new ExtEntry(CpeExt.EmoteFix), new ExtEntry(CpeExt.MessageTypes),
+            new ExtEntry(CpeExt.LongerMessages), new ExtEntry(CpeExt.FullCP437),
+            new ExtEntry(CpeExt.BlockDefinitions), new ExtEntry(CpeExt.BlockDefinitionsExt, 2),
+            new ExtEntry(CpeExt.TextColors), new ExtEntry(CpeExt.BulkBlockUpdate),
+            new ExtEntry(CpeExt.EnvMapAspect), new ExtEntry(CpeExt.PlayerClick),
+            new ExtEntry(CpeExt.EntityProperty), new ExtEntry(CpeExt.ExtEntityPositions),
+            new ExtEntry(CpeExt.TwoWayPing), new ExtEntry(CpeExt.InventoryOrder),
+        };
+        
+        ExtEntry FindExtension(string extName) {
+            foreach (ExtEntry ext in extensions) {
+                if (ext.ExtName.CaselessEq(extName)) return ext;
+            }
+            return null;
+        }
+        
         // these are checked very frequently, so avoid overhead of HasCpeExt
-        public bool hasCustomBlocks, hasBlockDefs,
-        hasTextColors, hasChangeModel, hasExtList, hasCP437, hasTwoWayPing;
+        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, 
+        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate;
 
-        public void AddExtension(string ext, int version) {
-            switch (ext.Trim()) {
-                case CpeExt.ClickDistance:
-                    ClickDistance = version; break;
-                case CpeExt.CustomBlocks:
-                    CustomBlocks = version;
-                    if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
-                    hasCustomBlocks = true; break;
-                case CpeExt.HeldBlock:
-                    HeldBlock = version; break;
-                case CpeExt.TextHotkey:
-                    TextHotKey = version; break;
-                case CpeExt.ExtPlayerList:
-                    ExtPlayerList = version;
-                    hasExtList = version == 2; break;
-                case CpeExt.EnvColors:
-                    EnvColors = version; break;
-                case CpeExt.SelectionCuboid:
-                    SelectionCuboid = version; break;
-                case CpeExt.BlockPermissions:
-                    BlockPermissions = version; break;
-                case CpeExt.ChangeModel:
-                    ChangeModel = version;
-                    hasChangeModel = true; break;
-                case CpeExt.EnvMapAppearance:
-                    EnvMapAppearance = version; break;
-                case CpeExt.EnvWeatherType:
-                    EnvWeatherType = version; break;
-                case CpeExt.HackControl:
-                    HackControl = version; break;
-                case CpeExt.EmoteFix:
-                    EmoteFix = version; break;
-                case CpeExt.MessageTypes:
-                    MessageTypes = version; break;
-                case CpeExt.LongerMessages:
-                    LongerMessages = version; break;
-                case CpeExt.FullCP437:
-                    FullCP437 = version;
-                    hasCP437 = true; break;
-                case CpeExt.BlockDefinitions:
-                    BlockDefinitions = version;
-                    hasBlockDefs = true; break;
-                case CpeExt.BlockDefinitionsExt:
-                    BlockDefinitionsExt = version; break;
-                case CpeExt.TextColors:
-                    hasTextColors = true;
-                    TextColors = version;
-                    
-                    for (int i = 0; i < Colors.List.Length; i++) {
-                        if (!Colors.List[i].IsModified()) continue;
-                        Send(Packet.SetTextColor(Colors.List[i]));
-                    }
-                    break;
-                case CpeExt.BulkBlockUpdate:
-                    BulkBlockUpdate = version; break;
-                case CpeExt.EnvMapAspect:
-                    EnvMapAspect = version; break;
-                case CpeExt.PlayerClick:
-                    PlayerClick = version; break;
-                case CpeExt.EntityProperty:
-                    EntityProperty = version; break;
-                case CpeExt.ExtEntityPositions:
-                    ExtEntityPositions = version;
-                    hasExtPositions = true; break;
-                case CpeExt.TwoWayPing:
-                    TwoWayPing = version; 
-                    hasTwoWayPing = true; break;
+        void AddExtension(string extName, int version) {
+            ExtEntry ext = FindExtension(extName.Trim());
+            if (ext == null) return;
+            ext.ClientExtVersion = (byte)version;
+            
+            if (ext.ExtName == CpeExt.CustomBlocks) {
+                if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
+                hasCustomBlocks = true;
+            } else if (ext.ExtName == CpeExt.ChangeModel) {
+                hasChangeModel = true;
+            } else if (ext.ExtName == CpeExt.FullCP437) {
+                hasCP437 = true;
+            } else if (ext.ExtName == CpeExt.ExtPlayerList) {
+                hasExtList = true;
+            } else if (ext.ExtName == CpeExt.BlockDefinitions) {
+                hasBlockDefs = true;
+            } else if (ext.ExtName == CpeExt.TextColors) {
+                hasTextColors = true;
+                for (int i = 0; i < Colors.List.Length; i++) {
+                    if (!Colors.List[i].IsModified()) continue;
+                    Send(Packet.SetTextColor(Colors.List[i]));
+                }
+            } else if (ext.ExtName == CpeExt.ExtEntityPositions) {
+                hasExtPositions = true;
+            } else if (ext.ExtName == CpeExt.TwoWayPing) {
+                hasTwoWayPing = true;
+            } else if (ext.ExtName == CpeExt.BulkBlockUpdate) {
+                hasBulkBlockUpdate = true;
             }
         }
 
-        public bool HasCpeExt(string Extension, int version = 1) {
+        public bool HasCpeExt(string extName, int version = 1) {
             if (!hasCpe) return false;
-            switch (Extension) {
-                    case CpeExt.ClickDistance: return ClickDistance == version;
-                    case CpeExt.CustomBlocks: return CustomBlocks == version;
-                    case CpeExt.HeldBlock: return HeldBlock == version;
-                    case CpeExt.TextHotkey: return TextHotKey == version;
-                    case CpeExt.ExtPlayerList: return ExtPlayerList == version;
-                    case CpeExt.EnvColors: return EnvColors == version;
-                    case CpeExt.SelectionCuboid: return SelectionCuboid == version;
-                    case CpeExt.BlockPermissions: return BlockPermissions == version;
-                    case CpeExt.ChangeModel: return ChangeModel == version;
-                    case CpeExt.EnvMapAppearance: return EnvMapAppearance == version;
-                    case CpeExt.EnvWeatherType: return EnvWeatherType == version;
-                    case CpeExt.HackControl: return HackControl == version;
-                    case CpeExt.EmoteFix: return EmoteFix == version;
-                    case CpeExt.MessageTypes: return MessageTypes == version;
-                    case CpeExt.LongerMessages: return LongerMessages == version;
-                    case CpeExt.FullCP437: return FullCP437 == version;
-                    case CpeExt.BlockDefinitions: return BlockDefinitions == version;
-                    case CpeExt.BlockDefinitionsExt: return BlockDefinitionsExt == version;
-                    case CpeExt.TextColors: return TextColors == version;
-                    case CpeExt.BulkBlockUpdate: return BulkBlockUpdate == version;
-                    case CpeExt.EnvMapAspect: return EnvMapAspect == version;
-                    case CpeExt.PlayerClick: return PlayerClick == version;
-                    case CpeExt.EntityProperty: return EntityProperty == version;
-                    case CpeExt.ExtEntityPositions: return ExtEntityPositions == version;
-                    case CpeExt.TwoWayPing: return TwoWayPing == version;
-                    default: return false;
-            }
+            ExtEntry ext = FindExtension(extName);
+            return ext != null && ext.ClientExtVersion == version;
         }
         
         string lastUrl = "";
@@ -168,10 +124,10 @@ namespace MCGalaxy {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                    Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel, 
+                    Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel,
                                                 level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 }
-                Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel, 
+                Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel,
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {

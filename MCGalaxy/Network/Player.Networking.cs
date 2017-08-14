@@ -26,9 +26,8 @@ namespace MCGalaxy {
 
         public bool hasCpe, finishedCpeLogin = false;
         public string appName;
-        public int extensionCount;
-        public List<string> extensions = new List<string>();
-        public int customBlockSupportLevel;
+        int extensionCount;
+        byte customBlockSupportLevel;
         
         void HandleExtInfo(byte[] buffer, int offset) {
             appName = NetUtils.ReadString(buffer, offset + 1);
