@@ -62,11 +62,12 @@ namespace MCGalaxy.Network {
         }
         
         static void RecvCallback(object sender, SocketAsyncEventArgs e) {
-            TcpSocket s = (TcpSocket)e.UserToken;
-            Player p = s.player;
-            if (p.disconnected) return;
-            
+            Player p = null;
             try {
+                TcpSocket s = (TcpSocket)e.UserToken;
+                p = s.player;
+                if (p.disconnected) return;
+            
                 int recvLen = e.BytesTransferred;
                 if (recvLen == 0) { p.Disconnect(); return; }
 
@@ -88,15 +89,16 @@ namespace MCGalaxy.Network {
                 
                 if (!p.disconnected) s.ReceiveNextAsync();
             } catch (SocketException) {
-                p.Disconnect();
+                if (p != null) p.Disconnect();
             }  catch (ObjectDisposedException) {
                 // Socket was closed by another thread, mark as disconnected
+                if (p == null) return;
                 Player.connections.Remove(p);
                 p.RemoveFromPending();
                 p.disconnected = true;
             } catch (Exception ex) {
                 Logger.LogError(ex);
-                p.Leave("Error!");
+                if (p != null) p.Leave("Error!");
             }
         }
         

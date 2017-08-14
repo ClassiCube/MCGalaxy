@@ -3710,7 +3710,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatMsgs.Location = new System.Drawing.Point(53, 45);
             this.sec_numChatMsgs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3736,7 +3736,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatSecs.Location = new System.Drawing.Point(156, 45);
             this.sec_numChatSecs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3771,7 +3771,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numChatMute.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3835,7 +3835,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdMsgs.Location = new System.Drawing.Point(53, 45);
             this.sec_numCmdMsgs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3861,7 +3861,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdSecs.Location = new System.Drawing.Point(161, 45);
             this.sec_numCmdSecs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3896,7 +3896,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numCmdMute.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3960,7 +3960,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numIPMsgs.Location = new System.Drawing.Point(53, 45);
             this.sec_numIPMsgs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -3986,7 +3986,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numIPSecs.Location = new System.Drawing.Point(166, 45);
             this.sec_numIPSecs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -4021,7 +4021,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numIPMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numIPMute.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -4105,7 +4105,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numBlocksMsgs.Location = new System.Drawing.Point(46, 45);
             this.sec_numBlocksMsgs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
@@ -4131,7 +4131,7 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numBlocksSecs.Location = new System.Drawing.Point(142, 45);
             this.sec_numBlocksSecs.Maximum = new decimal(new int[] {
-                                    1000,
+                                    1000000,
                                     0,
                                     0,
                                     0});
