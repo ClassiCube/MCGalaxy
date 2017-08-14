@@ -47,7 +47,7 @@ namespace MCGalaxy {
             { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay") },
             { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.Config.RandomFlow, "Random flow") },
             { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.Config.GrowTrees, "Tree growing") },
-            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat: ", true) },
+            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true) },
             { "Guns", ToggleGuns },
             { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Config.Buildable, "Buildable") },
             { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Config.Deletable, "Deletable") },
