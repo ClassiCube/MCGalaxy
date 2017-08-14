@@ -35,18 +35,18 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
-            string rank = null, name = null;
+            string rankName = null, name = null;
             string reason = args.Length > 2 ? args[2] : null;
             
             if (args[0].CaselessEq("+up")) {
-                rank = args[0];
+                rankName = args[0];
                 name = ModActionCmd.FindName(p, "promote", "Promote", "", args[1], ref reason);
             } else if (args[0].CaselessEq("-down")) {
-                rank = args[0];
+                rankName = args[0];
                 name = ModActionCmd.FindName(p, "demote", "Demote", "", args[1], ref reason);
             } else {
-                rank = args[1];
-                name = ModActionCmd.FindName(p, "rank", "Rank", " " + rank, args[0], ref reason);
+                rankName = args[1];
+                name = ModActionCmd.FindName(p, "rank", "Rank", " " + rankName, args[0], ref reason);
             }
             if (name == null) return;
             
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (p == who && who != null) { Player.Message(p, "Cannot change your own rank."); return; }
             
             Group curRank = who != null ? who.group : PlayerInfo.GetGroup(name);
-            Group newRank = TargetRank(p, rank.ToLower(), curRank);
+            Group newRank = TargetRank(p, rankName, curRank);
             if (newRank == null) return;
             
             if (curRank == newRank) {

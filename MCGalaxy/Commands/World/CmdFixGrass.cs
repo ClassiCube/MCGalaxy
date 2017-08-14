@@ -31,21 +31,21 @@ namespace MCGalaxy.Commands.World {
             int totalFixed = 0;
             Level lvl = p.level;
             if (!lvl.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence you cannot use /fixgrass on this map"); return;
+                Player.Message(p, "Hence you cannot use %T/fixgrass %Son this map"); return;
             }
             
-            switch (message.ToLower()) {
-                case "":
-                    FixDirtAndGrass(p, lvl, ref totalFixed); break;
-                case "light":
-                    FixLight(p, lvl, ref totalFixed); break;
-                case "grass":
-                    FixGrass(p, lvl, ref totalFixed); break;
-                case "dirt":
-                    FixDirt(p, lvl, ref totalFixed); break;
-                default:
-                    Help(p); return;
+            if (message.Length == 0) {
+                FixDirtAndGrass(p, lvl, ref totalFixed);
+            } else if (message.CaselessEq("light")) {
+                FixLight(p, lvl, ref totalFixed);
+            } else if (message.CaselessEq("grass")) {
+                FixGrass(p, lvl, ref totalFixed);
+            } else if (message.CaselessEq("dirt")) {
+                FixDirt(p, lvl, ref totalFixed);
+            } else {
+                Help(p); return;
             }
+            
             Player.Message(p, "Fixed " + totalFixed + " blocks.");
         }
         
