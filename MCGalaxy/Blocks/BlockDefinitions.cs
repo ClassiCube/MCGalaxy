@@ -43,6 +43,8 @@ namespace MCGalaxy {
         public bool Version2;
         public byte LeftTex, RightTex, FrontTex, BackTex;
         
+        public int InventoryOrder = -1;
+        
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefs;
@@ -209,6 +211,20 @@ namespace MCGalaxy {
             Save(global, level);
         }
         
+        public static void UpdateOrder(BlockDefinition def, bool global, Level level) {
+            if (def.InventoryOrder == -1) return;
+            byte raw = def.BlockID, order = (byte)def.InventoryOrder;
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (!global && pl.level != level) continue;
+                if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
+
+                if (!pl.HasCpeExt(CpeExt.InventoryOrder)) continue;
+                pl.Send(Packet.SetInventoryOrder(raw, order));
+            }
+        }
+        
         static void UpdateGlobalCustom(byte raw, BlockDefinition def) {
             Level[] loaded = LevelInfo.Loaded.Items;          
             foreach (Level lvl in loaded) {
@@ -249,9 +265,16 @@ namespace MCGalaxy {
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
+            bool supportsOrder = pl.HasCpeExt(CpeExt.InventoryOrder);
+            
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def != null) pl.Send(def.MakeDefinePacket(pl));
+                if (def == null) continue;
+                
+                pl.Send(def.MakeDefinePacket(pl));
+                if (def.InventoryOrder >= 0 && supportsOrder) {
+                    pl.Send(Packet.SetInventoryOrder((byte)i, (byte)def.InventoryOrder));
+                }
             }
         }
         

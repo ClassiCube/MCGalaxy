@@ -91,6 +91,7 @@ namespace MCGalaxy {
             }
         }
 
+        /// <summary> Returns whether this player's client supports the given CPE extension. </summary>
         public bool HasCpeExt(string extName, int version = 1) {
             if (!hasCpe) return false;
             ExtEntry ext = FindExtension(extName);
