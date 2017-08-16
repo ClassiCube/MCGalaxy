@@ -264,15 +264,18 @@ namespace MCGalaxy {
         
         
         internal static void SendLevelCustomBlocks(Player pl) {
-            BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            bool supportsOrder = pl.HasCpeExt(CpeExt.InventoryOrder);
-            
+            BlockDefinition[] defs = pl.level.CustomBlockDefs;            
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def == null) continue;
-                
-                pl.Send(def.MakeDefinePacket(pl));
-                if (def.InventoryOrder >= 0 && supportsOrder) {
+                if (def != null) pl.Send(def.MakeDefinePacket(pl));
+            }
+        }
+        
+        internal static void SendLevelInventoryOrder(Player pl) {
+            BlockDefinition[] defs = pl.level.CustomBlockDefs;
+            for (int i = 1; i < defs.Length; i++) {
+                BlockDefinition def = defs[i];
+                if (def != null && def.InventoryOrder >= 0) {
                     pl.Send(Packet.SetInventoryOrder((byte)i, (byte)def.InventoryOrder));
                 }
             }

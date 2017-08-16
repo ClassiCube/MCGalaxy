@@ -418,7 +418,7 @@ namespace MCGalaxy.Commands.CPE {
                         SendEditHelp(p, arg); return;
                     }
                     
-                    def.InventoryOrder = order - 1;
+                    def.InventoryOrder = order;
                     BlockDefinition.UpdateOrder(def, global, level);
                     BlockDefinition.Save(global, level);
                     Player.Message(p, "Set inventory order for {0} to {1}", blockName, value);

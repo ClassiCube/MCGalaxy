@@ -200,9 +200,14 @@ namespace MCGalaxy {
                 Send(Packet.LevelInitalise());
                 
                 if (hasBlockDefs) {
-                    if (oldLevel != null && oldLevel != level)
+                    if (oldLevel != null && oldLevel != level) {
                         RemoveOldLevelCustomBlocks(oldLevel);
+                    }
                     BlockDefinition.SendLevelCustomBlocks(this);
+                    
+                    if (HasCpeExt(CpeExt.InventoryOrder)) {
+                        BlockDefinition.SendLevelInventoryOrder(this);
+                    }
                 }
                 
                 using (LevelChunkStream s = new LevelChunkStream(this))
