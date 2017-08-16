@@ -58,7 +58,9 @@ namespace MCGalaxy.Commands.Building {
             
             p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block);
             string blockName = p.level.BlockName(block);
-            Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", x, y, z, blockName);
+            if (!p.ignoreDrawOutput) {
+                Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", x, y, z, blockName);
+            }
         }
         
         static int Clamp(int value, int axisLen) {

@@ -14,13 +14,13 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using MCGalaxy.DB;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdSPlace : Command {       
+namespace MCGalaxy.Commands.Building {
+    public sealed class CmdSPlace : Command {
         public override string name { get { return "SPlace"; } }
         public override string shortcut { get { return "set"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -56,12 +56,13 @@ namespace MCGalaxy.Commands.Building {
             
             int dirX = 0, dirY = 0, dirZ = 0;
             int dx = Math.Abs(m[1].X - m[0].X), dy = Math.Abs(m[1].Y - m[0].Y), dz = Math.Abs(m[1].Z - m[0].Z);
-            if (dy > dx && dy > dz) 
+            if (dy > dx && dy > dz) {
                 dirY = m[1].Y > m[0].Y ? 1 : -1;
-            else if (dx > dz) 
+            } else if (dx > dz) {
                 dirX = m[1].X > m[0].X ? 1 : -1;
-            else 
+            } else {
                 dirZ = m[1].Z > m[0].Z ? 1 : -1;
+            } 
             
             ushort endX = (ushort)(m[0].X + dirX * distance);
             ushort endY = (ushort)(m[0].Y + dirY * distance);
@@ -82,8 +83,10 @@ namespace MCGalaxy.Commands.Building {
                 p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, held, BlockDBFlags.Drawn, true);
             }
 
-            Player.Message(p, "Placed {1} blocks {0} apart.", 
-                           interval > 0 ? interval : distance, p.level.BlockName(held));
+            if (!p.ignoreDrawOutput) {
+                Player.Message(p, "Placed {1} blocks {0} apart.",
+                               interval > 0 ? interval : distance, p.level.BlockName(held));
+            }
             return true;
         }
         
