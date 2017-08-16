@@ -40,6 +40,7 @@ namespace MCGalaxy.DB {
             (p, who) => SpecialGroupLine(p, who.name),
             (p, who) => IPLine(p, who.name, who.ip),
             IdleLine,
+            EntityLine,
         };
         
         static void OnlineCoreLine(Player p, Player who) {
@@ -126,6 +127,19 @@ namespace MCGalaxy.DB {
                 Player.Message(p, "  Idle for {0} (AFK {1}%S)", idleTime.Shorten(), who.afkMessage);
             } else if (idleTime.TotalMinutes >= 1) {
                 Player.Message(p, "  Idle for {0}", idleTime.Shorten());
+            }
+        }
+        
+        static void EntityLine(Player p, Player who) {
+            bool hasSkin = !p.SkinName.CaselessEq(p.truename);
+            bool hasModel = !(p.Model.CaselessEq("humanoid") || p.Model.CaselessEq("human"));
+            
+            if (hasSkin && hasModel) {
+                Player.Message(p, "  Skin: &f{0} %S, model: &f{1}", p.SkinName, p.Model);
+            } else if (hasSkin) {
+                Player.Message(p, "  Skin: &f{0}", p.SkinName);
+            } else if (hasModel) {
+                Player.Message(p, "  Model: &f{0}", p.Model);
             }
         }
     }
