@@ -69,16 +69,8 @@ namespace MCGalaxy.Network {
                 "&public="   + ServerConfig.Public +
                 "&version=7" +
                 "&salt="     + Server.salt +
-                "&users="    + PlayerCount() + 
+                "&users="    + PlayerInfo.NonHiddenCount() +
                 "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned);
-        }
-        
-        static int PlayerCount() {
-            int count = PlayerInfo.NonHiddenCount();
-            // This may happen if a VIP joins an already full server.
-            if (count > ServerConfig.MaxPlayers)
-                count = ServerConfig.MaxPlayers;
-            return count;
         }
         
         public override void OnRequest(HttpWebRequest request) {

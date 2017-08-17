@@ -28,8 +28,7 @@ namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
         internal static void QueueTasks() {
-            Server.MainScheduler.QueueRepeat(CheckState,
-                                             null, TimeSpan.FromSeconds(3));
+            Server.MainScheduler.QueueRepeat(CheckState, null, TimeSpan.FromSeconds(3));
             
             Server.Background.QueueRepeat(AutoSave,
                                           1, TimeSpan.FromSeconds(ServerConfig.BackupInterval));
