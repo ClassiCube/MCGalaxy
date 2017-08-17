@@ -18,15 +18,20 @@
 using System;
 using System.IO;
 using MCGalaxy.Util;
-using MCGalaxy.Maths;
 
 namespace MCGalaxy.DB {
     
     public unsafe sealed class BlockDBFile_V1 : BlockDBFile {
-                
+        
         public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
-            WriteEntries(s, bulk, entries.Items, entries.Count);
+            for (int i = 0; i < entries.Count; i += BulkEntries) {
+                int bulkCount = Math.Min(BulkEntries, entries.Count - i);
+                for (int j = 0; j < bulkCount; j++) {
+                    WriteEntry(entries.Items[i + j], bulk, j * EntrySize);
+                }
+                s.Write(bulk, 0, bulkCount * EntrySize);
+            }
         }
 
         public override void WriteEntries(Stream s, BlockDBCache cache) {
@@ -34,36 +39,23 @@ namespace MCGalaxy.DB {
             BlockDBCacheNode node = cache.Tail;
             
             while (node != null) {
-                WriteEntries(s, bulk, node);
+                int count = node.Count;
+                for (int i = 0; i < count; i += BulkEntries) {
+                    int bulkCount = Math.Min(BulkEntries, count - i);
+                    for (int j = 0; j < bulkCount; j++) {
+                        BlockDBEntry entry = node.Unpack(node.Entries[i + j]);
+                        WriteEntry(entry, bulk, j * EntrySize);
+                    }
+                    s.Write(bulk, 0, bulkCount * EntrySize);
+                }
+                
                 lock (cache.Locker)
                     node = node.Next;
             }
         }
 
-        public override long CountEntries(Stream s) { 
+        public override long CountEntries(Stream s) {
             return (s.Length / BlockDBFile.EntrySize) - BlockDBFile.HeaderEntries;
-        }
-        
-        static void WriteEntries(Stream s, byte[] bulk, BlockDBEntry[] entries, int count) {
-            for (int i = 0; i < count; i += BulkEntries) {
-                int bulkCount = Math.Min(BulkEntries, count - i);
-                for (int j = 0; j < bulkCount; j++) {
-                    WriteEntry(entries[i + j], bulk, j * EntrySize);
-                }
-                s.Write(bulk, 0, bulkCount * EntrySize);
-            }
-        }
-        
-        static void WriteEntries(Stream s, byte[] bulk, BlockDBCacheNode node) {
-            int count = node.Count;
-            for (int i = 0; i < count; i += BulkEntries) {
-                int bulkCount = Math.Min(BulkEntries, count - i);
-                for (int j = 0; j < bulkCount; j++) {
-                    BlockDBEntry entry = node.Unpack(node.Entries[i + j]);
-                    WriteEntry(entry, bulk, j * EntrySize);
-                }
-                s.Write(bulk, 0, bulkCount * EntrySize);
-            }
         }
         
         // Inlined WriteI32/WriteU16 for better performance
@@ -88,75 +80,29 @@ namespace MCGalaxy.DB {
             bulk[index + 14] = (byte)(entry.Flags);
             bulk[index + 15] = (byte)(entry.Flags >> 8);
         }
-
         
-        public override void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            fixed (byte* ptr = bulk) {
-                int dbEntries = (int)(s.Length / EntrySize) - HeaderEntries;
-                while (dbEntries > 0) {
-                    int count = Math.Min(dbEntries, BulkEntries);
-                    ReadFully(s, bulk, count * EntrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    
-                    for (int i = 0; i < count; i++) {
-                        if (entryPtr->Index == index) {
-                            output(*entryPtr);
-                        }
-                        entryPtr++;
-                    }
-                    dbEntries -= count;
-                }
+        public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
+            int remaining = (int)((s.Length - s.Position) / EntrySize);
+            int count = Math.Min(remaining, BulkEntries);
+            
+            if (count > 0) {
+                BlockDBFile.ReadFully(s, bulk, count * EntrySize);
             }
+            return count;
         }
-        
-        public override bool FindChangesBy(Stream s, int[] ids, int start, int end, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            fixed (byte* ptr = bulk) {
-                int dbEntries = (int)(s.Length / EntrySize) - HeaderEntries;
-                
-                while (dbEntries > 0) {
-                    int count = Math.Min(dbEntries, BulkEntries);
-                    // find the correct position for the start of this bulk read
-                    s.Position = (dbEntries - count + HeaderEntries) * (long)EntrySize;
-                    
-                    ReadFully(s, bulk, count * EntrySize);
-                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
-                    entryPtr += (count - 1);
-                    
-                    for (int i = count - 1; i >= 0; i--) {
-                        if (entryPtr->TimeDelta < start) return true;
-                        
-                        if (entryPtr->TimeDelta <= end) {
-                            for (int j = 0; j < ids.Length; j++) {
-                                if (entryPtr->PlayerID != ids[j]) continue;
-                                output(*entryPtr); break;
-                            }
-                        }
-                        entryPtr--;
-                    }
-                    dbEntries -= count;
-                }
+         
+        public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
+            long pos = s.Position;
+            int remaining = (int)(pos / EntrySize) - HeaderEntries;
+            int count = Math.Min(remaining, BulkEntries);
+            
+            if (count > 0) {
+                pos -= count * EntrySize;
+                s.Position = pos;
+                BlockDBFile.ReadFully(s, bulk, count * EntrySize);
+                s.Position = pos; // set correct position for next backward read
             }
-            return false;
-        }
-        
-        static ushort ReadU16(byte[] array, int offset) {
-            return (ushort)(array[offset] | array[offset + 1] << 8);
-        }
-        
-        static void WriteU16(ushort value, byte[] array, int index) {
-            array[index++] = (byte)(value);
-            array[index++] = (byte)(value >> 8);
-        }
-        
-        static void ReadFully(Stream stream, byte[] dst, int count) {
-            int total = 0;
-            do {
-                int read = stream.Read(dst, total, count - total);
-                if (read == 0) throw new EndOfStreamException();
-                total += read;
-            } while (total < count);
+            return count;
         }
     }
 }
