@@ -147,8 +147,11 @@ namespace MCGalaxy.Network {
         }
         
         static void SendCallback(object sender, SocketAsyncEventArgs e) {
-            TcpSocket s = (TcpSocket)e.UserToken;
+            Player p = null;
             try {
+                TcpSocket s = (TcpSocket)e.UserToken;
+                p = s.player;
+                
                 // TODO: Need to check if all data was sent or not?
                 int sent = e.BytesTransferred;
                 lock (s.sendLock) {
@@ -159,13 +162,15 @@ namespace MCGalaxy.Network {
                         // If that happens, SendCallback isn't called so we need to send data here instead
                         if (s.DoSendAsync(s.sendQueue.Dequeue())) return;
 
-                        if (s.player.disconnected) s.sendQueue.Clear();
+                        if (p.disconnected) s.sendQueue.Clear();
                     }
                 }
             } catch (SocketException) {
-                s.player.Disconnect();
+                if (p != null) p.Disconnect();
             } catch (ObjectDisposedException) {
                 // Socket was already closed by another thread
+            } catch (Exception ex) {
+                Logger.LogError(ex);
             }
         }
         
