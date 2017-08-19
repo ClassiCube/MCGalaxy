@@ -31,7 +31,9 @@ namespace MCGalaxy.Commands.Fun {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("start")) {
+            if (message.CaselessEq("go")) {
+                HandleGo(p);
+            } else if (message.CaselessEq("start")) {
                 HandleStart(p);
             } else if (message.CaselessEq("stop")) {
                 HandleStop(p);
@@ -45,6 +47,13 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 Help(p);
             }
+        }
+        
+        static void HandleGo(Player p) {
+            if (Server.ctf == null || !Server.ctf.Running)  {
+                Player.Message(p, "CTF is not running."); return;
+            }
+            PlayerActions.ChangeMap(p, Server.ctf.Map.name);
         }
         
         static void HandleStart(Player p) {
@@ -167,8 +176,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/CTF start/stop");
-            Player.Message(p, "%HStarts/stops the CTF game.");
+            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map.");
+            Player.Message(p, "%T/CTF start/stop %H- Starts/stops the CTF game.");
             Player.Message(p, "%T/CTF add/remove");
             Player.Message(p, "%HAdds or removes current map from list of CTF maps.");
             Player.Message(p, "%T/CTF set [property]");

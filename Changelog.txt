@@ -1,3 +1,43 @@
+v 1.8.9.6
+Added: Support for reordering inventory
+Added: Can edit the core color codes
+Added: Support for custom odoors
+Fixed: Bug where drawops showed wrong blocks to some players
+Improved: Reduced allocations in packet receiving/sending
+Improved: ' >'/' <' (and support ' /'/' \') for partial messages, instead of just '>'/'<'
+Fixed: bottom controls in main tab of properties being 23 pixels too far down
+Added: Can repeat commands from console
+Added: /ctf goto
+Fixed: Bezier curve having minor artifacts
+Fixed: /worldresize alias
+Fixed: /splace says actual block name
+Fixed: /os map delete not outputting anything when used on non-os map
+Fixed: Changing block bounds, still 'killing' you assuming the block had its old block bounds
+Fixed: /ignore titles/nicks being wrong way around
+Fixed: /whonick returning 'player not online', when multiple people match
+Fixed: /copy @
+Fixed: /waypoint on unloaded maps
+Fixed: Fall death and drowning
+Fixed: /afk list
+Fixed: /paint shouldn't reset /mode
+Fixed: /ref
+Fixed: /lb edit 60 blockdraw asd erroring
+Fixed: /team leave XYZ, shouldn't make you leave name
+Fixed: random/cloudy brush with more than two blocks
+Improved: /unloaded is now /worlds, and outputs all maps regardless if loaded
+Improved: Increase max values in security tab in GUI to 1 million
+Improved: Commands and block names aren't all lowercase now
+Improved: Require extra perm to see mb/portal contents in /b
+Improved: Checkered brush supports more than two blocks.
+Improved: Don't bother creating absolute position updates when bot hasn't moved
+Improved: Reduced allocations in various places
+Removed: /update, incompatible with most environments
+Removed: [owner] prefix if player is server owner
+Removed: /reload [name]
+Removed: Spammy message on every lava flood in LS
+Improved: /whois now displays custom skin and model names
+Improved: Output of /place and /splace not shown when ignore drawop output on.
+
 v 1.8.9.5
 Added: /bezier command to draw a bezier curve
 Added: /ignore output, to ignore output of draw commands

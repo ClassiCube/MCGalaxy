@@ -31,29 +31,34 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            if (message.Length == 0) { Help(p); return; }
-            string[] args = message.ToLower().SplitSpaces();
-            ZSGame game = Server.zombie;
-            
-            switch (args[0]) {
-                    case "go": HandleGo(p, game, args); break;
-                    case "status": HandleStatus(p, game, args); break;
-                    case "start": HandleStart(p, game, args); break;
-                    case "end": HandleEnd(p, game, args); break;
-                    case "stop": HandleStop(p, game, args); break;
-                    case "set": HandleSet(p, game, args); break;
-                    default: Help(p); break;
+            ZSGame game = Server.zombie;            
+            if (message.CaselessEq("go")) {
+                HandleGo(p, game);
+            } else if (message.CaselessEq("status")) {
+                HandleStatus(p, game);
+            } else if (message.CaselessEq("start") || message.CaselessStarts("start ")) {
+                string[] args = message.SplitSpaces();
+                HandleStart(p, game, args);
+            } else if (message.CaselessEq("end")) {
+                HandleEnd(p, game);
+            } else if (message.CaselessEq("stop")) {
+                HandleStop(p, game);
+            } else if (message.CaselessStarts("set ")) {
+                string[] args = message.SplitSpaces();
+                HandleSet(p, game, args);
+            } else {
+                Help(p);
             }
         }
 
-        static void HandleGo(Player p, ZSGame game, string[] args) {
-            if (game.Status == ZombieGameStatus.NotStarted) {
-                Player.Message(p, "Zombie Survival is not currently running."); return;
+        static void HandleGo(Player p, ZSGame game) {
+            if (!game.Running) {
+                Player.Message(p, "Zombie Survival is not running."); return;
             }
             PlayerActions.ChangeMap(p, game.Map);
         }
         
-        static void HandleStatus(Player p, ZSGame game, string[] args) {
+        static void HandleStatus(Player p, ZSGame game) {
             switch (game.Status) {
                 case ZombieGameStatus.NotStarted:
                     Player.Message(p, "Zombie Survival is not currently running."); break;
@@ -89,7 +94,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static void HandleEnd(Player p, ZSGame game, string[] args) {
+        static void HandleEnd(Player p, ZSGame game) {
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
@@ -97,7 +102,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static void HandleStop(Player p, ZSGame game, string[] args) {
+        static void HandleStop(Player p, ZSGame game) {
             if (!game.Running) {
                 Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
