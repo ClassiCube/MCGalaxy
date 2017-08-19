@@ -131,15 +131,15 @@ namespace MCGalaxy.DB {
         }
         
         static void EntityLine(Player p, Player who) {
-            bool hasSkin = !p.SkinName.CaselessEq(p.truename);
-            bool hasModel = !(p.Model.CaselessEq("humanoid") || p.Model.CaselessEq("human"));
+            bool hasSkin = !who.SkinName.CaselessEq(who.truename);
+            bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             
             if (hasSkin && hasModel) {
-                Player.Message(p, "  Skin: &f{0} %S, model: &f{1}", p.SkinName, p.Model);
+                Player.Message(p, "  Skin: &f{0}%S, model: &f{1}", who.SkinName, who.Model);
             } else if (hasSkin) {
-                Player.Message(p, "  Skin: &f{0}", p.SkinName);
+                Player.Message(p, "  Skin: &f{0}", who.SkinName);
             } else if (hasModel) {
-                Player.Message(p, "  Model: &f{0}", p.Model);
+                Player.Message(p, "  Model: &f{0}", who.Model);
             }
         }
     }
