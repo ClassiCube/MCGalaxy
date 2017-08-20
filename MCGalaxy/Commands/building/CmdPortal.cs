@@ -221,6 +221,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlace a block for the entry, then another block for exit.");
             Player.Message(p, "%T/Portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
+            Player.Message(p, "%H  Note: The exit can be on a different level.");
             
             List<string> names = new List<string>();
             if (Player.IsSuper(p)) GetCoreNames(names, null);
