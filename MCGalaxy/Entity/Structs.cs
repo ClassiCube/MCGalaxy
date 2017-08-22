@@ -40,6 +40,9 @@ namespace MCGalaxy {
         /// <summary> World/block coordinate of this position. </summary>
         public Vec3S32 BlockCoords { get { return new Vec3S32(X >> 5, Y >> 5, Z >> 5); } }
         
+        /// <summary> World/block coordinate of this position. </summary>
+        public Vec3S32 BlockFeetCoords { get { return new Vec3S32(X >> 5, (Y - Entities.CharacterHeight) >> 5, Z >> 5); } }
+        
         /// <summary> X block coordinate of this position. </summary>
         public int BlockX { get { return X >> 5; } }
         
