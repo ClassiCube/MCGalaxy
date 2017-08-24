@@ -75,9 +75,11 @@ namespace MCGalaxy.Commands.CPE {
         public override void Help(Player p) {
             Player.Message(p, "%T/Skin [name] [skin] %H- Sets the skin of that player.");
             Player.Message(p, "%T/Skin bot [name] [skin] %H- Sets the skin of that bot.");
-            Player.Message(p, "%H e.g the player \"Test\" by default has the skin \"Test\".");
-            Player.Message(p, "%H If you put a + before [skin], players will retrieve [skin] " +
-                           "from minecraft.net instead of classicube.net.");
+            Player.Message(p, "%H[skin] can be:");
+            Player.Message(p, "%H - a ClassiCube player's name (e.g Hetal)");
+            Player.Message(p, "%H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
+            Player.Message(p, "%H - a direct url to a skin");
+            Player.Message(p, "%HDirect url skins also apply to non human models (e.g pig)");
         }
     }
 }
