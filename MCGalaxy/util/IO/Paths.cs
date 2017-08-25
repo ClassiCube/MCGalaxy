@@ -34,16 +34,14 @@ namespace MCGalaxy {
         public const string AliasesFile = "text/aliases.txt";
         public const string NewsFile = "text/news.txt";
         public const string WelcomeFile = "text/welcome.txt";
-        public const string JokerFile = "text/joker.txt";
-        
+        public const string JokerFile = "text/joker.txt";        
         
         public const string BlockPermsFile = "properties/block.properties";
         public const string CmdPermsFile = "properties/command.properties";
         public const string CmdExtraPermsFile = "properties/ExtraCommandPermissions.properties";
         public const string EconomyPropsFile = "properties/economy.properties";
         public const string ServerPropsFile = "properties/server.properties";
-        public const string RankPropsFile = "properties/ranks.properties";
-        
+        public const string RankPropsFile = "properties/ranks.properties";        
         
         public const string BotsFile = "extra/bots.json";
     }

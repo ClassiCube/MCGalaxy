@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.Bots;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -71,24 +72,24 @@ namespace MCGalaxy {
         public static void Add(PlayerBot bot, bool save = true) {
             bot.level.Bots.Add(bot);
             bot.GlobalSpawn();            
-            if (save) BotsFile.UpdateBot(bot);
+            if (save) BotsFile.Save(bot.level);
         }
 
         public static void Remove(PlayerBot bot, bool save = true) {
             bot.level.Bots.Remove(bot);
             bot.GlobalDespawn();
             bot.jumping = false;
-            if (save) BotsFile.RemoveBot(bot);
+            if (save) BotsFile.Save(bot.level);
         }
         
         public static void UnloadFromLevel(Level lvl) {
-            BotsFile.UnloadBots(lvl);
+            BotsFile.Save(lvl);
             RemoveLoadedBots(lvl, false);
         }
         
         public static void RemoveAllFromLevel(Level lvl) {
-            RemoveLoadedBots(lvl, true);
-            BotsFile.DeleteBots(lvl.name);
+            RemoveLoadedBots(lvl, false);           
+            BotsFile.Save(lvl);
         }
         
         static void RemoveLoadedBots(Level lvl, bool save) {

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Bots {
             if (bot == null) return;
             
             bot.Pos = p.Pos; bot.SetYawPitch(p.Rot.RotY, p.Rot.HeadX);
-            BotsFile.UpdateBot(bot);
+            BotsFile.Save(bot.level);
         }
         
         public override void Help(Player p) {

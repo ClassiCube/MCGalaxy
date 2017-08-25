@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.UpdateModel(bot, model);
             
             Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
-            BotsFile.UpdateBot(bot);
+            BotsFile.Save(bot.level);
         }
         
         protected override void SetPlayerData(Player p, Player who, string model) {

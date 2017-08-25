@@ -128,6 +128,7 @@ namespace MCGalaxy {
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
             Background.QueueOnce(LoadPlayerLists);
             Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
+            Background.QueueOnce(UpgradeTasks.UpgradeBots);
             
             Background.QueueOnce(SetupSocket);
             Background.QueueOnce(InitTimers);
@@ -163,6 +164,7 @@ namespace MCGalaxy {
 
             if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
             if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
+            if (!Directory.Exists("extra/bots")) Directory.CreateDirectory("extra/bots");
             if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
         }
         
@@ -192,7 +194,6 @@ namespace MCGalaxy {
             zombie.LoadInfectMessages();
             Colors.LoadList();
             Alias.Load();
-            Bots.BotsFile.Load();
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             

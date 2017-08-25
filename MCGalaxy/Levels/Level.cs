@@ -337,7 +337,7 @@ namespace MCGalaxy {
                 lvl.Config.jailroty = lvl.roty;
                 
                 LoadMetadata(lvl);
-                MCGalaxy.Bots.BotsFile.LoadBots(lvl);
+                MCGalaxy.Bots.BotsFile.Load(lvl);
 
                 object locker = ThreadSafeCache.DBCache.GetLocker(name);
                 lock (locker) {

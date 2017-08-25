@@ -16,56 +16,57 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using MCGalaxy.Maths;
+using Newtonsoft.Json;
 
 namespace MCGalaxy.Bots {
 
     /// <summary> Maintains persistent data for in-game bots. </summary>
     public static class BotsFile {
-        
-        public static List<BotProperties> SavedBots = new List<BotProperties>();
-        
-        static readonly object locker = new object();
-        
-        public static void Load() {
-            if (!File.Exists(Paths.BotsFile)) return;
-            lock (locker) {
-                string json = File.ReadAllText(Paths.BotsFile);
-                BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
-                SavedBots = new List<BotProperties>(bots);
-                
-                foreach (BotProperties bot in SavedBots) {
-                    if (String.IsNullOrEmpty(bot.DisplayName))
-                        bot.DisplayName = bot.Name;
+
+        public static string BotsPath(string mapName) {
+            return "extra/bots/" + mapName + ".json";
+        }
+
+        public static void Load(Level lvl) {
+            string path = BotsPath(lvl.MapName);
+            if (!File.Exists(path)) return;
+            string json = File.ReadAllText(path);
+            BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
+            
+            foreach (BotProperties props in bots) {
+                if (String.IsNullOrEmpty(props.DisplayName)) {
+                    props.DisplayName = props.Name;
                 }
+                
+                PlayerBot bot = new PlayerBot(props.Name, lvl);
+                props.ApplyTo(bot);
+                
+                bot.ModelBB = AABB.ModelAABB(bot.Model, lvl);
+                LoadAi(props, bot);
+                PlayerBot.Add(bot, false);
             }
         }
         
-        static void Save() {
-            BotProperties[] bots = SavedBots.ToArray();
-            string json = JsonConvert.SerializeObject(bots);
+        public static void Save(Level lvl) {
+            PlayerBot[] bots = lvl.Bots.Items;
+            string path = BotsPath(lvl.MapName);
+            if (!File.Exists(path) && bots.Length == 0) return;
+            
+            BotProperties[] props = new BotProperties[bots.Length];
+            for (int i = 0; i < props.Length; i++) {
+                BotProperties savedProps = new BotProperties();
+                savedProps.FromBot(bots[i]);
+                props[i] = savedProps;
+            }
+            
+            string json = JsonConvert.SerializeObject(props);
             try {
-                File.WriteAllText(Paths.BotsFile, json);
+                File.WriteAllText(path, json);
             } catch (Exception ex) {
                 Logger.Log(LogType.Warning, "Failed to save bots file");
                 Logger.LogError(ex);
-            }
-        }
-
-        public static void LoadBots(Level lvl) {
-            lock (locker) {
-                foreach (BotProperties props in SavedBots) {
-                    if (lvl.name != props.Level) continue;
-                    PlayerBot bot = new PlayerBot(props.Name, lvl);
-                    props.ApplyTo(bot);
-                    
-                    bot.ModelBB = AABB.ModelAABB(bot.Model, lvl);
-                    LoadAi(props, bot);
-                    PlayerBot.Add(bot, false);
-                }
             }
         }
         
@@ -78,96 +79,7 @@ namespace MCGalaxy.Bots {
             }
             
             bot.cur = props.CurInstruction;
-            if (bot.cur >= bot.Instructions.Count)
-                bot.cur = 0;
-        }
-        
-        public static void UnloadBots(Level lvl) {
-            lock (locker) {
-                PlayerBot[] bots = lvl.Bots.Items;
-                
-                foreach (PlayerBot bot in bots) {
-                    DoUpdateBot(bot, false);
-                }
-                if (bots.Length > 0) Save();
-            }
-        }
-        
-        public static void RemoveBot(PlayerBot bot) {
-            lock (locker) {
-                for (int i = 0; i < SavedBots.Count; i++) {
-                    BotProperties props = SavedBots[i];
-                    if (bot.name != props.Name || bot.level.name != props.Level) continue;
-                    SavedBots.RemoveAt(i);
-                    Save();
-                    return;
-                }
-            }
-        }
-        
-        /// <summary> Deletes all bots which are located on the given map.  </summary>
-        public static void DeleteBots(string level) {
-            lock (locker) {
-                int removed = 0;
-                for (int i = 0; i < SavedBots.Count; i++) {
-                    BotProperties props = SavedBots[i];
-                    if (!props.Level.CaselessEq(level)) continue;
-                    
-                    SavedBots.RemoveAt(i);
-                    removed++; i--;
-                }
-                if (removed > 0) Save();
-            }
-        }
-        
-        /// <summary> Moves all bots located on the given source map to the destination map. </summary>
-        public static void MoveBots(string srcLevel, string dstLevel) {
-            lock (locker) {
-                int moved = 0;
-                for (int i = 0; i < SavedBots.Count; i++) {
-                    BotProperties props = SavedBots[i];
-                    if (!props.Level.CaselessEq(srcLevel)) continue;
-                    
-                    props.Level = dstLevel;
-                    moved++;
-                }
-                if (moved > 0) Save();
-            }
-        }
-        
-        /// <summary> Copies all bots located on the given source map to the destination map. </summary>
-        public static void CopyBots(string srcLevel, string dstLevel) {
-            lock (locker) {
-                int copied = 0, count = SavedBots.Count;
-                for (int i = 0; i < SavedBots.Count; i++) {
-                    BotProperties props = SavedBots[i];
-                    if (!props.Level.CaselessEq(srcLevel)) continue;
-                    
-                    BotProperties copy = props.Copy();
-                    copy.Level = dstLevel;
-                    SavedBots.Add(copy);
-                    copied++;
-                }
-                if (copied > 0) Save();
-            }
-        }
-        
-        public static void UpdateBot(PlayerBot bot) {
-            lock (locker) DoUpdateBot(bot, true);
-        }
-        
-        static void DoUpdateBot(PlayerBot bot, bool save) {
-            foreach (BotProperties props in SavedBots) {
-                if (bot.name != props.Name || bot.level.name != props.Level) continue;
-                props.FromBot(bot);
-                if (save) Save();
-                return;
-            }
-            
-            BotProperties newProps = new BotProperties();
-            newProps.FromBot(bot);
-            SavedBots.Add(newProps);
-            if (save) Save();
+            if (bot.cur >= bot.Instructions.Count) bot.cur = 0;
         }
     }
     
@@ -208,7 +120,7 @@ namespace MCGalaxy.Bots {
         }
         
         public void ApplyTo(PlayerBot bot) {
-            bot.Pos = new Position(X, Y, Z);           
+            bot.Pos = new Position(X, Y, Z);
             bot.SetYawPitch(RotX, RotY);
             Orientation rot = bot.Rot;
             rot.RotX = BodyX; rot.RotZ = BodyZ;

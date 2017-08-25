@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Bots {
                 Player.Message(p, "Set text shown when bot {0} %Sis clicked on to {1}", bot.ColoredName, text);
                 bot.ClickedOnText = text;
             }
-            BotsFile.UpdateBot(bot);
+            BotsFile.Save(bot.level);
         }
 
         public override void Help(Player p) {

@@ -17,16 +17,12 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading;
-using MCGalaxy.Commands.World;
-using MCGalaxy.Games;
-using MCGalaxy.Generator;
-using MCGalaxy.DB;
 using System.Data;
-using System.Data.Common;
+using System.IO;
+using MCGalaxy.Bots;
+using MCGalaxy.DB;
 using MCGalaxy.SQL;
+using Newtonsoft.Json;
 
 namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
@@ -181,6 +177,39 @@ namespace MCGalaxy.Tasks {
             }
             File.WriteAllLines(Paths.TempRanksFile, lines);
         }
+        
+        internal static void UpgradeBots(SchedulerTask task) {
+            if (!File.Exists(Paths.BotsFile)) return;
+            string json = File.ReadAllText(Paths.BotsFile);
+            File.WriteAllText(Paths.BotsFile + ".bak", json);
+            Logger.Log(LogType.SystemActivity, "Making bots file per-level.. " +
+                       "saved backup of global bots file to extra/bots.json.bak");
+            
+            BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
+            Dictionary<string, List<BotProperties>> botsByLevel = new Dictionary<string, List<BotProperties>>();
+            
+            foreach (BotProperties bot in bots) {
+                List<BotProperties> levelBots;
+                if (bot.Level == null || bot.Level.Length == 0) continue;
+                
+                if (!botsByLevel.TryGetValue(bot.Level, out levelBots)) {
+                    levelBots = new List<BotProperties>();
+                    botsByLevel[bot.Level] = levelBots;
+                }
+                levelBots.Add(bot);
+            }
+            
+            foreach (var kvp in botsByLevel) {
+                json = JsonConvert.SerializeObject(kvp.Value);
+                File.WriteAllText(BotsFile.BotsPath(kvp.Key), json);
+            }
+            
+            if (Server.mainLevel.Bots.Count == 0) {
+                BotsFile.Load(Server.mainLevel);
+            }
+            File.Delete(Paths.BotsFile);
+        }
+
         
         internal static void UpgradeDBTimeSpent(SchedulerTask task) {
             DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");

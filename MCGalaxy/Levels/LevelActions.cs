@@ -41,13 +41,14 @@ namespace MCGalaxy {
                          "blockdefs/lvl_" + dst + ".json");
             MoveIfExists("blockprops/lvl_" + src + ".txt",
                          "blockprops/lvl_" + dst + ".txt");
+            MoveIfExists(BotsFile.BotsPath(src),
+                         BotsFile.BotsPath(dst));
             
             try {
                 MoveBackups(src, dst);
             } catch {
             }
             
-            BotsFile.MoveBots(src, dst);
             RenameDatabaseTables(src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
         }
@@ -132,8 +133,8 @@ namespace MCGalaxy {
             DeleteIfExists("levels/level properties/" + name + ".properties");
             DeleteIfExists("blockdefs/lvl_" + name + ".json");
             DeleteIfExists("blockprops/lvl_" + name + ".txt");
+            DeleteIfExists(BotsFile.BotsPath(name));
             
-            BotsFile.DeleteBots(name);
             DeleteDatabaseTables(name);
             BlockDBFile.DeleteBackingFile(name);
         }
@@ -217,8 +218,9 @@ namespace MCGalaxy {
                          "blockdefs/lvl_" + dst + ".json");
             CopyIfExists("blockprops/lvl_" + src + ".txt",
                          "blockprops/lvl_" + dst + ".txt");
+            CopyIfExists(BotsFile.BotsPath(src),
+                         BotsFile.BotsPath(dst));
             
-            BotsFile.CopyBots(src, dst);
             CopyDatabaseTables(src, dst);
         }
         
