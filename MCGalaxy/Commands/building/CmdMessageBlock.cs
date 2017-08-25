@@ -55,11 +55,8 @@ namespace MCGalaxy.Commands.Building {
                 data.Message = args[1];
             }
             
-            string text;
-            List<string> cmds = MessageBlock.GetParts(data.Message, out text);
-            foreach (string cmd in cmds) {
-                if (!CheckCommand(p, cmd)) return;
-            }
+            bool allCmds = HasExtraPerm(p, 1);
+            if (!MessageBlock.Validate(p, data.Message, allCmds)) return;
 
             Player.Message(p, "Place where you wish the message block to go."); 
             p.MakeSelection(1, data, PlacedMark);

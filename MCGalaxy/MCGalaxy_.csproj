@@ -118,9 +118,8 @@
     <Compile Include="Chat\LineWrapper.cs" />
     <Compile Include="Chat\ProfanityFilter.cs" />
     <Compile Include="Commands\Alias.cs" />
-    <Compile Include="Commands\Bots\CmdBotAdd.cs" />
+    <Compile Include="Commands\Bots\CmdBot.cs" />
     <Compile Include="Commands\Bots\CmdBotAI.cs" />
-    <Compile Include="Commands\Bots\CmdBotRemove.cs" />
     <Compile Include="Commands\Bots\CmdBots.cs" />
     <Compile Include="Commands\Bots\CmdBotSet.cs" />
     <Compile Include="Commands\Bots\CmdBotSummon.cs" />

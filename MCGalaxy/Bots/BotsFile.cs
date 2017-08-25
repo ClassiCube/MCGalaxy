@@ -60,16 +60,7 @@ namespace MCGalaxy.Bots {
                 foreach (BotProperties props in SavedBots) {
                     if (lvl.name != props.Level) continue;
                     PlayerBot bot = new PlayerBot(props.Name, lvl);
-                    bot.Pos = new Position(props.X, props.Y, props.Z);
-                    
-                    bot.SetYawPitch(props.RotX, props.RotY);
-                    Orientation rot = bot.Rot;
-                    rot.RotX = props.BodyX; rot.RotZ = props.BodyZ;
-                    bot.Rot = rot;
-                    
-                    bot.SkinName = props.Skin; bot.Model = props.Model; bot.color = props.Color;
-                    bot.AIName = props.AI; bot.hunt = props.Hunt; bot.kill = props.Kill;
-                    bot.DisplayName = props.DisplayName;
+                    props.ApplyTo(bot);
                     
                     bot.ModelBB = AABB.ModelAABB(bot.Model, lvl);
                     LoadAi(props, bot);
@@ -124,7 +115,7 @@ namespace MCGalaxy.Bots {
                     
                     SavedBots.RemoveAt(i);
                     removed++; i--;
-                }                
+                }
                 if (removed > 0) Save();
             }
         }
@@ -137,7 +128,7 @@ namespace MCGalaxy.Bots {
                     BotProperties props = SavedBots[i];
                     if (!props.Level.CaselessEq(srcLevel)) continue;
                     
-                    props.Level = dstLevel; 
+                    props.Level = dstLevel;
                     moved++;
                 }
                 if (moved > 0) Save();
@@ -187,6 +178,7 @@ namespace MCGalaxy.Bots {
         public string Skin { get; set; }
         public string Model { get; set; }
         public string Color { get; set; }
+        public string ClickedOnText { get; set; }
         
         public string AI { get; set; }
         public bool Kill { get; set; }
@@ -208,10 +200,26 @@ namespace MCGalaxy.Bots {
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
             CurInstruction = bot.cur;
+            ClickedOnText = bot.ClickedOnText;
             
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
             BodyX = bot.Rot.RotX; BodyZ = bot.Rot.RotZ;
+        }
+        
+        public void ApplyTo(PlayerBot bot) {
+            bot.Pos = new Position(X, Y, Z);           
+            bot.SetYawPitch(RotX, RotY);
+            Orientation rot = bot.Rot;
+            rot.RotX = BodyX; rot.RotZ = BodyZ;
+            bot.Rot = rot;
+            
+            bot.SkinName = Skin; bot.Model = Model; bot.color = Color;
+            bot.AIName = AI; bot.hunt = Hunt; bot.kill = Kill;
+            bot.DisplayName = DisplayName;
+            
+            bot.cur = CurInstruction;
+            bot.ClickedOnText = ClickedOnText;
         }
         
         public BotProperties Copy() {
@@ -220,8 +228,9 @@ namespace MCGalaxy.Bots {
             copy.Level = Level; copy.Skin = Skin;
             copy.Model = Model; copy.Color = Color;
             
-            copy.AI = AI; copy.Kill = Kill;
-            copy.Hunt = Hunt; copy.CurInstruction = CurInstruction;
+            copy.AI = AI; copy.Kill = Kill; copy.Hunt = Hunt;
+            copy.CurInstruction = CurInstruction;
+            copy.ClickedOnText = ClickedOnText;
             
             copy.X = X; copy.Y = Y; copy.Z = Z;
             copy.RotX = RotX; copy.RotY = RotY;

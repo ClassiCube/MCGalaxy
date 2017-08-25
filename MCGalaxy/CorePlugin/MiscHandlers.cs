@@ -84,8 +84,12 @@ namespace MCGalaxy.Core {
         
         internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch,
                                                byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
-            if (p.level.Config.Deletable || action != MouseAction.Pressed || !p.level.IsValidPos(x, y, z)) return;
+            if (action != MouseAction.Pressed) return;
             
+            bool validPos = p.level.IsValidPos(x, y, z);
+            if (entity != Entities.SelfID && !validPos && ClickOnBot(p, entity)) return;
+            
+            if (p.level.Config.Deletable || !validPos) return;
             ExtBlock block = p.level.GetBlock(x, y, z);
             bool isMB = p.level.BlockProps[block.Index].IsMessageBlock;
             bool isPortal = p.level.BlockProps[block.Index].IsPortal;
@@ -94,19 +98,36 @@ namespace MCGalaxy.Core {
             if (isPortal) { Portal.Handle(p, x, y, z); }
         }
         
+        static bool ClickOnBot(Player p, byte entity) {
+            PlayerBot[] bots = p.level.Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                if (bots[i].EntityID != entity) continue;
+                if (bots[i].ClickedOnText == null) return false;
+                
+                Vec3F32 delta = p.Pos.ToVec3F32() - bots[i].Pos.ToVec3F32();
+                float reachSq = p.ReachDistance * p.ReachDistance;
+                if (delta.LengthSquared > (reachSq + 1)) return false;
+                
+                string message = bots[i].ClickedOnText;
+                MessageBlock.Execute(p, message);
+                return true;
+            }
+            return false;
+        }
+        
         // Update rank colors and rank prefixes for online players
         internal static void HandleGroupLoad() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 p.group = Group.Find(p.group.Permission);
-                if (p.group == null) p.group = Group.standard;                
+                if (p.group == null) p.group = Group.standard;
                 p.SetPrefix();
                 
                 string dbCol = PlayerData.FindDBColor(p);
                 if (dbCol.Length == 0 && p.color != p.group.Color) {
                     p.color = p.group.Color;
                     Entities.GlobalRespawn(p);
-                }                
+                }
             }
         }
     }

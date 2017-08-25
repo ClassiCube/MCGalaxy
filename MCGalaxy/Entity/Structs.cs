@@ -32,6 +32,8 @@ namespace MCGalaxy {
         /// <summary> Z fixed-point location in the world. </summary>
         public int Z;
         
+        public Vec3F32 ToVec3F32() { return new Vec3F32(X / 32.0f, Y / 32.0f, Z / 32.0f); }
+        
         
         public Position(int x, int y, int z) { X = x; Y = y; Z = z; }
         
@@ -50,7 +52,7 @@ namespace MCGalaxy {
         public int BlockY { get { return Y >> 5; } }
         
         /// <summary> Z block coordinate of this position. </summary>
-        public int BlockZ { get { return Z >> 5; } }       
+        public int BlockZ { get { return Z >> 5; } }
         
         
         public override bool Equals(object obj) { return (obj is Position) && Equals((Position)obj); }

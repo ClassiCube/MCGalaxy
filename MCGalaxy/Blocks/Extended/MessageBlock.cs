@@ -38,17 +38,7 @@ namespace MCGalaxy.Blocks.Extended {
                 message = message.Replace("@p", p.name);
                 
                 if (message != p.prevMsg || (alwaysRepeat || ServerConfig.RepeatMBs)) {
-                    string text;
-                    List<string> cmds = GetParts(message, out text);
-                    if (text != null) Player.Message(p, text);
-                    
-                    if (cmds.Count == 1) {
-                        string[] parts = cmds[0].SplitSpaces(2);
-                        p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
-                    } else if (cmds.Count > 0) {
-                        p.HandleCommands(cmds);
-                    }
-                    p.prevMsg = message;
+                    Execute(p, message);
                 }
                 return true;
             } catch {
@@ -56,10 +46,56 @@ namespace MCGalaxy.Blocks.Extended {
             }
         }
         
+        public static void Execute(Player p, string message) {
+            string text;
+            List<string> cmds = GetParts(message, out text);
+            if (text != null) Player.Message(p, text);
+            
+            if (cmds.Count == 1) {
+                string[] parts = cmds[0].SplitSpaces(2);
+                p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
+            } else if (cmds.Count > 0) {
+                p.HandleCommands(cmds);
+            }
+            p.prevMsg = message;
+        }
+        
+        public static bool Validate(Player p, string message, bool allCmds) {
+            string text;
+            List<string> cmds = MessageBlock.GetParts(message, out text);
+            foreach (string cmd in cmds) {
+                if (!CheckCommand(p, cmd, allCmds)) return false;
+            }
+            return true;
+        }
+        
+        static bool CheckCommand(Player p, string message, bool allCmds) {
+            string[] parts = message.SplitSpaces(2);
+            string alias = parts[0], cmdArgs = "";
+            Command.Search(ref alias, ref cmdArgs);
+            
+            foreach (Command cmd in Command.all.commands) {
+                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.Contains("mod"))) continue;
+                
+                if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
+                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
+                }
+                if (cmd.shortcut.Length > 0 && IsCommand(message, cmd.shortcut)) {
+                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
+                }
+            }
+            return true;
+        }
+        
+        static bool IsCommand(string message, string cmd) {
+            return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
+        }
+        
+        
         static string[] sep = new string[] { " |/" };
         const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;
         static List<string> empty = new List<string>();
-        internal static List<string> GetParts(string message, out string text) {
+        static List<string> GetParts(string message, out string text) {
             if (message.IndexOf('|') == -1) return ParseSingle(message, out text);
             
             string[] parts = message.Split(sep, opts);

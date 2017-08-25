@@ -29,6 +29,7 @@ namespace MCGalaxy {
 
         public string AIName = "", color;
         public string name, DisplayName;
+        public string ClickedOnText;
         public string ColoredName { get { return color + DisplayName; } }
         
         public byte id;
