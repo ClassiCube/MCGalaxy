@@ -105,8 +105,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             byte below = lvl.GetTile(x, (ushort)(y - 1), z);
             
-            switch (below)
-            {
+            switch (below) {
                 case Block.Air:
                     lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown);
                     if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -116,6 +115,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.StillWater:
                 case Block.WaterDown:
                     break;
+                    
                 default:
                     byte block = lvl.blocks[C.b];
                     LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);

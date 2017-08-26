@@ -45,6 +45,7 @@ namespace MCGalaxy.Blocks {
         public bool IsMessageBlock;
         /// <summary> Whether this block is considered a portal. </summary>
         public bool IsPortal;
+        
         /// <summary> Whether this block is overwritten/killed by water blocks. </summary>
         public bool WaterKills;
         /// <summary> Whether this block is overwritten/killed by lava blocks. </summary>
@@ -62,6 +63,9 @@ namespace MCGalaxy.Blocks {
         /// <summary> ID of the block that is placed when two of this block are placed on top of each other. </summary>
         /// <remarks> e.g. slabs and cobblestone slabs. </remarks>
         public byte StackId;
+        
+        /// <summary> Whether players can drown inside this block (e.g. water). </summary>
+        public bool Drownable;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
@@ -81,7 +85,7 @@ namespace MCGalaxy.Blocks {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
                             "Killed by water : Killed by lava : Kills players : death message : " +
-                            "Animal AI type : Stack block : Is OP block");
+                            "Animal AI type : Stack block : Is OP block : oDoor block : Drownable");
                 for (int i = 0; i < scope.Length; i++) {
                     if (!scope[i].Changed || (selector != null && !selector(i))) continue;
                     BlockProps props = scope[i];
@@ -89,10 +93,11 @@ namespace MCGalaxy.Blocks {
                     int id = i >= Block.Count ? (i - Block.Count) : i;
                     
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
-                    w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
+                    w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor    + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
-                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg + ":" 
-                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock + ":" + props.oDoorIndex);
+                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":" 
+                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock     + ":" 
+                                + props.oDoorIndex + ":" + props.Drownable);
                 }
             }
         }
@@ -148,6 +153,9 @@ namespace MCGalaxy.Blocks {
                 if (parts.Length > 13) {
                     ushort oDoor; ushort.TryParse(parts[13], out oDoor);
                     scope[idx].oDoorIndex = oDoor;
+                }
+                if (parts.Length > 14) {
+                    bool.TryParse(parts[14], out scope[idx].Drownable);
                 }
             }
         }

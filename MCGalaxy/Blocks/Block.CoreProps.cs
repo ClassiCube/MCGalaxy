@@ -89,6 +89,8 @@ namespace MCGalaxy {
             Props[Red].IsRails = true; Props[Op_Air].IsRails = true;
             Props[Slab].StackId = DoubleSlab;
             Props[CobblestoneSlab].StackId = Cobblestone;
+            Props[Water].Drownable = true; Props[StillWater].Drownable = true;
+            Props[Lava].Drownable = true; Props[StillLava].Drownable = true;
             
             // Block specific physics properties
             Props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;
@@ -246,8 +248,12 @@ namespace MCGalaxy {
             SetDeath(Block.Fish_LavaShark, "@p %Swas eaten by a ... LAVA SHARK?!");
             SetDeath(Block.Snake, "@p %Swas bit by a deadly snake.");
             
+            const string drowned = "@p %S&cdrowned.";
             SetDeath(Block.Air, "@p %Shit the floor &chard.", false);
-            SetDeath(Block.Water, "@p %S&cdrowned.", false);
+            SetDeath(Block.Water, drowned, false);
+            SetDeath(Block.StillWater, drowned, false);
+            SetDeath(Block.Lava, drowned, false);
+            SetDeath(Block.StillLava, drowned, false);
             SetDeath(Block.Invalid, "@p %Swas &cterminated.", false);
         }
         

@@ -136,6 +136,9 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "odoor") {
                 string odoor = args.Length > 3 ? args[3] : null;
                 SetODoor(p, scope, block, i, odoor);
+            } else if (prop == "drownable" || prop == "drown") {
+                scope[i].Drownable = !scope[i].Drownable;
+                OnToggleSet(p, scope, block, "drowns players", scope[i].Drownable);
             } else {
                 Help(p);
             }
@@ -270,7 +273,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, " +
-                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock, opblock, odoor");
+                           "lavakills, door, tdoor, killer, deathmessage, animalai, stackblock, opblock, odoor, drownable");
             Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
@@ -306,7 +309,10 @@ namespace MCGalaxy.Commands.World {
                                "and can't be replaced in games when build type is ModifyOnly.");
             } else if (message.CaselessEq("odoor")) {
                 Player.Message(p, "%HSets the block that this block is changed into, when activated by a neighbouring door.");
-            } else {
+            } else if (message.CaselessEq("drownable")) {
+                Player.Message(p, "%HSets whether this block can drown players.");
+                Player.Message(p, "%T/Map death %Hmust be enabled for players to drown.");
+            }  else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }
         }

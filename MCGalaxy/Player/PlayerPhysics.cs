@@ -91,27 +91,22 @@ namespace MCGalaxy.Blocks.Physics {
             ExtBlock bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
             if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
             
-            switch (bHead.BlockID) {
-                case Block.Water:
-                case Block.StillWater:
-                case Block.Lava:
-                case Block.StillLava:
-                    p.startFallY = -1;
-                    DateTime now = DateTime.UtcNow;
-                    // level drown is in 10ths of a second
-                    if (p.drownTime == DateTime.MaxValue)
-                        p.drownTime = now.AddSeconds(p.level.Config.DrownTime / 10.0);
-                    
-                    if (now > p.drownTime) {
-                        p.HandleDeath((ExtBlock)Block.Water);
-                        p.drownTime = DateTime.MaxValue;
-                    }
-                    break;
-                default:
-                    bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
-                    if (!isGas) p.startFallY = -1;
+            if (p.level.BlockProps[bHead.Index].Drownable) {
+                p.startFallY = -1;
+                DateTime now = DateTime.UtcNow;
+                // level drown is in 10ths of a second
+                if (p.drownTime == DateTime.MaxValue) {
+                    p.drownTime = now.AddSeconds(p.level.Config.DrownTime / 10.0);
+                }
+                
+                if (now > p.drownTime) {
+                    p.HandleDeath(bHead);
                     p.drownTime = DateTime.MaxValue;
-                    break;
+                }
+            } else {
+                bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
+                if (!isGas) p.startFallY = -1;
+                p.drownTime = DateTime.MaxValue;
             }
         }
         
