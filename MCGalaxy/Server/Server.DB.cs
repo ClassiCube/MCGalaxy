@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using MCGalaxy.SQL;
@@ -81,29 +82,22 @@ namespace MCGalaxy {
             // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
             if (!ServerConfig.UseMySQL) return;
             // Check if the color column exists.
-            DataTable colorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='color'");
-            if (colorExists.Rows.Count == 0) {
+            
+            List<string> columns = Database.Backend.ColumnNames("Players");
+            if (columns.Count == 0) return;
+            
+            if (!columns.CaselessContains("Color")) {
                 Database.Backend.AddColumn("Players", new ColumnDesc("color", ColumnType.VarChar, 6), "totalKicked");
             }
-            colorExists.Dispose();
-
-            DataTable tcolorExists = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='title_color'");
-            if (tcolorExists.Rows.Count == 0) {
+            if (!columns.CaselessContains("Title_Color")) {
                 Database.Backend.AddColumn("Players", new ColumnDesc("title_color", ColumnType.VarChar, 6), "color");
             }
-            tcolorExists.Dispose();
-
-            DataTable timespent = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='TimeSpent'");
-            if (timespent.Rows.Count == 0) {
+            if (!columns.CaselessContains("TimeSpent")) {
                 Database.Backend.AddColumn("Players", new ColumnDesc("TimeSpent", ColumnType.VarChar, 20), "totalKicked");
             }
-            timespent.Dispose();
-
-            DataTable totalCuboided = Database.Fill("SHOW COLUMNS FROM Players WHERE `Field`='totalCuboided'");
-            if (totalCuboided.Rows.Count == 0) {
+            if (!columns.CaselessContains("TotalCuboided")) {
                 Database.Backend.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
             }
-            totalCuboided.Dispose();
         }
     }
 }

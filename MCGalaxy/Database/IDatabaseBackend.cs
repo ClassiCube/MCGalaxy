@@ -63,6 +63,9 @@ namespace MCGalaxy.SQL {
         /// <summary> Returns a list of all tables in this database. </summary>
         public abstract List<string> AllTables();
         
+        /// <summary> Returns a list of the column names in the given table. </summary>
+        public abstract List<string> ColumnNames(string table);
+        
         /// <summary> Renames the source table to the given name. </summary>
         public abstract void RenameTable(string srcTable, string dstTable);
         

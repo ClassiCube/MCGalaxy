@@ -75,6 +75,17 @@ namespace MCGalaxy.SQL {
             }
         }
         
+        public override List<string> ColumnNames(string table) {
+            ValidateTable(table);
+            using (DataTable results = Database.Fill("PRAGMA table_info(`" + table + "`)")) {
+                List<string> columns = new List<string>(results.Rows.Count);
+                foreach (DataRow row in results.Rows) {
+                    columns.Add(row["name"].ToString());
+                }
+                return columns;
+            }
+        }
+        
         public override void RenameTable(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
