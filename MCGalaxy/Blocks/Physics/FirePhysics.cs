@@ -22,11 +22,12 @@ namespace MCGalaxy.Blocks.Physics {
     public static class FirePhysics {
         
         static bool ExpandSimple(Level lvl, int x, int y, int z) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index < 0 || lvl.blocks[index] != Block.Air) return false;
-            
-            lvl.AddUpdate(index, Block.Fire);
-            return true;
+            int index;
+            if (lvl.IsAirAt((ushort)x, (ushort)y, (ushort)z, out index)) {
+                lvl.AddUpdate(index, Block.Fire);
+                return true;
+            }
+            return false;
         }
         
         static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,

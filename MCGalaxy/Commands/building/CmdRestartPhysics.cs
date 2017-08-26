@@ -91,14 +91,15 @@ namespace MCGalaxy.Commands.Building {
         bool DoRestart(Player p, Vec3S32[] m, object state, ExtBlock block) {
             PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
+            int index;
             
             for (int y = Math.Min(m[0].Y, m[1].Y); y <= Math.Max(m[0].Y, m[1].Y); y++)
                 for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                int index = p.level.PosToInt((ushort)x, (ushort)y, (ushort)z);
-                if (index >= 0 && p.level.blocks[index] != Block.Air)
+                if (p.level.IsAirAt((ushort)x, (ushort)y, (ushort)z, out index)) {
                     buffer.Add(index);
+                }
             }
 
             if (extraInfo.Raw == 0) {
@@ -113,8 +114,9 @@ namespace MCGalaxy.Commands.Building {
                 return false;
             }
 
-            foreach (int index in buffer)
-                p.level.AddCheck(index, true, extraInfo);
+            foreach (int index1 in buffer) {
+                p.level.AddCheck(index1, true, extraInfo);
+            }
             Player.Message(p, "Activated " + buffer.Count + " blocks.");
             return true;
         }

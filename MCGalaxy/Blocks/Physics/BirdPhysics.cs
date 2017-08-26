@@ -21,19 +21,20 @@ namespace MCGalaxy.Blocks.Physics {
     public static class BirdPhysics {
         
         public static void Do(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
+            int index;
 
             switch (rand.Next(1, 15)) {
                 case 1:
-                    if (lvl.IsAirAt(x, (ushort)(y - 1), z))
-                        lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b]);
+                    if (lvl.IsAirAt(x, (ushort)(y - 1), z, out index))
+                        lvl.AddUpdate(index, lvl.blocks[C.b]);
                     else goto case 3;
                     break;
                 case 2:
-                    if (lvl.IsAirAt(x, (ushort)(y + 1), z))
-                        lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y + 1), z), lvl.blocks[C.b]);
+                    if (lvl.IsAirAt(x, (ushort)(y + 1), z, out index))
+                        lvl.AddUpdate(index, lvl.blocks[C.b]);
                     else goto case 6;
                     break;
                 case 3:

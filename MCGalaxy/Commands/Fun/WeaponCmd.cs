@@ -124,15 +124,11 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         static void CheckTile(Level lvl, List<Vec3U16> glassCoords, int x, int y, int z) {
-            Vec3U16 pos;
-            if (lvl.IsAirAt(x, y - 1, z)) {
-                pos.X = (ushort)x; pos.Y = (ushort)(y - 1); pos.Z = (ushort)z;
-                glassCoords.Add(pos);
-            }
-            if (lvl.IsAirAt(x, y, z)) {
-                pos.X = (ushort)x; pos.Y = (ushort)y; pos.Z = (ushort)z;
-                glassCoords.Add(pos);
-            }
+            Vec3U16 pos = new Vec3U16((ushort)x, (ushort)(y - 1), (ushort)z);
+            if (lvl.IsAirAt(pos.X, pos.Y, pos.Z)) glassCoords.Add(pos);
+            
+            pos.Y++;
+            if (lvl.IsAirAt(pos.X, pos.Y, pos.Z)) glassCoords.Add(pos);
         }
         
         protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block);

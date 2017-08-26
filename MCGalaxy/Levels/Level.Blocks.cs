@@ -75,13 +75,12 @@ namespace MCGalaxy {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return false; 
             return blocks[x + Width * (z + y * Length)] == Block.Air;
         }
-
+   
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
-        public bool IsAirAt(int x, int y, int z) {
-            if (x < 0 || y < 0 || z < 0 || blocks == null) return false;
-            if (x >= Width || y >= Height || z >= Length)  return false;
-            
-            return blocks[x + Width * (z + y * Length)] == Block.Air;
+        public bool IsAirAt(ushort x, ushort y, ushort z, out int index) {
+            if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return false; }
+            index = x + Width * (z + y * Length);
+            return blocks[index] == Block.Air;
         }
 
         public byte GetTile(int b) {
