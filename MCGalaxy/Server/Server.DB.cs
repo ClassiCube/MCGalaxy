@@ -63,11 +63,6 @@ namespace MCGalaxy {
 
             Database.Backend.CreateTable("Opstats", createOpstats);
             Database.Backend.CreateTable("Players", createPlayers);
-            if (!File.Exists("extra/alter.txt") && ServerConfig.UseMySQL) {
-                Database.Execute("ALTER TABLE Players MODIFY Name TEXT");
-                Database.Execute("ALTER TABLE Opstats MODIFY Name TEXT");
-                File.Create("extra/alter.txt");
-            }
             
             //since 5.5.11 we are cleaning up the table Playercmds
             //if Playercmds exists copy-filter to Opstats and remove Playercmds
