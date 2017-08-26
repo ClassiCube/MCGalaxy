@@ -172,6 +172,7 @@ namespace MCGalaxy.Commands.World {
                            Group.GetColoredName(LevelPermission.Operator));
             Player.Message(p, "%Tjumpheight=[height] %H- sets max height users can jump up to");
             Player.Message(p, "%Thorspeed=[speed] %H- sets max speed users can move at, when speeding is disallowed");
+            Player.Message(p, "%Tjumps=[number] %H- sets the maximum number of consecutive jumps the player can make.");
         }
         
         static string Suffix(string opt) {
