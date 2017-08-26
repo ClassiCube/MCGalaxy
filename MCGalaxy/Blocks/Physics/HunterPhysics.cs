@@ -34,30 +34,33 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        if (closest.Pos.BlockX - x != 0) {
+                        if (closest.Pos.BlockX != x) {
                             index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveFish(lvl, C.b, index, target)) return;
-                        }                    
+                        }
+                		
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 4;
                     case 4:
                     case 5:
                     case 6:
-                        if (closest.Pos.BlockY - y != 0) {
+                        if (closest.Pos.BlockY != y) {
                             index = lvl.PosToInt(x, (ushort)(y + Math.Sign(closest.Pos.BlockY - y)), z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 7;
                     case 7:
                     case 8:
                     case 9:
-                        if (closest.Pos.BlockZ - z != 0) {
+                        if (closest.Pos.BlockZ != z) {
                             index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 1;
@@ -79,30 +82,33 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        if (closest.Pos.BlockX - x != 0) {
+                        if (closest.Pos.BlockX != x) {
                             index = lvl.PosToInt((ushort)(x - Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveFish(lvl, C.b, index, target)) return;
-                        }                        
+                        }
+                		
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 4;
                     case 4:
                     case 5:
                     case 6:
-                        if (closest.Pos.BlockY - y != 0) {
+                        if (closest.Pos.BlockY != y) {
                             index = lvl.PosToInt(x, (ushort)(y - Math.Sign(closest.Pos.BlockY - y)), z);
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 7;
                     case 7:
                     case 8:
                     case 9:
-                        if (closest.Pos.BlockZ - z != 0) {
+                        if (closest.Pos.BlockZ != z) {
                             index = lvl.PosToInt(x, y, (ushort)(z - Math.Sign(closest.Pos.BlockZ - z)));
                             if (MoveFish(lvl, C.b, index, target)) return;
                         }
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 1;
