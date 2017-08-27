@@ -74,7 +74,7 @@ namespace MCGalaxy {
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
         public bool SeesServerWideChat { get { return Config.ServerWideChat && ServerConfig.ServerWideChat; } }
         
-        internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object();
+        internal readonly object queueLock = new object(), saveLock = new object(), savePropsLock = new object(), botsIOLock = new object();
         public List<ulong> blockqueue = new List<ulong>();
         BufferedBlockSender bulkSender;
 

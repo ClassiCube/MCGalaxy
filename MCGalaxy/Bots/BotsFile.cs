@@ -29,7 +29,8 @@ namespace MCGalaxy.Bots {
             return "extra/bots/" + mapName + ".json";
         }
 
-        public static void Load(Level lvl) {
+        public static void Load(Level lvl) { lock (lvl.botsIOLock) { LoadCore(lvl); } }
+        static void LoadCore(Level lvl) {
             string path = BotsPath(lvl.MapName);
             if (!File.Exists(path)) return;
             string json = File.ReadAllText(path);
@@ -49,7 +50,8 @@ namespace MCGalaxy.Bots {
             }
         }
         
-        public static void Save(Level lvl) {
+        public static void Save(Level lvl) { lock (lvl.botsIOLock) { SaveCore(lvl); } }
+        static void SaveCore(Level lvl) {
             PlayerBot[] bots = lvl.Bots.Items;
             string path = BotsPath(lvl.MapName);
             if (!File.Exists(path) && bots.Length == 0) return;
@@ -67,7 +69,7 @@ namespace MCGalaxy.Bots {
             } catch (Exception ex) {
                 Logger.Log(LogType.Warning, "Failed to save bots file");
                 Logger.LogError(ex);
-            }
+            }            
         }
         
         static void LoadAi(BotProperties props, PlayerBot bot) {
