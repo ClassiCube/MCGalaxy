@@ -86,10 +86,9 @@ namespace MCGalaxy.Core {
                                                byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (action != MouseAction.Pressed) return;
             
-            bool validPos = p.level.IsValidPos(x, y, z);
-            if (entity != Entities.SelfID && !validPos && ClickOnBot(p, entity)) return;
+            if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
             
-            if (p.level.Config.Deletable || !validPos) return;
+            if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;
             ExtBlock block = p.level.GetBlock(x, y, z);
             bool isMB = p.level.BlockProps[block.Index].IsMessageBlock;
             bool isPortal = p.level.BlockProps[block.Index].IsPortal;
