@@ -59,9 +59,7 @@ namespace MCGalaxy.Blocks.Physics {
             block = ExtBlock.FromIndex(lvl.BlockProps[block.Index].oDoorIndex);
             
             if (index >= 0 && oDoor == block) {
-                PhysicsArgs args = default(PhysicsArgs);
-                args.ExtBlock = oDoor.BlockID == Block.custom_block;
-                lvl.AddUpdate(index, oDoor.RawID, true, args);
+                lvl.AddUpdate(index, oDoor, true);
             }
         }
         

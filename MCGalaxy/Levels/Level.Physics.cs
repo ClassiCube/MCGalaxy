@@ -227,6 +227,12 @@ namespace MCGalaxy {
                 //ListCheck.Add(new Check(b));    //Lousy back up plan
             }
         }
+        
+        internal bool AddUpdate(int b, ExtBlock block, bool overRide = false) {
+            PhysicsArgs args = default(PhysicsArgs);
+            args.ExtBlock = block.BlockID == Block.custom_block;
+            return AddUpdate(b, block.RawID, overRide, args);
+        }
 
         internal bool AddUpdate(int b, byte type, bool overRide = false) {
             return AddUpdate(b, type, overRide, default(PhysicsArgs));
