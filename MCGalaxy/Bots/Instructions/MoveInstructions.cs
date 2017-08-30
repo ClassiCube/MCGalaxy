@@ -94,7 +94,7 @@ namespace MCGalaxy.Bots {
         public JumpInstruction() { Name = "jump"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            bot.jumping = true;
+            if (bot.curJump <= 0) bot.curJump = 1;
             bot.NextInstruction(); return false;
         }
         

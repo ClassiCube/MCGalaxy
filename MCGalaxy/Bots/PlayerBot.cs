@@ -43,8 +43,7 @@ namespace MCGalaxy {
         public Position TargetPos;
         public bool movement = false;
         public int movementSpeed = 3;
-        internal bool jumping = false;
-        internal int currentjump = 0;
+        internal sbyte curJump = 0;
         
         public PlayerBot(string n, Level lvl) { Init(n, lvl); }
         
@@ -78,7 +77,7 @@ namespace MCGalaxy {
         public static void Remove(PlayerBot bot, bool save = true) {
             bot.level.Bots.Remove(bot);
             bot.GlobalDespawn();
-            bot.jumping = false;
+            bot.curJump = 0;
             if (save) BotsFile.Save(bot.level);
         }
         

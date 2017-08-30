@@ -98,6 +98,7 @@ namespace MCGalaxy.Bots {
         public bool Kill { get; set; }
         public bool Hunt { get; set; }
         public int CurInstruction { get; set; }
+        public sbyte CurJump { get; set; }
         
         public int X { get; set; }
         public int Y { get; set; }
@@ -113,7 +114,7 @@ namespace MCGalaxy.Bots {
             Model = bot.Model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
-            CurInstruction = bot.cur;
+            CurInstruction = bot.cur; CurJump = bot.curJump;
             ClickedOnText = bot.ClickedOnText;
             
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
@@ -132,7 +133,7 @@ namespace MCGalaxy.Bots {
             bot.AIName = AI; bot.hunt = Hunt; bot.kill = Kill;
             bot.DisplayName = DisplayName;
             
-            bot.cur = CurInstruction;
+            bot.cur = CurInstruction; bot.curJump = CurJump;
             bot.ClickedOnText = ClickedOnText;
         }
         
@@ -143,7 +144,7 @@ namespace MCGalaxy.Bots {
             copy.Model = Model; copy.Color = Color;
             
             copy.AI = AI; copy.Kill = Kill; copy.Hunt = Hunt;
-            copy.CurInstruction = CurInstruction;
+            copy.CurInstruction = CurInstruction; copy.CurJump = CurJump;
             copy.ClickedOnText = ClickedOnText;
             
             copy.X = X; copy.Y = Y; copy.Z = Z;

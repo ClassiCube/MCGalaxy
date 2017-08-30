@@ -66,7 +66,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if (bot.jumping) DoJump(bot);
+            if (bot.curJump > 0) DoJump(bot);
         }
         
         static bool DoInstruction(PlayerBot bot) {
@@ -75,16 +75,16 @@ namespace MCGalaxy {
             return ins.Execute(bot, bot.Instructions[bot.cur]);
         }
         
-        static void DoJump(PlayerBot bot) {
-            bot.currentjump++;
+        static void DoJump(PlayerBot bot) {            
             Position pos = bot.Pos;
-            switch (bot.currentjump) {
-                    case 1: pos.Y += 24; break;
-                    case 2: pos.Y += 12; break;
-                    case 3: break;
-                    case 4: pos.Y -= 12; break;
-                    case 5: pos.Y -= 24; bot.jumping = false; bot.currentjump = 0; break;
+            switch (bot.curJump) {
+                case 1: pos.Y += 24; break;
+                case 2: pos.Y += 12; break;
+                case 3: break;
+                case 4: pos.Y -= 12; break;
+                case 5: pos.Y -= 24; bot.curJump = -1; break;
             }
+            bot.curJump++;
             bot.Pos = pos;
         }
     }
