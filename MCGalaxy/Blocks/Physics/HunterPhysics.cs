@@ -25,6 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;       
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
+            ExtBlock block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -36,7 +37,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 3:
                         if (closest.Pos.BlockX != x) {
                             index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                 		
                         dirsVisited++;
@@ -47,7 +48,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 6:
                         if (closest.Pos.BlockY != y) {
                             index = lvl.PosToInt(x, (ushort)(y + Math.Sign(closest.Pos.BlockY - y)), z);
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                         
                         dirsVisited++;
@@ -58,7 +59,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 9:
                         if (closest.Pos.BlockZ != z) {
                             index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                         
                         dirsVisited++;
@@ -66,13 +67,14 @@ namespace MCGalaxy.Blocks.Physics {
                         goto case 1;
                 }
             }
-            RandomlyMove(lvl, ref C, rand, x, y, z, target);
+            RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
         }
         
         public static void DoFlee(Level lvl, ref Check C, byte target) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
+            ExtBlock block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -84,7 +86,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 3:
                         if (closest.Pos.BlockX != x) {
                             index = lvl.PosToInt((ushort)(x - Math.Sign(closest.Pos.BlockX - x)), y, z);
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                 		
                         dirsVisited++;
@@ -95,7 +97,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 6:
                         if (closest.Pos.BlockY != y) {
                             index = lvl.PosToInt(x, (ushort)(y - Math.Sign(closest.Pos.BlockY - y)), z);
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                         
                         dirsVisited++;
@@ -106,7 +108,7 @@ namespace MCGalaxy.Blocks.Physics {
                     case 9:
                         if (closest.Pos.BlockZ != z) {
                             index = lvl.PosToInt(x, y, (ushort)(z - Math.Sign(closest.Pos.BlockZ - z)));
-                            if (MoveTo(lvl, C.b, index, target)) return;
+                            if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
                         
                         dirsVisited++;
@@ -114,44 +116,45 @@ namespace MCGalaxy.Blocks.Physics {
                         goto case 1;
                 }
             }
-            RandomlyMove(lvl, ref C, rand, x, y, z, target);
+            RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
         }
         
-        static bool MoveTo(Level lvl, int baseIndex, int index, byte target) {
-            if (index >= 0 && lvl.blocks[index] == target && lvl.AddUpdate(index, lvl.blocks[baseIndex])) {
-                lvl.AddUpdate(baseIndex, target);
+        static bool MoveTo(Level lvl, ExtBlock block, int index, int targetIndex, byte target) {
+            if (targetIndex >= 0 && lvl.blocks[targetIndex] == target && lvl.AddUpdate(targetIndex, block)) {
+                lvl.AddUpdate(index, target);
                 return true;
             }
             return false;
         }
         
-        static void RandomlyMove(Level lvl, ref Check C, Random rand, ushort x, ushort y, ushort z, byte target ) {
+        static void RandomlyMove(Level lvl, ref Check C, ExtBlock block, Random rand, 
+		                         ushort x, ushort y, ushort z, byte target) {
             switch (rand.Next(1, 15)) {
                 case 1:
-                    if (MoveTo(lvl, C.b, lvl.PosToInt(x, (ushort)(y - 1), z), target)) return;
+                    if (MoveTo(lvl, block, C.b, lvl.PosToInt(x, (ushort)(y - 1), z), target)) return;
                     goto case 3;
                 case 2:
-                    if (MoveTo(lvl, C.b, lvl.PosToInt(x, (ushort)(y + 1), z), target)) return;
+                    if (MoveTo(lvl, block, C.b, lvl.PosToInt(x, (ushort)(y + 1), z), target)) return;
                     goto case 6;
                 case 3:
                 case 4:
                 case 5:
-                    if (MoveTo(lvl, C.b, lvl.PosToInt((ushort)(x - 1), y, z), target)) return;
+                    if (MoveTo(lvl, block, C.b, lvl.PosToInt((ushort)(x - 1), y, z), target)) return;
                     goto case 9;
                 case 6:
                 case 7:
                 case 8:
-                    if (MoveTo(lvl, C.b, lvl.PosToInt((ushort)(x + 1), y, z), target)) return;
+                    if (MoveTo(lvl, block, C.b, lvl.PosToInt((ushort)(x + 1), y, z), target)) return;
                     goto case 12;
                 case 9:
                 case 10:
                 case 11:
-                    MoveTo(lvl, C.b, lvl.PosToInt(x, y, (ushort)(z - 1)), target);
+                    MoveTo(lvl, block, C.b, lvl.PosToInt(x, y, (ushort)(z - 1)), target);
                     break;
                 case 12:
                 case 13:
                 case 14:
-                    MoveTo(lvl, C.b, lvl.PosToInt(x, y, (ushort)(z + 1)), target);
+                    MoveTo(lvl, block, C.b, lvl.PosToInt(x, y, (ushort)(z + 1)), target);
                     break;
             }
         }

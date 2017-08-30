@@ -62,12 +62,12 @@ namespace MCGalaxy.Blocks.Physics {
             // generated with no extraInfo, because it sets a Check for that position with no extraInfo.
             lvl.AddUpdate(lvl.PosToInt(x, y, z), Block.Air);
             
+            int index;
             for (ushort yy = (ushort)(y - (size + 1)); yy <= (ushort)(y + (size + 1)); ++yy)
                 for (ushort zz = (ushort)(z - (size + 1)); zz <= (ushort)(z + (size + 1)); ++zz)
                     for (ushort xx = (ushort)(x - (size + 1)); xx <= (ushort)(x + (size + 1)); ++xx)
-            {
-                int index = lvl.PosToInt(xx, yy, zz);
-                if (index >= 0 && lvl.blocks[index] == Block.Air && rand.Next(1, 40) < 2) {
+            {               
+                if (lvl.IsAirAt(xx, yy, zz, out index) && rand.Next(1, 40) < 2) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Drop; args.Value1 = 100;
                     args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 25;
