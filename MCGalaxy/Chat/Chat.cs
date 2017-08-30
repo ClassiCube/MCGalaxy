@@ -166,7 +166,6 @@ namespace MCGalaxy {
                 sb.Replace("<3", "(heart)");
             }
             message = EmotesHandler.Replace(sb.ToString());
-            message = FullCP437Handler.Replace(message);
             return message;
         }
         

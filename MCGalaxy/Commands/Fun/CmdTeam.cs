@@ -191,15 +191,15 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Team owner [name] %H-Sets the player who has owner privileges for the team.");
-            Player.Message(p, "%T/Team kick [name] %H-Removes that player from the team you are in.");
-            Player.Message(p, "%T/Team color [color] %H-Sets the color of the team name shown in chat.");
+            Player.Message(p, "%T/Team owner [name] %H- Sets the player who has owner privileges for the team.");
+            Player.Message(p, "%T/Team kick [name] %H- Removes that player from the team you are in.");
+            Player.Message(p, "%T/Team color [color] %H- Sets the color of the team name shown in chat.");
 
             Player.Message(p, "%T/Team create %H- Creates a new team.");
-            Player.Message(p, "%T/Team join %H-Joins the team you last received an invite to.");
-            Player.Message(p, "%T/Team invite [name] %H-Invites that player to join your team.");
-            Player.Message(p, "%T/Team leave %H-Removes you from the team you are in.");
-            Player.Message(p, "%T/Team members [name] %H-Lists the players within that team.");
+            Player.Message(p, "%T/Team join %H- Joins the team you last received an invite to.");
+            Player.Message(p, "%T/Team invite [name] %H- Invites that player to join your team.");
+            Player.Message(p, "%T/Team leave %H- Removes you from the team you are in.");
+            Player.Message(p, "%T/Team members [name] %H- Lists the players within that team.");
             Player.Message(p, "%HAnything else is sent as a message to all members of the team.");
         }
     }

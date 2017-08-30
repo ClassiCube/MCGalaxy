@@ -83,11 +83,11 @@ namespace MCGalaxy {
         /// <summary> Converts a code page 437 indice into unicode. </summary>
         public static char Cp437ToUnicode(this char c) {
             if (c < 0x20) {
-                return FullCP437Handler.ControlCharReplacements[c];
+                return EmotesHandler.ControlCharReplacements[c];
             } else if (c < 0x7F) {
                 return c;
             } else if (c <= 0xFF) {
-                return FullCP437Handler.ExtendedCharReplacements[c - 0x7F];
+                return EmotesHandler.ExtendedCharReplacements[c - 0x7F];
             }
             return '?';
         }
@@ -97,9 +97,9 @@ namespace MCGalaxy {
             int cpIndex = 0;
             if (c >= ' ' && c <= '~') {
                 return c;
-            } else if ((cpIndex = FullCP437Handler.ControlCharReplacements.IndexOf(c)) >= 0 ) {
+            } else if ((cpIndex = EmotesHandler.ControlCharReplacements.IndexOf(c)) >= 0 ) {
                 return (char)cpIndex;
-            } else if ((cpIndex = FullCP437Handler.ExtendedCharReplacements.IndexOf(c)) >= 0 ) {
+            } else if ((cpIndex = EmotesHandler.ExtendedCharReplacements.IndexOf(c)) >= 0 ) {
                 return (char)(cpIndex + 127);
             }
             return '?';

@@ -131,7 +131,6 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(message.Trim()))
                 message = ".";
             message = EmotesHandler.Replace(message);
-            message = FullCP437Handler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
             
             if (color)

@@ -39,7 +39,15 @@ namespace MCGalaxy {
             { "vv", '▼' }, { "down", '▼' },
             { "house", '⌂' }
         };
-
+		
+        /// <summary> Conversion for code page 437 characters from index 0 to 31 to unicode. </summary>
+        public const string ControlCharReplacements = "\0☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
+        
+        /// <summary> Conversion for code page 437 characters from index 127 to 255 to unicode. </summary>
+        public const string ExtendedCharReplacements = "⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»" +
+            "░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌" +
+            "█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u00a0";
+        
         public static string Replace(string message) {
             return Unescape(message, '(', ')', EmoteKeywords);
         }
