@@ -17,9 +17,8 @@
  */
 using System;
 using System.Globalization;
-using MCGalaxy.DB;
-using MCGalaxy.SQL;
 using MCGalaxy.Eco;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Core {
     internal static class EcoHandlers {

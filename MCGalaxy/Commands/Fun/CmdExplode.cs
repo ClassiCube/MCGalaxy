@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Fun {
             if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }
             if (message.CaselessEq("me") && p != null) args[0] = p.name;
             
-            ushort x, y, z;
+            ushort x = 0, y = 0, z = 0;
             if (args.Length == 1) {
                 Player who = PlayerInfo.FindMatches(p, args[0]);
                 if (who == null) return;
@@ -43,17 +43,15 @@ namespace MCGalaxy.Commands.Fun {
                 if (DoExplode(p, who.level, x, y, z))
                     Player.Message(p, who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
-                try {
-                    x = ushort.Parse(args[0]);
-                    y = ushort.Parse(args[1]);
-                    z = ushort.Parse(args[2]);
-                } catch {
-                    Player.Message(p, "Invalid parameters"); return;
-                }
+                if (!CommandParser.GetUShort(p, args[0], "X", ref x)) return;
+                if (!CommandParser.GetUShort(p, args[1], "Y", ref y)) return;
+                if (!CommandParser.GetUShort(p, args[2], "Z", ref z)) return;
 
                 if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
                 if (DoExplode(p, p.level, x, y, z))
                     Player.Message(p, "An explosion was made at {0}, {1}, {2}).", x, y, z);
+            } else {
+                Help(p);
             }
         }
         
