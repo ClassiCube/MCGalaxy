@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!TryMessage(p, string.Format(message, giver, who.ColoredName))) return false;
             
             string giverRaw = (p == null) ? "(console)" : p.name;
-            if (messageWho && !who.listignored.CaselessContains(giverRaw) && !who.ignoreAll)
+            if (messageWho && !who.Ignores.Names.CaselessContains(giverRaw) && !who.Ignores.All)
                 Player.Message(who, string.Format(message, giver, "you"));
             return true;
         }

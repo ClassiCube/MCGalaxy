@@ -31,7 +31,7 @@ namespace MCGalaxy.Core {
                 LoadReach(p);
             
             LoadWaypoints(p);
-            LoadIgnores(p);
+            p.Ignores.Load(p);
             CheckLoginJailed(p);
         }
         
@@ -66,33 +66,6 @@ namespace MCGalaxy.Core {
             } catch (IOException ex) {
                 Player.Message(p, "Error loading waypoints.");
                 Logger.LogError(ex);
-            }
-        }
-        
-        static void LoadIgnores(Player p) {
-            string path = "ranks/ignore/" + p.name + ".txt";
-            if (!File.Exists(path)) return;
-            
-            try {
-                string[] lines = File.ReadAllLines(path);
-                foreach (string line in lines) {
-                    if (line == "&global") continue; // deprecated /ignore global
-                    if (line == "&all") p.ignoreAll = true;
-                    else if (line == "&irc") p.ignoreIRC = true;
-                    else if (line == "&8ball") p.ignore8ball = true;
-                    else if (line == "&drawoutput") p.ignoreDrawOutput = true;
-                    else if (line == "&titles") p.ignoreTitles = true;
-                    else if (line == "&nicks") p.ignoreNicks = true;
-                    else p.listignored.Add(line);
-                }
-            } catch (IOException ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
-            }
-            
-            if (p.ignoreAll || p.ignoreIRC || p.ignore8ball || p.ignoreDrawOutput
-                || p.ignoreTitles || p.ignoreNicks || p.listignored.Count > 0) {
-                Player.Message(p, "&cType &a/ignore list &cto see who you are still ignoring");
             }
         }
         

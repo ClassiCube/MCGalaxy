@@ -43,9 +43,9 @@ namespace MCGalaxy {
                 if (visibleOnly && !Entities.CanSee(p, source)) continue;
                 if (!p.level.SeesServerWideChat || p.Chatroom != null) continue;
                 
-                if (p.ignoreNicks && p.ignoreTitles) Player.Message(p, msg_NNNT);
-                else if (p.ignoreNicks) Player.Message(p, msg_NN);
-                else if (p.ignoreTitles) Player.Message(p, msg_NT);
+                if (p.Ignores.Nicks && p.Ignores.Titles) Player.Message(p, msg_NNNT);
+                else if (p.Ignores.Nicks) Player.Message(p, msg_NN);
+                else if (p.Ignores.Titles) Player.Message(p, msg_NT);
                 else Player.Message(p, message);
             }
         }
@@ -122,7 +122,7 @@ namespace MCGalaxy {
         /// <summary> Sends a message to all players who are on the given level,
         /// are not in a chatroom, and are not ignoring all chat. </summary>
         public static void MessageLevel(Level lvl, string message) {
-            MessageWhere(message, pl => !pl.ignoreAll && pl.level == lvl && pl.Chatroom == null);
+            MessageWhere(message, pl => !pl.Ignores.All && pl.level == lvl && pl.Chatroom == null);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
@@ -140,7 +140,7 @@ namespace MCGalaxy {
         /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
         /// and are not on a level that does not have isolated/level only chat. </summary>
         public static void MessageGlobal(string message) {
-            MessageWhere(message, pl => !pl.ignoreAll && pl.level.SeesServerWideChat && pl.Chatroom == null);
+            MessageWhere(message, pl => !pl.Ignores.All && pl.level.SeesServerWideChat && pl.Chatroom == null);
         }
         
         /// <summary> Sends a message to everyone, regardless of their level, chatroom or ignoring all chat. </summary>
@@ -171,9 +171,9 @@ namespace MCGalaxy {
         
         /// <summary> Returns true if the target player can see chat messags by source. </summary>
         public static bool NotIgnoring(Player source, Player target) {
-            if (target.ignoreAll) return source == target; // don't ignore messages from self
+            if (target.Ignores.All) return source == target; // don't ignore messages from self
             
-            return source == null || !target.listignored.CaselessContains(source.name);
+            return source == null || !target.Ignores.Names.CaselessContains(source.name);
         }
         
         

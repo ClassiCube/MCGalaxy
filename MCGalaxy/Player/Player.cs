@@ -188,7 +188,7 @@ namespace MCGalaxy {
             message = Colors.Escape(message);
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.ignoreAll || p.ignoreIRC) continue;
+                if (p.Ignores.All || p.Ignores.IRC) continue;
                 
                 if (p.level.SeesServerWideChat && p.Chatroom == null)
                     Player.Message(p, message);

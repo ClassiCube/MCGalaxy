@@ -94,10 +94,10 @@ namespace MCGalaxy {
             if (who == null) return;
             if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             
-            if (who.ignoreAll) {
+            if (who.Ignores.All) {
                 DoFakePM(p, who, message); return;
             }          
-            if (p != null && who.listignored.CaselessContains(p.name)) {
+            if (p != null && who.Ignores.Names.CaselessContains(p.name)) {
                 DoFakePM(p, who, message); return;
             }
             DoPM(p, who, message);

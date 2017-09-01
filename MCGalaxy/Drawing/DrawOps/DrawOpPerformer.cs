@@ -65,12 +65,12 @@ namespace MCGalaxy.Drawing.Ops {
             
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
-                if (p == null || !p.ignoreDrawOutput) {
+                if (p == null || !p.Ignores.DrawOutput) {
                     Player.Message(p, format, op.Name, brush.Name, affected);
                 }
             } else if (affected != -1) {
                 const string format = "{0}: affecting up to {1} blocks";
-                if (p == null || !p.ignoreDrawOutput) {
+                if (p == null || !p.Ignores.DrawOutput) {
                     Player.Message(p, format, op.Name, affected);
                 }
             }
@@ -191,7 +191,7 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == reloadThreshold) {
-                    if (p == null || !p.ignoreDrawOutput) {
+                    if (p == null || !p.Ignores.DrawOutput) {
                 	    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
 

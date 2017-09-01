@@ -26,7 +26,7 @@ using MCGalaxy.Undo;
 namespace MCGalaxy {
     
     public enum VoteKickChoice { NotYetVoted, Yes, No }
-    
+
     public partial class Player : IDisposable {
 
         internal class PendingItem {
@@ -39,9 +39,9 @@ namespace MCGalaxy {
             }
         }
         internal static List<PendingItem> pendingNames = new List<PendingItem>();
-        internal static object pendingLock = new object();        
+        internal static object pendingLock = new object();
         public static List<Player> connections = new List<Player>(ServerConfig.MaxPlayers);
-        public List<string> listignored = new List<string>();
+        public PlayerIgnores Ignores = new PlayerIgnores();
         public static string lastMSG = "";
         
         //TpA
@@ -93,7 +93,6 @@ namespace MCGalaxy {
         public string ColoredName { get { return color + DisplayName; } }
 
         public bool deleteMode;
-        public bool ignorePermission;
         public bool ignoreGrief;
         public bool parseEmotes = ServerConfig.ParseEmotes;
         public bool opchat;
@@ -101,8 +100,6 @@ namespace MCGalaxy {
         public bool onWhitelist;
         public bool whisper;
         public string whisperTo = "";
-        public bool ignoreAll, ignoreGlobal, ignoreIRC, ignoreTitles, ignoreNicks, ignore8ball, ignoreDrawOutput;
-
         string partialMessage = "";
 
         public bool trainGrab;

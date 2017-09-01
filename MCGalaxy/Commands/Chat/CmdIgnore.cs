@@ -36,42 +36,29 @@ namespace MCGalaxy.Commands.Chatting {
             string action = args[0].ToLower();
             
             if (action == "all") {
-                Toggle(p, ref p.ignoreAll, "{0} ignoring all chat"); return;
+                Toggle(p, ref p.Ignores.All, "{0} ignoring all chat"); return;
             } else if (action == "irc") {
-               Toggle(p, ref p.ignoreIRC, "{0} ignoring IRC chat"); return;
+               Toggle(p, ref p.Ignores.IRC, "{0} ignoring IRC chat"); return;
             } else if (action == "titles") {
-                Toggle(p, ref p.ignoreTitles, "{1}Player titles {0} show before names in chat"); return;
+                Toggle(p, ref p.Ignores.Titles, "{1}Player titles {0} show before names in chat"); return;
             } else if (action == "nicks") {
-                Toggle(p, ref p.ignoreNicks, "{1}Custom player nicks {0} show in chat"); return;
+                Toggle(p, ref p.Ignores.Nicks, "{1}Custom player nicks {0} show in chat"); return;
             } else if (action == "8ball") {
-                Toggle(p, ref p.ignore8ball, "{0} ignoring %T/8ball"); return;
+                Toggle(p, ref p.Ignores.EightBall, "{0} ignoring %T/8ball"); return;
             } else if (action == "drawoutput") {
-                Toggle(p, ref p.ignoreDrawOutput, "{0} ignoring draw command output"); return;
+                Toggle(p, ref p.Ignores.DrawOutput, "{0} ignoring draw command output"); return;
             } else if (action == "list") {                
-                string names = p.listignored.Join();
-                if (names.Length > 0) {
-                    Player.Message(p, "&cCurrently ignoring the following players:");
-                    Player.Message(p, names);
-                }
-                
-                if (p.ignoreAll) Player.Message(p, "&cIgnoring all chat");
-                if (p.ignoreIRC) Player.Message(p, "&cIgnoring IRC chat");
-                if (p.ignore8ball) Player.Message(p, "&cIgnoring %T/8ball");
-                
-                if (p.ignoreDrawOutput) Player.Message(p, "&cIgnoring draw command output.");
-                if (p.ignoreTitles) Player.Message(p, "&cPlayer titles do not show before names in chat.");
-                if (p.ignoreNicks) Player.Message(p, "&cCustom player nicks do not show in chat.");
-                return;
+                p.Ignores.Output(p); return;
             }
             
             string unignore = null;
-            for (int i = 0; i < p.listignored.Count; i++) {
-                if (!action.CaselessEq(p.listignored[i])) continue;
-                unignore = p.listignored[i]; break;
+            for (int i = 0; i < p.Ignores.Names.Count; i++) {
+                if (!action.CaselessEq(p.Ignores.Names[i])) continue;
+                unignore = p.Ignores.Names[i]; break;
             }
             
             if (unignore != null) {
-                p.listignored.Remove(unignore);
+                p.Ignores.Names.Remove(unignore);
                 Player.Message(p, "&aNo longer ignoring {0}", unignore);
             } else {
                 int matches = 0;
@@ -83,14 +70,14 @@ namespace MCGalaxy.Commands.Chatting {
                 }
                 if (p == who) { Player.Message(p, "You cannot ignore yourself."); return; }
                 
-                if (p.listignored.CaselessRemove(who.name)) {
+                if (p.Ignores.Names.CaselessRemove(who.name)) {
                     Player.Message(p, "&aNo longer ignoring {0}", who.ColoredName);
                 } else {
-                    p.listignored.Add(who.name);
+                    p.Ignores.Names.Add(who.name);
                     Player.Message(p, "&cNow ignoring {0}", who.ColoredName);
                 }
             }
-            SaveIgnores(p);
+            p.Ignores.Save(p);
         }
         
         static void Toggle(Player p, ref bool ignore, string format) {
@@ -100,30 +87,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 Player.Message(p, format, ignore ? "no longer" : "now", ignore ? "&c" : "&a");
             }
-            SaveIgnores(p);
-        }
-        static void SaveIgnores(Player p) {
-            string path = "ranks/ignore/" + p.name + ".txt";
-            if (!Directory.Exists("ranks/ignore"))
-                Directory.CreateDirectory("ranks/ignore");
-            
-            try {
-                using (StreamWriter w = new StreamWriter(path)) {
-                    if (p.ignoreAll) w.WriteLine("&all");
-                    if (p.ignoreIRC) w.WriteLine("&irc");
-                    if (p.ignore8ball) w.WriteLine("&8ball");
-                    
-                    if (p.ignoreDrawOutput) w.WriteLine("&drawoutput");
-                    if (p.ignoreTitles) w.WriteLine("&titles");
-                    if (p.ignoreNicks) w.WriteLine("&nicks");
-                    
-                    foreach (string line in p.listignored)
-                        w.WriteLine(line);
-                }
-            } catch (IOException ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to save ignored list for player: " + p.name);
-            }
+            p.Ignores.Save(p);
         }
 
         public override void Help(Player p) {
