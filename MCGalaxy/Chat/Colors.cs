@@ -232,7 +232,9 @@ namespace MCGalaxy {
                 char color = chars[i + 1];
                 if (!Map(ref color)) continue;
                 
-                chars[i] = '&'; i++; // skip over color code
+                chars[i] = '&'; 
+                chars[i + 1] = color; 
+                i++; // skip over color code
             }
         }
         
