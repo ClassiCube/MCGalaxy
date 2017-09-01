@@ -22,8 +22,8 @@ using System.IO;
 namespace MCGalaxy {
     
     public class PlayerIgnores {
-        public List<string> Names = new List<string>();
-        public bool All, Global, IRC, Titles, Nicks, EightBall, DrawOutput;
+        public List<string> Names = new List<string>(), IRCNicks = new List<string>();
+        public bool All, IRC, Titles, Nicks, EightBall, DrawOutput;
         
         public void Load(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
@@ -33,13 +33,18 @@ namespace MCGalaxy {
                 string[] lines = File.ReadAllLines(path);
                 foreach (string line in lines) {
                     if (line == "&global") continue; // deprecated /ignore global
-                    if (line == "&all") All = true;
-                    else if (line == "&irc") IRC = true;
-                    else if (line == "&8ball") EightBall = true;
-                    else if (line == "&drawoutput") DrawOutput = true;
-                    else if (line == "&titles") Titles = true;
-                    else if (line == "&nicks") Nicks = true;
-                    else Names.Add(line);
+                    if (line == "&all") { All = true; continue; }
+                    if (line == "&irc") { IRC = true; continue; }
+                    if (line == "&8ball") { EightBall = true; continue; }
+                    if (line == "&drawoutput") { DrawOutput = true; continue; }
+                    if (line == "&titles") { Titles = true; continue; }
+                    if (line == "&nicks") { Nicks = true; continue; }
+                    
+                    if (line.StartsWith("&irc_")) {
+                        IRCNicks.Add(line.Substring("&irc_".Length));
+                    } else {
+                        Names.Add(line);
+                    }
                 }
             } catch (IOException ex) {
                 Logger.LogError(ex);
@@ -66,7 +71,8 @@ namespace MCGalaxy {
                     if (Titles) w.WriteLine("&titles");
                     if (Nicks) w.WriteLine("&nicks");
                     
-                    foreach (string line in Names) { w.WriteLine(line); }
+                    foreach (string nick in IRCNicks) { w.WriteLine("&irc_" + nick); }
+                    foreach (string name in Names) { w.WriteLine(name); }
                 }
             } catch (IOException ex) {
                 Logger.LogError(ex);
@@ -75,10 +81,13 @@ namespace MCGalaxy {
         }
         
         public void Output(Player p) {
-            string names = Names.Join();
-            if (names.Length > 0) {
+            if (Names.Count > 0) {
                 Player.Message(p, "&cCurrently ignoring the following players:");
-                Player.Message(p, names);
+                Player.Message(p, Names.Join(n => PlayerInfo.GetColoredName(p, n)));
+            }
+            if (IRCNicks.Count > 0) {
+                Player.Message(p, "&cCurrently ignoring the following IRC nicks:");
+                Player.Message(p, IRCNicks.Join());
             }
             
             if (All) Player.Message(p, "&cIgnoring all chat");

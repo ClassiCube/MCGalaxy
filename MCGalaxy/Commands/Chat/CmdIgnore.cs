@@ -38,7 +38,9 @@ namespace MCGalaxy.Commands.Chatting {
             if (action == "all") {
                 Toggle(p, ref p.Ignores.All, "{0} ignoring all chat"); return;
             } else if (action == "irc") {
-               Toggle(p, ref p.Ignores.IRC, "{0} ignoring IRC chat"); return;
+                if (args.Length > 1) { IgnoreIRCNick(p, args[1]); } 
+                else { Toggle(p, ref p.Ignores.IRC, "{0} ignoring IRC chat"); }
+                return;
             } else if (action == "titles") {
                 Toggle(p, ref p.Ignores.Titles, "{1}Player titles {0} show before names in chat"); return;
             } else if (action == "nicks") {
@@ -47,7 +49,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Toggle(p, ref p.Ignores.EightBall, "{0} ignoring %T/8ball"); return;
             } else if (action == "drawoutput") {
                 Toggle(p, ref p.Ignores.DrawOutput, "{0} ignoring draw command output"); return;
-            } else if (action == "list") {                
+            } else if (action == "list") {
                 p.Ignores.Output(p); return;
             }
             
@@ -89,17 +91,34 @@ namespace MCGalaxy.Commands.Chatting {
             }
             p.Ignores.Save(p);
         }
+        
+        static void IgnoreIRCNick(Player p, string nick) {
+            if (p.Ignores.IRCNicks.CaselessRemove(nick)) {
+                Player.Message(p, "&aNo longer ignoring IRC nick: {0}", nick);
+            } else {
+                p.Ignores.IRCNicks.Add(nick);
+                Player.Message(p, "&cNow ignoring IRC nick: {0}", nick);
+            }
+            p.Ignores.Save(p);
+        }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Ignore [name]");
-            Player.Message(p, "%HUsing the same name again will unignore.");
-            Player.Message(p, "%H If name is \"all\", all chat is ignored.");
-            Player.Message(p, "%H If name is \"irc\", IRC chat is ignored.");
-            Player.Message(p, "%H If name is \"8ball\", %T/8ball %His ignored.");
-            Player.Message(p, "%H If name is \"drawoutput\", drawing command output is ignored.");
-            Player.Message(p, "%H If name is \"titles\", player titles before names are ignored.");
-            Player.Message(p, "%H If name is \"nicks\", custom player nicks do not show in chat.");
+            Player.Message(p, "%HSee %T/Help ignore names %Hfor special names when ignoring.");
             Player.Message(p, "%HOtherwise, all chat from the player with [name] is ignored.");
+            Player.Message(p, "%HUsing the same [name] again will unignore.");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (!message.CaselessEq("names")) { Help(p); return; }
+            Player.Message(p, "%HSpecial names for %T/Ignore [name]");
+            Player.Message(p, "%H all - all chat is ignored.");
+            Player.Message(p, "%H irc - IRC chat is ignored.");
+            Player.Message(p, "%H irc [nick] - IRC chat by that IRC nick ignored.");            
+            Player.Message(p, "%H 8ball - %T/8ball %His ignored.");
+            Player.Message(p, "%H drawoutput - drawing command output is ignored.");
+            Player.Message(p, "%H titles - player titles before names are ignored.");
+            Player.Message(p, "%H nicks - custom player nicks do not show in chat.");         
         }
     }
 }

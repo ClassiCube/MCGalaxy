@@ -184,11 +184,11 @@ namespace MCGalaxy {
         [Obsolete("Use Chat.MessageAll() instead")]
         public static void GlobalMessage(string message, bool global) { Chat.MessageGlobal(message); }
         
-        public static void GlobalIRCMessage(string message) {
+        public static void GlobalIRCMessage(string srcNick, string message) {
             message = Colors.Escape(message);
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) {
-                if (p.Ignores.All || p.Ignores.IRC) continue;
+                if (p.Ignores.All || p.Ignores.IRC || p.Ignores.IRCNicks.Contains(srcNick)) continue;
                 
                 if (p.level.SeesServerWideChat && p.Chatroom == null)
                     Player.Message(p, message);

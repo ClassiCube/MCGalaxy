@@ -86,7 +86,7 @@ namespace MCGalaxy.Network {
         
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
-            Player.GlobalIRCMessage(String.Format("%I(IRC) * {0} {1}", user.Nick, description));
+            Player.GlobalIRCMessage(user.Nick, String.Format("%I(IRC) * {0} {1}", user.Nick, description));
         }
         
         void Listener_OnJoin(UserInfo user, string channel) {
@@ -101,10 +101,10 @@ namespace MCGalaxy.Network {
             DoJoinLeaveMessage(user.Nick, "left", channel);
         }
 
-        void DoJoinLeaveMessage(string who, string verb, string channel) {
-            Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", who, verb, channel);
+        void DoJoinLeaveMessage(string nick, string verb, string channel) {
+            Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", nick, verb, channel);
             string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
-            Player.GlobalIRCMessage(String.Format("%I(IRC) {0} {1} the{2} channel", who, verb, which));
+            Player.GlobalIRCMessage(nick, String.Format("%I(IRC) {0} {1} the{2} channel", nick, verb, which));
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -117,7 +117,7 @@ namespace MCGalaxy.Network {
             
             if (user.Nick == bot.nick) return;
             Logger.Log(LogType.IRCCActivity, user.Nick + " left IRC");
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " left");
+            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -161,7 +161,7 @@ namespace MCGalaxy.Network {
                                               ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
                 Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
-                Player.GlobalIRCMessage(String.Format("%I(IRC) {0}: &f{1}", user.Nick,
+                Player.GlobalIRCMessage(user.Nick, String.Format("%I(IRC) {0}: &f{1}", user.Nick,
                                                       ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
@@ -325,7 +325,7 @@ namespace MCGalaxy.Network {
                 }
             }
 
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " %Sis now known as %I" + newNick);
+            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " %Sis now known as %I" + newNick);
         }
         
         void Listener_OnNames(string channel, string[] nicks, bool last) {
@@ -344,7 +344,7 @@ namespace MCGalaxy.Network {
             
             if (reason.Length > 0) reason = " (" + reason + ")";
             Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
-            Player.GlobalIRCMessage("%I(IRC) " + user.Nick + " kicked " + kickee + reason);
+            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
