@@ -192,6 +192,7 @@ namespace MCGalaxy {
             useCheckpointSpawn = false;
             lastCheckpointIndex = -1;
             
+            AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             SendMapMotd();
             AccessResult access = level.BuildAccess.Check(this);
             AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
