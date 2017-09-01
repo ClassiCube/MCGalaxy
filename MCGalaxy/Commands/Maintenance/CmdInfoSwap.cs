@@ -33,10 +33,10 @@ namespace MCGalaxy.Commands.Maintenance {
             if (!Formatter.ValidName(p, args[1], "player")) return;
             
             if (PlayerInfo.FindExact(args[0]) != null) {
-                Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[0]); return;
+                Player.Message(p, "\"{0}\" must be offline to use %T/InfoSwap", args[0]); return;
             }
             if (PlayerInfo.FindExact(args[1]) != null) {
-                Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
+                Player.Message(p, "\"{0}\" must be offline to use %T/InfoSwap", args[1]); return;
             }
             
             string src = PlayerInfo.FindName(args[0]);
@@ -51,10 +51,10 @@ namespace MCGalaxy.Commands.Maintenance {
             Group srcGroup = Group.GroupIn(src);
             Group dstGroup = Group.GroupIn(dst);
             if (p != null && srcGroup.Permission >= p.Rank) {
-                Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
+                Player.Message(p, "Cannot %T/InfoSwap %Sfor a player ranked equal or higher to yours."); return;
             }
             if (p != null && dstGroup.Permission >= p.Rank) {
-                Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
+                Player.Message(p, "Cannot %T/InfoSwap %Sfor a player ranked equal or higher to yours."); return;
             }
                         
             SwapStats(src, dst);

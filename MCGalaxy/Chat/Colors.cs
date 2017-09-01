@@ -185,28 +185,55 @@ namespace MCGalaxy {
             if (col == 'T') { col = ServerConfig.HelpSyntaxColor[1]; return true; }
             if (col == 'I') { col = ServerConfig.IRCColor[1]; return true; }
             return IsDefined(col);
-        }
+        }       
         
         
         /// <summary> Converts percentage color codes to their actual/real color codes. </summary>
+        /// <remarks> Does not escape percentage codes that are part of urls. </remarks>
         public static string Escape(string value) {
             if (value.IndexOf('%') == -1) return value;
             char[] chars = new char[value.Length];
+            for (int i = 0; i < chars.Length; i++) { chars[i] = value[i]; }
             
-            for (int i = 0; i < value.Length; i++ ) {
-                char c = value[i];
-                bool validCode = c == '%' && i < value.Length - 1;
-                if (!validCode) { chars[i] = c; continue; }
+            for (int i = 0; i < chars.Length;) {
+                int end = value.IndexOf(' ', i);
+                if (end == -1) end = value.Length;
                 
-                char color = value[i + 1];
-                if (Map(ref color)) {
-                    chars[i] = '&';
-                    chars[i + 1] = color;
-                    i++; continue;
-                }
-                chars[i] = '%';
+                if (!IsUrlAt(chars, i, end - i)) Escape(chars, i, end);
+                i = end + 1;
             }
             return new string(chars);
+        }
+        
+        static bool IsUrlAt(char[] chars, int i, int len) {
+            const int prefixLen = 7; // "http://".Length
+            if (len < prefixLen) return false;
+            
+            // skip color codes in url
+            while (len > 0 && chars[i] == '&') { len -= 2; i += 2; }
+            
+            // Starts with "http" ?
+            if (len < prefixLen) return false;           
+            if (chars[i] != 'h' || chars[i + 1] != 't' || chars[i + 2] != 't' || chars[i + 3] != 'p') return false;
+            len -= 4; i += 4;
+            
+            // And then with "s://" or "://" ?
+            if (len >= 4 && chars[i] == 's' && chars[i + 1] == ':' && chars[i + 2] == '/' && chars[i + 3] == '/') return true;
+            if (len >= 3 && chars[i] == ':' && chars[i + 1] == '/' && chars[i + 2] == '/') return true;
+            return false;
+        }
+        
+        static void Escape(char[] chars, int start, int end) {
+            for (int i = start; i < end; i++ ) {
+                char c = chars[i];
+                bool validCode = c == '%' && i < chars.Length - 1;
+                
+                if (!validCode) continue;               
+                char color = chars[i + 1];
+                if (!Map(ref color)) continue;
+                
+                chars[i] = '&'; i++; // skip over color code
+            }
         }
         
         /// <summary> Removes all percentage and actual color codes from the given string. </summary>
@@ -320,7 +347,7 @@ namespace MCGalaxy {
         }
     }
     
-	/// <summary> Describes information about a color code. </summary>
+    /// <summary> Describes information about a color code. </summary>
     public struct ColorDesc {
         public char Code, Fallback;
         public byte R, G, B, A;

@@ -26,6 +26,8 @@ namespace MCGalaxy.Gui {
         public static void Format(string message, Action<char, string> output) {
             int index = 0;
             char col = 'S';
+            message = Colors.Escape(message);
+            
             while (index < message.Length)
                 OutputPart(ref col, ref index, message, output);
         }
@@ -47,7 +49,7 @@ namespace MCGalaxy.Gui {
         
         static int Next(int start, string message) {
             for (int i = start; i < message.Length; i++) {
-                if (!(message[i] == '&' || message[i] == '%')) continue;
+                if (message[i] != '&') continue;
                 // No colour code follows this
                 if (i == message.Length - 1) return -1;
                 
