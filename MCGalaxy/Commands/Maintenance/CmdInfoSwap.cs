@@ -39,56 +39,48 @@ namespace MCGalaxy.Commands.Maintenance {
                 Player.Message(p, "\"{0}\" must be offline to use /infoswap.", args[1]); return;
             }
             
-            PlayerData src = PlayerInfo.FindData(args[0]);
+            string src = PlayerInfo.FindName(args[0]);
             if (src == null) {
                 Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
             }
-            PlayerData dst = PlayerInfo.FindData(args[1]);
+            string dst = PlayerInfo.FindName(args[1]);
             if (dst == null) {
                 Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
             }
 
-            Group srcGroup = Group.GroupIn(src.Name);
-            Group dstGroup = Group.GroupIn(dst.Name);
+            Group srcGroup = Group.GroupIn(src);
+            Group dstGroup = Group.GroupIn(dst);
             if (p != null && srcGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
             }
             if (p != null && dstGroup.Permission >= p.Rank) {
                 Player.Message(p, "Cannot /infoswap for a player ranked equal or higher to yours."); return;
             }
-            
-            SetData(src, dst.Name); SetData(dst, src.Name);
+                        
+            SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);
             
             Player.Message(p, "Successfully infoswapped {0} %Sand {1}",
-                           PlayerInfo.GetColoredName(p, src.Name),
-                           PlayerInfo.GetColoredName(p, dst.Name));
+                           PlayerInfo.GetColoredName(p, src),
+                           PlayerInfo.GetColoredName(p, dst));
         }
         
-        const string format = "yyyy-MM-dd HH:mm:ss";
-        void SetData(PlayerData src, string dstName) {
-            string first = src.FirstLogin.ToString(format);
-            string last = src.LastLogin.ToString(format);
-            long blocks = PlayerData.BlocksPacked(src.TotalPlaced, src.TotalModified);
-            long cuboided = PlayerData.CuboidPacked(src.TotalDeleted, src.TotalDrawn);
+        void SwapStats(string src, string dst) {
+            int tmpNum = new Random().Next(0, 10000000);
+            string tmpName = "-tmp" + tmpNum + "-";
             
-            const string columns = "totalBlocks=@0, totalCuboided=@1, color=@2" +
-                ", totalDeaths=@3, FirstLogin=@4, IP=@5, totalKicked=@6, LastLogin=@7" +
-                ", totalLogin=@8, Money=@9, Title=@10, title_color=@11, TimeSpent=@12";
-            Database.Backend.UpdateRows(
-                "Players", columns, "WHERE Name=@13",
-                blocks, cuboided, src.Color,
-                src.Deaths, first, src.IP, src.Kicks, last, src.Logins,
-                src.Money, src.Title, src.TitleColor, src.TotalTime, dstName);
+            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", dst, tmpName); // PLAYERS[dst] = tmp
+            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", src, dst);     // PLAYERS[src] = dst
+            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", tmpName, src); // PLAYERS[tmp] = src
         }
         
-        void SwapGroups(PlayerData src, PlayerData dst, Group srcGroup, Group dstGroup) {
-            srcGroup.Players.Remove(src.Name);
-            srcGroup.Players.Add(dst.Name);
+        void SwapGroups(string src, string dst, Group srcGroup, Group dstGroup) {
+            srcGroup.Players.Remove(src);
+            srcGroup.Players.Add(dst);
             srcGroup.Players.Save();
             
-            dstGroup.Players.Remove(dst.Name);
-            dstGroup.Players.Add(src.Name);
+            dstGroup.Players.Remove(dst);
+            dstGroup.Players.Add(src);
             dstGroup.Players.Save();
         }
         
