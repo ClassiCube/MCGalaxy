@@ -64,16 +64,16 @@ namespace MCGalaxy.Blocks.Physics {
             if (index == -1) return;
             
             int i = block.Index;
-            if (lvl.BlockProps[i].IsDoor) {
+            if (lvl.Props[i].IsDoor) {
                 byte physForm;
                 PhysicsArgs args = GetDoorArgs(block, out physForm);
                 if (!instant) lvl.AddUpdate(index, physForm, false, args);
                 else lvl.Blockchange(index, (ExtBlock)physForm, false, args);
-            } else if (lvl.BlockProps[i].IsTDoor) {
+            } else if (lvl.Props[i].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block);
                 lvl.AddUpdate(index, Block.Air, false, args);
             } else {
-                ushort oDoorIndex = lvl.BlockProps[i].oDoorIndex;
+                ushort oDoorIndex = lvl.Props[i].oDoorIndex;
                 if (oDoorIndex == Block.Invalid) return;
                 ExtBlock oDoor = ExtBlock.FromIndex(oDoorIndex);
                 

@@ -62,7 +62,7 @@ namespace MCGalaxy.Gui {
                 }
             }
             
-            BlockProps.Save("core", Block.Props, i => true);
+            BlockProps.Save("core", Block.Props, Block.CorePropsLock, null);
             BlockPerms.Save();
             Block.SetBlocks();
             LoadBlocks();

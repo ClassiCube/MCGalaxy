@@ -473,23 +473,23 @@ namespace MCGalaxy {
         }
         
         void LoadCoreProps() {
-            for (int i = 0; i < BlockProps.Length; i++) {
+            for (int i = 0; i < Props.Length; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 if (!HasCustomProps(block)) {
-                    BlockProps[i] = BlockDefinition.DefaultProps(block);
+                    Props[i] = BlockDefinition.DefaultProps(block);
                 } else {
-                    BlockProps[i] = MCGalaxy.Blocks.BlockProps.MakeDefault();
+                    Props[i] = BlockProps.MakeDefault();
                 }
             }
         }
         
         public void UpdateBlockProps() {
             LoadCoreProps();
-            MCGalaxy.Blocks.BlockProps.Load("lvl_" + MapName, BlockProps, true);
+            BlockProps.Load("lvl_" + MapName, Props, PropsLock, true);
         }
         
         public void UpdateBlockHandlers() {
-            for (int i = 0; i < BlockProps.Length; i++) {
+            for (int i = 0; i < Props.Length; i++) {
                 UpdateBlockHandler(ExtBlock.FromIndex(i));
             }
         }
@@ -498,11 +498,11 @@ namespace MCGalaxy {
             bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
             int i = block.Index;
             
-            deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, BlockProps);
-            placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, BlockProps);
-            walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, BlockProps, nonSolid);
-            physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, BlockProps);
-            physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, BlockProps);
+            deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, Props);
+            placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, Props);
+            walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
+            physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, Props);
+            physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
         }
         
         public void UpdateCustomBlock(byte raw, BlockDefinition def) {

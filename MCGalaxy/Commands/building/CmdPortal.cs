@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
         ExtBlock GetBlock(Player p, string name) {
             if (name == "show") { ShowPortals(p); return ExtBlock.Invalid; }
             ExtBlock block = CommandParser.RawGetBlock(p, name);
-            if (!block.IsInvalid && p.level.BlockProps[block.Index].IsPortal)
+            if (!block.IsInvalid && p.level.Props[block.Index].IsPortal)
                 return block;
             
             // Hardcoded aliases for backwards compatibility
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "water") block.BlockID = Block.Portal_Water;
             if (name == "lava") block.BlockID = Block.Portal_Lava;
             
-            if (p.level.BlockProps[block.Index].IsPortal) return block;            
+            if (p.level.Props[block.Index].IsPortal) return block;            
             Help(p); return ExtBlock.Invalid;
         }
 
@@ -200,13 +200,13 @@ namespace MCGalaxy.Commands.Building {
             GetCoreNames(names, p.level);          
             for (int i = Block.CpeCount; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromRaw((byte)i);
-                string name = Format(block, p.level, p.level.BlockProps);
+                string name = Format(block, p.level, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }
         
         static void GetCoreNames(List<string> names, Level lvl) {
-            BlockProps[] props = lvl != null ? lvl.BlockProps : Block.Props;
+            BlockProps[] props = lvl != null ? lvl.Props : Block.Props;
             for (int i = Block.Air; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 if (block.BlockID == Block.custom_block) continue;

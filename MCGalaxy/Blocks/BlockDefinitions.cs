@@ -49,6 +49,7 @@ namespace MCGalaxy {
         
         public static BlockDefinition[] GlobalDefs;
         public static BlockProps[] GlobalProps = new BlockProps[Block.Count];
+        internal static readonly object GlobalPropsLock = new object();
         
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
@@ -142,7 +143,7 @@ namespace MCGalaxy {
                 GlobalProps[i] = BlockProps.MakeDefault();
                 GlobalProps[i] = DefaultProps(block);
             }
-            BlockProps.Load("global", GlobalProps, false);
+            BlockProps.Load("global", GlobalProps, GlobalPropsLock, false);
         }
         
         internal static BlockProps DefaultProps(ExtBlock block) {
@@ -162,7 +163,7 @@ namespace MCGalaxy {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
                     ExtBlock block = ExtBlock.FromRaw((byte)i);
-                    lvl.BlockProps[block.Index] = DefaultProps(block);
+                    lvl.Props[block.Index] = DefaultProps(block);
                     lvl.UpdateCustomBlock(block.RawID, GlobalDefs[i]);
                 }
             }

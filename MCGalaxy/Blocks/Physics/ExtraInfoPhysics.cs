@@ -31,7 +31,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (C.data.Door && C.data.Data == 0) {
                 int i = C.data.Value2 + (C.data.ExtBlock ? Block.Count : 0);
-                bool tdoor = lvl.BlockProps[i].IsTDoor;
+                bool tdoor = lvl.Props[i].IsTDoor;
                 
                 if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                 else DoorPhysics.Door(lvl, ref C);
@@ -69,7 +69,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (args.Wait) {
                 if (C.data.Door && C.data.Data == 0) {
                     int i = C.data.Value2 + (C.data.ExtBlock ? Block.Count : 0);
-                    bool tdoor = lvl.BlockProps[i].IsTDoor;
+                    bool tdoor = lvl.Props[i].IsTDoor;
                     
                     if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                     else DoorPhysics.Door(lvl, ref C);

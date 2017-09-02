@@ -53,7 +53,7 @@ namespace MCGalaxy.Blocks {
             }
             
             p.SendBlockchange(x, y, z, ExtBlock.Air); // send the air block back only to the user
-            byte stack = p.level.BlockProps[block.Index].StackId;
+            byte stack = p.level.Props[block.Index].StackId;
             p.ChangeBlock(x, (ushort)(y - 1), z, ExtBlock.FromRaw(stack));
         }        
         

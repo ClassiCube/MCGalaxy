@@ -47,7 +47,7 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 
                 // Some blocks will cause death of players
-                if (!p.level.BlockProps[block.Index].KillerBlock) continue;               
+                if (!p.level.Props[block.Index].KillerBlock) continue;               
                 if (block.BlockID == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
                 if (block.BlockID == Block.Train && p.trainInvincible) continue;
                 p.HandleDeath(block);
@@ -91,7 +91,7 @@ namespace MCGalaxy.Blocks.Physics {
             ExtBlock bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
             if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
             
-            if (p.level.BlockProps[bHead.Index].Drownable) {
+            if (p.level.Props[bHead.Index].Drownable) {
                 p.startFallY = -1;
                 DateTime now = DateTime.UtcNow;
                 // level drown is in 10ths of a second

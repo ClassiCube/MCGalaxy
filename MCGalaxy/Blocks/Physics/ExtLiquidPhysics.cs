@@ -55,7 +55,7 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
-            if (index >= 0 && lvl.BlockProps[block.Index].LavaKills) {
+            if (index >= 0 && lvl.Props[block.Index].LavaKills) {
                 lvl.AddUpdate(index, Block.Magma);
                 flowUp = true;
             }
@@ -94,7 +94,7 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
-            if (index >= 0 && lvl.BlockProps[block.Index].WaterKills) {
+            if (index >= 0 && lvl.Props[block.Index].WaterKills) {
                 lvl.AddUpdate(index, Block.Geyser);
                 flowUp = true;
             }

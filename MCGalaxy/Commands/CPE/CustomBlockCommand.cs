@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.CPE {
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
             if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
             
-            BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.BlockProps[src.Index];
+            BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.Props[src.Index];
             dstDef = srcDef.Copy();
             dstDef.BlockID = (byte)dst.RawID;
             
@@ -547,7 +547,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static void UpdateBlockProps(bool global, Player p, ExtBlock block, BlockProps props) {
             if (!global) {
-                p.level.BlockProps[block.Index] = props;
+                p.level.Props[block.Index] = props;
                 p.level.UpdateBlockHandler(block);
                 return;
             }
@@ -558,7 +558,7 @@ namespace MCGalaxy.Commands.CPE {
             
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.BlockProps[block.Index] = props;
+                lvl.Props[block.Index] = props;
                 lvl.UpdateBlockHandler(block);
             }
         }
@@ -566,7 +566,7 @@ namespace MCGalaxy.Commands.CPE {
         static void RemoveBlockProps(bool global, ExtBlock block, Player p) {
             // Level block reverts to using global block
             if (!global) {
-                p.level.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
+                p.level.Props[block.Index] = BlockDefinition.DefaultProps(block);
                 p.level.UpdateBlockHandler(block);
                 return;
             }
@@ -580,7 +580,7 @@ namespace MCGalaxy.Commands.CPE {
             
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.BlockProps[block.Index] = BlockDefinition.GlobalProps[block.RawID];
+                lvl.Props[block.Index] = BlockDefinition.GlobalProps[block.RawID];
                 lvl.UpdateBlockHandler(block);
             }
         }

@@ -177,7 +177,7 @@ namespace MCGalaxy {
         
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockProps.Load("core", Block.Props, false);
+            BlockProps.Load("core", Props, CorePropsLock, false);
             BlockDefinition.UpdateGlobalBlockProps();
             BlockPerms.Load();
             UpdateLoadedLevels();

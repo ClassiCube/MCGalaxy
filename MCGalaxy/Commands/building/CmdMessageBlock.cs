@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
         ExtBlock GetBlock(Player p, string name, ref bool allMessage) {
             if (name == "show") { ShowMessageBlocks(p); return ExtBlock.Invalid; }
             ExtBlock block = CommandParser.RawGetBlock(p, name);
-            if (!block.IsInvalid && p.level.BlockProps[block.Index].IsMessageBlock)
+            if (!block.IsInvalid && p.level.Props[block.Index].IsMessageBlock)
                 return block;
             
             // Hardcoded aliases for backwards compatibility
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "lava") block.BlockID = Block.MB_Lava;
             
             allMessage = block.BlockID == Block.MB_White && name != "white";
-            if (p.level.BlockProps[block.Index].IsMessageBlock) return block;
+            if (p.level.Props[block.Index].IsMessageBlock) return block;
             
             Help(p); return ExtBlock.Invalid;
         }
@@ -195,13 +195,13 @@ namespace MCGalaxy.Commands.Building {
             GetCoreNames(names, p.level);          
             for (int i = Block.CpeCount; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromRaw((byte)i);
-                string name = Format(block, p.level, p.level.BlockProps);
+                string name = Format(block, p.level, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }
         
         static void GetCoreNames(List<string> names, Level lvl) {
-            BlockProps[] props = lvl != null ? lvl.BlockProps : Block.Props;
+            BlockProps[] props = lvl != null ? lvl.Props : Block.Props;
             for (int i = Block.Air; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromIndex(i);
                 if (block.BlockID == Block.custom_block) continue;

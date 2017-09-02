@@ -351,9 +351,9 @@ namespace MCGalaxy {
         
         internal bool ActivatesPhysics(ExtBlock block) {
             int i = block.Index;
-            if (BlockProps[i].IsMessageBlock || BlockProps[i].IsPortal) return false;
-            if (BlockProps[i].IsDoor || BlockProps[i].IsTDoor) return false;
-            if (BlockProps[i].OPBlock) return false;
+            if (Props[i].IsMessageBlock || Props[i].IsPortal) return false;
+            if (Props[i].IsDoor || Props[i].IsTDoor) return false;
+            if (Props[i].OPBlock) return false;
             return physicsHandlers[i] != null;
         }
         

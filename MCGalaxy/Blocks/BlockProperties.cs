@@ -77,10 +77,15 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        public static void Save(string group, BlockProps[] scope, Predicate<int> selector) {
-            if (!Directory.Exists("blockprops"))
-                Directory.CreateDirectory("blockprops");
-            
+        public static void Save(string group, BlockProps[] scope, object locker, Predicate<int> selector) {
+            lock (locker) {
+                if (!Directory.Exists("blockprops"))
+                    Directory.CreateDirectory("blockprops");
+                SaveCore(group, scope, selector);
+            }
+        }
+        
+        static void SaveCore(string group, BlockProps[] scope, Predicate<int> selector) {
             using (StreamWriter w = new StreamWriter("blockprops/" + group + ".txt")) {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
@@ -94,18 +99,23 @@ namespace MCGalaxy.Blocks {
                     
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor    + ":"
-                                + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":" 
-                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":" 
-                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock     + ":" 
+                                + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
+                                + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
+                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock     + ":"
                                 + props.oDoorIndex + ":" + props.Drownable);
                 }
             }
         }
         
-        public static void Load(string group, BlockProps[] scope, bool lbScope) {
-            if (!Directory.Exists("blockprops")) return;
-            if (!File.Exists("blockprops/" + group + ".txt")) return;
-            
+        public static void Load(string group, BlockProps[] scope, object locker, bool lbScope) {
+            lock (locker) {
+                if (!Directory.Exists("blockprops")) return;
+                if (!File.Exists("blockprops/" + group + ".txt")) return;
+                LoadCore(group, scope, lbScope);
+            }
+        }
+        
+        static void LoadCore(string group, BlockProps[] scope, bool lbScope) {
             string[] lines = File.ReadAllLines("blockprops/" + group + ".txt");
             for (int i = 0; i < lines.Length; i++) {
                 string line = lines[i].Trim();

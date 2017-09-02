@@ -24,6 +24,7 @@ namespace MCGalaxy {
     public sealed partial class Block {
         
         public static BlockProps[] Props = new BlockProps[Block.Count];
+        public static readonly object CorePropsLock = new object();
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
         static void SetCoreProperties() {

@@ -189,7 +189,7 @@ namespace MCGalaxy.Commands.Fun {
             if (p.level.physics < 2 || ending == WeaponType.Teleport || ending == WeaponType.Normal) return true;
             
             if (ending == WeaponType.Destroy) {
-                bool fireKills = block.BlockID != Block.Air && p.level.BlockProps[block.Index].LavaKills;
+                bool fireKills = block.BlockID != Block.Air && p.level.Props[block.Index].LavaKills;
                 if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.Glass) {
                     return true;
                 }

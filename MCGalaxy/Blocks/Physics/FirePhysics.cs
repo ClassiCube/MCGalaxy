@@ -34,7 +34,7 @@ namespace MCGalaxy.Blocks.Physics {
                                    int dx, int dy, int dz) {
             ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
             if (block.BlockID == Block.Air) return;
-            if (!lvl.BlockProps[block.Index].LavaKills) return;
+            if (!lvl.Props[block.Index].LavaKills) return;
             
             if (dx != 0)
                 lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), y, z), Block.Fire);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (block.BlockID == Block.TNT) {
                 lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
-            } else if (lvl.BlockProps[block.Index].LavaKills) {
+            } else if (lvl.Props[block.Index].LavaKills) {
                 lvl.AddUpdate(index, Block.Fire);
             }
         }

@@ -131,7 +131,7 @@ namespace MCGalaxy.Games.ZS {
             if (Game.Map.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
-            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.BlockProps[old.Index].OPBlock) {
+            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.Props[old.Index].OPBlock) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
             

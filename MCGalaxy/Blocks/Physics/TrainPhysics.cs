@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks.Physics {
             {
                 ExtBlock below = lvl.GetBlock((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
                 ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
-                bool isRails = lvl.BlockProps[below.BlockID].IsRails;
+                bool isRails = lvl.Props[below.BlockID].IsRails;
                 
                 if (isRails && (block.BlockID == Block.Air || block.BlockID == Block.Water) 
                     && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {

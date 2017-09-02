@@ -47,7 +47,7 @@ namespace MCGalaxy.DB {
         
         public static void OutputMessageBlock(Player p, ExtBlock block,
                                               ushort x, ushort y, ushort z) {
-            if (!p.level.BlockProps[block.Index].IsMessageBlock) return;
+            if (!p.level.Props[block.Index].IsMessageBlock) return;
 
             try {
                 if (!Database.Backend.TableExists("Messages" + p.level.name)) return;
@@ -65,7 +65,7 @@ namespace MCGalaxy.DB {
         
         public static void OutputPortal(Player p, ExtBlock block,
                                         ushort x, ushort y, ushort z) {
-            if (!p.level.BlockProps[block.Index].IsPortal) return;
+            if (!p.level.Props[block.Index].IsPortal) return;
 
             try {
                 if (!Database.Backend.TableExists("Portals" + p.level.name)) return;

@@ -353,7 +353,7 @@ namespace MCGalaxy {
             try
             {
                 if (!overRide) {
-                    if (BlockProps[old.Index].OPBlock || (BlockProps[block.Index].OPBlock && data.Raw != 0)) 
+                    if (Props[old.Index].OPBlock || (Props[block.Index].OPBlock && data.Raw != 0)) 
                         return false;
                 }
 

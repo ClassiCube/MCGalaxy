@@ -124,7 +124,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             int index;
             ExtBlock block = lvl.GetBlock(x, y, z, out index);
-            if (index >= 0 && !lvl.BlockProps[block.Index].OPBlock)
+            if (index >= 0 && !lvl.Props[block.Index].OPBlock)
                 lvl.AddUpdate(index, Block.TNT_Explosion, true);
 
             Explode(lvl, x, y, z, size + 1, rand, -1, game);

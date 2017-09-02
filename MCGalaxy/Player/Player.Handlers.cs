@@ -369,7 +369,7 @@ namespace MCGalaxy {
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
             
-            string deathMsg = level.BlockProps[block.Index].DeathMessage;
+            string deathMsg = level.Props[block.Index].DeathMessage;
             if (deathMsg != null) {
                 Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
             }

@@ -56,7 +56,7 @@ namespace MCGalaxy.Blocks.Physics {
         static void ActivateODoor(Level lvl, ExtBlock oDoor, ushort x, ushort y, ushort z) {
             int index;
             ExtBlock block = lvl.GetBlock(x, y, z, out index);
-            block = ExtBlock.FromIndex(lvl.BlockProps[block.Index].oDoorIndex);
+            block = ExtBlock.FromIndex(lvl.Props[block.Index].oDoorIndex);
             
             if (index >= 0 && oDoor == block) {
                 lvl.AddUpdate(index, oDoor, true);
@@ -80,7 +80,7 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             ExtBlock block = lvl.GetBlock(x, y, z, out index);
             
-            if (index >= 0 && lvl.BlockProps[block.Index].IsTDoor) {
+            if (index >= 0 && lvl.Props[block.Index].IsTDoor) {
                 PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block);
                 lvl.AddUpdate(index, Block.Air, false, args);
             }

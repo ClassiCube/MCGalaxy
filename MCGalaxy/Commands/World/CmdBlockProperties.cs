@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "Cannot use level scope from {0}.",  src);
                     return null;
                 }
-                return p.level.BlockProps;
+                return p.level.Props;
             }
             
             Player.Message(p, "&cScope must \"core\", \"global\", or \"level\"");
@@ -221,7 +221,7 @@ namespace MCGalaxy.Commands.World {
         static void OnPropsChanged(BlockProps[] scope, Level level, ExtBlock block) {
             scope[GetIndex(scope, block)].Changed = true;            
             if (scope == Block.Props) {
-                BlockProps.Save("core", scope, null);
+                BlockProps.Save("core", scope, Block.CorePropsLock, null);
                 Level[] loaded = LevelInfo.Loaded.Items;                
                 if (!block.IsPhysicsType)
                     BlockDefinition.GlobalProps[block.RawID] = BlockDefinition.DefaultProps(block);
@@ -229,23 +229,23 @@ namespace MCGalaxy.Commands.World {
                 foreach (Level lvl in loaded) {
                     if (lvl.HasCustomProps(block)) continue;
                     
-                    lvl.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
+                    lvl.Props[block.Index] = BlockDefinition.DefaultProps(block);
                     lvl.UpdateBlockHandler(block);
                 }
             } else if (scope == BlockDefinition.GlobalProps) {
                 Level[] loaded = LevelInfo.Loaded.Items;
-                BlockProps.Save("global", scope, null);
+                BlockProps.Save("global", scope, BlockDefinition.GlobalPropsLock, null);
                 
                 byte raw = block.RawID;
                 foreach (Level lvl in loaded) {
                     if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
                     if (lvl.HasCustomProps(block)) continue;
                     
-                    lvl.BlockProps[block.Index] = BlockDefinition.DefaultProps(block);
+                    lvl.Props[block.Index] = BlockDefinition.DefaultProps(block);
                     lvl.UpdateBlockHandler(block);
                 }
             } else {
-                BlockProps.Save("lvl_" + level.name, scope, idx => SelectLevel(level, idx));
+                BlockProps.Save("lvl_" + level.name, scope, level.PropsLock, idx => SelectLevel(level, idx));
                 level.UpdateBlockHandler(block);
             }
         }
