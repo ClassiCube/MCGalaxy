@@ -103,6 +103,7 @@ namespace MCGalaxy.Commands.Building {
         static void PlaceMark(Player p, int x, int y, int z) {
             ExtBlock block = p.GetHeldBlock();
             p.ManualChange((ushort)x, (ushort)y, (ushort)z, false, block, false);
+            if (p.Ignores.DrawOutput) return;
             Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
         }
         
