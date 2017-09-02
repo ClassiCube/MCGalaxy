@@ -160,28 +160,42 @@ namespace MCGalaxy {
         public static void GlobalUpdatePosition() {
             Level[] levels = LevelInfo.Loaded.Items;
             for (int i = 0; i < levels.Length; i++) {
-                PlayerBot[] bots = levels[i].Bots.Items;
-                for (int j = 0; j < bots.Length; j++) { bots[j].UpdatePosition(); }
+                UpdatePositions(levels[i]);
             }
         }
         
-        void UpdatePosition() {
-            if (movement) PerformMovement();
+        unsafe static void UpdatePositions(Level lvl) {
+            byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
+            byte* ext = stackalloc byte[16 * 256];
+            byte* ptrSrc = src, ptrExt = ext;
             
-            Position pos = Pos; Orientation rot = Rot;
-            if (pos == lastPos && rot.HeadX == lastRot.HeadX && rot.RotY == lastRot.RotY) return;
-            lastPos = pos; lastRot = rot;
+            PlayerBot[] bots = lvl.Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                PlayerBot bot = bots[i];
+                if (bot.movement) bot.PerformMovement();               
+                Position pos = bot.Pos; Orientation rot = bot.Rot;
+                
+                Entities.GetPositionPacket(ref ptrSrc, bot.id, true, false,
+                                           pos, bot.lastPos, rot, bot.lastRot);
+                Entities.GetPositionPacket(ref ptrExt, bot.id, true, true, 
+                                           pos, bot.lastPos, rot, bot.lastRot);                                           
+                bot.lastPos = pos; bot.lastRot = rot;
+            }
             
-            // TODO: relative position updates, combine packets
-            byte[] packet = Packet.Teleport(id, pos, rot, false);
-            byte[] extPacket = Packet.Teleport(id, pos, rot, true);
+            int countSrc = (int)(ptrSrc - src);            
+            if (countSrc == 0) return;                        
+            int countExt = (int)(ptrExt - ext);
+            
+            byte[] srcPacket = new byte[countSrc];
+            byte[] extPacket = new byte[countExt];
+            for (int i = 0; i < srcPacket.Length; i++) { srcPacket[i] = src[i]; }
+            for (int i = 0; i < extPacket.Length; i++) { extPacket[i] = ext[i]; }
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level != level) continue;
-                
-                if (p.hasExtPositions) p.Send(extPacket);
-                else p.Send(packet);
+                if (p.level != lvl) continue;                
+                byte[] packet = p.hasExtPositions ? extPacket : srcPacket;
+                p.Send(packet);
             }
         }
         

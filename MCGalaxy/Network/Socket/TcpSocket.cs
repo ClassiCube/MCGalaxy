@@ -29,7 +29,7 @@ namespace MCGalaxy.Network {
         int unprocessedLen;
         readonly SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
         
-        byte[] sendBuffer = new byte[2048];
+        byte[] sendBuffer = new byte[4096];
         readonly object sendLock = new object();
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
         volatile bool sendInProgress;

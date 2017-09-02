@@ -319,9 +319,9 @@ namespace MCGalaxy {
             
             int count = (int)(ptr - src);
             if (count == 0) return;
+            
             byte[] packet = new byte[count];
-            for (int i = 0; i < packet.Length; i++)
-                packet[i] = src[i];
+            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
             p.Send(packet);
         }
         
