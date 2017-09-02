@@ -39,10 +39,10 @@ namespace MCGalaxy.Blocks.Extended {
                 if (p.level.name != map) {
                     Level curLevel = p.level;
                     p.summonedMap = map;
-                    PlayerActions.ChangeMap(p, map);
+                    bool changedMap = PlayerActions.ChangeMap(p, map);
                     p.summonedMap = null;
                     
-                    if (curLevel == p.level) { Player.Message(p, "The map the portal goes to isn't loaded."); return true; }
+                    if (!changedMap) { Player.Message(p, "Unable to use this portal, as this portal goes to that map."); return true; }
                     p.BlockUntilLoad(10);
                 }
                 

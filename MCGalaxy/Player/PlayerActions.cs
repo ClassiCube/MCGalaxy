@@ -32,14 +32,10 @@ namespace MCGalaxy {
         }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, string name) { 
-            return ChangeMap(p, null, name); 
-        }
+        public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
         
         /// <summary> Moves the player to the specified map. </summary>
-        public static bool ChangeMap(Player p, Level lvl) { 
-            return ChangeMap(p, lvl, null); 
-        }
+        public static bool ChangeMap(Player p, Level lvl) { return ChangeMap(p, lvl, null); }
         
         static bool ChangeMap(Player p, Level lvl, string name) {
             if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
