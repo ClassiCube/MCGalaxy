@@ -56,6 +56,9 @@ namespace MCGalaxy.Commands.Bots {
             if (BotExists(p.level, botName)) {
                 Player.Message(p, "A bot with that name already exists."); return;
             }
+            if (p.level.Bots.Count >= ServerConfig.MaxBotsPerLevel) {
+                Player.Message(p, "Reached maximum number of bots allowed on this map."); return;
+            }
             
             PlayerBot bot = new PlayerBot(botName, p.level);
             bot.Pos = p.Pos;

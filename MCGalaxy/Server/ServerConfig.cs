@@ -102,6 +102,8 @@ namespace MCGalaxy {
         [ConfigString("default-rank", "General", "guest")]
         public static string DefaultRankName = "guest";
 
+        [ConfigInt("max-bots-per-level", "Other", 192, 0, 256)]
+        public static int MaxBotsPerLevel = 192;
         [ConfigBool("deathcount", "Other", true)]
         public static bool AnnounceDeathCount = true;
         [ConfigBool("use-whitelist", "Other", false)]
