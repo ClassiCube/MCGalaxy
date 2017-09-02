@@ -61,6 +61,14 @@ namespace MCGalaxy.Maths {
             return bb;
         }
         
+        public AABB Adjust(int x, int y, int z) {
+            AABB bb = this;
+            if (x >= 0) { bb.Max.X += x; } else { bb.Min.X += x; }
+            if (y >= 0) { bb.Max.Y += y; } else { bb.Min.Y += y; }
+            if (z >= 0) { bb.Max.Z += z; } else { bb.Min.Z += z; }
+            return bb;
+        }
+        
         public AABB Expand(int amount) {
             AABB bb = this;
             bb.Min.X -= amount; bb.Min.Y -= amount; bb.Min.Z -= amount;
@@ -68,38 +76,18 @@ namespace MCGalaxy.Maths {
             return bb;
         }
         
-        /// <summary> Returns a new bounding box, with the minimum and maximum coordinates
-        /// of the original bounding box scaled away from origin the given value. </summary>
-        public AABB Scale(float scale) {
-            return new AABB(Min * scale, Max * scale);
-        }
-
         /// <summary> Determines whether this bounding box intersects
         /// the given bounding box on any axes. </summary>
-        public bool Intersects(AABB other) {
-            if (Max.X >= other.Min.X && Min.X <= other.Max.X) {
-                if (Max.Y < other.Min.Y || Min.Y > other.Max.Y) {
+        public static bool Intersects(ref AABB a, ref AABB b) {
+            if (a.Max.X >= b.Min.X && a.Min.X <= b.Max.X) {
+                if (a.Max.Y < b.Min.Y || a.Min.Y > b.Max.Y) {
                     return false;
                 }
-                return Max.Z >= other.Min.Z && Min.Z <= other.Max.Z;
+                return a.Max.Z >= b.Min.Z && a.Min.Z <= b.Max.Z;
             }
             return false;
         }
-        
-        /// <summary> Determines whether this bounding box entirely contains
-        /// the given bounding box on all axes. </summary>
-        public bool Contains(AABB other) {
-            return other.Min.X >= Min.X && other.Min.Y >= Min.Y && other.Min.Z >= Min.Z &&
-                other.Max.X <= Max.X && other.Max.Y <= Max.Y && other.Max.Z <= Max.Z;
-        }
-        
-        /// <summary> Determines whether this bounding box entirely contains
-        /// the coordinates on all axes. </summary>
-        public bool Contains(Vec3S32 P) {
-            return P.X >= Min.X && P.Y >= Min.Y && P.Z >= Min.Z &&
-                P.X <= Max.X && P.Y <= Max.Y && P.Z <= Max.Z;
-        }
-        
+
         public override string ToString() {
             return Min + " : " + Max;
         }
@@ -127,7 +115,7 @@ namespace MCGalaxy.Maths {
             float maxScale = model.CaselessEq("chibi") ? 3 : 2;
             if (scale > maxScale) scale = maxScale;
             
-            return baseBB.Scale(scale);
+            return new AABB(baseBB.Min * scale, baseBB.Max * scale);
         }
         
         static Vec3S32 BaseSize(string model) {
@@ -154,7 +142,7 @@ namespace MCGalaxy.Maths {
                 ExtBlock block = lvl.GetBlock(xP, yP, zP);
                 
                 AABB blockBB = lvl.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
-                if (!bb.Intersects(blockBB)) continue;
+                if (!AABB.Intersects(ref bb, ref blockBB)) continue;
                 
                 BlockDefinition def = lvl.GetBlockDef(block);
                 if (def != null) {
@@ -164,6 +152,39 @@ namespace MCGalaxy.Maths {
                 }
             }
             return false;
+        }
+        
+        public static int FindIntersectingSolids(AABB bb, Level lvl, ref AABB[] aabbs) {
+            Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
+            int volume = (max.X - min.X + 1) * (max.Y - min.Y + 1) * (max.Z - min.Z + 1);
+            if (volume > aabbs.Length) aabbs = new AABB[volume];
+            int count = 0;
+            
+            for (int y = min.Y; y <= max.Y; y++)
+                for (int z = min.Z; z <= max.Z; z++)
+                    for (int x = min.X; x <= max.X; x++)
+            {
+                ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z);               
+                AABB blockBB = lvl.blockAABBs[block.Index];
+                
+                blockBB.Min.X += x * 32; blockBB.Min.Y += y * 32; blockBB.Min.Z += z * 32;
+                blockBB.Max.X += x * 32; blockBB.Max.Y += y * 32; blockBB.Max.Z += z * 32;
+                if (!AABB.Intersects(ref bb, ref blockBB)) continue;
+                
+                BlockDefinition def = lvl.GetBlockDef(block);
+                bool solid = false;
+                
+                if (def != null) {
+                    solid = CollideType.IsSolid(def.CollideType);
+                } else {
+                    solid = block.BlockID == Block.Invalid || !Block.Walkthrough(Block.Convert(block.BlockID));
+                }
+                if (!solid) continue;
+                
+                aabbs[count] = blockBB;
+                count++;
+            }
+            return count;
         }
     }
 }

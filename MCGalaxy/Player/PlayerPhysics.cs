@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks.Physics {
                 if (block.BlockID == Block.Invalid) continue;
                 
                 AABB blockBB = p.level.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
-                if (!bb.Intersects(blockBB)) continue;
+                if (!AABB.Intersects(ref bb, ref blockBB)) continue;
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {

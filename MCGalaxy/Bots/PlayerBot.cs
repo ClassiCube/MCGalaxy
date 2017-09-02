@@ -70,7 +70,7 @@ namespace MCGalaxy {
         
         public static void Add(PlayerBot bot, bool save = true) {
             bot.level.Bots.Add(bot);
-            bot.GlobalSpawn();            
+            bot.GlobalSpawn();
             if (save) BotsFile.Save(bot.level);
         }
 
@@ -87,7 +87,7 @@ namespace MCGalaxy {
         }
         
         public static void RemoveAllFromLevel(Level lvl) {
-            RemoveLoadedBots(lvl, false);           
+            RemoveLoadedBots(lvl, false);
             BotsFile.Save(lvl);
         }
         
@@ -112,40 +112,6 @@ namespace MCGalaxy {
                 if (p.level == level) Entities.Despawn(p, this);
             }
         }
-        
-        public static void GlobalUpdatePosition() {
-            Level[] levels = LevelInfo.Loaded.Items;
-            for (int i = 0; i < levels.Length; i++) {
-                PlayerBot[] bots = levels[i].Bots.Items;
-                for (int j = 0; j < bots.Length; j++) { bots[j].UpdatePosition(); }
-            }
-        }
-        
-        void UpdatePosition() {
-            if (movement) {
-                double scale = Math.Ceiling(ServerConfig.PositionUpdateInterval / 25.0);
-                int steps = movementSpeed * (int)scale;
-                for (int i = 0; i < steps; i++)
-                    DoMove();
-            }
-            
-            Position pos = Pos; Orientation rot = Rot;
-            if (pos == lastPos && rot.HeadX == lastRot.HeadX && rot.RotY == lastRot.RotY) return;
-            lastPos = pos; lastRot = rot;
-            
-            // TODO: relative position updates, combine packets
-            byte[] packet = Packet.Teleport(id, pos, rot, false);
-            byte[] extPacket = Packet.Teleport(id, pos, rot, true);
-
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != level) continue;
-                
-                if (p.hasExtPositions) p.Send(extPacket);
-                else p.Send(packet);
-            }
-        }
-
         
         unsafe static byte NextFreeId(PlayerBot bot) {
             byte* used = stackalloc byte[256];
@@ -189,39 +155,118 @@ namespace MCGalaxy {
             cur++;
             if (cur == Instructions.Count) cur = 0;
         }
+
         
-        void DoMove() {
+        public static void GlobalUpdatePosition() {
+            Level[] levels = LevelInfo.Loaded.Items;
+            for (int i = 0; i < levels.Length; i++) {
+                PlayerBot[] bots = levels[i].Bots.Items;
+                for (int j = 0; j < bots.Length; j++) { bots[j].UpdatePosition(); }
+            }
+        }
+        
+        void UpdatePosition() {
+            if (movement) PerformMovement();
+            
+            Position pos = Pos; Orientation rot = Rot;
+            if (pos == lastPos && rot.HeadX == lastRot.HeadX && rot.RotY == lastRot.RotY) return;
+            lastPos = pos; lastRot = rot;
+            
+            // TODO: relative position updates, combine packets
+            byte[] packet = Packet.Teleport(id, pos, rot, false);
+            byte[] extPacket = Packet.Teleport(id, pos, rot, true);
+
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != level) continue;
+                
+                if (p.hasExtPositions) p.Send(extPacket);
+                else p.Send(packet);
+            }
+        }
+        
+        static AABB[] downs = new AABB[16], ups = new AABB[16];
+        static int downsCount, upsCount;
+        
+        void RecalcDownExtent(ref AABB bb, int steps, int dx, int dz) {
+            AABB downExtent = bb.Adjust(dx * steps, -32, dz * steps);
+            downsCount = AABB.FindIntersectingSolids(downExtent, level, ref downs);
+        }
+        
+        void RecalcUpExtent(ref AABB bb, int steps, int dx, int dz) {
+            AABB upExtent = bb.Adjust(dx * steps, 32, dz * steps);
+            upsCount = AABB.FindIntersectingSolids(upExtent, level, ref ups);
+        }
+        
+        void PerformMovement() {
+            double scale = Math.Ceiling(ServerConfig.PositionUpdateInterval / 25.0);
+            int steps = movementSpeed * (int)scale;
+            
+            downsCount = -1;
+            for (int i = 0; i < steps; i++) DoMove(steps);
+        }
+        
+        void DoMove(int steps) {
             Position pos = Pos;
             AABB bb = ModelBB.OffsetPosition(pos);
+            int dx = Math.Sign(TargetPos.X - pos.X);
+            int dz = Math.Sign(TargetPos.Z - pos.Z);
+            
+            if (downsCount == -1) {
+                RecalcDownExtent(ref bb, steps, dx, dz);
+                RecalcUpExtent(ref bb, steps, dx, dz);
+            }
+            
             // Advance the AABB to the bot's next position
-            int dx = Math.Sign(TargetPos.X - Pos.X), dz = Math.Sign(TargetPos.Z - Pos.Z);
             bb = bb.Offset(dx, 0, dz);
             AABB bbCopy = bb;
             
             // Attempt to drop the bot down up to 1 block
             int hitY = -32;
             for (int dy = 0; dy >= -32; dy--) {
-                if (AABB.IntersectsSolidBlocks(bb, level)) { hitY = dy + 1; break; }
+                bool intersectsAny = false;
+                for (int i = 0; i < downsCount; i++) {
+                    if (AABB.Intersects(ref bb, ref downs[i])) { intersectsAny = true; break; }
+                }
+                
+                if (intersectsAny) { hitY = dy + 1; break; }
                 bb.Min.Y--; bb.Max.Y--;
-            }          
+            }
             
             // Does the bot fall down a block
             if (hitY < 0) {
-                pos.X += dx; pos.Y += hitY; pos.Z += dz;
-                Pos = pos; return;
+                pos.X += dx; pos.Y += hitY; pos.Z += dz; Pos = pos; 
+                RecalcDownExtent(ref bb, steps, dx, dz);
+                RecalcUpExtent(ref bb, steps, dx, dz);              
+                return;
             }
             
             // Attempt to move the bot up to 1 block
             bb = bbCopy;
+            
             for (int dy = 0; dy <= 32; dy++) {
-                if (!AABB.IntersectsSolidBlocks(bb, level)) {
-                    pos.X += dx; pos.Y += dy; pos.Z += dz;
-                    Pos = pos; return;
+                bool intersectsAny = false;
+                for (int i = 0; i < upsCount; i++) {
+                    if (AABB.Intersects(ref bb, ref ups[i])) { intersectsAny = true; break; }
+                }
+                
+                if (!intersectsAny) {
+                    pos.X += dx; pos.Y += dy; pos.Z += dz; Pos = pos; 
+                    
+                    if (dy != 0) {
+                        RecalcDownExtent(ref bb, steps, dx, dz);
+                        RecalcUpExtent(ref bb, steps, dx, dz);
+                    }
+                    return;
                 }
                 bb.Min.Y++; bb.Max.Y++;
             }
-            
-            /*
+        }
+        
+        
+        /*
+         * Old water/lava swimming code - TODO: need to fix.
+         * 
                 if ((ushort)(foundPos[1] / 32) > y) {
                     if (b1 == Block.water || b1 == Block.waterstill || b1 == Block.lava || b1 == Block.lavastill) {
                         if (Block.Walkthrough(b2)) {
@@ -235,6 +280,5 @@ namespace MCGalaxy {
                         pos[1] = (ushort)(pos[1] + (Math.Sign(foundPos[1] - pos[1])));
                     }
                 }*/
-        }
     }
 }
