@@ -40,7 +40,7 @@ namespace MCGalaxy.Core {
                 }
                 
                 ponycount++;
-                p.Extras.PutInt("MCGalaxy_Core_RD", ponycount);
+                p.Extras.PutInt("MCGalaxy_Core_Pony", ponycount);
             } else if (cmd == "rainbowdashlikescoolthings") {
                 p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
