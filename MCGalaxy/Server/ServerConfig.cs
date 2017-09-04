@@ -236,36 +236,36 @@ namespace MCGalaxy {
         
         [ConfigBool("mute-on-spam", "Spam control", false)]
         public static bool ChatSpamCheck = false;
-        [ConfigInt("spam-messages", "Spam control", 8, 0, 1000)]
+        [ConfigInt("spam-messages", "Spam control", 8, 0, 10000)]
         public static int ChatSpamCount = 8;
-        [ConfigInt("spam-mute-time", "Spam control", 60, 0, 1000)]
+        [ConfigInt("spam-mute-time", "Spam control", 60, 0, 1000000)]
         public static int ChatSpamMuteTime = 60;
-        [ConfigInt("spam-counter-reset-time", "Spam control", 5, 0, 1000)]
+        [ConfigInt("spam-counter-reset-time", "Spam control", 5, 0, 10000)]
         public static int ChatSpamInterval = 5;
         
         [ConfigBool("cmd-spam-check", "Spam control", true)]
         public static bool CmdSpamCheck = true;
-        [ConfigInt("cmd-spam-count", "Spam control", 25, 0, 1000)]
+        [ConfigInt("cmd-spam-count", "Spam control", 25, 0, 10000)]
         public static int CmdSpamCount = 25;
-        [ConfigInt("cmd-spam-block-time", "Spam control", 30, 0, 1000)]
+        [ConfigInt("cmd-spam-block-time", "Spam control", 30, 0, 1000000)]
         public static int CmdSpamBlockTime = 30;
-        [ConfigInt("cmd-spam-interval", "Spam control", 1, 0, 1000)]
+        [ConfigInt("cmd-spam-interval", "Spam control", 1, 0, 10000)]
         public static int CmdSpamInterval = 1;
         
         [ConfigBool("block-spam-check", "Spam control", true)]
         public static bool BlockSpamCheck = true;
-        [ConfigInt("block-spam-count", "Spam control", 200, 0, 1000)]
+        [ConfigInt("block-spam-count", "Spam control", 200, 0, 10000)]
         public static int BlockSpamCount = 200;
-        [ConfigInt("block-spam-interval", "Spam control", 5, 0, 1000)]
+        [ConfigInt("block-spam-interval", "Spam control", 5, 0, 10000)]
         public static int BlockSpamInterval = 5;
         
         [ConfigBool("ip-spam-check", "Spam control", true)]
         public static bool IPSpamCheck = true;
-        [ConfigInt("ip-spam-count", "Spam control", 25, 0, 1000)]
+        [ConfigInt("ip-spam-count", "Spam control", 25, 0, 10000)]
         public static int IPSpamCount = 10;
-        [ConfigInt("ip-spam-block-time", "Spam control", 30, 0, 1000)]
+        [ConfigInt("ip-spam-block-time", "Spam control", 30, 0, 1000000)]
         public static int IPSpamBlockTime = 180;
-        [ConfigInt("ip-spam-interval", "Spam control", 1, 0, 1000)]
+        [ConfigInt("ip-spam-interval", "Spam control", 1, 0, 10000)]
         public static int IPSpamInterval = 60;
     }
 }
