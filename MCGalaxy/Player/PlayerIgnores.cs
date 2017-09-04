@@ -51,7 +51,7 @@ namespace MCGalaxy {
                 Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
             }
             
-            if (All || IRC || EightBall || DrawOutput || Titles || Nicks || Names.Count > 0) {
+            if (All || IRC || EightBall || DrawOutput || Titles || Nicks || Names.Count > 0 || IRCNicks.Count > 0) {
                 Player.Message(p, "&cType &a/ignore list &cto see who you are still ignoring");
             }
         }
