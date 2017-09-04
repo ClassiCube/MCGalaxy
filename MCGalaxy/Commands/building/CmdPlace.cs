@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPlace : Command {
@@ -27,7 +28,8 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             ExtBlock block = p.GetHeldBlock();
-            int x = p.Pos.BlockX, y = (p.Pos.Y - 32) / 32, z = p.Pos.BlockZ;
+            Vec3S32 P = p.Pos.BlockCoords;
+            P.Y = (p.Pos.Y - 32) / 32;
 
             string[] parts = message.SplitSpaces();
             switch (parts.Length) {
@@ -36,30 +38,25 @@ namespace MCGalaxy.Commands.Building {
                     if (!CommandParser.GetBlock(p, parts[0], out block)) return;
                     break;
                 case 3:
-                    if (!CommandParser.GetInt(p, parts[0], "X", ref x)) return;
-                    if (!CommandParser.GetInt(p, parts[1], "Y", ref y)) return;
-                    if (!CommandParser.GetInt(p, parts[2], "Z", ref z)) return;
+                    if (!CommandParser.GetCoords(p, parts, 0, ref P)) return;
                     break;
                 case 4:
                     if (!CommandParser.GetBlock(p, parts[0], out block)) return;
-                    if (!CommandParser.GetInt(p, parts[1], "X", ref x)) return;
-                    if (!CommandParser.GetInt(p, parts[2], "Y", ref y)) return;
-                    if (!CommandParser.GetInt(p, parts[3], "Z", ref z)) return;
+                    if (!CommandParser.GetCoords(p, parts, 1, ref P)) return;
                     break;
                 default:
                     Help(p); return;
             }
 
-            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;            
+            P.X = Clamp(P.X, p.level.Width);
+            P.Y = Clamp(P.Y, p.level.Height);
+            P.Z = Clamp(P.Z, p.level.Length);
             
-            x = Clamp(x, p.level.Width);
-            y = Clamp(y, p.level.Height);
-            z = Clamp(z, p.level.Length);
-            
-            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, block);
+            p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, block);
             string blockName = p.level.BlockName(block);
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", x, y, z, blockName);
+                Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
             }
         }
         
@@ -74,6 +71,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlaces block at your feet.");
             Player.Message(p, "%T/Place <block> [x y z]");
             Player.Message(p, "%HPlaces block at [x y z]");
+            Player.Message(p, "%HUse ~ before a coord to place relative to current position");
         }
     }
 }

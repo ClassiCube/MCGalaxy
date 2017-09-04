@@ -16,9 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using MCGalaxy.Eco;
 using MCGalaxy.Events;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.GroupEvents;

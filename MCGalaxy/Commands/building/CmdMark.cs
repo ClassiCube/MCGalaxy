@@ -43,61 +43,49 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            // convert player pos to block coords
-            Vec3U16 P = ClampPos(p.Pos, p.level);
-            if (message.Length > 0 && !ParseCoords(message, p, ref P)) return;            
-            P = Vec3U16.Clamp(P.X, P.Y, P.Z, p.level);
+            Vec3S32 P = p.Pos.BlockCoords;
+            P.Y = (p.Pos.Y - 32) / 32;
+            if (message.Length > 0 && !ParseCoords(message, p, ref P)) return;
+            
+            P.X = Clamp(P.X, p.level.Width);
+            P.Y = Clamp(P.Y, p.level.Height);
+            P.Z = Clamp(P.Z, p.level.Length);
             
             if (p.HasBlockchange) {
-                PlaceMark(p, P.X, P.Y, P.Z);
-            } else {
-                // We only want to activate blocks in the world
-                ExtBlock old = p.level.GetBlock(P.X, P.Y, P.Z);
-                if (!p.CheckManualChange(old, ExtBlock.Air, true)) return;
-                
-                HandleDelete handler = p.level.deleteHandlers[old.Index];
-                if (handler != null) {
-                    handler(p, old, P.X, P.Y, P.Z);
-                } else {
-                    Player.Message(p, "Cannot mark, no selection in progress, " +
-                                   "nor could the existing block at the coordinates be activated."); return;
-                }
+                PlaceMark(p, P.X, P.Y, P.Z); 
+                return;
             }
-        }
-
-        static Vec3U16 ClampPos(Position pos, Level lvl) {
-            Vec3S32 p = pos.BlockCoords;
-            p.Y--;
             
-            if (p.X < 0) p.X = 0;
-            if (p.Y < 0) p.Y = 0;
-            if (p.Z < 0) p.Z = 0;
+            Vec3U16 mark = (Vec3U16)P;
+            // We only want to activate blocks in the world
+            ExtBlock old = p.level.GetBlock(mark.X, mark.Y, mark.Z);
+            if (!p.CheckManualChange(old, ExtBlock.Air, true)) return;
             
-            if (p.X >= lvl.Width) p.X = lvl.Width - 1;
-            if (p.Y >= lvl.Height) p.Y = lvl.Height - 1;
-            if (p.Z >= lvl.Length) p.Z = lvl.Length - 1;
-            
-            return (Vec3U16)p;
+            HandleDelete handler = p.level.deleteHandlers[old.Index];
+            if (handler != null) {
+                handler(p, old, mark.X, mark.Y, mark.Z);
+            } else {
+                Player.Message(p, "Cannot mark, no selection in progress, " +
+                               "nor could the existing block at the coordinates be activated."); return;
+            }
         }
         
-        bool ParseCoords(string message, Player p, ref Vec3U16 P) {
+        bool ParseCoords(string message, Player p, ref Vec3S32 P) {
             string[] args = message.ToLower().SplitSpaces();
             if (args.Length != 3) { Help(p); return false; }
-            ushort value;
             
-            for (int i = 0; i < 3; i++) {
-                if (args[i] == "x") { P.X = p.lastClick.X;
-                } else if (args[i] == "y") { P.Y = p.lastClick.Y;
-                } else if (args[i] == "z") { P.Z = p.lastClick.Z;
-                } else if (ushort.TryParse(args[i], out value)) {
-                    if (i == 0) P.X = value;
-                    else if (i == 1) P.Y = value;
-                    else P.Z = value;
-                } else {
-                    Player.Message(p, "\"{0}\" was not valid", args[i]); return false;
-                }
-            }
-            return true;
+            // Hacky workaround for backwards compatibility
+            if (args[0].CaselessEq("X")) args[0] = p.lastClick.X.ToString();
+            if (args[1].CaselessEq("Y")) args[1] = p.lastClick.Y.ToString();
+            if (args[2].CaselessEq("Z")) args[2] = p.lastClick.Z.ToString();
+            
+            return CommandParser.GetCoords(p, args, 0, ref P);
+        }
+        
+        static int Clamp(int value, int axisLen) {
+            if (value < 0) return 0;
+            if (value >= axisLen) return axisLen - 1;
+            return value;
         }
         
         static void PlaceMark(Player p, int x, int y, int z) {
@@ -108,9 +96,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Mark [x y z] %H- Places a marker for selections. (such as /cuboid)");
-            Player.Message(p, "  %HIf no xyz is given, marks at where you are standing");
-            Player.Message(p, "    %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
+            Player.Message(p, "%T/Mark <x y z> %H- Places a marker for selections, e.g for %T/z");
+            Player.Message(p, "%HUse ~ before a coordinate to mark relative to current position");
+            Player.Message(p, "%HIf <x y z> is not given, marks at where you are standing");
+            Player.Message(p, "  %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
             Player.Message(p, "  %HNote: If no selection is in progress, activates (e.g. doors) the existing block at those coordinates.");
             Player.Message(p, "%T/Mark all %H- Places markers at min and max corners of the map");
         }

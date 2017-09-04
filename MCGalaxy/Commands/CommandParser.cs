@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Blocks;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands {
     
@@ -25,7 +26,7 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as a boolean. </summary>
         public static bool GetBool(Player p, string input, ref bool result) {
-            if (input.CaselessEq("1") || input.CaselessEq("true") 
+            if (input.CaselessEq("1") || input.CaselessEq("true")
                 || input.CaselessEq("yes") || input.CaselessEq("on")) {
                 result = true; return true;
             }
@@ -106,7 +107,7 @@ namespace MCGalaxy.Commands {
             if (value < min || value > max) {
                 Player.Message(p, "{0} must be between {1} and {2}", argName, min, max);
                 return false;
-            }           
+            }
             result = value; return true;
         }
         
@@ -129,6 +130,7 @@ namespace MCGalaxy.Commands {
             result = (ushort)temp; return true;
         }
         
+        
         /// <summary> Attempts to parse the given argument as a hex color. </summary>
         public static bool GetHex(Player p, string input, ref ColorDesc col) {
             if (input.Length > 0 && input[0] == '#')
@@ -139,6 +141,23 @@ namespace MCGalaxy.Commands {
             }
             
             col = Colors.ParseHex(input); return true;
+        }
+        
+        internal static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
+            return
+                GetCoord(p, args[argsOffset + 0], P.X, "X", out P.X) &&
+                GetCoord(p, args[argsOffset + 1], P.Y, "Y", out P.Y) &&
+                GetCoord(p, args[argsOffset + 2], P.Z, "Z", out P.Z);
+        }
+        
+        static bool GetCoord(Player p, string arg, int cur, string axis, out int value) {
+            bool relative = arg[0] == '~';
+            if (relative) arg = arg.Substring(1);
+            value = 0;
+            
+            if (!GetInt(p, arg, axis + " coordinate", ref value)) return false;
+            if (relative) value += cur;
+            return true;
         }
         
         

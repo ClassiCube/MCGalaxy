@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTp : Command {
@@ -67,23 +68,11 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         static void TeleportCoords(Player p, string[] args) {
-            int x, y, z;
-            if (!ParseCoord(p, args[0], p.Pos.X,                            "X", out x)) return;
-            if (!ParseCoord(p, args[1], p.Pos.Y - Entities.CharacterHeight, "Y", out y)) return;
-            if (!ParseCoord(p, args[2], p.Pos.Z,                            "Z", out z)) return;
+            Vec3S32 P = p.Pos.BlockFeetCoords;
+            if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
 
             p.PreTeleportPos = p.Pos;
-            PlayerActions.MoveCoords(p, x, y, z, p.Rot.RotY, p.Rot.HeadX);
-        }
-        
-        static bool ParseCoord(Player p, string arg, int cur, string axis, out int value) {
-            bool relative = arg[0] == '~';
-            if (relative) arg = arg.Substring(1);
-            value = 0;
-            
-            if (!CommandParser.GetInt(p, arg, axis + " coordinate", ref value)) return false;            
-            if (relative) value += (cur / 32);
-            return true;
+            PlayerActions.MoveCoords(p, P.X, P.Y, P.Z, p.Rot.RotY, p.Rot.HeadX);
         }
         
         static bool CheckPlayer(Player p, Player target) {
