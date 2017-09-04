@@ -16,23 +16,19 @@ using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Chatting;
 
-namespace MCGalaxy {   
+namespace MCGalaxy {
     public static class ChatModes {
         
         public static bool Handle(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
-                if (text.Length < 1) { Player.Message(p, "No message entered"); return true; }
-                
-                Player.Message(p, "[<] Console: &f" + text);
-                string name = p == null ? "(console)" : p.name;
-                Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", name, text);
+                DoConsolePM(p, text);
                 return true;
             }
             
             if (text[0] == '@' || (p != null && p.whisper)) {
                 if (text[0] == '@') text = text.Remove(0, 1).Trim();
-
+                
                 if (p == null || p.whisperTo.Length == 0) {
                     int sepIndex = text.IndexOf(' ');
                     if (sepIndex != -1) {
@@ -73,7 +69,7 @@ namespace MCGalaxy {
             MessageStaff(p, message, rank, "Admins");
         }
         
-        public static void MessageStaff(Player p, string message, 
+        public static void MessageStaff(Player p, string message,
                                         LevelPermission perm, string group) {
             string displayName = p == null ? "(console)" : p.ColoredName;
             string name = p == null ? "(console)" : p.name;
@@ -81,10 +77,11 @@ namespace MCGalaxy {
             
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             
-            Chat.MessageWhere(format, 
+            Chat.MessageWhere(format,
                               pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),
                               displayName, message);
             
+            if (p != null) p.CheckForMessageSpam();           
             Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, name, message);
             Server.IRC.Say(displayName + "%S: " + message, true);
         }
@@ -95,12 +92,23 @@ namespace MCGalaxy {
             if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             
             if (who.Ignores.All) {
-                DoFakePM(p, who, message); return;
-            }          
-            if (p != null && who.Ignores.Names.CaselessContains(p.name)) {
-                DoFakePM(p, who, message); return;
+                DoFakePM(p, who, message);
+            } else if (p != null && who.Ignores.Names.CaselessContains(p.name)) {
+                DoFakePM(p, who, message);
+            } else {
+                DoPM(p, who, message);
             }
-            DoPM(p, who, message);
+            
+            if (p != null) p.CheckForMessageSpam();
+        }
+        
+        static void DoConsolePM(Player p, string message) {
+            if (message.Length < 1) { Player.Message(p, "No message entered"); return; }
+            Player.Message(p, "[<] Console: &f" + message);
+            string name = p == null ? "(console)" : p.name;
+            Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", name, message);
+            
+            if (p != null) p.CheckForMessageSpam();
         }
         
         static void DoFakePM(Player p, Player who, string message) {
