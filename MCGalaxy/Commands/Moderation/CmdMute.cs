@@ -41,10 +41,11 @@ namespace MCGalaxy.Commands.Moderation {
                 Unmute(p, who.name, args);
             } else {
                 if (p != null && who.Rank >= p.Rank) { MessageTooHighRank(p, "mute", false); return; }
-                if (args.Length < 2) { Help(p); return; }
                 
-                TimeSpan duration = TimeSpan.Zero;
-                if (!CommandParser.GetTimespan(p, args[1], ref duration, "mute for", "s")) return;
+                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
+                if (args.Length > 1) {
+                    if (!CommandParser.GetTimespan(p, args[1], ref duration, "mute for", "s")) return;
+                }
                 
                 string reason = args.Length > 2 ? args[2] : "";
                 reason = ModActionCmd.ExpandReason(p, reason);
@@ -65,8 +66,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Mute [player] [timespan] <reason>");
-            Player.Message(p, "%HMutes player for [timespan], or unmutes that player.");
+            Player.Message(p, "%T/Mute [player] <timespan> <reason>");
+            Player.Message(p, "%HMutes player for <timespan>, or unmutes that player.");
+            Player.Message(p, "%H If <timespan> is not given, mutes for auto spam mute timespan");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
