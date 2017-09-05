@@ -59,9 +59,8 @@ namespace MCGalaxy {
         protected bool CheckExtraPerm(Player p, int num) {
             if (HasExtraPerm(p, num)) return true;
             
-            LevelPermission perm = CommandExtraPerms.MinPerm(name, num);
-            string action = ExtraPerms[num - 1].Description;
-            Formatter.MessageNeedMinPerm(p, action, perm);
+            CommandExtraPerms perms = CommandExtraPerms.Find(name, num);
+            Formatter.MessageNeedMinPerm(p, perms.Description, perms.MinRank);
             return false;
         }
         

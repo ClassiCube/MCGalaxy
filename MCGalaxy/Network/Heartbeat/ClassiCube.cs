@@ -63,7 +63,8 @@ namespace MCGalaxy.Network {
             Server.zombie.OnHeartbeat(ref name);
             name = Colors.Strip(name);
             
-            return "&port="  + ServerConfig.Port +
+            return 
+                "&port="     + ServerConfig.Port +
                 "&max="      + ServerConfig.MaxPlayers +
                 "&name="     + Uri.EscapeDataString(name) +
                 "&public="   + ServerConfig.Public +
