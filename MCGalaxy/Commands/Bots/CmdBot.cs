@@ -83,7 +83,8 @@ namespace MCGalaxy.Commands.Bots {
             }
             
             if (botName.CaselessEq("all")) {
-                PlayerBot.RemoveAllFromLevel(p.level); return;
+                PlayerBot.RemoveLoadedBots(p.level, false);
+                BotsFile.Save(p.level);
             } else {
                 PlayerBot bot = Matcher.FindBots(p, botName);
                 if (bot == null) return;

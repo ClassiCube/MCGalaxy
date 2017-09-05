@@ -44,6 +44,7 @@ namespace MCGalaxy {
         internal readonly object PropsLock = new object();
         public ExtrasCollection Extras = new ExtrasCollection();
         public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
+        bool unloadedBots;
         
         internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
         internal HandlePlace[] placeHandlers = new HandlePlace[Block.Count * 2];

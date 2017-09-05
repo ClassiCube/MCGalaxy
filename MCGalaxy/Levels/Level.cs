@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using MCGalaxy.Blocks;
+using MCGalaxy.Bots;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.LevelEvents;
@@ -176,7 +177,12 @@ namespace MCGalaxy {
             LevelInfo.Loaded.Remove(this);
 
             try {
-                PlayerBot.UnloadFromLevel(this);
+                if (!unloadedBots) {
+                    unloadedBots = true;
+                    BotsFile.Save(this);
+                    PlayerBot.RemoveLoadedBots(this, false);
+                }
+
                 physThread.Abort();
                 physThread.Join();
             } catch {

@@ -81,17 +81,7 @@ namespace MCGalaxy {
             if (save) BotsFile.Save(bot.level);
         }
         
-        public static void UnloadFromLevel(Level lvl) {
-            BotsFile.Save(lvl);
-            RemoveLoadedBots(lvl, false);
-        }
-        
-        public static void RemoveAllFromLevel(Level lvl) {
-            RemoveLoadedBots(lvl, false);
-            BotsFile.Save(lvl);
-        }
-        
-        static void RemoveLoadedBots(Level lvl, bool save) {
+        internal static void RemoveLoadedBots(Level lvl, bool save) {
             PlayerBot[] bots = lvl.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
                 Remove(bots[i], save);
