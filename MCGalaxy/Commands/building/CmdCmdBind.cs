@@ -21,11 +21,12 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdCmdBind : Command {        
         public override string name { get { return "CmdBind"; } }
         public override string shortcut { get { return "cb"; } }
-        public override string type { get { return CommandTypes.Moderation; } }
+        public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
-
+        public override bool MessageBlockRestricted { get { return true; } }
+        
         public override void Use(Player p, string message) {
             if (message.Length == 0) {
                 bool anyBinds = false;

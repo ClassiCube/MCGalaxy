@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WResize"), new CommandAlias("WorldResize") }; }
         }
-
+        public override bool MessageBlockRestricted { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (args.Length < 4) { Help(p); return; }

@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WDelete"), new CommandAlias("WorldDelete"), new CommandAlias("WRemove") }; }
         }
+        public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message) {
             if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }

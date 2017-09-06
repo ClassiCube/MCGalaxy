@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WRename"), new CommandAlias("WorldRename") }; }
         }
-
+        public override bool MessageBlockRestricted { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }

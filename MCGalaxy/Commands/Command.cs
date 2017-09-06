@@ -47,7 +47,10 @@ namespace MCGalaxy {
         /// <summary>  Aliases for this command. </summary>
         public virtual CommandAlias[] Aliases { get { return null; } }
         /// <summary> Whether this command can be used by 'super' players. (Console and IRC controllers). </summary>
-        public virtual bool SuperUseable { get { return true; } }      
+        public virtual bool SuperUseable { get { return true; } }
+        /// <summary> Whether this command is restricted in usage in message blocks. 
+        /// Restricted commands require the player to have the extra permission for /mb to be able to be placed in message blocks. </summary>
+        public virtual bool MessageBlockRestricted { get { return false; } }
 
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();

@@ -29,6 +29,7 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WCopy"), new CommandAlias("WorldCopy") }; }
         }
+        public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }

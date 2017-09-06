@@ -75,7 +75,8 @@ namespace MCGalaxy.Blocks.Extended {
             Command.Search(ref alias, ref cmdArgs);
             
             foreach (Command cmd in Command.all.commands) {
-                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.Contains("mod"))) continue;
+                bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.Contains("mod");
+                if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) continue;
                 
                 if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
                     Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;

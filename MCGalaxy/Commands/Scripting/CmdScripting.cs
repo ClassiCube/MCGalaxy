@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.Scripting {
             get { return new[] { new CommandAlias("PCreate", "pcreate"),
                     new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload") }; }
         }
+        public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message) {
             string[] parts = message.SplitSpaces(2);
