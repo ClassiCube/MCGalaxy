@@ -67,14 +67,12 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowNormal(Player p, MapInfoData data, LevelConfig cfg) {
-            Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", data.Name, data.Width, data.Height, data.Length);
+            Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", 
+                           cfg.Color + data.Name, data.Width, data.Height, data.Length);
+            
             string physicsState = CmdPhysics.states[cfg.Physics];
-            if (p == null || p.group.CanExecute("gun")) {
-                Player.Message(p, "  Physics are {0}%S, gun usage %Sis {1}",
-                               physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
-            } else {
-                Player.Message(p, "  Physics are {0}", physicsState);
-            }
+            Player.Message(p, "  Physics are {0}%S, gun usage is {1}",
+                           physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
 
             DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
@@ -165,14 +163,16 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
-            if (data.TerrainUrl.Length > 0) {
-                Player.Message(p, "Texture: %b" + data.TerrainUrl);
+            string url = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
+            if (url.Length > 0) {
+                Player.Message(p, "Texture: %b" + url);
             } else {
                 Player.Message(p, "No custom texture set for this map.");
             }
             
-            if (data.TextureUrl.Length > 0) {
-                Player.Message(p, "Texture pack: %b" + data.TextureUrl);
+            url = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
+            if (url.Length > 0) {
+                Player.Message(p, "Texture pack: %b" + url);
             } else {
                 Player.Message(p, "No custom texture pack set for this map.");
             }
@@ -197,17 +197,17 @@ namespace MCGalaxy.Commands.Info {
             public ushort Width, Height, Length;
             public string Name;
             public long BlockDBEntries = -1;
-            public string TerrainUrl, TextureUrl;
-            public LevelAccessController Visit, Build;            
+            public LevelAccessController Visit, Build;
             public LevelConfig Config;
 
             public void FromOnlineLevel(Level lvl) {
                 Name = lvl.name;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
-                LoadConfig(lvl.Config);
+                Config = lvl.Config;
                 
-                Visit = lvl.VisitAccess; Build = lvl.BuildAccess;
+                Visit = lvl.VisitAccess; 
+                Build = lvl.BuildAccess;
             }
             
             public void FromOfflineLevel(string name) {
@@ -221,16 +221,10 @@ namespace MCGalaxy.Commands.Info {
                 LevelConfig cfg = new LevelConfig();
                 cfg.EdgeLevel = Height / 2; cfg.CloudsHeight = Height + 2;
                 LevelConfig.Load(path, cfg);
-                LoadConfig(cfg);
+                Config = cfg;
                 
                 Visit = new LevelAccessController(cfg, name, true);
                 Build = new LevelAccessController(cfg, name, false);
-            }
-            
-            void LoadConfig(LevelConfig cfg) {
-                Config = cfg;              
-                TerrainUrl = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
-                TextureUrl = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
             }
         }
         
