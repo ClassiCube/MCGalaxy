@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.World {
             { "levelblock", new SubCommand(HandleLevelBlock, levelBlockHelp) },
             { "map", new SubCommand(HandleMap, mapHelp) },
             { "preset", new SubCommand(HandlePreset, presetHelp) },
-            { "spawn", new SubCommand(HandleSpawn, spawnHelp) },
+            { "setspawn", new SubCommand(HandleSpawn, spawnHelp) },
             { "zone", new SubCommand(HandleZone, zoneHelp) },
         };
         
@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands.World {
         };
         
         static string[] spawnHelp = new string[] {
-            "%T/os spawn %H- Sets the map's spawn point to your current position.",
+            "%T/os setspawn %H- Sets the map's spawn point to your current position.",
         };
         
         static string[] zoneHelp = new string[] {
