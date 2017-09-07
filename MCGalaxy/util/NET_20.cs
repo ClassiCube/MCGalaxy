@@ -55,7 +55,7 @@ namespace MCGalaxy.Util {
         }
         
         
-        struct SlimLock : IDisposable {
+        class SlimLock : IDisposable {
             ReaderWriterLock locker;
             bool writeMode;
             
