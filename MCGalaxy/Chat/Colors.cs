@@ -213,7 +213,7 @@ namespace MCGalaxy {
             while (len > 0 && chars[i] == '&') { len -= 2; i += 2; }
             
             // Starts with "http" ?
-            if (len < prefixLen) return false;           
+            if (len < prefixLen) return false;
             if (chars[i] != 'h' || chars[i + 1] != 't' || chars[i + 2] != 't' || chars[i + 3] != 'p') return false;
             len -= 4; i += 4;
             
@@ -228,7 +228,7 @@ namespace MCGalaxy {
                 char c = chars[i];
                 bool validCode = c == '%' && i < chars.Length - 1;
                 
-                if (!validCode) continue;               
+                if (!validCode) continue;
                 char color = chars[i + 1];
                 if (!Map(ref color)) continue;
                 

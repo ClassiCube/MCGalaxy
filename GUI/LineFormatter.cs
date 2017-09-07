@@ -26,7 +26,8 @@ namespace MCGalaxy.Gui {
         public static void Format(string message, Action<char, string> output) {
             int index = 0;
             char col = 'S';
-            message = Colors.Escape(message);
+            message = message.Replace("%S", "&f"); // We want %S to be treated specially when displayed to GUI
+            message = Colors.Escape(message);      // Need to Replace first, otherwise it's mapped by Colors.Escape
             
             while (index < message.Length)
                 OutputPart(ref col, ref index, message, output);
