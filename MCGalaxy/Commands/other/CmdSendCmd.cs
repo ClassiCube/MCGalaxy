@@ -36,12 +36,15 @@ namespace MCGalaxy.Commands.Misc {
                 Player.Message(p, "No command name given."); return;
             }
             
-            string name = parts[1], args = parts.Length > 2 ? parts[2] : "";
-            Command cmd = Command.all.Find(name);
+            string cmdName = parts[1];
+            string cmdArgs = parts.Length > 2 ? parts[2] : "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            Command cmd = Command.all.Find(cmdName);
             if (cmd == null) {
-                Player.Message(p, "Unknown command \"" + name + "\"."); return;
+                Player.Message(p, "Unknown command \"" + cmdName + "\"."); return;
             }
-            cmd.Use(target, args);
+            cmd.Use(target, cmdArgs);
         }
 
         public override void Help(Player p) {
