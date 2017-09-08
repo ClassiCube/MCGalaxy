@@ -45,20 +45,21 @@ namespace MCGalaxy.Commands.World {
         }
         
         static Level LoadLevelCore(Player p, string name, bool autoLoaded) {
-            Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
-            }
             if (!LevelInfo.MapExists(name)) {
                 Player.Message(p, "Level \"{0}\" does not exist", name); return null;
+            }
+            
+            Level existing = LevelInfo.FindExact(name);
+            if (existing != null) {
+                Player.Message(p, "Level {0} %Sis already loaded.", existing.ColoredName); return null;
             }
             
             Level lvl = ReadLevel(p, name);
             if (lvl == null || !lvl.CanJoin(p)) return null;
 
-            loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded) {
-                if (l.name == name) { Player.Message(p, "Level {0} %Sis already loaded.", l.ColoredName); return null; }
+            existing = LevelInfo.FindExact(name);
+            if (existing != null) {
+                Player.Message(p, "Level {0} %Sis already loaded.", existing.ColoredName); return null;
             }
 
             LevelInfo.Loaded.Add(lvl);

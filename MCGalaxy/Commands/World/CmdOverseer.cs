@@ -32,16 +32,18 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
-            string[] parts = message.SplitSpaces(3);
-            string cmd = parts[0].ToUpper();
-            string arg = parts.Length > 1 ? parts[1] : "";
-            string arg2 = parts.Length > 2 ? parts[2] : "";
+            string[] args = message.SplitSpaces(3);
+            string cmd = args[0];
+            string arg = args.Length > 1 ? args[1] : "";
+            string arg2 = args.Length > 2 ? args[2] : "";
             
-            bool mapOnly = !(cmd == "GO" || cmd == "MAP");
+            bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
             if (mapOnly && !OwnsMap(p, p.level)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
 
+            // used to be /os spawn, keep alias for backwards compatibility
+            if (cmd.CaselessEq("spawn")) cmd = "setspawn";
             foreach (var subCmd in subCommands) {
                 if (!subCmd.Key.CaselessEq(cmd)) continue;
                 subCmd.Value.Handler(p, arg, arg2);
