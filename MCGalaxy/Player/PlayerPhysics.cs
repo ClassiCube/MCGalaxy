@@ -105,6 +105,9 @@ namespace MCGalaxy.Blocks.Physics {
                 }
             } else {
                 bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
+                // NOTE: Rope is a special case, it should always reset fall height
+                if (bHead.BlockID == Block.Rope) isGas = false;
+                
                 if (!isGas) p.startFallY = -1;
                 p.drownTime = DateTime.MaxValue;
             }
