@@ -192,7 +192,7 @@ namespace MCGalaxy.Drawing.Ops {
                 // Potentially buffer the block change
                 if (op.TotalModified == reloadThreshold) {
                     if (p == null || !p.Ignores.DrawOutput) {
-                	    Player.Message(p, "Changed over {0} blocks, preparing to reload map..", reloadThreshold);
+                        Player.Message(p, "Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
 
                     lock (lvl.queueLock)

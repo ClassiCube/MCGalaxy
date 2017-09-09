@@ -27,7 +27,7 @@ namespace MCGalaxy.DB {
     /// <summary> Formats a value in a column. </summary>
     public delegate string TopStatFormatter(string input);
     
-	
+    
     /// <summary> Outputs ordered stats from a column in a database table. </summary>
     public sealed class TopStat {
         

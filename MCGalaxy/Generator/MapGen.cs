@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Generator {
     
-	/// <summary> Holds arguments for a map generator. </summary>
+    /// <summary> Holds arguments for a map generator. </summary>
     public struct MapGenArgs {
         public Player Player;
         public Level Level;
@@ -28,9 +28,9 @@ namespace MCGalaxy.Generator {
         public bool UseSeed;
         public int Seed;
     }
-	
-	/// <summary> Represents a map generator, returning whether map generation succeeded or not. </summary>
-	public delegate bool MapGenerator(MapGenArgs args);
+    
+    /// <summary> Represents a map generator, returning whether map generation succeeded or not. </summary>
+    public delegate bool MapGenerator(MapGenArgs args);
     
     /// <summary> Maintains a list of map generator instances. </summary>
     public static class MapGen {

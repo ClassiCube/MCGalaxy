@@ -39,7 +39,7 @@ namespace MCGalaxy {
             { "vv", '▼' }, { "down", '▼' },
             { "house", '⌂' }
         };
-		
+        
         /// <summary> Conversion for code page 437 characters from index 0 to 31 to unicode. </summary>
         public const string ControlCharReplacements = "\0☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼";
         

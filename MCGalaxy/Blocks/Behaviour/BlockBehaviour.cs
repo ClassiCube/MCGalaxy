@@ -45,8 +45,8 @@ namespace MCGalaxy.Blocks {
                 case Block.C4: return PlaceBehaviour.C4;
                 case Block.C4Detonator: return PlaceBehaviour.C4Det;
             }
-        	
-        	if (props[block.Index].StackId != Block.Air) return PlaceBehaviour.Stack(block);
+            
+            if (props[block.Index].StackId != Block.Air) return PlaceBehaviour.Stack(block);
             return null;
         }
         

@@ -30,9 +30,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             int totalFixed = 0;
             Level lvl = p.level;
-            if (!lvl.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence you cannot use %T/fixgrass %Son this map"); return;
-            }
+            if (!LevelInfo.ValidateAction(p, lvl.name, "use %T/fixgrass %Son this level")) return;
             
             if (message.Length == 0) {
                 FixDirtAndGrass(p, lvl, ref totalFixed);

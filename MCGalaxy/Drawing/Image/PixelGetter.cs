@@ -23,7 +23,7 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing {
     
     public delegate void PixelGetterCallback(Pixel pixel, DrawOpOutput output);
-	
+    
     public sealed class PixelGetter : IDisposable {
         
         Bitmap bmp;

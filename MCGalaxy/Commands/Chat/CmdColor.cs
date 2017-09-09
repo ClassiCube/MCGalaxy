@@ -33,10 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
 
         protected override void SetBotData(Player p, PlayerBot bot, string colName) {
-            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot change the color of that bot.");
-                return;
-            }
+            if (!LevelInfo.ValidateAction(p, bot.level.name, "change color of that bot")) return;
             
             string color = colName.Length == 0 ? "&1" : Matcher.FindColor(p, colName);
             if (color == null) return;

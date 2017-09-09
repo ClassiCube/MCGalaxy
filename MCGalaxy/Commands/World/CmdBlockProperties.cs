@@ -50,6 +50,8 @@ namespace MCGalaxy.Commands.World {
                     Player.Message(p, "Cannot use level scope from {0}.",  src);
                     return null;
                 }
+                
+                if (!LevelInfo.ValidateAction(p, p.level.name, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             

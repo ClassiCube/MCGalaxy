@@ -70,7 +70,7 @@ namespace MCGalaxy.Eco {
             if (value.IndexOf(',') != -1) {
                 foreach (string award in value.Split(',')) {
                     pl.Awards.Add(award);
-            	}
+                }
             } else {
                 pl.Awards.Add(value);
             }

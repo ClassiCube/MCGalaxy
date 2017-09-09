@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (num >= Inbox.Rows.Count) {
                     Player.Message(p, "Message #{0} does not exist.", num); return;
                 }
-            	
+                
                 OutputMessage(p, Inbox.Rows[num]);
             }
         }

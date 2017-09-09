@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Generator {
-	
+    
     public delegate ushort CalcLiquidLevel(ushort lvlHeight);
-	
+    
     public sealed class RealisticGenParams {        
         public float RangeLow = 0.2f;
         public float RangeHigh = 0.8f;

@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Info {
         static void SearchRanks(Player p, string keyword, string modifier) {
             List<string> ranks = new List<string>();
             foreach (Group g in Group.GroupList) {
-            	if (g.Name.CaselessContains(keyword)) {
+                if (g.Name.CaselessContains(keyword)) {
                     ranks.Add(g.ColoredName);
                 }
             }

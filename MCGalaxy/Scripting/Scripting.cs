@@ -50,8 +50,8 @@ namespace MCGalaxy.Scripting {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
             if (compiler == null) {
                 Logger.Log(LogType.Warning, 
-            	           "WARNING: Provider {0} is missing, you will be unable to compile {1} commands.", 
-            	           ProviderName, Ext);
+                           "WARNING: Provider {0} is missing, you will be unable to compile {1} commands.", 
+                           ProviderName, Ext);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
         }

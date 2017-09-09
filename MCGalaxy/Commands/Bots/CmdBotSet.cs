@@ -34,12 +34,8 @@ namespace MCGalaxy.Commands.Bots {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             PlayerBot bot = Matcher.FindBots(p, args[0]);
-            if (bot == null) return;
-            
-            if (p != null && !bot.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot change the AI of bots on this map.");
-                return;
-            }
+            if (bot == null) return;            
+            if (!LevelInfo.ValidateAction(p, p.level.name, "change AI of bots in this level")) return;
                 
             if (args.Length == 1) {
                 bot.Instructions.Clear();

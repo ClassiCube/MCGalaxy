@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return;  }
             
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set spawn of this level")) return;
             Player.Message(p, "Spawn location set to your current position.");
             p.level.spawnx = (ushort)p.Pos.BlockX;
             p.level.spawny = (ushort)p.Pos.BlockY;

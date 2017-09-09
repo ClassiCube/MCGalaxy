@@ -89,7 +89,7 @@ namespace MCGalaxy {
                     instance.Load(startup);
                     Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", instance.name, instance.build);
                 } else {
-                	Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", instance.name);
+                    Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", instance.name);
                 }
                 Logger.Log(LogType.SystemActivity, instance.welcome);
             } catch (Exception e) {

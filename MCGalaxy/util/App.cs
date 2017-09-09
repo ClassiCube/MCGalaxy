@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
                 }
             } catch (Exception ex) { 
                 Logger.LogError(ex); 
-        	}
+            }
 
             try {
                 string level = null;

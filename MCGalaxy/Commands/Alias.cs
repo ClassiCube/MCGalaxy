@@ -78,10 +78,10 @@ namespace MCGalaxy.Commands {
 
         public static Alias Find(string cmd) {
             foreach (Alias alias in aliases) {
-        	    if (alias.Trigger.CaselessEq(cmd)) return alias;
+                if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
             foreach (Alias alias in coreAliases) {
-        	    if (alias.Trigger.CaselessEq(cmd)) return alias;
+                if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
             return null;
         }

@@ -48,10 +48,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void AddBot(Player p, string botName) {
-            if (!p.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot add bots to this map.");
-                return;
-            }
+            if (!LevelInfo.ValidateAction(p, p.level.name, "add bots to this level")) return;
             
             if (BotExists(p.level, botName)) {
                 Player.Message(p, "A bot with that name already exists."); return;
@@ -77,10 +74,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void RemoveBot(Player p, string botName) {
-            if (!p.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot remove bots from this map.");
-                return;
-            }
+            if (!LevelInfo.ValidateAction(p, p.level.name, "remove bots from this level")) return;
             
             if (botName.CaselessEq("all")) {
                 PlayerBot.RemoveLoadedBots(p.level, false);
@@ -97,6 +91,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetBotText(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set bot text of that bot")) return;
             
             if (text == null) {
                 Player.Message(p, "Removed text shown when bot {0} %Sclicked on", bot.ColoredName);

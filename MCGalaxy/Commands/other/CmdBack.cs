@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Misc {
             if (p.PreTeleportMap.Length == 0) {
                 Player.Message(p, "You have not teleported anywhere yet"); return;
             }
-        	
+            
             if (!p.level.name.CaselessEq(p.PreTeleportMap))
                 PlayerActions.ChangeMap(p, p.PreTeleportMap);
             p.SendPos(Entities.SelfID, p.PreTeleportPos, new Orientation(0, 0));

@@ -91,7 +91,7 @@ namespace MCGalaxy {
         }
         
         static void SetupSocket(SchedulerTask task) {
-		    Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", ServerConfig.Port);
+            Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", ServerConfig.Port);
             Listener = new TcpListen();
             
             IPAddress ip;

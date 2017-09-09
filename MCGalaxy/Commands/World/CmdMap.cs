@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.World {
                 string map = Matcher.FindMaps(p, args[0]);
                 if (map == null) return;
                 
-                PrintMapInfo(p, GetConfig(map));
+                PrintMapInfo(p, LevelInfo.GetConfig(map, out lvl));
                 return;
             } else {
                 lvl = Matcher.FindLevels(p, args[0]);
@@ -63,18 +63,9 @@ namespace MCGalaxy.Commands.World {
             if (!CheckExtraPerm(p, 1)) return;
             if (opt.CaselessEq("realmowner") && !CheckExtraPerm(p, 2)) return;
             
+            if (!LevelInfo.ValidateAction(p, lvl.name, "change map settings of this level")) return;
             if (SetMapOption(p, lvl, opt, value)) return;
             Player.Message(p, "Could not find option entered.");
-        }
-        
-        static LevelConfig GetConfig(string map) {
-            Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null) return lvl.Config;
-            
-            string propsPath = LevelInfo.PropertiesPath(map);
-            LevelConfig cfg = new LevelConfig();
-            LevelConfig.Load(propsPath, cfg);
-            return cfg;
         }
         
         static bool IsMapOption(string[] args) {

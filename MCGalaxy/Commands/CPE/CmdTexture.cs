@@ -68,6 +68,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "Set server's default terrain to " + path);
                 UpdateGlobally(p, false);
             } else if (scope == "level") {
+                if (!LevelInfo.ValidateAction(p, p.level.name, "set texture of this level")) return;
                 p.level.Config.Terrain = url;
                 Player.Message(p, "Set level's terrain to " + path);
                 UpdateLevel(p);
@@ -76,6 +77,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "Set server's default texture pack to " + path);
                 UpdateGlobally(p, true);
             } else if (scope == "levelzip") {
+                if (!LevelInfo.ValidateAction(p, p.level.name, "set texture pack of this level")) return;
                 p.level.Config.TexturePack = url;
                 Player.Message(p, "Set level's texture pack to " + path);
                 UpdateLevel(p);

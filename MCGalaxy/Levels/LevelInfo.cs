@@ -88,32 +88,36 @@ namespace MCGalaxy {
         public static string PropertiesPath(string name) {
             return "levels/level properties/" + name + ".properties";
         }
-   
         
-        public static string FindOfflineProperty(string name, string propKey) {
-            string path = PropertiesPath(name);
-            if (!File.Exists(path)) return null;
-
-            string[] lines = null;
-            try {
-                lines = File.ReadAllLines(path);
-            } catch {
-                return null;
+        internal static LevelConfig GetConfig(string map, out Level lvl) {
+            lvl = FindExact(map);
+            if (lvl != null) return lvl.Config;
+            
+            string propsPath = PropertiesPath(map);
+            LevelConfig cfg = new LevelConfig();
+            LevelConfig.Load(propsPath, cfg); 
+            return cfg;
+        }
+        
+        internal static bool ValidateAction(Player p, string map, string action) {
+            if (p == null) return true;
+            LevelAccessController visit, build;
+            Level lvl = null;
+            LevelConfig cfg = GetConfig(map, out lvl);          
+            
+            if (lvl != null) {
+                visit = lvl.VisitAccess;
+                build = lvl.BuildAccess;
+            } else {
+                visit = new LevelAccessController(cfg, map, true);
+                build = new LevelAccessController(cfg, map, false);
             }
             
-            foreach (string line in lines) {
-                try {
-                    if (line.Length == 0 || line[0] == '#') continue;
-                    int index = line.IndexOf(" = ");
-                    if (index == -1) continue;
-                    
-                    string key = line.Substring(0, index).ToLower();
-                    if (key == propKey) return line.Substring(index + 3);
-                } catch (Exception e) {
-                    Logger.LogError(e);
-                }
+            if (!visit.CheckDetailed(p) || !build.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot {0}.", action);
+                return false;
             }
-            return null;
+            return true;
         }
     }
 }

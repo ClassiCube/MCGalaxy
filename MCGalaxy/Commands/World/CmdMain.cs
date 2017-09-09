@@ -42,9 +42,12 @@ namespace MCGalaxy.Commands.World {
             } else {
                 if (!CheckExtraPerm(p, 1)) return;
                 if (!Formatter.ValidName(p, message, "level")) return;
+                if (!LevelInfo.ValidateAction(p, ServerConfig.MainLevel, "set main to another level")) return;
                 
                 string map = Matcher.FindMaps(p, message);
                 if (map == null) return;
+                if (!LevelInfo.ValidateAction(p, map, "set main to this level")) return;
+                
                 Server.SetMainLevel(map);
                 SrvProperties.Save();
                 Player.Message(p, "Set main level to {0}", Server.mainLevel.ColoredName);

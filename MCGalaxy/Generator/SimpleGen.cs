@@ -21,8 +21,8 @@ using System.Collections.Generic;
 namespace MCGalaxy.Generator { 
     public static class SimpleGen {
 
-		delegate byte NextBlock();
-		
+        delegate byte NextBlock();
+        
         public static void RegisterGenerators() {
             MapGen.RegisterSimpleGen("island", GenSimple);
             MapGen.RegisterSimpleGen("mountains", GenSimple);

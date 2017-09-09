@@ -37,15 +37,18 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 2) {
                 Player.Message(p, "You did not specify the destination level name."); return;
             }
-            
-            string src = args[0], dst = args[1];
             if (p != null && !p.group.CanExecute("newlvl")) {
                 Player.Message(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
+            
+            string src = args[0];
             src = Matcher.FindMaps(p, src);
             if (src == null) return;
+            if (!LevelInfo.ValidateAction(p, src, "copy this level")) return;
+            
+            string dst = args[1];
             if (!Formatter.ValidName(p, dst, "level")) return;
-            if (LevelInfo.MapExists(dst)) { Player.Message(p, "The level \"" + dst + "\" already exists."); return; }
+            if (LevelInfo.MapExists(dst)) { Player.Message(p, "Level \"" + dst + "\" already exists."); return; }
 
             try {
                 LevelActions.CopyLevel(src, dst);

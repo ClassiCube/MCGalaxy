@@ -38,6 +38,8 @@ namespace MCGalaxy.Commands.World {
                 level = Matcher.FindLevels(p, args[0]);
                 if (level == null) return;
             }
+            
+            if (!LevelInfo.ValidateAction(p, level.name, "set physics of this level")) return;
             SetPhysics(level, state);
         }
         

@@ -128,9 +128,9 @@ namespace MCGalaxy.Games {
         }
         
         static void ZSLineProcessor(string key, string value) {
-        	if (!ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
+            if (!ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
                 Logger.Log(LogType.Warning, "\"{0}\" was not a recognised zombie survival property key.", key);
-        	}
+            }
         }
     }
 }

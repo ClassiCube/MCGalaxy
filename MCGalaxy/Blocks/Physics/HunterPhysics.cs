@@ -39,7 +39,7 @@ namespace MCGalaxy.Blocks.Physics {
                             index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
-                		
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 4;
@@ -88,7 +88,7 @@ namespace MCGalaxy.Blocks.Physics {
                             index = lvl.PosToInt((ushort)(x - Math.Sign(closest.Pos.BlockX - x)), y, z);
                             if (MoveTo(lvl, block, C.b, index, target)) return;
                         }
-                		
+                        
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 4;
@@ -128,7 +128,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void RandomlyMove(Level lvl, ref Check C, ExtBlock block, Random rand, 
-		                         ushort x, ushort y, ushort z, byte target) {
+                                 ushort x, ushort y, ushort z, byte target) {
             switch (rand.Next(1, 15)) {
                 case 1:
                     if (MoveTo(lvl, block, C.b, lvl.PosToInt(x, (ushort)(y - 1), z), target)) return;

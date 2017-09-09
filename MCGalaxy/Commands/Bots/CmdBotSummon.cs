@@ -27,10 +27,7 @@ namespace MCGalaxy.Commands.Bots {
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
-            if (!p.level.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot summon bots on this map.");
-                return;
-            }
+            if (!LevelInfo.ValidateAction(p, p.level.name, "summon that bot")) return;
             
             PlayerBot bot = Matcher.FindBots(p, message);
             if (bot == null) return;

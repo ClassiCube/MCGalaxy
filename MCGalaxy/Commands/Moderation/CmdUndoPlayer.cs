@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             public override void SendMessage(byte id, string message, bool colorParse = true) {
-        	    Logger.Log(LogType.ConsoleMessage, message);
+                Logger.Log(LogType.ConsoleMessage, message);
             }
         }
         

@@ -30,9 +30,9 @@ namespace MCGalaxy {
 }
 
 namespace MCGalaxy.Drawing.Ops {
-	
-	/// <summary> Performs on action on a block output from a draw operation. </summary>
-	public delegate void DrawOpOutput(DrawOpBlock block);
+    
+    /// <summary> Performs on action on a block output from a draw operation. </summary>
+    public delegate void DrawOpOutput(DrawOpBlock block);
     
     public abstract partial class DrawOp {
         
