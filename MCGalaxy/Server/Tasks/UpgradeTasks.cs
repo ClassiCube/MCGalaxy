@@ -116,10 +116,11 @@ namespace MCGalaxy.Tasks {
         
         static void Combine(string envFile) {
             string name = Path.GetFileNameWithoutExtension(envFile);
-            string propFile = LevelInfo.FindPropertiesFile(name);
+            string propsPath = LevelInfo.PropertiesPath(name);
+            
             List<string> lines = new List<string>();
-            if (propFile != null) {
-                lines = Utils.ReadAllLinesList(propFile);
+            if (File.Exists(propsPath)) {
+                lines = Utils.ReadAllLinesList(propsPath);
             }
             
             using (StreamReader r = new StreamReader(envFile)) {
@@ -128,8 +129,7 @@ namespace MCGalaxy.Tasks {
                     lines.Add(line);
             }
             
-            propFile = LevelInfo.PropertiesPath(name);
-            File.WriteAllLines(propFile, lines.ToArray());
+            File.WriteAllLines(propsPath, lines.ToArray());
             File.Delete(envFile);
         }
         

@@ -88,21 +88,15 @@ namespace MCGalaxy {
         public static string PropertiesPath(string name) {
             return "levels/level properties/" + name + ".properties";
         }
-        
-        
-        public static string FindPropertiesFile(string name) {
-            string file = "levels/level properties/" + name + ".properties";
-            if (!File.Exists(file)) file = "levels/level properties/" + name;
-            return File.Exists(file) ? file : null;
-        }      
+   
         
         public static string FindOfflineProperty(string name, string propKey) {
-            string file = FindPropertiesFile(name);
-            if (file == null) return null;
+            string path = PropertiesPath(name);
+            if (!File.Exists(path)) return null;
 
             string[] lines = null;
             try {
-                lines = File.ReadAllLines(file);
+                lines = File.ReadAllLines(path);
             } catch {
                 return null;
             }

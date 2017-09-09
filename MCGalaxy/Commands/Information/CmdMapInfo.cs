@@ -217,7 +217,7 @@ namespace MCGalaxy.Commands.Info {
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
                 BlockDBEntries = BlockDBFile.CountEntries(name);
 
-                path = LevelInfo.FindPropertiesFile(name);
+                path = LevelInfo.PropertiesPath(name);
                 LevelConfig cfg = new LevelConfig();
                 cfg.EdgeLevel = Height / 2; cfg.CloudsHeight = Height + 2;
                 LevelConfig.Load(path, cfg);

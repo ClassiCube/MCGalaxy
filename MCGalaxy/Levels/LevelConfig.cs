@@ -201,8 +201,8 @@ namespace MCGalaxy {
         }
         
         
-		public static void Load(string path, LevelConfig config) {
-            PropertiesFile.Read(path, ref config, LineProcessor);
+		public static bool Load(string path, LevelConfig config) {
+            return PropertiesFile.Read(path, ref config, LineProcessor);
         }
         
         static void LineProcessor(string key, string value, ref LevelConfig config) {

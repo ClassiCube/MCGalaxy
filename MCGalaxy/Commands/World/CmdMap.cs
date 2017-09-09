@@ -71,9 +71,9 @@ namespace MCGalaxy.Commands.World {
             Level lvl = LevelInfo.FindExact(map);
             if (lvl != null) return lvl.Config;
             
-            string propsPath = LevelInfo.FindPropertiesFile(map);
+            string propsPath = LevelInfo.PropertiesPath(map);
             LevelConfig cfg = new LevelConfig();
-            if (propsPath != null) LevelConfig.Load(propsPath, cfg);
+            LevelConfig.Load(propsPath, cfg);
             return cfg;
         }
         
