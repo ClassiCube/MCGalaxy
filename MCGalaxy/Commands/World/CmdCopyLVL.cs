@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "CopyLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return true; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WCopy"), new CommandAlias("WorldCopy") }; }
         }
@@ -36,9 +36,6 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.ToLower().SplitSpaces();
             if (args.Length < 2) {
                 Player.Message(p, "You did not specify the destination level name."); return;
-            }
-            if (p != null && !p.group.CanExecute("newlvl")) {
-                Player.Message(p, "You cannot use /copylvl as you cannot use /newlvl."); return;
             }
             
             string src = args[0];
@@ -52,10 +49,13 @@ namespace MCGalaxy.Commands.World {
 
             try {
                 LevelActions.CopyLevel(src, dst);
-            } catch (System.IO.IOException) {
-                Player.Message(p, "The level &c" + dst + " %Salready exists!"); return;
+            } catch (IOException) {
+                Player.Message(p, "Level &c" + dst + " %Salready exists!"); return;
             }
-            Player.Message(p, "The level &a" + src + " %Shas been copied to &a" + dst + ".");
+            
+            Level ignored;
+            LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
+            Player.Message(p, "Level {0} %Shas been copied to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
