@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             Player.Message(p, "About {0} ({1})", def.Name, def.BlockID);
-            Player.Message(p, "  DrawType: {0}, BlocksLight: {1}, Solidity: {2}",
+            Player.Message(p, "  Draw type: {0}, Blocks light: {1}, collide type: {2}",
                            def.BlockDraw, def.BlocksLight, def.CollideType);
             Player.Message(p, "  Fallback ID: {0}, Sound: {1}, Speed: {2}",
                            def.FallBack, def.WalkSound, def.Speed.ToString("F2"));
