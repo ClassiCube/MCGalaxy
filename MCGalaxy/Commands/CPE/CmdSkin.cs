@@ -69,6 +69,8 @@ namespace MCGalaxy.Commands.CPE {
             if (skin.Length == 0) skin = defSkin;
             if (skin[0] == '+')
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
+            
+            CmdTexture.FilterURL(ref skin);
             return skin;
         }
 

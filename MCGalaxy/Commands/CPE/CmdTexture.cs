@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands.World {  
+namespace MCGalaxy.Commands.CPE {
     public sealed class CmdTexture : Command {        
         public override string name { get { return "Texture"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static void FilterURL(ref string url) {
+        internal static void FilterURL(ref string url) {
             // a lot of people try linking to the dropbox page instead of directly to file, so we auto correct them
             if (url.StartsWith("http://www.dropbox")) {
                 url = "http://dl.dropbox" + url.Substring("http://www.dropbox".Length);
