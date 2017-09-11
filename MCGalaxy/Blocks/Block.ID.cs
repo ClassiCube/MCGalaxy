@@ -116,7 +116,7 @@ namespace MCGalaxy
         public const byte Door_Cobblestone = 80;
         //public const byte Door_Cobblestone_air = 81;// unused in core
         public const byte Door_Red = 83;
-        //public const byte Door_Red_air = 84;       // unused in core
+        //public const byte Door_Red_air = 84;        // unused in core
 
         public const byte Door_Orange = 85;
         public const byte Door_Yellow = 86;
@@ -141,7 +141,7 @@ namespace MCGalaxy
         public const byte Op_Water = 106;
         public const byte Op_Lava = 107;
 
-        //public const byte GrieferStone = 108;      // unused in core
+        //public const byte GrieferStone = 108;        // unused in core
         public const byte LavaSponge = 109;
 
         public const byte FloatWood = 110;
@@ -269,18 +269,18 @@ namespace MCGalaxy
         public const byte Air_FloodLayer = 202;
         public const byte Air_FloodDown = 203;
         public const byte Air_FloodUp = 204;
-        //public const byte Door_Obsidian_air = 205; // unused in core
-        //public const byte Door_Glass_air = 206;    // unused in core
-        //public const byte Door_Stone_air = 207;    // unused in core
-        //public const byte Door_Leaves_air = 208;   // unused in core
-        //public const byte Door_Sand_air = 209;     // unused in core
-        //public const byte Door_Wood_air = 210;     // unused in core
+        //public const byte Door_Obsidian_air = 205;   // unused in core
+        //public const byte Door_Glass_air = 206;      // unused in core
+        //public const byte Door_Stone_air = 207;      // unused in core
+        //public const byte Door_Leaves_air = 208;     // unused in core
+        //public const byte Door_Sand_air = 209;       // unused in core
+        //public const byte Door_Wood_air = 210;       // unused in core
         public const byte Door_Green_air = 211;
         public const byte Door_TNT_air = 212;
-        //public const byte Door_Slab_air = 213;     // unused in core
+        //public const byte Door_Slab_air = 213;       // unused in core
         //public const byte Door_AirActivatable_air = 214;
-        //public const byte Door_Water_air = 215;    // unused in core
-        //public const byte Door_Lava_air = 216;     // unused in core
+        //public const byte Door_Water_air = 215;      // unused in core
+        //public const byte Door_Lava_air = 216;       // unused in core
         public const byte Door_Air_air = 217;
         // 218, 219 free
 
@@ -289,11 +289,11 @@ namespace MCGalaxy
         public const byte Door_Grass = 222;
         public const byte Door_Blue = 223;
         public const byte Door_Bookshelf = 224;
-        //public const byte Door_Iron_air = 225;     // unused in core
-        //public const byte Door_Dirt_air = 226;     // unused in core
-        //public const byte Door_Grass_air = 227;    // unused in core
-        //public const byte Door_Blue_air = 228;     // unused in core
-        //public const byte Door_Bookshelf_air = 229;// unused in core
+        //public const byte Door_Iron_air = 225;       // unused in core
+        //public const byte Door_Dirt_air = 226;       // unused in core
+        //public const byte Door_Grass_air = 227;      // unused in core
+        //public const byte Door_Blue_air = 228;       // unused in core
+        //public const byte Door_Bookshelf_air = 229;  // unused in core
 
         public const byte Train = 230;
 
@@ -324,7 +324,7 @@ namespace MCGalaxy
         public const byte SnakeTail = 252;
         
         public const byte Door_Gold = 253;
-        //public const byte Door_Gold_air = 254;     // unused in core
+        //public const byte Door_Gold_air = 254;       // unused in core
         
         public const byte Zero = 0xff; // backwards compatibility
         public const byte Invalid = 0xff;

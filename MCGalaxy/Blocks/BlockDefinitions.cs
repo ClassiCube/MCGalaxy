@@ -120,8 +120,7 @@ namespace MCGalaxy {
         public static void LoadGlobal() {
             BlockDefinition[] oldDefs = GlobalDefs;
             GlobalDefs = Load(true, null);
-            GlobalDefs[Block.Air] = DefaultSet.MakeCustomBlock(Block.Air);
-            GlobalDefs[Block.Air].Name = "Air fallback";
+            GlobalDefs[Block.Air] = null;
             
             try {
                 if (File.Exists(GlobalPath)) {
@@ -266,7 +265,7 @@ namespace MCGalaxy {
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;            
-            for (int i = 1; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def != null) pl.Send(def.MakeDefinePacket(pl));
             }
@@ -274,7 +273,7 @@ namespace MCGalaxy {
         
         internal static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            for (int i = 1; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def != null && def.InventoryOrder >= 0) {
                     pl.Send(Packet.SetInventoryOrder((byte)i, (byte)def.InventoryOrder));

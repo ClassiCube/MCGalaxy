@@ -236,7 +236,7 @@ namespace MCGalaxy {
         
         void RemoveOldLevelCustomBlocks(Level oldLevel) {
             BlockDefinition[] defs = oldLevel.CustomBlockDefs;
-            for (int i = 1; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def == BlockDefinition.GlobalDefs[i]) continue;                
                 Send(Packet.UndefineBlock((byte)i));
