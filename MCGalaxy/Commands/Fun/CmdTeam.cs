@@ -153,7 +153,16 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You need to provide the name of the person to invite."); return;
             }
             Player who = PlayerInfo.FindMatches(p, args[1]);
-            if (who == null) return;
+            if (who == null) return;            
+            
+            DateTime cooldown = p.NextTeamInvite;
+            DateTime now = DateTime.UtcNow;
+            if (now < cooldown) {
+                Player.Message(p, "You can invite a player to join your team in another {0} seconds",
+                               (int)(cooldown - now).TotalSeconds);
+                return;
+            }
+            p.NextTeamInvite = now.AddSeconds(5);
             
             Player.Message(p, "Invited " + who.ColoredName + " %Sto join your team.");
             Player.Message(who, p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");

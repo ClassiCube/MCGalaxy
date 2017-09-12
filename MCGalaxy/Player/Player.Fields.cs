@@ -83,7 +83,7 @@ namespace MCGalaxy {
         public string titlecolor = "";
         public int passtries = 0;
         public bool hasreadrules;
-        public DateTime NextReviewTime, NextEat;
+        public DateTime NextReviewTime, NextEat, NextTeamInvite;
         public float ReachDistance = 5;
         public bool hackrank;
         public bool SuperUser;
