@@ -153,7 +153,7 @@ namespace MCGalaxy.Gui {
                 group = Group.NobodyRank;
             }
             
-            public override void SendMessage(byte id, string message, bool colorParse = true) {
+            public override void SendMessage(byte id, string message) {
                 HelpOutput += message + "\r\n";
             }
         }

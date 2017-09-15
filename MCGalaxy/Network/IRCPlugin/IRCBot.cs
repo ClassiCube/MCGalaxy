@@ -50,24 +50,24 @@ namespace MCGalaxy {
         
 
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
-        public void Say(string message, bool opchat = false, bool color = true) {
+        public void Say(string message, bool opchat = false) {
             string[] chans = opchat ? opchannels : channels;
             foreach (string chan in chans) {
-                Message(chan, message, color);
+                Message(chan, message);
             }
         }
         
         /// <summary> Sends an IRC private message to the given user. </summary>
-        public void Pm(string user, string message, bool color = true) {
+        public void Pm(string user, string message) {
             if (!Enabled) return;
-            message = ConvertMessage(message, color);
+            message = ConvertMessage(message);
             connection.Sender.PrivateMessage(user, message);
         }
         
         /// <summary> Sends an IRC message to the given channel. </summary>
-        public void Message(string channel, string message, bool color = true) {
+        public void Message(string channel, string message) {
             if (!Enabled) return;
-            message = ConvertMessage(message, color);
+            message = ConvertMessage(message);
             connection.Sender.PublicMessage(channel, message);
         }
 
@@ -127,14 +127,12 @@ namespace MCGalaxy {
             LoadBannedCommands();
         }
         
-        public static string ConvertMessage(string message, bool color) {
-            if (String.IsNullOrEmpty(message.Trim()))
-                message = ".";
+        public static string ConvertMessage(string message) {
+            if (String.IsNullOrEmpty(message.Trim())) message = ".";
+            
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
-            
-            if (color)
-                message = Colors.ConvertMCToIRC(message.Replace("%S", ResetSignal));
+            message = Colors.ConvertMCToIRC(message.Replace("%S", ResetSignal));
             return message;
         }
         

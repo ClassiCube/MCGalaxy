@@ -152,11 +152,11 @@ namespace MCGalaxy {
         #endregion
         
         
-        public static string Format(string message, Player p, bool colors = true,
-                                    bool tokens = true, bool emotes = true) {
-            if (colors) message = Colors.Escape(message);
+        public static string Format(string message, Player p, bool tokens = true, bool emotes = true) {
+            message = Colors.Escape(message);
             StringBuilder sb = new StringBuilder(message);
-            if (colors) Colors.Cleanup(sb, p.hasTextColors);
+            Colors.Cleanup(sb, p.hasTextColors);
+            
             if (tokens) ChatTokens.Apply(sb, p);
             if (!emotes) return sb.ToString();
             

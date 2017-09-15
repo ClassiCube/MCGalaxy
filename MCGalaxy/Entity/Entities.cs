@@ -131,9 +131,9 @@ namespace MCGalaxy {
         }
         
         internal static void Spawn(Player dst, PlayerBot b) {
-            string name = Chat.Format(b.color + b.DisplayName, dst, true, true, false);
+            string name = Chat.Format(b.color + b.DisplayName, dst, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
-            string skin = Chat.Format(b.SkinName, dst, true, true, false);
+            string skin = Chat.Format(b.SkinName, dst, true, false);
 
             SpawnRaw(dst, b.id, skin, name, b.Model, b.Pos, b.Rot);
             if (ServerConfig.TablistBots)

@@ -82,50 +82,44 @@ namespace MCGalaxy {
         
         public static void MessageLines(Player p, IEnumerable<string> lines) {
             foreach (string line in lines)
-                SendMessage(p, line, true);
+                SendMessage(p, line);
         }
         
         public static void Message(Player p, string message) {
-            SendMessage(p, message, true);
+            SendMessage(p, message);
         }
         
         public static void Message(Player p, string message, object a0) {
-            SendMessage(p, String.Format(message, a0), true);
+            SendMessage(p, String.Format(message, a0));
         }
         
         public static void Message(Player p, string message, object a0, object a1) {
-            SendMessage(p, String.Format(message, a0, a1), true);
+            SendMessage(p, String.Format(message, a0, a1));
         }
         
         public static void Message(Player p, string message, object a0, object a1, object a2) {
-            SendMessage(p, String.Format(message, a0, a1, a2), true);
+            SendMessage(p, String.Format(message, a0, a1, a2));
         }
         
         public static void Message(Player p, string message, params object[] args) {
-            SendMessage(p, String.Format(message, args), true);
+            SendMessage(p, String.Format(message, args));
         }
 
         public static void SendMessage(Player p, string message) {
-            SendMessage(p, message, true);
-        }
-        
-        public static void SendMessage(Player p, string message, bool colorParse) {
             if (p == null) {
                 Logger.Log(LogType.ConsoleMessage, message);
             } else {
-                p.SendMessage(0, message, colorParse);
+                p.SendMessage(0, message);
             }
         }
         
-        public void SendMessage(string message) { SendMessage(0, message, true); }        
-        public void SendMessage(string message, bool colorParse) { SendMessage(0, message, colorParse); }
-        
-        public virtual void SendMessage(byte id, string message, bool colorParse = true) {
+        public void SendMessage(string message) { SendMessage(0, message); }       
+        public virtual void SendMessage(byte id, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
                 message = ServerConfig.DefaultColor + message;
             }
-            message = Chat.Format(message, this, colorParse);
+            message = Chat.Format(message, this);
             
             int totalTries = 0;
             OnMessageRecievedEvent.Call(this, message);

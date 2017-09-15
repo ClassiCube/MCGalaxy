@@ -47,7 +47,10 @@ namespace MCGalaxy {
         static void BotTick(PlayerBot bot) {
             if (bot.kill) {
                 InstructionData data = default(InstructionData);
+                // The kill instruction should not intefere with the bot AI
+                int actualCur = bot.cur;
                 BotInstruction.Find("kill").Execute(bot, data);
+                bot.cur = actualCur;
             }
             bot.movement = false;
 

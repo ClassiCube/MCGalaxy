@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.Moderation {
                 DatabaseID = NameConverter.InvalidNameID("(console)");
             }
             
-            public override void SendMessage(byte id, string message, bool colorParse = true) {
+            public override void SendMessage(byte id, string message) {
                 Logger.Log(LogType.ConsoleMessage, message);
             }
         }
