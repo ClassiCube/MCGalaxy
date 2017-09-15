@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (p != null && who.Rank > p.Rank) {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }
-                who.HandleDeath((ExtBlock)Block.Stone, " died from a %cdeadly hug.");
+                who.HandleDeath((ExtBlock)Block.Stone, "@p %Sdied from a %cdeadly hug.");
             }
             TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug.", false); return;
         }

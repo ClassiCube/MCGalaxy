@@ -359,7 +359,7 @@ namespace MCGalaxy {
             HandleDeath((ExtBlock)b, customMessage, explode, immediate);
         }
         
-        public void HandleDeath(ExtBlock block, string customMessage = "", bool explode = false, bool immediate = false) {
+        public void HandleDeath(ExtBlock block, string customMsg = "", bool explode = false, bool immediate = false) {
             OnPlayerDeathEvent.Call(this, block);
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
@@ -379,9 +379,9 @@ namespace MCGalaxy {
             if (block.BlockID == Block.Stone || block.BlockID == Block.Cobblestone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
                 if (block.BlockID == Block.Stone) {
-                    Chat.MessageGlobal(this, ColoredName + "%S" + customMessage, false);
+                    Chat.MessageGlobal(this, customMsg.Replace("@p", ColoredName), false);
                 } else {
-                    Chat.MessageLevel(this, ColoredName + "%S" + customMessage, false, level);
+                    Chat.MessageLevel(this, customMsg.Replace("@p", ColoredName), false, level);
                 }
             }
             

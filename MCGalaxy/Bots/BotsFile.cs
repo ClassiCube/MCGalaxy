@@ -93,6 +93,7 @@ namespace MCGalaxy.Bots {
         public string Model { get; set; }
         public string Color { get; set; }
         public string ClickedOnText { get; set; }
+        public string DeathMessage { get; set; }
         
         public string AI { get; set; }
         public bool Kill { get; set; }
@@ -115,7 +116,7 @@ namespace MCGalaxy.Bots {
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
             CurInstruction = bot.cur; CurJump = bot.curJump;
-            ClickedOnText = bot.ClickedOnText;
+            ClickedOnText = bot.ClickedOnText; DeathMessage = bot.DeathMessage;
             
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
@@ -134,7 +135,7 @@ namespace MCGalaxy.Bots {
             bot.DisplayName = DisplayName;
             
             bot.cur = CurInstruction; bot.curJump = CurJump;
-            bot.ClickedOnText = ClickedOnText;
+            bot.ClickedOnText = ClickedOnText; bot.DeathMessage = DeathMessage;
         }
         
         public BotProperties Copy() {
@@ -145,7 +146,7 @@ namespace MCGalaxy.Bots {
             
             copy.AI = AI; copy.Kill = Kill; copy.Hunt = Hunt;
             copy.CurInstruction = CurInstruction; copy.CurJump = CurJump;
-            copy.ClickedOnText = ClickedOnText;
+            copy.ClickedOnText = ClickedOnText; copy.DeathMessage = DeathMessage;
             
             copy.X = X; copy.Y = Y; copy.Z = Z;
             copy.RotX = RotX; copy.RotY = RotY;

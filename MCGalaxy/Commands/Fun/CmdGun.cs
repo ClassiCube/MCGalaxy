@@ -106,9 +106,9 @@ namespace MCGalaxy.Commands.Fun {
             ExtBlock stone = (ExtBlock)Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
-                pl.HandleDeath(stone, " was blown up by " + p.ColoredName, true);
+                pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);
             } else {
-                pl.HandleDeath(stone, " was shot by " + p.ColoredName);
+                pl.HandleDeath(stone, "@p %Swas shot by " + p.ColoredName);
             }
             return true;
         }

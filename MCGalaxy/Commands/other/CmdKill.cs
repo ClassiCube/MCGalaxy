@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Misc {
             ExtBlock rock = (ExtBlock)Block.Stone;
             
             if (target == null) {
-                if (p != null) p.HandleDeath(rock, " killed themselves in their confusion");
+                if (p != null) p.HandleDeath(rock, "@p %Skilled themselves in their confusion");
                 return;
             }
             if (p != null && (target != p && target.Rank >= p.Rank)) {

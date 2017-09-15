@@ -109,7 +109,9 @@ namespace MCGalaxy.Bots {
                 int dz = Math.Abs(bot.Pos.Z - p.Pos.Z);
                 
                 if (dx <= 8 && dy <= 16 && dz <= 8) {
-                    p.HandleDeath(ExtBlock.Invalid);
+                    string msg = bot.DeathMessage;
+                    if (msg == null) msg = "@p %Swas &cterminated.";
+                    p.HandleDeath((ExtBlock)Block.Cobblestone, msg);
                 }
             }
             bot.NextInstruction(); return true;

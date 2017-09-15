@@ -255,7 +255,6 @@ namespace MCGalaxy {
             SetDeath(Block.StillWater, drowned, false);
             SetDeath(Block.Lava, drowned, false);
             SetDeath(Block.StillLava, drowned, false);
-            SetDeath(Block.Invalid, "@p %Swas &cterminated.", false);
         }
         
         static void SetDeath(byte block, string message, bool collideKill = true) {

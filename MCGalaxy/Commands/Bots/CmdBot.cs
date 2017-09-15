@@ -42,7 +42,10 @@ namespace MCGalaxy.Commands.Bots {
             } else if (args[0].CaselessEq("text")) {
                 string text = args.Length > 2 ? args[2] : null;
                 SetBotText(p, args[1], text);
-            } else {
+            } else if (args[0].CaselessEq("deathmsg") || args[0].CaselessEq("deathmessage")) {
+                string text = args.Length > 2 ? args[2] : null;
+                SetDeathMessage(p, args[1], text);
+            }  else {
                 Help(p);
             }
         }
@@ -103,16 +106,32 @@ namespace MCGalaxy.Commands.Bots {
             }
             BotsFile.Save(bot.level);
         }
-
+        
+        void SetDeathMessage(Player p, string botName, string text) {
+            PlayerBot bot = Matcher.FindBots(p, botName);
+            if (bot == null) return;
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set kill message of that bot")) return;
+            
+            if (text == null) {
+                Player.Message(p, "Reset shown when bot {0} %Skills someone", bot.ColoredName);
+                bot.DeathMessage = null;
+            } else {                
+                if (!MessageBlock.Validate(p, text, false)) return;
+                Player.Message(p, "Set message shown when bot {0} %Skills someone to {1}", bot.ColoredName, text);
+                bot.DeathMessage = text;
+            }
+            BotsFile.Save(bot.level);
+        }
+        
         public override void Help(Player p) {
-            Player.Message(p, "%T/Bot add [name]");
-            Player.Message(p, "%HAdds a new bot at your position.");
-            Player.Message(p, "%T/Bot remove [name]");
-            Player.Message(p, "%HRemove a bot on the same level as you");
-            Player.Message(p, "%HIf [name] is \"all\", all bots on your map are removed");
+            Player.Message(p, "%T/Bot add [name] %H- Adds a new bot at your position");
+            Player.Message(p, "%T/Bot remove [name] %H- Removes the bot with that name");
+            Player.Message(p, "%H  If [name] is \"all\", removes all bots on your map");
             Player.Message(p, "%T/Bot text [name] <text>");
             Player.Message(p, "%HSets the text shown when a player clicks on this bot");
             Player.Message(p, "%HSee %T/help mb %Hfor more details on <text>");
+            Player.Message(p, "%T/Bot deathmessage [name] <message>");
+            Player.Message(p, "%HSets the message shown when this bot kills a player");            
         }
     }
 }
