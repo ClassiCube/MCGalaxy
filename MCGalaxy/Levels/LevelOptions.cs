@@ -149,7 +149,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Load delay cannot go below 0 milliseconds. (default is 0)"); return false;
             }
             if (raw > 2000) {
-                Player.Message(p, "Load delay cannot go above 3000 milliseconds."); return false;
+                Player.Message(p, "Load delay cannot go above 2000 milliseconds."); return false;
             }
             return true;
         }
