@@ -48,8 +48,7 @@ namespace MCGalaxy.Commands.Misc {
                 Help(p); return;
             }
             
-            p.PreTeleportMap = p.level.name;
-            p.PreTeleportPos = p.Pos;
+            SavePreTeleportState(p);
             Level lvl = bot != null ? bot.level : target.level;
 
             if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
@@ -71,8 +70,14 @@ namespace MCGalaxy.Commands.Misc {
             Vec3S32 P = p.Pos.BlockFeetCoords;
             if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
 
-            p.PreTeleportPos = p.Pos;
+            SavePreTeleportState(p);
             PlayerActions.MoveCoords(p, P.X, P.Y, P.Z, p.Rot.RotY, p.Rot.HeadX);
+        }
+        
+        static void SavePreTeleportState(Player p) {
+            p.PreTeleportMap = p.level.name;
+            p.PreTeleportPos = p.Pos;
+            p.PreTeleportRot = p.Rot;
         }
         
         static bool CheckPlayer(Player p, Player target) {
