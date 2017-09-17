@@ -33,10 +33,6 @@ namespace MCGalaxy {
             unbans.EnsureExists();
         }
         
-        public static string FormatBan(string banner, string reason) {
-            return "Banned by " + banner + ": " + reason;
-        }
-        
         public static string PackTempBanData(string reason, string banner, DateTime expiry) {
             if (reason == null) reason = "-";
             return banner + " " + expiry.ToUnixTime() + " " + reason;
@@ -63,7 +59,7 @@ namespace MCGalaxy {
             reason = reason.Replace(" ", "%20");
             
             string player = banner == null ? "(console)" : banner.truename;
-            AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), FormatDate(), oldrank);
+            AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), oldrank);
         }
         
         /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
@@ -72,56 +68,71 @@ namespace MCGalaxy {
             reason = reason.Replace(" ", "%20");
             
             string player = unbanner == null ? "(console)" : unbanner.truename;
-            AddUnbanEntry(player, target.ToLower(), reason, FormatDate());
+            AddUnbanEntry(player, target.ToLower(), reason);
         }
         
-        static string FormatDate() {
-            DateTime now = DateTime.Now;
-            return now.DayOfWeek + "%20" + now.Day + "%20" + now.Month +
-                "%20" + now.Year + ",%20at%20" + now.Hour + ":" + now.Minute;
-        }
-        
-        static void AddBanEntry(string pl, string who, string reason,
-                                string stealth, string datetime, string oldrank) {
+        static void AddBanEntry(string pl, string who, string reason, string stealth, string oldrank) {
+            string datetime = DateTime.UtcNow.ToUnixTime().ToString();
             string data = pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank;
             bans.Append(data);
         }
         
-        static void AddUnbanEntry(string pl, string who, string reason, string datetime) {
+        static void AddUnbanEntry(string pl, string who, string reason) {
+            string datetime = DateTime.UtcNow.ToUnixTime().ToString();
             string data = pl + " " + who + " " + reason + " " + datetime;
             unbans.Append(data);
         }
         
         
-        /// <summary> Returns info about the current or last ban of a user, as a string array of
-        /// {banned by, ban reason, date and time, previous rank, stealth},
-        /// or null if no ban data was found. </summary>
-        public static string[] GetBanData(string who) {
+        /// <summary> Returns info about the current or last ban of a user. </summary>
+        public static void GetBanData(string who, out string banner, out string reason, 
+                                      out DateTime time, out string prevRank) {
             who = who.ToLower();
             foreach (string line in File.ReadAllLines(bans.file)) {
                 string[] parts = line.SplitSpaces();
                 if (parts.Length <= 5 || parts[1] != who) continue;
                 
-                parts[2] = parts[2].Replace("%20", " ");
-                parts[4] = parts[4].Replace("%20", " ");
-                return new string[] { parts[0], parts[2], parts[4], parts[5], parts[3] };
+                banner   = parts[0];
+                reason   = parts[2].Replace("%20", " ");
+                time     = GetDate(parts[4]);
+                prevRank = parts[5];
+                return;
             }
-            return null;
+            banner = null; reason = null; time = DateTime.MinValue; prevRank = null;
         }
         
-        /// <summary> Returns info about the last unban of a user, as a string array of
-        /// {banned by, ban reason, date and time}, or null if no unban data was found. </summary>
-        public static string[] GetUnbanData(string who) {
+        /// <summary> Returns information about the last unban of a user. </summary>
+        public static void GetUnbanData(string who, out string unbanner, out string reason, 
+                                        out DateTime time) {
             who = who.ToLower();
+            unbanner = null; reason = null;
             foreach (string line in File.ReadAllLines(unbans.file)) {
                 string[] parts = line.SplitSpaces();
                 if (parts.Length <= 3 || parts[1] != who) continue;
                 
-                parts[2] = parts[2].Replace("%20", " ");
-                parts[3] = parts[3].Replace("%20", " ");
-                return new string[] { parts[0], parts[2], parts[3] };
+                unbanner = parts[0];
+                reason   = parts[2].Replace("%20", " ");
+                time     = GetDate(parts[3]);
+                return;
             }
-            return null;
+            unbanner = null; reason = null; time = DateTime.MinValue;
+        }
+        
+        static DateTime GetDate(string raw) {
+            raw = raw.Replace("%20", " ").Replace(",", "");
+            long timestap;
+            if (long.TryParse(raw, out timestap)) return timestap.FromUnixTime();
+            
+            /* Old form of timestamps in bans/unbans:
+               DateTime now = DateTime.Now;
+               return now.DayOfWeek + "%20" + now.Day + "%20" + now.Month + "%20" + now.Year + ",%20at%20" + now.Hour + ":" + now.Minute;
+             */
+            string[] date = raw.SplitSpaces();
+            string[] minuteHour = date[5].Split(':');
+            
+            int hour = int.Parse(minuteHour[0]), minute = int.Parse(minuteHour[1]);
+            int day = int.Parse(date[1]), month = int.Parse(date[2]), year = int.Parse(date[3]);
+            return new DateTime(year, month, day, hour, minute, 0).ToUniversalTime();
         }
         
         

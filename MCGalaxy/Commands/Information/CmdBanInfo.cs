@@ -43,22 +43,24 @@ namespace MCGalaxy.Commands.Info {
             else if (ipBanned && banned) msg += " %Sand their IP are &CBANNED";
             else msg += " %Sis not banned, but their IP is &CBANNED";          
             
-            string[] data = Ban.GetBanData(plName);
-            if (data != null && permaBanned) {
-                string grpName = Group.GetColoredName(data[3]);
+            string banner, reason, prevRank;
+            DateTime time;
+            Ban.GetBanData(plName, out banner, out reason, out time, out prevRank);
+            if (banner != null && permaBanned) {
+                string grpName = Group.GetColoredName(prevRank);
                 msg += " %S(Former rank: " + grpName + "%S)";
             }
             Player.Message(p, msg);
             DisplayTempbanDetails(p, plName);
             
-            if (data != null) {
-                DisplayDetails(p, data, permaBanned ? "Banned" : "Last banned");
+            if (banner != null) {
+                DisplayDetails(p, banner, reason, time, permaBanned ? "Banned" : "Last banned");
             } else {
                 Player.Message(p, "No previous bans recorded for {0}%S.", colName);
             }
             
-            data = Ban.GetUnbanData(plName);
-            DisplayDetails(p, data, permaBanned ? "Last unbanned" : "Unbanned");
+            Ban.GetUnbanData(plName, out banner, out reason, out time);
+            DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
         }
         
         static void DisplayTempbanDetails(Player p, string target) {
@@ -76,30 +78,19 @@ namespace MCGalaxy.Commands.Info {
             if (reason != "") Player.Message(p, "Reason: {0}", reason);
         }
         
-        static void DisplayDetails(Player p, string[] data, string type) {
-            if (data == null) return;
+        static void DisplayDetails(Player p, string banner, string reason, DateTime time, string type) {
+            if (banner == null) return;
             
-            TimeSpan delta = GetDelta(data[2]);
+            TimeSpan delta = DateTime.UtcNow - time;
             Player.Message(p, "{0} {1} ago by {2}", 
-                           type, delta.Shorten(), GetName(p, data[0]));
-            Player.Message(p, "Reason: {0}", data[1]);
+                           type, delta.Shorten(), GetName(p, banner));
+            Player.Message(p, "Reason: {0}", reason);
         }
         
         static string GetName(Player p, string user) {
             // ban/unban uses truename
             if (ServerConfig.ClassicubeAccountPlus && !user.EndsWith("+")) user += "+";
             return PlayerInfo.GetColoredName(p, user);
-        }
-        
-        static TimeSpan GetDelta(string data) {
-            data = data.Replace(",", "");
-            string[] date = data.SplitSpaces();
-            string[] minuteHour = date[5].Split(':');
-            
-            int hour = int.Parse(minuteHour[0]), minute = int.Parse(minuteHour[1]);
-            int day = int.Parse(date[1]), month = int.Parse(date[2]), year = int.Parse(date[3]);
-            DateTime time = new DateTime(year, month, day, hour, minute, 0);
-            return DateTime.Now - time;
         }
         
         public override void Help(Player p) {

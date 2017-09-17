@@ -165,10 +165,14 @@ namespace MCGalaxy.Core {
                 p.Kick(null, ServerConfig.DefaultBanMessage, true);
                 return false;
             }
+        	
             if (group.Permission == LevelPermission.Banned) {
-                string[] data = Ban.GetBanData(p.name);
-                if (data != null) {
-                    p.Kick(null, Ban.FormatBan(data[0], data[1]), true);
+                string banner, reason, prevRank;
+                DateTime time;
+                Ban.GetBanData(p.name, out banner, out reason, out time, out prevRank);
+                
+                if (banner != null) {
+                    p.Kick(null, "Banned by " + banner + ": " + reason, true);
                 } else {
                     p.Kick(null, ServerConfig.DefaultBanMessage, true);
                 }

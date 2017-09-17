@@ -89,12 +89,14 @@ namespace MCGalaxy.DB {
         }
         
         internal static void BanLine(Player p, string name) {
-            if (!Group.BannedRank.Players.Contains(name)) return;
+            if (!Group.BannedRank.Players.Contains(name)) return;            
+            string banner, reason, prevRank;
+            DateTime time;
+            Ban.GetBanData(name, out banner, out reason, out time, out prevRank);
             
-            string[] data = Ban.GetBanData(name);
-            if (data != null) {
+            if (banner != null) {
                 Player.Message(p, "  Banned for {0} by {1}",
-                               data[1], PlayerInfo.GetColoredName(p, data[0]));
+                               reason, PlayerInfo.GetColoredName(p, banner));
             } else {
                 Player.Message(p, "  Is banned");
             }
