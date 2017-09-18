@@ -161,6 +161,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%T-/+speed %H- disallows/allows speeding");            
             Player.Message(p, "%T-/+ophax %H- disallows/allows hacks for {0}%S+", 
                            Group.GetColoredName(LevelPermission.Operator));
+            Player.Message(p, "%T-/+push %H- disallows/allows player pushing");
             Player.Message(p, "%Tjumpheight=[height] %H- sets max height users can jump up to");
             Player.Message(p, "%Thorspeed=[speed] %H- sets max speed users can move at, when speeding is disallowed");
             Player.Message(p, "%Tjumps=[number] %H- sets the maximum number of consecutive jumps the player can make.");
