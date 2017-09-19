@@ -163,7 +163,9 @@ namespace MCGalaxy {
             if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
-            if (painting && Replacable(old.BlockID)) flags = BlockDBFlags.Painted;
+            if (painting && CollideType.IsSolid(level.CollideType(old))) {
+                flags = BlockDBFlags.Painted;
+            }
             level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);
             
             bool autoGrass = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
@@ -177,12 +179,6 @@ namespace MCGalaxy {
                 level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.Dirt);
             }
             return type;
-        }
-        
-        
-        static bool Replacable(byte block) {
-            block = Block.Convert(block);
-            return block == Block.Air || (block >= Block.Water && block <= Block.StillLava);
         }
         
         internal int ProcessReceived(byte[] buffer, int bufferLen) {
