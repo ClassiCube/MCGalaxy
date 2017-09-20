@@ -1,6 +1,5 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt
 using System;
-using System.Linq;
 using MCGalaxy.Commands;
 
 namespace MCGalaxy.Generator {
@@ -98,7 +97,9 @@ namespace MCGalaxy.Generator {
             float midpoint = (args.MidPoint * args.Bias);
 
             // shuffle corners
-            corners = corners.OrderBy( r => rand.Next() ).ToArray();
+            int[] keys = new int[corners.Length];
+            for (int i = 0; i < corners.Length; i++) { keys[i] = rand.Next(); }
+            Array.Sort(keys, corners);
 
             // overlay the bias
             Noise.ApplyBias( heightmap, corners[0], corners[1], corners[2], corners[3], midpoint );

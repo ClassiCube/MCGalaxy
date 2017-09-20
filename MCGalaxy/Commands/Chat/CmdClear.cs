@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Network;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdClear : Command {
