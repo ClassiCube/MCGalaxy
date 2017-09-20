@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Building {
             bool allCmds = HasExtraPerm(p, 1);
             if (!MessageBlock.Validate(p, data.Message, allCmds)) return;
 
-            Player.Message(p, "Place where you wish the message block to go."); 
+            Player.Message(p, "Place where you wish the message block to go.");
             p.MakeSelection(1, data, PlacedMark);
         }
         
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Building {
             
             // Hardcoded aliases for backwards compatibility
             block.BlockID = Block.MB_White; block.ExtID = 0;
-            if (name == "white") block.BlockID = Block.MB_White;      
+            if (name == "white") block.BlockID = Block.MB_White;
             if (name == "black") block.BlockID = Block.MB_Black;
             if (name == "air") block.BlockID = Block.MB_Air;
             if (name == "water") block.BlockID = Block.MB_Water;
@@ -114,9 +114,9 @@ namespace MCGalaxy.Commands.Building {
                 p.level.UpdateBlock(p, x, y, z, args.Block);
                 UpdateDatabase(p, args, x, y, z);
                 Player.Message(p, "Message block created.");
-            } else {                
+            } else {
                 Player.Message(p, "Failed to create a message block.");
-            }           
+            }
             return true;
         }
         
@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands.Building {
                 if (count == 0) {
                     Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, args.Message);
                 } else {
-                    Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3", 
+                    Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3",
                                                 "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, args.Message);
                 }
             }
@@ -152,27 +152,28 @@ namespace MCGalaxy.Commands.Building {
         
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
-            using (DataTable table = Database.Backend.GetRows("Messages" + p.level.name, "*")) {
-                if (p.showMBs) {
-                    ShowMessageBlocks(p, table);
-                } else {
-                    HideMessageBlocks(p, table);
+            int count = 0;
+            
+            if (p.level.hasMessageBlocks) {
+                using (DataTable table = Database.Backend.GetRows("Messages" + p.level.name, "*")) {
+                    count = table.Rows.Count;
+                    if (p.showMBs) { ShowMessageBlocks(p, table); }
+                    else { HideMessageBlocks(p, table); }
                 }
             }
+            Player.Message(p, "Now {0} %SMBs.", p.showMBs ? "showing &a" + count : "hiding");
         }
         
         static void ShowMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
                 p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.Green);
             }
-            Player.Message(p, "Now showing &a" + table.Rows.Count + " %SMBs.");
         }
         
         static void HideMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
                 p.RevertBlock(U16(row["X"]), U16(row["Y"]), U16(row["Z"]));
             }
-            Player.Message(p, "Now hiding MBs.");
         }
         
         static ushort U16(object x) { return Convert.ToUInt16(x); }
@@ -192,7 +193,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void GetAllNames(Player p, List<string> names) {
-            GetCoreNames(names, p.level);          
+            GetCoreNames(names, p.level);
             for (int i = Block.CpeCount; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromRaw((byte)i);
                 string name = Format(block, p.level, p.level.Props);

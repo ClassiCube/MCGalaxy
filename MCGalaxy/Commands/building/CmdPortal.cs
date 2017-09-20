@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             if (name == "water") block.BlockID = Block.Portal_Water;
             if (name == "lava") block.BlockID = Block.Portal_Lava;
             
-            if (p.level.Props[block.Index].IsPortal) return block;            
+            if (p.level.Props[block.Index].IsPortal) return block;
             Help(p); return ExtBlock.Invalid;
         }
 
@@ -81,8 +81,8 @@ namespace MCGalaxy.Commands.Building {
             }
             p.ClearBlockchange();
 
-            if (args.Multi && block.BlockID == Block.Red && args.Entries.Count > 0) { 
-                ExitChange(p, x, y, z, block); return; 
+            if (args.Multi && block.BlockID == Block.Red && args.Entries.Count > 0) {
+                ExitChange(p, x, y, z, block); return;
             }
 
             p.level.UpdateBlock(p, x, y, z, args.Block);
@@ -150,13 +150,16 @@ namespace MCGalaxy.Commands.Building {
         
         void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
-            using (DataTable table = Database.Backend.GetRows("Portals" + p.level.name, "*")) {
-                if (p.showPortals) {
-                    ShowPortals(p, table);
-                } else {
-                    HidePortals(p, table);
+            int count = 0;
+            
+            if (p.level.hasPortals) {
+                using (DataTable table = Database.Backend.GetRows("Portals" + p.level.name, "*")) {
+                    count = table.Rows.Count;
+                    if (p.showPortals) { ShowPortals(p, table); } 
+                    else { HidePortals(p, table); }
                 }
-            }
+            }            
+            Player.Message(p, "Now {0} %Sportals.", p.showPortals ? "showing &a" + count : "hiding");
         }
         
         static void ShowPortals(Player p, DataTable table) {
@@ -166,8 +169,6 @@ namespace MCGalaxy.Commands.Building {
                 }
                 p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.Green);
             }
-
-            Player.Message(p, "Now showing &a" + table.Rows.Count + " %Sportals.");
         }
         
         static void HidePortals(Player p, DataTable table) {
@@ -177,7 +178,6 @@ namespace MCGalaxy.Commands.Building {
                 }
                 p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
             }
-            Player.Message(p, "Now hiding portals.");
         }
         
         static ushort U16(object x) { return Convert.ToUInt16(x); }
@@ -197,7 +197,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void GetAllNames(Player p, List<string> names) {
-            GetCoreNames(names, p.level);          
+            GetCoreNames(names, p.level);
             for (int i = Block.CpeCount; i < Block.Count; i++) {
                 ExtBlock block = ExtBlock.FromRaw((byte)i);
                 string name = Format(block, p.level, p.level.Props);
