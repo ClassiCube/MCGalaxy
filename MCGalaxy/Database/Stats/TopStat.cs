@@ -52,48 +52,51 @@ namespace MCGalaxy.DB {
         /// <summary> List of stats that can be ordered. </summary>
         public static List<TopStat> Stats = new List<TopStat>() {
             new TopStat("Logins", PlayerData.DBTable, 
-                        PlayerData.ColumnLogins,
-                        () => "Most logins", FormatInteger),
+                        PlayerData.ColumnLogins, MostLogins, FormatInteger),
             new TopStat("Deaths", PlayerData.DBTable, 
-                        PlayerData.ColumnDeaths,
-                        () => "Most deaths", FormatInteger),
+                        PlayerData.ColumnDeaths, MostDeaths, FormatInteger),
             new TopStat("Money", PlayerData.DBTable, 
-                        PlayerData.ColumnMoney,
-                        () => "Most " + ServerConfig.Currency, FormatInteger),
-            
+                        PlayerData.ColumnMoney, MostMoney, FormatInteger),            
             new TopStat("Oldest", PlayerData.DBTable, 
-                        PlayerData.ColumnFirstLogin,
-                        () => "Oldest players", FormatDate, true),
-            new TopStat("Recent", PlayerData.DBTable, 
-                        PlayerData.ColumnLastLogin,
-                        () => "Most recent players", FormatDate),
+                        PlayerData.ColumnFirstLogin, MostOldest, FormatDate, true),
             new TopStat("Newest", PlayerData.DBTable,
-                        PlayerData.ColumnFirstLogin,
-                        () => "Newest players", FormatDate),
+                        PlayerData.ColumnFirstLogin, MostNewest, FormatDate),
+            new TopStat("Recent", PlayerData.DBTable, 
+                        PlayerData.ColumnLastLogin, MostRecent, FormatDate),
             new TopStat("Least-Recent", PlayerData.DBTable,
-                        PlayerData.ColumnLastLogin,
-                        () => "Least Recent players", FormatDate, true),
-
+                        PlayerData.ColumnLastLogin, MostNotRecent, FormatDate, true),
             new TopStat("Kicked", PlayerData.DBTable, 
-                        PlayerData.ColumnKicked,
-                        () => "Most times kicked", FormatInteger),
+                        PlayerData.ColumnKicked, MostKicked, FormatInteger),
             new TopStat("Modified", PlayerData.DBTable, 
                         PlayerData.ColumnTotalBlocks + " & " + PlayerData.LowerBitsMask,
-                        () => "Most blocks modified", FormatInteger),
+                        MostModified, FormatInteger),
             new TopStat("Drawn", PlayerData.DBTable,
                         PlayerData.ColumnTotalCuboided + " & " + PlayerData.LowerBitsMask,
-                        () => "Most blocks drawn", FormatInteger),
+                        MostDrawn, FormatInteger),
             new TopStat("Placed", PlayerData.DBTable,
                         PlayerData.ColumnTotalBlocks + " >> " + PlayerData.LowerBits,
-                        () => "Most blocks placed", FormatInteger),
+                        MostPlaced, FormatInteger),
             new TopStat("Deleted", PlayerData.DBTable, 
                         PlayerData.ColumnTotalCuboided + " >> " + PlayerData.LowerBits,
-                        () => "Most blocks deleted", FormatInteger),
+                        MostDeleted, FormatInteger),
             new TopStat("TimeSpent", PlayerData.DBTable, 
-                        PlayerData.ColumnTimeSpent,
-                        () => "Most time spent", FormatTimespan,
+                        PlayerData.ColumnTimeSpent, MostTime, FormatTimespan,
                         false, " CAST(TimeSpent as unsigned) "),
         };
+        
+        static string MostLogins()    { return "Most logins"; }
+        static string MostDeaths()    { return "Most deaths"; }
+        static string MostMoney()     { return "Most " + ServerConfig.Currency; }
+        static string MostNewest()    { return "Newest players"; }
+        static string MostOldest()    { return "Oldest players"; }
+        static string MostRecent()    { return "Most recent players"; }
+        static string MostNotRecent() { return "Least recent players"; }        
+        static string MostKicked()    { return "Most times kicked"; }
+        static string MostModified()  { return "Most blocks modified"; }
+        static string MostDrawn()     { return "Most blocks drawn"; }
+        static string MostPlaced()    { return "Most blocks placed"; }        
+        static string MostDeleted()   { return "Most blocks deleted"; }
+        static string MostTime()      { return "Most time spent"; }        
         
         public static string FormatInteger(string input) {
             long value = PlayerData.ParseLong(input);

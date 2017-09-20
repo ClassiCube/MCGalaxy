@@ -195,7 +195,7 @@ namespace MCGalaxy {
         [ConfigBool("parse-emotes", "Other", true)]
         public static bool ParseEmotes = true;        
         [ConfigBool("dollar-before-dollar", "Other", true)]
-        public static bool DollarBeforeNamesToken = true;
+        public static bool DollarNames = true;
         [ConfigStringList("disabledstandardtokens", "Other")]
         internal static List<string> DisabledChatTokens = new List<string>();
         [ConfigBool("profanity-filter", "Other", false)]

@@ -33,7 +33,7 @@ namespace MCGalaxy.Gui {
             
             chkDeath.Checked = ServerConfig.AnnounceDeathCount;
             chkSmile.Checked = ServerConfig.ParseEmotes;
-            chk17Dollar.Checked = ServerConfig.DollarBeforeNamesToken;
+            chk17Dollar.Checked = ServerConfig.DollarNames;
             chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
             chkRestartTime.Checked = ServerConfig.AutoRestart;
             txtRestartTime.Text = ServerConfig.RestartTime.ToString();
@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
             
             ServerConfig.AnnounceDeathCount = chkDeath.Checked;
             ServerConfig.ParseEmotes = chkSmile.Checked;
-            ServerConfig.DollarBeforeNamesToken = chk17Dollar.Checked;
+            ServerConfig.DollarNames = chk17Dollar.Checked;
             ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
             ServerConfig.AutoRestart = chkRestartTime.Checked;
             try { ServerConfig.RestartTime = DateTime.Parse(txtRestartTime.Text); }

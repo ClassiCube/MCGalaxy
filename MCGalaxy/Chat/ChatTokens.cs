@@ -70,38 +70,44 @@ namespace MCGalaxy {
         
         
         public static List<ChatToken> Standard = new List<ChatToken>() {
-            new ChatToken("$name", "Nickname of the player",
-                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + Colors.Strip(p.DisplayName)),
-            new ChatToken("$truename", "Account name of the player",
-                          p => (ServerConfig.DollarBeforeNamesToken ? "$" : "") + p.truename),
-            new ChatToken("$date", "Current date (year-month-day)",
-                          p => DateTime.Now.ToString("yyyy-MM-dd")),
-            new ChatToken("$time", "Current time of day (hour:minute:second)",
-                          p => DateTime.Now.ToString("HH:mm:ss")),
-            new ChatToken("$ip", "IP of the player", p => p.ip),
-            new ChatToken("$serverip", "IP player connected to the server via",
-                          p => Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP),
-            new ChatToken("$color", "Color code of the player's nick", p => p.color),
-            new ChatToken("$rank", "Name of player's rank/group", p => p.group.Name),
-            new ChatToken("$level", "Name of level/map player is on",
-                          p => p.level == null ? null : p.level.name),            
-            new ChatToken("$deaths", "Times the player died",
-                          p => p.TimesDied.ToString()),
-            new ChatToken("$money", "Amount of server currency player has",
-                          p => p.money.ToString()),
-            new ChatToken("$blocks", "Number of blocks modified by the player",
-                          p => p.TotalModified.ToString()),
-            new ChatToken("$first", "Date player first logged in",
-                          p => p.FirstLogin.ToString()),
-            new ChatToken("$kicked", "Times the player was kicked",
-                          p => p.TimesBeenKicked.ToString()),
-            new ChatToken("$server", "Server's name", p => ServerConfig.Name),
-            new ChatToken("$motd", "Server's MOTD", p => ServerConfig.MOTD),
-            new ChatToken("$banned", "Number of banned players",
-                          p => Group.BannedRank.Players.Count.ToString()),
-            new ChatToken("$irc", "IRC server and channels",
-                          p => ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels),
+            new ChatToken("$name", "Nickname of the player", TokenName),
+            new ChatToken("$truename", "Account name of the player", TokenTrueName),
+            new ChatToken("$date", "Current date (year-month-day)", TokenDate),
+            new ChatToken("$time", "Current time of day (hour:minute:second)", TokenTime),
+            new ChatToken("$ip", "IP of the player", TokenIP),
+            new ChatToken("$serverip", "IP player connected to the server via", TokenServerIP),
+            new ChatToken("$color", "Color code of the player's nick", TokenColor),
+            new ChatToken("$rank", "Name of player's rank/group", TokenRank),
+            new ChatToken("$level", "Name of level/map player is on", TokenLevel),
+            new ChatToken("$deaths", "Times the player died", TokenDeaths),
+            new ChatToken("$money", "Amount of server currency player has", TokenMoney),
+            new ChatToken("$blocks", "Number of blocks modified by the player", TokenBlocks),
+            new ChatToken("$first", "Date player first logged in", TokenFirst),
+            new ChatToken("$kicked", "Times the player was kicked", TokenKicked),
+            new ChatToken("$server", "Server's name", TokenServerName),
+            new ChatToken("$motd", "Server's MOTD", TokenServerMOTD),
+            new ChatToken("$banned", "Number of banned players", TokenBanned),
+            new ChatToken("$irc", "IRC server and channels", TokenIRC),
         };
+
+        static string TokenName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
+        static string TokenTrueName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + p.truename; }
+        static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
+        static string TokenTime(Player p) { return DateTime.Now.ToString("HH:mm:ss"); }
+        static string TokenIP(Player p) { return p.ip; }
+        static string TokenServerIP(Player p) { return Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP; }
+        static string TokenColor(Player p) { return p.color; }
+        static string TokenRank(Player p) { return p.group.Name; }
+        static string TokenLevel(Player p) { return p.level == null ? null : p.level.name; }
+        static string TokenDeaths(Player p) { return p.TimesDied.ToString(); }        
+        static string TokenMoney(Player p) { return p.money.ToString(); }
+        static string TokenBlocks(Player p) { return p.TotalModified.ToString(); }
+        static string TokenFirst(Player p) { return p.FirstLogin.ToString(); }
+        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }
+        static string TokenServerName(Player p) { return ServerConfig.Name; }
+        static string TokenServerMOTD(Player p) { return ServerConfig.MOTD; }
+        static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
+        static string TokenIRC(Player p) { return ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels; }
         
         public static List<ChatToken> Custom = new List<ChatToken>();
         static bool hookedCustom;
