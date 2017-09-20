@@ -199,20 +199,6 @@ namespace MCGalaxy {
             if (from == null) Chat.MessageGlobal(message);
             else SendChatFrom(from, message, false);
         }
-        
-        
-        [Obsolete("Use Entities.GlobalSpawn()")]
-        public static void GlobalSpawn(Player p, bool self, string possession = "") {
-            Entities.GlobalSpawn(p, self, possession);
-        }
-        
-        [Obsolete("Use Entities.GlobalSpawn()")]
-        public static void GlobalSpawn(Player p, ushort x, ushort y, ushort z, 
-                                       byte rotx, byte roty, bool self, string possession = "") {
-            Entities.GlobalSpawn(p, new Position(x, y, z), new Orientation(rotx, roty), self, possession);
-        }
-        
-        public static void GlobalDespawn(Player p, bool self) { Entities.GlobalDespawn(p, self); }
 
         public bool MarkPossessed(string marker = "") {
             if (marker.Length > 0) {

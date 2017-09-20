@@ -45,69 +45,59 @@ namespace MCGalaxy.Commands.Maintenance {
                 MessageValidTypes(p); return;
             }
             
-            switch (args[1].ToLower()) {
-                case "firstlogin":
-                    SetDate(p, args, PlayerData.ColumnFirstLogin, who, 
-                            v => who.FirstLogin = v); break;
-                case "lastlogin":
-                    SetDate(p, args, PlayerData.ColumnLastLogin, who, 
-                            v => who.LastLogin = v); break;
-                    
-                case "logins":
-                case "totallogin":
-                case "totallogins":
-                    SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
-                               v => who.TimesVisited = v, UpdateDB); break;
-                case "deaths":
-                case "totaldeaths":
-                    SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
-                               v => who.TimesDied = v, UpdateDB); break;
-                case "money":
-                    SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
-                               v => who.money = v, UpdateDB); break;
-
-                case "title":
-                    if (args.Length < 3) {
-                        Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
-                    }
-                    if (args[2].Length >= 20) { Player.Message(p, "Title must be under 20 characters"); return; }
-                    if (args[2] == "null") args[2] = "";
-                    
-                    if (who != null) {
-                        who.title = args[2];
-                        who.SetPrefix();
-                    }
-                    UpdateDB(args[0], args[2], PlayerData.ColumnTitle);
-                    MessageDataChanged(p, args[0], args[1], args[2]); break;
-
-                    
-                case "modified":
-                case "totalblocks":
-                    SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
-                               v => who.TotalModified = v, UpdateDBLo); break;
-                case "drawn":
-                case "totalcuboided":
-                case "totalcuboid":
-                    SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
-                               v => who.TotalDrawn = v, UpdateDBLo); break;
-                case "placed":
-                    SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
-                               v => who.TotalPlaced = v, UpdateDBHi); break;
-                case "deleted":
-                    SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
-                               v => who.TotalDeleted = v, UpdateDBHi); break;
-                    
-                case "totalkicked":
-                    SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
-                               v => who.TimesBeenKicked = v, UpdateDB); break;
-                case "timespent":
-                    SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v); break;
-                case "color":
-                    SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v.Length == 0 ? who.group.Color : v)); break;
-                case "titlecolor":
-                default:
-                    Player.Message(p, Colors.red + "Invalid type.");
-                    MessageValidTypes(p); break;
+            string opt = args[1].ToLower();
+            if (opt == "firstlogin") {
+                SetDate(p, args, PlayerData.ColumnFirstLogin, who,
+                        v => who.FirstLogin = v);
+            } else if (opt == "lastlogin") {
+                SetDate(p, args, PlayerData.ColumnLastLogin, who,
+                        v => who.LastLogin = v);
+            } else if (opt == "logins") {
+                SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
+                           v => who.TimesVisited = v, UpdateDB);
+            } else if (opt == "deaths") {
+                SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
+                           v => who.TimesDied = v, UpdateDB);
+            } else if (opt == "money") {
+                SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
+                           v => who.money = v, UpdateDB);
+            } else if (opt == "title") {
+                if (args.Length < 3) {
+                    Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
+                }
+                if (args[2].Length >= 20) { Player.Message(p, "Title must be under 20 characters"); return; }
+                if (args[2] == "null") args[2] = "";
+                
+                if (who != null) {
+                    who.title = args[2];
+                    who.SetPrefix();
+                }
+                UpdateDB(args[0], args[2], PlayerData.ColumnTitle);
+                MessageDataChanged(p, args[0], args[1], args[2]);
+            } else if (opt == "modified") {
+                SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
+                           v => who.TotalModified = v, UpdateDBLo);
+            } else if (opt == "drawn") {
+                SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
+                           v => who.TotalDrawn = v, UpdateDBLo);
+            } else if (opt == "placed") {
+                SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
+                           v => who.TotalPlaced = v, UpdateDBHi);
+            } else if (opt == "deleted") {
+                SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
+                           v => who.TotalDeleted = v, UpdateDBHi);            
+            } else if (opt == "totalkicked") {
+                SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
+                           v => who.TimesBeenKicked = v, UpdateDB);
+            } else if (opt == "timespent") {
+                SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v);
+            } else if (opt == "color") {
+                SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v.Length == 0 ? who.group.Color : v));
+            } else if (opt == "titlecolor") {
+                SetColor(p, args, PlayerData.ColumnTColor, who, v => who.titlecolor = v);
+            } else {
+                Player.Message(p, Colors.red + "Invalid type.");
+                MessageValidTypes(p);
             }
         }
         
@@ -210,7 +200,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
                     hiValue |= (curValue & PlayerData.LowerBitsMask);
                 }
-            }            
+            }
             Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, hiValue);
         }
         
