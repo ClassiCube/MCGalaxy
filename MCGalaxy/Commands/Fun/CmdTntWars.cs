@@ -195,7 +195,6 @@ namespace MCGalaxy.Commands.Fun {
             switch (text[1]) {
                 case "all":
                 case "a":
-                case "everyone":
                     Player[] players = PlayerInfo.Online.Items;
                     foreach (Player pl in players) {
                         Player.Message(pl, "TNT Wars Rules: (sent to all players by " + p.ColoredName + " %S)");
@@ -206,9 +205,6 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "level":
                 case "l":
-                case "lvl":
-                case "map":
-                case "m":
                     foreach (Player pl in p.level.players) {
                         Player.Message(pl, "TNT Wars Rules: (sent to all players in map by " + p.ColoredName + " %S)");
                         SendRules(pl);
@@ -217,8 +213,6 @@ namespace MCGalaxy.Commands.Fun {
                     return;
 
                 case "players":
-                case "pls":
-                case "pl":
                 case "p":
                     TntWarsGame gm = TntWarsGame.GameIn(p);
                     if (gm == null) { Player.Message(p, "TNT Wars Error: You aren't in a TNT Wars game!"); return; }
@@ -284,11 +278,7 @@ namespace MCGalaxy.Commands.Fun {
                         Player.Message(p, "TNT Wars Error: Can't display scores - game not in progress!");
                     }
                     break;
-
-                case "me":
-                case "mine":
-                case "score":
-                case "i":
+                    
                 default:
                     if (tntwrs.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) {
                         Player.Message(p, "TNT Wars: Your Score: " + Colors.white + TntWarsGame.GameIn(p).FindPlayer(p).Score);
@@ -1022,10 +1012,7 @@ namespace MCGalaxy.Commands.Fun {
                     Player.Message(p, "TNT Wars: {0} is now &cdisabled", name); return true;
                 case "check":
                 case "current":
-                case "now":
-                case "ATM":
                 case "c":
-                case "t":
                     Player.Message(p, "TNT Wars: {0} is currently {1}", name, target ? "&aenabled" : "&cdisabled"); return false;
                 default:
                     target = !target;

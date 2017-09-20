@@ -22,36 +22,17 @@ using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy {
     
-    public static class LevelOptions {
-        
+    public static class LevelOptions {        
         public delegate void OptionSetter(Player p, Level lvl, string value);
         
-        public delegate bool OptionIntValidator(Player p, int value);
-        
         public static Dictionary<string, OptionSetter> Options = new Dictionary<string, OptionSetter>() {
-            { "motd", SetMotd },
-            { "RealmOwner", SetRealmOwner },
-            { "TreeType", SetTreeType },
-            { "PhysicSpeed", (p, l, value) => SetInt(p, l, ref l.Config.PhysicsSpeed, value, "Physics speed", SpeedValidator) },
-            { "Overload", (p, l, value) => SetInt(p, l, ref l.Config.PhysicsOverload, value, "Physics overload", OverloadValidator) },
-            { "Fall", (p, l, value) => SetInt(p, l, ref l.Config.FallHeight, value, "Fall distance") },
-            { "Drown", (p, l, value) => SetInt(p, l, ref l.Config.DrownTime, value, "Drown time (in tenths of a second)") },
-            { "Finite", (p, l, value) => Toggle(p, l, ref l.Config.FiniteLiquids, "Finite mode") },
-            { "AI", (p, l, value) => Toggle(p, l, ref l.Config.AnimalHuntAI, "Animal AI") },
-            { "Edge", (p, l, value) => Toggle(p, l, ref l.Config.EdgeWater, "Edge water") },
-            { "Grass", (p, l, value) => Toggle(p, l, ref l.Config.GrassGrow, "Growing grass") },
-            { "Death", (p, l, value) => Toggle(p, l, ref l.Config.SurvivalDeath, "Survival death") },
-            { "Killer", (p, l, value) => Toggle(p, l, ref l.Config.KillerBlocks, "Killer blocks") },
-            { "Unload", (p, l, value) => Toggle(p, l, ref l.Config.AutoUnload, "Auto unload") },
-            { "LoadOnGoto", (p, l, value) => Toggle(p, l, ref l.Config.LoadOnGoto, "Load on goto") },
-            { "LeafDecay", (p, l, value) => Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay") },
-            { "RandomFlow", (p, l, value) => Toggle(p, l, ref l.Config.RandomFlow, "Random flow") },
-            { "GrowTrees", (p, l, value) => Toggle(p, l, ref l.Config.GrowTrees, "Tree growing") },
-            { "Chat", (p, l, value) => Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true) },
-            { "Guns", ToggleGuns },
-            { "Buildable", (p, l, value) => TogglePerms(p, l, ref l.Config.Buildable, "Buildable") },
-            { "Deletable", (p, l, value) => TogglePerms(p, l, ref l.Config.Deletable, "Deletable") },
-            { "LoadDelay", (p, l, value) => SetInt(p, l, ref l.Config.LoadDelay, value, "Load delay", DelayValidator) },
+            { "motd", SetMotd }, { "RealmOwner", SetRealmOwner }, { "TreeType", SetTreeType },
+            { "PhysicSpeed", SetPhysicSpeed }, { "Overload", SetOverload }, { "Fall", SetFall }, { "Drown", SetDrown },
+            { "Finite", SetFinite }, { "AI", SetAI }, { "Edge", SetEdge }, { "Grass", SetGrass },
+            { "Death", SetDeath }, { "Killer", SetKiller }, { "Unload", SetUnload }, { "LoadOnGoto", SetLoadOnGoto },
+            { "LeafDecay", SetLeafDecay }, { "RandomFlow", SetRandomFlow }, { "GrowTrees", SetGrowTrees },
+            { "Chat", SetChat }, { "Guns", ToggleGuns }, { "Buildable", SetBuildable }, { "Deletable", SetDeletable },
+            { "LoadDelay", SetLoadDelay },
         };
         
         public static Dictionary<string, string> Help = new Dictionary<string, string>() {
@@ -89,8 +70,6 @@ namespace MCGalaxy {
             if (opt == "tree") return "growtrees";
             return opt;
         }
-        
-        static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         static void SetMotd(Player p, Level lvl, string value) {
             lvl.Config.MOTD = value.Length == 0 ? "ignore" : value;
@@ -127,40 +106,58 @@ namespace MCGalaxy {
             Player.Message(p, "Set tree type that saplings grow into to {0}.", value);
         }
         
-        
-        
-        static bool SpeedValidator(Player p, int raw) {
-            if (raw < 10) { Player.Message(p, "Physics speed cannot be below 10 milliseconds."); return false; }
-            return true;
+        static void SetFinite(Player p, Level l, string v) { Toggle(p, l, ref l.Config.FiniteLiquids, "Finite mode"); }
+        static void SetAI(Player p, Level l, string v) { Toggle(p, l, ref l.Config.AnimalHuntAI, "Animal AI"); }
+        static void SetEdge(Player p, Level l, string v) { Toggle(p, l, ref l.Config.EdgeWater, "Edge water"); }
+        static void SetGrass(Player p, Level l, string v) { Toggle(p, l, ref l.Config.GrassGrow, "Growing grass"); }
+        static void SetDeath(Player p, Level l, string v) { Toggle(p, l, ref l.Config.SurvivalDeath, "Survival death"); }
+        static void SetKiller(Player p, Level l, string v) { Toggle(p, l, ref l.Config.KillerBlocks, "Killer blocks"); }
+        static void SetUnload(Player p, Level l, string v) { Toggle(p, l, ref l.Config.AutoUnload, "Auto unload"); }
+        static void SetLoadOnGoto(Player p, Level l, string v) { Toggle(p, l, ref l.Config.LoadOnGoto, "Load on goto"); }
+        static void SetLeafDecay(Player p, Level l, string v) { Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay"); }
+        static void SetRandomFlow(Player p, Level l, string v) { Toggle(p, l, ref l.Config.RandomFlow, "Random flow"); }
+        static void SetGrowTrees(Player p, Level l, string v) { Toggle(p, l, ref l.Config.GrowTrees, "Tree growing"); }
+        static void SetBuildable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Buildable, "Buildable"); }
+        static void SetDeletable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Deletable, "Deletable"); }
+        static void SetChat(Player p, Level l, string v) {
+            Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true);
         }
         
-        static bool OverloadValidator(Player p, int raw) {
-            if (raw < 500) {
-                Player.Message(p, "Physics overload cannot go below 500 (default is 1500)"); return false;
-            }
-            if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) {
-                Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return false;
-            }
-            return true;
-        }
-        
-        static bool DelayValidator(Player p, int raw) {
-            if (raw < 0) {
-                Player.Message(p, "Load delay cannot go below 0 milliseconds. (default is 0)"); return false;
-            }
-            if (raw > 2000) {
-                Player.Message(p, "Load delay cannot go above 2000 milliseconds."); return false;
-            }
-            return true;
-        }
-        
-        static void SetInt(Player p, Level lvl, ref int target, string value, string name,
-                           OptionIntValidator validator = null) {
-            if (value.Length == 0) { Player.Message(p, "You must provide an integer."); return; }
+        static void SetLoadDelay(Player p, Level l, string value) {
             int raw = 0;
-            if (!CommandParser.GetInt(p, value, name, ref raw)) return;
+            if (!CommandParser.GetInt(p, value, "Load delay", ref raw, 0, 2000)) return;
+            SetInt(l, raw, ref l.Config.LoadDelay, "Load delay");
+        }
+        
+        static void SetPhysicSpeed(Player p, Level l, string value) {
+            int raw = 0;
+            if (!CommandParser.GetInt(p, value, "Physics speed", ref raw, 10)) return;
+            SetInt(l, raw, ref l.Config.PhysicsSpeed, "Physics speed");
+        }
+        
+        static void SetOverload(Player p, Level l, string value) {
+            int raw = 0;
+            if (!CommandParser.GetInt(p, value, "Physics overload", ref raw, 500)) return;
             
-            if (validator != null && !validator(p, raw)) return;
+            if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) {
+                Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return;
+            }
+            SetInt(l, raw, ref l.Config.PhysicsOverload, "Physics overload");
+        }
+        
+        static void SetFall(Player p, Level l, string value) {
+            int raw = 0;
+            if (!CommandParser.GetInt(p, value, "Fall distance", ref raw)) return;
+            SetInt(l, raw, ref l.Config.FallHeight, "Fall distance");
+        }
+        
+        static void SetDrown(Player p, Level l, string value) {
+            int raw = 0;
+            if (!CommandParser.GetInt(p, value, "Drown time (in tenths of a second)", ref raw)) return;
+            SetInt(l, raw, ref l.Config.DrownTime, "Drown time (in tenths of a second)");
+        }
+        
+        static void SetInt(Level lvl, int raw, ref int target, string name) {
             target = raw;
             lvl.ChatLevel(name + ": &b" + target);
         }
@@ -187,10 +184,12 @@ namespace MCGalaxy {
         static void Toggle(Player p, Level lvl, ref bool target, string name, bool not = false) {
             target = !target;
             bool display = not ? !target : target;
-            lvl.ChatLevel(name + ": " + GetBool(display));
+            string targetStr = display ? "&aON" : "&cOFF";
+            lvl.ChatLevel(name + ": " + targetStr);
             
-            if (p == null || p.level != lvl)
-                Player.Message(p, name + ": " + GetBool(display));
+            if (p == null || p.level != lvl) {
+                Player.Message(p, name + ": " + targetStr);
+            }
         }
     }
 }

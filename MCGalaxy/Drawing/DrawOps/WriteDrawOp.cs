@@ -102,8 +102,21 @@ namespace MCGalaxy.Drawing.Ops {
         static ulong[] letters;
         static WriteDrawOp() {
             letters = new ulong[256];
-            // each set bit means place a block at y offset equal to that bit index.
-            // e.g. 0x0A means place a block at 'y = 0' and at 'y = 3'
+            // Each letter is represented as 8 bytes
+            // Each byte represents a vertical line in that letter.
+            // For each byte, each set bit means place a block at y offset equal to the index of that bit.
+            
+            // For example, take the letter 'A', which is 0x0F140F0000000000UL
+            // Taking each byte in the 'A' until value is 0, we get 0x0F 0x14 0x0F, which becomes
+            //       y = 7
+            //       y = 6
+            //       y = 5
+            //  █    y = 4
+            // █ █   y = 3
+            // ███   y = 2
+            // █ █   y = 1
+            // █ █   y = 0
+            
             letters['A']  = 0x0F140F0000000000UL;
             letters['B']  = 0x1F150A0000000000UL;
             letters['C']  = 0x0E11110000000000UL;
