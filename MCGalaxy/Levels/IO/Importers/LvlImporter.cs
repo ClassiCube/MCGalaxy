@@ -78,14 +78,17 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void ReadCustomBlocksSection(Level lvl, Stream gs) {
-            if (gs.ReadByte() != 0xBD) return;
+            byte[] data = new byte[1];
+            int read = gs.Read(data, 0, 1);
+            if (read == 0 || data[0] != 0xBD) return;
             
             int index = 0;
             for (int y = 0; y < lvl.ChunksY; y++)
                 for (int z = 0; z < lvl.ChunksZ; z++)
                     for (int x = 0; x < lvl.ChunksX; x++)
             {
-                if (gs.ReadByte() == 1) {
+                read = gs.Read(data, 0, 1);
+                if (read > 0 && data[0] == 1) {
                     byte[] chunk = new byte[16 * 16 * 16];
                     gs.Read(chunk, 0, chunk.Length);
                     lvl.CustomBlocks[index] = chunk;
