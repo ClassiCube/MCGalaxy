@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Network;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdClear : Command {
@@ -31,7 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can clear chat for everyone") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message) {        
             if (!message.CaselessEq("global")) {
                 ClearChat(p);
                 Player.Message(p, "%4Chat cleared.");

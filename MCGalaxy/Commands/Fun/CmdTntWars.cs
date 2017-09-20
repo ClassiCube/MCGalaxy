@@ -451,13 +451,9 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "spawn":
                 case "spawns":
-                case "sp":
                 case "teamspawns":
                 case "teamspawn":
                 case "ts":
-                case "teams":
-                case "tspawn":
-                case "tspawns":
                     if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA) { Player.Message(p, "TNT Wars Error: Cannot set spawns because you are on Team Deathmatch!"); return; }
                     switch (text[2])
                     {
@@ -519,17 +515,12 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "gracetime":
                 case "gt":
-                case "gtime":
-                case "gracet":
                 case "graceperiodtime":
                     switch (text[2])
                     {
                         case "check":
                         case "current":
-                        case "now":
-                        case "ATM":
                         case "c":
-                        case "t":
                             Player.Message(p, "TNT Wars: Current grace time is " + it.Config.GracePeriodSeconds + " seconds long!");
                             break;
 
@@ -556,17 +547,11 @@ namespace MCGalaxy.Commands.Fun {
                     break;
 
                 case "mode":
-                case "game":
                 case "gamemode":
                 case "m":
                     switch (text[2])
                     {
                         case "check":
-                        case "current":
-                        case "mode":
-                        case "now":
-                        case "ATM":
-                        case "m":
                         case "c":
                             if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA)
                                 Player.Message(p, "TNT Wars: The current game mode is Free For All");
@@ -575,15 +560,8 @@ namespace MCGalaxy.Commands.Fun {
                             break;
 
                         case "tdm":
-                        case "team":
                         case "teamdeathmatch":
-                        case "deathmatch":
                         case "teams":
-                        case "t":
-                        case "td":
-                        case "dm":
-                        case "death":
-                        case "match":
                             if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA) {
                                 ModeTDM(p, it);
                             } else {
@@ -593,17 +571,6 @@ namespace MCGalaxy.Commands.Fun {
 
                         case "ffa":
                         case "all":
-                        case "free":
-                        case "man":
-                        case "himself":
-                        case "allvall":
-                        case "allvsall":
-                        case "allv":
-                        case "allvs":
-                        case "a":
-                        case "f":
-                        case "ff":
-                        case "fa":
                             if (it.GameMode == TntWarsGame.TntWarsGameMode.TDM) {
                                 ModeFFA(p, it);
                             } else {
@@ -613,8 +580,6 @@ namespace MCGalaxy.Commands.Fun {
 
                         case "swap":
                         case "s":
-                        case "change":
-                        case "edit":
                         case "switch":
                         default:
                             if (it.GameMode == TntWarsGame.TntWarsGameMode.FFA) {
@@ -629,44 +594,29 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "difficulty":
                 case "d":
-                case "dif":
-                case "diff":
                 case "difficult":
                     switch (text[2])
                     {
                         case "easy":
-                        case "e":
                         case "easiest":
                         case "1":
-                        case "1st":
                             SetDifficulty(it, TntWarsGame.TntWarsDifficulty.Easy, false, "easy", p); break;
 
                         case "normal":
-                        case "n":
                         case "medium":
-                        case "m":
                         case "2":
-                        case "2nd":
                         default:
                             SetDifficulty(it, TntWarsGame.TntWarsDifficulty.Normal, false, "normal", p); break;
                             
                         case "hard":
-                        case "h":
                         case "difficult":
-                        case "d":
                         case "3":
-                        case "3rd":
                             SetDifficulty(it, TntWarsGame.TntWarsDifficulty.Hard, true, "hard", p); break;
 
                         case "extreme":
-                        case "ex":
                         case "hardest":
-                        case "impossible":
                         case "ultimate":
-                        case "i":
-                        case "u":
                         case "4":
-                        case "4th":
                             SetDifficulty(it, TntWarsGame.TntWarsDifficulty.Extreme, true, "extreme", p); break;
                     }
                     it.CheckAllSetUp(p);
@@ -680,25 +630,17 @@ namespace MCGalaxy.Commands.Fun {
                         case "max":
                         case "m":
                         case "maximum":
-                        case "limit":
-                        case "top":
-                        case "goal":
                         case "maxscore":
-                        case "maximumscore":
-                        case "scorelimit":
                             switch (text[3])
                             {
                                 case "check":
                                 case "current":
-                                case "now":
-                                case "ATM":
                                 case "c":
-                                case "t":
                                     Player.Message(p, "TNT Wars: Score limit is " + it.ScoreLimit + " points!");
                                     break;
 
                                 default:
-                                    if (text[3] == "set" || text[3] == "s" || text[3] == "change")
+                                    if (text[3] == "set" || text[3] == "s")
                                     {
                                         text[3] = text[4];
                                     }
@@ -726,16 +668,8 @@ namespace MCGalaxy.Commands.Fun {
 
                         case "multi":
                         case "multikills":
-                        case "multiples":
-                        case "multiplekills":
                         case "multis":
-                        case "doublekill":
-                        case "double":
-                        case "triplekill":
-                        case "triple":
                         case "mk":
-                        case "d":
-                        case "t":
                             SetInt(p, it, ref it.Config.MultiKillBonus, TntWarsConfig.Default.MultiKillBonus,
                                    text, "Mulitkill bonuses", "Mulitkill bonus per extra kill");
                             break;
@@ -748,15 +682,12 @@ namespace MCGalaxy.Commands.Fun {
                             {
                                 case "check":
                                 case "current":
-                                case "now":
-                                case "ATM":
                                 case "c":
-                                case "t":
                                     Player.Message(p, "TNT Wars: Score per kill is " + it.Config.ScorePerKill + " points!");
                                     break;
 
                                 default:
-                                    if (text[3] == "set" || text[3] == "s" || text[3] == "change")
+                                    if (text[3] == "set" || text[3] == "s")
                                     {
                                         text[3] = text[4];
                                     }
@@ -773,7 +704,6 @@ namespace MCGalaxy.Commands.Fun {
                         case "assistkill":
                         case "assist":
                         case "assists":
-                        case "assistscore":
                         case "a":
                             SetInt(p, it, ref it.Config.AssistScore, TntWarsConfig.Default.AssistScore,
                                    text, "Assist bonuses", "Score per assist");
@@ -794,7 +724,6 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "balance":
                 case "balanceteams":
-                case "bt":
                 case "b":
                     if (SetBool(p, ref it.Config.BalanceTeams, text[2], "Team balancing"))
                         it.CheckAllSetUp(p);
@@ -803,12 +732,6 @@ namespace MCGalaxy.Commands.Fun {
                 case "teamkill":
                 case "tk":
                 case "tkill":
-                case "teamk":
-                case "friendly":
-                case "friendlyfire":
-                case "ff":
-                case "friendlyf":
-                case "ffire":
                     if (SetBool(p, ref it.Config.TeamKills, text[2], "Team killing"))
                         it.CheckAllSetUp(p);
                     break;
@@ -816,31 +739,16 @@ namespace MCGalaxy.Commands.Fun {
                 case "zone":
                 case "zones":
                 case "z":
-                case "zn":
-                case "zns":
-                case "zs":
                     switch (text[2])
                     {
                         case "notnt":
-                        case "tnt":
-                        case "no":
-                        case "none":
-                        case "nothing":
-                        case "blocktnt":
-                        case "blockt":
-                        case "bt":
                         case "nt":
                             HandleZone(p, it, true, text);
                             break;
 
                         case "noexplosion":
                         case "nodeleteblocks":
-                        case "deleteblocks":
-                        case "nd":
-                        case "nb":
-                        case "ne":
                         case "neb":
-                        case "ndb":
                             HandleZone(p, it, false, text);
                             break;
                     }
@@ -883,10 +791,6 @@ namespace MCGalaxy.Commands.Fun {
                 default:
                 case "status":
                 case "s":
-                case "ready":
-                case "check":
-                case "info":
-                case "c":
                     Player.Message(p, "TNT Wars: Current Setup:");
                     TntWarsConfig cfg = it.Config;
                     //1
