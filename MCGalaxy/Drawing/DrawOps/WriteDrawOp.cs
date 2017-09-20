@@ -29,12 +29,19 @@ namespace MCGalaxy.Drawing.Ops {
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             int blocks = 0;
             foreach (char c in Text) {
-                if ((int)c >= 256 || letters[(int)c] == null) {
+                if ((int)c >= 256 || letters[c] == 0) {
                     blocks += (4 * Scale) * (4 * Scale);
                 } else {
-                    byte[] flags = letters[(int)c];
-                    for (int i = 0; i < flags.Length; i++)
-                        blocks += Scale * Scale * HighestBit(flags[i]);
+                    // first 'vertical line flags' is at highest position
+                    ulong flags = letters[c]; int shift = 56;
+                    while (flags != 0) {
+                        // get the current flags
+                        byte yUsed = (byte)(flags >> shift);
+                        // clear current flags and move to next
+                        flags &= (1UL << shift) - 1; shift -= 8;
+                        
+                        blocks += Scale * Scale * CountBits(yUsed);
+                    }
                 }
             }
             return blocks;
@@ -56,14 +63,16 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void DrawLetter(Player p, char c, Brush brush, DrawOpOutput output) {
-            if ((int)c >= 256 || letters[(int)c] == null) {
-                Player.Message(p, "\"" + c + "\" is not currently supported, replacing with space.");
+            if ((int)c >= 256 || letters[c] == 0) {
+                if (c != ' ') Player.Message(p, "\"{0}\" is not currently supported, replacing with space.", c);
                 pos.X = (ushort)(pos.X + dirX * 4 * Scale);
                 pos.Z = (ushort)(pos.Z + dirZ * 4 * Scale);
             } else {
-                byte[] flags = letters[(int)c];
-                for (int i = 0; i < flags.Length; i++) {
-                    byte yUsed = flags[i];
+                ulong flags = letters[c]; int shift = 56;
+                while (flags != 0) {
+                    byte yUsed = (byte)(flags >> shift);  
+                    flags &= (1UL << shift) - 1; shift -= 8;
+                    
                     for (int j = 0; j < 8; j++) {
                         if ((yUsed & (1 << j)) == 0) continue;
                         
@@ -82,7 +91,7 @@ namespace MCGalaxy.Drawing.Ops {
             pos.Z = (ushort)(pos.Z + dirZ * Spacing);
         }
         
-        static int HighestBit(int value) {
+        static int CountBits(int value) {
             int bits = 0;
             while (value > 0) {
                 value >>= 1; bits++;
@@ -90,81 +99,80 @@ namespace MCGalaxy.Drawing.Ops {
             return bits;
         }
         
-        static byte[][] letters;
+        static ulong[] letters;
         static WriteDrawOp() {
-            letters = new byte[256][];
+            letters = new ulong[256];
             // each set bit means place a block at y offset equal to that bit index.
             // e.g. 0x0A means place a block at 'y = 0' and at 'y = 3'
-            letters['A'] = new byte[] { 0x0F, 0x14, 0x0F };
-            letters['B'] = new byte[] { 0x1F, 0x15, 0x0A };
-            letters['C'] = new byte[] { 0x0E, 0x11, 0x11 };
-            letters['D'] = new byte[] { 0x1F, 0x11, 0x0E };
-            letters['E'] = new byte[] { 0x1F, 0x15, 0x15 };
-            letters['F'] = new byte[] { 0x1F, 0x14, 0x14 };
-            letters['G'] = new byte[] { 0x0E, 0x11, 0x17 };
-            letters['H'] = new byte[] { 0x1F, 0x04, 0x1F };
-            letters['I'] = new byte[] { 0x11, 0x1F, 0x11 };
-            letters['J'] = new byte[] { 0x11, 0x11, 0x1E };
-            letters['K'] = new byte[] { 0x1F, 0x04, 0x1B };
-            letters['L'] = new byte[] { 0x1F, 0x01, 0x01 };
-            letters['M'] = new byte[] { 0x1F, 0x08, 0x04, 0x08, 0x1F };
-            letters['N'] = new byte[] { 0x1F, 0x08, 0x04, 0x02, 0x1F };
-            letters['O'] = new byte[] { 0x0E, 0x11, 0x0E };
-            letters['P'] = new byte[] { 0x1F, 0x14, 0x08 };
-            letters['Q'] = new byte[] { 0x0E, 0x11, 0x13, 0x0F };
-            letters['R'] = new byte[] { 0x1F, 0x14, 0x0B };
-            letters['S'] = new byte[] { 0x09, 0x15, 0x12 };
-            letters['T'] = new byte[] { 0x10, 0x1F, 0x10 };
-            letters['U'] = new byte[] { 0x1E, 0x01, 0x1E };
-            letters['V'] = new byte[] { 0x18, 0x06, 0x01, 0x06, 0x18 };
-            letters['W'] = new byte[] { 0x1F, 0x02, 0x04, 0x02, 0x1F };
-            letters['X'] = new byte[] { 0x1B, 0x04, 0x1B };
-            letters['Y'] = new byte[] { 0x10, 0x08, 0x07, 0x08, 0x10 };
-            letters['Z'] = new byte[] { 0x11, 0x13, 0x15, 0x19, 0x11 };
-            letters['0'] = new byte[] { 0x0E, 0x13, 0x15, 0x19, 0x0E };
-            letters['1'] = new byte[] { 0x09, 0x1F, 0x01 };
-            letters['2'] = new byte[] { 0x17, 0x15, 0x1D };
-            letters['3'] = new byte[] { 0x15, 0x15, 0x1F };
-            letters['4'] = new byte[] { 0x1E, 0x02, 0x07, 0x02 };
-            letters['5'] = new byte[] { 0x1D, 0x15, 0x17 };
-            letters['6'] = new byte[] { 0x1F, 0x15, 0x17 };
-            letters['7'] = new byte[] { 0x10, 0x10, 0x1F };
-            letters['8'] = new byte[] { 0x1F, 0x15, 0x1F };
-            letters['9'] = new byte[] { 0x1D, 0x15, 0x1F };
+            letters['A']  = 0x0F140F0000000000UL;
+            letters['B']  = 0x1F150A0000000000UL;
+            letters['C']  = 0x0E11110000000000UL;
+            letters['D']  = 0x1F110E0000000000UL;
+            letters['E']  = 0x1F15150000000000UL;
+            letters['F']  = 0x1F14140000000000UL;
+            letters['G']  = 0x0E11170000000000UL;
+            letters['H']  = 0x1F041F0000000000UL;
+            letters['I']  = 0x111F110000000000UL;
+            letters['J']  = 0x11111E0000000000UL;
+            letters['K']  = 0x1F041B0000000000UL;
+            letters['L']  = 0x1F01010000000000UL;
+            letters['M']  = 0x1F0804081F000000UL;
+            letters['N']  = 0x1F0804021F000000UL;
+            letters['O']  = 0x0E110E0000000000UL;
+            letters['P']  = 0x1F14080000000000UL;
+            letters['Q']  = 0x0E11130F00000000UL;
+            letters['R']  = 0x1F140B0000000000UL;
+            letters['S']  = 0x0915120000000000UL;
+            letters['T']  = 0x101F100000000000UL;
+            letters['U']  = 0x1E011E0000000000UL;
+            letters['V']  = 0x1806010618000000UL;
+            letters['W']  = 0x1F0204021F000000UL;
+            letters['X']  = 0x1B041B0000000000UL;
+            letters['Y']  = 0x1008070810000000UL;
+            letters['Z']  = 0x1113151911000000UL;
+            letters['0']  = 0x0E1315190E000000UL;
+            letters['1']  = 0x091F010000000000UL;
+            letters['2']  = 0x17151D0000000000UL;
+            letters['3']  = 0x15151F0000000000UL;
+            letters['4']  = 0x1E02070200000000UL;
+            letters['5']  = 0x1D15170000000000UL;
+            letters['6']  = 0x1F15170000000000UL;
+            letters['7']  = 0x10101F0000000000UL;
+            letters['8']  = 0x1F151F0000000000UL;
+            letters['9']  = 0x1D151F0000000000UL;
             
-            letters[' '] = new byte[] { 0x00 };
-            letters['!'] = new byte[] { 0x1D };
-            letters['"'] = new byte[] { 0x18, 0x00, 0x18 };
-            letters['#'] = new byte[] { 0x0A, 0x1F, 0x0A, 0x1F, 0x0A };
+            letters['!']  = 0x1D00000000000000UL;
+            letters['"']  = 0x1800180000000000UL;
+            letters['#']  = 0x0A1F0A1F0A000000UL;
             // $ is missing
-            letters['%'] = new byte[] { 0x11, 0x02, 0x04, 0x08, 0x11 };
+            letters['%']  = 0x1102040811000000UL;
             // & is missing
-            letters['\''] = new byte[] { 0x18 };
-            letters['('] = new byte[] { 0x0E, 0x11 };
-            letters[')'] = new byte[] { 0x11, 0x0E };
+            letters['\''] = 0x1800000000000000UL;
+            letters['(']  = 0x0E11000000000000UL;
+            letters[')']  = 0x110E000000000000UL;
             // * is missing
-            letters['+'] = new byte[] { 0x04, 0x0E, 0x04 };
-            letters[','] = new byte[] { 0x01, 0x03 };
-            letters['-'] = new byte[] { 0x04, 0x04, 0x04 };
-            letters['.'] = new byte[] { 0x01 };
-            letters['/'] = new byte[] { 0x01, 0x02, 0x04, 0x08, 0x10 };
-            letters[':'] = new byte[] { 0x0A };
-            letters[';'] = new byte[] { 0x10, 0x0A };
-            letters['\\'] = new byte[] { 0x10, 0x08, 0x04, 0x02, 0x01 };
-            letters['<'] = new byte[] { 0x04, 0x0A, 0x11 };
-            letters['='] = new byte[] { 0x0A, 0x0A, 0x0A };
-            letters['>'] = new byte[] { 0x11, 0x0A, 0x04 };
-            letters['?'] = new byte[] { 0x10, 0x15, 0x08 };
-            letters['@'] = new byte[] { 0x0E, 0x11, 0x15, 0x0D };
-            letters['['] = new byte[] { 0x1F, 0x11 };
-            letters['\''] = new byte[] { 0x18 };
-            letters[']'] = new byte[] { 0x11, 0x1F };
-            letters['_'] = new byte[] { 0x01, 0x01, 0x01, 0x01 };
-            letters['`'] = new byte[] { 0x10, 0x08 };
-            letters['{'] = new byte[] { 0x04, 0x1B, 0x11 };
-            letters['|'] = new byte[] { 0x1F };
-            letters['}'] = new byte[] { 0x11, 0x1B, 0x04 };
-            letters['~'] = new byte[] { 0x04, 0x08, 0x04, 0x08 };
+            letters['+']  = 0x040E040000000000UL;
+            letters[',']  = 0x0103000000000000UL;
+            letters['-']  = 0x0404040000000000UL;
+            letters['.']  = 0x0100000000000000UL;
+            letters['/']  = 0x0102040810000000UL;
+            letters[':']  = 0x0A00000000000000UL;
+            letters[';']  = 0x100A000000000000UL;
+            letters['\\'] = 0x1008040201000000UL;
+            letters['<']  = 0x040A110000000000UL;
+            letters['=']  = 0x0A0A0A0000000000UL;
+            letters['>']  = 0x110A040000000000UL;
+            letters['?']  = 0x1015080000000000UL;
+            letters['@']  = 0x0E11150D00000000UL;
+            letters['[']  = 0x1F11000000000000UL;
+            letters['\''] = 0x1800000000000000UL;
+            letters[']']  = 0x111F000000000000UL;
+            letters['_']  = 0x0101010100000000UL;
+            letters['`']  = 0x1008000000000000UL;
+            letters['{']  = 0x041B110000000000UL;
+            letters['|']  = 0x1F00000000000000UL;
+            letters['}']  = 0x111B040000000000UL;
+            letters['~']  = 0x0408040800000000UL;
         }
     }
 }
