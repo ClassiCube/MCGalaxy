@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Misc {
 
         void DoKick(Player p, Group newRank) {
             if (!ServerConfig.HackrankKicks) return;
-            HackRankArgs args;
+            HackRankArgs args = new HackRankArgs();
             args.name = p.name; args.newRank = newRank;
             
             TimeSpan delay = TimeSpan.FromSeconds(ServerConfig.HackrankKickDelay);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Misc {
             who.Leave("kicked (" + msg + "%S)", "Kicked " + msg);
         }
         
-        struct HackRankArgs { public string name; public Group newRank; }
+        class HackRankArgs { public string name; public Group newRank; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/HackRank [rank] %H- Hacks a rank");

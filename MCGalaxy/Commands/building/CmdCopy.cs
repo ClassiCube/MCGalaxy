@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void HandleOther(Player p, string opt, string[] parts, int offsetIndex) {
-            CopyArgs cArgs = default(CopyArgs);
+            CopyArgs cArgs = new CopyArgs();
             cArgs.offsetIndex = offsetIndex;
             
             if (opt == "cut") {
@@ -160,7 +160,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) { return false; }
-        struct CopyArgs { public int type, offsetIndex; }        
+        class CopyArgs { public int type, offsetIndex; }        
         
         void SaveCopy(Player p, string file) {
             if (!Directory.Exists("extra/savecopy"))

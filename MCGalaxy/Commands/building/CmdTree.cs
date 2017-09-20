@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             string[] parts = message.SplitSpaces(3);
             
-            DrawArgs dArgs = default(DrawArgs);
+            DrawArgs dArgs = new DrawArgs();
             dArgs.size = -1;
             
             Tree tree = Tree.Find(parts[0]);
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Building {
             return brush.Construct(args);
         }
         
-        struct DrawArgs { public Tree tree; public string brushMsg; public int size; }
+        class DrawArgs { public Tree tree; public string brushMsg; public int size; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Tree [type] %H- Draws a tree.");

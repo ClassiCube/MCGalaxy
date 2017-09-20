@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length == 0) { Help(p); return; }
 
             bool allMessage = false;
-            MBData data;
+            MBArgs data = new MBArgs();
             string[] args = message.SplitSpaces(2);
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, ref allMessage);
@@ -107,12 +107,12 @@ namespace MCGalaxy.Commands.Building {
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            MBData data = (MBData)state;
+            MBArgs args = (MBArgs)state;
             
             ExtBlock old = p.level.GetBlock(x, y, z);
-            if (p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
-                p.level.UpdateBlock(p, x, y, z, data.Block);
-                UpdateDatabase(p, data, x, y, z);
+            if (p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
+                p.level.UpdateBlock(p, x, y, z, args.Block);
+                UpdateDatabase(p, args, x, y, z);
                 Player.Message(p, "Message block created.");
             } else {                
                 Player.Message(p, "Failed to create a message block.");
@@ -120,10 +120,10 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        void UpdateDatabase(Player p, MBData data, ushort x, ushort y, ushort z) {
-            data.Message = data.Message.Replace("'", "\\'");
-            data.Message = Colors.Escape(data.Message);
-            data.Message = data.Message.UnicodeToCp437();
+        void UpdateDatabase(Player p, MBArgs args, ushort x, ushort y, ushort z) {
+            args.Message = args.Message.Replace("'", "\\'");
+            args.Message = Colors.Escape(args.Message);
+            args.Message = args.Message.UnicodeToCp437();
             
             string lvlName = p.level.name;
             object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
@@ -139,15 +139,15 @@ namespace MCGalaxy.Commands.Building {
                 }
                 
                 if (count == 0) {
-                    Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, data.Message);
+                    Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, args.Message);
                 } else {
                     Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3", 
-                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, data.Message);
+                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, args.Message);
                 }
             }
         }
 
-        struct MBData { public string Message; public ExtBlock Block; }
+        class MBArgs { public string Message; public ExtBlock Block; }
 
         
         void ShowMessageBlocks(Player p) {

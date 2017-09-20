@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "The Interval cannot be greater than the distance."); return;
             }
 
-            DrawArgs dArgs = default(DrawArgs);
+            DrawArgs dArgs = new DrawArgs();
             dArgs.distance = distance; dArgs.interval = interval;
             Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoSPlace);
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        struct DrawArgs { public ushort distance, interval; }
+        class DrawArgs { public ushort distance, interval; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/SPlace [distance] <interval>");

@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
             if (!byte.TryParse(args[0], out scale)) scale = 1;
             if (!byte.TryParse(args[1], out spacing)) spacing = 1;
 
-            WriteArgs wArgs = default(WriteArgs);
+            WriteArgs wArgs = new WriteArgs();
             wArgs.scale = scale; wArgs.spacing = spacing;
             wArgs.message = args[2].ToUpper();
             Player.Message(p, "Place or break two blocks to determine direction.");
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        struct WriteArgs { public byte scale, spacing; public string message; }
+        class WriteArgs { public byte scale, spacing; public string message; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/WriteText [scale] [spacing] [message]");

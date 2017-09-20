@@ -85,11 +85,10 @@ namespace MCGalaxy.Commands.Maintenance {
             } else {
                 Log("Server shutdown in " + args.Delay + " seconds");
                 args.Delay--;
-                task.State = args;
             }
         }
         
-        struct ShutdownArgs {
+        class ShutdownArgs {
             public int Delay;
             public string Reason;
         }

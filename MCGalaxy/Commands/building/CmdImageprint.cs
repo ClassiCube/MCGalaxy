@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length == 0) { Help(p); return; }
             string[] parts = message.SplitSpaces(3);
             
-            DrawArgs dArgs = default(DrawArgs);
+            DrawArgs dArgs = new DrawArgs();
             dArgs.palette = ImagePalette.Find("color");
             if (dArgs.palette == null) dArgs.palette = ImagePalette.Palettes[0];
             dArgs.dualLayered = true;
@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HModes: &fVertical, Vertical2Layer, Horizontal");
         }
 
-        struct DrawArgs { public bool layer, dualLayered; public ImagePalette palette; public string name; }
+        class DrawArgs { public bool layer, dualLayered; public ImagePalette palette; public string name; }
     }
 }
 

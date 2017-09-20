@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            PortalData data;
+            PortalArgs data = new PortalArgs();
             data.Multi = false;
             string[] args = message.SplitSpaces();
             string block = message.Length == 0 ? "" : args[0].ToLower();
@@ -74,27 +74,27 @@ namespace MCGalaxy.Commands.Building {
         }
 
         void EntryChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            PortalData data = (PortalData)p.blockchangeObject;
+            PortalArgs args = (PortalArgs)p.blockchangeObject;
             ExtBlock old = p.level.GetBlock(x, y, z);
-            if (!p.level.CheckAffectPermissions(p, x, y, z, old, data.Block)) {
+            if (!p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
                 p.RevertBlock(x, y, z); return;
             }
             p.ClearBlockchange();
 
-            if (data.Multi && block.BlockID == Block.Red && data.Entries.Count > 0) { 
+            if (args.Multi && block.BlockID == Block.Red && args.Entries.Count > 0) { 
                 ExitChange(p, x, y, z, block); return; 
             }
 
-            p.level.UpdateBlock(p, x, y, z, data.Block);
+            p.level.UpdateBlock(p, x, y, z, args.Block);
             p.SendBlockchange(x, y, z, (ExtBlock)Block.Green);
             PortalPos Port;
 
             Port.Map = p.level.name;
             Port.x = x; Port.y = y; Port.z = z;
-            data.Entries.Add(Port);
-            p.blockchangeObject = data;
+            args.Entries.Add(Port);
+            p.blockchangeObject = args;
 
-            if (!data.Multi) {
+            if (!args.Multi) {
                 p.Blockchange += ExitChange;
                 Player.Message(p, "&aEntry block placed");
             } else {
@@ -107,10 +107,10 @@ namespace MCGalaxy.Commands.Building {
         void ExitChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
             p.ClearBlockchange();
             p.RevertBlock(x, y, z);
-            PortalData bp = (PortalData)p.blockchangeObject;
+            PortalArgs args = (PortalArgs)p.blockchangeObject;
             string dstMap = p.level.name.UnicodeToCp437();
 
-            foreach (PortalPos P in bp.Entries) {
+            foreach (PortalPos P in args.Entries) {
                 string lvlName = P.Map;
                 object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
                 
@@ -134,17 +134,17 @@ namespace MCGalaxy.Commands.Building {
                     }
                 }
                 if (P.Map == p.level.name)
-                    p.SendBlockchange(P.x, P.y, P.z, bp.Block);
+                    p.SendBlockchange(P.x, P.y, P.z, args.Block);
             }
 
             Player.Message(p, "&3Exit %Sblock placed");
             if (!p.staticCommands) return;
-            bp.Entries.Clear();
-            p.blockchangeObject = bp;
+            args.Entries.Clear();
+            p.blockchangeObject = args;
             p.Blockchange += EntryChange;
         }
 
-        struct PortalData { public List<PortalPos> Entries; public ExtBlock Block; public bool Multi; }
+        class PortalArgs { public List<PortalPos> Entries; public ExtBlock Block; public bool Multi; }
         struct PortalPos { public ushort x, y, z; public string Map; }
 
         
