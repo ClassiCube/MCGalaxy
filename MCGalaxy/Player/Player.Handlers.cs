@@ -89,7 +89,7 @@ namespace MCGalaxy {
             }
 
             if (group.Permission == LevelPermission.Banned) return;
-            if (checkPlaceDist && group.Permission == LevelPermission.Guest) {
+            if (checkPlaceDist) {
                 int dx = Pos.BlockX - x, dy = Pos.BlockY - y, dz = Pos.BlockZ - z;
                 int diff = (int)Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 
