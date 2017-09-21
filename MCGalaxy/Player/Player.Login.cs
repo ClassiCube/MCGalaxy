@@ -61,6 +61,7 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
+            // Lock to ensure that no two players can end up with the same playerid
             lock (PlayerInfo.Online.locker) {
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
@@ -156,6 +157,23 @@ namespace MCGalaxy {
             Entities.SpawnEntities(this, true);
             PlayerActions.CheckGamesJoin(this, null);
             Loading = false;
+        }
+        
+         unsafe static byte NextFreeId() {
+            byte* used = stackalloc byte[256];
+            for (int i = 0; i < 256; i++)
+                used[i] = 0;
+
+            Player[] players = PlayerInfo.Online.Items;
+            for (int i = 0; i < players.Length; i++) {
+                byte id = players[i].id;
+                used[id] = 1;
+            }
+            
+            for (byte i = 0; i < 255; i++ ) {
+                if (used[i] == 0) return i;
+            }
+            return 1;
         }
         
         void LoadCpeData() {

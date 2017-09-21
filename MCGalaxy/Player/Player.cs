@@ -366,26 +366,6 @@ namespace MCGalaxy {
         
         [Obsolete("Use PlayerInfo.FindExact(name)")]
         public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
-        
-        unsafe static byte NextFreeId() {
-            byte* used = stackalloc byte[256];
-            for (int i = 0; i < 256; i++)
-                used[i] = 0;
-
-            // Lock to ensure that no two players can end up with the same playerid
-            lock (PlayerInfo.Online.locker) {
-                Player[] players = PlayerInfo.Online.Items;
-                for (int i = 0; i < players.Length; i++) {
-                    byte id = players[i].id;
-                    used[id] = 1;
-                }
-            }
-            
-            for (byte i = 0; i < 255; i++ ) {
-                if (used[i] == 0) return i;
-            }
-            return 1;
-        }
 
         public static bool ValidName(string name) {
             const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";

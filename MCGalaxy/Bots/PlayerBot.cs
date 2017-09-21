@@ -46,21 +46,11 @@ namespace MCGalaxy {
         public int movementSpeed = 3;
         internal sbyte curJump = 0;
         
-        public PlayerBot(string n, Level lvl) { Init(n, lvl); }
-        
-        public PlayerBot(string n, Level lvl, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            Pos = new Position(x, y, z);
-            SetYawPitch(rotx, roty);
-            Init(n, lvl);
-        }
-        
-        void Init(string n, Level lvl) {
+        public PlayerBot(string n, Level lvl) {
             name = n; DisplayName = n; SkinName = n;
             color = "&1";
             ModelBB = AABB.ModelAABB(Model, lvl);
-            
             level = lvl;
-            id = NextFreeId(this);
             hasExtPositions = true;
             BotsScheduler.Activate();
         }
@@ -70,7 +60,11 @@ namespace MCGalaxy {
         public override Level Level { get { return level; } }
         
         public static void Add(PlayerBot bot, bool save = true) {
-            bot.level.Bots.Add(bot);
+            // Lock to ensure that no two bots can end up with the same playerid
+            lock (bot.level.Bots.locker) {
+                bot.id = NextFreeId(bot);
+                bot.level.Bots.Add(bot);
+            }
             bot.GlobalSpawn();
             if (save) BotsFile.Save(bot.level);
         }
@@ -109,13 +103,10 @@ namespace MCGalaxy {
             for (int i = 0; i < 256; i++)
                 used[i] = 0;
 
-            // Lock to ensure that no two bots can end up with the same playerid
-            lock (bot.level.Bots.locker) {
-                PlayerBot[] bots = bot.level.Bots.Items;
-                for (int i = 0; i < bots.Length; i++) {
-                    byte id = bots[i].id;
-                    used[id] = 1;
-                }
+            PlayerBot[] bots = bot.level.Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                byte id = bots[i].id;
+                used[id] = 1;
             }
             
             for (byte i = 127; i >= 64; i-- ) {
@@ -163,18 +154,18 @@ namespace MCGalaxy {
             PlayerBot[] bots = lvl.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
                 PlayerBot bot = bots[i];
-                if (bot.movement) bot.PerformMovement();               
+                if (bot.movement) bot.PerformMovement();
                 Position pos = bot.Pos; Orientation rot = bot.Rot;
                 
                 Entities.GetPositionPacket(ref ptrSrc, bot.id, true, false,
                                            pos, bot.lastPos, rot, bot.lastRot);
-                Entities.GetPositionPacket(ref ptrExt, bot.id, true, true, 
-                                           pos, bot.lastPos, rot, bot.lastRot);                                           
+                Entities.GetPositionPacket(ref ptrExt, bot.id, true, true,
+                                           pos, bot.lastPos, rot, bot.lastRot);
                 bot.lastPos = pos; bot.lastRot = rot;
             }
             
-            int countSrc = (int)(ptrSrc - src);            
-            if (countSrc == 0) return;                        
+            int countSrc = (int)(ptrSrc - src);
+            if (countSrc == 0) return;
             int countExt = (int)(ptrExt - ext);
             
             byte[] srcPacket = new byte[countSrc];
@@ -184,7 +175,7 @@ namespace MCGalaxy {
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level != lvl) continue;                
+                if (p.level != lvl) continue;
                 byte[] packet = p.hasExtPositions ? extPacket : srcPacket;
                 p.Send(packet);
             }
@@ -240,9 +231,9 @@ namespace MCGalaxy {
             
             // Does the bot fall down a block
             if (hitY < 0) {
-                pos.X += dx; pos.Y += hitY; pos.Z += dz; Pos = pos; 
+                pos.X += dx; pos.Y += hitY; pos.Z += dz; Pos = pos;
                 RecalcDownExtent(ref bb, steps, dx, dz);
-                RecalcUpExtent(ref bb, steps, dx, dz);              
+                RecalcUpExtent(ref bb, steps, dx, dz);
                 return;
             }
             
@@ -256,7 +247,7 @@ namespace MCGalaxy {
                 }
                 
                 if (!intersectsAny) {
-                    pos.X += dx; pos.Y += dy; pos.Z += dz; Pos = pos; 
+                    pos.X += dx; pos.Y += dy; pos.Z += dz; Pos = pos;
                     
                     if (dy != 0) {
                         RecalcDownExtent(ref bb, steps, dx, dz);
