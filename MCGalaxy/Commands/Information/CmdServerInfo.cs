@@ -62,21 +62,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static int GetPlayerCount() {
-            // Use fast path if possible  TODO: fast path for mysql
-            int count = 0;
-            if (!ServerConfig.UseMySQL) {
-                DataTable maxTable = Database.Backend.GetRows("Players", "MAX(_ROWID_)", "LIMIT 1");
-                if (maxTable.Rows.Count > 0) {
-                     string row = maxTable.Rows[0]["MAX(_ROWID_)"].ToString();
-                     maxTable.Dispose();
-                     if (int.TryParse(row, out count) && count > 0) return count;
-                }             
+            using (DataTable table = Database.Backend.GetRows("Players", "COUNT(id)")) {
+                return int.Parse(table.Rows[0]["COUNT(id)"].ToString());
             }
-            
-            DataTable table = Database.Backend.GetRows("Players", "COUNT(id)");
-            count = int.Parse(table.Rows[0]["COUNT(id)"].ToString());
-            table.Dispose();
-            return count;
         }
         
         void ShowServerStats(Player p) {
