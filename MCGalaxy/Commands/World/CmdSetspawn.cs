@@ -14,9 +14,9 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
-namespace MCGalaxy.Commands.World {    
-    public sealed class CmdSetspawn : Command {        
+ */
+namespace MCGalaxy.Commands.World {
+    public sealed class CmdSetspawn : Command {
         public override string name { get { return "SetSpawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
@@ -24,22 +24,34 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message.Length > 0) { Help(p); return; }
-            
             if (!LevelInfo.ValidateAction(p, p.level.name, "set spawn of this level")) return;
-            Player.Message(p, "Spawn location set to your current location.");
-            p.level.spawnx = (ushort)p.Pos.BlockX;
-            p.level.spawny = (ushort)p.Pos.BlockY;
-            p.level.spawnz = (ushort)p.Pos.BlockZ;
-            p.level.rotx = p.Rot.RotY;
-            p.level.roty = p.Rot.HeadX;
-            p.level.Changed = true;
-            Entities.Spawn(p, p);
+            
+            if (message.Length == 0) {
+                Player.Message(p, "Spawn location set to your current location.");
+                p.level.spawnx = (ushort)p.Pos.BlockX;
+                p.level.spawny = (ushort)p.Pos.BlockY;
+                p.level.spawnz = (ushort)p.Pos.BlockZ;
+                p.level.rotx = p.Rot.RotY; p.level.roty = p.Rot.HeadX;
+                p.level.Changed = true;
+                Entities.Spawn(p, p);
+                return;
+            }
+            
+            Player who = PlayerInfo.FindMatches(p, message);
+            if (who == null) return;
+            if (who.level != p.level) { Player.Message(p, "{0} %Sis on a different map.", who.ColoredName); return; }
+            if (p != who && who.Rank >= p.Rank) { MessageTooHighRank(p, "set spawn of", false); return; }
+            
+            Player.Message(p, "Set spawn location of {0} %Sto your current location.", who.ColoredName);
+            who.Pos = p.Pos; who.Rot = p.Rot;
+            Entities.Spawn(who, who);
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/SetSpawn");
-            Player.Message(p, "%HSets the spawn location of the map to your current location.");  
+            Player.Message(p, "%HSets the spawn location of the map to your current location.");
+            Player.Message(p, "%T/SetSpawn [player]");
+            Player.Message(p, "%HSets the spawn location of that player");
         }
     }
 }

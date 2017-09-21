@@ -211,8 +211,6 @@ namespace MCGalaxy {
         public string PreTeleportMap;
         
         public string summonedMap;
-        public ushort[] pos = new ushort[3];
-        public byte[] rot = new byte[2];
         internal Position tempPos;
 
         // CmdVoteKick

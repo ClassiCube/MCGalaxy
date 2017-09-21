@@ -85,18 +85,7 @@ namespace MCGalaxy {
             
             if (target.otherRankHidden) return Rank >= target.oHideRank;
             return Rank >= target.Rank;
-        }
-        
-         protected override void OnSetPos() {
-            Position p = Pos;
-            pos[0] = (ushort)p.X; pos[1] = (ushort)p.Y; pos[2] = (ushort)p.Z;
-        }
-        
-        protected override void OnSetRot() {
-            Orientation r = Rot;
-            rot[0] = r.RotY; rot[1] = r.HeadX;
-        }
-        
+        }        
         
         public ExtBlock GetHeldBlock() {
             if (!ModeBlock.IsAir) return ModeBlock;
