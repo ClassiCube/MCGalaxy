@@ -37,22 +37,18 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Use(Player p, string message) {
-            if (p != null && message.Length == 0) message = "enter";
-            
-            switch (message.ToLower()) {
-                case "enter":
-                    HandleEnter(p); break;
-                case "list":
-                case "view":
-                    HandleView(p); break;
-                case "leave":
-                    HandleLeave(p); break;
-                case "next":
-                    HandleNext(p); break;
-                case "clear":
-                    HandleClear(p); break;
-                default:
-                    Help(p); break;
+            if (message.Length == 0 || message.CaselessEq("enter")) {
+                HandleEnter(p);
+            } else if (message.CaselessEq("list") || message.CaselessEq("view")) {
+                HandleView(p);
+            } else if (message.CaselessEq("leave")) {
+                HandleLeave(p);
+            } else if (message.CaselessEq("next")) {
+                HandleNext(p);
+            } else if (message.CaselessEq("clear")) {
+                HandleClear(p); 
+            } else {
+                Help(p);
             }
         }
         
@@ -83,7 +79,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (pos == 1) { Player.Message(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
             if (pos == 0) { Player.Message(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
             
-            string msg = opsOn ? "The Online staff have been notified. Someone should be with you shortly." :
+            string msg = opsOn ? 
+                "The Online staff have been notified. Someone should be with you shortly." :
                 "There are currently no staff online. Staff will be notified when they join the server.";
             Player.Message(p, msg);
             

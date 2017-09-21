@@ -27,10 +27,10 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Use(Player p, string message) {
-            if (!DoCommand(p, message)) Help(p);
+            if (!ListCommands(p, message)) Help(p);
         }
         
-        internal static bool DoCommand(Player p, string message) {
+        internal static bool ListCommands(Player p, string message) {
             string[] args = message.SplitSpaces();
             string sort = args.Length > 1 ? args[1].ToLower() : "";
             string modifier = args.Length > 2 ? args[2] : sort;

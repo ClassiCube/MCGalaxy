@@ -6,7 +6,7 @@ namespace MCGalaxy {
     
     public static class EmotesHandler {
         
-        public static readonly Dictionary<string, char> EmoteKeywords = new Dictionary<string, char> {
+        public static readonly Dictionary<string, char> Keywords = new Dictionary<string, char> {
             { "darksmile", '☺' },
             { "smile", '☻' },
             { "heart", '♥' }, { "hearts", '♥' },
@@ -16,6 +16,7 @@ namespace MCGalaxy {
             { "*", '•' }, { "bullet", '•' }, { "dot", '•' }, { "point", '•' },
             { "hole", '◘' },
             { "circle", '○' }, { "o", '○' },
+            { "inversecircle", '◙' },
             { "male", '♂' }, { "mars", '♂' },
             { "female", '♀' }, { "venus", '♀' },
             { "8", '♪' }, { "note", '♪' }, { "quaver", '♪' },
@@ -49,7 +50,7 @@ namespace MCGalaxy {
             "█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u00a0";
         
         public static string Replace(string message) {
-            return Unescape(message, '(', ')', EmoteKeywords);
+            return Unescape(message, '(', ')', Keywords);
         }
         
         public static string Unescape(string message, char start, char end, 

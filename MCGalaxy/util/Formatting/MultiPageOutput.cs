@@ -28,7 +28,7 @@ namespace MCGalaxy {
         public static void Output<T>(Player p, IList<T> items, StringFormatter<T> formatter,
                                      string cmd, string type, string modifier, bool lines) {
             int page = 0, total = items.Count;
-            int perPage = lines ? 10 : 30;
+            int perPage = lines ? 8 : 30;
             
             if (modifier.Length == 0) {
                 OutputPage(p, items, formatter, cmd, type, 1, lines);
@@ -46,7 +46,7 @@ namespace MCGalaxy {
         
         static void OutputPage<T>(Player p, IList<T> items, StringFormatter<T> formatter,
                                   string cmd, string type, int start, bool lines) {
-            int perPage = lines ? 10 : 30;
+            int perPage = lines ? 8 : 30;
             start = Utils.Clamp(start - 1, 0, items.Count - 1); // want item numbers to start at 1         
             int end = Math.Min(start + perPage, items.Count);
             OutputItems(p, items, start, end, lines, formatter);

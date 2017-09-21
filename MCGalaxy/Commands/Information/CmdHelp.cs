@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.CPE;
 
@@ -26,52 +25,37 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("CmdHelp"), new CommandAlias("Ranks", "ranks"),
-                    new CommandAlias("Colors", "colors") }; }
+                    new CommandAlias("Colors", "colors"), new CommandAlias("Emotes", "emotes") }; }
         }
 
         public override void Use(Player p, string message) {
-            switch (message.ToLower()) {
-                case "":
-                    Player.Message(p, "%HCommand Categories:");
-                    Player.Message(p, "  %TBuilding Chat Economy Games Info Moderation Other World");
-                    Player.Message(p, "%HOther Categories:");
-                    Player.Message(p, "  %TRanks Colors Shortcuts Commands");
-                    Player.Message(p, "%HTo view help for a category, type %T/Help CategoryName");
-                    Player.Message(p, "%HTo see detailed help for a command, type %T/Help CommandName");
-                    Player.Message(p, "%HTo see your stats, type %T/Info");
-                    Player.Message(p, "%HTo see loaded maps, type %T/Maps");
-                    Player.Message(p, "%HTo view your personal world options, use %T/Realm");
-                    Player.Message(p, "%HTo join a map, type %T/Goto WorldName");
-                    Player.Message(p, "%HTo send private messages, type %T@PlayerName Message");
-                    break;
-                case "ranks":
-                    PrintRanks(p); break;
-                case "colours":
-                case "colors":
-                    Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
-                    Player.Message(p, "Colors Available:");
-                    
-                    Player.Message(p, "0 - &0{0} %S| 1 - &1{1} %S| 2 - &2{2} %S| 3 - &3{3}",
-                                   Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
-                    Player.Message(p, "4 - &4{0} %S| 5 - &5{1} %S| 6 - &6{2} %S| 7 - &7{3}",
-                                   Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
-                                   
-                    Player.Message(p, "8 - &8{0} %S| 9 - &9{1} %S| a - &a{2} %S| b - &b{3}",
-                                   Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
-                    Player.Message(p, "c - &c{0} %S| d - &d{1} %S| e - &e{2} %S| f - &f{3}",
-                                   Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
-                    
-                    foreach (ColorDesc col in Colors.List) {
-                        if (col.Undefined || Colors.IsStandard(col.Code)) continue;
-                        Player.Message(p, CmdCustomColors.FormatColor(col));
-                    }
-                    break;
-                default:
-                    if (CmdCommands.DoCommand(p, message)) break;
-                    if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
-                    Player.Message(p, "Could not find command, plugin or block specified.");
-                    break;
+            if (message.Length == 0) {
+                PrintHelpMenu(p);
+            } else if (message.CaselessEq("ranks")) {
+                PrintRanks(p);
+            } else if (message.CaselessEq("colors") || message.CaselessEq("colours")) {
+                PrintColors(p);
+            } else if (message.CaselessEq("emotes") || message.CaselessStarts("emotes ")) {
+                PrintEmotes(p, message);
+            }  else {
+                if (CmdCommands.ListCommands(p, message)) return;
+                if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
+                Player.Message(p, "Could not find command, plugin or block specified.");
             }
+        }
+        
+        static void PrintHelpMenu(Player p) {
+            Player.Message(p, "%HCommand Categories:");
+            Player.Message(p, "  %TBuilding Chat Economy Games Info Moderation Other World");
+            Player.Message(p, "%HOther Categories:");
+            Player.Message(p, "  %TRanks Colors Emotes Shortcuts Commands");
+            Player.Message(p, "%HTo view help for a category, type %T/Help CategoryName");
+            Player.Message(p, "%HTo see detailed help for a command, type %T/Help CommandName");
+            Player.Message(p, "%HTo see your stats, type %T/Info");
+            Player.Message(p, "%HTo see loaded maps, type %T/Maps");
+            Player.Message(p, "%HTo view your personal world options, use %T/Realm");
+            Player.Message(p, "%HTo join a map, type %T/Goto WorldName");
+            Player.Message(p, "%HTo send private messages, type %T@PlayerName Message");
         }
         
         static void PrintRanks(Player p) {
@@ -82,6 +66,44 @@ namespace MCGalaxy.Commands.Info {
                                grp.ColoredName, count, grp.DrawLimit,
                                grp.MaxUndo == -1 ? "max" : grp.MaxUndo.ToString(), (int)grp.Permission);
             }
+        }
+        
+        static void PrintColors(Player p) {
+            Player.Message(p, "&fTo use a color, put a '%' and then put the color code.");
+            Player.Message(p, "Colors Available:");
+            
+            Player.Message(p, "0 - &0{0} %S| 1 - &1{1} %S| 2 - &2{2} %S| 3 - &3{3}",
+                           Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
+            Player.Message(p, "4 - &4{0} %S| 5 - &5{1} %S| 6 - &6{2} %S| 7 - &7{3}",
+                           Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
+            
+            Player.Message(p, "8 - &8{0} %S| 9 - &9{1} %S| a - &a{2} %S| b - &b{3}",
+                           Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
+            Player.Message(p, "c - &c{0} %S| d - &d{1} %S| e - &e{2} %S| f - &f{3}",
+                           Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
+            
+            foreach (ColorDesc col in Colors.List) {
+                if (col.Undefined || Colors.IsStandard(col.Code)) continue;
+                Player.Message(p, CmdCustomColors.FormatColor(col));
+            }
+        }
+        
+        static void PrintEmotes(Player p, string message) {
+            char[] emotes = EmotesHandler.ControlCharReplacements.ToCharArray();
+            emotes[0] = EmotesHandler.ExtendedCharReplacements[0]; // replace NULL with house
+            
+            string[] args = message.SplitSpaces(2);
+            string modifier = args.Length > 1 ? args[1] : "";
+            MultiPageOutput.Output(p, emotes, FormatEmote,
+                                   "Help emotes", "emotes", modifier, true);
+        }
+        
+        static string FormatEmote(char emote) {
+            List<string> keywords = new List<string>();
+            foreach (KeyValuePair<string, char> kvp in EmotesHandler.Keywords) {
+                if (kvp.Value == emote) keywords.Add("(%S" + kvp.Key + ")");
+            }
+            return "&f" + emote + " %S- " + keywords.Join();
         }
         
         bool ParseCommand(Player p, string message) {
