@@ -84,7 +84,6 @@ namespace MCGalaxy {
                     pl.SendMapMotd();
                 } else {
                     LevelActions.ReloadMap(p, pl, false);
-                    if (pl.HasCpeExt(CpeExt.HackControl)) pl.Send(Hacks.MakeHackControl(pl));
                 }
             }
         }

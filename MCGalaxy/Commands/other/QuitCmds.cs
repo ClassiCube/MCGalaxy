@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }
-            int code = p.random.Next(int.MinValue, int.MaxValue);
+            int code = new Random().Next(int.MinValue, int.MaxValue);
             p.Leave("Server crash! Error code 0x" + Convert.ToString(code, 16).ToUpper());
         }
         

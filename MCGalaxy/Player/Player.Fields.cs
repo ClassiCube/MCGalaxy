@@ -230,8 +230,7 @@ namespace MCGalaxy {
         public DateTime lastchatroomglobal;
 
         public WarpList Waypoints = new WarpList();
-
-        public Random random = new Random();
+        public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }
 
         public bool loggedIn;

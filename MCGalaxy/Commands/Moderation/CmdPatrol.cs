@@ -36,12 +36,10 @@ namespace MCGalaxy.Commands.Moderation {
 
             List<Player> candidates = GetPatrolCandidates(p);
             if (candidates.Count == 0) {
-                LevelPermission perm = CommandExtraPerms.MinPerm(name);
-                Player.Message(p, "No {0}players ranked {1} %Sor below are online.",
-                               p.Rank <= perm ? "other " : "", // in case we can patrol ourselves
-                               Group.GetColoredName(perm));
+                Player.Message(p, "&cNo players to patrol.");
             } else {
                 Player target = candidates[new Random().Next(candidates.Count)];
+                target.LastPatrol = DateTime.UtcNow;
                 Command.all.FindByName("TP").Use(p, target.name);
                 Player.Message(p, "Now visiting " + target.ColoredName + "%S.");
             }
@@ -51,9 +49,11 @@ namespace MCGalaxy.Commands.Moderation {
             List<Player> candidates = new List<Player>();
             LevelPermission perm = CommandExtraPerms.MinPerm(name);
             Player[] online = PlayerInfo.Online.Items;
+            DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
             
             foreach (Player target in online) {
                 if (target.Rank > perm || target == p || !Entities.CanSee(p, target)) continue;
+                if (target.LastPatrol > cutoff) continue;
                 candidates.Add(target);
             }
             return candidates;
@@ -62,8 +62,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/Patrol");
             LevelPermission perm = CommandExtraPerms.MinPerm(name);
-            Player.Message(p, "%HTeleports you to a random {0} %Sor lower",
-                           Group.GetColoredName(perm));
+            Player.Message(p, "%HTeleports you to a random {0} %Hor lower", Group.GetColoredName(perm));
+            Player.Message(p, "%HPlayers patrolled within the last 15 seconds are ignored");
         }
     }
 }
