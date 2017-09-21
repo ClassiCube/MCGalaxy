@@ -69,8 +69,8 @@ namespace MCGalaxy.Blocks.Physics {
                 allGas = allGas && collide == CollideType.WalkThrough;                
                 if (!CollideType.IsSolid(collide)) continue;
                 
-                int fallHeight = (p.startFallY - bb.Min.Y) / 32;
-                if (fallHeight > p.level.Config.FallHeight)
+                int fallHeight = p.startFallY - bb.Min.Y;
+                if (fallHeight > p.level.Config.FallHeight * 32)
                     p.HandleDeath(ExtBlock.Air, null, false, true);
                 
                 p.startFallY = -1;          

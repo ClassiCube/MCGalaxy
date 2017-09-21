@@ -77,8 +77,15 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.HackControl)) continue;
-                pl.Send(Hacks.MakeHackControl(pl));
+            	// Unfortunately, some clients will freeze or crash if we send a MOTD packet,
+            	// but don't follow it up by a new map. Thus, we have to use the ugly approach
+            	// of only sending to whitelisted clients. 
+                if (pl.appName != null && pl.appName.CaselessStarts("classicalsharp")) {
+                    pl.SendMapMotd();
+                } else {
+                    LevelActions.ReloadMap(p, pl, false);
+                    if (pl.HasCpeExt(CpeExt.HackControl)) pl.Send(Hacks.MakeHackControl(pl));
+                }
             }
         }
         
