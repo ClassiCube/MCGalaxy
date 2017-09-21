@@ -30,6 +30,7 @@ namespace MCGalaxy.Games.ZS {
         public ZSGame Game;
 
         public override void Load(bool startup) {
+            OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
@@ -41,6 +42,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         public override void Unload(bool shutdown) {
+            OnEntitySpawnedEvent.Unregister(HandleEntitySpawned);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
@@ -72,6 +74,18 @@ namespace MCGalaxy.Games.ZS {
         void HandleMoneyChanged(Player p) {
             if (p.level != Game.Map) return;
             HUD.UpdateTertiary(p);
+        }
+        
+        void HandleEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst) {
+            Player p = entity as Player;
+            if (p == null || !p.Game.Infected) return;
+
+            name = p.truename;
+            if (ZSConfig.ZombieName.Length > 0 && !dst.Game.Aka) {
+                name = ZSConfig.ZombieName; skin = name;
+            }
+            name = Colors.red + name;
+            model = p == dst ? p.Model : ZSConfig.ZombieModel;
         }
         
         void HandlePlayerConnect(Player p) {

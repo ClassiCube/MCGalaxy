@@ -42,8 +42,43 @@ namespace MCGalaxy.Events.EntityEvents {
     public sealed class OnTabListEntryRemovedEvent : IEvent<OnTabListEntryRemoved> {
         
         public static void Call(Entity entity, Player dst) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(entity, dst));
+            IEvent<OnTabListEntryRemoved>[] items = handlers.Items;
+            // Don't use CallCommon, because this event is called very frequently
+            // and want to avoid lots of pointless temp mem allocations
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(entity, dst); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
+    public delegate void OnEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst);
+    /// <summary> Called when an entity is being spawned to someone. </summary>
+    public sealed class OnEntitySpawnedEvent : IEvent<OnEntitySpawned> {
+        
+        public static void Call(Entity entity, ref string name, ref string skin, ref string model, Player dst) {
+            IEvent<OnEntitySpawned>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try {
+                    items[i].method(entity, ref name, ref skin, ref model, dst);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, items[i]);
+                }
+            }
+        }
+    }
+    
+    public delegate void OnEntityDespawned(Entity entity, Player dst);
+    /// <summary> Called when an entity is being despawned from someone. </summary>
+    public sealed class OnEntityDespawnedEvent : IEvent<OnEntityDespawned> {
+        
+        public static void Call(Entity entity, Player dst) {
+            IEvent<OnEntityDespawned>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(entity, dst); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
 }

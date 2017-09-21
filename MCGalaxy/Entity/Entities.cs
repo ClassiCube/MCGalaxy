@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Text;
+using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Maths;
@@ -84,20 +85,12 @@ namespace MCGalaxy {
                                    Orientation rot, string possession = "") {
             byte id = p == dst ? Entities.SelfID : p.id;
             
-            if (!ServerConfig.TablistGlobal)
-                TabList.Add(dst, p, id);
-            if (!Server.zombie.Running || !p.Game.Infected) {
-                SpawnRaw(dst, id, p.SkinName, p.color + p.truename + possession, p.Model, p.Pos, p.Rot);
-                return;
-            }
+            string name = p.color + p.truename + possession;
+            string skin = p.SkinName, model = p.Model;
+            OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
             
-            string name = p.truename, skinName = p.SkinName;
-            if (ZSConfig.ZombieName.Length > 0 && !dst.Game.Aka) {
-                name = ZSConfig.ZombieName; skinName = name;
-            }
-            
-            string model = p == dst ? p.Model : ZSConfig.ZombieModel;
-            SpawnRaw(dst, id, skinName, Colors.red + name + possession, model, p.Pos, p.Rot);
+            SpawnRaw(dst, id, skin, name, model, p.Pos, p.Rot);
+            if (!ServerConfig.TablistGlobal) TabList.Add(dst, p, id);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -133,15 +126,15 @@ namespace MCGalaxy {
         internal static void Spawn(Player dst, PlayerBot b) {
             string name = Chat.Format(b.color + b.DisplayName, dst, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
-            string skin = Chat.Format(b.SkinName, dst, true, false);
-
-            SpawnRaw(dst, b.id, skin, name, b.Model, b.Pos, b.Rot);
-            if (ServerConfig.TablistBots)
-                TabList.Add(dst, b);
+            string skin = Chat.Format(b.SkinName, dst, true, false), model = b.Model;
+            
+            OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
+            SpawnRaw(dst, b.id, skin, name, model, b.Pos, b.Rot);
+            if (ServerConfig.TablistBots) TabList.Add(dst, b);
         }
         
-        public static void SpawnRaw(Player dst, byte id, string skin, string name,
-                                    string model, Position pos, Orientation rot) {
+        static void SpawnRaw(Player dst, byte id, string skin, string name,
+                             string model, Position pos, Orientation rot) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
             name = Colors.Cleanup(name, dst.hasTextColors);
@@ -163,16 +156,16 @@ namespace MCGalaxy {
         }
         
         internal static void Despawn(Player dst, Player other) {
+            OnEntityDespawnedEvent.Call(other, dst);
             byte id = other == dst ? SelfID : other.id;
             dst.Send(Packet.RemoveEntity(id));
-            if (!ServerConfig.TablistGlobal)
-                TabList.Remove(dst, other);
+            if (!ServerConfig.TablistGlobal) TabList.Remove(dst, other);
         }
         
         internal static void Despawn(Player dst, PlayerBot b) {
+            OnEntityDespawnedEvent.Call(b, dst);
             dst.Send(Packet.RemoveEntity(b.id));
-            if (ServerConfig.TablistBots)
-                TabList.Remove(dst, b);
+            if (ServerConfig.TablistBots) TabList.Remove(dst, b);
         }
 
         #endregion
