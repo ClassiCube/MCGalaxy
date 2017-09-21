@@ -128,7 +128,7 @@ namespace MCGalaxy.Maths {
             if (model.CaselessEq("skeleton")) return new Vec3S32(16, 60, 16);
             if (model.CaselessEq("spider"))   return new Vec3S32(30, 24, 30);
             
-            return new Vec3S32(16, 56, 16); // default humanoid size
+            return new Vec3S32(18, 56, 18); // default humanoid size
         }
         
         public static bool IntersectsSolidBlocks(AABB bb, Level lvl) {
