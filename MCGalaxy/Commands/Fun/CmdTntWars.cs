@@ -60,14 +60,10 @@ namespace MCGalaxy.Commands.Fun {
                     DoScores(p, text); return;
                 case "players":
                 case "player":
-                case "ps":
-                case "pl":
                 case "p":
                     DoPlayers(p, text); break;
                 case "health":
-                case "heal":
                 case "hp":
-                case "hlth":
                     DoHealth(p, text); break;
                 case "setup":
                 case "s":

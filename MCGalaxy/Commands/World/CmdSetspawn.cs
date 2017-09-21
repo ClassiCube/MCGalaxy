@@ -24,10 +24,10 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message.Length > 0) { Help(p); return;  }
+            if (message.Length > 0) { Help(p); return; }
             
             if (!LevelInfo.ValidateAction(p, p.level.name, "set spawn of this level")) return;
-            Player.Message(p, "Spawn location set to your current position.");
+            Player.Message(p, "Spawn location set to your current location.");
             p.level.spawnx = (ushort)p.Pos.BlockX;
             p.level.spawny = (ushort)p.Pos.BlockY;
             p.level.spawnz = (ushort)p.Pos.BlockZ;
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/SetSpawn");
-            Player.Message(p, "%HSets the default spawn location of the map you are currently located in.");  
+            Player.Message(p, "%HSets the spawn location of the map to your current location.");  
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string shortcut { get { return "s"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }        
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Fetch"), new CommandAlias("Bring"), new CommandAlias("BringAll", "all") }; }
