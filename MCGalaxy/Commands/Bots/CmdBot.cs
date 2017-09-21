@@ -45,7 +45,10 @@ namespace MCGalaxy.Commands.Bots {
             } else if (args[0].CaselessEq("deathmsg") || args[0].CaselessEq("deathmessage")) {
                 string text = args.Length > 2 ? args[2] : null;
                 SetDeathMessage(p, args[1], text);
-            }  else {
+            } else if (args[0].CaselessEq("rename")) {
+                string newName = args.Length > 2 ? args[2] : null;
+                RenameBot(p, args[1], newName);
+            } else {
                 Help(p);
             }
         }
@@ -53,7 +56,7 @@ namespace MCGalaxy.Commands.Bots {
         void AddBot(Player p, string botName) {
             if (!LevelInfo.ValidateAction(p, p.level.name, "add bots to this level")) return;
             
-            if (BotExists(p.level, botName)) {
+            if (BotExists(p.level, botName, null)) {
                 Player.Message(p, "A bot with that name already exists."); return;
             }
             if (p.level.Bots.Count >= ServerConfig.MaxBotsPerLevel) {
@@ -68,9 +71,10 @@ namespace MCGalaxy.Commands.Bots {
             PlayerBot.Add(bot);
         }
         
-        static bool BotExists(Level lvl, string name) {
+        static bool BotExists(Level lvl, string name, PlayerBot skip) {
             PlayerBot[] bots = lvl.Bots.Items;
             foreach (PlayerBot bot in bots) {
+                if (bot == skip) continue;
                 if (bot.name.CaselessEq(name)) return true;
             }
             return false;
@@ -89,6 +93,28 @@ namespace MCGalaxy.Commands.Bots {
                 PlayerBot.Remove(bot);
                 Player.Message(p, "Removed bot {0}", bot.ColoredName);
             }
+        }
+        
+        void RenameBot(Player p, string botName, string newName) {
+            if (!LevelInfo.ValidateAction(p, p.level.name, "rename bots on this level")) return;
+            if (newName == null) { Player.Message(p, "New name of bot required."); return; }            
+            if (!Formatter.ValidName(p, newName, "bot")) return;
+            
+            PlayerBot bot = Matcher.FindBots(p, botName);
+            if (bot == null) return;
+            if (BotExists(p.level, newName, bot)) {
+                Player.Message(p, "A bot with the new name already exists."); return;
+            }
+            
+            Player.Message(p, "Renamed bot {0}", bot.ColoredName);
+            if (bot.DisplayName == bot.name) {
+                bot.DisplayName = newName;
+                bot.GlobalDespawn();
+                bot.GlobalSpawn();
+            }
+            
+            bot.name = newName;
+            BotsFile.Save(bot.level);
         }
         
         void SetBotText(Player p, string botName, string text) {
@@ -133,7 +159,7 @@ namespace MCGalaxy.Commands.Bots {
             Player.Message(p, "%T/Bot deathmessage [name] <message>");
             Player.Message(p, "%HSets the message shown when this bot kills a player");
             Player.Message(p, "%T/Bot rename [name] [new name] %H- Renames a bot");
-            Player.Message(p, "%H  Note: To change name tag of a bot, use %T/nick bot");
+            Player.Message(p, "%H  Note: To only change name tag of a bot, use %T/nick bot");
         }
     }
 }
