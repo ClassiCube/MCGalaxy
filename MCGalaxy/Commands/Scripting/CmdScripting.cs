@@ -113,11 +113,11 @@ namespace MCGalaxy
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Scripting pcreate [name]");
-            Player.Message(p, "%HCreate a example .cs file!");
+            Player.Message(p, "%HCreate a example .cs plugin file");
             Player.Message(p, "%T/Scripting pload [filename]");
-            Player.Message(p, "%HLoad a plugin from your plugins folder.");
+            Player.Message(p, "%HLoad a plugin from your plugins folder");
             Player.Message(p, "%T/Scripting punload [name]");
-            Player.Message(p, "%HUnloads a currently loaded plugin.");
+            Player.Message(p, "%HUnloads a currently loaded plugin");
         }
     }
 }

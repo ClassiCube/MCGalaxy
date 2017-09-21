@@ -129,6 +129,7 @@ namespace MCGalaxy {
                 File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name));
             }
 
+            DeleteIfExists(LevelInfo.MapPath(name) + ".backup");
             DeleteIfExists("levels/level properties/" + name);
             DeleteIfExists("levels/level properties/" + name + ".properties");
             DeleteIfExists("blockdefs/lvl_" + name + ".json");
