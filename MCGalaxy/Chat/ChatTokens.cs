@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.Network;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {
@@ -95,7 +96,7 @@ namespace MCGalaxy {
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
         static string TokenTime(Player p) { return DateTime.Now.ToString("HH:mm:ss"); }
         static string TokenIP(Player p) { return p.ip; }
-        static string TokenServerIP(Player p) { return Player.IsLocalIpAddress(p.ip) ? p.ip : Server.IP; }
+        static string TokenServerIP(Player p) { return HttpUtil.IsLocalIP(p.ip) ? p.ip : Server.IP; }
         static string TokenColor(Player p) { return p.color; }
         static string TokenRank(Player p) { return p.group.Name; }
         static string TokenLevel(Player p) { return p.level == null ? null : p.level.name; }

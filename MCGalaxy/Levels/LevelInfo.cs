@@ -26,20 +26,6 @@ namespace MCGalaxy {
         /// <summary> Array of all current loaded levels. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Level> Loaded = new VolatileArray<Level>(true);
-        
-        [Obsolete("Prefer Matcher.FindLevels() or FindExact()")]
-        public static Level Find(string name) {
-            Level match = null; int matches = 0;
-            Level[] loaded = Loaded.Items;
-            
-            foreach (Level lvl in loaded) {
-                if (lvl.name.CaselessEq(name)) return lvl;
-                if (lvl.name.CaselessContains(name)) {
-                    match = lvl; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
 
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;

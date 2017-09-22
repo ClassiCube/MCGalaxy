@@ -211,12 +211,6 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
-        [Obsolete]
-        public static Level Find(string name) { return LevelInfo.Find(name); }
-
-        [Obsolete]
-        public static Level FindExact(string name) { return LevelInfo.FindExact(name); }
-
         public static void SaveSettings(Level lvl) {
             if (lvl.IsMuseum) return; // museums do not save properties
             

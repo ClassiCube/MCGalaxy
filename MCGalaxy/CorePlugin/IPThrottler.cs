@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Core {
@@ -27,7 +28,7 @@ namespace MCGalaxy.Core {
         static readonly object ipsLock = new object();
         
         internal static bool CheckIP(Player p) {
-            if (!ServerConfig.IPSpamCheck || Player.IsLocalIpAddress(p.ip)) return true;
+            if (!ServerConfig.IPSpamCheck || HttpUtil.IsLocalIP(p.ip)) return true;
             DateTime blockedUntil, now = DateTime.UtcNow;
             
             lock (ipsLock) {

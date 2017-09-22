@@ -349,12 +349,6 @@ namespace MCGalaxy {
         
         [Obsolete("Use PlayerInfo.Online.Items")]
         public static List<Player> players;
-        
-        [Obsolete("Use PlayerInfo.Find(name)")]
-        public static Player Find(string name) { return PlayerInfo.Find(name); }
-        
-        [Obsolete("Use PlayerInfo.FindExact(name)")]
-        public static Player FindExact(string name) { return PlayerInfo.FindExact(name); }
 
         public static bool ValidName(string name) {
             const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
@@ -376,34 +370,6 @@ namespace MCGalaxy {
         /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
             SendBlockchange(x, y, z, level.GetBlock(x, y, z));
-        }
-
-        public static bool IPInPrivateRange(string ip) {
-            //range of 172.16.0.0 - 172.31.255.255
-            if (ip.StartsWith("172.") && (int.Parse(ip.Split('.')[1]) >= 16 && int.Parse(ip.Split('.')[1]) <= 31))
-                return true;
-            return IPAddress.IsLoopback(IPAddress.Parse(ip)) || ip.StartsWith("192.168.") || ip.StartsWith("10.");
-            //return IsLocalIpAddress(ip);
-        }
-
-        public static bool IsLocalIpAddress(string host) {
-            try { // get host IP addresses
-                IPAddress[] hostIPs = Dns.GetHostAddresses(host);
-                // get local IP addresses
-                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-
-                // test if any host IP equals to any local IP or to localhost
-                foreach ( IPAddress hostIP in hostIPs ) {
-                    // is localhost
-                    if ( IPAddress.IsLoopback(hostIP) ) return true;
-                    // is local address
-                    foreach ( IPAddress localIP in localIPs ) {
-                        if ( hostIP.Equals(localIP) ) return true;
-                    }
-                }
-            }
-            catch { }
-            return false;
         }
    
         public void SetMoney(int amount) {

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
                 target = match.name; ip = match.ip;
             }
             
-            if (Player.IPInPrivateRange(ip)) {
+            if (HttpUtil.IsPrivateIP(ip)) {
                 Player.Message(p, Colors.red + "Player has an internal IP, cannot trace"); return;
             }
 

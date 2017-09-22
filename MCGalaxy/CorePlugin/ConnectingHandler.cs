@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Security.Cryptography;
 using MCGalaxy.Events;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Core {
     internal static class ConnectingHandler {
@@ -82,7 +83,7 @@ namespace MCGalaxy.Core {
             
             string hashHex = BitConverter.ToString(hash);
             if (!mppass.CaselessEq(hashHex.Replace("-", ""))) {
-                if (!Player.IPInPrivateRange(p.ip)) {
+                if (!HttpUtil.IsPrivateIP(p.ip)) {
                     p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
                 }
             } else {
@@ -126,7 +127,7 @@ namespace MCGalaxy.Core {
             if (Server.vip.Contains(p.name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
-            if (online.Length >= ServerConfig.MaxPlayers && !Player.IPInPrivateRange(p.ip)) {
+            if (online.Length >= ServerConfig.MaxPlayers && !HttpUtil.IsPrivateIP(p.ip)) {
                 p.Leave(null, "Server full!", true); return false;
             }
             if (group.Permission > LevelPermission.Guest) return true;

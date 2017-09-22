@@ -43,22 +43,6 @@ namespace MCGalaxy {
             return count;
         }
         
-        
-        [Obsolete("Prefer FindMatches() or FindExact()")]
-        public static Player Find(string name) {
-            Player[] players = PlayerInfo.Online.Items;
-            Player match = null; int matches = 0;
-            name = name.ToLower();
-
-            foreach (Player p in players) {
-                if (p.name.CaselessEq(name)) return p;
-                if (p.name.CaselessContains(name)) {
-                    match = p; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
-        
         public static Player FindMatches(Player pl, string name, bool onlyCanSee = true) {
             int matches = 0; return FindMatches(pl, name, out matches, onlyCanSee);
         }
