@@ -121,17 +121,19 @@ namespace MCGalaxy {
         }
             
         
-        static readonly Dictionary<string, string> ircColors = new Dictionary<string, string> {
-            { white, "\u000300" }, { black, "\u000301" }, { navy, "\u000302" }, { green, "\u000303" }, 
-            { red, "\u000304" }, { maroon, "\u000305" }, { purple, "\u000306" }, { gold, "\u000307" },
-            { yellow, "\u000308" }, { lime, "\u000309" }, { teal, "\u000310" }, { aqua, "\u000311" },
-            { blue, "\u000312" }, { pink, "\u000313" }, { gray, "\u000314" }, { silver, "\u000315" },
+        static readonly string[] ircColors = new string[] {
+            "\u000300", "\u000301", "\u000302", "\u000303", "\u000304", "\u000305", 
+            "\u000306", "\u000307", "\u000308", "\u000309", "\u000310", "\u000311",
+            "\u000312", "\u000313", "\u000314", "\u000315",
         };
-        static readonly Dictionary<string, string> ircSingleColors = new Dictionary<string, string> {
-            { white, "\u00030" }, { black, "\u00031" }, { navy, "\u00032" }, { green, "\u00033" }, 
-            { red, "\u00034" }, { maroon, "\u00035" }, { purple, "\u00036" }, { gold, "\u00037" },
-            { yellow, "\u00038" }, { lime, "\u00039" },
+        static readonly string[] ircSingle = new string[] {
+            "\u00030", "\u00031", "\u00032", "\u00033", "\u00034", "\u00035", 
+            "\u00036", "\u00037", "\u00038", "\u00039",
         };
+        static readonly string[] ircReplacements = new string[] {
+            white, black, navy, green, red, maroon, purple, gold,
+            yellow, lime, teal, aqua, blue, pink, gray, silver,
+        };       
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
         /// <summary> Converts IRC color codes into normal color codes. </summary>
@@ -141,11 +143,11 @@ namespace MCGalaxy {
             input = IrcTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
             
-            foreach (var kvp in ircColors) {
-                sb.Replace(kvp.Value, kvp.Key);
+            for (int i = 0; i < ircColors.Length; i++) {
+                sb.Replace(ircColors[i], ircReplacements[i]);
             }
-            foreach (var kvp in ircSingleColors) {
-                sb.Replace(kvp.Value, kvp.Key);
+            for (int i = 0; i < ircSingle.Length; i++) {
+                sb.Replace(ircSingle[i], ircReplacements[i]);
             }
             
             sb.Replace("\u0003", white); // color reset
@@ -158,15 +160,10 @@ namespace MCGalaxy {
             if (input == null) throw new ArgumentNullException("input");
             input = Escape(input);
             StringBuilder sb = new StringBuilder(input);
+            Cleanup(sb, false);
             
-            for (int i = 0; i < List.Length; i++) {
-                ColorDesc col = List[i];
-                if (col.Undefined || col.Code == col.Fallback) continue;
-                sb.Replace("&" + col.Code, "&" + col.Fallback);
-            }
-            
-            foreach (var kvp in ircColors) {
-                sb.Replace(kvp.Key, kvp.Value);
+            for (int i = 0; i < ircColors.Length; i++) {
+                sb.Replace(ircReplacements[i], ircColors[i]);
             }
             return sb.ToString();
         }
