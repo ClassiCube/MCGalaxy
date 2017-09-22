@@ -62,9 +62,9 @@ namespace MCGalaxy {
         static void InitReduceTable() {
             if (reduceKeys != null) return;
             // Because some letters are similar (Like i and l), they are reduced to the same form.
-            // For example, the word "@t3$5t ll" is reduced to "atest ii";
-            reduceKeys = "@|i3|l3|(|3|ph|6|#|l|!|1|0|9|$5|vv|2".Split('|');
-            reduceValues= "a|b|b|c|e|f|g|h|i|i|i|o|q|s|w|z".Split('|');
+            // For example, the word "@t3$5t ll" is reduced to "atesst ii";
+            reduceKeys = "@|i3|l3|(|3|ph|6|#|l|!|1|0|9|$|5|vv|2".Split('|');
+            reduceValues= "a|b|b|c|e|f|g|h|i|i|i|o|q|s|s|w|z".Split('|');
         }
         
         static void LoadBadWords() {
