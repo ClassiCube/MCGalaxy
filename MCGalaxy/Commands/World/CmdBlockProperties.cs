@@ -99,55 +99,44 @@ namespace MCGalaxy.Commands.World {
         void SetProperty(Player p, BlockProps[] scope, ExtBlock block,
                          string prop, string[] args) {
             int i = GetIndex(scope, block);
+            string text = args.Length > 3 ? args[3] : null;
+            
             if (prop == "portal") {
-                scope[i].IsPortal = !scope[i].IsPortal;
-                OnToggleSet(p, scope, block, "a portal", scope[i].IsPortal);
+                Toggle(p, scope, block, "a portal", ref scope[i].IsPortal);
             } else if (prop == "mb" || prop == "messageblock") {
-                scope[i].IsMessageBlock = !scope[i].IsMessageBlock;
-                OnToggleSet(p, scope, block, "a message block", scope[i].IsMessageBlock);
+                Toggle(p, scope, block, "a message block", ref scope[i].IsMessageBlock);
             } else if (prop == "rails") {
-                scope[i].IsRails = !scope[i].IsRails;
-                OnToggleSet(p, scope, block, "train rails", scope[i].IsRails);
+                Toggle(p, scope, block, "train rails", ref scope[i].IsRails);
             } else if (prop == "waterkills") {
-                scope[i].WaterKills = !scope[i].WaterKills;
-                OnToggleSet(p, scope, block, "killed by water", scope[i].WaterKills);
+                Toggle(p, scope, block, "killed by water", ref scope[i].WaterKills);
             } else if (prop == "lavakills") {
-                scope[i].LavaKills = !scope[i].LavaKills;
-                OnToggleSet(p, scope, block, "killed by lava", scope[i].LavaKills);
+                Toggle(p, scope, block, "killed by lava", ref scope[i].LavaKills);
             } else if (prop == "door") {
-                scope[i].IsDoor = !scope[i].IsDoor;
-                OnToggleSet(p, scope, block, "a door", scope[i].IsDoor);
+                Toggle(p, scope, block, "a door", ref scope[i].IsDoor);
             } else if (prop == "tdoor") {
-                scope[i].IsTDoor = !scope[i].IsTDoor;
-                OnToggleSet(p, scope, block, "a tdoor", scope[i].IsTDoor);
+                Toggle(p, scope, block, "a tdoor", ref scope[i].IsTDoor);
             } else if (prop == "killer" || prop == "death") {
-                scope[i].KillerBlock = !scope[i].KillerBlock;
-                OnToggleSet(p, scope, block, "a killer block", scope[i].KillerBlock);
+                Toggle(p, scope, block, "a killer block", ref scope[i].KillerBlock);
             } else if (prop == "deathmsg" || prop == "deathmessage") {
-                string msg = args.Length > 3 ? args[3] : null;
-                SetDeathMessage(p, scope, block, i, msg);
+                SetDeathMessage(p, scope, block, i, text);
             } else if (prop == "animalai" || prop == "animal") {
-                string msg = args.Length > 3 ? args[3] : null;
-                SetEnum(p, scope, block, i, msg);
+                SetEnum(p, scope, block, i, text);
             }  else if (prop == "stackid" || prop == "stackblock") {
-                string msg = args.Length > 3 ? args[3] : null;
-                SetStackId(p, scope, block, i, msg);
+                SetStackId(p, scope, block, i, text);
             } else if (prop == "opblock" || prop == "op") {
-                scope[i].OPBlock = !scope[i].OPBlock;
-                OnToggleSet(p, scope, block, "an OP block", scope[i].OPBlock);
+                Toggle(p, scope, block, "an OP block", ref scope[i].OPBlock);
             } else if (prop == "odoor") {
-                string odoor = args.Length > 3 ? args[3] : null;
-                SetODoor(p, scope, block, i, odoor);
+                SetODoor(p, scope, block, i, text);
             } else if (prop == "drownable" || prop == "drown") {
-                scope[i].Drownable = !scope[i].Drownable;
-                OnToggleSet(p, scope, block, "drowns players", scope[i].Drownable);
+                Toggle(p, scope, block, "drowns players", ref scope[i].Drownable);
             } else {
                 Help(p);
             }
         }
 
         
-        static void OnToggleSet(Player p, BlockProps[] scope, ExtBlock block, string type, bool on) {
+        static void Toggle(Player p, BlockProps[] scope, ExtBlock block, string type, ref bool on) {
+            on = !on;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             Player.Message(p, "Block {0} is {1}: {2}",
                            BlockName(scope, lvl, block),

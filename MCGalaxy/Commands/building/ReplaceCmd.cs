@@ -25,15 +25,8 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Replace"; } }
         public override string shortcut { get { return "r"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected virtual bool ReplaceNot { get { return false; } }
-        
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            return new CuboidDrawOp();
-        }
-        
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
-            return ReplaceNot ? "replacenot" : "replace";
-        }
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new CuboidDrawOp(); }      
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "replace"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Replace [block] [block2].. [new]");
@@ -46,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdReplaceNot : CmdReplace {        
         public override string name { get { return "ReplaceNot"; } }
         public override string shortcut { get { return "rn"; } }
-        protected override bool ReplaceNot { get { return true; } }
+        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "replacenot"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/ReplaceNot [block] [block2].. [new]");
