@@ -78,7 +78,7 @@ namespace MCGalaxy {
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             
             Chat.MessageWhere(format,
-                              pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(p, pl),
+                              pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(pl, p),
                               displayName, message);
             
             if (p != null) p.CheckForMessageSpam();           

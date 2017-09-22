@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         static void ShowRequestMessage(Player p, Player target) {
-            if (!Chat.NotIgnoring(p, target)) return;
+            if (!Chat.NotIgnoring(target, p)) return;
             
             Player.Message(target, p.ColoredName + " %Swould like to teleport to you.");
             Player.Message(target, "Type &2/tpaccept %Sor &4/tpdeny%S.");

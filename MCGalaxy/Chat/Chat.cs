@@ -38,15 +38,15 @@ namespace MCGalaxy {
             }
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (!NotIgnoring(source, p)) continue;
-                if (visibleOnly && !Entities.CanSee(p, source)) continue;
-                if (!p.level.SeesServerWideChat || p.Chatroom != null) continue;
+            foreach (Player pl in players) {
+                if (!NotIgnoring(pl, source)) continue;
+                if (visibleOnly && !Entities.CanSee(pl, source)) continue;
+                if (!pl.level.SeesServerWideChat || pl.Chatroom != null) continue;
                 
-                if (p.Ignores.Nicks && p.Ignores.Titles) Player.Message(p, msg_NNNT);
-                else if (p.Ignores.Nicks) Player.Message(p, msg_NN);
-                else if (p.Ignores.Titles) Player.Message(p, msg_NT);
-                else Player.Message(p, message);
+                if (pl.Ignores.Nicks && pl.Ignores.Titles) Player.Message(pl, msg_NNNT);
+                else if (pl.Ignores.Nicks) Player.Message(pl, msg_NN);
+                else if (pl.Ignores.Titles) Player.Message(pl, msg_NT);
+                else Player.Message(pl, message);
             }
         }
         
@@ -60,7 +60,7 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!NotIgnoring(source, p)) continue;
+                if (!NotIgnoring(p, source)) continue;
                 if (visibleOnly && !Entities.CanSee(p, source)) continue;
                 
                 if (p.level == lvl && p.Chatroom == null)
@@ -78,7 +78,7 @@ namespace MCGalaxy {
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!NotIgnoring(source, p)) continue;
+                if (!NotIgnoring(p, source)) continue;
                 
                 if (p.Chatroom != null)
                     Player.Message(p, message);
@@ -97,7 +97,7 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!NotIgnoring(source, p)) continue;
+                if (!NotIgnoring(p, source)) continue;
                 
                 if (p.Chatroom == chatRoom)
                     Player.Message(p, message);
@@ -170,7 +170,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Returns true if the target player can see chat messags by source. </summary>
-        public static bool NotIgnoring(Player source, Player target) {
+        public static bool NotIgnoring(Player target, Player source) {
             if (target.Ignores.All) return source == target; // don't ignore messages from self
             
             return source == null || !target.Ignores.Names.CaselessContains(source.name);

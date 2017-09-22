@@ -53,10 +53,8 @@ namespace MCGalaxy.Commands.Chatting {
                            PlayerInfo.GetColoredName(p, receiverName));
             if (receiver == null) return;
             
-            if (Player.IsSuper(p)) {
-                Player.Message(receiver, "Message recieved from " + senderNick + "%S.");
-            } else if (Chat.NotIgnoring(p, receiver)) {
-                Player.Message(receiver, "Message recieved from " + senderNick + "%S.");
+            if (Chat.NotIgnoring(receiver, p)) {
+                Player.Message(receiver, "Message recieved from {0}%S. Check %T/inbox", senderNick);
             }
         }
         

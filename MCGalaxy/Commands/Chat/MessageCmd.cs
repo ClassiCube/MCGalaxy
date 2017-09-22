@@ -21,17 +21,18 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
-        protected bool TryMessageAction(Player p, string target, string message, bool messageWho) {
-            if (target.Length == 0) { Help(p); return false; }
-            Player who = PlayerInfo.FindMatches(p, target);
-            if (who == null) return false;
+        protected bool TryMessageAction(Player p, string name, string message, bool messageWho) {
+            if (name.Length == 0) { Help(p); return false; }
+            Player target = PlayerInfo.FindMatches(p, name);
+            if (target == null) return false;
 
             string giver = (p == null) ? "(console)" : p.ColoredName;
-            if (!TryMessage(p, string.Format(message, giver, who.ColoredName))) return false;
-            
-            string giverRaw = (p == null) ? "(console)" : p.name;
-            if (messageWho && !who.Ignores.Names.CaselessContains(giverRaw) && !who.Ignores.All)
-                Player.Message(who, string.Format(message, giver, "you"));
+            string reciever = p == target ? "themselves" : target.ColoredName;
+            if (!TryMessage(p, string.Format(message, giver, reciever))) return false;
+
+            if (messageWho && p != target && Chat.NotIgnoring(target, p)) {
+                Player.Message(target, string.Format(message, giver, "you"));
+            }
             return true;
         }
         

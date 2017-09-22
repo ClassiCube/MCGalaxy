@@ -26,26 +26,26 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (p != null && p == who) { Player.Message(p, "You cannot hug yourself, silly!"); return; }
-            
             string hugType = null;
+            
             if (args.Length > 1) {
                 args[1] = args[1].ToLower();
                 if (args[1] == "loving" || args[1] == "creepy" || args[1] == "friendly" || args[1] == "deadly")
                     hugType = args[1];
             }
-            if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}.", false); return; }
+            if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}", false); return; }
             
             if (hugType == "deadly") {
                 if (!CheckExtraPerm(p, 1)) return;
-                if (p != null && who.Rank > p.Rank) {
+                Player target = PlayerInfo.FindMatches(p, args[0]);
+                if (target == null) return;
+            
+                if (p != null && target.Rank > p.Rank) {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }
-                who.HandleDeath((ExtBlock)Block.Stone, "@p %Sdied from a %cdeadly hug.");
+                target.HandleDeath((ExtBlock)Block.Stone, "@p %Sdied from a %cdeadly hug.");
             }
-            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug.", false); return;
+            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug", false); return;
         }
         
         public override void Help(Player p) {
