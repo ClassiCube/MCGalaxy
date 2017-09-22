@@ -106,18 +106,18 @@ namespace MCGalaxy.Blocks {
         static void SaveCore(IEnumerable<BlockPerms> list) {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
                 w.WriteLine("#Version 2");
-                w.WriteLine("#   This file list the ranks that can use each command.");
+                w.WriteLine("#   This file list the ranks that can use each block");
                 w.WriteLine("#   Disallow and allow can be left empty.");
                 w.WriteLine("#   Works entirely on rank permission values, not rank names.");
                 w.WriteLine("#");
-                w.WriteLine("#   Layout: CommandName : MinRank : Disallow : Allow");
+                w.WriteLine("#   Layout: Block ID : MinRank : Disallow : Allow");
                 w.WriteLine("#   lava : 60 : 80,67 : 40,41,55");
                 w.WriteLine("");
 
                 foreach (BlockPerms perms in list) {
                     if (Block.Name(perms.BlockID).CaselessEq("unknown")) continue;
                     
-                    string line = Block.Name(perms.BlockID) + " : " + (int)perms.MinRank + " : "
+                    string line = perms.BlockID + " : " + (int)perms.MinRank + " : "
                         + CommandPerms.JoinPerms(perms.Disallowed) + " : " + CommandPerms.JoinPerms(perms.Allowed);
                     w.WriteLine(line);
                 }
@@ -150,13 +150,14 @@ namespace MCGalaxy.Blocks {
             string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
-                //Name : Lowest : Disallow : Allow
+                //Name/ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
+                byte block = Block.Byte(args[0]);
+                if (block == Block.Invalid) continue;
                 BlockPerms perms = new BlockPerms();
-                if (Block.Byte(args[0]) == Block.Invalid) continue;
-                perms.BlockID = Block.Byte(args[0]);
-
+                perms.BlockID = block;
+                
                 try {
                     perms.MinRank = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
