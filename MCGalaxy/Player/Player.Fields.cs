@@ -61,7 +61,7 @@ namespace MCGalaxy {
         public string BrushName = "normal", DefaultBrushArgs = "";
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
-        public bool disconnected;
+        public bool disconnected, ClickToMark = true;
 
         public string name;
         public string DisplayName;
@@ -246,7 +246,6 @@ namespace MCGalaxy {
         /// NOTE: Currently this prevents the OnBlockChange event from being called. </summary>
         public event SelectionBlockChange Blockchange;
         
-        internal bool HasBlockchange { get { return Blockchange != null; } }
         public void ClearBlockchange() { ClearSelection(); }
         public object blockchangeObject;
         

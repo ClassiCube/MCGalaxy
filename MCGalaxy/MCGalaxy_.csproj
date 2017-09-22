@@ -127,6 +127,7 @@
     <Compile Include="Commands\building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
     <Compile Include="Commands\building\CmdCenter.cs" />
+    <Compile Include="Commands\building\CmdDoNotMark.cs" />
     <Compile Include="Commands\building\CmdMark.cs" />
     <Compile Include="Commands\building\CmdCmdBind.cs" />
     <Compile Include="Commands\building\CmdCopy.cs" />

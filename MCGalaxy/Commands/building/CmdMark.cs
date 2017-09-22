@@ -33,13 +33,12 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (message.CaselessEq("all")) {
-                if (!p.HasBlockchange) {
-                    Player.Message(p, "Cannot mark, no selection in progress."); return;
+                if (!DoMark(p, 0, 0, 0)) {
+                    Player.Message(p, "Cannot mark, no selection in progress.");
+                } else {                    
+                    Level lvl = p.level;
+                    DoMark(p, lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
                 }
-                
-                Level lvl = p.level;
-                PlaceMark(p, 0, 0, 0);
-                PlaceMark(p, lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
                 return;
             }
             
@@ -50,11 +49,7 @@ namespace MCGalaxy.Commands.Building {
             P.X = Clamp(P.X, p.level.Width);
             P.Y = Clamp(P.Y, p.level.Height);
             P.Z = Clamp(P.Z, p.level.Length);
-            
-            if (p.HasBlockchange) {
-                PlaceMark(p, P.X, P.Y, P.Z); 
-                return;
-            }
+            if (DoMark(p, P.X, P.Y, P.Z)) return;
             
             Vec3U16 mark = (Vec3U16)P;
             // We only want to activate blocks in the world
@@ -88,11 +83,14 @@ namespace MCGalaxy.Commands.Building {
             return value;
         }
         
-        static void PlaceMark(Player p, int x, int y, int z) {
+        static bool DoMark(Player p, int x, int y, int z) {
             ExtBlock block = p.GetHeldBlock();
-            p.ManualChange((ushort)x, (ushort)y, (ushort)z, false, block, false);
-            if (p.Ignores.DrawOutput) return;
-            Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
+            bool didMark = p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);
+            
+            if (didMark && !p.Ignores.DrawOutput) {
+                Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
+            }
+            return didMark;
         }
         
         public override void Help(Player p) {
@@ -100,7 +98,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HUse ~ before a coordinate to mark relative to current position");
             Player.Message(p, "%HIf <x y z> is not given, marks at where you are standing");
             Player.Message(p, "  %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
-            Player.Message(p, "  %HNote: If no selection is in progress, activates (e.g. doors) the existing block at those coordinates.");
+            Player.Message(p, "%HActivates the block (e.g. door) if no selection is in progress");
             Player.Message(p, "%T/Mark all %H- Places markers at min and max corners of the map");
         }
     }

@@ -16,14 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using MCGalaxy.Gui.Components;
 
 namespace MCGalaxy.Gui {
+    public delegate void LineOutput(char colCode, string portion);
     public static class LineFormatter {
         
-        public static void Format(string message, Action<char, string> output) {
+        public static void Format(string message, LineOutput output) {
             int index = 0;
             char col = 'S';
             message = message.Replace("%S", "&f"); // We want %S to be treated specially when displayed to GUI
@@ -33,8 +33,7 @@ namespace MCGalaxy.Gui {
                 OutputPart(ref col, ref index, message, output);
         }
         
-        static void OutputPart(ref char col, ref int start,
-                               string message, Action<char, string> output) {
+        static void OutputPart(ref char col, ref int start, string message, LineOutput output) {
             int next = Next(start, message);
             if (next == -1) {
                 string part = message.Substring(start);
@@ -106,15 +105,6 @@ namespace MCGalaxy.Gui {
             if (!Colors.IsDefined(c)) return foreCol;
             ColorDesc col = Colors.List[c];
             return Color.FromArgb(col.R, col.G, col.B);
-        }
-        
-        public static List<string> GetColorsList() {
-            List<string> colors = new List<string>();
-            for (int i = 0; i < Colors.List.Length; i++) {
-                if (Colors.List[i].Undefined) continue;
-                colors.Add(Colors.List[i].Name);
-            }
-            return colors;
         }
     }
 }

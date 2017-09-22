@@ -46,6 +46,14 @@ namespace MCGalaxy {
                 }
             }
         }
+        
+        internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, ExtBlock block) {
+            lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
+            if (Blockchange == null) return false;
+            
+            Blockchange(this, x, y, z, block);
+            return true;
+        }
 
         public void ManualChange(ushort x, ushort y, ushort z, bool placing,
                                  ExtBlock block, bool checkPlaceDist) {
@@ -71,10 +79,8 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
-            if (Blockchange != null) {
-                Blockchange(this, x, y, z, block); return;
-            }
+            if (ClickToMark && DoBlockchangeCallback(x, y, z, block)) return;
+            
             OnBlockChangeEvent.Call(this, x, y, z, block, placing);
             if (cancelBlock) { cancelBlock = false; return; }
 
