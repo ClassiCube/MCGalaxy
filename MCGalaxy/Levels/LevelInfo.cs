@@ -89,7 +89,7 @@ namespace MCGalaxy {
             if (p == null) return true;
             LevelAccessController visit, build;
             Level lvl = null;
-            LevelConfig cfg = GetConfig(map, out lvl);          
+            LevelConfig cfg = GetConfig(map, out lvl); 
             
             if (lvl != null) {
                 visit = lvl.VisitAccess;

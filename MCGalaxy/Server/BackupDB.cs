@@ -88,9 +88,8 @@ namespace MCGalaxy {
                 }
                 sql.WriteLine(");");
             } else {
-                using (DataTable tableSQL = Database.Fill("SELECT sql FROM sqlite_master WHERE tbl_name LIKE @0" +
-                                                          " AND type = 'table' AND name NOT LIKE 'sqlite_%'" +
-                                                          " ORDER BY substr(type,2,1), name", tableName))
+                const string syntax = "SELECT sql FROM sqlite_master WHERE tbl_name = @0 AND type = 'table'";
+                using (DataTable tableSQL = Database.Fill(syntax + Database.Backend.CaselessWhereSuffix, tableName))
                 {
                     //just print out the data in the table.
                     foreach (DataRow row in tableSQL.Rows) {
