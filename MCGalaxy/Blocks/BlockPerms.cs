@@ -52,7 +52,7 @@ namespace MCGalaxy.Blocks {
         public static BlockPerms[] List = new BlockPerms[Block.Count];
 
 
-        /// <summary> Returns whether the given rank can modify the given block. </summary>        
+        /// <summary> Returns whether the given rank can modify the given block. </summary>
         public static bool UsableBy(Player p, byte block) {
             BlockPerms b = List[block];
             LevelPermission perm = p.Rank;
@@ -74,13 +74,13 @@ namespace MCGalaxy.Blocks {
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
                 if (block < count) {
                     bool usable = UsableBy(pl, block);
-                    pl.Send(Packet.BlockPermission(block, 
-                                                   usable && pl.level.CanPlace, 
+                    pl.Send(Packet.BlockPermission(block,
+                                                   usable && pl.level.CanPlace,
                                                    usable && pl.level.CanDelete));
                 }
             }
         }
-                        
+        
         public void MessageCannotUse(Player p, string action) {
             StringBuilder builder = new StringBuilder("Only ");
             Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
@@ -125,7 +125,7 @@ namespace MCGalaxy.Blocks {
         }
         
 
-        /// <summary> Loads the list of all block permissions. </summary>        
+        /// <summary> Loads the list of all block permissions. </summary>
         public static void Load() {
             SetDefaultPerms();
             
@@ -153,11 +153,14 @@ namespace MCGalaxy.Blocks {
                 //Name/ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
-                byte block = Block.Byte(args[0]);
+                byte block;
+                if (!byte.TryParse(args[0], out block)) {
+                    block = Block.Byte(args[0]);
+                }
                 if (block == Block.Invalid) continue;
+                
                 BlockPerms perms = new BlockPerms();
                 perms.BlockID = block;
-                
                 try {
                     perms.MinRank = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
@@ -184,7 +187,7 @@ namespace MCGalaxy.Blocks {
                         List[block].MinRank = group.Permission;
                     else
                         throw new InvalidDataException("Line " + line + " is invalid.");
-                } catch { 
+                } catch {
                     Logger.Log(LogType.Warning, "Could not find the rank given on {0}. Using default", line);
                 }
             }
