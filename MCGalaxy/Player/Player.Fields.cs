@@ -182,7 +182,6 @@ namespace MCGalaxy {
 
         public bool showPortals, showMBs;
         public string prevMsg = "";
-        internal bool showedWelcome;
 
         //Movement
         internal int oldIndex = -1, lastWalkthrough = -1, startFallY = -1, lastFallY = -1;

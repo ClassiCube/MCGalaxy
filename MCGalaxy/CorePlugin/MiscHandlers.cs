@@ -64,22 +64,6 @@ namespace MCGalaxy.Core {
             if (!p.level.Config.UseBlockDB) {
                 Player.Message(p, "BlockDB is disabled here, &cyou will not be able to /undo or /redo");
             }
-            ShowWelcome(p);
-        }
-        
-        static void ShowWelcome(Player p) {
-            if (p.showedWelcome) return;
-            p.showedWelcome = true;
-            p.LastAction = DateTime.UtcNow;
-            TextFile welcomeFile = TextFile.Files["Welcome"];
-            
-            try {
-                welcomeFile.EnsureExists();
-                string[] welcome = welcomeFile.GetText();
-                Player.MessageLines(p, welcome);
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
         }
         
         internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch,

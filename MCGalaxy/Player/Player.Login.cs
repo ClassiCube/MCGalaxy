@@ -20,10 +20,11 @@ using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
-using MCGalaxy.Maths;
+using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -78,6 +79,7 @@ namespace MCGalaxy {
             LastLogin = DateTime.Now;
             TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
+            ShowWelcome();
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
@@ -89,7 +91,7 @@ namespace MCGalaxy {
                 Directory.CreateDirectory("players");
             PlayerDB.Load(this);
             Game.Team = Team.FindTeam(this);
-            SetPrefix();            
+            SetPrefix();
             LoadCpeData();
             
             if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.VerifyAdminsRank)
@@ -105,7 +107,7 @@ namespace MCGalaxy {
             }
             
             OnPlayerConnectEvent.Call(this);
-            if (cancellogin) { cancellogin = false; return; }           
+            if (cancellogin) { cancellogin = false; return; }
             
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
@@ -127,7 +129,7 @@ namespace MCGalaxy {
                     SendMessage("&cPlease complete admin verification with %T/Pass [Password]!");
             }
             
-           try {
+            try {
                 if (group.CanExecute("inbox") && Database.TableExists("Inbox" + name) ) {
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
@@ -159,7 +161,20 @@ namespace MCGalaxy {
             Loading = false;
         }
         
-         unsafe static byte NextFreeId() {
+        void ShowWelcome() {
+            LastAction = DateTime.UtcNow;
+            TextFile welcomeFile = TextFile.Files["Welcome"];
+            
+            try {
+                welcomeFile.EnsureExists();
+                string[] welcome = welcomeFile.GetText();
+                Player.MessageLines(this, welcome);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+        }
+        
+        unsafe static byte NextFreeId() {
             byte* used = stackalloc byte[256];
             for (int i = 0; i < 256; i++)
                 used[i] = 0;
