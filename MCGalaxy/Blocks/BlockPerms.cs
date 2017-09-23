@@ -69,7 +69,7 @@ namespace MCGalaxy.Blocks {
         public static void ResendBlockPermissions(byte block) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (!pl.HasCpeExt(CpeExt.BlockPermissions)) continue;
+                if (!pl.Supports(CpeExt.BlockPermissions)) continue;
                 
                 int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
                 if (block < count) {

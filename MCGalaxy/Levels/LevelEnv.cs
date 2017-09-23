@@ -46,7 +46,7 @@ namespace MCGalaxy {
             lvl.Config.Weather = weather;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level == lvl && pl.HasCpeExt(CpeExt.EnvWeatherType))
+                if (pl.level == lvl && pl.Supports(CpeExt.EnvWeatherType))
                     pl.Send(Packet.EnvWeatherType(weather));
             }
         }
@@ -166,7 +166,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level != lvl) continue;
                 
-                if (pl.HasCpeExt(CpeExt.EnvMapAspect)) {
+                if (pl.Supports(CpeExt.EnvMapAspect)) {
                     pl.Send(Packet.EnvMapProperty(prop, value));
                 } else {
                     pl.SendCurrentMapAppearance();
@@ -177,7 +177,7 @@ namespace MCGalaxy {
         internal static void UpdateEnvColor(Player p, byte type, string hex) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != p.level || !pl.HasCpeExt(CpeExt.EnvColors)) continue;
+                if (pl.level != p.level || !pl.Supports(CpeExt.EnvColors)) continue;
                 pl.SendEnvColor(type, hex);
             }
         }

@@ -114,14 +114,14 @@ namespace MCGalaxy.Games.ZS {
                 Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
                 
-                if (p.HasCpeExt(CpeExt.HackControl))
+                if (p.Supports(CpeExt.HackControl))
                     p.Send(Hacks.MakeHackControl(p));
             } else {
                 HandlePlayerDisconnect(p, null);
                 Entities.GlobalDespawn(p, false, true);
                 p.Game.Referee = true;
                 
-                if (p.HasCpeExt(CpeExt.HackControl))
+                if (p.Supports(CpeExt.HackControl))
                     p.Send(Packet.HackControl(true, true, true, true, true, -1));
             }
             

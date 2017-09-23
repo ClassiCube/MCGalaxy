@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (packedDist > short.MaxValue) {
                 Player.Message(p, "\"{0}\", is too long a reach distance. Max is 1023 blocks.", message);
-            } else if (!p.HasCpeExt(CpeExt.ClickDistance)) {
+            } else if (!p.Supports(CpeExt.ClickDistance)) {
                 Player.Message(p, "Your client doesn't support changing your reach distance.");
             } else {        
                 p.Send(Packet.ClickDistance((short)packedDist));

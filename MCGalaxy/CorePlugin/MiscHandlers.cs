@@ -50,9 +50,9 @@ namespace MCGalaxy.Core {
                 p.isFlying = false;
             }
             
-            if (p.HasCpeExt(CpeExt.EnvWeatherType))
+            if (p.Supports(CpeExt.EnvWeatherType))
                 p.Send(Packet.EnvWeatherType((byte)level.Config.Weather));
-            if (p.HasCpeExt(CpeExt.EnvColors))
+            if (p.Supports(CpeExt.EnvColors))
                 p.SendCurrentEnvColors();
             p.SendCurrentMapAppearance();
             p.SendCurrentBlockPermissions();

@@ -99,14 +99,14 @@ namespace MCGalaxy.Games {
             // Show message for non-CPE clients
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != game.Map || pl.HasCpeExt(CpeExt.MessageTypes)) continue;
+                if (pl.level != game.Map || pl.Supports(CpeExt.MessageTypes)) continue;
                 pl.SendMessage("You have 20 seconds to vote for the next map");
             }
             
             for (int i = 0; i < 20; i++) {
                 players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (pl.level != game.Map || !pl.HasCpeExt(CpeExt.MessageTypes)) continue;
+                    if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");
                 }
                 Thread.Sleep(1000);
@@ -150,7 +150,7 @@ namespace MCGalaxy.Games {
             const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
             string line2 = "&a" + Candidate1 + "&e, &b" + Candidate2 + "&e, &c" + Candidate3;
             
-            if (p.HasCpeExt(CpeExt.MessageTypes)) {
+            if (p.Supports(CpeExt.MessageTypes)) {
                 p.SendCpeMessage(CpeMessageType.BottomRight3, line1);
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line2);
             } else {

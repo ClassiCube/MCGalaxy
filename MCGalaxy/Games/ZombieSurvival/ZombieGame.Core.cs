@@ -234,7 +234,7 @@ namespace MCGalaxy.Games {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != Map) continue;
-                CpeMessageType type = announce && p.HasCpeExt(CpeExt.MessageTypes)
+                CpeMessageType type = announce && p.Supports(CpeExt.MessageTypes)
                     ? CpeMessageType.Announcement : CpeMessageType.Normal;
                 
                 p.Send(Packet.Message(message, type, p.hasCP437));
@@ -258,7 +258,7 @@ namespace MCGalaxy.Games {
                 p.Game.InvisibilityTime = left;
                 
                 string msg = "&bInvisibility for &a" + left;
-                if (p.HasCpeExt(CpeExt.MessageTypes)) {
+                if (p.Supports(CpeExt.MessageTypes)) {
                     p.SendCpeMessage(CpeMessageType.BottomRight2, msg);
                 } else {
                     Player.Message(p, msg);

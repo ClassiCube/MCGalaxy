@@ -92,7 +92,7 @@ namespace MCGalaxy {
             List[col.Code] = col;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!p.HasCpeExt(CpeExt.TextColors)) continue;
+                if (!p.Supports(CpeExt.TextColors)) continue;
                 p.Send(Packet.SetTextColor(col));
             }
             SaveList();

@@ -92,7 +92,7 @@ namespace MCGalaxy {
         }
 
         /// <summary> Returns whether this player's client supports the given CPE extension. </summary>
-        public bool HasCpeExt(string extName, int version = 1) {
+        public bool Supports(string extName, int version = 1) {
             if (!hasCpe) return false;
             ExtEntry ext = FindExtension(extName);
             return ext != null && ext.ClientExtVersion == version;
@@ -104,7 +104,7 @@ namespace MCGalaxy {
             if (!hasBlockDefs) side = level.RawFallback(side);
             if (!hasBlockDefs) edge = level.RawFallback(edge);
             
-            if (HasCpeExt(CpeExt.EnvMapAspect)) {
+            if (Supports(CpeExt.EnvMapAspect)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
@@ -121,7 +121,7 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.Config.CloudsSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.Config.WeatherSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.Config.ExpFog ? 1 : 0));
-            } else if (HasCpeExt(CpeExt.EnvMapAppearance, 2)) {
+            } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
@@ -131,7 +131,7 @@ namespace MCGalaxy {
                 Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel,
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
-            } else if (HasCpeExt(CpeExt.EnvMapAppearance)) {
+            } else if (Supports(CpeExt.EnvMapAppearance)) {
                 string url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, level.Config.EdgeLevel, hasCP437));
             }
@@ -166,7 +166,7 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentBlockPermissions() {
-            if (!HasCpeExt(CpeExt.BlockPermissions)) return;
+            if (!Supports(CpeExt.BlockPermissions)) return;
             
             // Write the block permissions as one bulk TCP packet
             int count = NumBlockPermissions();

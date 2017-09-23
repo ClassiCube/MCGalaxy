@@ -139,8 +139,11 @@ namespace MCGalaxy {
             if (id == Entities.SelfID) pos.Y -= 22;
             name = Colors.Cleanup(name, dst.hasTextColors);
             
-            if (dst.hasExtList) {
+            if (dst.Supports(CpeExt.ExtPlayerList, 2)) {
                 dst.Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
+            } else if (dst.hasExtList) {
+                dst.Send(Packet.ExtAddEntity(id, skin, name, dst.hasCP437));
+                dst.Send(Packet.Teleport(id, pos, rot, dst.hasExtPositions));
             } else {
                 dst.Send(Packet.AddEntity(id, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             }
@@ -149,7 +152,7 @@ namespace MCGalaxy {
                 dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
             }
             
-            if (dst.HasCpeExt(CpeExt.EntityProperty)) {
+            if (dst.Supports(CpeExt.EntityProperty)) {
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX)));
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ)));
             }
@@ -186,7 +189,7 @@ namespace MCGalaxy {
             entity.ModelBB = AABB.ModelAABB(model, lvl);
             
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.ChangeModel)) continue;
+                if (pl.level != lvl || !pl.Supports(CpeExt.ChangeModel)) continue;
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
@@ -217,7 +220,7 @@ namespace MCGalaxy {
             if (prop == EntityProp.RotY) entity.SetYawPitch(rot.RotY, rot.HeadX);
 
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.HasCpeExt(CpeExt.EntityProperty)) continue;
+                if (pl.level != lvl || !pl.Supports(CpeExt.EntityProperty)) continue;
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;

@@ -185,7 +185,7 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
                 
                 pl.Send(def.MakeDefinePacket(pl));
-                if (pl.HasCpeExt(CpeExt.BlockPermissions))
+                if (pl.Supports(CpeExt.BlockPermissions))
                     pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
             }
             Save(global, level);
@@ -220,7 +220,7 @@ namespace MCGalaxy {
                 if (!global && pl.level != level) continue;
                 if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
 
-                if (!pl.HasCpeExt(CpeExt.InventoryOrder)) continue;
+                if (!pl.Supports(CpeExt.InventoryOrder)) continue;
                 pl.Send(Packet.SetInventoryOrder(raw, order));
             }
         }
@@ -282,9 +282,9 @@ namespace MCGalaxy {
         }
         
         public byte[] MakeDefinePacket(Player pl) {
-            if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
+            if (pl.Supports(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
                 return Packet.DefineBlockExt(this, true, pl.hasCP437);
-            } else if (pl.HasCpeExt(CpeExt.BlockDefinitionsExt) && Shape != 0) {
+            } else if (pl.Supports(CpeExt.BlockDefinitionsExt) && Shape != 0) {
                 return Packet.DefineBlockExt(this, false, pl.hasCP437);
             } else {
                 return Packet.DefineBlock(this, pl.hasCP437);

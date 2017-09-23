@@ -55,7 +55,7 @@ namespace MCGalaxy.Core {
             if (!short.TryParse(reach, out reachDist)) return;
             p.ReachDistance = reachDist / 32f;
             
-            if (p.HasCpeExt(CpeExt.ClickDistance))
+            if (p.Supports(CpeExt.ClickDistance))
                 p.Send(Packet.ClickDistance(reachDist));
         }
         

@@ -303,7 +303,7 @@ namespace MCGalaxy {
         
         void HandleMovement(byte[] buffer, int offset) {
             if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos); return; }
-            if (HasCpeExt(CpeExt.HeldBlock)) {
+            if (Supports(CpeExt.HeldBlock)) {
                 RawHeldBlock = ExtBlock.FromRaw(buffer[offset + 1]);
             }
             
@@ -490,7 +490,7 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (HasCpeExt(CpeExt.LongerMessages) && continued != 0) {
+            if (Supports(CpeExt.LongerMessages) && continued != 0) {
                 partialMessage += text;
                 if (text.Length < NetUtils.StringSize) partialMessage += " ";
                 return true;

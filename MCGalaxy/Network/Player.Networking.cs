@@ -128,7 +128,7 @@ namespace MCGalaxy {
             retryTag: try {
                 foreach (string raw in LineWrapper.Wordwrap(message)) {
                     string line = raw;
-                    if (!HasCpeExt(CpeExt.EmoteFix) && LineEndsInEmote(line))
+                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line))
                         line += '\'';
 
                     Send(Packet.Message(line, (CpeMessageType)id, hasCP437));
@@ -150,7 +150,7 @@ namespace MCGalaxy {
         }
         
         public void SendCpeMessage(CpeMessageType type, string message, bool colorParse = true) {
-            if (type != CpeMessageType.Normal && !HasCpeExt(CpeExt.MessageTypes)) {
+            if (type != CpeMessageType.Normal && !Supports(CpeExt.MessageTypes)) {
                 if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
             }
@@ -166,7 +166,7 @@ namespace MCGalaxy {
             OnSendingMotdEvent.Call(this, packet);
             Send(packet);
             
-            if (!HasCpeExt(CpeExt.HackControl)) return;
+            if (!Supports(CpeExt.HackControl)) return;
             Send(Hacks.MakeHackControl(this));
             if (Game.Referee)
                 Send(Packet.HackControl(true, true, true, true, true, -1));
@@ -200,7 +200,7 @@ namespace MCGalaxy {
                     }
                     BlockDefinition.SendLevelCustomBlocks(this);
                     
-                    if (HasCpeExt(CpeExt.InventoryOrder)) {
+                    if (Supports(CpeExt.InventoryOrder)) {
                         BlockDefinition.SendLevelInventoryOrder(this);
                     }
                 }
