@@ -35,6 +35,7 @@ namespace MCGalaxy.Commands.Chatting {
             }
             if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}", false); return; }
             
+            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug", false);
             if (hugType == "deadly") {
                 if (!CheckExtraPerm(p, 1)) return;
                 Player target = PlayerInfo.FindMatches(p, args[0]);
@@ -44,8 +45,7 @@ namespace MCGalaxy.Commands.Chatting {
                     MessageTooHighRank(p, "&cdeath-hug%S", true); return;
                 }
                 target.HandleDeath((ExtBlock)Block.Stone, "@p %Sdied from a %cdeadly hug.");
-            }
-            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug", false); return;
+            } 
         }
         
         public override void Help(Player p) {
