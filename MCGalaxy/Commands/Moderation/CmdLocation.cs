@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Moderation {
                 country = client.DownloadString("http://ipinfo.io/" + ip + "/country");
                 country = country.Replace("\n", "");
             }
-            Player.Message(p, "The IP of &a" + target + " %Shas been traced to: &b" + country);
+            Player.Message(p, "The IP of {0} %Shas been traced to: &b" + country, PlayerInfo.GetColoredName(p, target));
         }
         
         public override void Help(Player p) {
