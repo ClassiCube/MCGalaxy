@@ -89,6 +89,8 @@ namespace MCGalaxy {
 
         static string Reduce(string text) {
             text = text.ToLower();
+            text = Colors.Strip(text);
+            
             for (int i = 0; i < reduceKeys.Length; i++)
                 text = text.Replace(reduceKeys[i], reduceValues[i]);
             return text;
