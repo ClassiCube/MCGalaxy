@@ -239,7 +239,7 @@ namespace MCGalaxy {
         SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
         CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
         WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
-        SidesOffset = 9,
+        SidesOffset = 9, SkyboxHorSpeed = 10, SkyboxVerSpeed = 11,
     }
     
     public enum EntityProp : byte {

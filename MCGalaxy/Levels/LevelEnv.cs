@@ -146,11 +146,11 @@ namespace MCGalaxy {
                 return false;
             } else if (value < min || value > max) {
                 Player.Message(p, "Env: \"{0}\" must be between {1} and {2}.",
-                               value, min.ToString("F2"), max.ToString("F2"));
+                               value, min.ToString("F4"), max.ToString("F4"));
                 return false;
             } else {
                 modify = (int)(value * scale);
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value.ToString("F2"));
+                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value.ToString("F4"));
                 return true;
             }
         }

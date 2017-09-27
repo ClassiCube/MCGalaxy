@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {
     public sealed class CmdEnvironment : Command {
@@ -90,6 +91,12 @@ namespace MCGalaxy.Commands.CPE {
             } else if (opt == "expfog") {
                 LevelEnv.SetBool(p, value, EnvProp.ExpFog,
                                  "exp fog", false, ref lvl.Config.ExpFog);
+            } else if (opt == "skyboxhorspeed" || opt == "skyboxhor") {
+                LevelEnv.SetFloat(p, value, EnvProp.SkyboxHorSpeed, 1024, "skybox horizontal speed",
+                                  0, ref lvl.Config.SkyboxHorSpeed, -32767, 32767);
+            }  else if (opt == "skyboxverspeed" || opt == "skyboxver") {
+                LevelEnv.SetFloat(p, value, EnvProp.SkyboxVerSpeed, 1024, "skybox vertical speed",
+                                  0, ref lvl.Config.SkyboxVerSpeed, -32767, 32767);
             } else {
                 return false;
             }
@@ -99,20 +106,32 @@ namespace MCGalaxy.Commands.CPE {
         
         static void ResetEnv(Player p) {
             Level lvl = p.level;
+            LevelConfig cfg = lvl.Config;
             SetPreset(p, "normal");
-            LevelEnv.SetWeather(p, lvl, "normal");
-            
-            LevelEnv.SetBlock(p, "normal", EnvProp.EdgeBlock,
-                              "edge block", Block.Water, ref lvl.Config.HorizonBlock);
-            LevelEnv.SetBlock(p, "normal", EnvProp.SidesBlock,
-                              "sides block", Block.Bedrock, ref lvl.Config.EdgeBlock);
-            
-            LevelEnv.SetShort(p, "normal", EnvProp.EdgeLevel,
-                              "water level", (short)(lvl.Height / 2), ref lvl.Config.EdgeLevel);
-            LevelEnv.SetShort(p, "normal", EnvProp.SidesOffset,
-                              "bedrock offset", -2, ref lvl.Config.SidesOffset);
-            LevelEnv.SetShort(p, "normal", EnvProp.CloudsLevel,
-                              "clouds height", (short)(lvl.Height + 2), ref lvl.Config.CloudsHeight);
+            cfg.Weather = 0;
+            cfg.CloudsHeight = (short)(lvl.Height + 2);
+            cfg.EdgeLevel = (short)(lvl.Height / 2);
+            cfg.SidesOffset = -2;
+            cfg.MaxFogDistance = 0;
+            cfg.CloudsSpeed = 256;
+            cfg.WeatherSpeed = 256;
+            cfg.WeatherFade = 128;
+            cfg.EdgeBlock = Block.Bedrock;
+            cfg.HorizonBlock = Block.Water;
+            cfg.ExpFog = false;
+            cfg.SkyboxHorSpeed = 0;
+            cfg.SkyboxVerSpeed = 0;
+                   
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != lvl) continue;
+                pl.SendCurrentMapAppearance();
+                
+                if (pl.Supports(CpeExt.EnvWeatherType)) {
+                    pl.Send(Packet.EnvWeatherType(0));
+                }
+            }
+            Level.SaveSettings(lvl);
         }
         
         static bool SetPreset(Player p,  string value) {
@@ -181,9 +200,10 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Environment [variable] [value]");
-            Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level");
-            Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight");
-            Player.Message(p, "%H   cloudspeed, weatherspeed, weatherfade, expfog, sidesoffset");
+            Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
+            Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
+            Player.Message(p, "%H   weatherspeed, weatherfade, expfog, sidesoffset,");
+            Player.Message(p, "%H   skyboxhorspeed, skyboxverspeed");
             Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
             Player.Message(p, "%T/Environment normal %H- resets all variables");
         }

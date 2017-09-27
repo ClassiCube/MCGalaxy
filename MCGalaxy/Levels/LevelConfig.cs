@@ -94,6 +94,13 @@ namespace MCGalaxy {
         /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
         [ConfigInt("weather-fade", "Env", 128, short.MinValue, short.MaxValue)]
         public int WeatherFade = 128;
+        /// <summary> Skybox horizontal speed, in units of 1024ths. Default is 0 (0 speed). </summary>
+        [ConfigInt("skybox-hor-speed", "Env", 0, short.MinValue, short.MaxValue)]
+        public int SkyboxHorSpeed = 0;
+        /// <summary> Skybox vertical speed, in units of 1024ths. Default is 0 (0 speed). </summary>
+        [ConfigInt("skybox-ver-speed", "Env", 0, short.MinValue, short.MaxValue)]
+        public int SkyboxVerSpeed = 0;
+        
         /// <summary> The block which will be displayed on the horizon. </summary>
         [ConfigByte("HorizonBlock", "Env", Block.Water)]
         public byte HorizonBlock = Block.Water;
