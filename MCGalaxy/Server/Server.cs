@@ -84,15 +84,6 @@ namespace MCGalaxy {
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
             
-            try {
-                if (File.Exists("Restarter.exe"))
-                    File.Delete("Restarter.exe");
-            } catch { }
-            try {
-                if (File.Exists("Restarter.pdb"))
-                    File.Delete("Restarter.pdb");
-            } catch { }
-            
             CheckFile("MySql.Data.dll");
             CheckFile("System.Data.SQLite.dll");
             CheckFile("sqlite3_x32.dll");
