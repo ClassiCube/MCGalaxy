@@ -191,6 +191,12 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "Weather fade rate: &b{0}%%S, Exponential fog: {1}",
                            (cfg.WeatherFade / 128).ToString("F2"),
                            cfg.ExpFog ? "&aON" : "&cOFF");
+            Player.Message(p, "Skybox rotations: Horizontal &b{0}%S, vertical &b{1}",
+                           SkyboxSpeed(cfg.SkyboxHorSpeed), SkyboxSpeed(cfg.SkyboxVerSpeed));
+        }
+        
+        static string SkyboxSpeed(int angle) { 
+            return angle == 0 ? "none" : (angle / 1024.0).ToString("F3") + "/s";
         }
         
         class MapInfoData {

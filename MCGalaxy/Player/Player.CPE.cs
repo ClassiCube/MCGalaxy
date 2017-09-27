@@ -111,8 +111,7 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapUrl(url, hasCP437));
                 
                 Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
-                Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));
-                
+                Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));               
                 Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.Config.EdgeLevel));
                 Send(Packet.EnvMapProperty(EnvProp.SidesOffset, level.Config.SidesOffset));
                 Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.Config.CloudsHeight));
@@ -121,6 +120,8 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.Config.CloudsSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.Config.WeatherSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.Config.ExpFog ? 1 : 0));
+                Send(Packet.EnvMapProperty(EnvProp.SkyboxHorSpeed, level.Config.SkyboxHorSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.SkyboxVerSpeed, level.Config.SkyboxVerSpeed));
             } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
                 string url = GetTextureUrl();
                 // reset all other textures back to client default.
