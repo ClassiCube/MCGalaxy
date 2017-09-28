@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.CPE {
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 2) { Help(p, cmd); return; }
             ExtBlock src, dst;
-            if (!CheckBlock(p, parts[1], out src)) return;
+            if (!CheckBlock(p, parts[1], out src, true)) return;
             if (!CheckBlock(p, parts[2], out dst)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
@@ -535,10 +535,11 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool CheckBlock(Player p, string arg, out ExtBlock block) {
+        static bool CheckBlock(Player p, string arg, out ExtBlock block, bool allowAir = false) {
             block = ExtBlock.Invalid;
             int raw = 0;
-            bool success = CommandParser.GetInt(p, arg, "Block ID", ref raw, 0, 254);
+            int min = allowAir ? 0 : 1;
+            bool success = CommandParser.GetInt(p, arg, "Block ID", ref raw, min, 254);
             
             block = ExtBlock.FromRaw((byte)raw);
             return success;
