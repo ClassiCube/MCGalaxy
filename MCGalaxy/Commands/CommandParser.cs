@@ -145,9 +145,9 @@ namespace MCGalaxy.Commands {
         
         internal static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
             return
-                GetCoord(p, args[argsOffset + 0], P.X, "X", out P.X) &&
-                GetCoord(p, args[argsOffset + 1], P.Y, "Y", out P.Y) &&
-                GetCoord(p, args[argsOffset + 2], P.Z, "Z", out P.Z);
+                GetCoord(p, args[argsOffset + 0], P.X, "X coordinate", out P.X) &&
+                GetCoord(p, args[argsOffset + 1], P.Y, "Y coordinate", out P.Y) &&
+                GetCoord(p, args[argsOffset + 2], P.Z, "Z coordinate", out P.Z);
         }
         
         static bool GetCoord(Player p, string arg, int cur, string axis, out int value) {
@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands {
             if (relative) arg = arg.Substring(1);
             value = 0;
             
-            if (!GetInt(p, arg, axis + " coordinate", ref value)) return false;
+            if (!GetInt(p, arg, axis, ref value)) return false;
             if (relative) value += cur;
             return true;
         }
