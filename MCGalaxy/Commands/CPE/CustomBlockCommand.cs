@@ -110,8 +110,9 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
             BlockDefinition srcDef = defs[src.RawID], dstDef = defs[dst.RawID];
-            if (srcDef == null && src.BlockID < Block.CpeCount)
+            if (srcDef == null && src.BlockID < Block.CpeCount) {
                 srcDef = DefaultSet.MakeCustomBlock(src.BlockID);
+            }
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
             if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
             
@@ -309,10 +310,14 @@ namespace MCGalaxy.Commands.CPE {
             ExtBlock block;
             if (!CheckBlock(p, parts[1], out block)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition def = defs[block.RawID];
+            BlockDefinition def = defs[block.RawID], globalDef = BlockDefinition.GlobalDefs[block.RawID];
             
             if (def == null && block.BlockID < Block.CpeCount) {
                 def = DefaultSet.MakeCustomBlock(block.BlockID);
+                AddBlock(p, def, global, cmd, BlockDefinition.DefaultProps(block));
+            }
+            if (def != null && !global && def == globalDef) {
+                def = globalDef.Copy();
                 AddBlock(p, def, global, cmd, BlockDefinition.DefaultProps(block));
             }
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
