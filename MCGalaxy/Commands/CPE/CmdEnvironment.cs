@@ -75,10 +75,10 @@ namespace MCGalaxy.Commands.CPE {
                                   "max fog distance", 0, ref lvl.Config.MaxFogDistance);
             } else if (opt == "cloudspeed" || opt == "cloudsspeed") {
                 LevelEnv.SetFloat(p, value, EnvProp.CloudsSpeed, 256, "clouds speed",
-                                  256, ref lvl.Config.CloudsSpeed, -32767, 32767);
+                                  256, ref lvl.Config.CloudsSpeed, -0xFFFFFF, 0xFFFFFF);
             } else if (opt == "weatherspeed") {
                 LevelEnv.SetFloat(p, value, EnvProp.WeatherSpeed, 256, "weather speed",
-                                  256, ref lvl.Config.WeatherSpeed, -32767, 32767);
+                                  256, ref lvl.Config.WeatherSpeed, -0xFFFFFF, 0xFFFFFF);
             } else if (opt == "weatherfade") {
                 LevelEnv.SetFloat(p, value, EnvProp.WeatherFade, 128, "weather fade rate",
                                   128, ref lvl.Config.WeatherFade, 0, 255);
@@ -93,10 +93,10 @@ namespace MCGalaxy.Commands.CPE {
                                  "exp fog", false, ref lvl.Config.ExpFog);
             } else if (opt == "skyboxhorspeed" || opt == "skyboxhor") {
                 LevelEnv.SetFloat(p, value, EnvProp.SkyboxHorSpeed, 1024, "skybox horizontal speed",
-                                  0, ref lvl.Config.SkyboxHorSpeed, -32767, 32767);
+                                  0, ref lvl.Config.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);
             }  else if (opt == "skyboxverspeed" || opt == "skyboxver") {
                 LevelEnv.SetFloat(p, value, EnvProp.SkyboxVerSpeed, 1024, "skybox vertical speed",
-                                  0, ref lvl.Config.SkyboxVerSpeed, -32767, 32767);
+                                  0, ref lvl.Config.SkyboxVerSpeed, -0xFFFFFF, 0xFFFFFF);
             } else {
                 return false;
             }
