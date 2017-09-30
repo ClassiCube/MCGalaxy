@@ -1,53 +1,53 @@
 v 1.8.9.7
-* Added: Bots can have text when clicked on
-* Added: /ignore irc [nick]
-* Added: Skybox horizontal/vertical rotation
-* Added: Can specify max number of bots allowed on a map
-* Added: Custom kill/death messages for bots
-* Added: /help emotes
-* Added: /bot rename, for name of bot used in commands
-* Added: /setspawn player
-* Added: /donotmark, toggles whether clicking blocks counts as a /mark
-* Fixed: Being able to spam /pony
-* Fixed: Being unable to do /transform scale 63/64
-* Fixed: Fly animal AI with custom blocks.
-* Fixed: Bots with have jump AI, having wrong position on map reload
-* Fixed: /summon shouldn't reset AFK
-* Fixed: opchat/adminchat/PM not triggering auto mute
-* Fixed: /botset kill not working properly when bot has an AI
-* Fixed: Falling into 2 block water, rope, not resetting fall height
-* Fixed: /tp x y z with /back, /back preserves rotation
-* Fixed: 'painted' flag not added to BlockDB when /paint on
-* Fixed: Doing portal/mb show on a map without portals/mbs causing error
-* Fixed: Rare case when you land on edge of block and don't die from falling
-* Fixed: Not properly dying from falling when non-full block
-* Fixed: Block permissions being lost if core block was renamed
-* Fixed: Chat tokens not working properly in welcome message
-* Fixed: Train rails with custom blocks
-* Fixed: ClassicalSharp 0.4 crashing
-* Fixed: Colour codes bypass swear filters
-* Fixed: placing red wool to detonate /c4, not working
-* Fixed: /static tree rainforest 16 not working properly
-* Improved: Document more flags in /help map motd
-* Improved: /infoswap now just swaps names in database
-* Improved: Don't convert percents to ampersands when part of url
-* Improved:  Better message when portal destination map can't be loaded
-* Improved: /mark shows nothing when /ignore drawoutput on
-* Improved: Optimise bot movement
-* Improved: Relative coords in /place and /mark
-* Improved: /mute mutes for auto spam time, if no interval given
-* Improved: Any command can be restricted from MB usage now
-* Improved: /os spawn aliases to /os setspawn now
-* Improved: Skin also filters dropbox urls like /texture
-* Improved: Validate build/access permissions for world changing commands
-* Improved: /baninfo shows tempban details too
-* Improved: Reach distance check is performed for all ranks now.
-* Improved: /patrol won't repatrol players patrolled in last 15 seconds
-* Improved: /deletelvl also deletes [map].lvl.backup in levels folder
-* Improved: Can use hug/high5 on yourself
-* Improved: Don't allow replacing air with gb/lb
-* Improved: /lb edit auto copies a /gb to a /lb
-* Removed: /chain
+Added: Bots can have text when clicked on
+Added: /ignore irc [nick]
+Added: Skybox horizontal/vertical rotation
+Added: Can specify max number of bots allowed on a map
+Added: Custom kill/death messages for bots
+Added: /help emotes
+Added: /bot rename, for name of bot used in commands
+Added: /setspawn player
+Added: /donotmark, toggles whether clicking blocks counts as a /mark
+Fixed: Being able to spam /pony
+Fixed: Being unable to do /transform scale 63/64
+Fixed: Fly animal AI with custom blocks.
+Fixed: Bots with have jump AI, having wrong position on map reload
+Fixed: /summon shouldn't reset AFK
+Fixed: opchat/adminchat/PM not triggering auto mute
+Fixed: /botset kill not working properly when bot has an AI
+Fixed: Falling into 2 block water, rope, not resetting fall height
+Fixed: /tp x y z with /back, /back preserves rotation
+Fixed: 'painted' flag not added to BlockDB when /paint on
+Fixed: Doing portal/mb show on a map without portals/mbs causing error
+Fixed: Rare case when you land on edge of block and don't die from falling
+Fixed: Not properly dying from falling when non-full block
+Fixed: Block permissions being lost if core block was renamed
+Fixed: Chat tokens not working properly in welcome message
+Fixed: Train rails with custom blocks
+Fixed: ClassicalSharp 0.4 crashing
+Fixed: Colour codes bypass swear filters
+Fixed: placing red wool to detonate /c4, not working
+Fixed: /static tree rainforest 16 not working properly
+Improved: Document more flags in /help map motd
+Improved: /infoswap now just swaps names in database
+Improved: Don't convert percents to ampersands when part of url
+Improved:  Better message when portal destination map can't be loaded
+Improved: /mark shows nothing when /ignore drawoutput on
+Improved: Optimise bot movement
+Improved: Relative coords in /place and /mark
+Improved: /mute mutes for auto spam time, if no interval given
+Improved: Any command can be restricted from MB usage now
+Improved: /os spawn aliases to /os setspawn now
+Improved: Skin also filters dropbox urls like /texture
+Improved: Validate build/access permissions for world changing commands
+Improved: /baninfo shows tempban details too
+Improved: Reach distance check is performed for all ranks now.
+Improved: /patrol won't repatrol players patrolled in last 15 seconds
+Improved: /deletelvl also deletes [map].lvl.backup in levels folder
+Improved: Can use hug/high5 on yourself
+Improved: Don't allow replacing air with gb/lb
+Improved: /lb edit auto copies a /gb to a /lb
+Removed: /chain
 
 v 1.8.9.6
 Added: Support for reordering inventory
