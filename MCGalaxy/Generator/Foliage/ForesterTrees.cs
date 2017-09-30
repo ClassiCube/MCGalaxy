@@ -315,6 +315,7 @@ namespace MCGalaxy.Generator.Foliage {
             
             // TODO: fCraft is yEnd - 1, ????
             // Outdated, since maps can be twice as tall now.
+            foliage_coords.Clear();
             for (int y = yend; y != ystart; y--)
                 for (int i = 0; i < num_of_clusters_per_y; i++)
             {
