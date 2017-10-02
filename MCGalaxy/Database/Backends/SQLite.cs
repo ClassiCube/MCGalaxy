@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.IO;
 using System.Text;
 
 namespace MCGalaxy.SQL {
@@ -129,7 +130,19 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
-        }        
+        }
+        
+        public override void PrintSchema(string table, TextWriter w) {
+            const string syntax = "SELECT sql FROM sqlite_master WHERE tbl_name = @0 AND type = 'table'";
+            using (DataTable schema = Database.Fill(syntax + CaselessWhereSuffix, table)) {
+                foreach (DataRow row in schema.Rows) {
+                    string sql = row[0].ToString();
+                    sql = sql.Replace(" " + table, " `" + table + "`");
+                    sql = sql.Replace("CREATE TABLE `" + table + "`", "CREATE TABLE IF NOT EXISTS `" + table + "`");
+                    w.WriteLine(sql + ";");
+                }
+            }
+        }
                 
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateTable(table);

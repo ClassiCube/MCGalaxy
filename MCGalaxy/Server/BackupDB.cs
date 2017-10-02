@@ -51,56 +51,11 @@ namespace MCGalaxy {
             sql.WriteLine("-- --------------------------------------------------------");
             sql.WriteLine("-- Table structure for table `{0}`", tableName);
             sql.WriteLine();
-            WriteTableSchema(tableName, sql);
+            Database.Backend.PrintSchema(tableName, sql);
             
             TableDumper dumper = new TableDumper();
             dumper.DumpTable(sql, tableName);
             dumper.sql = null;
-        }
-        
-        static void WriteTableSchema(string tableName, StreamWriter sql) {
-            if (ServerConfig.UseMySQL) {
-                string pri = "";
-                sql.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", tableName);
-                
-                using (DataTable schema = Database.Fill("DESCRIBE `" + tableName + "`")) {
-                    string[] rowParams = new string[schema.Columns.Count];
-                    foreach (DataRow row in schema.Rows) {
-                        //Save the info contained to file
-                        List<string> tmp = new List<string>();
-                        for (int col = 0; col < schema.Columns.Count; col++)
-                            tmp.Add(row[col].ToString());
-                        
-                        rowParams = tmp.ToArray();
-                        rowParams[2] = (rowParams[2].CaselessEq("no") ? "NOT " : "DEFAULT ") + "NULL";
-                        pri += (rowParams[3].CaselessEq("pri") ? rowParams[0] + ";" : "");
-                        sql.WriteLine("`{0}` {1} {2}" + (rowParams[5].Equals("") ? "" : " {5}") + (pri.Equals("") && row == schema.Rows[schema.Rows.Count - 1] ? "" : ","), rowParams);
-                    }
-                }
-                
-                if (pri.Length > 0) {
-                    string[] tmp = pri.Substring(0, pri.Length - 1).Split(';');
-                    sql.Write("PRIMARY KEY (`");
-                    foreach (string prim in tmp) {
-                        sql.Write(prim);
-                        sql.Write("`" + (tmp[tmp.Length - 1].Equals(prim) ? ")" : ", `"));
-                    }
-                }
-                sql.WriteLine(");");
-            } else {
-                const string syntax = "SELECT sql FROM sqlite_master WHERE tbl_name = @0 AND type = 'table'";
-                using (DataTable tableSQL = Database.Fill(syntax + Database.Backend.CaselessWhereSuffix, tableName))
-                {
-                    //just print out the data in the table.
-                    foreach (DataRow row in tableSQL.Rows) {
-                        string sqlSyntax = row[0].ToString();
-                        sqlSyntax = sqlSyntax.Replace(" " + tableName, " `" + tableName + "`");
-                        sqlSyntax = sqlSyntax.Replace("CREATE TABLE `" + tableName + "`", "CREATE TABLE IF NOT EXISTS `" + tableName + "`");
-                        sql.WriteLine(sqlSyntax + ";");
-                    }
-                }
-            }
-            sql.WriteLine();
         }
         
         internal static void ReplaceDatabase(Stream sql) {

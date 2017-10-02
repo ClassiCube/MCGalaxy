@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Text;
 
 namespace MCGalaxy.SQL {
@@ -90,6 +91,9 @@ namespace MCGalaxy.SQL {
             string syntax = "DROP TABLE `" + table + "`";
             Database.Execute(syntax);
         }
+        
+        /// <summary> Prints/dumps the table schema of the given table. </summary>
+        public abstract void PrintSchema(string table, TextWriter w);
         
         
         // == Higher level column functions ==

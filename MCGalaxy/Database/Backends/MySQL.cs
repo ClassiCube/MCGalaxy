@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Text;
 using MySql.Data.MySqlClient;
 
@@ -121,6 +122,31 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
+        }        
+        
+        public override void PrintSchema(string table, TextWriter w) {
+            string pri = "";
+            w.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", table);
+            
+            using (DataTable schema = Database.Fill("DESCRIBE `" + table + "`")) {
+                string[] data = new string[schema.Columns.Count];
+                foreach (DataRow row in schema.Rows) {
+                    for (int col = 0; col < schema.Columns.Count; col++) {
+                        data[col] = row[col].ToString();
+                    }
+                    
+                    if (data[3].CaselessEq("pri")) pri = data[0];
+                    string value = data[2].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
+                    if (data[4].Length > 0) value += " DEFAULT '" + data[4] + "'";
+                    if (data[5].Length > 0) value += " " + data[5];
+
+                    string suffix = pri.Length == 0 && row == schema.Rows[schema.Rows.Count - 1] ? "" : ",";
+                    w.WriteLine("`{0}` {1} {2}{3}", row[0], row[1], value, suffix);
+                }
+            }
+            
+            if (pri.Length > 0) w.Write("PRIMARY KEY (`{0}`)", pri);
+            w.WriteLine(");");
         }
                 
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {

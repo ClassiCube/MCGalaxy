@@ -38,8 +38,8 @@ namespace MCGalaxy {
             new ColumnDesc("totalCuboided", ColumnType.Int64),
             new ColumnDesc("totalKicked", ColumnType.Int24),
             new ColumnDesc("TimeSpent", ColumnType.VarChar, 20),
-            new ColumnDesc("color", ColumnType.VarChar, 6),
-            new ColumnDesc("title_color", ColumnType.VarChar, 6),
+            new ColumnDesc("color", ColumnType.VarChar, 2),
+            new ColumnDesc("title_color", ColumnType.VarChar, 2),
         };
         
         static ColumnDesc[] createOpstats = new ColumnDesc[] {
