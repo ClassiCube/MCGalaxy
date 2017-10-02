@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.UpdateModel(who, model);
             
             if (p != who) {
-                Player.GlobalMessage(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
+                Player.SendChatFrom(who, who.ColoredName + "'s %Smodel was changed to a &c" + model, false);
             } else {
                 Player.Message(who, "Changed your own model to a &c" + model);
             }

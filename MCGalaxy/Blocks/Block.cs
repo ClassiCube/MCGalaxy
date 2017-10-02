@@ -90,11 +90,6 @@ namespace MCGalaxy {
                 && block < CpeCount;
         }
 
-        public static bool RightClick(byte block, bool countAir = false) {
-            if (countAir && block == Air) return true;
-            return block >= Water && block <= StillLava;
-        }
-
         public static bool BuildIn(byte block) {
             if (block == Op_Water || block == Op_Lava
                 || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
@@ -190,11 +185,5 @@ namespace MCGalaxy {
                 lvl.UpdateBlockHandlers();
             }            
         }
-        
-        [Obsolete("Use BlockPerms.CanModify()")]
-        public static bool canPlace(Player p, byte type) { return BlockPerms.UsableBy(p, type); }
-        
-        [Obsolete("Use BlockPerms.CanModify()")]
-        public static bool canPlace(LevelPermission perm, byte type) { return BlockPerms.UsableBy(perm, type); }
     }
 }

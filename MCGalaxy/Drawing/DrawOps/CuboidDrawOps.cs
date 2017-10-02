@@ -26,6 +26,11 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Hollow"; } }
         public byte Skip;
         
+        static bool CanHollow(byte block, bool andAir = false) {
+            if (andAir && block == Block.Air) return true;
+            return block >= Block.Water && block <= Block.StillLava;
+        }
+        
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             ExtBlock air = ExtBlock.Air;
@@ -36,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
             {
                 bool hollow = true;
                 byte tile = Level.GetTile(x, y, z);
-                if (!Block.RightClick(Block.Convert(tile), true) && tile != Skip) {
+                if (!CanHollow(Block.Convert(tile), true) && tile != Skip) {
                     CheckTile(x - 1, y, z, ref hollow);
                     CheckTile(x + 1, y, z, ref hollow);
                     CheckTile(x, y - 1, z, ref hollow);
@@ -53,7 +58,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         void CheckTile(int x, int y, int z, ref bool hollow) {
             byte tile = Level.GetTile((ushort)x, (ushort)y, (ushort)z);
-            if (Block.RightClick(Block.Convert(tile)) || tile == Skip)
+            if (CanHollow(Block.Convert(tile)) || tile == Skip)
                 hollow = false;
         }
     }

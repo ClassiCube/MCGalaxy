@@ -148,11 +148,6 @@ namespace MCGalaxy {
                 if (p.level == level) p.SendBlockchange(x, y, z, block);
             }
         }
-
-        [Obsolete("Use SendChatFrom() instead.")]
-        public static void GlobalChat(Player from, string message) { SendChatFrom(from, message, true); }
-        [Obsolete("Use SendChatFrom() instead.")]
-        public static void GlobalChat(Player from, string message, bool showname) { SendChatFrom(from, message, showname); }
         
         public static void SendChatFrom(Player from, string message) { SendChatFrom(from, message, true); }
         public static void SendChatFrom(Player from, string message, bool showname) {
@@ -168,11 +163,6 @@ namespace MCGalaxy {
         }
 
         public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
-        [Obsolete("Use Chat.MessageAll() instead")]
-        public static void GlobalMessage(string message) { Chat.MessageGlobal(message); }
-        [Obsolete("Use Chat.MessageAll() instead")]
-        public static void GlobalMessage(string message, bool global) { Chat.MessageGlobal(message); }
-        
         public static void GlobalIRCMessage(string srcNick, string message) {
             message = Colors.Escape(message);
             Player[] players = PlayerInfo.Online.Items; 
@@ -182,11 +172,6 @@ namespace MCGalaxy {
                 if (p.level.SeesServerWideChat && p.Chatroom == null)
                     Player.Message(p, message);
             }
-        }
-        
-        public static void GlobalMessage(Player from, string message) {
-            if (from == null) Chat.MessageGlobal(message);
-            else SendChatFrom(from, message, false);
         }
 
         public bool MarkPossessed(string marker = "") {
