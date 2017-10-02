@@ -38,8 +38,9 @@ namespace MCGalaxy {
             new ColumnDesc("totalCuboided", ColumnType.Int64),
             new ColumnDesc("totalKicked", ColumnType.Int24),
             new ColumnDesc("TimeSpent", ColumnType.VarChar, 20),
-            new ColumnDesc("color", ColumnType.VarChar, 2),
-            new ColumnDesc("title_color", ColumnType.VarChar, 2),
+            new ColumnDesc("color", ColumnType.VarChar, 6),
+            new ColumnDesc("title_color", ColumnType.VarChar, 6),
+            new ColumnDesc("Messages", ColumnType.UInt24),
         };
         
         static ColumnDesc[] createOpstats = new ColumnDesc[] {
@@ -74,10 +75,6 @@ namespace MCGalaxy {
                 Database.Backend.DeleteTable("Playercmds");
             }
 
-            // Here, since SQLite is a NEW thing from 5.3.0.0, we do not have to check for existing tables in SQLite.
-            if (!ServerConfig.UseMySQL) return;
-            // Check if the color column exists.
-            
             List<string> columns = Database.Backend.ColumnNames("Players");
             if (columns.Count == 0) return;
             
@@ -92,6 +89,9 @@ namespace MCGalaxy {
             }
             if (!columns.CaselessContains("TotalCuboided")) {
                 Database.Backend.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
+            }
+            if (!columns.CaselessContains("Messages")) {
+                Database.Backend.AddColumn("Players", new ColumnDesc("Messages", ColumnType.UInt64), "title_color");
             }
         }
     }

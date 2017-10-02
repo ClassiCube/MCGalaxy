@@ -87,9 +87,12 @@ namespace MCGalaxy.Commands.Maintenance {
                 SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
                            v => who.TotalDeleted = v, UpdateDBHi);            
             } else if (opt == "totalkicked") {
-                SetInteger(p, args, PlayerData.ColumnKicked, 1000000000, who,
+                SetInteger(p, args, PlayerData.ColumnKicked, 16777215, who,
                            v => who.TimesBeenKicked = v, UpdateDB);
-            } else if (opt == "timespent") {
+            } else if (opt == "messages") {
+                SetInteger(p, args, PlayerData.ColumnMessages, 16777215, who,
+            	           v => who.TotalMessagesSent = v, UpdateDB);
+            }  else if (opt == "timespent") {
                 SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v);
             } else if (opt == "color") {
                 SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v.Length == 0 ? who.group.Color : v));
@@ -213,7 +216,7 @@ namespace MCGalaxy.Commands.Maintenance {
 
         static void MessageValidTypes(Player p) {
             Player.Message(p, "%HValid types: %SFirstLogin, LastLogin, Logins, Title, Deaths, Money, " +
-                           "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor ");
+                           "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
         }
         
         public override void Help(Player p) {

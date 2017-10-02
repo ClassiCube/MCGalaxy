@@ -82,6 +82,8 @@ namespace MCGalaxy.DB {
             new TopStat("TimeSpent", PlayerData.DBTable, 
                         PlayerData.ColumnTimeSpent, MostTime, FormatTimespan,
                         false, " CAST(TimeSpent as unsigned) "),
+            new TopStat("Messages", PlayerData.DBTable, 
+                        PlayerData.ColumnMessages, MostMessages, FormatInteger),
         };
         
         static string MostLogins()    { return "Most logins"; }
@@ -90,13 +92,14 @@ namespace MCGalaxy.DB {
         static string MostNewest()    { return "Newest players"; }
         static string MostOldest()    { return "Oldest players"; }
         static string MostRecent()    { return "Most recent players"; }
-        static string MostNotRecent() { return "Least recent players"; }        
+        static string MostNotRecent() { return "Least recent players"; }
         static string MostKicked()    { return "Most times kicked"; }
         static string MostModified()  { return "Most blocks modified"; }
         static string MostDrawn()     { return "Most blocks drawn"; }
-        static string MostPlaced()    { return "Most blocks placed"; }        
+        static string MostPlaced()    { return "Most blocks placed"; }
         static string MostDeleted()   { return "Most blocks deleted"; }
-        static string MostTime()      { return "Most time spent"; }        
+        static string MostTime()      { return "Most time spent"; }
+        static string MostMessages()  { return "Most messages written"; }
         
         public static string FormatInteger(string input) {
             long value = PlayerData.ParseLong(input);

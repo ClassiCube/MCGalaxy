@@ -40,10 +40,11 @@ namespace MCGalaxy.DB {
         
         public const string ColumnTotalBlocks = "totalBlocks";
         public const string ColumnTotalCuboided = "totalCuboided";
+        public const string ColumnMessages = "Messages";
         
         public string Name, Color, Title, TitleColor, IP;
         public DateTime FirstLogin, LastLogin;
-        public int DatabaseID, Money, Deaths, Logins, Kicks;
+        public int DatabaseID, Money, Deaths, Logins, Kicks, Messages;
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TotalTime;
         
@@ -55,8 +56,8 @@ namespace MCGalaxy.DB {
             
             string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");            
             Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
-                                    "totalDeaths, Money, totalBlocks, totalKicked, TimeSpent",
-                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
+                                    "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
+                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
             
             using (DataTable ids = Database.Backend.GetRows(DBTable,
                                                             "ID", "WHERE Name = @0", p.name)) {
@@ -80,13 +81,14 @@ namespace MCGalaxy.DB {
             p.titlecolor = data.TitleColor;
             p.color = data.Color;
             if (p.color.Length == 0) p.color = p.group.Color;
-            
-            p.TimesDied = data.Deaths;
+                       
             p.TotalModified = data.TotalModified;
             p.TotalDrawn = data.TotalDrawn;
             p.TotalPlaced = data.TotalPlaced;
             p.TotalDeleted = data.TotalDeleted;
             
+            p.TimesDied = data.Deaths;
+            p.TotalMessagesSent = data.Messages;            
             p.money = data.Money;
             p.TimesBeenKicked = data.Kicks;
         }
@@ -115,6 +117,7 @@ namespace MCGalaxy.DB {
             data.Deaths = ParseInt(row[ColumnDeaths].ToString());
             data.Logins = ParseInt(row[ColumnLogins].ToString());
             data.Kicks = ParseInt(row[ColumnKicked].ToString());
+            data.Messages = ParseInt(row[ColumnMessages].ToString());
             
             long blocks = ParseLong(row[ColumnTotalBlocks].ToString());
             long cuboided = ParseLong(row[ColumnTotalCuboided].ToString());
