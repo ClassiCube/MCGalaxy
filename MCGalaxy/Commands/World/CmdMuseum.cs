@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) :
-                LevelInfo.BackupPath(args[0], args[1]);
+                LevelInfo.BackupFilePath(args[0], args[1]);
             if (!File.Exists(path)) {
                 Player.Message(p, "Level or backup could not be found."); return;
             }

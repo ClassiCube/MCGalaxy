@@ -44,8 +44,9 @@ namespace MCGalaxy {
             MoveIfExists(BotsFile.BotsPath(src),
                          BotsFile.BotsPath(dst));
             
+            // TODO: Should we move backups still
             try {
-                MoveBackups(src, dst);
+                //MoveBackups(src, dst);
             } catch {
             }
             
@@ -86,29 +87,25 @@ namespace MCGalaxy {
             }
         }
         
-        static bool DirectoryEmpty(string dir) {
-            if (!Directory.Exists(dir))  return true;
-            if (Directory.GetDirectories(dir).Length > 0) return false;
-            if (Directory.GetFiles(dir).Length > 0) return false;
-            return true;
-        }
-        
-        static void MoveBackups(string src, string dst) {
-            for (int i = 1; ; i++) {
-                string oldDir = LevelInfo.BackupPath(src, i.ToString());
-                string newDir = LevelInfo.BackupPath(dst, i.ToString());
-
-                if (File.Exists(oldDir + src + ".lvl")) {
-                    Directory.CreateDirectory(newDir);
-                    File.Move(oldDir + src + ".lvl", newDir + dst + ".lvl");
-                    if (DirectoryEmpty(oldDir)) Directory.Delete(oldDir);
-                } else {
-                    if (DirectoryEmpty(ServerConfig.BackupDirectory + "/" + src + "/"))
-                        Directory.Delete(ServerConfig.BackupDirectory + "/" + src + "/");
-                    break;
-                }
+        /*static void MoveBackups(string src, string dst) {
+            string srcBase = LevelInfo.BackupBasePath(src);
+            string dstBase = LevelInfo.BackupBasePath(dst);
+            if (!Directory.Exists(srcBase)) return;
+            Directory.CreateDirectory(dstBase);
+            
+            string[] backups = Directory.GetDirectories(srcBase);
+            for (int i = 0; i < backups.Length; i++) {
+                string name = LevelInfo.BackupNameFrom(backups[i]);
+                string srcFile = LevelInfo.BackupFilePath(src, name);
+                string dstFile = LevelInfo.BackupFilePath(dst, name);                
+                string dstDir = LevelInfo.BackupDirPath(dst, name);
+                
+                Directory.CreateDirectory(dstDir);
+                File.Move(srcFile, dstFile);
+                Directory.Delete(backups[i]);
             }
-        }
+            Directory.Delete(srcBase);
+        }*/
         
         
         /// <summary> Deletes the .lvl (and related) files and database tables.

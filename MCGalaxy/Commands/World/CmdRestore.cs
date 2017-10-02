@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
             }
 
             if (!LevelInfo.ValidateAction(p, lvl.name, "restore a backup of this level")) return;
-            if (File.Exists(LevelInfo.BackupPath(lvl.name, args[0]))) {
+            if (File.Exists(LevelInfo.BackupFilePath(lvl.name, args[0]))) {
                 try {
                     DoRestore(lvl, args[0]);
                 } catch (Exception ex) {
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.World {
         
         static void DoRestore(Level lvl, string backup) {
             lock (lvl.saveLock) {
-                File.Copy(LevelInfo.BackupPath(lvl.name, backup), LevelInfo.MapPath(lvl.name), true);
+                File.Copy(LevelInfo.BackupFilePath(lvl.name, backup), LevelInfo.MapPath(lvl.name), true);
                 lvl.SaveChanges = false;
             }
             
@@ -73,17 +73,18 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void OutputBackups(Player p) {
-            if (!Directory.Exists(ServerConfig.BackupDirectory + "/" + p.level.name)) {
+            string backupPath = LevelInfo.BackupBasePath(p.level.name);
+        	if (!Directory.Exists(backupPath)) {
                 Player.Message(p, p.level.ColoredName + " %Shas no backups yet."); return;
             }
             
-            string[] dirs = Directory.GetDirectories(ServerConfig.BackupDirectory + "/" + p.level.name);
+        	string[] dirs = Directory.GetDirectories(backupPath);
             Player.Message(p, p.level.ColoredName + " %Shas &b" + dirs.Length + " %Sbackups.");
             int count = 0;
             StringBuilder custom = new StringBuilder();
             
-            foreach (string s in dirs) {
-                string name = s.Substring(s.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+            foreach (string path in dirs) {
+                string name = LevelInfo.BackupNameFrom(path);
                 int num;
                 if (int.TryParse(name, out num)) continue;
                 

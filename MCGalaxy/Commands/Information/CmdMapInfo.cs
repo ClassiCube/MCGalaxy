@@ -76,9 +76,11 @@ namespace MCGalaxy.Commands.Info {
 
             DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
-            if (Directory.Exists(ServerConfig.BackupDirectory + "/" + data.Name)) {
-                int latest = Directory.GetDirectories(ServerConfig.BackupDirectory + "/" + data.Name).Length;
-                DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupPath(data.Name, latest.ToString()));
+            string backupPath = LevelInfo.BackupBasePath(data.Name);
+            
+            if (Directory.Exists(backupPath)) {
+                int latest = LevelInfo.LatestBackup(data.Name);
+                DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupFilePath(data.Name, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
                 Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
                                latest, backupDelta.Shorten(), createDelta.Shorten());

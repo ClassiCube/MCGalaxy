@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         
         public static bool ExistsBackup(string name, string backup) {
-            return File.Exists(BackupPath(name, backup));
+            return File.Exists(BackupFilePath(name, backup));
         }
         
         
@@ -65,10 +65,41 @@ namespace MCGalaxy {
             return "levels/prev/" + name.ToLower() + ".lvl.prev";
         }
         
-        /// <summary> Relative path of a level's backup map file </summary>
-        public static string BackupPath(string name, string backup) {
-            return ServerConfig.BackupDirectory + "/" + name + "/" + backup + "/" + name + ".lvl";
+
+        /// <summary> Relative path of a level's backup folder </summary>
+        public static string BackupBasePath(string name) {
+            return ServerConfig.BackupDirectory + "/" + name;
         }
+        
+        /// <summary> Relative path of a level's backup map directory </summary>
+        public static string BackupDirPath(string name, string backup) {
+            return BackupBasePath(name) + "/" + backup;
+        }
+        
+        /// <summary> Relative path of a level's backup map file </summary>
+        public static string BackupFilePath(string name, string backup) {
+            return BackupDirPath(name, backup) + "/" + name + ".lvl";
+        }
+        
+        public static string BackupNameFrom(string path) {
+            return path.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+        }
+        
+        public static int LatestBackup(string name) {
+            string dir = BackupBasePath(name);
+            string[] backups = Directory.GetDirectories(dir);
+            int latest = 0;
+            
+            foreach (string path in backups) {
+            	string backupName = BackupNameFrom(path);
+                int num;
+                
+                if (!int.TryParse(backupName, out num)) continue;
+                latest = Math.Max(num, latest);
+            }
+            return latest;
+        }
+               
         
         /// <summary> Relative path of a level's property file </summary>
         public static string PropertiesPath(string name) {

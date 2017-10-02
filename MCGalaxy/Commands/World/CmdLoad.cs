@@ -80,13 +80,13 @@ namespace MCGalaxy.Commands.World {
             if (level != null) return level;
             
             Player.Message(p, "Loading backup failed.");
-            string backupPath = ServerConfig.BackupDirectory;
+            string backupPath = LevelInfo.BackupBasePath(name);
             
-            if (Directory.Exists(backupPath + "/" + name)) {
-                int num = Directory.GetDirectories(backupPath + "/" + name).Length;
-                Logger.Log(LogType.Warning, "Attempting to load latest backup of {0}, number {1} instead.", name, num);
+            if (Directory.Exists(backupPath)) {
+                int latest = LevelInfo.LatestBackup(name);
+                Logger.Log(LogType.Warning, "Attempting to load latest backup of {0}, number {1} instead.", name, latest);
                 
-                string path = LevelInfo.BackupPath(name, num.ToString());
+                string path = LevelInfo.BackupFilePath(name, latest.ToString());
                 level = Level.Load(name, path);
                 if (level == null)
                     Player.Message(p, "Loading latest backup failed as well.");

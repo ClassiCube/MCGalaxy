@@ -274,11 +274,12 @@ namespace MCGalaxy {
 
         public int Backup(bool Forced = false, string backupName = "") {
             if (!backedup || Forced) {
-                string dir = Path.Combine(ServerConfig.BackupDirectory, name);
-                int backupNum = NextBackup(dir);
+                string backupPath = LevelInfo.BackupBasePath(name);
+                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
+                int next = LevelInfo.LatestBackup(name) + 1;
 
-                string path = Path.Combine(dir, backupNum.ToString());
-                if (backupName.Length > 0) path = Path.Combine(dir, backupName);
+                string path = Path.Combine(backupPath, next.ToString());
+                if (backupName.Length > 0) path = Path.Combine(backupPath, backupName);
                 Directory.CreateDirectory(path);
 
                 string backup = Path.Combine(path, name + ".lvl");
@@ -286,7 +287,7 @@ namespace MCGalaxy {
                 try {
                     File.Copy(current, backup, true);
                     backedup = true;
-                    return backupNum;
+                    return next;
                 } catch (Exception e) {
                     Logger.LogError(e);
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
@@ -295,24 +296,6 @@ namespace MCGalaxy {
             }
             Logger.Log(LogType.SystemActivity, "Level unchanged, skipping backup");
             return -1;
-        }
-        
-        int NextBackup(string dir) {
-            if (Directory.Exists(dir)) {
-                int max = 0;
-                string[] backups = Directory.GetDirectories(dir);
-                foreach (string s in backups) {
-                    string name = s.Substring(s.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                    int num;
-                    
-                    if (!int.TryParse(name, out num)) continue;
-                    max = Math.Max(num, max);
-                }
-                return max + 1;
-            } else {
-                Directory.CreateDirectory(dir);
-                return 1;
-            }
         }
 
         public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name)); }
