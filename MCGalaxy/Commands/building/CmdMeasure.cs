@@ -18,9 +18,9 @@
 using System;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Building {    
+namespace MCGalaxy.Commands.Building {
     public sealed class CmdMeasure : Command {
-       
+        
         public override string name { get { return "Measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -29,40 +29,78 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (message.IndexOf(' ') != -1) { Help(p); return; }
-            ExtBlock skip = ExtBlock.Air;
-            if (message.Length > 0 && !CommandParser.GetBlock(p, message, out skip)) return;
+            ExtBlock[] toCount = null;
+            if (message.Length > 0) {
+                string[] args = message.SplitSpaces();
+                toCount = new ExtBlock[args.Length];
+                for (int i = 0; i < toCount.Length; i++) {
+                    if (!CommandParser.GetBlock(p, args[i], out toCount[i])) return;
+                }
+            }
             
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SMeasure", skip, DoMeasure);
+            p.MakeSelection(2, "Selecting region for %SMeasure", toCount, DoMeasure);
         }
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {
-            ExtBlock skip = (ExtBlock)state;
+            ExtBlock[] toCount = (ExtBlock[])state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
-            int found = 0;
-
+            int[] counts = new int[512];
+            
             for (ushort y = (ushort)min.Y; y <= (ushort)max.Y; y++)
                 for (ushort z = (ushort)min.Z; z <= (ushort)max.Z; z++)
                     for (ushort x = (ushort)min.X; x <= (ushort)max.X; x++)
             {
-                if (p.level.GetBlock(x, y, z) != skip) found++;
+                counts[p.level.GetBlock(x, y, z).Index]++;
             }
 
             int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
-            Player.Message(p, "Measuring from &a({0}, {1}, {2}) %Sto &a({3}, {4}, {5})", 
+            int volume = width * height * length;
+            Player.Message(p, "Measuring from &a({0}, {1}, {2}) %Sto &a({3}, {4}, {5})",
                            min.X, min.Y, min.Z, max.X, max.Y, max.Z);
-            Player.Message(p, "Area is {0} wide, {1} high, {2} long. Volume is {3} blocks.", 
-                           width, height, length, width * height * length);
-            Player.Message(p, "There are {0} {1} blocks in the area.", found, 
-                           "non-" + p.level.BlockName(skip));
+            Player.Message(p, "   {0} wide, {1} high, {2} long. Volume is {3} blocks.",
+                           width, height, length, volume);
+            
+            string title = "Block types: ";
+            if (toCount == null) {
+                toCount = MostFrequentBlocks(counts);
+                title = "Top " + toCount.Length + " block types: ";
+            }
+            
+            string blocks = toCount.Join(bl => p.level.BlockName(bl) + FormatCount(counts[bl.Index], volume));
+            Player.Message(p, title +  blocks);
             return true;
         }
         
+        static ExtBlock[] MostFrequentBlocks(int[] countsRaw) {
+            ExtBlock[] blocks = new ExtBlock[512];
+            int[] counts = new int[512]; // copy array as Sort works in place
+            int total = 0;
+            
+            for (int i = 0; i < blocks.Length; i++) {
+                blocks[i] = ExtBlock.FromIndex(i);
+                counts[i] = countsRaw[i];
+                if (counts[i] > 0) total++;
+            }
+            Array.Sort(counts, blocks);
+            
+            if (total > 5) total = 5;
+            ExtBlock[] mostFrequent = new ExtBlock[total];
+            for (int i = 0; i < total; i++) {
+                mostFrequent[i] = blocks[blocks.Length - 1 - i];
+            }
+            return mostFrequent;
+        }
+        
+        static string FormatCount(int count, int volume) {
+            return ": " + count + " (" + (int)(count * 100.0 / volume) + "%)";
+        }
+        
         public override void Help(Player p) {
-            Player.Message(p, "%T/Measure [ignore]");
+            Player.Message(p, "%T/Measure <block1> <block2>..");
             Player.Message(p, "%HMeasures all the blocks between two points");
-            Player.Message(p, "%H [ignore] is optional, and specifies the block which is not counted.");
+            Player.Message(p, "%HShows information such as dimensions, most frequent blocks");
+            Player.Message(p, "%H  <blocks> optionally indicates which blocks to only count");
         }
     }
 }
