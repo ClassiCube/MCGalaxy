@@ -84,13 +84,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static bool DoMark(Player p, int x, int y, int z) {
-            ExtBlock block = p.GetHeldBlock();
-            bool didMark = p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);
-            
-            if (didMark && !p.Ignores.DrawOutput) {
+            if (!p.HasBlockChange()) return false;
+            if (!p.Ignores.DrawOutput) {
                 Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
             }
-            return didMark;
+            
+            ExtBlock block = p.GetHeldBlock();
+            p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);            
+            return true;
         }
         
         public override void Help(Player p) {

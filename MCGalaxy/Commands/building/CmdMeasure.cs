@@ -39,22 +39,19 @@ namespace MCGalaxy.Commands.Building {
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {
             ExtBlock skip = (ExtBlock)state;
-            int minX = Math.Min(m[0].X, m[1].X), maxX = Math.Max(m[0].X, m[1].X);
-            int minY = Math.Min(m[0].Y, m[1].Y), maxY = Math.Max(m[0].Y, m[1].Y);
-            int minZ = Math.Min(m[0].Z, m[1].Z), maxZ = Math.Max(m[0].Z, m[1].Z);
+            Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
             int found = 0;
 
-            for (int y = minY; y <= maxY; y++)
-                for (int z = minZ; z <= maxZ; z++)
-                    for (int x = minX; x <= maxX; x++)
+            for (ushort y = (ushort)min.Y; y <= (ushort)max.Y; y++)
+                for (ushort z = (ushort)min.Z; z <= (ushort)max.Z; z++)
+                    for (ushort x = (ushort)min.X; x <= (ushort)max.X; x++)
             {
-                if (p.level.GetBlock((ushort)x, (ushort)y, (ushort)z) != skip)
-                    found++;
+                if (p.level.GetBlock(x, y, z) != skip) found++;
             }
 
-            int width = maxX - minX + 1, height = maxY - minY + 1, length = maxZ - minZ + 1;
+            int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
             Player.Message(p, "Measuring from &a({0}, {1}, {2}) %Sto &a({3}, {4}, {5})", 
-                           minX, minY, minZ, maxX, maxY, maxZ);
+                           min.X, min.Y, min.Z, max.X, max.Y, max.Z);
             Player.Message(p, "Area is {0} wide, {1} high, {2} long. Volume is {3} blocks.", 
                            width, height, length, width * height * length);
             Player.Message(p, "There are {0} {1} blocks in the area.", found, 

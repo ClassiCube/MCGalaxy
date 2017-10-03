@@ -47,6 +47,7 @@ namespace MCGalaxy {
             }
         }
         
+        internal bool HasBlockChange() { return Blockchange != null; }
         internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, ExtBlock block) {
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if (Blockchange == null) return false;
