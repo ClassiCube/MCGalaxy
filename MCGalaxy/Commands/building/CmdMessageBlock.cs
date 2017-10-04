@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
             Command.Search(ref alias, ref cmdArgs);
             
             foreach (Command cmd in Command.all.commands) {
-                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.Contains("mod"))) continue;
+                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.CaselessContains("mod"))) continue;
                 
                 if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
                     Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;

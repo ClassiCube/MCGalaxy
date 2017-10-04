@@ -75,7 +75,7 @@ namespace MCGalaxy.Blocks.Extended {
             Command.Search(ref alias, ref cmdArgs);
             
             foreach (Command cmd in Command.all.commands) {
-                bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.Contains("mod");
+                bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
                 if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) continue;
                 
                 if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {

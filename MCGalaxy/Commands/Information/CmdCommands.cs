@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands.Info {
             foreach (Command c in Command.all.commands) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if ((p == null || p.group.CanExecute(c)) && disabled == null) {
-                    if (!c.type.Contains(type) || c.name == null) continue;
+                    if (!c.type.CaselessContains(type) || c.name == null) continue;
                     cmds.Add(c);
                 }
             }    

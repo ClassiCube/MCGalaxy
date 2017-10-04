@@ -23,8 +23,8 @@ namespace MCGalaxy {
         
         public static bool CanUseHacks(Player p, Level lvl) {
             string motd = lvl.GetMotd(p);
-            bool noHacks = motd.Contains("-hax");
-            if (noHacks && p.Rank >= LevelPermission.Operator && motd.Contains("+ophax"))
+            bool noHacks = motd.CaselessContains("-hax");
+            if (noHacks && p.Rank >= LevelPermission.Operator && motd.CaselessContains("+ophax"))
                 return true;
             return !noHacks;
         }
