@@ -111,10 +111,12 @@ namespace MCGalaxy.Commands.World {
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Command.all.FindByName("PerVisit").Use(p, rank);
+                Group grp = Matcher.FindRanks(p, rank);
+                if (grp != null) p.level.VisitAccess.SetMin(null, grp);
             } else if (cmd == "PERBUILD") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Command.all.FindByName("PerBuild").Use(p, rank);
+                Group grp = Matcher.FindRanks(p, rank);
+                if (grp != null) p.level.BuildAccess.SetMin(null, grp);
             } else if (cmd == "TEXTURE") {
                 if (value.Length == 0) {
                     Command.all.FindByName("Texture").Use(p, "level normal");
@@ -155,7 +157,7 @@ namespace MCGalaxy.Commands.World {
             args = (level + " " + value).SplitSpaces();
             Level lvl = newLvl.GenerateMap(p, args);
             if (lvl == null) return;
-            SetBuildPerms(p, lvl);
+            SetPerms(p, lvl);
             
             try {
                 lvl.Save(true);
@@ -165,9 +167,10 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static void SetBuildPerms(Player p, Level lvl) {
+        static void SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
             lvl.BuildAccess.Whitelist(null, p.name);
+            lvl.VisitAccess.Whitelist(null, p.name);
             CmdZone.ZoneAll(lvl, p.name);
             
             LevelPermission osPerm = ServerConfig.OSPerbuildDefault;
