@@ -91,7 +91,7 @@ namespace MCGalaxy {
                 Database.Backend.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
             }
             if (!columns.CaselessContains("Messages")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("Messages", ColumnType.UInt64), "title_color");
+                Database.Backend.AddColumn("Players", new ColumnDesc("Messages", ColumnType.UInt24), "title_color");
             }
         }
     }
