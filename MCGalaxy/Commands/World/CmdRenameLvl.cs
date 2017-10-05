@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command {
         public override string name { get { return "RenameLvl"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WRename"), new CommandAlias("WorldRename") }; }

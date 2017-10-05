@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdSend : Command {
         public override string name { get { return "Send"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) {

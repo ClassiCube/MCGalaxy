@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdSpawn : Command {
         public override string name { get { return "Spawn"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override bool SuperUseable { get { return false; } }
 

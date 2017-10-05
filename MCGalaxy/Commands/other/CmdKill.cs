@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdKill : Command {
         public override string name { get { return "Kill"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {

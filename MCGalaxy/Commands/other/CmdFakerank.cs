@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "FakeRank"; } }
         public override string shortcut { get { return "frk"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
         public override void Use(Player p, string message) {

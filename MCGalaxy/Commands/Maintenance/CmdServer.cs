@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Maintenance {
         public override string name { get { return "Server"; } }
         public override string shortcut { get { return "Serv"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {

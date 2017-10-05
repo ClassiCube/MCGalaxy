@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "TP"; } }
         public override string shortcut { get { return "Move"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {

@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdSendCmd : Command {        
         public override string name { get { return "SendCmd"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         
         public override void Use(Player p, string message) {

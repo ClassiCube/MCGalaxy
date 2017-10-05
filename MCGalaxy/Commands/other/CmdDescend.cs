@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdDescend : Command {
         public override string name { get { return "Descend"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
 

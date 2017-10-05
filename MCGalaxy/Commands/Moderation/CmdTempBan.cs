@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "TempBan"; } }
         public override string shortcut { get { return "tb"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {

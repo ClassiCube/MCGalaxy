@@ -18,7 +18,6 @@
 namespace MCGalaxy.Commands.Chatting {  
     public abstract class MessageCmd : Command {
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         protected bool TryMessageAction(Player p, string name, string message, bool messageWho) {

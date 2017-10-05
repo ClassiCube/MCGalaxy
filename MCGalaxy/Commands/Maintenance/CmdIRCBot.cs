@@ -19,7 +19,6 @@ namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdIRCBot : Command {
         public override string name { get { return "IRCBot"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ResetBot", "reset"), new CommandAlias("ResetIRC", "reset") }; }

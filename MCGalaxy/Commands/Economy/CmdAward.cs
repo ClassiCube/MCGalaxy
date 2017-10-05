@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Eco {
     public sealed class CmdAward : Command {      
         public override string name { get { return "Award"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
         public override void Use(Player p, string message) {

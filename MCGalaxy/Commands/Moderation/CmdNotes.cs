@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Moderation {
     public class CmdNotes : Command {
         public override string name { get { return "Notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
@@ -80,7 +79,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMyNotes : CmdNotes {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 

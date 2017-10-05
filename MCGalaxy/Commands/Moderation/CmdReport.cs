@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReport : Command {
         public override string name { get { return "Report"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can check, view and delete reports") }; }

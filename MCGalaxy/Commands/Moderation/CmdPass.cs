@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command {
         public override string name { get { return "Pass"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }

@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Infected"; } }
         public override string shortcut { get { return "dead"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 

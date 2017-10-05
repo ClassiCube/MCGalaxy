@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "BlockProperties"; } }
         public override string shortcut { get { return "BlockProps"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {

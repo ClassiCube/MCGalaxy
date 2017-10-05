@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.CPE {
         public override string name { get { return "Environment"; } }
         public override string shortcut { get { return "Env"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {

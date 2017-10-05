@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdLoad : Command {
         public override string name { get { return "Load"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("MapLoad"), new CommandAlias("WLoad") }; }

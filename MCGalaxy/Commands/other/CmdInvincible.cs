@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "Invincible"; } }
         public override string shortcut { get { return "Inv"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("GodMode") }; }

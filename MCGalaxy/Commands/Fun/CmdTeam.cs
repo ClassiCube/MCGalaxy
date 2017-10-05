@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdTeam : Command {        
         public override string name { get { return "Team"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {

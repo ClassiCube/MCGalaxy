@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPossess : Command {
         public override string name { get { return "Possess"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
 

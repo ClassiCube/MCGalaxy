@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdReferee : Command {
         public override string name { get { return "Ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }   
         public override bool SuperUseable { get { return false; } }

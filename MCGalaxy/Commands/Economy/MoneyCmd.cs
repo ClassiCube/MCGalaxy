@@ -21,7 +21,6 @@ using MCGalaxy.Eco;
 namespace MCGalaxy.Commands.Eco {
     public abstract class MoneyCmd : Command {
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
 
         protected bool ParseArgs(Player p, string message, ref bool all, 

@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.World {
     public class CmdCopyLVL : Command {        
         public override string name { get { return "CopyLvl"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WCopy"), new CommandAlias("WorldCopy") }; }

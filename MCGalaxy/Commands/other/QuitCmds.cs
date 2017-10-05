@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "RageQuit"; } }
         public override string shortcut { get { return "rq"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         
         public override void Use(Player p, string message)  {
@@ -40,7 +39,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdQuit : Command {        
         public override string name { get { return "Quit"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
@@ -59,7 +57,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "CrashServer"; } }
         public override string shortcut { get { return "Crash"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {
@@ -78,7 +75,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "Hacks"; } }
         public override string shortcut { get { return "Hax"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {

@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdDelay : Command {
         public override string name { get { return "Delay"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
 

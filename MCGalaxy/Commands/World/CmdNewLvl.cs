@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "NewLvl"; } }
         public override string shortcut { get { return "Gen"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can generate maps with advanced themes") }; }

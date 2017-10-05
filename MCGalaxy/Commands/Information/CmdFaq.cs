@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdFaq : Command {        
         public override string name { get { return "Faq"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {

@@ -19,7 +19,6 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdWhisper : Command {
         public override string name { get { return "Whisper"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 

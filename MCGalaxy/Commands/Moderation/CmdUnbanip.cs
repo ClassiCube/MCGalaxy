@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdUnbanip : Command {
         public override string name { get { return "UnbanIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("UnIPBan") }; }

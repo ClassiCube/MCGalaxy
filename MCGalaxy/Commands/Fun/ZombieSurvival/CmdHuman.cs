@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdHuman : Command {
         public override string name { get { return "Human"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public override bool SuperUseable { get { return false; } }

@@ -738,7 +738,6 @@ namespace MCGalaxy.Commands.CPE {
         public override string name { get { return "GlobalBlock"; } }
         public override string shortcut { get { return "gb"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {
@@ -758,7 +757,6 @@ namespace MCGalaxy.Commands.CPE {
         public override string name { get { return "LevelBlock"; } }
         public override string shortcut { get { return "lb"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
 

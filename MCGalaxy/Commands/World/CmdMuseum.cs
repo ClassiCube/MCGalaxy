@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdMuseum : Command {
         public override string name { get { return "Museum"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 

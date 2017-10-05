@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Undo"; } }
         public override string shortcut { get { return "u"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can undo physics") }; }

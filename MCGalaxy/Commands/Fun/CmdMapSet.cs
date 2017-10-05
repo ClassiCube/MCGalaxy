@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "MapSet"; } }
         public override string shortcut { get { return "MSet"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }

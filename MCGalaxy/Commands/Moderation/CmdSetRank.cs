@@ -25,7 +25,6 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "SetRank"; } }
         public override string shortcut { get { return "Rank"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("pr", "+up"), new CommandAlias("de", "-down"),

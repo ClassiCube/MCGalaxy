@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTpA : Command {        
         public override string name { get { return "TPA"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("TPAccept", "accept"), new CommandAlias("TPDeny", "deny") }; }

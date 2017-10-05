@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Time"; } }
         public override string shortcut { get { return "ti"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
 
         public override void Use(Player p, string message) {

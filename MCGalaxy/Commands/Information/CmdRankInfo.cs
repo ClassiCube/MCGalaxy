@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "RankInfo"; } }
         public override string shortcut { get { return "ri"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {

@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "ChatRoom"; } }
         public override string shortcut { get { return "cr"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {

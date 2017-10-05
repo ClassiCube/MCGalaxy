@@ -19,7 +19,6 @@ namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdRestart : Command {
         public override string name { get { return "Restart"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message) {

@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "Balance"; } }
         public override string shortcut { get { return "Money"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         

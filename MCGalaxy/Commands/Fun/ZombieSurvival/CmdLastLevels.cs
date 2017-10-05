@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "LastLevels"; } }
         public override string shortcut { get { return "ll"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         

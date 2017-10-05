@@ -18,7 +18,6 @@
 
 namespace MCGalaxy.Commands {
     public abstract class EntityPropertyCmd : Command {
-        public override bool museumUsable { get { return true; } }
         
         protected void UseBotOrPlayer(Player p, string message, string type) {
             if (message.Length == 0) { Help(p); return; }

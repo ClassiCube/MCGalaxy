@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Scripting {
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
-        public override bool museumUsable { get { return true; } }
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message) {

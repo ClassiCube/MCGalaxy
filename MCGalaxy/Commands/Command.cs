@@ -30,7 +30,7 @@ namespace MCGalaxy {
         /// <summary> The type/category/group this command falls under.</summary>
         public abstract string type { get; }
         /// <summary> Whether this command can be used in museum maps. </summary>
-        public abstract bool museumUsable { get; }
+        public virtual bool museumUsable { get { return true; } }
         /// <summary> The default minimum rank that is able to use this command. </summary>
         public abstract LevelPermission defaultRank { get; }
         /// <summary> Executes this command. </summary>

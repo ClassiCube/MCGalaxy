@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdShutdown : Command {
         public override string name { get { return "Shutdown"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         static SchedulerTask shutdownTask;

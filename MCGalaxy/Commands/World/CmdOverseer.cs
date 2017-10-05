@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "Overseer"; } }
         public override string shortcut { get { return "os"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {

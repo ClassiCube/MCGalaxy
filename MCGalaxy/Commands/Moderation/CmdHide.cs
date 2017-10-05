@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHide : Command {
         public override string name { get { return "Hide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {

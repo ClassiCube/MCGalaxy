@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "RankMsg"; } }
         public override string shortcut { get { return "rm"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override bool museumUsable { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
         public override void Use(Player p, string message) {
