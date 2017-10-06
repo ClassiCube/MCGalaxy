@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "HasIRC"; } }
         public override string shortcut { get { return "IRC"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }

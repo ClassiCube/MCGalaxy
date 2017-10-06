@@ -110,6 +110,11 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
+                // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
+                if (!p.level.VisitAccess.Whitelisted.CaselessContains(p.name)) {
+                    p.level.VisitAccess.Whitelist(null, p.name);
+                }
+                
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
                 if (grp != null) p.level.VisitAccess.SetMin(null, grp);
