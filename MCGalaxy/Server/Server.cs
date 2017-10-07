@@ -105,10 +105,6 @@ namespace MCGalaxy {
             Economy.LoadDatabase();
             Server.zombie.CheckTableExists();
 
-            Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level l in loaded)
-                l.Unload();
-
             Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.Load();

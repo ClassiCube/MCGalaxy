@@ -25,8 +25,8 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("j"), new CommandAlias("Join"),
-                    new CommandAlias("gr", "-random"), new CommandAlias("GotoRandom", "-random") }; }
+            get { return new[] { new CommandAlias("j"), new CommandAlias("Join"), new CommandAlias("gr", "-random"),
+                    new CommandAlias("GotoRandom", "-random"), new CommandAlias("JoinRandom", "-random") }; }
         }
         public override bool SuperUseable { get { return false; } }
 

@@ -39,7 +39,8 @@ namespace MCGalaxy.Commands.World {
             if (!LevelInfo.ValidateAction(p, map, "delete this level")) return;
             
             Player.Message(p, "Created backup.");
-            LevelActions.Delete(map.ToLower());
+            if (LevelActions.Delete(map)) return;
+            Player.Message(p, LevelActions.DeleteFailedMessage);
         }
         
         public override void Help(Player p) {

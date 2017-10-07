@@ -200,8 +200,11 @@ namespace MCGalaxy.Commands.World {
             if (!OwnsMap(p, p.level)) return;
             
             Player.Message(p, "Created backup.");
-            LevelActions.Delete(map);
-            Player.Message(p, "Map " + map + " was removed.");
+            if (LevelActions.Delete(map)) {
+                Player.Message(p, "Map " + map + " was removed.");
+            } else {
+                Player.Message(p, LevelActions.DeleteFailedMessage);
+            }
         }
 
 

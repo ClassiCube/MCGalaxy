@@ -19,6 +19,7 @@
 using System;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.EntityEvents;
+using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
@@ -39,6 +40,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
         }
         
         public override void Unload(bool shutdown) {
@@ -51,6 +53,7 @@ namespace MCGalaxy.Games.ZS {
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnBlockChangeEvent.Unregister(HandleBlockChange);
+            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
@@ -164,6 +167,10 @@ namespace MCGalaxy.Games.ZS {
                 if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
                     Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
             }
+        }
+        
+        void HandleLevelUnload(Level lvl) {
+            if (lvl == Game.Map) lvl.cancelunload = true;
         }
     }
 }

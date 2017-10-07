@@ -26,8 +26,7 @@ namespace MCGalaxy {
     
     public static class LevelActions {
         
-        /// <summary> Renames the .lvl (and related) files and database tables.
-        /// Does not perform any unloading. </summary>
+        /// <summary> Renames the .lvl (and related) files and database tables. Does not unload. </summary>
         public static void Rename(string src, string dst) {
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             
@@ -108,11 +107,11 @@ namespace MCGalaxy {
         }*/
         
         
-        /// <summary> Deletes the .lvl (and related) files and database tables.
-        /// Unloads a level (if present) which exactly matches name. </summary>
-        public static void Delete(string name) {
+        public const string DeleteFailedMessage = "Unable to delete the level, because it could not be unloaded. A game may currently be running on it.";
+        /// <summary> Deletes the .lvl (and related) files and database tables. Unloads level if it is loaded. </summary>
+        public static bool Delete(string name) {
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) lvl.Unload();
+            if (lvl != null && !lvl.Unload()) return false;
             
             if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
@@ -135,6 +134,7 @@ namespace MCGalaxy {
             
             DeleteDatabaseTables(name);
             BlockDBFile.DeleteBackingFile(name);
+            return true;
         }
         
         static void DeleteDatabaseTables(string name) {
