@@ -69,7 +69,7 @@ namespace MCGalaxy.SQL {
                         value = value.Replace("'", "''");
                     sql.Write("'" + value + "'");
                 } else if (rowTypes[col] == typeof(DateTime)) {
-                    string date = GetDate(reader, col);
+                    string date = Database.Backend.FastGetDateTime(reader, col);
                     sql.Write("'" + date + "'");
                 } else {
                     long value = reader.GetInt64(col); // TODO: try to use GetInt32 where possible
@@ -78,16 +78,6 @@ namespace MCGalaxy.SQL {
                 sql.Write((col < rowTypes.Length - 1 ? ", " : ");"));
             }
             sql.WriteLine();
-        }
-        
-        
-        public static string GetDate(IDataReader reader, int col) {
-            if (ServerConfig.UseMySQL) {
-                DateTime date = reader.GetDateTime(col);
-                return date.ToString("yyyy-MM-dd HH:mm:ss");
-            } else {
-                return reader.GetString(col); // GetDateTime is extremely slow so avoid it
-            }
         }
         
         static string FormatInsertColumns(string[] cols, string name) {

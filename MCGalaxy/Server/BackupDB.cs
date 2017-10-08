@@ -88,7 +88,11 @@ namespace MCGalaxy {
                     if (cmd == null || cmd.Length == 0) continue;
                     
                     int index = cmd.ToUpper().IndexOf("CREATE TABLE");
-                    if (index > -1) ParseCreate(ref cmd, index);
+                    if (index > -1) {
+                        cmd = cmd.Remove(0, index);
+                        cmd = cmd.Replace(" unsigned", " UNSIGNED");
+                        Database.Backend.ParseCreate(ref cmd);
+                    }
                     
                     //Run the command in the transaction.
                     if (helper.Execute(cmd)) continue;
@@ -118,31 +122,6 @@ namespace MCGalaxy {
                 if (line[line.Length - 1] == ';') break;
             }
             return buffer.Join("");
-        }
-        
-        static void ParseCreate(ref string cmd, int index) {
-            cmd = cmd.Remove(0, index);
-            cmd = cmd.Replace(" unsigned", " UNSIGNED");
-            if (!ServerConfig.UseMySQL) return;
-            
-            // MySQL does not support the format used by the SQLite backend for the primary key
-            const string priKey = " PRIMARY KEY AUTOINCREMENT";
-            int priIndex = cmd.ToUpper().IndexOf(priKey);
-            if (priIndex == -1) return;
-            
-            // Find the name of this column
-            char[] sepChars = new char[] { '\t', ' ' }; // chars that separate part of a column definition
-            char[] startChars = new char[] { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
-            string before = cmd.Substring(0, priIndex);
-            before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type
-            int nameStart = before.LastIndexOfAny(startChars) + 1;
-            string name = before.Substring(nameStart);
-            
-            // Replace the 'PRIMARY KEY AUTOINCREMENT' with just 'AUTO_INCREMENT';
-            cmd = cmd.Remove(priIndex, priKey.Length);
-            cmd = cmd.Insert(priIndex, " AUTO_INCREMENT");
-            // Insert 'PRIMARY KEY' at end of columns definition
-            cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + name + "`)");
         }
     }
 }

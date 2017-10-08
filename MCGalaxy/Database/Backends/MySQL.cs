@@ -58,6 +58,32 @@ namespace MCGalaxy.SQL {
         
         internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
+        }       
+                
+        public override string FastGetDateTime(IDataReader reader, int col) {
+            DateTime date = reader.GetDateTime(col);
+            return date.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+        
+        internal override void ParseCreate(ref string cmd) {
+            // MySQL does not support the format used by the SQLite backend for the primary key
+            const string priKey = " PRIMARY KEY AUTOINCREMENT";
+            int priIndex = cmd.ToUpper().IndexOf(priKey);
+            if (priIndex == -1) return;
+            
+            // Find the name of this column
+            char[] sepChars = new char[] { '\t', ' ' }; // chars that separate part of a column definition
+            char[] startChars = new char[] { '`', '(', ' ', ',', '\t' }; // chars that can start a column definition
+            string before = cmd.Substring(0, priIndex);
+            before = before.Substring(0, before.LastIndexOfAny(sepChars)); // get rid of column type
+            int nameStart = before.LastIndexOfAny(startChars) + 1;
+            string name = before.Substring(nameStart);
+            
+            // Replace the 'PRIMARY KEY AUTOINCREMENT' with just 'AUTO_INCREMENT';
+            cmd = cmd.Remove(priIndex, priKey.Length);
+            cmd = cmd.Insert(priIndex, " AUTO_INCREMENT");
+            // Insert 'PRIMARY KEY' at end of columns definition
+            cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + name + "`)");
         }
         
         

@@ -56,6 +56,10 @@ namespace MCGalaxy.SQL {
             return queryInstance;
         }
         
+        public override string FastGetDateTime(IDataReader reader, int col) {
+            return reader.GetString(col); // reader.GetDateTime is extremely slow so avoid it
+        }
+        
         
         public override bool TableExists(string table) {
             ValidateTable(table);

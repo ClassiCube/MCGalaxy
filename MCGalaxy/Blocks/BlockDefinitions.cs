@@ -67,6 +67,7 @@ namespace MCGalaxy {
             def.Version2 = Version2;
             def.LeftTex = LeftTex; def.RightTex = RightTex;
             def.FrontTex = FrontTex; def.BackTex = BackTex;
+            def.InventoryOrder = InventoryOrder;
             return def;
         }
         
