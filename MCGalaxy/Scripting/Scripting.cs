@@ -110,18 +110,20 @@ namespace MCGalaxy.Scripting {
             args.GenerateExecutable = false;
             args.OutputAssembly = baseOutName + ".dll";
             
-            string source = ReadSourceCode(path, args);
-            results = CompileSource(source, args);
+            List<string> source = ReadSourceCode(path, args);
+            results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return true;
 
             sb = new StringBuilder();
             AppendDivider(sb, exists);
-            bool first = true;           
+            bool first = true;
             foreach (CompilerError err in results.Errors) {
                 if (!first) AppendDivider(sb, true);
-                sb.AppendLine("Error #" + err.ErrorNumber);
-                sb.AppendLine("Message: " + err.ErrorText);
-                sb.AppendLine("Line: " + err.Line);
+                
+                sb.AppendLine("Error on line " + err.Line + ":");
+                sb.AppendLine(source[err.Line - 1]);
+                sb.Append(' ', err.Column - 1);
+                sb.AppendLine("^-- Error #" + err.ErrorNumber + " - " + err.ErrorText);
                 first = false;
             }
             using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
@@ -130,7 +132,7 @@ namespace MCGalaxy.Scripting {
             return false;
         }
         
-        string ReadSourceCode(string path, CompilerParameters args) {
+        List<string> ReadSourceCode(string path, CompilerParameters args) {
             List<string> lines = Utils.ReadAllLinesList(path);
             // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
@@ -141,7 +143,7 @@ namespace MCGalaxy.Scripting {
                 args.ReferencedAssemblies.Add(assem);
                 lines.RemoveAt(i); i--;
             }
-            return lines.Join(Environment.NewLine);
+            return lines;
         }
         
         void AppendDivider(StringBuilder sb, bool exists) {
