@@ -42,19 +42,12 @@ namespace MCGalaxy.Commands.Scripting {
             if (!engine.SourceFileExists(args[0])) {
                 Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found."); return;
             }
-            bool success = false;
-            try {
-                success = engine.Compile(args[0]);
-            } catch (Exception e) {
-                Logger.LogError(e);
-                Player.Message(p, "An exception was thrown during compilation.");
-                return;
-            }
             
-            if (success)
-                Player.Message(p, "Compiled successfully.");
-            else
-                Player.Message(p, "Compilation error. Please check " + IScripting.ErrorPath + " for more information.");
+            if (engine.Compile(args[0])) {
+                Player.Message(p, "Command compiled successfully.");
+            } else {
+                Player.Message(p, "Compilation error. See " + IScripting.ErrorPath + " for more information.");
+            }
         }
 
         public override void Help(Player p) {

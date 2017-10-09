@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdScripting : Command {
@@ -25,7 +26,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload"),
-                    new CommandAlias("PCreate", "pcreate"), new CommandAlias("PCreate", "pcreate"),  }; }
+                    new CommandAlias("PCreate", "pcreate"), new CommandAlias("PCompile", "pcompile") }; }
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
@@ -40,8 +41,25 @@ namespace MCGalaxy.Commands.Scripting {
                 UnloadPlugin(p, parts[1]);
             } else if (parts[0].CaselessEq("pcreate")) {
                 CreatePlugin(p, parts[1]);
+            } else if (parts[0].CaselessEq("pcompile")) {
+                CompilePlugin(p, parts[1]);
             } else {
                 Help(p);
+            }
+        }
+        
+        static void CompilePlugin(Player p, string name) {
+            IScripting engine = IScripting.CS;
+            string path = "plugins/" + name;
+            
+            if (File.Exists(path + engine.Ext)) {
+                if (engine.Compile(path, path)) {
+                    Player.Message(p, "Plugin compiled successfully.");
+                } else {
+                    Player.Message(p, "Compilation error. See " + IScripting.ErrorPath + " for more information.");
+                }
+            } else {
+                Player.Message(p, "File &9" + path + engine.Ext + " %Snot found.");
             }
         }
         
@@ -69,13 +87,10 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void CreatePlugin(Player p, string name) {
             Player.Message(p, "Creating a plugin example source");
-            string user = p == null ? ServerConfig.Name : p.name;
-            if (!Directory.Exists("plugin_source"))
-                Directory.CreateDirectory("plugin_source");
-            
+            string creator = p == null ? ServerConfig.Name : p.name;
             string syntax = pluginSrc.Replace(@"\t", "\t");
-            syntax = String.Format(syntax, name, user, Server.VersionString);
-            File.WriteAllText("plugin_source/" + name + ".cs", syntax);
+            syntax = String.Format(syntax, name, creator, Server.VersionString);
+            File.WriteAllText("plugins/" + name + ".cs", syntax);
         }
         
         const string pluginSrc =
@@ -113,6 +128,8 @@ namespace MCGalaxy
         public override void Help(Player p) {
             Player.Message(p, "%T/Scripting pcreate [name]");
             Player.Message(p, "%HCreate a example .cs plugin file");
+            Player.Message(p, "%T/Scripting pcompile [name]");
+            Player.Message(p, "%HCompiles a .cs plugin file");
             Player.Message(p, "%T/Scripting pload [filename]");
             Player.Message(p, "%HLoad a plugin from your plugins folder");
             Player.Message(p, "%T/Scripting punload [name]");
