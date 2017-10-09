@@ -77,11 +77,22 @@ namespace MCGalaxy.Scripting {
                 sw.WriteLine(syntax);
         }
         
-        /// <summary> Compiles a written function from source into a DLL. </summary>
+        /// <summary> Compiles a command from source into a DLL. </summary>
         /// <param name="commandName">Name of the command file to be compiled (without the extension)</param>
         /// <returns> True on successful compile, false on failure. </returns>
         public bool Compile(string cmdName) {
-            string path = SourceDir + "Cmd" + cmdName + Ext;
+            if (!Directory.Exists(DllDir)) {
+                Directory.CreateDirectory(DllDir);
+            }
+            return Compile(SourceDir + "Cmd" + cmdName, DllDir + "Cmd" + cmdName);
+        }
+        
+        /// <summary> Compiles a written function from source into a DLL. </summary>
+        /// <param name="baseName"> Path to file to be compiled (**without** the extension) </param>
+        /// <param name="baseOutName"> Path of file to be compiled to (**without** the extension) </param>
+        /// <returns> True on successful compile, false on failure. </returns>
+        public bool Compile(string baseName, string baseOutName) {
+            string path = baseName + Ext;
             StringBuilder sb = null;
             bool exists = File.Exists(ErrorPath);
             
@@ -89,18 +100,15 @@ namespace MCGalaxy.Scripting {
                 sb = new StringBuilder();
                 using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
                     AppendDivider(sb, exists);
-                    sb.AppendLine("File not found: Cmd" + cmdName + ".cs");
+                    sb.AppendLine("File not found: " + path);
                     w.Write(sb.ToString());
                 }
                 return false;
             }
-            if (!Directory.Exists(DllDir))
-                Directory.CreateDirectory(DllDir);
-            
+
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
-            args.MainClass = cmdName;
-            args.OutputAssembly = DllDir + "Cmd" + cmdName + ".dll";
+            args.OutputAssembly = baseOutName + ".dll";
             
             string source = ReadSourceCode(path, args);
             results = CompileSource(source, args);
@@ -116,8 +124,9 @@ namespace MCGalaxy.Scripting {
                 sb.AppendLine("Line: " + err.Line);
                 first = false;
             }
-            using (StreamWriter w = new StreamWriter(ErrorPath, exists))
+            using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
                 w.Write(sb.ToString());
+            }
             return false;
         }
         

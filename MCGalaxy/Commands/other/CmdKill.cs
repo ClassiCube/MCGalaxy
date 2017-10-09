@@ -46,13 +46,13 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         static string GetDeathMessage(string[] args, string killer, ref bool explode) {
-            if (args.Length < 2) return " was killed by " + killer;
+            if (args.Length < 2) return "@p %Swas killed by " + killer;
             
             if (args[1].CaselessEq("explode")) {
                 explode = true;
-                return " was exploded by " + killer;
+                return "@p %Swas exploded by " + killer;
             }
-            return " " + args[1];
+            return "@p %S" + args[1];
         }
         
         public override void Help(Player p) {

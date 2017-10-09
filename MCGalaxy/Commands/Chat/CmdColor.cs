@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
-                if (color == who.color) { Player.Message(p, who.DisplayName + " %Salready has that color."); return; }
+                if (color == who.color) { Player.Message(p, who.ColoredName + " %Salready has that color."); return; }
                 
                 Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
                 who.color = color;

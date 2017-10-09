@@ -52,7 +52,7 @@ namespace MCGalaxy.SQL {
             return new SQLiteParameterisedQuery();
         }
         
-        internal override ParameterisedQuery GetStaticParameterised() {
+        protected internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
         }
         

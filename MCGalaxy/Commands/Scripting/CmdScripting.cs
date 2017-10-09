@@ -24,8 +24,8 @@ namespace MCGalaxy.Commands.Scripting {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("PCreate", "pcreate"),
-                    new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload") }; }
+            get { return new[] { new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload"),
+                    new CommandAlias("PCreate", "pcreate"), new CommandAlias("PCreate", "pcreate"),  }; }
         }
         public override bool MessageBlockRestricted { get { return true; } }
         

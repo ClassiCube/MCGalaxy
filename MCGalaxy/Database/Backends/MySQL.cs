@@ -56,7 +56,7 @@ namespace MCGalaxy.SQL {
             return new MySQLParameterisedQuery();
         }
         
-        internal override ParameterisedQuery GetStaticParameterised() {
+        protected internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
         }       
                 
@@ -65,7 +65,7 @@ namespace MCGalaxy.SQL {
             return date.ToString("yyyy-MM-dd HH:mm:ss");
         }
         
-        internal override void ParseCreate(ref string cmd) {
+        protected internal override void ParseCreate(ref string cmd) {
             // MySQL does not support the format used by the SQLite backend for the primary key
             const string priKey = " PRIMARY KEY AUTOINCREMENT";
             int priIndex = cmd.ToUpper().IndexOf(priKey);

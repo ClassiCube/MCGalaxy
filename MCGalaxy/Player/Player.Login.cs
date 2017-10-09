@@ -214,7 +214,7 @@ namespace MCGalaxy {
             DataTable data = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             if (data.Rows.Count == 0) {
                 PlayerData.Create(this);
-                SendMessage("Welcome " + DisplayName + "! This is your first visit.");
+                SendMessage("Welcome " + ColoredName + "! This is your first visit.");
             } else {
                 PlayerData.Load(data, this);
                 SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
@@ -226,12 +226,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageGlobal(this, DisplayName + " &cis still muted from previously.", false);
+                Chat.MessageGlobal(this, ColoredName + " &cis still muted from previously.", false);
             }
             
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageGlobal(this, DisplayName + " &cis still frozen from previously.", false);
+                Chat.MessageGlobal(this, ColoredName + " &cis still frozen from previously.", false);
             }
         }
         

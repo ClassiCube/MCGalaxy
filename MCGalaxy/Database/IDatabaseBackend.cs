@@ -53,11 +53,11 @@ namespace MCGalaxy.SQL {
         
         /// <summary> Returns the shared static ParamterisedQuery instance, that is only used
         /// for sql queries with no parameters. </summary>
-        internal abstract ParameterisedQuery GetStaticParameterised();
+        protected internal abstract ParameterisedQuery GetStaticParameterised();
         
         public abstract string FastGetDateTime(IDataReader reader, int col);
         
-        internal virtual void ParseCreate(ref string cmd) { }
+        protected internal virtual void ParseCreate(ref string cmd) { }
         
         
         // == Higher level table management functions ==
