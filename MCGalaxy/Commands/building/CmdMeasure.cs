@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
             int volume = width * height * length;
             Player.Message(p, "Measuring from &a({0}, {1}, {2}) %Sto &a({3}, {4}, {5})",
                            min.X, min.Y, min.Z, max.X, max.Y, max.Z);
-            Player.Message(p, "   {0} wide, {1} high, {2} long. Volume is {3} blocks.",
+            Player.Message(p, "  &b{0} %Swide, &b{1} %Shigh, &b{2} %Slong, {3} blocks",
                            width, height, length, volume);
             
             string title = "Block types: ";
