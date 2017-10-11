@@ -214,7 +214,7 @@ namespace MCGalaxy {
             DataTable data = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             if (data.Rows.Count == 0) {
                 PlayerData.Create(this);
-                SendMessage("Welcome " + ColoredName + "! This is your first visit.");
+                SendMessage("Welcome " + ColoredName + "%S! This is your first visit.");
             } else {
                 PlayerData.Load(data, this);
                 SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
