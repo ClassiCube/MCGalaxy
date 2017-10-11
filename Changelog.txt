@@ -1,3 +1,16 @@
+v 1.8.9.8
+Added: /pcompile to compile plugins
+Fixed: /mi showing wrong latest backup time, if a map has a custom named backup
+Fixed: missing DEFAULT values for mysql DB table dumps
+Fixed: /mark message being after drawop completed message
+Fixed: ZS not working properly when the level it is unloaded.
+Fixed: /kill not working
+Fixed: /rp not working
+Fixed: /gun not working properly after trying to use it with a block you can't use
+Improved: Make entries in logs/errors/compiler.log more intuitive
+Improved: /measure output
+Improved: You can set any rank in /os map perbuild/pervisit
+
 v 1.8.9.7
 Added: Bots can have text when clicked on
 Added: /ignore irc [nick]
