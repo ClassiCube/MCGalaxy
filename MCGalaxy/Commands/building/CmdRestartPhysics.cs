@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
                 for (int z = Math.Min(m[0].Z, m[1].Z); z <= Math.Max(m[0].Z, m[1].Z); z++)
                     for (int x = Math.Min(m[0].X, m[1].X); x <= Math.Max(m[0].X, m[1].X); x++)
             {
-                if (p.level.IsAirAt((ushort)x, (ushort)y, (ushort)z, out index)) {
+                if (!p.level.IsAirAt((ushort)x, (ushort)y, (ushort)z, out index)) {
                     buffer.Add(index);
                 }
             }
