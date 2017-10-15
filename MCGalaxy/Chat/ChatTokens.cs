@@ -126,11 +126,20 @@ namespace MCGalaxy {
             char[] colon = new char[] {':'};
             
             foreach (string line in lines) {
-                if (line.StartsWith("//")) continue;
-                string[] parts = line.Split(colon, 2);
-                if (parts.Length == 1) continue; // not a proper line
+                if (line.StartsWith("//") || line.Length == 0) continue;
+                // Need to handle special case of :discord: emotes
+                int offset = 0;
+                if (line[0] == ':') {
+                    int emoteEnd = line.IndexOf(':', 1);
+                    if (emoteEnd == -1) continue;
+                    offset = emoteEnd + 1;
+                }
                 
-                string key = parts[0].Trim(), value = parts[1].Trim();
+                int separator = line.IndexOf(':', offset);
+                if (separator == -1) continue; // not a proper line
+                
+                string key = line.Substring(0, separator).Trim();
+                string value = line.Substring(separator + 1).Trim();
                 if (key.Length == 0) continue;
                 Custom.Add(new ChatToken(key, value, null));
             }
