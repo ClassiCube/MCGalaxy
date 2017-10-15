@@ -125,7 +125,11 @@ namespace MCGalaxy.Commands.World {
             } else if (prop == "opblock" || prop == "op") {
                 Toggle(p, scope, block, "an OP block", ref scope[i].OPBlock);
             } else if (prop == "odoor") {
-                SetODoor(p, scope, block, i, text);
+                SetBlock(p, scope, block, i, text, ref scope[i].oDoorIndex, "oDoor");
+            } else if (prop == "grass") {
+                SetBlock(p, scope, block, i, text, ref scope[i].GrassIndex, "Grass form");
+            } else if (prop == "dirt") {
+                SetBlock(p, scope, block, i, text, ref scope[i].DirtIndex, "Dirt form");
             } else if (prop == "drownable" || prop == "drown") {
                 Toggle(p, scope, block, "drowns players", ref scope[i].Drownable);
             } else {
@@ -134,7 +138,8 @@ namespace MCGalaxy.Commands.World {
         }
 
         
-        static void Toggle(Player p, BlockProps[] scope, ExtBlock block, string type, ref bool on) {
+        static void Toggle(Player p, BlockProps[] scope, ExtBlock block, 
+                           string type, ref bool on) {
             on = !on;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             Player.Message(p, "Block {0} is {1}: {2}",
@@ -143,7 +148,8 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+        static void SetEnum(Player p, BlockProps[] scope, ExtBlock block, 
+                            int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             AnimalAI ai = AnimalAI.None;
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
@@ -154,7 +160,8 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+        static void SetDeathMessage(Player p, BlockProps[] scope, ExtBlock block, 
+                                    int i, string msg) {
             scope[i].DeathMessage = msg;
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
@@ -168,7 +175,8 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+        static void SetStackId(Player p, BlockProps[] scope, ExtBlock block, 
+                               int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
             ExtBlock stackBlock;
@@ -190,20 +198,20 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetODoor(Player p, BlockProps[] scope, ExtBlock block, int i, string msg) {
+        static void SetBlock(Player p, BlockProps[] scope, ExtBlock block, 
+                             int i, string msg, ref ushort target, string type) {
             Level lvl = Player.IsSuper(p) ? null : p.level;           
             if (msg == null) {
-                scope[i].oDoorIndex = Block.Invalid;
-                Player.Message(p, "oDoor for {0} removed.", BlockName(scope, lvl, block));
+                target = Block.Invalid;
+                Player.Message(p, "{1} for {0} removed.", BlockName(scope, lvl, block), type);
             } else {
-                ExtBlock other = GetBlock(p, scope, msg);
-                if (other.IsInvalid) return;
-                if (other == block) { Player.Message(p, "ID of oDoor must be different."); return; }
+                ExtBlock other;
+                if (!CommandParser.GetBlock(p, msg, out other)) return;
+                if (other == block) { Player.Message(p, "ID of {0} must be different.", type); return; }
                 
-                scope[i].oDoorIndex = (ushort)other.Index;
-                
-                Player.Message(p, "oDoor for {0} set to: {1}",
-                               BlockName(scope, lvl, block), BlockName(scope, lvl, other));
+                target = (ushort)other.Index;             
+                Player.Message(p, "{2} for {0} set to: {1}", BlockName(scope, lvl, block), 
+                               BlockName(scope, lvl, other), type);
             }
             OnPropsChanged(scope, lvl, block);
         }        
@@ -302,6 +310,12 @@ namespace MCGalaxy.Commands.World {
             } else if (message.CaselessEq("drownable")) {
                 Player.Message(p, "%HSets whether this block can drown players.");
                 Player.Message(p, "%T/Map death %Hmust be enabled for players to drown.");
+            } else if (message.CaselessEq("grass")) {
+                Player.Message(p, "%HSets the block that this block is changed into, when exposed to sunlight");
+                Player.Message(p, "%HLeave block blank to remove this behaviour.");
+            } else if (message.CaselessEq("dirt")) {
+                Player.Message(p, "%HSets the block that this block is changed into, when no longer exposed to sunlight");
+                Player.Message(p, "%HLeave block blank to remove this behaviour.");
             }  else {
                 Player.Message(p, "&cUnrecognised property \"{0}\"", message);
             }

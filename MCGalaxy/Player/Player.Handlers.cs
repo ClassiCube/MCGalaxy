@@ -154,7 +154,7 @@ namespace MCGalaxy {
         bool PlaceBlock(ExtBlock old, ushort x, ushort y, ushort z, ExtBlock block) {
             HandlePlace handler = level.placeHandlers[block.Index];
             if (handler != null) {
-                handler(this, old, x, y, z);
+                handler(this, block, x, y, z);
                 return true;
             }
             return ChangeBlock(x, y, z, block) == 2;
@@ -176,14 +176,17 @@ namespace MCGalaxy {
             level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);
             
             bool autoGrass = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
-            if (!autoGrass) return type;
+            if (!autoGrass) return type;           
+            ExtBlock below = level.GetBlock(x, (ushort)(y - 1), z);
             
-            byte below = level.GetTile(x, (ushort)(y - 1), z);
-            if (below == Block.Dirt && block.BlockID == Block.Air) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.Grass);
+            ushort grassIdx = level.Props[below.Index].GrassIndex;
+            if (grassIdx != Block.Invalid && block.BlockID == Block.Air) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, ExtBlock.FromIndex(grassIdx));
             }
-            if (below == Block.Grass && !level.LightPasses(block)) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, (ExtBlock)Block.Dirt);
+            
+            ushort dirtIdx = level.Props[below.Index].DirtIndex;
+            if (dirtIdx != Block.Invalid && !level.LightPasses(block)) {
+                level.Blockchange(this, x, (ushort)(y - 1), z, ExtBlock.FromIndex(dirtIdx));
             }
             return type;
         }

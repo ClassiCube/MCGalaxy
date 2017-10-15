@@ -111,28 +111,36 @@ namespace MCGalaxy.Blocks.Physics {
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        public static void DoDirt(Level lvl, ref Check C) {
+        public static void DoDirtGrow(Level lvl, ref Check C) {
             if (!lvl.Config.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            if (C.data.Data > 20) {
+            if (C.data.Data > 20) {                
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.Grass);
+                if (lvl.LightPasses(above)) {
+                    ExtBlock block = lvl.GetBlock(x, y, z);
+                    ExtBlock grass = ExtBlock.FromIndex(lvl.Props[block.Index].GrassIndex);
+                    lvl.AddUpdate(C.b, grass);
+                }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {
                 C.data.Data++;
             }
         }
         
-        public static void DoGrass(Level lvl, ref Check C) {
+        public static void DoGrassDie(Level lvl, ref Check C) {
             if (!lvl.Config.GrassGrow) { C.data.Data = PhysicsArgs.RemoveFromChecks; return; }
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
                 ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (!lvl.LightPasses(above)) lvl.AddUpdate(C.b, Block.Dirt);
+                if (!lvl.LightPasses(above)) {
+                    ExtBlock block = lvl.GetBlock(x, y, z);
+                    ExtBlock dirt = ExtBlock.FromIndex(lvl.Props[block.Index].DirtIndex);
+                    lvl.AddUpdate(C.b, dirt);
+                }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
             } else {
                 C.data.Data++;

@@ -22,32 +22,36 @@ namespace MCGalaxy.Blocks {
     
     internal static class PlaceBehaviour {
 
-        internal static void Grass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            DirtGrass(p, (ExtBlock)Block.Grass, x, y, z);
-        }
-        
-        internal static void Dirt(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            DirtGrass(p, (ExtBlock)Block.Dirt, x, y, z);
-        }
-        
-        static void DirtGrass(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        static bool SkipGrassDirt(Player p, ExtBlock block) {
             Level lvl = p.level;
-            if (!lvl.Config.GrassGrow || !(lvl.physics == 0 || lvl.physics == 5)) {
-                p.ChangeBlock(x, y, z, block); return;
-            }
-            if (p.ModeBlock.BlockID == Block.Dirt || p.ModeBlock.BlockID == Block.Grass) {
-                p.ChangeBlock(x, y, z, block); return;
-            }
-            
+            return !lvl.Config.GrassGrow || p.ModeBlock == block || !(lvl.physics == 0 || lvl.physics == 5);
+        }
+        
+        internal static void GrassDie(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+            if (SkipGrassDirt(p, block)) { p.ChangeBlock(x, y, z, block); return; }
+            Level lvl = p.level;
             ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-            block.BlockID = (above.BlockID == Block.Invalid || lvl.LightPasses(above)) ? Block.Grass : Block.Dirt;
+            
+            if (above.BlockID != Block.Invalid && !lvl.LightPasses(above)) {
+                ushort index = p.level.Props[block.Index].DirtIndex;
+                block = ExtBlock.FromIndex(index);
+            }
             p.ChangeBlock(x, y, z, block);
         }
         
-        internal static HandlePlace Stack(ExtBlock block) {
-            return (p, b, x, y, z) => Stack(p, block, x, y, z);
+        internal static void DirtGrow(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+            if (SkipGrassDirt(p, block)) { p.ChangeBlock(x, y, z, block); return; }
+            Level lvl = p.level;
+            ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+            
+            if (above.BlockID == Block.Invalid || lvl.LightPasses(above)) {
+                ushort index = p.level.Props[block.Index].GrassIndex;
+                block = ExtBlock.FromIndex(index);
+            }
+            p.ChangeBlock(x, y, z, block);
         }
-        static void Stack(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+
+        internal static void Stack(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
             if (p.level.GetBlock(x, (ushort)(y - 1), z) != block) {
                 p.ChangeBlock(x, y, z, block); return;
             }

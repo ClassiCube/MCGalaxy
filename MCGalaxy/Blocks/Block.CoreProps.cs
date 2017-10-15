@@ -92,6 +92,7 @@ namespace MCGalaxy {
             Props[CobblestoneSlab].StackId = Cobblestone;
             Props[Water].Drownable = true; Props[StillWater].Drownable = true;
             Props[Lava].Drownable = true; Props[StillLava].Drownable = true;
+            Props[Dirt].GrassIndex = Block.Grass; Props[Grass].DirtIndex = Block.Dirt;
             
             // Block specific physics properties
             Props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;

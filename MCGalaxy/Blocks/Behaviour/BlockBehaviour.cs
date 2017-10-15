@@ -20,13 +20,13 @@ using MCGalaxy.Blocks.Physics;
 
 namespace MCGalaxy.Blocks {
 
-    /// <summary> Handles the player placing a block at the given coordinates. </summary>
+    /// <summary> Handles the player deleting a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
     public delegate void HandleDelete(Player p, ExtBlock oldBlock, ushort x, ushort y, ushort z);
 
-    /// <summary> Handles the player deleting a block at the given coordinates. </summary>
+    /// <summary> Handles the player placing a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
-    public delegate void HandlePlace(Player p, ExtBlock oldBlock, ushort x, ushort y, ushort z);
+    public delegate void HandlePlace(Player p, ExtBlock newBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
     /// <remarks> If this returns true, the usual 'death check' behaviour is skipped. </remarks>
@@ -40,13 +40,13 @@ namespace MCGalaxy.Blocks {
         /// <summary> Retrieves the default place block handler for the given block. </summary>
         internal static HandlePlace GetPlaceHandler(ExtBlock block, BlockProps[] props) {
             switch (block.BlockID) {
-                case Block.Dirt: return PlaceBehaviour.Dirt;
-                case Block.Grass: return PlaceBehaviour.Grass;
                 case Block.C4: return PlaceBehaviour.C4;
                 case Block.C4Detonator: return PlaceBehaviour.C4Det;
             }
             
-            if (props[block.Index].StackId != Block.Air) return PlaceBehaviour.Stack(block);
+            if (props[block.Index].GrassIndex != Block.Invalid) return PlaceBehaviour.DirtGrow;
+            if (props[block.Index].DirtIndex  != Block.Invalid) return PlaceBehaviour.GrassDie;
+            if (props[block.Index].StackId != Block.Air) return PlaceBehaviour.Stack;
             return null;
         }
         
@@ -120,8 +120,6 @@ namespace MCGalaxy.Blocks {
                 case Block.Deadly_FastLava: return SimpleLiquidPhysics.DoFastLava;
                     
                 case Block.Air: return AirPhysics.DoAir;
-                case Block.Dirt: return OtherPhysics.DoDirt;
-                case Block.Grass: return OtherPhysics.DoGrass;
                 case Block.Leaves: return LeafPhysics.DoLeaf;
                 case Block.Sapling: return OtherPhysics.DoShrub;
                 case Block.Fire: return FirePhysics.Do;
@@ -158,6 +156,8 @@ namespace MCGalaxy.Blocks {
             HandlePhysics animalAI = AnimalAIHandler(props[i].AnimalAI);
             if (animalAI != null) return animalAI;
             if (props[i].oDoorIndex != Block.Invalid) return DoorPhysics.oDoor;
+            if (props[i].GrassIndex != Block.Invalid) return OtherPhysics.DoDirtGrow;
+            if (props[i].DirtIndex  != Block.Invalid) return OtherPhysics.DoGrassDie;
             
             i = block.BlockID; // TODO: should this be checking WaterKills/LavaKills
             // Adv physics updating anything placed next to water or lava
