@@ -107,10 +107,10 @@ namespace MCGalaxy.Commands.Info {
         
         bool ParseCommand(Player p, string message) {
             string[] args = message.SplitSpaces(2);
-            Alias alias = Alias.Find(args[0]);
-            if (alias != null) args[0] = alias.Target;
+            string cmdName = args[0], cmdArgs = "";
+            Command.Search(ref cmdName, ref cmdArgs);
             
-            Command cmd = Command.all.Find(args[0]);
+            Command cmd = Command.all.FindByName(cmdName);
             if (cmd == null) return false;
             
             if (args.Length == 1) {

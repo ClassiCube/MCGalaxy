@@ -95,7 +95,7 @@ namespace MCGalaxy.Games {
                     InfectPlayer(p, null);
                 }
             }
-            if (RoundInProgress && oldLvl == Map) {
+            if (RoundInProgress && oldLvl == Map && lvl != Map) {
                 PlayerLeftGame(p);
             }
             
