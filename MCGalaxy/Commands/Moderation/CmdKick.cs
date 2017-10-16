@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             string kickMsg = null, reason = null;
             if (p == null) kickMsg = "by (console)";
-            else kickMsg = "by " + p.DisplayName;
+            else kickMsg = "by " + p.truename;
             
             if (args.Length > 1) {
                 reason = ModActionCmd.ExpandReason(p, args[1]);
