@@ -119,6 +119,7 @@ namespace MCGalaxy {
                 Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.Config.MaxFogDistance));
                 Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.Config.CloudsSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.Config.WeatherSpeed));
+                Send(Packet.EnvMapProperty(EnvProp.WeatherFade, level.Config.WeatherFade));
                 Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.Config.ExpFog ? 1 : 0));
                 Send(Packet.EnvMapProperty(EnvProp.SkyboxHorSpeed, level.Config.SkyboxHorSpeed));
                 Send(Packet.EnvMapProperty(EnvProp.SkyboxVerSpeed, level.Config.SkyboxVerSpeed));
