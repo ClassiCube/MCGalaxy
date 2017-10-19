@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
                                    "Levels", "maps", message, false);
-            Player.Message(p, "Use %T/Unloaded %Sfor unloaded levels.");
+            Player.Message(p, "Use %T/Worlds %Sfor all levels.");
         }
         
         static string FormatMap(Player p, Level lvl) {            

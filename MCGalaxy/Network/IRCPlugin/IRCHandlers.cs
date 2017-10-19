@@ -262,7 +262,7 @@ namespace MCGalaxy.Network {
             }
             
             public override void SendMessage(byte id, string message) {
-                message = IRCBot.ConvertMessage(message);               
+                message = IRCBot.ConvertMessage(message);
                 if (IRCChannel != null) {
                     Bot.Message(IRCChannel, message);
                 } else {
