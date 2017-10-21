@@ -279,6 +279,9 @@ namespace MCGalaxy {
                     Leave(msg, msg, true); return;
                 }
                 
+                LastAction = DateTime.UtcNow;
+                if (IsAfk) CmdAfk.ToggleAfk(this, "");
+                
                 ExtBlock held = ExtBlock.FromRaw(buffer[offset + 8]);
                 RawHeldBlock = held;
                 
