@@ -29,9 +29,10 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             
-            string file = "extra/import/" + message;
-            if (!Directory.Exists("extra/import"))
-                Directory.CreateDirectory("extra/import");
+            string file = Paths.ImportsDir + message;
+            if (!Directory.Exists(Paths.ImportsDir)) {
+                Directory.CreateDirectory(Paths.ImportsDir);
+            }
             
             foreach (IMapImporter importer in IMapImporter.Formats) {
                 if (!File.Exists(file + importer.Extension)) continue;

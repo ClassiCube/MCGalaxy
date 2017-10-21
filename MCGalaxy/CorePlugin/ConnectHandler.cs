@@ -61,7 +61,7 @@ namespace MCGalaxy.Core {
         
         static void LoadWaypoints(Player p) {
             try {
-                p.Waypoints.Filename = "extra/Waypoints/" + p.name + ".save";
+                p.Waypoints.Filename = Paths.WaypointsDir + p.name + ".save";
                 p.Waypoints.Load();
             } catch (IOException ex) {
                 Player.Message(p, "Error loading waypoints.");

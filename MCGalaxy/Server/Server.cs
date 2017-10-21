@@ -27,6 +27,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
     public sealed partial class Server {
@@ -142,17 +143,24 @@ namespace MCGalaxy {
         }
         
         static void EnsureFilesExist() {
-            if (!Directory.Exists("properties")) Directory.CreateDirectory("properties");
-            if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
-            if (!Directory.Exists("bots")) Directory.CreateDirectory("bots");
-            if (!Directory.Exists("text")) Directory.CreateDirectory("text");
+            EnsureDirectoryExists("properties");
+            EnsureDirectoryExists("levels");
+            EnsureDirectoryExists("bots");
+            EnsureDirectoryExists("text");
             RankInfo.EnsureExists();
             Ban.EnsureExists();
 
-            if (!Directory.Exists("extra")) Directory.CreateDirectory("extra");
-            if (!Directory.Exists("extra/Waypoints")) Directory.CreateDirectory("extra/Waypoints");
-            if (!Directory.Exists("extra/bots")) Directory.CreateDirectory("extra/bots");
-            if (!Directory.Exists("blockdefs")) Directory.CreateDirectory("blockdefs");
+            EnsureDirectoryExists("extra");
+            EnsureDirectoryExists(Paths.WaypointsDir);
+            EnsureDirectoryExists("extra/bots");
+            EnsureDirectoryExists(Paths.ImportsDir);
+            EnsureDirectoryExists("blockdefs");
+            EnsureDirectoryExists(IScripting.DllDir);
+            EnsureDirectoryExists(IScripting.SourceDir);
+        }
+        
+        static void EnsureDirectoryExists(string dir) {
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
         }
         
         static void MoveOutdatedFiles() {

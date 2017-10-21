@@ -16,10 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using MCGalaxy.Blocks;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
