@@ -45,7 +45,7 @@ namespace MCGalaxy.Network {
         
         public void RegisterCallbacks() {
             recvArgs.Completed += recvCallback; 
-            sendArgs.Completed += sendCallback;            
+            sendArgs.Completed += sendCallback;
         }
         
         public string RemoteIP {

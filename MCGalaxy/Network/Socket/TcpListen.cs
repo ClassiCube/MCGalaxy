@@ -55,7 +55,8 @@ namespace MCGalaxy.Network {
             bool accepted = false;
             
             try {
-                p = new Player(listen.socket.EndAccept(result));
+                p = new Player();
+                p.Connect(listen.socket.EndAccept(result));
                 listen.AcceptNextAsync();
                 accepted = true;
             } catch (Exception ex) {

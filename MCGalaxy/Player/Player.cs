@@ -48,25 +48,26 @@ namespace MCGalaxy {
             SuperUser = true;
         }
 
-        public Player(Socket s) {
+        internal Player() {
             spamChecker = new SpamChecker(this);
+            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            for (int i = 0; i < BlockBindings.Length; i++) {
+                BlockBindings[i] = ExtBlock.FromRaw((byte)i);
+            }
+        }
+        
+        internal void Connect(Socket s) {
             try {
-                TcpSocket tcp = new TcpSocket(this, s);
-                Socket = tcp;
-                tcp.RegisterCallbacks();
-                
+                Socket = new TcpSocket(this, s);
                 ip = Socket.RemoteIP;
-                SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+                Socket.RegisterCallbacks();
+                
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
-
-                for (int i = 0; i < BlockBindings.Length; i++) {
-                    BlockBindings[i] = ExtBlock.FromRaw((byte)i);
-                }
-
                 Socket.ReceiveNextAsync();
                 connections.Add(this);
+            } catch ( Exception e ) {
+                Leave("Login failed!"); Logger.LogError(e);
             }
-            catch ( Exception e ) { Leave("Login failed!"); Logger.LogError(e); }
         }
         
         public override byte EntityID { get { return id; } }

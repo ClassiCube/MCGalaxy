@@ -29,6 +29,10 @@ namespace MCGalaxy.Network {
         /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
         bool LowLatency { set; }
         
+        /// <summary> Registers receive/send callbacks handlers. </summary>
+        /// <remarks> Separate, to ensure data is only received/sent with a fully constructed object. </remarks>
+        void RegisterCallbacks();
+        
         /// <summary> Receives next block of received data, asynchronously. </summary>
         void ReceiveNextAsync();
         
