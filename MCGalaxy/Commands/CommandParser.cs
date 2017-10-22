@@ -105,7 +105,8 @@ namespace MCGalaxy.Commands {
             }
             
             if (value < min || value > max) {
-                Player.Message(p, "{0} must be between {1} and {2}", argName, min, max);
+            	Player.Message(p, "{0} must be between {1} and {2}", argName, 
+            	               min.ToString("F4"), max.ToString("F4"));
                 return false;
             }
             result = value; return true;

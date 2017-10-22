@@ -138,21 +138,13 @@ namespace MCGalaxy {
         
         static bool CheckFloat(Player p, string raw, string variable,
                                ref int modify, int scale, float min, float max) {
-            float value;
+            float value = 0;
             min /= scale; max /= scale;
-            
-            if (!Utils.TryParseDecimal(raw, out value)) {
-                Player.Message(p, "Env: \"{0}\" is not a valid decimal.", value);
-                return false;
-            } else if (value < min || value > max) {
-                Player.Message(p, "Env: \"{0}\" must be between {1} and {2}.",
-                               value, min.ToString("F4"), max.ToString("F4"));
-                return false;
-            } else {
-                modify = (int)(value * scale);
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value.ToString("F4"));
-                return true;
-            }
+            if (!CommandParser.GetReal(p, raw, variable, ref value, min, max)) return false;
+
+            modify = (int)(value * scale);
+            Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, value.ToString("F4"));
+            return true;
         }
         
         static bool IsResetString(string value) {

@@ -245,6 +245,6 @@ namespace MCGalaxy {
     }
     
     public enum EntityProp : byte {
-        RotX = 0, RotY = 1, RotZ = 2,
+        RotX = 0, RotY = 1, RotZ = 2, ScaleX = 3, ScaleY = 4, ScaleZ = 5,
     }
 }

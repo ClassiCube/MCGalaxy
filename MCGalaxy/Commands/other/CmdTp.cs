@@ -26,13 +26,19 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("Teleport") }; }
+            get { return new [] { new CommandAlias("Teleport"), new CommandAlias("TPP", "-precise") }; }
         }
         
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (message.Length == 0 || args.Length > 3) { Help(p); return; }
+            if (message.Length == 0 || args.Length > 4) { Help(p); return; }
             if (args.Length == 3) { TeleportCoords(p, args); return; }
+            
+            if (message.CaselessStarts("-precise ")) {
+                if (args.Length != 4) { Help(p); return; }
+                TeleportCoordsPrecise(p, args);
+                return;
+            }
             
             Player target = null;
             PlayerBot bot = null;
@@ -73,6 +79,15 @@ namespace MCGalaxy.Commands.Misc {
             PlayerActions.MoveCoords(p, P.X, P.Y, P.Z, p.Rot.RotY, p.Rot.HeadX);
         }
         
+        static void TeleportCoordsPrecise(Player p, string[] args) {
+            Vec3S32 P = new Vec3S32(p.Pos.X, p.Pos.Y + Entities.CharacterHeight, p.Pos.Z);
+            if (!CommandParser.GetCoords(p, args, 1, ref P)) return;
+
+            SavePreTeleportState(p);
+            Position pos = new Position(P.X, P.Y - Entities.CharacterHeight, P.Z);
+            p.SendPos(Entities.SelfID, pos, p.Rot);
+        }
+        
         static void SavePreTeleportState(Player p) {
             p.PreTeleportMap = p.level.name;
             p.PreTeleportPos = p.Pos;
@@ -97,14 +112,15 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
+            Player.Message(p, "%HUse ~ before a coordinate to move relative to current position");
             Player.Message(p, "%T/TP [x y z]");
             Player.Message(p, "%HTeleports yourself to the given block coordinates.");
-            Player.Message(p, "%HUse ~ before a coordinate to move relative to current position");
+            Player.Message(p, "%T/TP -precise [x y z]");
+            Player.Message(p, "%HTeleports using precise units. (32 units = 1 block)");
             Player.Message(p, "%T/TP [player]");
             Player.Message(p, "%HTeleports yourself to that player.");
             Player.Message(p, "%T/TP bot [name]");
             Player.Message(p, "%HTeleports yourself to that bot.");
-            Player.Message(p, "%H  Use /p2p to teleport a given player to a different player.");
         }
     }
 }
