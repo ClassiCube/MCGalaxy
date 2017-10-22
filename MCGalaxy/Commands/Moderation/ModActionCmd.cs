@@ -77,16 +77,6 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        
-        /// <summary> Gets a formatted rank change message for the given name. </summary>
-        internal static string FormatRankChange(Group curRank, Group newRank, string name, string reason) {
-            string direction = newRank.Permission >= curRank.Permission ? " %Swas promoted to " : " %Swas demoted to ";
-            Player who = PlayerInfo.FindExact(name);
-            
-            if (who != null) name = who.ColoredName;
-            return name + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
-        }
-        
         /// <summary> Changes the rank of the given player from the old to the new rank. </summary>
         internal static void ChangeRank(string name, Group oldRank, Group newRank,
                                         Player who, bool saveToNewRank = true) {

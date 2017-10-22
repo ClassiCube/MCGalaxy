@@ -34,15 +34,16 @@ namespace MCGalaxy.Commands.Misc {
             if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "fakerank", true); return;
             }
-            
+            DoFakerank(p, who, newRank);
+        }
+
+        internal static void DoFakerank(Player p, Player who, Group newRank) {            
             if (newRank.Permission == LevelPermission.Banned) {
-                string banner = p == null ? "console" : p.ColoredName;
-                Chat.MessageGlobal("{0} %Swas &8banned %Sby {1}%S.", 
-                                who.ColoredName, banner);
+                Chat.MessageGlobal("{0} %Swas &8banned%S.", who.ColoredName);
             } else {
-                string reason = newRank.Permission >= who.Rank ? 
-                    ServerConfig.DefaultPromoteMessage : ServerConfig.DefaultDemoteMessage;
-                string rankMsg = ModActionCmd.FormatRankChange(who.group, newRank, who.name, reason);
+                string reason    = newRank.Permission >= who.Rank ? ServerConfig.DefaultPromoteMessage : ServerConfig.DefaultDemoteMessage;
+                string direction = newRank.Permission >= who.Rank ? " %Swas promoted to " : " %Swas demoted to ";
+                string rankMsg   = who.ColoredName + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
                 
                 Chat.MessageGlobal(rankMsg);
                 Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
@@ -51,7 +52,7 @@ namespace MCGalaxy.Commands.Misc {
             
             who.color = newRank.Color;
             Entities.GlobalRespawn(who);
-            who.SetPrefix();
+            who.SetPrefix();            
         }
         
         public override void Help(Player p) {
