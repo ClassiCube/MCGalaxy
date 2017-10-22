@@ -15,7 +15,6 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands.Misc {
     public sealed class CmdFakeRank : Command {

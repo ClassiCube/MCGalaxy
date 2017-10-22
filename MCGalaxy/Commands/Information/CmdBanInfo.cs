@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Info {
             TimeSpan delta = expiry - DateTime.UtcNow;        
             Player.Message(p, "Temp-banned %S by {1} %Sfor another {0}", 
                            delta.Shorten(), GetName(p, banner));
-            if (reason != "") Player.Message(p, "Reason: {0}", reason);
+            if (reason.Length > 0) Player.Message(p, "Reason: {0}", reason);
         }
         
         static void DisplayDetails(Player p, string banner, string reason, DateTime time, string type) {

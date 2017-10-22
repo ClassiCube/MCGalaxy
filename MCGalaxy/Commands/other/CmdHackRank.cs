@@ -19,7 +19,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Commands.Moderation;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {

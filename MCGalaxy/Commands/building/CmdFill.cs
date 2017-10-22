@@ -27,6 +27,10 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
         public override int MarksCount { get { return 1; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("F3D"), new CommandAlias("F2D", "2d"),
+                    new CommandAlias("Fill3D"), new CommandAlias("Fill2D", "2d") }; }
+        }
         
         protected override DrawMode GetMode(string[] parts) {
             if (parts[parts.Length - 1].CaselessEq("confirm")) {
@@ -43,6 +47,7 @@ namespace MCGalaxy.Commands.Building {
             else if (msg == "layer") return DrawMode.layer;
             else if (msg == "vertical_x") return DrawMode.verticalX;
             else if (msg == "vertical_z") return DrawMode.verticalZ;
+            else if (msg == "2d") return DrawMode.volcano;
             return DrawMode.normal;
         }
         
@@ -60,6 +65,7 @@ namespace MCGalaxy.Commands.Building {
             ExtBlock old = p.level.GetBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
+            if (dArgs.Mode == DrawMode.volcano) dArgs.Mode = Calc2DFill(p, marks);            
             FillDrawOp op = (FillDrawOp)dArgs.Op;
             op.Positions = FillDrawOp.FloodFill(p, p.level.PosToInt(x, y, z), old, dArgs.Mode);
             int count = op.Positions.Count;
@@ -70,10 +76,19 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "If you still want to fill, type %T/Fill {0} confirm", dArgs.Message);
             } else {
                 success = base.DoDraw(p, marks, state, block);
-            }            
-  
+            }
+            
             op.Positions = null;
             return success;
+        }
+        
+        static DrawMode Calc2DFill(Player p, Vec3S32[] marks) {
+            int lenX = Math.Abs(p.Pos.BlockX - marks[0].X);
+            int lenY = Math.Abs(p.Pos.BlockY - marks[0].Y);
+            int lenZ = Math.Abs(p.Pos.BlockZ - marks[0].Z);
+            
+            if (lenY >= lenX && lenY >= lenZ) return DrawMode.layer;
+            return lenX >= lenZ ? DrawMode.verticalX : DrawMode.verticalZ;
         }
         
         static bool IsConfirmed(string message) {
@@ -83,7 +98,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/Fill [brush args] <mode>");
             Player.Message(p, "%HFills the area specified with the output of the current brush.");
-            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z");
+            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z/2d");
             Player.Message(p, BrushHelpLine);
         }
     }
