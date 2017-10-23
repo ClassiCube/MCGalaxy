@@ -40,21 +40,6 @@ namespace MCGalaxy.Maths {
         public int LengthSquared { get { return X * X + Y * Y + Z * Z; } }
         
         public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
-        
-        
-        /// <summary> Clamps the given block coordinates to inside the map. </summary>
-        public static Vec3U16 Clamp(ushort x, ushort y, ushort z, Level lvl) {
-            Vec3U16 P = new Vec3U16(x, y, z);
-            if (P.X >= 32768) P.X = 0;
-            if (P.Y >= 32768) P.Y = 0;
-            if (P.Z >= 32768) P.Z = 0;
-            
-            if (P.X >= lvl.Width) P.X = (ushort)(lvl.Width - 1);
-            if (P.Y >= lvl.Height) P.Y = (ushort)(lvl.Height - 1);
-            if (P.Z >= lvl.Length) P.Z = (ushort)(lvl.Length - 1);
-            return P;
-        }
-        
 
         public override bool Equals(object obj) {
             return (obj is Vec3U16) && Equals((Vec3U16)obj);

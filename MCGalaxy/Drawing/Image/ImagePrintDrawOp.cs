@@ -32,16 +32,14 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         internal Draw.Bitmap Source;
-        internal int Direction;
         internal bool DualLayer, LayerMode;
         internal string Filename;
         public ImagePalette Palette;
         
-        Vec3S32 dx, dy, adj;
+        internal Vec3S32 dx, dy, adj;
         IPaletteMatcher selector;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            CalcState(Direction);
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
 
@@ -130,7 +128,7 @@ namespace MCGalaxy.Drawing.Ops {
             output(Place(x, y, z, ExtBlock.FromRaw(raw)));
         }
         
-        void CalcState(int dir) {
+        public void CalcState(int dir) {
             dx = default(Vec3S32); dy = default(Vec3S32); adj = default(Vec3S32);
             DualLayer = DualLayer && !LayerMode;
             

@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Moderation {
             BlockPerms.Save();
             BlockPerms.Load();
             if (block < Block.CpeCount) {
-                BlockPerms.ResendBlockPermissions(block);
+                BlockPerms.ResendAllBlockPermissions();
             }
             
             Chat.MessageGlobal("&d{0}%S{1}", Block.Name(block), message);

@@ -58,7 +58,7 @@ namespace MCGalaxy.Gui {
             foreach (BlockPerms perms in blockPermsChanged) {
                 BlockPerms.List[perms.BlockID] = perms;
                 if (perms.BlockID < Block.CpeCount) {
-                    BlockPerms.ResendBlockPermissions(perms.BlockID);
+                    BlockPerms.ResendAllBlockPermissions();
                 }
             }
             

@@ -65,20 +65,9 @@ namespace MCGalaxy.Blocks {
             return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
         
-        /// <summary> Globally sends appropriate CPE block permission packets for after a block's permission is changed. </summary>
-        public static void ResendBlockPermissions(byte block) {
+        public static void ResendAllBlockPermissions() {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!pl.Supports(CpeExt.BlockPermissions)) continue;
-                
-                int count = pl.hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-                if (block < count) {
-                    bool usable = UsableBy(pl, block);
-                    pl.Send(Packet.BlockPermission(block,
-                                                   usable && pl.level.CanPlace,
-                                                   usable && pl.level.CanDelete));
-                }
-            }
+            foreach (Player pl in players) { pl.SendCurrentBlockPermissions(); }
         }
         
         public void MessageCannotUse(Player p, string action) {

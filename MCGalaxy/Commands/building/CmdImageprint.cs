@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using MCGalaxy.Drawing;
+using System.Drawing.Drawing2D;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using MCGalaxy.Maths;
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.palette = ImagePalette.Find("color");
             if (dArgs.palette == null) dArgs.palette = ImagePalette.Palettes[0];
             dArgs.dualLayered = true;
-                        
+            
             if (parts.Length == 3) {
                 string mode = parts[2];
                 if (mode.CaselessEq("horizontal")) dArgs.layer = true;
@@ -77,7 +78,7 @@ namespace MCGalaxy.Commands.Building {
 
             if (!File.Exists("extra/images/" + dArgs.name + ".bmp")) {
                 Player.Message(p, "The URL entered was invalid!"); return;
-            }            
+            }
             Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
         }
@@ -115,17 +116,60 @@ namespace MCGalaxy.Commands.Building {
             }
 
             ImagePrintDrawOp op = new ImagePrintDrawOp();
+            int dir;
             if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z)) {
-                op.Direction = m[1].X <= m[0].X ? 1 : 0;
+                dir = m[1].X <= m[0].X ? 1 : 0;
             } else {
-                op.Direction = m[1].Z <= m[0].Z ? 3 : 2;
+                dir = m[1].Z <= m[0].Z ? 3 : 2;
             }
+            op.LayerMode = dArgs.layer; op.DualLayer = dArgs.dualLayered;
+            op.CalcState(dir);
             
+            ResizeImage(p, m, op, ref bmp);
             op.SetLevel(p.level);
             op.Player = p; op.Source = bmp;
-            op.LayerMode = dArgs.layer; op.DualLayer = dArgs.dualLayered;
+            
             op.Palette = dArgs.palette; op.Filename = dArgs.name;
             DrawOpPerformer.Do(op, null, p, m, false);
+        }
+        
+        void ResizeImage(Player p, Vec3S32[] m, ImagePrintDrawOp op, ref Bitmap bmp) {
+            Level lvl = p.level;
+            Vec3S32 xEnd = m[0] + op.dx * (bmp.Width  - 1);
+            Vec3S32 yEnd = m[0] + op.dy * (bmp.Height - 1);
+            if (lvl.IsValidPos(xEnd.X, xEnd.Y, xEnd.Z) && lvl.IsValidPos(yEnd.X, yEnd.Y, yEnd.Z)) return;
+            
+            int resizedWidth  = bmp.Width - LargestDelta(lvl, xEnd);
+            int resizedHeight = bmp.Height - LargestDelta(lvl, yEnd);
+            // Preserve aspect ratio of image
+            float ratioX = resizedWidth / (float)bmp.Width, ratioY = resizedHeight / (float)bmp.Height;
+            float ratio = Math.Min(ratioX, ratioY);
+            resizedWidth = (int)(bmp.Width * ratio); resizedHeight = (int)(bmp.Height * ratio);
+            
+            Player.Message(p, "&cImage is too large ({0}x{1}), resizing to ({2}x{3})",
+                           bmp.Width, bmp.Height, resizedWidth, resizedHeight);
+            
+            Bitmap resized = new Bitmap(resizedWidth, resizedHeight);
+            using (Graphics g = Graphics.FromImage(resized)) {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.DrawImage(bmp, 0, 0, resizedWidth, resizedHeight);
+            }
+            bmp.Dispose();
+            bmp = resized;
+        }
+        
+        static int LargestDelta(Level lvl, Vec3S32 point) {
+            Vec3S32 clamped;
+            clamped.X = Math.Max(0, Math.Min(point.X, lvl.Width - 1));
+            clamped.Y = Math.Max(0, Math.Min(point.Y, lvl.Height - 1));
+            clamped.Z = Math.Max(0, Math.Min(point.Z, lvl.Length - 1));
+            
+            int dx = Math.Abs(point.X - clamped.X);
+            int dy = Math.Abs(point.Y - clamped.Y);
+            int dz = Math.Abs(point.Z - clamped.Z);
+            return Math.Max(dx, Math.Max(dy, dz));
         }
         
         public override void Help(Player p) {
