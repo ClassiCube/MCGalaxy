@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Building {
             Vec3S32 yEnd = m[0] + op.dy * (bmp.Height - 1);
             if (lvl.IsValidPos(xEnd.X, xEnd.Y, xEnd.Z) && lvl.IsValidPos(yEnd.X, yEnd.Y, yEnd.Z)) return;
             
-            int resizedWidth  = bmp.Width - LargestDelta(lvl, xEnd);
+            int resizedWidth  = bmp.Width  - LargestDelta(lvl, xEnd);
             int resizedHeight = bmp.Height - LargestDelta(lvl, yEnd);
             // Preserve aspect ratio of image
             float ratioX = resizedWidth / (float)bmp.Width, ratioY = resizedHeight / (float)bmp.Height;

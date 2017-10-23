@@ -271,7 +271,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%H[scope] can be: %Score, global, level");
             
             Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, lavakills, door, tdoor, " +
-                           "killer, deathmessage, animalai, stackblock, opblock, odoor, drownable, grass, block");
+                           "killer, deathmessage, animalai, stackblock, opblock, odoor, drownable, grass, dirt");
             Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
