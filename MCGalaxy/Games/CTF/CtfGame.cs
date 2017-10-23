@@ -243,7 +243,7 @@ namespace MCGalaxy.Games {
         /// <summary> Called when the given player takes the opposing team's flag. </summary>
         public void TakeFlag(Player p, CtfTeam2 team) {
             CtfTeam2 opposing = Opposing(team);
-            Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + Blue.ColoredName + " %Steam's FLAG");
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
             Get(p).hasflag = true;
         }
         
