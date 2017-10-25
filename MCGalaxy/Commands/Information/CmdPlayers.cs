@@ -57,22 +57,16 @@ namespace MCGalaxy.Commands.Info {
                 playerList.Add(MakeSection(grp, title));
             }
 
-            int totalPlayers = 0;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (p == pl || Entities.CanSee(p, pl)) {
-                    totalPlayers++;
                     string name = Colors.Strip(pl.DisplayName);
                     AddStates(pl, ref name);
                     playerList.Find(grp => grp.group == pl.group).Append(pl, name);
                 }
             }
 
-            if (totalPlayers == 1)
-                Player.Message(p, "There is &a1 %Splayer online.");
-            else
-                Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
-            
+            Player.Message(p, "There are &a$online %Splayers online.");            
             for (int i = playerList.Count - 1; i >= 0; i--)
                 playerList[i].Print(p, ServerConfig.ListEmptyRanks);
         }

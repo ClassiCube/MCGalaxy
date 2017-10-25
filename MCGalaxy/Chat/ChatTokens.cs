@@ -71,45 +71,72 @@ namespace MCGalaxy {
         
         
         public static List<ChatToken> Standard = new List<ChatToken>() {
-            new ChatToken("$name", "Nickname of the player", TokenName),
-            new ChatToken("$truename", "Account name of the player", TokenTrueName),
             new ChatToken("$date", "Current date (year-month-day)", TokenDate),
             new ChatToken("$time", "Current time of day (hour:minute:second)", TokenTime),
-            new ChatToken("$ip", "IP of the player", TokenIP),
-            new ChatToken("$serverip", "IP player connected to the server via", TokenServerIP),
-            new ChatToken("$color", "Color code of the player's nick", TokenColor),
-            new ChatToken("$rank", "Name of player's rank/group", TokenRank),
-            new ChatToken("$level", "Name of level/map player is on", TokenLevel),
-            new ChatToken("$deaths", "Times the player died", TokenDeaths),
-            new ChatToken("$money", "Amount of server currency player has", TokenMoney),
-            new ChatToken("$blocks", "Number of blocks modified by the player", TokenBlocks),
-            new ChatToken("$first", "Date player first logged in", TokenFirst),
-            new ChatToken("$kicked", "Times the player was kicked", TokenKicked),
+            new ChatToken("$irc", "IRC server and channels", TokenIRC),
+            new ChatToken("$banned", "Number of banned players", TokenBanned),
             new ChatToken("$server", "Server's name", TokenServerName),
             new ChatToken("$motd", "Server's MOTD", TokenServerMOTD),
-            new ChatToken("$banned", "Number of banned players", TokenBanned),
-            new ChatToken("$irc", "IRC server and channels", TokenIRC),
+            new ChatToken("$loaded", "Number of loaded levels", TokenLoaded),
+            new ChatToken("$worlds", "Number of worlds", TokenWorlds),
+            new ChatToken("$online", "Number of players online", TokenOnline),
+            
+            new ChatToken("$name", "Nickname of the player", TokenName),
+            new ChatToken("$truename", "Account name of the player", TokenTrueName),
+            new ChatToken("$color", "Color code of the player's nick", TokenColor),
+            new ChatToken("$rank", "Name of player's rank/group", TokenRank),
+            new ChatToken("$deaths", "Times the player died", TokenDeaths),
+            new ChatToken("$money", "Amount of server currency player has", TokenMoney),
+            new ChatToken("$blocks", "Number of blocks player has modified", TokenBlocks),
+            new ChatToken("$placed", "Number of blocks player has placed", TokenPlaced),
+            new ChatToken("$deleted", "Number of blocks player has deleted", TokenDeleted),
+            new ChatToken("$drawn", "Number of blocks player has drawn", TokenDrawn),
+            new ChatToken("$playtime", "Total time player has spent", TokenPlaytime),
+            new ChatToken("$first", "Date player first logged in", TokenFirst),
+            new ChatToken("$visits", "Times the player logged in", TokenVisits),
+            new ChatToken("$kicked", "Times the player was kicked", TokenKicked),
+            new ChatToken("$ip", "IP of the player", TokenIP),
+            new ChatToken("$model", "Model of the player", TokenModel),
+            new ChatToken("$skin", "Skin of the player", TokenSkin),
+            new ChatToken("$level", "Name of level/map player is on", TokenLevel),    
         };
 
-        static string TokenName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
-        static string TokenTrueName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + p.truename; }
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
         static string TokenTime(Player p) { return DateTime.Now.ToString("HH:mm:ss"); }
-        static string TokenIP(Player p) { return p.ip; }
-        static string TokenServerIP(Player p) { return HttpUtil.IsLocalIP(p.ip) ? p.ip : Server.IP; }
-        static string TokenColor(Player p) { return p.color; }
-        static string TokenRank(Player p) { return p.group.Name; }
-        static string TokenLevel(Player p) { return p.level == null ? null : p.level.name; }
-        static string TokenDeaths(Player p) { return p.TimesDied.ToString(); }        
-        static string TokenMoney(Player p) { return p.money.ToString(); }
-        static string TokenBlocks(Player p) { return p.TotalModified.ToString(); }
-        static string TokenFirst(Player p) { return p.FirstLogin.ToString(); }
-        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }
+        static string TokenIRC(Player p) { return ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels; }
+        static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
         static string TokenServerName(Player p) { return ServerConfig.Name; }
         static string TokenServerMOTD(Player p) { return ServerConfig.MOTD; }
-        static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
-        static string TokenIRC(Player p) { return ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels; }
+        static string TokenLoaded(Player p) { return LevelInfo.Loaded.Count.ToString(); }
+        static string TokenWorlds(Player p) { return LevelInfo.AllMapFiles().Length.ToString(); }
+        static string TokenOnline(Player p) {
+            Player[] players = PlayerInfo.Online.Items;
+            int count = 0;
+            foreach (Player pl in players) {
+                if (p == pl || Entities.CanSee(p, pl)) count++;
+            }
+            return count.ToString();
+        }
         
+        static string TokenName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
+        static string TokenTrueName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + p.truename; }
+        static string TokenColor(Player p) { return p.color; }
+        static string TokenRank(Player p) { return p.group.Name; }
+        static string TokenDeaths(Player p) { return p.TimesDied.ToString(); }
+        static string TokenMoney(Player p) { return p.money.ToString(); }
+        static string TokenBlocks(Player p) { return p.TotalModified.ToString(); }
+        static string TokenPlaced(Player p) { return p.TotalPlaced.ToString(); }
+        static string TokenDeleted(Player p) { return p.TotalDeleted.ToString(); }
+        static string TokenDrawn(Player p) { return p.TotalDrawn.ToString(); }
+        static string TokenPlaytime(Player p) { return p.TotalTime.Shorten(); }
+        static string TokenFirst(Player p) { return p.FirstLogin.ToString(); }
+        static string TokenVisits(Player p) { return p.TimesVisited.ToString(); }
+        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }        
+        static string TokenIP(Player p) { return p.ip; }
+        static string TokenModel(Player p) { return p.Model; }
+        static string TokenSkin(Player p) { return p.SkinName; }
+        static string TokenLevel(Player p) { return p.level == null ? null : p.level.name; }
+
         public static List<ChatToken> Custom = new List<ChatToken>();
         static bool hookedCustom;
         internal static void LoadCustom() {
