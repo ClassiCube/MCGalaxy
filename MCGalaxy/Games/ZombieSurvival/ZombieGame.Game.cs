@@ -25,6 +25,7 @@ namespace MCGalaxy.Games {
         
         public LevelPicker Picker = new ZSLevelPicker();
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
+        public override bool Running { get { return Status != ZombieGameStatus.NotStarted; } }
         
         public override void PlayerLeftGame(Player p) {
             Alive.Remove(p);

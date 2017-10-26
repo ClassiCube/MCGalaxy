@@ -72,30 +72,23 @@ namespace MCGalaxy.Games {
         
         [ConfigString("revive-notime-msg", "Revive",
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
-        public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";
-        
+        public static string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";        
         [ConfigInt("revive-no-time", "Revive", 120, 0)]
         public static int ReviveNoTime = 120;
         
         [ConfigString("revive-fewzombies-msg", "Revive",
                       "There aren't enough zombies for it to be worthwhile to produce revive potions.")]
-        public static string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";
-        
+        public static string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";        
         [ConfigInt("revive-fewzombies", "Revive", 3, 0)]
-        public static int ReviveFewZombies = 3;
-        
+        public static int ReviveFewZombies = 3;       
         [ConfigInt("revive-tooslow", "Revive", 60, 0)]
-        public static int ReviveTooSlow = 60;
-        
+        public static int ReviveTooSlow = 60;      
         [ConfigInt("revive-chance", "Revive", 80, 0, 100)]
-        public static int ReviveChance = 80;
-        
+        public static int ReviveChance = 80;        
         [ConfigInt("revive-times", "Revive", 1, 0)]
-        public static int ReviveTimes = 1;
-        
+        public static int ReviveTimes = 1;       
         [ConfigString("revive-success", "Revive", "used a revive potion. &aIt was super effective!")]
         public static string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
-
         [ConfigString("revive-failure", "Revive", "tried using a revive potion. &cIt was not very effective..")]
         public static string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
         

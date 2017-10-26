@@ -28,11 +28,39 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
     
+    public class BountyData {
+        public string Origin, Target;
+        public int Amount;
+        
+        public BountyData(string origin, string target, int amount) {
+            Origin = origin; Target = target; Amount = amount;
+        }
+    }
+    
+    public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
+    
     public struct ZombieStats {
         public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
     }
     
     public sealed partial class ZSGame {
+        
+        public const string InfectCol = "&infect";
+        public int RoundsDone = 0;
+        public int MaxRounds = 0;
+        public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
+        
+        public bool RoundInProgress = false;
+        public DateTime RoundStart, RoundEnd;
+        public string LastLevelName = "";
+        public VolatileArray<Player> Alive = new VolatileArray<Player>();
+        public VolatileArray<Player> Infected = new VolatileArray<Player>();
+        public string QueuedZombie;
+        public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
+
+        List<string> infectMessages = new List<string>();
+        string lastPlayerToInfect = "";
+        int infectCombo = 0;        
         ZSPlugin plugin = new ZSPlugin();
         
         public void Start(ZombieGameStatus status, Level level, int rounds) {

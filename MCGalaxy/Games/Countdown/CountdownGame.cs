@@ -25,16 +25,12 @@ namespace MCGalaxy.Games {
         
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
-        public CountdownGameStatus Status = CountdownGameStatus.Disabled;
-        
+        public CountdownGameStatus Status = CountdownGameStatus.Disabled;        
         public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }
-        
-        /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
-        public override bool TeleportAllowed { get { return Status == CountdownGameStatus.RoundInProgress; } }
         
         public bool FreezeMode = false;
         public int Interval;
-        public string SpeedType;        
+        public string SpeedType;
         
         CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();

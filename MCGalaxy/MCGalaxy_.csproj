@@ -514,7 +514,6 @@
     <Compile Include="Games\ZombieSurvival\Rewards.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZombieGame.Game.cs" />
-    <Compile Include="Games\ZombieSurvival\ZombieGame.Props.cs" />
     <Compile Include="Games\ZombieSurvival\ZSConfig.cs" />
     <Compile Include="Games\ZombieSurvival\ZSPlugin.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
