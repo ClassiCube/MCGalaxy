@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
                 Group grp = Matcher.FindRanks(p, message);
                 if (grp == null) return;
                 string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
-                Section rankSec = MakeSection(grp, title);                
+                Section rankSec = MakeSection(grp, title);
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Info {
                         AddStates(pl, ref name);
                         rankSec.Append(pl, name);
                     }
-                } 
+                }
                 
                 if (rankSec.Empty) {
                     Player.Message(p, "There are no players of that rank online.");
@@ -57,18 +57,26 @@ namespace MCGalaxy.Commands.Info {
                 playerList.Add(MakeSection(grp, title));
             }
 
+            int totalPlayers = 0;
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (p == pl || Entities.CanSee(p, pl)) {
                     string name = Colors.Strip(pl.DisplayName);
                     AddStates(pl, ref name);
+                    totalPlayers++;
                     playerList.Find(grp => grp.group == pl.group).Append(pl, name);
                 }
             }
-
-            Player.Message(p, "There are &a$online %Splayers online.");            
-            for (int i = playerList.Count - 1; i >= 0; i--)
+            
+            if (totalPlayers == 1) {
+                Player.Message(p, "There is &a1 %Splayer online.");
+            } else {
+                Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
+            }
+            
+            for (int i = playerList.Count - 1; i >= 0; i--) {
                 playerList[i].Print(p, ServerConfig.ListEmptyRanks);
+            }
         }
         
         static void AddStates(Player pl, ref string name) {

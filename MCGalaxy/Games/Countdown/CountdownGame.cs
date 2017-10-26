@@ -23,27 +23,18 @@ using MCGalaxy.Commands.World;
 namespace MCGalaxy.Games {
     public sealed class CountdownGame : IGame {
         
-        /// <summary> All players who are playing this countdown game. </summary>
         public VolatileArray<Player> Players = new VolatileArray<Player>();
-        
-        /// <summary> Players who are still alive in the current round. </summary>
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
-        
-        /// <summary> Current status of the countdown game. </summary>
         public CountdownGameStatus Status = CountdownGameStatus.Disabled;
         
-        // <summary> Gets whether countdown is currently running. </summary>
-        public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }        
+        public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }
         
-        /// <summary> Whether the game is running in freeze mode or not. </summary>
+        /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
+        public override bool TeleportAllowed { get { return Status == CountdownGameStatus.RoundInProgress; } }
+        
         public bool FreezeMode = false;
-        
-        /// <summary> Interval the game is removing squares at. (lower interval is faster game). </summary>
         public int Interval;
-        
-        /// <summary> Speed type. (slow, fast, extreme, etc) </summary>
-        public string SpeedType;
-        
+        public string SpeedType;        
         
         CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();
