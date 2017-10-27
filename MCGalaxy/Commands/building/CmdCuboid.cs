@@ -26,7 +26,8 @@ namespace MCGalaxy.Commands.Building {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("cw", null, "wire"),
                     new CommandAlias("ch", null, "hollow"), new CommandAlias("Walls", null, "walls"),
-                    new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
+                    new CommandAlias("cuboidh", null, "hollow"), new CommandAlias("cubh", null, "hollow"),
+                    new CommandAlias("box"), new CommandAlias("hbox", null, "hollow"), new CommandAlias("bhb", null, "hollow") };
         }
         
         protected override DrawMode GetMode(string[] parts) {
