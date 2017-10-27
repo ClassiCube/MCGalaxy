@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("BInfo"), new CommandAlias("WhoDid") }; }
+            get { return new [] { new CommandAlias("BInfo"), new CommandAlias("BlockInfo"), new CommandAlias("WhoDid") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see portal/MB data of a block") }; }
