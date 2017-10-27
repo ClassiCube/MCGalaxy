@@ -25,68 +25,63 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide/unhide without showing a message to ops") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide silently") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("XHide", "silent") }; }
         }
 
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("check")) {
-                string state = p.hidden ? "" : "not ";
-                Player.Message(p, "You are " + state + "currently hidden!"); return;
-            }
             if (message.Length > 0 && p.possess.Length > 0) {
                 Player.Message(p, "Stop your current possession first."); return;
             }
-            bool messageOps = true;
+            bool announceToOps = true;
             if (message.CaselessEq("silent")) {
                 if (!CheckExtraPerm(p, 1)) return;
-                messageOps = false;
+                announceToOps = false;
             }
             
             Command opchat = Command.all.FindByName("OpChat");
-            Command adminchat = Command.all.FindByName("AdminChat");
+            Entities.GlobalDespawn(p, false);
+            
             p.hidden = !p.hidden;
-
             //Possible to use /hide myrank, but it accomplishes the same as regular /hide if you use it on yourself.
             if (message.CaselessEq("myrank")) {
                 p.otherRankHidden = !p.otherRankHidden;
                 p.hidden = p.otherRankHidden;
             }
 
-            if (p.hidden) {
-                Entities.GlobalDespawn(p, false);
-                if (messageOps && !p.otherRankHidden)
+            if (p.hidden) {                
+            	if (announceToOps && !p.otherRankHidden) {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
+            	}
                 
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Chat.MessageGlobal(p, "&c- " + p.FullName + " %S" + discMsg, false);
                 Server.IRC.Say(p.DisplayName + " %Sleft the game (disconnected%S)");
-                if (messageOps && !p.opchat) opchat.Use(p, message);
+                if (announceToOps && !p.opchat) opchat.Use(p, "");
                 Server.hidden.AddIfNotExists(p.name);
-            } else {
-                Entities.GlobalSpawn(p, false);
+            } else {                
                 p.otherRankHidden = false;
                 p.oHideRank = LevelPermission.Null;
-                if (messageOps)
-                    Chat.MessageAdmins("To Admins -" + p.ColoredName + "%S- is now &fvisible%S.");
+                if (announceToOps) {
+                    Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &fvisible%S.");
+                }
                 
                 Chat.MessageGlobal(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " %Sjoined the game");
-                if (messageOps && p.opchat) opchat.Use(p, message);
-                if (p.adminchat) adminchat.Use(p, message);
+                if (announceToOps && p.opchat) opchat.Use(p, "");
                 Server.hidden.Remove(p.name);
             }
             
+            Entities.GlobalSpawn(p, false);
             TabList.Add(p, p, Entities.SelfID);
             Server.hidden.Save(false);
         }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
-            Player.Message(p, "%T/Hide check %H- Checks your hidden status.");
-            Player.Message(p, "%T/Hide silent %H- hides without sending a message to other ops/admins.");
+            Player.Message(p, "%T/Hide silent %H- Hides without sending a message to opchat");
             Player.Message(p, "%HUse %T/OHide %Hto hide other players.");
         }
     }

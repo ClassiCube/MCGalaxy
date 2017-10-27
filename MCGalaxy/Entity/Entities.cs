@@ -30,9 +30,9 @@ namespace MCGalaxy {
         #region Spawning / Despawning
         
         /// <summary> Respawns this player to all players (including self) that can see the player in the current world. </summary>
-        public static void GlobalRespawn(Player p) {
-            GlobalDespawn(p, true);
-            GlobalSpawn(p, true);
+        public static void GlobalRespawn(Player p, bool self = true) {
+        	GlobalDespawn(p, self);
+            GlobalSpawn(p, self);
         }
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
@@ -59,9 +59,9 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Despawns this player to all other players that cannot
-        /// (or can if 'toVisible' is true) see the player in the current world. </summary>
-        public static void GlobalDespawn(Player p, bool self, bool toVisible = false) {
+        /// <summary> Despawns this player to all other players that can
+        /// (or cannot if 'toVisible' is false) see the player in the current world. </summary>
+        public static void GlobalDespawn(Player p, bool self, bool toVisible = true) {
             Player[] players = PlayerInfo.Online.Items;
             TabList.RemoveAll(p, self, toVisible);
             
@@ -116,7 +116,7 @@ namespace MCGalaxy {
             foreach (Player other in players) {
                 if (p.level == other.level && p != other) Despawn(p, other);
             }
-            GlobalDespawn(p, true, true);
+            GlobalDespawn(p, true);
             
             if (!bots) return;
             PlayerBot[] botsList = p.level.Bots.Items;

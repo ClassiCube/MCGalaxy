@@ -313,8 +313,7 @@ namespace MCGalaxy.Games {
         static void UpdatePlayerColor(Player p, string color) {
             if (p.Game.lastSpawnColor == color) return;
             p.Game.lastSpawnColor = color;
-            Entities.GlobalDespawn(p, false);
-            Entities.GlobalSpawn(p, false);
+            Entities.GlobalRespawn(p, false);
             TabList.Add(p, p, Entities.SelfID);
         }
 

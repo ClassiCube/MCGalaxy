@@ -158,7 +158,7 @@ namespace MCGalaxy.Eco {
             
             Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
             Server.zombie.Map.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");
-            Entities.GlobalDespawn(p, false);
+            Entities.GlobalDespawn(p, false, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
         }
         

@@ -100,8 +100,7 @@ namespace MCGalaxy.Games.ZS {
                     pl.SetMoney(pl.money + 1);
                 }
                 
-                Entities.GlobalDespawn(pl, false);
-                Entities.GlobalSpawn(pl, false);
+                Entities.GlobalRespawn(pl, false);
                 TabList.Add(pl, pl, Entities.SelfID);
                 HUD.UpdateTertiary(pl);
             }

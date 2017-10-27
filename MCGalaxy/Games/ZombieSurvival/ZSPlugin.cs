@@ -121,7 +121,7 @@ namespace MCGalaxy.Games.ZS {
                     p.Send(Hacks.MakeHackControl(p));
             } else {
                 HandlePlayerDisconnect(p, null);
-                Entities.GlobalDespawn(p, false, true);
+                Entities.GlobalDespawn(p, false, false);
                 p.Game.Referee = true;
                 
                 if (p.Supports(CpeExt.HackControl))
@@ -129,7 +129,7 @@ namespace MCGalaxy.Games.ZS {
             }
             
             Entities.GlobalSpawn(p, false, "");
-            TabList.Add(p, p, Entities.SelfID);
+            TabList.Update(p, true);
             p.SetPrefix();
         }
         
