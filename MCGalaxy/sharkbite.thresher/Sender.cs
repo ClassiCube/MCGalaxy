@@ -755,7 +755,7 @@ namespace Sharkbite.Irc
 				if (Rfc2812Util.IsValidChannelName(channel)) 
 				{
 					// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-					int max = MAX_COMMAND_SIZE - 11 - channel.Length;
+					int max = MAX_COMMAND_SIZE - 11 - channel.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
 					if (message.Length > max) 
 					{
 						string[] parts = BreakUpMessage( message, max );
@@ -806,7 +806,7 @@ namespace Sharkbite.Irc
 				if (Rfc2812Util.IsValidNick(nick)) 
 				{
 					// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-					int max = MAX_COMMAND_SIZE - 11 - nick.Length;
+					int max = MAX_COMMAND_SIZE - 11 - nick.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
 					if (message.Length > max) 
 					{
 						string[] parts = BreakUpMessage( message, max );

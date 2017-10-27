@@ -22,11 +22,7 @@ using System.Threading;
 
 namespace MCGalaxy.Games {
     public abstract class LevelPicker {
-        
-        /// <summary> Level specifically chosen to be used in the next round. </summary>
         public string QueuedMap;
-        
-        /// <summary> List of maps that have been recently played in this game. </summary>
         public List<string> RecentMaps = new List<string>();
         
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";

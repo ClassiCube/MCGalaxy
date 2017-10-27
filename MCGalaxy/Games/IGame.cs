@@ -20,37 +20,19 @@ using System;
 namespace MCGalaxy.Games {
 
     public abstract class IGame {
-        
-        /// <summary> Name of the map this game is running on. </summary>
         public string MapName;
-        
-        /// <summary> Level instance of the map this game is running on. </summary>
         public Level Map;
-        
-        /// <summary> Gets whether this game is currently running. </summary>
         public abstract bool Running { get; }
         
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
-        public virtual bool TeleportAllowed { get { return true; } }
-        
+        public virtual bool TeleportAllowed { get { return true; } }    
         /// <summary> Returns whether this game handled the player sending a chat message. </summary>
-        public virtual bool HandlesChatMessage(Player p, string message) {
-            return false;
-        }
+        public virtual bool HandlesChatMessage(Player p, string message) {  return false; }
         
-        /// <summary> Raised when a player joins the server. </summary>
         public virtual void PlayerJoinedServer(Player p) { }
-        
-        /// <summary> Raised when a player joins this game. </summary>
         public virtual void PlayerJoinedGame(Player p) { }
-        
-        /// <summary> Raised when a player leaves this game. </summary>
         public virtual void PlayerLeftGame(Player p) { }
-        
-        /// <summary> Raised when a player moves to a different map/level. </summary>
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
-        
-        /// <summary> Raised when the server is about to send a heartbeat. </summary>
         public virtual void OnHeartbeat(ref string name) { }
         
         /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>

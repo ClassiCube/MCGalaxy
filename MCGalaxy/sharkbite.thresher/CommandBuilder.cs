@@ -41,6 +41,8 @@ namespace Sharkbite.Irc
 		internal const char SPACE = ' ';
 		internal const string SPACE_COLON = " :";
 		internal const int MAX_COMMAND_SIZE = 512;
+		internal const int MAX_HOSTNAME_LEN = 63;
+		internal const int MAX_NICKNAME_LEN = 30;
 		internal const char CtcpQuote = '\u0001';
 
 		internal CommandBuilder(Connection connection) {
