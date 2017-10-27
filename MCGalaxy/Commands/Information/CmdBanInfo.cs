@@ -31,16 +31,23 @@ namespace MCGalaxy.Commands.Info {
             if (plName == null) return;
             string colName = PlayerInfo.GetColoredName(p, plName);
             
+            string tempData = Server.tempBans.FindData(plName);
+            string tempBanner = null, tempReason = null;
+            DateTime tempExpiry = DateTime.MinValue;
+            if (tempData != null) {
+                Ban.UnpackTempBanData(tempData, out tempReason, out tempBanner, out tempExpiry);
+            }
+            
             bool permaBanned = Group.BannedRank.Players.Contains(plName);
-            bool banned = permaBanned || Server.tempBans.Contains(plName);
+            bool isBanned = permaBanned || tempExpiry >= DateTime.UtcNow;
             string msg = colName;
             string ip = PlayerInfo.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
-            if (!ipBanned && banned) msg += " %Sis &CBANNED";
-            else if (!ipBanned && !banned) msg += " %Sis not banned";
-            else if (ipBanned && banned) msg += " %Sand their IP are &CBANNED";
-            else msg += " %Sis not banned, but their IP is &CBANNED";          
+            if (!ipBanned && isBanned) msg += " %Sis &CBANNED";
+            else if (!ipBanned && !isBanned) msg += " %Sis not banned";
+            else if (ipBanned && isBanned) msg += " %Sand their IP are &CBANNED";
+            else msg += " %Sis not banned, but their IP is &CBANNED";
             
             string banner, reason, prevRank;
             DateTime time;
@@ -50,38 +57,30 @@ namespace MCGalaxy.Commands.Info {
                 msg += " %S(Former rank: " + grpName + "%S)";
             }
             Player.Message(p, msg);
-            DisplayTempbanDetails(p, plName);
+            
+            if (tempExpiry >= DateTime.UtcNow) {
+                TimeSpan delta = tempExpiry - DateTime.UtcNow;
+                Player.Message(p, "Temp-banned %S by {1} %Sfor another {0}",
+                               delta.Shorten(), GetName(p, tempBanner));
+                if (tempReason.Length > 0) {
+                    Player.Message(p, "Reason: {0}",tempReason);
+                }
+            }
             
             if (banner != null) {
                 DisplayDetails(p, banner, reason, time, permaBanned ? "Banned" : "Last banned");
             } else {
                 Player.Message(p, "No previous bans recorded for {0}%S.", colName);
-            }
-            
+            }            
             Ban.GetUnbanData(plName, out banner, out reason, out time);
             DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
-        }
-        
-        static void DisplayTempbanDetails(Player p, string target) {
-            string data = Server.tempBans.FindData(target);
-            if (data == null) return;
-            
-            string banner, reason;
-            DateTime expiry;
-            Ban.UnpackTempBanData(data, out reason, out banner, out expiry);        
-            if (expiry < DateTime.UtcNow) return;
-            
-            TimeSpan delta = expiry - DateTime.UtcNow;        
-            Player.Message(p, "Temp-banned %S by {1} %Sfor another {0}", 
-                           delta.Shorten(), GetName(p, banner));
-            if (reason.Length > 0) Player.Message(p, "Reason: {0}", reason);
         }
         
         static void DisplayDetails(Player p, string banner, string reason, DateTime time, string type) {
             if (banner == null) return;
             
             TimeSpan delta = DateTime.UtcNow - time;
-            Player.Message(p, "{0} {1} ago by {2}", 
+            Player.Message(p, "{0} {1} ago by {2}",
                            type, delta.Shorten(), GetName(p, banner));
             Player.Message(p, "Reason: {0}", reason);
         }
