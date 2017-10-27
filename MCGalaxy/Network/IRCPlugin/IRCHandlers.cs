@@ -297,9 +297,12 @@ namespace MCGalaxy.Network {
         }
         
         void Authenticate() {
+            string nickServ = ServerConfig.IRCNickServName;
+            if (nickServ.Length == 0) return;
+            
             if (ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0) {
-                Logger.Log(LogType.IRCCActivity, "Identifying with NickServ");
-                bot.connection.Sender.PrivateMessage("NickServ", "IDENTIFY " + ServerConfig.IRCPassword);
+                Logger.Log(LogType.IRCCActivity, "Identifying with " + nickServ);
+                bot.connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + ServerConfig.IRCPassword);
             }
         }
 

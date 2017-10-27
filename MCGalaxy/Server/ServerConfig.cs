@@ -154,6 +154,8 @@ namespace MCGalaxy {
         public static string IRCOpChannels = "#changethistoo";
         [ConfigBool("irc-identify", "IRC bot", false)]
         public static bool IRCIdentify = false;
+        [ConfigString("irc-nickserv-name", "IRC bot", "NickServ", true)]
+        public static string IRCNickServName = "NickServ";
         [ConfigString("irc-password", "IRC bot", "", true)]
         public static string IRCPassword = "";
 
