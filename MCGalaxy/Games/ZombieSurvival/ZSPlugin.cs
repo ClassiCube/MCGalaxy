@@ -120,9 +120,9 @@ namespace MCGalaxy.Games.ZS {
                 if (p.Supports(CpeExt.HackControl))
                     p.Send(Hacks.MakeHackControl(p));
             } else {
-                HandlePlayerDisconnect(p, null);
-                Entities.GlobalDespawn(p, false, false);
+                HandlePlayerDisconnect(p, null);                
                 p.Game.Referee = true;
+                Entities.GlobalDespawn(p, false, false);
                 
                 if (p.Supports(CpeExt.HackControl))
                     p.Send(Packet.HackControl(true, true, true, true, true, -1));
