@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("IPBan") }; }
+            get { return new CommandAlias[] { new CommandAlias("IPBan"), new CommandAlias("BanAll") }; }
         }
 
         public override void Use(Player p, string message) {
