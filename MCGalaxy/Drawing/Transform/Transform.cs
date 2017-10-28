@@ -16,23 +16,18 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Transforms {
     public abstract class Transform {
-        
-        /// <summary> Human friendly name of this transform. </summary>
         public abstract string Name { get; }
+        public virtual void Configure(DrawOp op, Player p) { }
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects,
         /// after this transformation (e.g. scaling) has been applied to it. </summary>
         public virtual void GetBlocksAffected(ref long affected) { }
-        
-        /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
-        public virtual void Configure(DrawOp op, Player p) { }
         
         public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, 
                                      DrawOp op, Brush brush, DrawOpOutput output);

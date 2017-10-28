@@ -39,7 +39,6 @@ namespace MCGalaxy.Games {
         public CtfTeam hasflag;
 
         //Zombie
-        /// <summary> Whether this play is acting as a referee (spectator) in the game. </summary>
         public bool Referee = false;
         
         /// <summary> Remaining number of blocks the player can place this round. </summary>
@@ -106,26 +105,13 @@ namespace MCGalaxy.Games {
             TimeInfected = DateTime.MinValue;
             LastInfecter = null;
         }
-        
-        
-        /// <summary> The total number of rounds this player has survived. </summary>
+                
         public int TotalRoundsSurvived;
-        
-        /// <summary> The maximum number of rounds this player has consecutively survived. </summary>
         public int MaxRoundsSurvived;
-        
-        /// <summary> The current number of rounds this player has consecutively survived. </summary>
         public int CurrentRoundsSurvived;
-        
-        /// <summary> The total number of other players this player has infected. </summary>
         public int TotalInfected;
-        
-        /// <summary> Maximum number of players this player infected in the current round. </summary>
         public int MaxInfected;
-        
-        /// <summary> The current number of other players this player infected in the current round. </summary>
-        public int CurrentInfected;
-        
+        public int CurrentInfected;        
         
         internal List<DateTime> NoclipLog = new List<DateTime>(5);
         internal List<DateTime> SpeedhackLog = new List<DateTime>(5);

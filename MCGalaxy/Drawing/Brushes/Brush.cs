@@ -20,11 +20,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     public abstract class Brush {
-        
-        /// <summary> Human friendly name of this brush. </summary>
         public abstract string Name { get; }
-        
-        /// <summary> Performs calcuations (if necessary) for the given drawop. </summary>
         public virtual void Configure(DrawOp op, Player p) { }
         
         /// <summary> Returns the next block that should be placed in the world, 

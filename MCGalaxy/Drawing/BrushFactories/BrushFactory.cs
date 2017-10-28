@@ -22,11 +22,7 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {
     public abstract class BrushFactory {
-        
-        /// <summary> Human friendly name of this brush. </summary>
         public abstract string Name { get; }
-        
-        /// <summary> Description of the brush, in addition to its syntax. </summary>
         public abstract string[] Help { get; }
         
         /// <summary> Creates a brush from the given arguments, 

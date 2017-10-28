@@ -58,7 +58,7 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        public Pixel GetGenericPixel(int x, int y) {
+        Pixel GetGenericPixel(int x, int y) {
             Pixel pixel;
             int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead            
             pixel.A = (byte)(argb >> 24);
@@ -68,16 +68,16 @@ namespace MCGalaxy.Drawing {
             return pixel;
         }
         
-        public Pixel Get24BppPixel(int x, int y) {
+        Pixel Get24BppPixel(int x, int y) {
             Pixel pixel;
-            byte* ptr = (scan0 + y * data.Stride) + (x * 3);
+            byte* ptr = (scan0 + y * stride) + (x * 3);
             pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = 255;
             return pixel;
         }
         
-        public Pixel Get32BppPixel(int x, int y) {
+        Pixel Get32BppPixel(int x, int y) {
             Pixel pixel;
-            byte* ptr = (scan0 + y * data.Stride) + (x * 4);            
+            byte* ptr = (scan0 + y * stride) + (x * 4);            
             pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = ptr[3];
             return pixel;
         }

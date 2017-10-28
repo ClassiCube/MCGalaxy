@@ -22,21 +22,14 @@ namespace MCGalaxy.Drawing {
     
     /// <summary> Represents a mapping of block ids to RGB colors. </summary>
     public sealed class ImagePalette {
-        
-        /// <summary> The name of this palette. </summary>
         public string Name;
-        
-        /// <summary> Relative file path on disc. </summary>
         public string FileName { get { return "extra/palettes/" + Name + ".pal"; } }
-        
-        /// <summary> Block mapping in this paleete. </summary>
         public PaletteEntry[] Entries;
         
         public ImagePalette(string name, PaletteEntry[] entries) {
             Name = name; Entries = entries;
-        }        
+        }
         
-        /// <summary> All supported palettes. </summary>
         public static List<ImagePalette> Palettes = new List<ImagePalette>();
         
         public static ImagePalette Find(string name) {
