@@ -315,7 +315,7 @@ namespace MCGalaxy.Games
                 }
                 if (BlueScore >= RedScore)
                 {
-                    Chat.MessageGlobal("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby {1} points!", BlueScore - RedScore);
+                    Chat.MessageGlobal("TNT Wars: Team &9Blue %Swon &cTNT Wars %Sby {0} points!", BlueScore - RedScore);
                 }
                 try
                 {
