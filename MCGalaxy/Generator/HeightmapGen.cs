@@ -20,6 +20,7 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using MCGalaxy.Network;
+using MCGalaxy.Drawing;
 
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
@@ -73,12 +74,12 @@ namespace MCGalaxy.Generator {
             Level lvl = args.Level;
             if (args.Args.Length == 0) { Player.Message(p, "You need to provide a url for the image."); return false; }
             
-            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;            
+            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;
             string user = p == null ? "(console)" : p.name;
             Bitmap bmp = ReadBitmap("tempImage_" + user, "extra/heightmap/", p);
             if (bmp == null) return false;
             
-            int index = 0, oneY = lvl.Width * lvl.Length;            
+            int index = 0, oneY = lvl.Width * lvl.Length;
             using (bmp) {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
                     Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
@@ -86,35 +87,38 @@ namespace MCGalaxy.Generator {
                     return false;
                 }
                 
-                for (int z = 0; z < bmp.Height; z++)
-                    for (int x = 0; x < bmp.Width; x++)
-                {
-                    int height = bmp.GetPixel(x, z).R;     
-                    byte layer = Block.Dirt, top = Block.Grass;
-                    
-                    if (
-                        IsShorterBy(height, bmp, x - 1, z) ||
-                        IsShorterBy(height, bmp, x + 1, z) ||
-                        IsShorterBy(height, bmp, x, z - 1) ||
-                        IsShorterBy(height, bmp, x, z + 1)) 
+                using (PixelGetter pixels = new PixelGetter(bmp)) {
+                    pixels.Init();
+                    for (int z = 0; z < pixels.Height; z++)
+                        for (int x = 0; x < pixels.Width; x++)
                     {
-                        layer = Block.Stone; top = Block.Stone;
+                        int height = pixels.Get(x, z).R;
+                        byte layer = Block.Dirt, top = Block.Grass;
+                        
+                        if (
+                            IsShorterBy(height, pixels, x - 1, z) ||
+                            IsShorterBy(height, pixels, x + 1, z) ||
+                            IsShorterBy(height, pixels, x, z - 1) ||
+                            IsShorterBy(height, pixels, x, z + 1))
+                        {
+                            layer = Block.Stone; top = Block.Stone;
+                        }
+                        
+                        height = height * lvl.Height / 255;
+                        for (int y = 0; y < height - 1; y++)
+                            lvl.blocks[index + oneY * y] = layer;
+                        if (height > 0)
+                            lvl.blocks[index + oneY * (height - 1)] = top;
+                        index++;
                     }
-                    
-                    height = height * lvl.Height / 255;
-                    for (int y = 0; y < height - 1; y++)
-                        lvl.blocks[index + oneY * y] = layer;
-                    if (height > 0)
-                        lvl.blocks[index + oneY * (height - 1)] = top;
-                    index++;
                 }
             }
             return true;
         }
         
-        static bool IsShorterBy(int height, Bitmap bmp, int x, int z) {
-            if (x >= bmp.Width || x < 0 || z >= bmp.Height || z < 0) return false;            
-            int neighbourHeight = bmp.GetPixel(x, z).R;
+        static bool IsShorterBy(int height, PixelGetter pixels, int x, int z) {
+            if (x >= pixels.Width || x < 0 || z >= pixels.Height || z < 0) return false;
+            int neighbourHeight = pixels.Get(x, z).R;
             return height >= neighbourHeight + 2;
         }
     }

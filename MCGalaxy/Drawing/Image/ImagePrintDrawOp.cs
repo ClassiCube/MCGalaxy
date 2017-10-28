@@ -45,7 +45,7 @@ namespace MCGalaxy.Drawing.Ops {
 
             using (PixelGetter getter = new PixelGetter(Source)) {
                 getter.Init();
-                getter.Iterate(output, OutputPixel);
+                OutputPixels(getter, output);
             }
             selector = null;
             
@@ -106,26 +106,30 @@ namespace MCGalaxy.Drawing.Ops {
             return entry;
         }
         
-        void OutputPixel(Pixel P, DrawOpOutput output) {
-            ushort x = (ushort)(Origin.X + dx.X * P.X + dy.X * P.Y);
-            ushort y = (ushort)(Origin.Y + dx.Y * P.X + dy.Y * P.Y);
-            ushort z = (ushort)(Origin.Z + dx.Z * P.X + dy.Z * P.Y);
-            if (P.A < 20) { output(Place(x, y, z, ExtBlock.Air)); return; }
-            
-            byte raw = 0;
-            if (!DualLayer) {
-                raw = selector.BestMatch(P.R, P.G, P.B);
-            } else {
-                bool backLayer;
-                raw = selector.BestMatch(P.R, P.G, P.B, out backLayer);
+        void OutputPixels(PixelGetter pixels, DrawOpOutput output) {
+            int width = pixels.Width, height = pixels.Height;
+            for (int yy = 0; yy < height; yy++)
+                for (int xx = 0; xx < width; xx++) 
+            {
+                Pixel P = pixels.Get(xx, yy);
+                ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
+                ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
+                ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
+                if (P.A < 20) { output(Place(x, y, z, ExtBlock.Air)); continue; }
                 
-                if (backLayer) {
-                    x = (ushort)(x + adj.X);
-                    z = (ushort)(z + adj.Z);
+                byte raw = 0;
+                if (!DualLayer) {
+                    raw = selector.BestMatch(P.R, P.G, P.B);
+                } else {
+                    bool backLayer;
+                    raw = selector.BestMatch(P.R, P.G, P.B, out backLayer);                    
+                    if (backLayer) {
+                        x = (ushort)(x + adj.X);
+                        z = (ushort)(z + adj.Z);
+                    }
                 }
+                output(Place(x, y, z, ExtBlock.FromRaw(raw)));
             }
-
-            output(Place(x, y, z, ExtBlock.FromRaw(raw)));
         }
         
         public void CalcState(int dir) {

@@ -22,79 +22,70 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing {
     
-    public delegate void PixelGetterCallback(Pixel pixel, DrawOpOutput output);
+    public delegate Pixel PixelGet(int x, int y);
+    public struct Pixel { public byte A, R, G, B; }
     
-    public sealed class PixelGetter : IDisposable {
+    public unsafe sealed class PixelGetter : IDisposable {
         
         Bitmap bmp;
         BitmapData data;
-        public PixelGetter(Bitmap bmp) {
-            this.bmp = bmp;
+        byte* scan0;
+        int stride;
+        public PixelGet Get;
+        public readonly int Width, Height;
+        
+        public PixelGetter(Bitmap bmp) { 
+            this.bmp = bmp; 
+            Width = bmp.Width; Height = bmp.Height;
         }
         
         public void Init() {
             bool fastPath = bmp.PixelFormat == PixelFormat.Format32bppRgb
-                || bmp.PixelFormat == PixelFormat.Format32bppArgb
-                || bmp.PixelFormat == PixelFormat.Format24bppRgb;
-            if (!fastPath) return;
+                         || bmp.PixelFormat == PixelFormat.Format32bppArgb
+                         || bmp.PixelFormat == PixelFormat.Format24bppRgb;
+            if (!fastPath) { Get = GetGenericPixel; return; }
             // We can only use the fast path for 24bpp or 32bpp bitmaps
             
             Rectangle r = new Rectangle(0, 0, bmp.Width, bmp.Height);
             data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
-        }
-        
-        public void Iterate(DrawOpOutput output, PixelGetterCallback callback) {
-            if (data == null) IterateSlow(output, callback);
-            else IterateFast(output, callback);
-        }
-        
-        unsafe void IterateFast(DrawOpOutput output, PixelGetterCallback callback) {
-            Pixel pixel;
-            int width = bmp.Width, height = bmp.Height;
-            byte* scan0 = (byte*)data.Scan0;
-            pixel.A = 255;
-            bool hasA = bmp.PixelFormat != PixelFormat.Format24bppRgb;
-                
-            for (int y = 0; y < height; y++) {
-                pixel.Y = (ushort)y;
-                byte* row = (scan0 + y * data.Stride);
-                for (int x = 0; x < width; x++) {
-                    pixel.X = (ushort)x;
-                    pixel.B = *row; row++;
-                    pixel.G = *row; row++;
-                    pixel.R = *row; row++;
-                    if (hasA) { pixel.A = *row; row++; }
-                    callback(pixel, output);
-                }
+            scan0 = (byte*)data.Scan0;
+            stride = data.Stride;
+            
+            if (bmp.PixelFormat == PixelFormat.Format24bppRgb) {
+                Get = Get24BppPixel;
+            } else {
+                Get = Get32BppPixel;
             }
         }
         
-        void IterateSlow(DrawOpOutput output, PixelGetterCallback callback) {
+        public Pixel GetGenericPixel(int x, int y) {
             Pixel pixel;
-            int width = bmp.Width, height = bmp.Height;
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-            {
-                pixel.X = (ushort)x; pixel.Y = (ushort)y;
-                int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead
-                
-                pixel.A = (byte)(argb >> 24);
-                pixel.R = (byte)(argb >> 16);
-                pixel.G = (byte)(argb >> 8);
-                pixel.B = (byte)argb;
-                callback(pixel, output);
-            }
+            int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead            
+            pixel.A = (byte)(argb >> 24);
+            pixel.R = (byte)(argb >> 16);
+            pixel.G = (byte)(argb >> 8);
+            pixel.B = (byte)argb;
+            return pixel;
         }
         
+        public Pixel Get24BppPixel(int x, int y) {
+            Pixel pixel;
+            byte* ptr = (scan0 + y * data.Stride) + (x * 3);
+            pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = 255;
+            return pixel;
+        }
+        
+        public Pixel Get32BppPixel(int x, int y) {
+            Pixel pixel;
+            byte* ptr = (scan0 + y * data.Stride) + (x * 4);            
+            pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = ptr[3];
+            return pixel;
+        }
+
         public void Dispose() {
             if (data != null) bmp.UnlockBits(data);
             data = null;
             bmp = null;
         }
-    }
-    
-    public struct Pixel {
-        public ushort X, Y;
-        public byte A, R, G, B;
     }
 }
