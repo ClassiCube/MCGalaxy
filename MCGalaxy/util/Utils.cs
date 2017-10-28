@@ -73,14 +73,6 @@ namespace MCGalaxy {
             return Math.Max(Math.Min(value, hi), lo);
         }
         
-        public static decimal Clamp(decimal value, decimal lo, decimal hi) {
-            return Math.Max(Math.Min(value, hi), lo);
-        }
-
-        public static double Clamp(double value, double lo, double hi) {
-            return Math.Max(Math.Min(value, hi), lo);
-        }
-        
         /// <summary> Divides by 16, rounding up if there is a remainder. </summary>
         public static int CeilDiv16(int x) { return (x + 15) / 16; }
         

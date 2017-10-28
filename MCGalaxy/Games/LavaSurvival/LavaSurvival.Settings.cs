@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
             switch (key.ToLower()) {
                 case "start-on-startup": startOnStartup = bool.Parse(value); break;
                 case "send-afk-to-main": sendAfkMain = bool.Parse(value); break;
-                case "vote-count": voteCount = (byte)Utils.Clamp(decimal.Parse(value), 2, 10); break;
+                case "vote-count": voteCount = (byte)Utils.Clamp(int.Parse(value), 2, 10); break;
                 case "vote-time": voteTime = double.Parse(value); break;
                 case "lives": lifeNum = int.Parse(value); break;
                     

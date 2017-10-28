@@ -30,12 +30,14 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("XUndo", null, "all"),
-                    new CommandAlias("UndoArea", "area"), new CommandAlias("ua", "area") }; }
+                    new CommandAlias("UndoArea", "-area"), new CommandAlias("ua", "-area") }; }
         }
 
         public override void Use(Player p, string message) {
-            bool area = message.CaselessStarts("area ");
-            if (area) message = message.Substring("area ".Length);
+            bool area = message.CaselessStarts("-area");
+            if (area) {
+                message = message.Substring("-area".Length).TrimStart();
+            }
 
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
@@ -118,7 +120,8 @@ namespace MCGalaxy.Commands.Moderation {
                 if (names[i] == null) return null;
                 
                 Group grp = Group.GroupIn(names[i]);
-                if (p != null && grp.Permission >= p.Rank) {
+                bool canUndo = p == null || grp.Permission < p.Rank || p.name.CaselessEq(names[i]);
+                if (!canUndo) {
                     MessageTooHighRank(p, "undo", false); return null;
                 }
 
@@ -130,7 +133,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/UndoPlayer [player1] <player2..> <timespan>");
             Player.Message(p, "%HUndoes the block changes of [players] in the past <timespan>");
-            Player.Message(p, "%T/UndoPlayer area [player1] <player2..> <timespan>");
+            Player.Message(p, "%T/UndoPlayer -area [player1] <player2..> <timespan>");
             Player.Message(p, "%HOnly undoes block changes in the specified region.");
             Player.Message(p, "%H  If <timespan> is not given, undoes 30 minutes.");
             if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)

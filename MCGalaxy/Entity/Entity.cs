@@ -20,8 +20,6 @@ using System.Threading;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy {
-    
-    /// <summary> Represents a player or an NPC. </summary>
     public abstract class Entity {
         
         // Raw orientation/position - access must be threadsafe
@@ -33,44 +31,28 @@ namespace MCGalaxy {
         protected internal Position lastPos;
         internal bool hasExtPositions;
         
-        
-        /// <summary> Model name of this entity. </summary>
         public string Model = "humanoid";
-        
-        /// <summary> AABB of the model of this entity. </summary>
         public AABB ModelBB;
-        
-        /// <summary> Skin name of this entity. </summary>
-        public string SkinName;
-        
-        
-        /// <summary> Gets or sets the orientation of this entity. </summary>
+        public string SkinName;        
+
         public Orientation Rot {
             get { return Orientation.Unpack(_rot); }
             set { _rot = value.Pack(); OnSetRot(); }
         }
         
-        /// <summary> Gets or sets the position of this entity. </summary>
         public Position Pos {
             get { return Position.Unpack(Interlocked.Read(ref _pos)); }
             set { Interlocked.Exchange(ref _pos, value.Pack()); OnSetPos(); }
         }
         
-        /// <summary> Sets only the yaw and pitch of the orientation of this entity. </summary>
         public void SetYawPitch(byte yaw, byte pitch) {
             Orientation rot = Rot;
             rot.RotY = yaw; rot.HeadX = pitch;
             Rot = rot;
         }
-        
-        
-        /// <summary> Returns whether this entity can see the given entity in the world/level. </summary>
+
         public abstract bool CanSeeEntity(Entity other);
-        
-        /// <summary> Gets the entity/player ID of this entity. </summary>
         public abstract byte EntityID { get; }
-        
-        /// <summary> Gets the world/level this entity is on. </summary>
         public abstract Level Level { get; }
         
         protected virtual void OnSetPos() { }
