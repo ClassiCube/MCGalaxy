@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             switch (parts[0].ToLower()) {
                 case "reload":
-                    Server.ircControllers = PlayerList.Load("IRC_Controllers.txt");
+                    Server.ircControllers = PlayerList.Load("ranks/IRC_Controllers.txt");
                     Player.Message(p, "IRC Controllers reloaded!");
                     break;
                     

@@ -24,8 +24,6 @@ namespace MCGalaxy {
     
     /// <summary> Represents a list of player names. Case insensitive. Thread safe. </summary>
     public sealed class PlayerList {
-        
-        /// <summary> Path to the file that stores this list on disc. </summary>
         public string Path;
         
         List<string> names = new List<string>();        
@@ -37,35 +35,23 @@ namespace MCGalaxy {
         
         /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> All() {
-            lock (locker)
-                return new List<string>(names);
-        }
-        
-        /// <summary> Returns the number of names in the list. </summary>
-        public int Count { get { lock (locker) return names.Count; } }
-        
-        
-        /// <summary> Adds the given name to the list. Does not check for duplicates. </summary>
-        public void Add(string name) {
-            lock (locker)
-                names.Add(name);
+            lock (locker) return new List<string>(names);
         }
 
-        /// <summary> Removes the given name to the list, 
-        /// returning whether it was in the list to begin with. </summary>
+        public int Count { get { lock (locker) return names.Count; } }
+
+        public void Add(string name) {
+            lock (locker) names.Add(name);
+        }
+
         public bool Remove(string name) {
-            lock (locker)
-                return names.CaselessRemove(name);
+            lock (locker) return names.CaselessRemove(name);
         }
         
-        /// <summary> Returns whether the given name is in the list. </summary>
         public bool Contains(string name) {
-            lock (locker)
-                return names.CaselessContains(name);
+            lock (locker) return names.CaselessContains(name);
         }
-        
-        /// <summary> Adds the given name, if it is not already in the list. </summary>
-        /// <returns> Whether the given name was added to the list. </returns>
+
         public bool AddIfNotExists(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -84,11 +70,8 @@ namespace MCGalaxy {
             }
         }
         
-        
-        /// <summary> Saves the list of names to disc, also logging to console. </summary>
+
         public void Save() { Save(true); }
-        
-        /// <summary> Saves the list of names to disc, optionally logging to console. </summary>
         public void Save(bool log) {
             lock (saveLocker) {
                 using (StreamWriter w = new StreamWriter(Path))
@@ -104,11 +87,8 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Loads a list of names from disc. </summary>
         public static PlayerList Load(string file) {
-            if (!Directory.Exists("ranks")) Directory.CreateDirectory("ranks");
             PlayerList list = new PlayerList(file);
-            if (file.IndexOf('/') == -1) file = "ranks/" + file;
             list.Path = file;
             
             if (!File.Exists(list.Path)) {

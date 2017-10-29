@@ -24,41 +24,30 @@ namespace MCGalaxy {
     
     /// <summary> Represents a list of player names and simple associated data. Case insensitive. Thread safe. </summary>
     public sealed class PlayerExtList {
-        
-        /// <summary> Separator between name and data within a line. Defaults to space. </summary>
         public char Separator = ' ';
-        
-        /// <summary> Path to the file that stores this list on disc. </summary>
         public string Path;
         
         List<string> names = new List<string>(), lines = new List<string>();
         internal readonly object locker = new object();
         readonly object saveLocker = new object();
 
-        /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> AllNames() {
-            lock (locker)
-                return new List<string>(names);
+            lock (locker) return new List<string>(names);
         }
         
         /// <summary> Returns a copy of all lines (name + separator + data) in the list. </summary>
         public List<string> AllLines() {
-            lock (locker)
-                return new List<string>(lines);
+            lock (locker) return new List<string>(lines);
         }
         
-        /// <summary> Returns the number of names in the list. </summary>
         public int Count { get { lock (locker) return names.Count; } }
         
-        /// <summary> Adds the given name and data to the list. Does not check for duplicates. </summary>
         public void Add(string name, string data) {
             lock (locker) {
                 names.Add(name); lines.Add(name + Separator + data);
             }
         }
         
-        /// <summary> Removes the given name (and associated data) to the list,
-        /// returning whether it was in the list to begin with. </summary>
         public bool Remove(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -70,13 +59,11 @@ namespace MCGalaxy {
             }
         }
 
-        /// <summary> Returns whether the given name is in the list. </summary>
         public bool Contains(string name) {
             lock (locker)
                 return names.CaselessContains(name);
         }
         
-        /// <summary> Adds or updates the given name and data in the list. </summary>
         public void AddOrReplace(string name, string data) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -87,8 +74,7 @@ namespace MCGalaxy {
                 }
             }
         }
-        
-        /// <summary> Finds the data associated with the given name. </summary>
+
         public string FindData(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -101,10 +87,7 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Saves the list of names to disc, also logging to console. </summary>
         public void Save() { Save(true); }
-        
-        /// <summary> Saves the list of names to disc, optionally logging to console. </summary>
         public void Save(bool log) {
             lock (saveLocker) {
                 using (StreamWriter w = new StreamWriter(Path))

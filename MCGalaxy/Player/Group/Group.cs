@@ -140,7 +140,7 @@ namespace MCGalaxy {
             if (filename == null || !filename.StartsWith(desired))
                 MoveToDesired(desired);
             
-            Players = PlayerList.Load(filename);
+            Players = PlayerList.Load("ranks/" + filename);
         }
         
         void MoveToDesired(string desired) {

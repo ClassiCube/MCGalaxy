@@ -52,14 +52,14 @@ namespace MCGalaxy {
             agreed = new PlayerList("ranks/agreed.txt");
             try {
                 UpgradeTasks.UpgradeOldAgreed();
-                agreed = PlayerList.Load("agreed.txt");
+                agreed = PlayerList.Load("ranks/agreed.txt");
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
             
-            bannedIP = PlayerList.Load("banned-ip.txt");
-            ircControllers = PlayerList.Load("IRC_Controllers.txt");
-            hidden = PlayerList.Load("hidden.txt");
+            bannedIP = PlayerList.Load("ranks/banned-ip.txt");
+            ircControllers = PlayerList.Load("ranks/IRC_Controllers.txt");
+            hidden = PlayerList.Load("ranks/hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
             lockdown = PlayerList.Load("text/lockdown.txt");            
@@ -77,7 +77,7 @@ namespace MCGalaxy {
             ModerationTasks.QueueTasks();
             
             if (ServerConfig.WhitelistedOnly)
-                whiteList = PlayerList.Load("whitelist.txt");
+                whiteList = PlayerList.Load("ranks/whitelist.txt");
         }
         
         static void LoadAutoloadMaps(SchedulerTask task) {

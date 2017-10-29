@@ -147,6 +147,7 @@ namespace MCGalaxy {
             EnsureDirectoryExists("levels");
             EnsureDirectoryExists("bots");
             EnsureDirectoryExists("text");
+            EnsureDirectoryExists("ranks");
             RankInfo.EnsureExists();
             Ban.EnsureExists();
 

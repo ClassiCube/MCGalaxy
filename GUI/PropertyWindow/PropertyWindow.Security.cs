@@ -57,7 +57,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
             ServerConfig.WhitelistedOnly = sec_cbWhitelist.Checked;
             if (ServerConfig.WhitelistedOnly && Server.whiteList == null)
-                Server.whiteList = PlayerList.Load("whitelist.txt");
+                Server.whiteList = PlayerList.Load("ranks/whitelist.txt");
             
             ServerConfig.ChatSpamCheck = sec_cbChatAuto.Checked;
             ServerConfig.ChatSpamCount = (int)sec_numChatMsgs.Value;
