@@ -176,7 +176,6 @@ namespace MCGalaxy.Commands.World {
             lvl.Config.RealmOwner = p.name;
             lvl.BuildAccess.Whitelist(null, p.name);
             lvl.VisitAccess.Whitelist(null, p.name);
-            CmdZone.ZoneAll(lvl, p.name);
             
             LevelPermission osPerm = ServerConfig.OSPerbuildDefault;
             if (osPerm == LevelPermission.Nobody)
@@ -257,7 +256,9 @@ namespace MCGalaxy.Commands.World {
             name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);
             if (name == null) return;
             
-            CmdZone.ZoneAll(p.level, name);
+            if (p.level.ZoneList.Count > 0) {
+                CmdZone.ZoneAll(p.level, name);
+            }
             Player.Message(p, "Added zone for &b" + name);
 
             LevelAccessController access = p.level.BuildAccess;
