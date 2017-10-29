@@ -72,10 +72,10 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 Help(p);
             }
-        }      
-                
+        }
+        
         static string FormatZone(Level.Zone zone) {
-            return "&b(" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ 
+            return "&b(" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ
                 + ") to (" + zone.MaxX + ", " + zone.MaxY + ", " + zone.MaxZ + ") &F" + zone.Owner;
         }
         
@@ -136,11 +136,18 @@ namespace MCGalaxy.Commands.Moderation {
                     continue;
                 
                 if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    Group grp = Group.Find(zn.Owner.Substring(3));
-                    if (grp != null && p.Rank < grp.Permission) continue;
+                    Group group = Group.Find(zn.Owner.Substring(3));
+                    if (group != null && p.Rank < group.Permission) {
+                        Player.Message(p, "Cannot delete zone for rank {0}", group.ColoredName);
+                        continue;
+                    }
                 } else if (zn.Owner.Length > 0 && !zn.Owner.CaselessEq(p.name)) {
                     Group group = Group.GroupIn(zn.Owner);
-                    if (p.Rank < group.Permission) continue;
+                    if (p.Rank < group.Permission) {
+                        Player.Message(p, "Cannot delete zone for {0} %S- they are ranked {1}",
+                                       PlayerInfo.GetColoredName(p, zn.Owner), group.ColoredName);
+                        continue;
+                    }
                 }
                 
                 LevelDB.DeleteZone(lvl.name, zn);

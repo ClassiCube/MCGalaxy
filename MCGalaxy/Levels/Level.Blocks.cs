@@ -186,22 +186,7 @@ namespace MCGalaxy {
         }
         
         bool CheckZonePerms(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
-            if (p.Rank < LevelPermission.Admin) {
-                bool zoneAllow = FindZones(p, x, y, z, ref inZone);
-                if (zoneAllow) return true;
-                if (p.ZoneSpam > DateTime.UtcNow) return false;
-                
-                Player.Message(p, FindZoneOwners(p, x, y, z));
-                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
-                return false;
-            }
-            return true;
-        }
-        
-        bool FindZones(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
-            if (ZoneList.Count == 0) return true;
-            bool zoneAllow = true;
-            
+            bool zoneAllow = true;            
             for (int i = 0; i < ZoneList.Count; i++) {
                 Zone zn = ZoneList[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ)
@@ -216,7 +201,13 @@ namespace MCGalaxy {
                 }
                 zoneAllow = false;
             }
-            return zoneAllow;
+            
+            if (zoneAllow) return true;
+            if (p.ZoneSpam > DateTime.UtcNow) return false;
+            
+            Player.Message(p, FindZoneOwners(p, x, y, z));
+            p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
+            return false;
         }
         
         internal string FindZoneOwners(Player p, ushort x, ushort y, ushort z) {
@@ -254,7 +245,7 @@ namespace MCGalaxy {
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
             
             bool inZone = false;
-            if (!CheckZonePerms(p, x, y, z, ref inZone)) return false;
+            if (ZoneList.Count > 0 && !CheckZonePerms(p, x, y, z, ref inZone)) return false;
             return inZone || CheckRank(p);
         }
         
