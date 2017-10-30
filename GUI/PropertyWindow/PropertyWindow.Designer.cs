@@ -1133,8 +1133,7 @@ namespace MCGalaxy.Gui
             this.rank_cmbOsMap.Name = "rank_cmbOsMap";
             this.rank_cmbOsMap.Size = new System.Drawing.Size(80, 21);
             this.rank_cmbOsMap.TabIndex = 49;
-            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.\nIf \'nobody\'" +
-                        " is selected, rank required is the minimum rank that can use /os.");
+            this.toolTip.SetToolTip(this.rank_cmbOsMap, "Default minimum rank required to build on maps made with /os map add.");
             // 
             // irc_chkPass
             // 

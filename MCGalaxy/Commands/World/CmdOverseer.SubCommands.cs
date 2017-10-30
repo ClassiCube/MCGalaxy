@@ -178,9 +178,6 @@ namespace MCGalaxy.Commands.World {
             lvl.VisitAccess.Whitelist(null, p.name);
             
             LevelPermission osPerm = ServerConfig.OSPerbuildDefault;
-            if (osPerm == LevelPermission.Nobody)
-                osPerm = CommandPerms.MinPerm(Command.all.Find("overseer"));
-            
             Group grp = Group.Find(osPerm);
             if (grp == null) return;
             

@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands {
             if (relative) arg = arg.Substring(1);
             value = 0;
             // ~ should work as ~0
-            if (relative && arg.Length == 0) return true;
+            if (relative && arg.Length == 0) { value += cur; return true; }
             
             if (!GetInt(p, arg, axis, ref value)) return false;
             if (relative) value += cur;
