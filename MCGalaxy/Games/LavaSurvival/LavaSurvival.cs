@@ -143,7 +143,7 @@ namespace MCGalaxy.Games
                 mapData.roundTimer.Start();
                 mapData.floodTimer.Start();
                 announceTimer.Start();
-                startTime = DateTime.Now;
+                startTime = DateTime.UtcNow;
                 roundActive = true;
                 Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + map.ColoredName);
             }
@@ -204,8 +204,7 @@ namespace MCGalaxy.Games
             catch (Exception e) { Logger.LogError(e); }
         }
 
-        public void DoFloodLayer()
-        {
+        void DoFloodLayer()  {
             Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
             map.Blockchange(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z, mapData.block, true);
             if (OnLayerFlood != null)
@@ -213,28 +212,23 @@ namespace MCGalaxy.Games
             mapData.currentLayer++;
         }
 
-        public void AnnounceTimeLeft(bool flood, bool round, Player p = null, bool console = false)
-        {
+        public void AnnounceTimeLeft(bool flood, bool round, Player p = null, bool console = false) {
             if (!active || !roundActive || startTime == null || map == null) return;
 
-            if (flood)
-            {
-                double floodMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.Now).TotalMinutes);
+            if (flood) {
+                double floodMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.UtcNow).TotalMinutes);
                 if (p == null && !console) map.ChatLevel("&3" + floodMinutes + " minute" + (floodMinutes == 1 ? "" : "s") + " %Suntil the flood.");
                 else Player.Message(p, "&3" + floodMinutes + " minute" + (floodMinutes == 1 ? "" : "s") + " %Suntil the flood.");
             }
-            if (round)
-            {
-                double roundMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.Now).TotalMinutes);
+            if (round) {
+                double roundMinutes = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.UtcNow).TotalMinutes);
                 if (p == null && !console) map.ChatLevel("&3" + roundMinutes + " minute" + (roundMinutes == 1 ? "" : "s") + " %Suntil the round ends.");
                 else Player.Message(p, "&3" + roundMinutes + " minute" + (roundMinutes == 1 ? "" : "s") + " %Suntil the round ends.");
             }
         }
 
-        public void AnnounceRoundInfo(Player p = null, bool console = false)
-        {
-            if (p == null && !console)
-            {
+        public void AnnounceRoundInfo(Player p = null, bool console = false)  {
+            if (p == null && !console) {
                 if (mapData.water) map.ChatLevel("The map will be flooded with &9water %Sthis round!");
                 if (mapData.layer)
                 {
@@ -245,9 +239,7 @@ namespace MCGalaxy.Games
                 if (mapData.fast) map.ChatLevel("The lava will be &cfast %Sthis round!");
                 if (mapData.killer) map.ChatLevel("The " + (mapData.water ? "water" : "lava") + " will &ckill you %Sthis round!");
                 if (mapData.destroy) map.ChatLevel("The " + (mapData.water ? "water" : "lava") + " will &cdestroy plants " + (mapData.water ? "" : "and flammable blocks ") + "%Sthis round!");
-            }
-            else
-            {
+            } else {
                 if (mapData.water) Player.Message(p, "The map will be flooded with &9water %Sthis round!");
                 if (mapData.layer) Player.Message(p, "The " + (mapData.water ? "water" : "lava") + " will &aflood in layers %Sthis round!");
                 if (mapData.fast) Player.Message(p, "The lava will be &cfast %Sthis round!");
