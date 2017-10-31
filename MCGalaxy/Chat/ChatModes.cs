@@ -44,15 +44,16 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (text[0] == '#' || (p != null && p.opchat)) {
-                if (text[0] == '#') text = text.Remove(0, 1).Trim();
+            if (p != null && p.opchat) {
                 MessageOps(p, text);
                 return true;
-            }
-            if (text[0] == '+' || (p != null && p.adminchat)) {
-                if (text[0] == '+') text = text.Remove(0, 1).Trim();
+            } else if (p != null && p.adminchat) {
                 MessageAdmins(p, text);
                 return true;
+            } else if (text[0] == '#') {
+                Player.Message(p, "%HIf you meant to send this to opchat, use %T/opchat " + text.Substring(1));
+            } else if (text[0] == '+') {
+                Player.Message(p, "%HIf you meant to send this to adminchat, use %T/adminchat " + text.Substring(1));
             }
             return false;
         }
