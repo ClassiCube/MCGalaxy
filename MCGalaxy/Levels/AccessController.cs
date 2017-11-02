@@ -71,13 +71,21 @@ namespace MCGalaxy {
             if (result == AccessResult.BelowMinRank && ignoreRankPerm) return true;
             
             if (result == AccessResult.Blacklisted) {
-                Player.Message(p, "You are blacklisted from {0} {1}%S.", ActionIng, ColoredName);
-            } else if (result == AccessResult.BelowMinRank) {
-                Player.Message(p, "Only {2}%S+ may {0} {1}%S.",
-                               Action, ColoredName, Group.GetColoredName(Min));
+                Player.Message(p, "You are blacklisted from {0} {1}", ActionIng, ColoredName);
+                return false;
+            }
+            
+            string whitelist = "";
+            if (Whitelisted.Count > 0) {
+                whitelist = "(and " + Whitelisted.Join(pl => PlayerInfo.GetColoredName(p, pl)) + "%S) ";
+            }
+            
+            if (result == AccessResult.BelowMinRank) {
+                Player.Message(p, "Only {2}%S+ {3}may {0} {1}",
+                               Action, ColoredName, Group.GetColoredName(Min), whitelist);
             } else if (result == AccessResult.AboveMaxRank) {
-                Player.Message(p, "Only {2} %Sand below may {0} {1}%S.",
-                               Action, ColoredName, Group.GetColoredName(Max));
+                Player.Message(p, "Only {2} %Sand below {3}may{0} {1}",
+                               Action, ColoredName, Group.GetColoredName(Max), whitelist);
             }
             return false;
         }
