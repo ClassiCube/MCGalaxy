@@ -105,8 +105,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             TntWarsGame it;
-            if (text[1] == "red" || text[1] == "r" || text[1] == "1" || text[1] == "blue"
-                || text[1] == "b" || text[1] == "2" || text[1] == "auto" || text[1] == "a" || text[1].Length == 0) {
+            if (text[1] == "red" || text[1] == "r" || text[1] == "blue" || text[1] == "b" || text[1] == "auto" || text[1] == "a" || text[1].Length == 0) {
                 it = TntWarsGame.Find(p.level);
                 if (it == null) {
                     Player.Message(p, "TNT Wars Error: There isn't a game on your current level!"); return;
@@ -134,7 +133,6 @@ namespace MCGalaxy.Commands.Fun {
                 switch (text[1]) {
                     case "red":
                     case "r":
-                    case "1":
                         if (it.Config.BalanceTeams && red > blue) {
                             Player.Message(p, "TNT Wars Error: Red has too many players!"); return;
                         }
@@ -142,7 +140,6 @@ namespace MCGalaxy.Commands.Fun {
 
                     case "blue":
                     case "b":
-                    case "2":
                         if (it.Config.BalanceTeams && blue > red) {
                             Player.Message(p, "TNT Wars Error: Blue has too many players!"); return;
                         }
@@ -445,13 +442,11 @@ namespace MCGalaxy.Commands.Fun {
                     {
                         case "red":
                         case "r":
-                        case "1":
                             SetSpawn(p, ref it.RedSpawn, Colors.red + "Red %Sspawn");
                             break;
 
                         case "blue":
                         case "b":
-                        case "2":
                             SetSpawn(p, ref it.BlueSpawn, Colors.blue + "Blue %Sspawn");
                             break;
                     }

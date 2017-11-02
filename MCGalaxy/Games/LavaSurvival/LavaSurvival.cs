@@ -457,23 +457,6 @@ namespace MCGalaxy.Games
                 && y <= mapSettings.safeZone[1].Y && z >= mapSettings.safeZone[0].Z && z <= mapSettings.safeZone[1].Z;
         }
 
-        // Accessors
-        public string VoteString
-        {
-            get
-            {
-                if (votes.Count > 0)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    foreach (KeyValuePair<string, int> kvp in votes)
-                        sb.AppendFormat("%S, &5{0}", kvp.Key.Capitalize());
-                    sb.Remove(0, 4);
-                    return sb.ToString();
-                }
-                return String.Empty;
-            }
-        }
-
         public List<string> Maps
         {
             get

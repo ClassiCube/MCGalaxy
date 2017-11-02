@@ -48,7 +48,7 @@ namespace MCGalaxy.Games {
                     AnnounceTimeLeft(!flooded, true, p);
                 } else {
                     Player.Message(p, "Vote for the next map!");
-                    Player.Message(p, "Choices: " + VoteString);
+                    Player.Message(p, "Choices: &5" + votes.Keys.Join("%S, &5"));
                 }
             }
         }

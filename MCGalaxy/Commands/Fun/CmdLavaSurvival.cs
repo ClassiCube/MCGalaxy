@@ -95,19 +95,24 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetup(Player p, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             
-            if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }            
+            if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }
             if (args.Length < 2) { SetupHelp(p); return; }
             if (Server.lava.active) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
+            string group = args[1];
             
-            switch (args[1]) {
-                case "map": HandleSetupMap(p, args); return;
-                case "block": HandleSetupBlock(p, args); return;
-                case "safe": HandleSetupSafeZone(p, args); return;
-                case "safezone": HandleSetupSafeZone(p, args); return;
-                case "settings": HandleSetupSettings(p, args); return;
-                case "mapsettings": HandleSetupMapSettings(p, args); return;
+            if (group.CaselessEq("map")) {
+                HandleSetupMap(p, args);
+            } else if (group.CaselessEq("block")) {
+                HandleSetupBlock(p, args);
+            } else if (group.CaselessEq("safe") || group.CaselessEq("safezone")) {
+                HandleSetupSafeZone(p, args);
+            } else if (group.CaselessEq("settings")) {
+                HandleSetupSettings(p, args);
+            } else if (group.CaselessEq("mapsettings")) {
+                HandleSetupMapSettings(p, args);
+            } else {
+                SetupHelp(p);
             }
-            SetupHelp(p);
         }
         
         void HandleSetupMap(Player p, string[] args) {
@@ -166,28 +171,25 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Start on server startup: " + (Server.lava.startOnStartup ? "&aON" : "&cOFF"));
                 Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
                 Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
-                Player.Message(p, "Vote time: &b" + Server.lava.voteTime + " minute" + (Server.lava.voteTime == 1 ? "" : "s"));
+                Player.Message(p, "Vote time: &b" + Server.lava.voteTime + " minutes");
                 return;
             }
 
-            try {
-                switch (args[2]) {
-                    case "sendafkmain":
-                        Server.lava.sendAfkMain = !Server.lava.sendAfkMain;
-                        Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
-                        break;
-                    case "votecount":
-                        Server.lava.voteCount = (byte)Utils.Clamp(int.Parse(args[3]), 2, 10);
-                        Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
-                        break;
-                    case "votetime":
-                        Server.lava.voteTime = double.Parse(args[3]);
-                        Player.Message(p, "Vote time: &b" + Server.lava.voteTime + "minute" + (Server.lava.voteTime == 1 ? "" : "s"));
-                        break;
-                    default:
-                        SetupHelp(p, "settings"); return;
-                }
-            } catch { Player.Message(p, "INVALID INPUT"); return; }
+        	string opt = args[2], value = args[3];
+            TimeSpan span = default(TimeSpan);
+            if (opt.CaselessEq("sendafkmain")) {
+                Server.lava.sendAfkMain = !Server.lava.sendAfkMain;
+                Player.Message(p, "Send AFK to main: " + (Server.lava.sendAfkMain ? "&aON" : "&cOFF"));
+            } else if (opt.CaselessEq("votecount")) {
+                if (!CommandParser.GetByte(p, value, "Count", ref Server.lava.voteCount, 2, 10)) return;
+                Player.Message(p, "Vote count: &b" + Server.lava.voteCount);
+            } else if (opt.CaselessEq("votetime")) {
+                if (!CommandParser.GetTimespan(p, value, ref span, "set time to", "m")) return;
+                Server.lava.voteTime = span.TotalMinutes;
+                Player.Message(p, "Vote time: &b" + span.Shorten(true));
+            } else {
+                SetupHelp(p, "settings"); return;
+            }
             Server.lava.SaveSettings();
         }
         
@@ -200,11 +202,11 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
                 Player.Message(p, "Water flood chance: &b" + settings.water + "%");
                 Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
-                Player.Message(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
+                Player.Message(p, "Layer height: &b" + settings.layerHeight + " blocks");
                 Player.Message(p, "Layer count: &b" + settings.layerCount);
-                Player.Message(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
-                Player.Message(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
-                Player.Message(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
+                Player.Message(p, "Layer time: &b" + settings.layerInterval + " minutes");
+                Player.Message(p, "Round time: &b" + settings.roundTime + " minutes");
+                Player.Message(p, "Flood time: &b" + settings.floodTime + " minutes");
                 Player.Message(p, "Flood position: &b" + settings.blockFlood.ToString(", "));
                 Player.Message(p, "Layer position: &b" + settings.blockLayer.ToString(", "));
                 Player.Message(p, "Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", "));
@@ -235,7 +237,7 @@ namespace MCGalaxy.Commands.Fun {
                         break;
                     case "layerheight":
                         settings.layerHeight = int.Parse(args[3]);
-                        Player.Message(p, "Layer height: &b" + settings.layerHeight + " block" + (settings.layerHeight == 1 ? "" : "s"));
+                        Player.Message(p, "Layer height: &b" + settings.layerHeight + " blocks");
                         break;
                     case "layercount":
                         settings.layerCount = int.Parse(args[3]);
@@ -243,15 +245,15 @@ namespace MCGalaxy.Commands.Fun {
                         break;
                     case "layertime":
                         settings.layerInterval = double.Parse(args[3]);
-                        Player.Message(p, "Layer time: &b" + settings.layerInterval + " minute" + (settings.layerInterval == 1 ? "" : "s"));
+                        Player.Message(p, "Layer time: &b" + settings.layerInterval + " minutes");
                         break;
                     case "roundtime":
                         settings.roundTime = double.Parse(args[3]);
-                        Player.Message(p, "Round time: &b" + settings.roundTime + " minute" + (settings.roundTime == 1 ? "" : "s"));
+                        Player.Message(p, "Round time: &b" + settings.roundTime + " minutes");
                         break;
                     case "floodtime":
                         settings.floodTime = double.Parse(args[3]);
-                        Player.Message(p, "Flood time: &b" + settings.floodTime + " minute" + (settings.floodTime == 1 ? "" : "s"));
+                        Player.Message(p, "Flood time: &b" + settings.floodTime + " minutes");
                         break;
                     default:
                         SetupHelp(p, "mapsettings"); return;
@@ -324,7 +326,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Position set! &b({0}, {1}, {2})", m[0].X, m[0].Y, m[0].Z);
             return false;
         }
-                
+        
         bool SetFloodLayerPos(Player p, Vec3S32[] m, object state, ExtBlock block) {
             LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
             settings.blockLayer = (Vec3U16)m[0];
