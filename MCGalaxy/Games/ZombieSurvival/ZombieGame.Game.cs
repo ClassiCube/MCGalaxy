@@ -138,8 +138,8 @@ namespace MCGalaxy.Games {
             int winStreak = p.Game.CurrentRoundsSurvived;
             
             if (winStreak == 1) prefix += "&4*" + p.color;
-            else if (winStreak == 2) prefix += "&7*"+ p.color;
-            else if (winStreak == 3) prefix += "&6*"+ p.color;
+            else if (winStreak == 2) prefix += "&7*" + p.color;
+            else if (winStreak == 3) prefix += "&6*" + p.color;
             else if (winStreak > 0) prefix += "&6" + winStreak + p.color;
         }
     }

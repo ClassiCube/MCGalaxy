@@ -37,5 +37,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
+        
+        public abstract void EndRound();
     }
 }

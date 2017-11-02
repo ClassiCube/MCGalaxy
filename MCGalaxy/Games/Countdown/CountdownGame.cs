@@ -35,6 +35,8 @@ namespace MCGalaxy.Games {
         CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();
         
+        public override void EndRound() { EndRound(null); }
+        
         
         #region Round
 

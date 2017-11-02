@@ -48,30 +48,6 @@ namespace MCGalaxy.Games
         public byte voteCount = 2;
         public int lifeNum = 3;
         public double voteTime = 2;
-        
-        // Plugin event delegates
-        public delegate void GameStartHandler(Level map);
-        public delegate void GameStopHandler();
-        public delegate void MapChangeHandler(Level oldmap, Level newmap); // Keep in mind oldmap will be unloaded after this event finishes.
-        public delegate void LavaFloodHandler(ushort x, ushort y, ushort z); // Only called on normal flood, not layer flood.
-        public delegate void LayerFloodHandler(ushort x, ushort y, ushort z);
-        public delegate void RoundStartHandler(Level map);
-        public delegate void RoundEndHandler();
-        public delegate void VoteStartHandler(string[] options);
-        public delegate void VoteEndHandler(string winner);
-        public delegate void PlayerDeathHandler(Player p); // Only called when the plaer is out of the round, not when they lose a life.
-
-        // Plugin events
-        public event GameStartHandler OnGameStart;
-        public event GameStopHandler OnGameStop;
-        public event MapChangeHandler OnMapChange;
-        public event LavaFloodHandler OnLavaFlood;
-        public event LayerFloodHandler OnLayerFlood;
-        public event RoundStartHandler OnRoundStart;
-        public event RoundEndHandler OnRoundEnd;
-        public event VoteStartHandler OnVoteStart;
-        public event VoteEndHandler OnVoteEnd;
-        public event PlayerDeathHandler OnPlayerDeath;
 
         // Constructors
         public LavaSurvival() {
@@ -101,16 +77,12 @@ namespace MCGalaxy.Games
             
             try { LoadMap(String.IsNullOrEmpty(mapName) ? maps[rand.Next(maps.Count)] : mapName); }
             catch (Exception e) { Logger.LogError(e); active = false; return 4; }
-            if (OnGameStart != null)
-                OnGameStart(map);
             return 0;
         }
         public byte Stop()
         {
             if (!active) return 1; // Not started
 
-            if (OnGameStop != null)
-                OnGameStop();
             active = false;
             roundActive = false;
             voteActive = false;
@@ -133,8 +105,6 @@ namespace MCGalaxy.Games
         {
             if (roundActive) return;
 
-            if (OnRoundStart != null)
-                OnRoundStart(map);
             try
             {
                 deaths.Clear();
@@ -150,12 +120,10 @@ namespace MCGalaxy.Games
             catch (Exception e) { Logger.LogError(e); }
         }
 
-        public void EndRound()
+        public override void EndRound()
         {
             if (!roundActive) return;
 
-            if (OnRoundEnd != null)
-                OnRoundEnd();
             roundActive = false;
             flooded = false;
             try
@@ -197,8 +165,6 @@ namespace MCGalaxy.Games
                 else
                 {
                     map.Blockchange(mapSettings.blockFlood.X, mapSettings.blockFlood.Y, mapSettings.blockFlood.Z, mapData.block, true);
-                    if (OnLavaFlood != null)
-                        OnLavaFlood(mapSettings.blockFlood.X, mapSettings.blockFlood.Y, mapSettings.blockFlood.Z);
                 }
             }
             catch (Exception e) { Logger.LogError(e); }
@@ -207,8 +173,6 @@ namespace MCGalaxy.Games
         void DoFloodLayer()  {
             Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " + mapData.currentLayer + " flooding.");
             map.Blockchange(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z, mapData.block, true);
-            if (OnLayerFlood != null)
-                OnLayerFlood(mapSettings.blockLayer.X, (ushort)(mapSettings.blockLayer.Y + ((mapSettings.layerHeight * mapData.currentLayer) - 1)), mapSettings.blockLayer.Z);
             mapData.currentLayer++;
         }
 
@@ -287,8 +251,6 @@ namespace MCGalaxy.Games
                                 PlayerActions.ChangeMap(pl, map);
                         }
                     }
-                    if (OnMapChange != null)
-                        OnMapChange(oldMap, map);
                     oldMap.Unload(true, false);
                 }
                 catch { }
@@ -319,8 +281,6 @@ namespace MCGalaxy.Games
                 }
             }
 
-            if (OnVoteStart != null)
-                OnVoteStart(GetVotedLevels().ToArray());
             map.ChatLevel("Vote for the next map! The vote ends in " + voteTime + " minute" + (voteTime == 1 ? "" : "s") +".");
             map.ChatLevel("Choices: " + str.Remove(0, 4));
 
@@ -360,8 +320,6 @@ namespace MCGalaxy.Games
             votes.Clear();
             voted.Clear();
 
-            if (OnVoteEnd != null)
-                OnVoteEnd(most.Key);
             map.ChatLevel("The vote has ended! &5" + most.Key.Capitalize() + " %Swon with &a" + most.Value + " %Svote" + (most.Value == 1 ? "" : "s") + ".");
             map.ChatLevel("You will be transferred in 5 seconds...");
             transferTimer = new Timer(5000);
@@ -404,10 +362,9 @@ namespace MCGalaxy.Games
             if (!deaths.ContainsKey(name))
                 deaths.Add(name, 0);
             deaths[name]++;
+            
             if (!silent && IsPlayerDead(p))
             {
-                if (OnPlayerDeath != null)
-                    OnPlayerDeath(p);
                 Player[] online = PlayerInfo.Online.Items; 
                 foreach (Player pl in online) {
                     if (pl != p && HasPlayer(pl))

@@ -317,7 +317,7 @@ namespace MCGalaxy.Games {
             TabList.Add(p, p, Entities.SelfID);
         }
 
-        public void EndRound() {
+        public override void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;

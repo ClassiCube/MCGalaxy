@@ -212,8 +212,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        /// <summary> Ends the current round of CTF. </summary>
-        public void EndRound() {
+        public override void EndRound() {
             started = false;
             if (Blue.Points >= Config.RoundPoints || Blue.Points > Red.Points) {
                 Chat.MessageLevel(Map, Blue.ColoredName + " %Swon this round of CTF!");
