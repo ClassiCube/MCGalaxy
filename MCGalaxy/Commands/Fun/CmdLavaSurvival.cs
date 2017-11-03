@@ -175,7 +175,7 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
 
-        	string opt = args[2], value = args[3];
+        	string opt = args[2], value = args.Length > 3 ? args[3] : "";
             TimeSpan span = default(TimeSpan);
             if (opt.CaselessEq("sendafkmain")) {
                 Server.lava.sendAfkMain = !Server.lava.sendAfkMain;

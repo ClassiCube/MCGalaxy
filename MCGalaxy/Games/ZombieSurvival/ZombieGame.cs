@@ -275,13 +275,9 @@ namespace MCGalaxy.Games {
         
         public bool IsZombieMap(string name) {
             if (!Running) return false;
-            if (ZSConfig.IgnorePersonalWorlds && name.IndexOf('+') >= 0)
-                return false;
-            if (ZSConfig.IgnoredLevelList.CaselessContains(name))
-                return false;
+            if (ZSConfig.IgnoredLevelList.CaselessContains(name)) return false;
             
-            return ZSConfig.LevelList.Count == 0 ?
-                true : ZSConfig.LevelList.CaselessContains(name);
+            return ZSConfig.LevelList.Count == 0 || ZSConfig.LevelList.CaselessContains(name);
         }
         
         #region Database

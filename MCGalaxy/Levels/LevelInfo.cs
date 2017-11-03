@@ -91,7 +91,7 @@ namespace MCGalaxy {
             int latest = 0;
             
             foreach (string path in backups) {
-            	string backupName = BackupNameFrom(path);
+                string backupName = BackupNameFrom(path);
                 int num;
                 
                 if (!int.TryParse(backupName, out num)) continue;
@@ -135,6 +135,23 @@ namespace MCGalaxy {
                 return false;
             }
             return true;
+        }
+        
+        internal static bool IsRealmOwner(string name, string map) {
+            Level lvl = null;
+            LevelConfig cfg = GetConfig(map, out lvl); 
+            string[] owners = cfg.RealmOwner.Replace(" ", "").Split(',');
+            
+            if (owners.Length > 0 && owners[0].Length > 0) {
+                foreach (string owner in owners) {
+                    if (owner.CaselessEq(name)) return true;
+                }
+                return false;
+            }
+            
+            // For backwards compatibility, treat name+XYZ map names as belonging to name+
+            // If no + though, don't use because otherwise people can register accounts and claim maps
+            return ServerConfig.ClassicubeAccountPlus && map.CaselessStarts(name);
         }
     }
 }

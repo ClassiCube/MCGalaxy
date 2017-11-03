@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
             string arg2 = args.Length > 2 ? args[2] : "";
             
             bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
-            if (mapOnly && !OwnsMap(p, p.level)) {
+            if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
 
@@ -120,20 +120,7 @@ namespace MCGalaxy.Commands.World {
                 return p.name.ToLower() + "00";
             return p.name.ToLower();
         }
-        
-        static bool OwnsMap(Player p, Level lvl) {
-            string[] owners = lvl.Config.RealmOwner.Replace(" ", "").Split(',');
-            
-            if (owners.Length > 0 && owners[0].Length > 0) {
-                foreach (string owner in owners) {
-                    if (owner.CaselessEq(p.name)) return true;
-                }
-                return false;
-            }
-            return lvl.name.CaselessStarts(p.name);
-        }
-        
-        
+
         #region Help messages
 
         static string[] blockPropsHelp = new string[] {

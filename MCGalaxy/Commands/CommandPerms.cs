@@ -202,7 +202,7 @@ namespace MCGalaxy.Commands {
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
                 try {                    
-                    LevelPermission minRank = (LevelPermission)int.Parse(args[1]);                    
+                    LevelPermission minRank = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
                     
                     List<LevelPermission> allow = ExpandPerms(allowRaw);

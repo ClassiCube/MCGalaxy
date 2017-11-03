@@ -29,12 +29,6 @@ namespace MCGalaxy.Gui {
         [DisplayName("Change levels")]
         public bool ChangeLevels { get; set; }
         
-        [Description("Whether worlds with a '+' in their name (i.e. from /os map add) are ignored " +
-                     "when choosing levels for zombie survival.")]
-        [Category("Levels settings")]
-        [DisplayName("Ignore personal worlds")]
-        public bool IgnorePersonalWorlds { get; set; }
-        
         [Description("Comma separated list of levels that are never chosen for zombie survival. (e.g. main,spawn)")]
         [Category("Levels settings")]
         [DisplayName("Ignored level list")]
@@ -52,12 +46,6 @@ namespace MCGalaxy.Gui {
         [Category("General settings")]
         [DisplayName("Pillaring allowed")]
         public bool Pillaring { get; set; }
-        
-        [Description("Whether players are allowed to use /spawn in zombie survival. " +
-                     "You should generallly leave this as false.")]
-        [Category("Levels settings")]
-        [DisplayName("Respawning allowed")]
-        public bool Respawning { get; set; }
         
         [Description("Whether the main/spawn level is always set to the current level of zombie survival. " +
                      "You should set this to true if the server is purely for zombie survival. ")]
@@ -156,10 +144,8 @@ namespace MCGalaxy.Gui {
             ChangeLevels = ZSConfig.ChangeLevels;
             IgnoredLevelsList = ZSConfig.IgnoredLevelList.Join(",");
             LevelsList = ZSConfig.LevelList.Join(",");
-            IgnorePersonalWorlds = ZSConfig.IgnorePersonalWorlds;
             
             Pillaring = !ZSConfig.NoPillaring;
-            Respawning = !ZSConfig.NoRespawn;
             SetMainLevel = ZSConfig.SetMainLevel;
             StartImmediately = ZSConfig.StartImmediately;
             
@@ -191,10 +177,8 @@ namespace MCGalaxy.Gui {
             list = LevelsList.Replace(" ", "");
             if (list.Length == 0) ZSConfig.LevelList = new List<string>();
             else ZSConfig.LevelList = new List<string>(list.Replace(" ", "").Split(','));
-            ZSConfig.IgnorePersonalWorlds = IgnorePersonalWorlds;
             
             ZSConfig.NoPillaring = !Pillaring;
-            ZSConfig.NoRespawn = !Respawning;
             ZSConfig.SetMainLevel = SetMainLevel;
             ZSConfig.StartImmediately = StartImmediately;
             

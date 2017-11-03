@@ -106,8 +106,9 @@ namespace MCGalaxy.Commands.Info {
             PrintRanks(p, data.Build, "  Modifiable by ");
             
             string realmOwner = cfg.RealmOwner;
-            if (String.IsNullOrEmpty(cfg.RealmOwner))
+            if (String.IsNullOrEmpty(cfg.RealmOwner)) {
                 realmOwner = GetRealmMapOwner(data.Name);
+            }
             if (String.IsNullOrEmpty(realmOwner)) return;
             
             string[] owners = realmOwner.Replace(" ", "").Split(',');
@@ -149,19 +150,23 @@ namespace MCGalaxy.Commands.Info {
                            cfg.Likes, cfg.Dislikes);
         }
         
-        static string GetRealmMapOwner(string lvlName) {
+        static string GetRealmMapOwner(string map) {
             bool plus = ServerConfig.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
-            if (plus && lvlName.IndexOf('+') == -1) return null;
+            if (plus && map.IndexOf('+') == -1) return null;
             
-            while (lvlName.Length > 0 && Char.IsNumber(lvlName[lvlName.Length - 1])) {
+            string name = null, origMap = map;
+            while (map.Length > 0 && Char.IsNumber(map[map.Length - 1])) {
                 // If the server does not have account with +, we have to account for the
                 // that say Player123's second level is Player1232, and the realm owner is Player123
-                string pName = plus ? null : PlayerInfo.FindName(lvlName);
-                if (pName != null) return pName;
-                lvlName = lvlName.Substring(0, lvlName.Length - 1);
+                name = plus ? null : PlayerInfo.FindName(map);
+                if (name != null) break;
+                map = map.Substring(0, map.Length - 1);
             }
-            return PlayerInfo.FindName(lvlName);
+            
+            if (name == null) name = PlayerInfo.FindName(map);           
+            if (name != null && !LevelInfo.IsRealmOwner(name, origMap)) return null;
+            return name;
         }
         
         void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {

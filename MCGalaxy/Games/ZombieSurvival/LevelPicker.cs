@@ -46,15 +46,13 @@ namespace MCGalaxy.Games.ZS {
             }
             return maps;
         }
-        
-        /// <summary> Returns a list of all possible maps (exclusing personal realms if 'ignore realms' setting is true) </summary>
-        static List<string> AllMaps() {
-            List<string> maps = new List<string>();
+
+        static List<string> AllMaps() {            
             string[] files = LevelInfo.AllMapFiles();
+            List<string> maps = new List<string>(files.Length);
             
             foreach (string file in files) {
                 string map = Path.GetFileNameWithoutExtension(file);
-                if (map.IndexOf('+') >= 0 && ZSConfig.IgnorePersonalWorlds) continue;
                 maps.Add(map);
             }
             return maps;

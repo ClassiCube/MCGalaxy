@@ -42,16 +42,10 @@ namespace MCGalaxy.Games {
         [ConfigBool("zombie-on-server-start", "Zombie", false)]
         public static bool StartImmediately;
         
-        /// <summary> Whether maps with '+' in their name are ignored when choosing levels for the next round. </summary>
-        [ConfigBool("zombie-ignore-personalworlds", "Zombie", true)]
-        public static bool IgnorePersonalWorlds = true;
-        
         /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
         [ConfigBool("zombie-map-inheartbeat", "Zombie", false)]
         public static bool IncludeMapInHeartbeat = false;
 
-        [ConfigBool("no-respawning-during-zombie", "Zombie", true)]
-        public static bool NoRespawn = true;
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public static bool NoPillaring = true;
         [ConfigString("zombie-name-while-infected", "Zombie", "", true)]

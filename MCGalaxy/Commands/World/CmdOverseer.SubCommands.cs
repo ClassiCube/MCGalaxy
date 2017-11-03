@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.World {
         static void HandleMap(Player p, string cmd, string value) {
             cmd = cmd.ToUpper();
             bool mapOnly = !(cmd == "ADD" || cmd.Length == 0);
-            if (mapOnly && !OwnsMap(p, p.level)) {
+            if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
             
@@ -193,8 +193,6 @@ namespace MCGalaxy.Commands.World {
             }
             
             string map = p.level.name;
-            if (!OwnsMap(p, p.level)) return;
-            
             Player.Message(p, "Created backup.");
             if (LevelActions.Delete(map)) {
                 Player.Message(p, "Map " + map + " was removed.");
