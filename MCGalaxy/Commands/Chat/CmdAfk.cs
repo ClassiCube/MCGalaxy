@@ -24,18 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
-            if (message.CaselessEq("list")) {
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (!Entities.CanSee(p, pl) || !pl.IsAfk) continue;
-                    Player.Message(p, pl.ColoredName);
-                }
-                return;
-            }
-            ToggleAfk(p, message);
-        }
-        
+        public override void Use(Player p, string message) { ToggleAfk(p, message); }        
         internal static void ToggleAfk(Player p, string message) {
             if (p.joker) message = "";
             p.AutoAfk = false;
