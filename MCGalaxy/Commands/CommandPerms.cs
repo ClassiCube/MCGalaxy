@@ -180,11 +180,7 @@ namespace MCGalaxy.Commands {
 
             if (File.Exists(Paths.CmdPermsFile)) {
                 string[] lines = File.ReadAllLines(Paths.CmdPermsFile);
-                if (lines.Length > 0 && lines[0].CaselessEq("#Version 2")) {
-                    LoadVersion2(lines);
-                } else {
-                    LoadVersion1(lines);
-                }
+                ProcessLines(lines);
             } else {
                 Save();
             }
@@ -192,9 +188,9 @@ namespace MCGalaxy.Commands {
             foreach (Group grp in Group.GroupList) {
                 grp.SetUsableCommands();
             }
-        }        
+        }
                 
-        static void LoadVersion2(string[] lines) {
+        static void ProcessLines(string[] lines) {
             string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
@@ -213,22 +209,5 @@ namespace MCGalaxy.Commands {
                 }
             }
         }
-        
-        static void LoadVersion1(string[] lines) {
-            foreach (string line in lines) {
-                if (line.Length == 0 || line[0] == '#') continue;
-                
-                string cmd = line.Split('=')[0].Trim();
-                string value = line.Split('=')[1].Trim();
-
-                if (Group.Find(value) == null) {
-                    Logger.Log(LogType.Warning, "No group found for command {0}, using default value.", cmd);
-                } else {
-                    LevelPermission lowestRank = Group.Find(value).Permission;
-                    Set(cmd, lowestRank, null, null);
-                }
-            }
-        }
-
     }
 }

@@ -121,11 +121,7 @@ namespace MCGalaxy.Blocks {
             // Custom permissions set by the user.
             if (File.Exists(Paths.BlockPermsFile)) {
                 string[] lines = File.ReadAllLines(Paths.BlockPermsFile);
-                if (lines.Length > 0 && lines[0].CaselessEq("#Version 2")) {
-                    LoadVersion2(lines);
-                } else {
-                    LoadVersion1(lines);
-                }
+                ProcessLines(lines);
             } else {
                 Save();
             }
@@ -135,11 +131,11 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        static void LoadVersion2(string[] lines) {
+        static void ProcessLines(string[] lines) {
             string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
-                //Name/ID : Lowest : Disallow : Allow
+                // Format is - Name/ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
                 byte block;
@@ -162,26 +158,7 @@ namespace MCGalaxy.Blocks {
                 }
                 List[perms.BlockID] = perms;
             }
-        }
-        
-        static void LoadVersion1(string[] lines) {
-            foreach (string line in lines) {
-                if (line.Length == 0 || line[0] == '#') continue;
-                
-                try {
-                    byte block = Block.Byte(line.SplitSpaces()[0]);
-                    Group group = Group.Find(line.SplitSpaces()[2]);
-                    
-                    if (group != null)
-                        List[block].MinRank = group.Permission;
-                    else
-                        throw new InvalidDataException("Line " + line + " is invalid.");
-                } catch {
-                    Logger.Log(LogType.Warning, "Could not find the rank given on {0}. Using default", line);
-                }
-            }
-        }
-        
+        }       
         
         static void SetDefaultPerms() {
             for (int i = 0; i < Block.Count; i++) {
