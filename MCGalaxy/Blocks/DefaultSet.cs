@@ -72,7 +72,7 @@ namespace MCGalaxy.Blocks {
             if (b == Block.Water || b == Block.StillWater)
                 return 11; // (128 * 0.1f - 1);
             if (b == Block.Lava || b == Block.StillLava)
-                return 255; // (128 * 2 - 1);
+                return 229; // (128 * 1.8f - 1);
             return 0;
         }
         
