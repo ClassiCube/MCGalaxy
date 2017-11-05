@@ -51,9 +51,19 @@ namespace MCGalaxy {
                 MessageAdmins(p, text);
                 return true;
             } else if (text[0] == '#') {
-                Player.Message(p, "%HIf you meant to send this to opchat, use %T/opchat " + text.Substring(1));
+                if (text.Length > 1 && text[1] == '#') {
+                    MessageOps(p, text.Substring(2));
+                    return true;
+                } else {
+                    Player.Message(p, "%HIf you meant to send this to opchat, use %T##" + text.Substring(1));
+                }
             } else if (text[0] == '+') {
-                Player.Message(p, "%HIf you meant to send this to adminchat, use %T/adminchat " + text.Substring(1));
+                if (text.Length > 1 && text[1] == '+') {
+                    MessageAdmins(p, text.Substring(2));
+                    return true;
+                } else {
+                    Player.Message(p, "%HIf you meant to send this to adminchat, use %T++" + text.Substring(1));
+                }
             }
             return false;
         }
@@ -82,7 +92,7 @@ namespace MCGalaxy {
                               pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(pl, p),
                               displayName, message);
             
-            if (p != null) p.CheckForMessageSpam();           
+            if (p != null) p.CheckForMessageSpam();
             Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, name, message);
             Server.IRC.Say(displayName + "%S: " + message, true);
         }
