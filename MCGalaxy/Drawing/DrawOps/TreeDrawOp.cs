@@ -47,23 +47,29 @@ namespace MCGalaxy.Drawing.Ops {
             Vec3U16 P = Clamp(marks[0]);
             Level lvl = Level;
             
+            // Need to make a list of leave coordinates, because otherwise
+            // drawing tree with /scale won't work properly
+            List<Vec3U16> leaves = new List<Vec3U16>();
+            
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
-                        {
-                            if (bT == Block.Leaves && !lvl.IsAirAt(xT, yT, zT)) return;
-                            
-                            if (bT != Block.Leaves) {
-                                output(Place(xT, yT, zT, (ExtBlock)bT));
-                            } else {
-                                output(Place(xT, yT, zT, brush));
-                            }
-                        });
+                          {
+                              if (bT != Block.Leaves) {
+                                  output(Place(xT, yT, zT, (ExtBlock)bT));
+                              } else if (lvl.IsAirAt(xT, yT, zT)) {
+                                  leaves.Add(new Vec3U16(xT, yT, zT));
+                              }
+                          });
+            
+            foreach (Vec3U16 pos in leaves) {
+                output(Place(pos.X, pos.Y, pos.Z, brush));
+            }
         }
         
         public override void SetMarks(Vec3S32[] marks) {
             base.SetMarks(marks);
             int value = Size != -1 ? Size : Tree.DefaultSize(random);
             Tree.SetData(random, value);
-                        
+            
             Max.Y += Tree.height;
             Min.X -= Tree.size; Min.Z -= Tree.size;
             Max.X += Tree.size; Max.Z += Tree.size;
