@@ -27,7 +27,7 @@ namespace MCGalaxy.DB {
         public const byte Version = 1;
         public const int EntrySize = 16;
         public const int HeaderEntries = 1;
-        public const int BulkEntries = 2048;
+        public const int BulkEntries = 4096;
         
         public static BlockDBFile V1 = new BlockDBFile_V1();
         
@@ -48,7 +48,7 @@ namespace MCGalaxy.DB {
         public static BlockDBFile ReadHeader(Stream s, out Vec3U16 dims) {
             dims = default(Vec3U16);
             byte[] header = new byte[EntrySize * HeaderEntries];
-            ReadFully(s, header, header.Length);
+            ReadFully(s, header, 0, header.Length);
             
             // Check constants are expected
             // TODO: check 8 byte string identifier
@@ -194,10 +194,10 @@ namespace MCGalaxy.DB {
             array[index++] = (byte)(value >> 8);
         }
         
-        internal static void ReadFully(Stream stream, byte[] dst, int count) {
+        internal static void ReadFully(Stream stream, byte[] dst, int offset, int count) {
             int total = 0;
             do {
-                int read = stream.Read(dst, total, count - total);
+                int read = stream.Read(dst, offset + total, count - total);
                 if (read == 0) throw new EndOfStreamException();
                 total += read;
             } while (total < count);

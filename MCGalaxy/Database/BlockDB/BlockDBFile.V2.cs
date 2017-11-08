@@ -22,9 +22,9 @@ using MCGalaxy.Util;
 namespace MCGalaxy.DB {
     
     public unsafe sealed class BlockDBFile_V2 : BlockDBFile {
-        const int BlockSize = 4096;
+        const int BlockSize = BlockDBFile.BulkEntries;
         
-        /* TODO: Last chunk may only be partial. need to prepend these entries when compressing. */
+        /* TODO: Last chunk in file may only be partially filled. need to prepend these entries when compressing more. */
         public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             throw new NotImplementedException();
         }
@@ -36,7 +36,7 @@ namespace MCGalaxy.DB {
         public override long CountEntries(Stream s) {
             byte[] data = new byte[8];
             s.Position = 16;
-            BlockDBFile.ReadFully(s, data, data.Length);
+            BlockDBFile.ReadFully(s, data, 0, data.Length);
             
             uint lo = (uint)ReadInt32(data, 0);
             uint hi = (uint)ReadInt32(data, 4);
@@ -44,32 +44,40 @@ namespace MCGalaxy.DB {
         }
         
         public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
-            long remaining = s.Length - s.Position;
+            long pos = s.Position;
+            // Version 2 expects all chunks to be aligned to 4096 bytes
+            if (pos < BlockSize) { s.Position = BlockSize; pos = BlockSize; }
+            long remaining = s.Length - pos;
             if (remaining == 0) return 0;
-            int bytes = (int)Math.Min(remaining, BlockSize);
             
-            /* TODO: BULK POINTS TO ENTRIESPTR, FIX THIS */
-            BlockDBFile.ReadFully(s, bulk, bytes);
-            return DecompressChunk(bulk, entriesPtr);
+            int bytes = (int)Math.Min(remaining, BlockSize);
+            int offset = bulk.Length - BlockSize;
+            
+            // NOTE: bulk and entriesPtr point to same thing
+            // But we read into the end of the bulk array, thus the entriesPtr pointing
+            // to start of array never ends up overlapping with the data being read
+            BlockDBFile.ReadFully(s, bulk, offset, bytes);
+            return DecompressChunk(bulk, offset, entriesPtr);
         }
         
         public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
             if (pos > BlockSize) {
                 int bytes = (int)Math.Min(pos - BlockSize, BlockSize);
+                int offset = bulk.Length - BlockSize;
+                
                 pos -= bytes;
                 s.Position = pos;
-                BlockDBFile.ReadFully(s, bulk, bytes);
-                s.Position = pos; // set correct position for next backward read            
-                return DecompressChunk(bulk, entriesPtr);
+                BlockDBFile.ReadFully(s, bulk, offset, bytes);
+                s.Position = pos; // set correct position for next backward read
+                return DecompressChunk(bulk, offset, entriesPtr);
             }
             return 0;
         }
         
-        unsafe static int DecompressChunk(byte[] bulk, BlockDBEntry* ptr) {
-            byte comp = bulk[0];
-            int count = bulk[1] | (bulk[2] << 8);
-            int idx = 3;
+        unsafe static int DecompressChunk(byte[] bulk, int idx, BlockDBEntry* ptr) {
+            byte comp = bulk[idx]; idx++;
+            int count = bulk[idx] | (bulk[idx + 1] << 8); idx += 2;
             
             int playerID = 0;
             if ((comp & 0x01) < 0x01) { playerID = ReadInt32(bulk, idx); idx += 4; }

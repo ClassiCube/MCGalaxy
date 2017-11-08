@@ -86,7 +86,7 @@ namespace MCGalaxy.DB {
             int count = Math.Min(remaining, BulkEntries);
             
             if (count > 0) {
-                BlockDBFile.ReadFully(s, bulk, count * EntrySize);
+                BlockDBFile.ReadFully(s, bulk, 0, count * EntrySize);
             }
             return count;
         }
@@ -99,7 +99,7 @@ namespace MCGalaxy.DB {
             if (count > 0) {
                 pos -= count * EntrySize;
                 s.Position = pos;
-                BlockDBFile.ReadFully(s, bulk, count * EntrySize);
+                BlockDBFile.ReadFully(s, bulk, 0, count * EntrySize);
                 s.Position = pos; // set correct position for next backward read
             }
             return count;
