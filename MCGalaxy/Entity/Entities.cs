@@ -31,7 +31,7 @@ namespace MCGalaxy {
         
         /// <summary> Respawns this player to all players (including self) that can see the player in the current world. </summary>
         public static void GlobalRespawn(Player p, bool self = true) {
-        	GlobalDespawn(p, self);
+            GlobalDespawn(p, self);
             GlobalSpawn(p, self);
         }
         
@@ -149,10 +149,7 @@ namespace MCGalaxy {
                 dst.Send(Packet.AddEntity(id, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             }
             
-            if (dst.hasChangeModel && !model.CaselessEq("humanoid")) {
-                dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
-            }
-            
+            if (dst.hasChangeModel && !model.CaselessEq("humanoid")) SendModel(dst, id, model);
             if (dst.Supports(CpeExt.EntityProperty)) {
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX)));
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ)));
@@ -181,8 +178,7 @@ namespace MCGalaxy {
             if (target.otherRankHidden) return p.Rank >= target.oHideRank;
             return p.Rank >= target.Rank;
         }
-        
-        /// <summary> Updates the model of an entity to all players in same level. </summary>
+
         public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
             entity.Model = model;
@@ -194,19 +190,20 @@ namespace MCGalaxy {
                 if (!pl.CanSeeEntity(entity)) continue;
                 
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
-                
-                // Fallback block models for clients that don't support block definitions
                 string modelSend = Chat.Format(model, pl, true, false);
-                byte block;
-                if (byte.TryParse(modelSend, out block) && !pl.hasBlockDefs) {
-                    modelSend = pl.level.RawFallback(block).ToString();
-                }
-
-                pl.Send(Packet.ChangeModel(id, modelSend, pl.hasCP437));
+                SendModel(pl, id, modelSend);
             }
         }
+        
+        static void SendModel(Player pl, byte id, string model) {
+            byte block;
+            // Fallback block models for clients that don't support block definitions
+            if (byte.TryParse(model, out block) && !pl.hasBlockDefs) {
+                model = pl.level.RawFallback(block).ToString();
+            }
+            pl.Send(Packet.ChangeModel(id, model, pl.hasCP437));
+        }
 
-        /// <summary> Updates a property of an entity to all other players in same level. </summary>
         public static void UpdateEntityProp(Entity entity, EntityProp prop, int value) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = entity.Level;
