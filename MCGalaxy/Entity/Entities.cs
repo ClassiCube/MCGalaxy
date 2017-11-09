@@ -126,7 +126,8 @@ namespace MCGalaxy {
         internal static void Spawn(Player dst, PlayerBot b) {
             string name = Chat.Format(b.color + b.DisplayName, dst, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
-            string skin = Chat.Format(b.SkinName, dst, true, false), model = b.Model;
+            string skin = Chat.Format(b.SkinName, dst, true, false);
+            string model = Chat.Format(b.Model, dst, true, false);
             
             OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
             SpawnRaw(dst, b.id, skin, name, model, b.Pos, b.Rot);
@@ -195,9 +196,9 @@ namespace MCGalaxy {
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
                 
                 // Fallback block models for clients that don't support block definitions
-                string modelSend = model;
+                string modelSend = Chat.Format(model, pl, true, false);
                 byte block;
-                if (byte.TryParse(model, out block) && !pl.hasBlockDefs) {
+                if (byte.TryParse(modelSend, out block) && !pl.hasBlockDefs) {
                     modelSend = pl.level.RawFallback(block).ToString();
                 }
 
