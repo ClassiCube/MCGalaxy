@@ -25,6 +25,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string shortcut { get { return "rq"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message)  {
             p.Leave("RAGEQUIT!!");
@@ -40,7 +41,8 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "Quit"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-
+        public override bool MessageBlockRestricted { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string msg = message.Length > 0 ? "Left the game: " + message : "Left the game.";
             if (p.muted) msg = "Left the game.";
@@ -58,6 +60,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string shortcut { get { return "Crash"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool MessageBlockRestricted { get { return true; } }
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }
@@ -76,6 +79,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string shortcut { get { return "Hax"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override bool MessageBlockRestricted { get { return true; } }
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) {
