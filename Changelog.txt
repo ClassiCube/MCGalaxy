@@ -1,3 +1,33 @@
+v 1.8.9.9
+Added: Support for custom dirt/grass blocks.
+Fixed: /ref issue with ZS
+Improved: Create useful sub-directories in extra directory
+Improved: Placing block while AFK makes you un-AFK.
+Added: precise /tp (/tpp shortcut)
+Added: /f2d, /f3d aliases, implement 2d fill like fCraft
+Fixed: ctf flag take message always saying blue team
+Fixed: 2 layer palette in imgprint, resize imgprint to fit in map
+Added: a bunch more chat tokens (removed useless $serverip)
+Fixed: long messages being incorrectly trimmed on IRC sometimes
+Added: Allow using custom nickserv for IRC bot
+Fixed: /baninfo still saying player was banned, if they were temp-banned
+Fixed: /hide not updating tab list
+Fixed: TNT wars crashing entire server, when round ended and blue score same
+Improved: Using ~ in tp/tpp/mark should behave same as ~0
+Improved: Allow up/ua yourself, fix /ua with no args behaving incorrectly
+Improved: Show a message when you can't delete zones due to insufficient permisission
+Improved: OS maps no longer make zones, only use perbuild whitelist
+Removed: #/+[message], use ##/++ instead
+Improved: Show whitelisted names list for visit/build permission denied
+Fixed: If no +, only look at /map realmowner for owner of OS maps.
+Removed: obsolete /afk list, since /who and tab list do same thing
+Fixed: Tree works properly with /scale, fixes #344
+Fixed: Bot models not having chat tokens.
+Fixed: Models not using fallback block IDs to clients that don't support
+Improved: Blacklist /quit etc from MBs
+Fixed: Don't allow silently importing over an existing map.
+Added: Support for per axis entity models, see /help model scale
+
 v 1.8.9.8
 Added: /pcompile to compile plugins
 Fixed: /mi showing wrong latest backup time, if a map has a custom named backup
