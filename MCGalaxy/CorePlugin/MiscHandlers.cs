@@ -43,7 +43,7 @@ namespace MCGalaxy.Core {
             p.prevMsg = "";
             p.showMBs = false;
             p.showPortals = false;
-            p.ModelBB = AABB.ModelAABB(p.Model, level); // in case had been using a level-only custom block for their model
+            p.ModelBB = AABB.ModelAABB(p, level); // in case had been using a level-only custom block for their model
             
             if (!Hacks.CanUseHacks(p, level) && p.isFlying) {
                 Player.Message(p, "You cannot use /fly on this map.");

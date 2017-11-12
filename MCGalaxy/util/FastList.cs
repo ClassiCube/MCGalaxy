@@ -38,45 +38,11 @@ namespace MCGalaxy.Util {
             Count = 0;
         }
         
-        public bool Exists(Predicate<T> condition) {
-            for (int i = 0; i < Count; i++) {
-                if (condition(Items[i])) return true;
-            }
-            return false;
-        }
-        
-        public int IndexOf(Predicate<T> condition) {
-            for (int i = 0; i < Count; i++) {
-                if (condition(Items[i])) return i;
-            }
-            return -1;
-        }
-        
-        public bool Remove(T item) {
-            int index = Array.IndexOf<T>(Items, item, 0, Count);
-            if (index < 0) return false;
-            
-            Count--;
-            if (index < Count)
-                Array.Copy(Items, index + 1, Items, index, Count - index);
-            Items[Count] = default(T);
-            return true;
-        }
-        
         public void RemoveAt(int index) {
             Count--;
             if (index < Count)
                 Array.Copy(Items, index + 1, Items, index, Count - index);
             Items[Count] = default(T);
-        }
-        
-        public void RemoveAll(Predicate<T> condition) {
-            int j = 0;
-            for (int i = 0; i < Count; i++) {
-                if (condition(Items[i])) continue;
-                Items[j] = Items[i]; j++;
-            }
-            Count = j;
         }
         
         void EnsureCapacity(int threshold) {

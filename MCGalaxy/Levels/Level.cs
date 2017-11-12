@@ -45,12 +45,6 @@ namespace MCGalaxy {
             if (Width < 16) Width = 16;
             if (Height < 16) Height = 16;
             if (Length < 16) Length = 16;
-            
-            #pragma warning disable 0612
-            width = Width;
-            length = Height;
-            height = Length; depth = Length;
-            #pragma warning restore 0612
 
             for (int i = 0; i < CustomBlockDefs.Length; i++)
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];

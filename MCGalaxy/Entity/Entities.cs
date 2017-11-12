@@ -89,7 +89,7 @@ namespace MCGalaxy {
             string skin = p.SkinName, model = p.Model;
             OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
             
-            SpawnRaw(dst, id, skin, name, model, p.Pos, p.Rot);
+            SpawnRaw(dst, id, p, skin, name, model);
             if (!ServerConfig.TablistGlobal) TabList.Add(dst, p, id);
         }
         
@@ -130,15 +130,16 @@ namespace MCGalaxy {
             string model = Chat.Format(b.Model, dst, true, false);
             
             OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
-            SpawnRaw(dst, b.id, skin, name, model, b.Pos, b.Rot);
+            SpawnRaw(dst, b.id, b, skin, name, model);
             if (ServerConfig.TablistBots) TabList.Add(dst, b);
         }
         
-        static void SpawnRaw(Player dst, byte id, string skin, string name,
-                             string model, Position pos, Orientation rot) {
+        static void SpawnRaw(Player dst, byte id, Entity entity, 
+                             string skin, string name, string model) {
+            Position pos = entity.Pos; Orientation rot = entity.Rot;
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
-            name = Colors.Cleanup(name, dst.hasTextColors);
+            name = Colors.Cleanup(name, dst.hasTextColors);           
             
             if (dst.Supports(CpeExt.ExtPlayerList, 2)) {
                 dst.Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
@@ -153,6 +154,7 @@ namespace MCGalaxy {
             if (dst.Supports(CpeExt.EntityProperty)) {
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX)));
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ)));
+                SendModelScales(dst, id, entity);
             }
         }
         
@@ -183,7 +185,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             entity.Model = model;
             Level lvl = entity.Level;
-            entity.ModelBB = AABB.ModelAABB(model, lvl);
+            entity.ModelBB = AABB.ModelAABB(entity, lvl);
             
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.ChangeModel)) continue;
@@ -192,7 +194,20 @@ namespace MCGalaxy {
                 byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
                 string modelSend = Chat.Format(model, pl, true, false);
                 SendModel(pl, id, modelSend);
+                SendModelScales(pl, id, entity);
             }
+        }
+        
+        static void SendModelScales(Player pl, byte id, Entity entity) {
+            if (!pl.Supports(CpeExt.EntityProperty)) return;
+            SendModelScale(pl, id, EntityProp.ScaleX, entity.ScaleX);
+            SendModelScale(pl, id, EntityProp.ScaleY, entity.ScaleY);
+            SendModelScale(pl, id, EntityProp.ScaleZ, entity.ScaleZ);
+        }
+        
+        static void SendModelScale(Player pl, byte id, EntityProp axis, float value) {
+            if (value == 0) return;
+            pl.Send(Packet.EntityProperty(id, axis, (int)(value * 1000)));
         }
         
         static void SendModel(Player pl, byte id, string model) {

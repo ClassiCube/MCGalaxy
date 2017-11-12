@@ -33,7 +33,8 @@ namespace MCGalaxy {
         
         public string Model = "humanoid";
         public AABB ModelBB;
-        public string SkinName;        
+        public string SkinName;
+        public float ScaleX, ScaleY, ScaleZ;
 
         public Orientation Rot {
             get { return Orientation.Unpack(_rot); }

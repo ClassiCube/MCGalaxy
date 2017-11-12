@@ -60,7 +60,7 @@ namespace MCGalaxy {
         
         public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;
         public static PlayerList ignored, hidden, agreed, vip, noEmotes, lockdown;
-        public static PlayerExtList models, skins, reach, rotations;
+        public static PlayerExtList models, skins, reach, rotations, modelScales;
         public static PlayerExtList frozen, muted, jailed, tempBans, tempRanks;
         
         public static readonly List<string> Devs = new List<string>(), Mods = new List<string>();

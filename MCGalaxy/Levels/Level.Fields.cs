@@ -54,12 +54,6 @@ namespace MCGalaxy {
         internal AABB[] blockAABBs = new AABB[Block.Count * 2];
         
         public ushort Width, Height, Length;
-        // NOTE: These are for legacy code only, you should use upper case Width/Height/Length
-        // as these correctly map Y to being Height
-        [Obsolete] public ushort width;
-        [Obsolete] public ushort height;
-        [Obsolete] public ushort depth;
-        [Obsolete] public ushort length;
         public bool IsMuseum;
 
         public int ReloadThreshold {

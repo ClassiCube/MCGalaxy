@@ -21,15 +21,6 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy {
-    
-    public class GrpCommands {
-        
-        [Obsolete("Use CommandPerms.Load()")]
-        public static void fillRanks() { CommandPerms.Load(); }
-    }
-}
-
 namespace MCGalaxy.Commands {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a command. </summary>

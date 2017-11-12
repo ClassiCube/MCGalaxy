@@ -49,7 +49,7 @@ namespace MCGalaxy {
         public PlayerBot(string n, Level lvl) {
             name = n; DisplayName = n; SkinName = n;
             color = "&1";
-            ModelBB = AABB.ModelAABB(Model, lvl);
+            ModelBB = AABB.ModelAABB(this, lvl);
             level = lvl;
             hasExtPositions = true;
             BotsScheduler.Activate();

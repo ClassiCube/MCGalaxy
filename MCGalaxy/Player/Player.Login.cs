@@ -193,21 +193,28 @@ namespace MCGalaxy {
         
         void LoadCpeData() {
             string skin = Server.skins.FindData(name);
-            if (skin != null) SkinName = skin;
-            
+            if (skin != null) SkinName = skin;           
             string model = Server.models.FindData(name);
             if (model != null) Model = model;
-            ModelBB = AABB.ModelAABB(Model, level);
-            
+
+            string modelScales = Server.modelScales.FindData(name);
+            if (modelScales != null) {
+                string[] bits = modelScales.SplitSpaces(3);
+                Utils.TryParseDecimal(bits[0], out ScaleX);
+                Utils.TryParseDecimal(bits[1], out ScaleY);
+                Utils.TryParseDecimal(bits[2], out ScaleZ);
+            }            
+
             string rotations = Server.rotations.FindData(name);
-            if (rotations == null) return;
-            string[] rotParts = rotations.SplitSpaces(2);
-            if (rotParts.Length != 2) return;
+            if (rotations != null) {
+                string[] bits = rotations.SplitSpaces(2);
+                Orientation rot = Rot;
+                byte.TryParse(bits[0], out rot.RotX);
+                byte.TryParse(bits[1], out rot.RotZ);
+                Rot = rot;
+            }
             
-            Orientation rot = Rot;
-            byte.TryParse(rotParts[0], out rot.RotX);
-            byte.TryParse(rotParts[1], out rot.RotZ);
-            Rot = rot;
+            ModelBB = AABB.ModelAABB(this, level);
         }
         
         void GetPlayerStats() {

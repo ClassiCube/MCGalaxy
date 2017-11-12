@@ -69,6 +69,7 @@ namespace MCGalaxy {
             reach = PlayerExtList.Load("extra/reach.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             rotations = PlayerExtList.Load("extra/rotations.txt");
+            modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
             muted = PlayerExtList.Load("ranks/muted.txt");
             frozen = PlayerExtList.Load("ranks/frozen.txt");            

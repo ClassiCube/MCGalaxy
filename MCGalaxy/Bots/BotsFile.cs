@@ -44,7 +44,7 @@ namespace MCGalaxy.Bots {
                 PlayerBot bot = new PlayerBot(props.Name, lvl);
                 props.ApplyTo(bot);
                 
-                bot.ModelBB = AABB.ModelAABB(bot.Model, lvl);
+                bot.ModelBB = AABB.ModelAABB(bot, lvl);
                 LoadAi(props, bot);
                 PlayerBot.Add(bot, false);
             }

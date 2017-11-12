@@ -88,34 +88,41 @@ namespace MCGalaxy.Maths {
             return false;
         }
 
-        public override string ToString() {
-            return Min + " : " + Max;
-        }
+        public override string ToString() { return Min + " : " + Max; }
         
         
-        public static AABB ModelAABB(string model, Level lvl) {
+        public static AABB ModelAABB(Entity entity, Level lvl) {
+            string model = entity.Model;
             int sep = model.IndexOf('|');
             string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
             model = sep == -1 ? model : model.Substring(0, sep);
             
-            AABB baseBB;
+            AABB bb;
             byte raw;
             if (byte.TryParse(model, out raw)) {
                 ExtBlock block = ExtBlock.FromRaw(raw);                
-                baseBB = Block.BlockAABB(block, lvl);
-                baseBB = baseBB.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
+                bb = Block.BlockAABB(block, lvl);
+                bb = bb.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
             } else {
-                baseBB = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
+                bb = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
             }
-            baseBB = baseBB.Expand(-1); // adjust the model AABB inwards slightly
+            bb = bb.Expand(-1); // adjust the model AABB inwards slightly
             
             float scale;
-            if (!Utils.TryParseDecimal(scaleStr, out scale)) return baseBB;
+            if (!Utils.TryParseDecimal(scaleStr, out scale)) return bb;
             if (scale < 0.25f) scale = 0.25f;
             float maxScale = model.CaselessEq("chibi") ? 3 : 2;
             if (scale > maxScale) scale = maxScale;
             
-            return new AABB(baseBB.Min * scale, baseBB.Max * scale);
+            float scaleX = scale, scaleY = scale, scaleZ = scale;
+            if (entity.ScaleX != 0) scaleX = entity.ScaleX;
+            if (entity.ScaleY != 0) scaleY = entity.ScaleY;
+            if (entity.ScaleZ != 0) scaleZ = entity.ScaleZ;
+            
+            bb.Min.X = (int)(bb.Min.X * scaleX); bb.Max.X = (int)(bb.Max.X * scaleX);
+            bb.Min.Y = (int)(bb.Min.Y * scaleY); bb.Max.Y = (int)(bb.Max.Y * scaleY);
+            bb.Min.Z = (int)(bb.Min.Z * scaleZ); bb.Max.Z = (int)(bb.Max.Z * scaleZ);
+            return bb;
         }
         
         static Vec3S32 BaseSize(string model) {

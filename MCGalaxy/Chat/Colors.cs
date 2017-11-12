@@ -55,13 +55,10 @@ namespace MCGalaxy {
         /// <remarks> NOTE: This returns false for A to F, be warned! </remarks>
         public static bool IsDefined(char c) { return c <= '\xff' && List[c].Fallback != '\0'; }
         
-        /// <summary> Returns whether c is a color code in 0-9, a-f, or A-F. </summary>
         public static bool IsStandard(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
         
-
-        /// <summary> Gets the default color description for the given color code. </summary>
         public static ColorDesc DefaultCol(char code) {
             switch (code) {
                 case '0': return new ColorDesc('0', "Black");
@@ -86,8 +83,7 @@ namespace MCGalaxy {
             col.Code = code;
             return col;
         }
-        
-        /// <summary> Updates the colors list array, sends change to all players, then saves color list. </summary>
+
         public static void Update(ColorDesc col) {
             List[col.Code] = col;
             Player[] players = PlayerInfo.Online.Items;
@@ -98,7 +94,6 @@ namespace MCGalaxy {
             SaveList();
         }
 
-        /// <summary> Finds the color code which has the given name, or empty string if not found. </summary>
         public static string Parse(string name) {
             for (int i = 0; i < List.Length; i++) {
                 if (List[i].Undefined) continue;
@@ -107,14 +102,12 @@ namespace MCGalaxy {
             }
             return "";
         }
-        
-        /// <summary> Gets the name of the given color code. </summary>
+
         public static string Name(string color) {
             if (color.Length != 2 || color[0] != '&') return "";
             return Name(color[1]);
         }
         
-        /// <summary> Gets the name of the given color code. </summary>
         public static string Name(char code) {
             if (code >= 'A' && code <= 'F') code += ' ';
             return IsDefined(code) ? List[code].Name : "";
@@ -136,7 +129,6 @@ namespace MCGalaxy {
         };       
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        /// <summary> Converts IRC color codes into normal color codes. </summary>
         public static string ConvertIRCToMC(string input) {
             if (input == null) throw new ArgumentNullException("input");
             // get rid of background color component of some IRC color codes.
@@ -155,7 +147,6 @@ namespace MCGalaxy {
             return sb.ToString();
         }
 
-        /// <summary> Escapes then converts color codes into IRC color codes. </summary>
         public static string ConvertMCToIRC(string input) {
             if (input == null) throw new ArgumentNullException("input");
             input = Escape(input);
@@ -235,7 +226,6 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Removes all percentage and actual color codes from the given string. </summary>
         public static string Strip(string value) {
             if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
@@ -279,9 +269,8 @@ namespace MCGalaxy {
                 }
             }
         }
-        
 
-        /// <summary> Saves the list of all colors. </summary>
+        
         internal static void SaveList() {
             using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
                 foreach (ColorDesc col in List) {
@@ -293,7 +282,6 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Loads the list of all colors. </summary>
         internal static void LoadList() {
             if (!File.Exists(Paths.CustomColorsFile)) return;
             string[] lines = File.ReadAllLines(Paths.CustomColorsFile);
