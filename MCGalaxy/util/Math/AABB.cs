@@ -110,20 +110,19 @@ namespace MCGalaxy.Maths {
             
             float scale;
             if (!Utils.TryParseDecimal(scaleStr, out scale)) scale = 1.0f;
-            if (scale < 0.25f) scale = 0.25f;
-            float maxScale = model.CaselessEq("chibi") ? 3 : 2;
-            if (scale > maxScale) scale = maxScale;
+            if (scale < 0.01f) scale = 0.01f;
+            float max = model.CaselessEq("chibi") ? 3 : 2;
+            scale = Math.Min(scale, max);
             
             float scaleX = scale, scaleY = scale, scaleZ = scale;
-            if (entity.ScaleX != 0) scaleX = entity.ScaleX;
-            if (entity.ScaleY != 0) scaleY = entity.ScaleY;
-            if (entity.ScaleZ != 0) scaleZ = entity.ScaleZ;
+            if (entity.ScaleX != 0) scaleX = Math.Min(entity.ScaleX, max);
+            if (entity.ScaleY != 0) scaleY = Math.Min(entity.ScaleY, max);
+            if (entity.ScaleZ != 0) scaleZ = Math.Min(entity.ScaleZ, max);
             
             bb.Min.X = (int)(bb.Min.X * scaleX); bb.Max.X = (int)(bb.Max.X * scaleX);
             bb.Min.Y = (int)(bb.Min.Y * scaleY); bb.Max.Y = (int)(bb.Max.Y * scaleY);
             bb.Min.Z = (int)(bb.Min.Z * scaleZ); bb.Max.Z = (int)(bb.Max.Z * scaleZ);
             
-            Server.s.Log("AABB: " + bb);
             return bb;
         }
         
@@ -142,7 +141,7 @@ namespace MCGalaxy.Maths {
         
         public static bool IntersectsSolidBlocks(AABB bb, Level lvl) {
             Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
-            
+
             for (int y = min.Y; y <= max.Y; y++)
                 for (int z = min.Z; z <= max.Z; z++)
                     for (int x = min.X; x <= max.X; x++)
