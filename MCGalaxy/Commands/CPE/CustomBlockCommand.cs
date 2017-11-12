@@ -423,10 +423,11 @@ namespace MCGalaxy.Commands.CPE {
                         SendEditHelp(p, arg); return;
                     }
                     
-                    def.InventoryOrder = order;
+                    def.InventoryOrder = order == def.BlockID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, level);
                     BlockDefinition.Save(global, level);
-                    Player.Message(p, "Set inventory order for {0} to {1}", blockName, value);
+                    Player.Message(p, "Set inventory order for {0} to {1}", blockName, 
+                                   order == def.BlockID ? "default" : order.ToString());
                     return;
                 default:
                     Player.Message(p, "Unrecognised property: " + arg); return;

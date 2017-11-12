@@ -109,7 +109,7 @@ namespace MCGalaxy.Maths {
             bb = bb.Expand(-1); // adjust the model AABB inwards slightly
             
             float scale;
-            if (!Utils.TryParseDecimal(scaleStr, out scale)) return bb;
+            if (!Utils.TryParseDecimal(scaleStr, out scale)) scale = 1.0f;
             if (scale < 0.25f) scale = 0.25f;
             float maxScale = model.CaselessEq("chibi") ? 3 : 2;
             if (scale > maxScale) scale = maxScale;
@@ -122,6 +122,8 @@ namespace MCGalaxy.Maths {
             bb.Min.X = (int)(bb.Min.X * scaleX); bb.Max.X = (int)(bb.Max.X * scaleX);
             bb.Min.Y = (int)(bb.Min.Y * scaleY); bb.Max.Y = (int)(bb.Max.Y * scaleY);
             bb.Min.Z = (int)(bb.Min.Z * scaleZ); bb.Max.Z = (int)(bb.Max.Z * scaleZ);
+            
+            Server.s.Log("AABB: " + bb);
             return bb;
         }
         

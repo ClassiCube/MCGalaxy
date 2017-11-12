@@ -108,6 +108,9 @@ namespace MCGalaxy.Bots {
         public byte RotY { get; set; }
         public byte BodyX { get; set; }
         public byte BodyZ { get; set; }
+        public float ScaleX { get; set; }
+        public float ScaleY { get; set; }
+        public float ScaleZ { get; set; }
         
         public void FromBot(PlayerBot bot) {
             Name = bot.name; Level = bot.level.name;
@@ -121,6 +124,7 @@ namespace MCGalaxy.Bots {
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
             BodyX = bot.Rot.RotX; BodyZ = bot.Rot.RotZ;
+            ScaleX = bot.ScaleX; ScaleY = bot.ScaleY; ScaleZ = bot.ScaleZ;
         }
         
         public void ApplyTo(PlayerBot bot) {
@@ -136,22 +140,7 @@ namespace MCGalaxy.Bots {
             
             bot.cur = CurInstruction; bot.curJump = CurJump;
             bot.ClickedOnText = ClickedOnText; bot.DeathMessage = DeathMessage;
-        }
-        
-        public BotProperties Copy() {
-            BotProperties copy = new BotProperties();
-            copy.DisplayName = DisplayName; copy.Name = Name;
-            copy.Level = Level; copy.Skin = Skin;
-            copy.Model = Model; copy.Color = Color;
-            
-            copy.AI = AI; copy.Kill = Kill; copy.Hunt = Hunt;
-            copy.CurInstruction = CurInstruction; copy.CurJump = CurJump;
-            copy.ClickedOnText = ClickedOnText; copy.DeathMessage = DeathMessage;
-            
-            copy.X = X; copy.Y = Y; copy.Z = Z;
-            copy.RotX = RotX; copy.RotY = RotY;
-            copy.BodyX = BodyX; copy.BodyZ = BodyZ;
-            return copy;
+            bot.ScaleX = ScaleX; bot.ScaleY = ScaleY; bot.ScaleZ = ScaleZ;
         }
     }
 }

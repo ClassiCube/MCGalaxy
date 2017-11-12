@@ -41,7 +41,8 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string model) {
-            model = GetModel(model);
+            bool changedAxisScale;
+            model = ParseModel(p, bot, model, out changedAxisScale);
             Entities.UpdateModel(bot, model);
             
             Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
@@ -49,7 +50,8 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         protected override void SetPlayerData(Player p, Player who, string model) {
-            model = GetModel(model);
+            bool changedAxisScale;
+            model = ParseModel(p, who, model, out changedAxisScale);
             Entities.UpdateModel(who, model);
             
             if (p != who) {
@@ -64,13 +66,39 @@ namespace MCGalaxy.Commands.CPE {
                 Server.models.Remove(who.name);
             }
             Server.models.Save();
+            
+            if (!changedAxisScale) return;
+            if (who.ScaleX != 0 || who.ScaleY != 0 || who.ScaleZ != 0) {
+                Server.modelScales.AddOrReplace(who.name, who.ScaleX + " " + who.ScaleY + " " + who.ScaleZ);
+            } else {
+                Server.modelScales.Remove(who.name);
+            }
+            Server.modelScales.Save();
         }
         
-        static string GetModel(string model) {
+        static string ParseModel(Player dst, Entity entity, string model, out bool changedAxisScale) {
             if (model.Length == 0) model = "humanoid";
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
+            changedAxisScale = false;
+            
+            if (model.CaselessStarts("x ")) {
+                changedAxisScale = true;
+                return ParseModelScale(dst, entity, model, "X scale", ref entity.ScaleX);
+            } else if (model.CaselessStarts("y ")) {
+                changedAxisScale = true;
+                return ParseModelScale(dst, entity, model, "Y scale", ref entity.ScaleY);
+            } else if (model.CaselessStarts("z ")) {
+                changedAxisScale = true;
+                return ParseModelScale(dst, entity, model, "Z scale", ref entity.ScaleZ);
+            }
             return model;
+        }
+        
+        static string ParseModelScale(Player dst, Entity entity, string model, string argName, ref float value) {
+            string[] bits = model.SplitSpaces();
+            CommandParser.GetReal(dst, bits[1], argName, ref value, 0, 3);
+            return entity.Model;
         }
 
         public override void Help(Player p) {
