@@ -30,6 +30,11 @@ namespace MCGalaxy.SQL {
         public readonly bool NotNull;
         public readonly string DefaultValue;
         
+        public ColumnDesc(string col, ColumnType type)
+            : this(col, type, 0, false, false, false, null) { }        
+        public ColumnDesc(string col, ColumnType type, ushort maxLen = 0)
+            : this(col, type, maxLen, false, false, false, null) { }
+        
         public ColumnDesc(string col, ColumnType type, ushort maxLen = 0,
                             bool autoInc = false, bool priKey = false, 
                             bool notNull = false, string def = null) {
