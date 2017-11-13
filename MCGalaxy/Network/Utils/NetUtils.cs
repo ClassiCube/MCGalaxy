@@ -20,40 +20,32 @@ using System;
 namespace MCGalaxy {
     /// <summary> Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
     public static class NetUtils {
-
-        /// <summary> Number of bytes a string occupies in a packet.</summary>
         public const int StringSize = 64;        
-        
-        /// <summary> Reads a 16 bit signed integer, big endian form. </summary>
+
         public static short ReadI16(byte[] array, int offset) {
             return (short)(array[offset] << 8 | array[offset + 1]);
         }
-        
-        /// <summary> Reads a 16 bit unsigned integer, big endian form. </summary>
+
         public static ushort ReadU16(byte[] array, int offset) {
             return (ushort)(array[offset] << 8 | array[offset + 1]);
         }
 
-        /// <summary> Reads a 32 bit signed integer, big endian form. </summary>
         public static int ReadI32(byte[] array, int offset) {
             return array[offset] << 24 | array[offset + 1] << 16
                 | array[offset + 2] << 8 | array[offset + 3];
         }
         
 
-        /// <summary> Writes a 16 bit signed integer, big endian form. </summary>
         public static void WriteI16(short value, byte[] array, int index) {
             array[index++] = (byte)(value >> 8);
             array[index++] = (byte)(value);
         }
 
-        /// <summary> Writes a 16 bit unsigned integer, big endian form. </summary>
         public static void WriteU16(ushort value, byte[] array, int index) {
             array[index++] = (byte)(value >> 8);
             array[index++] = (byte)(value);
         }
 
-        /// <summary> Writes a 32 bit signed integer, big endian form. </summary>
         public static void WriteI32(int value, byte[] array, int index) {
             array[index++] = (byte)(value >> 24);
             array[index++] = (byte)(value >> 16);
@@ -61,8 +53,6 @@ namespace MCGalaxy {
             array[index++] = (byte)(value);
         }
         
-        /// <summary> Writes three (X, Y, Z) either 16 or 32 bit signed integers, big endian form. </summary>
-        /// <returns> Number of bytes written. </returns>
         internal static int WritePos(Position pos, byte[] arr, int offset, bool extPos) {
             if (!extPos) {
                 WriteI16((short)pos.X, arr, offset + 0);
@@ -75,10 +65,8 @@ namespace MCGalaxy {
             }
             return extPos ? 12 : 6;
         }
+        
 
-
-        /// <summary> Reads a string of unicode characters. (input is 64 bytes). </summary>
-        /// <remarks> String length may be less than 64, as string is trimmed of trailing spaces and nuls. </remarks>
         public unsafe static string ReadString(byte[] data, int offset) {
             int length = 0;
             char* characters = stackalloc char[StringSize];
@@ -90,10 +78,7 @@ namespace MCGalaxy {
             }
             return new String(characters, 0, length);
         }
-        
-        /// <summary> Writes a string of unicode characters. (output is 64 bytes). </summary>
-        /// <remarks> Unicode characters that are unable to be mapped into code page 437 are converted to '?'. </remarks>
-        /// <remarks> If 'hasCP437' is false, characters that cannot be mapped to ASCII are converted to '?'. </remarks>
+
         public static void Write(string str, byte[] array, int offset, bool hasCP437) {
             if (hasCP437) WriteCP437(str, array, offset);
             else WriteAscii(str, array, offset);

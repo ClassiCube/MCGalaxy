@@ -27,8 +27,6 @@ namespace MCGalaxy.Network {
         int count = 0;
         public Level level;
         public Player player;
-        
-        /// <summary> Constructs a bulk sender. </summary>
         public BufferedBlockSender() { }
         
         /// <summary> Constructs a bulk sender that will send block changes to all players on that level. </summary>

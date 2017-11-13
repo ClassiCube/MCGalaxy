@@ -17,6 +17,7 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
     public class CmdWarp : Command {
@@ -37,18 +38,20 @@ namespace MCGalaxy.Commands.Misc {
             UseCore(p, message, WarpList.Global, "Warp", true);
         }
         
+        static string FormatWarp(Warp warp) {
+            Vec3S32 pos = warp.Pos.BlockCoords;
+            return warp.Name + " - (" + pos.X + ", " + pos.Y + ", " + pos.Z + ") on " + warp.Level;
+        }
+        
         protected void UseCore(Player p, string message, WarpList warps, 
                                string group, bool checkExtraPerms) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
             if (cmd.Length == 0) { Help(p); return; }
             
-            if (args.Length == 1 && cmd.CaselessEq("list")) {
-                Player.Message(p, "{0}s:", group);
-                foreach (Warp wr in warps.Items) {
-                    if (LevelInfo.FindExact(wr.Level) != null)
-                        Player.Message(p, wr.Name + " : " + wr.Level);
-                }
+            if (cmd.CaselessEq("list")) {
+                string modifier = args.Length > 1 ? args[1] : "";
+                MultiPageOutput.Output(p, warps.Items, FormatWarp, group + " list", group + "s", modifier, true);
                 return;
             } else if (args.Length == 1) {
                 Warp warp = Matcher.FindWarps(p, warps, cmd);

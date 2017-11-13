@@ -190,15 +190,12 @@ namespace MCGalaxy.Eco {
             return false;
         }
         
-        /// <summary> Whether an award with that name exists. </summary>
         public static string FindExact(string name) {
             foreach (Award award in AwardsList)
                 if (award.Name.CaselessEq(name)) return award.Name;
             return null;
         }
-        
-        /// <summary> Gets the description of the award matching the given name, 
-        /// or an empty string if no matching award was found. </summary>
+
         public static string GetDescription(string name) {
             foreach (Award award in AwardsList)
                 if (award.Name.CaselessEq(name)) return award.Description;
