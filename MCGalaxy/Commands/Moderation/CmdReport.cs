@@ -18,6 +18,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Commands.Moderation {
@@ -57,17 +58,18 @@ namespace MCGalaxy.Commands.Moderation {
 
         void HandleList(Player p, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
-
-            bool foundone = false;
-            string[] files = Directory.GetFiles("extra/reported", "*.txt");
-            Player.Message(p, "The following players have been reported:");
-            foreach (string file in files) {
-                foundone = true;
-                Player.Message(p, "- %c" + Path.GetFileNameWithoutExtension(file));
+            string[] users = Directory.GetFiles("extra/reported", "*.txt");
+            for (int i = 0; i < users.Length; i++) {
+            	users[i] = Path.GetFileNameWithoutExtension(users[i]);
             }
             
-            if (foundone) {
-                Player.Message(p, "Use %T/Report check [Player] %Sto view report info.");
+            if (users.Length > 0) {
+                Player.Message(p, "The following players have been reported:");
+                string modifier = args.Length > 1 ? args[1] : "";
+                MultiPageOutput.Output(p, users, pl => PlayerInfo.GetColoredName(p, pl), 
+                                       "Review list", "players", modifier, false);
+                
+                Player.Message(p, "Use %T/Report check [Player] %Sto view report details.");
                 Player.Message(p, "Use %T/Report delete [Player] %Sto delete a report");
             } else {
                 Player.Message(p, "No reports were found.");
@@ -79,13 +81,15 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, 1)) return;
-            if (!Formatter.ValidName(p, args[1], "player")) return;
+            string target = PlayerInfo.FindOfflineNameMatches(p, args[1]);
+            if (target == null) return;
             
-            if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
+            if (!File.Exists("extra/reported/" + target + ".txt")) {
                 Player.Message(p, "The player you specified has not been reported."); return;
             }
-            string details = File.ReadAllText("extra/reported/" + args[1] + ".txt");
-            Player.Message(p, details);
+            
+            string[] reports = File.ReadAllLines("extra/reported/" + target + ".txt");
+            Player.MessageLines(p, reports);
         }
         
         void HandleDelete(Player p, string[] args) {
@@ -93,33 +97,35 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, 1)) return;
-            if (!Formatter.ValidName(p, args[1], "player")) return;
+            string target = PlayerInfo.FindOfflineNameMatches(p, args[1]);
+            if (target == null) return;
             
-            if (!File.Exists("extra/reported/" + args[1] + ".txt")) {
+            if (!File.Exists("extra/reported/" + target + ".txt")) {
                 Player.Message(p, "The player you specified has not been reported."); return;
             }
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
-            if (File.Exists("extra/reportedbackups/" + args[1] + ".txt"))
-                File.Delete("extra/reportedbackups/" + args[1] + ".txt");
+            if (File.Exists("extra/reportedbackups/" + target + ".txt"))
+                File.Delete("extra/reportedbackups/" + target + ".txt");
             
-            File.Move("extra/reported/" + args[1] + ".txt", "extra/reportedbackups/" + args[1] + ".txt");
-            Player.Message(p, "&a" + args[1] + "'s report has been deleted.");
-            Chat.MessageOps(p.ColoredName + " %Sdeleted " + args[1] + "'s report.");
-            Logger.Log(LogType.UserActivity, "{1}'s report has been deleted by {0}", p.name, args[1]);
+            File.Move("extra/reported/" + target + ".txt", "extra/reportedbackups/" + target + ".txt");
+            string targetName = PlayerInfo.GetColoredName(p, target);
+            Player.Message(p, "Reports on {0} %Swere deleted.", targetName);
+            Chat.MessageOps(p.ColoredName + " %Sdeleted " + target + "'s report.");
+            Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         
         void HandleClear(Player p, string[] args) {
-           if (!CheckExtraPerm(p, 1)) return;
-           if (!Directory.Exists("extra/reportedbackups"))
-                Directory.CreateDirectory("extra/reportedbackups");            
+            if (!CheckExtraPerm(p, 1)) return;
+            if (!Directory.Exists("extra/reportedbackups"))
+                Directory.CreateDirectory("extra/reportedbackups");
             string[] files = Directory.GetFiles("extra/reported", "*.txt");
             
             foreach (string path in files) {
-                string name = Path.GetFileName(path);
-                if (File.Exists("extra/reportedbackups/" + name))
-                    File.Delete("extra/reportedbackups/" + name);
-                File.Move(path, "extra/reportedbackups/" + name);
+                string user = Path.GetFileName(path);
+                if (File.Exists("extra/reportedbackups/" + user))
+                    File.Delete("extra/reportedbackups/" + user);
+                File.Move(path, "extra/reportedbackups/" + user);
             }
             
             Player.Message(p, "%aYou have cleared all reports!");
@@ -131,19 +137,23 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a reason for the report."); return;
             }
-            string target = args[0].ToLower();
-            string reason = args[1];
+            string target = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+            if (target == null) return;
 
+            List<string> reports = new List<string>();
             if (File.Exists("extra/reported/" + target + ".txt")) {
-                File.WriteAllText("extra/reported/" + target + "(2).txt", reason + " - Reported by " + p.name + "." + " DateTime: " + DateTime.Now);
-                Player.Message(p, "%aYour report has been sent, it should be viewed when an operator is online!");
+            	reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
+            }
+                      
+            if (reports.Count >= 5) {
+                LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
+                Player.Message(p, "{0} &calready has 5 pending reports! Please wait until an {1}%c+ has reviewed these reports first!",
+            	               PlayerInfo.GetColoredName(p, target), Group.GetColoredName(checkRank));
                 return;
             }
-            if (File.Exists("extra/reported/" + target + "(2).txt")) {
-                Player.Message(p, "%cThe player you've reported has already been reported 2 times! Please wait patiently untill an OP+ has reviewed the reports!");
-                return;
-            }
-            File.WriteAllText("extra/reported/" + target + ".txt", reason + " - Reported by " + p.name + " on " + DateTime.Now);
+            
+            reports.Add(args[1] + " - Reported by " + p.name + " at " + DateTime.Now);
+            File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
             Player.Message(p, "%aYour report has been sent, it should be viewed when an operator is online!");
             Chat.MessageOps(p.ColoredName + " %Shas made a report, view it with %T/Report check " + target);
         }
@@ -151,9 +161,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
             if (!HasExtraPerm(p, 1)) return;
-            Player.Message(p, "%T/Report list %H- Outputs the list of reported players.");
-            Player.Message(p, "%T/Report check [Player] %H- Views report for that player.");
-            Player.Message(p, "%T/Report delete [Player] %H- Deletes report for that player.");
+            Player.Message(p, "%T/Report list %H- Lists all reported players.");
+            Player.Message(p, "%T/Report check [Player] %H- Views reports for that player.");
+            Player.Message(p, "%T/Report delete [Player] %H- Deletes reports for that player.");
             Player.Message(p, "%T/Report clear %H- Clears &call%H reports.");
         }
     }
