@@ -709,7 +709,7 @@ namespace MCGalaxy {
         
         bool UseCommand(Command command, string message) {
             string cmd = command.name;
-            if (!cmd.CaselessEq("pass")) {
+            if (!cmd.CaselessEq("pass") && !cmd.CaselessEq("lastcmd")) {
                 lastCMD = message.Length == 0 ? cmd : cmd + " " + message;
                 lastCmdTime = DateTime.UtcNow;
                 Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);

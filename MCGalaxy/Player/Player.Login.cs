@@ -152,7 +152,7 @@ namespace MCGalaxy {
             
             Position pos = level.SpawnPos;
             byte yaw = level.rotx, pitch = level.roty;
-            OnPlayerSpawningEvent.Call(this, ref pos, ref yaw, ref pitch, true);
+            OnPlayerSpawningEvent.Call(this, ref pos, ref yaw, ref pitch, false);
             Pos = pos;
             SetYawPitch(yaw, pitch);
             
