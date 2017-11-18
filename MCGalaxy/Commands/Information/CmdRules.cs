@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdRules : Command {
         public override string name { get { return "Rules"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Builder, "+ can send rules to other players") }; }
         }

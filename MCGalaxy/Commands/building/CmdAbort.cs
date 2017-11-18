@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Abort"; } }
         public override string shortcut { get { return "a"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {

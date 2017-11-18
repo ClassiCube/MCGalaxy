@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdPing : Command {
         public override string name { get { return "Ping"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can see ping of all players") }; }
         }

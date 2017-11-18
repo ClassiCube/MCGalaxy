@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "Goto"; } }
         public override string shortcut { get { return "g"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("j"), new CommandAlias("Join"), new CommandAlias("gr", "-random"),
                     new CommandAlias("GotoRandom", "-random"), new CommandAlias("JoinRandom", "-random") }; }

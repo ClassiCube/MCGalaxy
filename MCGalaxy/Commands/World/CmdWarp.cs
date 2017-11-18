@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "Warp"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {

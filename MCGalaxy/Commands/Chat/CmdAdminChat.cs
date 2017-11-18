@@ -17,7 +17,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "AdminChat"; } }
         public override string shortcut { get { return "Admin"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can read adminchat messages") }; }
         }

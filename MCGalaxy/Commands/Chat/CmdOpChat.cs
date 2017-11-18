@@ -20,7 +20,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "OpChat"; } }
         public override string shortcut { get { return "Op"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can read opchat messages") }; }
         }

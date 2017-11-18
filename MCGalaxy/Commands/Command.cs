@@ -32,7 +32,7 @@ namespace MCGalaxy {
         /// <summary> Whether this command can be used in museum maps. </summary>
         public virtual bool museumUsable { get { return true; } }
         /// <summary> The default minimum rank that is able to use this command. </summary>
-        public abstract LevelPermission defaultRank { get; }
+        public virtual LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         /// <summary> Executes this command. </summary>
         public abstract void Use(Player p, string message);
         /// <summary> Outputs usage information about this command, for when a user does /help [command]. </summary>

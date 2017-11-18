@@ -19,12 +19,10 @@ using System;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdMeasure : Command {
-        
+    public sealed class CmdMeasure : Command {      
         public override string name { get { return "Measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {

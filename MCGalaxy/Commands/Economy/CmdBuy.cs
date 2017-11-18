@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "Buy"; } }
         public override string shortcut { get { return "Purchase"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override bool SuperUseable { get { return false; } }
         

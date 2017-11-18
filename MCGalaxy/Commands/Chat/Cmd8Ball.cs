@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "8ball"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         
         static string[] messages = new string[] { "Not likely." , "Very likely." , "Impossible!" , 

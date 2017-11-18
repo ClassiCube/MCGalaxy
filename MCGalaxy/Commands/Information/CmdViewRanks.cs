@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdViewRanks : Command {
         public override string name { get { return "ViewRanks"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Ops", "operator"), new CommandAlias("Admins", "superop"),
                     new CommandAlias("Banned", "banned"), new CommandAlias("BanList", "banned") }; }

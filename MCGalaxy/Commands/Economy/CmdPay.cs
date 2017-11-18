@@ -22,7 +22,6 @@ using MCGalaxy.Events.EconomyEvents;
 namespace MCGalaxy.Commands.Eco {
     public sealed class CmdPay : MoneyCmd {
         public override string name { get { return "Pay"; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             EcoTransaction data;

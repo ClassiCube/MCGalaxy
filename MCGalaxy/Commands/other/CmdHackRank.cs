@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdHackRank : Command {
         public override string name { get { return "HackRank"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {

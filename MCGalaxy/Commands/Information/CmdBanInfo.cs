@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdBanInfo : Command {
         public override string name { get { return "BanInfo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player name")) return;

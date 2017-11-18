@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMyNotes : CmdNotes {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
+
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) { base.Use(p, p.name); }

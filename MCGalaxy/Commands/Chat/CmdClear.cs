@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Clear"; } }
         public override string shortcut { get { return "cls"; } }
         public override string type { get { return CommandTypes.Chat; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("PlayerCLS"), new CommandAlias("GlobalCLS", "global"), new CommandAlias("gcls", "global") }; }
         }

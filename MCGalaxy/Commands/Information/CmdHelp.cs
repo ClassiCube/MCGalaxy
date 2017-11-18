@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdHelp : Command {
         public override string name { get { return "Help"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("CmdHelp"), new CommandAlias("Ranks", "ranks"),
                     new CommandAlias("Colors", "colors"), new CommandAlias("Emotes", "emotes") }; }

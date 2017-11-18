@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Eco {
     public sealed class CmdAwards : Command {        
         public override string name { get { return "Awards"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();

@@ -23,8 +23,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "ShowQueue"; } }
         public override string shortcut { get { return "sq"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message) {
             ShowQueued(p, Server.zombie.Picker.QueuedMap, "level");

@@ -26,13 +26,11 @@ using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.Fun {
     
-    public sealed class CmdCountdown : Command {
-        
+    public sealed class CmdCountdown : Command {      
         public override string name { get { return "CountDown"; } }
         public override string shortcut { get { return "CD"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {

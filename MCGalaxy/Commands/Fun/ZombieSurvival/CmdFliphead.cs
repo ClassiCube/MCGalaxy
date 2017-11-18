@@ -20,7 +20,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "FlipHead"; } }
         public override string shortcut { get { return "fh"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message) {

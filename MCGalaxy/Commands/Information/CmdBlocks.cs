@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdBlocks : Command {
         public override string name { get { return "Blocks"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Materials") }; }
         }

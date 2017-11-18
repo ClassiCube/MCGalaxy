@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhere : Command {
         public override string name { get { return "Where"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             if (message.Length == 0) message = p.name;

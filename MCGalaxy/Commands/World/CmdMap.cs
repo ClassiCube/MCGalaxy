@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdMap : Command {
         public override string name { get { return "Map"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can edit map options"),
                     new CommandPerm(LevelPermission.Admin, "+ can set realm owners") }; }

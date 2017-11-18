@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string shortcut { get { return "tw"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can use admin commands for tntwars") }; }
         }

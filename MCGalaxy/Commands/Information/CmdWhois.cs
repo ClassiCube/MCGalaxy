@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "WhoIs"; } }
         public override string shortcut { get { return "WhoWas"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see player's IP and if on whitelist") }; }
         }

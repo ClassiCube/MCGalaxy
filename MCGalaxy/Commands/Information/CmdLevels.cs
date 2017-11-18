@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Levels"; } }
         public override string shortcut { get { return "Maps"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             Level[] loaded = LevelInfo.Loaded.Items;

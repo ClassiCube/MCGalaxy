@@ -26,7 +26,6 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdOpStats : Command {
         public override string name { get { return "OpStats"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             string end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");

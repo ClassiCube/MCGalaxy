@@ -28,7 +28,6 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "b"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("BInfo"), new CommandAlias("WhoDid") }; }

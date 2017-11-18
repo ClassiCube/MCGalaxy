@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "MapLike"; } }
         public override string shortcut { get { return "Like"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         
