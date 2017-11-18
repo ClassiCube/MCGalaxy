@@ -21,7 +21,7 @@ using MCGalaxy.DB;
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdSeen : Command {
         public override string name { get { return "Seen"; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override string type { get { return CommandTypes.Information; } }
 
         public override void Use(Player p, string message) {

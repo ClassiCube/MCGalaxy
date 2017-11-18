@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdFaq : Command {        
         public override string name { get { return "FAQ"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
 
         public override void Use(Player p, string message) {
             TextFile faqFile = TextFile.Files["FAQ"];

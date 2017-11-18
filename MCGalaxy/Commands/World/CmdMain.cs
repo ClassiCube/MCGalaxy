@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "Main"; } }
         public override string shortcut { get { return "h"; } }
         public override string type { get { return CommandTypes.World; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the main level") }; }
         }

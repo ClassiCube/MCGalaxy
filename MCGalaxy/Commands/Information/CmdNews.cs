@@ -21,7 +21,7 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdNews : Command {
         public override string name { get { return "News"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Banned; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public override void Use(Player p, string message) {
             TextFile newsText = TextFile.Files["News"];

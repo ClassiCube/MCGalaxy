@@ -255,7 +255,7 @@ namespace MCGalaxy.Blocks {
                 case Block.Bird_Lava:
                     return LevelPermission.AdvBuilder;
             }
-            return LevelPermission.Banned;
+            return LevelPermission.Guest;
         }
     }
 }
