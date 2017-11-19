@@ -28,17 +28,17 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawMode GetMode(string[] parts) {
             string msg = parts[parts.Length - 1];
-            if (msg == "cone") return DrawMode.cone;
-            else if (msg == "hcone") return DrawMode.hcone;
-            else if (msg == "icone") return DrawMode.icone;
-            else if (msg == "hicone") return DrawMode.hicone;
-            else if (msg == "pyramid") return DrawMode.pyramid;
-            else if (msg == "hpyramid") return DrawMode.hpyramid;
-            else if (msg == "ipyramid") return DrawMode.ipyramid;
-            else if (msg == "hipyramid") return DrawMode.hipyramid;
-            else if (msg == "sphere") return DrawMode.sphere;
-            else if (msg == "hsphere") return DrawMode.hsphere;
-            else if (msg == "volcano") return DrawMode.volcano;
+            if (msg == "cone")      return DrawMode.cone;
+            if (msg == "hcone")     return DrawMode.hcone;
+            if (msg == "icone")     return DrawMode.icone;
+            if (msg == "hicone")    return DrawMode.hicone;
+            if (msg == "pyramid")   return DrawMode.pyramid;
+            if (msg == "hpyramid")  return DrawMode.hpyramid;
+            if (msg == "ipyramid")  return DrawMode.ipyramid;
+            if (msg == "hipyramid") return DrawMode.hipyramid;
+            if (msg == "sphere")    return DrawMode.sphere;
+            if (msg == "hsphere")   return DrawMode.hsphere;
+            if (msg == "volcano")   return DrawMode.volcano;
             return DrawMode.normal;
         }
         
@@ -91,9 +91,9 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
-            offset = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
-            return dArgs.Player.BrushName;
+        protected override void GetBrush(DrawArgs dArgs) {
+            int endCount = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
+            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
         bool CheckTwoArgs(Player p, ref int radius, ref int height, string[] parts) {

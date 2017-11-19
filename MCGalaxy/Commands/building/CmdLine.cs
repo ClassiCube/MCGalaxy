@@ -40,9 +40,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static DrawMode ParseMode(string msg) {
-            if (msg == "normal") return DrawMode.solid;
-            else if (msg == "walls") return DrawMode.walls;
-            else if (msg == "straight") return DrawMode.straight;
+            if (msg == "normal")   return DrawMode.solid;
+            if (msg == "walls")    return DrawMode.walls;
+            if (msg == "straight") return DrawMode.straight;
             return DrawMode.normal;
         }
         
@@ -72,12 +72,11 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
+        protected override void GetBrush(DrawArgs dArgs) {
             LineDrawOp line = (LineDrawOp)dArgs.Op;
-            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            
-            if (line.MaxLength != int.MaxValue) offset++;
-            return dArgs.Player.BrushName;
+            int endCount = dArgs.DefaultBrushEndCount;
+            if (line.MaxLength != int.MaxValue) endCount++;
+            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
         public override void Help(Player p) {

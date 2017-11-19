@@ -26,9 +26,9 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawMode GetMode(string[] parts) {
             string mode = parts[parts.Length - 1];
-            if (mode == "solid") return DrawMode.solid;
-            else if (mode == "hollow") return DrawMode.hollow;
-            else if (mode == "reverse") return DrawMode.reverse;
+            if (mode == "solid")   return DrawMode.solid;
+            if (mode == "hollow")  return DrawMode.hollow;
+            if (mode == "reverse") return DrawMode.reverse;
             return DrawMode.normal;
         }
         

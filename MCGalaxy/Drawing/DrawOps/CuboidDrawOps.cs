@@ -66,6 +66,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
         public ExtBlock Target;
+        public bool Above = true, Layer = true, Below = true;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
@@ -74,20 +75,16 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool outline = false;
-                outline |= Check((ushort)(x - 1), y, z);
-                outline |= Check((ushort)(x + 1), y, z);
-                outline |= Check(x, y, (ushort)(z - 1));
-                outline |= Check(x, y, (ushort)(z + 1));
-                outline |= Check(x, (ushort)(y - 1), z);
-                outline |= Check(x, (ushort)(y + 1), z);
+                outline |= Layer && Level.GetBlock((ushort)(x - 1), y, z) == Target;
+                outline |= Layer && Level.GetBlock((ushort)(x + 1), y, z) == Target;
+                outline |= Layer && Level.GetBlock(x, y, (ushort)(z - 1)) == Target;
+                outline |= Layer && Level.GetBlock(x, y, (ushort)(z + 1)) == Target;
+                outline |= Below && Level.GetBlock(x, (ushort)(y - 1), z) == Target;
+                outline |= Above && Level.GetBlock(x, (ushort)(y + 1), z) == Target;
 
-                if (outline && !Check(x, y, z))
+                if (outline && Level.GetBlock(x, y, z) != Target)
                     output(Place(x, y, z, brush));
             }
-        }
-        
-        bool Check(ushort x, ushort y, ushort z) {
-            return Level.GetBlock(x, y, z) == Target;
         }
     }
     

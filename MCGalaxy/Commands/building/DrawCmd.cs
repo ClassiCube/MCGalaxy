@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
             message = message.ToLower();
             string[] parts = message.SplitSpaces();
             
-            DrawArgs dArgs = default(DrawArgs);
+            DrawArgs dArgs = new DrawArgs();
             dArgs.Message = message;
             dArgs.Player = p;
             dArgs.Mode = GetMode(parts);
@@ -41,11 +41,8 @@ namespace MCGalaxy.Commands.Building {
             if (dArgs.Op == null) return;
             
             // Validate the brush syntax is correct
-            int offset = 0;
-            BrushFactory factory = BrushFactory.Find(GetBrush(dArgs, ref offset));
-            
-            string brushArgs = GetBrushArgs(dArgs, offset);
-            BrushArgs bArgs = new BrushArgs(p, brushArgs, dArgs.Block);
+            BrushFactory factory = MakeBrush(dArgs);
+            BrushArgs bArgs = new BrushArgs(p, dArgs.BrushArgs, dArgs.Block);
             if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, PlaceMessage);
@@ -58,16 +55,22 @@ namespace MCGalaxy.Commands.Building {
             GetMarks(dArgs, ref marks);
             if (marks == null) return false;
             
-            int offset = 0;
-            BrushFactory factory = BrushFactory.Find(GetBrush(dArgs, ref offset));
-            
-            string brushArgs = GetBrushArgs(dArgs, offset);
-            BrushArgs bArgs = new BrushArgs(p, brushArgs, dArgs.Block);
+            BrushFactory factory = MakeBrush(dArgs);
+            BrushArgs bArgs = new BrushArgs(p, dArgs.BrushArgs, dArgs.Block);
             Brush brush = factory.Construct(bArgs);
             if (brush == null) return false;
             
             DrawOpPerformer.Do(dArgs.Op, brush, p, marks);
             return true;
+        }
+        
+        BrushFactory MakeBrush(DrawArgs args) {
+            args.BrushName = args.Player.BrushName; 
+            args.BrushArgs = "";
+            GetBrush(args);
+            
+            if (args.BrushArgs.Length == 0) args.BrushArgs = args.Player.DefaultBrushArgs;
+            return BrushFactory.Find(args.BrushName);
         }
         
         protected virtual string PlaceMessage {
@@ -81,28 +84,15 @@ namespace MCGalaxy.Commands.Building {
         
         protected virtual void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) { }
         
-        protected virtual string GetBrush(DrawArgs dArgs, ref int offset) {
-            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            return dArgs.Player.BrushName;
+        protected virtual void GetBrush(DrawArgs dArgs) {
+            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.DefaultBrushEndCount);
         }
         
-        protected virtual string GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
-            int end = dArgs.Message.Length;
-            string brushMsg = "";
-            for (int i = 0; i < usedFromEnd; i++) {
-                end = dArgs.Message.LastIndexOf(' ', end - 1);
-                if (end == -1) break;
-            }
-            
-            if (end >= 0) brushMsg = dArgs.Message.Substring(0, end);
-            if (brushMsg.Length == 0) brushMsg = dArgs.Player.DefaultBrushArgs;
-            return brushMsg;
-        }
-        
-        protected struct DrawArgs {
+        protected class DrawArgs {
             public DrawMode Mode;
             public ExtBlock Block;
-            public string Message;
+            public string Message, BrushName, BrushArgs;
+            public int DefaultBrushEndCount { get { return Mode == DrawMode.normal ? 0 : 1; } }
             
             public DrawOp Op;
             public Player Player;

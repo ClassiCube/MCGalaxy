@@ -36,10 +36,10 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawMode GetMode(string[] parts) {
             string msg = parts[parts.Length - 1];
-            if (msg == "solid") return DrawMode.solid;
-            else if (msg == "hollow") return DrawMode.hollow;
-            else if (msg == "circle") return DrawMode.circle;
-            else if (msg == "hollowcircle") return DrawMode.hcircle;
+            if (msg == "solid")        return DrawMode.solid;
+            if (msg == "hollow")       return DrawMode.hollow;
+            if (msg == "circle")       return DrawMode.circle;
+            if (msg == "hollowcircle") return DrawMode.hcircle;
             return DrawMode.normal;
         }
         
@@ -58,10 +58,10 @@ namespace MCGalaxy.Commands.Building {
             m[0] = p0 - radius; m[1] = p0 + radius;
         }
         
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
-            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Mode == DrawMode.solid) return "normal";
-            return dArgs.Player.BrushName;
+        
+        protected override void GetBrush(DrawArgs dArgs) {
+            if (dArgs.Mode == DrawMode.solid) dArgs.BrushName = "Normal";
+            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.DefaultBrushEndCount);
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {

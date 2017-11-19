@@ -35,18 +35,34 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.GetBlockIfAllowed(dArgs.Player, parts[0], out target)) return null;
             
             OutlineDrawOp op = new OutlineDrawOp();
+            // e.g. testing air 'above' grass - therefore op.Above needs to be false for 'up mode'
+            if (dArgs.Mode == DrawMode.up)    { op.Layer = false; op.Above = false; }
+            if (dArgs.Mode == DrawMode.down)  { op.Layer = false; op.Below = false; }
+            if (dArgs.Mode == DrawMode.layer) { op.Above = false; op.Below = false; }
             op.Target = target;
             return op;
         }
         
-        protected override string GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
-            string[] parts = dArgs.Message.SplitSpaces(2);
-            return parts.Length == 1 ? "" : parts[1];
+                
+        protected override DrawMode GetMode(string[] parts) {
+            if (parts.Length <= 2) return DrawMode.normal;
+            
+            string type = parts[parts.Length - 1];
+            if (type == "down")  return DrawMode.down;
+            if (type == "up")    return DrawMode.up;
+            if (type == "layer") return DrawMode.layer;
+            if (type == "all")   return DrawMode.solid;
+            return DrawMode.normal;
+        }
+        
+        protected override void GetBrush(DrawArgs dArgs) {
+            dArgs.BrushArgs = dArgs.Message.Splice(1, dArgs.DefaultBrushEndCount);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Outline [block] <brush args>");
+            Player.Message(p, "%T/Outline [block] <brush args> <mode>");
             Player.Message(p, "%HOutlines [block] with output of your current brush.");
+            Player.Message(p, "   %HModes: &fall/up/layer/down (default all)");
             Player.Message(p, BrushHelpLine);
         }
     }

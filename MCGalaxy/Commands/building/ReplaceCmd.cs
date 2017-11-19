@@ -20,13 +20,16 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Building {  
-    public class CmdReplace : DrawCmd {        
+namespace MCGalaxy.Commands.Building {
+    public class CmdReplace : DrawCmd {
         public override string name { get { return "Replace"; } }
         public override string shortcut { get { return "r"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new CuboidDrawOp(); }      
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "replace"; }
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new CuboidDrawOp(); }
+        protected override void GetBrush(DrawArgs dArgs) {
+            dArgs.BrushName = "Replace";
+            dArgs.BrushArgs = dArgs.Message;
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Replace [block] [block2].. [new]");
@@ -36,10 +39,13 @@ namespace MCGalaxy.Commands.Building {
         }
     }
     
-    public sealed class CmdReplaceNot : CmdReplace {        
+    public sealed class CmdReplaceNot : CmdReplace {
         public override string name { get { return "ReplaceNot"; } }
         public override string shortcut { get { return "rn"; } }
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) { return "replacenot"; }
+        protected override void GetBrush(DrawArgs dArgs) {
+            dArgs.BrushName = "ReplaceNot";
+            dArgs.BrushArgs = dArgs.Message;
+        }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/ReplaceNot [block] [block2].. [new]");

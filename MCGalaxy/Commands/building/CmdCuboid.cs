@@ -31,12 +31,12 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawMode GetMode(string[] parts) {
             string msg = parts[parts.Length - 1];
-            if (msg == "solid") return DrawMode.solid;
-            else if (msg == "hollow") return DrawMode.hollow;
-            else if (msg == "walls") return DrawMode.walls;
-            else if (msg == "holes") return DrawMode.holes;
-            else if (msg == "wire") return DrawMode.wire;
-            else if (msg == "random") return DrawMode.random;
+            if (msg == "solid")  return DrawMode.solid;
+            if (msg == "hollow") return DrawMode.hollow;
+            if (msg == "walls")  return DrawMode.walls;
+            if (msg == "holes")  return DrawMode.holes;
+            if (msg == "wire")   return DrawMode.wire;
+            if (msg == "random") return DrawMode.random;
             return DrawMode.normal;
         }
         
@@ -51,12 +51,11 @@ namespace MCGalaxy.Commands.Building {
             return new CuboidDrawOp();
         }
         
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
-            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (dArgs.Mode == DrawMode.solid) return "normal";
-            if (dArgs.Mode == DrawMode.holes) return "checkered";
-            if (dArgs.Mode == DrawMode.random) return "random";
-            return dArgs.Player.BrushName;
+        protected override void GetBrush(DrawArgs dArgs) {
+            if (dArgs.Mode == DrawMode.solid)  dArgs.BrushName = "Normal";
+            if (dArgs.Mode == DrawMode.holes)  dArgs.BrushName = "Checkered";
+            if (dArgs.Mode == DrawMode.random) dArgs.BrushName = "Random";
+            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.DefaultBrushEndCount);
         }
         
         public override void Help(Player p) {

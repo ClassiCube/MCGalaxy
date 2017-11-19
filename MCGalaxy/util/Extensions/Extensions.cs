@@ -39,6 +39,22 @@ namespace MCGalaxy {
             return value.Split(trimChars, maxParts);
         }
         
+        public static string Splice(this string value, int startCount, int endCount) {
+            int start = 0;
+            for (int i = 0; i < startCount; i++) {
+                start = value.IndexOf(' ', start) + 1;
+                if (start == 0) return "";
+            }
+            value = value.Substring(start);
+            
+            int end = value.Length;
+            for (int i = 0; i < endCount; i++) {
+                end = value.LastIndexOf(' ', end - 1);
+                if (end == -1) return "";
+            }
+            return value.Substring(0, end);
+        }
+        
         public static void FixedSplit(this string value, string[] split, char splitter) {
             int start = 0, i = 0;
             for (; i < split.Length && start <= value.Length; i++) {

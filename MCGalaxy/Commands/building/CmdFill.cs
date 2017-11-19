@@ -41,22 +41,22 @@ namespace MCGalaxy.Commands.Building {
         }
         
         DrawMode ParseFillMode(string msg) {
-            if (msg == "normal") return DrawMode.solid;
-            else if (msg == "up") return DrawMode.up;
-            else if (msg == "down") return DrawMode.down;
-            else if (msg == "layer") return DrawMode.layer;
-            else if (msg == "vertical_x") return DrawMode.verticalX;
-            else if (msg == "vertical_z") return DrawMode.verticalZ;
-            else if (msg == "2d") return DrawMode.volcano;
+            if (msg == "normal")     return DrawMode.solid;
+            if (msg == "up")         return DrawMode.up;
+            if (msg == "down")       return DrawMode.down;
+            if (msg == "layer")      return DrawMode.layer;
+            if (msg == "vertical_x") return DrawMode.verticalX;
+            if (msg == "vertical_z") return DrawMode.verticalZ;
+            if (msg == "2d")         return DrawMode.volcano;
             return DrawMode.normal;
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArg) { return new FillDrawOp(); }
 
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
-            offset = dArgs.Mode == DrawMode.normal ? 0 : 1;
-            if (IsConfirmed(dArgs.Message)) offset++;
-            return dArgs.Player.BrushName;
+        protected override void GetBrush(DrawArgs dArgs) {
+            int endCount = dArgs.DefaultBrushEndCount;
+            if (IsConfirmed(dArgs.Message)) endCount++;
+            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {

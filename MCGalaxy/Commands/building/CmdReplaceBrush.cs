@@ -54,14 +54,10 @@ namespace MCGalaxy.Commands.Building {
             return op;
         }
         
-        protected override string GetBrush(DrawArgs dArgs, ref int offset) {
+        protected override void GetBrush(DrawArgs dArgs) {
             string[] args = dArgs.Message.SplitSpaces(3);
-            return args[1];
-        }
-        
-        protected override string GetBrushArgs(DrawArgs dArgs, int usedFromEnd) {
-            string[] args = dArgs.Message.SplitSpaces(3);
-            return args.Length > 2 ? args[2] : "";
+            dArgs.BrushName = args[1];
+            dArgs.BrushArgs = args.Length > 2 ? args[2] : "";
         }
         
         public override void Help(Player p) {
