@@ -125,6 +125,7 @@ namespace MCGalaxy.Drawing {
             w.Write(OriginX); w.Write(OriginY); w.Write(OriginZ);
             w.Write((byte)0x0f); // 0ffset
             w.Write(Offset.X); w.Write(Offset.Y); w.Write(Offset.Z);
+            w.Write((byte)(PasteAir ? 1 : 0));
         }
         
         /// <summary> Loads this copy state from the given stream. </summary>
@@ -142,6 +143,7 @@ namespace MCGalaxy.Drawing {
             OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
             if (stream.ReadByte() != 0x0f) return;
             Offset.X = r.ReadInt32(); Offset.Y = r.ReadInt32(); Offset.Z = r.ReadInt32();
+            PasteAir = stream.ReadByte() == 1;
         }
         
         void LoadBlocks(BinaryReader r, int identifier) {
