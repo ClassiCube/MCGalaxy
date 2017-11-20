@@ -26,9 +26,7 @@ namespace MCGalaxy.Generator {
             MapGen.RegisterAdvancedGen("billow", GenBillow2D);
             MapGen.RegisterAdvancedGen("ridgedmultifractal", GenRidged2D);
             MapGen.RegisterAdvancedGen("perlin", GenPerlin2D);
-            MapGen.RegisterAdvancedGen("checkerboard", GenCheckerboard);          
-            MapGen.RegisterAdvancedGen("spheres", GenSpheres);
-            MapGen.RegisterAdvancedGen("cylinders", GenCylinders);
+            MapGen.RegisterAdvancedGen("checkerboard", GenCheckerboard);
             MapGen.RegisterAdvancedGen("voronoi", GenVoronoi);            
             MapGen.RegisterAdvancedGen("perlin3d", GenPerlin3D);
             MapGen.RegisterAdvancedGen("perlin3dyadjust", GenPerlin3DYAdjust);
@@ -58,14 +56,6 @@ namespace MCGalaxy.Generator {
         
         static bool GenCheckerboard(MapGenArgs args) {
             return Gen2D(args, new Checkerboard());
-        }
-        
-        static bool GenSpheres(MapGenArgs args) {
-            return Gen2D(args, new Spheres());
-        }
-        
-        static bool GenCylinders(MapGenArgs args) {
-            return Gen2D(args, new Cylinders());
         }
         
         static bool GenVoronoi(MapGenArgs args) {
