@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
         
                 
         protected override DrawMode GetMode(string[] parts) {
-            if (parts.Length <= 2) return DrawMode.normal;
+            if (parts.Length == 1) return DrawMode.normal;
             
             string type = parts[parts.Length - 1];
             if (type == "down")  return DrawMode.down;
