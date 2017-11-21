@@ -23,14 +23,8 @@ namespace MCGalaxy.Util {
     
     /// <summary> Represents a text file and associated data for it. </summary>
     public sealed class TextFile {
-        
-        /// <summary> Filename on disc. </summary>
         public readonly string Filename;
-        
-        /// <summary> Default text that the file contains. </summary>
-        public readonly string[] DefaultText;
-        
-        /// <summary> Callback invoked when contents of this file are changed. </summary>
+        public readonly string[] DefaultText;        
         public Action OnTextChanged;
         
         public TextFile(string filename, params string[] defaultText) {
@@ -38,9 +32,6 @@ namespace MCGalaxy.Util {
             DefaultText = defaultText;
         }
         
-        
-        /// <summary> Ensure this file exists on disc.
-        /// If it doesn't, a file is created and filled with the default text. </summary>
         public void EnsureExists() {
             if (File.Exists(Filename)) return;
             
@@ -54,43 +45,38 @@ namespace MCGalaxy.Util {
             }
         }
         
-        /// <summary> Retrieves the text in this text file. </summary>
         public string[] GetText() {
             return File.ReadAllLines(Filename);
         }
         
-        /// <summary> Updates the text in this text file. </summary>
         public void SetText(string[] text) {
             File.WriteAllLines(Filename, text);
             if (OnTextChanged != null) OnTextChanged();
         }
         
-        
-        /// <summary> Dictionary of all core text files. </summary>
+
         public static Dictionary<string, TextFile> Files = new Dictionary<string, TextFile>() {
-            { "News", new TextFile(Paths.NewsFile,
-                                   "News have not been created. Put News in '" + Paths.NewsFile + "'.") },
-            { "FAQ", new TextFile(Paths.FaqFile,
+            { "News", new TextFile(Paths.NewsFile, "News have not been created. Put News in '" + Paths.NewsFile + "'.") },
+            { "FAQ", new TextFile(Paths.FaqFile, 
                                   "Example: What does this server run on? This server runs on &b" + Server.SoftwareName) },
-            { "Rules", new TextFile(Paths.RulesFile,
-                                    "No rules entered yet!") },
-            { "OpRules", new TextFile(Paths.OprulesFile,
-                                      "No oprules entered yet!") },
+            { "Rules", new TextFile(Paths.RulesFile, "No rules entered yet!") },
+            { "OpRules", new TextFile(Paths.OprulesFile, "No oprules entered yet!") },
             { "Custom $s", new TextFile(Paths.CustomTokensFile,
                                         "// This is used to create custom chat tokens",
                                         "// Lines starting with // are ignored",
                                         "// Lines should be formatted like this:",
                                         "// $website:http://example.org",
                                         "// That would replace '$website' in any message to 'http://example.org'") },
-            { "Welcome", new TextFile(Paths.WelcomeFile,
-                                      "Welcome to my server!") },
-            { "Eat", new TextFile(Paths.EatMessagesFile,
-                                  "guzzled a grape", "chewed a cherry", "ate an avocado") },
+            { "Welcome", new TextFile(Paths.WelcomeFile, "Welcome to my server!") },
+            { "Eat", new TextFile(Paths.EatMessagesFile, "guzzled a grape", "chewed a cherry", "ate an avocado") },
             { "Profanity filter", new TextFile(Paths.BadWordsFile,
                                                "# This file is a list of words to remove via the profanity filter",
                                                "# Each word to remove must be on an individual line") },
             { "Announcements", new TextFile(Paths.AnnouncementsFile, null) },
             { "Joker", new TextFile(Paths.JokerFile, null) },
+            { "8ball", new TextFile(Paths.EightBallFile, 
+                                    "Not likely.", "Very likely.", "Impossible!", "No.", 
+                                    "Yes.", "Definitely!", "Do some more thinking.") },
         };
     }
 }

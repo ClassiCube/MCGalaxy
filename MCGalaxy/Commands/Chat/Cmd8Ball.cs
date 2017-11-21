@@ -18,6 +18,7 @@
 using System;
 using System.Text;
 using MCGalaxy.Tasks;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Chatting {
     public sealed class Cmd8Ball : Command {
@@ -25,10 +26,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
-        
-        static string[] messages = new string[] { "Not likely." , "Very likely." , "Impossible!" , 
-            "No." , "Yes." , "Definitely!" , "Do some more thinking." };
-        DateTime nextUse;
+
+        static DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         
         public override void Use(Player p, string message) {
@@ -56,6 +55,10 @@ namespace MCGalaxy.Commands.Chatting {
         static void EightBallCallback(SchedulerTask task) {
             string final = (string)task.State;
             Random random = new Random(final.ToLower().GetHashCode());
+            
+            TextFile file = TextFile.Files["8ball"];
+            file.EnsureExists();
+            string[] messages = file.GetText();
             Chat.MessageWhere("The &b8-Ball %Ssays: &f{0}", Sees8Ball, messages[random.Next(messages.Length)]);
         }
         
