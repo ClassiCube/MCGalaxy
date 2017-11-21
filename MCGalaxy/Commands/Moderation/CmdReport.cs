@@ -151,7 +151,11 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
-            reports.Add(args[1] + " - Reported by " + p.name + " at " + DateTime.Now);
+            string reason = args[1];
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
+            reports.Add(reason + " - Reported by " + p.name + " at " + DateTime.Now);
             File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
             Player.Message(p, "%aYour report has been sent, it should be viewed when an operator is online!");
             Chat.MessageOps(p.ColoredName + " %Shas made a report, view it with %T/Report check " + target);
