@@ -72,8 +72,9 @@ namespace MCGalaxy {
             char* characters = stackalloc char[StringSize];
             for (int i = StringSize - 1; i >= 0; i--) {
                 byte code = data[i + offset];
-                if( length == 0 && !(code == 0x00 || code == 0x20))
-                    length = i + 1;
+                if (code == 0) code = 0x20; // NULL to space
+                
+                if (length == 0 && code != 0x20) { length = i + 1; }
                 characters[i] = ((char)code).Cp437ToUnicode();
             }
             return new String(characters, 0, length);
