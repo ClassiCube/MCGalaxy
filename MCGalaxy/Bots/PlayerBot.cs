@@ -109,11 +109,15 @@ namespace MCGalaxy {
                 used[id] = 1;
             }
             
-            for (byte i = 127; i >= 64; i-- ) {
+            for (byte i = 127; i >= 64; i--) {
                 if (used[i] == 0) return i;
             }
             // NOTE: For some clients these IDs mean self ID
-            for (byte i = 254; i > 127; i-- ) {
+            for (byte i = 254; i > 127; i--) {
+                if (used[i] == 0) return i;
+            }
+            // NOTE: These IDs may conflict with player IDs, so use as a last resort
+            for (byte i = 63; i > 0; i--) {
                 if (used[i] == 0) return i;
             }
             return Entities.SelfID;
