@@ -142,8 +142,13 @@ namespace MCGalaxy {
                 sb.Replace(ircSingle[i], ircReplacements[i]);
             }
             
-            sb.Replace("\u0003", white); // color reset
-            sb.Replace("\u000f", white); // reset
+            // trim misc formatting chars
+            sb.Replace("\x02", ""); // bold
+            sb.Replace("\x1D", ""); // italic
+            sb.Replace("\x1F", ""); // underline
+            
+            sb.Replace("\x03", white); // color reset
+            sb.Replace("\x0f", white); // reset
             return sb.ToString();
         }
 
