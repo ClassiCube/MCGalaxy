@@ -119,6 +119,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.Props[src.Index];
             dstDef = srcDef.Copy();
             dstDef.BlockID = (byte)dst.RawID;
+            dstDef.InventoryOrder = -1;
             
             AddBlock(p, dstDef, global, cmd, props);
             string scope = global ? "global" : "level";
