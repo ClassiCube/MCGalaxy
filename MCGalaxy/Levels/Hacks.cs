@@ -29,8 +29,7 @@ namespace MCGalaxy {
             return !noHacks;
         }
         
-        public static byte[] MakeHackControl(Player p) {
-            string motd = p.level.GetMotd(p);
+        public static byte[] MakeHackControl(Player p, string motd) {
             motd = Colors.Strip(motd);
             bool isOp = p.Rank >= LevelPermission.Operator;
             

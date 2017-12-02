@@ -160,16 +160,17 @@ namespace MCGalaxy {
 
         //Tnt Wars
         public bool PlayingTntWars;
-        public int CurrentAmountOfTnt = 0;
+        public int CurrentAmountOfTnt;
         public int CurrentTntGameNumber; //For keeping track of which game is which
         public int TntWarsHealth = 2;
-        public int TntWarsKillStreak = 0;
+        public int TntWarsKillStreak;
         public float TntWarsScoreMultiplier = 1f;
-        public int TNTWarsLastKillStreakAnnounced = 0;
+        public int TNTWarsLastKillStreakAnnounced;
         public bool inTNTwarsMap;
         public Player HarmedBy = null; //For Assists
 
-        public CopyState CopyBuffer;
+        public List<CopyState> CopySlots = new List<CopyState>();
+        public int CurrentCopySlot;
         
         // BlockDefinitions
         internal int gbStep = 0, lbStep = 0;

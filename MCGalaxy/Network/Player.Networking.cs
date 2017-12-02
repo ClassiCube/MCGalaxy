@@ -167,9 +167,8 @@ namespace MCGalaxy {
             Send(packet);
             
             if (!Supports(CpeExt.HackControl)) return;
-            Send(Hacks.MakeHackControl(this));
-            if (Game.Referee)
-                Send(Packet.HackControl(true, true, true, true, true, -1));
+            Send(Hacks.MakeHackControl(this, level.GetMotd(this)));
+            if (Game.Referee) Send(Packet.HackControl(true, true, true, true, true, -1));
         }
         
         public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }

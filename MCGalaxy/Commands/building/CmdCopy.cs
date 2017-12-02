@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
 
         void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ExtBlock block) {
             if (i == 2) {
-                CopyState copy = p.CopyBuffer;
+                CopyState copy = p.CopySlots[p.CurrentCopySlot];
                 copy.Offset.X = copy.OriginX - m[i].X;
                 copy.Offset.Y = copy.OriginY - m[i].Y;
                 copy.Offset.Z = copy.OriginZ - m[i].Z;
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Building {
             CopyArgs cArgs = (CopyArgs)state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
             ushort minX = (ushort)min.X, minY = (ushort)min.Y, minZ = (ushort)min.Z;
-            ushort maxX = (ushort)max.X, maxY = (ushort)max.X, maxZ = (ushort)max.Z;
+            ushort maxX = (ushort)max.X, maxY = (ushort)max.Y, maxZ = (ushort)max.Z;
             
             CopyState cState = new CopyState(minX, minY, minZ, maxX - minX + 1,
                                              maxY - minY + 1, maxZ - minZ + 1);
@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            p.CopyBuffer = cState;
+            p.SetCurrentCopy(cState);
             if (cArgs.type == 1) {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands.Building {
             using (FileStream fs = File.Create(path))
                 using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
             {
-                p.CopyBuffer.SaveTo(gs);
+                p.CopySlots[p.CurrentCopySlot].SaveTo(gs);
             }
             Player.Message(p, "Saved copy as " + file);
         }
@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands.Building {
                 } else {
                     state.LoadFromOld(gs, fs);
                 }
-                p.CopyBuffer = state;
+                p.SetCurrentCopy(state);
             }
             Player.Message(p, "Loaded copy as " + file);
         }

@@ -99,15 +99,16 @@ namespace MCGalaxy.Drawing.Brushes {
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Player.CopyBuffer == null) {
+            CopyState cState = args.Player.CopySlots[args.Player.CurrentCopySlot];
+            if (cState == null) {
                 args.Player.SendMessage("You haven't copied anything yet.");
                 return null;
             }
             
             if (args.Message.Length == 0)
-                return new SimplePasteBrush(args.Player.CopyBuffer);
+                return new SimplePasteBrush(cState);
             string[] parts = args.Message.SplitSpaces();
-            PasteBrush brush = new PasteBrush(args.Player.CopyBuffer);
+            PasteBrush brush = new PasteBrush(cState);
             
             if (parts[0].CaselessEq("not")) {
                 brush.Exclude = ReplaceBrushFactory.GetBlocks(args.Player, 1, parts.Length, parts);

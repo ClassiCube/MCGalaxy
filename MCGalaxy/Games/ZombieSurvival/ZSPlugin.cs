@@ -118,7 +118,7 @@ namespace MCGalaxy.Games.ZS {
                 p.Game.Referee = false;
                 
                 if (p.Supports(CpeExt.HackControl))
-                    p.Send(Hacks.MakeHackControl(p));
+                    p.Send(Hacks.MakeHackControl(p, p.level.GetMotd(p)));
             } else {
                 HandlePlayerDisconnect(p, null);                
                 p.Game.Referee = true;

@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) message = "y";
-            if (p.CopyBuffer == null) {
+            CopyState cState = p.CopySlots[p.CurrentCopySlot];
+            if (cState == null) {
                 Player.Message(p, "You haven't copied anything yet"); return;
             }
             string opt = message.ToLower();
@@ -39,13 +40,13 @@ namespace MCGalaxy.Commands.Building {
             
             // Mirroring
             if (opt == "mirrorx" || opt == "mirror x") {
-                Flip.MirrorX(p.CopyBuffer, defs);
+                Flip.MirrorX(cState, defs);
                 Player.Message(p, "Flipped copy across the X (east/west) axis.");
             } else if (opt == "mirrory" || opt == "mirror y" || opt == "u") {
-                Flip.MirrorY(p.CopyBuffer, defs);
+                Flip.MirrorY(cState, defs);
                 Player.Message(p, "Flipped copy across the Y (vertical) axis.");
             } else if (opt == "mirrorz" || opt == "mirror z" || opt == "m") {
-                Flip.MirrorZ(p.CopyBuffer, defs);
+                Flip.MirrorZ(cState, defs);
                 Player.Message(p, "Flipped copy across the Z (north/south) axis.");
             } else {
                 string[] args = opt.SplitSpaces();
@@ -56,11 +57,11 @@ namespace MCGalaxy.Commands.Building {
                 
                 if (angle == 0) {
                 } else if (axis == 'X') {
-                    p.CopyBuffer = Flip.RotateX(p.CopyBuffer, angle, defs);
+                    p.SetCurrentCopy(Flip.RotateX(cState, angle, defs));
                 } else if (axis == 'Y') {
-                    p.CopyBuffer = Flip.RotateY(p.CopyBuffer, angle, defs);
+                    p.SetCurrentCopy(Flip.RotateY(cState, angle, defs));
                 } else if (axis == 'Z') {
-                    p.CopyBuffer = Flip.RotateZ(p.CopyBuffer, angle, defs);
+                    p.SetCurrentCopy(Flip.RotateZ(cState, angle, defs));
                 }
                 Player.Message(p, "Rotated copy {0} degrees around the {1} axis", angle, axis);
             }            

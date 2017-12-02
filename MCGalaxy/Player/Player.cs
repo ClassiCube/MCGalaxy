@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.DB;
+using MCGalaxy.Drawing;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
@@ -322,8 +323,11 @@ namespace MCGalaxy {
             connections.Remove(this);
             RemoveFromPending();
             Extras.Clear();
-            if (CopyBuffer != null)
-                CopyBuffer.Clear();
+            
+            foreach (CopyState cState in CopySlots) { 
+                if (cState != null) cState.Clear();
+            }
+            CopySlots.Clear();
             DrawOps.Clear();
             if (spamChecker != null)
                 spamChecker.Clear();
@@ -342,6 +346,11 @@ namespace MCGalaxy {
                 if (valid.IndexOf(c) == -1) return false;
             }
             return true;
+        }
+        
+        public void SetCurrentCopy(CopyState state) {
+            while (CurrentCopySlot >= CopySlots.Count) { CopySlots.Add(null); }
+            CopySlots[CurrentCopySlot] = state;
         }
 
         #endregion
