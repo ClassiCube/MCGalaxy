@@ -4,11 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # SharpDevelop 4.4
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starter", "GUI\Starter.csproj", "{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxyGUI", "GUI\MCGalaxyGUI.csproj", "{63DCBB31-92CD-4464-A86C-A7E51A5FE9FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxy_", "MCGalaxy\MCGalaxy_.csproj", "{12597DB0-7C34-4DE1-88EA-9250FF3372EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "updater\Updater.csproj", "{1C317052-9B87-471C-A8AF-5AB2D779C174}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCGalaxyCLI", "CLI\MCGalaxyCLI.csproj", "{A1A5B886-2D0A-4D2A-AE13-409560D5227C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,10 @@ Global
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Debug|x86.Build.0 = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.ActiveCfg = Release|x86
 		{1C317052-9B87-471C-A8AF-5AB2D779C174}.Release|x86.Build.0 = Release|x86
+		{A1A5B886-2D0A-4D2A-AE13-409560D5227C}.Debug|x86.Build.0 = Debug|x86
+		{A1A5B886-2D0A-4D2A-AE13-409560D5227C}.Debug|x86.ActiveCfg = Debug|x86
+		{A1A5B886-2D0A-4D2A-AE13-409560D5227C}.Release|x86.Build.0 = Release|x86
+		{A1A5B886-2D0A-4D2A-AE13-409560D5227C}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

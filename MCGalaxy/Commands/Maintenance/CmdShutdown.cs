@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Maintenance {
         static void ShutdownCallback(SchedulerTask task) {
             ShutdownArgs args = (ShutdownArgs)task.State;
             if (args.Delay == 0) {
-                MCGalaxy.Gui.App.ExitProgram(false, args.Reason);
+                Server.Stop(false, args.Reason);
             } else {
                 Log("Server shutdown in " + args.Delay + " seconds");
                 args.Delay--;

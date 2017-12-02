@@ -80,6 +80,7 @@ namespace MCGalaxy {
         [Obsolete("Use ServerConfig.Currency")]
         public static string moneys;
         public static string IP;
+        public static string RestartPath;
         
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;
@@ -106,7 +107,7 @@ namespace MCGalaxy {
         public static string salt = "";
         public static bool chatmod = false, flipHead = false;
 
-        public static bool shuttingDown = false, restarting = false;
+        public static bool shuttingDown = false;
         public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
     }
 }

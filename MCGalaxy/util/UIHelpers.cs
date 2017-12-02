@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2015 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -17,9 +17,10 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy;
 
-namespace MCGalaxy.Gui {
-    public static class Handlers {
+namespace MCGalaxy.UI {
+    public static class UIHelpers {
         
         static string lastCMD = "";
         public static void HandleChat(string text) {
@@ -87,6 +88,39 @@ namespace MCGalaxy.Gui {
             thread.IsBackground = true;
             thread.Start();
             return thread;
+        }
+        
+        public static string Format(string message) {
+            message = message.Replace("%S", "&f"); // We want %S to be treated specially when displayed in UI
+            message = Colors.Escape(message);      // Need to Replace first, otherwise it's mapped by Colors.Escape
+            return message;
+        }
+        
+        public static string OutputPart(ref char col, ref int start, string message) {
+            int next = NextPart(start, message);
+            string part;
+            if (next == -1) {
+                part = message.Substring(start);
+                start = message.Length;
+            } else {
+                part = message.Substring(start, next - start);
+                start = next + 2;
+                col = message[next + 1];
+            }
+            return part;
+        }
+        
+        static int NextPart(int start, string message) {
+            for (int i = start; i < message.Length; i++) {
+                if (message[i] != '&') continue;
+                // No colour code follows this
+                if (i == message.Length - 1) return -1;
+                
+                // Check following character is an actual colour code
+                char col = message[i + 1];
+                if (Colors.Map(ref col)) return i;
+            }
+            return -1;
         }
     }
 }

@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MCGalaxy.UI;
 
 namespace MCGalaxy.Gui.Components {
 
@@ -105,7 +106,7 @@ namespace MCGalaxy.Gui.Components {
             if (!Colorize) {
                 AppendText(text);
             } else {
-                LineFormatter.Format(text, (c, s) => LineFormatter.FormatGui(c, s, this, color));
+                AppendFormatted(text, color);
             }
         }
         
@@ -159,5 +160,26 @@ namespace MCGalaxy.Gui.Components {
         
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        
+        
+        void AppendFormatted(string message, Color foreColor) {
+            int index = 0;
+            char col = 'S';
+            message = UIHelpers.Format(message);
+            
+            while (index < message.Length) {
+                string part = UIHelpers.OutputPart(ref col, ref index, message);
+                if (part.Length > 0) AppendColoredText(part, GetCol(col, foreColor));
+            }
+        }
+        
+        static Color GetCol(char c, Color foreCol) {
+            if (c == 'S' || c == 'f' || c == 'F' || c == '0') return foreCol;
+            Colors.Map(ref c);
+
+            if (!Colors.IsDefined(c)) return foreCol;
+            ColorDesc col = Colors.List[c];
+            return Color.FromArgb(col.R, col.G, col.B);
+        }
     }
 }

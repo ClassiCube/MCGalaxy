@@ -17,17 +17,19 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
+using MCGalaxy.Scripting;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
-using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
     public sealed partial class Server {
@@ -215,7 +217,48 @@ namespace MCGalaxy {
                 plugin.Load(false);
             }
         }
+        
+        public static void Stop(bool restart) { Stop(restart, ""); }
+        public static void Stop(bool restart, string msg) {
+            Server.shuttingDown = true;
+            if (msg.Length == 0) {
+                msg = restart ? "Server restarted. Sign in again and rejoin." : ServerConfig.DefaultShutdownMessage;
+            }
+            
+            Exit(restart, msg);
+            new Thread(() => ShutdownThread(restart, msg)).Start();
+        }
+        
+        static void ShutdownThread(bool restarting, string msg) {
+            try {
+                Player[] players = PlayerInfo.Online.Items; 
+                foreach (Player p in players) { p.Leave(msg); }
+            } catch (Exception ex) { 
+                Logger.LogError(ex); 
+            }
 
+            try {
+                string autoload = null;
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
+                    if (!lvl.ShouldSaveChanges()) continue;
+                    
+                    autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
+                    lvl.Save(false, true);
+                    lvl.SaveBlockDBChanges();
+                }
+                
+                if (Server.ServerSetupFinished && !ServerConfig.AutoLoadMaps) {
+                    File.WriteAllText("text/autoload.txt", autoload);
+                }
+            } catch (Exception ex) {
+                Logger.LogError(ex); 
+            }
+            
+            if (restarting) Process.Start(RestartPath);
+            Environment.Exit(0);
+        }
+        
         public static void Exit(bool restarting, string msg) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }

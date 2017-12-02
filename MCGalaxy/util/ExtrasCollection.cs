@@ -24,17 +24,13 @@ namespace MCGalaxy {
     /// For example: This is useful if you want to store the value "lives" for a player. </summary>
     public sealed class ExtrasCollection : Dictionary<string, object> {
 
-        /// <summary> Returns the value associated with the given key as an object, or null if no value exists for this key </summary>
         public object Get(string key) {
             object value;
             TryGetValue(key, out value);
             return value;
         }
 
-        /// <summary> Returns the value associated with the given key, or false if no mapping of the desired type exists for the given key. </summary>
         public bool GetBoolean(string key) { return GetBoolean(key, false); }
-
-        /// <summary> Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. </summary>
         public bool GetBoolean(string key, bool defaultValue) {
             object value;
             if (TryGetValue(key, out value)) {
@@ -44,10 +40,7 @@ namespace MCGalaxy {
             return defaultValue;
         }
 
-        /// <summary> Returns the value associated with the given key, or 0 if no mapping of the desired type exists for the given key. </summary>
         public int GetInt(string key) { return GetInt(key, 0); }
-
-        /// <summary> Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. </summary>
         public int GetInt(string key, int defaultValue) {
             object value;
             if (TryGetValue(key, out value)) {
@@ -57,11 +50,7 @@ namespace MCGalaxy {
             return defaultValue;
         }
 
-        /// <summary> Returns the value associated with the given key, or null if no mapping of the desired type exists for the given key 
-        /// or a null value is explicitly associated with the key. </summary>
         public string GetString(string key) { return GetString(key, null); }
-
-        /// <summary> Returns the value associated with the given key, or defaultValue if no mapping of the desired type exists for the given key. </summary>
         public string GetString(string key, string defaultValue) {
             object value;
             if (TryGetValue(key, out value)) {
@@ -71,16 +60,9 @@ namespace MCGalaxy {
             return defaultValue;
         }
 
-        /// <summary> Inserts a boolean value into the ExtrasCollection </summary>
         public void PutBoolean(string key, bool value) { this[key] = value; }
-
-        /// <summary> Inserts an integer value into the ExtrasCollection </summary>
         public void PutInt(string key, int value) { this[key] = value; }
-
-        /// <summary> Inserts a string value into the ExtrasCollection </summary>
         public void PutString(string key, string value) { this[key] = value; }
-
-        /// <summary> Returns true if there is no data stored </summary>
         public bool IsEmpty() { return Count == 0; }
     }
 }

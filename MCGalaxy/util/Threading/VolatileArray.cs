@@ -24,7 +24,6 @@ namespace MCGalaxy {
         /// <remarks> Note this field is highly volatile, you should cache references to it. </remarks>
         public volatile T[] Items = new T[0];
         
-        /// <summary> Returns the number of items in this array. </summary>
         public int Count { get { return Items.Length; } }
         
         /// <summary> Object used to sychronise Add/Remove calls to this array. </summary>

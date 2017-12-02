@@ -18,165 +18,74 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using MCGalaxy;
+using MCGalaxy.Cli;
 
 namespace MCGalaxy.Gui {
     public static class Program {
 
-        [DllImport("kernel32")]
-        static extern IntPtr GetConsoleWindow();
-        
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        // NOTE: //Console.ReadLine() is ignored while Starter is set as Windows Application in properties. (At least on Windows)
-        static bool useConsole, useHighQualityGui, isWindows;
         [STAThread]
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            bool useConsole = DetectConsole();
+            
+            if (useConsole) {
+                CLIProgram.RunCLI();
+            } else {
+                RunGUI();
+            }
+        }
+        
+        // For compatibility with older MCGalaxy versions, which use Viewmode.cfg
+        static bool DetectConsole() {
+            try {
+                if (!File.Exists("Viewmode.cfg")) return false;
+                string[] lines = File.ReadAllLines("Viewmode.cfg");
+                
+                for (int i = 0; i < lines.Length; i++) {
+                    string line = lines[i];
+                    if (line.Length == 0 || line[0] == '#') continue;
+                    
+                    line = line.Trim().Replace(" ", "");
+                    if (!line.StartsWith("cli=")) continue;                  
+                    return bool.Parse(line.Substring("cli=".Length));
+                }
+            } catch { }
+            return false;
+        }
+        
+        static void RunGUI() {
             if (!File.Exists("MCGalaxy_.dll")) {
-                Console.WriteLine("MCGalaxy_.dll is missing from the folder");
-                Console.WriteLine("Go to https://github.com/Hetal728/MCGalaxy yourself and download it, please");
-                Console.WriteLine("Place it in the same folder.");
-                Console.WriteLine("If you have any issues, get the files from the https://github.com/Hetal728/MCGalaxy download page and try again.");
-                Console.WriteLine("Press any key to close me...");
-                Console.ReadLine();
-                Console.WriteLine("Bye!");
+                MessageBox.Show("Cannot start server as MCGalaxy_.dll is missing\r\n" +
+                                "Download it from https://github.com/Hetal728/MCGalaxy/tree/master/Uploads");
                 return;
             }
-            
-            DateTime startTime = DateTime.UtcNow;
+            // separate method, in case MCGalaxy_.dll is missing
+            StartGUI();
+        }
+        
+        static void StartGUI() {
             FileLogger.Init();
+            Server.RestartPath = Application.ExecutablePath;
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
-            useHighQualityGui = false;
-            
-            PlatformID platform = Environment.OSVersion.Platform;
-            isWindows = platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows;
-            useConsole = !isWindows;
-            
-            try {
-                ReadViewmode();
-                if (useConsole) {
-                    RunCli();
-                } else {
-                    RunGui();
-                }
-                WriteToConsole("Completed in " + (DateTime.UtcNow - startTime).Milliseconds + "ms");
-            }
-            catch (Exception e) { Logger.LogError(e); }
-        }
-        
-        static void RunCli() {
-            Logger.LogHandler += LogMessage;
-            MCGalaxy.Gui.App.usingConsole = true;
-            
-            Server.Start();
-            Console.Title = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
-            ConsoleLoop();
-        }
-        
-        
-        static void LogMessage(LogType type, string message) {
-            switch (type) {
-                case LogType.Error:
-                    WriteToConsole("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
-                    break;
-                case LogType.BackgroundActivity:
-                    break;
-                default:
-                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    WriteToConsole(now + message); 
-                    break;
-            }
-        }
-        
-        static void RunGui() {
             Application.ThreadException += ThreadExHandler;
-            if (isWindows) { // get rid of console window on Windows
-                IntPtr hConsole = GetConsoleWindow();
-                if (IntPtr.Zero != hConsole) ShowWindow(hConsole, 0);
-            }
-            
-            if (useHighQualityGui) {
+
+            try {
                 Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-            }
-
-            Application.Run(new Window());
-        }
-        
-        static void ReadViewmode() {
-            if (!File.Exists("Viewmode.cfg")) {
-                using (StreamWriter w = new StreamWriter("Viewmode.cfg")) {
-                    w.WriteLine("#This file controls how the console window is shown to the server host");
-                    w.WriteLine("#cli: True or False (Determines whether a CLI interface is used) (Set True if on Mono)");
-                    w.WriteLine("#high-quality: True or false (Determines whether the GUI interface uses higher quality objects)");
-                    w.WriteLine();
-                    w.WriteLine("cli = " + useConsole);
-                    w.WriteLine("high-quality = true");
-                }
-            }
-            PropertiesFile.Read("Viewmode.cfg", ViewmodeLineProcessor);
-        }
-
-        static void ViewmodeLineProcessor(string key, string value) {
-            switch (key.ToLower()) {
-                case "cli":
-                    useConsole = value.CaselessEq("true"); break;
-                case "high-quality":
-                    useHighQualityGui = value.CaselessEq("true"); break;
+                Application.SetCompatibleTextRenderingDefault( false );
+                Application.Run(new Window());
+            } catch (Exception e) {
+                Logger.LogError(e);
             }
         }
-
-        static void WriteToConsole(string message) {
-            LineFormatter.Format(message, LineFormatter.FormatConsole);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine();
-        }
-
-        static void ConsoleLoop() {
-            while (true) {
-                try {
-                    string msg = Console.ReadLine().Trim(); // Make sure we have no whitespace!
-                    Thread t = null;
-                    
-                    if (msg == "/") {
-                        t = Handlers.RepeatCommand();
-                    } else if (msg.Length > 0 && msg[0] == '/') {
-                        t = Handlers.HandleCommand(msg.Substring(1));                        
-                    } else {
-                        Handlers.HandleChat(msg);
-                    }
-                    
-                    if (t != null && msg.CaselessEq("/restart")) { t.Join(); break; }
-                } catch (Exception ex) {
-                    Logger.LogError(ex);
-                }
-            }
-        }
-        
         
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
-            Exception ex = (Exception)e.ExceptionObject;
-            Logger.LogError(ex);
-            FileLogger.Flush(null);
-            
-            Thread.Sleep(500);
-            if (ServerConfig.restartOnError)
-                App.ExitProgram(true);
+            CLIProgram.LogAndRestart((Exception)e.ExceptionObject);
         }
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
-            Exception ex = e.Exception;
-            Logger.LogError(ex);
-            FileLogger.Flush(null);
-            
-            Thread.Sleep(500);
-            if (ServerConfig.restartOnError)
-                App.ExitProgram(true);
+            CLIProgram.LogAndRestart(e.Exception);
         }
     }
 }

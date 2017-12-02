@@ -41,6 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
                 announceToOps = false;
             }
             
+            Command adminchat = Command.all.FindByName("AdminChat");
             Command opchat = Command.all.FindByName("OpChat");
             Entities.GlobalDespawn(p, false);
             
@@ -70,7 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Chat.MessageGlobal(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
                 Server.IRC.Say(p.DisplayName + " %Sjoined the game");
-                if (announceToOps && p.opchat) opchat.Use(p, "");
+                if (p.opchat) opchat.Use(p, "");
+                if (p.adminchat) adminchat.Use(p, "");
                 Server.hidden.Remove(p.name);
             }
             

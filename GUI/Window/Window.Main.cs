@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using MCGalaxy.UI;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
@@ -111,20 +112,20 @@ namespace MCGalaxy.Gui {
                 inputLog.RemoveAt(20);
             
             if (text == "/") {
-                Handlers.RepeatCommand();
+                UIHelpers.RepeatCommand();
             } else if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
-                Handlers.HandleChat(text.Substring(1));
+                UIHelpers.HandleChat(text.Substring(1));
             } else if (text[0] == '/') {
-                Handlers.HandleCommand(text.Substring(1));
+                UIHelpers.HandleCommand(text.Substring(1));
             } else {
-                Handlers.HandleChat(text);
+                UIHelpers.HandleChat(text);
             }
             main_txtInput.Clear();
         }
         
         void main_BtnRestart_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                MCGalaxy.Gui.App.ExitProgram(true);
+                Server.Stop(true);
             }
         }
         

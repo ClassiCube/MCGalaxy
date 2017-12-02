@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Maintenance {
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }
-            MCGalaxy.Gui.App.ExitProgram(true);
+            Server.Stop(true);
         }
         
         public override void Help(Player p) {

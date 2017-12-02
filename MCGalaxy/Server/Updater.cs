@@ -20,8 +20,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
@@ -30,11 +28,14 @@ namespace MCGalaxy {
         
         public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
         public const string BaseURL = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/";
+        public const string UploadsURL = "https://github.com/Hetal728/MCGalaxy/tree/master/Uploads";
         const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
         const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
         const string ChangelogLocation = BaseURL + "Changelog.txt";
         const string EXELocation = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
-        static bool msgOpen = false;
+        const string CLILocation = BaseURL + "Uploads/MCGalaxyCLI.exe?raw=true";
+
+        public static event EventHandler NewerVersionDetected;
         
         public static void UpdaterTask(SchedulerTask task) {
             UpdateCheck();
@@ -48,23 +49,11 @@ namespace MCGalaxy {
             try {
                 string raw = client.DownloadString(CurrentVersionFile);
                 Version latestVersion = new Version(raw);
+                
                 if (latestVersion <= Server.Version) {
                     Logger.Log(LogType.SystemActivity, "No update found!");
-                    return;
-                }
-                
-                if (!msgOpen && !MCGalaxy.Gui.App.usingConsole) {
-                    // don't want message box blocking background scheduler thread
-                    Thread thread = new Thread(ShowUpdateMessageAsync);
-                    thread.Name = "MCGalaxy_UpdateMsgBox";
-                    thread.Start();
-                } else if (MCGalaxy.Gui.App.usingConsole) {
-                    ConsoleColor prevColor = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("An update was found!");
-                    Console.WriteLine("Update using the file at " + DLLLocation + ", and replace MCGalaxy_.dll");
-                    Console.WriteLine("Also update using the file at " + EXELocation + ", and replace MCGalaxy.exe");
-                    Console.ForegroundColor = prevColor;
+                } else if (NewerVersionDetected != null) {
+                    NewerVersionDetected(null, EventArgs.Empty);
                 }
             } catch (Exception e) {
                 Logger.LogError(e);
@@ -72,26 +61,18 @@ namespace MCGalaxy {
             
             client.Dispose();
         }
-        
-        static void ShowUpdateMessageAsync() {
-            msgOpen = true;
-            if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                PerformUpdate();
-            }
-            msgOpen = false;
-        }
 
         public static void PerformUpdate() {
             try {
                 try {
-                    DeleteFiles("MCLawl.new", "Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update",
-                                "Update.bat", "Update.sh", "Update_generated.bat", "Update_generated.sh");
+                    DeleteFiles("Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update", "MCGalaxyCLI.update");
                 } catch {
                 }
                 
                 WebClient client = HttpUtil.CreateWebClient();
                 client.DownloadFile(DLLLocation, "MCGalaxy_.update");
                 client.DownloadFile(EXELocation, "MCGalaxy.update");
+                client.DownloadFile(CLILocation, "MCGalaxyCLI.update");
                 client.DownloadFile(ChangelogLocation, "Changelog.txt");
 
                 Level[] levels = LevelInfo.Loaded.Items;
@@ -112,7 +93,7 @@ namespace MCGalaxy {
                     string path = Path.Combine(Utils.FolderPath, "Updater.exe");
                     Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + parent);
                 }
-                MCGalaxy.Gui.App.ExitProgram(false, "Updating server.");
+                Server.Stop(false, "Updating server.");
             } catch (Exception e) {
                 Logger.LogError(e);
             }

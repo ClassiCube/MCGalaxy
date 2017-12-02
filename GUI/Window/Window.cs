@@ -102,6 +102,7 @@ namespace MCGalaxy.Gui {
         void InitServer() {
             Server s = new Server();
             Logger.LogHandler += LogMessage;
+            Updater.NewerVersionDetected += LogNewerVersionDetected;
 
             Server.OnURLChange += UpdateUrl;
             Server.OnPlayerListChange += UpdateClientList;
@@ -128,6 +129,23 @@ namespace MCGalaxy.Gui {
                     WriteLine(message);
                     break;
             }
+        }
+
+        static volatile bool msgOpen = false;
+        static void LogNewerVersionDetected(object sender, EventArgs e) {
+            if (msgOpen) return;
+            // don't want message box blocking background scheduler thread
+            Thread thread = new Thread(ShowUpdateMessageAsync);
+            thread.Name = "MCGalaxy_UpdateMsgBox";
+            thread.Start();
+        }
+        
+        static void ShowUpdateMessageAsync() {
+            msgOpen = true;
+            if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                Updater.PerformUpdate();
+            }
+            msgOpen = false;
         }
         
         void InitServerTask(SchedulerTask task) {
@@ -322,12 +340,12 @@ namespace MCGalaxy.Gui {
 
         void Window_FormClosing(object sender, FormClosingEventArgs e) {
             if (e.CloseReason == CloseReason.WindowsShutDown) {
-                MCGalaxy.Gui.App.ExitProgram(false);
+                Server.Stop(false, "Server shutdown - PC turning off");
                 notifyIcon.Dispose();
             }
             
             if (Server.shuttingDown || MessageBox.Show("Really shutdown the server? All players will be disconnected!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                if (!Server.shuttingDown) MCGalaxy.Gui.App.ExitProgram(false);
+                if (!Server.shuttingDown) Server.Stop(false);
                 notifyIcon.Dispose();
             } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'

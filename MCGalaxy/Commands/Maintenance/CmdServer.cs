@@ -180,7 +180,6 @@ namespace MCGalaxy.Commands.Maintenance {
             ServerConfig.unsafe_plugin = true;
             Server.flipHead = false;
             Server.shuttingDown = false;
-            Server.restarting = false;
         }
 
         public override void Help(Player p) {
