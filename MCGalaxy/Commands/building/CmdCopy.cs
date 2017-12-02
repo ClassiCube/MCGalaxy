@@ -99,13 +99,13 @@ namespace MCGalaxy.Commands.Building {
                 copy.Offset.Z = copy.OriginZ - m[i].Z;
                 Player.Message(p, "Set offset of where to paste from.");
                 return;
-            }           
+            }
             if (i != 1) return;
             
             CopyArgs cArgs = (CopyArgs)state;
-            ushort minX = (ushort)Math.Min(m[0].X, m[1].X), maxX = (ushort)Math.Max(m[0].X, m[1].X);
-            ushort minY = (ushort)Math.Min(m[0].Y, m[1].Y), maxY = (ushort)Math.Max(m[0].Y, m[1].Y);
-            ushort minZ = (ushort)Math.Min(m[0].Z, m[1].Z), maxZ = (ushort)Math.Max(m[0].Z, m[1].Z);
+            Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
+            ushort minX = (ushort)min.X, minY = (ushort)min.Y, minZ = (ushort)min.Z;
+            ushort maxX = (ushort)max.X, maxY = (ushort)max.X, maxZ = (ushort)max.Z;
             
             CopyState cState = new CopyState(minX, minY, minZ, maxX - minX + 1,
                                              maxY - minY + 1, maxZ - minZ + 1);
@@ -140,24 +140,23 @@ namespace MCGalaxy.Commands.Building {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
                 Brush brush = new SolidBrush(ExtBlock.Air);
-                
-                Vec3S32[] marks = new Vec3S32[] {
-                    new Vec3S32(minX, minY, minZ),
-                    new Vec3S32(maxX, maxY, maxZ)
-                };
-                DrawOpPerformer.Do(op, brush, p, marks, false);
+                DrawOpPerformer.Do(op, brush, p, new Vec3S32[] { min, max }, false);
             }
 
-            string format = "Copied &a{0} %Sblocks." +
-                (cState.PasteAir ? "" : " To also copy air blocks, use %T/Copy Air");
-            Player.Message(p, format, cState.UsedBlocks);
+            Player.Message(p, "Copied &a{0} %Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
+                           cState.OriginX == cState.X ? "Min" : "Max",
+                           cState.OriginY == cState.Y ? "Min" : "Max",
+                           cState.OriginY == cState.Y ? "Min" : "Max");
+            if (!cState.PasteAir) {
+                Player.Message(p, "To also copy air blocks, use %T/Copy Air");
+            }
             if (cArgs.offsetIndex != -1) {
                 Player.Message(p, "Place a block to determine where to paste from");
             }
         }
         
         bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) { return false; }
-        class CopyArgs { public int type, offsetIndex; }        
+        class CopyArgs { public int type, offsetIndex; }
         
         void SaveCopy(Player p, string file) {
             if (!Directory.Exists("extra/savecopy"))

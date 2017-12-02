@@ -20,63 +20,41 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
-using MCGalaxy.Events;
+using MCGalaxy.Events.GroupEvents;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
     public sealed partial class Group {
+
+        public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
+        public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
+        public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
+        public static Group standard;
+        public static List<Group> GroupList = new List<Group>();
+        static bool reloading;
         
         const int mapGenLimitAdmin = 225 * 1000 * 1000;
         const int mapGenLimit = 30 * 1000 * 1000;
         public static bool cancelrank = false;
         
-        /// <summary> Name of this rank. </summary>
         public string Name;
-        
-        /// <summary> Default color code applied to members of this rank. </summary>
         public string Color;
-        
-        /// <summary> Name of this rank, prefixed by its color code. </summary>
         public string ColoredName { get { return Color + Name; } }
-
-        /// <summary> Permission level of this rank. </summary>
         public LevelPermission Permission = LevelPermission.Null;
-        
-        /// <summary> Maximum number of blocks members of this group can use in draw commands. </summary>
         public int DrawLimit;
-        
-        /// <summary> Maximum number of seconds members of this group can /undo up to. </summary>
         public int MaxUndo;
-        
-        /// <summary> Maximum volume of a map that members of this group can generate. </summary>
-        public int GenVolume = mapGenLimit;
-        
-        /// <summary> Whether members of this rank are auto kicked for being AFK. </summary>
-        public bool AfkKicked = true;
-        
-        /// <summary> Number of minutes members of this rank can be AFK for, before they are auto kicked. </summary>
-        public int AfkKickMinutes = 45;
-        
-        /// <summary> Optional MOTD shown to members of this group, instead of server's default MOTD. </summary>
-        /// <remarks> If a level has a custom MOTD, it overrides this. </remarks>
         public string MOTD = "";
-
-        /// <summary> Maxmimum number of personal/realm worlds allowed for members of this rank. </summary>
+        public int GenVolume = mapGenLimit;
         public byte OverseerMaps = 3;
-        
-        /// <summary> Optional prefix shown in chat before titles and player name. </summary>
-        public string Prefix = "";
-        
-        /// <summary> List of players who are members of this group.  </summary>
-        public PlayerList Players;
-        
-        /// <summary> List of commands members of this group can use. </summary>
-        public List<Command> Commands;
-        
-        /// <summary> List of blocks members of this group can use. </summary>
-        public bool[] Blocks = new bool[256];
-        
+        public bool AfkKicked = true;
+        public int AfkKickMinutes = 45;
+        public string Prefix = "";   
+        public int CopySlots = 1;
         internal string filename;
+        
+        public PlayerList Players;
+        public List<Command> Commands;
+        public bool[] Blocks = new bool[256];
         public Group() { }
         
         private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode) {
@@ -90,27 +68,21 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Sets all the commands that members of this group can use. </summary>
         public void SetUsableCommands() {
             Commands = CommandPerms.AllCommandsUsableBy(Permission);
         }
         
-        /// <summary> Sets all the blocks that this group can use. </summary>
         public void SetUsableBlocks() {
             for (int i = 0; i < Blocks.Length; i++)
                 Blocks[i] = BlockPerms.UsableBy(Permission, (byte)i);
         }
 
-        /// <summary> Returns true if members of this group can use the given command. </summary>
+        public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }
         public bool CanExecute(string cmdName) {
             Command cmd = Command.all.Find(cmdName);
             return cmd != null && Commands.Contains(cmd);
         }
-        
-        /// <summary> Returns true if members of this group can use the given command. </summary>
-        public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }
-        
-        
+
         /// <summary> Creates a copy of this group, except for members list and usable commands and blocks. </summary>
         public Group CopyConfig() {
             Group copy = new Group();
@@ -118,8 +90,50 @@ namespace MCGalaxy {
             copy.DrawLimit = DrawLimit; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
             copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps;
             copy.AfkKicked = AfkKicked; copy.AfkKickMinutes = AfkKickMinutes;
-            copy.Prefix = Prefix; copy.filename = filename;
+            copy.Prefix = Prefix; copy.CopySlots = CopySlots; copy.filename = filename;
             return copy;            
+        }        
+        
+        
+        public static Group Find(string name) {
+            MapName(ref name);
+            foreach (Group grp in GroupList) {
+                if (grp.Name.CaselessEq(name)) return grp;
+            }
+            return null;
+        }
+        
+        internal static void MapName(ref string name) {
+            if (name.CaselessEq("op")) name = "operator";
+        }
+
+        public static Group Find(LevelPermission perm) {
+            return GroupList.Find(grp => grp.Permission == perm);
+        }
+
+        public static Group GroupIn(string playerName) {
+            foreach (Group grp in GroupList) {
+                if (grp.Players.Contains(playerName)) return grp;
+            }
+            return standard;
+        }
+        
+        public static string GetColoredName(LevelPermission perm) {
+            Group grp = Find(perm);
+            if (grp != null) return grp.ColoredName;
+            return Colors.white + ((int)perm);
+        }
+        
+        public static string GetColoredName(string rankName) {
+            Group grp = Find(rankName);
+            if (grp != null) return grp.ColoredName;
+            return Colors.white + rankName;
+        }
+        
+        public static string GetColor(LevelPermission perm) {
+            Group grp = Find(perm);
+            if (grp != null) return grp.Color;
+            return Colors.white;
         }
         
         public static LevelPermission ParsePermOrName(string value, LevelPermission defPerm) {
@@ -131,6 +145,54 @@ namespace MCGalaxy {
             
             Group grp = Find(value);
             return grp != null ? grp.Permission : defPerm;
+        }
+        
+        
+        public static void Register(Group grp) {
+            GroupList.Add(grp);
+            grp.LoadPlayers();
+            
+            if (reloading) {
+                grp.SetUsableBlocks();
+                grp.SetUsableCommands();
+            }
+            OnGroupLoadedEvent.Call(grp);
+        }
+        
+        public static void InitAll() {
+            GroupList = new List<Group>();
+            if (File.Exists(Paths.RankPropsFile)) {
+                GroupProperties.InitAll();
+            } else {
+                // Add some default ranks
+                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2'));
+                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3'));
+                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c'));
+                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e'));
+            }
+
+            if (BannedRank == null)
+                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8'));
+            if (GuestRank == null)
+                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7'));
+            if (NobodyRank == null)
+                Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0'));
+            
+            GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
+            standard = Find(ServerConfig.DefaultRankName);
+            if (standard == null) standard = GuestRank;            
+
+            OnGroupLoadEvent.Call();
+            reloading = true;
+            SaveList(GroupList);
+        }
+
+        static readonly object saveLock = new object();
+        public static void SaveList(List<Group> givenList) {
+            lock (saveLock) {
+                GroupProperties.SaveGroups(givenList);       
+            }
+            OnGroupSaveEvent.Call();
         }
         
         
@@ -170,6 +232,5 @@ namespace MCGalaxy {
                 return false;
             }
         }
-
     }
 }

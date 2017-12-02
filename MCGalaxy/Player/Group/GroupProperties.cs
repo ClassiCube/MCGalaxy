@@ -58,7 +58,7 @@ namespace MCGalaxy {
                     } if (perm > 120 || perm < -50) {
                         Logger.Log(LogType.Warning, "Permission must be between -50 and 120 for ranks");
                         temp = null;
-                    } else if (Group.Find(perm) == null) {
+                    } else if (Group.Find((LevelPermission)perm) == null) {
                         temp.Permission = (LevelPermission)perm;
                     } else {
                         Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + value);
@@ -102,10 +102,7 @@ namespace MCGalaxy {
                     temp.MOTD = value;
                     break;
                 case "osmaps":
-                    byte osmaps;
-                    if (!byte.TryParse(value, out osmaps))
-                        osmaps = 3;
-                    temp.OverseerMaps = osmaps;
+                    temp.OverseerMaps = byte.Parse(value);
                     break;
                 case "prefix":
                     if (!String.IsNullOrEmpty(value))
@@ -115,6 +112,9 @@ namespace MCGalaxy {
                         Logger.Log(LogType.Warning, "Prefixes may only consist of color codes and three letters");
                         temp.Prefix = temp.Prefix.Substring(0, 3);
                     }
+                    break;
+                case "copyslots":
+                    temp.CopySlots = byte.Parse(value);
                     break;
             }
         }
@@ -181,6 +181,7 @@ namespace MCGalaxy {
                     w.WriteLine("GenVolume = " + grp.GenVolume);
                     w.WriteLine("AfkKicked = " + grp.AfkKicked);
                     w.WriteLine("AfkKickMinutes = " + grp.AfkKickMinutes);
+                    w.WriteLine("CopySlots = " + grp.CopySlots);
                     w.WriteLine();
                 }
             }
