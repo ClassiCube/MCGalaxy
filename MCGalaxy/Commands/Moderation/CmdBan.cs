@@ -23,7 +23,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "Ban"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new CommandAlias[] { new CommandAlias("KickBan"), new CommandAlias("kb") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
 
@@ -57,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Ban [player] <reason>");
-            Player.Message(p, "%HBans a player without kicking them.");
+            Player.Message(p, "%HBans a player (and kicks them if online).");
             Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }

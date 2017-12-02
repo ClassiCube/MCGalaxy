@@ -138,7 +138,7 @@ namespace MCGalaxy.Core {
             
             if (e.Duration.Ticks != 0) {
                 string banner = e.Actor == null ? "(console)" : e.Actor.truename;
-                DateTime end =  DateTime.UtcNow.Add(e.Duration);
+                DateTime end = DateTime.UtcNow.Add(e.Duration);
                 Server.tempBans.AddOrReplace(e.Target, Ban.PackTempBanData(e.Reason, banner, end));
                 Server.tempBans.Save();
 
@@ -148,6 +148,11 @@ namespace MCGalaxy.Core {
                 Ban.DeleteBan(e.Target);
                 Ban.BanPlayer(e.Actor, e.Target, e.Reason, !e.Announce, e.TargetGroup.Name);
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
+                                
+                if (who != null) {
+                    string msg = e.Reason.Length == 0 ? ServerConfig.DefaultBanMessage : e.Reason;
+                    who.Kick("Banned by " + e.ActorName + ": " + msg);
+                }
             }
         }
         
