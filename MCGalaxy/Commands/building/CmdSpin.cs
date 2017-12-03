@@ -55,14 +55,19 @@ namespace MCGalaxy.Commands.Building {
                 if (!Handle(ref axis, ref angle, args[0])) { Help(p); return; }
                 if (args.Length > 1 && !Handle(ref axis, ref angle, args[1])) { Help(p); return; }
                 
+                CopyState newState = cState;
                 if (angle == 0) {
                 } else if (axis == 'X') {
-                    p.SetCurrentCopy(Flip.RotateX(cState, angle, defs));
+                    newState = Flip.RotateX(cState, angle, defs);
                 } else if (axis == 'Y') {
-                    p.SetCurrentCopy(Flip.RotateY(cState, angle, defs));
+                    newState = Flip.RotateY(cState, angle, defs);
                 } else if (axis == 'Z') {
-                    p.SetCurrentCopy(Flip.RotateZ(cState, angle, defs));
+                    newState = Flip.RotateZ(cState, angle, defs);
                 }
+
+                newState.CopySource = cState.CopySource;
+                newState.CopyTime = cState.CopyTime;
+                p.SetCurrentCopy(newState);
                 Player.Message(p, "Rotated copy {0} degrees around the {1} axis", angle, axis);
             }            
         }

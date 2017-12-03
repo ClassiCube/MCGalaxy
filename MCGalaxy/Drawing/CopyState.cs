@@ -31,13 +31,14 @@ namespace MCGalaxy.Drawing {
         public int UsedBlocks;
         public Vec3S32 Offset;
         public DateTime CopyTime;
+        public string CopySource;
         
         internal int OppositeOriginX { get { return OriginX == X ? X + Width - 1 : X; } }
         internal int OppositeOriginY { get { return OriginY == Y ? Y + Height - 1 : Y; } }
         internal int OppositeOriginZ { get { return OriginZ == Z ? Z + Length - 1 : Z; } }        
         public int Volume { get { return Width * Height * Length; } }
         public string Summary { 
-            get { return Volume + " blocks, " + (DateTime.UtcNow - CopyTime).Shorten(true) + " ago"; } 
+            get { return Volume + " blocks from " + CopySource + ", " + (DateTime.UtcNow - CopyTime).Shorten(true) + " ago"; } 
         }
         
         public CopyState(int x, int y, int z, int width, int height, int length) {

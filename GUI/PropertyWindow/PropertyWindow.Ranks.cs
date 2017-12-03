@@ -80,6 +80,7 @@ namespace MCGalaxy.Gui {
             rank_numUndo.Value = grp.MaxUndo;
             rank_numMaps.Value = grp.OverseerMaps;
             rank_numGen.Value = grp.GenVolume;
+            rank_numCopy.Value = grp.CopySlots;
         }
 
         void rank_txtName_TextChanged(object sender, EventArgs e) {
@@ -120,8 +121,7 @@ namespace MCGalaxy.Gui {
         
         void rank_numAfk_ValueChanged(object sender, EventArgs e) {
             copiedGroups[rank_list.SelectedIndex].AfkKickMinutes = (int)rank_numAfk.Value;
-        }
-        
+        }       
         
         void rank_numDraw_ValueChanged(object sender, EventArgs e) {
             copiedGroups[rank_list.SelectedIndex].DrawLimit = (int)rank_numDraw.Value;
@@ -137,6 +137,10 @@ namespace MCGalaxy.Gui {
         
         void rank_numGen_ValueChanged(object sender, EventArgs e) {
             copiedGroups[rank_list.SelectedIndex].GenVolume = (int)rank_numGen.Value;
+        }
+        
+        void rank_numCopy_ValueChanged(object sender, EventArgs e) {
+            copiedGroups[rank_list.SelectedIndex].CopySlots = (int)rank_numCopy.Value;
         }
         
         void rank_btnAdd_Click(object sender, EventArgs e) {

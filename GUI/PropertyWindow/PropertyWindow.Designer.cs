@@ -377,6 +377,8 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
+            this.rank_lblCopy = new System.Windows.Forms.Label();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -461,6 +463,7 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
             this.SuspendLayout();
             // 
             // pageChat
@@ -683,8 +686,8 @@ namespace MCGalaxy.Gui
             this.chat_btnDefault.Name = "chat_btnDefault";
             this.chat_btnDefault.Size = new System.Drawing.Size(95, 23);
             this.chat_btnDefault.TabIndex = 10;
-            this.toolTip.SetToolTip(this.chat_btnDefault, "The default color of server messages (excluding player chat).\nFor example, when you are aske" +
-                        "d to select two corners in a cuboid.");
+            this.toolTip.SetToolTip(this.chat_btnDefault, "The default color of server messages (excluding player chat).\nFor example, when y" +
+                        "ou are asked to select two corners in a cuboid.");
             this.chat_btnDefault.Click += new System.EventHandler(this.chat_cmbDefault_Click);
             // 
             // chat_lblIRC
@@ -1527,6 +1530,8 @@ namespace MCGalaxy.Gui
             // 
             // rank_grpLimits
             // 
+            this.rank_grpLimits.Controls.Add(this.rank_numCopy);
+            this.rank_grpLimits.Controls.Add(this.rank_lblCopy);
             this.rank_grpLimits.Controls.Add(this.rank_lblGen);
             this.rank_grpLimits.Controls.Add(this.rank_numGen);
             this.rank_grpLimits.Controls.Add(this.rank_lblMaps);
@@ -1537,7 +1542,7 @@ namespace MCGalaxy.Gui
             this.rank_grpLimits.Controls.Add(this.rank_lblUndo);
             this.rank_grpLimits.Location = new System.Drawing.Point(142, 143);
             this.rank_grpLimits.Name = "rank_grpLimits";
-            this.rank_grpLimits.Size = new System.Drawing.Size(349, 79);
+            this.rank_grpLimits.Size = new System.Drawing.Size(349, 106);
             this.rank_grpLimits.TabIndex = 22;
             this.rank_grpLimits.TabStop = false;
             this.rank_grpLimits.Text = "Rank limits";
@@ -1591,7 +1596,7 @@ namespace MCGalaxy.Gui
             this.rank_grpGeneral.Controls.Add(this.rank_cmbDefault);
             this.rank_grpGeneral.Controls.Add(this.rank_cbSilentAdmins);
             this.rank_grpGeneral.Controls.Add(this.rank_cbTPHigher);
-            this.rank_grpGeneral.Location = new System.Drawing.Point(142, 228);
+            this.rank_grpGeneral.Location = new System.Drawing.Point(142, 255);
             this.rank_grpGeneral.Name = "rank_grpGeneral";
             this.rank_grpGeneral.Size = new System.Drawing.Size(349, 121);
             this.rank_grpGeneral.TabIndex = 19;
@@ -1663,7 +1668,7 @@ namespace MCGalaxy.Gui
             this.rank_lblAfk.AutoSize = true;
             this.rank_lblAfk.Location = new System.Drawing.Point(176, 106);
             this.rank_lblAfk.Name = "rank_lblAfk";
-            this.rank_lblAfk.Size = new System.Drawing.Size(37, 13);
+            this.rank_lblAfk.Size = new System.Drawing.Size(46, 13);
             this.rank_lblAfk.TabIndex = 23;
             this.rank_lblAfk.Text = "minutes";
             this.rank_lblAfk.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1718,7 +1723,7 @@ namespace MCGalaxy.Gui
             // 
             // rank_btnDel
             // 
-            this.rank_btnDel.Location = new System.Drawing.Point(79, 326);
+            this.rank_btnDel.Location = new System.Drawing.Point(79, 353);
             this.rank_btnDel.Name = "rank_btnDel";
             this.rank_btnDel.Size = new System.Drawing.Size(57, 23);
             this.rank_btnDel.TabIndex = 2;
@@ -1728,7 +1733,7 @@ namespace MCGalaxy.Gui
             // 
             // rank_btnAdd
             // 
-            this.rank_btnAdd.Location = new System.Drawing.Point(6, 326);
+            this.rank_btnAdd.Location = new System.Drawing.Point(6, 353);
             this.rank_btnAdd.Name = "rank_btnAdd";
             this.rank_btnAdd.Size = new System.Drawing.Size(57, 23);
             this.rank_btnAdd.TabIndex = 1;
@@ -1741,7 +1746,7 @@ namespace MCGalaxy.Gui
             this.rank_list.FormattingEnabled = true;
             this.rank_list.Location = new System.Drawing.Point(6, 6);
             this.rank_list.Name = "rank_list";
-            this.rank_list.Size = new System.Drawing.Size(130, 325);
+            this.rank_list.Size = new System.Drawing.Size(130, 342);
             this.rank_list.TabIndex = 0;
             this.rank_list.SelectedIndexChanged += new System.EventHandler(this.rank_list_SelectedIndexChanged);
             // 
@@ -4152,6 +4157,35 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
+            // rank_numCopy
+            // 
+            this.rank_numCopy.Location = new System.Drawing.Point(85, 74);
+            this.rank_numMaps.Maximum = new decimal(new int[] {
+                                    255,
+                                    0,
+                                    0,
+                                    0});
+            this.rank_numCopy.Minimum = new decimal(new int[] {
+                                    1,
+                                    0,
+                                    0,
+                                    0});
+            this.rank_numCopy.Name = "rank_numCopy";
+            this.rank_numCopy.Size = new System.Drawing.Size(81, 21);
+            this.rank_numCopy.TabIndex = 23;
+            this.toolTip.SetToolTip(this.rank_numCopy, "Maximum number of copies player can select in /copyslot");
+            this.rank_numCopy.ValueChanged += new System.EventHandler(this.rank_numCopy_ValueChanged);
+            // 
+            // rank_lblCopy
+            // 
+            this.rank_lblCopy.AutoSize = true;
+            this.rank_lblCopy.Location = new System.Drawing.Point(18, 77);
+            this.rank_lblCopy.Name = "rank_lblCopy";
+            this.rank_lblCopy.Size = new System.Drawing.Size(61, 13);
+            this.rank_lblCopy.TabIndex = 22;
+            this.rank_lblCopy.Text = "/copy slots:";
+            this.rank_lblCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4290,8 +4324,11 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label rank_lblCopy;
+        private System.Windows.Forms.NumericUpDown rank_numCopy;
         private System.Windows.Forms.CheckBox rank_cbAfk;
         private System.Windows.Forms.NumericUpDown rank_numAfk;
         private System.Windows.Forms.Label rank_lblAfk;

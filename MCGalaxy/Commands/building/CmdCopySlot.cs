@@ -50,10 +50,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/CopySlot [number].");
+            Player.Message(p, "%T/CopySlot [number]");
             Player.Message(p, "%HSelects the slot to %T/copy %Hand %T/paste %Hfrom");
             Player.Message(p, "%HMaxmimum number of copy slots is determined your rank");
-            Player.Message(p, "%T/CopySlot.");
+            Player.Message(p, "%T/CopySlot");
             Player.Message(p, "%HLists details about any copies stored in any slots");
         }
     }

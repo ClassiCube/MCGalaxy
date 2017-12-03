@@ -135,6 +135,7 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
+            cState.CopySource = "level " + p.level.name;
             p.SetCurrentCopy(cState);
             if (cArgs.type == 1) {
                 DrawOp op = new CuboidDrawOp();
@@ -180,7 +181,8 @@ namespace MCGalaxy.Commands.Building {
         void LoadCopy(Player p, string file) {
             string path = FindCopy(p.name, file);
             if (path == null) { Player.Message(p, "No such copy exists"); return; }
-
+            file = Path.GetFileNameWithoutExtension(path);
+            
             using (FileStream fs = File.OpenRead(path))
                 using (GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
             {
@@ -190,9 +192,10 @@ namespace MCGalaxy.Commands.Building {
                 } else {
                     state.LoadFromOld(gs, fs);
                 }
+                state.CopySource = "file " + file;
                 p.SetCurrentCopy(state);
             }
-            Player.Message(p, "Loaded copy as " + file);
+            Player.Message(p, "Loaded copy from " + file);
         }
         
         static string FindCopy(string name, string file) {
