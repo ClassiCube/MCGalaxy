@@ -48,6 +48,7 @@
   <ItemGroup>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CLI\CLIProgram.cs">
@@ -119,6 +120,7 @@
       <DependentUpon>EconomyWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
+    <Compile Include="UPnP.cs" />
     <Compile Include="Window\Window.cs">
       <SubType>Form</SubType>
     </Compile>

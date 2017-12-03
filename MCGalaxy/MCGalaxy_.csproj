@@ -620,7 +620,6 @@
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Server\Backup.cs" />
     <Compile Include="Server\BackupDB.cs" />
-    <Compile Include="Server\Extra\UPnP.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
