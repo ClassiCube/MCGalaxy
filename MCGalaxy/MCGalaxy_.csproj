@@ -125,6 +125,7 @@
     <Compile Include="Commands\building\CmdBezier.cs" />
     <Compile Include="Commands\building\CmdBind.cs" />
     <Compile Include="Commands\building\CmdBrush.cs" />
+    <Compile Include="Commands\building\CmdCalculate.cs" />
     <Compile Include="Commands\building\CmdCenter.cs" />
     <Compile Include="Commands\building\CmdCopySlot.cs" />
     <Compile Include="Commands\building\CmdDoNotMark.cs" />
