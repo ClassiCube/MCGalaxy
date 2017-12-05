@@ -34,7 +34,6 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[0].ToLower()) {
                 case "public": SetPublic(p, args); break;
                 case "private": SetPrivate(p, args); break;
-                case "reset": DoReset(p, args); break;
                 case "reload": DoReload(p, args); break;
                 case "backup": DoBackup(p, args); break;
                 case "restore": DoRestore(p, args); break;
@@ -54,22 +53,6 @@ namespace MCGalaxy.Commands.Maintenance {
             ServerConfig.Public = false;
             Player.Message(p, "Server is now private!");
             Logger.Log(LogType.SystemActivity, "Server is now private!");
-        }
-        
-        void DoReset(Player p, string[] args) {
-            if (!CheckPerms(p)) {
-                Player.Message(p, "Only Console or the Server Owner can reset the server."); return;
-            }
-
-            Player.Message(p, "Backing up and deleting current property files.");
-            foreach (string name in Directory.GetFiles("properties")) {
-                File.Copy(name, name + ".bkp"); // create backup first
-                File.Delete(name);
-            }
-            
-            Player.Message(p, "Done!  Restoring defaults...");
-            SetToDefault();
-            DoReload(p, args);
         }
         
         void DoReload(Player p, string[] args) {
@@ -158,33 +141,7 @@ namespace MCGalaxy.Commands.Maintenance {
             return p.name.CaselessEq(ServerConfig.OwnerName);
         }
 
-        void SetToDefault() {
-            foreach (var elem in Server.serverConfig)
-                elem.Field.SetValue(null, elem.Attrib.DefaultValue);
-            
-            Server.messages = new List<string>();
-            Server.chatmod = false;
-
-            Server.voteKickInProgress = false;
-            Server.voteKickVotesNeeded = 0;
-
-            Server.zombie.End();
-            SrvProperties.GenerateSalt();
-
-            ServerConfig.RestartTime = DateTime.Now;
-            ServerConfig.MainLevel = "main";
-
-            ServerConfig.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
-            ServerConfig.BlockDBSaveInterval = 60;
-
-            ServerConfig.unsafe_plugin = true;
-            Server.flipHead = false;
-            Server.shuttingDown = false;
-        }
-
         public override void Help(Player p) {
-            Player.Message(p, "%T/Server reset %H- Reset everything to defaults. (Owner only)");
-            Player.Message(p, "  &cWARNING: This will erase ALL properties. Use with caution. (Likely requires restart)");
             Player.Message(p, "%T/Server reload %H- Reload the server files. (May require restart) (Owner only)");
             Player.Message(p, "%T/Server public/private %H- Make the server public or private.");
             Player.Message(p, "%T/Server restore %H- Restore the server from a backup.");
