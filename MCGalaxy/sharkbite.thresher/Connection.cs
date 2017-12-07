@@ -329,7 +329,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		internal void ReceiveIRCMessages()
 		{
-			Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo, "[" + Thread.CurrentThread.Name +"] Connection::ReceiveIRCMessages()");
 			string line;
 			try
 			{
@@ -337,7 +336,6 @@ namespace Sharkbite.Irc
 				{
 					try
 					{
-						Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceVerbose, "[" + Thread.CurrentThread.Name +"] Connection::ReceiveIRCMessages() rec'd:" + line );
 						if( IsDccRequest( line ) ) continue;
 						if( IsCtcpMessage( line) ) continue;
 						
@@ -357,10 +355,9 @@ namespace Sharkbite.Irc
 					}
 				}
 			}
-			catch (IOException e)
+			catch (IOException)
 			{
 				//Trap a connection failure
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning, "[" + Thread.CurrentThread.Name +"] Connection::ReceiveIRCMessages() IO Error while listening for messages " + e);
 				listener.Error( ReplyCode.ConnectionFailed, "Connection to server unexpectedly failed.");
 			}
 			finally
@@ -381,12 +378,10 @@ namespace Sharkbite.Irc
 			try
 			{
 				writer.WriteLine( command.ToString() );
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceVerbose,"[" + Thread.CurrentThread.Name +"] Connection::SendCommand() sent= " + command);
 				timeLastSent = DateTime.UtcNow;
 			}
-			catch( Exception e )
+			catch( Exception )
 			{
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Connection::SendCommand() exception=" + e);
 			}
 			if( OnRawMessageSent != null )
 			{
@@ -404,11 +399,9 @@ namespace Sharkbite.Irc
 			try
 			{
 				writer.WriteLine( command.ToString() );
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceVerbose,"[" + Thread.CurrentThread.Name +"] Connection::SendAutomaticReply() message=" + command);
 			}
-			catch( Exception e )
+			catch( Exception )
 			{
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Connection::SendAutomaticReply() exception=" + e );
 			}
 			command.Remove(0, command.Length );
 		}
@@ -448,7 +441,6 @@ namespace Sharkbite.Irc
 			lock ( this )
 			{
 				if( connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Connection::Connect()");
 				client = new TcpClient();
 				client.Connect( connectionArgs.Hostname, connectionArgs.Port );
 				connected = true;
@@ -474,7 +466,6 @@ namespace Sharkbite.Irc
 			lock ( this )
 			{
 				if( !connected ) throw new InvalidOperationException("Not connected to IRC server.");
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Connection::Disconnect()");
 				listener.Disconnecting();
 				sender.Quit( reason );
 				listener.Disconnected();

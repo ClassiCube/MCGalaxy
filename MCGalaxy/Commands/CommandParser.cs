@@ -185,8 +185,9 @@ namespace MCGalaxy.Commands {
             if (!block.IsInvalid) return block;
             
             // find custom block
-            byte raw = BlockDefinition.GetBlock(input, p);
-            if (raw != Block.Invalid) return ExtBlock.FromRaw(raw);
+            BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            int raw = BlockDefinition.GetBlock(input, defs);
+            if (raw != -1) return ExtBlock.FromRaw((byte)raw);
             return ExtBlock.Invalid;
         }
 

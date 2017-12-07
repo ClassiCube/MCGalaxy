@@ -234,13 +234,9 @@ namespace MCGalaxy {
             }
         }
         
-        
-        public static byte GetBlock(string msg, Player p) {
-            return GetBlock(msg, p.level.CustomBlockDefs);
-        }
-        
-        public static byte GetBlock(string msg, BlockDefinition[] defs) {
-            for (int i = 1; i < Block.Invalid; i++) {
+ 
+        public static int GetBlock(string msg, BlockDefinition[] defs) {
+            for (int i = 1; i < Block.Count; i++) {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 if (def.Name.Replace(" ", "").CaselessEq(msg))
@@ -248,8 +244,7 @@ namespace MCGalaxy {
             }
             
             byte id;
-            if (!byte.TryParse(msg, out id) || defs[id] == null)
-                return Block.Invalid;
+            if (!byte.TryParse(msg, out id) || defs[id] == null) return -1;
             return id;
         }
         

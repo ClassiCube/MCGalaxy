@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -45,7 +44,6 @@ namespace Sharkbite.Irc
 		private const string UserModes = "awiorOs";
 		private const string ChannelModes = "OohvaimnqpsrtklbeI";
 
-		internal static TraceSwitch IrcTrace = new TraceSwitch("IrcTraceSwitch", "Debug level for RFC2812 classes.");
 		// Odd chars that IRC allows in nicknames 
 		internal const string Special = "\\[\\]\\`_\\^\\{\\|\\}";
 		internal const string Nick = "[" + Special + "a-zA-Z][\\w\\-" + Special + "]{0,8}";

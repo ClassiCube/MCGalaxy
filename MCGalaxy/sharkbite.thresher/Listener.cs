@@ -451,7 +451,6 @@ namespace Sharkbite.Irc
 								{
 									OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
 								}
-								Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Listener::ParseCommand() Bad IRC MODE string=" + tokens[0] );
 							}
 						}
 					}
@@ -482,7 +481,6 @@ namespace Sharkbite.Irc
 					{
 						OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
 					}
-					Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Listener::ParseCommand() Unknown IRC command=" + tokens[1] );
 					break;
 			}
 		}
@@ -682,7 +680,6 @@ namespace Sharkbite.Irc
 							{
 								OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
 							}
-							Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceWarning,"[" + Thread.CurrentThread.Name +"] Listener::ParseReply() Bad IRC MODE string=" + tokens[0] );
 						}
 					}
 					break;

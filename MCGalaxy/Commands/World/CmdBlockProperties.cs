@@ -70,15 +70,15 @@ namespace MCGalaxy.Commands.World {
                 }
                 return new ExtBlock(raw, 0);
             } else if (scope == BlockDefinition.GlobalProps) {
-                byte raw = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
-                if (raw == Block.Invalid) {
+                int raw = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
+                if (raw == -1) {
                     Player.Message(p, "&cThere is no global custom block with id or name \"{0}\"", input);
                     return ExtBlock.Invalid;
                 }
-                return ExtBlock.FromRaw(raw);
+                return ExtBlock.FromRaw((byte)raw);
             } else {
-                byte raw = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
-                if (raw == Block.Invalid) {
+                int raw = BlockDefinition.GetBlock(input, p.level.CustomBlockDefs);
+                if (raw == -1) {
                     Player.Message(p, "&cThere is no level custom block with id or name \"{0}\"", input);
                     return ExtBlock.Invalid;
                 }
@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.World {
                 if (p.level.CustomBlockDefs[raw] == BlockDefinition.GlobalDefs[raw]) {
                     Player.Message(p, "&cUse %T/BlockProps global &cto modify this custom block."); return ExtBlock.Invalid;
                 }
-                return ExtBlock.FromRaw(raw);
+                return ExtBlock.FromRaw((byte)raw);
             }
         }
         

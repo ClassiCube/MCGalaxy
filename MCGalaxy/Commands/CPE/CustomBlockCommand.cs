@@ -333,7 +333,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "name":
                     def.Name = value; break;
                 case "collide":
-                    if (!EditByte(p, value, "Collide type", ref def.CollideType, arg, 0, 6)) return;
+                    if (!EditByte(p, value, "Collide type", ref def.CollideType, arg)) return;
                     break;
                 case "speed":
                     if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
@@ -375,7 +375,7 @@ namespace MCGalaxy.Commands.CPE {
                     def.BlocksLight = temp;
                     break;
                 case "sound":
-                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, arg, 0, 11)) return;
+                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, arg)) return;
                     break;
                 case "fullbright":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
@@ -391,7 +391,7 @@ namespace MCGalaxy.Commands.CPE {
                     def.Shape = temp ? (byte)0 : def.MaxZ;
                     break;
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, arg, 0, 255)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, arg)) return;
                     break;
                 case "min":
                     if (!ParseCoords(p, value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
@@ -515,14 +515,9 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
-        static bool EditByte(Player p, string arg, string propName, ref byte target, string help) {
-            return EditByte(p, arg, propName, ref target, help, 0, 255);
-        }
-        
-        static bool EditByte(Player p, string value, string propName, ref byte target,
-                             string help, byte min, byte max) {
+        static bool EditByte(Player p, string value, string propName, ref byte target, string help) {
             byte temp = 0;
-            if (!CommandParser.GetByte(p, value, propName, ref temp, min, max)) {
+            if (!CommandParser.GetByte(p, value, propName, ref temp, 0, 255)) {
                 SendEditHelp(p, help);
                 return false;
             }
@@ -546,7 +541,7 @@ namespace MCGalaxy.Commands.CPE {
             block = ExtBlock.Invalid;
             int raw = 0;
             int min = allowAir ? 0 : 1;
-            bool success = CommandParser.GetInt(p, arg, "Block ID", ref raw, min, 254);
+            bool success = CommandParser.GetInt(p, arg, "Block ID", ref raw, min, 255);
             
             block = ExtBlock.FromRaw((byte)raw);
             return success;
