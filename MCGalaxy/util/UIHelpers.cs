@@ -96,7 +96,7 @@ namespace MCGalaxy.UI {
             return message;
         }
         
-        public static string OutputPart(ref char col, ref int start, string message) {
+        public static string OutputPart(ref char nextCol, ref int start, string message) {
             int next = NextPart(start, message);
             string part;
             if (next == -1) {
@@ -105,7 +105,7 @@ namespace MCGalaxy.UI {
             } else {
                 part = message.Substring(start, next - start);
                 start = next + 2;
-                col = message[next + 1];
+                nextCol = message[next + 1];
             }
             return part;
         }

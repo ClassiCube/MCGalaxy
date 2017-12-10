@@ -131,10 +131,11 @@ namespace MCGalaxy.Cli {
             message = UIHelpers.Format(message);
             
             while (index < message.Length) {
+                char curCol = col;
                 string part = UIHelpers.OutputPart(ref col, ref index, message);
                 if (part.Length > 0) {
-                    Console.ForegroundColor = GetConsoleCol(col);
-                    Console.Write(message);
+                    Console.ForegroundColor = GetConsoleCol(curCol);
+                    Console.Write(part);
                 }
             }
         }

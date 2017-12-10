@@ -168,8 +168,9 @@ namespace MCGalaxy.Gui.Components {
             message = UIHelpers.Format(message);
             
             while (index < message.Length) {
+                char curCol = col;
                 string part = UIHelpers.OutputPart(ref col, ref index, message);
-                if (part.Length > 0) AppendColoredText(part, GetCol(col, foreColor));
+                if (part.Length > 0) AppendColoredText(part, GetCol(curCol, foreColor));
             }
         }
         

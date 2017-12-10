@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "%T/Map [level] [option] <value> %H- Sets [option] on [level]");
             Player.Message(p, "%HPossible options: %S{0}", LevelOptions.Options.Keys.Join());
-            Player.Message(p, "%HUse %T/Help map [option] %Hto see a description for that option.");
+            Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option.");
         }
         
         public override void Help(Player p, string message) {
