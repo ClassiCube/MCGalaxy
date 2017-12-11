@@ -27,9 +27,11 @@ namespace MCGalaxy.Commands.Fun {
         public override string shortcut { get { return "CTFSetup"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
-
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage CTF") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message.CaselessEq("go")) {
                 HandleGo(p);
@@ -56,17 +58,19 @@ namespace MCGalaxy.Commands.Fun {
             PlayerActions.ChangeMap(p, Server.ctf.Map.name);
         }
         
-        static void HandleStart(Player p) {
+        void HandleStart(Player p) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (Server.ctf == null)  {
                 Player.Message(p, "Initialising CTF..");
                 Server.ctf = new CTFGame();
             }
             
             if (!Server.ctf.Start(p)) return;
-            Chat.MessageGlobal("A CTF GAME IS STARTING AT CTF! TYPE %T/Goto " + Server.ctf.Map.name + " %Sto join!");
+            Chat.MessageGlobal("A CTF GAME IS STARTING! TYPE %T/CTF goto %Sto join!");
         }
         
-        static void HandleStop(Player p) {
+        void HandleStop(Player p) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (Server.ctf == null || !Server.ctf.started) {
                 Player.Message(p, "No CTF game is active."); return;
             }
@@ -74,7 +78,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         
-        static void HandleAdd(Player p) {
+        void HandleAdd(Player p) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
@@ -87,7 +92,8 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static void HandleRemove(Player p) {
+        void HandleRemove(Player p) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
@@ -107,6 +113,7 @@ namespace MCGalaxy.Commands.Fun {
 
         
         void HandleSet(Player p, string property) {
+            if (!CheckExtraPerm(p, 1)) return;
             CTFConfig cfg = RetrieveConfig(p);
             
             if (property.CaselessEq("bluespawn")) {
@@ -176,12 +183,11 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map.");
-            Player.Message(p, "%T/CTF start/stop %H- Starts/stops the CTF game.");
-            Player.Message(p, "%T/CTF add/remove");
-            Player.Message(p, "%HAdds or removes current map from list of CTF maps.");
+            Player.Message(p, "%T/CTF start/stop %H- Starts/stops the CTF game");
+            Player.Message(p, "%T/CTF add/remove %H- Adds/removes current map from CTF map list");
             Player.Message(p, "%T/CTF set [property]");
             Player.Message(p, "%HSets a CTF game property, see %T/Help CTF set");
+            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");
         }
         
         public override void Help(Player p, string message) {

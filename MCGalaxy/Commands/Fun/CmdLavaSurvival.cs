@@ -27,8 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can setup lava survival"),
-                    new CommandPerm(LevelPermission.Operator, "+ can start/stop lava survival") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage lava survival") }; }
         }
         
         public override void Use(Player p, string message)  {
@@ -262,17 +261,12 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/LS go %H- Join the fun!");
+            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
+            Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");
+            Player.Message(p, "%T/LS end %H- End the current round or vote.");
+            Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info.");
             Player.Message(p, "%T/LS info %H- View current round info and time.");
-            
-            if (HasExtraPerm(p, 1))  {
-                Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
-                Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");
-                Player.Message(p, "%T/LS end %H- End the current round or vote.");
-            }
-            if (HasExtraPerm(p, 2)) {
-                Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info.");
-            }
+            Player.Message(p, "%T/LS go %H- Join the fun!");
         }
 
         void SetupHelp(Player p, string mode = "") {

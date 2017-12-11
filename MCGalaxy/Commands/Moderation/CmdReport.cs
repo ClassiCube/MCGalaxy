@@ -162,12 +162,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
-            if (!HasExtraPerm(p, 1)) return;
             Player.Message(p, "%T/Report list %H- Lists all reported players.");
             Player.Message(p, "%T/Report check [Player] %H- Views reports for that player.");
             Player.Message(p, "%T/Report delete [Player] %H- Deletes reports for that player.");
             Player.Message(p, "%T/Report clear %H- Clears &call%H reports.");
+            Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
         }
     }
 }

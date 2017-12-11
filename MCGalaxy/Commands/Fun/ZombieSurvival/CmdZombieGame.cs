@@ -25,9 +25,11 @@ namespace MCGalaxy.Commands.Fun {
         public override string shortcut { get { return "ZG"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ZS"), new CommandAlias("ZombieSurvival") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage zombie survival") }; }
         }
         
         public override void Use(Player p, string message) {
@@ -76,7 +78,8 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Running on map: " + game.MapName);
         }
         
-        static void HandleStart(Player p, ZSGame game, string[] args) {
+        void HandleStart(Player p, ZSGame game, string[] args) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (game.Running) {
                 Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
             }
@@ -94,7 +97,8 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static void HandleEnd(Player p, ZSGame game) {
+        void HandleEnd(Player p, ZSGame game) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
@@ -102,7 +106,8 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static void HandleStop(Player p, ZSGame game) {
+        void HandleStop(Player p, ZSGame game) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (!game.Running) {
                 Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
             }
@@ -119,14 +124,15 @@ namespace MCGalaxy.Commands.Fun {
         }
         
        void HandleSet(Player p, ZSGame game, string[] args) {
+            if (!CheckExtraPerm(p, 1)) return;
             if (args.Length == 1) { Help(p, "set"); return; }
             
-            if (args[1].CaselessEq("hitbox")) { HandleHitbox(p, game, args); return; }
-            if (args[1].CaselessEq("maxmove")) { HandleMaxMove(p, game, args); return; }
+            if (args[1].CaselessEq("hitbox")) { SetHitbox(p, game, args); return; }
+            if (args[1].CaselessEq("maxmove")) { SetMaxMove(p, game, args); return; }
             Help(p, "set");
         }
         
-        static void HandleHitbox(Player p, ZSGame game, string[] args) {
+        static void SetHitbox(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
                 Player.Message(p, "Hitbox detection is currently &a" + ZSConfig.HitboxPrecision + " %Sunits apart.");
                 return;
@@ -140,7 +146,7 @@ namespace MCGalaxy.Commands.Fun {
             ZSConfig.SaveSettings();
         }
         
-        static void HandleMaxMove(Player p, ZSGame game, string[] args) {
+        static void SetMaxMove(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
                 Player.Message(p, "Maxmium move distance is currently &a" + ZSConfig.MaxMoveDistance + " %Sunits apart.");
                 return;
@@ -155,14 +161,14 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ZG status %H- Outputs current status of Zombie Survival.");
-            Player.Message(p, "%T/ZG go %H- Moves you to the current Zombie Survival map.");
             Player.Message(p, "%T/ZG start 0 %H- Runs Zombie Survival for infinite rounds.");         
             Player.Message(p, "%T/ZG start [x] %H- Runs Zombie Survival for [x] rounds.");
             Player.Message(p, "%T/ZG end %H- Ends current round of Zombie Survival.");
             Player.Message(p, "%T/ZG stop %H- Immediately stops Zombie Survival.");
             Player.Message(p, "%T/ZG set [property] [value]");
             Player.Message(p, "%HSets a Zombie Survival game property, see %T/Help ZG set");
+            Player.Message(p, "%T/ZG status %H- Outputs current status of Zombie Survival.");
+            Player.Message(p, "%T/ZG go %H- Moves you to the current Zombie Survival map.");
         }
         
         public override void Help(Player p, string message) {

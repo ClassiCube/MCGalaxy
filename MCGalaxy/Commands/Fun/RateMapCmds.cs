@@ -18,6 +18,7 @@
 using System;
 
 namespace MCGalaxy.Commands.Fun {
+
     public class CmdMapLike : Command {
         public override string name { get { return "MapLike"; } }
         public override string shortcut { get { return "Like"; } }
