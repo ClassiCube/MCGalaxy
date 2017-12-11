@@ -62,11 +62,8 @@ namespace MCGalaxy.Commands.Misc {
             if (cmd.CaselessEq("create") || cmd.CaselessEq("add")) {
                 if (checkExtraPerms && !CheckExtraPerm(p, 1)) return;
                 if (warps.Exists(name)) { Player.Message(p, "{0} already exists", group); return; }
-                
-                Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
-                if (who == null) return;
 
-                warps.Create(name, who);
+                warps.Create(name, p);
                 Player.Message(p, "{0} {1} created.", group, name);
             } else if (cmd.CaselessEq("delete") || cmd.CaselessEq("remove")) {
                 if (checkExtraPerms && !CheckExtraPerm(p, 2)) return;
@@ -79,11 +76,8 @@ namespace MCGalaxy.Commands.Misc {
                 if (checkExtraPerms && !CheckExtraPerm(p, 3)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
-                
-                Player who = args.Length == 2 ? p : PlayerInfo.FindMatches(p, args[2]);
-                if (who == null) return;
-                
-                warps.Update(warp, who);
+
+                warps.Update(warp, p);
                 Player.Message(p, "{0} {1} moved.", group, warp.Name);
             } else if (cmd.CaselessEq("goto")) {
                 Warp warp = Matcher.FindWarps(p, warps, name);
@@ -96,12 +90,9 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             Player.Message(p, "%T/Warp [name] %H- Move to that warp");
             Player.Message(p, "%T/Warp list %H- List all the warps");
-            if (HasExtraPerm(p, 1))
-                Player.Message(p, "%T/Warp create [name] <player> %H- Create a warp, if a <player> is given, it will be created where they are");
-            if (HasExtraPerm(p, 2))
-                Player.Message(p, "%T/Warp delete [name] %H- Deletes a warp");
-            if (HasExtraPerm(p, 3))
-                Player.Message(p, "%T/Warp move [name] <player> %H- Moves a warp, if a <player> is given, it will be created where they are");
+            Player.Message(p, "%T/Warp create [name] %H- Create a warp at your position");
+            Player.Message(p, "%T/Warp delete [name] %H- Deletes a warp");
+            Player.Message(p, "%T/Warp move [name] %H- Moves a warp to your position");
         }
     }
 }
