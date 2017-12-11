@@ -659,7 +659,7 @@ namespace MCGalaxy.Commands.CPE {
             null, null, "name", "shape", "toptex", "sidetex", "bottomtex", "min", "max", "collide",
             "speed", "blockslight", "sound", "fullbright", "blockdraw", "fogdensity", "fogcolor", "fallback" };
         
-        const string texLine = "Textures in terrain.png are numbered from left to right, increasing downwards";
+        const string texLine = "Press F10 to see the numbers for each texture in terrain.png";
         static Dictionary<string, string[]> helpSections = new Dictionary<string, string[]>() {
             { "name", new string[] { "Type the name for the block." } },
             { "shape", new string[] { "Type '0' if the block is a cube, '1' if a sprite (e.g roses)." } },
