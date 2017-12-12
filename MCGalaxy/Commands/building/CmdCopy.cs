@@ -70,20 +70,23 @@ namespace MCGalaxy.Commands.Building {
                     Player.Message(p, Path.GetFileNameWithoutExtension(files[i]));
                 }
             } else {
-                HandleOther(p, opt, parts, offsetIndex);
+                HandleOther(p, parts, offsetIndex);
             }
         }
         
-        void HandleOther(Player p, string opt, string[] parts, int offsetIndex) {
+        void HandleOther(Player p, string[] parts, int offsetIndex) {
             CopyArgs cArgs = new CopyArgs();
             cArgs.offsetIndex = offsetIndex;
             
-            if (opt == "cut") {
-                cArgs.type = 1;
-            } else if (opt == "air") {
-                cArgs.type = 2;
-            } else if (!String.IsNullOrEmpty(opt)) {
-                Help(p); return;
+            for (int i = 0; i < parts.Length; i++) {
+                string opt = parts[i];
+                if (opt.CaselessEq("cut")) {
+                    cArgs.cut = true;
+                } else if (opt.CaselessEq("air")) {
+                    cArgs.air = true;
+                } else if (opt.Length > 0) {
+                    Help(p);
+                }
             }
 
             Player.Message(p, "Place or break two blocks to determine the edges.");
@@ -112,7 +115,7 @@ namespace MCGalaxy.Commands.Building {
             cState.OriginX = m[0].X; cState.OriginY = m[0].Y; cState.OriginZ = m[0].Z;
             
             int index = 0; cState.UsedBlocks = 0;
-            cState.PasteAir = cArgs.type == 2;
+            cState.PasteAir = cArgs.air;
             
             for (ushort y = minY; y <= maxY; ++y)
                 for (ushort z = minZ; z <= maxZ; ++z)
@@ -137,7 +140,7 @@ namespace MCGalaxy.Commands.Building {
             
             cState.CopySource = "level " + p.level.name;
             p.SetCurrentCopy(cState);
-            if (cArgs.type == 1) {
+            if (cArgs.cut) {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
                 Brush brush = new SolidBrush(ExtBlock.Air);
@@ -157,7 +160,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) { return false; }
-        class CopyArgs { public int type, offsetIndex; }
+        class CopyArgs { public int offsetIndex; public bool cut, air; }
         
         void SaveCopy(Player p, string file) {
             if (!Directory.Exists("extra/savecopy"))
