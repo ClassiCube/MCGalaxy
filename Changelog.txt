@@ -1,3 +1,32 @@
+v 1.9.0.0
+Added: custom 8ball responses
+Added: @ [rule] shortcuts in /report (Thanks VenkSociety)
+Added: /copyslot for easy manipulation of multiple copies
+Added: /calc command
+Added: Outlining only up/down/layer modes
+Added: Separate pure CLI executable
+Added: /copy cut air
+Fixed: issues with NULL char not being treated properly
+Fixed: being able to ban same player multiple times
+Fixed: Not being able to review more than 1 report of a player
+Fixed: Custom water blocks not making grass->dirt
+Fixed: /copy save not saving whether to paste air
+Fixed: not being able to add more than 192 bots
+Fixed: IRC bold/italic/underline formatting chars not being stripped.
+Improved: Better output for warp/waypoint list
+Improved: Make usage of /last not show in /last
+Improved: Banned rank does not deserve any commands or blocks by default
+Improved: Support block ID 255 for custom block usage
+Improved: Physics trees trunks should only replace air
+Improved: gb/lb copy shouldn't copy inventory order
+Improved: When /copy ing, it also states origin of copy.
+Improved: For consistency with almost all other server software, /ban kicks player
+Improved: Mention F10 for textures step in lb/gb add 
+Improved: Make games commands have 1 extra permission to maange them
+Removed: /warp create <player> at a specific player, can only create at self pos
+Removed: /server reset
+Removed: useless cylinder/spheres map gen themes
+
 v 1.8.9.9
 Added: Support for custom dirt/grass blocks.
 Fixed: /ref issue with ZS

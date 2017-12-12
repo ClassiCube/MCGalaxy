@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             if (!Server.ctf.Start(p)) return;
-            Chat.MessageGlobal("A CTF GAME IS STARTING! TYPE %T/CTF goto %Sto join!");
+            Chat.MessageGlobal("A CTF GAME IS STARTING! TYPE %T/CTF go %Sto join!");
         }
         
         void HandleStop(Player p) {

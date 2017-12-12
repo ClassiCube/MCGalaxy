@@ -61,6 +61,7 @@ namespace Updater {
             for (tries = 1; tries <= 3; tries++) {
                 if (!UpdateFile("MCGalaxy", ".exe")) continue;
                 if (!UpdateFile("MCGalaxy_", ".dll")) continue;
+                if (!UpdateFile("MCGalaxyCLI", ".exe")) continue;
 
                 StartProcess(args[0]);
                 return;
