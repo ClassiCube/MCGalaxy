@@ -1,6 +1,6 @@
 v 1.9.0.0
 Added: custom 8ball responses
-Added: @ [rule] shortcuts in /report (Thanks VenkSociety)
+Added: @ [rule] shortcuts in /report
 Added: /copyslot for easy manipulation of multiple copies
 Added: /calc command
 Added: Outlining only up/down/layer modes
