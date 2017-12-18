@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             string name = message.SplitSpaces()[0];
             Command.all.FindByName("UndoPlayer").Use(p, name + " all");
             if (banIP) Command.all.FindByName("BanIP").Use(p, "@" + name);
-            Command.all.FindByName("KickBan").Use(p, message);    
+            Command.all.FindByName("Ban").Use(p, message);    
         }
 
         public override void Help(Player p) {
