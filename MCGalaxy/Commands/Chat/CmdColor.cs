@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Chatting {
             string color = colName.Length == 0 ? "&1" : Matcher.FindColor(p, colName);
             if (color == null) return;
             
-            Chat.MessageLevel(bot.level, "Bot " + bot.ColoredName + "'s %Scolor was set to " 
-                              + color + Colors.Name(color));
+            Player.Message(p, "You changed the color of bot " + bot.ColoredName + 
+                           " %Sto " + color + Colors.Name(color));
             bot.color = color;
             
             bot.GlobalDespawn();

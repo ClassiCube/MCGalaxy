@@ -121,8 +121,8 @@ namespace MCGalaxy.Scripting {
                 if (!first) AppendDivider(sb, true);
                 
                 sb.AppendLine("Error on line " + err.Line + ":");
-                sb.AppendLine(source[err.Line - 1]);
-                sb.Append(' ', err.Column - 1);
+                if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
+                if (err.Column > 0) sb.Append(' ', err.Column - 1);
                 sb.AppendLine("^-- Error #" + err.ErrorNumber + " - " + err.ErrorText);
                 first = false;
             }

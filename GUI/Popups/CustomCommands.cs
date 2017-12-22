@@ -65,7 +65,8 @@ namespace MCGalaxy.Gui.Popups {
 
                 string fileName = dialog.FileName;
                 if (fileName.EndsWith(".dll")) {
-                    Assembly lib = Assembly.LoadFile(fileName);
+                    byte[] data = File.ReadAllBytes(fileName);
+                    Assembly lib = Assembly.Load(data);
                     commands = IScripting.LoadFrom(lib).ToArray();
                 } else {
                     IScripting engine = fileName.EndsWith(".cs") ? IScripting.CS : IScripting.VB;
