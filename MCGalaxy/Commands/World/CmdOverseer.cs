@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands.World {
             "%T/os map pervisit [rank] %H- Sets the pervisit of you map",
             "%T/os map perbuild [rank] %H- Sets the perbuild of you map",
             "%T/os map texture [url] %H- Sets terrain.png for your map",
-            "%T/os map texturezip [url] %H- Sets texture .zip for your map",
+            "%T/os map texturepack [url] %H- Sets texture pack .zip for your map",
             "%T/os map [option] <value> %H- Toggles that map option.",
             "%H  See %T/help map %Hfor a list of map options",
         };

@@ -168,8 +168,8 @@ namespace MCGalaxy {
         internal static DataRow QueryMulti(Player p, string name, string columns) {
             string suffix = Database.Backend.CaselessLikeSuffix;
             using (DataTable results = Database.Backend.GetRows("Players", columns,
-                                                                "WHERE Name LIKE @0 LIMIT 21" + suffix,
-                                                                "%" + name + "%")) {
+                                                                "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
+                                                                "%" + name.Replace("_", "#_") + "%")) {
                 int matches = 0;
                 return Matcher.Find<DataRow>(p, name, out matches, results.Rows,
                                              r => true, r => r["Name"].ToString(), "players", 20);
