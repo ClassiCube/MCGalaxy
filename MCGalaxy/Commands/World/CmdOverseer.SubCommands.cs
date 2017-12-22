@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.World {
                 } else {
                     Command.all.FindByName("Texture").Use(p, "level " + value);
                 }
-            } else if (cmd == "TEXTUREZIP") {
+            } else if (cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) {
                     Command.all.FindByName("Texture").Use(p, "levelzip normal");
                 } else {
