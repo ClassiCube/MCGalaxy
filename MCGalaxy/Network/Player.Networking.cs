@@ -160,7 +160,7 @@ namespace MCGalaxy {
 
         public void SendMapMotd() {
             string motd = level.GetMotd(this);
-            motd = ChatTokens.Apply(motd, this);
+            motd = Chat.Format(motd, this);
             
             byte[] packet = Packet.Motd(this, motd);
             OnSendingMotdEvent.Call(this, packet);
