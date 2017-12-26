@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing {
         }
 
         static string[] rotY_90 = new string[]  { "N", "E", "S", "W",  "NE", "SE", "SW", "NW",  "WE", "NS", "WE", "NS" };
-        static string[] rotY_180 = new string[] { "W", "E", "N", "S",  "NS", "WE", "NE", "SW",  "NW", "SE" };
+        static string[] rotY_180 = new string[] { "W", "E", "N", "S",  "NE", "SW", "NW", "SE"                          };
         static string[] rotY_270 = new string[] { "N", "W", "S", "E",  "NE", "NW", "SW", "SE",  "WE", "NS", "WE", "NS" };
         public static CopyState RotateY(CopyState state, int angle, BlockDefinition[] defs) {
             CopyState newState = Clone(state);
