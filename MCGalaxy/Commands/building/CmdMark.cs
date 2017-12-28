@@ -100,10 +100,11 @@ namespace MCGalaxy.Commands.Building {
         public override void Help(Player p) {
             Player.Message(p, "%T/Mark <x y z> %H- Places a marker for selections, e.g for %T/z");
             Player.Message(p, "%HUse ~ before a coordinate to mark relative to current position");
-            Player.Message(p, "%HIf <x y z> is not given, marks at where you are standing");
+            Player.Message(p, "%HIf no coordinates are given, marks at where you are standing");
+            Player.Message(p, "%HIf only x coordinate is given, it is used for y and z too");
             Player.Message(p, "  %He.g. /mark 30 y 20 will mark at (30, last y, 20)");
-            Player.Message(p, "%HActivates the block (e.g. door) if no selection is in progress");
             Player.Message(p, "%T/Mark all %H- Places markers at min and max corners of the map");
+            Player.Message(p, "%HActivates the block (e.g. door) if no selection is in progress");
         }
     }
 }

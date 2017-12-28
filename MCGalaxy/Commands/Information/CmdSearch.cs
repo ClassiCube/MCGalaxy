@@ -16,9 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using MCGalaxy.Blocks;
 
 namespace MCGalaxy.Commands.Info {
-    public class CmdSearch : Command {        
+    public class CmdSearch : Command {
         public override string name { get { return "Search"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -34,111 +36,125 @@ namespace MCGalaxy.Commands.Info {
                 SearchBlocks(p, keyword, modifier);
             } else if (args[0] == "rank" || args[0] == "ranks") {
                 SearchRanks(p, keyword, modifier);
-            } else if (args[0] == "command" || args[0] == "commands" || args[0] == "cmd" || args[0] == "cmds") {
+            } else if (args[0] == "command" || args[0] == "commands") {
                 SearchCommands(p, keyword, modifier);
-            } else if (args[0] == "user" || args[0] == "users" || args[0] == "player" || args[0] == "players") {
+            } else if (args[0] == "player" || args[0] == "players") {
                 SearchPlayers(p, keyword, modifier);
             } else if (args[0] == "loaded") {
                 SearchLoaded(p, keyword, modifier);
-            } else if (args[0] == "level" || args[0] == "levels") {
-                SearchUnloaded(p, keyword, modifier);
+            } else if (args[0] == "level" || args[0] == "levels" || args[0] == "maps") {
+                SearchMaps(p, keyword, modifier);
             } else {
                 Help(p);
             }
         }
         
+        static string CoreBlockName(ExtBlock block) { return Block.Name(block.BlockID); }
         static void SearchBlocks(Player p, string keyword, string modifier) {
-            List<string> blocks = new List<string>();
+            List<ExtBlock> blockIDs = new List<ExtBlock>();
             for (byte id = 0; id < Block.Invalid; id++) {
-                string name = Block.Name(id);
-                if (name.CaselessContains(keyword) && !name.CaselessEq("unknown"))
-                    blocks.Add(name);
+                if (!Block.Name(id).CaselessEq("unknown")) {
+                    blockIDs.Add(new ExtBlock(id, 0));
+                }
             }
+            StringFormatter<ExtBlock> getName;
             
-            OutputList(p, keyword, "search blocks", "blocks", 
-                       modifier, blocks, CmdBlocks.FormatBlockName);
+            if (!Player.IsSuper(p)) {
+                for (int id = Block.CpeCount; id < Block.Count; id++) {
+                    if (p.level.CustomBlockDefs[id] == null) continue;
+                    blockIDs.Add(new ExtBlock(Block.custom_block, (byte)id));
+                }
+                getName = p.level.BlockName;
+            } else {
+                getName = CoreBlockName;
+            }
+
+            List<string> blocks = FilterList(blockIDs, keyword, getName, null,
+                                             b => Group.GetColor(BlockPerms.List[b.BlockID].MinRank) + getName(b));
+            OutputList(p, keyword, "search blocks", "blocks", modifier, blocks);
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
-            List<Command> cmds = new List<Command>();
-            foreach (Command cmd in Command.all.commands) {
-                if (cmd.name.CaselessContains(keyword)) {
-                    cmds.Add(cmd); continue;
-                }
-                
-                if (String.IsNullOrEmpty(cmd.shortcut)) continue;
-                if (cmd.shortcut.CaselessContains(keyword))
-                    cmds.Add(cmd);
-            }    
+            List<string> commands = FilterList(Command.all.commands, keyword, cmd => cmd.name,
+                                               null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
+            List<string> shortcuts = FilterList(Command.all.commands, keyword, cmd => cmd.shortcut,
+        	                                    cmd => !String.IsNullOrEmpty(cmd.shortcut), 
+        	                                    cmd => CmdHelp.GetColor(cmd) + cmd.name);
             
-            OutputList(p, keyword, "search commands", "commands", 
-                       modifier, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name);
+            // Match both names and shortcuts
+            foreach (string shortcutCmd in shortcuts) {
+                if (commands.CaselessContains(shortcutCmd)) continue;
+                commands.Add(shortcutCmd);
+            }
+            
+            OutputList(p, keyword, "search commands", "commands", modifier, commands);
         }
         
         static void SearchRanks(Player p, string keyword, string modifier) {
-            List<string> ranks = new List<string>();
-            foreach (Group g in Group.GroupList) {
-                if (g.Name.CaselessContains(keyword)) {
-                    ranks.Add(g.ColoredName);
-                }
-            }
-            
-            OutputList(p, keyword, "search ranks", "ranks", 
-                       modifier, ranks, (name) => name);
+            List<string> ranks = FilterList(Group.GroupList, keyword, grp => grp.Name,
+                                            null, grp => grp.ColoredName);
+            OutputList(p, keyword, "search ranks", "ranks", modifier, ranks);
         }
         
         static void SearchPlayers(Player p, string keyword, string modifier) {
-            List<string> players = new List<string>();
             Player[] online = PlayerInfo.Online.Items;
-            foreach (Player who in online) {
-                if (who.name.CaselessContains(keyword) && Entities.CanSee(p, who))
-                    players.Add(who.ColoredName);
-            }
-            
-            OutputList(p, keyword, "search players", "players", 
-                       modifier, players, (name) => name);
+            List<string> players = FilterList(online, keyword, pl => pl.name,
+                                              pl => Entities.CanSee(p, pl), pl => pl.ColoredName);
+            OutputList(p, keyword, "search players", "players", modifier, players);
         }
         
         static void SearchLoaded(Player p, string keyword, string modifier) {
-            List<string> levels = new List<string>();
             Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level level in loaded) {
-                if (level.name.CaselessContains(level.name)) 
-                    levels.Add(level.name);
+            List<string> levels = FilterList(loaded, keyword, level => level.name);
+            OutputList(p, keyword, "search loaded", "loaded levels", modifier, levels);
+        }
+        
+        static void SearchMaps(Player p, string keyword, string modifier) {
+            string[] files = LevelInfo.AllMapFiles();
+            List<string> maps = FilterList(files, keyword,
+                                           map => Path.GetFileNameWithoutExtension(map));
+            OutputList(p, keyword, "search levels", "maps", modifier, maps);
+        }
+        
+        internal static List<string> FilterList<T>(IList<T> input, string keyword, StringFormatter<T> formatter,
+                                          Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
+            List<string> matches = new List<string>();
+            Regex regex = null;
+            // wildcard matching
+            if (keyword.Contains("*") || keyword.Contains("?")) {
+                string pattern = "^" + Regex.Escape(keyword).Replace("\\?", ".").Replace("\\*", ".*") + "$";
+                regex = new Regex(pattern, RegexOptions.IgnoreCase);
             }
             
-            OutputList(p, keyword, "search loaded", "loaded levels", 
-                       modifier, levels, (level) => level);
-        }
-        
-        static void SearchUnloaded(Player p, string keyword, string modifier) {
-            List<string> maps = new List<string>();
-            string[] files = LevelInfo.AllMapFiles();
-            foreach (string file in files) {
-                string map = Path.GetFileNameWithoutExtension(file);
-                if (map.CaselessContains(keyword)) maps.Add(map);
+            foreach (T item in input) {
+                if (filter != null && !filter(item)) continue;
+                string name = formatter(item);
+                
+                if (regex != null) { if (!regex.IsMatch(name))  continue; }
+                else { if (!name.CaselessContains(keyword))     continue; }
+                
+                // format this item for display
+                if (listFormatter != null) name = listFormatter(item);
+                matches.Add(name);
             }
-
-            OutputList(p, keyword, "search levels", "maps", 
-                       modifier, maps, (map) => map);
+            return matches;
         }
         
-        static void OutputList<T>(Player p, string keyword, string cmd, string type, string modifier,
-                                  List<T> items, StringFormatter<T> formatter) {
+        static void OutputList(Player p, string keyword, string cmd, string type, string modifier, List<string> items) {
             if (items.Count == 0) {
                 Player.Message(p, "No {0} found containing \"{1}\"", type, keyword);
             } else {
-                MultiPageOutput.Output(p, items, formatter, cmd + " " + keyword, type, modifier, false);
+                MultiPageOutput.Output(p, items, item => item, cmd + " " + keyword, type, modifier, false);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Search blocks [keyword] %H- finds blocks with that keyword");
-            Player.Message(p, "%T/Search commands [keyword] %H- finds commands with that keyword");
-            Player.Message(p, "%T/Search ranks [keyword] %H- finds ranks with that keyword");
-            Player.Message(p, "%T/Search players [keyword] %H- find players with that keyword");
-            Player.Message(p, "%T/Search loaded [keyword] %H- finds loaded levels with that keyword");
-            Player.Message(p, "%T/Search levels [keyword] %H- find all levels with that keyword");
+            Player.Message(p, "%T/Search [list] [keyword]");
+            Player.Message(p, "%HFinds entries in a list that match the given keyword");
+            Player.Message(p, "%H  keyword can also include wildcard characters:");
+            Player.Message(p, "%H    * - placeholder for zero or more characters");
+            Player.Message(p, "%H    ? - placeholder for exactly one character");
+            Player.Message(p, "%HLists available: &fblocks/commands/ranks/players/loaded/maps");
         }
     }
 }

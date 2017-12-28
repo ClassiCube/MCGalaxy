@@ -16,7 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Commands.Info;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdGoto : Command {
@@ -32,11 +34,25 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             
-            if (message.CaselessEq("-random")) {
+            if (message.CaselessStarts("-random")) {
                 string[] files = LevelInfo.AllMapFiles();
-                string map = files[new Random().Next(files.Length)];
+                string[] args = message.SplitSpaces(2);
+                string map;
                 
-                map = Path.GetFileNameWithoutExtension(map);
+                // randomly only visit certain number of maps
+                if (args.Length > 1) {
+                    List<string> maps = CmdSearch.FilterList(files, args[1],
+                                                             mapFile => Path.GetFileNameWithoutExtension(mapFile));
+                    if (maps.Count == 0) {
+                        Player.Message(p, "No maps found containing \"{0}\"", args[1]);
+                        return;
+                    }
+                    map = maps[new Random().Next(maps.Count)];
+                } else {
+                    map = files[new Random().Next(files.Length)];
+                    map = Path.GetFileNameWithoutExtension(map);
+                }
+
                 PlayerActions.ChangeMap(p, map);
             } else if (Formatter.ValidName(p, message, "level")) {
                 PlayerActions.ChangeMap(p, message);

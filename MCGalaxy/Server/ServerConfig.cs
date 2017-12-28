@@ -95,7 +95,7 @@ namespace MCGalaxy {
         public static int BackupInterval = 300;
         public static int BlockDBSaveInterval = 60;
         [ConfigString("backup-location", "Backup", "")]
-        public static string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");       
+        public static string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
         
         [ConfigInt("afk-minutes", "Other", 10)]
         public static int AutoAfkMins = 10;

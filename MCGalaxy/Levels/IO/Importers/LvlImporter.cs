@@ -50,11 +50,16 @@ namespace MCGalaxy.Levels.IO {
                 lvl.roty = header[offset + 11];
                 
                 gs.Read(lvl.blocks, 0, lvl.blocks.Length);
-                ReadCustomBlocksSection(lvl, gs);
-                
+                ReadCustomBlocksSection(lvl, gs);             
                 if (!metadata) return lvl;
-                ReadPhysicsSection(lvl, gs);
-                return lvl;
+                
+                for (;;) {
+                    int section = gs.ReadByte();                    
+                    if (section == 0xFC) {
+                        ReadPhysicsSection(lvl, gs); continue;
+                    }
+                    return lvl;
+                }
             }
         }
         
@@ -98,7 +103,6 @@ namespace MCGalaxy.Levels.IO {
         }
         
         unsafe static void ReadPhysicsSection(Level lvl, Stream gs) {
-            if (gs.ReadByte() != 0xFC) return;
             byte[] buffer = new byte[sizeof(int)];
             int read = gs.Read(buffer, 0, sizeof(int));
             if (read < sizeof(int)) return;
