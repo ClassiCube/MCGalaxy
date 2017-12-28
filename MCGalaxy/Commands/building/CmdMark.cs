@@ -65,7 +65,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool ParseCoords(string message, Player p, ref Vec3S32 P) {
-            string[] args = message.ToLower().SplitSpaces();
+            string[] args = message.SplitSpaces();
+            // Expand /mark ~4 into /mark ~4 ~4 ~4
+            if (args.Length == 1) {
+                args = new string[] { message, message, message };
+            }
             if (args.Length != 3) { Help(p); return false; }
             
             // Hacky workaround for backwards compatibility
