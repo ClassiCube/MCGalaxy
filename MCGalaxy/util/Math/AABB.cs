@@ -155,8 +155,10 @@ namespace MCGalaxy.Maths {
                 BlockDefinition def = lvl.GetBlockDef(block);
                 if (def != null) {
                     if (CollideType.IsSolid(def.CollideType)) return true;
-                } else {
-                    if (block.BlockID == Block.Invalid || !Block.Walkthrough(Block.Convert(block.BlockID))) return true;
+                } else if (block.BlockID == Block.Invalid) {
+                    if (y < lvl.Height) return true;
+                } else if (!Block.Walkthrough(Block.Convert(block.BlockID))) {
+                    return true;
                 }
             }
             return false;
