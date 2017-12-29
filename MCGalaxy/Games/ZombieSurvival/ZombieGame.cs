@@ -180,7 +180,7 @@ namespace MCGalaxy.Games {
             Picker.QueuedMap = null;
             CmdLoad.LoadLevel(null, next);
             Map = LevelInfo.FindExact(next);
-            Map.SaveChanges = ZSConfig.ChangeLevels;
+            Map.SaveChanges = false;
             if (ZSConfig.SetMainLevel)
                 Server.mainLevel = Map;
             
