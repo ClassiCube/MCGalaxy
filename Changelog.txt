@@ -1,3 +1,18 @@
+v 1.9.0.1
+Fixed: /xban erroring
+Fixed: .dll commands added via GUI keeping open handle to file
+Fixed: Standing on top of map triggering noclip detection in ZS.
+Fixed: Maps saving block changes saved after ZS round end
+Fixed: /info with _ in names not always working properly (Thanks goodlyay)
+Fixed: /paste without having /copy ed anything erroring
+Fixed: colours not showing in MOTD. (Thanks xnotx123)
+Fixed: WE/NS blocks being incorrectly flipped with /rotate 180
+Improved: /color bot now only shows message to you
+Improved: /os map texturepack alias for /os map texturezip
+Improved: Can use /m coord as shortcut for /m coord coord coord
+Improved: Support for * and ? wildcards in /search
+Improved: /search blocks now searches through custom blocks list too
+
 v 1.9.0.0
 Added: custom 8ball responses
 Added: @ [rule] shortcuts in /report
