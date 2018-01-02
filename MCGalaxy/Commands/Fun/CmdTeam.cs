@@ -140,6 +140,7 @@ namespace MCGalaxy.Commands.Fun {
             team.Members.Add(p.name);
             team.Action(p, "joined the team.");
             p.Game.Team = team;
+            p.Game.TeamInvite = null;
             p.SetPrefix();
             Team.SaveList();
         }
