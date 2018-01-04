@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "Copied &a{0} %Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
                            cState.OriginX == cState.X ? "Min" : "Max",
                            cState.OriginY == cState.Y ? "Min" : "Max",
-                           cState.OriginY == cState.Y ? "Min" : "Max");
+                           cState.OriginZ == cState.Z ? "Min" : "Max");
             if (!cState.PasteAir) {
                 Player.Message(p, "To also copy air blocks, use %T/Copy Air");
             }

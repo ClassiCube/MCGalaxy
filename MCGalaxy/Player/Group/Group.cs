@@ -180,7 +180,7 @@ namespace MCGalaxy {
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             standard = Find(ServerConfig.DefaultRankName);
-            if (standard == null) standard = GuestRank;            
+            if (standard == null) standard = GuestRank;
 
             OnGroupLoadEvent.Call();
             reloading = true;
