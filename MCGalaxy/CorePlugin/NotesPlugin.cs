@@ -44,7 +44,7 @@ namespace MCGalaxy.Core {
                 case ModActionType.Muted:
                     AddNote(action, "M"); break; 
                 case ModActionType.Warned:
-                    AddNote(action, "W"); break;                    
+                    AddNote(action, "W"); break;
                 case ModActionType.Ban:
                     string banType = action.Duration.Ticks != 0 ? "T" : "B";
                     AddNote(action, banType); break;
