@@ -59,6 +59,7 @@ namespace MCGalaxy.Cli {
                 ConsoleLoop();
             } catch (Exception e) {
                 Logger.LogError(e);
+                FileLogger.Flush(null);
             }
         }
         
