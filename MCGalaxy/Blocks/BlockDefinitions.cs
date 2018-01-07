@@ -73,7 +73,7 @@ namespace MCGalaxy {
         
         
         internal static BlockDefinition[] Load(bool global, Level lvl) {
-            BlockDefinition[] defs = new BlockDefinition[Block.Count];
+            BlockDefinition[] defs = null;
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
             try {
                 if (File.Exists(path)) {
@@ -82,7 +82,13 @@ namespace MCGalaxy {
                 }
             } catch (Exception ex) {
                 Logger.LogError(ex);
-                defs = new BlockDefinition[Block.Count];
+            }
+            if (defs == null) defs = new BlockDefinition[Block.Count];
+            
+            // File was probably manually modified - fix it up
+            if (defs.Length < Block.Count) {
+                Logger.Log(LogType.Warning, "Expected " + Block.Count + " blocks in " + path + ", but only had " + defs.Length);
+                Array.Resize(ref defs, Block.Count);
             }
             
             for (int i = 0; i < Block.Count; i++) {
