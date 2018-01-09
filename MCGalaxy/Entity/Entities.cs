@@ -79,8 +79,7 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }
-        
+        internal static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }       
         internal static void Spawn(Player dst, Player p, Position pos,
                                    Orientation rot, string possession = "") {
             byte id = p == dst ? Entities.SelfID : p.id;
@@ -88,8 +87,8 @@ namespace MCGalaxy {
             string name = p.color + p.truename + possession;
             string skin = p.SkinName, model = p.Model;
             OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
-            
-            SpawnRaw(dst, id, p, skin, name, model);
+
+            SpawnRaw(dst, id, p, pos, rot, skin, name, model);
             if (!ServerConfig.TablistGlobal) TabList.Add(dst, p, id);
         }
         
@@ -130,13 +129,12 @@ namespace MCGalaxy {
             string model = Chat.Format(b.Model, dst, true, false);
             
             OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
-            SpawnRaw(dst, b.id, b, skin, name, model);
+            SpawnRaw(dst, b.id, b, b.Pos, b.Rot, skin, name, model);
             if (ServerConfig.TablistBots) TabList.Add(dst, b);
         }
         
-        static void SpawnRaw(Player dst, byte id, Entity entity, 
+        static void SpawnRaw(Player dst, byte id, Entity entity, Position pos, Orientation rot,
                              string skin, string name, string model) {
-            Position pos = entity.Pos; Orientation rot = entity.Rot;
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
             name = Colors.Cleanup(name, dst.hasTextColors);           
