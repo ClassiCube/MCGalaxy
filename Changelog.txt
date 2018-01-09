@@ -1,3 +1,13 @@
+v 1.9.0.2
+Fixed: Rare case where you could rejoin team after leaving without an invite
+Fixed: /spin erroring when having not copied anything first
+Fixed: /copy sometimes saying origin on Z axis is at min or max when it was actually opposite
+Fixed: Not compiling on linux
+Fixed: Don't error out when global block defs file is empty or has too few elements
+Fixed: CLI mode not logging error to disc if an error occurs on server startup.
+Fixed: Players sometimes not appearing at correct spawn position to others when joining a map.
+Improved: Make various output messages in /award better.
+
 v 1.9.0.1
 Fixed: /xban erroring
 Fixed: .dll commands added via GUI keeping open handle to file
