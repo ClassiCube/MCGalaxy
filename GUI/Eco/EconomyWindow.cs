@@ -11,7 +11,7 @@ namespace MCGalaxy.Gui.Eco {
             InitializeComponent();
         }
 
-        private void EconomyWindow_Load(object sender, EventArgs e) {
+        void EconomyWindow_Load(object sender, EventArgs e) {
             RankItem rankItem = Economy.Ranks;
             numericUpDownTitle.Value = Economy.Title.Price;
             numericUpDownColor.Value = Economy.Color.Price;
@@ -59,17 +59,17 @@ namespace MCGalaxy.Gui.Eco {
             this.Font = SystemFonts.IconTitleFont;
         }
 
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+        void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
             if (e.Category == UserPreferenceCategory.Window) {
                 this.Font = SystemFonts.IconTitleFont;
             }
         }
 
-        private void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
+        void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
             SystemEvents.UserPreferenceChanged -= new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
         }
 
-        private void UpdateRanks() {
+        void UpdateRanks() {
             RankItem rankItem = Economy.Ranks;
             rankItem.UpdatePrices();
 
@@ -80,7 +80,7 @@ namespace MCGalaxy.Gui.Eco {
             }
             listBoxRank.DataSource = ranklist;
             listBoxRank.SelectedItem = comboBoxRank.SelectedItem;
-            numericUpDownRank.Value = rankItem.FindRank(comboBoxRank.SelectedItem.ToString()).price;
+            listBoxRank_SelectedIndexChanged(null, null);
         }
 
         public void UpdateLevels() {
@@ -95,7 +95,7 @@ namespace MCGalaxy.Gui.Eco {
             buttonEdit.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
         }
 
-        private void checkBoxEco_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxEco_CheckedChanged(object sender, EventArgs e) {
             groupBoxTitle.Enabled = checkBoxEco.Checked;
             groupBoxColor.Enabled = checkBoxEco.Checked;
             groupBoxTcolor.Enabled = checkBoxEco.Checked;
@@ -104,40 +104,40 @@ namespace MCGalaxy.Gui.Eco {
             Economy.Enabled = checkBoxEco.Checked;
         }
 
-        private void checkBoxTitle_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxTitle_CheckedChanged(object sender, EventArgs e) {
             labelPriceTitle.Enabled = checkBoxTitle.Checked;
             numericUpDownTitle.Enabled = checkBoxTitle.Checked;
             Economy.Title.Enabled = checkBoxTitle.Checked;
             Economy.Title.Price = (int)numericUpDownTitle.Value;
         }
 
-        private void checkBoxColor_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxColor_CheckedChanged(object sender, EventArgs e) {
             labelPriceColor.Enabled = checkBoxColor.Checked;
             numericUpDownColor.Enabled = checkBoxColor.Checked;
             Economy.Color.Enabled = checkBoxColor.Checked;
             Economy.Color.Price = (int)numericUpDownColor.Value;
         }
 
-        private void checkBoxTcolor_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxTcolor_CheckedChanged(object sender, EventArgs e) {
             labelPriceTcolor.Enabled = checkBoxTcolor.Checked;
             numericUpDownTcolor.Enabled = checkBoxTcolor.Checked;
             Economy.TitleColor.Enabled = checkBoxTcolor.Checked;
             Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
         }
 
-        private void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
+        void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
             Economy.Title.Price = (int)numericUpDownTitle.Value;
         }
 
-        private void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
+        void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
             Economy.Color.Price = (int)numericUpDownColor.Value;
         }
 
-        private void numericUpDownTcolor_ValueChanged(object sender, EventArgs e) {
+        void numericUpDownTcolor_ValueChanged(object sender, EventArgs e) {
             Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
         }
 
-        private void checkBoxRank_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxRank_CheckedChanged(object sender, EventArgs e) {
             labelMaxrank.Enabled = checkBoxRank.Checked;
             comboBoxRank.Enabled = checkBoxRank.Checked;
             listBoxRank.Enabled = checkBoxRank.Checked;
@@ -146,36 +146,44 @@ namespace MCGalaxy.Gui.Eco {
             Economy.Ranks.Enabled = checkBoxRank.Checked;
         }
 
-        private void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
+        void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
             Economy.Ranks.MaxRank = GuiPerms.GetPermission(comboBoxRank, LevelPermission.AdvBuilder);
             UpdateRanks();
         }
 
-        private void numericUpDownRank_ValueChanged(object sender, EventArgs e) {
-            Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString()).price = (int)numericUpDownRank.Value;
+        void numericUpDownRank_ValueChanged(object sender, EventArgs e) {
+            if (listBoxRank.SelectedItem != null) {
+                RankItem.Rank rank = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString());
+                if (rank != null) rank.price = (int)numericUpDownRank.Value;
+            }
         }
 
-        private void listBoxRank_SelectedIndexChanged(object sender, EventArgs e) {
-            numericUpDownRank.Value = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString()).price;
+        void listBoxRank_SelectedIndexChanged(object sender, EventArgs e) {
+            if (listBoxRank.SelectedItem == null) {
+                numericUpDownRank.Value = 0;
+            } else {
+                RankItem.Rank rank = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString());
+                numericUpDownRank.Value = rank != null ? rank.price : 0;
+            }
         }
 
-        private void EconomyWindow_FormClosing(object sender, FormClosingEventArgs e) {
+        void EconomyWindow_FormClosing(object sender, FormClosingEventArgs e) {
             Dispose();
             Economy.Save();
         }
 
-        private void checkBoxLevel_CheckedChanged(object sender, EventArgs e) {
+        void checkBoxLevel_CheckedChanged(object sender, EventArgs e) {
             dataGridView1.Enabled = checkBoxLevel.Checked;
             buttonAdd.Enabled = checkBoxLevel.Checked;
             CheckLevelEnables();
             Economy.Levels.Enabled = checkBoxLevel.Checked;
         }
 
-        private void buttonAdd_Click(object sender, EventArgs e) {
+        void buttonAdd_Click(object sender, EventArgs e) {
             new EcoLevelWindow(this).ShowDialog();
         }
 
-        private void buttonEdit_Click(object sender, EventArgs e) {
+        void buttonEdit_Click(object sender, EventArgs e) {
             string name = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
             int price = (int)dataGridView1.SelectedRows[0].Cells[1].Value;
             string x = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
@@ -185,7 +193,7 @@ namespace MCGalaxy.Gui.Eco {
             new EcoLevelWindow(this, name, price, x, y, z, type, true).ShowDialog();
         }
 
-        private void buttonRemove_Click(object sender, EventArgs e) {
+        void buttonRemove_Click(object sender, EventArgs e) {
             LevelItem item = Economy.Levels;
             item.Presets.Remove(item.FindPreset(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
             dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
@@ -193,7 +201,7 @@ namespace MCGalaxy.Gui.Eco {
             buttonEdit.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+        void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
             buttonEdit.Enabled = true;
             buttonRemove.Enabled = true;
         }
