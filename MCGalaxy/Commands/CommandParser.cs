@@ -180,14 +180,19 @@ namespace MCGalaxy.Commands {
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> This does not output any messages to the player. </remarks>
         public static ExtBlock RawGetBlock(Player p, string input) {
-            ExtBlock block = default(ExtBlock);
-            block.BlockID = Block.Byte(input);
-            if (!block.IsInvalid) return block;
-            
-            // find custom block
             BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            byte id;
+            // raw ID is treated specially, before names
+            if (byte.TryParse(input, out id) && (id < Block.CpeCount || defs[id] != null)) {
+                return ExtBlock.FromRaw(id);
+            }
+            
             int raw = BlockDefinition.GetBlock(input, defs);
             if (raw != -1) return ExtBlock.FromRaw((byte)raw);
+            
+            id = Block.Byte(input);
+            if (id != Block.Invalid) return new ExtBlock(id, 0);
+            
             return ExtBlock.Invalid;
         }
 
