@@ -91,10 +91,9 @@ namespace MCGalaxy.Commands.World {
             if (len == 0) { Player.Message(p, "&c{0} cannot be 0.", type); return false; }
             if (len > 16384) { Player.Message(p, "&c{0} must be 16384 or less.", type); return false; }
             
-            int lenPadded = Utils.CeilDiv16(len) * 16;
-            if (lenPadded != len) {
-                Player.Message(p, "&c{0} not divisible by 16! %SRounding up to {1}.", type, lenPadded);
-                len = (ushort)lenPadded;
+            if ((len % 16) != 0) {
+                Player.Message(p, "&cMap {0} of {1} blocks is not divisible by 16!", type, len);
+                Player.Message(p, "&cAs such, you may see rendering artifacts on some clients.");
             }
             return true;
         }

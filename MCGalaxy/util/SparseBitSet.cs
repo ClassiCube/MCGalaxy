@@ -24,9 +24,9 @@ namespace MCGalaxy.Util {
         byte[][] bits;
         
         public SparseBitSet(int width, int height, int length) {
-            chunksX = (width + 15) >> 4;
-            chunksY = (height + 15) >> 4;
-            chunksZ = (length + 15) >> 4;
+            chunksX = Utils.CeilDiv16(width);
+            chunksY = Utils.CeilDiv16(height);
+            chunksZ = Utils.CeilDiv16(length);
             bits = new byte[chunksX * chunksY * chunksZ][];
         }
         
