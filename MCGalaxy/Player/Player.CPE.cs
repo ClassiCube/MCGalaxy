@@ -34,19 +34,20 @@ namespace MCGalaxy {
         }
         
         ExtEntry[] extensions = new ExtEntry[] {
-            new ExtEntry(CpeExt.ClickDistance), new ExtEntry(CpeExt.CustomBlocks),
-            new ExtEntry(CpeExt.HeldBlock), new ExtEntry(CpeExt.TextHotkey),
+            new ExtEntry(CpeExt.ClickDistance),    new ExtEntry(CpeExt.CustomBlocks),
+            new ExtEntry(CpeExt.HeldBlock),        new ExtEntry(CpeExt.TextHotkey),
             new ExtEntry(CpeExt.ExtPlayerList, 2), new ExtEntry(CpeExt.EnvColors),
-            new ExtEntry(CpeExt.SelectionCuboid), new ExtEntry(CpeExt.BlockPermissions),
-            new ExtEntry(CpeExt.ChangeModel), new ExtEntry(CpeExt.EnvMapAppearance, 2),
-            new ExtEntry(CpeExt.EnvWeatherType), new ExtEntry(CpeExt.HackControl),
-            new ExtEntry(CpeExt.EmoteFix), new ExtEntry(CpeExt.MessageTypes),
-            new ExtEntry(CpeExt.LongerMessages), new ExtEntry(CpeExt.FullCP437),
+            new ExtEntry(CpeExt.SelectionCuboid),  new ExtEntry(CpeExt.BlockPermissions),
+            new ExtEntry(CpeExt.ChangeModel),      new ExtEntry(CpeExt.EnvMapAppearance, 2),
+            new ExtEntry(CpeExt.EnvWeatherType),   new ExtEntry(CpeExt.HackControl),
+            new ExtEntry(CpeExt.EmoteFix),         new ExtEntry(CpeExt.MessageTypes),
+            new ExtEntry(CpeExt.LongerMessages),   new ExtEntry(CpeExt.FullCP437),
             new ExtEntry(CpeExt.BlockDefinitions), new ExtEntry(CpeExt.BlockDefinitionsExt, 2),
-            new ExtEntry(CpeExt.TextColors), new ExtEntry(CpeExt.BulkBlockUpdate),
-            new ExtEntry(CpeExt.EnvMapAspect), new ExtEntry(CpeExt.PlayerClick),
-            new ExtEntry(CpeExt.EntityProperty), new ExtEntry(CpeExt.ExtEntityPositions),
-            new ExtEntry(CpeExt.TwoWayPing), new ExtEntry(CpeExt.InventoryOrder),
+            new ExtEntry(CpeExt.TextColors),       new ExtEntry(CpeExt.BulkBlockUpdate),
+            new ExtEntry(CpeExt.EnvMapAspect),     new ExtEntry(CpeExt.PlayerClick),
+            new ExtEntry(CpeExt.EntityProperty),   new ExtEntry(CpeExt.ExtEntityPositions),
+            new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
+            new ExtEntry(CpeExt.InstantMOTD),
         };
         
         ExtEntry FindExtension(string extName) {
@@ -229,6 +230,7 @@ namespace MCGalaxy {
         public const string ExtEntityPositions = "ExtEntityPositions";
         public const string TwoWayPing = "TwoWayPing";
         public const string InventoryOrder = "InventoryOrder";
+        public const string InstantMOTD = "InstantMOTD";
     }
     
     public enum CpeMessageType : byte {
