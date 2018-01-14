@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using System.Net;
 using MCGalaxy.Network;
 
@@ -28,6 +27,11 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
         public override void Use(Player p, string message) {
+            if (message.Length == 0) {
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "name"); return; }
+                message = p.name;
+            }
+            
             string ip = "";
             Player match = PlayerInfo.FindMatches(p, message);
             string target = message;
