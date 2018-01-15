@@ -198,14 +198,19 @@ namespace MCGalaxy {
         
         static void SendModelScales(Player pl, byte id, Entity entity) {
             if (!pl.Supports(CpeExt.EntityProperty)) return;
-            SendModelScale(pl, id, EntityProp.ScaleX, entity.ScaleX);
-            SendModelScale(pl, id, EntityProp.ScaleY, entity.ScaleY);
-            SendModelScale(pl, id, EntityProp.ScaleZ, entity.ScaleZ);
+            
+            string model = entity.Model;
+            float scale = AABB.GetScaleFrom(ref model);
+            SendModelScale(pl, id, EntityProp.ScaleX, entity.ScaleX * scale);
+            SendModelScale(pl, id, EntityProp.ScaleY, entity.ScaleY * scale);
+            SendModelScale(pl, id, EntityProp.ScaleZ, entity.ScaleZ * scale);
         }
         
         static void SendModelScale(Player pl, byte id, EntityProp axis, float value) {
             if (value == 0) return;
-            pl.Send(Packet.EntityProperty(id, axis, (int)(value * 1000)));
+            int packed = (int)(value * 1000);
+            if (packed == 0) return;
+            pl.Send(Packet.EntityProperty(id, axis, packed));
         }
         
         static void SendModel(Player pl, byte id, string model) {

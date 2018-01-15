@@ -93,9 +93,7 @@ namespace MCGalaxy.Maths {
         
         public static AABB ModelAABB(Entity entity, Level lvl) {
             string model = entity.Model;
-            int sep = model.IndexOf('|');
-            string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
-            model = sep == -1 ? model : model.Substring(0, sep);
+            float scale = GetScaleFrom(ref model);
             
             AABB bb;
             byte raw;
@@ -107,23 +105,31 @@ namespace MCGalaxy.Maths {
                 bb = AABB.Make(new Vec3S32(0, 0, 0), BaseSize(model));
             }
             bb = bb.Expand(-1); // adjust the model AABB inwards slightly
-            
-            float scale;
-            if (!Utils.TryParseDecimal(scaleStr, out scale)) scale = 1.0f;
-            if (scale < 0.01f) scale = 0.01f;
+
             float max = model.CaselessEq("chibi") ? 3 : 2;
-            scale = Math.Min(scale, max);
-            
             float scaleX = scale, scaleY = scale, scaleZ = scale;
-            if (entity.ScaleX != 0) scaleX = Math.Min(entity.ScaleX, max);
-            if (entity.ScaleY != 0) scaleY = Math.Min(entity.ScaleY, max);
-            if (entity.ScaleZ != 0) scaleZ = Math.Min(entity.ScaleZ, max);
+            if (entity.ScaleX != 0) scaleX = Math.Min(entity.ScaleX * scale, max);
+            if (entity.ScaleY != 0) scaleY = Math.Min(entity.ScaleY * scale, max);
+            if (entity.ScaleZ != 0) scaleZ = Math.Min(entity.ScaleZ * scale, max);
             
             bb.Min.X = (int)(bb.Min.X * scaleX); bb.Max.X = (int)(bb.Max.X * scaleX);
             bb.Min.Y = (int)(bb.Min.Y * scaleY); bb.Max.Y = (int)(bb.Max.Y * scaleY);
             bb.Min.Z = (int)(bb.Min.Z * scaleZ); bb.Max.Z = (int)(bb.Max.Z * scaleZ);
             
             return bb;
+        }
+        
+        internal static float GetScaleFrom(ref string model) {
+            int sep = model.IndexOf('|');
+            string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
+            model = sep == -1 ? model : model.Substring(0, sep);
+            
+            float scale;
+            if (!Utils.TryParseDecimal(scaleStr, out scale)) scale = 1.0f;
+            if (scale < 0.01f) scale = 0.01f;
+            
+            float max = model.CaselessEq("chibi") ? 3 : 2;
+            return Math.Min(scale, max);
         }
         
         static Vec3S32 BaseSize(string model) {
