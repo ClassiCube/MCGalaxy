@@ -179,7 +179,7 @@ namespace MCGalaxy.Gui.Components {
             Colors.Map(ref c);
 
             if (!Colors.IsDefined(c)) return foreCol;
-            ColorDesc col = Colors.List[c];
+            ColorDesc col = Colors.Get(c);
             return Color.FromArgb(col.R, col.G, col.B);
         }
     }

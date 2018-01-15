@@ -165,7 +165,7 @@ namespace MCGalaxy.Cli {
                     
                 default:
                     if (!Colors.IsDefined(c)) return ConsoleColor.White;
-                    return GetConsoleCol(Colors.List[c].Fallback);
+                    return GetConsoleCol(Colors.Get(c).Fallback);
             }
         }
     }

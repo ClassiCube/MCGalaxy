@@ -10,7 +10,7 @@ namespace MCGalaxy.Gui.Popups {
 
         internal static Color LookupColor(char colCode, out Color textCol) {
             Color rgb = default(Color);
-            ColorDesc col = Colors.List[colCode];
+            ColorDesc col = Colors.Get(colCode);
             
             if (col.Undefined) {
                 rgb = Color.White;

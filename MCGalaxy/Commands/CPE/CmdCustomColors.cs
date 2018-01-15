@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.CPE {
             if (Colors.IsStandard(code)) {
                 Player.Message(p, "You may only edit standard codes using %T/CustomColors edit"); return;
             }
-            if (code <= ' ' || code > '~' || code == '%' || code == '&') {
+            if (code == ' ' || code == '\0' || code == '\u00a0' || code == '%' || code == '&') {
                 Player.Message(p, "{0} must be a standard ASCII character.", code);
                 Player.Message(p, "It also cannot be a space, percentage, or ampersand.");
                 return;

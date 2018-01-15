@@ -115,7 +115,7 @@ namespace MCGalaxy.Gui {
             if (code.Length == 0) return SystemColors.Control;
             if (Colors.IsStandard(code[1])) return Color.FromName(name);
             
-            ColorDesc col = Colors.List[code[1]];
+            ColorDesc col = Colors.Get(code[1]);
             return Color.FromArgb(col.R, col.G, col.B);
         }
 

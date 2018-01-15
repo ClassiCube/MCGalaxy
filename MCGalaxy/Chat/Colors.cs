@@ -53,10 +53,18 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given color code is defined. </summary>
         /// <remarks> NOTE: This returns false for A to F, be warned! </remarks>
-        public static bool IsDefined(char c) { return c <= '\xff' && List[c].Fallback != '\0'; }
+        public static bool IsDefined(char c) {
+            if (c >= '~' && c <= '~') return List[c].Fallback != '\0';
+            return List[c.UnicodeToCp437()].Fallback != '\0';
+        }
         
         public static bool IsStandard(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+        }
+        
+        public static ColorDesc Get(char c) {
+            if (c >= ' ' && c <= '~') return List[c];
+            return List[c.UnicodeToCp437()];
         }
         
         public static ColorDesc DefaultCol(char code) {
@@ -85,7 +93,7 @@ namespace MCGalaxy {
         }
 
         public static void Update(ColorDesc col) {
-            List[col.Code] = col;
+            List[col.Index] = col;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (!p.Supports(CpeExt.TextColors)) continue;
@@ -110,7 +118,7 @@ namespace MCGalaxy {
         
         public static string Name(char code) {
             if (code >= 'A' && code <= 'F') code += ' ';
-            return IsDefined(code) ? List[code].Name : "";
+            return IsDefined(code) ? Get(code).Name : "";
         }
             
         
@@ -270,7 +278,7 @@ namespace MCGalaxy {
                 } else if (!IsDefined(code)) {
                     value.Remove(i, 2); i--; // now need to check char at i again
                 } else if (!supportsCustomCols) {
-                    value[i + 1] = List[code].Fallback;
+                    value[i + 1] = Get(code).Fallback;
                 }
             }
         }
@@ -299,7 +307,7 @@ namespace MCGalaxy {
                 
                 if (Byte.TryParse(parts[3], out col.R) && Byte.TryParse(parts[4], out col.G)
                     && Byte.TryParse(parts[5], out col.B) && Byte.TryParse(parts[6], out col.A)) {
-                    List[col.Code] = col;
+                    List[col.Index] = col;
                 }
             }
         }
@@ -345,6 +353,7 @@ namespace MCGalaxy {
         public byte R, G, B, A;
         public string Name;
         public bool Undefined { get { return Fallback == '\0'; } }
+        public byte Index { get { return (byte)Code.UnicodeToCp437(); } }
         
         public ColorDesc(byte r, byte g, byte b) {
             Code = '\0'; Fallback = '\0'; Name = null;
