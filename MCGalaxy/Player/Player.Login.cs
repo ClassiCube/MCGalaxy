@@ -222,6 +222,7 @@ namespace MCGalaxy {
             if (data.Rows.Count == 0) {
                 PlayerData.Create(this);
                 SendMessage("Welcome " + ColoredName + "%S! This is your first visit.");
+                Chat.MessageGlobal(ColoredName + " %dhas joined the server for the first time! Please make them feel welcome.", false);
             } else {
                 PlayerData.Load(data, this);
                 SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
