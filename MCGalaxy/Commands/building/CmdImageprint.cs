@@ -49,12 +49,12 @@ namespace MCGalaxy.Commands.Building {
             DrawArgs dArgs = new DrawArgs();
             dArgs.palette = ImagePalette.Find("color");
             if (dArgs.palette == null) dArgs.palette = ImagePalette.Palettes[0];
-            dArgs.dualLayered = true;
+            dArgs.dualLayered = false;
             
             if (parts.Length == 3) {
                 string mode = parts[2];
                 if (mode.CaselessEq("horizontal")) dArgs.layer = true;
-                if (mode.CaselessEq("vertical"))   dArgs.dualLayered = false;
+                if (mode.CaselessEq("vertical2layer"))   dArgs.dualLayered = true;
             }
             
             if (parts.Length >= 2) {
