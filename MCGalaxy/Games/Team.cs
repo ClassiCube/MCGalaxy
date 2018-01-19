@@ -21,15 +21,12 @@ using System.IO;
 
 namespace MCGalaxy.Games {
 
-    public sealed partial class Team {
+    public sealed class Team {
         
-        public string Color;
-        public string Name;
-        public string Owner;
+        public string Color, Name, Owner;
         public List<string> Members = new List<string>();
         
-        public Team() { }
-        
+        public Team() { }        
         public Team(string name, string owner) {
             Name = name;
             Owner = owner;
@@ -64,13 +61,77 @@ namespace MCGalaxy.Games {
                 
         public void RemoveIfEmpty() {
             if (Members.Count > 0) return;
-            TeamsList.Remove(Name);
+            Teams.Remove(this);
         }        
         
         public void UpdatePrefix() {
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
                 if (p != null) p.SetPrefix();
+            }
+        }
+        
+        
+        public static List<Team> Teams = new List<Team>();
+        static readonly object ioLock = new object();
+        
+        public static Team TeamIn(Player p) {
+            foreach (Team team in Teams) {
+                List<string> members = team.Members;
+                if (members.CaselessContains(p.name)) return team;
+            }
+            return null;
+        }
+        
+        public static Team Find(string name) {
+            foreach (Team team in Teams) {
+                if (name.CaselessEq(team.Name)) return team;
+            }
+            return null;
+        }
+        
+        public static void Add(Team team) {
+            Team old = Find(team.Name);
+            if (old != null) Teams.Remove(old);
+            Teams.Add(team);
+        }
+        
+        public static void SaveList() {
+            lock (ioLock)
+                using (StreamWriter w = new StreamWriter("extra/teams.txt"))
+                    foreach (Team team in Teams)
+            {
+                w.WriteLine("Name=" + team.Name);
+                w.WriteLine("Color=" + team.Color);
+                w.WriteLine("Owner=" + team.Owner);
+                string list = team.Members.Join(",");
+                w.WriteLine("Members=" + list);
+                w.WriteLine("");
+            }
+        }
+        
+        public static void LoadList() {
+            if (!File.Exists("extra/teams.txt")) return;
+            Team tmp = new Team();
+            lock (ioLock)
+                PropertiesFile.Read("extra/teams.txt", ref tmp, LineProcessor, '=');
+            
+            if (tmp.Name != null) Add(tmp);
+        }
+        
+        static void LineProcessor(string key, string value, ref Team tmp) {
+            switch (key.ToLower()) {
+                case "name":
+                    if (tmp.Name != null) Add(tmp);
+                    tmp = new Team();
+                    tmp.Name = value;
+                    break;
+                case "color":
+                    tmp.Color = value; break;
+                case "owner":
+                    tmp.Owner = value; break;
+                case "members":
+                    tmp.Members = new List<string>(value.Split(',')); break;
             }
         }
     }

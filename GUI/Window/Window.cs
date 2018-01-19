@@ -204,7 +204,7 @@ namespace MCGalaxy.Gui {
                 UpdateNotifyIconText();
             }
         }
-
+		
         delegate void LogDelegate(string message);
 
         /// <summary> Does the same as Console.WriteLine() only in the form </summary>

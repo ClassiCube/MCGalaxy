@@ -505,7 +505,6 @@
     <Compile Include="Games\LevelPicker.cs" />
     <Compile Include="Games\MovementCheck.cs" />
     <Compile Include="Games\Team.cs" />
-    <Compile Include="Games\Team.List.cs" />
     <Compile Include="Games\TntWars\TntWars.cs" />
     <Compile Include="Games\TntWars\TntWarsConfig.cs" />
     <Compile Include="Games\ZombieSurvival\LevelPicker.cs" />
