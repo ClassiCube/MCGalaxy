@@ -49,9 +49,8 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius) continue;
-                
-                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
+                if (dist > curRadius * curRadius) continue;               
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -82,10 +81,8 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1))
-                    continue;
-                
-                if (Level.IsAirAt(x, y, z)) output(Place(x, y, z, brush));
+                if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1)) continue;              
+                output(Place(x, y, z, brush));
             }
         }
     }
@@ -115,7 +112,6 @@ namespace MCGalaxy.Drawing.Ops {
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
-                if (!Level.IsAirAt(x, y, z)) continue;
                 
                 bool layer = dist >= (curRadius - 1) * (curRadius - 1);
                 block.BlockID = layer ? Block.Grass : Block.StillLava;
