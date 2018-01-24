@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override int MarksCount { get { return 1; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
+            string msg = parts[0];
             if (msg == "cone")      return DrawMode.cone;
             if (msg == "hcone")     return DrawMode.hcone;
             if (msg == "icone")     return DrawMode.icone;
@@ -92,28 +92,28 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
-            int endCount = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
-            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
+            int argsUsed = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
+            dArgs.BrushArgs = dArgs.Message.Splice(argsUsed, 0);
         }
         
         bool CheckTwoArgs(Player p, ref int radius, ref int height, string[] parts) {
             if (parts.Length < 3) {
-                Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[parts.Length - 1]); return false;
+                Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[0]); return false;
             }
-            return CommandParser.GetInt(p, parts[parts.Length - 3], "height", ref height, 0, 2000)
-                && CommandParser.GetInt(p, parts[parts.Length - 2], "radius", ref radius, 0, 2000);
+            return CommandParser.GetInt(p, parts[1], "radius", ref radius, 0, 2000)
+                && CommandParser.GetInt(p, parts[2], "height", ref height, 0, 2000);
         }
         
         bool CheckOneArg(Player p, ref int radius, string[] parts) {
             if (parts.Length < 2) {
-                Player.Message(p, "You need to provide the radius for the {0}.", parts[parts.Length - 1]); return false;
+                Player.Message(p, "You need to provide the radius for the {0}.", parts[0]); return false;
             }
-            return CommandParser.GetInt(p, parts[parts.Length - 2], "radius", ref radius, 0, 2000);
+            return CommandParser.GetInt(p, parts[1], "radius", ref radius, 0, 2000);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Draw <brush args> [height] [baseradius] [mode]");
-            Player.Message(p, "%T/Draw <brush args> [radius] [mode]");
+            Player.Message(p, "%T/Draw [mode] [baseradius] [height] <brush args>");
+            Player.Message(p, "%T/Draw [mode] [radius] <brush args>");
             Player.Message(p, "%HDraws an object at the specified point.");
             Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
             Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
