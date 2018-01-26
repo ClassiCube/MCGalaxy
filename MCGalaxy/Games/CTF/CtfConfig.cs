@@ -101,8 +101,11 @@ namespace MCGalaxy.Games {
         }
         
         public void Save(string mapName) {
+            ConfigElement[] elements = elems;
             using (StreamWriter w = new StreamWriter("CTF/" + mapName + ".config")) {
-                ConfigElement.SerialisePlain(elems, w, this);
+                for (int i = 0; i < elements.Length; i++) {
+                    w.WriteLine(elements[i].Format(this));
+                }
             }
         }
         

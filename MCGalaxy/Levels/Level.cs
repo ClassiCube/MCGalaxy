@@ -40,14 +40,15 @@ namespace MCGalaxy {
 
     public sealed partial class Level : IDisposable {
         
-        public Level(string n, ushort x, ushort y, ushort z) {
-            Width = x; Height = y; Length = z;
-            if (Width < 16) Width = 16;
-            if (Height < 16) Height = 16;
-            if (Length < 16) Length = 16;
-
-            for (int i = 0; i < CustomBlockDefs.Length; i++)
+        public Level(string name, ushort width, ushort height, ushort length) {
+            if (width  < 1) width  = 1;
+            if (height < 1) height = 1;
+            if (length < 1) length = 1;
+            
+            Width = width; Height = height; Length = length;
+            for (int i = 0; i < CustomBlockDefs.Length; i++) {
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
+            }
             
             LoadCoreProps();
             for (int i = 0; i < blockAABBs.Length; i++) {
@@ -56,10 +57,10 @@ namespace MCGalaxy {
             }
             UpdateBlockHandlers();
             
-            name = n; MapName = n.ToLower();
+            this.name = name; MapName = name.ToLower();
             BlockDB = new BlockDB(this);
-            Config.EdgeLevel = (short)(y / 2);
-            Config.CloudsHeight = (short)(y + 2);
+            Config.EdgeLevel = (short)(height / 2);
+            Config.CloudsHeight = (short)(height + 2);
             
             blocks = new byte[Width * Height * Length];
             ChunksX = Utils.CeilDiv16(Width);

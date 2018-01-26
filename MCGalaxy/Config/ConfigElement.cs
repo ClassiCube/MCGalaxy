@@ -27,8 +27,12 @@ namespace MCGalaxy {
         public ConfigAttribute Attrib;
         public FieldInfo Field;
         
-        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static |
-            BindingFlags.Public | BindingFlags.NonPublic;
+        public string Format(object instance) {
+            object value = Field.GetValue(instance);
+            return Attrib.Name + " = " + Attrib.Serialise(value);
+        }
+        
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         
         public static ConfigElement[] GetAll(Type type) {
             List<ConfigElement> elems = new List<ConfigElement>();
@@ -59,10 +63,8 @@ namespace MCGalaxy {
         }
         
         /// <summary> Writes all config elements to the given stream, grouped by named sections. </summary>
-        public static void Serialise(ConfigElement[] elements, string suffix,
-                                     StreamWriter dst, object instance) {
-            Dictionary<string, List<ConfigElement>> sections
-                = new Dictionary<string, List<ConfigElement>>();
+        public static void Serialise(ConfigElement[] elements, string suffix, StreamWriter dst, object instance) {
+            Dictionary<string, List<ConfigElement>> sections = new Dictionary<string, List<ConfigElement>>();
             
             foreach (ConfigElement elem in elements) {
                 List<ConfigElement> members;
@@ -76,18 +78,9 @@ namespace MCGalaxy {
             foreach (var kvp in sections) {
                 dst.WriteLine("# " + kvp.Key + suffix);
                 foreach (ConfigElement elem in kvp.Value) {
-                    object value = elem.Field.GetValue(instance);
-                    dst.WriteLine(elem.Attrib.Name + " = " + elem.Attrib.Serialise(value));
+                    dst.WriteLine(elem.Format(instance));
                 }
                 dst.WriteLine();
-            }
-        }
-        
-        /// <summary> Writes all config elements to the given stream. </summary>
-        public static void SerialisePlain(ConfigElement[] elements, StreamWriter dst, object instance) {
-            foreach (ConfigElement elem in elements) {
-                object value = elem.Field.GetValue(instance);
-                dst.WriteLine(elem.Attrib.Name + " = " + elem.Attrib.Serialise(value));
             }
         }
     }

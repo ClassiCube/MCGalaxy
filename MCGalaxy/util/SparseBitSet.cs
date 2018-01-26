@@ -31,8 +31,7 @@ namespace MCGalaxy.Util {
         }
         
         public bool Get(int x, int y, int z) {
-            int index = (x >> 4) + chunksX * 
-                ((z >> 4) + (y >> 4) * chunksZ);
+            int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
             byte[] chunk = bits[index];
             if (chunk == null) return false;
             
@@ -41,8 +40,7 @@ namespace MCGalaxy.Util {
         }
         
         public void Set(int x, int y, int z, bool bit) {
-            int index = (x >> 4) + chunksX * 
-                ((z >> 4) + (y >> 4) * chunksZ);
+            int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
             byte[] chunk = bits[index];
             if (chunk == null) {
                 chunk = new byte[(16 * 16 * 16) / 8];
