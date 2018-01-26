@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
             if (alive.Length == 0) { Player.Message(p, "No one is alive."); return; }
             
             Player.Message(p, "Players who are &2alive %Sare:");
-            Player.Message(p, alive.Join(pl => pl.ColoredName + "%S"));
+            Player.Message(p, alive.Join(pl => pl.ColoredName));
         }
         
         public override void Help(Player p) {

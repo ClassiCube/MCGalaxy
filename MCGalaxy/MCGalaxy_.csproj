@@ -353,7 +353,7 @@
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
     <Compile Include="Commands\Scripting\CmdCompile.cs" />
     <Compile Include="Commands\Scripting\CmdCompload.cs" />
-    <Compile Include="Commands\Scripting\CmdScripting.cs" />
+    <Compile Include="Commands\Scripting\CmdPlugin.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />

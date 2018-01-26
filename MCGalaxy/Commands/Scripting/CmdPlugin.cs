@@ -20,28 +20,34 @@ using System.IO;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdScripting : Command {
-        public override string name { get { return "Scripting"; } }
+    public sealed class CmdPlugin : Command {
+        public override string name { get { return "Plugin"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("PLoad", "pload"), new CommandAlias("PUnload", "punload"),
-                    new CommandAlias("PCreate", "pcreate"), new CommandAlias("PCompile", "pcompile") }; }
+            get { return new[] { new CommandAlias("PLoad", "load"), new CommandAlias("PUnload", "unload"),
+                    new CommandAlias("PCreate", "create"), new CommandAlias("PCompile", "compile"),
+                    new CommandAlias("Plugins", "list") }; }
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message) {            
+            if (message.CaselessEq("list")) {
+                Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));
+                return;
+            }  
+            
             string[] parts = message.SplitSpaces(2);
             if (parts.Length == 1) { Help(p); return; }
             if (!Formatter.ValidName(p, parts[1], "plugin")) return;
             
-            if (parts[0].CaselessEq("pload")) {
+            if (parts[0].CaselessEq("load")) {
                 LoadPlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("punload")) {
+            } else if (parts[0].CaselessEq("unload")) {
                 UnloadPlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("pcreate")) {
+            } else if (parts[0].CaselessEq("create")) {
                 CreatePlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("pcompile")) {
+            } else if (parts[0].CaselessEq("compile")) {
                 CompilePlugin(p, parts[1]);
             } else {
                 Help(p);
@@ -126,14 +132,16 @@ namespace MCGalaxy
 }}";
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Scripting pcreate [name]");
+            Player.Message(p, "%T/Plugin create [name]");
             Player.Message(p, "%HCreate a example .cs plugin file");
-            Player.Message(p, "%T/Scripting pcompile [name]");
+            Player.Message(p, "%T/Plugin compile [name]");
             Player.Message(p, "%HCompiles a .cs plugin file");
-            Player.Message(p, "%T/Scripting pload [filename]");
+            Player.Message(p, "%T/Plugin load [filename]");
             Player.Message(p, "%HLoad a plugin from your plugins folder");
-            Player.Message(p, "%T/Scripting punload [name]");
+            Player.Message(p, "%T/Plugin unload [name]");
             Player.Message(p, "%HUnloads a currently loaded plugin");
+            Player.Message(p, "%T/Plugin list");
+            Player.Message(p, "%HLists all loaded plugins");
         }
     }
 }
