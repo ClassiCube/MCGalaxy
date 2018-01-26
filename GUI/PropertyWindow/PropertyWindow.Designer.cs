@@ -173,9 +173,7 @@ namespace MCGalaxy.Gui
             this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.misc_lblReview = new System.Windows.Forms.Label();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
-            this.txtRestartTime = new System.Windows.Forms.TextBox();
             this.txtMoneys = new System.Windows.Forms.TextBox();
-            this.chkRestartTime = new System.Windows.Forms.CheckBox();
             this.chk17Dollar = new System.Windows.Forms.CheckBox();
             this.chkSmile = new System.Windows.Forms.CheckBox();
             this.label34 = new System.Windows.Forms.Label();
@@ -1805,9 +1803,7 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
             this.grpExtra.Controls.Add(this.chkDeath);
-            this.grpExtra.Controls.Add(this.txtRestartTime);
             this.grpExtra.Controls.Add(this.txtMoneys);
-            this.grpExtra.Controls.Add(this.chkRestartTime);
             this.grpExtra.Controls.Add(this.chk17Dollar);
             this.grpExtra.Controls.Add(this.chkSmile);
             this.grpExtra.Controls.Add(this.label34);
@@ -1854,30 +1850,12 @@ namespace MCGalaxy.Gui
             this.chkRepeatMessages.Text = "Repeat message blocks";
             this.chkRepeatMessages.UseVisualStyleBackColor = true;
             // 
-            // txtRestartTime
-            // 
-            this.txtRestartTime.Location = new System.Drawing.Point(143, 155);
-            this.txtRestartTime.Name = "txtRestartTime";
-            this.txtRestartTime.Size = new System.Drawing.Size(172, 21);
-            this.txtRestartTime.TabIndex = 1;
-            this.txtRestartTime.Text = "HH: mm: ss";
-            // 
             // txtMoneys
             // 
             this.txtMoneys.Location = new System.Drawing.Point(143, 180);
             this.txtMoneys.Name = "txtMoneys";
             this.txtMoneys.Size = new System.Drawing.Size(172, 21);
             this.txtMoneys.TabIndex = 1;
-            // 
-            // chkRestartTime
-            // 
-            this.chkRestartTime.AutoSize = true;
-            this.chkRestartTime.Location = new System.Drawing.Point(6, 157);
-            this.chkRestartTime.Name = "chkRestartTime";
-            this.chkRestartTime.Size = new System.Drawing.Size(131, 17);
-            this.chkRestartTime.TabIndex = 0;
-            this.chkRestartTime.Text = "Restart server at time:";
-            this.chkRestartTime.UseVisualStyleBackColor = true;
             // 
             // chk17Dollar
             // 
@@ -4522,7 +4500,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown bak_numTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
         private System.Windows.Forms.TextBox txtMoneys;
-        private System.Windows.Forms.TextBox txtRestartTime;
         private System.Windows.Forms.CheckBox hackrank_kick;
         private System.Windows.Forms.CheckBox chkProfanityFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
@@ -4536,7 +4513,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label afk_lblTimer;
         private System.Windows.Forms.Label bak_lblTime;
         private System.Windows.Forms.Label bak_lblLocation;
-        private System.Windows.Forms.CheckBox chkRestartTime;
         private System.Windows.Forms.TabPage pageIRC;
         private System.Windows.Forms.TextBox irc_txtOpChannel;
         private System.Windows.Forms.TextBox irc_txtChannel;

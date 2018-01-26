@@ -75,12 +75,6 @@ namespace MCGalaxy {
         
         [ConfigBool("check-updates", "Update", false)]
         public static bool CheckForUpdates = true;
-        [ConfigBool("in-game-update-notify", "Server", false)]
-        public static bool NotifyUpdating;
-        [ConfigBool("auto-restart", "Server", false)]
-        public static bool AutoRestart;
-        [ConfigDateTime("restarttime", "Server")]
-        public static DateTime RestartTime;        
         
         [ConfigInt("rplimit", "Other", 500, 0, 50000)]
         public static int PhysicsRestartLimit = 500;

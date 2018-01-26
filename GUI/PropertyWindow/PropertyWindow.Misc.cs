@@ -35,8 +35,6 @@ namespace MCGalaxy.Gui {
             chkSmile.Checked = ServerConfig.ParseEmotes;
             chk17Dollar.Checked = ServerConfig.DollarNames;
             chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
-            chkRestartTime.Checked = ServerConfig.AutoRestart;
-            txtRestartTime.Text = ServerConfig.RestartTime.ToString();
             chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
             txtMoneys.Text = ServerConfig.Currency;
             nudCooldownTime.Value = ServerConfig.ReviewCooldown;
@@ -58,9 +56,6 @@ namespace MCGalaxy.Gui {
             ServerConfig.ParseEmotes = chkSmile.Checked;
             ServerConfig.DollarNames = chk17Dollar.Checked;
             ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
-            ServerConfig.AutoRestart = chkRestartTime.Checked;
-            try { ServerConfig.RestartTime = DateTime.Parse(txtRestartTime.Text); }
-            catch { } // ignore bad values
             ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
             ServerConfig.Currency = txtMoneys.Text;
             ServerConfig.ReviewCooldown = (int)nudCooldownTime.Value;

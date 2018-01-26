@@ -73,27 +73,6 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigDateTimeAttribute : ConfigAttribute {
-        
-        public ConfigDateTimeAttribute(string name, string section)
-            : base(name, section, DateTime.MinValue) {
-        }
-        
-        public override object Parse(string value) {
-            DateTime time;
-            if (!DateTime.TryParse(value, out time)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid datetime, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
-            }
-            return time;
-        }
-        
-        public override string Serialise(object value) {
-            DateTime time = (DateTime)value;
-            return time.ToShortDateString();
-        }
-    }
-    
     public sealed class ConfigEnumAttribute : ConfigAttribute {
         
         /// <summary> The type of members of this enumeration. </summary>
