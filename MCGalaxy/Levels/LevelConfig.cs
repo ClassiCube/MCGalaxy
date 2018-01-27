@@ -30,6 +30,8 @@ namespace MCGalaxy {
         public bool LoadOnGoto = true;
         [ConfigString("Theme", "General", "Normal", true)]
         public string Theme = "Normal";
+        [ConfigString("Seed", "General", "", true)]
+        public string Seed = "";
         [ConfigBool("Unload", "General", true)]
         public bool AutoUnload = true;
         /// <summary> true if this map may see server-wide chat, false if this map has level-only/isolated chat </summary>

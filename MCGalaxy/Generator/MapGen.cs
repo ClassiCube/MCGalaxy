@@ -63,14 +63,15 @@ namespace MCGalaxy.Generator {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }
 
-        public static bool Generate(Level lvl, string theme, string args, Player p) {
+        public static bool Generate(Level lvl, string theme, string seed, Player p) {
             MapGenArgs genArgs = new MapGenArgs();
             genArgs.Level = lvl; genArgs.Player = p;
-            genArgs.Theme = theme; genArgs.Args = args;
+            genArgs.Theme = theme; lvl.Config.Theme = theme;
+            genArgs.Args = seed;   lvl.Config.Seed  = seed;
             
-            genArgs.UseSeed = args.Length > 0;
-            if (genArgs.UseSeed && !int.TryParse(args, out genArgs.Seed))
-                genArgs.Seed = args.GetHashCode();
+            genArgs.UseSeed = seed.Length > 0;
+            if (genArgs.UseSeed && !int.TryParse(seed, out genArgs.Seed))
+                genArgs.Seed = seed.GetHashCode();
             MapGenerator generator = null;
             
             simpleGens.TryGetValue(theme, out generator);
