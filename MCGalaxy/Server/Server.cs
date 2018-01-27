@@ -71,11 +71,12 @@ namespace MCGalaxy {
             }
         }
         
-        internal static ConfigElement[] serverConfig, levelConfig, zombieConfig;
+        internal static ConfigElement[] serverConfig, levelConfig, zombieConfig, zoneConfig;
         public static void Start() {
             serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
             zombieConfig = ConfigElement.GetAll(typeof(ZSConfig));
             levelConfig = ConfigElement.GetAll(typeof(LevelConfig));
+            zoneConfig = ConfigElement.GetAll(typeof(ZoneConfig));
             
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;

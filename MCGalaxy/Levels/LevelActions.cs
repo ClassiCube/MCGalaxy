@@ -240,10 +240,6 @@ namespace MCGalaxy {
                     Database.Backend.CreateTable("Messages" + dst, LevelDB.createMessages);
                     Database.Backend.CopyAllRows("Messages" + src, "Messages" + dst);
                 }
-                if (Database.TableExists("Zone" + src)) {
-                    Database.Backend.CreateTable("Zone" + dst, LevelDB.createZones);
-                    Database.Backend.CopyAllRows("Zone" + src, "Zone" + dst);
-                }
             }
         }
         

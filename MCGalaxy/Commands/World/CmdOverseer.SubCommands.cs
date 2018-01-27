@@ -162,7 +162,12 @@ namespace MCGalaxy.Commands.World {
             args = (level + " " + value).SplitSpaces();
             Level lvl = newLvl.GenerateMap(p, args);
             if (lvl == null) return;
-            SetPerms(p, lvl);
+            
+            if (SetPerms(p, lvl)) {
+                Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
+                Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
+                               "players ranked below " + grp.ColoredName + " %Sto build in the map.");
+            }
             
             try {
                 lvl.Save(true);
@@ -172,18 +177,16 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static void SetPerms(Player p, Level lvl) {
+        internal static bool SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
             lvl.BuildAccess.Whitelist(null, p.name);
             lvl.VisitAccess.Whitelist(null, p.name);
-            
-            LevelPermission osPerm = ServerConfig.OSPerbuildDefault;
-            Group grp = Group.Find(osPerm);
-            if (grp == null) return;
+
+            Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
+            if (grp == null) return false;
             
             lvl.BuildAccess.SetMin(null, grp);
-            Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
-                           "players ranked below " + grp.ColoredName + " %Sto build in the map.");
+            return true;
         }
         
         static void DeleteMap(Player p, string value) {
@@ -244,18 +247,13 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static void AddBuildPlayer(Player p, string name) {
-            string[] zoneArgs = name.SplitSpaces();
-            name = zoneArgs[0];
-            string reason = zoneArgs.Length > 1 ? zoneArgs[1] : "";
-            name = CmdZone.FindZoneOwner(p, "os zone add", name, ref reason);
+        static void AddBuildPlayer(Player p, string rawArgs) {
+            string[] args = rawArgs.SplitSpaces();
+            string reason = args.Length > 1 ? args[1] : "";
+            string name = ModActionCmd.FindName(p, "zone", "os zone add", "", args[0], ref reason);
             if (name == null) return;
             
-            if (p.level.ZoneList.Count > 0) {
-                CmdZone.ZoneAll(p.level, name);
-            }
             Player.Message(p, "Added zone for &b" + name);
-
             LevelAccessController access = p.level.BuildAccess;
             if (access.Blacklisted.CaselessRemove(name)) {
                 access.OnListChanged(p, name, true, true);
@@ -267,14 +265,13 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void DeleteBuildPlayer(Player p, string name) {
-            if (name.CaselessEq("all")) {
-                CmdZone.DeleteAll(p);
-            } else if (Formatter.ValidName(p, name, "player")) {
-                CmdZone.DeleteWhere(p, zone => zone.Owner.CaselessEq(name));
-                LevelAccessController access = p.level.BuildAccess;
-                if (access.Whitelisted.CaselessRemove(name)) {
-                    access.OnListChanged(p, name, false, true);
-                }
+            if (!Formatter.ValidName(p, name, "player")) return;
+            
+            LevelAccessController access = p.level.BuildAccess;
+            if (access.Whitelisted.CaselessRemove(name)) {
+                access.OnListChanged(p, name, false, true);
+            } else {
+                Player.Message(p, name + " was not whitelisted.");
             }
         }
         

@@ -22,10 +22,50 @@ using MCGalaxy.Config;
 using MCGalaxy.Games;
 
 namespace MCGalaxy {
-    public sealed class LevelConfig {
-
+    public abstract class AreaConfig {
         [ConfigString("MOTD", "General", "ignore", true, null, 128)]
         public string MOTD = "ignore";
+
+        // Permission settings
+        [ConfigBool("Buildable", "Permissions", true)]
+        public bool Buildable = true;
+        [ConfigBool("Deletable", "Permissions", true)]
+        public bool Deletable = true;
+
+        [ConfigPerm("PerBuild", "Permissions", LevelPermission.Guest)]
+        public LevelPermission BuildMin = LevelPermission.Guest;
+        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Nobody)]
+        public LevelPermission BuildMax = LevelPermission.Nobody;
+        
+        // Other blacklists/whitelists
+        [ConfigStringList("BuildWhitelist", "Permissions")]
+        public List<string> BuildWhitelist = new List<string>();
+        [ConfigStringList("BuildBlacklist", "Permissions")]
+        public List<string> BuildBlacklist = new List<string>();
+        
+        // Env settings
+        [ConfigString("Texture", "Env", "", true, null, NetUtils.StringSize)]
+        public string Terrain = "";
+        [ConfigString("TexturePack", "Env", "", true, null, NetUtils.StringSize)]
+        public string TexturePack = "";
+        /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("CloudColor", "Env", "", true)]
+        public string CloudColor = "";
+        /// <summary> Color of the fog (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("FogColor", "Env", "", true)]
+        public string FogColor = "";
+        /// <summary> Color of the sky (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("SkyColor", "Env", "", true)]
+        public string SkyColor = "";
+        /// <summary> Color of the blocks in shadows (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("ShadowColor", "Env", "", true)]
+        public string ShadowColor = "";
+        /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("LightColor", "Env", "", true)]
+        public string LightColor = "";
+    }
+    
+    public sealed class LevelConfig : AreaConfig {
         [ConfigBool("LoadOnGoto", "General", true)]
         public bool LoadOnGoto = true;
         [ConfigString("Theme", "General", "Normal", true)]
@@ -49,30 +89,11 @@ namespace MCGalaxy {
         [ConfigInt("JailY", "Jail", 0, 0, 65535)]
         public int JailY;
         [ConfigInt("JailZ", "Jail", 0, 0, 65535)]
-        public int JailZ;       
+        public int JailZ;
 
         // Environment settings
         [ConfigByte("Weather", "Env", 0, 0, 2)]
-        public byte Weather;       
-        [ConfigString("Texture", "Env", "", true, null, NetUtils.StringSize)]
-        public string Terrain = "";
-        [ConfigString("TexturePack", "Env", "", true, null, NetUtils.StringSize)]
-        public string TexturePack = "";
-        /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        [ConfigString("CloudColor", "Env", "", true)]
-        public string CloudColor = "";
-        /// <summary> Color of the fog (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        [ConfigString("FogColor", "Env", "", true)]
-        public string FogColor = "";
-        /// <summary> Color of the sky (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        [ConfigString("SkyColor", "Env", "", true)]
-        public string SkyColor = "";
-        /// <summary> Color of the blocks in shadows (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        [ConfigString("ShadowColor", "Env", "", true)]
-        public string ShadowColor = "";
-        /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
-        [ConfigString("LightColor", "Env", "", true)]
-        public string LightColor = "";
+        public byte Weather;
         
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
         [ConfigInt("EdgeLevel", "Env", -1, short.MinValue, short.MaxValue)]
@@ -109,37 +130,24 @@ namespace MCGalaxy {
         /// <summary> The block which will be displayed on the edge of the map. </summary>
         [ConfigByte("EdgeBlock", "Env", Block.Bedrock)]
         public byte EdgeBlock = Block.Bedrock;
-         /// <summary> Whether exponential fog mode is used client-side. </summary>
+        /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBool("ExpFog", "Env", false)]
         public bool ExpFog;
         
         // Permission settings
         [ConfigString("RealmOwner", "Permissions", "", true)]
         public string RealmOwner = "";
-        [ConfigBool("Buildable", "Permissions", true)]
-        public bool Buildable = true;
-        [ConfigBool("Deletable", "Permissions", true)]
-        public bool Deletable = true;
-
         [ConfigPerm("PerVisit", "Permissions", LevelPermission.Guest)]
         public LevelPermission VisitMin = LevelPermission.Guest;
         [ConfigPerm("PerVisitMax", "Permissions", LevelPermission.Nobody)]
         public LevelPermission VisitMax = LevelPermission.Nobody;
-        [ConfigPerm("PerBuild", "Permissions", LevelPermission.Guest)]
-        public LevelPermission BuildMin = LevelPermission.Guest;
-        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Nobody)]
-        public LevelPermission BuildMax = LevelPermission.Nobody;
-   
+        
         // Other blacklists/whitelists
         [ConfigStringList("VisitWhitelist", "Permissions")]
         public List<string> VisitWhitelist = new List<string>();
         [ConfigStringList("VisitBlacklist", "Permissions")]
         public List<string> VisitBlacklist = new List<string>();
-        [ConfigStringList("BuildWhitelist", "Permissions")]
-        public List<string> BuildWhitelist = new List<string>();
-        [ConfigStringList("BuildBlacklist", "Permissions")]
-        public List<string> BuildBlacklist = new List<string>();
-
+        
         // Physics settings
         [ConfigInt("Physics", "Physics", 0, 0, 5)]
         public int Physics;
@@ -174,7 +182,7 @@ namespace MCGalaxy {
         [ConfigBool("Survival death", "Survival", false)]
         public bool SurvivalDeath;
         [ConfigBool("Killer blocks", "Survival", true)]
-        public bool KillerBlocks = true;       
+        public bool KillerBlocks = true;
         
         // Games settings
         [ConfigInt("Likes", "Game", 0)]

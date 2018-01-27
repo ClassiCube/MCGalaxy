@@ -18,13 +18,14 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-    public sealed class LvlImporter : IMapImporter {
+    public unsafe sealed class LvlImporter : IMapImporter {
 
         public override string Extension { get { return ".lvl"; } }
         
@@ -55,8 +56,11 @@ namespace MCGalaxy.Levels.IO {
                 
                 for (;;) {
                     int section = gs.ReadByte();                    
-                    if (section == 0xFC) {
+                    if (section == 0xFC) { // 'ph'ysics 'c'hecks
                         ReadPhysicsSection(lvl, gs); continue;
+                    }
+                    if (section == 0x51) { // 'z'one 'l'ist
+                        ReadZonesSection(lvl, gs); continue;
                     }
                     return lvl;
                 }
@@ -102,18 +106,17 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        unsafe static void ReadPhysicsSection(Level lvl, Stream gs) {
+        static void ReadPhysicsSection(Level lvl, Stream gs) {
             byte[] buffer = new byte[sizeof(int)];
-            int read = gs.Read(buffer, 0, sizeof(int));
-            if (read < sizeof(int)) return;
+            int count = TryRead_I32(buffer, gs);
+            if (count == 0) return;
             
-            int count = NetUtils.ReadI32(buffer, 0);
             lvl.ListCheck.Count = count;
             lvl.ListCheck.Items = new Check[count];
             ReadPhysicsEntries(lvl, gs, count);
         }
         
-        unsafe static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
+        static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
             byte[] buffer = new byte[Math.Min(count, 1024) * 8];
             Check C;
             
@@ -131,6 +134,49 @@ namespace MCGalaxy.Levels.IO {
                     lvl.ListCheck.Items[i + j] = C;
                 }
             }
+        }
+        
+        static void ReadZonesSection(Level lvl, Stream gs) {
+            byte[] buffer = new byte[sizeof(int)];
+            int count = TryRead_I32(buffer, gs);
+            if (count == 0) return;
+            
+            for (int i = 0; i < count; i++) {
+                Zone z = Zone.Create();
+                if (!TryRead_U16(buffer, gs, ref z.MinX) || !TryRead_U16(buffer, gs, ref z.MaxX)) return;
+                if (!TryRead_U16(buffer, gs, ref z.MinY) || !TryRead_U16(buffer, gs, ref z.MaxY)) return;
+                if (!TryRead_U16(buffer, gs, ref z.MinZ) || !TryRead_U16(buffer, gs, ref z.MaxZ)) return;
+                
+                int metaCount = TryRead_I32(buffer, gs);
+                ConfigElement[] elems = Server.zoneConfig;
+                
+                for (int j = 0; j < metaCount; j++) {
+                    ushort size = 0;
+                    if (!TryRead_U16(buffer, gs, ref size)) return;
+                    if (size > buffer.Length) buffer = new byte[size + 16];
+                    gs.Read(buffer, 0, size);
+                    
+                    string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
+                    PropertiesFile.ParseLine(line, '=', out key, out value);
+                    if (key == null) continue;
+                    ConfigElement.Parse(elems, key, value, z.Config);
+                }
+                
+                lvl.Zones.Add(z);
+            }
+        }
+        
+        static int TryRead_I32(byte[] buffer, Stream gs) {
+            int read = gs.Read(buffer, 0, sizeof(int));
+            if (read < sizeof(int)) return 0;
+            return NetUtils.ReadI32(buffer, 0); 
+        }
+        
+        static bool TryRead_U16(byte[] buffer, Stream gs, ref ushort value) {
+            int read = gs.Read(buffer, 0, sizeof(ushort));
+            if (read < sizeof(ushort)) return false;
+            value = NetUtils.ReadU16(buffer, 0);
+            return true;
         }
     }
 }

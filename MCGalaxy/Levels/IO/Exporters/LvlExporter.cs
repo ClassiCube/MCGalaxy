@@ -16,15 +16,17 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-    public sealed class LvlExporter : IMapExporter {
+    public unsafe sealed class LvlExporter : IMapExporter {
 
         public override string Extension { get { return ".lvl"; } }
         
@@ -40,6 +42,7 @@ namespace MCGalaxy.Levels.IO {
                 WriteBlocksSection(lvl, gs, buffer);
                 WriteBlockDefsSection(lvl, gs, buffer);
                 WritePhysicsSection(lvl, gs, buffer);
+                WriteZonesSection(lvl, gs, buffer);
             }
         }
         
@@ -87,7 +90,7 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        unsafe static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
+        static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
             lock (lvl.physStepLock) {
                 // Count the number of physics checks with extra info
                 int used = 0, count = lvl.ListCheck.Count;
@@ -108,8 +111,7 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        unsafe static void WritePhysicsEntries(Stream gs, FastList<Check> items,
-                                               byte[] buffer, byte* ptr) {
+        static void WritePhysicsEntries(Stream gs, FastList<Check> items, byte[] buffer, byte* ptr) {
             Check[] checks = items.Items;
             int entries = 0, count = items.Count;
             int* ptrInt = (int*)ptr;
@@ -132,6 +134,34 @@ namespace MCGalaxy.Levels.IO {
             
             if (entries == 0) return;
             gs.Write(buffer, 0, entries * 8);
+        }
+        
+        static void WriteZonesSection(Level lvl, Stream gs, byte[] buffer) {
+            List<Zone> zones = lvl.Zones;
+            if (zones.Count == 0) return;
+            
+            gs.WriteByte(0x51);
+            NetUtils.WriteI32(zones.Count, buffer, 0);
+            gs.Write(buffer, 0, sizeof(int));
+            
+            foreach (Zone z in zones) {
+                NetUtils.WriteU16(z.MinX, buffer, 0 * 2); NetUtils.WriteU16(z.MaxX, buffer, 1 * 2);
+                NetUtils.WriteU16(z.MinY, buffer, 2 * 2); NetUtils.WriteU16(z.MaxY, buffer, 3 * 2);
+                NetUtils.WriteU16(z.MinZ, buffer, 4 * 2); NetUtils.WriteU16(z.MaxZ, buffer, 5 * 2);
+                gs.Write(buffer, 0, 6 * 2);
+                
+                // Write all metadata of the zone
+                ConfigElement[] elem = Server.zoneConfig;
+                NetUtils.WriteI32(elem.Length, buffer, 0);
+                gs.Write(buffer, 0, sizeof(int));
+                
+                for (int i = 0; i < elem.Length; i++) {
+                    string value = elem[i].Format(z.Config);
+                    int count = Encoding.UTF8.GetBytes(value, 0, value.Length, buffer, 2);
+                    NetUtils.WriteU16((ushort)count, buffer, 0);
+                    gs.Write(buffer, 0, count + 2);
+                }
+            }
         }
     }
 }

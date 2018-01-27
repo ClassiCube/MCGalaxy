@@ -30,7 +30,7 @@ namespace MCGalaxy {
 
             using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(60 * 1000)) {
                 if (wLock == null) {
-            	    Logger.Log(LogType.Warning, "Couldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
+                    Logger.Log(LogType.Warning, "Couldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
                     return;
                 }
                 lvl.BlockDB.WriteEntries();
@@ -40,19 +40,36 @@ namespace MCGalaxy {
 
         internal static void LoadZones(Level level, string name) {
             if (!Database.TableExists("Zone" + name)) return;
+            int id = 0;
+            object ; // add to map perbuild.combine and modularise perbuild cmds
             using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {
-                Level.Zone Zn;
                 foreach (DataRow row in table.Rows) {
-                    Zn.MinX = ushort.Parse(row["SmallX"].ToString());
-                    Zn.MinY = ushort.Parse(row["SmallY"].ToString());
-                    Zn.MinZ = ushort.Parse(row["SmallZ"].ToString());
-                    Zn.MaxX = ushort.Parse(row["BigX"].ToString());
-                    Zn.MaxY = ushort.Parse(row["BigY"].ToString());
-                    Zn.MaxZ = ushort.Parse(row["BigZ"].ToString());
-                    Zn.Owner = row["Owner"].ToString();
-                    level.ZoneList.Add(Zn);
+                    Zone z = Zone.Create();
+                    z.MinX = ushort.Parse(row["SmallX"].ToString());
+                    z.MinY = ushort.Parse(row["SmallY"].ToString());
+                    z.MinZ = ushort.Parse(row["SmallZ"].ToString());
+                    z.MaxX = ushort.Parse(row["BigX"].ToString());
+                    z.MaxY = ushort.Parse(row["BigY"].ToString());
+                    z.MaxZ = ushort.Parse(row["BigZ"].ToString());
+                    
+                    string owner = row["Owner"].ToString();
+                    if (owner.StartsWith("grp")) {
+                        Group grp = Group.Find(owner.Substring(3));
+                        if (grp != null) z.Config.BuildMin = grp.Permission;
+                    } else {
+                        z.Config.BuildWhitelist.Add(owner);
+                        z.Config.BuildMin = LevelPermission.Admin;
+                    }
+                    
+                    z.Config.Name = "Zone" + id;
+                    id++;
+                    level.Zones.Add(z);
                 }
             }
+            
+            if (level.Zones.Count > 0 && !level.Save(true)) return;
+            Database.Backend.DeleteTable("Zone" + name);
+            Logger.Log(LogType.SystemActivity, "Upgraded zones for map " + name);
         }
         
         internal static void LoadPortals(Level level, string name) {
@@ -91,26 +108,6 @@ namespace MCGalaxy {
             }
         }
         
-        public static void DeleteZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.GetLocker(level);
-            lock (locker) {
-                if (!Database.TableExists("Zone" + level)) return;
-                Database.Backend.DeleteRows("Zone" + level, "WHERE Owner=@0 AND SmallX=@1 AND SMALLY=@2 " +
-                                            "AND SMALLZ=@3 AND BIGX=@4 AND BIGY=@5 AND BIGZ=@6",
-                                            zn.Owner, zn.MinX, zn.MinY, zn.MinZ, zn.MaxX, zn.MaxY, zn.MaxZ);
-            }
-        }
-        
-        public static void CreateZone(string level, Level.Zone zn) {
-            object locker = ThreadSafeCache.DBCache.GetLocker(level);
-            lock (locker) {
-                Database.Backend.CreateTable("Zone" + level, LevelDB.createZones);
-                Database.Backend.AddRow("Zone" + level, "Owner, SmallX, SmallY, SmallZ, BigX, BigY, BigZ",
-                                        zn.Owner, zn.MinX, zn.MinY, zn.MinZ, zn.MaxX, zn.MaxY, zn.MaxZ);
-            }
-        }
-
-        
         internal static ColumnDesc[] createPortals = new ColumnDesc[] {
             new ColumnDesc("EntryX", ColumnType.UInt16),
             new ColumnDesc("EntryY", ColumnType.UInt16),
@@ -126,16 +123,6 @@ namespace MCGalaxy {
             new ColumnDesc("Y", ColumnType.UInt16),
             new ColumnDesc("Z", ColumnType.UInt16),
             new ColumnDesc("Message", ColumnType.Char, 255),
-        };
-
-        internal static ColumnDesc[] createZones = new ColumnDesc[] {
-            new ColumnDesc("SmallX", ColumnType.UInt16),
-            new ColumnDesc("SmallY", ColumnType.UInt16),
-            new ColumnDesc("SmallZ", ColumnType.UInt16),
-            new ColumnDesc("BigX", ColumnType.UInt16),
-            new ColumnDesc("BigY", ColumnType.UInt16),
-            new ColumnDesc("BigZ", ColumnType.UInt16),
-            new ColumnDesc("Owner", ColumnType.VarChar, 20),
         };
     }
 }

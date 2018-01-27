@@ -54,7 +54,7 @@ namespace MCGalaxy {
             block.BlockID = blocks[x + Width * (z + y * Length)];
             block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.Air;
             return block;
-        }       
+        }
         
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
@@ -66,14 +66,14 @@ namespace MCGalaxy {
             block.BlockID = blocks[index];
             block.ExtID = block.BlockID == Block.custom_block ? GetExtTileNoCheck(x, y, z) : Block.Air;
             return block;
-        }   
-   
+        }
+        
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z) {
-            if (x >= Width || y >= Height || z >= Length || blocks == null) return false; 
+            if (x >= Width || y >= Height || z >= Length || blocks == null) return false;
             return blocks[x + Width * (z + y * Length)] == Block.Air;
         }
-   
+        
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return false; }
@@ -88,7 +88,7 @@ namespace MCGalaxy {
         }
         
         public byte GetExtTile(ushort x, ushort y, ushort z) {
-            if (x >= Width || y >= Height || z >= Length || blocks == null) 
+            if (x >= Width || y >= Height || z >= Length || blocks == null)
                 return Block.Invalid;
             
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
@@ -159,7 +159,7 @@ namespace MCGalaxy {
         
         public void RevertExtTileNoCheck(ushort x, ushort y, ushort z) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
-            int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;        
+            int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
             
             if (chunk == null) return;
@@ -185,49 +185,6 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool CheckZonePerms(Player p, ushort x, ushort y, ushort z, ref bool inZone) {
-            bool zoneAllow = true;            
-            for (int i = 0; i < ZoneList.Count; i++) {
-                Zone zn = ZoneList[i];
-                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ)
-                    continue;
-                
-                inZone = true;
-                if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    Group grp = Group.Find(zn.Owner.Substring(3));
-                    if (grp != null && grp.Permission <= p.Rank) return true;
-                } else {
-                    if (zn.Owner.CaselessEq(p.name)) return true;
-                }
-                zoneAllow = false;
-            }
-            
-            if (zoneAllow) return true;
-            if (p.ZoneSpam > DateTime.UtcNow) return false;
-            
-            Player.Message(p, FindZoneOwners(p, x, y, z));
-            p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
-            return false;
-        }
-        
-        internal string FindZoneOwners(Player p, ushort x, ushort y, ushort z) {
-            string owners = "";
-            for (int i = 0; i < ZoneList.Count; i++) {
-                Zone zn = ZoneList[i];
-                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ)
-                    continue;
-                
-                if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    owners += ", " + Group.GetColoredName(zn.Owner.Substring(3));
-                } else {
-                    owners += ", " + PlayerInfo.GetColoredName(p, zn.Owner);
-                }
-            }
-            
-            if (owners.Length == 0) return "No zones affect this block";
-            return "This zone belongs to " + owners.Remove(0, 2) + ".";
-        }
-        
         bool CheckRank(Player p) {
             if (p.ZoneSpam <= DateTime.UtcNow) {
                 BuildAccess.CheckDetailed(p);
@@ -236,25 +193,44 @@ namespace MCGalaxy {
             if (p.level == this) return p.AllowBuild;
             
             AccessResult access = BuildAccess.Check(p);
-            return access == AccessResult.Whitelisted 
-                || access == AccessResult.Allowed;
+            return access == AccessResult.Whitelisted || access == AccessResult.Allowed;
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ExtBlock old, ExtBlock block) {
             if (!p.group.Blocks[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
+            if (Zones.Count == 0) return CheckRank(p);
             
-            bool inZone = false;
-            if (ZoneList.Count > 0 && !CheckZonePerms(p, x, y, z, ref inZone)) return false;
-            return inZone || CheckRank(p);
+            // Check zones specifically allowed in
+            for (int i = 0; i < Zones.Count; i++) {
+                Zone zn = Zones[i];
+                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
+                AccessResult access = zn.Acess.Check(p);
+                if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) return true;
+            }
+            
+            // Check zones denied from
+            for (int i = 0; i < Zones.Count; i++) {
+                Zone zn = Zones[i];
+                if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
+                AccessResult access = zn.Acess.Check(p);
+                if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
+
+                if (p.ZoneSpam > DateTime.UtcNow) return false;
+                zn.Acess.CheckDetailed(p);
+                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
+                return false;
+            }
+            return CheckRank(p);
         }
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
-            if (DoBlockchange(p, x, y, z, block) == 2)
+            if (DoBlockchange(p, x, y, z, block) == 2) {
                 Player.GlobalBlockchange(this, x, y, z, block);
+            }
         }
         
-        /// <summary> Returns: <br/> 
+        /// <summary> Returns: <br/>
         /// 0 - block change was not performed <br/>
         /// 1 - old block was same as new block visually (e.g. white to door_white)<br/>
         /// 2 - old block was different to new block visually </summary>
@@ -279,11 +255,11 @@ namespace MCGalaxy {
 
                 p.SessionModified++;
                 p.TotalModified++;
-            
+                
                 if (drawn) p.TotalDrawn++;
                 else if (block.BlockID == Block.Air) p.TotalDeleted++;
                 else p.TotalPlaced++;
-            
+                
                 errorLocation = "Setting tile";
                 SetTile(x, y, z, block.BlockID);
                 if (old.BlockID == Block.custom_block && block.BlockID != Block.custom_block)
@@ -302,7 +278,7 @@ namespace MCGalaxy {
             } catch (Exception e) {
                 Logger.LogError(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
-                Logger.Log(LogType.Warning, "{0} triggered a non-fatal error on {1}, %Sat location: {2}", 
+                Logger.Log(LogType.Warning, "{0} triggered a non-fatal error on {1}, %Sat location: {2}",
                            p.name, ColoredName, errorLocation);
                 return 0;
             }
@@ -317,13 +293,13 @@ namespace MCGalaxy {
             AddCheck(b, false, args);
         }
         
-        public void Blockchange(int b, ExtBlock block, bool overRide = false, 
+        public void Blockchange(int b, ExtBlock block, bool overRide = false,
                                 PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) { //Block change made by physics
             if (DoPhysicsBlockchange(b, block, overRide, data, addUndo))
                 Player.GlobalBlockchange(this, b, block);
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, ExtBlock block, bool overRide = false, 
+        public void Blockchange(ushort x, ushort y, ushort z, ExtBlock block, bool overRide = false,
                                 PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             Blockchange(PosToInt(x, y, z), block, overRide, data, addUndo); //Block change made by physics
         }
@@ -332,7 +308,7 @@ namespace MCGalaxy {
             Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs)); //Block change made by physics
         }
         
-        internal bool DoPhysicsBlockchange(int b, ExtBlock block, bool overRide = false, 
+        internal bool DoPhysicsBlockchange(int b, ExtBlock block, bool overRide = false,
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
             ExtBlock old;
@@ -342,7 +318,7 @@ namespace MCGalaxy {
             try
             {
                 if (!overRide) {
-                    if (Props[old.Index].OPBlock || (Props[block.Index].OPBlock && data.Raw != 0)) 
+                    if (Props[old.Index].OPBlock || (Props[block.Index].OPBlock && data.Raw != 0))
                         return false;
                 }
 
@@ -377,7 +353,7 @@ namespace MCGalaxy {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
-                }                
+                }
                 if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0))
                     AddCheck(b, false, data);
                 

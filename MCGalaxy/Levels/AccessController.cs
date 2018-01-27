@@ -25,14 +25,11 @@ namespace MCGalaxy {
     public abstract class AccessController {
         
         /// <summary> Lowest allowed rank. </summary>
-        public abstract LevelPermission Min { get; set; }
-        
+        public abstract LevelPermission Min { get; set; }        
         /// <summary> Highest allowed rank. </summary>
-        public abstract LevelPermission Max { get; set; }
-        
+        public abstract LevelPermission Max { get; set; }     
         /// <summary> List of always allowed players, overrides rank allowances. </summary>
-        public abstract List<string> Whitelisted { get; }
-        
+        public abstract List<string> Whitelisted { get; }        
         /// <summary> List of never allowed players, ignores rank allowances. </summary>
         public abstract List<string> Blacklisted { get; }
         
@@ -217,8 +214,7 @@ namespace MCGalaxy {
             this.lvlName = levelName;
             IsVisit = isVisit;
         }
-        
-        /// <summary> Lowest allowed rank. </summary>
+
         public override LevelPermission Min {
             get { return IsVisit ? cfg.VisitMin : cfg.BuildMin; }
             set {
@@ -226,8 +222,7 @@ namespace MCGalaxy {
                 else cfg.BuildMin = value;
             }
         }
-        
-        /// <summary> Highest allowed rank. </summary>
+
         public override LevelPermission Max {
             get { return IsVisit ? cfg.VisitMax : cfg.BuildMax; }
             set {
@@ -235,13 +230,11 @@ namespace MCGalaxy {
                 else cfg.BuildMax = value;
             }
         }
-        
-        /// <summary> List of always allowed players, overrides rank allowances. </summary>
+
         public override List<string> Whitelisted {
             get { return IsVisit ? cfg.VisitWhitelist : cfg.BuildWhitelist; }
         }
-        
-        /// <summary> List of never allowed players, ignores rank allowances. </summary>
+
         public override List<string> Blacklisted {
             get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }

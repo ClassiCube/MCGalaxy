@@ -73,7 +73,7 @@ namespace MCGalaxy {
             spawnz = (ushort)(Length / 2);
             rotx = 0; roty = 0;
             
-            ZoneList = new List<Zone>();
+            Zones = new List<Zone>();
             VisitAccess = new LevelAccessController(this, true);
             BuildAccess = new LevelAccessController(this, false);
             listCheckExists = new SparseBitSet(Width, Height, Length);
@@ -89,7 +89,7 @@ namespace MCGalaxy {
             ListUpdate.Clear(); listUpdateExists.Clear();
             UndoBuffer.Clear();
             BlockDB.Cache.Clear();
-            ZoneList.Clear();
+            Zones.Clear();
             
             lock (queueLock)
                 blockqueue.Clear();
@@ -221,22 +221,20 @@ namespace MCGalaxy {
             return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
-        public void Save(bool Override = false, bool clearPhysics = false) {
-            if (blocks == null || IsMuseum) return; // museums do not save properties
+        public bool Save(bool force = false, bool clearPhysics = false) {
+            if (blocks == null || IsMuseum) return false; // museums do not save properties
             
             string path = LevelInfo.MapPath(MapName);
             OnLevelSaveEvent.Call(this);
-            if (cancelsave) { cancelsave = false; return; }
+            if (cancelsave) { cancelsave = false; return false; }
             
             try {
                 if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
-                if (Changed || !File.Exists(path) || Override || (physicschanged && clearPhysics)) {
-                    lock (saveLock)
-                        SaveCore(path);
-                    
+                if (Changed || !File.Exists(path) || force || (physicschanged && clearPhysics)) {
+                    lock (saveLock) SaveCore(path);                    
                     if (clearPhysics) ClearPhysics();
                 } else {
                     Logger.Log(LogType.SystemActivity, "Skipping level save for " + name + ".");
@@ -245,8 +243,10 @@ namespace MCGalaxy {
                 Logger.Log(LogType.Warning, "FAILED TO SAVE :" + name);
                 Chat.MessageGlobal("FAILED TO SAVE {0}", ColoredName);
                 Logger.LogError(e);
+                return false;
             }
             Server.DoGC();
+            return true;
         }
         
         void SaveCore(string path) {
@@ -438,12 +438,6 @@ namespace MCGalaxy {
                     newRaw = newBlock.BlockID;
                 }
             }
-        }
-
-        public struct Zone {
-            public string Owner;
-            public ushort MaxX, MaxY, MaxZ;
-            public ushort MinX, MinY, MinZ;
         }
         
         internal bool HasCustomProps(ExtBlock block) {

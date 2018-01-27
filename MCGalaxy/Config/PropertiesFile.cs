@@ -39,15 +39,13 @@ namespace MCGalaxy {
             if (!File.Exists(path)) return false;
             
             using (StreamReader reader = new StreamReader(path)) {
-                string line;
+                string line, key, value;
                 while ((line = reader.ReadLine()) != null) {
-                    int index = ParseLine(line, path, separator);
-                    if (index == -1) continue;
-                    
-                    string key = line.Substring(0, index), value = line.Substring(index + 1);
-                    if (trimValue) value = value.Trim();
-                    
+                    ParseLine(line, separator, out key, out value);
+                    if (key == null) continue;
+
                     try {
+                        if (trimValue) value = value.Trim();
                         processor(key.Trim(), value, ref state);
                     } catch (Exception ex) {
                         Logger.LogError(ex);
@@ -58,14 +56,15 @@ namespace MCGalaxy {
             return true;
         }
         
-        static int ParseLine(string line, string path, char separator) {
-            if (line.Length == 0 || line[0] == '#') return -1;
+        internal static void ParseLine(string line, char separator, out string key, out string value) {
+            key = null; value = null;
+            if (line.Length == 0 || line[0] == '#') return;
+            
             int index = line.IndexOf(separator);
-            if (index == -1) {
-                Logger.Log(LogType.Warning, "Line \"{0}\" in {1} is missing a value", line, path);
-                return -1;
-            }
-            return index;
+            if (index == -1) return;
+            
+            key = line.Substring(0, index).Trim();
+            value = line.Substring(index + 1);
         }
     }
 }

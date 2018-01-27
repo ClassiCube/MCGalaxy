@@ -90,21 +90,11 @@ namespace MCGalaxy.Eco {
                 
                 CmdLoad.LoadLevel(null, name);
                 Level level = LevelInfo.FindExact(name);
-                if (level.BuildAccess.Min > p.Rank) level.BuildAccess.Min = p.Rank;
-                if (level.VisitAccess.Min > p.Rank) level.VisitAccess.Min = p.Rank;
+                CmdOverseer.SetPerms(p, level);
+                Level.SaveSettings(level);
                 PlayerActions.ChangeMap(p, name);
 
                 Player.Message(p, "%aSuccessfully created your map: '%f" + name + "%a'");
-                try {
-                    Level.Zone zn = default(Level.Zone);
-                    zn.MaxX = (ushort)(level.Width - 1);
-                    zn.MaxY = (ushort)(level.Height - 1);
-                    zn.MaxZ = (ushort)(level.Length - 1);
-                    zn.Owner = p.name;
-                    level.ZoneList.Add(zn);
-                    LevelDB.CreateZone(level.name, zn);
-                    Player.Message(p, "%aZoning Succesful");
-                } catch { Player.Message(p, "%cZoning Failed"); }
             } catch {
                 Player.Message(p, "%cSomething went wrong, Money untouched"); return;
             }

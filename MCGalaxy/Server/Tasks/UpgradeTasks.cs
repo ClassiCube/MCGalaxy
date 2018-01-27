@@ -248,8 +248,7 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        static void UpgradePlayerTimeSpents() {
-            
+        static void UpgradePlayerTimeSpents() {          
             using (BulkTransaction bulk = Database.Backend.CreateBulk()) {
                 IDataParameter idParam = bulk.CreateParam("@0", DbType.Int32);
                 IDataParameter secsParam = bulk.CreateParam("@1", DbType.Int64);
@@ -267,6 +266,10 @@ namespace MCGalaxy.Tasks {
                 
                 bulk.Commit();
             }
+        }
+        
+        internal static void UpgradeZones(SchedulerTask task) {
+        	
         }
     }
 }

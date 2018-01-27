@@ -32,9 +32,6 @@ namespace MCGalaxy.Commands.Moderation {
                     new CommandPerm(LevelPermission.Operator, "+ can create zones"),
                 }; }
         }
-        public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("OZone", "map"), new CommandAlias("oz", "map") }; }
-        }
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
@@ -47,65 +44,23 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Place or break two blocks to determine the edges.");
                 Player.Message(p, "Zone for: &b" + args[1] + ".");
                 p.MakeSelection(2, args[1], AddZone);
-            } else if (args[0].CaselessEq("map")) {
-                if (!CheckAdd(p, args, "Zone map")) return;
-
-                ZoneAll(p.level, args[1]);
-                Player.Message(p, "Added zone for &b" + args[1]);
-            } else if (args[0].CaselessEq("del") && args.Length > 1 && args[1].CaselessEq("all")) {
-                if (!CheckExtraPerm(p, 2)) return;
-                DeleteAll(p);
             } else if (args[0].CaselessEq("del")) {
                 if (!CheckExtraPerm(p, 1)) return;
                 
-                if (p.canBuild) { //Checks if player can build there
-                    Player.Message(p, "Place a block where you would like to delete a zone.");
-                    p.MakeSelection(1, null, DeleteZone);
-                } else { //if they cant, it warns them, the ops and logs it on the server!
-                    Player.Message(p, "You can't delete a zone which is above your rank!");
-                    Chat.MessageOps(p.name + " tried to delete a zone that is above their rank!");
-                    Logger.Log(LogType.SuspiciousActivity, "{0} tried to delete a zone that is above their rank!", p.name);
-                }
+                Player.Message(p, "Place a block where you would like to delete a zone.");
+                p.MakeSelection(1, null, DeleteZone);
             } else if (args[0].CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, p.level.ZoneList, FormatZone, "Zone list", "zones", modifier, true);
+                MultiPageOutput.Output(p, p.level.Zones, FormatZone, "Zone list", "zones", modifier, true);
             } else {
                 Help(p);
             }
         }
         
-        static string FormatZone(Level.Zone zone) {
-            return "&b(" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ
-                + ") to (" + zone.MaxX + ", " + zone.MaxY + ", " + zone.MaxZ + ") &F" + zone.Owner;
-        }
-        
-        internal static void ZoneAll(Level lvl, string owner) {
-            Level.Zone zn = default(Level.Zone);
-            zn.MaxX = (ushort)(lvl.Width - 1);
-            zn.MaxY = (ushort)(lvl.Height - 1);
-            zn.MaxZ = (ushort)(lvl.Length - 1);
-            zn.Owner = owner;
-            
-            lvl.ZoneList.Add(zn);
-            LevelDB.CreateZone(lvl.name, zn);
-        }
-        
-        internal static void DeleteAll(Player p) {
-            DeleteWhere(p, zone => true);
-        }
-
-        internal static void DeleteWhere(Player p, Predicate<Level.Zone> filter) {
-            int count = p.level.ZoneList.Count, removed = 0;
-            for (int i = count - 1; i >= 0; i--) {
-                Level.Zone zone = p.level.ZoneList[i];
-                if (!filter(zone)) continue;
-                LevelDB.DeleteZone(p.level.name, zone);
-                
-                removed++;
-                Player.Message(p, "Zone deleted for &b" + zone.Owner);
-                p.level.ZoneList.Remove(p.level.ZoneList[i]);
-            }
-            Player.Message(p, "Removed {0} zone{1}.", removed, count == 1 ? "s" : "");
+        static string FormatZone(Zone zone) {
+            return zone.ColoredName 
+            	+ " &b- (" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ
+                + ") to (" + zone.MaxX + ", " + zone.MaxY + ", " + zone.MaxZ + ")";
         }
         
         bool CheckAdd(Player p, string[] args, string cmd) {
@@ -120,8 +75,20 @@ namespace MCGalaxy.Commands.Moderation {
         
         bool CheckZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
             Vec3S32 P = marks[0];
-            string zoneMsg = p.level.FindZoneOwners(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z);
-            Player.Message(p, zoneMsg);
+            Level lvl = p.level;
+            bool found = false;
+
+            for (int i = 0; i < lvl.Zones.Count; i++) {
+                Zone z = lvl.Zones[i];
+                if (!z.Contains(P.X, P.Y, P.Z)) continue;               
+                found = true;
+                 
+                AccessResult status = z.Acess.Check(p);
+                bool allowed = status == AccessResult.Allowed || status == AccessResult.Whitelisted;
+                Player.Message(p, "  Zone {0} %S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
+            }
+            
+            if (!found) { Player.Message(p, "No zones affect this block."); }
             return true;
         }
 
@@ -130,29 +97,17 @@ namespace MCGalaxy.Commands.Moderation {
             bool foundDel = false;
             Vec3S32 P = marks[0];
             
-            for (int i = 0; i < lvl.ZoneList.Count; i++) {
-                Level.Zone zn = lvl.ZoneList[i];
-                if (P.X < zn.MinX || P.X > zn.MaxX || P.Y < zn.MinY || P.Y > zn.MaxY || P.Z < zn.MinZ || P.Z > zn.MaxZ)
-                    continue;
+            for (int i = 0; i < lvl.Zones.Count; i++) {
+                Zone zn = lvl.Zones[i];
+                if (P.X < zn.MinX || P.X > zn.MaxX || P.Y < zn.MinY || P.Y > zn.MaxY || P.Z < zn.MinZ || P.Z > zn.MaxZ) continue;
                 
-                if (zn.Owner.Length >= 3 && zn.Owner.StartsWith("grp")) {
-                    Group group = Group.Find(zn.Owner.Substring(3));
-                    if (group != null && p.Rank < group.Permission) {
-                        Player.Message(p, "Cannot delete zone for rank {0}", group.ColoredName);
-                        continue;
-                    }
-                } else if (zn.Owner.Length > 0 && !zn.Owner.CaselessEq(p.name)) {
-                    Group group = Group.GroupIn(zn.Owner);
-                    if (p.Rank < group.Permission) {
-                        Player.Message(p, "Cannot delete zone for {0} %S- they are ranked {1}",
-                                       PlayerInfo.GetColoredName(p, zn.Owner), group.ColoredName);
-                        continue;
-                    }
+                if (!zn.Acess.CheckDetailed(p)) { 
+                    Player.Message(p, "Hence, you cannot delete this zone.");
+                    continue;
                 }
                 
-                LevelDB.DeleteZone(lvl.name, zn);
-                lvl.ZoneList.RemoveAt(i); i--;
-                Player.Message(p, "Zone deleted for &b" + zn.Owner);
+                lvl.Zones.RemoveAt(i); i--;
+                Player.Message(p, "Zone " + zn.ColoredName + " %sdeleted");
                 foundDel = true;
             }
             
@@ -161,17 +116,18 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         bool AddZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            Level.Zone Zn;
-            Zn.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
-            Zn.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
-            Zn.MinZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
-            Zn.MaxX = (ushort)Math.Max(marks[0].X, marks[1].X);
-            Zn.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
-            Zn.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
-            Zn.Owner = (string)state;
+            Zone z = Zone.Create();
+            z.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
+            z.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
+            z.MinZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
+            z.MaxX = (ushort)Math.Max(marks[0].X, marks[1].X);
+            z.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
+            z.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
+            z.Owner = (string)state;
+            z.Config.Name = state + state;
 
-            p.level.ZoneList.Add(Zn);
-            LevelDB.CreateZone(p.level.name, Zn);
+            p.level.Zones.Add(z);
+            p.level.Save(true);
             Player.Message(p, "Added zone for &b" + (string)state);
             return false;
         }
