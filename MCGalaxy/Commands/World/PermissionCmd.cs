@@ -24,38 +24,51 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected Level GetArgs(Player p, string[] args, ref Group grp) {
-            if (args.Length == 1 && Player.IsSuper(p)) {
-                SuperRequiresArgs(p, "level name"); return null;
+        protected static void Do(Player p, string[] args, int offset, bool max, AccessController access) {
+            for (int i = offset; i < args.Length; i++) {
+                string arg = args[i];
+                if (arg[0] == '+' || arg[0] == '-') {
+                    SetList(p, access, arg);
+                } else if (max) {
+                    Group grp = Matcher.FindRanks(p, arg);
+                    if (grp != null) access.SetMax(p, grp);
+                } else {
+                    Group grp = Matcher.FindRanks(p, arg);
+                    if (grp != null) access.SetMin(p, grp);
+                }
             }
-            Level level = args.Length == 1 ? p.level : Matcher.FindLevels(p, args[0]);
-            if (level == null) return null;
-            
-            string rank = args.Length == 1 ? args[0] : args[1];
-            grp = Matcher.FindRanks(p, rank);
-            return grp != null ? level : null;
         }
         
-        protected void UseList(Player p, string[] args, bool isVisit) {
-            string target = isVisit ? "pervisit" : "perbuild";
+        protected void DoLevel(Player p, string message, bool visit) {
+            const string maxPrefix = "-max ";
+            bool max = message.CaselessStarts(maxPrefix);
+            if (max) message = message.Substring(maxPrefix.Length);
+            
+            string[] args = message.SplitSpaces();
+            if (message.Length == 0 || args.Length > 2) { Help(p); return; }
             if (args.Length == 1 && Player.IsSuper(p)) {
-                Command.SuperRequiresArgs(target, p, "level"); return;
+                Command.SuperRequiresArgs(name, p, "level"); return;
             }
+            
             Level level = args.Length == 1 ? p.level : Matcher.FindLevels(p, args[0]);
             if (level == null) return;
-            LevelAccessController access = isVisit ? level.VisitAccess : level.BuildAccess;
             
-            string name = args.Length == 1 ? args[0] : args[1];
+            int offset = args.Length == 1 ? 0 : 1;
+            AccessController access = visit ? level.VisitAccess : level.BuildAccess;
+            Do(p, args, offset, max, access);
+        }
+        
+        static void SetList(Player p, AccessController access, string name) {
             bool include = name[0] == '+';
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
-            
             if (name.Length == 0) {
                 Player.Message(p, "You must provide a player name to {0}.", mode); return;
             }
+            
             if (!Formatter.ValidName(p, name, "player")) return;
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
-            if (name == null) return;          
+            if (name == null) return;
             
             if (p != null && name.CaselessEq(p.name)) {
                 Player.Message(p, "You cannot {0} yourself.", mode); return;
@@ -68,18 +81,44 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        protected void MaxHelp(Player p, string action) {
-            Player.Message(p, "%T/{0} [Level] [Rank]", name);
-            Player.Message(p, "%HSets the highest rank able to {0} the given level.", action);
-        }
-        
-        protected void NormalHelp(Player p, string action, string action2) {
+
+        protected void ShowHelp(Player p, string action, string action2) {
             Player.Message(p, "%T/{0} [level] [rank]", name);
             Player.Message(p, "%HSets the lowest rank able to {0} the given level.", action);
+            Player.Message(p, "%T/{0} -max [Level] [Rank]", name);
+            Player.Message(p, "%HSets the highest rank able to {0} the given level.", action);
             Player.Message(p, "%T/{0} [level] +[name]", name);
             Player.Message(p, "%HAllows [name] to {0}, even if their rank cannot.", action2);
             Player.Message(p, "%T/{0} [level] -[name]", name);
             Player.Message(p, "%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
+	
+    public sealed class CmdPermissionBuild : PermissionCmd {        
+        public override string name { get { return "PerBuild"; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("WBuild"), new CommandAlias("WorldBuild"), 
+                    new CommandAlias("PerBuildMax", "-max") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max build rank restriction") }; }
+        }
+        
+        public override void Use(Player p, string message) { DoLevel(p, message, false); }    
+        public override void Help(Player p) { ShowHelp(p, "build on", "build"); }
+    }
+    
+    public sealed class CmdPermissionVisit : PermissionCmd {       
+        public override string name { get { return "PerVisit"; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("WAccess"), new CommandAlias("WorldAccess"), 
+                    new CommandAlias("PerVisitMax", "-max") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max visit rank restriction") }; }
+        }
+
+        public override void Use(Player p, string message) { DoLevel(p, message, true); }        
+        public override void Help(Player p) { ShowHelp(p, "visit", "visit"); }
+    }	
 }

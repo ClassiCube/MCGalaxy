@@ -41,7 +41,7 @@ namespace MCGalaxy {
         internal static void LoadZones(Level level, string name) {
             if (!Database.TableExists("Zone" + name)) return;
             int id = 0;
-            object ; // add to map perbuild.combine and modularise perbuild cmds
+            object ; // add to map perbuild.
             using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
                     Zone z = Zone.Create();
