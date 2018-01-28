@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
@@ -206,8 +207,10 @@ namespace MCGalaxy {
             for (int i = 0; i < zones.Length; i++) {
                 Zone zn = zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
-                AccessResult access = zn.Access.Check(p);
-                if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) return true;
+                
+                ZoneConfig cfg = zn.Config;
+                if (p.group.Permission >= cfg.BuildMin) return true;
+                if (cfg.BuildWhitelist.Count > 0 && cfg.BuildWhitelist.CaselessContains(p.name)) return true;
             }
             
             // Check zones denied from

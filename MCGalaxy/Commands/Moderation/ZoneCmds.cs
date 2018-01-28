@@ -199,7 +199,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "ZMark"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("zm") }; }
+        }
+        
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             
