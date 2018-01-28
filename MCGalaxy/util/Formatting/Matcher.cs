@@ -90,7 +90,7 @@ namespace MCGalaxy {
         /// <summary> Find partial matches of 'name' against the list of zones in a map. </summary>
         public static Zone FindZones(Player p, Level lvl, string name) {
             int matches = 0;
-            return Find<Zone>(p, name, out matches, lvl.Zones,
+            return Find<Zone>(p, name, out matches, lvl.Zones.Items,
                                null, z => z.Config.Name, "zones");
         }
         

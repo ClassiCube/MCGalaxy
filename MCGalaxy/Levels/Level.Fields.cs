@@ -75,7 +75,7 @@ namespace MCGalaxy {
         BufferedBlockSender bulkSender;
 
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
-        public List<Zone> Zones;
+        public VolatileArray<Zone> Zones = new VolatileArray<Zone>();
         public bool backedup;
         public BlockDB BlockDB;
         public LevelAccessController VisitAccess, BuildAccess;

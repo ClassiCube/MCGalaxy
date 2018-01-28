@@ -176,8 +176,7 @@ namespace MCGalaxy {
         
         unsafe static byte NextFreeId() {
             byte* used = stackalloc byte[256];
-            for (int i = 0; i < 256; i++)
-                used[i] = 0;
+            for (int i = 0; i < 256; i++) used[i] = 0;
 
             Player[] players = PlayerInfo.Online.Items;
             for (int i = 0; i < players.Length; i++) {

@@ -164,7 +164,7 @@ namespace MCGalaxy.Levels.IO {
                     ConfigElement.Parse(elems, key, value, z.Config);
                 }
                 
-                lvl.Zones.Add(z);
+                z.AddTo(lvl);
             }
         }
         

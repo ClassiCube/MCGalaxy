@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Moderation {
             zone.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
             zone.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
 
-            p.level.Zones.Add(zone);
+            zone.AddTo(p.level);
             p.level.Save(true);
             Player.Message(p, "Created zone " + zone.ColoredName);
             return false;
@@ -137,8 +137,9 @@ namespace MCGalaxy.Commands.Moderation {
             Level lvl = p.level;
             bool found = false;
 
-            for (int i = 0; i < lvl.Zones.Count; i++) {
-                Zone z = lvl.Zones[i];
+            Zone[] zones = lvl.Zones.Items;
+            for (int i = 0; i < zones.Length; i++) {
+                Zone z = zones[i];
                 if (!z.Contains(P.X, P.Y, P.Z)) continue;
                 found = true;
                 
@@ -163,7 +164,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool museumUsable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            MultiPageOutput.Output(p, p.level.Zones, FormatZone, "ZoneList", "zones", message, true);
+            Zone[] zones = p.level.Zones.Items;
+            MultiPageOutput.Output(p, zones, FormatZone, "ZoneList", "zones", message, true);
         }
         
         static string FormatZone(Zone zone) {

@@ -68,7 +68,7 @@ namespace MCGalaxy {
                     
                     z.Config.Name = "Zone" + id;
                     id++;
-                    level.Zones.Add(z);
+                    z.AddTo(level);
                 }
             }
             

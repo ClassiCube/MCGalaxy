@@ -100,8 +100,7 @@ namespace MCGalaxy {
         
         unsafe static byte NextFreeId(PlayerBot bot) {
             byte* used = stackalloc byte[256];
-            for (int i = 0; i < 256; i++)
-                used[i] = 0;
+            for (int i = 0; i < 256; i++) used[i] = 0;
 
             PlayerBot[] bots = bot.level.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {

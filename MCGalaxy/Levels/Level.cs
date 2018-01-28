@@ -73,7 +73,6 @@ namespace MCGalaxy {
             spawnz = (ushort)(Length / 2);
             rotx = 0; roty = 0;
             
-            Zones = new List<Zone>();
             VisitAccess = new LevelAccessController(this, true);
             BuildAccess = new LevelAccessController(this, false);
             listCheckExists = new SparseBitSet(Width, Height, Length);
@@ -105,7 +104,8 @@ namespace MCGalaxy {
         }
         
         public Zone FindZoneExact(string name) {
-            foreach (Zone zone in Zones) {
+            Zone[] zones = Zones.Items;
+            foreach (Zone zone in zones) {
                 if (zone.Config.Name.CaselessEq(name)) return zone;
             }
             return null;

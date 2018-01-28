@@ -137,11 +137,11 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void WriteZonesSection(Level lvl, Stream gs, byte[] buffer) {
-            List<Zone> zones = lvl.Zones;
-            if (zones.Count == 0) return;
+            Zone[] zones = lvl.Zones.Items;
+            if (zones.Length == 0) return;
             
             gs.WriteByte(0x51);
-            NetUtils.WriteI32(zones.Count, buffer, 0);
+            NetUtils.WriteI32(zones.Length, buffer, 0);
             gs.Write(buffer, 0, sizeof(int));
             
             foreach (Zone z in zones) {

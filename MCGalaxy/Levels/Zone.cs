@@ -18,8 +18,8 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Config;
-using MCGalaxy.Network;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
     
@@ -99,6 +99,12 @@ namespace MCGalaxy {
         public ZoneAccessController Access;
         public string ColoredName { get { return Config.Color + Config.Name; } }
         
+        public Zone(Level lvl) {
+            Config = new ZoneConfig();
+            Access = new ZoneAccessController(lvl, Config);
+        }
+        
+        
         public bool Contains(int x, int y, int z) {
             return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY && z >= MinZ && z <= MaxZ;
         }
@@ -108,27 +114,45 @@ namespace MCGalaxy {
                 MaxX == lvl.Width - 1 && MaxY == lvl.Height - 1 && MaxZ == lvl.Length - 1;
         }
         
-        public bool Shows { get { return Config.ShowAlpha != 0 && Config.ShowColor != ""; } }       
+        public bool Shows { get { return Config.ShowAlpha != 0 && Config.ShowColor != ""; } }
         public void Show(Player p) {
             if (!p.Supports(CpeExt.SelectionCuboid) || !Shows) return;
             
             ColorDesc col = Colors.ParseHex(Config.ShowColor);
             p.Send(Packet.MakeSelection(
-                ID, "", new Vec3U16(MinX, MinY, MinZ), 
+                ID, "", new Vec3U16(MinX, MinY, MinZ),
                 new Vec3U16((ushort)(MaxX + 1), (ushort)(MaxY + 1), (ushort)(MaxZ + 1)),
-                col.R, col.G, col.B, Config.ShowAlpha, p.hasCP437));          
+                col.R, col.G, col.B, Config.ShowAlpha, p.hasCP437));
         }
         
         public void ShowAll(Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (p.level == lvl) Show(p); 
-            }            
+                if (p.level == lvl) Show(p);
+            }
         }
         
-        public Zone(Level lvl) {
-            Config = new ZoneConfig();
-            Access = new ZoneAccessController(lvl, Config);
+        public void AddTo(Level level) {
+            lock (level.Zones.locker) {
+                ID = NextFreeZoneId(level);
+                level.Zones.Add(this);
+            }
+        }
+        
+        unsafe byte NextFreeZoneId(Level level) {
+            byte* used = stackalloc byte[256];
+            for (int i = 0; i < 256; i++) used[i] = 0;
+
+            Zone[] zones = level.Zones.Items;
+            for (int i = 0; i < zones.Length; i++) {
+                byte id = zones[i].ID;
+                used[id] = 1;
+            }
+            
+            for (byte i = 0; i <= 255; i++ ) {
+                if (used[i] == 0) return i;
+            }
+            return 255;
         }
     }
 }

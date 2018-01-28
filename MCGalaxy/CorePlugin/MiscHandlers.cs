@@ -59,7 +59,8 @@ namespace MCGalaxy.Core {
             
             // TODO: unshow old zones here??
             if (p.Supports(CpeExt.SelectionCuboid)) {
-                foreach (Zone zn in level.Zones) { zn.Show(p); }
+                Zone[] zones = level.Zones.Items;
+                foreach (Zone zn in zones) { zn.Show(p); }
             }
 
             if (!level.Config.Guns && p.aiming) {

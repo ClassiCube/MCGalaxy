@@ -199,19 +199,20 @@ namespace MCGalaxy {
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ExtBlock old, ExtBlock block) {
             if (!p.group.Blocks[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
-            if (Zones.Count == 0) return CheckRank(p);
+            Zone[] zones = Zones.Items;
+            if (zones.Length == 0) return CheckRank(p);
             
             // Check zones specifically allowed in
-            for (int i = 0; i < Zones.Count; i++) {
-                Zone zn = Zones[i];
+            for (int i = 0; i < zones.Length; i++) {
+                Zone zn = zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
                 AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) return true;
             }
             
             // Check zones denied from
-            for (int i = 0; i < Zones.Count; i++) {
-                Zone zn = Zones[i];
+            for (int i = 0; i < zones.Length; i++) {
+                Zone zn = zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
                 AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
