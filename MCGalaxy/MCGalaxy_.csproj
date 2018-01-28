@@ -329,7 +329,7 @@
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
     <Compile Include="Commands\Moderation\CmdXJail.cs" />
-    <Compile Include="Commands\Moderation\CmdZone.cs" />
+    <Compile Include="Commands\Moderation\ZoneCmds.cs" />
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />
     <Compile Include="Commands\other\CmdBack.cs" />
@@ -381,7 +381,7 @@
     <Compile Include="Commands\World\CmdSpawn.cs" />
     <Compile Include="Commands\World\CmdUnflood.cs" />
     <Compile Include="Commands\World\CmdUnload.cs" />
-    <Compile Include="Commands\World\PermissionCmd.cs" />
+    <Compile Include="Commands\World\PermissionCmds.cs" />
     <Compile Include="Config\ConfigAttribute.cs" />
     <Compile Include="Config\NumberAttributes.cs" />
     <Compile Include="Config\OtherAttributes.cs" />
