@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.Building;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Maths;
 
@@ -33,16 +34,26 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
+            string opt = args[0];
             
-            if (args[0].CaselessEq("add")) {
+            if (opt.CaselessEq("add")) {
                 if (args.Length == 1) { Help(p); return; }
                 CreateZone(p, args, 1);
-            } else if (args[0].CaselessEq("del")) {
+            } else if (opt.CaselessEq("del")) {
                 if (args.Length == 1) { Help(p); return; }
                 DeleteZone(p, args);
-            } else if (args[0].CaselessEq("edit")) {
-                if (args.Length < 3) { Help(p); return; }
-                EditZone(p, args);
+            } else if (opt.CaselessEq("edit") || opt.CaselessEq("set")) {
+                if (args.Length <= 2) { Help(p); return; }
+                Zone zone = Matcher.FindZones(p, p.level, args[1]);
+                if (zone == null) return;
+                
+                if (!zone.Access.CheckDetailed(p)) {
+                    Player.Message(p, "Hence, you cannot edit this zone."); return;
+                } else if (opt.CaselessEq("edit")) {
+                    EditZone(p, args, zone);
+                } else {
+                    SetZoneProp(p, args, zone);
+                }
             } else {
                 CreateZone(p, args, 0);
             }
@@ -91,33 +102,37 @@ namespace MCGalaxy.Commands.Moderation {
             lvl.Save();
         }
         
-        void EditZone(Player p, string[] args) {
-            Level lvl = p.level;
-            Zone zone = Matcher.FindZones(p, lvl, args[1]);
-            if (zone == null) return;
-            if (!zone.Access.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot edit this zone."); return;
-            }
-            
+        void EditZone(Player p, string[] args, Zone zone) {
+            if (!PermissionCmd.Do(p, args, 2, false, zone.Access)) return;
+            p.level.Save(true);
+        }
+        
+        void SetZoneProp(Player p, string[] args, Zone zone) {
             if (args[2].CaselessEq("col")) {
                 ColorDesc desc = default(ColorDesc);
                 if (!CommandParser.GetHex(p, args[3], ref desc)) return;
                 
                 zone.Config.ShowColor = args[3];
-                zone.ShowAll(lvl);
+                zone.ShowAll(p.level);
             } else if (args[2].CaselessEq("alpha")) {
                 if (!CommandParser.GetByte(p, args[3], "Alpha", ref zone.Config.ShowAlpha)) return;
-                zone.ShowAll(lvl);
-            } else if (!PermissionCmd.Do(p, args, 2, false, zone.Access)) {
+                zone.ShowAll(p.level);
+            } else {
+                Player.Message(p, "?????");
                 return;
             }
-            lvl.Save(true);
+            p.level.Save(true);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Zone add [name] %H- Creates a new zone");
-            Player.Message(p, "%T/Zone del [name] %H- Deletes the given zone");
-            Player.Message(p, "%T/Zone edit [name] [args] %H- Edits/Updates the given zone");
+            Player.Message(p, "%T/Zone add [name] <permissions>");
+            Player.Message(p, "%HCreates a new zone, optionally also sets build permissions");
+            Player.Message(p, "%T/Zone del [name]");
+            Player.Message(p, "%HDeletes the given zone");
+            Player.Message(p, "%T/Zone edit [name] [permissions]");
+            Player.Message(p, "%HSets build permissions for the given zone");
+            Player.Message(p, "%H  For syntax of permissions, see %T/Help PerBuild");
+            Player.Message(p, "%T/Zone rename [old name] [new name]");
         }
     }
     
@@ -176,6 +191,31 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/ZoneList %H- Lists all zones in current level");
+        }
+    }    
+    
+    public sealed class CmdZoneMark : Command {
+        public override string name { get { return "ZoneMark"; } }
+        public override string shortcut { get { return "ZMark"; } }
+        public override string type { get { return CommandTypes.Building; } }
+        public override bool museumUsable { get { return false; } }
+
+        public override void Use(Player p, string message) {
+            if (message.Length == 0) { Help(p); return; }
+            
+            Zone z = Matcher.FindZones(p, p.level, message);
+            if (z == null) return;
+            
+            if (!CmdMark.DoMark(p, z.MinX, z.MinY, z.MinZ)) {
+                Player.Message(p, "Cannot mark, no selection in progress.");
+            } else {
+                CmdMark.DoMark(p, z.MaxX, z.MaxY, z.MaxZ);
+            }
+        }
+        
+        public override void Help(Player p) {
+            Player.Message(p, "%T/ZoneMark [name]");
+            Player.Message(p, "%HUses corners of the given zone as a %T/Mark %Hfor selections");
         }
     }
 }
