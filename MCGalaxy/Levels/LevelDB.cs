@@ -41,10 +41,11 @@ namespace MCGalaxy {
         internal static void LoadZones(Level level, string name) {
             if (!Database.TableExists("Zone" + name)) return;
             int id = 0;
-            object ; // add to map perbuild.
+            bool changedPerbuild = false;
+            
             using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {
                 foreach (DataRow row in table.Rows) {
-                    Zone z = Zone.Create();
+                    Zone z = new Zone(level);
                     z.MinX = ushort.Parse(row["SmallX"].ToString());
                     z.MinY = ushort.Parse(row["SmallY"].ToString());
                     z.MinZ = ushort.Parse(row["SmallZ"].ToString());
@@ -55,10 +56,14 @@ namespace MCGalaxy {
                     string owner = row["Owner"].ToString();
                     if (owner.StartsWith("grp")) {
                         Group grp = Group.Find(owner.Substring(3));
-                        if (grp != null) z.Config.BuildMin = grp.Permission;
+                        if (grp != null) z.Access.Min = grp.Permission;
+                    } else if (z.CoversMap(level)) {
+                        level.BuildAccess.Whitelisted.Add(owner);
+                        changedPerbuild = true;
+                        continue;
                     } else {
-                        z.Config.BuildWhitelist.Add(owner);
-                        z.Config.BuildMin = LevelPermission.Admin;
+                        z.Access.Whitelisted.Add(owner);
+                        z.Access.Min = LevelPermission.Admin;                        
                     }
                     
                     z.Config.Name = "Zone" + id;
@@ -67,6 +72,7 @@ namespace MCGalaxy {
                 }
             }
             
+            if (changedPerbuild) Level.SaveSettings(level);
             if (level.Zones.Count > 0 && !level.Save(true)) return;
             Database.Backend.DeleteTable("Zone" + name);
             Logger.Log(LogType.SystemActivity, "Upgraded zones for map " + name);

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected static void Do(Player p, string[] args, int offset, bool max, AccessController access) {
+        public static void Do(Player p, string[] args, int offset, bool max, AccessController access) {
             for (int i = offset; i < args.Length; i++) {
                 string arg = args[i];
                 if (arg[0] == '+' || arg[0] == '-') {

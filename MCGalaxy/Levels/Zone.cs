@@ -82,23 +82,26 @@ namespace MCGalaxy {
         void Update() { lvl.Save(true); }
     }
     
-    public struct Zone {
+    public class Zone {
         public ushort MinX, MinY, MinZ;
         public ushort MaxX, MaxY, MaxZ;
         
         public ZoneConfig Config;
-        public ZoneAccessController Acess;
+        public ZoneAccessController Access;
         public string ColoredName { get { return Config.Color + Config.Name; } }
         
         public bool Contains(int x, int y, int z) {
             return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY && z >= MinZ && z <= MaxZ;
         }
         
-        public static Zone Create() {
-            Zone zone = new Zone();
-            zone.Config = new ZoneConfig();
-            zone.Acess = new ZoneAccessController();
-            return zone;
+        public bool CoversMap(Level lvl) {
+            return MinX == 0 && MinY == 0 && MinZ == 0 && 
+                MaxX == lvl.Width - 1 && MaxY == lvl.Height - 1 && MaxZ == lvl.Length - 1;
+        }
+        
+        public Zone(Level lvl) {
+            Config = new ZoneConfig();
+            Access = new ZoneAccessController(lvl, Config);
         }
     }
 }

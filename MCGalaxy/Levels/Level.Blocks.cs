@@ -205,7 +205,7 @@ namespace MCGalaxy {
             for (int i = 0; i < Zones.Count; i++) {
                 Zone zn = Zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
-                AccessResult access = zn.Acess.Check(p);
+                AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) return true;
             }
             
@@ -213,11 +213,11 @@ namespace MCGalaxy {
             for (int i = 0; i < Zones.Count; i++) {
                 Zone zn = Zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
-                AccessResult access = zn.Acess.Check(p);
+                AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
 
                 if (p.ZoneSpam > DateTime.UtcNow) return false;
-                zn.Acess.CheckDetailed(p);
+                zn.Access.CheckDetailed(p);
                 p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
                 return false;
             }

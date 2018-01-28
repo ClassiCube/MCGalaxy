@@ -142,7 +142,7 @@ namespace MCGalaxy.Levels.IO {
             if (count == 0) return;
             
             for (int i = 0; i < count; i++) {
-                Zone z = Zone.Create();
+                Zone z = new Zone(lvl);
                 if (!TryRead_U16(buffer, gs, ref z.MinX) || !TryRead_U16(buffer, gs, ref z.MaxX)) return;
                 if (!TryRead_U16(buffer, gs, ref z.MinY) || !TryRead_U16(buffer, gs, ref z.MaxY)) return;
                 if (!TryRead_U16(buffer, gs, ref z.MinZ) || !TryRead_U16(buffer, gs, ref z.MaxZ)) return;
