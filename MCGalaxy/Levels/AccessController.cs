@@ -228,8 +228,9 @@ namespace MCGalaxy {
             Update();
             Logger.Log(LogType.UserActivity, "{0} rank changed to {1} on {2}.", type, grp.Name, lvl.name);
             Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
-            if (p != null && p.level != lvl)
+            if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, ColoredName);
+            }
         }
  
         public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
@@ -244,8 +245,9 @@ namespace MCGalaxy {
             Update();
             Logger.Log(LogType.UserActivity, "{0} on {1}", msg, lvl.name);
             Chat.MessageLevel(lvl, msg);
-            if (p != null && p.level != lvl)
+            if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} on %S{1}", msg, ColoredName);
+            }
         }
         
         

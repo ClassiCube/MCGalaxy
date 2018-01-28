@@ -25,7 +25,11 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("ZRemove", "del"), new CommandAlias("ZDelete", "del"),
+                    new CommandAlias("ZAdd"), new CommandAlias("ZEdit", "edit") }; }
+        }
+        
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
@@ -34,17 +38,25 @@ namespace MCGalaxy.Commands.Moderation {
                 if (args.Length == 1) { Help(p); return; }
                 CreateZone(p, args, 1);
             } else if (args[0].CaselessEq("del")) {
-                Player.Message(p, "Place a block where you would like to delete a zone.");
-                p.MakeSelection(1, null, DeleteZone);
+                if (args.Length == 1) { Help(p); return; }
+                DeleteZone(p, args);
+            } else if (args[0].CaselessEq("edit")) {
+                if (args.Length < 3) { Help(p); return; }
+                EditZone(p, args);
             } else {
                 CreateZone(p, args, 0);
             }
         }
         
         void CreateZone(Player p, string[] args, int offset) {
-            Zone z = new Zone(p.level); 
+            if (p.level.FindZoneExact(args[offset]) != null) {
+                Player.Message(p, "A zone with that name already exists. Use %T/zedit %Sto change it.");
+                return;
+            }
+            
+            Zone z = new Zone(p.level);
             z.Config.Name = args[offset];
-            PermissionCmd.Do(p, args, offset + 1, false, z.Access);
+            if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access)) return;
 
             Player.Message(p, "Creating zone " + z.ColoredName);
             Player.Message(p, "Place or break two blocks to determine the edges.");
@@ -52,47 +64,60 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         bool AddZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            Zone z = (Zone)state;
-            z.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
-            z.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
-            z.MinZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
-            z.MaxX = (ushort)Math.Max(marks[0].X, marks[1].X);
-            z.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
-            z.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
+            Zone zone = (Zone)state;
+            zone.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
+            zone.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
+            zone.MinZ = (ushort)Math.Min(marks[0].Z, marks[1].Z);
+            zone.MaxX = (ushort)Math.Max(marks[0].X, marks[1].X);
+            zone.MaxY = (ushort)Math.Max(marks[0].Y, marks[1].Y);
+            zone.MaxZ = (ushort)Math.Max(marks[0].Z, marks[1].Z);
 
-            p.level.Zones.Add(z);
+            p.level.Zones.Add(zone);
             p.level.Save(true);
-            Player.Message(p, "Created zone " + z.ColoredName);
-            return false;
-        }
-
-        bool DeleteZone(Player p, Vec3S32[] marks, object state, ExtBlock block) {
-            Level lvl = p.level;
-            bool foundDel = false;
-            Vec3S32 P = marks[0];
-            
-            for (int i = 0; i < lvl.Zones.Count; i++) {
-                Zone zn = lvl.Zones[i];
-                if (P.X < zn.MinX || P.X > zn.MaxX || P.Y < zn.MinY || P.Y > zn.MaxY || P.Z < zn.MinZ || P.Z > zn.MaxZ) continue;
-                
-                if (!zn.Access.CheckDetailed(p)) {
-                    Player.Message(p, "Hence, you cannot delete this zone.");
-                    continue;
-                }
-                
-                lvl.Zones.RemoveAt(i); i--;
-                Player.Message(p, "Zone " + zn.ColoredName + " %sdeleted");
-                foundDel = true;
-            }
-            
-            if (!foundDel) Player.Message(p, "No zones found to delete.");
+            Player.Message(p, "Created zone " + zone.ColoredName);
             return false;
         }
         
+        void DeleteZone(Player p, string[] args) {
+            Level lvl = p.level;
+            Zone zone = Matcher.FindZones(p, lvl, args[1]);
+            if (zone == null) return;
+            if (!zone.Access.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot delete this zone."); return;
+            }
+            
+            lvl.Zones.Remove(zone);
+            Player.Message(p, "Zone " + zone.ColoredName + " %Sdeleted");
+            lvl.Save();
+        }
+        
+        void EditZone(Player p, string[] args) {
+            Level lvl = p.level;
+            Zone zone = Matcher.FindZones(p, lvl, args[1]);
+            if (zone == null) return;
+            if (!zone.Access.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot edit this zone."); return;
+            }
+            
+            if (args[2].CaselessEq("col")) {
+                ColorDesc desc = default(ColorDesc);
+                if (!CommandParser.GetHex(p, args[3], ref desc)) return;
+                
+                zone.Config.ShowColor = args[3];
+                zone.ShowAll(lvl);
+            } else if (args[2].CaselessEq("alpha")) {
+                if (!CommandParser.GetByte(p, args[3], "Alpha", ref zone.Config.ShowAlpha)) return;
+                zone.ShowAll(lvl);
+            } else if (!PermissionCmd.Do(p, args, 2, false, zone.Access)) {
+                return;
+            }
+            lvl.Save(true);
+        }
+        
         public override void Help(Player p) {
-            Player.Message(p, "%T/Zone add [name] %H- Creates a zone only [name] can build in");
-            Player.Message(p, "%T/Zone add [rank] %H- Creates a zone only [rank]+ can build in");
-            Player.Message(p, "%T/Zone del %H- Deletes the zone clicked");
+            Player.Message(p, "%T/Zone add [name] %H- Creates a new zone");
+            Player.Message(p, "%T/Zone del [name] %H- Deletes the given zone");
+            Player.Message(p, "%T/Zone edit [name] [args] %H- Edits/Updates the given zone");
         }
     }
     

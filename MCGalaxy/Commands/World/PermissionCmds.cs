@@ -24,19 +24,22 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public static void Do(Player p, string[] args, int offset, bool max, AccessController access) {
+        public static bool Do(Player p, string[] args, int offset, bool max, AccessController access) {
             for (int i = offset; i < args.Length; i++) {
                 string arg = args[i];
                 if (arg[0] == '+' || arg[0] == '-') {
-                    SetList(p, access, arg);
+                    if (!SetList(p, access, arg)) return false;
                 } else if (max) {
                     Group grp = Matcher.FindRanks(p, arg);
-                    if (grp != null) access.SetMax(p, grp);
+                    if (grp == null) return false;
+                    access.SetMax(p, grp);
                 } else {
                     Group grp = Matcher.FindRanks(p, arg);
-                    if (grp != null) access.SetMin(p, grp);
+                    if (grp == null) return false;
+                    access.SetMin(p, grp);
                 }
             }
+            return true;
         }
         
         protected void DoLevel(Player p, string message, bool visit) {
@@ -58,20 +61,21 @@ namespace MCGalaxy.Commands.World {
             Do(p, args, offset, max, access);
         }
         
-        static void SetList(Player p, AccessController access, string name) {
+        static bool SetList(Player p, AccessController access, string name) {
             bool include = name[0] == '+';
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
             if (name.Length == 0) {
-                Player.Message(p, "You must provide a player name to {0}.", mode); return;
+                Player.Message(p, "You must provide a player name to {0}.", mode); 
+                return false;
             }
             
-            if (!Formatter.ValidName(p, name, "player")) return;
+            if (!Formatter.ValidName(p, name, "player")) return false;
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
-            if (name == null) return;
+            if (name == null) return false;
             
             if (p != null && name.CaselessEq(p.name)) {
-                Player.Message(p, "You cannot {0} yourself.", mode); return;
+                Player.Message(p, "You cannot {0} yourself.", mode); return false;
             }
             
             if (include) {
@@ -79,8 +83,8 @@ namespace MCGalaxy.Commands.World {
             } else {
                 access.Blacklist(p, name);
             }
-        }
-        
+            return true;
+        }      
 
         protected void ShowHelp(Player p, string action, string action2) {
             Player.Message(p, "%T/{0} [level] [rank]", name);
@@ -93,12 +97,12 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
-	
+    
     public sealed class CmdPermissionBuild : PermissionCmd {        
         public override string name { get { return "PerBuild"; } }
+        public override string shortcut { get { return "WBuild"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("WBuild"), new CommandAlias("WorldBuild"), 
-                    new CommandAlias("PerBuildMax", "-max") }; }
+            get { return new[] { new CommandAlias("WorldBuild"), new CommandAlias("PerBuildMax", "-max") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max build rank restriction") }; }
@@ -110,9 +114,9 @@ namespace MCGalaxy.Commands.World {
     
     public sealed class CmdPermissionVisit : PermissionCmd {       
         public override string name { get { return "PerVisit"; } }
+        public override string shortcut { get { return "WAccess"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("WAccess"), new CommandAlias("WorldAccess"), 
-                    new CommandAlias("PerVisitMax", "-max") }; }
+            get { return new[] { new CommandAlias("WorldAccess"), new CommandAlias("PerVisitMax", "-max") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max visit rank restriction") }; }
@@ -120,5 +124,5 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) { DoLevel(p, message, true); }        
         public override void Help(Player p) { ShowHelp(p, "visit", "visit"); }
-    }	
+    }    
 }

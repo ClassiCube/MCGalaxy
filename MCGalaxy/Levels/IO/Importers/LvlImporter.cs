@@ -159,6 +159,8 @@ namespace MCGalaxy.Levels.IO {
                     string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
                     PropertiesFile.ParseLine(line, '=', out key, out value);
                     if (key == null) continue;
+                    
+                    value = value.Trim();
                     ConfigElement.Parse(elems, key, value, z.Config);
                 }
                 

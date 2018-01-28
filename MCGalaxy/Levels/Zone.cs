@@ -18,16 +18,22 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Config;
+using MCGalaxy.Network;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy {
     
     public sealed class ZoneConfig : AreaConfig {
         [ConfigString("Name", "General", "", true)]
         public string Name = "";
+        [ConfigString("ShowColor", "General", "", true)]
+        public string ShowColor = "";
+        [ConfigByte("ShowAlpha", "General", 0)]
+        public byte ShowAlpha = 0;
         
         public string Color { get { return Group.GetColor(BuildMin); } }
-    }    
-      
+    }
+    
     /// <summary> Encapuslates build access permissions for a zone. </summary>
     public sealed class ZoneAccessController : AccessController {
         
@@ -47,7 +53,7 @@ namespace MCGalaxy {
             get { return cfg.BuildMax; } set { cfg.BuildMax = value; }
         }
         
-        public override List<string> Whitelisted { get { return cfg.BuildWhitelist; } }       
+        public override List<string> Whitelisted { get { return cfg.BuildWhitelist; } }
         public override List<string> Blacklisted { get { return cfg.BuildBlacklist; } }
         
         protected override string ColoredName { get { return "zone " + cfg.Color + cfg.Name; } }
@@ -59,9 +65,10 @@ namespace MCGalaxy {
         public override void OnPermissionChanged(Player p, Group grp, string type) {
             Update();
             Logger.Log(LogType.UserActivity, "{0} rank changed to {1} in zone {2}.", type, grp.Name, cfg.Name);
-            Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
-            if (p != null && p.level != lvl)
+            Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + " %Sin zone " + cfg.Color + cfg.Name);
+            if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} rank changed to {1} %Sin {2}%S.", type, grp.ColoredName, ColoredName);
+            }
         }
         
         public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
@@ -74,10 +81,11 @@ namespace MCGalaxy {
             
             Update();
             Logger.Log(LogType.UserActivity, "{0} in zone {1}", msg, cfg.Name);
-            Chat.MessageLevel(lvl, msg);
-            if (p != null && p.level != lvl)
+            Chat.MessageLevel(lvl, msg + " in zone " + cfg.Color + cfg.Name);
+            if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} in %S{1}", msg, ColoredName);
-        }       
+            }
+        }
         
         void Update() { lvl.Save(true); }
     }
@@ -85,6 +93,7 @@ namespace MCGalaxy {
     public class Zone {
         public ushort MinX, MinY, MinZ;
         public ushort MaxX, MaxY, MaxZ;
+        public byte ID;
         
         public ZoneConfig Config;
         public ZoneAccessController Access;
@@ -95,8 +104,26 @@ namespace MCGalaxy {
         }
         
         public bool CoversMap(Level lvl) {
-            return MinX == 0 && MinY == 0 && MinZ == 0 && 
+            return MinX == 0 && MinY == 0 && MinZ == 0 &&
                 MaxX == lvl.Width - 1 && MaxY == lvl.Height - 1 && MaxZ == lvl.Length - 1;
+        }
+        
+        public bool Shows { get { return Config.ShowAlpha != 0 && Config.ShowColor != ""; } }       
+        public void Show(Player p) {
+            if (!p.Supports(CpeExt.SelectionCuboid) || !Shows) return;
+            
+            ColorDesc col = Colors.ParseHex(Config.ShowColor);
+            p.Send(Packet.MakeSelection(
+                ID, "", new Vec3U16(MinX, MinY, MinZ), 
+                new Vec3U16((ushort)(MaxX + 1), (ushort)(MaxY + 1), (ushort)(MaxZ + 1)),
+                col.R, col.G, col.B, Config.ShowAlpha, p.hasCP437));          
+        }
+        
+        public void ShowAll(Level lvl) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == lvl) Show(p); 
+            }            
         }
         
         public Zone(Level lvl) {

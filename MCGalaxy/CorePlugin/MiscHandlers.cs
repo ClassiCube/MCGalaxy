@@ -56,6 +56,11 @@ namespace MCGalaxy.Core {
                 p.SendCurrentEnvColors();
             p.SendCurrentMapAppearance();
             p.SendCurrentBlockPermissions();
+            
+            // TODO: unshow old zones here??
+            if (p.Supports(CpeExt.SelectionCuboid)) {
+                foreach (Zone zn in level.Zones) { zn.Show(p); }
+            }
 
             if (!level.Config.Guns && p.aiming) {
                 p.aiming = false;

@@ -87,6 +87,13 @@ namespace MCGalaxy {
                               null, wp => wp.Name, group);
         }
         
+        /// <summary> Find partial matches of 'name' against the list of zones in a map. </summary>
+        public static Zone FindZones(Player p, Level lvl, string name) {
+            int matches = 0;
+            return Find<Zone>(p, name, out matches, lvl.Zones,
+                               null, z => z.Config.Name, "zones");
+        }
+        
         
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
         /// <returns> If exactly one match, the matching item. </returns>

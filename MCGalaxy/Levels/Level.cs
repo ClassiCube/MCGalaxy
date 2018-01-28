@@ -103,6 +103,13 @@ namespace MCGalaxy {
             if (Config.MOTD != "ignore") return Config.MOTD;
             return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }
+        
+        public Zone FindZoneExact(string name) {
+            foreach (Zone zone in Zones) {
+                if (zone.Config.Name.CaselessEq(name)) return zone;
+            }
+            return null;
+        }
 
         /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
         public bool ShouldSaveChanges() {
