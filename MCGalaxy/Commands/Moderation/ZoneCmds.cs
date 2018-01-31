@@ -108,13 +108,15 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void SetZoneProp(Player p, string[] args, Zone zone) {
-            if (args[2].CaselessEq("col")) {
-                ColorDesc desc = default(ColorDesc);
+            ColorDesc desc = default(ColorDesc);
+            string opt = args[2];
+            
+            if (opt.CaselessEq("col")) {
                 if (!CommandParser.GetHex(p, args[3], ref desc)) return;
                 
                 zone.Config.ShowColor = args[3];
                 zone.ShowAll(p.level);
-            } else if (args[2].CaselessEq("alpha")) {
+            } else if (opt.CaselessEq("alpha")) {
                 if (!CommandParser.GetByte(p, args[3], "Alpha", ref zone.Config.ShowAlpha)) return;
                 zone.ShowAll(p.level);
             } else {

@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands.Building {
             block.BlockID = Block.MB_White; block.ExtID = 0;
             if (name == "white") block.BlockID = Block.MB_White;
             if (name == "black") block.BlockID = Block.MB_Black;
-            if (name == "air") block.BlockID = Block.MB_Air;
+            if (name == "air")   block.BlockID = Block.MB_Air;
             if (name == "water") block.BlockID = Block.MB_Water;
-            if (name == "lava") block.BlockID = Block.MB_Lava;
+            if (name == "lava")  block.BlockID = Block.MB_Lava;
             
             allMessage = block.BlockID == Block.MB_White && name != "white";
             if (p.level.Props[block.Index].IsMessageBlock) return block;

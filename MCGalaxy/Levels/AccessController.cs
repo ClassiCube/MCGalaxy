@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using MCGalaxy.Commands;
 
 namespace MCGalaxy {
@@ -78,6 +79,28 @@ namespace MCGalaxy {
                                Action, ColoredName, Group.GetColoredName(Max), whitelist);
             }
             return false;
+        }
+        
+        public void Describe(Player p, StringBuilder perms) {
+            perms.Append(Group.GetColoredName(Min) + "%S+");
+            if (Max != LevelPermission.Nobody) {
+                perms.Append(" up to " + Group.GetColoredName(Max));
+            }
+            
+            List<string> whitelist = Whitelisted;
+            foreach (string name in whitelist) {
+                perms.Append(", " + PlayerInfo.GetColoredName(p, name));
+            }
+
+            List<string> blacklist = Blacklisted;
+            if (blacklist.Count == 0) return;
+            
+            perms.Append(" %S(except ");
+            foreach (string name in blacklist) {
+                perms.Append(PlayerInfo.GetColoredName(p, name) + ", ");
+            }
+            perms.Remove(perms.Length - 2, 2);
+            perms.Append("%S)");
         }
         
 

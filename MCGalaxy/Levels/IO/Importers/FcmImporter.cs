@@ -54,6 +54,14 @@ namespace MCGalaxy.Levels.IO {
                     string group = ReadString(reader);
                     string key = ReadString(reader);
                     string value = ReadString(reader);
+                    
+                    if (group != "zones") continue;
+                    try {
+                        ParseZone(lvl, value);
+                    } catch (Exception ex) {
+                        Logger.Log(LogType.Warning, "Error importing zone '" + key + "' from fCraft map");
+                        Logger.LogError(ex);
+                    }
                 }
                 int read = ds.Read(lvl.blocks, 0, lvl.blocks.Length);
             }
@@ -77,6 +85,48 @@ namespace MCGalaxy.Levels.IO {
             int length = reader.ReadUInt16();
             byte[] data = reader.ReadBytes(length);
             return Encoding.ASCII.GetString(data);
+        }
+        
+        static char[] comma = new char[] { ',' };
+        static void ParseZone(Level lvl, string raw) {
+            string[] parts = raw.Split(comma);
+            string[] header = parts[0].SplitSpaces();
+            Zone zone = new Zone(lvl);
+            
+            // fCraft uses Z for height
+            zone.Config.Name = header[0];
+            zone.MinX = ushort.Parse(header[1]);
+            zone.MinZ = ushort.Parse(header[2]);
+            zone.MinY = ushort.Parse(header[3]);
+            zone.MaxX = ushort.Parse(header[4]);
+            zone.MaxZ = ushort.Parse(header[5]);
+            zone.MaxY = ushort.Parse(header[6]);
+            
+            // fCraft uses name#identifier for ranks
+            string minRaw = header[7];
+            int idStart = minRaw.IndexOf('#');
+            if (idStart >= 0) minRaw = minRaw.Substring(0, idStart);
+            Group minRank = Group.Find(minRaw);
+            if (minRank != null) zone.Config.BuildMin = minRank.Permission;
+            
+            // Extended ProCraft zone header adds colour
+            if (header.Length > 8) {
+                // header[8] is bool for 'showzone'
+                zone.Config.ShowColor = header[9];
+                zone.Config.ShowAlpha = byte.Parse(header[10]);
+            }
+            
+            if (parts[1].Length > 0) {
+                string[] whitelist = parts[1].SplitSpaces();
+                zone.Config.BuildWhitelist.AddRange(whitelist);
+            }
+            
+            if (parts[2].Length > 0) {
+                string[] blacklist = parts[2].SplitSpaces();
+                zone.Config.BuildBlacklist.AddRange(blacklist);
+            }
+            
+            zone.AddTo(lvl);
         }
     }
 }

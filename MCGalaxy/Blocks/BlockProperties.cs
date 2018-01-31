@@ -163,7 +163,7 @@ namespace MCGalaxy.Blocks {
                     scope[idx].AnimalAI = (AnimalAI)ai;
                 }
                 if (parts.Length > 11) {
-                    byte.TryParse(parts[11], out  scope[idx].StackId);
+                    byte.TryParse(parts[11], out scope[idx].StackId);
                 }
                 if (parts.Length > 12) {
                     bool.TryParse(parts[12], out scope[idx].OPBlock);

@@ -132,9 +132,16 @@ namespace MCGalaxy.Drawing.Ops {
             }
         }
         
-        public void CalcState(int dir) {
+        public void CalcState(Vec3S32[] m) {
             dx = default(Vec3S32); dy = default(Vec3S32); adj = default(Vec3S32);
             DualLayer = DualLayer && !LayerMode;
+            
+            int dir;
+            if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z)) {
+                dir = m[1].X <= m[0].X ? 1 : 0;
+            } else {
+                dir = m[1].Z <= m[0].Z ? 3 : 2;
+            }
             
             // Calculate back layer offset
             if (dir == 0) adj.Z = -1;

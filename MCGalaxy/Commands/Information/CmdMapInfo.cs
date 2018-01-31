@@ -115,24 +115,9 @@ namespace MCGalaxy.Commands.Info {
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         
-        static void PrintRanks(Player p, LevelAccessController access, string initial) {
+        static void PrintRanks(Player p, AccessController access, string initial) {
             StringBuilder perms = new StringBuilder(initial);
-            perms.Append(Group.GetColoredName(access.Min) + "%S+");
-            if (access.Max != LevelPermission.Nobody)
-                perms.Append(" up to " + Group.GetColoredName(access.Max));
-            
-            List<string> whitelist = access.Whitelisted;
-            foreach (string name in whitelist)
-                perms.Append(", " + PlayerInfo.GetColoredName(p, name));
-
-            List<string> blacklist = access.Blacklisted;
-            if (blacklist.Count == 0) { Player.Message(p, perms.ToString()); return; }
-            
-            perms.Append( " %S(except ");
-            foreach (string name in blacklist)
-                perms.Append(PlayerInfo.GetColoredName(p, name) + ", ");
-            perms.Remove(perms.Length - 2, 2);
-            perms.Append("%S)");
+            access.Describe(p, perms);
             Player.Message(p, perms.ToString());
         }
         

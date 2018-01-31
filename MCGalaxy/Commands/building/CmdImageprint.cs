@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        void DoDrawImageCore(Player p, Vec3S32[] m, DrawArgs dArgs) {
+        void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
             Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.name, "extra/images/", p);
             if (bmp == null) return;
             try {
@@ -116,21 +116,15 @@ namespace MCGalaxy.Commands.Building {
             }
 
             ImagePrintDrawOp op = new ImagePrintDrawOp();
-            int dir;
-            if (Math.Abs(m[1].X - m[0].X) > Math.Abs(m[1].Z - m[0].Z)) {
-                dir = m[1].X <= m[0].X ? 1 : 0;
-            } else {
-                dir = m[1].Z <= m[0].Z ? 3 : 2;
-            }
             op.LayerMode = dArgs.layer; op.DualLayer = dArgs.dualLayered;
-            op.CalcState(dir);
+            op.CalcState(marks);
             
-            ResizeImage(p, m, op, ref bmp);
+            ResizeImage(p, marks, op, ref bmp);
             op.SetLevel(p.level);
             op.Player = p; op.Source = bmp;
             
             op.Palette = dArgs.palette; op.Filename = dArgs.name;
-            DrawOpPerformer.Do(op, null, p, m, false);
+            DrawOpPerformer.Do(op, null, p, marks, false);
         }
         
         void ResizeImage(Player p, Vec3S32[] m, ImagePrintDrawOp op, ref Bitmap bmp) {

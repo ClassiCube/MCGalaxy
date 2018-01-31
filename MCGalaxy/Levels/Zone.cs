@@ -26,8 +26,8 @@ namespace MCGalaxy {
     public sealed class ZoneConfig : AreaConfig {
         [ConfigString("Name", "General", "", true)]
         public string Name = "";
-        [ConfigString("ShowColor", "General", "", true)]
-        public string ShowColor = "";
+        [ConfigString("ShowColor", "General", "000000", true)]
+        public string ShowColor = "000000";
         [ConfigByte("ShowAlpha", "General", 0)]
         public byte ShowAlpha = 0;
         
@@ -120,7 +120,7 @@ namespace MCGalaxy {
             
             ColorDesc col = Colors.ParseHex(Config.ShowColor);
             p.Send(Packet.MakeSelection(
-                ID, "", new Vec3U16(MinX, MinY, MinZ),
+                ID, Config.Name, new Vec3U16(MinX, MinY, MinZ),
                 new Vec3U16((ushort)(MaxX + 1), (ushort)(MaxY + 1), (ushort)(MaxZ + 1)),
                 col.R, col.G, col.B, Config.ShowAlpha, p.hasCP437));
         }

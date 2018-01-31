@@ -63,11 +63,11 @@ namespace MCGalaxy.Commands.Building {
             // Hardcoded aliases for backwards compatibility
             block.BlockID = Block.Invalid; block.ExtID = 0;
             if (name.Length == 0) block.BlockID = Block.Portal_Blue;
-            if (name == "blue") block.BlockID = Block.Portal_Blue;
+            if (name == "blue")   block.BlockID = Block.Portal_Blue;
             if (name == "orange") block.BlockID = Block.Portal_Orange;
-            if (name == "air") block.BlockID = Block.Portal_Air;
-            if (name == "water") block.BlockID = Block.Portal_Water;
-            if (name == "lava") block.BlockID = Block.Portal_Lava;
+            if (name == "air")    block.BlockID = Block.Portal_Air;
+            if (name == "water")  block.BlockID = Block.Portal_Water;
+            if (name == "lava")   block.BlockID = Block.Portal_Lava;
             
             if (p.level.Props[block.Index].IsPortal) return block;
             Help(p); return ExtBlock.Invalid;
