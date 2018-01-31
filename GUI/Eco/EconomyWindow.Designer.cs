@@ -23,119 +23,119 @@ namespace MCGalaxy.Gui.Eco {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.groupBoxEco = new System.Windows.Forms.GroupBox();
-            this.groupBoxLevel = new System.Windows.Forms.GroupBox();
-            this.buttonEdit = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.eco_gb = new System.Windows.Forms.GroupBox();
+            this.lvl_gb = new System.Windows.Forms.GroupBox();
+            this.lvl_btnEdit = new System.Windows.Forms.Button();
+            this.lvl_dgvMaps = new System.Windows.Forms.DataGridView();
             this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnY = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnZ = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonRemove = new System.Windows.Forms.Button();
-            this.buttonAdd = new System.Windows.Forms.Button();
-            this.checkBoxLevel = new System.Windows.Forms.CheckBox();
-            this.groupBoxRank = new System.Windows.Forms.GroupBox();
-            this.numericUpDownRank = new System.Windows.Forms.NumericUpDown();
-            this.labelPriceRank = new System.Windows.Forms.Label();
-            this.listBoxRank = new System.Windows.Forms.ListBox();
-            this.comboBoxRank = new System.Windows.Forms.ComboBox();
-            this.labelMaxrank = new System.Windows.Forms.Label();
-            this.checkBoxRank = new System.Windows.Forms.CheckBox();
-            this.groupBoxTcolor = new System.Windows.Forms.GroupBox();
-            this.numericUpDownTcolor = new System.Windows.Forms.NumericUpDown();
-            this.labelPriceTcolor = new System.Windows.Forms.Label();
-            this.checkBoxTcolor = new System.Windows.Forms.CheckBox();
-            this.groupBoxColor = new System.Windows.Forms.GroupBox();
-            this.numericUpDownColor = new System.Windows.Forms.NumericUpDown();
-            this.labelPriceColor = new System.Windows.Forms.Label();
-            this.checkBoxColor = new System.Windows.Forms.CheckBox();
-            this.groupBoxTitle = new System.Windows.Forms.GroupBox();
-            this.numericUpDownTitle = new System.Windows.Forms.NumericUpDown();
-            this.labelPriceTitle = new System.Windows.Forms.Label();
-            this.checkBoxTitle = new System.Windows.Forms.CheckBox();
-            this.checkBoxEco = new System.Windows.Forms.CheckBox();
-            this.groupBoxEco.SuspendLayout();
-            this.groupBoxLevel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.groupBoxRank.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRank)).BeginInit();
-            this.groupBoxTcolor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTcolor)).BeginInit();
-            this.groupBoxColor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownColor)).BeginInit();
-            this.groupBoxTitle.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTitle)).BeginInit();
+            this.lvl_btnRemove = new System.Windows.Forms.Button();
+            this.lvl_btnAdd = new System.Windows.Forms.Button();
+            this.lvl_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.rnk_gb = new System.Windows.Forms.GroupBox();
+            this.rnk_numPrice = new System.Windows.Forms.NumericUpDown();
+            this.rnk_lblPrice = new System.Windows.Forms.Label();
+            this.rnk_lbRanks = new System.Windows.Forms.ListBox();
+            this.rnk_cmbMax = new System.Windows.Forms.ComboBox();
+            this.rnk_lblMax = new System.Windows.Forms.Label();
+            this.rnk_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.tcl_gb = new System.Windows.Forms.GroupBox();
+            this.tcl_numPrice = new System.Windows.Forms.NumericUpDown();
+            this.tcl_lblPrice = new System.Windows.Forms.Label();
+            this.tcl_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.col_gb = new System.Windows.Forms.GroupBox();
+            this.col_numPrice = new System.Windows.Forms.NumericUpDown();
+            this.col_lblPrice = new System.Windows.Forms.Label();
+            this.col_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.ttl_gb = new System.Windows.Forms.GroupBox();
+            this.ttl_numPrice = new System.Windows.Forms.NumericUpDown();
+            this.ttl_lblPrice = new System.Windows.Forms.Label();
+            this.ttl_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.eco_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.eco_gb.SuspendLayout();
+            this.lvl_gb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lvl_dgvMaps)).BeginInit();
+            this.rnk_gb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rnk_numPrice)).BeginInit();
+            this.tcl_gb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tcl_numPrice)).BeginInit();
+            this.col_gb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.col_numPrice)).BeginInit();
+            this.ttl_gb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ttl_numPrice)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBoxEco
+            // eco_gb
             // 
-            this.groupBoxEco.AutoSize = true;
-            this.groupBoxEco.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBoxEco.Controls.Add(this.groupBoxLevel);
-            this.groupBoxEco.Controls.Add(this.groupBoxRank);
-            this.groupBoxEco.Controls.Add(this.groupBoxTcolor);
-            this.groupBoxEco.Controls.Add(this.groupBoxColor);
-            this.groupBoxEco.Controls.Add(this.groupBoxTitle);
-            this.groupBoxEco.Controls.Add(this.checkBoxEco);
-            this.groupBoxEco.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxEco.Name = "groupBoxEco";
-            this.groupBoxEco.Size = new System.Drawing.Size(432, 560);
-            this.groupBoxEco.TabIndex = 0;
-            this.groupBoxEco.TabStop = false;
-            this.groupBoxEco.Text = "Economy";
+            this.eco_gb.AutoSize = true;
+            this.eco_gb.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.eco_gb.Controls.Add(this.lvl_gb);
+            this.eco_gb.Controls.Add(this.rnk_gb);
+            this.eco_gb.Controls.Add(this.tcl_gb);
+            this.eco_gb.Controls.Add(this.col_gb);
+            this.eco_gb.Controls.Add(this.ttl_gb);
+            this.eco_gb.Controls.Add(this.eco_cbEnabled);
+            this.eco_gb.Location = new System.Drawing.Point(12, 12);
+            this.eco_gb.Name = "eco_gb";
+            this.eco_gb.Size = new System.Drawing.Size(432, 560);
+            this.eco_gb.TabIndex = 0;
+            this.eco_gb.TabStop = false;
+            this.eco_gb.Text = "Economy";
             // 
-            // groupBoxLevel
+            // lvl_gb
             // 
-            this.groupBoxLevel.Controls.Add(this.buttonEdit);
-            this.groupBoxLevel.Controls.Add(this.dataGridView1);
-            this.groupBoxLevel.Controls.Add(this.buttonRemove);
-            this.groupBoxLevel.Controls.Add(this.buttonAdd);
-            this.groupBoxLevel.Controls.Add(this.checkBoxLevel);
-            this.groupBoxLevel.Enabled = false;
-            this.groupBoxLevel.Location = new System.Drawing.Point(6, 288);
-            this.groupBoxLevel.Name = "groupBoxLevel";
-            this.groupBoxLevel.Size = new System.Drawing.Size(420, 251);
-            this.groupBoxLevel.TabIndex = 4;
-            this.groupBoxLevel.TabStop = false;
-            this.groupBoxLevel.Text = "Level";
+            this.lvl_gb.Controls.Add(this.lvl_btnEdit);
+            this.lvl_gb.Controls.Add(this.lvl_dgvMaps);
+            this.lvl_gb.Controls.Add(this.lvl_btnRemove);
+            this.lvl_gb.Controls.Add(this.lvl_btnAdd);
+            this.lvl_gb.Controls.Add(this.lvl_cbEnabled);
+            this.lvl_gb.Enabled = false;
+            this.lvl_gb.Location = new System.Drawing.Point(6, 288);
+            this.lvl_gb.Name = "lvl_gb";
+            this.lvl_gb.Size = new System.Drawing.Size(420, 251);
+            this.lvl_gb.TabIndex = 4;
+            this.lvl_gb.TabStop = false;
+            this.lvl_gb.Text = "Level";
             // 
-            // buttonEdit
+            // lvl_btnEdit
             // 
-            this.buttonEdit.Enabled = false;
-            this.buttonEdit.Location = new System.Drawing.Point(108, 217);
-            this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(96, 28);
-            this.buttonEdit.TabIndex = 10;
-            this.buttonEdit.Text = "Edit";
-            this.buttonEdit.UseVisualStyleBackColor = true;
-            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
+            this.lvl_btnEdit.Enabled = false;
+            this.lvl_btnEdit.Location = new System.Drawing.Point(108, 217);
+            this.lvl_btnEdit.Name = "lvl_btnEdit";
+            this.lvl_btnEdit.Size = new System.Drawing.Size(96, 28);
+            this.lvl_btnEdit.TabIndex = 10;
+            this.lvl_btnEdit.Text = "Edit";
+            this.lvl_btnEdit.UseVisualStyleBackColor = true;
+            this.lvl_btnEdit.Click += new System.EventHandler(this.lvl_btnEdit_Click);
             // 
             // dataGridView1
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.lvl_dgvMaps.AllowUserToAddRows = false;
+            this.lvl_dgvMaps.AllowUserToDeleteRows = false;
+            this.lvl_dgvMaps.AllowUserToResizeRows = false;
+            this.lvl_dgvMaps.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this.lvl_dgvMaps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lvl_dgvMaps.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnName,
             this.ColumnPrice,
             this.ColumnX,
             this.ColumnY,
             this.ColumnZ,
             this.ColumnType});
-            this.dataGridView1.Enabled = false;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 48);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(408, 163);
-            this.dataGridView1.TabIndex = 9;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.lvl_dgvMaps.Enabled = false;
+            this.lvl_dgvMaps.Location = new System.Drawing.Point(6, 48);
+            this.lvl_dgvMaps.MultiSelect = false;
+            this.lvl_dgvMaps.Name = "dataGridView1";
+            this.lvl_dgvMaps.ReadOnly = true;
+            this.lvl_dgvMaps.RowTemplate.Height = 24;
+            this.lvl_dgvMaps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.lvl_dgvMaps.Size = new System.Drawing.Size(408, 163);
+            this.lvl_dgvMaps.TabIndex = 9;
+            this.lvl_dgvMaps.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.lvl_dgvMaps_CellContentClick);
             // 
             // ColumnName
             // 
@@ -173,296 +173,296 @@ namespace MCGalaxy.Gui.Eco {
             this.ColumnType.Name = "ColumnType";
             this.ColumnType.ReadOnly = true;
             // 
-            // buttonRemove
+            // lvl_btnRemove
             // 
-            this.buttonRemove.Enabled = false;
-            this.buttonRemove.Location = new System.Drawing.Point(318, 217);
-            this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(96, 28);
-            this.buttonRemove.TabIndex = 8;
-            this.buttonRemove.Text = "Remove";
-            this.buttonRemove.UseVisualStyleBackColor = true;
-            this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
+            this.lvl_btnRemove.Enabled = false;
+            this.lvl_btnRemove.Location = new System.Drawing.Point(318, 217);
+            this.lvl_btnRemove.Name = "lvl_btnRemove";
+            this.lvl_btnRemove.Size = new System.Drawing.Size(96, 28);
+            this.lvl_btnRemove.TabIndex = 8;
+            this.lvl_btnRemove.Text = "Remove";
+            this.lvl_btnRemove.UseVisualStyleBackColor = true;
+            this.lvl_btnRemove.Click += new System.EventHandler(this.lvl_btnRemove_Click);
             // 
-            // buttonAdd
+            // lvl_btnAdd
             // 
-            this.buttonAdd.Enabled = false;
-            this.buttonAdd.Location = new System.Drawing.Point(6, 217);
-            this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(96, 28);
-            this.buttonAdd.TabIndex = 7;
-            this.buttonAdd.Text = "Add";
-            this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            this.lvl_btnAdd.Enabled = false;
+            this.lvl_btnAdd.Location = new System.Drawing.Point(6, 217);
+            this.lvl_btnAdd.Name = "lvl_btnAdd";
+            this.lvl_btnAdd.Size = new System.Drawing.Size(96, 28);
+            this.lvl_btnAdd.TabIndex = 7;
+            this.lvl_btnAdd.Text = "Add";
+            this.lvl_btnAdd.UseVisualStyleBackColor = true;
+            this.lvl_btnAdd.Click += new System.EventHandler(this.lvl_btnAdd_Click);
             // 
-            // checkBoxLevel
+            // lvl_cbEnabled
             // 
-            this.checkBoxLevel.AutoSize = true;
-            this.checkBoxLevel.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxLevel.Name = "checkBoxLevel";
-            this.checkBoxLevel.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxLevel.TabIndex = 6;
-            this.checkBoxLevel.Text = "Enable";
-            this.checkBoxLevel.UseVisualStyleBackColor = true;
-            this.checkBoxLevel.CheckedChanged += new System.EventHandler(this.checkBoxLevel_CheckedChanged);
+            this.lvl_cbEnabled.AutoSize = true;
+            this.lvl_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.lvl_cbEnabled.Name = "lvl_cbEnabled";
+            this.lvl_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.lvl_cbEnabled.TabIndex = 6;
+            this.lvl_cbEnabled.Text = "Enable";
+            this.lvl_cbEnabled.UseVisualStyleBackColor = true;
+            this.lvl_cbEnabled.CheckedChanged += new System.EventHandler(this.lvl_cbEnabled_CheckedChanged);
             // 
-            // groupBoxRank
+            // rnk_gb
             // 
-            this.groupBoxRank.Controls.Add(this.numericUpDownRank);
-            this.groupBoxRank.Controls.Add(this.labelPriceRank);
-            this.groupBoxRank.Controls.Add(this.listBoxRank);
-            this.groupBoxRank.Controls.Add(this.comboBoxRank);
-            this.groupBoxRank.Controls.Add(this.labelMaxrank);
-            this.groupBoxRank.Controls.Add(this.checkBoxRank);
-            this.groupBoxRank.Enabled = false;
-            this.groupBoxRank.Location = new System.Drawing.Point(176, 48);
-            this.groupBoxRank.Name = "groupBoxRank";
-            this.groupBoxRank.Size = new System.Drawing.Size(250, 234);
-            this.groupBoxRank.TabIndex = 3;
-            this.groupBoxRank.TabStop = false;
-            this.groupBoxRank.Text = "Rank";
+            this.rnk_gb.Controls.Add(this.rnk_numPrice);
+            this.rnk_gb.Controls.Add(this.rnk_lblPrice);
+            this.rnk_gb.Controls.Add(this.rnk_lbRanks);
+            this.rnk_gb.Controls.Add(this.rnk_cmbMax);
+            this.rnk_gb.Controls.Add(this.rnk_lblMax);
+            this.rnk_gb.Controls.Add(this.rnk_cbEnabled);
+            this.rnk_gb.Enabled = false;
+            this.rnk_gb.Location = new System.Drawing.Point(176, 48);
+            this.rnk_gb.Name = "rnk_gb";
+            this.rnk_gb.Size = new System.Drawing.Size(250, 234);
+            this.rnk_gb.TabIndex = 3;
+            this.rnk_gb.TabStop = false;
+            this.rnk_gb.Text = "Rank";
             // 
-            // numericUpDownRank
+            // rnk_numPrice
             // 
-            this.numericUpDownRank.Enabled = false;
-            this.numericUpDownRank.Location = new System.Drawing.Point(6, 100);
-            this.numericUpDownRank.Maximum = new decimal(new int[] {
+            this.rnk_numPrice.Enabled = false;
+            this.rnk_numPrice.Location = new System.Drawing.Point(6, 100);
+            this.rnk_numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
             0,
             0});
-            this.numericUpDownRank.Name = "numericUpDownRank";
-            this.numericUpDownRank.Size = new System.Drawing.Size(102, 22);
-            this.numericUpDownRank.TabIndex = 5;
-            this.numericUpDownRank.Value = new decimal(new int[] {
+            this.rnk_numPrice.Name = "rnk_numPrice";
+            this.rnk_numPrice.Size = new System.Drawing.Size(102, 22);
+            this.rnk_numPrice.TabIndex = 5;
+            this.rnk_numPrice.Value = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDownRank.ValueChanged += new System.EventHandler(this.numericUpDownRank_ValueChanged);
+            this.rnk_numPrice.ValueChanged += new System.EventHandler(this.rnk_numPrice_ValueChanged);
             // 
-            // labelPriceRank
+            // rnk_lblPrice
             // 
-            this.labelPriceRank.AutoSize = true;
-            this.labelPriceRank.Enabled = false;
-            this.labelPriceRank.Location = new System.Drawing.Point(6, 80);
-            this.labelPriceRank.Name = "labelPriceRank";
-            this.labelPriceRank.Size = new System.Drawing.Size(40, 17);
-            this.labelPriceRank.TabIndex = 5;
-            this.labelPriceRank.Text = "Price";
+            this.rnk_lblPrice.AutoSize = true;
+            this.rnk_lblPrice.Enabled = false;
+            this.rnk_lblPrice.Location = new System.Drawing.Point(6, 80);
+            this.rnk_lblPrice.Name = "rnk_lblPrice";
+            this.rnk_lblPrice.Size = new System.Drawing.Size(40, 17);
+            this.rnk_lblPrice.TabIndex = 5;
+            this.rnk_lblPrice.Text = "Price";
             // 
-            // listBoxRank
+            // rnk_lbRanks
             // 
-            this.listBoxRank.Enabled = false;
-            this.listBoxRank.FormattingEnabled = true;
-            this.listBoxRank.ItemHeight = 16;
-            this.listBoxRank.Location = new System.Drawing.Point(114, 80);
-            this.listBoxRank.Name = "listBoxRank";
-            this.listBoxRank.Size = new System.Drawing.Size(127, 148);
-            this.listBoxRank.TabIndex = 8;
-            this.listBoxRank.SelectedIndexChanged += new System.EventHandler(this.listBoxRank_SelectedIndexChanged);
+            this.rnk_lbRanks.Enabled = false;
+            this.rnk_lbRanks.FormattingEnabled = true;
+            this.rnk_lbRanks.ItemHeight = 16;
+            this.rnk_lbRanks.Location = new System.Drawing.Point(114, 80);
+            this.rnk_lbRanks.Name = "rnk_lbRanks";
+            this.rnk_lbRanks.Size = new System.Drawing.Size(127, 148);
+            this.rnk_lbRanks.TabIndex = 8;
+            this.rnk_lbRanks.SelectedIndexChanged += new System.EventHandler(this.rnk_lbRanks_SelectedIndexChanged);
             // 
-            // comboBoxRank
+            // rnk_cmbMax
             // 
-            this.comboBoxRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxRank.Enabled = false;
-            this.comboBoxRank.FormattingEnabled = true;
-            this.comboBoxRank.Location = new System.Drawing.Point(77, 42);
-            this.comboBoxRank.Name = "comboBoxRank";
-            this.comboBoxRank.Size = new System.Drawing.Size(164, 24);
-            this.comboBoxRank.TabIndex = 7;
-            this.comboBoxRank.SelectionChangeCommitted += new System.EventHandler(this.comboBoxRank_SelectionChangeCommitted);
+            this.rnk_cmbMax.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rnk_cmbMax.Enabled = false;
+            this.rnk_cmbMax.FormattingEnabled = true;
+            this.rnk_cmbMax.Location = new System.Drawing.Point(77, 42);
+            this.rnk_cmbMax.Name = "rnk_cmbMax";
+            this.rnk_cmbMax.Size = new System.Drawing.Size(164, 24);
+            this.rnk_cmbMax.TabIndex = 7;
+            this.rnk_cmbMax.SelectionChangeCommitted += new System.EventHandler(this.rnk_cmbMax_SelectionChangeCommitted);
             // 
-            // labelMaxrank
+            // rnk_lblMax
             // 
-            this.labelMaxrank.AutoSize = true;
-            this.labelMaxrank.Enabled = false;
-            this.labelMaxrank.Location = new System.Drawing.Point(6, 45);
-            this.labelMaxrank.Name = "labelMaxrank";
-            this.labelMaxrank.Size = new System.Drawing.Size(65, 17);
-            this.labelMaxrank.TabIndex = 6;
-            this.labelMaxrank.Text = "Max rank";
+            this.rnk_lblMax.AutoSize = true;
+            this.rnk_lblMax.Enabled = false;
+            this.rnk_lblMax.Location = new System.Drawing.Point(6, 45);
+            this.rnk_lblMax.Name = "rnk_lblMax";
+            this.rnk_lblMax.Size = new System.Drawing.Size(65, 17);
+            this.rnk_lblMax.TabIndex = 6;
+            this.rnk_lblMax.Text = "Max rank";
             // 
-            // checkBoxRank
+            // rnk_cbEnabled
             // 
-            this.checkBoxRank.AutoSize = true;
-            this.checkBoxRank.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxRank.Name = "checkBoxRank";
-            this.checkBoxRank.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxRank.TabIndex = 5;
-            this.checkBoxRank.Text = "Enable";
-            this.checkBoxRank.UseVisualStyleBackColor = true;
-            this.checkBoxRank.CheckedChanged += new System.EventHandler(this.checkBoxRank_CheckedChanged);
+            this.rnk_cbEnabled.AutoSize = true;
+            this.rnk_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.rnk_cbEnabled.Name = "rnk_cbEnabled";
+            this.rnk_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.rnk_cbEnabled.TabIndex = 5;
+            this.rnk_cbEnabled.Text = "Enable";
+            this.rnk_cbEnabled.UseVisualStyleBackColor = true;
+            this.rnk_cbEnabled.CheckedChanged += new System.EventHandler(this.rnk_cbEnabled_CheckedChanged);
             // 
-            // groupBoxTcolor
+            // tcl_gb
             // 
-            this.groupBoxTcolor.Controls.Add(this.numericUpDownTcolor);
-            this.groupBoxTcolor.Controls.Add(this.labelPriceTcolor);
-            this.groupBoxTcolor.Controls.Add(this.checkBoxTcolor);
-            this.groupBoxTcolor.Enabled = false;
-            this.groupBoxTcolor.Location = new System.Drawing.Point(6, 208);
-            this.groupBoxTcolor.Name = "groupBoxTcolor";
-            this.groupBoxTcolor.Size = new System.Drawing.Size(164, 74);
-            this.groupBoxTcolor.TabIndex = 2;
-            this.groupBoxTcolor.TabStop = false;
-            this.groupBoxTcolor.Text = "Titlecolor";
+            this.tcl_gb.Controls.Add(this.tcl_numPrice);
+            this.tcl_gb.Controls.Add(this.tcl_lblPrice);
+            this.tcl_gb.Controls.Add(this.tcl_cbEnabled);
+            this.tcl_gb.Enabled = false;
+            this.tcl_gb.Location = new System.Drawing.Point(6, 208);
+            this.tcl_gb.Name = "tcl_gb";
+            this.tcl_gb.Size = new System.Drawing.Size(164, 74);
+            this.tcl_gb.TabIndex = 2;
+            this.tcl_gb.TabStop = false;
+            this.tcl_gb.Text = "Titlecolor";
             // 
-            // numericUpDownTcolor
+            // tcl_numPrice
             // 
-            this.numericUpDownTcolor.Enabled = false;
-            this.numericUpDownTcolor.Location = new System.Drawing.Point(52, 43);
-            this.numericUpDownTcolor.Maximum = new decimal(new int[] {
+            this.tcl_numPrice.Enabled = false;
+            this.tcl_numPrice.Location = new System.Drawing.Point(52, 43);
+            this.tcl_numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
             0,
             0});
-            this.numericUpDownTcolor.Name = "numericUpDownTcolor";
-            this.numericUpDownTcolor.Size = new System.Drawing.Size(102, 22);
-            this.numericUpDownTcolor.TabIndex = 6;
-            this.numericUpDownTcolor.Value = new decimal(new int[] {
+            this.tcl_numPrice.Name = "tcl_numPrice";
+            this.tcl_numPrice.Size = new System.Drawing.Size(102, 22);
+            this.tcl_numPrice.TabIndex = 6;
+            this.tcl_numPrice.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.numericUpDownTcolor.ValueChanged += new System.EventHandler(this.numericUpDownTcolor_ValueChanged);
+            this.tcl_numPrice.ValueChanged += new System.EventHandler(this.tcl_numPrice_ValueChanged);
             // 
-            // labelPriceTcolor
+            // tcl_lblPrice
             // 
-            this.labelPriceTcolor.AutoSize = true;
-            this.labelPriceTcolor.Enabled = false;
-            this.labelPriceTcolor.Location = new System.Drawing.Point(6, 45);
-            this.labelPriceTcolor.Name = "labelPriceTcolor";
-            this.labelPriceTcolor.Size = new System.Drawing.Size(40, 17);
-            this.labelPriceTcolor.TabIndex = 6;
-            this.labelPriceTcolor.Text = "Price";
+            this.tcl_lblPrice.AutoSize = true;
+            this.tcl_lblPrice.Enabled = false;
+            this.tcl_lblPrice.Location = new System.Drawing.Point(6, 45);
+            this.tcl_lblPrice.Name = "tcl_lblPrice";
+            this.tcl_lblPrice.Size = new System.Drawing.Size(40, 17);
+            this.tcl_lblPrice.TabIndex = 6;
+            this.tcl_lblPrice.Text = "Price";
             // 
-            // checkBoxTcolor
+            // tcl_cbEnabled
             // 
-            this.checkBoxTcolor.AutoSize = true;
-            this.checkBoxTcolor.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxTcolor.Name = "checkBoxTcolor";
-            this.checkBoxTcolor.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxTcolor.TabIndex = 6;
-            this.checkBoxTcolor.Text = "Enable";
-            this.checkBoxTcolor.UseVisualStyleBackColor = true;
-            this.checkBoxTcolor.CheckedChanged += new System.EventHandler(this.checkBoxTcolor_CheckedChanged);
+            this.tcl_cbEnabled.AutoSize = true;
+            this.tcl_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.tcl_cbEnabled.Name = "tcl_cbEnabled";
+            this.tcl_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.tcl_cbEnabled.TabIndex = 6;
+            this.tcl_cbEnabled.Text = "Enable";
+            this.tcl_cbEnabled.UseVisualStyleBackColor = true;
+            this.tcl_cbEnabled.CheckedChanged += new System.EventHandler(this.tcl_cbEnabled_CheckedChanged);
             // 
-            // groupBoxColor
+            // col_gb
             // 
-            this.groupBoxColor.Controls.Add(this.numericUpDownColor);
-            this.groupBoxColor.Controls.Add(this.labelPriceColor);
-            this.groupBoxColor.Controls.Add(this.checkBoxColor);
-            this.groupBoxColor.Enabled = false;
-            this.groupBoxColor.Location = new System.Drawing.Point(6, 128);
-            this.groupBoxColor.Name = "groupBoxColor";
-            this.groupBoxColor.Size = new System.Drawing.Size(164, 74);
-            this.groupBoxColor.TabIndex = 2;
-            this.groupBoxColor.TabStop = false;
-            this.groupBoxColor.Text = "Color";
+            this.col_gb.Controls.Add(this.col_numPrice);
+            this.col_gb.Controls.Add(this.col_lblPrice);
+            this.col_gb.Controls.Add(this.col_cbEnabled);
+            this.col_gb.Enabled = false;
+            this.col_gb.Location = new System.Drawing.Point(6, 128);
+            this.col_gb.Name = "col_gb";
+            this.col_gb.Size = new System.Drawing.Size(164, 74);
+            this.col_gb.TabIndex = 2;
+            this.col_gb.TabStop = false;
+            this.col_gb.Text = "Color";
             // 
-            // numericUpDownColor
+            // col_numPrice
             // 
-            this.numericUpDownColor.Enabled = false;
-            this.numericUpDownColor.Location = new System.Drawing.Point(52, 43);
-            this.numericUpDownColor.Maximum = new decimal(new int[] {
+            this.col_numPrice.Enabled = false;
+            this.col_numPrice.Location = new System.Drawing.Point(52, 43);
+            this.col_numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
             0,
             0});
-            this.numericUpDownColor.Name = "numericUpDownColor";
-            this.numericUpDownColor.Size = new System.Drawing.Size(102, 22);
-            this.numericUpDownColor.TabIndex = 5;
-            this.numericUpDownColor.Value = new decimal(new int[] {
+            this.col_numPrice.Name = "col_numPrice";
+            this.col_numPrice.Size = new System.Drawing.Size(102, 22);
+            this.col_numPrice.TabIndex = 5;
+            this.col_numPrice.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.numericUpDownColor.ValueChanged += new System.EventHandler(this.numericUpDownColor_ValueChanged);
+            this.col_numPrice.ValueChanged += new System.EventHandler(this.col_numPrice_ValueChanged);
             // 
-            // labelPriceColor
+            // col_lblPrice
             // 
-            this.labelPriceColor.AutoSize = true;
-            this.labelPriceColor.Enabled = false;
-            this.labelPriceColor.Location = new System.Drawing.Point(6, 45);
-            this.labelPriceColor.Name = "labelPriceColor";
-            this.labelPriceColor.Size = new System.Drawing.Size(40, 17);
-            this.labelPriceColor.TabIndex = 5;
-            this.labelPriceColor.Text = "Price";
+            this.col_lblPrice.AutoSize = true;
+            this.col_lblPrice.Enabled = false;
+            this.col_lblPrice.Location = new System.Drawing.Point(6, 45);
+            this.col_lblPrice.Name = "col_lblPrice";
+            this.col_lblPrice.Size = new System.Drawing.Size(40, 17);
+            this.col_lblPrice.TabIndex = 5;
+            this.col_lblPrice.Text = "Price";
             // 
-            // checkBoxColor
+            // col_cbEnabled
             // 
-            this.checkBoxColor.AutoSize = true;
-            this.checkBoxColor.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxColor.Name = "checkBoxColor";
-            this.checkBoxColor.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxColor.TabIndex = 5;
-            this.checkBoxColor.Text = "Enable";
-            this.checkBoxColor.UseVisualStyleBackColor = true;
-            this.checkBoxColor.CheckedChanged += new System.EventHandler(this.checkBoxColor_CheckedChanged);
+            this.col_cbEnabled.AutoSize = true;
+            this.col_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.col_cbEnabled.Name = "col_cbEnabled";
+            this.col_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.col_cbEnabled.TabIndex = 5;
+            this.col_cbEnabled.Text = "Enable";
+            this.col_cbEnabled.UseVisualStyleBackColor = true;
+            this.col_cbEnabled.CheckedChanged += new System.EventHandler(this.col_cbEnabled_CheckedChanged);
             // 
-            // groupBoxTitle
+            // ttl_gb
             // 
-            this.groupBoxTitle.Controls.Add(this.numericUpDownTitle);
-            this.groupBoxTitle.Controls.Add(this.labelPriceTitle);
-            this.groupBoxTitle.Controls.Add(this.checkBoxTitle);
-            this.groupBoxTitle.Enabled = false;
-            this.groupBoxTitle.Location = new System.Drawing.Point(6, 48);
-            this.groupBoxTitle.Name = "groupBoxTitle";
-            this.groupBoxTitle.Size = new System.Drawing.Size(164, 74);
-            this.groupBoxTitle.TabIndex = 1;
-            this.groupBoxTitle.TabStop = false;
-            this.groupBoxTitle.Text = "Title";
+            this.ttl_gb.Controls.Add(this.ttl_numPrice);
+            this.ttl_gb.Controls.Add(this.ttl_lblPrice);
+            this.ttl_gb.Controls.Add(this.ttl_cbEnabled);
+            this.ttl_gb.Enabled = false;
+            this.ttl_gb.Location = new System.Drawing.Point(6, 48);
+            this.ttl_gb.Name = "ttl_gb";
+            this.ttl_gb.Size = new System.Drawing.Size(164, 74);
+            this.ttl_gb.TabIndex = 1;
+            this.ttl_gb.TabStop = false;
+            this.ttl_gb.Text = "Title";
             // 
-            // numericUpDownTitle
+            // ttl_numPrice
             // 
-            this.numericUpDownTitle.Enabled = false;
-            this.numericUpDownTitle.Location = new System.Drawing.Point(52, 43);
-            this.numericUpDownTitle.Maximum = new decimal(new int[] {
+            this.ttl_numPrice.Enabled = false;
+            this.ttl_numPrice.Location = new System.Drawing.Point(52, 43);
+            this.ttl_numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
             0,
             0});
-            this.numericUpDownTitle.Name = "numericUpDownTitle";
-            this.numericUpDownTitle.Size = new System.Drawing.Size(102, 22);
-            this.numericUpDownTitle.TabIndex = 4;
-            this.numericUpDownTitle.Value = new decimal(new int[] {
+            this.ttl_numPrice.Name = "ttl_numPrice";
+            this.ttl_numPrice.Size = new System.Drawing.Size(102, 22);
+            this.ttl_numPrice.TabIndex = 4;
+            this.ttl_numPrice.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.numericUpDownTitle.ValueChanged += new System.EventHandler(this.numericUpDownTitle_ValueChanged);
+            this.ttl_numPrice.ValueChanged += new System.EventHandler(this.ttl_numPrice_ValueChanged);
             // 
-            // labelPriceTitle
+            // ttl_lblPrice
             // 
-            this.labelPriceTitle.AutoSize = true;
-            this.labelPriceTitle.Enabled = false;
-            this.labelPriceTitle.Location = new System.Drawing.Point(6, 45);
-            this.labelPriceTitle.Name = "labelPriceTitle";
-            this.labelPriceTitle.Size = new System.Drawing.Size(40, 17);
-            this.labelPriceTitle.TabIndex = 4;
-            this.labelPriceTitle.Text = "Price";
+            this.ttl_lblPrice.AutoSize = true;
+            this.ttl_lblPrice.Enabled = false;
+            this.ttl_lblPrice.Location = new System.Drawing.Point(6, 45);
+            this.ttl_lblPrice.Name = "ttl_lblPrice";
+            this.ttl_lblPrice.Size = new System.Drawing.Size(40, 17);
+            this.ttl_lblPrice.TabIndex = 4;
+            this.ttl_lblPrice.Text = "Price";
             // 
-            // checkBoxTitle
+            // ttl_cbEnabled
             // 
-            this.checkBoxTitle.AutoSize = true;
-            this.checkBoxTitle.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxTitle.Name = "checkBoxTitle";
-            this.checkBoxTitle.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxTitle.TabIndex = 3;
-            this.checkBoxTitle.Text = "Enable";
-            this.checkBoxTitle.UseVisualStyleBackColor = true;
-            this.checkBoxTitle.CheckedChanged += new System.EventHandler(this.checkBoxTitle_CheckedChanged);
+            this.ttl_cbEnabled.AutoSize = true;
+            this.ttl_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.ttl_cbEnabled.Name = "ttl_cbEnabled";
+            this.ttl_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.ttl_cbEnabled.TabIndex = 3;
+            this.ttl_cbEnabled.Text = "Enable";
+            this.ttl_cbEnabled.UseVisualStyleBackColor = true;
+            this.ttl_cbEnabled.CheckedChanged += new System.EventHandler(this.ttl_cbEnabled_CheckedChanged);
             // 
-            // checkBoxEco
+            // eco_cbEnabled
             // 
-            this.checkBoxEco.AutoSize = true;
-            this.checkBoxEco.Location = new System.Drawing.Point(6, 21);
-            this.checkBoxEco.Name = "checkBoxEco";
-            this.checkBoxEco.Size = new System.Drawing.Size(74, 21);
-            this.checkBoxEco.TabIndex = 0;
-            this.checkBoxEco.Text = "Enable";
-            this.checkBoxEco.UseVisualStyleBackColor = true;
-            this.checkBoxEco.CheckedChanged += new System.EventHandler(this.checkBoxEco_CheckedChanged);
+            this.eco_cbEnabled.AutoSize = true;
+            this.eco_cbEnabled.Location = new System.Drawing.Point(6, 21);
+            this.eco_cbEnabled.Name = "eco_cbEnabled";
+            this.eco_cbEnabled.Size = new System.Drawing.Size(74, 21);
+            this.eco_cbEnabled.TabIndex = 0;
+            this.eco_cbEnabled.Text = "Enable";
+            this.eco_cbEnabled.UseVisualStyleBackColor = true;
+            this.eco_cbEnabled.CheckedChanged += new System.EventHandler(this.eco_cbEnabled_CheckedChanged);
             // 
             // EconomyWindow
             // 
@@ -471,7 +471,7 @@ namespace MCGalaxy.Gui.Eco {
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(454, 579);
-            this.Controls.Add(this.groupBoxEco);
+            this.Controls.Add(this.eco_gb);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -480,23 +480,23 @@ namespace MCGalaxy.Gui.Eco {
             this.Text = "Economy Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EconomyWindow_FormClosing);
             this.Load += new System.EventHandler(this.EconomyWindow_Load);
-            this.groupBoxEco.ResumeLayout(false);
-            this.groupBoxEco.PerformLayout();
-            this.groupBoxLevel.ResumeLayout(false);
-            this.groupBoxLevel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.groupBoxRank.ResumeLayout(false);
-            this.groupBoxRank.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRank)).EndInit();
-            this.groupBoxTcolor.ResumeLayout(false);
-            this.groupBoxTcolor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTcolor)).EndInit();
-            this.groupBoxColor.ResumeLayout(false);
-            this.groupBoxColor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownColor)).EndInit();
-            this.groupBoxTitle.ResumeLayout(false);
-            this.groupBoxTitle.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTitle)).EndInit();
+            this.eco_gb.ResumeLayout(false);
+            this.eco_gb.PerformLayout();
+            this.lvl_gb.ResumeLayout(false);
+            this.lvl_gb.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lvl_dgvMaps)).EndInit();
+            this.rnk_gb.ResumeLayout(false);
+            this.rnk_gb.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rnk_numPrice)).EndInit();
+            this.tcl_gb.ResumeLayout(false);
+            this.tcl_gb.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tcl_numPrice)).EndInit();
+            this.col_gb.ResumeLayout(false);
+            this.col_gb.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.col_numPrice)).EndInit();
+            this.ttl_gb.ResumeLayout(false);
+            this.ttl_gb.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ttl_numPrice)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -504,33 +504,33 @@ namespace MCGalaxy.Gui.Eco {
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxEco;
-        private System.Windows.Forms.GroupBox groupBoxTcolor;
-        private System.Windows.Forms.GroupBox groupBoxColor;
-        private System.Windows.Forms.GroupBox groupBoxTitle;
-        private System.Windows.Forms.NumericUpDown numericUpDownTitle;
-        private System.Windows.Forms.Label labelPriceTitle;
-        private System.Windows.Forms.CheckBox checkBoxTitle;
-        private System.Windows.Forms.CheckBox checkBoxEco;
-        private System.Windows.Forms.GroupBox groupBoxLevel;
-        private System.Windows.Forms.CheckBox checkBoxLevel;
-        private System.Windows.Forms.GroupBox groupBoxRank;
-        private System.Windows.Forms.ListBox listBoxRank;
-        private System.Windows.Forms.ComboBox comboBoxRank;
-        private System.Windows.Forms.Label labelMaxrank;
-        private System.Windows.Forms.CheckBox checkBoxRank;
-        private System.Windows.Forms.NumericUpDown numericUpDownTcolor;
-        private System.Windows.Forms.Label labelPriceTcolor;
-        private System.Windows.Forms.CheckBox checkBoxTcolor;
-        private System.Windows.Forms.NumericUpDown numericUpDownColor;
-        private System.Windows.Forms.Label labelPriceColor;
-        private System.Windows.Forms.CheckBox checkBoxColor;
-        private System.Windows.Forms.Button buttonRemove;
-        private System.Windows.Forms.Button buttonAdd;
-        private System.Windows.Forms.NumericUpDown numericUpDownRank;
-        private System.Windows.Forms.Label labelPriceRank;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button buttonEdit;
+        private System.Windows.Forms.GroupBox eco_gb;
+        private System.Windows.Forms.GroupBox tcl_gb;
+        private System.Windows.Forms.GroupBox col_gb;
+        private System.Windows.Forms.GroupBox ttl_gb;
+        private System.Windows.Forms.NumericUpDown ttl_numPrice;
+        private System.Windows.Forms.Label ttl_lblPrice;
+        private System.Windows.Forms.CheckBox ttl_cbEnabled;
+        private System.Windows.Forms.CheckBox eco_cbEnabled;
+        private System.Windows.Forms.GroupBox lvl_gb;
+        private System.Windows.Forms.CheckBox lvl_cbEnabled;
+        private System.Windows.Forms.GroupBox rnk_gb;
+        private System.Windows.Forms.ListBox rnk_lbRanks;
+        private System.Windows.Forms.ComboBox rnk_cmbMax;
+        private System.Windows.Forms.Label rnk_lblMax;
+        private System.Windows.Forms.CheckBox rnk_cbEnabled;
+        private System.Windows.Forms.NumericUpDown tcl_numPrice;
+        private System.Windows.Forms.Label tcl_lblPrice;
+        private System.Windows.Forms.CheckBox tcl_cbEnabled;
+        private System.Windows.Forms.NumericUpDown col_numPrice;
+        private System.Windows.Forms.Label col_lblPrice;
+        private System.Windows.Forms.CheckBox col_cbEnabled;
+        private System.Windows.Forms.Button lvl_btnRemove;
+        private System.Windows.Forms.Button lvl_btnAdd;
+        private System.Windows.Forms.NumericUpDown rnk_numPrice;
+        private System.Windows.Forms.Label rnk_lblPrice;
+        private System.Windows.Forms.DataGridView lvl_dgvMaps;
+        private System.Windows.Forms.Button lvl_btnEdit;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnX;

@@ -13,49 +13,50 @@ namespace MCGalaxy.Gui.Eco {
 
         void EconomyWindow_Load(object sender, EventArgs e) {
             RankItem rankItem = Economy.Ranks;
-            numericUpDownTitle.Value = Economy.Title.Price;
-            numericUpDownColor.Value = Economy.Color.Price;
-            numericUpDownTcolor.Value = Economy.TitleColor.Price;
-            checkBoxEco.Checked = Economy.Enabled;
-            checkBoxTitle.Checked = Economy.Title.Enabled;
-            checkBoxColor.Checked = Economy.Color.Enabled;
-            checkBoxTcolor.Checked = Economy.TitleColor.Enabled;
-            checkBoxRank.Checked = rankItem.Enabled;
-            checkBoxLevel.Checked = Economy.Levels.Enabled;
+            ttl_numPrice.Value = Economy.Title.Price;
+            col_numPrice.Value = Economy.Color.Price;
+            tcl_numPrice.Value = Economy.TitleColor.Price;
+            eco_cbEnabled.Checked = Economy.Enabled;
+            ttl_cbEnabled.Checked = Economy.Title.Enabled;
+            col_cbEnabled.Checked = Economy.Color.Enabled;
+            tcl_cbEnabled.Checked = Economy.TitleColor.Enabled;
+            rnk_cbEnabled.Checked = rankItem.Enabled;
+            lvl_cbEnabled.Checked = Economy.Levels.Enabled;
 
             //load all ranks in combobox
             List<string> groupList = new List<string>();
             foreach (Group group in Group.GroupList)
                 if (group.Permission > LevelPermission.Guest && group.Permission < LevelPermission.Nobody)
                     groupList.Add(group.Name);
-            comboBoxRank.DataSource = groupList;
-            comboBoxRank.SelectedItem = rankItem.MaxRank;
+            rnk_cmbMax.DataSource = groupList;
+            rnk_cmbMax.SelectedItem = rankItem.MaxRank;
 
             UpdateRanks();
             UpdateLevels();
             
-            //initialize enables
-            groupBoxTitle.Enabled = checkBoxEco.Checked;
-            groupBoxColor.Enabled = checkBoxEco.Checked;
-            groupBoxTcolor.Enabled = checkBoxEco.Checked;
-            groupBoxRank.Enabled = checkBoxEco.Checked;
-            groupBoxLevel.Enabled = checkBoxEco.Checked;
-            labelPriceTitle.Enabled = checkBoxTitle.Checked;
-            labelPriceColor.Enabled = checkBoxColor.Checked;
-            labelPriceTcolor.Enabled = checkBoxTcolor.Checked;
-            numericUpDownTitle.Enabled = checkBoxTitle.Checked;
-            numericUpDownColor.Enabled = checkBoxColor.Checked;
-            numericUpDownTcolor.Enabled = checkBoxTcolor.Checked;
-            labelMaxrank.Enabled = checkBoxRank.Checked;
-            comboBoxRank.Enabled = checkBoxRank.Checked;
-            listBoxRank.Enabled = checkBoxRank.Checked;
-            labelPriceRank.Enabled = checkBoxRank.Checked;
-            numericUpDownRank.Enabled = checkBoxRank.Checked;
-            dataGridView1.Enabled = checkBoxLevel.Checked;
-            buttonAdd.Enabled = checkBoxLevel.Checked;
+            ttl_gb.Enabled = eco_cbEnabled.Checked;
+            col_gb.Enabled = eco_cbEnabled.Checked;
+            tcl_gb.Enabled = eco_cbEnabled.Checked;
+            rnk_gb.Enabled = eco_cbEnabled.Checked;
+            lvl_gb.Enabled = eco_cbEnabled.Checked;
+            
+            ttl_lblPrice.Enabled = ttl_cbEnabled.Checked;
+            ttl_numPrice.Enabled = ttl_cbEnabled.Checked;
+            col_lblPrice.Enabled = col_cbEnabled.Checked;
+            col_numPrice.Enabled = col_cbEnabled.Checked;
+            tcl_lblPrice.Enabled = tcl_cbEnabled.Checked;
+            tcl_numPrice.Enabled = tcl_cbEnabled.Checked;
+            
+            rnk_lblMax.Enabled = rnk_cbEnabled.Checked;
+            rnk_cmbMax.Enabled = rnk_cbEnabled.Checked;
+            rnk_lbRanks.Enabled = rnk_cbEnabled.Checked;
+            rnk_lblPrice.Enabled = rnk_cbEnabled.Checked;
+            rnk_numPrice.Enabled = rnk_cbEnabled.Checked;
+            lvl_dgvMaps.Enabled = lvl_cbEnabled.Checked;
+            lvl_btnAdd.Enabled = lvl_cbEnabled.Checked;
             CheckLevelEnables();
 
-            SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             this.Font = SystemFonts.IconTitleFont;
         }
 
@@ -66,104 +67,104 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
-            SystemEvents.UserPreferenceChanged -= new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
+            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
 
         void UpdateRanks() {
             RankItem rankItem = Economy.Ranks;
             rankItem.UpdatePrices();
 
-            List<string> ranklist = new List<string>();
+            List<string> ranks = new List<string>();
             foreach (RankItem.Rank rank in rankItem.RanksList) {
-                ranklist.Add(rank.group.Name);
+                ranks.Add(rank.group.Name);
                 if (rank.group.Permission >= rankItem.MaxRank) break;
             }
-            listBoxRank.DataSource = ranklist;
-            listBoxRank.SelectedItem = comboBoxRank.SelectedItem;
-            listBoxRank_SelectedIndexChanged(null, null);
+            rnk_lbRanks.DataSource = ranks;
+            rnk_lbRanks.SelectedItem = rnk_cmbMax.SelectedItem;
+            rnk_lbRanks_SelectedIndexChanged(null, null);
         }
 
         public void UpdateLevels() {
-            dataGridView1.Rows.Clear();
+            lvl_dgvMaps.Rows.Clear();
             foreach (LevelItem.LevelPreset preset in Economy.Levels.Presets) {
-                dataGridView1.Rows.Add(preset.name, preset.price, preset.x, preset.y, preset.z, preset.type);
+                lvl_dgvMaps.Rows.Add(preset.name, preset.price, preset.x, preset.y, preset.z, preset.type);
             }
         }
 
         public void CheckLevelEnables() {
-            buttonRemove.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
-            buttonEdit.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
+            lvl_btnRemove.Enabled = lvl_cbEnabled.Checked && lvl_dgvMaps.SelectedRows.Count > 0;
+            lvl_btnEdit.Enabled   = lvl_cbEnabled.Checked && lvl_dgvMaps.SelectedRows.Count > 0;
         }
 
-        void checkBoxEco_CheckedChanged(object sender, EventArgs e) {
-            groupBoxTitle.Enabled = checkBoxEco.Checked;
-            groupBoxColor.Enabled = checkBoxEco.Checked;
-            groupBoxTcolor.Enabled = checkBoxEco.Checked;
-            groupBoxRank.Enabled = checkBoxEco.Checked;
-            groupBoxLevel.Enabled = checkBoxEco.Checked;
-            Economy.Enabled = checkBoxEco.Checked;
+        void eco_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            ttl_gb.Enabled = eco_cbEnabled.Checked;
+            col_gb.Enabled = eco_cbEnabled.Checked;
+            tcl_gb.Enabled = eco_cbEnabled.Checked;
+            rnk_gb.Enabled = eco_cbEnabled.Checked;
+            lvl_gb.Enabled = eco_cbEnabled.Checked;
+            Economy.Enabled = eco_cbEnabled.Checked;
         }
 
-        void checkBoxTitle_CheckedChanged(object sender, EventArgs e) {
-            labelPriceTitle.Enabled = checkBoxTitle.Checked;
-            numericUpDownTitle.Enabled = checkBoxTitle.Checked;
-            Economy.Title.Enabled = checkBoxTitle.Checked;
-            Economy.Title.Price = (int)numericUpDownTitle.Value;
+        void ttl_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            ttl_lblPrice.Enabled = ttl_cbEnabled.Checked;
+            ttl_numPrice.Enabled = ttl_cbEnabled.Checked;
+            Economy.Title.Enabled = ttl_cbEnabled.Checked;
+            Economy.Title.Price = (int)ttl_numPrice.Value;
         }
 
-        void checkBoxColor_CheckedChanged(object sender, EventArgs e) {
-            labelPriceColor.Enabled = checkBoxColor.Checked;
-            numericUpDownColor.Enabled = checkBoxColor.Checked;
-            Economy.Color.Enabled = checkBoxColor.Checked;
-            Economy.Color.Price = (int)numericUpDownColor.Value;
+        void col_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            col_lblPrice.Enabled = col_cbEnabled.Checked;
+            col_numPrice.Enabled = col_cbEnabled.Checked;
+            Economy.Color.Enabled = col_cbEnabled.Checked;
+            Economy.Color.Price = (int)col_numPrice.Value;
         }
 
-        void checkBoxTcolor_CheckedChanged(object sender, EventArgs e) {
-            labelPriceTcolor.Enabled = checkBoxTcolor.Checked;
-            numericUpDownTcolor.Enabled = checkBoxTcolor.Checked;
-            Economy.TitleColor.Enabled = checkBoxTcolor.Checked;
-            Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
+        void tcl_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            tcl_lblPrice.Enabled = tcl_cbEnabled.Checked;
+            tcl_numPrice.Enabled = tcl_cbEnabled.Checked;
+            Economy.TitleColor.Enabled = tcl_cbEnabled.Checked;
+            Economy.TitleColor.Price = (int)tcl_numPrice.Value;
         }
 
-        void numericUpDownTitle_ValueChanged(object sender, EventArgs e) {
-            Economy.Title.Price = (int)numericUpDownTitle.Value;
+        void ttl_numPrice_ValueChanged(object sender, EventArgs e) {
+            Economy.Title.Price = (int)ttl_numPrice.Value;
         }
 
-        void numericUpDownColor_ValueChanged(object sender, EventArgs e) {
-            Economy.Color.Price = (int)numericUpDownColor.Value;
+        void col_numPrice_ValueChanged(object sender, EventArgs e) {
+            Economy.Color.Price = (int)col_numPrice.Value;
         }
 
-        void numericUpDownTcolor_ValueChanged(object sender, EventArgs e) {
-            Economy.TitleColor.Price = (int)numericUpDownTcolor.Value;
+        void tcl_numPrice_ValueChanged(object sender, EventArgs e) {
+            Economy.TitleColor.Price = (int)tcl_numPrice.Value;
         }
 
-        void checkBoxRank_CheckedChanged(object sender, EventArgs e) {
-            labelMaxrank.Enabled = checkBoxRank.Checked;
-            comboBoxRank.Enabled = checkBoxRank.Checked;
-            listBoxRank.Enabled = checkBoxRank.Checked;
-            labelPriceRank.Enabled = checkBoxRank.Checked;
-            numericUpDownRank.Enabled = checkBoxRank.Checked;
-            Economy.Ranks.Enabled = checkBoxRank.Checked;
+        void rnk_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            rnk_lblMax.Enabled = rnk_cbEnabled.Checked;
+            rnk_cmbMax.Enabled = rnk_cbEnabled.Checked;
+            rnk_lbRanks.Enabled = rnk_cbEnabled.Checked;
+            rnk_lblPrice.Enabled = rnk_cbEnabled.Checked;
+            rnk_numPrice.Enabled = rnk_cbEnabled.Checked;
+            Economy.Ranks.Enabled = rnk_cbEnabled.Checked;
         }
 
-        void comboBoxRank_SelectionChangeCommitted(object sender, EventArgs e) {
-            Economy.Ranks.MaxRank = GuiPerms.GetPermission(comboBoxRank, LevelPermission.AdvBuilder);
+        void rnk_cmbMax_SelectionChangeCommitted(object sender, EventArgs e) {
+            Economy.Ranks.MaxRank = GuiPerms.GetPermission(rnk_cmbMax, LevelPermission.AdvBuilder);
             UpdateRanks();
         }
 
-        void numericUpDownRank_ValueChanged(object sender, EventArgs e) {
-            if (listBoxRank.SelectedItem != null) {
-                RankItem.Rank rank = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString());
-                if (rank != null) rank.price = (int)numericUpDownRank.Value;
+        void rnk_numPrice_ValueChanged(object sender, EventArgs e) {
+            if (rnk_lbRanks.SelectedItem != null) {
+                RankItem.Rank rank = Economy.Ranks.FindRank(rnk_lbRanks.SelectedItem.ToString());
+                if (rank != null) rank.price = (int)rnk_numPrice.Value;
             }
         }
 
-        void listBoxRank_SelectedIndexChanged(object sender, EventArgs e) {
-            if (listBoxRank.SelectedItem == null) {
-                numericUpDownRank.Value = 0;
+        void rnk_lbRanks_SelectedIndexChanged(object sender, EventArgs e) {
+            if (rnk_lbRanks.SelectedItem == null) {
+                rnk_numPrice.Value = 0;
             } else {
-                RankItem.Rank rank = Economy.Ranks.FindRank(listBoxRank.SelectedItem.ToString());
-                numericUpDownRank.Value = rank != null ? rank.price : 0;
+                RankItem.Rank rank = Economy.Ranks.FindRank(rnk_lbRanks.SelectedItem.ToString());
+                rnk_numPrice.Value = rank != null ? rank.price : 0;
             }
         }
 
@@ -172,38 +173,39 @@ namespace MCGalaxy.Gui.Eco {
             Economy.Save();
         }
 
-        void checkBoxLevel_CheckedChanged(object sender, EventArgs e) {
-            dataGridView1.Enabled = checkBoxLevel.Checked;
-            buttonAdd.Enabled = checkBoxLevel.Checked;
+        void lvl_cbEnabled_CheckedChanged(object sender, EventArgs e) {
+            lvl_dgvMaps.Enabled = lvl_cbEnabled.Checked;
+            lvl_btnAdd.Enabled = lvl_cbEnabled.Checked;
             CheckLevelEnables();
-            Economy.Levels.Enabled = checkBoxLevel.Checked;
+            Economy.Levels.Enabled = lvl_cbEnabled.Checked;
         }
 
-        void buttonAdd_Click(object sender, EventArgs e) {
+        void lvl_btnAdd_Click(object sender, EventArgs e) {
             new EcoLevelWindow(this).ShowDialog();
         }
 
-        void buttonEdit_Click(object sender, EventArgs e) {
-            string name = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
-            int price = (int)dataGridView1.SelectedRows[0].Cells[1].Value;
-            string x = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
-            string y = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
-            string z = dataGridView1.SelectedRows[0].Cells[4].Value.ToString();
-            string type = dataGridView1.SelectedRows[0].Cells[5].Value.ToString();
+        void lvl_btnEdit_Click(object sender, EventArgs e) {
+            DataGridViewRow row = lvl_dgvMaps.SelectedRows[0];
+            string name = row.Cells[0].Value.ToString();
+            int price   = (int)row.Cells[1].Value;
+            string x    = row.Cells[2].Value.ToString();
+            string y    = row.Cells[3].Value.ToString();
+            string z    = row.Cells[4].Value.ToString();
+            string type = row.Cells[5].Value.ToString();
             new EcoLevelWindow(this, name, price, x, y, z, type, true).ShowDialog();
         }
 
-        void buttonRemove_Click(object sender, EventArgs e) {
+        void lvl_btnRemove_Click(object sender, EventArgs e) {
             LevelItem item = Economy.Levels;
-            item.Presets.Remove(item.FindPreset(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
-            dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
-            buttonRemove.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
-            buttonEdit.Enabled = checkBoxLevel.Checked && dataGridView1.SelectedRows.Count > 0;
+            DataGridViewRow row = lvl_dgvMaps.SelectedRows[0];
+            item.Presets.Remove(item.FindPreset(row.Cells[0].Value.ToString()));
+            lvl_dgvMaps.Rows.RemoveAt(row.Index);
+            CheckLevelEnables();
         }
 
-        void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
-            buttonEdit.Enabled = true;
-            buttonRemove.Enabled = true;
+        void lvl_dgvMaps_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            lvl_btnEdit.Enabled = true;
+            lvl_btnRemove.Enabled = true;
         }
     }
 }
