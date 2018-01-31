@@ -3,119 +3,80 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using MCGalaxy.Eco;
+using MCGalaxy.Generator;
 using Microsoft.Win32;
 
 namespace MCGalaxy.Gui.Eco {
     public partial class EcoLevelWindow : Form {
 
-        private bool edit = false;
-        private struct LevelEdit {
-            public string name, x, y, z, oldname;
-            public int price;
-            public string type;
-        }
-        private LevelEdit lvledit;
+        EconomyWindow _eco;
+        string _name, _x, _y, _z, _type, _origName;
+        int _price;
 
-        EconomyWindow eco;
-
-        public EcoLevelWindow(EconomyWindow eco, string name = "", int price = 0, string x = "", string y = "", string z = "", string type = "", bool edit = false) {
-            this.edit = edit;
-            this.eco = eco;
-            lvledit.name = name;
-            lvledit.oldname = name;
-            lvledit.price = price;
-            lvledit.x = x;
-            lvledit.y = y;
-            lvledit.z = z;
-            lvledit.type = type;
+        public EcoLevelWindow(EconomyWindow eco, string name, int price, string x, string y, string z, string type) {
+            _eco = eco;
+            _name = name; _origName = name;
+            _x = x; _y = y; _z = z;
+            _price = price; _type = type;
 
             InitializeComponent();
-
-            SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             this.Font = SystemFonts.IconTitleFont;
         }
 
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+        void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
             if (e.Category == UserPreferenceCategory.Window) {
                 this.Font = SystemFonts.IconTitleFont;
             }
         }
 
-        private void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
-            SystemEvents.UserPreferenceChanged -= new UserPreferenceChangedEventHandler(SystemEvents_UserPreferenceChanged);
-            edit = false;
+        void EcoLevelWindow_FormClosing(object sender, FormClosingEventArgs e) {
+            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
 
-        private void EcoLevelWindow_Load(object sender, EventArgs e) {
-            List<string> dimensionsX = new List<string>();
-            string[] dimensionsY = new string[6];
-            string[] dimensionsZ = new string[6];
-            dimensionsX.Add("16");
-            dimensionsX.Add("32");
-            dimensionsX.Add("64");
-            dimensionsX.Add("128");
-            dimensionsX.Add("256");
-            dimensionsX.Add("512");
-            dimensionsX.CopyTo(dimensionsY);
-            dimensionsX.CopyTo(dimensionsZ);
-            comboBoxX.DataSource = dimensionsX;
-            comboBoxY.DataSource = dimensionsY;
-            comboBoxZ.DataSource = dimensionsZ;
-
+        static string[] dimensions = new string[] { "16", "32", "64", "128", "256", "512" };
+        void EcoLevelWindow_Load(object sender, EventArgs e) {
+            cmbX.DataSource = dimensions;
+            cmbY.DataSource = dimensions;
+            cmbZ.DataSource = dimensions;
+            
             List<string> types = new List<string>();
-            types.Add("Flat");
-            types.Add("Pixel");
-            types.Add("Island");
-            types.Add("Mountains");
-            types.Add("Ocean");
-            types.Add("Forest");
-            types.Add("Desert");
-            types.Add("Space");
-            types.Add("Rainbow");
-            types.Add("Hell");
-            comboBoxType.DataSource = types;
-
-            if (edit) {
-                textBoxName.Text = lvledit.name;
-                numericUpDownPrice.Value = lvledit.price;
-                comboBoxX.SelectedItem = lvledit.x;
-                comboBoxY.SelectedItem = lvledit.y;
-                comboBoxZ.SelectedItem = lvledit.z;
-                comboBoxType.SelectedItem = lvledit.type;
-            } else {
-                numericUpDownPrice.Value = 1000;
-                comboBoxX.SelectedItem = "64";
-                comboBoxY.SelectedItem = "64";
-                comboBoxZ.SelectedItem = "64";
-                comboBoxType.SelectedItem = "Flat";
+            foreach (string theme in MapGen.SimpleThemeNames) {
+                types.Add(theme);
             }
-            buttonOk.Enabled = edit;
+            cmbType.DataSource = types;
+
+            txtName.Text = _name;
+            numPrice.Value = _price;
+            cmbX.SelectedItem = _x;
+            cmbY.SelectedItem = _y;
+            cmbZ.SelectedItem = _z;
+            cmbType.SelectedItem = _type;
+            btnOk.Enabled = _name.Length > 0;
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e) {
-            this.Close();
-        }
+        void btnCancel_Click(object sender, EventArgs e) { Close(); }
 
-        private void buttonOk_Click(object sender, EventArgs e) {
+        void btnOk_Click(object sender, EventArgs e) {
             LevelItem item = Economy.Levels;
-            if (edit) item.Presets.Remove(item.FindPreset(lvledit.oldname));
+            if (_origName.Length > 0) item.Presets.Remove(item.FindPreset(_origName));
+            
             LevelItem.LevelPreset preset = new LevelItem.LevelPreset();
-            preset.name = textBoxName.Text.Split()[0];
-            preset.price = (int)numericUpDownPrice.Value;
-            preset.x = comboBoxX.SelectedItem.ToString();
-            preset.y = comboBoxY.SelectedItem.ToString();
-            preset.z = comboBoxZ.SelectedItem.ToString();
-            preset.type = comboBoxType.SelectedItem.ToString().ToLower();
+            preset.name = txtName.Text.Split()[0];
+            preset.price = (int)numPrice.Value;
+            preset.x = cmbX.SelectedItem.ToString();
+            preset.y = cmbY.SelectedItem.ToString();
+            preset.z = cmbZ.SelectedItem.ToString();
+            preset.type = cmbType.SelectedItem.ToString().ToLower();
             
             item.Presets.Add(preset);
-            eco.UpdateLevels();
-            eco.CheckLevelEnables();
-            this.Close();
+            _eco.UpdateLevels();
+            _eco.CheckLevelEnables();
+            Close();
         }
 
-        private void textBoxName_TextChanged(object sender, EventArgs e) {
-            buttonOk.Enabled = textBoxName.Text != null && textBoxName.Text != String.Empty && textBoxName.Text != "";
+        void txtName_TextChanged(object sender, EventArgs e) {
+            btnOk.Enabled = txtName.Text != null && txtName.Text.Length > 0;
         }
-
     }
 }

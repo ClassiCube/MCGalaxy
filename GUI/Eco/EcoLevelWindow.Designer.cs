@@ -23,201 +23,201 @@ namespace MCGalaxy.Gui.Eco {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.buttonOk = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownPrice = new System.Windows.Forms.NumericUpDown();
-            this.comboBoxX = new System.Windows.Forms.ComboBox();
-            this.comboBoxY = new System.Windows.Forms.ComboBox();
-            this.comboBoxZ = new System.Windows.Forms.ComboBox();
-            this.comboBoxType = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrice)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.lblName = new System.Windows.Forms.Label();
+            this.lblPrice = new System.Windows.Forms.Label();
+            this.lblX = new System.Windows.Forms.Label();
+            this.lblY = new System.Windows.Forms.Label();
+            this.lblZ = new System.Windows.Forms.Label();
+            this.lblType = new System.Windows.Forms.Label();
+            this.numPrice = new System.Windows.Forms.NumericUpDown();
+            this.cmbX = new System.Windows.Forms.ComboBox();
+            this.cmbY = new System.Windows.Forms.ComboBox();
+            this.cmbZ = new System.Windows.Forms.ComboBox();
+            this.cmbType = new System.Windows.Forms.ComboBox();
+            this.panel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.numPrice)).BeginInit();
+            this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // buttonOk
+            // btnOk
             // 
-            this.buttonOk.AutoSize = true;
-            this.buttonOk.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonOk.Enabled = false;
-            this.buttonOk.Location = new System.Drawing.Point(12, 252);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(36, 27);
-            this.buttonOk.TabIndex = 0;
-            this.buttonOk.Text = "Ok";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
+            this.btnOk.AutoSize = true;
+            this.btnOk.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnOk.Enabled = false;
+            this.btnOk.Location = new System.Drawing.Point(12, 252);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(36, 27);
+            this.btnOk.TabIndex = 0;
+            this.btnOk.Text = "Ok";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // buttonCancel
+            // btnCancel
             // 
-            this.buttonCancel.AutoSize = true;
-            this.buttonCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(54, 252);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(61, 27);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.btnCancel.AutoSize = true;
+            this.btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(54, 252);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(61, 27);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // textBoxName
+            // txtName
             // 
-            this.textBoxName.Location = new System.Drawing.Point(70, 9);
-            this.textBoxName.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
-            this.textBoxName.MaxLength = 32;
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(112, 22);
-            this.textBoxName.TabIndex = 2;
-            this.textBoxName.Tag = "";
-            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            this.txtName.Location = new System.Drawing.Point(70, 9);
+            this.txtName.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
+            this.txtName.MaxLength = 32;
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(112, 22);
+            this.txtName.TabIndex = 2;
+            this.txtName.Tag = "";
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
-            // label1
+            // lblName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 12);
-            this.label1.Margin = new System.Windows.Forms.Padding(10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 17);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Name";
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(12, 12);
+            this.lblName.Margin = new System.Windows.Forms.Padding(10);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(45, 17);
+            this.lblName.TabIndex = 3;
+            this.lblName.Text = "Name";
             // 
-            // label2
+            // lblPrice
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 49);
-            this.label2.Margin = new System.Windows.Forms.Padding(10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 17);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Price";
+            this.lblPrice.AutoSize = true;
+            this.lblPrice.Location = new System.Drawing.Point(12, 49);
+            this.lblPrice.Margin = new System.Windows.Forms.Padding(10);
+            this.lblPrice.Name = "lblPrice";
+            this.lblPrice.Size = new System.Drawing.Size(40, 17);
+            this.lblPrice.TabIndex = 4;
+            this.lblPrice.Text = "Price";
             // 
-            // label3
+            // lblX
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 86);
-            this.label3.Margin = new System.Windows.Forms.Padding(10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(17, 17);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "X";
+            this.lblX.AutoSize = true;
+            this.lblX.Location = new System.Drawing.Point(12, 86);
+            this.lblX.Margin = new System.Windows.Forms.Padding(10);
+            this.lblX.Name = "lblX";
+            this.lblX.Size = new System.Drawing.Size(17, 17);
+            this.lblX.TabIndex = 5;
+            this.lblX.Text = "X";
             // 
-            // label4
+            // lblY
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 123);
-            this.label4.Margin = new System.Windows.Forms.Padding(10);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(17, 17);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Y";
+            this.lblY.AutoSize = true;
+            this.lblY.Location = new System.Drawing.Point(12, 123);
+            this.lblY.Margin = new System.Windows.Forms.Padding(10);
+            this.lblY.Name = "lblY";
+            this.lblY.Size = new System.Drawing.Size(17, 17);
+            this.lblY.TabIndex = 6;
+            this.lblY.Text = "Y";
             // 
-            // label5
+            // lblZ
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 160);
-            this.label5.Margin = new System.Windows.Forms.Padding(10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(17, 17);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Z";
+            this.lblZ.AutoSize = true;
+            this.lblZ.Location = new System.Drawing.Point(12, 160);
+            this.lblZ.Margin = new System.Windows.Forms.Padding(10);
+            this.lblZ.Name = "lblZ";
+            this.lblZ.Size = new System.Drawing.Size(17, 17);
+            this.lblZ.TabIndex = 7;
+            this.lblZ.Text = "Z";
             // 
-            // label6
+            // lblType
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 197);
-            this.label6.Margin = new System.Windows.Forms.Padding(10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(40, 17);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Type";
+            this.lblType.AutoSize = true;
+            this.lblType.Location = new System.Drawing.Point(12, 197);
+            this.lblType.Margin = new System.Windows.Forms.Padding(10);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(40, 17);
+            this.lblType.TabIndex = 8;
+            this.lblType.Text = "Type";
             // 
-            // numericUpDownPrice
+            // numPrice
             // 
-            this.numericUpDownPrice.AutoSize = true;
-            this.numericUpDownPrice.Location = new System.Drawing.Point(70, 47);
-            this.numericUpDownPrice.Maximum = new decimal(new int[] {
+            this.numPrice.AutoSize = true;
+            this.numPrice.Location = new System.Drawing.Point(70, 47);
+            this.numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
             0,
             0});
-            this.numericUpDownPrice.Name = "numericUpDownPrice";
-            this.numericUpDownPrice.Size = new System.Drawing.Size(88, 22);
-            this.numericUpDownPrice.TabIndex = 9;
-            this.numericUpDownPrice.Value = new decimal(new int[] {
+            this.numPrice.Name = "numPrice";
+            this.numPrice.Size = new System.Drawing.Size(88, 22);
+            this.numPrice.TabIndex = 9;
+            this.numPrice.Value = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             // 
-            // comboBoxX
+            // cmbX
             // 
-            this.comboBoxX.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxX.FormattingEnabled = true;
-            this.comboBoxX.Location = new System.Drawing.Point(70, 83);
-            this.comboBoxX.MaxDropDownItems = 6;
-            this.comboBoxX.Name = "comboBoxX";
-            this.comboBoxX.Size = new System.Drawing.Size(64, 24);
-            this.comboBoxX.TabIndex = 10;
+            this.cmbX.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbX.FormattingEnabled = true;
+            this.cmbX.Location = new System.Drawing.Point(70, 83);
+            this.cmbX.MaxDropDownItems = 6;
+            this.cmbX.Name = "cmbX";
+            this.cmbX.Size = new System.Drawing.Size(64, 24);
+            this.cmbX.TabIndex = 10;
             // 
-            // comboBoxY
+            // cmbY
             // 
-            this.comboBoxY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxY.FormattingEnabled = true;
-            this.comboBoxY.Location = new System.Drawing.Point(70, 120);
-            this.comboBoxY.MaxDropDownItems = 6;
-            this.comboBoxY.Name = "comboBoxY";
-            this.comboBoxY.Size = new System.Drawing.Size(64, 24);
-            this.comboBoxY.TabIndex = 11;
+            this.cmbY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbY.FormattingEnabled = true;
+            this.cmbY.Location = new System.Drawing.Point(70, 120);
+            this.cmbY.MaxDropDownItems = 6;
+            this.cmbY.Name = "cmbY";
+            this.cmbY.Size = new System.Drawing.Size(64, 24);
+            this.cmbY.TabIndex = 11;
             // 
-            // comboBoxZ
+            // cmbZ
             // 
-            this.comboBoxZ.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxZ.FormattingEnabled = true;
-            this.comboBoxZ.Location = new System.Drawing.Point(70, 157);
-            this.comboBoxZ.MaxDropDownItems = 6;
-            this.comboBoxZ.Name = "comboBoxZ";
-            this.comboBoxZ.Size = new System.Drawing.Size(64, 24);
-            this.comboBoxZ.TabIndex = 12;
+            this.cmbZ.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbZ.FormattingEnabled = true;
+            this.cmbZ.Location = new System.Drawing.Point(70, 157);
+            this.cmbZ.MaxDropDownItems = 6;
+            this.cmbZ.Name = "cmbZ";
+            this.cmbZ.Size = new System.Drawing.Size(64, 24);
+            this.cmbZ.TabIndex = 12;
             // 
-            // comboBoxType
+            // cmbType
             // 
-            this.comboBoxType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxType.FormattingEnabled = true;
-            this.comboBoxType.Location = new System.Drawing.Point(70, 194);
-            this.comboBoxType.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
-            this.comboBoxType.MaxDropDownItems = 6;
-            this.comboBoxType.Name = "comboBoxType";
-            this.comboBoxType.Size = new System.Drawing.Size(112, 24);
-            this.comboBoxType.TabIndex = 13;
+            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.FormattingEnabled = true;
+            this.cmbType.Location = new System.Drawing.Point(70, 194);
+            this.cmbType.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
+            this.cmbType.MaxDropDownItems = 6;
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(112, 24);
+            this.cmbType.TabIndex = 13;
             // 
-            // panel1
+            // panel
             // 
-            this.panel1.AutoSize = true;
-            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.comboBoxType);
-            this.panel1.Controls.Add(this.comboBoxZ);
-            this.panel1.Controls.Add(this.comboBoxY);
-            this.panel1.Controls.Add(this.comboBoxX);
-            this.panel1.Controls.Add(this.numericUpDownPrice);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.textBoxName);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(192, 224);
-            this.panel1.TabIndex = 14;
+            this.panel.AutoSize = true;
+            this.panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel.Controls.Add(this.cmbType);
+            this.panel.Controls.Add(this.cmbZ);
+            this.panel.Controls.Add(this.cmbY);
+            this.panel.Controls.Add(this.cmbX);
+            this.panel.Controls.Add(this.numPrice);
+            this.panel.Controls.Add(this.lblType);
+            this.panel.Controls.Add(this.lblZ);
+            this.panel.Controls.Add(this.lblY);
+            this.panel.Controls.Add(this.lblX);
+            this.panel.Controls.Add(this.lblPrice);
+            this.panel.Controls.Add(this.lblName);
+            this.panel.Controls.Add(this.txtName);
+            this.panel.Location = new System.Drawing.Point(12, 12);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(192, 224);
+            this.panel.TabIndex = 14;
             // 
             // EcoLevelWindow
             // 
@@ -225,11 +225,11 @@ namespace MCGalaxy.Gui.Eco {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CancelButton = this.buttonCancel;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(216, 287);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonOk);
+            this.Controls.Add(this.panel);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -237,9 +237,9 @@ namespace MCGalaxy.Gui.Eco {
             this.ShowIcon = false;
             this.Text = "Add Level Preset";
             this.Load += new System.EventHandler(this.EcoLevelWindow_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrice)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPrice)).EndInit();
+            this.panel.ResumeLayout(false);
+            this.panel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -247,20 +247,20 @@ namespace MCGalaxy.Gui.Eco {
 
         #endregion
 
-        private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.TextBox textBoxName;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDownPrice;
-        private System.Windows.Forms.ComboBox comboBoxX;
-        private System.Windows.Forms.ComboBox comboBoxY;
-        private System.Windows.Forms.ComboBox comboBoxZ;
-        private System.Windows.Forms.ComboBox comboBoxType;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Label lblPrice;
+        private System.Windows.Forms.Label lblX;
+        private System.Windows.Forms.Label lblY;
+        private System.Windows.Forms.Label lblZ;
+        private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.NumericUpDown numPrice;
+        private System.Windows.Forms.ComboBox cmbX;
+        private System.Windows.Forms.ComboBox cmbY;
+        private System.Windows.Forms.ComboBox cmbZ;
+        private System.Windows.Forms.ComboBox cmbType;
+        private System.Windows.Forms.Panel panel;
     }
 }
