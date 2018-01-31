@@ -209,6 +209,8 @@ namespace MCGalaxy {
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
                 
                 ZoneConfig cfg = zn.Config;
+                if (cfg.BuildBlacklist.Count > 0 && cfg.BuildBlacklist.CaselessContains(p.name)) break;
+                
                 if (p.group.Permission >= cfg.BuildMin) return true;
                 if (cfg.BuildWhitelist.Count > 0 && cfg.BuildWhitelist.CaselessContains(p.name)) return true;
             }
