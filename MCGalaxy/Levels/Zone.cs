@@ -132,10 +132,29 @@ namespace MCGalaxy {
             }
         }
         
+        public void Unshow(Player p) {
+            if (!p.Supports(CpeExt.SelectionCuboid) || !Shows) return;
+            p.Send(Packet.DeleteSelection(ID));
+        }
+        
+        public void UnshowAll(Level lvl) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == lvl) Unshow(p);
+            }
+        }
+        
         public void AddTo(Level level) {
             lock (level.Zones.locker) {
                 ID = NextFreeZoneId(level);
                 level.Zones.Add(this);
+            }
+        }
+        
+        public void RemoveFrom(Level level) {
+            lock (level.Zones.locker) {
+                UnshowAll(level);
+                level.Zones.Remove(this);
             }
         }
         

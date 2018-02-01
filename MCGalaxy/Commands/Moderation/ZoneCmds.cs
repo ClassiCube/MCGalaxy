@@ -97,9 +97,9 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Hence, you cannot delete this zone."); return;
             }
             
-            lvl.Zones.Remove(zone);
+            zone.RemoveFrom(lvl);
             Player.Message(p, "Zone " + zone.ColoredName + " %Sdeleted");
-            lvl.Save();
+            lvl.Save(true);
         }
         
         void EditZone(Player p, string[] args, Zone zone) {
