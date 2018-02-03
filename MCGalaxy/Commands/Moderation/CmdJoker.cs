@@ -16,13 +16,13 @@
     permissions and limitations under the Licenses.
 */
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Commands.Chatting;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdJoker : Command {       
         public override string name { get { return "Joker"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public static string keywords { get { return ""; } }
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
@@ -38,6 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (p != null && who.Rank > p.Rank) { 
                 MessageTooHighRank(p, "joker", true); return;
             }
+            if (!MessageCmd.CanSpeak(p, name)) return;
 
             if (!who.joker) {
                 if (stealth) { 

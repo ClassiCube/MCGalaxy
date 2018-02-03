@@ -46,56 +46,57 @@ namespace MCGalaxy.Commands.CPE {
         
         internal static bool Handle(Player p, string opt, string value) {
             Level lvl = p.level;
+            LevelConfig cfg = lvl.Config;
             // using if else instead of switch here reduces IL by about 200 bytes
             
             if (opt == "fog") {
-                LevelEnv.SetColor(p, value, 2, opt, ref lvl.Config.FogColor);
+                LevelEnv.SetColor(p, value, 2, opt, ref cfg.FogColor);
             } else if (opt == "cloud" || opt == "clouds") {
-                LevelEnv.SetColor(p, value, 1, opt, ref lvl.Config.CloudColor);
+                LevelEnv.SetColor(p, value, 1, opt, ref cfg.CloudColor);
             } else if (opt == "sky") {
-                LevelEnv.SetColor(p, value, 0, opt, ref lvl.Config.SkyColor);
+                LevelEnv.SetColor(p, value, 0, opt, ref cfg.SkyColor);
             } else if (opt == "dark" || opt == "shadow") {
-                LevelEnv.SetColor(p, value, 3, opt, ref lvl.Config.ShadowColor);
+                LevelEnv.SetColor(p, value, 3, opt, ref cfg.ShadowColor);
             } else if (opt == "sun" || opt == "light" || opt == "sunlight") {
-                LevelEnv.SetColor(p, value, 4, opt, ref lvl.Config.LightColor);
+                LevelEnv.SetColor(p, value, 4, opt, ref cfg.LightColor);
             } else if (opt == "weather") {
                 LevelEnv.SetWeather(p, p.level, value);
             } else if (opt == "cloudheight" || opt == "cloudsheight") {
                 LevelEnv.SetShort(p, value, EnvProp.CloudsLevel,
-                                  "clouds height", (short)(lvl.Height + 2), ref lvl.Config.CloudsHeight);
+                                  "clouds height", (short)(lvl.Height + 2), ref cfg.CloudsHeight);
             } else if (opt == "waterlevel" || opt == "edgelevel" || opt == "level") {
                 LevelEnv.SetShort(p, value, EnvProp.EdgeLevel,
-                                  "water level", (short)(lvl.Height / 2), ref lvl.Config.EdgeLevel);
+                                  "water level", (short)(lvl.Height / 2), ref cfg.EdgeLevel);
             } else if (opt == "bedrockoffset" || opt == "sidesoffset" || opt == "sideoffset") {
                 LevelEnv.SetShort(p, value, EnvProp.SidesOffset,
-                                  "bedrock offset", -2, ref lvl.Config.SidesOffset);
+                                  "bedrock offset", -2, ref cfg.SidesOffset);
             } else if (opt == "maxfogdistance" || opt == "maxfog" || opt == "fogdistance") {
                 LevelEnv.SetShort(p, value, EnvProp.MaxFog,
-                                  "max fog distance", 0, ref lvl.Config.MaxFogDistance);
+                                  "max fog distance", 0, ref cfg.MaxFogDistance);
             } else if (opt == "cloudspeed" || opt == "cloudsspeed") {
                 LevelEnv.SetFloat(p, value, EnvProp.CloudsSpeed, 256, "clouds speed",
-                                  256, ref lvl.Config.CloudsSpeed, -0xFFFFFF, 0xFFFFFF);
+                                  256, ref cfg.CloudsSpeed, -0xFFFFFF, 0xFFFFFF);
             } else if (opt == "weatherspeed") {
                 LevelEnv.SetFloat(p, value, EnvProp.WeatherSpeed, 256, "weather speed",
-                                  256, ref lvl.Config.WeatherSpeed, -0xFFFFFF, 0xFFFFFF);
+                                  256, ref cfg.WeatherSpeed, -0xFFFFFF, 0xFFFFFF);
             } else if (opt == "weatherfade") {
                 LevelEnv.SetFloat(p, value, EnvProp.WeatherFade, 128, "weather fade rate",
-                                  128, ref lvl.Config.WeatherFade, 0, 255);
+                                  128, ref cfg.WeatherFade, 0, 255);
             } else if (opt == "horizon" || opt == "edge" || opt == "water") {
                 LevelEnv.SetBlock(p, value, EnvProp.EdgeBlock,
-                                  "edge block", Block.Water, ref lvl.Config.HorizonBlock);
+                                  "edge block", Block.Water, ref cfg.HorizonBlock);
             } else if (opt == "side" || opt == "border" || opt == "bedrock") {
                 LevelEnv.SetBlock(p, value, EnvProp.SidesBlock,
-                                  "sides block", Block.Bedrock, ref lvl.Config.EdgeBlock);
+                                  "sides block", Block.Bedrock, ref cfg.EdgeBlock);
             } else if (opt == "expfog") {
                 LevelEnv.SetBool(p, value, EnvProp.ExpFog,
-                                 "exp fog", false, ref lvl.Config.ExpFog);
+                                 "exp fog", false, ref cfg.ExpFog);
             } else if (opt == "skyboxhorspeed" || opt == "skyboxhor") {
                 LevelEnv.SetFloat(p, value, EnvProp.SkyboxHorSpeed, 1024, "skybox horizontal speed",
-                                  0, ref lvl.Config.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);
+                                  0, ref cfg.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);
             }  else if (opt == "skyboxverspeed" || opt == "skyboxver") {
                 LevelEnv.SetFloat(p, value, EnvProp.SkyboxVerSpeed, 1024, "skybox vertical speed",
-                                  0, ref lvl.Config.SkyboxVerSpeed, -0xFFFFFF, 0xFFFFFF);
+                                  0, ref cfg.SkyboxVerSpeed, -0xFFFFFF, 0xFFFFFF);
             } else {
                 return false;
             }

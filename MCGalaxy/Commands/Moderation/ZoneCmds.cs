@@ -117,7 +117,11 @@ namespace MCGalaxy.Commands.Moderation {
                 zone.Config.ShowColor = args[3];
                 zone.ShowAll(p.level);
             } else if (opt.CaselessEq("alpha")) {
-                if (!CommandParser.GetByte(p, args[3], "Alpha", ref zone.Config.ShowAlpha)) return;
+                byte alpha = 0;
+                if (!CommandParser.GetByte(p, args[3], "Alpha", ref alpha)) return;
+                
+                zone.UnshowAll(p.level);
+                zone.Config.ShowAlpha = alpha;
                 zone.ShowAll(p.level);
             } else {
                 Player.Message(p, "?????");

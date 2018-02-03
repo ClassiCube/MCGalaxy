@@ -151,7 +151,7 @@ namespace MCGalaxy {
         // Physics settings
         [ConfigInt("Physics", "Physics", 0, 0, 5)]
         public int Physics;
-        [ConfigInt("Physics overload", "Physics", 250)]
+        [ConfigInt("Physics overload", "Physics", 1500)]
         public int PhysicsOverload = 1500;
         [ConfigInt("Physics speed", "Physics", 250)]
         public int PhysicsSpeed = 250;
