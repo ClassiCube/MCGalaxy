@@ -75,7 +75,7 @@ namespace MCGalaxy {
                 Player.Message(p, "Only {2}%S+ {3}may {0} {1}",
                                Action, ColoredName, Group.GetColoredName(Min), whitelist);
             } else if (result == AccessResult.AboveMaxRank) {
-                Player.Message(p, "Only {2} %Sand below {3}may{0} {1}",
+                Player.Message(p, "Only {2} %Sand below {3}may {0} {1}",
                                Action, ColoredName, Group.GetColoredName(Max), whitelist);
             }
             return false;
