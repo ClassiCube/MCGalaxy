@@ -36,14 +36,14 @@ namespace MCGalaxy.Drawing.Brushes {
                 return new SolidBrush(args.Block);
             }
             
-            ExtBlock block;
+            ushort block;
             if (!CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block)) return null;
             return new SolidBrush(block);
         }
         
         public override bool Validate(BrushArgs args) {
             if (args.Message.Length == 0) return true;
-            ExtBlock block;
+            ushort block;
             return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block);
         }
     }
@@ -62,22 +62,22 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
-                return new CheckeredBrush(args.Block, ExtBlock.Invalid);
+                return new CheckeredBrush(args.Block, Block.Invalid);
             }
             string[] parts = args.Message.SplitSpaces();
             
-            ExtBlock block1;
+            ushort block1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
-                return new CheckeredBrush(block1, ExtBlock.Invalid);
+                return new CheckeredBrush(block1, Block.Invalid);
             
             if (parts.Length == 2) {
-                ExtBlock block2;
+                ushort block2;
                 if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
                 return new CheckeredBrush(block1, block2);
             }
             
-            ExtBlock[] blocks = new ExtBlock[parts.Length];
+            ushort[] blocks = new ushort[parts.Length];
             for (int i = 0; i < blocks.Length; i++) {
                 if (!CommandParser.GetBlockIfAllowed(args.Player, parts[i], out blocks[i], true)) return null;
             }            
@@ -135,16 +135,16 @@ namespace MCGalaxy.Drawing.Brushes {
         public override Brush Construct(BrushArgs args) {
             if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
-                return new StripedBrush(args.Block, ExtBlock.Air);
+                return new StripedBrush(args.Block, Block.Air);
             }
             string[] parts = args.Message.SplitSpaces();
             
-            ExtBlock block1;
+            ushort block1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
-                return new StripedBrush(block1, ExtBlock.Air);
+                return new StripedBrush(block1, Block.Air);
             
-            ExtBlock block2;
+            ushort block2;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
             return new StripedBrush(block1, block2);
         }

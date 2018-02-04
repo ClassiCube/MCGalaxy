@@ -114,7 +114,7 @@ namespace MCGalaxy {
         
         
         static bool CheckBlock(Player p, string value, string variable, ref byte modify) {
-            ExtBlock block;
+            ushort block;
             if (!CommandParser.GetBlock(p, value, out block)) return false;
             
             if (block.IsPhysicsType) {

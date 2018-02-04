@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
             byte block = data.water ? (data.killer ? Block.Deadly_ActiveWater : Block.Water) 
                 : (data.fast ? (data.killer ? Block.Deadly_FastLava : Block.FastLava) 
                    : (data.killer ? Block.Deadly_ActiveLava : Block.Lava));
-            data.block = (ExtBlock)block;
+            data.block = (ushort)block;
             return data;
         }
 
@@ -195,7 +195,7 @@ namespace MCGalaxy.Games {
         public class MapData : IDisposable
         {
             public bool fast, killer, destroy, water, layer;
-            public ExtBlock block;
+            public ushort block;
             public int currentLayer;
             public Timer roundTimer, floodTimer, layerTimer;
 
@@ -206,7 +206,7 @@ namespace MCGalaxy.Games {
                 destroy = false;
                 water = false;
                 layer = false;
-                block = (ExtBlock)Block.Lava;
+                block = Block.Lava;
                 currentLayer = 1;
                 roundTimer = new Timer(TimeSpan.FromMinutes(settings.roundTime).TotalMilliseconds); roundTimer.AutoReset = false;
                 floodTimer = new Timer(TimeSpan.FromMinutes(settings.floodTime).TotalMilliseconds); floodTimer.AutoReset = false;

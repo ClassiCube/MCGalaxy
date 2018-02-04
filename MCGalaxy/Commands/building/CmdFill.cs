@@ -59,10 +59,10 @@ namespace MCGalaxy.Commands.Building {
             dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            ExtBlock old = p.level.GetBlock(x, y, z);
+            ushort old = p.level.GetBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
             if (dArgs.Mode == DrawMode.volcano) dArgs.Mode = Calc2DFill(p, marks);            

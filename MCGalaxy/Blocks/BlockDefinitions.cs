@@ -145,14 +145,14 @@ namespace MCGalaxy {
         
         public static void UpdateGlobalBlockProps() {
             for (int i = 0; i < GlobalProps.Length; i++) {
-                ExtBlock block = ExtBlock.FromRaw((byte)i);
+                ushort block = Block.FromRaw((byte)i);
                 GlobalProps[i] = BlockProps.MakeDefault();
                 GlobalProps[i] = DefaultProps(block);
             }
             BlockProps.Load("global", GlobalProps, GlobalPropsLock, false);
         }
         
-        internal static BlockProps DefaultProps(ExtBlock block) {
+        internal static BlockProps DefaultProps(ushort block) {
             if (block.IsPhysicsType) {
                 return Block.Props[block.Index];
             } else if (!block.IsCustomType && GlobalDefs[block.RawID] == null) {
@@ -168,7 +168,7 @@ namespace MCGalaxy {
                 for (int i = 0; i < lvl.CustomBlockDefs.Length; i++) {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
-                    ExtBlock block = ExtBlock.FromRaw((byte)i);
+                    ushort block = Block.FromRaw((byte)i);
                     lvl.Props[block.Index] = DefaultProps(block);
                     lvl.UpdateCustomBlock(block.RawID, GlobalDefs[i]);
                 }

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             p.staticCommands = !p.staticCommands;
             p.ClearBlockchange();
-            p.ModeBlock = ExtBlock.Air;
+            p.ModeBlock = Block.Air;
 
             Player.Message(p, "Static mode: &a" + p.staticCommands);
             if (message.Length == 0 || !p.staticCommands) return;

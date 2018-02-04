@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks.Physics {
                         lvl.AddUpdate(b2, Block.Fireworks);
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
-                        lvl.AddUpdate(b1, Block.StillLava, false, args);
+                        lvl.AddUpdate(b1, Block.StillLava, args);
                     }
                 } else if (b == Block.TNT) {
                     lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
@@ -60,31 +60,26 @@ namespace MCGalaxy.Blocks.Physics {
         /// <summary> Activates doors, tdoors and toggles odoors at (x, y, z) </summary>
         public static void DoDoors(Level lvl, ushort x, ushort y, ushort z, bool instant) {
             int index;
-            ExtBlock block = lvl.GetBlock(x, y, z, out index);
+            ushort block = lvl.GetBlock(x, y, z, out index);
             if (index == -1) return;
             
-            int i = block.Index;
-            if (lvl.Props[i].IsDoor) {
+            if (lvl.Props[block].IsDoor) {
                 byte physForm;
                 PhysicsArgs args = GetDoorArgs(block, out physForm);
-                if (!instant) lvl.AddUpdate(index, physForm, false, args);
-                else lvl.Blockchange(index, (ExtBlock)physForm, false, args);
-            } else if (lvl.Props[i].IsTDoor) {
+                if (!instant) lvl.AddUpdate(index, physForm, args);
+                else lvl.Blockchange(index, (ushort)physForm, false, args);
+            } else if (lvl.Props[block].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block);
-                lvl.AddUpdate(index, Block.Air, false, args);
+                lvl.AddUpdate(index, Block.Air,  args);
             } else {
-                ushort oDoorIndex = lvl.Props[i].oDoorIndex;
-                if (oDoorIndex == Block.Invalid) return;
-                ExtBlock oDoor = ExtBlock.FromIndex(oDoorIndex);
-                
-                PhysicsArgs args = default(PhysicsArgs);
-                args.ExtBlock = oDoor.BlockID == Block.custom_block;
-                lvl.AddUpdate(index, oDoor.RawID, true, args);
+                ushort oDoor = lvl.Props[block].oDoorBlock;
+                if (oDoor == Block.Invalid) return;
+                lvl.AddUpdate(index, oDoor, true);
             }
         }
         
         
-        internal static PhysicsArgs GetDoorArgs(ExtBlock block, out byte physForm) {
+        internal static PhysicsArgs GetDoorArgs(ushort block, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;
@@ -92,17 +87,17 @@ namespace MCGalaxy.Blocks.Physics {
             args.ExtBlock = block.BlockID == Block.custom_block;
             
             physForm = Block.Door_Log_air; // air
-            if (block.BlockID == Block.Door_Air || block.BlockID == Block.Door_AirActivatable) {
+            if (block == Block.Door_Air || block == Block.Door_AirActivatable) {
                 args.Value1 = 4 - 1;
-            } else if (block.BlockID == Block.Door_Green) {
+            } else if (block == Block.Door_Green) {
                 physForm = Block.Door_Green_air; // red wool
-            } else if (block.BlockID == Block.Door_TNT) {
+            } else if (block == Block.Door_TNT) {
                 args.Value1 = 4 - 1; physForm = Block.Door_TNT_air; // lava
             }
             return args;
         }
         
-        internal static PhysicsArgs GetTDoorArgs(ExtBlock block) {
+        internal static PhysicsArgs GetTDoorArgs(ushort block) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;

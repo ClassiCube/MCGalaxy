@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Missile"; } }
         protected override string Weapon { get { return "Missile"; } }
 
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block) {
             if (!p.staticCommands) {
                 p.ClearBlockchange();
                 p.aiming = false;
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Fun {
             if (args.previous.Count > 0) {
                 Vec3U16 pos = args.previous[0];
                 args.previous.RemoveAt(0);
-                args.player.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                args.player.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
             }
             task.Repeating = args.previous.Count > 0;
         }
@@ -82,10 +82,10 @@ namespace MCGalaxy.Commands.Fun {
             
             for (i = 1; ; i++) {
                 Vec3U16 target = args.PosAt(i);
-                ExtBlock block = p.level.GetBlock(target.X, target.Y, target.Z);
-                if (block.BlockID == Block.Invalid) break;
+                ushort block = p.level.GetBlock(target.X, target.Y, target.Z);
+                if (block == Block.Invalid) break;
 
-                if (block.BlockID != Block.Air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.weaponType, target, false))
+                if (block != Block.Air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.weaponType, target, false))
                     break;
 
                 Player hit = GetPlayer(p, target, true);
@@ -96,8 +96,8 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool MoveMissile(WeaponArgs args, Vec3U16 pos, Vec3U16 target) {
             Player p = args.player;
-            ExtBlock block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
-            if (block.BlockID != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.weaponType, pos, true))
+            ushort block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
+            if (block != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.weaponType, pos, true))
                 return false;
 
             p.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);
@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands.Fun {
 
             if (args.previous.Count > 12) {
                 pos = args.previous[0];
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
                 args.previous.RemoveAt(0);
             }
             return true;
@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            ExtBlock stone = (ExtBlock)Block.Cobblestone;
+            ushort stone = Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
                 pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);

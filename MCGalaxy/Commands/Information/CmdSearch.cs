@@ -49,20 +49,20 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static string CoreBlockName(ExtBlock block) { return Block.Name(block.BlockID); }
+        static string CoreBlockName(ushort block) { return Block.Name(block.BlockID); }
         static void SearchBlocks(Player p, string keyword, string modifier) {
-            List<ExtBlock> blockIDs = new List<ExtBlock>();
+            List<ushort> blockIDs = new List<ushort>();
             for (byte id = 0; id < Block.Invalid; id++) {
                 if (!Block.Name(id).CaselessEq("unknown")) {
-                    blockIDs.Add(new ExtBlock(id, 0));
+                    blockIDs.Add(new ushort(id, 0));
                 }
             }
-            StringFormatter<ExtBlock> getName;
+            StringFormatter<ushort> getName;
             
             if (!Player.IsSuper(p)) {
                 for (int id = Block.CpeCount; id < Block.Count; id++) {
                     if (p.level.CustomBlockDefs[id] == null) continue;
-                    blockIDs.Add(new ExtBlock(Block.custom_block, (byte)id));
+                    blockIDs.Add(new ushort(Block.custom_block, (byte)id));
                 }
                 getName = p.level.BlockName;
             } else {

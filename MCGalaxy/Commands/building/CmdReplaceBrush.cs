@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             
-            ExtBlock target;
+            ushort target;
             if (!CommandParser.GetBlockIfAllowed(p, args[0], out target)) return null;
             
             BrushFactory factory = BrushFactory.Find(args[1]);

@@ -21,10 +21,10 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class RandomBrush : Brush {
-        readonly ExtBlock[] blocks;
+        readonly ushort[] blocks;
         readonly int seed;
         
-        public RandomBrush(ExtBlock[] blocks) {
+        public RandomBrush(ushort[] blocks) {
             this.blocks = blocks;
             seed = new Random().Next();
         }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         int next;
         const int mask = 0x7fffffff;
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             // Sourced from http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
             int n = (op.Coords.X + 1217 * op.Coords.Y + 4751 * op.Coords.Z + 673 * seed) & mask;
             n = (n >> 13) ^ n;

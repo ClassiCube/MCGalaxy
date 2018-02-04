@@ -165,48 +165,44 @@ namespace MCGalaxy.Commands {
         
         
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
-        public static bool GetBlock(Player p, string input, out ExtBlock block, bool allowSkip = false) {
-            block = default(ExtBlock);
+        public static bool GetBlock(Player p, string input, out ushort block, bool allowSkip = false) {
+            block = default(ushort);
             // Skip/None block for draw operations
             if (allowSkip && (input.CaselessEq("skip") || input.CaselessEq("none"))) {
-                block = ExtBlock.Invalid; return true;
+                block = Block.Invalid; return true;
             }
             
             block = RawGetBlock(p, input);
-            if (block.IsInvalid) Player.Message(p, "&cThere is no block \"{0}\".", input);
-            return !block.IsInvalid;
+            if (block == Block.Invalid) Player.Message(p, "&cThere is no block \"{0}\".", input);
+            return block != Block.Invalid;
         }
         
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> This does not output any messages to the player. </remarks>
-        public static ExtBlock RawGetBlock(Player p, string input) {
+        public static ushort RawGetBlock(Player p, string input) {
             BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             byte id;
             // raw ID is treated specially, before names
             if (byte.TryParse(input, out id) && (id < Block.CpeCount || defs[id] != null)) {
-                return ExtBlock.FromRaw(id);
+                return Block.FromRaw(id);
             }
             
             int raw = BlockDefinition.GetBlock(input, defs);
-            if (raw != -1) return ExtBlock.FromRaw((byte)raw);
-            
-            id = Block.Byte(input);
-            if (id != Block.Invalid) return new ExtBlock(id, 0);
-            
-            return ExtBlock.Invalid;
+            if (raw != -1) return Block.FromRaw((byte)raw);
+            return Block.Byte(input);
         }
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
-        public static bool GetBlockIfAllowed(Player p, string input, out ExtBlock block, bool allowSkip = false) {
+        public static bool GetBlockIfAllowed(Player p, string input, out ushort block, bool allowSkip = false) {
             if (!GetBlock(p, input, out block, allowSkip)) return false;
-            if (allowSkip && block == ExtBlock.Invalid) return true;
+            if (allowSkip && block == Block.Invalid) return true;
             return IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
-        public static bool IsBlockAllowed(Player p, string action, ExtBlock block) {
+        public static bool IsBlockAllowed(Player p, string action, ushort block) {
             if (p == null || BlockPerms.UsableBy(p, block.BlockID)) return true;
             BlockPerms.List[block.BlockID].MessageCannotUse(p, action);
             return false;

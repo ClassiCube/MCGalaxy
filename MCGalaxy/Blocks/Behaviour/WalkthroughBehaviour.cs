@@ -25,31 +25,31 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks {
     internal static class WalkthroughBehaviour {
 
-        internal static bool Door(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static bool Door(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0) return true;
 
             byte physForm;
             PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
-            p.level.Blockchange(x, y, z, (ExtBlock)physForm, false, args);
+            p.level.Blockchange(x, y, z, (ushort)physForm, false, args);
             return true;
         }
         
-        internal static bool Train(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (!p.trainInvincible) p.HandleDeath((ExtBlock)Block.Train);
+        internal static bool Train(Player p, ushort block, ushort x, ushort y, ushort z) {
+            if (!p.trainInvincible) p.HandleDeath(Block.Train);
             return true;
         }       
         
-        internal static bool DoPortal(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static bool DoPortal(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             return Portal.Handle(p, x, y, z);
         }
         
-        internal static bool DoMessageBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static bool DoMessageBlock(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
             return MessageBlock.Handle(p, x, y, z, false);
         }
         
-        internal static bool Checkpoint(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static bool Checkpoint(Player p, ushort block, ushort x, ushort y, ushort z) {
             p.useCheckpointSpawn = true;
             p.checkpointX = x; p.checkpointY = (ushort)(y + 1); p.checkpointZ = z;
             p.checkpointRotX = p.Rot.RotY; p.checkpointRotY = p.Rot.HeadX;

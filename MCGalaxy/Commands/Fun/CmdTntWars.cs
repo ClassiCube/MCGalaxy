@@ -1027,7 +1027,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        bool DeleteZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DeleteZoneCallback(Player p, Vec3S32[] marks, object state, ushort block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             TntWarsGame it = TntWarsGame.GameIn(p);
             
@@ -1039,7 +1039,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        bool CheckZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool CheckZoneCallback(Player p, Vec3S32[] marks, object state, ushort block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             TntWarsGame it = TntWarsGame.GameIn(p);
             
@@ -1061,7 +1061,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        bool AddZoneCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool AddZoneCallback(Player p, Vec3S32[] marks, object state, ushort block) {
             Vec3U16 p1 = (Vec3U16)marks[0], p2 = (Vec3U16)marks[1];
             TntWarsGame.Zone Zn = new TntWarsGame.Zone();
             

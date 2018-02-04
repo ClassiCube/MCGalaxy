@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);
         }
         
-        bool DoDrill(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoDrill(Player p, Vec3S32[] marks, object state, ushort block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetBlock(x, y, z);
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
@@ -75,10 +75,10 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        void DoBlock(Player p, Level lvl, ExtBlock block, ushort x, ushort y, ushort z) {
-            ExtBlock cur = lvl.GetBlock(x, y, z);
+        void DoBlock(Player p, Level lvl, ushort block, ushort x, ushort y, ushort z) {
+            ushort cur = lvl.GetBlock(x, y, z);
             if (cur == block) {
-                p.level.UpdateBlock(p, x, y, z, ExtBlock.Air, BlockDBFlags.Drawn, true);
+                p.level.UpdateBlock(p, x, y, z, Block.Air, BlockDBFlags.Drawn, true);
             }
         }
         

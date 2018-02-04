@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, "Selecting direction for %SWrite", wArgs, DoWrite);
         }
 
-        bool DoWrite(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoWrite(Player p, Vec3S32[] marks, object state, ushort block) {
             WriteArgs wArgs = (WriteArgs)state;
             if (marks[0].X == marks[1].X && marks[0].Z == marks[1].Z) { 
                 Player.Message(p, "No direction was selected"); return false; 

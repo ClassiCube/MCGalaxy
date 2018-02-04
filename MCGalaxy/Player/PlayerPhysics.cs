@@ -31,15 +31,15 @@ namespace MCGalaxy.Blocks.Physics {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ExtBlock block = p.level.GetBlock(xP, yP, zP);
-                if (block.BlockID == Block.Invalid) continue;
+                ushort block = p.level.GetBlock(xP, yP, zP);
+                if (block == Block.Invalid) continue;
                 
-                AABB blockBB = p.level.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
+                AABB blockBB = p.level.blockAABBs[block].Offset(x * 32, y * 32, z * 32);
                 if (!AABB.Intersects(ref bb, ref blockBB)) continue;
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {
-                    HandleWalkthrough handler = p.level.walkthroughHandlers[block.Index];
+                    HandleWalkthrough handler = p.level.walkthroughHandlers[block];
                     if (handler != null && handler(p, block, xP, yP, zP)) {
                         p.lastWalkthrough = p.level.PosToInt(xP, yP, zP);
                         hitWalkthrough = true;
@@ -47,9 +47,9 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 
                 // Some blocks will cause death of players
-                if (!p.level.Props[block.Index].KillerBlock) continue;               
-                if (block.BlockID == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
-                if (block.BlockID == Block.Train && p.trainInvincible) continue;
+                if (!p.level.Props[block].KillerBlock) continue;               
+                if (block == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (block == Block.Train && p.trainInvincible) continue;
                 p.HandleDeath(block);
             }
             
@@ -64,14 +64,14 @@ namespace MCGalaxy.Blocks.Physics {
             for (int z = min.Z; z <= max.Z; z++)
                 for (int x = min.X; x <= max.X; x++)
             {
-                ExtBlock block = GetSurvivalBlock(p, x, min.Y, z);
+                ushort block = GetSurvivalBlock(p, x, min.Y, z);
                 byte collide = p.level.CollideType(block);
                 allGas = allGas && collide == CollideType.WalkThrough;                
                 if (!CollideType.IsSolid(collide)) continue;
                 
                 int fallHeight = p.startFallY - bb.Min.Y;
                 if (fallHeight > p.level.Config.FallHeight * 32)
-                    p.HandleDeath(ExtBlock.Air, null, false, true);
+                    p.HandleDeath(Block.Air, null, false, true);
                 
                 p.startFallY = -1;          
                 return;
@@ -88,10 +88,10 @@ namespace MCGalaxy.Blocks.Physics {
             bb.Max.Z -= (bb.Max.Z - bb.Min.Z) / 2;
             
             Vec3S32 P = bb.BlockMax;
-            ExtBlock bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
+            ushort bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
             if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
             
-            if (p.level.Props[bHead.Index].Drownable) {
+            if (p.level.Props[bHead].Drownable) {
                 p.startFallY = -1;
                 DateTime now = DateTime.UtcNow;
                 // level drown is in 10ths of a second
@@ -106,16 +106,16 @@ namespace MCGalaxy.Blocks.Physics {
             } else {
                 bool isGas = p.level.CollideType(bHead) == CollideType.WalkThrough;
                 // NOTE: Rope is a special case, it should always reset fall height
-                if (bHead.BlockID == Block.Rope) isGas = false;
+                if (bHead == Block.Rope) isGas = false;
                 
                 if (!isGas) p.startFallY = -1;
                 p.drownTime = DateTime.MaxValue;
             }
         }
         
-        static ExtBlock GetSurvivalBlock(Player p, int x, int y, int z) {
-            if (y < 0) return (ExtBlock)Block.Bedrock;
-            if (y >= p.level.Height) return ExtBlock.Air;
+        static ushort GetSurvivalBlock(Player p, int x, int y, int z) {
+            if (y < 0) return Block.Bedrock;
+            if (y >= p.level.Height) return Block.Air;
             return p.level.GetBlock((ushort)x, (ushort)y, (ushort)z);
         }
     }

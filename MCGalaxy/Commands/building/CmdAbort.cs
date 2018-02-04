@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
             p.cmdTimer = false;
             p.staticCommands = false;
             p.deleteMode = false;
-            p.ModeBlock = ExtBlock.Air;
+            p.ModeBlock = Block.Air;
             p.aiming = false;
             p.onTrain = false;
             p.isFlying = false;

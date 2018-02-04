@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Building {
             return HeightmapGen.DownloadImage(url, "extra/images/", p);
         }
         
-        bool DoImage(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        bool DoImage(Player p, Vec3S32[] m, object state, ushort block) {
             if (m[0].X == m[1].X && m[0].Z == m[1].Z) { Player.Message(p, "No direction was selected"); return false; }
 
             Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));

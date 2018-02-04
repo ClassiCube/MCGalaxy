@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, dArgs, DoSPlace);
         }
         
-        bool DoSPlace(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        bool DoSPlace(Player p, Vec3S32[] m, object state, ushort block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort distance = dArgs.distance, interval = dArgs.interval;
             if (m[0] == m[1]) { Player.Message(p, "No direction was selected"); return false; }
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Building {
             ushort endY = (ushort)(m[0].Y + dirY * distance);
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
             
-            ExtBlock held = p.GetHeldBlock();
+            ushort held = p.GetHeldBlock();
             p.level.UpdateBlock(p, endX, endY, endZ, held, BlockDBFlags.Drawn, true);
             
             if (interval > 0) {

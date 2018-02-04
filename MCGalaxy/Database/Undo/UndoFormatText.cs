@@ -47,8 +47,8 @@ namespace MCGalaxy.Undo {
                 pos.Y = ushort.Parse(lines[(i * items) - 5]);
                 pos.Z = ushort.Parse(lines[(i * items) - 4]);
                                 
-                pos.Block.BlockID = byte.Parse(lines[(i * items) - 2]);
-                pos.NewBlock.BlockID = byte.Parse(lines[(i * items) - 1]);
+                pos.Block    = byte.Parse(lines[(i * items) - 2]);
+                pos.NewBlock = byte.Parse(lines[(i * items) - 1]);
                 args.Output(pos);
             }
         }

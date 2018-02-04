@@ -129,7 +129,7 @@ namespace MCGalaxy.Undo {
 
     public struct UndoFormatEntry {
         public ushort X, Y, Z;
-        public ExtBlock Block;
-        public ExtBlock NewBlock;
+        public ushort Block;
+        public ushort NewBlock;
     }
 }

@@ -47,16 +47,16 @@ namespace MCGalaxy {
                 
                 // oDoor blocks
                 if (i >= oDoor_Log && i <= oDoor_Wood) {
-                    Props[i].oDoorIndex = (byte)(oDoor_Log_air + (i - oDoor_Log));
+                    Props[i].oDoorBlock = (ushort)(oDoor_Log_air + (i - oDoor_Log));
                 }
                 if (i >= oDoor_Green && i <= oDoor_Water) {
-                    Props[i].oDoorIndex = (byte)(oDoor_Green_air + (i - oDoor_Green));
+                    Props[i].oDoorBlock = (ushort)(oDoor_Green_air + (i - oDoor_Green));
                 }
                 if (i >= oDoor_Log_air && i <= oDoor_Wood_air) {
-                    Props[i].oDoorIndex = (byte)(oDoor_Log + (i - oDoor_Log_air));
+                    Props[i].oDoorBlock = (ushort)(oDoor_Log + (i - oDoor_Log_air));
                 }
                 if (i >= oDoor_Green_air && i <= oDoor_Water_air) {
-                    Props[i].oDoorIndex = (byte)(oDoor_Green + (i - oDoor_Green_air));
+                    Props[i].oDoorBlock = (ushort)(oDoor_Green + (i - oDoor_Green_air));
                 }
                 
                 if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise)) {
@@ -92,7 +92,7 @@ namespace MCGalaxy {
             Props[CobblestoneSlab].StackId = Cobblestone;
             Props[Water].Drownable = true; Props[StillWater].Drownable = true;
             Props[Lava].Drownable = true; Props[StillLava].Drownable = true;
-            Props[Dirt].GrassIndex = Block.Grass; Props[Grass].DirtIndex = Block.Dirt;
+            Props[Dirt].GrassBlock = Block.Grass; Props[Grass].DirtBlock = Block.Dirt;
             
             // Block specific physics properties
             Props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;

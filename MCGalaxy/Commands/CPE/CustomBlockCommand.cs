@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void AddHandler(Player p, string[] parts, bool global, string cmd) {
-            ExtBlock target;
+            ushort target;
             if (parts.Length >= 2 ) {
                 string id = parts[1];
                 if (!CheckBlock(p, id, out target)) return;
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
             } else {
                 target = GetFreeBlock(global, p == null ? null : p.level);
-                if (target == ExtBlock.Invalid) {
+                if (target == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd +" remove a custom block first.");
                     return;
@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 2) { Help(p, cmd); return; }
-            ExtBlock src, dst;
+            ushort src, dst;
             if (!CheckBlock(p, parts[1], out src, true)) return;
             if (!CheckBlock(p, parts[2], out dst)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.CPE {
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
             if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
             
-            BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.Props[src.Index];
+            BlockProps props = global ? BlockDefinition.GlobalProps[src.RawID] : p.level.Props[src];
             dstDef = srcDef.Copy();
             dstDef.BlockID = (byte)dst.RawID;
             dstDef.InventoryOrder = -1;
@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length == 1) { Help(p, cmd); return; }
-            ExtBlock block;
+            ushort block;
             if (!CheckBlock(p, parts[1], out block)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
@@ -171,7 +171,7 @@ namespace MCGalaxy.Commands.CPE {
             
             for (int i = 0; i < Block.Count; i++) {
                 BlockDefinition def = defs[i];
-                ExtBlock block = ExtBlock.FromRaw((byte)i);
+                ushort block = Block.FromRaw((byte)i);
                 
                 if (!ExistsInScope(def, block, global)) continue;
                 defsInScope.Add(def);
@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static void RemoveHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 1) { Help(p, cmd); return; }
-            ExtBlock block;
+            ushort block;
             if (!CheckBlock(p, parts[1], out block)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
@@ -283,7 +283,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (fallback == Block.Invalid) { SendStepHelp(p, global); return; }
                 bd.FallBack = fallback;
                 
-                ExtBlock block = ExtBlock.FromRaw(bd.BlockID);
+                ushort block = Block.FromRaw(bd.BlockID);
                 BlockProps props = BlockDefinition.DefaultProps(block);
                 if (!AddBlock(p, bd, global, cmd, props)) return;
                 
@@ -308,7 +308,7 @@ namespace MCGalaxy.Commands.CPE {
                 return;
             }
             
-            ExtBlock block;
+            ushort block;
             if (!CheckBlock(p, parts[1], out block)) return;
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[block.RawID], globalDef = BlockDefinition.GlobalDefs[block.RawID];
@@ -446,12 +446,12 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition old = defs[def.BlockID];
             if (!global && old == BlockDefinition.GlobalDefs[def.BlockID]) old = null;
-            ExtBlock block;
+            ushort block;
             
             // in case the list is modified before we finish the command.
             if (old != null) {
                 block = GetFreeBlock(global, p == null ? null : p.level);
-                if (block.IsInvalid) {
+                if (block == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd + " remove a custom block first.");
                     if (!global) {
@@ -465,14 +465,14 @@ namespace MCGalaxy.Commands.CPE {
             string scope = global ? "global" : "level";
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
-            block = ExtBlock.FromRaw(def.BlockID);
+            block = Block.FromRaw(def.BlockID);
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             UpdateBlockProps(global, p, block, props);
             return true;
         }
         
         static byte GetFallback(Player p, string value) {
-            ExtBlock block;
+            ushort block;
             if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
             if (block.BlockID == Block.custom_block) {
@@ -487,29 +487,29 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         
-        static ExtBlock GetFreeBlock(bool global, Level lvl) {
+        static ushort GetFreeBlock(bool global, Level lvl) {
             // Start from opposite ends to avoid overlap.
             if (global) {
                 BlockDefinition[] defs = BlockDefinition.GlobalDefs;
                 for (int i = Block.CpeCount; i < Block.Invalid; i++) {
-                    if (defs[i] == null) return ExtBlock.FromRaw((byte)i);
+                    if (defs[i] == null) return Block.FromRaw((byte)i);
                 }
             } else {
                 BlockDefinition[] defs = lvl.CustomBlockDefs;
                 for (int i = Block.Invalid - 1; i >= Block.CpeCount; i--) {
-                    if (defs[i] == null) return ExtBlock.FromRaw((byte)i);
+                    if (defs[i] == null) return Block.FromRaw((byte)i);
                 }
             }
-            return ExtBlock.Invalid;
+            return Block.Invalid;
         }
         
-        static void MessageNoBlock(Player p, ExtBlock block, bool global, string cmd) {
+        static void MessageNoBlock(Player p, ushort block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", block.RawID, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
-        static void MessageAlreadyBlock(Player p, ExtBlock block, bool global, string cmd) {
+        static void MessageAlreadyBlock(Player p, ushort block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", block.RawID, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
@@ -537,20 +537,20 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool CheckBlock(Player p, string arg, out ExtBlock block, bool allowAir = false) {
-            block = ExtBlock.Invalid;
+        static bool CheckBlock(Player p, string arg, out ushort block, bool allowAir = false) {
+            block = Block.Invalid;
             int raw = 0;
             int min = allowAir ? 0 : 1;
             bool success = CommandParser.GetInt(p, arg, "Block ID", ref raw, min, 255);
             
-            block = ExtBlock.FromRaw((byte)raw);
+            block = Block.FromRaw((byte)raw);
             return success;
         }
         
         
-        static void UpdateBlockProps(bool global, Player p, ExtBlock block, BlockProps props) {
+        static void UpdateBlockProps(bool global, Player p, ushort block, BlockProps props) {
             if (!global) {
-                p.level.Props[block.Index] = props;
+                p.level.Props[block] = props;
                 p.level.UpdateBlockHandler(block);
                 return;
             }
@@ -561,15 +561,15 @@ namespace MCGalaxy.Commands.CPE {
             
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.Props[block.Index] = props;
+                lvl.Props[block] = props;
                 lvl.UpdateBlockHandler(block);
             }
         }
         
-        static void RemoveBlockProps(bool global, ExtBlock block, Player p) {
+        static void RemoveBlockProps(bool global, ushort block, Player p) {
             // Level block reverts to using global block
             if (!global) {
-                p.level.Props[block.Index] = BlockDefinition.DefaultProps(block);
+                p.level.Props[block] = BlockDefinition.DefaultProps(block);
                 p.level.UpdateBlockHandler(block);
                 return;
             }
@@ -583,7 +583,7 @@ namespace MCGalaxy.Commands.CPE {
             
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.Props[block.Index] = BlockDefinition.GlobalProps[block.RawID];
+                lvl.Props[block] = BlockDefinition.GlobalProps[block.RawID];
                 lvl.UpdateBlockHandler(block);
             }
         }
@@ -612,7 +612,7 @@ namespace MCGalaxy.Commands.CPE {
             else p.lbStep = step;
         }
         
-        static bool ExistsInScope(BlockDefinition def, ExtBlock block, bool global) {
+        static bool ExistsInScope(BlockDefinition def, ushort block, bool global) {
             return def != null && (global ? true : def != BlockDefinition.GlobalDefs[block.RawID]);
         }
         

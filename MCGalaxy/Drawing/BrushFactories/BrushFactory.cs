@@ -58,9 +58,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public string Message;
         
         /// <summary> Block the player is currently holding. </summary>
-        public ExtBlock Block;
+        public ushort Block;
         
-        public BrushArgs(Player p, string message, ExtBlock block) {
+        public BrushArgs(Player p, string message, ushort block) {
             Player = p; Message = message; Block = block;
         }
     }

@@ -143,14 +143,14 @@ namespace MCGalaxy.Games.ZS {
             }
         }
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
+        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ushort block, bool placing) {
             if (p.level != Game.Map) return;
-            ExtBlock old = Game.Map.GetBlock(x, y, z);
+            ushort old = Game.Map.GetBlock(x, y, z);
             
             if (Game.Map.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
-            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.Props[old.Index].OPBlock) {
+            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.Props[old].OPBlock) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
             

@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoUndoArea(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoUndoArea(Player p, Vec3S32[] marks, object state, ushort block) {
             UndoAreaArgs args = (UndoAreaArgs)state;
             UndoPlayer(p, args.delta, args.names, args.ids, marks);
             return false;

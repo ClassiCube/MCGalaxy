@@ -38,7 +38,7 @@ namespace MCGalaxy {
             task.Delay = TimeSpan.FromMilliseconds(time);
         }
 
-        public static void Addblock(Player p, int index, ExtBlock block) {
+        public static void Addblock(Player p, int index, ushort block) {
             if (index == -1) return;
             // Bit packing format
             // 32-63: index

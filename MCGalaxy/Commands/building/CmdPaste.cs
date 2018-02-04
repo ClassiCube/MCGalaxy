@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
         	    Player.Message(p, "You haven't copied anything yet"); return; 
         	}
             
-            BrushArgs args = new BrushArgs(p, message, ExtBlock.Air);
+            BrushArgs args = new BrushArgs(p, message, Block.Air);
             Brush brush = BrushFactory.Find("paste").Construct(args);
             if (brush == null) return;
             
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, "Selecting location for %SPaste", brush, DoPaste);
         }
 
-        bool DoPaste(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        bool DoPaste(Player p, Vec3S32[] m, object state, ushort block) {
         	CopyState cState = p.CopySlots[p.CurrentCopySlot];
             m[0] += cState.Offset;
 

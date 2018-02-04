@@ -41,23 +41,23 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (message.Length == 0) {
-                if (p.ModeBlock != ExtBlock.Air) {
+                if (p.ModeBlock != Block.Air) {
                     Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
-                    p.ModeBlock = ExtBlock.Air;
+                    p.ModeBlock = Block.Air;
                 } else {
                     Help(p);
                 }
                 return;
             }
             
-            ExtBlock block;
+            ushort block;
             if (!CommandParser.GetBlock(p, message, out block)) return;
-            if (block == ExtBlock.Air) { Player.Message(p, "Cannot use Air Mode."); return; }
+            if (block == Block.Air) { Player.Message(p, "Cannot use Air Mode."); return; }
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             if (p.ModeBlock == block) {
                 Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
-                p.ModeBlock = ExtBlock.Air;
+                p.ModeBlock = Block.Air;
             } else {
                 p.ModeBlock = block;
                 Player.Message(p, "&b{0} %Smode: &aON", p.level.BlockName(p.ModeBlock));

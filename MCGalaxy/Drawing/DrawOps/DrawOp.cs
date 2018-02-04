@@ -25,7 +25,7 @@ namespace MCGalaxy {
     
     public struct DrawOpBlock {
         public ushort X, Y, Z;
-        public ExtBlock Block;
+        public ushort Block;
     }
 }
 
@@ -111,7 +111,7 @@ namespace MCGalaxy.Drawing.Ops {
             return Coords;
         }
         
-        protected DrawOpBlock Place(ushort x, ushort y, ushort z, ExtBlock block) {
+        protected DrawOpBlock Place(ushort x, ushort y, ushort z, ushort block) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
             Coords.Block = block;
             return Coords;

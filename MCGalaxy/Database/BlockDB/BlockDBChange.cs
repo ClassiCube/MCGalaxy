@@ -25,14 +25,14 @@ namespace MCGalaxy.DB {
     public static class BlockDBChange {
         
         public static void Output(Player p, string name, BlockDBEntry e) {
-            ExtBlock oldBlock = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
-            ExtBlock newBlock = ExtBlock.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
+            ushort oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            ushort newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
             DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
             name = PlayerInfo.GetColoredName(p, name);
             
-            if (newBlock.BlockID == Block.Air) {
+            if (newBlock == Block.Air) {
                 Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
                                delta.Shorten(true, false), name,
                                p.level.BlockName(oldBlock),
@@ -45,9 +45,9 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static void OutputMessageBlock(Player p, ExtBlock block,
+        public static void OutputMessageBlock(Player p, ushort block,
                                               ushort x, ushort y, ushort z) {
-            if (!p.level.Props[block.Index].IsMessageBlock) return;
+            if (!p.level.Props[block].IsMessageBlock) return;
 
             try {
                 if (!Database.Backend.TableExists("Messages" + p.level.name)) return;
@@ -63,9 +63,9 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static void OutputPortal(Player p, ExtBlock block,
+        public static void OutputPortal(Player p, ushort block,
                                         ushort x, ushort y, ushort z) {
-            if (!p.level.Props[block.Index].IsPortal) return;
+            if (!p.level.Props[block].IsPortal) return;
 
             try {
                 if (!Database.Backend.TableExists("Portals" + p.level.name)) return;

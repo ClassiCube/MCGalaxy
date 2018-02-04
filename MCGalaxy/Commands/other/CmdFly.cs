@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Misc {
             if (state.player.isFlying) { DoFly(state); return; }
             
             foreach (Vec3U16 pos in state.lastGlass) {
-                p.SendBlockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air);
+                p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Air);
             }            
             Player.Message(p, "Stopped flying");
             task.Repeating = false;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Misc {
 
             int x = p.Pos.BlockX, z = p.Pos.BlockZ;
             int y = (p.Pos.Y - 60) / 32;
-            ExtBlock glass = (ExtBlock)Block.Glass;
+            ushort glass = Block.Glass;
 
             for (int yy = y - 1; yy <= y; yy++)
                 for (int zz = z - 2; zz <= z + 2; zz++)

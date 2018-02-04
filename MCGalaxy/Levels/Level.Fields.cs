@@ -40,18 +40,18 @@ namespace MCGalaxy {
         public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
             
         public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.Count];
-        public BlockProps[] Props = new BlockProps[Block.Count * 2];
+        public BlockProps[] Props = new BlockProps[Block.ExtendedCount];
         internal readonly object PropsLock = new object();
         public ExtrasCollection Extras = new ExtrasCollection();
         public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
         bool unloadedBots;
         
-        internal HandleDelete[] deleteHandlers = new HandleDelete[Block.Count * 2];
-        internal HandlePlace[] placeHandlers = new HandlePlace[Block.Count * 2];
-        internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.Count * 2];
-        internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.Count * 2];
-        internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.Count * 2];
-        internal AABB[] blockAABBs = new AABB[Block.Count * 2];
+        internal HandleDelete[] deleteHandlers = new HandleDelete[Block.ExtendedCount];
+        internal HandlePlace[] placeHandlers = new HandlePlace[Block.ExtendedCount];
+        internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.ExtendedCount];
+        internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.ExtendedCount];
+        internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.ExtendedCount];
+        internal AABB[] blockAABBs = new AABB[Block.ExtendedCount];
         
         public ushort Width, Height, Length;
         public bool IsMuseum;

@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.Building {
             
             Vec3U16 mark = (Vec3U16)P;
             // We only want to activate blocks in the world
-            ExtBlock old = p.level.GetBlock(mark.X, mark.Y, mark.Z);
-            if (!p.CheckManualChange(old, ExtBlock.Air, true)) return;
+            ushort old = p.level.GetBlock(mark.X, mark.Y, mark.Z);
+            if (!p.CheckManualChange(old, Block.Air, true)) return;
             
-            HandleDelete handler = p.level.deleteHandlers[old.Index];
+            HandleDelete handler = p.level.deleteHandlers[old];
             if (handler != null) {
                 handler(p, old, mark.X, mark.Y, mark.Z);
             } else {
@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
             }
             
-            ExtBlock block = p.GetHeldBlock();
+            ushort block = p.GetHeldBlock();
             p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);            
             return true;
         }

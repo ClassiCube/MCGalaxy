@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoRestore(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoRestore(Player p, Vec3S32[] marks, object state, ushort block) {
             string path = LevelInfo.BackupFilePath(p.level.name, (string)state);
             Level source = IMapImporter.Formats[0].Read(path, "templevel", false);
             

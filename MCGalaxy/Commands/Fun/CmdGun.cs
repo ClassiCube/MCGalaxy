@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block) {
             p.RevertBlock(x, y, z);
             if (!p.level.Config.Guns) { p.ClearBlockchange(); return; }
             if (!CommandParser.IsBlockAllowed(p, "use", block)) return;
@@ -59,13 +59,13 @@ namespace MCGalaxy.Commands.Fun {
             args.TeleportSourcePlayer();
             if (args.weaponType == WeaponType.Laser) {
                 foreach (Vec3U16 pos in args.previous) {
-                    args.player.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                    args.player.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
                 }
                 args.previous.Clear();
             } else if (args.previous.Count > 0) {
                 Vec3U16 pos = args.previous[0];
                 args.previous.RemoveAt(0);
-                args.player.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                args.player.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
             }
             task.Repeating = args.previous.Count > 0;
         }
@@ -76,9 +76,9 @@ namespace MCGalaxy.Commands.Fun {
                 args.iterations++;
                 Vec3U16 pos = args.pos;
 
-                ExtBlock cur = args.player.level.GetBlock(pos.X, pos.Y, pos.Z);
-                if (cur.IsInvalid) return false;
-                if (cur.BlockID != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(args.player, cur, args.weaponType, pos, true))
+                ushort cur = args.player.level.GetBlock(pos.X, pos.Y, pos.Z);
+                if (cur == Block.Invalid) return false;
+                if (cur != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(args.player, cur, args.weaponType, pos, true))
                     return false;
 
                 args.player.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (args.iterations > 12 && args.weaponType != WeaponType.Laser) {
                     pos = args.previous[0];
                     args.previous.RemoveAt(0);
-                    args.player.level.Blockchange(pos.X, pos.Y, pos.Z, ExtBlock.Air, true);
+                    args.player.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
                 }
                 
                 if (args.weaponType != WeaponType.Laser) return true;
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            ExtBlock stone = (ExtBlock)Block.Cobblestone;
+            ushort stone = Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
                 pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);

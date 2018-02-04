@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
         public override void Use(Player p, string message) {
-            BrushArgs args = new BrushArgs(p, message.ToLower(), ExtBlock.Air);
+            BrushArgs args = new BrushArgs(p, message.ToLower(), Block.Air);
             Brush brush = BrushFactory.Find("replace").Construct(args);
             if (brush == null) return;
             
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
                         for (ushort x = p1.X; x <= p2.X; x++)
                 {
                     Coords.X = x; Coords.Y = y; Coords.Z = z;
-                    if (!brush.NextBlock(this).IsInvalid) Total++;
+                    if (brush.NextBlock(this) != Block.Invalid) Total++;
                 }
             }
         }

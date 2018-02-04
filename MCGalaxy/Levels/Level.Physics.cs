@@ -170,22 +170,21 @@ namespace MCGalaxy {
             if (ListUpdate.Count > 0 && bulkSender == null)
                 bulkSender = new BufferedBlockSender(this);
             
-            ExtBlock block;
+            ushort block;
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
-                    block.BlockID = C.data.Data;
-                    block.ExtID = 0;
+                    block = C.data.Data;
                     C.data.Data = 0;
+                    
                     // Is the Ext flag just an indicator for the block update?
                     if (C.data.ExtBlock && (C.data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        block.ExtID = block.BlockID;
-                        block.BlockID = Block.custom_block;
+                        block |= Block.Extended;
                         C.data.ExtBlock = false;
                     }
                     
                     if (DoPhysicsBlockchange(C.b, block, false, C.data, true))
-                        bulkSender.Add(C.b, block.BlockID, block.ExtID);
+                        bulkSender.Add(C.b, block);
                 } catch {
                     Logger.Log(LogType.Warning, "Phys update issue");
                 }
@@ -227,18 +226,14 @@ namespace MCGalaxy {
                 //ListCheck.Add(new Check(b));    //Lousy back up plan
             }
         }
-        
-        internal bool AddUpdate(int b, ExtBlock block, bool overRide = false) {
-            PhysicsArgs args = default(PhysicsArgs);
-            args.ExtBlock = block.BlockID == Block.custom_block;
-            return AddUpdate(b, block.RawID, overRide, args);
-        }
 
-        internal bool AddUpdate(int b, byte type, bool overRide = false) {
-            return AddUpdate(b, type, overRide, default(PhysicsArgs));
+        internal bool AddUpdate(int b, ushort block, bool overRide = false) {
+            PhysicsArgs args = default(PhysicsArgs);
+            args.ExtBlock = block >= Block.Extended;
+            return AddUpdate(b, block, args, overRide);
         }
         
-        internal bool AddUpdate(int b, byte type, bool overRide, PhysicsArgs data) {
+        internal bool AddUpdate(int b, ushort block, PhysicsArgs data, bool overRide = false) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -246,14 +241,8 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {
-                    ExtBlock block;
-                    block.BlockID = type;
-                    block.ExtID = 0;
-                    
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        block.ExtID = block.BlockID;
-                        block.BlockID = Block.custom_block;
                         data.ExtBlock = false;
                     }
                     AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
@@ -263,12 +252,12 @@ namespace MCGalaxy {
 
                 if (!listUpdateExists.Get(x, y, z)) {
                     listUpdateExists.Set(x, y, z, true);
-                } else if (type == Block.Sand || type == Block.Gravel)  {
+                } else if (block == Block.Sand || block == Block.Gravel)  {
                     RemoveUpdatesAtPos(b);
                 } else {
                     return false;
                 }
-                ListUpdate.Add(new Update(b, (byte)type, data));
+                ListUpdate.Add(new Update(b, (byte)block, data));
                 
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
@@ -334,13 +323,13 @@ namespace MCGalaxy {
                     ushort x, y, z;
                     IntToPos(C.b, out x, out y, out z);
                     
-                    ExtBlock block = ExtBlock.FromRaw(args.Value1, args.ExtBlock);
+                    ushort block = Block.FromRaw(args.Value1, args.ExtBlock);
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 } else if (args.Type2 == PhysicsArgs.Revert) {
                     ushort x, y, z;
                     IntToPos(C.b, out x, out y, out z);
                     
-                    ExtBlock block = ExtBlock.FromRaw(args.Value2, args.ExtBlock);
+                    ushort block = Block.FromRaw(args.Value2, args.ExtBlock);
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {
@@ -349,12 +338,11 @@ namespace MCGalaxy {
         }
         
         
-        internal bool ActivatesPhysics(ExtBlock block) {
-            int i = block.Index;
-            if (Props[i].IsMessageBlock || Props[i].IsPortal) return false;
-            if (Props[i].IsDoor || Props[i].IsTDoor) return false;
-            if (Props[i].OPBlock) return false;
-            return physicsHandlers[i] != null;
+        internal bool ActivatesPhysics(ushort block) {
+            if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
+            if (Props[block].IsDoor || Props[block].IsTDoor) return false;
+            if (Props[block].OPBlock) return false;
+            return physicsHandlers[block] != null;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

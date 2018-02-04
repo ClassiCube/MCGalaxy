@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.Building {
             if (!p.group.CanExecute("brush")) {
                 Player.Message(p, "You cannot use %T/Brush%S, so therefore cannot use %T/Tree%S with a brush."); return false;
             }        
-            return ParseBrush(brushMsg, p, ExtBlock.Air) != null;
+            return ParseBrush(brushMsg, p, Block.Air) != null;
         }
 
-        bool DoTree(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoTree(Player p, Vec3S32[] marks, object state, ushort block) {
             DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Tree = dArgs.tree;
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         
-        static Brush ParseBrush(string raw, Player p, ExtBlock block) {
+        static Brush ParseBrush(string raw, Player p, ushort block) {
             string[] parts = raw.SplitSpaces(2);
             BrushFactory brush = BrushFactory.Find(parts[0]);
             if (brush == null) {

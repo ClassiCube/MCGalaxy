@@ -148,12 +148,12 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
             int b;
-            ExtBlock block = lvl.GetBlock(x, y, z, out b);
+            ushort block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
 
-            switch (block.BlockID) {
+            switch (block) {
                 case Block.Air:
                 case Block.Lava:
                 case Block.FastLava:
@@ -168,7 +168,7 @@ namespace MCGalaxy.Blocks.Physics {
                     
                 default:
                     // Adv physics kills flowers, mushroom blocks in water
-                    if (!lvl.Props[block.Index].WaterKills) break;
+                    if (!lvl.Props[block].WaterKills) break;
                     
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) return false;
                     break;
@@ -261,12 +261,12 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             int b;
-            ExtBlock block = lvl.GetBlock(x, y, z, out b);
+            ushort block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
             
-            switch (block.BlockID) {
+            switch (block) {
                 case Block.Air:
                     return false;
 
@@ -281,7 +281,7 @@ namespace MCGalaxy.Blocks.Physics {
 
                 default:
                     // Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
-                    if (!lvl.Props[block.Index].LavaKills) break;
+                    if (!lvl.Props[block].LavaKills) break;
 
                     if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) return false;
                     break;

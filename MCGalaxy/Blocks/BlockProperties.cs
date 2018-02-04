@@ -38,8 +38,8 @@ namespace MCGalaxy.Blocks {
         public bool IsTDoor;
         /// <summary> Whether this block is considered a door. </summary>
         public bool IsDoor;
-        /// <summary> Block index of the block this is converted to when toggled by a neighbouring door. </summary>
-        public ushort oDoorIndex;
+        /// <summary> Extended block ID of the block this is converted to when toggled by a neighbouring door. </summary>
+        public ushort oDoorBlock;
         
         /// <summary> Whether this block is considered a message block. </summary>
         public bool IsMessageBlock;
@@ -67,20 +67,20 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether players can drown inside this block (e.g. water). </summary>
         public bool Drownable;
         
-        /// <summary> The block ID this is changed into when exposed to sunlight. </summary>
-        public ushort GrassIndex;
+        /// <summary> The extended block ID this is changed into when exposed to sunlight. </summary>
+        public ushort GrassBlock;
         
-        /// <summary> The block ID this is changed into when no longer exposed to sunlight. </summary>
-        public ushort DirtIndex;
+        /// <summary> The extended block ID this is changed into when no longer exposed to sunlight. </summary>
+        public ushort DirtBlock;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
         
         public static BlockProps MakeDefault() {
             BlockProps props = default(BlockProps);
-            props.oDoorIndex = Block.Invalid;
-            props.GrassIndex = Block.Invalid;
-            props.DirtIndex = Block.Invalid;
+            props.oDoorBlock = Block.Invalid;
+            props.GrassBlock = Block.Invalid;
+            props.DirtBlock = Block.Invalid;
             return props;
         }
         
@@ -111,7 +111,7 @@ namespace MCGalaxy.Blocks {
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
                                 + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock     + ":"
-                                + props.oDoorIndex + ":" + props.Drownable + ":" + props.GrassIndex + ":" + props.DirtIndex);
+                                + props.oDoorBlock + ":" + props.Drownable + ":" + props.GrassBlock + ":" + props.DirtBlock);
                 }
             }
         }
@@ -169,16 +169,16 @@ namespace MCGalaxy.Blocks {
                     bool.TryParse(parts[12], out scope[idx].OPBlock);
                 }
                 if (parts.Length > 13) {
-                    ushort.TryParse(parts[13], out scope[idx].oDoorIndex);
+                    ushort.TryParse(parts[13], out scope[idx].oDoorBlock);
                 }
                 if (parts.Length > 14) {
                     bool.TryParse(parts[14], out scope[idx].Drownable);
                 }
                 if (parts.Length > 15) {
-                    ushort.TryParse(parts[15], out scope[idx].GrassIndex);
+                    ushort.TryParse(parts[15], out scope[idx].GrassBlock);
                 }
                 if (parts.Length > 16) {
-                    ushort.TryParse(parts[16], out scope[idx].DirtIndex);
+                    ushort.TryParse(parts[16], out scope[idx].DirtBlock);
                 }
             }
         }

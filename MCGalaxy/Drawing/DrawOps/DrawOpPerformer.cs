@@ -160,16 +160,16 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             public void Output(DrawOpBlock b) {
-                if (b.Block.BlockID == Block.Invalid) return;
+                if (b.Block == Block.Invalid) return;
                 Level lvl = op.Level;
                 Player p = op.Player;
                 if (b.X >= lvl.Width || b.Y >= lvl.Height || b.Z >= lvl.Length) return;
                 
                 int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
-                ExtBlock old;
+                ushort old;
                 old.BlockID = lvl.blocks[index]; old.ExtID = 0;
                 if (old.BlockID == Block.custom_block) old.ExtID = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
-                if (old.BlockID == Block.Invalid) return;
+                if (old == Block.Invalid) return;
                 
                 // Check to make sure the block is actually different and that we can change it
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
@@ -201,9 +201,9 @@ namespace MCGalaxy.Drawing.Ops {
                     if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
 
                     if (lvl.physics > 0) {
-                        if (old.BlockID == Block.Sponge && b.Block.BlockID != Block.Sponge)
+                        if (old == Block.Sponge && b.Block != Block.Sponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, false);
-                        if (old.BlockID == Block.LavaSponge && b.Block.BlockID != Block.LavaSponge)
+                        if (old == Block.LavaSponge && b.Block != Block.LavaSponge)
                             OtherPhysics.DoSpongeRemoved(lvl, index, true);
 
                         if (lvl.ActivatesPhysics(b.Block)) lvl.AddCheck(index);

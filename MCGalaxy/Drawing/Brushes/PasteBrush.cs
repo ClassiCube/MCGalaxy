@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
@@ -46,7 +46,7 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class PasteBrush : Brush {
         readonly CopyState state;     
-        public ExtBlock[] Include, Exclude;
+        public ushort[] Include, Exclude;
         
         public PasteBrush(CopyState state) { this.state = state; }
         
@@ -56,7 +56,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
@@ -65,17 +65,17 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            ExtBlock block = state.Get(x, y, z);            
+            ushort block = state.Get(x, y, z);            
             if (Exclude != null) {
                 for (int i = 0; i < Exclude.Length; i++) {
-                    if (block == Exclude[i]) return ExtBlock.Invalid;
+                    if (block == Exclude[i]) return Block.Invalid;
                 }
                 return block;
             } else {
                 for (int i = 0; i < Include.Length; i++) {
                     if (block == Include[i]) return block;
                 }
-                return ExtBlock.Invalid;
+                return Block.Invalid;
             }
         }
     }

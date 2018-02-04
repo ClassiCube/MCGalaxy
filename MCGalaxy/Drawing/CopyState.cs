@@ -72,37 +72,35 @@ namespace MCGalaxy.Drawing {
             return (y * Length + z) * Width + x;
         }
         
-        public ExtBlock Get(int index) {
-            return ExtBlock.FromRaw(raw[index],
+        public ushort Get(int index) {
+            return Block.FromRaw(raw[index],
                                     (isExt[index >> 3] & (1 << (index & 0x07))) != 0);
         }
         
-        public ExtBlock Get(int x, int y, int z) {
+        public ushort Get(int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
-            return ExtBlock.FromRaw(raw[index],
+            return Block.FromRaw(raw[index],
                                     (isExt[index >> 3] & (1 << (index & 0x07))) != 0);
         }
         
-        public void Set(ExtBlock block, int index) {
-            isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
-            
+        public void Set(ushort block, int index) {
             if (block.BlockID == Block.custom_block) {
                 raw[index] = block.ExtID;
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {
                 raw[index] = block.BlockID;
+                isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
             }
         }
         
-        public void Set(ExtBlock block, int x, int y, int z) {
+        public void Set(ushort block, int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
-            isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
-            
             if (block.BlockID == Block.custom_block) {
                 raw[index] = block.ExtID;
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {
                 raw[index] = block.BlockID;
+                isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
             }
         }
         
@@ -183,14 +181,14 @@ namespace MCGalaxy.Drawing {
             raw = raw.Decompress();
             if (raw.Length == 0) return;
             
-            ExtBlock block = default(ExtBlock);
+            ushort block = default(ushort);
             CalculateBounds(raw);
             for (int i = 0; i < raw.Length; i += 7) {
                 ushort x = BitConverter.ToUInt16(raw, i + 0);
                 ushort y = BitConverter.ToUInt16(raw, i + 2);
                 ushort z = BitConverter.ToUInt16(raw, i + 4);
                 
-                block.BlockID = raw[i + 6];
+                block = raw[i + 6];
                 Set(block, x - X, y - Y, z - Z);
             }
             UsedBlocks = Volume;

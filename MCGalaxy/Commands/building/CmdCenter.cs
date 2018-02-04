@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, "Selecting region for %SCenter", null, DoCentre);
         }
         
-        bool DoCentre(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        bool DoCentre(Player p, Vec3S32[] m, object state, ushort block) {
             int lenX = m[0].X + m[1].X, lenY = m[0].Y + m[1].Y, lenZ = m[0].Z + m[1].Z;
             int x = lenX / 2, y = lenY / 2, z = lenZ / 2;
             
@@ -52,8 +52,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void Place(Player p, int x, int y, int z) {
-            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, 
-                                (ExtBlock)Block.Gold, BlockDBFlags.Drawn);
+            p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, Block.Gold, BlockDBFlags.Drawn);
         }
         
         public override void Help(Player p) {

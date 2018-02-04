@@ -23,10 +23,10 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {    
     public sealed class ReplaceBrush : Brush {
-        readonly ExtBlock[] include;
-        readonly ExtBlock target;
+        readonly ushort[] include;
+        readonly ushort target;
         
-        public ReplaceBrush(ExtBlock[] include, ExtBlock target) {
+        public ReplaceBrush(ushort[] include, ushort target) {
             this.include = include; this.target = target;
         }
         
@@ -36,22 +36,22 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ExtBlock block = op.Level.GetBlock(x, y, z);
+            ushort block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < include.Length; i++) {
                 if (block == include[i]) return target;
             }
-            return ExtBlock.Invalid;
+            return Block.Invalid;
         }
     }
     
     public sealed class ReplaceNotBrush : Brush {
-        readonly ExtBlock[] exclude;
-        readonly ExtBlock target;
+        readonly ushort[] exclude;
+        readonly ushort target;
         
-        public ReplaceNotBrush(ExtBlock[] include, ExtBlock target) {
+        public ReplaceNotBrush(ushort[] include, ushort target) {
             this.exclude = include; this.target = target;
         }
         
@@ -61,12 +61,12 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ExtBlock block = op.Level.GetBlock(x, y, z);
+            ushort block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < exclude.Length; i++) {
-                if (block == exclude[i]) return ExtBlock.Invalid;
+                if (block == exclude[i]) return Block.Invalid;
             }
             return target;
         }

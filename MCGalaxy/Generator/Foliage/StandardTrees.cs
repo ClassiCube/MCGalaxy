@@ -34,7 +34,7 @@ namespace MCGalaxy.Generator.Foliage {
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 6); }
                 
         public override void SetData(Random rnd, int value) {
-            height = (byte)value;
+            height = value;
             size = 1;
             this.rnd = rnd;
         }
@@ -64,8 +64,8 @@ namespace MCGalaxy.Generator.Foliage {
         public override int DefaultSize(Random rnd) { return rnd.Next(5, 8); }
         
         public override void SetData(Random rnd, int value) {
-            height = (byte)value;
-            size = (byte)(height - rnd.Next(2, 4));
+            height = value;
+            size = height - rnd.Next(2, 4);
             this.rnd = rnd;
         }
         
@@ -95,7 +95,7 @@ namespace MCGalaxy.Generator.Foliage {
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 7); }
         
         public override void SetData(Random rnd, int value) {
-            height = (byte)value;
+            height = value;
             size = 2;
             this.rnd = rnd;
         }
@@ -130,7 +130,7 @@ namespace MCGalaxy.Generator.Foliage {
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
 
         public override void SetData(Random rnd, int value) {
-            height = (byte)value;
+            height = value;
             size = 3;
             this.rnd = rnd;
         }

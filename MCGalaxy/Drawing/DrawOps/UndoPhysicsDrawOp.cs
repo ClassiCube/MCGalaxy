@@ -69,7 +69,7 @@ namespace MCGalaxy.Drawing.Ops {
                 lvl.currentUndo = i;
                 lvl.currentUndo = undoIndex;
                 
-                ExtBlock oldBlock = ExtBlock.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
+                ushort oldBlock = Block.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
                 lvl.Blockchange(x, y, z, oldBlock, true, default(PhysicsArgs), false);
             }
             return true;

@@ -33,23 +33,23 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int dy = -dirY; dy != 2 * dirY; dy += dirY)
                     for (int dz = -dirZ; dz != 2 * dirZ; dz += dirZ)
             {
-                ExtBlock below = lvl.GetBlock((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
-                ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
-                bool isRails = lvl.Props[below.Index].IsRails;
+                ushort below = lvl.GetBlock((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
+                ushort block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
+                bool isRails = lvl.Props[below].IsRails;
                 
-                if (isRails && (block.BlockID == Block.Air || block.BlockID == Block.Water) 
+                if (isRails && (block == Block.Air || block == Block.Water) 
                     && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
                     lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz)), Block.Train);
-                    lvl.AddUpdate(C.b, Block.Air);                    
-                    byte newBlock = below.BlockID == Block.Op_Air ? Block.Glass : Block.Obsidian;
+                    lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));                    
+                    byte newBlock = below == Block.Op_Air ? Block.Glass : Block.Obsidian;
                     
                     below = lvl.GetBlock(x, (ushort)(y - 1), z);
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
-                    args.Type2 = PhysicsArgs.Revert; args.Value2 = below.RawID;
-                    args.ExtBlock = below.BlockID == Block.custom_block;
+                    args.Type2 = PhysicsArgs.Revert; args.Value2 = (byte)below;
+                    args.ExtBlock = below >= Block.Extended;
                     
-                    lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, true, args);
+                    lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, args, true);
                     return;
                 }
             }

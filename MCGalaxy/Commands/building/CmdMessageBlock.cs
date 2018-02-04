@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             string block = args[0].ToLower();
             data.Block = GetBlock(p, block, ref allMessage);
-            if (data.Block.IsInvalid) return;
+            if (data.Block == Block.Invalid) return;
             if (!CommandParser.IsBlockAllowed(p, "place a message block of", data.Block)) return;
             
             if (allMessage) {
@@ -62,24 +62,24 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, data, PlacedMark);
         }
         
-        ExtBlock GetBlock(Player p, string name, ref bool allMessage) {
-            if (name == "show") { ShowMessageBlocks(p); return ExtBlock.Invalid; }
-            ExtBlock block = CommandParser.RawGetBlock(p, name);
-            if (!block.IsInvalid && p.level.Props[block.Index].IsMessageBlock)
+        ushort GetBlock(Player p, string name, ref bool allMessage) {
+            if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
+            ushort block = CommandParser.RawGetBlock(p, name);
+            if (!block.IsInvalid && p.level.Props[block].IsMessageBlock)
                 return block;
             
             // Hardcoded aliases for backwards compatibility
-            block.BlockID = Block.MB_White; block.ExtID = 0;
-            if (name == "white") block.BlockID = Block.MB_White;
-            if (name == "black") block.BlockID = Block.MB_Black;
-            if (name == "air")   block.BlockID = Block.MB_Air;
-            if (name == "water") block.BlockID = Block.MB_Water;
-            if (name == "lava")  block.BlockID = Block.MB_Lava;
+            block = Block.MB_White;
+            if (name == "white") block = Block.MB_White;
+            if (name == "black") block = Block.MB_Black;
+            if (name == "air")   block = Block.MB_Air;
+            if (name == "water") block = Block.MB_Water;
+            if (name == "lava")  block = Block.MB_Lava;
             
-            allMessage = block.BlockID == Block.MB_White && name != "white";
-            if (p.level.Props[block.Index].IsMessageBlock) return block;
+            allMessage = block == Block.MB_White && name != "white";
+            if (p.level.Props[block].IsMessageBlock) return block;
             
-            Help(p); return ExtBlock.Invalid;
+            Help(p); return Block.Invalid;
         }
         
         bool CheckCommand(Player p, string message) {
@@ -105,11 +105,11 @@ namespace MCGalaxy.Commands.Building {
             return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
         }
 
-        bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, ushort block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             MBArgs args = (MBArgs)state;
             
-            ExtBlock old = p.level.GetBlock(x, y, z);
+            ushort old = p.level.GetBlock(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
                 p.level.UpdateBlock(p, x, y, z, args.Block);
                 UpdateDatabase(p, args, x, y, z);
@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
 
-        class MBArgs { public string Message; public ExtBlock Block; }
+        class MBArgs { public string Message; public ushort Block; }
 
         
         void ShowMessageBlocks(Player p) {
@@ -166,7 +166,7 @@ namespace MCGalaxy.Commands.Building {
         
         static void ShowMessageBlocks(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
-                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), (ExtBlock)Block.Green);
+                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), Block.Green);
             }
         }
         
@@ -179,35 +179,29 @@ namespace MCGalaxy.Commands.Building {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
 
         
-        static string Format(ExtBlock block, Level lvl, BlockProps[] props) {
-            if (!props[block.Index].IsMessageBlock) return null;
+        static string Format(ushort block, Level lvl, BlockProps[] props) {
+            if (!props[block].IsMessageBlock) return null;
             
             // We want to use the simple aliases if possible
-            if (block.BlockID == Block.MB_Black) return "black";
-            if (block.BlockID == Block.MB_White) return "white";
-            if (block.BlockID == Block.MB_Air)   return "air";
-            if (block.BlockID == Block.MB_Lava)  return "lava";
-            if (block.BlockID == Block.MB_Water) return "water";
+            if (block == Block.MB_Black) return "black";
+            if (block == Block.MB_White) return "white";
+            if (block == Block.MB_Air)   return "air";
+            if (block == Block.MB_Lava)  return "lava";
+            if (block == Block.MB_Water) return "water";
             
             return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
         }
         
-        static void GetAllNames(Player p, List<string> names) {
-            GetCoreNames(names, p.level);
-            for (int i = Block.CpeCount; i < Block.Count; i++) {
-                ExtBlock block = ExtBlock.FromRaw((byte)i);
-                string name = Format(block, p.level, p.level.Props);
+        static void AllNames(Player p, List<string> names) {
+            for (int i = 0; i < Block.ExtendedCount; i++) {
+                string name = Format((ushort)i, p.level, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }
         
-        static void GetCoreNames(List<string> names, Level lvl) {
-            BlockProps[] props = lvl != null ? lvl.Props : Block.Props;
-            for (int i = Block.Air; i < Block.Count; i++) {
-                ExtBlock block = ExtBlock.FromIndex(i);
-                if (block.BlockID == Block.custom_block) continue;
-                
-                string name = Format(block, lvl, props);
+        static void CoreNames(List<string> names) {
+            for (int i = 0; i < Block.Count; i++) {
+                string name = Format((ushort)i, null, Block.Props);
                 if (name != null) names.Add(name);
             }
         }
@@ -217,8 +211,8 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HPlaces a message in your next block.");
             
             List<string> names = new List<string>();
-            if (Player.IsSuper(p)) GetCoreNames(names, null);
-            else GetAllNames(p, names);
+            if (Player.IsSuper(p)) CoreNames(names);
+            else AllNames(p, names);
             
             Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
             Player.Message(p, "%H  Use | to separate commands, e.g. /say 1 |/say 2");

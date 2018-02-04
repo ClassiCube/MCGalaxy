@@ -24,12 +24,12 @@ using MCGalaxy.Generator;
 namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class CloudyBrush : Brush {
-        readonly ExtBlock[] blocks;
+        readonly ushort[] blocks;
         readonly int[] counts;
         readonly float[] thresholds;
         readonly ImprovedNoise noise;
         
-        public CloudyBrush(ExtBlock[] blocks, int[] counts, NoiseArgs n) {
+        public CloudyBrush(ushort[] blocks, int[] counts, NoiseArgs n) {
             this.blocks = blocks;
             this.counts = counts;
             this.thresholds = new float[counts.Length];
@@ -99,7 +99,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         int next;
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             float N = noise.NormalisedNoise(op.Coords.X, op.Coords.Y, op.Coords.Z);
             N = (N + 1) * 0.5f; // rescale to [0, 1];
             N = N < 0 ? 0 : N;

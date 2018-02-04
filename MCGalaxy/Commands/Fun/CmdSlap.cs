@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.Fun {
         
         static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
             for (; y <= lvl.Height; y++) {
-                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (above.IsInvalid) continue;
+                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (above == Block.Invalid) continue;
                 if (!CollideType.IsSolid(lvl.CollideType(above))) continue;
                 
                 int posY = (y + 1) * 32 - 6;

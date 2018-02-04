@@ -251,19 +251,7 @@ namespace MCGalaxy {
             Send(Packet.Teleport(id, pos, rot, hasExtPositions));
         }
         
-        [Obsolete("Prefer SendBlockChange with ExtBlock")]
-        public void SendBlockchange(ushort x, ushort y, ushort z, byte block) {
-            byte extBlock = 0;
-            if (block == Block.custom_block) extBlock = level.GetExtTile(x, y, z);            
-            SendBlockchange(x, y, z, new ExtBlock(block, extBlock));
-        }
-        
-        [Obsolete("Prefer SendBlockChange with ExtBlock")]
-        public void SendBlockchange(ushort x, ushort y, ushort z, byte block, byte extBlock) {
-            SendBlockchange(x, y, z, new ExtBlock(block, extBlock));
-        }
-        
-        public void SendBlockchange(ushort x, ushort y, ushort z, ExtBlock block) {
+        public void SendBlockchange(ushort x, ushort y, ushort z, ushort block) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 

@@ -25,6 +25,6 @@ namespace MCGalaxy.Drawing.Brushes {
         
         /// <summary> Returns the next block that should be placed in the world, 
         /// based on the draw operation's current state. </summary>
-        public abstract ExtBlock NextBlock(DrawOp op);
+        public abstract ushort NextBlock(DrawOp op);
     }
 }

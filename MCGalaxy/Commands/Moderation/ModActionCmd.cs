@@ -106,16 +106,16 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void CheckBlockBindings(Player who) {
-            ExtBlock block = who.ModeBlock;
-            if (block != ExtBlock.Air && !CommandParser.IsBlockAllowed(who, "place", block)) {
-                who.ModeBlock = ExtBlock.Air;
+            ushort block = who.ModeBlock;
+            if (block != Block.Air && !CommandParser.IsBlockAllowed(who, "place", block)) {
+                who.ModeBlock = Block.Air;
                 Player.Message(who, "   Hence, &b{0} %Smode was turned &cOFF",
                                who.level.BlockName(block));
             }
             
             for (int i = 0; i < who.BlockBindings.Length; i++) {
                 block = who.BlockBindings[i];
-                ExtBlock defaultBinding = ExtBlock.FromRaw((byte)i);
+                ushort defaultBinding = Block.FromRaw((byte)i);
                 if (block == defaultBinding) continue;
                 
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {

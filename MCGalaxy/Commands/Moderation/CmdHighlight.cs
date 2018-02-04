@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoHighlightArea(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool DoHighlightArea(Player p, Vec3S32[] marks, object state, ushort block) {
             HighlightAreaArgs args = (HighlightAreaArgs)state;
             HighlightPlayer(p, args.delta, args.who, args.ids, marks);
             return false;
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Moderation {
             op.Perform(marks, null,
                        P => {
                            int index = p.level.PosToInt(P.X, P.Y, P.Z);
-                           buffer.Add(index, P.Block.BlockID, P.Block.ExtID);
+                           buffer.Add(index, P.Block);
                        });
             buffer.Send(true);
             

@@ -131,7 +131,7 @@ namespace MCGalaxy.Blocks.Physics {
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                 args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
-                lvl.AddUpdate(C.b, Block.SnakeTail, true, args);
+                lvl.AddUpdate(C.b, Block.SnakeTail, args, true);
                 return true;
             }
             return false;
@@ -149,7 +149,7 @@ namespace MCGalaxy.Blocks.Physics {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
-                    lvl.AddUpdate(C.b, Block.SnakeTail, true, args);
+                    lvl.AddUpdate(C.b, Block.SnakeTail, args, true);
                     return true;
                 }            
             }

@@ -26,10 +26,10 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            if (lvl.GetTile(x, (ushort)(y - 1), z) != Block.StillLava)
+            if (lvl.GetBlock(x, (ushort)(y - 1), z) != Block.StillLava)
                 return;
             
-            if (lvl.GetTile(x, (ushort)(y + 1), z) == Block.Air) {
+            if (lvl.IsAirAt(x, (ushort)(y + 1), z)) {
                 bool keepGoing = true;
                 if ((lvl.Height * 80 / 100) < y)
                     keepGoing = rand.Next(1, 20) > 1;
@@ -43,7 +43,7 @@ namespace MCGalaxy.Blocks.Physics {
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
                         
                         lvl.AddUpdate(bAbove, Block.Fireworks);
-                        lvl.AddUpdate(C.b, Block.StillLava, false, args);
+                        lvl.AddUpdate(C.b, Block.StillLava, args);
                         args.Data = C.data.Data;
                         C.data = args;
                         return;
@@ -71,7 +71,7 @@ namespace MCGalaxy.Blocks.Physics {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Drop; args.Value1 = 100;
                     args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 25;
-                    lvl.AddUpdate(index, (byte)rand.Next(min, max), false, args);
+                    lvl.AddUpdate(index, (byte)rand.Next(min, max), args);
                 }
             }
         }

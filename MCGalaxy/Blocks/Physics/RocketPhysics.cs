@@ -33,7 +33,7 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int cy = -dirY; cy != 2 * dirY; cy += dirY)
                     for (int cz = -dirZ; cz != 2 * dirZ; cz += dirZ)
             {                
-                byte rocketTail = lvl.GetTile((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
+                ushort rocketTail = lvl.GetBlock((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
                 if (rocketTail != Block.LavaFire) continue;
                 
                 int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));

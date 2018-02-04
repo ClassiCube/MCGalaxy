@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
         }
         
         
-        void HandlePlayerDeath(Player p, ExtBlock deathblock) {
+        void HandlePlayerDeath(Player p, ushort deathblock) {
             if (!Game.started || p.level != Game.Map) return;
             if (!Game.Get(p).hasflag) return;
             
@@ -101,7 +101,7 @@ namespace MCGalaxy.Games {
             p.cancelchat = true;
         }
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ExtBlock block, bool placing) {
+        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ushort block, bool placing) {
             if (!Game.started || p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             if (team == null) {

@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         static byte GetBlock(Player p, string name) {
-            ExtBlock block;
+            ushort block;
             if (!CommandParser.GetBlock(p, name, out block)) return Block.Invalid;
             
             if (block.IsPhysicsType) {
@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static string FormatEntry(PaletteEntry e, Level lvl) {
-            ExtBlock block = ExtBlock.FromRaw(e.Raw);
+            ushort block = Block.FromRaw(e.Raw);
             return lvl.BlockName(block) + " - " + Utils.Hex(e.R, e.G, e.B);
         }
 

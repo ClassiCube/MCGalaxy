@@ -32,9 +32,9 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
                                    int dx, int dy, int dz) {
-            ExtBlock block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-            if (block.BlockID == Block.Air) return;
-            if (!lvl.Props[block.Index].LavaKills) return;
+            ushort block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+            if (block == Block.Air) return;
+            if (!lvl.Props[block].LavaKills) return;
             
             if (dx != 0)
                 lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), y, z), Block.Fire);
@@ -46,12 +46,12 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ExpandAvanced(Level lvl, int x, int y, int z) {
             int index;
-            ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
-            if (index < 0 || block.BlockID == Block.Air) return;
+            ushort block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            if (index < 0 || block == Block.Air) return;
             
-            if (block.BlockID == Block.TNT) {
+            if (block == Block.TNT) {
                 lvl.MakeExplosion((ushort)x, (ushort)y, (ushort)z, -1);
-            } else if (lvl.Props[block.Index].LavaKills) {
+            } else if (lvl.Props[block].LavaKills) {
                 lvl.AddUpdate(index, Block.Fire);
             }
         }

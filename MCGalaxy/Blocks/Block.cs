@@ -156,7 +156,7 @@ namespace MCGalaxy {
             return false;
         }
         
-        public static AABB BlockAABB(ExtBlock block, Level lvl) {
+        public static AABB BlockAABB(ushort block, Level lvl) {
             BlockDefinition def = lvl.GetBlockDef(block);
             if (def != null) {
                 return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2,
@@ -166,7 +166,7 @@ namespace MCGalaxy {
             if (block.BlockID == Block.custom_block)
                 return new AABB(0, 0, 0, 32, 32, 32);
             
-            byte core = Block.Convert(block.BlockID);
+            byte core = Convert(block.BlockID);
             return new AABB(0, 0, 0, 32, DefaultSet.Height(core) * 2, 32);
         }
         
@@ -184,6 +184,14 @@ namespace MCGalaxy {
                 lvl.UpdateBlockProps();
                 lvl.UpdateBlockHandlers();
             }            
+        }
+        
+        public static ushort FromRaw(byte raw) {
+            return raw < Block.CpeCount ? raw : (byte)(Block.Extended + raw);
+        }
+        
+        public static ushort FromRaw(byte raw, bool extended) {
+            return (ushort)(raw | (extended ? Block.Extended : Block.Air));
         }
     }
 }

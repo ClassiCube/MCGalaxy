@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.Fun {
             foreach (Vec3U16 pos in state.glassCoords) {
                 if (state.lastGlass.Contains(pos)) continue;
                 state.lastGlass.Add(pos);
-                p.SendBlockchange(pos.X, pos.Y, pos.Z, (ExtBlock)Block.Glass);
+                p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Glass);
             }
             state.glassCoords.Clear();
         }
@@ -131,12 +131,12 @@ namespace MCGalaxy.Commands.Fun {
             if (lvl.IsAirAt(pos.X, pos.Y, pos.Z)) glassCoords.Add(pos);
         }
         
-        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ExtBlock block);
+        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block);
         
         
         protected class WeaponArgs {
             public Player player;
-            public ExtBlock block;
+            public ushort block;
             public WeaponType weaponType;
             public Vec3U16 pos, start;
             public Vec3F32 dir;
@@ -185,16 +185,16 @@ namespace MCGalaxy.Commands.Fun {
             return null;
         }
         
-        protected static bool HandlesHitBlock(Player p, ExtBlock block, WeaponType ending, Vec3U16 pos, bool doExplode) {
+        protected static bool HandlesHitBlock(Player p, ushort block, WeaponType ending, Vec3U16 pos, bool doExplode) {
             if (p.level.physics < 2 || ending == WeaponType.Teleport || ending == WeaponType.Normal) return true;
             
             if (ending == WeaponType.Destroy) {
-                bool fireKills = block.BlockID != Block.Air && p.level.Props[block.Index].LavaKills;
-                if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block.BlockID != Block.Glass) {
+                bool fireKills = block != Block.Air && p.level.Props[block].LavaKills;
+                if ((!fireKills && !Block.NeedRestart(block.BlockID)) && block != Block.Glass) {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-                if (block.BlockID != Block.Glass && doExplode) {
+                if (block != Block.Glass && doExplode) {
                     p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }

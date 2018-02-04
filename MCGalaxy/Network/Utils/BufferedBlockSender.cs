@@ -43,7 +43,7 @@ namespace MCGalaxy.Network {
         /// <summary> Adds a block change, and potentially sends block change packets if 
         /// number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
-        public bool Add(int index, byte block, byte extBlock) {
+        public bool Add(int index, ushort block) {
             indices[count] = index;
             if (block == Block.custom_block) types[count] = extBlock;
             else types[count] = Block.Convert(block);

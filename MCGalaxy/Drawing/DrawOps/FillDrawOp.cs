@@ -59,7 +59,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         
-        public unsafe static List<int> FloodFill(Player p, int index, ExtBlock block, DrawMode mode) {
+        public unsafe static List<int> FloodFill(Player p, int index, ushort block, DrawMode mode) {
             Level lvl = p.level;
             SparseBitSet bits = new SparseBitSet(lvl.Width, lvl.Height, lvl.Length);
             List<int> buffer = new List<int>();

@@ -48,7 +48,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (C.data.Door) {
                 PhysicsArgs dArgs = default(PhysicsArgs);
                 dArgs.ExtBlock = C.data.ExtBlock;
-                lvl.AddUpdate(C.b, C.data.Value2, false, dArgs); 
+                lvl.AddUpdate(C.b, C.data.Value2, dArgs); 
                 
                 C.data.ResetTypes();
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -111,7 +111,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (args.Revert) {
                 PhysicsArgs revertArgs = default(PhysicsArgs);
                 if (args.ExtBlock) revertArgs.ExtBlock = true;
-                lvl.AddUpdate(C.b, args.RevertType, false, revertArgs);
+                lvl.AddUpdate(C.b, args.RevertType, revertArgs);
                 
                 C.data.ResetTypes();
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -128,7 +128,7 @@ namespace MCGalaxy.Blocks.Physics {
                     C.data.ResetTypes();
                     args.Drop = false;
                 } else {
-                    lvl.AddUpdate(C.b, lvl.blocks[C.b], false, C.data);
+                    lvl.AddUpdate(C.b, lvl.blocks[C.b], C.data);
                 }
             }
             
@@ -146,7 +146,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (rainbownum > 2) {
                 byte block = lvl.blocks[C.b];
                 if (block < Block.Red || block > Block.Pink) {
-                    lvl.AddUpdate(C.b, Block.Red, false, C.data);
+                    lvl.AddUpdate(C.b, Block.Red, C.data);
                 } else {
                     byte next = block == Block.Pink ? Block.Red : (byte)(block + 1);
                     lvl.AddUpdate(C.b, next);

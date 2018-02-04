@@ -26,6 +26,7 @@ namespace MCGalaxy
         public const byte CpeMaxBlock = StoneBrick;
         public const byte CpeCount = CpeMaxBlock + 1;
         public const int Count = 256;
+        public const int ExtendedCount = 256 * 2;
         
         // Original blocks
         public const byte Air = 0;
@@ -328,5 +329,7 @@ namespace MCGalaxy
         
         public const byte Zero = 0xff; // backwards compatibility
         public const byte Invalid = 0xff;
+        
+        public const ushort Extended = 256;
     }
 }

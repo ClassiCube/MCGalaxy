@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Info {
             p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
         }
 
-        bool PlacedMark(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, ushort block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetBlock(x, y, z);
             p.RevertBlock(x, y, z);

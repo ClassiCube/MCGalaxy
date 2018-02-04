@@ -25,12 +25,12 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Rainbow"; } }
         public RainbowBrush() : base(blocks) {}
         
-        internal static ExtBlock[] blocks = new ExtBlock[] { 
-            (ExtBlock)Block.Red,   (ExtBlock)Block.Orange,  (ExtBlock)Block.Yellow,
-            (ExtBlock)Block.Lime,  (ExtBlock)Block.Green,   (ExtBlock)Block.Teal,
-            (ExtBlock)Block.Aqua,  (ExtBlock)Block.Cyan,    (ExtBlock)Block.Blue,
-            (ExtBlock)Block.Indigo, (ExtBlock)Block.Violet, (ExtBlock)Block.Magenta,
-            (ExtBlock)Block.Pink };
+        internal static ushort[] blocks = new ushort[] { 
+            Block.Red,   Block.Orange,  Block.Yellow,
+            Block.Lime,  Block.Green,   Block.Teal,
+            Block.Aqua,  Block.Cyan,    Block.Blue,
+            Block.Indigo, Block.Violet, Block.Magenta,
+            Block.Pink };
     }
     
     public sealed class BWRainbowBrush : CheckeredPaletteBrush {
@@ -38,10 +38,10 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "BWRainbow"; } }
         public BWRainbowBrush() : base(blocks) {}
         
-        static ExtBlock[] blocks = new ExtBlock[] { 
-            (ExtBlock)Block.Iron,  (ExtBlock)Block.White,    (ExtBlock)Block.Gray,
-            (ExtBlock)Block.Black, (ExtBlock)Block.Obsidian, (ExtBlock)Block.Black, 
-            (ExtBlock)Block.Gray,  (ExtBlock)Block.White };
+        static ushort[] blocks = new ushort[] { 
+            Block.Iron,  Block.White,    Block.Gray,
+            Block.Black, Block.Obsidian, Block.Black, 
+            Block.Gray,  Block.White };
     }
     
     internal sealed class RandomRainbowBrush : Brush {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public RandomRainbowBrush() { rnd = new Random(); }        
         public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             return RainbowBrush.blocks[rnd.Next(RainbowBrush.blocks.Length)];
         }
     }

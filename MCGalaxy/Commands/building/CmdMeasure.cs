@@ -26,10 +26,10 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            ExtBlock[] toCount = null;
+            ushort[] toCount = null;
             if (message.Length > 0) {
                 string[] args = message.SplitSpaces();
-                toCount = new ExtBlock[args.Length];
+                toCount = new ushort[args.Length];
                 for (int i = 0; i < toCount.Length; i++) {
                     if (!CommandParser.GetBlock(p, args[i], out toCount[i])) return;
                 }
@@ -39,16 +39,16 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, "Selecting region for %SMeasure", toCount, DoMeasure);
         }
         
-        bool DoMeasure(Player p, Vec3S32[] m, object state, ExtBlock block) {
-            ExtBlock[] toCount = (ExtBlock[])state;
+        bool DoMeasure(Player p, Vec3S32[] m, object state, ushort block) {
+            ushort[] toCount = (ushort[])state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
-            int[] counts = new int[512];
+            int[] counts = new int[Block.Extended];
             
             for (ushort y = (ushort)min.Y; y <= (ushort)max.Y; y++)
                 for (ushort z = (ushort)min.Z; z <= (ushort)max.Z; z++)
                     for (ushort x = (ushort)min.X; x <= (ushort)max.X; x++)
             {
-                counts[p.level.GetBlock(x, y, z).Index]++;
+                counts[p.level.GetBlock(x, y, z)]++;
             }
 
             int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
@@ -64,25 +64,25 @@ namespace MCGalaxy.Commands.Building {
                 title = "Top " + toCount.Length + " block types: ";
             }
             
-            string blocks = toCount.Join(bl => p.level.BlockName(bl) + FormatCount(counts[bl.Index], volume));
+            string blocks = toCount.Join(bl => p.level.BlockName(bl) + FormatCount(counts[bl], volume));
             Player.Message(p, title +  blocks);
             return true;
         }
         
-        static ExtBlock[] MostFrequentBlocks(int[] countsRaw) {
-            ExtBlock[] blocks = new ExtBlock[512];
-            int[] counts = new int[512]; // copy array as Sort works in place
+        static ushort[] MostFrequentBlocks(int[] countsRaw) {
+        	ushort[] blocks = new ushort[Block.ExtendedCount];
+            int[] counts = new int[Block.ExtendedCount]; // copy array as Sort works in place
             int total = 0;
             
             for (int i = 0; i < blocks.Length; i++) {
-                blocks[i] = ExtBlock.FromIndex(i);
+                blocks[i] = (ushort)i;
                 counts[i] = countsRaw[i];
                 if (counts[i] > 0) total++;
             }
             Array.Sort(counts, blocks);
             
             if (total > 5) total = 5;
-            ExtBlock[] mostFrequent = new ExtBlock[total];
+            ushort[] mostFrequent = new ushort[total];
             for (int i = 0; i < total; i++) {
                 mostFrequent[i] = blocks[blocks.Length - 1 - i];
             }

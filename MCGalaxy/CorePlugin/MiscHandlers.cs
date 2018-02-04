@@ -79,9 +79,9 @@ namespace MCGalaxy.Core {
             if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
             
             if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;
-            ExtBlock block = p.level.GetBlock(x, y, z);
-            bool isMB = p.level.Props[block.Index].IsMessageBlock;
-            bool isPortal = p.level.Props[block.Index].IsPortal;
+            ushort block = p.level.GetBlock(x, y, z);
+            bool isMB = p.level.Props[block].IsMessageBlock;
+            bool isPortal = p.level.Props[block].IsPortal;
 
             if (isMB) { MessageBlock.Handle(p, x, y, z, true); }
             if (isPortal) { Portal.Handle(p, x, y, z); }

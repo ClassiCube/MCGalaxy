@@ -88,8 +88,8 @@ namespace MCGalaxy {
                     ushort y = ushort.Parse(row["EntryY"].ToString());
                     ushort z = ushort.Parse(row["EntryZ"].ToString());
                     
-                    ExtBlock block = level.GetBlock(x, y, z);
-                    if (level.Props[block.Index].IsPortal) continue;
+                    ushort block = level.GetBlock(x, y, z);
+                    if (level.Props[block].IsPortal) continue;
                     
                     Database.Backend.DeleteRows("Portals" + name, "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 }
@@ -106,8 +106,8 @@ namespace MCGalaxy {
                     ushort y = ushort.Parse(row["Y"].ToString());
                     ushort z = ushort.Parse(row["Z"].ToString());
                     
-                    ExtBlock block = level.GetBlock(x, y, z);
-                    if (level.Props[block.Index].IsMessageBlock) continue;
+                    ushort block = level.GetBlock(x, y, z);
+                    if (level.Props[block].IsMessageBlock) continue;
 
                     Database.Backend.DeleteRows("Messages" + name, "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 }

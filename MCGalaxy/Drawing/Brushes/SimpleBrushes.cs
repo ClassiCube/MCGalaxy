@@ -21,55 +21,55 @@ using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing.Brushes {    
     public sealed class SolidBrush : Brush {
-        readonly ExtBlock block;
+        readonly ushort block;
         
-        public SolidBrush(ExtBlock block) {
+        public SolidBrush(ushort block) {
             this.block = block;
         }
         
         public override string Name { get { return "Normal"; } }
         
-        public override ExtBlock NextBlock(DrawOp op) { return block; }
+        public override ushort NextBlock(DrawOp op) { return block; }
     }
     
     // CheckeredPaletteBrush of { b1, b1, b2, b2 }
     public sealed class StripedBrush : Brush {
-        readonly ExtBlock b1, b2;
+        readonly ushort b1, b2;
         
-        public StripedBrush(ExtBlock block1, ExtBlock block2) {
+        public StripedBrush(ushort block1, ushort block2) {
            b1 = block1; b2 = block2;
         }
         
         public override string Name { get { return "Striped"; } }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 3) <= 1 ? b1 : b2;
         }
     }
     
     // CheckeredPaletteBrush of { b1, b2 }
     public sealed class CheckeredBrush : Brush {
-        readonly ExtBlock b1, b2;
+        readonly ushort b1, b2;
         
-        public CheckeredBrush(ExtBlock block1, ExtBlock block2) {
+        public CheckeredBrush(ushort block1, ushort block2) {
             b1 = block1; b2 = block2;
         }
         
         public override string Name { get { return "Checkered"; } }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             return ((op.Coords.X + op.Coords.Y + op.Coords.Z) & 1) == 0 ? b1 : b2;
         }
     }
     
     public class CheckeredPaletteBrush : Brush {
-        readonly ExtBlock[] blocks;
+        readonly ushort[] blocks;
         
-        public CheckeredPaletteBrush(ExtBlock[] blocks) { this.blocks = blocks; }
+        public CheckeredPaletteBrush(ushort[] blocks) { this.blocks = blocks; }
         
         public override string Name { get { return "Checkered"; } }
         
-        public override ExtBlock NextBlock(DrawOp op) {
+        public override ushort NextBlock(DrawOp op) {
             int i = (op.Coords.X + op.Coords.Y + op.Coords.Z) % blocks.Length;
             if (i < 0) i += blocks.Length;
             return blocks[i];

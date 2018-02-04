@@ -115,8 +115,8 @@ namespace MCGalaxy.Games
             }
 
             mapOn.Blockchange(tfb.x, tfb.y, tfb.z, tfb.type);
-            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 1), tfb.z, ExtBlock.Air);
-            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 2), tfb.z, ExtBlock.Air);
+            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 1), tfb.z, Block.Air);
+            mapOn.Blockchange(tfb.x, (ushort)(tfb.y + 2), tfb.z, Block.Air);
 
             if (holdingFlag == null)
             {
@@ -124,14 +124,14 @@ namespace MCGalaxy.Games
 
                 tfb.type = mapOn.GetBlock(x, y, z);
 
-                if (mapOn.GetBlock(x, y, z) != (ExtBlock)Block.FlagBase) { 
-                    mapOn.Blockchange(x, y, z, (ExtBlock)Block.FlagBase); 
+                if (mapOn.GetBlock(x, y, z) != Block.FlagBase) { 
+                    mapOn.Blockchange(x, y, z, Block.FlagBase); 
                 }
-                if (mapOn.GetBlock(x, (ushort)(y + 1), z) != (ExtBlock)Block.Mushroom) {
-                    mapOn.Blockchange(x, (ushort)(y + 1), z, (ExtBlock)Block.Mushroom); 
+                if (mapOn.GetBlock(x, (ushort)(y + 1), z) != Block.Mushroom) {
+                    mapOn.Blockchange(x, (ushort)(y + 1), z, Block.Mushroom); 
                 }
-                if (mapOn.GetBlock(x, (ushort)(y + 2), z) != (ExtBlock)GetColorBlock(color)) {
-                    mapOn.Blockchange(x, (ushort)(y + 2), z, (ExtBlock)GetColorBlock(color)); 
+                if (mapOn.GetBlock(x, (ushort)(y + 2), z) != (ushort)GetColorBlock(color)) {
+                    mapOn.Blockchange(x, (ushort)(y + 2), z, (ushort)GetColorBlock(color)); 
                 }
 
                 tfb.x = x;
@@ -153,7 +153,7 @@ namespace MCGalaxy.Games
 
                 tempFlagblock.type = mapOn.GetBlock(x, y, z);
 
-                mapOn.Blockchange(x, y, z, (ExtBlock)GetColorBlock(color));
+                mapOn.Blockchange(x, y, z, (ushort)GetColorBlock(color));
 
                 tempFlagblock.x = x;
                 tempFlagblock.y = y;
@@ -181,7 +181,7 @@ namespace MCGalaxy.Games
                 return Block.Air;
         }
 
-        public struct CatchPos { public ushort x, y, z; public ExtBlock type; }
+        public struct CatchPos { public ushort x, y, z; public ushort type; }
         public struct Spawn { public ushort x, y, z, rotx, roty; }
     }
 }

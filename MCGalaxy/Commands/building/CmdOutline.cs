@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(dArgs.Player, "Block name is required."); return null;
             }
             
-            ExtBlock target;
+            ushort target;
             string[] parts = dArgs.Message.SplitSpaces(2);
             if (!CommandParser.GetBlockIfAllowed(dArgs.Player, parts[0], out target)) return null;
             

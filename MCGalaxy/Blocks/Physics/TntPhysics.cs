@@ -24,10 +24,10 @@ namespace MCGalaxy.Blocks.Physics {
     public static class TntPhysics {
         
         static void ToggleFuse(Level lvl, ushort x, ushort y, ushort z) {
-            if (lvl.GetTile(x, y, z) == Block.StillLava) {
-                lvl.Blockchange(x, y, z, ExtBlock.Air);
+            if (lvl.GetBlock(x, y, z) == Block.StillLava) {
+                lvl.Blockchange(x, y, z, Block.Air);
             } else {
-                lvl.Blockchange(x, y, z, (ExtBlock)Block.StillLava);
+                lvl.Blockchange(x, y, z, Block.StillLava);
             }
         }
         
@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (lvl.physics < 3) {
-                lvl.Blockchange(x, y, z, ExtBlock.Air);
+                lvl.Blockchange(x, y, z, Block.Air);
             } else {
                 if (C.data.Data < 5 && lvl.physics == 3) {
                     C.data.Data++;
@@ -95,7 +95,7 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 game.HandleKill(p, Killed);
             } else if (lvl.physics < 3) {
-                lvl.Blockchange(x, y, z, ExtBlock.Air);
+                lvl.Blockchange(x, y, z, Block.Air);
             } else {
                 if (C.data.Data < 5 && lvl.physics == 3) {
                     C.data.Data++;
@@ -123,8 +123,8 @@ namespace MCGalaxy.Blocks.Physics {
             if ((lvl.physics < 2 || lvl.physics == 5) && !force) return;
             
             int index;
-            ExtBlock block = lvl.GetBlock(x, y, z, out index);
-            if (index >= 0 && !lvl.Props[block.Index].OPBlock)
+            ushort block = lvl.GetBlock(x, y, z, out index);
+            if (index >= 0 && !lvl.Props[block].OPBlock)
                 lvl.AddUpdate(index, Block.TNT_Explosion, true);
 
             Explode(lvl, x, y, z, size + 1, rand, -1, game);

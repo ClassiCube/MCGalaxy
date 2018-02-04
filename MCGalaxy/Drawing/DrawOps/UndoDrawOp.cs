@@ -79,8 +79,8 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void UndoBlock(BlockDBEntry e) {
-            ExtBlock block = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
-            if (block.BlockID == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+            ushort block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             
             int x = e.Index % dims.X;
             int y = (e.Index / dims.X) / dims.Z;

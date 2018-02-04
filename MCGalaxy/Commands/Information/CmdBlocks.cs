@@ -128,14 +128,14 @@ namespace MCGalaxy.Commands.Info {
 
             if (props.IsDoor) Player.Message(p, "Block is an ordinary door");
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
-            if (props.oDoorIndex != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
+            if (props.oDoorBlock != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
 
             if (Mover(b)) Player.Message(p, "Block can be activated by walking through it");
         }
         
         static bool Mover(byte b) {
             bool nonSolid = Block.Walkthrough(Block.Convert(b));
-            return BlockBehaviour.GetWalkthroughHandler(new ExtBlock(b, 0), Block.Props, nonSolid) != null;
+            return BlockBehaviour.GetWalkthroughHandler(b, Block.Props, nonSolid) != null;
         }
         
         static bool Physics(byte b) {
@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands.Info {
             if (Block.Props[b].IsDoor || Block.Props[b].IsTDoor) return false;
             if (Block.Props[b].OPBlock) return false;
             
-            return BlockBehaviour.GetPhysicsHandler(new ExtBlock(b, 0), Block.Props) != null;
+            return BlockBehaviour.GetPhysicsHandler(b, Block.Props) != null;
         }
         
         public override void Help(Player p) {

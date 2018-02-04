@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             data.Block = GetBlock(p, block);
-            if (data.Block == ExtBlock.Invalid) return;
+            if (data.Block == Block.Invalid) return;
             if (!CommandParser.IsBlockAllowed(p, "place a portal of", data.Block)) return;
             data.Entries = new List<PortalPos>();
             
@@ -54,39 +54,38 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += EntryChange;
         }
         
-        ExtBlock GetBlock(Player p, string name) {
-            if (name == "show") { ShowPortals(p); return ExtBlock.Invalid; }
-            ExtBlock block = CommandParser.RawGetBlock(p, name);
-            if (!block.IsInvalid && p.level.Props[block.Index].IsPortal)
-                return block;
+        ushort GetBlock(Player p, string name) {
+            if (name == "show") { ShowPortals(p); return Block.Invalid; }
+            ushort block = CommandParser.RawGetBlock(p, name);
+            if (block != Block.Invalid && p.level.Props[block].IsPortal) return block;
             
             // Hardcoded aliases for backwards compatibility
-            block.BlockID = Block.Invalid; block.ExtID = 0;
-            if (name.Length == 0) block.BlockID = Block.Portal_Blue;
-            if (name == "blue")   block.BlockID = Block.Portal_Blue;
-            if (name == "orange") block.BlockID = Block.Portal_Orange;
-            if (name == "air")    block.BlockID = Block.Portal_Air;
-            if (name == "water")  block.BlockID = Block.Portal_Water;
-            if (name == "lava")   block.BlockID = Block.Portal_Lava;
+            block = Block.Invalid;
+            if (name.Length == 0) block = Block.Portal_Blue;
+            if (name == "blue")   block = Block.Portal_Blue;
+            if (name == "orange") block = Block.Portal_Orange;
+            if (name == "air")    block = Block.Portal_Air;
+            if (name == "water")  block = Block.Portal_Water;
+            if (name == "lava")   block = Block.Portal_Lava;
             
-            if (p.level.Props[block.Index].IsPortal) return block;
-            Help(p); return ExtBlock.Invalid;
+            if (p.level.Props[block].IsPortal) return block;
+            Help(p); return Block.Invalid;
         }
 
-        void EntryChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        void EntryChange(Player p, ushort x, ushort y, ushort z, ushort block) {
             PortalArgs args = (PortalArgs)p.blockchangeObject;
-            ExtBlock old = p.level.GetBlock(x, y, z);
+            ushort old = p.level.GetBlock(x, y, z);
             if (!p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
                 p.RevertBlock(x, y, z); return;
             }
             p.ClearBlockchange();
 
-            if (args.Multi && block.BlockID == Block.Red && args.Entries.Count > 0) {
+            if (args.Multi && block == Block.Red && args.Entries.Count > 0) {
                 ExitChange(p, x, y, z, block); return;
             }
 
             p.level.UpdateBlock(p, x, y, z, args.Block);
-            p.SendBlockchange(x, y, z, (ExtBlock)Block.Green);
+            p.SendBlockchange(x, y, z, Block.Green);
             PortalPos Port;
 
             Port.Map = p.level.name;
@@ -100,11 +99,11 @@ namespace MCGalaxy.Commands.Building {
             } else {
                 p.Blockchange += EntryChange;
                 Player.Message(p, "&aEntry block placed. &c{0} block for exit",
-                               p.Level.BlockName((ExtBlock)Block.Red));
+                               p.Level.BlockName(Block.Red));
             }
         }
         
-        void ExitChange(Player p, ushort x, ushort y, ushort z, ExtBlock block) {
+        void ExitChange(Player p, ushort x, ushort y, ushort z, ushort block) {
             p.ClearBlockchange();
             p.RevertBlock(x, y, z);
             PortalArgs args = (PortalArgs)p.blockchangeObject;
@@ -144,7 +143,7 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += EntryChange;
         }
 
-        class PortalArgs { public List<PortalPos> Entries; public ExtBlock Block; public bool Multi; }
+        class PortalArgs { public List<PortalPos> Entries; public ushort Block; public bool Multi; }
         struct PortalPos { public ushort x, y, z; public string Map; }
 
         
@@ -165,9 +164,9 @@ namespace MCGalaxy.Commands.Building {
         static void ShowPortals(Player p, DataTable table) {
             foreach (DataRow row in table.Rows) {
                 if (row["ExitMap"].ToString() == p.level.name) {
-                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), (ExtBlock)Block.Red);
+                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.Red);
                 }
-                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), (ExtBlock)Block.Green);
+                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.Green);
             }
         }
         
@@ -183,35 +182,29 @@ namespace MCGalaxy.Commands.Building {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         
-        static string Format(ExtBlock block, Level lvl, BlockProps[] props) {
-            if (!props[block.Index].IsPortal) return null;
+        static string Format(ushort block, Level lvl, BlockProps[] props) {
+            if (!props[block].IsPortal) return null;
             
             // We want to use the simple aliases if possible
-            if (block.BlockID == Block.Portal_Orange) return "orange";
-            if (block.BlockID == Block.Portal_Blue)   return "blue";
-            if (block.BlockID == Block.Portal_Air)    return "air";
-            if (block.BlockID == Block.Portal_Lava)   return "lava";
-            if (block.BlockID == Block.Portal_Water)  return "water";
+            if (block == Block.Portal_Orange) return "orange";
+            if (block == Block.Portal_Blue)   return "blue";
+            if (block == Block.Portal_Air)    return "air";
+            if (block == Block.Portal_Lava)   return "lava";
+            if (block == Block.Portal_Water)  return "water";
             
             return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
         }
         
-        static void GetAllNames(Player p, List<string> names) {
-            GetCoreNames(names, p.level);
-            for (int i = Block.CpeCount; i < Block.Count; i++) {
-                ExtBlock block = ExtBlock.FromRaw((byte)i);
-                string name = Format(block, p.level, p.level.Props);
+        static void AllNames(Player p, List<string> names) {
+            for (int i = 0; i < Block.ExtendedCount; i++) {
+                string name = Format((ushort)i, p.level, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }
         
-        static void GetCoreNames(List<string> names, Level lvl) {
-            BlockProps[] props = lvl != null ? lvl.Props : Block.Props;
-            for (int i = Block.Air; i < Block.Count; i++) {
-                ExtBlock block = ExtBlock.FromIndex(i);
-                if (block.BlockID == Block.custom_block) continue;
-                
-                string name = Format(block, lvl, props);
+        static void CoreNames(List<string> names) {
+            for (int i = 0; i < Block.Count; i++) {
+                string name = Format((ushort)i, null, Block.Props);
                 if (name != null) names.Add(name);
             }
         }
@@ -224,8 +217,8 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%H  Note: The exit can be on a different level.");
             
             List<string> names = new List<string>();
-            if (Player.IsSuper(p)) GetCoreNames(names, null);
-            else GetAllNames(p, names);
+            if (Player.IsSuper(p)) CoreNames(names);
+            else AllNames(p, names);
             
             Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
             Player.Message(p, "%T/Portal show %H- Shows portals (green = entry, red = exit)");

@@ -39,23 +39,23 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             
             int count = parts.Length == 1 ? 1 : parts.Length - 1;
-            ExtBlock[] toAffect = GetBlocks(args.Player, 0, count, parts);
+            ushort[] toAffect = GetBlocks(args.Player, 0, count, parts);
             if (toAffect == null) return null;
             
-            ExtBlock target;
+            ushort target;
             if (!GetTargetBlock(args, parts, out target)) return null;
             
             if (not) return new ReplaceNotBrush(toAffect, target);
             return new ReplaceBrush(toAffect, target);
         }
         
-        internal static ExtBlock[] GetBlocks(Player p, int start, int max, string[] parts) {
-            ExtBlock[] blocks = new ExtBlock[max - start];
+        internal static ushort[] GetBlocks(Player p, int start, int max, string[] parts) {
+            ushort[] blocks = new ushort[max - start];
             for (int i = 0; i < blocks.Length; i++)
-                blocks[i] = ExtBlock.Invalid;
+                blocks[i] = Block.Invalid;
             
             for (int i = 0; start < max; start++, i++ ) {
-                ExtBlock block;
+                ushort block;
                 if (!CommandParser.GetBlockIfAllowed(p, parts[start], out block)) return null;
 
                 blocks[i] = block;
@@ -63,8 +63,8 @@ namespace MCGalaxy.Drawing.Brushes {
             return blocks;
         }
         
-        static bool GetTargetBlock(BrushArgs args, string[] parts, out ExtBlock target) {
-            target = default(ExtBlock);
+        static bool GetTargetBlock(BrushArgs args, string[] parts, out ushort target) {
+            target = default(ushort);
             if (parts.Length == 1) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return false;
                 

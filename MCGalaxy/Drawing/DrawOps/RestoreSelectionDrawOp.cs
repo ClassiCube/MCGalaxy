@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Ops {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             int width = Source.Width, length = Source.Length;
             byte[] blocks = Source.blocks;
-            ExtBlock block;
+            ushort block;
             
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)

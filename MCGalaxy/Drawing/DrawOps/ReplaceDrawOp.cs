@@ -25,9 +25,9 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class ReplaceDrawOp : DrawOp {
         
-        public ExtBlock Include;
+        public ushort Include;
         
-        public ReplaceDrawOp(ExtBlock include) {
+        public ReplaceDrawOp(ushort include) {
             Include = include;
             Flags = BlockDBFlags.Replaced;
             AffectedByTransform = false;
@@ -45,7 +45,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ExtBlock block = Level.GetBlock(x, y, z);
+                ushort block = Level.GetBlock(x, y, z);
                 if (block == Include) output(Place(x, y, z, brush));
             }
         }
@@ -53,9 +53,9 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class ReplaceNotDrawOp : DrawOp {
         
-        public ExtBlock Exclude;
+        public ushort Exclude;
         
-        public ReplaceNotDrawOp(ExtBlock exclude) {
+        public ReplaceNotDrawOp(ushort exclude) {
             Exclude = exclude;
             Flags = BlockDBFlags.Replaced;
             AffectedByTransform = false;
@@ -73,7 +73,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ExtBlock block = Level.GetBlock(x, y, z);
+                ushort block = Level.GetBlock(x, y, z);
                 if (block != Exclude) output(Place(x, y, z, brush));
             }
         }

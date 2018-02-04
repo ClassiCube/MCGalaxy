@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             ushort y = min.Y;
-            ExtBlock doubleSlab = (ExtBlock)Block.DoubleSlab, leaf = (ExtBlock)Block.Leaves;
+            ushort doubleSlab = Block.DoubleSlab, leaf = Block.Leaves;
             
             for (ushort x = 0; x <= width; x++)
                 for (ushort z = 0; z <= length; z++)

@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
         
         bool Parse(Player p, string name, string arg, ref byte type, ref byte value, ref bool isExt) {
             if (name == "revert") {
-                ExtBlock block;
+                ushort block;
                 if (!CommandParser.GetBlock(p, arg, out block)) return false;
 
                 type = PhysicsArgs.Revert; value = block.RawID;
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
             return false;
         }
         
-        bool DoRestart(Player p, Vec3S32[] m, object state, ExtBlock block) {
+        bool DoRestart(Player p, Vec3S32[] m, object state, ushort block) {
             PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             int index;

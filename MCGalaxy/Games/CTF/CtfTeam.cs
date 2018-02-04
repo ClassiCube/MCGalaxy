@@ -45,7 +45,7 @@ namespace MCGalaxy.Games {
         public Position SpawnPos;
         
         /// <summary> Block type of this team's flag. </summary>
-        public ExtBlock FlagBlock;
+        public ushort FlagBlock;
                 
         public CtfTeam2(string name, string color) { Name = name; Color = color; }
 

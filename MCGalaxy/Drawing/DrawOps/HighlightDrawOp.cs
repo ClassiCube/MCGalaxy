@@ -32,10 +32,10 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime Start = DateTime.MinValue;
         
         /// <summary> Block to highlight placements with. </summary>
-        public ExtBlock PlaceHighlight = (ExtBlock)Block.Green;
+        public ushort PlaceHighlight = Block.Green;
         
         /// <summary> Block to highlight deletions with. </summary>
-        public ExtBlock DeleteHighlight = (ExtBlock)Block.Red;
+        public ushort DeleteHighlight = Block.Red;
         
         
         internal string who;
@@ -75,11 +75,11 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void HighlightBlock(BlockDBEntry e) {
-            ExtBlock oldBlock = ExtBlock.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
-            if (oldBlock.BlockID == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
-            ExtBlock newBlock = ExtBlock.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
+            ushort oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
+            ushort newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
-            ExtBlock highlight = (newBlock.BlockID == Block.Air
+            ushort highlight = (newBlock == Block.Air
                                   || Block.Convert(oldBlock.BlockID) == Block.Water || oldBlock.BlockID == Block.StillWater
                                   || Block.Convert(oldBlock.BlockID) == Block.Lava || oldBlock.BlockID == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;
@@ -109,12 +109,12 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void OldHighlightBlock(UndoFormatEntry P) {
-            ExtBlock old = P.Block, newBlock = P.NewBlock;
+            ushort old = P.Block, newBlock = P.NewBlock;
             if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
             if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
             DrawOpBlock block;
-            block.Block = (newBlock.BlockID == Block.Air
+            block.Block = (newBlock == Block.Air
                            || Block.Convert(old.BlockID) == Block.Water || old.BlockID == Block.StillWater
                            || Block.Convert(old.BlockID) == Block.Lava || old.BlockID == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;

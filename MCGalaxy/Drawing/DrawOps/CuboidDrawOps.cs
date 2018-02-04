@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            ExtBlock air = ExtBlock.Air;
+            ushort air = Block.Air;
             
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
-        public ExtBlock Target;
+        public ushort Target;
         public bool Above = true, Layer = true, Below = true;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -107,7 +107,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             int repeat = RainbowBrush.blocks.Length;
             int i = repeat - 1;
-            ExtBlock block = default(ExtBlock);
+            ushort block = default(ushort);
             brush = new RainbowBrush();            
             
             for (ushort y = p1.Y; y <= p2.Y; y++) {

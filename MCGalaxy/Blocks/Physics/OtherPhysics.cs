@@ -105,7 +105,7 @@ namespace MCGalaxy.Blocks.Physics {
             tree.Generate(x, y, z, (xT, yT, zT, bT) =>
                         {
                             if (!lvl.IsAirAt(xT, yT, zT)) return;
-                            lvl.Blockchange(xT, yT, zT, (ExtBlock)bT);
+                            lvl.Blockchange(xT, yT, zT, (ushort)bT);
                         });
             
             C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -117,10 +117,10 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {                
-                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (lvl.LightPasses(above)) {
-                    ExtBlock block = lvl.GetBlock(x, y, z);
-                    ExtBlock grass = ExtBlock.FromIndex(lvl.Props[block.Index].GrassIndex);
+                    ushort block = lvl.GetBlock(x, y, z);
+                    ushort grass = lvl.Props[block].GrassBlock;
                     lvl.AddUpdate(C.b, grass);
                 }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -135,10 +135,10 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                ExtBlock above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (!lvl.LightPasses(above)) {
-                    ExtBlock block = lvl.GetBlock(x, y, z);
-                    ExtBlock dirt = ExtBlock.FromIndex(lvl.Props[block.Index].DirtIndex);
+                    ushort block = lvl.GetBlock(x, y, z);
+                    ushort dirt = lvl.Props[block].DirtBlock;
                     lvl.AddUpdate(C.b, dirt);
                 }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;

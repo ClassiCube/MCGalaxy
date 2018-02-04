@@ -24,7 +24,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ExtBlock block = lvl.GetBlock(x, y, z);
+            ushort block = lvl.GetBlock(x, y, z);
             int index;
 
             switch (rand.Next(1, 15)) {
@@ -63,7 +63,7 @@ namespace MCGalaxy.Blocks.Physics {
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, ExtBlock block) {
+        static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, ushort block) {
             int index = lvl.PosToInt(x, y, z);
             if (index < 0) return;
             
@@ -76,7 +76,7 @@ namespace MCGalaxy.Blocks.Physics {
                 default:
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 25;
-                    lvl.AddUpdate(C.b, Block.Red, false, args);
+                    lvl.AddUpdate(C.b, Block.Red, args);
                     break;
             }
         }

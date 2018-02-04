@@ -219,38 +219,38 @@ namespace MCGalaxy.Games {
             
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
             if (Map.IsAirAt(x1, y, (ushort)(z2 + 2))) {
-                Map.Blockchange(x1, y, (ushort)(z2 + 1), ExtBlock.Air);
-                Map.Blockchange(x2, y, (ushort)(z2 + 1), ExtBlock.Air);
+                Map.Blockchange(x1, y, (ushort)(z2 + 1), Block.Air);
+                Map.Blockchange(x2, y, (ushort)(z2 + 1), Block.Air);
                 airMaxZ = true;
             }
             if (Map.IsAirAt(x1, y, (ushort)(z1 - 2))) {
-                Map.Blockchange(x1, y, (ushort)(z1 - 1), ExtBlock.Air);
-                Map.Blockchange(x2, y, (ushort)(z1 - 1), ExtBlock.Air);
+                Map.Blockchange(x1, y, (ushort)(z1 - 1), Block.Air);
+                Map.Blockchange(x2, y, (ushort)(z1 - 1), Block.Air);
                 airMinZ = true;
             }
             if (Map.IsAirAt((ushort)(x2 + 2), y, z1)) {
-                Map.Blockchange((ushort)(x2 + 1), y, z1, ExtBlock.Air);
-                Map.Blockchange((ushort)(x2 + 1), y, z2, ExtBlock.Air);
+                Map.Blockchange((ushort)(x2 + 1), y, z1, Block.Air);
+                Map.Blockchange((ushort)(x2 + 1), y, z2, Block.Air);
                 airMaxX = true;
             }
             if (Map.IsAirAt((ushort)(x1 - 2), y, z1)) {
-                Map.Blockchange((ushort)(x1 - 1), y, z1, ExtBlock.Air);
-                Map.Blockchange((ushort)(x1 - 1), y, z2, ExtBlock.Air);
+                Map.Blockchange((ushort)(x1 - 1), y, z1, Block.Air);
+                Map.Blockchange((ushort)(x1 - 1), y, z2, Block.Air);
                 airMinX = true;
             }
             
             // Remove glass borders for diagonals too.
             if (Map.IsAirAt((ushort)(x1 - 2), y, (ushort)(z1 - 2)) && airMinX && airMinZ) {
-                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), ExtBlock.Air);
+                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.Air);
             }
             if (Map.IsAirAt((ushort)(x1 - 2), y, (ushort)(z2 + 2)) && airMinX && airMaxZ) {
-                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), ExtBlock.Air);
+                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), Block.Air);
             }
             if (Map.IsAirAt((ushort)(x2 + 2), y, (ushort)(z1 - 2)) && airMaxX && airMinZ) {
-                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), ExtBlock.Air);
+                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), Block.Air);
             }
             if (Map.IsAirAt((ushort)(x2 + 2), y, (ushort)(z2 + 2)) && airMaxX && airMaxZ) {
-                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), ExtBlock.Air);
+                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), Block.Air);
             }
         }
 
@@ -382,7 +382,7 @@ namespace MCGalaxy.Games {
         }
         
         static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte raw, Level lvl) {
-            ExtBlock block = (ExtBlock)raw;
+            ushort block = (ushort)raw;
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)

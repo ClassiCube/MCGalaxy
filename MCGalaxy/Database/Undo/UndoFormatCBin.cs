@@ -64,8 +64,8 @@ namespace MCGalaxy.Undo {
                     pos.Y = (ushort)((index / chunk.Width) / chunk.Length);
                     pos.Z = (ushort)((index / chunk.Width) % chunk.Length);
                     
-                    pos.Block = ExtBlock.FromRaw(temp[offset + 6],    (flags & (1 << 14)) != 0);
-                    pos.NewBlock = ExtBlock.FromRaw(temp[offset + 7], (flags & (1 << 15)) != 0);
+                    pos.Block = Block.FromRaw(temp[offset + 6],    (flags & (1 << 14)) != 0);
+                    pos.NewBlock = Block.FromRaw(temp[offset + 7], (flags & (1 << 15)) != 0);
                     args.Output(pos);
                 }
             }

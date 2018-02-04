@@ -139,14 +139,14 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, ushort block) {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];           
             cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
             Player.Message(p, "Set flag position of blue team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
-            if (block.IsAir) block = (ExtBlock)Block.Blue;
+            if (block == Block.Air) block = Block.Blue;
             cfg.BlueFlagBlock = block.RawID;
             Player.Message(p, "Set flag block of blue team to {0}", p.level.BlockName(block));
             
@@ -154,14 +154,14 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, ushort block) {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];            
             cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
             Player.Message(p, "Set flag position of red team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
-            if (block.IsAir) block = (ExtBlock)Block.Red;
+            if (block == Block.Air) block = Block.Red;
             cfg.RedFlagBlock = block.RawID;
             Player.Message(p, "Set flag block of red team to {0}", p.level.BlockName(block));
             

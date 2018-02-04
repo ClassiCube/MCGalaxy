@@ -98,7 +98,7 @@ namespace MCGalaxy.Maths {
             AABB bb;
             byte raw;
             if (byte.TryParse(model, out raw)) {
-                ExtBlock block = ExtBlock.FromRaw(raw);                
+                ushort block = Block.FromRaw(raw);                
                 bb = Block.BlockAABB(block, lvl);
                 bb = bb.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
             } else {
@@ -153,15 +153,15 @@ namespace MCGalaxy.Maths {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ExtBlock block = lvl.GetBlock(xP, yP, zP);
+                ushort block = lvl.GetBlock(xP, yP, zP);
                 
-                AABB blockBB = lvl.blockAABBs[block.Index].Offset(x * 32, y * 32, z * 32);
+                AABB blockBB = lvl.blockAABBs[block].Offset(x * 32, y * 32, z * 32);
                 if (!AABB.Intersects(ref bb, ref blockBB)) continue;
                 
                 BlockDefinition def = lvl.GetBlockDef(block);
                 if (def != null) {
                     if (CollideType.IsSolid(def.CollideType)) return true;
-                } else if (block.BlockID == Block.Invalid) {
+                } else if (block == Block.Invalid) {
                     if (y < lvl.Height) return true;
                 } else if (!Block.Walkthrough(Block.Convert(block.BlockID))) {
                     return true;
@@ -180,8 +180,8 @@ namespace MCGalaxy.Maths {
                 for (int z = min.Z; z <= max.Z; z++)
                     for (int x = min.X; x <= max.X; x++)
             {
-                ExtBlock block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z);               
-                AABB blockBB = lvl.blockAABBs[block.Index];
+                ushort block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z);               
+                AABB blockBB = lvl.blockAABBs[block];
                 
                 blockBB.Min.X += x * 32; blockBB.Min.Y += y * 32; blockBB.Min.Z += z * 32;
                 blockBB.Max.X += x * 32; blockBB.Max.Y += y * 32; blockBB.Max.Z += z * 32;
@@ -193,7 +193,7 @@ namespace MCGalaxy.Maths {
                 if (def != null) {
                     solid = CollideType.IsSolid(def.CollideType);
                 } else {
-                    solid = block.BlockID == Block.Invalid || !Block.Walkthrough(Block.Convert(block.BlockID));
+                    solid = block == Block.Invalid || !Block.Walkthrough(Block.Convert(block.BlockID));
                 }
                 if (!solid) continue;
                 

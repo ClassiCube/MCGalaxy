@@ -50,7 +50,7 @@ namespace MCGalaxy.Drawing.Ops {
             selector = null;
             
             // Put all the blocks in shadow
-            ExtBlock rock = (ExtBlock)Block.Stone;
+            ushort rock = Block.Stone;
             if (DualLayer) {
                 ushort y = (ushort)(Origin.Y + Source.Height);
                 for (int i = 0; i < Source.Width; i++) {
@@ -85,7 +85,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             for (int i = 0; i < Palette.Entries.Length; i++) {
                 PaletteEntry entry = Palette.Entries[i];
-                ExtBlock block = ExtBlock.FromRaw(entry.Raw);
+                ushort block = Block.FromRaw(entry.Raw);
                 BlockDefinition def = Level.GetBlockDef(block);
                 
                 if (def != null && def.FullBright) {
@@ -115,7 +115,7 @@ namespace MCGalaxy.Drawing.Ops {
                 ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
                 ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                 ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
-                if (P.A < 20) { output(Place(x, y, z, ExtBlock.Air)); continue; }
+                if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
                 
                 byte raw = 0;
                 if (!DualLayer) {
@@ -128,7 +128,7 @@ namespace MCGalaxy.Drawing.Ops {
                         z = (ushort)(z + adj.Z);
                     }
                 }
-                output(Place(x, y, z, ExtBlock.FromRaw(raw)));
+                output(Place(x, y, z, Block.FromRaw(raw)));
             }
         }
         

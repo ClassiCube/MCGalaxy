@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
-        protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, ExtBlock block) {
+        protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
             DrawArgs dArgs = (DrawArgs)state;
             dArgs.Block = block;
             GetMarks(dArgs, ref marks);
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected class DrawArgs {
             public DrawMode Mode;
-            public ExtBlock Block;
+            public ushort Block;
             public string Message, BrushName, BrushArgs;
             public int DefaultBrushEndCount { get { return Mode == DrawMode.normal ? 0 : 1; } }
             

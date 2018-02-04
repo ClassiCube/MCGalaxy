@@ -170,7 +170,7 @@ namespace MCGalaxy.Blocks {
                     perms.MinRank = LevelPermission.Admin;
                 } else if (props.OPBlock) {
                     perms.MinRank = LevelPermission.Operator;
-                } else if (props.IsDoor || props.IsTDoor || props.oDoorIndex != Block.Invalid) {
+                } else if (props.IsDoor || props.IsTDoor || props.oDoorBlock != Block.Invalid) {
                     perms.MinRank = LevelPermission.Builder;
                 } else if (props.IsPortal || props.IsMessageBlock) {
                     perms.MinRank = LevelPermission.AdvBuilder;

@@ -84,11 +84,11 @@ namespace MCGalaxy.Games {
             Config.Retrieve(Map.name);
             CTFConfig cfg = Config;
             
-            Red.FlagBlock = ExtBlock.FromRaw(cfg.RedFlagBlock);
+            Red.FlagBlock = Block.FromRaw(cfg.RedFlagBlock);
             Red.FlagPos = new Vec3U16((ushort)cfg.RedFlagX, (ushort)cfg.RedFlagY, (ushort)cfg.RedFlagZ);
             Red.SpawnPos = new Position(cfg.RedSpawnX, cfg.RedSpawnY, cfg.RedSpawnZ);
             
-            Blue.FlagBlock = ExtBlock.FromRaw(cfg.BlueFlagBlock);
+            Blue.FlagBlock = Block.FromRaw(cfg.BlueFlagBlock);
             Blue.FlagPos = new Vec3U16((ushort)cfg.BlueFlagX, (ushort)cfg.BlueFlagY, (ushort)cfg.BlueFlagZ);
             Blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
         }

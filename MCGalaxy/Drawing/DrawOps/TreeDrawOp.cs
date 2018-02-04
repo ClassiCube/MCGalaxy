@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public Random random = new Random();
         public Tree Tree;
-        static Brush defBrush = new SolidBrush(new ExtBlock(Block.Leaves, 0));
+        static Brush defBrush = new SolidBrush(Block.Leaves);
         
         public int Size = -1;
         
@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                           {
                               if (bT != Block.Leaves) {
-                                  output(Place(xT, yT, zT, (ExtBlock)bT));
+                                  output(Place(xT, yT, zT, (ushort)bT));
                               } else if (lvl.IsAirAt(xT, yT, zT)) {
                                   leaves.Add(new Vec3U16(xT, yT, zT));
                               }

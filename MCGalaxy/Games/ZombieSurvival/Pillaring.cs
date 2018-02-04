@@ -25,7 +25,7 @@ namespace MCGalaxy.Games.ZS {
     internal static class Pillaring {
         
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
-                                     bool placing, ExtBlock block, ExtBlock old, ZSGame game) {
+                                     bool placing, ushort block, ushort old, ZSGame game) {
             
             if (placing && !game.Map.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(game.Map, block, old)) {
@@ -42,7 +42,7 @@ namespace MCGalaxy.Games.ZS {
             return false;
         }
 
-        static bool NotPillaring(Level lvl, ExtBlock b, ExtBlock old) {
+        static bool NotPillaring(Level lvl, ushort b, ushort old) {
             byte collide = lvl.CollideType(b);
             if (collide == CollideType.WalkThrough) return true;
             

@@ -54,7 +54,7 @@ namespace MCGalaxy.Drawing.Ops {
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 DrawOpBlock block = Place(x, y, z, brush);
-                if (pasteAir || block.Block.BlockID != Block.Air) output(block);
+                if (pasteAir || block.Block != Block.Air) output(block);
             }
         }
     }

@@ -24,7 +24,7 @@ namespace MCGalaxy.Blocks {
     
     internal static class DeleteBehaviour {
 
-        internal static void RocketStart(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void RocketStart(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             int dx = 0, dy = 0, dz = 0;
@@ -41,12 +41,12 @@ namespace MCGalaxy.Blocks {
             bool headFree = p.level.IsAirAt(head.X, head.Y, head.Z) && p.level.CheckClear(head.X, head.Y, head.Z);
             bool tailFree = p.level.IsAirAt(tail.X, tail.Y, tail.Z) && p.level.CheckClear(tail.X, tail.Y, tail.Z);
             if (headFree && tailFree) {
-                p.level.Blockchange(head.X, head.Y, head.Z, (ExtBlock)Block.RocketHead);
-                p.level.Blockchange(tail.X, tail.Y, tail.Z, (ExtBlock)Block.LavaFire);
+                p.level.Blockchange(head.X, head.Y, head.Z, Block.RocketHead);
+                p.level.Blockchange(tail.X, tail.Y, tail.Z, Block.LavaFire);
             }
         }
         
-        internal static void Firework(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void Firework(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             Random rand = new Random();
@@ -59,58 +59,58 @@ namespace MCGalaxy.Blocks {
             bool headFree = p.level.IsAirAt(pos.X, headY, pos.Z) && p.level.CheckClear(pos.X, headY, pos.Z);
             bool tailFree = p.level.IsAirAt(pos.X, tailY, pos.Z) && p.level.CheckClear(pos.X, tailY, pos.Z);            
             if (headFree && tailFree) {
-                p.level.Blockchange(pos.X, headY, pos.Z, (ExtBlock)Block.Fireworks);
+                p.level.Blockchange(pos.X, headY, pos.Z, Block.Fireworks);
                 
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
                 args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
-                p.level.Blockchange(pos.X, tailY, pos.Z, (ExtBlock)Block.StillLava, false, args);
+                p.level.Blockchange(pos.X, tailY, pos.Z, Block.StillLava, false, args);
             }
             p.RevertBlock(x, y, z);
         }
         
-        internal static void C4Det(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, ushort block, ushort x, ushort y, ushort z) {
             int index = p.level.PosToInt(x, y, z);
             C4Physics.BlowUp(index, p.level);
-            p.ChangeBlock(x, y, z, ExtBlock.Air);
+            p.ChangeBlock(x, y, z, Block.Air);
         }
         
-        internal static void RevertDoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void RevertDoor(Player p, ushort block, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
         }
         
-        internal static void Door(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void Door(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {             
                 byte physForm;
                 PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
-                p.level.Blockchange(x, y, z, (ExtBlock)physForm, false, args);
+                p.level.Blockchange(x, y, z, (ushort)physForm, false, args);
             } else {
                 p.RevertBlock(x, y, z);
             }
         }
         
-        internal static void oDoor(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
-            if (block.BlockID == Block.oDoor_Green || block.BlockID == Block.oDoor_Green_air) {
-                ushort oDoorOpposite = p.level.Props[block.Index].oDoorIndex;
-                p.level.Blockchange(x, y, z, ExtBlock.FromIndex(oDoorOpposite));
+        internal static void oDoor(Player p, ushort block, ushort x, ushort y, ushort z) {
+            if (block == Block.oDoor_Green || block == Block.oDoor_Green_air) {
+                ushort oDoorOpposite = p.level.Props[block].oDoorBlock;
+                p.level.Blockchange(x, y, z, oDoorOpposite);
             } else {
                 p.RevertBlock(x, y, z);
             }
         }
         
-        internal static void DoPortal(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void DoPortal(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (Portal.Handle(p, x, y, z)) {
                 p.RevertBlock(x, y, z);
             } else {
-                p.ChangeBlock(x, y, z, ExtBlock.Air);
+                p.ChangeBlock(x, y, z, Block.Air);
             }
         }
         
-        internal static void DoMessageBlock(Player p, ExtBlock block, ushort x, ushort y, ushort z) {
+        internal static void DoMessageBlock(Player p, ushort block, ushort x, ushort y, ushort z) {
             if (MessageBlock.Handle(p, x, y, z, true)) {
                 p.RevertBlock(x, y, z);
             } else {
-                p.ChangeBlock(x, y, z, ExtBlock.Air);
+                p.ChangeBlock(x, y, z, Block.Air);
             }
         }
     }

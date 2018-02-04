@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(marks, "Selecting region for %SCopy", cArgs, DoCopy, DoCopyMark);
         }
 
-        void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ExtBlock block) {
+        void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ushort block) {
             if (i == 2) {
                 CopyState copy = p.CopySlots[p.CurrentCopySlot];
                 copy.Offset.X = copy.OriginX - m[i].X;
@@ -124,8 +124,7 @@ namespace MCGalaxy.Commands.Building {
                 block = p.level.GetBlock(x, y, z);
                 if (!p.group.Blocks[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
                 
-                if (block.BlockID != Block.Air || cState.PasteAir)
-                    cState.UsedBlocks++;
+                if (block != Block.Air || cState.PasteAir) cState.UsedBlocks++;
                 cState.Set(block, index);
                 index++;
             }
@@ -143,7 +142,7 @@ namespace MCGalaxy.Commands.Building {
             if (cArgs.cut) {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
-                Brush brush = new SolidBrush(ExtBlock.Air);
+                Brush brush = new SolidBrush(Block.Air);
                 DrawOpPerformer.Do(op, brush, p, new Vec3S32[] { min, max }, false);
             }
 
@@ -159,7 +158,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        bool DoCopy(Player p, Vec3S32[] m, object state, ExtBlock block) { return false; }
+        bool DoCopy(Player p, Vec3S32[] m, object state, ushort block) { return false; }
         class CopyArgs { public int offsetIndex; public bool cut, air; }
         
         void SaveCopy(Player p, string file) {

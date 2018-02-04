@@ -25,7 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;       
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ExtBlock block = lvl.GetBlock(x, y, z);
+            ushort block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -74,7 +74,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ExtBlock block = lvl.GetBlock(x, y, z);
+            ushort block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -119,7 +119,7 @@ namespace MCGalaxy.Blocks.Physics {
             RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
         }
         
-        static bool MoveTo(Level lvl, ExtBlock block, int index, int targetIndex, byte target) {
+        static bool MoveTo(Level lvl, ushort block, int index, int targetIndex, byte target) {
             if (targetIndex >= 0 && lvl.blocks[targetIndex] == target && lvl.AddUpdate(targetIndex, block)) {
                 lvl.AddUpdate(index, target);
                 return true;
@@ -127,7 +127,7 @@ namespace MCGalaxy.Blocks.Physics {
             return false;
         }
         
-        static void RandomlyMove(Level lvl, ref Check C, ExtBlock block, Random rand, 
+        static void RandomlyMove(Level lvl, ref Check C, ushort block, Random rand, 
                                  ushort x, ushort y, ushort z, byte target) {
             switch (rand.Next(1, 15)) {
                 case 1:

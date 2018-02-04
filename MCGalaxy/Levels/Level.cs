@@ -52,8 +52,7 @@ namespace MCGalaxy {
             
             LoadCoreProps();
             for (int i = 0; i < blockAABBs.Length; i++) {
-                ExtBlock block = ExtBlock.FromIndex(i);
-                blockAABBs[i] = Block.BlockAABB(block, this);
+                blockAABBs[i] = Block.BlockAABB((ushort)i, this);
             }
             UpdateBlockHandlers();
             
@@ -433,7 +432,7 @@ namespace MCGalaxy {
             public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
             public byte oldRaw, newRaw;
             
-            public void SetData(ExtBlock oldBlock, ExtBlock newBlock) {
+            public void SetData(ushort oldBlock, ushort newBlock) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
                 flags = (int)delta.TotalSeconds << 2;
                 
@@ -451,14 +450,14 @@ namespace MCGalaxy {
             }
         }
         
-        internal bool HasCustomProps(ExtBlock block) {
+        internal bool HasCustomProps(ushort block) {
             if (block.IsPhysicsType) return false;
             return CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
         }
         
         void LoadCoreProps() {
             for (int i = 0; i < Props.Length; i++) {
-                ExtBlock block = ExtBlock.FromIndex(i);
+        	    ushort block = (ushort)i;
                 if (!HasCustomProps(block)) {
                     Props[i] = BlockDefinition.DefaultProps(block);
                 } else {
@@ -474,26 +473,24 @@ namespace MCGalaxy {
         
         public void UpdateBlockHandlers() {
             for (int i = 0; i < Props.Length; i++) {
-                UpdateBlockHandler(ExtBlock.FromIndex(i));
+        	    UpdateBlockHandler((ushort)i);
             }
         }
         
-        public void UpdateBlockHandler(ExtBlock block) {
-            bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
-            int i = block.Index;
-            
-            deleteHandlers[i] = BlockBehaviour.GetDeleteHandler(block, Props);
-            placeHandlers[i] = BlockBehaviour.GetPlaceHandler(block, Props);
-            walkthroughHandlers[i] = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
-            physicsHandlers[i] = BlockBehaviour.GetPhysicsHandler(block, Props);
-            physicsDoorsHandlers[i] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
+        public void UpdateBlockHandler(ushort block) {
+            bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));           
+            deleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
+            placeHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
+            walkthroughHandlers[block]  = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
+            physicsHandlers[block]      = BlockBehaviour.GetPhysicsHandler(block, Props);
+            physicsDoorsHandlers[block] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
         }
         
         public void UpdateCustomBlock(byte raw, BlockDefinition def) {
             CustomBlockDefs[raw] = def;
-            ExtBlock block = ExtBlock.FromRaw(raw);            
+            ushort block = Block.FromRaw(raw);            
             UpdateBlockHandler(block);
-            blockAABBs[block.Index] = Block.BlockAABB(block, this);
+            blockAABBs[block] = Block.BlockAABB(block, this);
         }
     }
 }
