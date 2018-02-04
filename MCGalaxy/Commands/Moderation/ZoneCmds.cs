@@ -123,11 +123,24 @@ namespace MCGalaxy.Commands.Moderation {
                 zone.UnshowAll(p.level);
                 zone.Config.ShowAlpha = alpha;
                 zone.ShowAll(p.level);
-            } else {
+            } else if (opt.CaselessEq("motd")) {
+                zone.Config.MOTD = args[3];
+                OnChangedZone(zone);
+            } else if (opt.CaselessEq("clouds")) {
+                zone.Config.CloudColor = args[3];
+                OnChangedZone(zone);
+            }  else {
                 Player.Message(p, "?????");
                 return;
             }
             p.level.Save(true);
+        }
+        
+        void OnChangedZone(Zone zone) {
+        	Player[] players = PlayerInfo.Online.Items;
+        	foreach (Player pl in players) {
+        		if (pl.ZoneIn == zone) pl.OnChangedZone();
+        	}
         }
         
         public override void Help(Player p) {

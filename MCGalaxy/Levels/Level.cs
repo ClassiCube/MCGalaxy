@@ -99,6 +99,10 @@ namespace MCGalaxy {
         }
         
         public string GetMotd(Player p) {
+            Zone zone = p.ZoneIn;
+            string zoneMOTD = zone == null ? null : zone.Config.MOTD;
+            if (zoneMOTD != null && zoneMOTD != "ignore") return zoneMOTD;
+            
             if (Config.MOTD != "ignore") return Config.MOTD;
             return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
         }

@@ -236,6 +236,7 @@ namespace MCGalaxy {
             if (leftServer) return;
             leftServer = true;
             CriticalTasks.Clear();
+            ZoneIn = null;
             
             //Umm...fixed?
             if (name == null || name.Length == 0) {
@@ -266,6 +267,7 @@ namespace MCGalaxy {
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
                 Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
                 disconnected = true;
+                ZoneIn = null;
                 if (isKick) TimesBeenKicked++;
                 
                 if (!loggedIn) {

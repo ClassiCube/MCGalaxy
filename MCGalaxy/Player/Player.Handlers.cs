@@ -335,11 +335,44 @@ namespace MCGalaxy {
             
             Pos = next;
             SetYawPitch(yaw, pitch);
+            CheckZones(next);
+            
             if (!Moved() || Loading) return;
             if (DateTime.UtcNow < AFKCooldown) return;
             
             LastAction = DateTime.UtcNow;
             if (IsAfk) CmdAfk.ToggleAfk(this, "");
+        }
+        
+        void CheckZones(Position pos) {
+            Vec3S32 P = pos.BlockCoords;
+            Zone zone = ZoneIn;
+            
+            // player hasn't moved from current zone
+            if (zone != null && zone.Contains(P.X, P.Y, P.Z)) return;
+            Zone[] zones = level.Zones.Items;
+            if (zones.Length == 0) return;
+            
+            for (int i = 0; i < zones.Length; i++) {
+                if (!zones[i].Contains(P.X, P.Y, P.Z)) continue;
+                
+                ZoneIn = zones[i];
+                OnChangedZone();
+                return;
+            }
+            
+            ZoneIn = null;
+            if (zone != null) OnChangedZone();
+        }
+        
+        public void OnChangedZone() {
+            if (Supports(CpeExt.InstantMOTD)) SendMapMotd();
+            Zone zone = ZoneIn;
+            string cloudsCol = zone == null || zone.Config.CloudColor == "" ? level.Config.CloudColor : zone.Config.CloudColor;
+            if (Supports(CpeExt.EnvColors)) SendEnvColor(1, cloudsCol);
+            
+            Server.s.Log("I MOVED");
+            if (ZoneIn != null) Server.s.Log(ZoneIn.ColoredName);
         }
         
         void CheckBlocks(Position pos) {

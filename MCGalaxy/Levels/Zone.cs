@@ -156,6 +156,13 @@ namespace MCGalaxy {
                 UnshowAll(level);
                 level.Zones.Remove(this);
             }
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.ZoneIn != this) continue;
+                pl.ZoneIn = null;
+                pl.OnChangedZone();
+            }
         }
         
         unsafe byte NextFreeZoneId(Level level) {

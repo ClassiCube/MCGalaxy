@@ -117,15 +117,17 @@ namespace MCGalaxy.Games.ZS {
                 Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
                 
-                if (p.Supports(CpeExt.HackControl))
+                if (p.Supports(CpeExt.HackControl)) {
                     p.Send(Hacks.MakeHackControl(p, p.level.GetMotd(p)));
+                }
             } else {
                 HandlePlayerDisconnect(p, null);                
                 p.Game.Referee = true;
                 Entities.GlobalDespawn(p, false, false);
                 
-                if (p.Supports(CpeExt.HackControl))
+                if (p.Supports(CpeExt.HackControl)) {
                     p.Send(Packet.HackControl(true, true, true, true, true, -1));
+                }
             }
             
             Entities.GlobalSpawn(p, false, "");

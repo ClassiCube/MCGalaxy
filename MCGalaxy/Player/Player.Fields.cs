@@ -43,6 +43,7 @@ namespace MCGalaxy {
         public static List<Player> connections = new List<Player>(ServerConfig.MaxPlayers);
         public PlayerIgnores Ignores = new PlayerIgnores();
         public static string lastMSG = "";
+        public Zone ZoneIn;
         
         //TpA
         internal bool Request;
