@@ -90,7 +90,7 @@ namespace MCGalaxy {
         }        
         
         public ushort GetHeldBlock() {
-            if (!ModeBlock.IsAir) return ModeBlock;
+            if (ModeBlock != Block.Air) return ModeBlock;
             return BlockBindings[RawHeldBlock.RawID];
         }
         

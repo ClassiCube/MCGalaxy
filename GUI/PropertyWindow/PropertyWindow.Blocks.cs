@@ -56,8 +56,8 @@ namespace MCGalaxy.Gui {
                 Block.Props[i] = blockPropsChanged[i];
             }
             foreach (BlockPerms perms in blockPermsChanged) {
-                BlockPerms.List[perms.BlockID] = perms;
-                if (perms.BlockID < Block.CpeCount) {
+                BlockPerms.List[perms.Block] = perms;
+                if (perms.Block < Block.CpeCount) {
                     BlockPerms.ResendAllBlockPermissions();
                 }
             }
@@ -79,7 +79,7 @@ namespace MCGalaxy.Gui {
         void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
             blockID = Block.Byte(blk_list.SelectedItem.ToString());
             blockPermsOrig = BlockPerms.List[blockID];
-            blockPerms = blockPermsChanged.Find(p => p.BlockID == blockID);
+            blockPerms = blockPermsChanged.Find(p => p.Block == blockID);
             BlockInitSpecificArrays();
             blockSupressEvents = true;
             

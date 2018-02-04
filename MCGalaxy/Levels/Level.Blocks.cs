@@ -158,7 +158,7 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
 
-        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref byte block) {
+        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref ushort block) {
             if (!(block == Block.TNT || block == Block.TNT_Big || block == Block.TNT_Nuke || block == Block.TNT_Small))
                 return true;
             
@@ -189,8 +189,8 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ushort old, ushort block) {
-            if (!p.group.Blocks[old.BlockID] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
-            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block.BlockID)) return false;
+            if (!p.group.Blocks[old] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
+            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             Zone[] zones = Zones.Items;
             if (zones.Length == 0) return CheckRank(p);
             

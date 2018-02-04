@@ -86,13 +86,11 @@ namespace MCGalaxy {
         }
 
         public static bool Placable(byte block) {
-            return !(block == Bedrock || (block >= Water && block <= StillLava))
-                && block < CpeCount;
+            return !(block == Bedrock || (block >= Water && block <= StillLava)) && block < CpeCount;
         }
 
         public static bool BuildIn(byte block) {
-            if (block == Op_Water || block == Op_Lava
-                || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
+            if (block == Op_Water || block == Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
             return block >= Water && block <= StillLava;
         }
@@ -192,6 +190,10 @@ namespace MCGalaxy {
         
         public static ushort FromRaw(byte raw, bool extended) {
             return (ushort)(raw | (extended ? Block.Extended : Block.Air));
+        }
+        
+        public static bool IsPhysicsType(ushort block) {
+            return block >= Block.CpeCount && block < Block.Extended;
         }
     }
 }

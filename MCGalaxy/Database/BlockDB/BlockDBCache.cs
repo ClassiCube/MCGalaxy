@@ -45,17 +45,10 @@ namespace MCGalaxy.DB {
             int timeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
             entry.Index = x + Dims.X * (z + Dims.Z * y);
             
-            entry.OldRaw = old.BlockID; entry.NewRaw = block.BlockID;
+            entry.OldRaw = (byte)old; entry.NewRaw = (byte)block;
             entry.Flags = flags;
-            
-            if (block.BlockID == Block.custom_block) {
-                entry.Flags |= BlockDBFlags.NewCustom;
-                entry.NewRaw = block.ExtID;
-            }
-            if (old.BlockID == Block.custom_block) {
-                entry.Flags |= BlockDBFlags.OldCustom;
-                entry.OldRaw = old.ExtID;
-            }
+            if (block >= Block.Extended) entry.Flags |= BlockDBFlags.NewCustom;
+            if (old >= Block.Extended)   entry.Flags |= BlockDBFlags.OldCustom;
 
             lock (Locker) {
                 const int maxTime = (1 << 11); // 11 bits for time

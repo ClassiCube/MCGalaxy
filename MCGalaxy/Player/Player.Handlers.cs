@@ -132,9 +132,9 @@ namespace MCGalaxy {
         }
         
         internal bool CheckManualChange(ushort old, ushort block, bool deleteMode) {
-            if (!BlockPerms.UsableBy(this, old.BlockID) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
+            if (!BlockPerms.UsableBy(this, old) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
                 string action = deleteMode ? "delete" : "replace";
-                BlockPerms.List[old.BlockID].MessageCannotUse(this, action);
+                BlockPerms.List[old].MessageCannotUse(this, action);
                 return false;
             }
             return CommandParser.IsBlockAllowed(this, "place", block);

@@ -436,22 +436,14 @@ namespace MCGalaxy {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
                 flags = (int)delta.TotalSeconds << 2;
                 
-                if (oldBlock.BlockID == Block.custom_block) {
-                    oldRaw = oldBlock.ExtID; flags |= 1;
-                } else {
-                    oldRaw = oldBlock.BlockID;
-                }
-                
-                if (newBlock.BlockID == Block.custom_block) {
-                    newRaw = newBlock.ExtID; flags |= 2;
-                } else {
-                    newRaw = newBlock.BlockID;
-                }
+                oldRaw = (byte)oldBlock; newRaw = (byte)newBlock;
+                if (oldBlock >= Block.Extended) flags |= 1;
+                if (newBlock >= Block.Extended) flags |= 2;
             }
         }
         
         internal bool HasCustomProps(ushort block) {
-            if (block.IsPhysicsType) return false;
+            if (Block.IsPhysicsType(block)) return false;
             return CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
         }
         

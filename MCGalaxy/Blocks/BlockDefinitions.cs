@@ -153,7 +153,7 @@ namespace MCGalaxy {
         }
         
         internal static BlockProps DefaultProps(ushort block) {
-            if (block.IsPhysicsType) {
+            if (Block.IsPhysicsType(block)) {
                 return Block.Props[block.Index];
             } else if (!block.IsCustomType && GlobalDefs[block.RawID] == null) {
                 return Block.Props[block.RawID];
@@ -169,7 +169,7 @@ namespace MCGalaxy {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
                     ushort block = Block.FromRaw((byte)i);
-                    lvl.Props[block.Index] = DefaultProps(block);
+                    lvl.Props[block] = DefaultProps(block);
                     lvl.UpdateCustomBlock(block.RawID, GlobalDefs[i]);
                 }
             }

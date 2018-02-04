@@ -23,13 +23,9 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Hollow"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            byte skip = Block.Invalid;
+            ushort skip = Block.Invalid;
             if (dArgs.Message.Length > 0) {
-                skip = Block.Byte(dArgs.Message);
-                
-                if (skip == Block.Invalid) { 
-                    Player.Message(dArgs.Player, "Cannot find block entered."); return null; 
-                }
+                if (!CommandParser.GetBlock(dArgs.Player, dArgs.Message, out skip)) return null;
             }
             
             HollowDrawOp op = new HollowDrawOp();

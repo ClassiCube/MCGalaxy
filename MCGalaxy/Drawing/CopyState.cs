@@ -84,22 +84,20 @@ namespace MCGalaxy.Drawing {
         }
         
         public void Set(ushort block, int index) {
-            if (block.BlockID == Block.custom_block) {
-                raw[index] = block.ExtID;
+            raw[index] = (byte)block;
+            if (block >= Block.Extended) {
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {
-                raw[index] = block.BlockID;
                 isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
             }
         }
         
         public void Set(ushort block, int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
-            if (block.BlockID == Block.custom_block) {
-                raw[index] = block.ExtID;
+            raw[index] = (byte)block;
+            if (block >= Block.Extended) {
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {
-                raw[index] = block.BlockID;
                 isExt[index >> 3] &= (byte)~(1 << (index & 0x07));
             }
         }

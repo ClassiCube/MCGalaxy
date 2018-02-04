@@ -28,8 +28,8 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces();
             if (args.Length == 1) { Help(p); return; }
             
-            byte block = Block.Byte(args[0]);
-            if (block == Block.Invalid) { Player.Message(p, "Could not find block entered"); return; }
+            ushort block;
+            if (!CommandParser.GetBlock(p, args[0], out block)) return;
             if (!CommandParser.IsBlockAllowed(p, "change permissions of", (ushort)block)) return;
 
             if (args.Length == 2 && args[1][0] == '+') {
@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Moderation {
             return grp;
         }
         
-        static void UpdatePermissions(byte block, Player p, string message) {
+        static void UpdatePermissions(ushort block, Player p, string message) {
             BlockPerms.Save();
             BlockPerms.Load();
             if (block < Block.CpeCount) {

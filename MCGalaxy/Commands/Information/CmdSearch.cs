@@ -49,37 +49,31 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static string CoreBlockName(ushort block) { return Block.Name(block.BlockID); }
         static void SearchBlocks(Player p, string keyword, string modifier) {
-            List<ushort> blockIDs = new List<ushort>();
-            for (byte id = 0; id < Block.Invalid; id++) {
-                if (!Block.Name(id).CaselessEq("unknown")) {
-                    blockIDs.Add(new ushort(id, 0));
-                }
+            List<ushort> blocks = new List<ushort>();
+            for (ushort block = 0; block < Block.Count; block++) {
+                if (!Block.Undefined(block)) blocks.Add(block);
             }
-            StringFormatter<ushort> getName;
             
             if (!Player.IsSuper(p)) {
                 for (int id = Block.CpeCount; id < Block.Count; id++) {
                     if (p.level.CustomBlockDefs[id] == null) continue;
-                    blockIDs.Add(new ushort(Block.custom_block, (byte)id));
+                    blocks.Add(new ushort(Block.custom_block, (byte)id));
                 }
-                getName = p.level.BlockName;
-            } else {
-                getName = CoreBlockName;
-            }
+            } 
 
-            List<string> blocks = FilterList(blockIDs, keyword, getName, null,
-                                             b => Group.GetColor(BlockPerms.List[b.BlockID].MinRank) + getName(b));
-            OutputList(p, keyword, "search blocks", "blocks", modifier, blocks);
+            List<string> blockNames = FilterList(blocks, keyword, 
+                                                 b => CmdBlocks.GetBlockName(p, b), null,
+                                                 b => CmdBlocks.FormatBlockName(p, b));
+            OutputList(p, keyword, "search blocks", "blocks", modifier, blockNames);
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
             List<string> commands = FilterList(Command.all.commands, keyword, cmd => cmd.name,
                                                null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
             List<string> shortcuts = FilterList(Command.all.commands, keyword, cmd => cmd.shortcut,
-        	                                    cmd => !String.IsNullOrEmpty(cmd.shortcut), 
-        	                                    cmd => CmdHelp.GetColor(cmd) + cmd.name);
+                                                cmd => !String.IsNullOrEmpty(cmd.shortcut), 
+                                                cmd => CmdHelp.GetColor(cmd) + cmd.name);
             
             // Match both names and shortcuts
             foreach (string shortcutCmd in shortcuts) {

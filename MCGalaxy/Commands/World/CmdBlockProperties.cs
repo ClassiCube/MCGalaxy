@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.World {
                 if (!byte.TryParse(input, out  raw))
                     raw = Block.Byte(input);
                 
-                if (Block.Name(raw).CaselessEq("unknown")) {
+                if (Block.Undefined(raw)) {
                     Player.Message(p, "&cThere is no block with id or name \"{0}\"", input);
                     return Block.Invalid;
                 }
@@ -221,8 +221,9 @@ namespace MCGalaxy.Commands.World {
             if (scope == Block.Props) {
                 BlockProps.Save("core", scope, Block.CorePropsLock, null);
                 Level[] loaded = LevelInfo.Loaded.Items;                
-                if (!block.IsPhysicsType)
-                    BlockDefinition.GlobalProps[block.RawID] = BlockDefinition.DefaultProps(block);
+                if (!block.IsPhysicsType) {
+                    BlockDefinition.GlobalProps[block.RawID] = BlockDefinition.DefaultProps(block);                    
+                }
                 
                 foreach (Level lvl in loaded) {
                     if (lvl.HasCustomProps(block)) continue;

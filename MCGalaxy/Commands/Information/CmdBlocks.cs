@@ -33,18 +33,21 @@ namespace MCGalaxy.Commands.Info {
             
             if (args[0].Length == 0 || args[0].CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
-                MultiPageOutput.Output(p, BasicBlocks(), FormatBlockName,
+                MultiPageOutput.Output(p, BasicBlocks(), 
+                                       b => FormatBlockName(p, b),
                                        "Blocks basic", "blocks", modifier, false);
             } else if (args[0].CaselessEq("all") || args[0].CaselessEq("complex")) {
                 Player.Message(p, "Complex blocks: ");
-                MultiPageOutput.Output(p, ComplexBlocks(), FormatBlockName,
+                MultiPageOutput.Output(p, ComplexBlocks(), 
+                                       b => FormatBlockName(p, b),
                                        "Blocks complex", "blocks", modifier, false);
             } else if (Block.Byte(args[0]) != Block.Invalid) {
                 OutputBlockData(p, args[0]);
             } else if (Group.Find(args[0]) != null) {
                 Group grp = Group.Find(args[0]);
                 Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
-                MultiPageOutput.Output(p, RankBlocks(grp.Permission), FormatBlockName,
+                MultiPageOutput.Output(p, RankBlocks(grp.Permission), 
+                                       b => FormatBlockName(p, b),
                                        "Blocks " + args[0], "blocks", modifier, false);
             } else if (args.Length > 1) {
                 Help(p);
@@ -53,37 +56,39 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static List<string> BasicBlocks() {
-            List<string> names = new List<string>(Block.CpeCount);
-            for (int i = 0; i < Block.CpeCount; i++) {
-                names.Add(Block.Name((byte)i));
+        static List<ushort> BasicBlocks() {
+            List<ushort> blocks = new List<ushort>(Block.CpeCount);
+            for (ushort block = 0; block < Block.CpeCount; block++) { 
+                blocks.Add(block); 
             }
-            return names;
+            return blocks;
         }
         
-        static List<string> ComplexBlocks() {
-            List<string> names = new List<string>(Block.Count);
-            for (int i = Block.CpeCount; i < Block.Invalid; i++) {
-                string name = Block.Name((byte)i);
-                if (!name.CaselessEq("unknown")) names.Add(name);
+        static List<ushort> ComplexBlocks() {
+            List<ushort> blocks = new List<ushort>(Block.Count);
+            for (ushort block = Block.CpeCount; block < Block.Count; block++) {
+                if (!Block.Undefined(block)) blocks.Add(block);
             }
-            return names;
+            return blocks;
         }
         
-        static List<string> RankBlocks(LevelPermission perm) {
-            List<string> items = new List<string>(Block.Count);
+        static List<ushort> RankBlocks(LevelPermission perm) {
+            List<ushort> blocks = new List<ushort>(Block.Count);
             foreach (BlockPerms perms in BlockPerms.List) {
                 if (!BlockPerms.UsableBy(perm, perms.BlockID)) continue;
-                if (Block.Name(perms.BlockID).CaselessEq("unknown")) continue;
-                items.Add(Block.Name(perms.BlockID));
+                if (Block.Undefined(perms.BlockID)) continue;
+                blocks.Add(perms.BlockID);
             }
-            return items;
+            return blocks;
         }
         
+        internal static string GetBlockName(Player p, ushort block) {
+            return Player.IsSuper(p) ? Block.Name(block) : p.level.BlockName(block);
+        }
         
-        internal static string FormatBlockName(string block) {
-            BlockPerms perms = BlockPerms.List[Block.Byte(block)];
-            return Group.GetColor(perms.MinRank) + block;
+        internal static string FormatBlockName(Player p, ushort block) {
+            BlockPerms perms = BlockPerms.List[block];
+            return Group.GetColor(perms.MinRank) + GetBlockName(p, block);
         }
         
         static void OutputBlockData(Player p, string block) {

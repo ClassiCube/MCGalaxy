@@ -24,7 +24,7 @@ namespace MCGalaxy.Drawing.Ops {
 
     public class HollowDrawOp : CuboidDrawOp {      
         public override string Name { get { return "Hollow"; } }
-        public byte Skip;
+        public ushort Skip;
         
         static bool CanHollow(byte block, bool andAir = false) {
             if (andAir && block == Block.Air) return true;
@@ -57,7 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void CheckTile(int x, int y, int z, ref bool hollow) {
-            byte tile = Level.GetTile((ushort)x, (ushort)y, (ushort)z);
+            ushort tile = Level.GetBlock((ushort)x, (ushort)y, (ushort)z);
             if (CanHollow(Block.Convert(tile)) || tile == Skip)
                 hollow = false;
         }

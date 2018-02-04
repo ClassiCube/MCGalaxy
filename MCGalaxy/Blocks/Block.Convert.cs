@@ -22,6 +22,7 @@ namespace MCGalaxy {
         
         static string[] coreNames = new string[Block.Count];
         public static string Name(byte block) { return coreNames[block]; }
+        public static bool Undefined(ushort block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
         public static byte Byte(string type) {
             byte block;

@@ -179,26 +179,17 @@ namespace MCGalaxy {
         }
         
         int NumBlockPermissions() {
-            int count = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-            if (!hasBlockDefs) return count;
-
-            return count + (Block.Count - Block.CpeCount);
+            if (hasBlockDefs) return Block.Count;
+            return hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
         }
         
         void WriteBlockPermissions(byte[] bulk) {
-            int coreCount = hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-            for (byte i = 0; i < coreCount; i++) {
-                bool place = BlockPerms.UsableBy(this, i) && level.CanPlace;
-                bool delete = BlockPerms.UsableBy(this, i) && level.CanDelete;
-                Packet.WriteBlockPermission(i, place, delete, bulk, i * 4);
-            }
-            
-            if (!hasBlockDefs) return;
-            int j = coreCount * 4;
-            
-            for (int i = Block.CpeCount; i < Block.Count; i++) {
-                Packet.WriteBlockPermission((byte)i, level.CanPlace, level.CanDelete, bulk, j);
-                j += 4;
+            int count = NumBlockPermissions();
+            for (int i = 0; i < count; i++) {
+                ushort block = Block.FromRaw((byte)i);
+                bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
+                bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
+                Packet.WriteBlockPermission((byte)i, place, delete, bulk, i * 4);
             }
         }
     }
