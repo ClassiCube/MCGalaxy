@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
 
@@ -28,7 +29,7 @@ namespace MCGalaxy.Blocks {
     public class BlockPerms {
         
         /// <summary> Extended block ID these permissions are for. </summary>
-        public ushort BlockID;
+        public BlockID ID;
         
         /// <summary> Minimum rank normally able to use the block. </summary>
         public LevelPermission MinRank;
@@ -42,7 +43,7 @@ namespace MCGalaxy.Blocks {
         /// <summary> Creates a copy of this instance. </summary>
         public BlockPerms Copy() {
             BlockPerms perms = new BlockPerms();
-            perms.BlockID = BlockID;
+            perms.ID = ID;
             perms.MinRank = MinRank;
             perms.Allowed = new List<LevelPermission>(Allowed);
             perms.Disallowed = new List<LevelPermission>(Disallowed);
@@ -53,14 +54,14 @@ namespace MCGalaxy.Blocks {
 
 
         /// <summary> Returns whether the given rank can modify the given block. </summary>
-        public static bool UsableBy(Player p, ushort block) {
+        public static bool UsableBy(Player p, BlockID block) {
             BlockPerms b = List[block];
             LevelPermission perm = p.Rank;
             return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
         
         /// <summary> Returns whether the given rank can modify the given block. </summary>
-        public static bool UsableBy(LevelPermission perm, ushort block) {
+        public static bool UsableBy(LevelPermission perm, BlockID block) {
             BlockPerms b = List[block];
             return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
         }
@@ -74,7 +75,7 @@ namespace MCGalaxy.Blocks {
             StringBuilder builder = new StringBuilder("Only ");
             Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
             
-            string name = Player.IsSuper(p) ? Block.Name(BlockID) : p.level.BlockName(BlockID);
+            string name = Block.GetName(p, ID);
             builder.Append( " %Scan ").Append(action).Append(' ');
             builder.Append(name).Append(".");
             Player.Message(p, builder.ToString());
@@ -146,7 +147,7 @@ namespace MCGalaxy.Blocks {
                 if (block == Block.Invalid) continue;
                 
                 BlockPerms perms = new BlockPerms();
-                perms.BlockID = block;
+                perms.ID = block;
                 try {
                     perms.MinRank = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
@@ -157,7 +158,7 @@ namespace MCGalaxy.Blocks {
                     Logger.Log(LogType.Warning, "Hit an error on the block " + line);
                     continue;
                 }
-                List[perms.BlockID] = perms;
+                List[perms.ID] = perms;
             }
         }       
         

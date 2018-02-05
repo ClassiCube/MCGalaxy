@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Generator.Foliage;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
 
@@ -117,10 +118,10 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {                
-                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (lvl.LightPasses(above)) {
-                    ushort block = lvl.GetBlock(x, y, z);
-                    ushort grass = lvl.Props[block].GrassBlock;
+                    BlockID block = lvl.GetBlock(x, y, z);
+                    BlockID grass = lvl.Props[block].GrassBlock;
                     lvl.AddUpdate(C.b, grass);
                 }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -135,10 +136,10 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.IntToPos(C.b, out x, out y, out z);
             
             if (C.data.Data > 20) {
-                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (!lvl.LightPasses(above)) {
-                    ushort block = lvl.GetBlock(x, y, z);
-                    ushort dirt = lvl.Props[block].DirtBlock;
+                    BlockID block = lvl.GetBlock(x, y, z);
+                    BlockID dirt = lvl.Props[block].DirtBlock;
                     lvl.AddUpdate(C.b, dirt);
                 }
                 C.data.Data = PhysicsArgs.RemoveFromChecks;

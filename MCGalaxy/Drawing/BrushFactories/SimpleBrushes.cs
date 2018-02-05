@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     public sealed class SolidBrushFactory : BrushFactory {
@@ -36,14 +37,14 @@ namespace MCGalaxy.Drawing.Brushes {
                 return new SolidBrush(args.Block);
             }
             
-            ushort block;
+            BlockID block;
             if (!CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block)) return null;
             return new SolidBrush(block);
         }
         
         public override bool Validate(BrushArgs args) {
             if (args.Message.Length == 0) return true;
-            ushort block;
+            BlockID block;
             return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block);
         }
     }
@@ -66,18 +67,18 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             string[] parts = args.Message.SplitSpaces();
             
-            ushort block1;
+            BlockID block1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
                 return new CheckeredBrush(block1, Block.Invalid);
             
             if (parts.Length == 2) {
-                ushort block2;
+                BlockID block2;
                 if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
                 return new CheckeredBrush(block1, block2);
             }
             
-            ushort[] blocks = new ushort[parts.Length];
+            BlockID[] blocks = new BlockID[parts.Length];
             for (int i = 0; i < blocks.Length; i++) {
                 if (!CommandParser.GetBlockIfAllowed(args.Player, parts[i], out blocks[i], true)) return null;
             }            
@@ -139,12 +140,12 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             string[] parts = args.Message.SplitSpaces();
             
-            ushort block1;
+            BlockID block1;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
             if (parts.Length == 1)
                 return new StripedBrush(block1, Block.Air);
             
-            ushort block2;
+            BlockID block2;
             if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
             return new StripedBrush(block1, block2);
         }

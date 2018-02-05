@@ -27,6 +27,7 @@ using MCGalaxy.SQL;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public class ChatMessage {
@@ -138,13 +139,13 @@ namespace MCGalaxy {
 
         #region == GLOBAL MESSAGES ==
         
-        public static void GlobalBlockchange(Level level, int b, ushort block) {
+        public static void GlobalBlockchange(Level level, int b, BlockID block) {
             ushort x, y, z;
             level.IntToPos(b, out x, out y, out z);
             GlobalBlockchange(level, x, y, z, block);
         }
         
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, ushort block) {
+        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, BlockID block) {
             Player[] players = PlayerInfo.Online.Items; 
             foreach (Player p in players) { 
                 if (p.level == level) p.SendBlockchange(x, y, z, block);
@@ -446,7 +447,7 @@ namespace MCGalaxy {
             }
         }
         
-        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, ushort block) {
+        void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             lock (selLock) {
                 Blockchange = SelectionBlockChange;
                 RevertBlock(x, y, z);

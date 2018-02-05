@@ -16,12 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
     public static class SimpleLiquidPhysics {
         
-        const StringComparison comp = StringComparison.Ordinal;
         public static void DoWater(Level lvl, ref Check C) {
             if (lvl.Config.FiniteLiquids) {
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
@@ -148,7 +148,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
             int b;
-            ushort block = lvl.GetBlock(x, y, z, out b);
+            BlockID block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
@@ -261,7 +261,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             int b;
-            ushort block = lvl.GetBlock(x, y, z, out b);
+            BlockID block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return true;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;

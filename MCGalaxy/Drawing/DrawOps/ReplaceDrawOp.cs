@@ -20,14 +20,15 @@ using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
     
     public class ReplaceDrawOp : DrawOp {
         
-        public ushort Include;
+        public BlockID Include;
         
-        public ReplaceDrawOp(ushort include) {
+        public ReplaceDrawOp(BlockID include) {
             Include = include;
             Flags = BlockDBFlags.Replaced;
             AffectedByTransform = false;
@@ -45,7 +46,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ushort block = Level.GetBlock(x, y, z);
+                BlockID block = Level.GetBlock(x, y, z);
                 if (block == Include) output(Place(x, y, z, brush));
             }
         }
@@ -53,9 +54,9 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class ReplaceNotDrawOp : DrawOp {
         
-        public ushort Exclude;
+        public BlockID Exclude;
         
-        public ReplaceNotDrawOp(ushort exclude) {
+        public ReplaceNotDrawOp(BlockID exclude) {
             Exclude = exclude;
             Flags = BlockDBFlags.Replaced;
             AffectedByTransform = false;
@@ -73,7 +74,7 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ushort block = Level.GetBlock(x, y, z);
+                BlockID block = Level.GetBlock(x, y, z);
                 if (block != Exclude) output(Place(x, y, z, brush));
             }
         }

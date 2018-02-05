@@ -20,12 +20,13 @@ using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
     public struct DrawOpBlock {
         public ushort X, Y, Z;
-        public ushort Block;
+        public BlockID Block;
     }
 }
 
@@ -111,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops {
             return Coords;
         }
         
-        protected DrawOpBlock Place(ushort x, ushort y, ushort z, ushort block) {
+        protected DrawOpBlock Place(ushort x, ushort y, ushort z, BlockID block) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;
             Coords.Block = block;
             return Coords;

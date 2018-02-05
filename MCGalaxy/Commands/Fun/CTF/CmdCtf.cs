@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : Command {
@@ -139,7 +140,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, ushort block) {
+        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];           
             cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
@@ -148,13 +149,13 @@ namespace MCGalaxy.Commands.Fun {
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Blue;
             cfg.BlueFlagBlock = block.RawID;
-            Player.Message(p, "Set flag block of blue team to {0}", p.level.BlockName(block));
+            Player.Message(p, "Set flag block of blue team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);
             return false;
         }
         
-        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, ushort block) {
+        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];            
             cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
@@ -163,7 +164,7 @@ namespace MCGalaxy.Commands.Fun {
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Red;
             cfg.RedFlagBlock = block.RawID;
-            Player.Message(p, "Set flag block of red team to {0}", p.level.BlockName(block));
+            Player.Message(p, "Set flag block of red team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);
             return false;

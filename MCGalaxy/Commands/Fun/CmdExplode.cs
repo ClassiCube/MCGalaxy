@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "The physics on this level are not sufficient for exploding!"); return false;
             }
             
-            ushort old = lvl.GetBlock(x, y, z);
+            BlockID old = lvl.GetBlock(x, y, z);
             if (!lvl.CheckAffectPermissions(p, x, y, z, old, Block.TNT)) return false;
             lvl.MakeExplosion(x, y, z, 1);
             return true;

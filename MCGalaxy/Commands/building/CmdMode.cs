@@ -32,17 +32,17 @@ namespace MCGalaxy.Commands.Building {
             if (message.CaselessStarts("tnt ")) {
                 string[] parts = message.SplitSpaces(2);
                 if (parts[1].CaselessEq("small")) {
-                    message = Block.Name(Block.TNT_Small);
+                    message = Block.GetName(p, Block.TNT_Small);
                 } else if (parts[1].CaselessEq("big")) {
-                    message = Block.Name(Block.TNT_Big);
+                    message = Block.GetName(p, Block.TNT_Big);
                 } else if (parts[1].CaselessEq("nuke")) {
-                    message = Block.Name(Block.TNT_Nuke);
+                    message = Block.GetName(p, Block.TNT_Nuke);
                 }
             }
             
             if (message.Length == 0) {
                 if (p.ModeBlock != Block.Air) {
-                    Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
+                    Player.Message(p, "&b{0} %Smode: &cOFF", Block.GetName(p, p.ModeBlock));
                     p.ModeBlock = Block.Air;
                 } else {
                     Help(p);
@@ -56,11 +56,11 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             if (p.ModeBlock == block) {
-                Player.Message(p, "&b{0} %Smode: &cOFF", p.level.BlockName(p.ModeBlock));
+                Player.Message(p, "&b{0} %Smode: &cOFF", Block.GetName(p, p.ModeBlock));
                 p.ModeBlock = Block.Air;
             } else {
                 p.ModeBlock = block;
-                Player.Message(p, "&b{0} %Smode: &aON", p.level.BlockName(p.ModeBlock));
+                Player.Message(p, "&b{0} %Smode: &aON", Block.GetName(p, p.ModeBlock));
             }
         }
         

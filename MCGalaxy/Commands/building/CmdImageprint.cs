@@ -25,6 +25,7 @@ using System.Drawing.Drawing2D;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdImageprint : Command {
@@ -87,7 +88,7 @@ namespace MCGalaxy.Commands.Building {
             return HeightmapGen.DownloadImage(url, "extra/images/", p);
         }
         
-        bool DoImage(Player p, Vec3S32[] m, object state, ushort block) {
+        bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {
             if (m[0].X == m[1].X && m[0].Z == m[1].Z) { Player.Message(p, "No direction was selected"); return false; }
 
             Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));

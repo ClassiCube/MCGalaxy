@@ -27,6 +27,7 @@ using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -48,7 +49,7 @@ namespace MCGalaxy {
         }
         
         internal bool HasBlockChange() { return Blockchange != null; }
-        internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, ushort block) {
+        internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, BlockID block) {
             lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
             if (Blockchange == null) return false;
             
@@ -57,9 +58,9 @@ namespace MCGalaxy {
         }
 
         public void ManualChange(ushort x, ushort y, ushort z, bool placing,
-                                 ushort block, bool checkPlaceDist) {
-            ushort old = level.GetBlock(x, y, z);
-            if (old.IsInvalid) return;
+                                 BlockID block, bool checkPlaceDist) {
+            BlockID old = level.GetBlock(x, y, z);
+            if (old == Block.Invalid) return;
             
             if (jailed || !canBuild) { RevertBlock(x, y, z); return; }
             if (!agreed) {
@@ -85,7 +86,7 @@ namespace MCGalaxy {
             OnBlockChangeEvent.Call(this, x, y, z, block, placing);
             if (cancelBlock) { cancelBlock = false; return; }
 
-            if (old.BlockID >= Block.Air_Flood && old.BlockID <= Block.Door_Air_air) {
+            if (old >= Block.Air_Flood && old <= Block.Door_Air_air) {
                 SendMessage("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
@@ -107,15 +108,15 @@ namespace MCGalaxy {
                 }
             }
 
-            ushort held = block;
+            BlockID held = block;
             block = BlockBindings[block.RawID];
             if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
-            if (!ModeBlock.IsAir) block = ModeBlock;
+            if (ModeBlock != Block.Air) block = ModeBlock;
             
             //Ignores updating blocks that are the same and revert block back only to the player
-            ushort newB = deletingBlock ? Block.Air : block;
+            BlockID newB = deletingBlock ? Block.Air : block;
             if (old == newB) {
                 if (painting || !old.VisuallyEquals(held)) RevertBlock(x, y, z);
                 return;
@@ -131,7 +132,7 @@ namespace MCGalaxy {
             }
         }
         
-        internal bool CheckManualChange(ushort old, ushort block, bool deleteMode) {
+        internal bool CheckManualChange(BlockID old, BlockID block, bool deleteMode) {
             if (!BlockPerms.UsableBy(this, old) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
                 string action = deleteMode ? "delete" : "replace";
                 BlockPerms.List[old].MessageCannotUse(this, action);
@@ -140,7 +141,7 @@ namespace MCGalaxy {
             return CommandParser.IsBlockAllowed(this, "place", block);
         }
         
-        bool DeleteBlock(ushort old, ushort x, ushort y, ushort z, ushort block) {
+        bool DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
             if (deleteMode) { return ChangeBlock(x, y, z, Block.Air) == 2; }
 
             HandleDelete handler = level.deleteHandlers[old];
@@ -151,7 +152,7 @@ namespace MCGalaxy {
             return ChangeBlock(x, y, z, Block.Air) == 2;
         }
 
-        bool PlaceBlock(ushort old, ushort x, ushort y, ushort z, ushort block) {
+        bool PlaceBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
             HandlePlace handler = level.placeHandlers[block];
             if (handler != null) {
                 handler(this, block, x, y, z);
@@ -163,7 +164,7 @@ namespace MCGalaxy {
         /// <summary> Updates the block at the given position, mainly intended for manual changes by the player. </summary>
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
-        public int ChangeBlock(ushort x, ushort y, ushort z, ushort block) {
+        public int ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
             ushort old = level.GetBlock(x, y, z);
             int type = level.DoBlockchange(this, x, y, z, block);
             if (type == 0) return type;                                     // no change performed
@@ -177,14 +178,14 @@ namespace MCGalaxy {
             
             bool autoGrass = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
             if (!autoGrass) return type;           
-            ushort below = level.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = level.GetBlock(x, (ushort)(y - 1), z);
             
-            ushort grass = level.Props[below].GrassBlock;
+            BlockID grass = level.Props[below].GrassBlock;
             if (grass != Block.Invalid && block == Block.Air) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, grass);
             }
             
-            ushort dirt = level.Props[below].DirtBlock;
+            BlockID dirt = level.Props[below].DirtBlock;
             if (dirt != Block.Invalid && !level.LightPasses(block)) {
                 level.Blockchange(this, x, (ushort)(y - 1), z, dirt);
             }
@@ -397,7 +398,7 @@ namespace MCGalaxy {
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
         
-        public void HandleDeath(ushort block, string customMsg = "", bool explode = false, bool immediate = false) {
+        public void HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
             OnPlayerDeathEvent.Call(this, block);
             
             if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;

@@ -20,6 +20,7 @@ using System.IO;
 using System.Timers;
 using MCGalaxy.Commands;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     public sealed partial class LavaSurvival {
@@ -195,7 +196,7 @@ namespace MCGalaxy.Games {
         public class MapData : IDisposable
         {
             public bool fast, killer, destroy, water, layer;
-            public ushort block;
+            public BlockID block;
             public int currentLayer;
             public Timer roundTimer, floodTimer, layerTimer;
 

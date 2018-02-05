@@ -21,6 +21,7 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.DB;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {    
     public sealed class CmdRestoreSelection : Command {        
@@ -42,7 +43,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoRestore(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoRestore(Player p, Vec3S32[] marks, object state, BlockID block) {
             string path = LevelInfo.BackupFilePath(p.level.name, (string)state);
             Level source = IMapImporter.Formats[0].Read(path, "templevel", false);
             

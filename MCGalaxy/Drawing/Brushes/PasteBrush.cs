@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     public sealed class SimplePasteBrush : Brush {
@@ -46,7 +47,7 @@ namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class PasteBrush : Brush {
         readonly CopyState state;     
-        public ushort[] Include, Exclude;
+        public BlockID[] Include, Exclude;
         
         public PasteBrush(CopyState state) { this.state = state; }
         
@@ -65,7 +66,7 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            ushort block = state.Get(x, y, z);            
+            BlockID block = state.Get(x, y, z);            
             if (Exclude != null) {
                 for (int i = 0; i < Exclude.Length; i++) {
                     if (block == Exclude[i]) return Block.Invalid;

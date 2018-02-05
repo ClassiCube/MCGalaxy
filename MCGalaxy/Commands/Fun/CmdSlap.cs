@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdSlap : Command {
@@ -71,7 +72,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
             for (; y <= lvl.Height; y++) {
-                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (above == Block.Invalid) continue;
                 if (!CollideType.IsSolid(lvl.CollideType(above))) continue;
                 

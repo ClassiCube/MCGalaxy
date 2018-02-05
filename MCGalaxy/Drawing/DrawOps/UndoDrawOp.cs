@@ -22,6 +22,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using MCGalaxy.Undo;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -79,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void UndoBlock(BlockDBEntry e) {
-            ushort block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
             if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             
             int x = e.Index % dims.X;
@@ -110,10 +111,8 @@ namespace MCGalaxy.Drawing.Ops {
             if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
             if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
-            byte lvlBlock = Level.GetTile(P.X, P.Y, P.Z);
-            if (lvlBlock == P.NewBlock.BlockID || Block.Convert(lvlBlock) == Block.Water
-                || Block.Convert(lvlBlock) == Block.Lava || lvlBlock == Block.Grass) {
-                
+            BlockID cur = Level.GetBlock(P.X, P.Y, P.Z);
+            if (cur == P.NewBlock || Block.Convert(cur) == Block.Water || Block.Convert(cur) == Block.Lava || cur == Block.Grass) {                
                 DrawOpBlock block;
                 block.X = P.X; block.Y = P.Y; block.Z = P.Z;
                 block.Block = P.Block;

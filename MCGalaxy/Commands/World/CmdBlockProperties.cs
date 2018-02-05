@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdBlockProperties : Command {
@@ -32,7 +33,7 @@ namespace MCGalaxy.Commands.World {
             
             BlockProps[] scope = GetScope(p, args[0]);
             if (scope == null) return;
-            ushort block = GetBlock(p, scope, args[1]);
+            BlockID block = GetBlock(p, scope, args[1]);
             if (block == Block.Invalid) return;
             
             string prop = args[2].ToLower();
@@ -58,17 +59,17 @@ namespace MCGalaxy.Commands.World {
             return null;
         }
         
-        static ushort GetBlock(Player p, BlockProps[] scope, string input) {
+        static BlockID GetBlock(Player p, BlockProps[] scope, string input) {
             if (scope == Block.Props) {
                 byte raw;
-                if (!byte.TryParse(input, out  raw))
+                if (!byte.TryParse(input, out raw))
                     raw = Block.Byte(input);
                 
                 if (Block.Undefined(raw)) {
                     Player.Message(p, "&cThere is no block with id or name \"{0}\"", input);
                     return Block.Invalid;
                 }
-                return new ushort(raw, 0);
+                return raw;
             } else if (scope == BlockDefinition.GlobalProps) {
                 int raw = BlockDefinition.GetBlock(input, BlockDefinition.GlobalDefs);
                 if (raw == -1) {
@@ -90,12 +91,12 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static int GetIndex(BlockProps[] scope, ushort block) {
+        static int GetIndex(BlockProps[] scope, BlockID block) {
             return scope == BlockDefinition.GlobalProps ? block.RawID : block;
         }
         
         
-        void SetProperty(Player p, BlockProps[] scope, ushort block,
+        void SetProperty(Player p, BlockProps[] scope, BlockID block,
                          string prop, string[] args) {
             int i = GetIndex(scope, block);
             string text = args.Length > 3 ? args[3] : null;
@@ -138,7 +139,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         
-        static void Toggle(Player p, BlockProps[] scope, ushort block, 
+        static void Toggle(Player p, BlockProps[] scope, BlockID block, 
                            string type, ref bool on) {
             on = !on;
             Level lvl = Player.IsSuper(p) ? null : p.level;
@@ -148,7 +149,7 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetEnum(Player p, BlockProps[] scope, ushort block, 
+        static void SetEnum(Player p, BlockProps[] scope, BlockID block, 
                             int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             AnimalAI ai = AnimalAI.None;
@@ -160,7 +161,7 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetDeathMessage(Player p, BlockProps[] scope, ushort block, 
+        static void SetDeathMessage(Player p, BlockProps[] scope, BlockID block, 
                                     int i, string msg) {
             scope[i].DeathMessage = msg;
             Level lvl = Player.IsSuper(p) ? null : p.level;
@@ -175,19 +176,19 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetStackId(Player p, BlockProps[] scope, ushort block, 
+        static void SetStackId(Player p, BlockProps[] scope, BlockID block, 
                                int i, string msg) {
             Level lvl = Player.IsSuper(p) ? null : p.level;
             
-            ushort stackBlock;
+            BlockID stackBlock;
             if (msg == null) {
                 stackBlock = Block.Air;
             } else {
                 if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
             }
-            scope[i].StackId = stackBlock.RawID;
+            scope[i].StackBlock = stackBlock;
             
-            if (stackBlock.IsAir) {
+            if (stackBlock == Block.Air) {
                 Player.Message(p, "Removed stack block for {0}", BlockName(scope, lvl, block));
             } else {
                 string stackBlockName = Player.IsSuper(p) ?
@@ -198,14 +199,14 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }
         
-        static void SetBlock(Player p, BlockProps[] scope, ushort block, 
+        static void SetBlock(Player p, BlockProps[] scope, BlockID block, 
                              int i, string msg, ref ushort target, string type) {
             Level lvl = Player.IsSuper(p) ? null : p.level;           
             if (msg == null) {
                 target = Block.Invalid;
                 Player.Message(p, "{1} for {0} removed.", BlockName(scope, lvl, block), type);
             } else {
-                ushort other;
+                BlockID other;
                 if (!CommandParser.GetBlock(p, msg, out other)) return;
                 if (other == block) { Player.Message(p, "ID of {0} must be different.", type); return; }
                 
@@ -216,7 +217,7 @@ namespace MCGalaxy.Commands.World {
             OnPropsChanged(scope, lvl, block);
         }        
 
-        static void OnPropsChanged(BlockProps[] scope, Level level, ushort block) {
+        static void OnPropsChanged(BlockProps[] scope, Level level, BlockID block) {
             scope[GetIndex(scope, block)].Changed = true;            
             if (scope == Block.Props) {
                 BlockProps.Save("core", scope, Block.CorePropsLock, null);
@@ -253,7 +254,7 @@ namespace MCGalaxy.Commands.World {
             return lvl.HasCustomProps((ushort)i);
         }
         
-        static string BlockName(BlockProps[] scope, Level lvl, ushort block) {
+        static string BlockName(BlockProps[] scope, Level lvl, BlockID block) {
             if (scope == Block.Props) return Block.Name(block.RawID);
             BlockDefinition def = null;
             

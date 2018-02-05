@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdZone : Command {
@@ -74,7 +75,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.MakeSelection(2, z, AddZone);
         }
         
-        bool AddZone(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool AddZone(Player p, Vec3S32[] marks, object state, BlockID block) {
             Zone zone = (Zone)state;
             zone.MinX = (ushort)Math.Min(marks[0].X, marks[1].X);
             zone.MinY = (ushort)Math.Min(marks[0].Y, marks[1].Y);
@@ -166,7 +167,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.MakeSelection(1, null, TestZone);
         }
         
-        bool TestZone(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool TestZone(Player p, Vec3S32[] marks, object state, BlockID block) {
             Vec3S32 P = marks[0];
             Level lvl = p.level;
             bool found = false;

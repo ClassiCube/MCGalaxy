@@ -20,6 +20,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
     
@@ -58,7 +59,7 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void RedoBlock(BlockDBEntry e) {
-            ushort block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
             if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             if ((e.Flags & BlockDBFlags.UndoSelf) == 0) return; // not an undo
             

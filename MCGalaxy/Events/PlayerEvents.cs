@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
     public enum PlayerAction { Joker, Unjoker, AFK, UnAFK, JoinWorld, Me, Review, Referee, UnReferee };
@@ -97,7 +98,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     /// <summary> Called whenever a player dies in-game </summary>
     public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> {
         
-        public static void Call(Player p, ushort block) {
+        public static void Call(Player p, BlockID block) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p, block));
         }
@@ -113,12 +114,12 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, ushort block);
-    public delegate void OnBlockChange(Player p, ushort x, ushort y, ushort z, ushort block, bool placing);
+    public delegate void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block);
+    public delegate void OnBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing);
     /// <summary> Called whenever a player places or deletes a block. </summary>
     public sealed class OnBlockChangeEvent : IEvent<OnBlockChange> {
         
-        public static void Call(Player p, ushort x, ushort y, ushort z, ushort block, bool placing) {
+        public static void Call(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             IEvent<OnBlockChange>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
                 try { items[i].method(p, x, y, z, block, placing); } 

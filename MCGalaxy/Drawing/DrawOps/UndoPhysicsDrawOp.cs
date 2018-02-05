@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -57,19 +58,16 @@ namespace MCGalaxy.Drawing.Ops {
         
         bool CheckBlockPhysics(Player p, Level lvl, int i) {
             Level.UndoPos undo = lvl.UndoBuffer[i];
-            byte b = lvl.GetTile(undo.index);
             DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
             if (time < Start) return false;
             
-            byte newType = (undo.flags & 2) != 0 ? Block.custom_block : undo.newRaw;
-            if (b == newType || Block.Convert(b) == Block.Water || Block.Convert(b) == Block.Lava) {
-                ushort x, y, z;
-                lvl.IntToPos(undo.index, out x, out y, out z);
-                int undoIndex = lvl.currentUndo;
-                lvl.currentUndo = i;
-                lvl.currentUndo = undoIndex;
-                
-                ushort oldBlock = Block.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
+            ushort x, y, z;
+            lvl.IntToPos(undo.index, out x, out y, out z);
+            BlockID cur = lvl.GetBlock(x, y, z);
+            
+            BlockID newBlock = Block.FromRaw(undo.newRaw, (undo.flags & 2) != 0);
+            if (cur == newBlock || Block.Convert(cur) == Block.Water || Block.Convert(cur) == Block.Lava) {
+                BlockID oldBlock = Block.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
                 lvl.Blockchange(x, y, z, oldBlock, true, default(PhysicsArgs), false);
             }
             return true;

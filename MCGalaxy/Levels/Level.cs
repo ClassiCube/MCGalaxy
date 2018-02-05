@@ -28,6 +28,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Util;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public enum LevelPermission {
@@ -432,7 +433,7 @@ namespace MCGalaxy {
             public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
             public byte oldRaw, newRaw;
             
-            public void SetData(ushort oldBlock, ushort newBlock) {
+            public void SetData(BlockID oldBlock, BlockID newBlock) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
                 flags = (int)delta.TotalSeconds << 2;
                 
@@ -442,14 +443,14 @@ namespace MCGalaxy {
             }
         }
         
-        internal bool HasCustomProps(ushort block) {
+        internal bool HasCustomProps(BlockID block) {
             if (Block.IsPhysicsType(block)) return false;
             return CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
         }
         
         void LoadCoreProps() {
             for (int i = 0; i < Props.Length; i++) {
-        	    ushort block = (ushort)i;
+        	    BlockID block = (BlockID)i;
                 if (!HasCustomProps(block)) {
                     Props[i] = BlockDefinition.DefaultProps(block);
                 } else {
@@ -469,7 +470,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void UpdateBlockHandler(ushort block) {
+        public void UpdateBlockHandler(BlockID block) {
             bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));           
             deleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
             placeHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
@@ -480,7 +481,7 @@ namespace MCGalaxy {
         
         public void UpdateCustomBlock(byte raw, BlockDefinition def) {
             CustomBlockDefs[raw] = def;
-            ushort block = Block.FromRaw(raw);            
+            BlockID block = Block.FromRaw(raw);            
             UpdateBlockHandler(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
         }

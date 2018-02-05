@@ -21,6 +21,7 @@ using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {
     public class CmdUndoPlayer : Command {
@@ -60,7 +61,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoUndoArea(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoUndoArea(Player p, Vec3S32[] marks, object state, BlockID block) {
             UndoAreaArgs args = (UndoAreaArgs)state;
             UndoPlayer(p, args.delta, args.names, args.ids, marks);
             return false;

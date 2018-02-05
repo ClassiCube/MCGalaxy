@@ -19,12 +19,13 @@ using System;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
     
     internal static class DeleteBehaviour {
 
-        internal static void RocketStart(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void RocketStart(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics < 2 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             int dx = 0, dy = 0, dz = 0;
@@ -46,7 +47,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        internal static void Firework(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void Firework(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) { p.RevertBlock(x, y, z); return; }
             
             Random rand = new Random();
@@ -69,17 +70,17 @@ namespace MCGalaxy.Blocks {
             p.RevertBlock(x, y, z);
         }
         
-        internal static void C4Det(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, BlockID block, ushort x, ushort y, ushort z) {
             int index = p.level.PosToInt(x, y, z);
             C4Physics.BlowUp(index, p.level);
             p.ChangeBlock(x, y, z, Block.Air);
         }
         
-        internal static void RevertDoor(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void RevertDoor(Player p, BlockID block, ushort x, ushort y, ushort z) {
             p.RevertBlock(x, y, z);
         }
         
-        internal static void Door(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void Door(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {             
                 byte physForm;
                 PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
@@ -89,7 +90,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        internal static void oDoor(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void oDoor(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (block == Block.oDoor_Green || block == Block.oDoor_Green_air) {
                 ushort oDoorOpposite = p.level.Props[block].oDoorBlock;
                 p.level.Blockchange(x, y, z, oDoorOpposite);
@@ -98,7 +99,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        internal static void DoPortal(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void DoPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (Portal.Handle(p, x, y, z)) {
                 p.RevertBlock(x, y, z);
             } else {
@@ -106,7 +107,7 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        internal static void DoMessageBlock(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void DoMessageBlock(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (MessageBlock.Handle(p, x, y, z, true)) {
                 p.RevertBlock(x, y, z);
             } else {

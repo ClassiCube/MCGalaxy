@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -23,7 +24,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, byte type) {
             int b;
-            ushort block = lvl.GetBlock(x, y, z, out b);
+            BlockID block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
@@ -56,7 +57,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, byte type) {
             int b;
-            ushort block = lvl.GetBlock(x, y, z, out b);
+            BlockID block = lvl.GetBlock(x, y, z, out b);
             if (b == -1) return;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;

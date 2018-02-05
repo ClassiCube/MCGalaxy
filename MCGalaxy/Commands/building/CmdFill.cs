@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdFill : DrawCmd {
@@ -59,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
-        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             ushort old = p.level.GetBlock(x, y, z);

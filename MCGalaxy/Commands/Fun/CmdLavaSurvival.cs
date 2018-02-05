@@ -19,6 +19,7 @@
 using System;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdLavaSurvival : Command {
@@ -311,7 +312,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
 
-        bool SetFloodPos(Player p, Vec3S32[] m, object state, ushort block) {
+        bool SetFloodPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
             settings.blockFlood = (Vec3U16)m[0];
             Server.lava.SaveMapSettings(settings);
@@ -320,7 +321,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        bool SetFloodLayerPos(Player p, Vec3S32[] m, object state, ushort block) {
+        bool SetFloodLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(p.level.name);
             settings.blockLayer = (Vec3U16)m[0];
             Server.lava.SaveMapSettings(settings);
@@ -329,7 +330,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        bool SetSafeZone(Player p, Vec3S32[] m, object state, ushort block) {
+        bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
             Vec3S32 min = Vec3S32.Min(m[0], m[1]);
             Vec3S32 max = Vec3S32.Max(m[0], m[1]);
 

@@ -154,7 +154,7 @@ namespace MCGalaxy {
         
         internal static BlockProps DefaultProps(ushort block) {
             if (Block.IsPhysicsType(block)) {
-                return Block.Props[block.Index];
+                return Block.Props[block];
             } else if (!block.IsCustomType && GlobalDefs[block.RawID] == null) {
                 return Block.Props[block.RawID];
             } else {

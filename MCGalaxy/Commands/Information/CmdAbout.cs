@@ -21,6 +21,7 @@ using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
@@ -41,7 +42,7 @@ namespace MCGalaxy.Commands.Info {
             p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
         }
 
-        bool PlacedMark(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetBlock(x, y, z);
             p.RevertBlock(x, y, z);
@@ -62,7 +63,7 @@ namespace MCGalaxy.Commands.Info {
             
             if (!foundAny) Player.Message(p, "No block change records found for this block.");
             
-            string blockName = p.level.BlockName(block);
+            string blockName = Block.GetName(p, block);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.",
                            x, y, z, block.RawID, blockName);
             

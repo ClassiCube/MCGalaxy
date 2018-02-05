@@ -23,6 +23,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdCopy : Command {
@@ -122,7 +123,7 @@ namespace MCGalaxy.Commands.Building {
                     for (ushort x = minX; x <= maxX; ++x)
             {
                 block = p.level.GetBlock(x, y, z);
-                if (!p.group.Blocks[block.BlockID]) { index++; continue; } // TODO: will need to fix this when extblock permissions
+                if (!p.group.Blocks[block]) { index++; continue; }
                 
                 if (block != Block.Air || cState.PasteAir) cState.UsedBlocks++;
                 cState.Set(block, index);
@@ -158,7 +159,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
-        bool DoCopy(Player p, Vec3S32[] m, object state, ushort block) { return false; }
+        bool DoCopy(Player p, Vec3S32[] m, object state, BlockID block) { return false; }
         class CopyArgs { public int offsetIndex; public bool cut, air; }
         
         void SaveCopy(Player p, string file) {

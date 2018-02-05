@@ -17,6 +17,7 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdFixGrass : Command {
@@ -50,35 +51,35 @@ namespace MCGalaxy.Commands.World {
         static void Fix(Player p, Level lvl, ref int totalFixed, bool fixGrass, bool fixDirt) {
             int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
             BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            ushort above = default(ushort), block = default(ushort);
+            BlockID above, block;
             
             for (ushort y = 0; y < lvl.Height; y++)
                 for (ushort z = 0; z < lvl.Length; z++)
                     for (ushort x = 0; x < lvl.Width; x++)
             {
-                block.BlockID = lvl.blocks[index];
-                block.ExtID = 0;
-                if (block.BlockID == Block.custom_block)
-                    block.ExtID = lvl.GetExtTile(x, y, z);
+                block = lvl.blocks[index];
+                if (block == Block.custom_block) {
+                    block = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, y, z));
+                }
                 
                 if (fixGrass && lvl.Props[block].GrassBlock != Block.Invalid) {
-                    above.BlockID = y == maxY ? Block.Air : lvl.blocks[index + oneY];
-                    above.ExtID = 0;
-                    if (above.BlockID == Block.custom_block)
-                        above.ExtID = lvl.GetExtTile(x, (ushort)(y + 1), z);
+                    above = y == maxY ? Block.Air : lvl.blocks[index + oneY];
+                    if (above == Block.custom_block) {
+                        above = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, (ushort)(y + 1), z));
+                    }
                     
-                    ushort grass = lvl.Props[block].GrassBlock;
+                    BlockID grass = lvl.Props[block].GrassBlock;
                     if (lvl.LightPasses(above) && p.level.DoBlockchange(p, x, y, z, grass) == 2) {
                         buffer.Add(index, grass);
                         totalFixed++;
                     }
                 } else if (fixDirt && lvl.Props[block].DirtBlock != Block.Invalid) {
-                    above.BlockID = y == maxY ? Block.Air : lvl.blocks[index + oneY];
-                    above.ExtID = 0;
-                    if (above.BlockID == Block.custom_block)
-                        above.ExtID = lvl.GetExtTile(x, (ushort)(y + 1), z);
+                    above = y == maxY ? Block.Air : lvl.blocks[index + oneY];
+                    if (above == Block.custom_block) {
+                        above= (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, (ushort)(y + 1), z));
+                    }
                     
-                    ushort dirt = lvl.Props[block].DirtBlock;
+                    BlockID dirt = lvl.Props[block].DirtBlock;
                     if (!lvl.LightPasses(above) && p.level.DoBlockchange(p, x, y, z, dirt) == 2) {
                         buffer.Add(index, dirt);
                         totalFixed++;
@@ -92,45 +93,45 @@ namespace MCGalaxy.Commands.World {
         static void FixLight(Player p, Level lvl, ref int totalFixed) {
             int index = 0;
             BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            ushort above = default(ushort), block = default(ushort);
+            BlockID above, block;
             
             for (ushort y = 0; y < lvl.Height - 1; y++)
                 for (ushort z = 0; z < lvl.Length; z++)
                     for (ushort x = 0; x < lvl.Width; x++)
             {
-                block.BlockID = lvl.blocks[index];
-                block.ExtID = 0;
+                block = lvl.blocks[index];
                 bool inShadow = false;
-                if (block.BlockID == Block.custom_block)
-                    block.ExtID = lvl.GetExtTile(x, y, z);
+                if (block == Block.custom_block) {
+                    block = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, y, z));
+                }
                 
                 if (lvl.Props[block].GrassBlock != Block.Invalid) {
                     for (int i = 1; i < (lvl.Height - y); i++) {
-                        above.BlockID = lvl.blocks[index + (lvl.Width * lvl.Length) * i];
-                        above.ExtID = 0;
-                        if (above.BlockID == Block.custom_block)
-                            above.ExtID = lvl.GetExtTile(x, (ushort)(y + i), z);
+                        above = lvl.blocks[index + (lvl.Width * lvl.Length) * i];
+                        if (above == Block.custom_block) {
+                            above = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, (ushort)(y + i), z));
+                        }
                         
                         if (!lvl.LightPasses(above)) { inShadow = true; break; }
                     }
                     
-                    ushort grass = lvl.Props[block].GrassBlock;
-                    if (!inShadow && p.level.DoBlockchange(p, x, (ushort)y, z, grass) == 2) {
+                    BlockID grass = lvl.Props[block].GrassBlock;
+                    if (!inShadow && p.level.DoBlockchange(p, x, y, z, grass) == 2) {
                         buffer.Add(index, grass);
                         totalFixed++;
                     }
                 } else if (lvl.Props[block].DirtBlock != Block.Invalid) {
                     for (int i = 1; i < (lvl.Height - y); i++) {
-                        above.BlockID = lvl.blocks[index + (lvl.Width * lvl.Length) * i];
-                        above.ExtID = 0;
-                        if (above.BlockID == Block.custom_block)
-                            above.ExtID = lvl.GetExtTile(x, (ushort)(y + i), z);
+                        above = lvl.blocks[index + (lvl.Width * lvl.Length) * i];
+                        if (above == Block.custom_block) {
+                            above = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(x, (ushort)(y + i), z));
+                        }
                         
                         if (!lvl.LightPasses(above)) { inShadow = true; break; }
                     }
                     
-                    ushort dirt = lvl.Props[block].DirtBlock;
-                    if (inShadow && p.level.DoBlockchange(p, x, (ushort)y, z, dirt) == 2) {
+                    BlockID dirt = lvl.Props[block].DirtBlock;
+                    if (inShadow && p.level.DoBlockchange(p, x, y, z, dirt) == 2) {
                         buffer.Add(index, dirt);
                         totalFixed++;
                     }

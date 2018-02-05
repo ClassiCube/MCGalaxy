@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     public abstract class BrushFactory {
@@ -58,9 +59,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public string Message;
         
         /// <summary> Block the player is currently holding. </summary>
-        public ushort Block;
+        public BlockID Block;
         
-        public BrushArgs(Player p, string message, ushort block) {
+        public BrushArgs(Player p, string message, BlockID block) {
             Player = p; Message = message; Block = block;
         }
     }

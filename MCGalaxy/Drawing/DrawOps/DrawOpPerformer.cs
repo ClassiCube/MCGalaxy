@@ -166,9 +166,8 @@ namespace MCGalaxy.Drawing.Ops {
                 if (b.X >= lvl.Width || b.Y >= lvl.Height || b.Z >= lvl.Length) return;
                 
                 int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
-                ushort old;
-                old.BlockID = lvl.blocks[index]; old.ExtID = 0;
-                if (old.BlockID == Block.custom_block) old.ExtID = lvl.GetExtTileNoCheck(b.X, b.Y, b.Z);
+                ushort old = lvl.blocks[index];
+                if (old == Block.custom_block) old = (ushort)(Block.Extended | lvl.GetExtTileNoCheck(b.X, b.Y, b.Z));
                 if (old == Block.Invalid) return;
                 
                 // Check to make sure the block is actually different and that we can change it

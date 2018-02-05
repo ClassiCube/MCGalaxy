@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     public static class DoorPhysics {
@@ -42,7 +43,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void oDoor(Level lvl, ref Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort block = lvl.GetBlock(x, y, z);
+            BlockID block = lvl.GetBlock(x, y, z);
              
             ActivateODoor(lvl, block, (ushort)(x - 1), y, z);
             ActivateODoor(lvl, block, (ushort)(x + 1), y, z);
@@ -55,7 +56,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ActivateODoor(Level lvl, ushort oDoor, ushort x, ushort y, ushort z) {
             int index;
-            ushort block = lvl.GetBlock(x, y, z, out index);
+            BlockID block = lvl.GetBlock(x, y, z, out index);
             block = lvl.Props[block].oDoorBlock;
             
             if (index >= 0 && oDoor == block) {
@@ -78,7 +79,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ActivateTDoor(Level lvl, ushort x, ushort y, ushort z) {
             int index;
-            ushort block = lvl.GetBlock(x, y, z, out index);
+            BlockID block = lvl.GetBlock(x, y, z, out index);
             
             if (index >= 0 && lvl.Props[block].IsTDoor) {
                 PhysicsArgs args = ActivateablePhysics.GetTDoorArgs(block);

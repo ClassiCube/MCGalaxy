@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
     
@@ -60,18 +61,18 @@ namespace MCGalaxy.Blocks {
         /// <summary> Animal AI behaviour of this block. </summary>
         public AnimalAI AnimalAI;
         
-        /// <summary> ID of the block that is placed when two of this block are placed on top of each other. </summary>
+        /// <summary> The extended block ID that is placed when two of this block are placed on top of each other. </summary>
         /// <remarks> e.g. slabs and cobblestone slabs. </remarks>
-        public byte StackId;
+        public BlockID StackBlock;
         
         /// <summary> Whether players can drown inside this block (e.g. water). </summary>
         public bool Drownable;
         
         /// <summary> The extended block ID this is changed into when exposed to sunlight. </summary>
-        public ushort GrassBlock;
+        public BlockID GrassBlock;
         
         /// <summary> The extended block ID this is changed into when no longer exposed to sunlight. </summary>
-        public ushort DirtBlock;
+        public BlockID DirtBlock;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public bool Changed;
@@ -110,7 +111,7 @@ namespace MCGalaxy.Blocks {
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor    + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
-                                + (byte)props.AnimalAI + ":" + props.StackId + ":" + props.OPBlock     + ":"
+                                + (byte)props.AnimalAI + ":" + props.StackBlock + ":" + props.OPBlock     + ":"
                                 + props.oDoorBlock + ":" + props.Drownable + ":" + props.GrassBlock + ":" + props.DirtBlock);
                 }
             }
@@ -163,22 +164,22 @@ namespace MCGalaxy.Blocks {
                     scope[idx].AnimalAI = (AnimalAI)ai;
                 }
                 if (parts.Length > 11) {
-                    byte.TryParse(parts[11], out scope[idx].StackId);
+                    byte.TryParse(parts[11], out scope[idx].StackBlock); // TODO: this is raw ID, need to fixup
                 }
                 if (parts.Length > 12) {
                     bool.TryParse(parts[12], out scope[idx].OPBlock);
                 }
                 if (parts.Length > 13) {
-                    ushort.TryParse(parts[13], out scope[idx].oDoorBlock);
+                    BlockID.TryParse(parts[13], out scope[idx].oDoorBlock);
                 }
                 if (parts.Length > 14) {
                     bool.TryParse(parts[14], out scope[idx].Drownable);
                 }
                 if (parts.Length > 15) {
-                    ushort.TryParse(parts[15], out scope[idx].GrassBlock);
+                    BlockID.TryParse(parts[15], out scope[idx].GrassBlock);
                 }
                 if (parts.Length > 16) {
-                    ushort.TryParse(parts[16], out scope[idx].DirtBlock);
+                    BlockID.TryParse(parts[16], out scope[idx].DirtBlock);
                 }
             }
         }

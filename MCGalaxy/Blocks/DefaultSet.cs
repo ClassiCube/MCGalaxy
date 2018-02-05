@@ -17,6 +17,7 @@
  */
 using System;
 using System.Text;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
     
@@ -24,7 +25,7 @@ namespace MCGalaxy.Blocks {
     public static class DefaultSet {
         
         /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block. </summary>
-        public static BlockDefinition MakeCustomBlock(byte b) {
+        public static BlockDefinition MakeCustomBlock(BlockID b) {
             BlockDefinition def = new BlockDefinition();
             def.BlockID = b;
             def.Name = Name(b);
@@ -54,7 +55,7 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets the default height of a block. A value of 16 is full height. </summary>
-        public static byte Height(byte b) {
+        public static byte Height(BlockID b) {
             if (b == Block.Slab) return 8;
             if (b == Block.CobblestoneSlab) return 8;
             if (b == Block.Snow) return 2;
@@ -62,13 +63,13 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets whether a block is full bright / light emitting by default. </summary>
-        public static bool FullBright(byte b) {
+        public static bool FullBright(BlockID b) {
             return b == Block.Lava || b == Block.StillLava
                 || b == Block.MagmaBlock || b == Block.Fire;
         }
         
         /// <summary> Gets the default fog density of a block, in packed form. </summary>
-        public static byte FogDensity(byte b) {
+        public static byte FogDensity(BlockID b) {
             if (b == Block.Water || b == Block.StillWater)
                 return 11; // (128 * 0.1f - 1);
             if (b == Block.Lava || b == Block.StillLava)
@@ -77,7 +78,7 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets the default fog color of a block. </summary>
-        public static ColorDesc FogColor(byte b) {
+        public static ColorDesc FogColor(BlockID b) {
             if (b == Block.Water || b == Block.StillWater)
                 return new ColorDesc(5, 5, 51);
             if (b == Block.Lava || b == Block.StillLava)
@@ -86,7 +87,7 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets the default collide type of a block, see CollideType class. </summary>
-        public static byte Collide(byte b) {
+        public static byte Collide(BlockID b) {
             if (b >= Block.Water && b <= Block.StillLava)
                 return CollideType.SwimThrough;
             if (b == Block.Snow || b == Block.Air || Draw(b) == DrawType.Sprite)
@@ -95,14 +96,14 @@ namespace MCGalaxy.Blocks {
         }
         
         /// <summary> Gets whether a block blocks light (prevents light passing through) by default. </summary>
-        public static bool BlocksLight(byte b) {
+        public static bool BlocksLight(BlockID b) {
             return !(b == Block.Glass || b == Block.Leaves
                      || b == Block.Air || Draw(b) == DrawType.Sprite);
         }
         
 
         /// <summary> Gets the default step sound of a block. </summary>
-        public static SoundType StepSound(byte b) {
+        public static SoundType StepSound(BlockID b) {
             if (b == Block.Glass) return SoundType.Stone;
             if (b == Block.Rope) return SoundType.Cloth;
             if (Draw(b) == DrawType.Sprite) return SoundType.None;
@@ -140,7 +141,7 @@ namespace MCGalaxy.Blocks {
         
 
         /// <summary> Gets the default draw type of a block, see Draw class. </summary>        
-        public static byte Draw(byte b) {
+        public static byte Draw(BlockID b) {
             if (b == Block.Air || b == Block.Invalid) return DrawType.Gas;
             if (b == Block.Leaves) return DrawType.TransparentThick;
 
@@ -163,7 +164,7 @@ namespace MCGalaxy.Blocks {
             " Gold Iron DoubleSlab Slab Brick TNT Bookshelf MossyRocks Obsidian CobblestoneSlab Rope Sandstone" +
             " Snow Fire LightPink ForestGreen Brown DeepBlue Turquoise Ice CeramicTile Magma Pillar Crate StoneBrick";
         
-        static string Name(byte block) {
+        static string Name(BlockID block) {
             // Find start and end of this particular block name
             int start = 0;
             for (int i = 0; i < block; i++)

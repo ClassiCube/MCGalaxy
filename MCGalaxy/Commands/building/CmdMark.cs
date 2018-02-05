@@ -17,6 +17,7 @@
  */
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMark : Command {
@@ -92,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Mark placed at &b({0}, {1}, {2})", x, y, z);
             }
             
-            ushort block = p.GetHeldBlock();
+            BlockID block = p.GetHeldBlock();
             p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);            
             return true;
         }

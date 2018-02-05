@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {  
     public sealed class ReplaceBrushFactory : BrushFactory {       
@@ -39,23 +40,23 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             
             int count = parts.Length == 1 ? 1 : parts.Length - 1;
-            ushort[] toAffect = GetBlocks(args.Player, 0, count, parts);
+            BlockID[] toAffect = GetBlocks(args.Player, 0, count, parts);
             if (toAffect == null) return null;
             
-            ushort target;
+            BlockID target;
             if (!GetTargetBlock(args, parts, out target)) return null;
             
             if (not) return new ReplaceNotBrush(toAffect, target);
             return new ReplaceBrush(toAffect, target);
         }
         
-        internal static ushort[] GetBlocks(Player p, int start, int max, string[] parts) {
-            ushort[] blocks = new ushort[max - start];
+        internal static BlockID[] GetBlocks(Player p, int start, int max, string[] parts) {
+            BlockID[] blocks = new BlockID[max - start];
             for (int i = 0; i < blocks.Length; i++)
                 blocks[i] = Block.Invalid;
             
             for (int i = 0; start < max; start++, i++ ) {
-                ushort block;
+                BlockID block;
                 if (!CommandParser.GetBlockIfAllowed(p, parts[start], out block)) return null;
 
                 blocks[i] = block;
@@ -63,8 +64,8 @@ namespace MCGalaxy.Drawing.Brushes {
             return blocks;
         }
         
-        static bool GetTargetBlock(BrushArgs args, string[] parts, out ushort target) {
-            target = default(ushort);
+        static bool GetTargetBlock(BrushArgs args, string[] parts, out BlockID target) {
+            target = 0;
             if (parts.Length == 1) {
                 if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return false;
                 

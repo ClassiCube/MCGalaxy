@@ -22,6 +22,7 @@ using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     public sealed class CtfPlugin : Plugin_Simple {
@@ -101,7 +102,7 @@ namespace MCGalaxy.Games {
             p.cancelchat = true;
         }
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, ushort block, bool placing) {
+        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (!Game.started || p.level != Game.Map) return;
             CtfTeam2 team = Game.TeamOf(p);
             if (team == null) {

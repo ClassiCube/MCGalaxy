@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
 
@@ -31,7 +32,7 @@ namespace MCGalaxy.Blocks.Physics {
                     for (int x = min.X; x <= max.X; x++)
             {
                 ushort xP = (ushort)x, yP = (ushort)y, zP = (ushort)z;
-                ushort block = p.level.GetBlock(xP, yP, zP);
+                BlockID block = p.level.GetBlock(xP, yP, zP);
                 if (block == Block.Invalid) continue;
                 
                 AABB blockBB = p.level.blockAABBs[block].Offset(x * 32, y * 32, z * 32);
@@ -64,7 +65,7 @@ namespace MCGalaxy.Blocks.Physics {
             for (int z = min.Z; z <= max.Z; z++)
                 for (int x = min.X; x <= max.X; x++)
             {
-                ushort block = GetSurvivalBlock(p, x, min.Y, z);
+                BlockID block = GetSurvivalBlock(p, x, min.Y, z);
                 byte collide = p.level.CollideType(block);
                 allGas = allGas && collide == CollideType.WalkThrough;                
                 if (!CollideType.IsSolid(collide)) continue;
@@ -88,8 +89,8 @@ namespace MCGalaxy.Blocks.Physics {
             bb.Max.Z -= (bb.Max.Z - bb.Min.Z) / 2;
             
             Vec3S32 P = bb.BlockMax;
-            ushort bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
-            if (bHead.IsPhysicsType) bHead.BlockID = Block.Convert(bHead.BlockID);
+            BlockID bHead = GetSurvivalBlock(p, P.X, P.Y, P.Z);
+            if (Block.IsPhysicsType(bHead)) bHead = Block.Convert(bHead);
             
             if (p.level.Props[bHead].Drownable) {
                 p.startFallY = -1;
@@ -113,7 +114,7 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        static ushort GetSurvivalBlock(Player p, int x, int y, int z) {
+        static BlockID GetSurvivalBlock(Player p, int x, int y, int z) {
             if (y < 0) return Block.Bedrock;
             if (y >= p.level.Height) return Block.Air;
             return p.level.GetBlock((ushort)x, (ushort)y, (ushort)z);

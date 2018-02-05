@@ -17,20 +17,21 @@
  */
 using System;
 using MCGalaxy.Blocks.Physics;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
 
     /// <summary> Handles the player deleting a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
-    public delegate void HandleDelete(Player p, ushort oldBlock, ushort x, ushort y, ushort z);
+    public delegate void HandleDelete(Player p, BlockID oldBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Handles the player placing a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
-    public delegate void HandlePlace(Player p, ushort newBlock, ushort x, ushort y, ushort z);
+    public delegate void HandlePlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
     /// <remarks> If this returns true, the usual 'death check' behaviour is skipped. </remarks>
-    public delegate bool HandleWalkthrough(Player p, ushort block, ushort x, ushort y, ushort z);
+    public delegate bool HandleWalkthrough(Player p, BlockID block, ushort x, ushort y, ushort z);
 
     /// <summary> Called to handle the physics for this particular block. </summary>
     public delegate void HandlePhysics(Level lvl, ref Check C);
@@ -38,7 +39,7 @@ namespace MCGalaxy.Blocks {
     public static class BlockBehaviour {
 
         /// <summary> Retrieves the default place block handler for the given block. </summary>
-        internal static HandlePlace GetPlaceHandler(ushort block, BlockProps[] props) {
+        internal static HandlePlace GetPlaceHandler(BlockID block, BlockProps[] props) {
             switch (block) {
                 case Block.C4:          return PlaceBehaviour.C4;
                 case Block.C4Detonator: return PlaceBehaviour.C4Det;
@@ -46,12 +47,12 @@ namespace MCGalaxy.Blocks {
             
             if (props[block].GrassBlock != Block.Invalid) return PlaceBehaviour.DirtGrow;
             if (props[block].DirtBlock  != Block.Invalid) return PlaceBehaviour.GrassDie;
-            if (props[block].StackId != Block.Air)        return PlaceBehaviour.Stack;
+            if (props[block].StackBlock != Block.Air)        return PlaceBehaviour.Stack;
             return null;
         }
         
         /// <summary> Retrieves the default delete block handler for the given block. </summary>
-        internal static HandleDelete GetDeleteHandler(ushort block, BlockProps[] props) {
+        internal static HandleDelete GetDeleteHandler(BlockID block, BlockProps[] props) {
             switch (block) {
                 case Block.RocketStart:    return DeleteBehaviour.RocketStart;
                 case Block.Fireworks:      return DeleteBehaviour.Firework;
@@ -70,7 +71,7 @@ namespace MCGalaxy.Blocks {
         }
 
         /// <summary> Retrieves the default walkthrough block handler for the given block. </summary>
-        internal static HandleWalkthrough GetWalkthroughHandler(ushort block, BlockProps[] props, bool nonSolid) {
+        internal static HandleWalkthrough GetWalkthroughHandler(BlockID block, BlockProps[] props, bool nonSolid) {
             switch (block) {
                 case Block.Checkpoint:          return WalkthroughBehaviour.Checkpoint;
                 case Block.Door_AirActivatable: return WalkthroughBehaviour.Door;
@@ -86,7 +87,7 @@ namespace MCGalaxy.Blocks {
 
         
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
-        internal static HandlePhysics GetPhysicsHandler(ushort block, BlockProps[] props) {
+        internal static HandlePhysics GetPhysicsHandler(BlockID block, BlockProps[] props) {
             switch (block) {
                 case Block.SnakeTail: return SnakePhysics.DoTail;
                 case Block.Snake: return SnakePhysics.Do;
@@ -149,23 +150,22 @@ namespace MCGalaxy.Blocks {
                 case Block.Train: return TrainPhysics.Do;
             }
 
-            int i = block.Index;
-            HandlePhysics animalAI = AnimalAIHandler(props[i].AnimalAI);
+            HandlePhysics animalAI = AnimalAIHandler(props[block].AnimalAI);
             if (animalAI != null) return animalAI;
-            if (props[i].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
-            if (props[i].GrassBlock != Block.Invalid) return OtherPhysics.DoDirtGrow;
-            if (props[i].DirtBlock  != Block.Invalid) return OtherPhysics.DoGrassDie;
+            if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
+            if (props[block].GrassBlock != Block.Invalid) return OtherPhysics.DoDirtGrow;
+            if (props[block].DirtBlock  != Block.Invalid) return OtherPhysics.DoGrassDie;
             
-            i = block.BlockID; // TODO: should this be checking WaterKills/LavaKills
+            // TODO: should this be checking WaterKills/LavaKills
             // Adv physics updating anything placed next to water or lava
-            if ((i >= Block.Red && i <= Block.RedMushroom) || i == Block.Wood || i == Block.Log || i == Block.Bookshelf) {
+            if ((block >= Block.Red && block <= Block.RedMushroom) || block == Block.Wood || block == Block.Log || block == Block.Bookshelf) {
                 return OtherPhysics.DoOther;
             }
             return null;
         }
         
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
-        internal static HandlePhysics GetPhysicsDoorsHandler(ushort block, BlockProps[] props) {
+        internal static HandlePhysics GetPhysicsDoorsHandler(BlockID block, BlockProps[] props) {
             if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
             return null;
         }

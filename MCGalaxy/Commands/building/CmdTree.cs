@@ -20,6 +20,7 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator.Foliage;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdTree : Command {
@@ -71,7 +72,7 @@ namespace MCGalaxy.Commands.Building {
             return ParseBrush(brushMsg, p, Block.Air) != null;
         }
 
-        bool DoTree(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoTree(Player p, Vec3S32[] marks, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
             op.Tree = dArgs.tree;
@@ -84,7 +85,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         
-        static Brush ParseBrush(string raw, Player p, ushort block) {
+        static Brush ParseBrush(string raw, Player p, BlockID block) {
             string[] parts = raw.SplitSpaces(2);
             BrushFactory brush = BrushFactory.Find(parts[0]);
             if (brush == null) {

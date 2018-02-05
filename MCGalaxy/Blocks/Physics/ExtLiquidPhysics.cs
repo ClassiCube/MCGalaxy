@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -26,7 +27,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (C.data.Data < 3) return;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             if (below == Block.Air) {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Magma);
@@ -53,7 +54,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void MagmaFlow(Level lvl, int x, int y, int z, ref bool flowUp) {
             int index;
-            ushort block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
             if (index >= 0 && lvl.Props[block].LavaKills) {
                 lvl.AddUpdate(index, Block.Magma);
@@ -65,7 +66,7 @@ namespace MCGalaxy.Blocks.Physics {
             C.data.Data++;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             if (below == Block.Air) {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Geyser);
@@ -92,7 +93,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void GeyserFlow(Level lvl, int x, int y, int z, ref bool flowUp) {
             int index;
-            ushort block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
             if (index >= 0 && lvl.Props[block].WaterKills) {
                 lvl.AddUpdate(index, Block.Geyser);
@@ -103,7 +104,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoWaterfall(Level lvl, ref Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             switch (below) {
                 case Block.Air:
@@ -130,7 +131,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoLavafall(Level lvl, ref Check C) {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             switch (below)
             {

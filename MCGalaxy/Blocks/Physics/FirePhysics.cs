@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -32,7 +33,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ExpandDiagonal(Level lvl, ushort x, ushort y, ushort z,
                                    int dx, int dy, int dz) {
-            ushort block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+            BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
             if (block == Block.Air) return;
             if (!lvl.Props[block].LavaKills) return;
             
@@ -46,7 +47,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void ExpandAvanced(Level lvl, int x, int y, int z) {
             int index;
-            ushort block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
+            BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             if (index < 0 || block == Block.Air) return;
             
             if (block == Block.TNT) {

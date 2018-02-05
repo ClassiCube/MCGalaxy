@@ -19,6 +19,7 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public abstract class DrawCmd : Command {
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
-        protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
+        protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             dArgs.Block = block;
             GetMarks(dArgs, ref marks);
@@ -90,7 +91,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected class DrawArgs {
             public DrawMode Mode;
-            public ushort Block;
+            public BlockID Block;
             public string Message, BrushName, BrushArgs;
             public int DefaultBrushEndCount { get { return Mode == DrawMode.normal ? 0 : 1; } }
             

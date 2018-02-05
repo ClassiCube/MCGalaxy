@@ -69,7 +69,6 @@ namespace MCGalaxy.Commands.Misc {
 
             int x = p.Pos.BlockX, z = p.Pos.BlockZ;
             int y = (p.Pos.Y - 60) / 32;
-            ushort glass = Block.Glass;
 
             for (int yy = y - 1; yy <= y; yy++)
                 for (int zz = z - 2; zz <= z + 2; zz++)
@@ -83,7 +82,7 @@ namespace MCGalaxy.Commands.Misc {
             foreach (Vec3U16 P in state.glassCoords) {
                 if (state.lastGlass.Contains(P)) continue;
                 state.lastGlass.Add(P);
-                p.SendBlockchange(P.X, P.Y, P.Z, glass);
+                p.SendBlockchange(P.X, P.Y, P.Z, Block.Glass);
             }
             
             for (int i = 0; i < state.lastGlass.Count; i++) {

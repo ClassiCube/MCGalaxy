@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public abstract class WeaponCmd : Command {
@@ -131,12 +132,12 @@ namespace MCGalaxy.Commands.Fun {
             if (lvl.IsAirAt(pos.X, pos.Y, pos.Z)) glassCoords.Add(pos);
         }
         
-        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block);
+        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block);
         
         
         protected class WeaponArgs {
             public Player player;
-            public ushort block;
+            public BlockID block;
             public WeaponType weaponType;
             public Vec3U16 pos, start;
             public Vec3F32 dir;

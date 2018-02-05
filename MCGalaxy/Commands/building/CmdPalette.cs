@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPalette : Command {
@@ -135,10 +136,10 @@ namespace MCGalaxy.Commands.Building {
         }
 
         static byte GetBlock(Player p, string name) {
-            ushort block;
+            BlockID block;
             if (!CommandParser.GetBlock(p, name, out block)) return Block.Invalid;
             
-            if (block.IsPhysicsType) {
+            if (Block.IsPhysicsType(block)) {
                 Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
             }
             
@@ -154,13 +155,13 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string modifer = args.Length > 2 ? args[2] : "";
-            MultiPageOutput.Output(p, palette.Entries, (e) => FormatEntry(e, p.level), 
+            MultiPageOutput.Output(p, palette.Entries, (e) => FormatEntry(e, p), 
                                    "Palette entries", "entries", modifer, true);
         }
         
-        static string FormatEntry(PaletteEntry e, Level lvl) {
-            ushort block = Block.FromRaw(e.Raw);
-            return lvl.BlockName(block) + " - " + Utils.Hex(e.R, e.G, e.B);
+        static string FormatEntry(PaletteEntry e, Player p) {
+            BlockID block = Block.FromRaw(e.Raw);
+            return Block.GetName(p, block) + " - " + Utils.Hex(e.R, e.G, e.B);
         }
 
         public override void Help(Player p) {

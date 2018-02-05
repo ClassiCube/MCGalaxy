@@ -186,7 +186,7 @@ namespace MCGalaxy {
         void WriteBlockPermissions(byte[] bulk) {
             int count = NumBlockPermissions();
             for (int i = 0; i < count; i++) {
-                ushort block = Block.FromRaw((byte)i);
+                BlockID block = Block.FromRaw((byte)i);
                 bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
                 bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
                 Packet.WriteBlockPermission((byte)i, place, delete, bulk, i * 4);

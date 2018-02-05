@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.Fun;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Misc {
     public class CmdAscend : Command {
@@ -49,13 +50,13 @@ namespace MCGalaxy.Commands.Misc {
         
         static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
             for (; y < lvl.Height; y++) {
-                ushort block = lvl.GetBlock(x, y, z);
+                BlockID block = lvl.GetBlock(x, y, z);
                 if (block != Block.Invalid && CollideType.IsSolid(lvl.CollideType(block))) continue;
                     
-                ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
                 if (above != Block.Invalid && CollideType.IsSolid(lvl.CollideType(above))) continue;
 
-                ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+                BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
                 if (below != Block.Invalid && CollideType.IsSolid(lvl.CollideType(below))) return y;
             }
             return -1;

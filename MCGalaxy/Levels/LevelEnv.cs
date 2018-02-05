@@ -20,6 +20,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public static class LevelEnv {
@@ -114,14 +115,14 @@ namespace MCGalaxy {
         
         
         static bool CheckBlock(Player p, string value, string variable, ref byte modify) {
-            ushort block;
+            BlockID block;
             if (!CommandParser.GetBlock(p, value, out block)) return false;
             
-            if (block.IsPhysicsType) {
+            if (Block.IsPhysicsType(block)) {
                 Player.Message(p, "Cannot use physics block ids for /env."); return false;
             }
             
-            string name = p.level.BlockName(block);
+            string name = Block.GetName(p, block);
             modify = block.RawID;
             Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, name);
             return true;
@@ -148,8 +149,7 @@ namespace MCGalaxy {
         }
         
         static bool IsResetString(string value) {
-            return value.CaselessEq("normal") ||
-                value.CaselessEq("reset") || value.CaselessEq("default");
+            return value.CaselessEq("normal") || value.CaselessEq("reset") || value.CaselessEq("default");
         }
         
         

@@ -18,18 +18,19 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public sealed partial class Block {
 
-        public static bool Walkthrough(byte block) {
+        public static bool Walkthrough(BlockID block) {
             return block == Air || block == Sapling || block == Block.Snow
                 || block == Fire || block == Rope
                 || (block >= Water && block <= StillLava)
                 || (block >= Dandelion && block <= RedMushroom);
         }
 
-        public static bool AllowBreak(byte block) {
+        public static bool AllowBreak(BlockID block) {
             switch (block) {
                 case Portal_Blue:
                 case Portal_Orange:
@@ -85,17 +86,13 @@ namespace MCGalaxy {
             return false;
         }
 
-        public static bool Placable(byte block) {
-            return !(block == Bedrock || (block >= Water && block <= StillLava)) && block < CpeCount;
-        }
-
         public static bool BuildIn(byte block) {
             if (block == Op_Water || block == Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Convert(block);
             return block >= Water && block <= StillLava;
         }
 
-        public static bool LightPass(byte block) {
+        public static bool LightPass(BlockID block) {
             switch (Convert(block)) {
                 case Air:
                 case Glass:
@@ -154,17 +151,15 @@ namespace MCGalaxy {
             return false;
         }
         
-        public static AABB BlockAABB(ushort block, Level lvl) {
+        public static AABB BlockAABB(BlockID block, Level lvl) {
             BlockDefinition def = lvl.GetBlockDef(block);
             if (def != null) {
                 return new AABB(def.MinX * 2, def.MinZ * 2, def.MinY * 2,
                                 def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
             }
             
-            if (block.BlockID == Block.custom_block)
-                return new AABB(0, 0, 0, 32, 32, 32);
-            
-            byte core = Convert(block.BlockID);
+            if (block >= Block.Extended) return new AABB(0, 0, 0, 32, 32, 32);            
+            BlockID core = Convert(block);
             return new AABB(0, 0, 0, 32, DefaultSet.Height(core) * 2, 32);
         }
         
@@ -184,15 +179,15 @@ namespace MCGalaxy {
             }            
         }
         
-        public static ushort FromRaw(byte raw) {
-            return raw < Block.CpeCount ? raw : (byte)(Block.Extended + raw);
+        public static BlockID FromRaw(byte raw) {
+            return raw < Block.CpeCount ? raw : (BlockID)(Block.Extended | raw);
         }
         
-        public static ushort FromRaw(byte raw, bool extended) {
-            return (ushort)(raw | (extended ? Block.Extended : Block.Air));
+        public static BlockID FromRaw(byte raw, bool extended) {
+            return (BlockID)(raw | (extended ? Block.Extended : Block.Air));
         }
         
-        public static bool IsPhysicsType(ushort block) {
+        public static bool IsPhysicsType(BlockID block) {
             return block >= Block.CpeCount && block < Block.Extended;
         }
     }

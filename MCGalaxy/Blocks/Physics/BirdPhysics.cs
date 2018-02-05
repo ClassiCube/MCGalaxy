@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {    
     public static class BirdPhysics {
@@ -24,7 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort block = lvl.GetBlock(x, y, z);
+            BlockID block = lvl.GetBlock(x, y, z);
             int index;
 
             switch (rand.Next(1, 15)) {
@@ -63,7 +64,7 @@ namespace MCGalaxy.Blocks.Physics {
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, ushort block) {
+        static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, BlockID block) {
             int index = lvl.PosToInt(x, y, z);
             if (index < 0) return;
             

@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
@@ -38,7 +39,7 @@ namespace MCGalaxy {
             task.Delay = TimeSpan.FromMilliseconds(time);
         }
 
-        public static void Addblock(Player p, int index, ushort block) {
+        public static void Addblock(Player p, int index, BlockID block) {
             if (index == -1) return;
             // Bit packing format
             // 32-63: index

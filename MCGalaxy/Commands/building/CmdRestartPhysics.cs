@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRestartPhysics : Command {
@@ -88,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
             return false;
         }
         
-        bool DoRestart(Player p, Vec3S32[] m, object state, ushort block) {
+        bool DoRestart(Player p, Vec3S32[] m, object state, BlockID block) {
             PhysicsArgs extraInfo = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             int index;

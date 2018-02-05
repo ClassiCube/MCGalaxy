@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network {
     /// <summary> Combines block changes and sends them as either a single CPE BulkBlockUpdate packet,
@@ -43,7 +44,7 @@ namespace MCGalaxy.Network {
         /// <summary> Adds a block change, and potentially sends block change packets if 
         /// number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
-        public bool Add(int index, ushort block) {
+        public bool Add(int index, BlockID block) {
             indices[count] = index;
             if (block == Block.custom_block) types[count] = extBlock;
             else types[count] = Block.Convert(block);

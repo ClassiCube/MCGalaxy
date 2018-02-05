@@ -21,6 +21,7 @@ using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPortal : Command {
@@ -54,9 +55,9 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += EntryChange;
         }
         
-        ushort GetBlock(Player p, string name) {
+        BlockID GetBlock(Player p, string name) {
             if (name == "show") { ShowPortals(p); return Block.Invalid; }
-            ushort block = CommandParser.RawGetBlock(p, name);
+            BlockID block = CommandParser.RawGetBlock(p, name);
             if (block != Block.Invalid && p.level.Props[block].IsPortal) return block;
             
             // Hardcoded aliases for backwards compatibility
@@ -72,9 +73,9 @@ namespace MCGalaxy.Commands.Building {
             Help(p); return Block.Invalid;
         }
 
-        void EntryChange(Player p, ushort x, ushort y, ushort z, ushort block) {
+        void EntryChange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             PortalArgs args = (PortalArgs)p.blockchangeObject;
-            ushort old = p.level.GetBlock(x, y, z);
+            BlockID old = p.level.GetBlock(x, y, z);
             if (!p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
                 p.RevertBlock(x, y, z); return;
             }
@@ -99,11 +100,11 @@ namespace MCGalaxy.Commands.Building {
             } else {
                 p.Blockchange += EntryChange;
                 Player.Message(p, "&aEntry block placed. &c{0} block for exit",
-                               p.Level.BlockName(Block.Red));
+                              Block.GetName(p, Block.Red));
             }
         }
         
-        void ExitChange(Player p, ushort x, ushort y, ushort z, ushort block) {
+        void ExitChange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             p.ClearBlockchange();
             p.RevertBlock(x, y, z);
             PortalArgs args = (PortalArgs)p.blockchangeObject;
@@ -143,7 +144,7 @@ namespace MCGalaxy.Commands.Building {
             p.Blockchange += EntryChange;
         }
 
-        class PortalArgs { public List<PortalPos> Entries; public ushort Block; public bool Multi; }
+        class PortalArgs { public List<PortalPos> Entries; public BlockID Block; public bool Multi; }
         struct PortalPos { public ushort x, y, z; public string Map; }
 
         
@@ -182,7 +183,7 @@ namespace MCGalaxy.Commands.Building {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         
-        static string Format(ushort block, Level lvl, BlockProps[] props) {
+        static string Format(BlockID block, Player p, BlockProps[] props) {
             if (!props[block].IsPortal) return null;
             
             // We want to use the simple aliases if possible
@@ -190,14 +191,13 @@ namespace MCGalaxy.Commands.Building {
             if (block == Block.Portal_Blue)   return "blue";
             if (block == Block.Portal_Air)    return "air";
             if (block == Block.Portal_Lava)   return "lava";
-            if (block == Block.Portal_Water)  return "water";
-            
-            return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
+            if (block == Block.Portal_Water)  return "water";           
+            return Block.GetName(p, block);
         }
         
         static void AllNames(Player p, List<string> names) {
             for (int i = 0; i < Block.ExtendedCount; i++) {
-                string name = Format((ushort)i, p.level, p.level.Props);
+                string name = Format((ushort)i, p, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }

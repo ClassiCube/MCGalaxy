@@ -16,43 +16,45 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     public static class ActivateablePhysics {
         
         /// <summary> Activates fireworks, rockets, and TNT in 1 block radius around (x, y, z) </summary>
         public static void DoNeighbours(Level lvl, int index, ushort x, ushort y, ushort z) {
-            for (int yy = -1; yy <= 1; yy++)
-                for (int zz = -1; zz <= 1; zz++)
-                    for (int xx = -1; xx <= 1; xx++)
+            int bHead = 0, bTail = 0;
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dz = -1; dz <= 1; dz++)
+                    for (int dx = -1; dx <= 1; dx++)
             {
-                byte b = lvl.GetTile(lvl.IntOffset(index, xx, yy, zz));
-                if (b == Block.RocketStart) {
-                    int b1 = lvl.IntOffset(index, xx * 3, yy * 3, zz * 3);
-                    int b2 = lvl.IntOffset(index, xx * 2, yy * 2, zz * 2);
-                    bool unblocked = lvl.GetTile(b1) == Block.Air && lvl.GetTile(b2) == Block.Air &&
-                        !lvl.listUpdateExists.Get(x + xx * 3, y + yy * 3, z + zz * 3) &&
-                        !lvl.listUpdateExists.Get(x + xx * 2, y + yy * 2, z + zz * 2);
+                BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                if (block == Block.RocketStart) {
+                    bool isFree = 
+                        lvl.GetBlock((ushort)(x + dx * 2), (ushort)(y + dy * 2), (ushort)(z + dz * 2), out bTail) == Block.Air &&
+                        lvl.GetBlock((ushort)(x + dx * 3), (ushort)(y + dy * 3), (ushort)(z + dz * 3), out bHead) == Block.Air &&
+                        !lvl.listUpdateExists.Get(x + dx * 3, y + dy * 3, z + dz * 3) &&
+                        !lvl.listUpdateExists.Get(x + dx * 2, y + dy * 2, z + dz * 2);
                     
-                    if (unblocked) {
-                        lvl.AddUpdate(b1, Block.RocketHead);
-                        lvl.AddUpdate(b2, Block.LavaFire);
+                    if (isFree) {
+                        lvl.AddUpdate(bHead, Block.RocketHead);
+                        lvl.AddUpdate(bTail, Block.LavaFire);
                     }
-                } else if (b == Block.Fireworks) {
-                    int b1 = lvl.IntOffset(index, xx, yy + 1, zz);
-                    int b2 = lvl.IntOffset(index, xx, yy + 2, zz);
-                    bool unblocked = lvl.GetTile(b1) == Block.Air && lvl.GetTile(b2) == Block.Air &&
-                        !lvl.listUpdateExists.Get(x + xx, y + yy + 1, z + zz) &&
-                        !lvl.listUpdateExists.Get(x + xx, y + yy + 2, z + zz);
+                } else if (block == Block.Fireworks) {
+                    bool isFree = 
+                        lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy + 1), (ushort)(z + dz), out bTail) == Block.Air &&
+                        lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy + 2), (ushort)(z + dz), out bHead) == Block.Air &&
+                        !lvl.listUpdateExists.Get(x + dx, y + dy + 1, z + dz) &&
+                        !lvl.listUpdateExists.Get(x + dx, y + dy + 2, z + dz);
                     
-                    if (unblocked) {
-                        lvl.AddUpdate(b2, Block.Fireworks);
+                    if (isFree) {
+                        lvl.AddUpdate(bHead, Block.Fireworks);
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
-                        lvl.AddUpdate(b1, Block.StillLava, args);
+                        lvl.AddUpdate(bTail, Block.StillLava, args);
                     }
-                } else if (b == Block.TNT) {
-                    lvl.MakeExplosion((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), 0);
+                } else if (block == Block.TNT) {
+                    lvl.MakeExplosion((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), 0);
                 }
             }
         }
@@ -60,7 +62,7 @@ namespace MCGalaxy.Blocks.Physics {
         /// <summary> Activates doors, tdoors and toggles odoors at (x, y, z) </summary>
         public static void DoDoors(Level lvl, ushort x, ushort y, ushort z, bool instant) {
             int index;
-            ushort block = lvl.GetBlock(x, y, z, out index);
+            BlockID block = lvl.GetBlock(x, y, z, out index);
             if (index == -1) return;
             
             if (lvl.Props[block].IsDoor) {
@@ -79,7 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         
-        internal static PhysicsArgs GetDoorArgs(ushort block, out byte physForm) {
+        internal static PhysicsArgs GetDoorArgs(BlockID block, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;
@@ -97,7 +99,7 @@ namespace MCGalaxy.Blocks.Physics {
             return args;
         }
         
-        internal static PhysicsArgs GetTDoorArgs(ushort block) {
+        internal static PhysicsArgs GetTDoorArgs(BlockID block) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDrill : Command {
@@ -34,7 +35,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);
         }
         
-        bool DoDrill(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoDrill(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             block = p.level.GetBlock(x, y, z);
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
@@ -75,7 +76,7 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        void DoBlock(Player p, Level lvl, ushort block, ushort x, ushort y, ushort z) {
+        void DoBlock(Player p, Level lvl, BlockID block, ushort x, ushort y, ushort z) {
             ushort cur = lvl.GetBlock(x, y, z);
             if (cur == block) {
                 p.level.UpdateBlock(p, x, y, z, Block.Air, BlockDBFlags.Drawn, true);

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -25,7 +26,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;       
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort block = lvl.GetBlock(x, y, z);
+            BlockID block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -74,7 +75,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            ushort block = lvl.GetBlock(x, y, z);
+            BlockID block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -119,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
             RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
         }
         
-        static bool MoveTo(Level lvl, ushort block, int index, int targetIndex, byte target) {
+        static bool MoveTo(Level lvl, BlockID block, int index, int targetIndex, byte target) {
             if (targetIndex >= 0 && lvl.blocks[targetIndex] == target && lvl.AddUpdate(targetIndex, block)) {
                 lvl.AddUpdate(index, target);
                 return true;
@@ -127,7 +128,7 @@ namespace MCGalaxy.Blocks.Physics {
             return false;
         }
         
-        static void RandomlyMove(Level lvl, ref Check C, ushort block, Random rand, 
+        static void RandomlyMove(Level lvl, ref Check C, BlockID block, Random rand, 
                                  ushort x, ushort y, ushort z, byte target) {
             switch (rand.Next(1, 15)) {
                 case 1:

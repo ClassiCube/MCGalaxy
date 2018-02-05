@@ -17,20 +17,21 @@
  */
 using MCGalaxy.Blocks.Physics;
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
     
     internal static class PlaceBehaviour {
 
-        static bool SkipGrassDirt(Player p, ushort block) {
+        static bool SkipGrassDirt(Player p, BlockID block) {
             Level lvl = p.level;
             return !lvl.Config.GrassGrow || p.ModeBlock == block || !(lvl.physics == 0 || lvl.physics == 5);
         }
         
-        internal static void GrassDie(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void GrassDie(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (SkipGrassDirt(p, block)) { p.ChangeBlock(x, y, z, block); return; }
             Level lvl = p.level;
-            ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+            BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
             
             if (above != Block.Invalid && !lvl.LightPasses(above)) {
                 block = p.level.Props[block].DirtBlock;
@@ -38,10 +39,10 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, y, z, block);
         }
         
-        internal static void DirtGrow(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void DirtGrow(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (SkipGrassDirt(p, block)) { p.ChangeBlock(x, y, z, block); return; }
             Level lvl = p.level;
-            ushort above = lvl.GetBlock(x, (ushort)(y + 1), z);
+            BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
             
             if (above == Block.Invalid || lvl.LightPasses(above)) {
                 block = p.level.Props[block].GrassBlock;
@@ -49,17 +50,17 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, y, z, block);
         }
 
-        internal static void Stack(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void Stack(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.GetBlock(x, (ushort)(y - 1), z) != block) {
                 p.ChangeBlock(x, y, z, block); return;
             }
             
             p.SendBlockchange(x, y, z, Block.Air); // send the air block back only to the user
-            byte stack = p.level.Props[block].StackId;
-            p.ChangeBlock(x, (ushort)(y - 1), z, Block.FromRaw(stack));
+            BlockID stack = p.level.Props[block].StackBlock;
+            p.ChangeBlock(x, (ushort)(y - 1), z, stack);
         }        
         
-        internal static void C4(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void C4(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
                 p.RevertBlock(x, y, z); return;
             }
@@ -76,7 +77,7 @@ namespace MCGalaxy.Blocks {
                 p.level.C4list.Add(new C4Data(num));
                 p.c4circuitNumber = num;
                 
-                string detonatorName = p.level.BlockName(Block.Red);
+                string detonatorName = Block.GetName(p, Block.Red);
                 Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
                                detonatorName);
             }
@@ -86,7 +87,7 @@ namespace MCGalaxy.Blocks {
             p.ChangeBlock(x, y, z, Block.C4);
         }
         
-        internal static void C4Det(Player p, ushort block, ushort x, ushort y, ushort z) {
+        internal static void C4Det(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0 || p.level.physics == 5) {
                 p.c4circuitNumber = -1;
                 p.RevertBlock(x, y, z); return;

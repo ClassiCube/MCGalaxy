@@ -31,7 +31,7 @@ namespace MCGalaxy.Gui {
         // to modify the server's live permissions if user clicks 'discard'
         BlockPerms blockPermsOrig, blockPerms;
         List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
-        BlockProps[] blockPropsChanged = new BlockProps[256];        
+        BlockProps[] blockPropsChanged = new BlockProps[Block.Props.Length];        
         
         void LoadBlocks() {
             blk_list.Items.Clear();

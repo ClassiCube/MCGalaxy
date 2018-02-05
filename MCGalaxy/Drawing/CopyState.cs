@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing {
 
@@ -83,7 +84,7 @@ namespace MCGalaxy.Drawing {
                                     (isExt[index >> 3] & (1 << (index & 0x07))) != 0);
         }
         
-        public void Set(ushort block, int index) {
+        public void Set(BlockID block, int index) {
             raw[index] = (byte)block;
             if (block >= Block.Extended) {
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
@@ -92,7 +93,7 @@ namespace MCGalaxy.Drawing {
             }
         }
         
-        public void Set(ushort block, int x, int y, int z) {
+        public void Set(BlockID block, int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
             raw[index] = (byte)block;
             if (block >= Block.Extended) {
@@ -179,14 +180,13 @@ namespace MCGalaxy.Drawing {
             raw = raw.Decompress();
             if (raw.Length == 0) return;
             
-            ushort block = default(ushort);
             CalculateBounds(raw);
             for (int i = 0; i < raw.Length; i += 7) {
                 ushort x = BitConverter.ToUInt16(raw, i + 0);
                 ushort y = BitConverter.ToUInt16(raw, i + 2);
                 ushort z = BitConverter.ToUInt16(raw, i + 4);
                 
-                block = raw[i + 6];
+                ushort block = raw[i + 6];
                 Set(block, x - X, y - Y, z - Z);
             }
             UsedBlocks = Volume;

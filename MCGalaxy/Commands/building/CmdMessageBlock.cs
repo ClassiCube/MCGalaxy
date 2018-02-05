@@ -23,6 +23,7 @@ using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMessageBlock : Command {
@@ -64,8 +65,8 @@ namespace MCGalaxy.Commands.Building {
         
         ushort GetBlock(Player p, string name, ref bool allMessage) {
             if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
-            ushort block = CommandParser.RawGetBlock(p, name);
-            if (!block.IsInvalid && p.level.Props[block].IsMessageBlock)
+            BlockID block = CommandParser.RawGetBlock(p, name);
+            if (block != Block.Invalid && p.level.Props[block].IsMessageBlock)
                 return block;
             
             // Hardcoded aliases for backwards compatibility
@@ -147,7 +148,7 @@ namespace MCGalaxy.Commands.Building {
             }
         }
 
-        class MBArgs { public string Message; public ushort Block; }
+        class MBArgs { public string Message; public BlockID Block; }
 
         
         void ShowMessageBlocks(Player p) {
@@ -179,7 +180,7 @@ namespace MCGalaxy.Commands.Building {
         static ushort U16(object x) { return Convert.ToUInt16(x); }
 
         
-        static string Format(ushort block, Level lvl, BlockProps[] props) {
+        static string Format(BlockID block, Player p, BlockProps[] props) {
             if (!props[block].IsMessageBlock) return null;
             
             // We want to use the simple aliases if possible
@@ -187,21 +188,20 @@ namespace MCGalaxy.Commands.Building {
             if (block == Block.MB_White) return "white";
             if (block == Block.MB_Air)   return "air";
             if (block == Block.MB_Lava)  return "lava";
-            if (block == Block.MB_Water) return "water";
-            
-            return lvl == null ? Block.Name(block.BlockID) : lvl.BlockName(block);
+            if (block == Block.MB_Water) return "water";            
+            return Block.GetName(p, block);
         }
         
         static void AllNames(Player p, List<string> names) {
             for (int i = 0; i < Block.ExtendedCount; i++) {
-                string name = Format((ushort)i, p.level, p.level.Props);
+                string name = Format((BlockID)i, p, p.level.Props);
                 if (name != null) names.Add(name);
             }
         }
         
         static void CoreNames(List<string> names) {
             for (int i = 0; i < Block.Count; i++) {
-                string name = Format((ushort)i, null, Block.Props);
+                string name = Format((BlockID)i, null, Block.Props);
                 if (name != null) names.Add(name);
             }
         }

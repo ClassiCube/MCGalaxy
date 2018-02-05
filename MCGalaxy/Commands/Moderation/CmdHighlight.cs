@@ -20,6 +20,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHighlight : Command {
@@ -63,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        bool DoHighlightArea(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoHighlightArea(Player p, Vec3S32[] marks, object state, BlockID block) {
             HighlightAreaArgs args = (HighlightAreaArgs)state;
             HighlightPlayer(p, args.delta, args.who, args.ids, marks);
             return false;

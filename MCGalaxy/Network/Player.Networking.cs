@@ -20,6 +20,7 @@ using System.Text;
 using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -251,7 +252,7 @@ namespace MCGalaxy {
             Send(Packet.Teleport(id, pos, rot, hasExtPositions));
         }
         
-        public void SendBlockchange(ushort x, ushort y, ushort z, ushort block) {
+        public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 

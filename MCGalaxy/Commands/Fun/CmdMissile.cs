@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMissile : WeaponCmd {
@@ -27,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Missile"; } }
         protected override string Weapon { get { return "Missile"; } }
 
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block) {
             if (!p.staticCommands) {
                 p.ClearBlockchange();
                 p.aiming = false;
@@ -82,7 +83,7 @@ namespace MCGalaxy.Commands.Fun {
             
             for (i = 1; ; i++) {
                 Vec3U16 target = args.PosAt(i);
-                ushort block = p.level.GetBlock(target.X, target.Y, target.Z);
+                BlockID block = p.level.GetBlock(target.X, target.Y, target.Z);
                 if (block == Block.Invalid) break;
 
                 if (block != Block.Air && !args.allBlocks.Contains(target) && HandlesHitBlock(p, block, args.weaponType, target, false))
@@ -96,7 +97,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool MoveMissile(WeaponArgs args, Vec3U16 pos, Vec3U16 target) {
             Player p = args.player;
-            ushort block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
+            BlockID block = p.level.GetBlock(pos.X, pos.Y, pos.Z);
             if (block != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(p, block, args.weaponType, pos, true))
                 return false;
 
@@ -122,7 +123,7 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            ushort stone = Block.Cobblestone;
+            BlockID stone = Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
                 pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);

@@ -35,12 +35,12 @@ namespace MCGalaxy.DB {
             if (newBlock == Block.Air) {
                 Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
                                delta.Shorten(true, false), name,
-                               p.level.BlockName(oldBlock),
+                               Block.GetName(p, oldBlock),
                                FormatReason(e.Flags));
             } else {
                 Player.Message(p, "{0} ago {1} &3placed %S{2}{3}",
                                delta.Shorten(true, false), name,
-                               p.level.BlockName(newBlock),
+                               Block.GetName(p, newBlock),
                                FormatReason(e.Flags));
             }
         }

@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.DB;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdSPlace : Command {
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, dArgs, DoSPlace);
         }
         
-        bool DoSPlace(Player p, Vec3S32[] m, object state, ushort block) {
+        bool DoSPlace(Player p, Vec3S32[] m, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort distance = dArgs.distance, interval = dArgs.interval;
             if (m[0] == m[1]) { Player.Message(p, "No direction was selected"); return false; }
@@ -85,7 +86,7 @@ namespace MCGalaxy.Commands.Building {
 
             if (!p.Ignores.DrawOutput) {
                 Player.Message(p, "Placed {1} blocks {0} apart.",
-                               interval > 0 ? interval : distance, p.level.BlockName(held));
+                               interval > 0 ? interval : distance, Block.GetName(p, held));
             }
             return true;
         }

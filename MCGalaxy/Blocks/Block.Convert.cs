@@ -16,13 +16,17 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public sealed partial class Block {
         
         static string[] coreNames = new string[Block.Count];
-        public static string Name(byte block) { return coreNames[block]; }
-        public static bool Undefined(ushort block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
+        public static string Name(BlockID block) { 
+            return block >= Block.Extended ? "custom_block" : coreNames[block];
+        }
+        public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
         public static byte Byte(string type) {
             byte block;
@@ -31,6 +35,15 @@ namespace MCGalaxy {
             if (Aliases.TryGetValue(type.ToLower(), out block))
                 return block;
             return Invalid;
+        }
+        
+        public static string GetName(Player p, BlockID block) {
+            if (!Player.IsSuper(p)) return p.level.BlockName(block);
+            if (block < Block.Extended) return coreNames[block];
+            
+            BlockRaw raw = (BlockRaw)block;
+            BlockDefinition def = BlockDefinition.GlobalDefs[raw];
+            return def != null ? def.Name.Replace(" ", "") : raw.ToString();
         }
         
         public static byte ConvertCPE(byte block) {
@@ -55,7 +68,7 @@ namespace MCGalaxy {
             }
         }
         
-        public static byte Convert(byte block) {
+        public static BlockID Convert(BlockID block) {
             switch (block) {
                 case FlagBase: return Mushroom;
                 case Op_Glass: return Glass;
@@ -255,11 +268,8 @@ namespace MCGalaxy {
                 case Fish_Shark: return Gray;
                 case Fish_Sponge: return Sponge;
                 case Fish_LavaShark: return Obsidian;
-                
-                case custom_block: return custom_block;
-                default:
-                    return block < CpeCount ? block : Orange;
             }
+            return block;
         }
     }
 }

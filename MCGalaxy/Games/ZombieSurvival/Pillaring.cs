@@ -19,13 +19,14 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Events;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games.ZS {
     
     internal static class Pillaring {
         
         internal static bool Handles(Player p, ushort x, ushort y, ushort z,
-                                     bool placing, ushort block, ushort old, ZSGame game) {
+                                     bool placing, BlockID block, BlockID old, ZSGame game) {
             
             if (placing && !game.Map.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(game.Map, block, old)) {
@@ -42,7 +43,7 @@ namespace MCGalaxy.Games.ZS {
             return false;
         }
 
-        static bool NotPillaring(Level lvl, ushort b, ushort old) {
+        static bool NotPillaring(Level lvl, BlockID b, BlockID old) {
             byte collide = lvl.CollideType(b);
             if (collide == CollideType.WalkThrough) return true;
             

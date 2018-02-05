@@ -88,8 +88,8 @@ namespace MCGalaxy {
             Props[Sponge].LavaKills = true; Props[Bookshelf].LavaKills = true;
             Props[Leaves].LavaKills = true; Props[Crate].LavaKills = true;
             Props[Red].IsRails = true; Props[Op_Air].IsRails = true;
-            Props[Slab].StackId = DoubleSlab;
-            Props[CobblestoneSlab].StackId = Cobblestone;
+            Props[Slab].StackBlock = DoubleSlab;
+            Props[CobblestoneSlab].StackBlock = Cobblestone;
             Props[Water].Drownable = true; Props[StillWater].Drownable = true;
             Props[Lava].Drownable = true; Props[StillLava].Drownable = true;
             Props[Dirt].GrassBlock = Block.Grass; Props[Grass].DirtBlock = Block.Dirt;

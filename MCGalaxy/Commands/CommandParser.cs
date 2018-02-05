@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands {
     
@@ -165,8 +166,8 @@ namespace MCGalaxy.Commands {
         
         
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
-        public static bool GetBlock(Player p, string input, out ushort block, bool allowSkip = false) {
-            block = default(ushort);
+        public static bool GetBlock(Player p, string input, out BlockID block, bool allowSkip = false) {
+            block = Block.Air;
             // Skip/None block for draw operations
             if (allowSkip && (input.CaselessEq("skip") || input.CaselessEq("none"))) {
                 block = Block.Invalid; return true;
@@ -179,7 +180,7 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> This does not output any messages to the player. </remarks>
-        public static ushort RawGetBlock(Player p, string input) {
+        public static BlockID RawGetBlock(Player p, string input) {
             BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             byte id;
             // raw ID is treated specially, before names
@@ -194,7 +195,7 @@ namespace MCGalaxy.Commands {
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
-        public static bool GetBlockIfAllowed(Player p, string input, out ushort block, bool allowSkip = false) {
+        public static bool GetBlockIfAllowed(Player p, string input, out BlockID block, bool allowSkip = false) {
             if (!GetBlock(p, input, out block, allowSkip)) return false;
             if (allowSkip && block == Block.Invalid) return true;
             return IsBlockAllowed(p, "draw with", block);
@@ -202,7 +203,7 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
-        public static bool IsBlockAllowed(Player p, string action, ushort block) {
+        public static bool IsBlockAllowed(Player p, string action, BlockID block) {
             if (p == null || BlockPerms.UsableBy(p, block)) return true;
             BlockPerms.List[block].MessageCannotUse(p, action);
             return false;

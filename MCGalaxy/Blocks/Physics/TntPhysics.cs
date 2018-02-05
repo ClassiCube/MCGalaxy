@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Games;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -123,7 +124,7 @@ namespace MCGalaxy.Blocks.Physics {
             if ((lvl.physics < 2 || lvl.physics == 5) && !force) return;
             
             int index;
-            ushort block = lvl.GetBlock(x, y, z, out index);
+            BlockID block = lvl.GetBlock(x, y, z, out index);
             if (index >= 0 && !lvl.Props[block].OPBlock)
                 lvl.AddUpdate(index, Block.TNT_Explosion, true);
 

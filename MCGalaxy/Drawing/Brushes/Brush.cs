@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     public abstract class Brush {
@@ -25,6 +26,6 @@ namespace MCGalaxy.Drawing.Brushes {
         
         /// <summary> Returns the next block that should be placed in the world, 
         /// based on the draw operation's current state. </summary>
-        public abstract ushort NextBlock(DrawOp op);
+        public abstract BlockID NextBlock(DrawOp op);
     }
 }

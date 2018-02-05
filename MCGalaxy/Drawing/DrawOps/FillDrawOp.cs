@@ -22,6 +22,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Util;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
     
@@ -59,7 +60,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         
-        public unsafe static List<int> FloodFill(Player p, int index, ushort block, DrawMode mode) {
+        public unsafe static List<int> FloodFill(Player p, int index, BlockID block, DrawMode mode) {
             Level lvl = p.level;
             SparseBitSet bits = new SparseBitSet(lvl.Width, lvl.Height, lvl.Length);
             List<int> buffer = new List<int>();

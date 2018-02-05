@@ -22,6 +22,7 @@ using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Undo;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
@@ -192,9 +193,9 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.UtcNow;
 
-        public ushort ModeBlock;
-        public ushort RawHeldBlock = Block.Stone;
-        public ushort[] BlockBindings = new ushort[Block.Count];        
+        public BlockID ModeBlock;
+        public BlockID RawHeldBlock = Block.Stone;
+        public BlockID[] BlockBindings = new BlockID[Block.Count];        
         public string[] CmdBindings = new string[10];
         public string[] CmdArgsBindings = new string[10];
         
@@ -252,10 +253,10 @@ namespace MCGalaxy {
         
         /// <summary> Called when the player has finished providing all the marks for a selection. </summary>
         /// <returns> Whether to repeat this selection, if /static mode is enabled. </returns>
-        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, ushort block);
+        public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, BlockID block);
         
         /// <summary> Called when the player has provided a mark for a selection. </summary>
         /// <remarks> i is the index of the mark, so the 'first' mark has i of 0. </remarks>
-        public delegate void SelectionMarkHandler(Player p, Vec3S32[] marks, int i, object state, ushort block);
+        public delegate void SelectionMarkHandler(Player p, Vec3S32[] marks, int i, object state, BlockID block);
     }
 }

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPlace : Command {
@@ -52,7 +53,7 @@ namespace MCGalaxy.Commands.Building {
             P.Z = Clamp(P.Z, p.level.Length);
             
             p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, block);
-            string blockName = p.level.BlockName(block);
+            string blockName = Block.GetName(p, block);
             if (!p.Ignores.DrawOutput) {
                 Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
             }

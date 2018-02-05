@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Fun {
                 args.iterations++;
                 Vec3U16 pos = args.pos;
 
-                ushort cur = args.player.level.GetBlock(pos.X, pos.Y, pos.Z);
+                BlockID cur = args.player.level.GetBlock(pos.X, pos.Y, pos.Z);
                 if (cur == Block.Invalid) return false;
                 if (cur != Block.Air && !args.allBlocks.Contains(pos) && HandlesHitBlock(args.player, cur, args.weaponType, pos, true))
                     return false;
@@ -102,12 +102,11 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            ushort stone = Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
-                pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);
+                pl.HandleDeath(Block.Cobblestone, "@p %Swas blown up by " + p.ColoredName, true);
             } else {
-                pl.HandleDeath(stone, "@p %Swas shot by " + p.ColoredName);
+                pl.HandleDeath(Block.Cobblestone, "@p %Swas shot by " + p.ColoredName);
             }
             return true;
         }

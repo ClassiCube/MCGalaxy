@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -27,7 +28,7 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             
-            ushort below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             if (below == Block.Air) {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], C.data);
                 lvl.AddUpdate(C.b, Block.Air);

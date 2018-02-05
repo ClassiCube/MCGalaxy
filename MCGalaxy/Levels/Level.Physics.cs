@@ -22,6 +22,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
@@ -170,7 +171,7 @@ namespace MCGalaxy {
             if (ListUpdate.Count > 0 && bulkSender == null)
                 bulkSender = new BufferedBlockSender(this);
             
-            ushort block;
+            BlockID block;
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
@@ -227,13 +228,13 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, ushort block, bool overRide = false) {
+        internal bool AddUpdate(int b, BlockID block, bool overRide = false) {
             PhysicsArgs args = default(PhysicsArgs);
             args.ExtBlock = block >= Block.Extended;
             return AddUpdate(b, block, args, overRide);
         }
         
-        internal bool AddUpdate(int b, ushort block, PhysicsArgs data, bool overRide = false) {
+        internal bool AddUpdate(int b, BlockID block, PhysicsArgs data, bool overRide = false) {
             try {
                 int x = b % Width;
                 int y = (b / Width) / Length;
@@ -323,13 +324,13 @@ namespace MCGalaxy {
                     ushort x, y, z;
                     IntToPos(C.b, out x, out y, out z);
                     
-                    ushort block = Block.FromRaw(args.Value1, args.ExtBlock);
+                    BlockID block = Block.FromRaw(args.Value1, args.ExtBlock);
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 } else if (args.Type2 == PhysicsArgs.Revert) {
                     ushort x, y, z;
                     IntToPos(C.b, out x, out y, out z);
                     
-                    ushort block = Block.FromRaw(args.Value2, args.ExtBlock);
+                    BlockID block = Block.FromRaw(args.Value2, args.ExtBlock);
                     Blockchange(C.b, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {
@@ -338,7 +339,7 @@ namespace MCGalaxy {
         }
         
         
-        internal bool ActivatesPhysics(ushort block) {
+        internal bool ActivatesPhysics(BlockID block) {
             if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
             if (Props[block].IsDoor || Props[block].IsTDoor) return false;
             if (Props[block].OPBlock) return false;

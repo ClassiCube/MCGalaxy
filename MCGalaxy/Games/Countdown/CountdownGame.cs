@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Commands.World;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     public sealed class CountdownGame : IGame {
@@ -372,7 +373,7 @@ namespace MCGalaxy.Games {
         }
         
         
-        void SetGlassTube(byte block, byte floorBlock) {
+        void SetGlassTube(BlockID block, BlockID floorBlock) {
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
             Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block, Map);
             Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block, Map);
@@ -381,8 +382,7 @@ namespace MCGalaxy.Games {
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock, Map);
         }
         
-        static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte raw, Level lvl) {
-            ushort block = (ushort)raw;
+        static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block, Level lvl) {
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)

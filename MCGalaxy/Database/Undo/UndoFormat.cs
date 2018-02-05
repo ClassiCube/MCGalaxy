@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Undo {
     
@@ -129,7 +130,7 @@ namespace MCGalaxy.Undo {
 
     public struct UndoFormatEntry {
         public ushort X, Y, Z;
-        public ushort Block;
-        public ushort NewBlock;
+        public BlockID Block;
+        public BlockID NewBlock;
     }
 }

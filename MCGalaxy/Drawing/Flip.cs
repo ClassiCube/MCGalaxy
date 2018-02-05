@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing {
     public static class Flip {
@@ -28,10 +29,10 @@ namespace MCGalaxy.Drawing {
             newState.Height = angle == 180 ? state.Height : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Height;
             
-            ushort[] transform;
+            BlockID[] transform;
             if (angle == 90 || angle == 270) transform = Transform(defs, rotX_90_270, null);
-            else if (angle == 180) transform = Transform(defs, rotX_180, null);
-            else transform = Transform(defs, null, null);
+            else if (angle == 180)           transform = Transform(defs, rotX_180,    null);
+            else                             transform = Transform(defs, null,        null);
             
             int[] m = new int[] { posX, negZ, posY };
             if (angle == 180) { m[1] = negY; m[2] = negZ; }
@@ -47,11 +48,11 @@ namespace MCGalaxy.Drawing {
             newState.Width = angle == 180 ? state.Width : state.Length;
             newState.Length = angle == 180 ? state.Length : state.Width;
             
-            ushort[] transform;
-            if (angle == 90) transform = Transform(defs, null, rotY_90);
+            BlockID[] transform;
+            if (angle == 90)       transform = Transform(defs, null,     rotY_90);
             else if (angle == 180) transform = Transform(defs, rotY_180, null);
-            else if (angle == 270) transform = Transform(defs, null, rotY_270);
-            else transform = Transform(defs, null, null);
+            else if (angle == 270) transform = Transform(defs, null,     rotY_270);
+            else                   transform = Transform(defs, null,     null);
 
             int[] m = new int[] { negZ, posY, posX };
             if (angle == 180) { m[0] = negX; m[2] = negZ; }
@@ -66,7 +67,7 @@ namespace MCGalaxy.Drawing {
             newState.Width = angle == 180 ? state.Width : state.Height;
             newState.Height = angle == 180 ? state.Height : state.Width;
             
-            ushort[] transform;
+            BlockID[] transform;
             if (angle == 90 || angle == 270) transform = Transform(defs, rotZ_90_270, null);
             else if (angle == 180) transform = Transform(defs, rotZ_180,null);
             else transform = Transform(defs, null, null);
@@ -77,12 +78,12 @@ namespace MCGalaxy.Drawing {
             return Rotate(state, newState, m, transform);
         }
 
-        static CopyState Rotate(CopyState state, CopyState flipped, int[] m, ushort[] transform) {
+        static CopyState Rotate(CopyState state, CopyState flipped, int[] m, BlockID[] transform) {
             int volume = state.Volume;
             for (int i = 0; i < volume; i++) {
                 ushort x, y, z;
                 state.GetCoords(i, out x, out y, out z);
-                ushort block = transform[state.Get(i)];
+                BlockID block = transform[state.Get(i)];
                 
                 flipped.Set(block,
                             Rotate(m[0], x, y, z, state),
@@ -131,7 +132,7 @@ namespace MCGalaxy.Drawing {
             int midZ = (state.Length + 1) / 2, maxZ = state.Length - 1;
             state.OriginZ = state.OppositeOriginZ;
             state.Offset.Z = -state.Offset.Z;
-            ushort[] transform = Transform(defs, mirrorX, null);
+            BlockID[] transform = Transform(defs, mirrorX, null);
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < midZ; z++) {
@@ -140,8 +141,8 @@ namespace MCGalaxy.Drawing {
                     int end = state.GetIndex(0, y, endZ);
                     
                     for (int x = 0; x < state.Width; x++) {
-                        ushort blockA = transform[state.Get(start)];
-                        ushort blockB = transform[state.Get(end)];
+                        BlockID blockA = transform[state.Get(start)];
+                        BlockID blockB = transform[state.Get(end)];
                         state.Set(blockB, start); state.Set(blockA, end);
                         start++; end++;
                     }
@@ -154,7 +155,7 @@ namespace MCGalaxy.Drawing {
             int midY = (state.Height + 1) / 2, maxY = state.Height - 1;
             state.OriginY = state.OppositeOriginY;
             state.Offset.Y = -state.Offset.Y;
-            ushort[] transform = Transform(defs, mirrorY, null);
+            BlockID[] transform = Transform(defs, mirrorY, null);
             
             for (int y = 0; y < midY; y++) {
                 int endY = maxY - y;
@@ -163,8 +164,8 @@ namespace MCGalaxy.Drawing {
                 
                 for (int z = 0; z < state.Length; z++) {
                     for (int x = 0; x < state.Width; x++) {
-                        ushort blockA = transform[state.Get(start)];
-                        ushort blockB = transform[state.Get(end)];
+                        BlockID blockA = transform[state.Get(start)];
+                        BlockID blockB = transform[state.Get(end)];
                         state.Set(blockB, start); state.Set(blockA, end);
                         start++; end++;
                     }
@@ -177,7 +178,7 @@ namespace MCGalaxy.Drawing {
             int midX = (state.Width + 1) / 2, maxX = state.Width - 1;
             state.OriginX = state.OppositeOriginX;
             state.Offset.X = -state.Offset.X;
-            ushort[] transform = Transform(defs, mirrorZ, null);
+            BlockID[] transform = Transform(defs, mirrorZ, null);
             
             for (int y = 0; y < state.Height; y++) {
                 for (int z = 0; z < state.Length; z++) {
@@ -186,8 +187,8 @@ namespace MCGalaxy.Drawing {
                         int start = state.GetIndex(x, y, z);
                         int end = state.GetIndex(endX, y, z);
                         
-                        ushort blockA = transform[state.Get(start)];
-                        ushort blockB = transform[state.Get(end)];
+                        BlockID blockA = transform[state.Get(start)];
+                        BlockID blockB = transform[state.Get(end)];
                         state.Set(blockB, start); state.Set(blockA, end);
                     }
                 }
@@ -195,10 +196,10 @@ namespace MCGalaxy.Drawing {
         }
         
         
-        static ushort[] Transform(BlockDefinition[] defs, string[] mirrorDirs, string[] rotateDirs) {
-            ushort[] transform = new ushort[Block.ExtendedCount];
+        static BlockID[] Transform(BlockDefinition[] defs, string[] mirrorDirs, string[] rotateDirs) {
+            BlockID[] transform = new BlockID[Block.ExtendedCount];
             for (int i = 0; i < transform.Length; i++) {
-                transform[i] = (ushort)i;
+                transform[i] = (BlockID)i;
             }
             if (mirrorDirs == null && rotateDirs == null) return transform;
             
@@ -216,7 +217,7 @@ namespace MCGalaxy.Drawing {
                 }
                 
                 if (transformed == null) continue;
-                ushort src = Block.FromRaw(defs[i].BlockID);
+                BlockID src = Block.FromRaw(defs[i].BlockID);
                 transform[src] = Block.FromRaw(transformed.BlockID);
             }
             return transform;

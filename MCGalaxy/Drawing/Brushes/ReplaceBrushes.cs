@@ -20,13 +20,14 @@ using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {    
     public sealed class ReplaceBrush : Brush {
-        readonly ushort[] include;
-        readonly ushort target;
+        readonly BlockID[] include;
+        readonly BlockID target;
         
-        public ReplaceBrush(ushort[] include, ushort target) {
+        public ReplaceBrush(BlockID[] include, BlockID target) {
             this.include = include; this.target = target;
         }
         
@@ -38,7 +39,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override ushort NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ushort block = op.Level.GetBlock(x, y, z);
+            BlockID block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < include.Length; i++) {
                 if (block == include[i]) return target;
@@ -48,11 +49,11 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     public sealed class ReplaceNotBrush : Brush {
-        readonly ushort[] exclude;
-        readonly ushort target;
+        readonly BlockID[] exclude;
+        readonly BlockID target;
         
-        public ReplaceNotBrush(ushort[] include, ushort target) {
-            this.exclude = include; this.target = target;
+        public ReplaceNotBrush(BlockID[] exclude, BlockID target) {
+            this.exclude = exclude; this.target = target;
         }
         
         public override string Name { get { return "ReplaceNot"; } }
@@ -63,7 +64,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override ushort NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
-            ushort block = op.Level.GetBlock(x, y, z);
+            BlockID block = op.Level.GetBlock(x, y, z);
             
             for (int i = 0; i < exclude.Length; i++) {
                 if (block == exclude[i]) return Block.Invalid;

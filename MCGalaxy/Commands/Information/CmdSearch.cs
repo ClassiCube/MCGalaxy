@@ -18,6 +18,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
     public class CmdSearch : Command {
@@ -50,8 +51,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void SearchBlocks(Player p, string keyword, string modifier) {
-            List<ushort> blocks = new List<ushort>();
-            for (ushort block = 0; block < Block.Count; block++) {
+            List<BlockID> blocks = new List<BlockID>();
+            for (BlockID block = 0; block < Block.Count; block++) {
                 if (!Block.Undefined(block)) blocks.Add(block);
             }
             
@@ -63,7 +64,7 @@ namespace MCGalaxy.Commands.Info {
             } 
 
             List<string> blockNames = FilterList(blocks, keyword, 
-                                                 b => CmdBlocks.GetBlockName(p, b), null,
+                                                 b => Block.GetName(p, b), null,
                                                  b => CmdBlocks.FormatBlockName(p, b));
             OutputList(p, keyword, "search blocks", "blocks", modifier, blockNames);
         }

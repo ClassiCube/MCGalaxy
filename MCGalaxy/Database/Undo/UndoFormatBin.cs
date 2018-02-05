@@ -57,10 +57,10 @@ namespace MCGalaxy.Undo {
                     pos.Y = U16(temp, offset + 4);
                     pos.Z = U16(temp, offset + 6);
                     
-                    pos.Block.BlockID = temp[offset + 8]; 
-                    pos.Block.ExtID = temp[offset + 9];
-                    pos.NewBlock.BlockID = temp[offset + 10]; 
-                    pos.NewBlock.ExtID = temp[offset + 11];
+                    pos.Block = temp[offset + 8]; 
+                    if (pos.Block == Block.custom_block) pos.Block = temp[offset + 9];
+                    pos.NewBlock = temp[offset + 10]; 
+                    if (pos.NewBlock == Block.custom_block) pos.NewBlock = temp[offset + 11];
                     args.Output(pos);
                 }
             }

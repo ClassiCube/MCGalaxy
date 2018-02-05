@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -33,8 +34,8 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int dy = -dirY; dy != 2 * dirY; dy += dirY)
                     for (int dz = -dirZ; dz != 2 * dirZ; dz += dirZ)
             {
-                ushort below = lvl.GetBlock((ushort)(x + dx),(ushort)(y + dy - 1), (ushort)(z + dz));
-                ushort block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));                
+                BlockID below = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy - 1), (ushort)(z + dz));
+                BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy),     (ushort)(z + dz));
                 bool isRails = lvl.Props[below].IsRails;
                 
                 if (isRails && (block == Block.Air || block == Block.Water) 

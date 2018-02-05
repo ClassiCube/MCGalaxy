@@ -17,6 +17,7 @@
 */
 using MCGalaxy.Blocks;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBlockSet : Command {
@@ -28,9 +29,9 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces();
             if (args.Length == 1) { Help(p); return; }
             
-            ushort block;
+            BlockID block;
             if (!CommandParser.GetBlock(p, args[0], out block)) return;
-            if (!CommandParser.IsBlockAllowed(p, "change permissions of", (ushort)block)) return;
+            if (!CommandParser.IsBlockAllowed(p, "change permissions of", block)) return;
 
             if (args.Length == 2 && args[1][0] == '+') {
                 Group grp = GetGroup(p, args[1].Substring(1));
@@ -80,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
             return grp;
         }
         
-        static void UpdatePermissions(ushort block, Player p, string message) {
+        static void UpdatePermissions(BlockID block, Player p, string message) {
             BlockPerms.Save();
             BlockPerms.Load();
             if (block < Block.CpeCount) {

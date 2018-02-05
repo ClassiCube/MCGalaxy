@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     
@@ -25,11 +26,11 @@ namespace MCGalaxy.Drawing.Brushes {
     /// optional frequency counts (e.g. random and cloudy brushes) </summary>
     public static class FrequencyBrush {
         
-        public static ushort[] GetBlocks(BrushArgs args, out int[] count,
+        public static BlockID[] GetBlocks(BrushArgs args, out int[] count,
                                            Predicate<string> argFilter, Predicate<string> argHandler) {
             string[] parts = args.Message.SplitSpaces();
             Player p = args.Player;
-            ushort[] blocks;
+            BlockID[] blocks;
             GetRaw(parts, argFilter, args, out blocks, out count);
             
             // check if we're allowed to place the held block
@@ -44,7 +45,7 @@ namespace MCGalaxy.Drawing.Brushes {
                     continue;
                 }
                 
-                ushort block;
+                BlockID block;
                 int sepIndex = parts[i].IndexOf('/');
                 string name = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
                 if (!CommandParser.GetBlockIfAllowed(p, name, out block, true)) return null;
@@ -70,7 +71,7 @@ namespace MCGalaxy.Drawing.Brushes {
             }
             
             // For 0 or 1 blocks given, treat second block as 'unchanged'.
-            blocks = new ushort[Math.Max(2, bCount)];
+            blocks = new BlockID[Math.Max(2, bCount)];
             count = new int[blocks.Length];
             for (int i = 0; i < count.Length; i++) {
                 count[i] = 1;
@@ -81,11 +82,11 @@ namespace MCGalaxy.Drawing.Brushes {
             if (bCount == 0) blocks[0] = args.Block;
         }
         
-        public static ushort[] Combine(ushort[] toAffect, int[] count) {
+        public static BlockID[] Combine(BlockID[] toAffect, int[] count) {
             int sum = 0;
             for (int i = 0; i < count.Length; i++) sum += count[i];
             
-            ushort[] blocks = new ushort[sum];
+            BlockID[] blocks = new ushort[sum];
             for (int i = 0, index = 0; i < toAffect.Length; i++) {
                 for (int j = 0; j < count[i]; j++)
                     blocks[index++] = toAffect[i];
@@ -107,10 +108,10 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public override Brush Construct(BrushArgs args) {
             int[] count;
-            ushort[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
             
             if (toAffect == null) return null;
-            ushort[] blocks = FrequencyBrush.Combine(toAffect, count);
+            BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
             return new RandomBrush(blocks);
         }
     }

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMeasure : Command {      
@@ -26,10 +27,10 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            ushort[] toCount = null;
+            BlockID[] toCount = null;
             if (message.Length > 0) {
                 string[] args = message.SplitSpaces();
-                toCount = new ushort[args.Length];
+                toCount = new BlockID[args.Length];
                 for (int i = 0; i < toCount.Length; i++) {
                     if (!CommandParser.GetBlock(p, args[i], out toCount[i])) return;
                 }
@@ -39,8 +40,8 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, "Selecting region for %SMeasure", toCount, DoMeasure);
         }
         
-        bool DoMeasure(Player p, Vec3S32[] m, object state, ushort block) {
-            ushort[] toCount = (ushort[])state;
+        bool DoMeasure(Player p, Vec3S32[] m, object state, BlockID block) {
+            BlockID[] toCount = (BlockID[])state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
             int[] counts = new int[Block.Extended];
             
@@ -64,13 +65,13 @@ namespace MCGalaxy.Commands.Building {
                 title = "Top " + toCount.Length + " block types: ";
             }
             
-            string blocks = toCount.Join(bl => p.level.BlockName(bl) + FormatCount(counts[bl], volume));
+            string blocks = toCount.Join(bl => Block.GetName(p, bl) + FormatCount(counts[bl], volume));
             Player.Message(p, title +  blocks);
             return true;
         }
         
         static ushort[] MostFrequentBlocks(int[] countsRaw) {
-        	ushort[] blocks = new ushort[Block.ExtendedCount];
+            BlockID[] blocks = new BlockID[Block.ExtendedCount];
             int[] counts = new int[Block.ExtendedCount]; // copy array as Sort works in place
             int total = 0;
             
@@ -82,7 +83,7 @@ namespace MCGalaxy.Commands.Building {
             Array.Sort(counts, blocks);
             
             if (total > 5) total = 5;
-            ushort[] mostFrequent = new ushort[total];
+            BlockID[] mostFrequent = new BlockID[total];
             for (int i = 0; i < total; i++) {
                 mostFrequent[i] = blocks[blocks.Length - 1 - i];
             }

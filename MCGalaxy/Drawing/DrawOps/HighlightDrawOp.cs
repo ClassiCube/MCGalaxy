@@ -22,6 +22,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using MCGalaxy.Undo;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
     
@@ -32,10 +33,10 @@ namespace MCGalaxy.Drawing.Ops {
         public DateTime Start = DateTime.MinValue;
         
         /// <summary> Block to highlight placements with. </summary>
-        public ushort PlaceHighlight = Block.Green;
+        public BlockID PlaceHighlight = Block.Green;
         
         /// <summary> Block to highlight deletions with. </summary>
-        public ushort DeleteHighlight = Block.Red;
+        public BlockID DeleteHighlight = Block.Red;
         
         
         internal string who;
@@ -75,13 +76,13 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void HighlightBlock(BlockDBEntry e) {
-            ushort oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
             if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
-            ushort newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
+            BlockID newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
-            ushort highlight = (newBlock == Block.Air
-                                  || Block.Convert(oldBlock.BlockID) == Block.Water || oldBlock.BlockID == Block.StillWater
-                                  || Block.Convert(oldBlock.BlockID) == Block.Lava || oldBlock.BlockID == Block.StillLava)
+            BlockID highlight = (newBlock == Block.Air
+                                  || Block.Convert(oldBlock) == Block.Water || oldBlock == Block.StillWater
+                                  || Block.Convert(oldBlock) == Block.Lava  || oldBlock == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;
             
             int x = e.Index % dims.X;
@@ -109,14 +110,14 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void OldHighlightBlock(UndoFormatEntry P) {
-            ushort old = P.Block, newBlock = P.NewBlock;
+            BlockID old = P.Block, newBlock = P.NewBlock;
             if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
             if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
             
             DrawOpBlock block;
             block.Block = (newBlock == Block.Air
-                           || Block.Convert(old.BlockID) == Block.Water || old.BlockID == Block.StillWater
-                           || Block.Convert(old.BlockID) == Block.Lava || old.BlockID == Block.StillLava)
+                           || Block.Convert(old) == Block.Water || old == Block.StillWater
+                           || Block.Convert(old) == Block.Lava  || old == Block.StillLava)
                 ? DeleteHighlight : PlaceHighlight;
                         
             block.X = P.X; block.Y = P.Y; block.Z = P.Z;

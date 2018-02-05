@@ -22,6 +22,7 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
 
@@ -48,19 +49,19 @@ namespace MCGalaxy {
         
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
-        public ushort GetBlock(ushort x, ushort y, ushort z) {
+        public BlockID GetBlock(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return Block.Invalid;
             byte raw = blocks[x + Width * (z + y * Length)];
-            return raw != Block.custom_block ? raw : (ushort)(Block.Extended | GetExtTileNoCheck(x, y, z));
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
-        public ushort GetBlock(ushort x, ushort y, ushort z, out int index) {
+        public BlockID GetBlock(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return Block.Invalid; }
             index = x + Width * (z + y * Length);
             byte raw = blocks[x + Width * (z + y * Length)];
-            return raw != Block.custom_block ? raw : (ushort)(Block.Extended | GetExtTileNoCheck(x, y, z));
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
         }
         
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
@@ -158,7 +159,7 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
 
-        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref ushort block) {
+        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref BlockID block) {
             if (!(block == Block.TNT || block == Block.TNT_Big || block == Block.TNT_Nuke || block == Block.TNT_Small))
                 return true;
             
@@ -188,7 +189,7 @@ namespace MCGalaxy {
             return access == AccessResult.Whitelisted || access == AccessResult.Allowed;
         }
         
-        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, ushort old, ushort block) {
+        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
             if (!p.group.Blocks[old] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             Zone[] zones = Zones.Items;
@@ -221,7 +222,7 @@ namespace MCGalaxy {
             return CheckRank(p);
         }
         
-        public void Blockchange(Player p, ushort x, ushort y, ushort z, ushort block) {
+        public void Blockchange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             if (DoBlockchange(p, x, y, z, block) == 2) {
                 Player.GlobalBlockchange(this, x, y, z, block);
             }
@@ -232,7 +233,7 @@ namespace MCGalaxy {
         /// 1 - old block was same as new block visually (e.g. white to door_white)<br/>
         /// 2 - old block was different to new block visually </summary>
         /// <remarks> The return code can be used to avoid sending redundant block changes. </remarks>
-        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, ushort block, bool drawn = false) {
+        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, BlockID block, bool drawn = false) {
             string errorLocation = "start";
             try
             {
@@ -292,22 +293,22 @@ namespace MCGalaxy {
             AddCheck(b, false, args);
         }
         
-        public void Blockchange(int b, ushort block, bool overRide = false,
+        public void Blockchange(int b, BlockID block, bool overRide = false,
                                 PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) { //Block change made by physics
             if (DoPhysicsBlockchange(b, block, overRide, data, addUndo))
                 Player.GlobalBlockchange(this, b, block);
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, ushort block, bool overRide = false,
+        public void Blockchange(ushort x, ushort y, ushort z, BlockID block, bool overRide = false,
                                 PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             Blockchange(PosToInt(x, y, z), block, overRide, data, addUndo); //Block change made by physics
         }
         
-        public void Blockchange(ushort x, ushort y, ushort z, ushort block) {
+        public void Blockchange(ushort x, ushort y, ushort z, BlockID block) {
             Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs)); //Block change made by physics
         }
         
-        internal bool DoPhysicsBlockchange(int b, ushort block, bool overRide = false,
+        internal bool DoPhysicsBlockchange(int b, BlockID block, bool overRide = false,
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
             ushort old;
@@ -391,9 +392,9 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
-        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, ushort block,
+        public void UpdateBlock(Player p, ushort x, ushort y, ushort z, BlockID block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
-            ushort old = GetBlock(x, y, z);
+            BlockID old = GetBlock(x, y, z);
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
             int type = DoBlockchange(p, x, y, z, block, drawn);
             if (type == 0) return; // no block change performed
@@ -406,38 +407,38 @@ namespace MCGalaxy {
             else Player.GlobalBlockchange(this, x, y, z, block);
         }
         
-        public BlockDefinition GetBlockDef(ushort block) {
+        public BlockDefinition GetBlockDef(BlockID block) {
             if (block.BlockID == Block.custom_block) return CustomBlockDefs[block.ExtID];
-            if (block.BlockID == Block.Air) return null;
+            if (block == Block.Air) return null;
             
-            if (block.BlockID >= Block.CpeCount) {
-                return CustomBlockDefs[Block.Convert(block.BlockID)];
+            if (block >= Block.CpeCount) {
+                return CustomBlockDefs[Block.Convert(block)];
             } else {
-                return CustomBlockDefs[block.BlockID];
+                return CustomBlockDefs[block];
             }
         }
         
-        public string BlockName(ushort block) {
-            if (block.IsPhysicsType) return Block.Name(block.BlockID);
+        public string BlockName(BlockID block) {
+            if (block.IsPhysicsType) return Block.Name(block);
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block.BlockID != Block.custom_block ? Block.Name(block.BlockID) : block.ExtID.ToString();
+            return block.BlockID != Block.custom_block ? Block.Name(block) : block.ExtID.ToString();
         }
         
-        public byte CollideType(ushort block) {
+        public byte CollideType(BlockID block) {
             BlockDefinition def = GetBlockDef(block);
             byte collide = def != null ? def.CollideType : MCGalaxy.Blocks.CollideType.Solid;
             
-            if (def == null && !block.IsCustomType)
-                return DefaultSet.Collide(Block.Convert(block.BlockID));
+            if (def == null && block < Block.Extended)
+                return DefaultSet.Collide(Block.Convert(block));
             return collide;
         }
         
-        public bool LightPasses(ushort block) {
+        public bool LightPasses(BlockID block) {
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return !def.BlocksLight || def.BlockDraw == DrawType.TransparentThick || def.MinZ > 0;
-            return Block.LightPass(block.BlockID);
+            return Block.LightPass(block);
         }
     }
 }

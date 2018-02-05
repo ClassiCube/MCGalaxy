@@ -19,29 +19,30 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
 
     public class HollowDrawOp : CuboidDrawOp {      
         public override string Name { get { return "Hollow"; } }
-        public ushort Skip;
+        public BlockID Skip;
         
-        static bool CanHollow(byte block, bool andAir = false) {
+        static bool CanHollow(BlockID block, bool andAir = false) {
+            block = Block.Convert(block);
             if (andAir && block == Block.Air) return true;
             return block >= Block.Water && block <= Block.StillLava;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            ushort air = Block.Air;
             
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool hollow = true;
-                byte tile = Level.GetTile(x, y, z);
-                if (!CanHollow(Block.Convert(tile), true) && tile != Skip) {
+                BlockID block = Level.GetBlock(x, y, z);
+                if (!CanHollow(block, true) && block != Skip) {
                     CheckTile(x - 1, y, z, ref hollow);
                     CheckTile(x + 1, y, z, ref hollow);
                     CheckTile(x, y - 1, z, ref hollow);
@@ -52,20 +53,19 @@ namespace MCGalaxy.Drawing.Ops {
                     hollow = false;
                 }
                 
-                if (hollow) output(Place(x, y, z, air));
+                if (hollow) output(Place(x, y, z, Block.Air));
             }
         }
         
         void CheckTile(int x, int y, int z, ref bool hollow) {
-            ushort tile = Level.GetBlock((ushort)x, (ushort)y, (ushort)z);
-            if (CanHollow(Block.Convert(tile)) || tile == Skip)
-                hollow = false;
+            BlockID block = Level.GetBlock((ushort)x, (ushort)y, (ushort)z);
+            if (CanHollow(block) || block == Skip) hollow = false;
         }
     }
     
     public class OutlineDrawOp : CuboidDrawOp {        
         public override string Name { get { return "Outline"; } }
-        public ushort Target;
+        public BlockID Target;
         public bool Above = true, Layer = true, Below = true;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -107,7 +107,6 @@ namespace MCGalaxy.Drawing.Ops {
             
             int repeat = RainbowBrush.blocks.Length;
             int i = repeat - 1;
-            ushort block = default(ushort);
             brush = new RainbowBrush();            
             
             for (ushort y = p1.Y; y <= p2.Y; y++) {
@@ -121,7 +120,7 @@ namespace MCGalaxy.Drawing.Ops {
                         if (!Level.IsAirAt(x, y, z)) {
                             // Need this because RainbowBrush works on world coords
                             Coords.X = (ushort)i; Coords.Y = 0; Coords.Z = 0;
-                            block = brush.NextBlock(this);
+                            BlockID block = brush.NextBlock(this);
                             output(Place(x, y, z, block));
                         }
                     }

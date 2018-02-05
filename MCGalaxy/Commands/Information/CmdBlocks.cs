@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdBlocks : Command {
@@ -56,39 +57,35 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static List<ushort> BasicBlocks() {
-            List<ushort> blocks = new List<ushort>(Block.CpeCount);
-            for (ushort block = 0; block < Block.CpeCount; block++) { 
+        static List<BlockID> BasicBlocks() {
+            List<BlockID> blocks = new List<BlockID>(Block.CpeCount);
+            for (BlockID block = 0; block < Block.CpeCount; block++) { 
                 blocks.Add(block); 
             }
             return blocks;
         }
         
-        static List<ushort> ComplexBlocks() {
-            List<ushort> blocks = new List<ushort>(Block.Count);
-            for (ushort block = Block.CpeCount; block < Block.Count; block++) {
+        static List<BlockID> ComplexBlocks() {
+            List<BlockID> blocks = new List<BlockID>(Block.Count);
+            for (BlockID block = Block.CpeCount; block < Block.Count; block++) {
                 if (!Block.Undefined(block)) blocks.Add(block);
             }
             return blocks;
         }
         
-        static List<ushort> RankBlocks(LevelPermission perm) {
-            List<ushort> blocks = new List<ushort>(Block.Count);
+        static List<BlockID> RankBlocks(LevelPermission perm) {
+            List<BlockID> blocks = new List<BlockID>(Block.Count);
             foreach (BlockPerms perms in BlockPerms.List) {
-                if (!BlockPerms.UsableBy(perm, perms.BlockID)) continue;
-                if (Block.Undefined(perms.BlockID)) continue;
-                blocks.Add(perms.BlockID);
+                if (!BlockPerms.UsableBy(perm, perms.ID)) continue;
+                if (Block.Undefined(perms.ID)) continue;
+                blocks.Add(perms.ID);
             }
             return blocks;
         }
         
-        internal static string GetBlockName(Player p, ushort block) {
-            return Player.IsSuper(p) ? Block.Name(block) : p.level.BlockName(block);
-        }
-        
-        internal static string FormatBlockName(Player p, ushort block) {
+        internal static string FormatBlockName(Player p, BlockID block) {
             BlockPerms perms = BlockPerms.List[block];
-            return Group.GetColor(perms.MinRank) + GetBlockName(p, block);
+            return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         
         static void OutputBlockData(Player p, string block) {

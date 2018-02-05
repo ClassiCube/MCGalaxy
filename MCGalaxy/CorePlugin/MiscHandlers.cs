@@ -22,6 +22,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Core {
     internal static class MiscHandlers {
@@ -79,8 +80,8 @@ namespace MCGalaxy.Core {
             if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
             
             if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;
-            ushort block = p.level.GetBlock(x, y, z);
-            bool isMB = p.level.Props[block].IsMessageBlock;
+            BlockID block = p.level.GetBlock(x, y, z);
+            bool isMB     = p.level.Props[block].IsMessageBlock;
             bool isPortal = p.level.Props[block].IsPortal;
 
             if (isMB) { MessageBlock.Handle(p, x, y, z, true); }

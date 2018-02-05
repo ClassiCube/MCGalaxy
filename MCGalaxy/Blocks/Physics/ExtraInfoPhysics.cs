@@ -148,11 +148,11 @@ namespace MCGalaxy.Blocks.Physics {
                 if (block < Block.Red || block > Block.Pink) {
                     lvl.AddUpdate(C.b, Block.Red, C.data);
                 } else {
-                    byte next = block == Block.Pink ? Block.Red : (byte)(block + 1);
+                    ushort next = block == Block.Pink ? Block.Red : (ushort)(block + 1);
                     lvl.AddUpdate(C.b, next);
                 }
             } else {
-                lvl.AddUpdate(C.b, (byte)rand.Next(Block.Red, Block.Pink + 1));
+                lvl.AddUpdate(C.b, (ushort)rand.Next(Block.Red, Block.Pink + 1));
             }
         }
         
@@ -164,7 +164,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (!(below == Block.Air || below == Block.Lava || below == Block.Water))
                 return;
             
-            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], false, C.data)) {
+            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
                 lvl.AddUpdate(C.b, Block.Air);
                 C.data.ResetTypes();
             }
