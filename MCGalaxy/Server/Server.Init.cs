@@ -131,7 +131,7 @@ namespace MCGalaxy {
             InitZombieSurvival();
             InitLavaSurvival();
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
-                                      TimeSpan.FromMilliseconds(BlockQueue.time));
+                                      TimeSpan.FromMilliseconds(BlockQueue.Interval));
             Critical.QueueRepeat(ServerTasks.LocationChecks, null,
                                  TimeSpan.FromMilliseconds(20));
 

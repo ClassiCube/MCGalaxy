@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Generator.Foliage {
     public sealed class AshTree : Tree {
@@ -68,7 +69,7 @@ namespace MCGalaxy.Generator.Foliage {
             DrawOp op = new EllipsoidDrawOp();
             Brush brush = new RandomBrush(new ushort[] { Block.Leaves });
             op.SetMarks(marks);
-            op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, b.Block.BlockID));
+            op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, (BlockRaw)b.Block));
             
             Vec3S32 p1 = new Vec3S32(x, y + branchStart, z);
             Vec3S32 p2 = new Vec3S32(x + dx, y + branchMax, z + dz);

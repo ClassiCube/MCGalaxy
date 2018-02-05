@@ -166,7 +166,7 @@ namespace MCGalaxy.Core {
                 p.Kick(null, ServerConfig.DefaultBanMessage, true);
                 return false;
             }
-        	
+            
             if (group.Permission == LevelPermission.Banned) {
                 string banner, reason, prevRank;
                 DateTime time;

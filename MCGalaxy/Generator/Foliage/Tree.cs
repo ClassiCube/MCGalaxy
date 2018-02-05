@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Generator.Foliage {
 
@@ -55,8 +56,8 @@ namespace MCGalaxy.Generator.Foliage {
                 for (int dz = -size; dz <= size; ++dz)
                     for (int dx = -size; dx <= size; ++dx)
             {
-                byte tile = lvl.GetTile((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-                if (tile == Block.Log || tile == Block.Green) return true;
+                BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                if (block == Block.Log || block == Block.Green) return true;
             }
             return false;
         }

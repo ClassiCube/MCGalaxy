@@ -90,8 +90,10 @@ namespace MCGalaxy.Network {
             // Store on stack instead of performing function call for every block in map
             byte* conv = stackalloc byte[Block.Count];
             byte* convCPE = stackalloc byte[Block.Count];
-            for (int i = 0; i < 256; i++)
-                conv[i] = Block.Convert((byte)i);
+            for (int i = 0; i < 256; i++) {
+                conv[i] = (byte)Block.Convert((byte)i);
+                if (conv[i] > Block.CpeCount) conv[i] = Block.Orange;
+            }
             
             // Convert custom blocks (that overwrote core blocks) to their fallbacks
             if (!p.hasBlockDefs) {

@@ -80,8 +80,8 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Palette {0} does not exist.", args[1]); return;
             }
             
-            byte block = GetBlock(p, args[2]);
-            if (block == Block.Invalid) return;
+            BlockID block;
+            if (!CommandParser.GetBlock(p, args[2], out block)) return;
             
             ColorDesc rgb = default(ColorDesc);
             if (!CommandParser.GetHex(p, args[3], ref rgb)) return;
@@ -108,13 +108,13 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Palette {0} does not exist.", args[1]); return;
             }
             
-            byte block = GetBlock(p, args[2]);
-            if (block == Block.Invalid) return;
+            BlockID block;
+            if (!CommandParser.GetBlock(p, args[2], out block)) return;
             RemoveEntry(p, palette, block);
         }
         
         
-        static void RemoveEntry(Player p, ImagePalette palette, byte block) {
+        static void RemoveEntry(Player p, ImagePalette palette, BlockID block) {
             PaletteEntry[] entries = palette.Entries;
             if (entries == null) {
                 Player.Message(p, "Block not found in entries of palette {0}", palette.Name);
@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Building {
             
             List<PaletteEntry> newEntries = new List<PaletteEntry>();
             foreach (PaletteEntry entry in entries) {
-                if (entry.Raw == block) continue;
+                if (entry.Block == block) continue;
                 newEntries.Add(entry);
             }
             
@@ -133,17 +133,6 @@ namespace MCGalaxy.Commands.Building {
             palette.Entries = newEntries.ToArray();
             palette.Save();
             Player.Message(p, "Removed block from entries of palette {0}", palette.Name);
-        }
-
-        static byte GetBlock(Player p, string name) {
-            BlockID block;
-            if (!CommandParser.GetBlock(p, name, out block)) return Block.Invalid;
-            
-            if (Block.IsPhysicsType(block)) {
-                Player.Message(p, "Physics blocks may not be used for palettes."); return Block.Invalid;
-            }
-            
-            return block.RawID;
         }
         
         void HandleEntries(Player p, string[] args) {
@@ -160,8 +149,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static string FormatEntry(PaletteEntry e, Player p) {
-            BlockID block = Block.FromRaw(e.Raw);
-            return Block.GetName(p, block) + " - " + Utils.Hex(e.R, e.G, e.B);
+            return Block.GetName(p, e.Block) + " - " + Utils.Hex(e.R, e.G, e.B);
         }
 
         public override void Help(Player p) {

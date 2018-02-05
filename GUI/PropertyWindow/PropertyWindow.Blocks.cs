@@ -55,12 +55,11 @@ namespace MCGalaxy.Gui {
                 if (!blockPropsChanged[i].Changed) continue;
                 Block.Props[i] = blockPropsChanged[i];
             }
+            
             foreach (BlockPerms perms in blockPermsChanged) {
-                BlockPerms.List[perms.Block] = perms;
-                if (perms.Block < Block.CpeCount) {
-                    BlockPerms.ResendAllBlockPermissions();
-                }
+                BlockPerms.List[perms.ID] = perms;
             }
+            BlockPerms.ResendAllBlockPermissions();
             
             BlockProps.Save("core", Block.Props, Block.CorePropsLock, null);
             BlockPerms.Save();
@@ -79,7 +78,7 @@ namespace MCGalaxy.Gui {
         void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
             blockID = Block.Byte(blk_list.SelectedItem.ToString());
             blockPermsOrig = BlockPerms.List[blockID];
-            blockPerms = blockPermsChanged.Find(p => p.Block == blockID);
+            blockPerms = blockPermsChanged.Find(p => p.ID == blockID);
             BlockInitSpecificArrays();
             blockSupressEvents = true;
             

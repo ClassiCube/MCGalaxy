@@ -42,13 +42,13 @@ namespace MCGalaxy.Commands.Maintenance {
             if (cmd == "bs") {
                 if (!CommandParser.GetInt(p, args[1], "Blocks per interval", ref value, 0)) return;
                 
-                BlockQueue.blockupdates = value;
-                Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.blockupdates);
+                BlockQueue.UpdatesPerTick = value;
+                Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.UpdatesPerTick);
             } else if (cmd == "ts") {
                 if (!CommandParser.GetInt(p, args[1], "Block interval", ref value, 50)) return;
                 
-                BlockQueue.time = value;
-                Player.Message(p, "Block interval is now {0}.", BlockQueue.time);
+                BlockQueue.Interval = value;
+                Player.Message(p, "Block interval is now {0}.", BlockQueue.Interval);
             } else if (cmd == "net") {
                 if (!CommandParser.GetInt(p, args[1], "value", ref value, 2, 1000)) return;
                 
@@ -68,12 +68,12 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         static void Set(int updates, int time) {
-            BlockQueue.blockupdates = updates;
-            BlockQueue.time = time;
+            BlockQueue.UpdatesPerTick = updates;
+            BlockQueue.Interval = time;
         }
         
         static void SendEstimation(Player p) {
-            int updates = BlockQueue.blockupdates, time = BlockQueue.time, count = PlayerInfo.Online.Count;
+            int updates = BlockQueue.UpdatesPerTick, time = BlockQueue.Interval, count = PlayerInfo.Online.Count;
             Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", updates, time, updates * (1000 / time));
             Player.Message(p, "Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (updates * (1000 / time) * 8) / 1000, count, count * ((updates * (1000 / time) * 8) / 1000));
         }

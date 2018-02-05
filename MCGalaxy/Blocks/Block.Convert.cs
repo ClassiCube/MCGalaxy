@@ -38,11 +38,15 @@ namespace MCGalaxy {
         }
         
         public static string GetName(Player p, BlockID block) {
-            if (!Player.IsSuper(p)) return p.level.BlockName(block);
-            if (block < Block.Extended) return coreNames[block];
+            BlockDefinition def;
+            if (!Player.IsSuper(p) && !IsPhysicsType(block)) {
+                def = p.level.GetBlockDef(block);
+                if (def != null) return def.Name.Replace(" ", "");
+            }
             
+            if (block < Block.Extended) return coreNames[block];
             BlockRaw raw = (BlockRaw)block;
-            BlockDefinition def = BlockDefinition.GlobalDefs[raw];
+            def = BlockDefinition.GlobalDefs[raw];
             return def != null ? def.Name.Replace(" ", "") : raw.ToString();
         }
         

@@ -17,6 +17,7 @@
  */
 using System;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Network {
     /// <summary> Combines block changes and sends them as either a single CPE BulkBlockUpdate packet,
@@ -45,9 +46,13 @@ namespace MCGalaxy.Network {
         /// number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
         public bool Add(int index, BlockID block) {
-            indices[count] = index;
-            if (block == Block.custom_block) types[count] = extBlock;
-            else types[count] = Block.Convert(block);
+            indices[count] = index;            
+            if (Block.IsPhysicsType(block)) {
+                types[count] = (BlockRaw)Block.Convert(block);
+            } else {
+                types[count] = (BlockRaw)block;
+            }
+            
             count++;
             return Send(false);
         }

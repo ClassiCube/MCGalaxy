@@ -24,9 +24,10 @@ namespace MCGalaxy {
     
     public static class BlockQueue {
         
-        public static int time = 100;
-        public static int blockupdates = 750;
+        public static int Interval = 100;
+        public static int UpdatesPerTick = 750;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
+        public const int BlockMask = 0x1FF;
 
         public static void Loop(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
@@ -36,10 +37,10 @@ namespace MCGalaxy {
             }
             
             bulkSender.level = null;
-            task.Delay = TimeSpan.FromMilliseconds(time);
+            task.Delay = TimeSpan.FromMilliseconds(Interval);
         }
 
-        public static void Addblock(Player p, int index, BlockID block) {
+        public static void Add(Player p, int index, BlockID block) {
             if (index == -1) return;
             // Bit packing format
             // 32-63: index
@@ -48,8 +49,7 @@ namespace MCGalaxy {
             // 0-7: raw type
             ulong flags = (ulong)index << 32;
             flags |= (ulong)p.SessionID << 9;
-            flags |= (block.BlockID == Block.custom_block ? 0x100UL : 0x000UL);
-            flags |= (block.BlockID == Block.custom_block ? block.ExtID : block.BlockID);
+            flags |= (ulong)block & BlockMask;
             
             lock (p.level.queueLock)
                 p.level.blockqueue.Add(flags);
@@ -61,16 +61,15 @@ namespace MCGalaxy {
                 if (!lvl.HasPlayers()) { lvl.blockqueue.Clear(); return; }
                     
                 bulkSender.level = lvl;
-                int count = blockupdates;
-                if (lvl.blockqueue.Count < blockupdates)
+                int count = UpdatesPerTick;
+                if (lvl.blockqueue.Count < UpdatesPerTick)
                     count = lvl.blockqueue.Count;
 
                 for (int i = 0; i < count; i++) {
                     ulong flags = lvl.blockqueue[i];
                     int index = (int)(flags >> 32);
-                    byte block = (flags & 0x100) != 0 ? Block.custom_block : (byte)flags;
-                    byte extBlock = (flags & 0x100) != 0 ? (byte)flags : Block.Air;
-                    bulkSender.Add(index, block, extBlock);
+                    BlockID block = (BlockID)(flags & BlockMask);
+                    bulkSender.Add(index, block);
                 }
                 bulkSender.Send(true);
                 lvl.blockqueue.RemoveRange(0, count);

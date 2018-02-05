@@ -28,6 +28,7 @@ using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -109,7 +110,7 @@ namespace MCGalaxy {
             }
 
             BlockID held = block;
-            block = BlockBindings[block.RawID];
+            if (!Block.IsPhysicsType(block)) block = BlockBindings[(BlockRaw)block];
             if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
@@ -118,7 +119,7 @@ namespace MCGalaxy {
             //Ignores updating blocks that are the same and revert block back only to the player
             BlockID newB = deletingBlock ? Block.Air : block;
             if (old == newB) {
-                if (painting || !old.VisuallyEquals(held)) RevertBlock(x, y, z);
+                if (painting || !Block.VisuallyEquals(old, held)) RevertBlock(x, y, z);
                 return;
             }
             
@@ -133,7 +134,7 @@ namespace MCGalaxy {
         }
         
         internal bool CheckManualChange(BlockID old, BlockID block, bool deleteMode) {
-            if (!BlockPerms.UsableBy(this, old) && !Block.BuildIn(old.BlockID) && !Block.AllowBreak(old.BlockID)) {
+            if (!BlockPerms.UsableBy(this, old) && !level.BuildIn(old) && !Block.AllowBreak(old)) {
                 string action = deleteMode ? "delete" : "replace";
                 BlockPerms.List[old].MessageCannotUse(this, action);
                 return false;
@@ -294,9 +295,10 @@ namespace MCGalaxy {
                     RevertBlock(x, y, z); return;
                 }
                 
-                if (held.BlockID == Block.custom_block) {
-                    if (!hasBlockDefs || level.CustomBlockDefs[held.ExtID] == null) {
-                        SendMessage("Invalid block type: " + held.ExtID);
+                if (held >= Block.Extended) {
+                    BlockRaw raw = (BlockRaw)held;
+                    if (!hasBlockDefs || level.CustomBlockDefs[raw] == null) {
+                        SendMessage("Invalid block type: " + raw);
                         RevertBlock(x, y, z); return;
                     }
                 }

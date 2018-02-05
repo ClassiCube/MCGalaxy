@@ -138,10 +138,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void OnChangedZone(Zone zone) {
-        	Player[] players = PlayerInfo.Online.Items;
-        	foreach (Player pl in players) {
-        		if (pl.ZoneIn == zone) pl.OnChangedZone();
-        	}
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.ZoneIn == zone) pl.OnChangedZone();
+            }
         }
         
         public override void Help(Player p) {

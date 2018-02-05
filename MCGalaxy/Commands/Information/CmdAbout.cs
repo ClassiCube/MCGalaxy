@@ -22,6 +22,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {
@@ -65,7 +66,7 @@ namespace MCGalaxy.Commands.Info {
             
             string blockName = Block.GetName(p, block);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.",
-                           x, y, z, block.RawID, blockName);
+                           x, y, z, (BlockRaw)block, blockName);
             
             if (HasExtraPerm(p, 1)) {
                 BlockDBChange.OutputMessageBlock(p, block, x, y, z);

@@ -21,6 +21,7 @@ using System.IO;
 using Draw = System.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -85,8 +86,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             for (int i = 0; i < Palette.Entries.Length; i++) {
                 PaletteEntry entry = Palette.Entries[i];
-                ushort block = Block.FromRaw(entry.Raw);
-                BlockDefinition def = Level.GetBlockDef(block);
+                BlockDefinition def = Level.GetBlockDef(entry.Block);
                 
                 if (def != null && def.FullBright) {
                     front[i] = Multiply(entry, Colors.ParseHex("FFFFFF"));
@@ -117,18 +117,18 @@ namespace MCGalaxy.Drawing.Ops {
                 ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
                 if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
                 
-                byte raw = 0;
+                BlockID block;
                 if (!DualLayer) {
-                    raw = selector.BestMatch(P.R, P.G, P.B);
+                    block = selector.BestMatch(P.R, P.G, P.B);
                 } else {
                     bool backLayer;
-                    raw = selector.BestMatch(P.R, P.G, P.B, out backLayer);                    
+                    block = selector.BestMatch(P.R, P.G, P.B, out backLayer);                    
                     if (backLayer) {
                         x = (ushort)(x + adj.X);
                         z = (ushort)(z + adj.Z);
                     }
                 }
-                output(Place(x, y, z, Block.FromRaw(raw)));
+                output(Place(x, y, z, block));
             }
         }
         

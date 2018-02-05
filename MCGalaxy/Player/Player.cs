@@ -28,6 +28,7 @@ using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public class ChatMessage {
@@ -90,9 +91,9 @@ namespace MCGalaxy {
             return Rank >= target.Rank;
         }        
         
-        public ushort GetHeldBlock() {
+        public BlockID GetHeldBlock() {
             if (ModeBlock != Block.Air) return ModeBlock;
-            return BlockBindings[RawHeldBlock.RawID];
+            return BlockBindings[(BlockRaw)RawHeldBlock];
         }
         
         public void SetPrefix() {
@@ -471,7 +472,7 @@ namespace MCGalaxy {
                 SelectionHandler callback = selCallback;
                 ClearSelection();
 
-                if (!block.IsPhysicsType) block = p.BlockBindings[block.RawID];
+                if (!Block.IsPhysicsType(block)) block = p.BlockBindings[(BlockRaw)block];
                 bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {

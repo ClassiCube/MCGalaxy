@@ -69,13 +69,15 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoFloatwood(Level lvl, ref Check C) {
-            int index = lvl.IntOffset(C.b, 0, -1, 0);
-            if (lvl.GetTile(index) == Block.Air) {
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            int index;
+            
+            if (lvl.GetBlock(x, (ushort)(y - 1), z, out index) == Block.Air) {
                 lvl.AddUpdate(C.b, Block.Air);
                 lvl.AddUpdate(index, Block.FloatWood);
             } else {
-                index = lvl.IntOffset(C.b, 0, 1, 0);
-                byte above = lvl.GetTile(index);
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z, out index);
                 if (above == Block.StillWater || Block.Convert(above) == Block.Water) {
                     lvl.AddUpdate(C.b, lvl.blocks[index]);
                     lvl.AddUpdate(index, Block.FloatWood);

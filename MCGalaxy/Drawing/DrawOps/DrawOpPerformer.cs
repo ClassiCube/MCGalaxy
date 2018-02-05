@@ -24,6 +24,7 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Network;
 using MCGalaxy.Undo;
 using MCGalaxy.Maths;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Drawing {
     internal struct PendingDrawOp {
@@ -174,13 +175,12 @@ namespace MCGalaxy.Drawing.Ops {
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
                 // Set the block (inlined)
-                lvl.blocks[index] = b.Block.BlockID;
+                lvl.blocks[index] = b.Block >= Block.Extended ? Block.custom_block : (BlockRaw)b.Block;
                 lvl.Changed = true;
-                if (old.BlockID == Block.custom_block && b.Block.BlockID != Block.custom_block) {
+                if (b.Block >= Block.Extended) {
+                    lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, (BlockRaw)b.Block);
+                } else if (old >= Block.Extended) {
                     lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
-                }
-                if (b.Block.BlockID == Block.custom_block) {
-                    lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, b.Block.ExtID);
                 }
                 
                 if (p != null) {
@@ -197,7 +197,7 @@ namespace MCGalaxy.Drawing.Ops {
                     lock (lvl.queueLock)
                         lvl.blockqueue.Clear();
                 } else if (op.TotalModified < reloadThreshold) {
-                    if (!old.VisuallyEquals(b.Block)) BlockQueue.Addblock(p, index, b.Block);
+                    if (!Block.VisuallyEquals(old, b.Block)) BlockQueue.Add(p, index, b.Block);
 
                     if (lvl.physics > 0) {
                         if (old == Block.Sponge && b.Block != Block.Sponge)

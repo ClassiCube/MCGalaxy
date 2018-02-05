@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdRestartPhysics : Command {
@@ -66,11 +67,11 @@ namespace MCGalaxy.Commands.Building {
         
         bool Parse(Player p, string name, string arg, ref byte type, ref byte value, ref bool isExt) {
             if (name == "revert") {
-                ushort block;
+                BlockID block;
                 if (!CommandParser.GetBlock(p, arg, out block)) return false;
 
-                type = PhysicsArgs.Revert; value = block.RawID;
-                isExt = block.BlockID == Block.custom_block;
+                type = PhysicsArgs.Revert; value = (BlockRaw)block;
+                isExt = block >= Block.Extended;
                 return true;
             }
             

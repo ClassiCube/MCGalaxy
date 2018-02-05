@@ -23,6 +23,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
 
@@ -39,12 +40,6 @@ namespace MCGalaxy {
                     if (CustomBlocks[i] != null) return true;
                 return false;
             }
-        }
-        
-        public byte GetTile(ushort x, ushort y, ushort z) {
-            int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Invalid;
-            return blocks[index];
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
@@ -80,7 +75,10 @@ namespace MCGalaxy {
         public byte GetTile(int b) {
             ushort x = 0, y = 0, z = 0;
             IntToPos(b, out x, out y, out z);
-            return GetTile(x, y, z);
+            
+            int index = PosToInt(x, y, z);
+            if (index < 0 || blocks == null) return Block.Invalid;
+            return blocks[index];
         }
         
         public byte GetExtTile(ushort x, ushort y, ushort z) {
@@ -189,8 +187,14 @@ namespace MCGalaxy {
             return access == AccessResult.Whitelisted || access == AccessResult.Allowed;
         }
         
+        internal bool BuildIn(BlockID block) {
+            if (block == Block.Op_Water || block == Block.Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
+            block = Block.Convert(block);
+            return block >= Block.Water && block <= Block.StillLava;
+        }
+        
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
-            if (!p.group.Blocks[old] && !Block.AllowBreak(old.BlockID) && !Block.BuildIn(old.BlockID)) return false;
+            if (!p.group.Blocks[old] && !Block.AllowBreak(old) && !BuildIn(old)) return false;
             if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             Zone[] zones = Zones.Items;
             if (zones.Length == 0) return CheckRank(p);
@@ -261,20 +265,22 @@ namespace MCGalaxy {
                 else p.TotalPlaced++;
                 
                 errorLocation = "Setting tile";
-                SetTile(x, y, z, block.BlockID);
-                if (old.BlockID == Block.custom_block && block.BlockID != Block.custom_block)
+                BlockRaw raw = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
+                SetTile(x, y, z, raw);   
+                if (block >= Block.Extended) {
+                    SetExtTileNoCheck(x, y, z, (BlockRaw)block);
+                } else if (old >= Block.Extended) {
                     RevertExtTileNoCheck(x, y, z);
-                if (block.BlockID == Block.custom_block)
-                    SetExtTileNoCheck(x, y, z, block.ExtID);
+                }
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && block.BlockID == Block.TNT_Small) AddTntCheck(PosToInt(x, y, z), p);
+                if (p.PlayingTntWars && block == Block.TNT_Small) AddTntCheck(PosToInt(x, y, z), p);
                 if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
                 Changed = true;
                 backedup = false;
                 
-                return old.VisuallyEquals(block) ? 1 : 2;
+                return Block.VisuallyEquals(old, block) ? 1 : 2;
             } catch (Exception e) {
                 Logger.LogError(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
@@ -311,9 +317,8 @@ namespace MCGalaxy {
         internal bool DoPhysicsBlockchange(int b, BlockID block, bool overRide = false,
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
-            ushort old;
-            old.BlockID = blocks[b];
-            old.ExtID = old.BlockID == Block.custom_block ? GetExtTile(b) : Block.Air;
+            BlockID old = blocks[b];
+            old = old != Block.custom_block ? old : (BlockID)(Block.Extended | GetExtTile(b));
             
             try
             {
@@ -321,10 +326,10 @@ namespace MCGalaxy {
                     if (Props[old].OPBlock || (Props[block].OPBlock && data.Raw != 0)) return false;
                 }
 
-            	if (old == Block.Sponge && physics > 0 && block != Block.Sponge) {
+                if (old == Block.Sponge && physics > 0 && block != Block.Sponge) {
                     OtherPhysics.DoSpongeRemoved(this, b, false);
                 }
-            	if (old == Block.LavaSponge && physics > 0 && block != Block.LavaSponge) {
+                if (old == Block.LavaSponge && physics > 0 && block != Block.LavaSponge) {
                     OtherPhysics.DoSpongeRemoved(this, b, true);
                 }
 
@@ -343,24 +348,25 @@ namespace MCGalaxy {
                     currentUndo++;
                 }
 
-                blocks[b] = block.BlockID;
+                blocks[b] = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
                 Changed = true;
-                if (block.BlockID == Block.custom_block) {
+                if (block >= Block.Extended) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
-                    SetExtTileNoCheck(x, y, z, block.ExtID);
-                } else if (old.BlockID == Block.custom_block) {
+                    SetExtTileNoCheck(x, y, z, (BlockRaw)block);
+                } else if (old >= Block.Extended) {
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
                     RevertExtTileNoCheck(x, y, z);
                 }
-                if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0))
+                if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0)) {
                     AddCheck(b, false, data);
+                }
                 
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
-                return !old.VisuallyEquals(block);
+                return !Block.VisuallyEquals(old, block);
             } catch {
-                blocks[b] = block.BlockID;
+                blocks[b] = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
                 return false;
             }
         }
@@ -403,12 +409,12 @@ namespace MCGalaxy {
             if (type == 1) return; // not different visually
             
             int index = PosToInt(x, y, z);
-            if (buffered) BlockQueue.Addblock(p, index, block);
+            if (buffered) BlockQueue.Add(p, index, block);
             else Player.GlobalBlockchange(this, x, y, z, block);
         }
         
         public BlockDefinition GetBlockDef(BlockID block) {
-            if (block.BlockID == Block.custom_block) return CustomBlockDefs[block.ExtID];
+            if (block >= Block.Extended) return CustomBlockDefs[(BlockRaw)block];
             if (block == Block.Air) return null;
             
             if (block >= Block.CpeCount) {
@@ -416,14 +422,6 @@ namespace MCGalaxy {
             } else {
                 return CustomBlockDefs[block];
             }
-        }
-        
-        public string BlockName(BlockID block) {
-            if (block.IsPhysicsType) return Block.Name(block);
-            BlockDefinition def = GetBlockDef(block);
-            if (def != null) return def.Name.Replace(" ", "");
-            
-            return block.BlockID != Block.custom_block ? Block.Name(block) : block.ExtID.ToString();
         }
         
         public byte CollideType(BlockID block) {

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public partial class Player {

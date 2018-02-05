@@ -45,10 +45,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         void Import(Player p, string path, string name, IMapImporter importer) {
-        	if (LevelInfo.MapExists(name)) {
-        		Player.Message(p, "&cMap {0} already exists. Try renaming the file to something else before importing.", name);
-        		return;
-        	}
+            if (LevelInfo.MapExists(name)) {
+                Player.Message(p, "&cMap {0} already exists. Try renaming the file to something else before importing.", name);
+                return;
+            }
             try {
                 Level lvl = importer.Read(path + importer.Extension, name, true);
                 try {

@@ -86,12 +86,6 @@ namespace MCGalaxy {
             return false;
         }
 
-        public static bool BuildIn(byte block) {
-            if (block == Op_Water || block == Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
-            block = Convert(block);
-            return block >= Water && block <= StillLava;
-        }
-
         public static bool LightPass(BlockID block) {
             switch (Convert(block)) {
                 case Air:
@@ -108,8 +102,7 @@ namespace MCGalaxy {
             return false;
         }
 
-        public static bool NeedRestart(byte block)
-        {
+        public static bool NeedRestart(BlockID block) {
             switch (block)
             {
                 case Train:
@@ -187,8 +180,16 @@ namespace MCGalaxy {
             return (BlockID)(raw | (extended ? Block.Extended : Block.Air));
         }
         
+        public static BlockID MapOldRaw(BlockID raw) {
+            return IsPhysicsType(raw) ? ((BlockID)(Block.Extended | raw)) : raw;
+        }
+        
         public static bool IsPhysicsType(BlockID block) {
             return block >= Block.CpeCount && block < Block.Extended;
+        }
+        
+        public static bool VisuallyEquals(BlockID a, BlockID b) {
+            return Block.Convert(a) == Block.Convert(b);
         }
     }
 }

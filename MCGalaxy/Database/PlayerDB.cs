@@ -21,7 +21,7 @@ using System.IO;
 
 namespace MCGalaxy.DB {
     
-	/// <summary> Stores per-player persistent data. </summary>
+    /// <summary> Stores per-player persistent data. </summary>
     public static class PlayerDB {
         
         public static string LoginPath(string name) {

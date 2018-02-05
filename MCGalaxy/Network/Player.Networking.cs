@@ -21,6 +21,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
@@ -262,11 +263,11 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            byte raw;
-            if (block.BlockID == Block.custom_block) {
-                raw = hasBlockDefs ? block.ExtID : level.RawFallback(block.ExtID);
+            BlockRaw raw;
+            if (block >= Block.Extended) {
+                raw = hasBlockDefs ? (BlockRaw)block : level.RawFallback((BlockRaw)block);
             } else {
-                raw = Block.Convert(block.BlockID);
+                raw = (BlockRaw)Block.Convert(block);
             }
             if (!hasCustomBlocks) raw = Block.ConvertCPE(raw); // client doesn't support CPE
             

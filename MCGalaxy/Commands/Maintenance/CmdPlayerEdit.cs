@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Maintenance {
                            v => who.TimesBeenKicked = v, UpdateDB);
             } else if (opt == "messages") {
                 SetInteger(p, args, PlayerData.ColumnMessages, 16777215, who,
-            	           v => who.TotalMessagesSent = v, UpdateDB);
+                           v => who.TotalMessagesSent = v, UpdateDB);
             }  else if (opt == "timespent") {
                 SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v);
             } else if (opt == "color") {

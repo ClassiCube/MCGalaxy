@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Info {
             if (!Player.IsSuper(p)) {
                 for (int id = Block.CpeCount; id < Block.Count; id++) {
                     if (p.level.CustomBlockDefs[id] == null) continue;
-                    blocks.Add(new ushort(Block.custom_block, (byte)id));
+                    blocks.Add((BlockID)(Block.Extended | id));
                 }
             } 
 

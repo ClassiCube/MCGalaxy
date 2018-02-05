@@ -106,9 +106,9 @@ namespace MCGalaxy.Blocks {
                 w.WriteLine("");
 
                 foreach (BlockPerms perms in list) {
-                    if (Block.Undefined(perms.Block)) continue;
+                    if (Block.Undefined(perms.ID)) continue;
                     
-                    string line = perms.Block + " : " + (int)perms.MinRank + " : "
+                    string line = perms.ID + " : " + (int)perms.MinRank + " : "
                         + CommandPerms.JoinPerms(perms.Disallowed) + " : " + CommandPerms.JoinPerms(perms.Allowed);
                     w.WriteLine(line);
                 }
@@ -140,8 +140,8 @@ namespace MCGalaxy.Blocks {
                 // Format is - Name/ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
-                ushort block;
-                if (!ushort.TryParse(args[0], out block)) {
+                BlockID block;
+                if (!BlockID.TryParse(args[0], out block)) {
                     block = Block.Byte(args[0]);
                 }
                 if (block == Block.Invalid) continue;
@@ -163,10 +163,11 @@ namespace MCGalaxy.Blocks {
         }       
         
         static void SetDefaultPerms() {
-            for (int i = 0; i < Block.Count; i++) {
+            BlockProps defProps = BlockProps.MakeDefault();
+            for (int i = 0; i < Block.ExtendedCount; i++) {
                 BlockPerms perms = new BlockPerms();
-                perms.Block = (byte)i;
-                BlockProps props = Block.Props[i];
+                perms.ID = (BlockID)i;
+                BlockProps props = i < Block.Count ? Block.Props[i] : defProps;
                 
                 if (i == Block.Invalid) {
                     perms.MinRank = LevelPermission.Admin;

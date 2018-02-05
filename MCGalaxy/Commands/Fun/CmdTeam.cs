@@ -200,9 +200,9 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleList(Player p, string[] args) {
-        	string modifier = args.Length > 1 ? args[1] : "";
+            string modifier = args.Length > 1 ? args[1] : "";
             MultiPageOutput.Output(p, Team.Teams, team => team.Color + team.Name,
-        	                       "team list", "teams", modifier, false);
+                                   "team list", "teams", modifier, false);
         }
         
         public override void Help(Player p) {

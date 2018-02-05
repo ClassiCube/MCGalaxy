@@ -29,6 +29,7 @@ using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public enum LevelPermission {
@@ -445,12 +446,13 @@ namespace MCGalaxy {
         
         internal bool HasCustomProps(BlockID block) {
             if (Block.IsPhysicsType(block)) return false;
-            return CustomBlockDefs[block.RawID] != BlockDefinition.GlobalDefs[block.RawID];
+            BlockRaw raw = (BlockRaw)block;
+            return CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw];
         }
         
         void LoadCoreProps() {
             for (int i = 0; i < Props.Length; i++) {
-        	    BlockID block = (BlockID)i;
+                BlockID block = (BlockID)i;
                 if (!HasCustomProps(block)) {
                     Props[i] = BlockDefinition.DefaultProps(block);
                 } else {
@@ -466,7 +468,7 @@ namespace MCGalaxy {
         
         public void UpdateBlockHandlers() {
             for (int i = 0; i < Props.Length; i++) {
-        	    UpdateBlockHandler((ushort)i);
+                UpdateBlockHandler((ushort)i);
             }
         }
         

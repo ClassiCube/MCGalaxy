@@ -164,7 +164,8 @@ namespace MCGalaxy.Blocks {
                     scope[idx].AnimalAI = (AnimalAI)ai;
                 }
                 if (parts.Length > 11) {
-                    byte.TryParse(parts[11], out scope[idx].StackBlock); // TODO: this is raw ID, need to fixup
+                    BlockID.TryParse(parts[11], out scope[idx].StackBlock);
+                    scope[idx].StackBlock = Block.MapOldRaw(scope[idx].StackBlock);
                 }
                 if (parts.Length > 12) {
                     bool.TryParse(parts[12], out scope[idx].OPBlock);

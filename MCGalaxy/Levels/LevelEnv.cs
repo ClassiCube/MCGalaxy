@@ -21,6 +21,7 @@ using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public static class LevelEnv {
@@ -114,7 +115,7 @@ namespace MCGalaxy {
         }
         
         
-        static bool CheckBlock(Player p, string value, string variable, ref byte modify) {
+        static bool CheckBlock(Player p, string value, string variable, ref BlockRaw modify) {
             BlockID block;
             if (!CommandParser.GetBlock(p, value, out block)) return false;
             
@@ -123,7 +124,7 @@ namespace MCGalaxy {
             }
             
             string name = Block.GetName(p, block);
-            modify = block.RawID;
+            modify = (BlockRaw)block;
             Player.Message(p, "Set {0} for {1} %Sto {2}", variable, p.level.ColoredName, name);
             return true;
         }

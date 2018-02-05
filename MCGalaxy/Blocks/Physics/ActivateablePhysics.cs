@@ -17,6 +17,7 @@
  */
 using System;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Blocks.Physics {
     public static class ActivateablePhysics {
@@ -84,9 +85,9 @@ namespace MCGalaxy.Blocks.Physics {
         internal static PhysicsArgs GetDoorArgs(BlockID block, out byte physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)block;
             args.Door = true;
-            args.ExtBlock = block.BlockID == Block.custom_block;
+            args.ExtBlock = block >= Block.Extended;
             
             physForm = Block.Door_Log_air; // air
             if (block == Block.Door_Air || block == Block.Door_AirActivatable) {
@@ -102,9 +103,9 @@ namespace MCGalaxy.Blocks.Physics {
         internal static PhysicsArgs GetTDoorArgs(BlockID block) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
-            args.Type2 = PhysicsArgs.Revert; args.Value2 = block.RawID;
+            args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)block;
             args.Door = true;
-            args.ExtBlock = block.BlockID == Block.custom_block;
+            args.ExtBlock = block >= Block.Extended;
             return args;
         }
         
@@ -121,7 +122,7 @@ namespace MCGalaxy.Blocks.Physics {
         internal static void CheckAt(Level lvl, int index) {
             if (index == -1) return;
             byte block = lvl.blocks[index];
-            byte convBlock = Block.Convert(block);
+            BlockID convBlock = Block.Convert(block);
             if (convBlock == Block.Water || convBlock == Block.Lava ||
                 (block >= Block.Red && block <= Block.White)) {
                 lvl.AddCheck(index); return;

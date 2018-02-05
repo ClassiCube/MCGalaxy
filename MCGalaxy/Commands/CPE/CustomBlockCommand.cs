@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!CheckBlock(p, parts[1], out block)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition def = defs[block.RawID];
+            BlockDefinition def = defs[(BlockRaw)block];
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             Player.Message(p, "About {0} ({1})", def.Name, def.BlockID);
@@ -193,7 +193,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!CheckBlock(p, parts[1], out block)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition def = defs[block.RawID];
+            BlockDefinition def = defs[(BlockRaw)block];
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             RemoveBlockProps(global, block, p);
@@ -202,7 +202,7 @@ namespace MCGalaxy.Commands.CPE {
             string scope = global ? "global" : "level";
             Player.Message(p, "Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
-            BlockDefinition globalDef = BlockDefinition.GlobalDefs[block.RawID];
+            BlockDefinition globalDef = BlockDefinition.GlobalDefs[(BlockRaw)block];
             if (!global && globalDef != null)
                 BlockDefinition.Add(globalDef, defs, p.level);
         }
@@ -313,8 +313,10 @@ namespace MCGalaxy.Commands.CPE {
             
             BlockID block;
             if (!CheckBlock(p, parts[1], out block)) return;
+            BlockRaw raw = (BlockRaw)block;
+             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition def = defs[block.RawID], globalDef = BlockDefinition.GlobalDefs[block.RawID];
+            BlockDefinition def = defs[raw], globalDef = BlockDefinition.GlobalDefs[raw];
             
             if (def == null && block < Block.CpeCount) {
                 def = DefaultSet.MakeCustomBlock(block);
@@ -418,7 +420,7 @@ namespace MCGalaxy.Commands.CPE {
                     if (fallback == Block.Invalid) return;
                     changedFallback = true;
                     
-                    value = Block.Name(fallback);
+                    value = Block.GetName(p, fallback);
                     def.FallBack = fallback; break;
                     
                 case "order":
@@ -462,7 +464,7 @@ namespace MCGalaxy.Commands.CPE {
                     }
                     return false;
                 }
-                def.BlockID = block.RawID;
+                def.BlockID = (BlockRaw)block;
             }
             
             string scope = global ? "global" : "level";
@@ -474,7 +476,7 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static byte GetFallback(Player p, string value) {
+        static BlockRaw GetFallback(Player p, string value) {
             BlockID block;
             if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
@@ -486,7 +488,7 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
-            return block.BlockID;
+            return (BlockRaw)block;
         }
         
         
@@ -508,13 +510,13 @@ namespace MCGalaxy.Commands.CPE {
         
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", block.RawID, scope);
+            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", (BlockRaw)block, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", block.RawID, scope);
+            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", (BlockRaw)block, scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
@@ -558,7 +560,7 @@ namespace MCGalaxy.Commands.CPE {
                 return;
             }
             
-			BlockRaw raw = (BlockRaw)block;
+            BlockRaw raw = (BlockRaw)block;
             BlockDefinition.GlobalProps[raw] = props;
             Level[] loaded = LevelInfo.Loaded.Items;
             
@@ -616,7 +618,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool ExistsInScope(BlockDefinition def, BlockID block, bool global) {
-            return def != null && (global ? true : def != BlockDefinition.GlobalDefs[block.RawID]);
+            return def != null && (global ? true : def != BlockDefinition.GlobalDefs[(BlockRaw)block]);
         }
         
         

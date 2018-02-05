@@ -67,7 +67,7 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int zz = z - (size + 1); zz <= z + (size + 1); ++zz)
                     for (int xx = x - (size + 1); xx <= x + (size + 1); ++xx)
             {               
-            	if (lvl.IsAirAt((ushort)xx, (ushort)yy, (ushort)zz, out index) && rand.Next(1, 40) < 2) {
+                if (lvl.IsAirAt((ushort)xx, (ushort)yy, (ushort)zz, out index) && rand.Next(1, 40) < 2) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Drop; args.Value1 = 100;
                     args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 25;

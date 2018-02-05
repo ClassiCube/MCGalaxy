@@ -134,7 +134,7 @@ namespace MCGalaxy.Generator {
                 
                 if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-                        if (Lvl.GetTile(x, y, z) == Block.Grass || genParams.UseCactus) {
+                        if (Lvl.GetBlock(x, y, z) == Block.Grass || genParams.UseCactus) {
                             if (rand.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
                                 Tree tree = null;
                                 if (genParams.UseCactus) tree = new CactusTree();

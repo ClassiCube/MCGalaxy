@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckExtraPerm(p, 1)) return;
             string[] users = Directory.GetFiles("extra/reported", "*.txt");
             for (int i = 0; i < users.Length; i++) {
-            	users[i] = Path.GetFileNameWithoutExtension(users[i]);
+                users[i] = Path.GetFileNameWithoutExtension(users[i]);
             }
             
             if (users.Length > 0) {
@@ -141,13 +141,13 @@ namespace MCGalaxy.Commands.Moderation {
 
             List<string> reports = new List<string>();
             if (File.Exists("extra/reported/" + target + ".txt")) {
-            	reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
+                reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
             }
                       
             if (reports.Count >= 5) {
                 LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
                 Player.Message(p, "{0} &calready has 5 pending reports! Please wait until an {1}%c+ has reviewed these reports first!",
-            	               PlayerInfo.GetColoredName(p, target), Group.GetColoredName(checkRank));
+                               PlayerInfo.GetColoredName(p, target), Group.GetColoredName(checkRank));
                 return;
             }
             

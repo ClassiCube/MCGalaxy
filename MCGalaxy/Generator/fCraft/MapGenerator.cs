@@ -1,6 +1,7 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt
 using System;
 using MCGalaxy.Commands;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Generator {
 
@@ -286,7 +287,7 @@ namespace MCGalaxy.Generator {
                 for( int z = 0; z < map.Length; z++ )
                     for( int y = args.WaterLevel; y <= args.WaterLevel + args.BeachHeight; y++ )
             {
-                if( map.GetTile( (ushort)x, (ushort)y, (ushort)z ) != bGroundSurface ) continue;
+                if( map.GetBlock( (ushort)x, (ushort)y, (ushort)z ) != bGroundSurface ) continue;
                 bool found = false;
                 for( int dx = -args.BeachExtent; !found && dx <= args.BeachExtent; dx++ )
                     for( int dz = -args.BeachExtent; !found && dz <= args.BeachExtent; dz++ )
@@ -296,7 +297,7 @@ namespace MCGalaxy.Generator {
                     int xx = x + dx, yy = y + dy, zz = z + dz;
                     if( xx < 0 || xx >= map.Width || yy < 0 || yy >= map.Height || zz < 0 || zz >= map.Length ) continue;
                     
-                    byte block = map.GetTile( (ushort)xx, (ushort)yy, (ushort)zz );
+                    BlockID block = map.GetBlock( (ushort)xx, (ushort)yy, (ushort)zz );
                     if( block == bWater || block == bWaterSurface ) {
                         found = true;
                         break;
@@ -305,7 +306,7 @@ namespace MCGalaxy.Generator {
                 
                 if( found ) {
                     map.SetTile( (ushort)x, (ushort)y, (ushort)z, bSeaFloor );
-                    if( y > 0 && map.GetTile( (ushort)x, (ushort)(y - 1), (ushort)z ) == bGround ) {
+                    if( y > 0 && map.GetBlock( (ushort)x, (ushort)(y - 1), (ushort)z ) == bGround ) {
                         map.SetTile( (ushort)x, (ushort)(y - 1), (ushort)z, bSeaFloor );
                     }
                 }
@@ -332,7 +333,7 @@ namespace MCGalaxy.Generator {
                     if( nx < 0 || nx >= map.Width || nz < 0 || nz >= map.Length ) continue;
                     int ny = shadows[nx, nz];
 
-                    if( (map.GetTile( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx, nz] < .5 ) {
+                    if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx, nz] < .5 ) {
                         // Pick a random height for the tree between Min and Max,
                         // discarding this tree if it would breach the top of the map
                         int nh;
@@ -354,8 +355,9 @@ namespace MCGalaxy.Generator {
                                 if( rn.NextDouble() > odds && Math.Abs( dx ) == Math.Abs( dz ) && Math.Abs( dx ) == radius )
                                     continue;
                                 // By default only replace an existing block if its air
-                                if( map.GetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz) ) == Block.Air )
+                                if( map.GetBlock( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz) ) == Block.Air ) {
                                     map.SetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz), Block.Leaves );
+                                }
                             }
                         }
                     }

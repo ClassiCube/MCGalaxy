@@ -17,13 +17,14 @@
  */
 using System;
 using System.Drawing;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing {
 
     public interface IPaletteMatcher {
         void SetPalette(PaletteEntry[] front, PaletteEntry[] back);
-        byte BestMatch(byte R, byte G, byte B);
-        byte BestMatch(byte R, byte G, byte B, out bool backLayer);
+        BlockID BestMatch(byte R, byte G, byte B);
+        BlockID BestMatch(byte R, byte G, byte B, out bool backLayer);
     }
     
     public sealed class RgbPaletteMatcher : IPaletteMatcher {
@@ -33,19 +34,19 @@ namespace MCGalaxy.Drawing {
             this.front = front; this.back = back;
         }
         
-        public byte BestMatch(byte R, byte G, byte B) {
+        public BlockID BestMatch(byte R, byte G, byte B) {
             int pos;
             MinDist(R, G, B, front, out pos);
-            return front[pos].Raw;
+            return front[pos].Block;
         }
         
-        public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
+        public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             int frontPos, backPos;
             int frontDist = MinDist(R, G, B, front, out frontPos);
             int backDist  = MinDist(R, G, B, back, out backPos);
             
             backLayer = backDist < frontDist;
-            return backLayer ? back[backPos].Raw : front[frontPos].Raw;
+            return backLayer ? back[backPos].Block : front[frontPos].Block;
         }
         
         
@@ -73,7 +74,7 @@ namespace MCGalaxy.Drawing {
                 this.palette[i] = RgbToLab(front[i]);
         }
         
-        public byte BestMatch(byte R, byte G, byte B) {
+        public BlockID BestMatch(byte R, byte G, byte B) {
             double minDist = int.MaxValue; int pos = 0;
             LabColor col = RgbToLab(R, G, B);
             
@@ -89,7 +90,7 @@ namespace MCGalaxy.Drawing {
             return palette[pos].Block;
         }
         
-        public byte BestMatch(byte R, byte G, byte B, out bool backLayer) {
+        public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             backLayer = false;
             return BestMatch(R, G, B);
         }
@@ -97,12 +98,12 @@ namespace MCGalaxy.Drawing {
         
         struct LabColor {
             public double L, A, B;
-            public byte Block;
+            public BlockID Block;
         }
         
         LabColor RgbToLab(PaletteEntry cur) {
             LabColor lab = RgbToLab(cur.R, cur.G, cur.B);
-            lab.Block = cur.Raw;
+            lab.Block = cur.Block;
             return lab;
         }
         

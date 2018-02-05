@@ -20,6 +20,8 @@ using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Network;
 using Newtonsoft.Json;
+using BlockID_ = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public sealed class BlockDefinition {
@@ -145,20 +147,21 @@ namespace MCGalaxy {
         
         public static void UpdateGlobalBlockProps() {
             for (int i = 0; i < GlobalProps.Length; i++) {
-                ushort block = Block.FromRaw((byte)i);
+                BlockID_ block = Block.FromRaw((byte)i);
                 GlobalProps[i] = BlockProps.MakeDefault();
                 GlobalProps[i] = DefaultProps(block);
             }
             BlockProps.Load("global", GlobalProps, GlobalPropsLock, false);
         }
         
-        internal static BlockProps DefaultProps(ushort block) {
+        internal static BlockProps DefaultProps(BlockID_ block) {
+            BlockRaw raw = (BlockRaw)block;
             if (Block.IsPhysicsType(block)) {
                 return Block.Props[block];
-            } else if (!block.IsCustomType && GlobalDefs[block.RawID] == null) {
-                return Block.Props[block.RawID];
+            } else if (block < Block.Extended && GlobalDefs[raw] == null) {
+                return Block.Props[raw];
             } else {
-                return GlobalProps[block.RawID];
+                return GlobalProps[raw];
             }
         }
         
@@ -168,16 +171,16 @@ namespace MCGalaxy {
                 for (int i = 0; i < lvl.CustomBlockDefs.Length; i++) {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
-                    ushort block = Block.FromRaw((byte)i);
+                    BlockID_ block = Block.FromRaw((byte)i);
                     lvl.Props[block] = DefaultProps(block);
-                    lvl.UpdateCustomBlock(block.RawID, GlobalDefs[i]);
+                    lvl.UpdateCustomBlock((BlockRaw)block, GlobalDefs[i]);
                 }
             }
         }
         
         
         public static void Add(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte raw = def.BlockID;
+            BlockRaw raw = def.BlockID;
             bool global = defs == GlobalDefs;
             if (global) UpdateGlobalCustom(raw, def);
             
@@ -199,7 +202,7 @@ namespace MCGalaxy {
         }
         
         public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
-            byte raw = def.BlockID;
+            BlockRaw raw = def.BlockID;
             bool global = defs == GlobalDefs;
             if (global) UpdateGlobalCustom(raw, null);
             
@@ -232,7 +235,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void UpdateGlobalCustom(byte raw, BlockDefinition def) {
+        static void UpdateGlobalCustom(BlockRaw raw, BlockDefinition def) {
             Level[] loaded = LevelInfo.Loaded.Items;          
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
@@ -249,8 +252,8 @@ namespace MCGalaxy {
                     return def.BlockID;
             }
             
-            byte id;
-            if (!byte.TryParse(msg, out id) || defs[id] == null) return -1;
+            BlockRaw id;
+            if (!BlockRaw.TryParse(msg, out id) || defs[id] == null) return -1;
             return id;
         }
         
@@ -293,14 +296,14 @@ namespace MCGalaxy {
             }
         }
         
-        public static void UpdateFallback(bool global, byte block, Level level) {
+        public static void UpdateFallback(bool global, BlockRaw raw, Level level) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
                 if (pl.hasBlockDefs) continue;
                 
                 // if custom block is replacing core block, need to always reload for fallback
-                if (block >= Block.CpeCount && !pl.level.MayHaveCustomBlocks) continue;
+                if (raw >= Block.CpeCount && !pl.level.MayHaveCustomBlocks) continue;
                 
                 LevelActions.ReloadMap(pl, pl, false);
             }

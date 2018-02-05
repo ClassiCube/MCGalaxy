@@ -18,6 +18,7 @@
 using System;
 using System.Text;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Blocks {
     
@@ -27,7 +28,7 @@ namespace MCGalaxy.Blocks {
         /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block. </summary>
         public static BlockDefinition MakeCustomBlock(BlockID b) {
             BlockDefinition def = new BlockDefinition();
-            def.BlockID = b;
+            def.BlockID = (BlockRaw)b;
             def.Name = Name(b);
             def.CollideType = Collide(b);
             def.Speed = 1;
@@ -47,7 +48,7 @@ namespace MCGalaxy.Blocks {
             def.FogDensity = FogDensity(b);
             ColorDesc fog = FogColor(b);
             def.FogR = fog.R; def.FogG = fog.G; def.FogB = fog.B;
-            def.FallBack = b;
+            def.FallBack = (BlockRaw)b;
             
             def.MaxX = 16; def.MaxZ = Height(b); def.MaxY = 16;
             def.Version2 = true;

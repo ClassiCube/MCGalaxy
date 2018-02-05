@@ -21,6 +21,7 @@ using System.IO;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : Command {
@@ -148,7 +149,7 @@ namespace MCGalaxy.Commands.Fun {
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Blue;
-            cfg.BlueFlagBlock = block.RawID;
+            cfg.BlueFlagBlock = (BlockRaw)block;
             Player.Message(p, "Set flag block of blue team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);
@@ -163,7 +164,7 @@ namespace MCGalaxy.Commands.Fun {
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Red;
-            cfg.RedFlagBlock = block.RawID;
+            cfg.RedFlagBlock = (BlockRaw)block;
             Player.Message(p, "Set flag block of red team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);

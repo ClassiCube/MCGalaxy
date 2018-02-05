@@ -267,9 +267,5 @@ namespace MCGalaxy.Tasks {
                 bulk.Commit();
             }
         }
-        
-        internal static void UpgradeZones(SchedulerTask task) {
-        	
-        }
     }
 }

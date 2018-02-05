@@ -17,6 +17,7 @@
  */
 using System.Collections.Generic;
 using System.IO;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing {
     
@@ -76,8 +77,12 @@ namespace MCGalaxy.Drawing {
         }
         
         static PaletteEntry ParseEntry(string[] parts) {
-            byte r = byte.Parse(parts[1]), g = byte.Parse(parts[2]);
-            byte b = byte.Parse(parts[3]), block = byte.Parse(parts[0]);
+            BlockID block = BlockID.Parse(parts[0]);
+            block = Block.MapOldRaw(block);
+        	
+            byte r = byte.Parse(parts[1]);
+            byte g = byte.Parse(parts[2]);
+            byte b = byte.Parse(parts[3]);            
             return new PaletteEntry(r, g, b, block);
         }
         
@@ -88,7 +93,7 @@ namespace MCGalaxy.Drawing {
                 
                 if (Entries == null) return;
                 foreach (PaletteEntry e in Entries)
-                    w.WriteLine(e.Raw + ":" + e.R + ":" + e.G + ":" + e.B);
+                    w.WriteLine(e.Block + ":" + e.R + ":" + e.G + ":" + e.B);
             }
         }
         
@@ -150,10 +155,11 @@ namespace MCGalaxy.Drawing {
     }
     
     public struct PaletteEntry  {
-        public byte R, G, B, Raw;
+        public byte R, G, B;
+        public BlockID Block;
         
-        public PaletteEntry(byte r, byte g, byte b, byte block) {
-            R = r; G = g; B = b; Raw = block;
+        public PaletteEntry(byte r, byte g, byte b, BlockID block) {
+            R = r; G = g; B = b; Block = block;
         }
     }
 }

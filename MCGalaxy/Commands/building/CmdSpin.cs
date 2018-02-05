@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message) {
             if (message.Length == 0) message = "y";
             if (p.CurrentCopySlot >= p.CopySlots.Count || p.CopySlots[p.CurrentCopySlot] == null) { 
-        	    Player.Message(p, "You haven't copied anything yet"); return; 
-        	}
+                Player.Message(p, "You haven't copied anything yet"); return; 
+            }
             
             CopyState cState = p.CopySlots[p.CurrentCopySlot];
             string opt = message.ToLower();

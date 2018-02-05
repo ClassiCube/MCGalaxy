@@ -53,9 +53,9 @@ namespace MCGalaxy.Commands.Moderation {
             }
 
             if (p.hidden) {                
-            	if (announceToOps && !p.otherRankHidden) {
+                if (announceToOps && !p.otherRankHidden) {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
-            	}
+                }
                 
                 string discMsg = PlayerDB.GetLogoutMessage(p);
                 Chat.MessageGlobal(p, "&c- " + p.FullName + " %S" + discMsg, false);

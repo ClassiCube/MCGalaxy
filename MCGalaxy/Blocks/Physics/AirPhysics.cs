@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -71,7 +72,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static void FloodAir(Level lvl, int index, byte block) {
             if (index == -1) return;
-            byte curBlock = Block.Convert(lvl.blocks[index]);
+            BlockID curBlock = Block.Convert(lvl.blocks[index]);
             if (curBlock == Block.Water || curBlock == Block.Lava)
                 lvl.AddUpdate(index, block);
         }
