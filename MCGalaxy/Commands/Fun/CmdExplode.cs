@@ -18,6 +18,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
+
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdExplode : Command {
         public override string name { get { return "Explode"; } }

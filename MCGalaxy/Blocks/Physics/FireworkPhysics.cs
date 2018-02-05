@@ -63,11 +63,11 @@ namespace MCGalaxy.Blocks.Physics {
             lvl.AddUpdate(lvl.PosToInt(x, y, z), Block.Air);
             
             int index;
-            for (ushort yy = (ushort)(y - (size + 1)); yy <= (ushort)(y + (size + 1)); ++yy)
-                for (ushort zz = (ushort)(z - (size + 1)); zz <= (ushort)(z + (size + 1)); ++zz)
-                    for (ushort xx = (ushort)(x - (size + 1)); xx <= (ushort)(x + (size + 1)); ++xx)
+            for (int yy = y - (size + 1); yy <= y + (size + 1); ++yy)
+                for (int zz = z - (size + 1); zz <= z + (size + 1); ++zz)
+                    for (int xx = x - (size + 1); xx <= x + (size + 1); ++xx)
             {               
-                if (lvl.IsAirAt(xx, yy, zz, out index) && rand.Next(1, 40) < 2) {
+            	if (lvl.IsAirAt((ushort)xx, (ushort)yy, (ushort)zz, out index) && rand.Next(1, 40) < 2) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Drop; args.Value1 = 100;
                     args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 25;

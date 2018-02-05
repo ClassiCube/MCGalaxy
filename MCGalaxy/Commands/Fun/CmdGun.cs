@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdGun : WeaponCmd {
