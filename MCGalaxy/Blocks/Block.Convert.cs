@@ -35,16 +35,18 @@ namespace MCGalaxy {
         }
         
         public static string GetName(Player p, BlockID block) {
-            BlockDefinition def;
-            if (!Player.IsSuper(p) && !IsPhysicsType(block)) {
-                def = p.level.GetBlockDef(block);
-                if (def != null) return def.Name.Replace(" ", "");
-            }
-            
-            if (block < Block.Extended) return coreNames[block];
             BlockRaw raw = (BlockRaw)block;
-            def = BlockDefinition.GlobalDefs[raw];
-            return def != null ? def.Name.Replace(" ", "") : raw.ToString();
+            if (IsPhysicsType(block)) return coreNames[raw];
+            
+            BlockDefinition def;
+            if (!Player.IsSuper(p)) {
+                def = p.level.GetBlockDef(block);
+            } else {
+                def = BlockDefinition.GlobalDefs[raw];
+            }
+            if (def != null) return def.Name.Replace(" ", "");
+            
+            return block < Block.Extended ? coreNames[block] : raw.ToString();
         }
         
         public static byte ConvertCPE(byte block) {

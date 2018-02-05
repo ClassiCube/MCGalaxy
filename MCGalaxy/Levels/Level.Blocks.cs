@@ -71,24 +71,6 @@ namespace MCGalaxy {
             index = x + Width * (z + y * Length);
             return blocks[index] == Block.Air;
         }
-
-        public byte GetTile(int b) {
-            ushort x = 0, y = 0, z = 0;
-            IntToPos(b, out x, out y, out z);
-            
-            int index = PosToInt(x, y, z);
-            if (index < 0 || blocks == null) return Block.Invalid;
-            return blocks[index];
-        }
-        
-        public byte GetExtTile(ushort x, ushort y, ushort z) {
-            if (x >= Width || y >= Height || z >= Length || blocks == null)
-                return Block.Invalid;
-            
-            int cx = x >> 4, cy = y >> 4, cz = z >> 4;
-            byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
-            return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
-        }
         
         public byte GetExtTile(int index) {
             ushort x, y, z;

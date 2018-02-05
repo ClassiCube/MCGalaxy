@@ -29,13 +29,15 @@ namespace MCGalaxy.Blocks.Physics {
             int index = C.b;
             bool movedDown = false;
             byte block = lvl.blocks[C.b];
+            ushort yCur = y;
             
             do {
-                index = lvl.IntOffset(index, 0, -1, 0); //Get block below each loop
-                if (lvl.GetTile(index) == Block.Invalid) break;
+                index = lvl.IntOffset(index, 0, -1, 0); yCur--;// Get block below each loop
+                BlockID cur = lvl.GetBlock(x, yCur, z);
+                if (cur == Block.Invalid) break;
                 bool hitBlock = false;
                 
-                switch (lvl.blocks[index]) {
+                switch (cur) {
                     case Block.Air:
                     case Block.Water:
                     case Block.Lava:
@@ -154,17 +156,20 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoSponge(Level lvl, ref Check C, bool lava) {
             byte target = lava ? Block.Lava : Block.Water;
             byte alt    = lava ? Block.StillLava : Block.StillWater;
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
             
-            for (int y = -2; y <= +2; ++y)
-                for (int z = -2; z <= +2; ++z)
-                    for (int x = -2; x <= +2; ++x)
+            for (int yy = y - 2; yy <= y + 2; ++yy)
+                for (int zz = z - 2; zz <= z + 2; ++zz)
+                    for (int xx = x - 2; xx <= x + 2; ++xx)
             {
-                int index = lvl.IntOffset(C.b, x, y, z);
-                byte block = lvl.GetTile(index);
+                int index;
+                BlockID block = lvl.GetBlock((ushort)xx, (ushort)yy, (ushort)zz, out index);
                 if (block == Block.Invalid) continue;
                 
-                if (Block.Convert(block) == target || Block.Convert(block) == alt)
+                if (Block.Convert(block) == target || Block.Convert(block) == alt) {
                     lvl.AddUpdate(index, Block.Air);
+                }
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
@@ -172,15 +177,16 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoSpongeRemoved(Level lvl, int b, bool lava) {
             byte target = lava ? Block.Lava : Block.Water;
             byte alt    = lava ? Block.StillLava : Block.StillWater;
+            ushort x, y, z;
+            lvl.IntToPos(b, out x, out y, out z);
             
-            for (int y = -3; y <= +3; ++y)
-                for (int z = -3; z <= +3; ++z)
-                    for (int x = -3; x <= +3; ++x)
+            for (int yy = -3; yy <= +3; ++yy)
+                for (int zz = -3; zz <= +3; ++zz)
+                    for (int xx = -3; xx <= +3; ++xx)
             {
-                if (Math.Abs(x) == 3 || Math.Abs(y) == 3 || Math.Abs(z) == 3) //Calc only edge
-                {
-                    int index = lvl.IntOffset(b, x, y, z);
-                    byte block = lvl.GetTile(index);
+            	if (Math.Abs(xx) == 3 || Math.Abs(yy) == 3 || Math.Abs(zz) == 3) { // Calc only edge
+                    int index;
+                    BlockID block = lvl.GetBlock((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), out index);
                     if (block == Block.Invalid) continue;
                     
                     if (Block.Convert(block) == target || Block.Convert(block) == alt)

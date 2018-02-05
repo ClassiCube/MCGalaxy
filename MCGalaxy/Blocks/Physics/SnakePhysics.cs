@@ -16,13 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
     public static class SnakePhysics {
         
         public static void Do(Level lvl, ref Check C) {
-            Random rand = lvl.physRandom;            
+            Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int dirsVisited = 0, index = 0;
@@ -103,25 +104,28 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoTail(Level lvl, ref Check C) {
-            if (lvl.GetTile(lvl.IntOffset(C.b, -1, 0, 0)) != Block.Snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 1, 0, 0)) != Block.Snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, 1)) != Block.Snake
-                || lvl.GetTile(lvl.IntOffset(C.b, 0, 0, -1)) != Block.Snake) {
+            ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            
+            bool revert =
+                lvl.GetBlock((ushort)(x - 1), y, z) != Block.Snake ||
+                lvl.GetBlock((ushort)(x + 1), y, z) != Block.Snake ||
+                lvl.GetBlock(x, y, (ushort)(z - 1)) != Block.Snake ||
+                lvl.GetBlock(x, y, (ushort)(z + 1)) != Block.Snake;
+            if (revert) {
                 C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
             }
         }
         
         static bool MoveSnake(Level lvl, ref Check C, int index) {
-            if (
-                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.Air &&
-                lvl.GetTile(index) == Block.Air) {
+            ushort x, y, z;
+            lvl.IntToPos(index, out x, out y, out z);
+            
+            // Move snake up or down tiles
+            if (lvl.IsAirAt(x, (ushort)(y - 1), z) && lvl.IsAirAt(x, y, z)) {
                 index = lvl.IntOffset(index, 0, -1, 0);
-            } else if (
-                lvl.GetTile(index) == Block.Air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
-            } else if (
-                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.Air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
+            } else if (lvl.IsAirAt(x, y, z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
+            } else if (lvl.IsAirAt(x, (ushort)(y + 2), z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
                 index = lvl.IntOffset(index, 0, 1, 0);
             } else {
                 return false;
@@ -137,21 +141,22 @@ namespace MCGalaxy.Blocks.Physics {
             return false;
         }
         
-        static bool MoveSnakeY(Level lvl, ref Check C, int index ) {
-            byte block = lvl.GetTile(index);
-            byte blockAbove = lvl.GetTile(lvl.IntOffset(index, 0, 1, 0));
-            byte block2Above = lvl.GetTile(lvl.IntOffset(index, 0, 2, 0));
+        static bool MoveSnakeY(Level lvl, ref Check C, int index) {
+            ushort x, y, z;
+            lvl.IntToPos(index, out x, out y, out z);
             
-            if (block == Block.Air &&
-                (blockAbove == Block.Grass ||
-                 blockAbove == Block.Dirt && block2Above == Block.Air)) {
+            BlockID block  = lvl.GetBlock(x, y, z);
+            BlockID above  = lvl.GetBlock(x, (ushort)(y + 1), z);
+            BlockID above2 = lvl.GetBlock(x, (ushort)(y + 2), z);
+            
+            if (block == Block.Air && (above == Block.Grass || above == Block.Dirt && above2 == Block.Air)) {
                 if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
                     lvl.AddUpdate(C.b, Block.SnakeTail, args, true);
                     return true;
-                }            
+                }
             }
             return false;
         }

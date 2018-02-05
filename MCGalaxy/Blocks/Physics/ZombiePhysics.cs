@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -106,23 +107,24 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoHead(Level lvl, ref Check C) {
-            if (lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.ZombieBody
-                && lvl.GetTile(lvl.IntOffset(C.b, 0, -1, 0)) != Block.Creeper) {
+		    ushort x, y, z;
+            lvl.IntToPos(C.b, out x, out y, out z);
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+            
+            if (below != Block.ZombieBody && below != Block.Creeper) {
                 C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
             }
         }
         
         static bool MoveZombie(Level lvl, ref Check C, int index) {
-            if(
-                lvl.GetTile(lvl.IntOffset(index, 0, -1, 0)) == Block.Air &&
-                lvl.GetTile(index) == Block.Air) {
+            ushort x, y, z;
+            lvl.IntToPos(index, out x, out y, out z);
+            
+            // Move zombie up or down tiles
+            if (lvl.IsAirAt(x, (ushort)(y - 1), z) && lvl.IsAirAt(x, y, z)) {
                 index = lvl.IntOffset(index, 0, -1, 0);
-            } else if (
-                lvl.GetTile(index) == Block.Air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
-            } else if (
-                lvl.GetTile(lvl.IntOffset(index, 0, 2, 0)) == Block.Air &&
-                lvl.GetTile(lvl.IntOffset(index, 0, 1, 0)) == Block.Air) {
+            } else if (lvl.IsAirAt(x, y, z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
+            } else if (lvl.IsAirAt(x, (ushort)(y + 2), z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
                 index = lvl.IntOffset(index, 0, 1, 0);
             } else {
                 return false;
