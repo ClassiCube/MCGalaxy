@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {    
     public class CmdReplaceBrush : DrawCmd {
@@ -38,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             
-            ushort target;
+            BlockID target;
             if (!CommandParser.GetBlockIfAllowed(p, args[0], out target)) return null;
             
             BrushFactory factory = BrushFactory.Find(args[1]);

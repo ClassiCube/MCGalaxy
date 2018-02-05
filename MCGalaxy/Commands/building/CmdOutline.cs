@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdOutline : DrawCmd {
@@ -30,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(dArgs.Player, "Block name is required."); return null;
             }
             
-            ushort target;
+            BlockID target;
             string[] parts = dArgs.Message.SplitSpaces(2);
             if (!CommandParser.GetBlockIfAllowed(dArgs.Player, parts[0], out target)) return null;
             

@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, data, PlacedMark);
         }
         
-        ushort GetBlock(Player p, string name, ref bool allMessage) {
+        BlockID GetBlock(Player p, string name, ref bool allMessage) {
             if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
             BlockID block = CommandParser.RawGetBlock(p, name);
             if (block != Block.Invalid && p.level.Props[block].IsMessageBlock)
@@ -106,11 +106,11 @@ namespace MCGalaxy.Commands.Building {
             return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
         }
 
-        bool PlacedMark(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool PlacedMark(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             MBArgs args = (MBArgs)state;
             
-            ushort old = p.level.GetBlock(x, y, z);
+            BlockID old = p.level.GetBlock(x, y, z);
             if (p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
                 p.level.UpdateBlock(p, x, y, z, args.Block);
                 UpdateDatabase(p, args, x, y, z);

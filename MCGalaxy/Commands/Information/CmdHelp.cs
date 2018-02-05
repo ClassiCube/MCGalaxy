@@ -194,7 +194,7 @@ namespace MCGalaxy.Commands.Info {
                 case "duck":
                     Player.Message(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches"); break;
                 default:
-                    Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.Name(Block.Convert(b))); break;
+                    Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.GetName(p, Block.Convert(b))); break;
             }
             
             BlockPerms.List[b].MessageCannotUse(p, "use");

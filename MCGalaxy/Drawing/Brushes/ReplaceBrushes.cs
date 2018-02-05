@@ -37,7 +37,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
             BlockID block = op.Level.GetBlock(x, y, z);
             
@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Replaced;
         }
         
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
             BlockID block = op.Level.GetBlock(x, y, z);
             

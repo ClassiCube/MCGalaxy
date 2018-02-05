@@ -22,10 +22,7 @@ using BlockRaw = System.Byte;
 namespace MCGalaxy {
     public sealed partial class Block {
         
-        static string[] coreNames = new string[Block.Count];
-        public static string Name(BlockID block) { 
-            return block >= Block.Extended ? "custom_block" : coreNames[block];
-        }
+        internal static string[] coreNames = new string[Block.Count];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
         public static byte Byte(string type) {

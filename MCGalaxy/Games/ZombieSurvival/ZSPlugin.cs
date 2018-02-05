@@ -146,7 +146,7 @@ namespace MCGalaxy.Games.ZS {
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (p.level != Game.Map) return;
-            ushort old = Game.Map.GetBlock(x, y, z);
+            BlockID old = Game.Map.GetBlock(x, y, z);
             
             if (Game.Map.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;

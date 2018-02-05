@@ -92,15 +92,15 @@ namespace MCGalaxy.Commands.Info {
             byte b = Block.Byte(block);
             if (b >= Block.CpeCount) {
                 Player.Message(p, "&bComplex information for \"{0}\":", block);
-                Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.Name(Block.Convert(b)));
+                Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.GetName(p, Block.Convert(b)));
                 OutputBlockProps(p, b);
                 return;
             }
             
             string msg = "";
             for (byte i = Block.CpeCount; i < Block.Invalid; i++) {
-                if (Block.Convert(i) == b)
-                    msg += Block.Name(i) + ", ";
+                if (Block.Convert(i) != b) continue;
+                msg += Block.GetName(p, i) + ", ";
             }
 
             if (msg.Length > 0) {

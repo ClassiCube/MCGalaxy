@@ -15,7 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.Text;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdMode : Command {
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            ushort block;
+            BlockID block;
             if (!CommandParser.GetBlock(p, message, out block)) return;
             if (block == Block.Air) { Player.Message(p, "Cannot use Air Mode."); return; }
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;

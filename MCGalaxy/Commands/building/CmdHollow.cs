@@ -17,13 +17,14 @@
  */
 using System;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdHollow : DrawCmd {
         public override string name { get { return "Hollow"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            ushort skip = Block.Invalid;
+            BlockID skip = Block.Invalid;
             if (dArgs.Message.Length > 0) {
                 if (!CommandParser.GetBlock(dArgs.Player, dArgs.Message, out skip)) return null;
             }

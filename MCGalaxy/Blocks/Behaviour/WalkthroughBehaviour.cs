@@ -29,9 +29,9 @@ namespace MCGalaxy.Blocks {
         internal static bool Door(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics == 0) return true;
 
-            byte physForm;
+            BlockID physForm;
             PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
-            p.level.Blockchange(x, y, z, (ushort)physForm, false, args);
+            p.level.Blockchange(x, y, z, physForm, false, args);
             return true;
         }
         

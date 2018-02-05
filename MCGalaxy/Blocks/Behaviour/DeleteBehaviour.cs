@@ -82,9 +82,9 @@ namespace MCGalaxy.Blocks {
         
         internal static void Door(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.physics != 0) {             
-                byte physForm;
+                BlockID physForm;
                 PhysicsArgs args = ActivateablePhysics.GetDoorArgs(block, out physForm);
-                p.level.Blockchange(x, y, z, (ushort)physForm, false, args);
+                p.level.Blockchange(x, y, z, physForm, false, args);
             } else {
                 p.RevertBlock(x, y, z);
             }
@@ -92,7 +92,7 @@ namespace MCGalaxy.Blocks {
         
         internal static void oDoor(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (block == Block.oDoor_Green || block == Block.oDoor_Green_air) {
-                ushort oDoorOpposite = p.level.Props[block].oDoorBlock;
+                BlockID oDoorOpposite = p.level.Props[block].oDoorBlock;
                 p.level.Blockchange(x, y, z, oDoorOpposite);
             } else {
                 p.RevertBlock(x, y, z);

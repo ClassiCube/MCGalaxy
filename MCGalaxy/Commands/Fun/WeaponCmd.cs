@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands.Fun {
             return null;
         }
         
-        protected static bool HandlesHitBlock(Player p, ushort block, WeaponType ending, Vec3U16 pos, bool doExplode) {
+        protected static bool HandlesHitBlock(Player p, BlockID block, WeaponType ending, Vec3U16 pos, bool doExplode) {
             if (p.level.physics < 2 || ending == WeaponType.Teleport || ending == WeaponType.Normal) return true;
             
             if (ending == WeaponType.Destroy) {

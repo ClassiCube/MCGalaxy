@@ -70,13 +70,13 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        static ushort[] MostFrequentBlocks(int[] countsRaw) {
+        static BlockID[] MostFrequentBlocks(int[] countsRaw) {
             BlockID[] blocks = new BlockID[Block.ExtendedCount];
             int[] counts = new int[Block.ExtendedCount]; // copy array as Sort works in place
             int total = 0;
             
             for (int i = 0; i < blocks.Length; i++) {
-                blocks[i] = (ushort)i;
+                blocks[i] = (BlockID)i;
                 counts[i] = countsRaw[i];
                 if (counts[i] > 0) total++;
             }

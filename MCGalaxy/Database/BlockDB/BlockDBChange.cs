@@ -18,6 +18,7 @@
 using System;
 using System.Data;
 using MCGalaxy.SQL;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.DB {
     
@@ -25,8 +26,8 @@ namespace MCGalaxy.DB {
     public static class BlockDBChange {
         
         public static void Output(Player p, string name, BlockDBEntry e) {
-            ushort oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
-            ushort newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
+            BlockID oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
             
             DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
@@ -45,8 +46,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static void OutputMessageBlock(Player p, ushort block,
-                                              ushort x, ushort y, ushort z) {
+        public static void OutputMessageBlock(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (!p.level.Props[block].IsMessageBlock) return;
 
             try {
@@ -63,8 +63,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        public static void OutputPortal(Player p, ushort block,
-                                        ushort x, ushort y, ushort z) {
+        public static void OutputPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (!p.level.Props[block].IsPortal) return;
 
             try {

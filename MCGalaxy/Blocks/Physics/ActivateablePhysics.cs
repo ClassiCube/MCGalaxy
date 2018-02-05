@@ -67,22 +67,22 @@ namespace MCGalaxy.Blocks.Physics {
             if (index == -1) return;
             
             if (lvl.Props[block].IsDoor) {
-                byte physForm;
+                BlockID physForm;
                 PhysicsArgs args = GetDoorArgs(block, out physForm);
                 if (!instant) lvl.AddUpdate(index, physForm, args);
-                else lvl.Blockchange(index, (ushort)physForm, false, args);
+                else lvl.Blockchange(index, physForm, false, args);
             } else if (lvl.Props[block].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block);
                 lvl.AddUpdate(index, Block.Air,  args);
             } else {
-                ushort oDoor = lvl.Props[block].oDoorBlock;
+                BlockID oDoor = lvl.Props[block].oDoorBlock;
                 if (oDoor == Block.Invalid) return;
                 lvl.AddUpdate(index, oDoor, true);
             }
         }
         
         
-        internal static PhysicsArgs GetDoorArgs(BlockID block, out byte physForm) {
+        internal static PhysicsArgs GetDoorArgs(BlockID block, out BlockID physForm) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)block;

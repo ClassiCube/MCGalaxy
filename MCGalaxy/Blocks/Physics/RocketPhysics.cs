@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -33,7 +34,7 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int cy = -dirY; cy != 2 * dirY; cy += dirY)
                     for (int cz = -dirZ; cz != 2 * dirZ; cz += dirZ)
             {                
-                ushort rocketTail = lvl.GetBlock((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
+                BlockID rocketTail = lvl.GetBlock((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
                 if (rocketTail != Block.LavaFire) continue;
                 
                 int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Drawing.Ops;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     
@@ -25,7 +26,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Rainbow"; } }
         public RainbowBrush() : base(blocks) {}
         
-        internal static ushort[] blocks = new ushort[] { 
+        internal static BlockID[] blocks = new BlockID[] { 
             Block.Red,   Block.Orange,  Block.Yellow,
             Block.Lime,  Block.Green,   Block.Teal,
             Block.Aqua,  Block.Cyan,    Block.Blue,
@@ -38,7 +39,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "BWRainbow"; } }
         public BWRainbowBrush() : base(blocks) {}
         
-        static ushort[] blocks = new ushort[] { 
+        static BlockID[] blocks = new BlockID[] { 
             Block.Iron,  Block.White,    Block.Gray,
             Block.Black, Block.Obsidian, Block.Black, 
             Block.Gray,  Block.White };
@@ -52,7 +53,7 @@ namespace MCGalaxy.Drawing.Brushes {
         public RandomRainbowBrush() { rnd = new Random(); }        
         public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
         
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             return RainbowBrush.blocks[rnd.Next(RainbowBrush.blocks.Length)];
         }
     }

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.DB {
     
@@ -38,7 +39,7 @@ namespace MCGalaxy.DB {
         /// <remarks> May be different from actual level's dimensions, such as when the level has been resized. </remarks>        
         public Vec3U16 Dims;
         
-        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags, ushort old, ushort block) {
+        public void Add(Player p, ushort x, ushort y, ushort z, ushort flags, BlockID old, BlockID block) {
             if (!Enabled) return;
             BlockDBCacheEntry entry;
             entry.Packed1 = (uint)p.DatabaseID;

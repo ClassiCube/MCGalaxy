@@ -55,24 +55,23 @@ namespace MCGalaxy.Drawing.Ops {
             
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             ushort y = min.Y;
-            ushort doubleSlab = Block.DoubleSlab, leaf = Block.Leaves;
             
             for (ushort x = 0; x <= width; x++)
                 for (ushort z = 0; z <= length; z++)
                     if (wall[x, z])
             {
-                output(Place((ushort)(min.X + x + 1), y, (ushort)(min.Z + z + 1), doubleSlab));
-                output(Place((ushort)(min.X + x + 1), (ushort)(y + 1), (ushort)(min.Z + z + 1), leaf));
-                output(Place((ushort)(min.X + x + 1), (ushort)(y + 2), (ushort)(min.Z + z + 1), leaf));
+                output(Place((ushort)(min.X + x + 1), y, (ushort)(min.Z + z + 1), Block.DoubleSlab));
+                output(Place((ushort)(min.X + x + 1), (ushort)(y + 1), (ushort)(min.Z + z + 1), Block.Leaves));
+                output(Place((ushort)(min.X + x + 1), (ushort)(y + 2), (ushort)(min.Z + z + 1), Block.Leaves));
             }
             
-            brush = new SolidBrush(doubleSlab);
+            brush = new SolidBrush(Block.DoubleSlab);
             QuadX(min.X, y, min.Z, y, max.Z, brush, output);
             QuadX(max.X, y, min.Z, y, max.Z, brush, output);
             QuadZ(min.Z, y, min.X, y, max.X, brush, output);
             QuadZ(max.Z, y, min.X, y, max.X, brush, output);
             
-            brush = new SolidBrush(leaf);
+            brush = new SolidBrush(Block.Leaves);
             QuadX(min.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, brush, output);
             QuadX(max.X, (ushort)(y + 1), min.Z, (ushort)(y + 2), max.Z, brush, output);
             QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);

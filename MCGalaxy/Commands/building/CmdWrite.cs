@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {    
     public class CmdWriteText : Command {        
@@ -49,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(2, "Selecting direction for %SWrite", wArgs, DoWrite);
         }
 
-        bool DoWrite(Player p, Vec3S32[] marks, object state, ushort block) {
+        bool DoWrite(Player p, Vec3S32[] marks, object state, BlockID block) {
             WriteArgs wArgs = (WriteArgs)state;
             if (marks[0].X == marks[1].X && marks[0].Z == marks[1].Z) { 
                 Player.Message(p, "No direction was selected"); return false; 

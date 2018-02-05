@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            ushort old = p.level.GetBlock(x, y, z);
+            BlockID old = p.level.GetBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
             if (dArgs.Mode == DrawMode.volcano) dArgs.Mode = Calc2DFill(p, marks);            

@@ -17,6 +17,8 @@
 */
 using System;
 using System.Collections.Generic;
+using BlockID = System.UInt16;
+
 namespace MCGalaxy.Games
 {
     public sealed class CtfTeam
@@ -181,7 +183,7 @@ namespace MCGalaxy.Games
                 return Block.Air;
         }
 
-        public struct CatchPos { public ushort x, y, z; public ushort type; }
+        public struct CatchPos { public ushort x, y, z; public BlockID type; }
         public struct Spawn { public ushort x, y, z, rotx, roty; }
     }
 }

@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether this block is considered a door. </summary>
         public bool IsDoor;
         /// <summary> Extended block ID of the block this is converted to when toggled by a neighbouring door. </summary>
-        public ushort oDoorBlock;
+        public BlockID oDoorBlock;
         
         /// <summary> Whether this block is considered a message block. </summary>
         public bool IsMessageBlock;

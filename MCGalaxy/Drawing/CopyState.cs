@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Drawing {
 
@@ -73,19 +74,19 @@ namespace MCGalaxy.Drawing {
             return (y * Length + z) * Width + x;
         }
         
-        public ushort Get(int index) {
+        public BlockID Get(int index) {
             return Block.FromRaw(raw[index],
                                     (isExt[index >> 3] & (1 << (index & 0x07))) != 0);
         }
         
-        public ushort Get(int x, int y, int z) {
+        public BlockID Get(int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
             return Block.FromRaw(raw[index],
                                     (isExt[index >> 3] & (1 << (index & 0x07))) != 0);
         }
         
         public void Set(BlockID block, int index) {
-            raw[index] = (byte)block;
+            raw[index] = (BlockRaw)block;
             if (block >= Block.Extended) {
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {
@@ -95,7 +96,7 @@ namespace MCGalaxy.Drawing {
         
         public void Set(BlockID block, int x, int y, int z) {
             int index = (y * Length + z) * Width + x;
-            raw[index] = (byte)block;
+            raw[index] = (BlockRaw)block;
             if (block >= Block.Extended) {
                 isExt[index >> 3] |= (byte)(1 << (index & 0x07));
             } else {

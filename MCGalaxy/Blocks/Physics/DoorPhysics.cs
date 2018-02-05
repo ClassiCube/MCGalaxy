@@ -54,7 +54,7 @@ namespace MCGalaxy.Blocks.Physics {
             C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static void ActivateODoor(Level lvl, ushort oDoor, ushort x, ushort y, ushort z) {
+        static void ActivateODoor(Level lvl, BlockID oDoor, ushort x, ushort y, ushort z) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
             block = lvl.Props[block].oDoorBlock;

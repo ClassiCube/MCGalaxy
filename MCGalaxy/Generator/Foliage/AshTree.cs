@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Generator.Foliage {
@@ -67,7 +68,7 @@ namespace MCGalaxy.Generator.Foliage {
                 new Vec3S32(x + dx + R, y + branchMax + R, z + dz + R) };
             
             DrawOp op = new EllipsoidDrawOp();
-            Brush brush = new RandomBrush(new ushort[] { Block.Leaves });
+            Brush brush = new RandomBrush(new BlockID[] { Block.Leaves });
             op.SetMarks(marks);
             op.Perform(marks, brush, b => output(b.X, b.Y, b.Z, (BlockRaw)b.Block));
             

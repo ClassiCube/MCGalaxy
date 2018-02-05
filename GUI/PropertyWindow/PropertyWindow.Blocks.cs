@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
@@ -39,9 +40,10 @@ namespace MCGalaxy.Gui {
             for (int i = 0; i < Block.Props.Length; i++) {
                 blockPropsChanged[i] = Block.Props[i];
                 blockPropsChanged[i].Changed = false;
-                
-                string name = Block.Name((byte)i);
-                if (name != "unknown") blk_list.Items.Add(name);
+                if (Block.Undefined((BlockID)i)) continue;
+                    
+                string name = Block.GetName(null, (byte)i);
+                blk_list.Items.Add(name);
             }
             
             if (blk_list.SelectedIndex == -1)

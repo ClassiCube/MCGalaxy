@@ -17,6 +17,7 @@
 */
 using System;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
@@ -45,7 +46,7 @@ namespace MCGalaxy.Games {
         public Position SpawnPos;
         
         /// <summary> Block type of this team's flag. </summary>
-        public ushort FlagBlock;
+        public BlockID FlagBlock;
                 
         public CtfTeam2(string name, string color) { Name = name; Color = color; }
 

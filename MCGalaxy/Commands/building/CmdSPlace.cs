@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             ushort endY = (ushort)(m[0].Y + dirY * distance);
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
             
-            ushort held = p.GetHeldBlock();
+            BlockID held = p.GetHeldBlock();
             p.level.UpdateBlock(p, endX, endY, endZ, held, BlockDBFlags.Drawn, true);
             
             if (interval > 0) {

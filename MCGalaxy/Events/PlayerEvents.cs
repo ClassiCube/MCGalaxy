@@ -94,7 +94,7 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnPlayerDeath(Player p, ushort cause);
+    public delegate void OnPlayerDeath(Player p, BlockID cause);
     /// <summary> Called whenever a player dies in-game </summary>
     public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> {
         

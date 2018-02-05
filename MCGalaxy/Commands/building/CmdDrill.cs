@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoBlock(Player p, Level lvl, BlockID block, ushort x, ushort y, ushort z) {
-            ushort cur = lvl.GetBlock(x, y, z);
+            BlockID cur = lvl.GetBlock(x, y, z);
             if (cur == block) {
                 p.level.UpdateBlock(p, x, y, z, Block.Air, BlockDBFlags.Drawn, true);
             }

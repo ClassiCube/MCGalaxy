@@ -194,7 +194,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void SetBlock(Player p, BlockProps[] scope, BlockID block, 
-                             int i, string msg, ref ushort target, string type) {
+                             int i, string msg, ref BlockID target, string type) {
             Level lvl = Player.IsSuper(p) ? null : p.level;           
             if (msg == null) {
                 target = Block.Invalid;
@@ -249,7 +249,7 @@ namespace MCGalaxy.Commands.World {
         
         static string BlockName(BlockProps[] scope, Level lvl, BlockID block) {
             BlockRaw raw = (BlockRaw)block;
-            if (scope == Block.Props) return Block.Name(raw);
+            if (scope == Block.Props) return Block.coreNames[raw];
             BlockDefinition def = null;
             
             if (scope == BlockDefinition.GlobalProps) {

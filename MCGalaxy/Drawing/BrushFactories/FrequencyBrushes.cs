@@ -63,7 +63,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         static void GetRaw(string[] parts, Predicate<string> filter, BrushArgs args,
-                           out ushort[] blocks, out int[] count) {
+                           out BlockID[] blocks, out int[] count) {
             int bCount = 0;
             for (int i = 0; i < parts.Length; i++) {
                 if (parts[i].Length == 0 || filter(parts[i])) continue;
@@ -86,7 +86,7 @@ namespace MCGalaxy.Drawing.Brushes {
             int sum = 0;
             for (int i = 0; i < count.Length; i++) sum += count[i];
             
-            BlockID[] blocks = new ushort[sum];
+            BlockID[] blocks = new BlockID[sum];
             for (int i = 0, index = 0; i < toAffect.Length; i++) {
                 for (int j = 0; j < count[i]; j++)
                     blocks[index++] = toAffect[i];

@@ -20,16 +20,17 @@ using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     
     public sealed class CloudyBrush : Brush {
-        readonly ushort[] blocks;
+        readonly BlockID[] blocks;
         readonly int[] counts;
         readonly float[] thresholds;
         readonly ImprovedNoise noise;
         
-        public CloudyBrush(ushort[] blocks, int[] counts, NoiseArgs n) {
+        public CloudyBrush(BlockID[] blocks, int[] counts, NoiseArgs n) {
             this.blocks = blocks;
             this.counts = counts;
             this.thresholds = new float[counts.Length];
@@ -99,7 +100,7 @@ namespace MCGalaxy.Drawing.Brushes {
         }
         
         int next;
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             float N = noise.NormalisedNoise(op.Coords.X, op.Coords.Y, op.Coords.Z);
             N = (N + 1) * 0.5f; // rescale to [0, 1];
             N = N < 0 ? 0 : N;

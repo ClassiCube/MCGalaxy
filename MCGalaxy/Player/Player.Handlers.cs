@@ -166,7 +166,7 @@ namespace MCGalaxy {
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
         public int ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
-            ushort old = level.GetBlock(x, y, z);
+            BlockID old = level.GetBlock(x, y, z);
             int type = level.DoBlockchange(this, x, y, z, block);
             if (type == 0) return type;                                     // no change performed
             if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
@@ -284,7 +284,7 @@ namespace MCGalaxy {
                 LastAction = DateTime.UtcNow;
                 if (IsAfk) CmdAfk.ToggleAfk(this, "");
                 
-                ushort held = Block.FromRaw(buffer[offset + 8]);
+                BlockID held = Block.FromRaw(buffer[offset + 8]);
                 RawHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {

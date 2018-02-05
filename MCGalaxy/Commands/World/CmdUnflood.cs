@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
+
 namespace MCGalaxy.Commands.World {
     public sealed class CmdUnflood : Command {
         public override string name { get { return "Unflood"; } }
@@ -25,10 +27,10 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (message.Length == 0) { Help(p); return; }            
-            if (!message.CaselessEq("all") && Block.Byte(message) == Block.Invalid) {
-                Player.Message(p, "There is no block \"" + message + "\"."); return;
-            }            
+            if (message.Length == 0) { Help(p); return; }
+            BlockID block;
+            if (!message.CaselessEq("all") && !CommandParser.GetBlock(p, message, out block)) return;
+            
             int phys = p.level.physics;
             CmdPhysics.SetPhysics(p.level, 0);
             

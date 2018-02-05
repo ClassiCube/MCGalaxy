@@ -60,7 +60,7 @@ namespace MCGalaxy.Games {
         }
         
         
-        void HandlePlayerDeath(Player p, ushort deathblock) {
+        void HandlePlayerDeath(Player p, BlockID deathblock) {
             if (!Game.started || p.level != Game.Map) return;
             if (!Game.Get(p).hasflag) return;
             

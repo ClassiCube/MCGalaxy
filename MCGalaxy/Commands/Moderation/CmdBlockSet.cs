@@ -84,13 +84,13 @@ namespace MCGalaxy.Commands.Moderation {
         static void UpdatePermissions(BlockID block, Player p, string message) {
             BlockPerms.Save();
             BlockPerms.Load();
-            if (block < Block.CpeCount) {
+            if (!Block.IsPhysicsType(block)) {
                 BlockPerms.ResendAllBlockPermissions();
             }
             
-            Chat.MessageGlobal("&d{0}%S{1}", Block.Name(block), message);
-            if (Player.IsSuper(p))
-                Player.Message(p, Block.Name(block) + message);
+            string name = Block.GetName(p, block);
+            Chat.MessageGlobal("&d{0}%S{1}", name, message);
+            if (Player.IsSuper(p)) Player.Message(p, name + message);
         }
         
         public override void Help(Player p) {

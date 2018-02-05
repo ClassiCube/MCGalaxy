@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Commands;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     public sealed class CloudyBrushFactory : BrushFactory {       
@@ -44,7 +45,7 @@ namespace MCGalaxy.Drawing.Brushes {
             n.Lacunarity = 2;
             
             int[] count;
-            ushort[] toAffect = FrequencyBrush.GetBlocks(args, out count,
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count,
                                             Filter, arg => Handler(arg, args.Player, ref n));
             
             if (toAffect == null) return null;

@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
 
         public override void Use(Player p, string message) {
-            ushort block = p.GetHeldBlock();
+            BlockID block = p.GetHeldBlock();
             Vec3S32 P = p.Pos.BlockCoords;
             P.Y = (p.Pos.Y - 32) / 32;
 

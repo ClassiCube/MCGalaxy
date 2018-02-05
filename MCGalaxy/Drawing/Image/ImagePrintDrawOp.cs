@@ -51,16 +51,15 @@ namespace MCGalaxy.Drawing.Ops {
             selector = null;
             
             // Put all the blocks in shadow
-            ushort rock = Block.Stone;
             if (DualLayer) {
                 ushort y = (ushort)(Origin.Y + Source.Height);
                 for (int i = 0; i < Source.Width; i++) {
                     ushort x = (ushort)(Origin.X + dx.X * i);
                     ushort z = (ushort)(Origin.Z + dx.Z * i);
-                    output(Place(x, y, z, rock));
+                    output(Place(x, y, z, Block.Stone));
                     
                     x = (ushort)(x + adj.X); z = (ushort)(z + adj.Z);
-                    output(Place(x, y, z, rock));
+                    output(Place(x, y, z, Block.Stone));
                 }
             }
             

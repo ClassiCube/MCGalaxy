@@ -20,6 +20,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdPaste : Command {
@@ -46,7 +47,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(1, "Selecting location for %SPaste", brush, DoPaste);
         }
 
-        bool DoPaste(Player p, Vec3S32[] m, object state, ushort block) {
+        bool DoPaste(Player p, Vec3S32[] m, object state, BlockID block) {
             CopyState cState = p.CopySlots[p.CurrentCopySlot];
             m[0] += cState.Offset;
 

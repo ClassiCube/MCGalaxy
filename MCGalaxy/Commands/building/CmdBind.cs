@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using BlockID = System.UInt16;
+
 namespace MCGalaxy.Commands.Building {    
     public sealed class CmdBind : Command {
         public override string name { get { return "Bind"; } }
@@ -37,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (args.Length == 2) {
-                ushort src, dst;
+                BlockID src, dst;
                 if (!CommandParser.GetBlock(p, args[0], out src)) return;
                 if (!CommandParser.GetBlock(p, args[1], out dst)) return;
                 if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;              
@@ -48,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
                 p.BlockBindings[src] = dst;
                 Player.Message(p, "{0} bound to {1}", Block.GetName(p, src), Block.GetName(p, dst));
             } else {
-                ushort src;
+                BlockID src;
                 if (!CommandParser.GetBlock(p, args[0], out src)) return;
                 if (Block.IsPhysicsType(src)) {
                     Player.Message(p, "Physics blocks cannot be bound to another block."); return; 

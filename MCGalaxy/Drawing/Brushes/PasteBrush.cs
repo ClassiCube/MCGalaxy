@@ -32,7 +32,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;
@@ -57,7 +57,7 @@ namespace MCGalaxy.Drawing.Brushes {
             op.Flags = BlockDBFlags.Pasted;
         }
         
-        public override ushort NextBlock(DrawOp op) {
+        public override BlockID NextBlock(DrawOp op) {
             // Figure out local coords for this block
             int x = (op.Coords.X - op.Min.X) % state.Width;
             if (x < 0) x += state.Width;

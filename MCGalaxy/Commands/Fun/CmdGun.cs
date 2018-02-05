@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, ushort block) {
+        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block) {
             p.RevertBlock(x, y, z);
             if (!p.level.Config.Guns) { p.ClearBlockchange(); return; }
             if (!CommandParser.IsBlockAllowed(p, "use", block)) return;

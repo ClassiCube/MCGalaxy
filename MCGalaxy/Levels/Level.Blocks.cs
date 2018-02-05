@@ -242,7 +242,7 @@ namespace MCGalaxy {
             try
             {
                 if (x >= Width || y >= Height || z >= Length) return 0;
-                ushort old = GetBlock(x, y, z);
+                BlockID old = GetBlock(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffectPermissions(p, x, y, z, old, block)) {

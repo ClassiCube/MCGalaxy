@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Building {
             p.MakeSelection(marks, "Selecting region for %SCopy", cArgs, DoCopy, DoCopyMark);
         }
 
-        void DoCopyMark(Player p, Vec3S32[] m, int i, object state, ushort block) {
+        void DoCopyMark(Player p, Vec3S32[] m, int i, object state, BlockID block) {
             if (i == 2) {
                 CopyState copy = p.CopySlots[p.CurrentCopySlot];
                 copy.Offset.X = copy.OriginX - m[i].X;
