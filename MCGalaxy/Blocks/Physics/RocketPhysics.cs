@@ -37,10 +37,9 @@ namespace MCGalaxy.Blocks.Physics {
                 BlockID rocketTail = lvl.GetBlock((ushort)(x + cx), (ushort)(y + cy), (ushort)(z + cz));
                 if (rocketTail != Block.LavaFire) continue;
                 
-                int headIndex = lvl.PosToInt((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz));
-                byte rocketHead = headIndex < 0 ? Block.Invalid : lvl.blocks[headIndex];
-                bool unblocked = !lvl.listUpdateExists.Get(x, y, z) && 
-                    (headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
+                int headIndex;
+                BlockID rocketHead = lvl.GetBlock((ushort)(x - cx), (ushort)(y - cy), (ushort)(z - cz), out headIndex);
+                bool unblocked = !lvl.listUpdateExists.Get(x, y, z) && (headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
                 
                 if (unblocked && (rocketHead == Block.Air || rocketHead == Block.RocketStart)) {
                     lvl.AddUpdate(headIndex, Block.RocketHead);

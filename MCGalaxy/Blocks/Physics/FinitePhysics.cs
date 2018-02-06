@@ -53,8 +53,8 @@ namespace MCGalaxy.Blocks.Physics {
                     int i = indices[j];
                     ushort posX = (ushort)(x + (i / 5) - 2);
                     ushort posZ = (ushort)(z + (i % 5) - 2);
-                    if (lvl.IsAirAt(posX, (ushort)(y - 1), posZ) && lvl.IsAirAt(posX, y, posZ))
-                    {
+                    
+                    if (lvl.IsAirAt(posX, (ushort)(y - 1), posZ) && lvl.IsAirAt(posX, y, posZ)) {
                         if (posX < x) {
                             posX = (ushort)((posX + x) / 2);
                         } else {
@@ -67,10 +67,8 @@ namespace MCGalaxy.Blocks.Physics {
                             posZ = (ushort)((posZ + z + 1) / 2);
                         }
 
-                        int index = lvl.PosToInt(posX, y, posZ);
-                        if (index >= 0 && lvl.blocks[index] == Block.Air &&
-                            lvl.AddUpdate(index, lvl.blocks[C.b], C.data))
-                        {
+                        int index;
+                        if (lvl.IsAirAt(posX, y, posZ, out index) && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
                             lvl.AddUpdate(C.b, Block.Air);
                             C.data.ResetTypes();
                             return;

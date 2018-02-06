@@ -155,7 +155,6 @@ namespace MCGalaxy.Scripting {
         
         public CompilerResults CompileSource(string source, CompilerParameters args) {
             args.ReferencedAssemblies.Add("MCGalaxy_.dll");
-            args.ReferencedAssemblies.Add("MCGalaxy.exe");
             source = source.Replace("MCLawl", "MCGalaxy");
             source = source.Replace("MCForge", "MCGalaxy");
             return compiler.CompileAssemblyFromSource(args, source);
