@@ -21,6 +21,7 @@ using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Events.GroupEvents;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
@@ -54,7 +55,7 @@ namespace MCGalaxy {
         
         public PlayerList Players;
         public List<Command> Commands;
-        public bool[] Blocks = new bool[256];
+        public bool[] Blocks = new bool[Block.ExtendedCount];
         public Group() { }
         
         private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode) {
@@ -73,8 +74,9 @@ namespace MCGalaxy {
         }
         
         public void SetUsableBlocks() {
-            for (int i = 0; i < Blocks.Length; i++)
-                Blocks[i] = BlockPerms.UsableBy(Permission, (byte)i);
+            for (int i = 0; i < Blocks.Length; i++) {
+                Blocks[i] = BlockPerms.UsableBy(Permission, (BlockID)i);
+            }
         }
 
         public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }

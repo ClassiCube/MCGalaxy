@@ -140,7 +140,7 @@ namespace MCGalaxy.Maths {
             if (model.CaselessEq("head"))     return new Vec3S32(31, 31, 31);
             if (model.CaselessEq("pig"))      return new Vec3S32(28, 28, 28);
             if (model.CaselessEq("sheep"))    return new Vec3S32(20, 40, 20);
-            if (model.CaselessEq("skeleton")) return new Vec3S32(16, 60, 16);
+            if (model.CaselessEq("skeleton")) return new Vec3S32(16, 56, 16);
             if (model.CaselessEq("spider"))   return new Vec3S32(30, 24, 30);
             
             return new Vec3S32(18, 56, 18); // default humanoid size
