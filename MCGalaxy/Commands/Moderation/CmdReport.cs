@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (users.Length > 0) {
                 Player.Message(p, "The following players have been reported:");
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, users, pl => PlayerInfo.GetColoredName(p, pl), 
+                MultiPageOutput.Output(p, users, pl => PlayerInfo.GetColoredName(p, pl),
                                        "Review list", "players", modifier, false);
                 
                 Player.Message(p, "Use %T/Report check [Player] %Sto view report details.");
@@ -143,11 +143,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (File.Exists("extra/reported/" + target + ".txt")) {
                 reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
             }
-                      
+            
+            LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
+            string checkRankName = Group.GetColoredName(checkRank);
             if (reports.Count >= 5) {
-                LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
-                Player.Message(p, "{0} &calready has 5 pending reports! Please wait until an {1}%c+ has reviewed these reports first!",
-                               PlayerInfo.GetColoredName(p, target), Group.GetColoredName(checkRank));
+                Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1}%c+ has reviewed these reports first!",
+                               PlayerInfo.GetColoredName(p, target), checkRankName);
                 return;
             }
             
@@ -157,8 +158,10 @@ namespace MCGalaxy.Commands.Moderation {
             
             reports.Add(reason + " - Reported by " + p.name + " at " + DateTime.Now);
             File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
-            Player.Message(p, "%aYour report has been sent, it should be viewed when an operator is online!");
-            Chat.MessageOps(p.ColoredName + " %Shas made a report, view it with %T/Report check " + target);
+            Player.Message(p, "&aReport sent! It should be viewed when a {0}&a+ is online", checkRankName);
+            
+            Chat.MessageWhere(p.ColoredName + " %Smade a report, view it with %T/Report check " + target,
+                              pl => pl.Rank >= checkRank);
         }
         
         public override void Help(Player p) {
