@@ -78,9 +78,7 @@ namespace MCGalaxy.Drawing.Ops {
                 ushort z = (ushort)((index / lvl.Width) % lvl.Length);
                 
                 if (temp.Count > 0) { pos[count] = temp.Dequeue(); count++; }
-                if (bits.Get(x, y, z)) continue;
-                
-                bits.Set(x, y, z, true);
+                if (!bits.TrySetOn(x, y, z)) continue;
                 buffer.Add(index);
                 
                 if (mode != DrawMode.verticalX) { // x

@@ -52,6 +52,21 @@ namespace MCGalaxy.Util {
             chunk[index >> 3] |= (byte)((bit ? 1 : 0) << (index & 0x7)); // set new bit
         }
         
+        public bool TrySetOn(int x, int y, int z) {
+            int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
+            byte[] chunk = bits[index];
+            if (chunk == null) {
+                chunk = new byte[(16 * 16 * 16) / 8];
+                bits[index] = chunk;
+            }
+            
+            index = (x & 0xF) | (z & 0xF) << 4 | (y & 0xF) << 8;
+            if ((chunk[index >> 3] & (1 << (index & 0x7))) != 0) return false;
+            
+            chunk[index >> 3] |= (byte)(1 << (index & 0x7)); // set new bit
+            return true;
+        }
+        
         public void Clear() {
             for (int i = 0; i < bits.Length; i++)
                 bits[i] = null;

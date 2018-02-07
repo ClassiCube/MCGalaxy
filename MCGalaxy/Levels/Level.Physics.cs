@@ -211,10 +211,9 @@ namespace MCGalaxy {
                 int z = (index / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return;
                 
-                if (!listCheckExists.Get(x, y, z)) {
+                if (listCheckExists.TrySetOn(x, y, z)) {
                     Check check; check.Index = index; check.data = data;
                     ListCheck.Add(check); // Adds block to list to be updated
-                    listCheckExists.Set(x, y, z, true);
                 } else if (overRide) {
                     Check[] items = ListCheck.Items;
                     int count = ListCheck.Count;
@@ -256,8 +255,7 @@ namespace MCGalaxy {
                     return true;
                 }
 
-                if (!listUpdateExists.Get(x, y, z)) {
-                    listUpdateExists.Set(x, y, z, true);
+                if (listUpdateExists.TrySetOn(x, y, z)) {
                 } else if (block == Block.Sand || block == Block.Gravel)  {
                     RemoveUpdatesAtPos(index);
                 } else {
