@@ -111,7 +111,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (args.Revert) {
                 PhysicsArgs revertArgs = default(PhysicsArgs);
-                if (args.ExtBlock) revertArgs.ExtBlock = true;
+                if (args.ExtBlock) revertArgs.Raw |= PhysicsArgs.ExtBit;
                 lvl.AddUpdate(C.b, args.RevertType, revertArgs);
                 
                 C.data.ResetTypes();

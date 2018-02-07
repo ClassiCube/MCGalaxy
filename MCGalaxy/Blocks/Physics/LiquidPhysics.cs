@@ -23,16 +23,16 @@ namespace MCGalaxy.Blocks.Physics {
     public static class LiquidPhysics {
         
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, byte type) {
-            int b;
-            BlockID block = lvl.GetBlock(x, y, z, out b);
-            if (b == -1) return;
+            int index;
+            BlockID block = lvl.GetBlock(x, y, z, out index);
+            if (index == -1) return;
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
 
             switch (block) {
                 case Block.Air:
             		if (!lvl.CheckSpongeWater(x, y, z)) {
-            		    lvl.AddUpdate(b, type);
+            		    lvl.AddUpdate(index, type);
             		}
                     break;
 
@@ -40,21 +40,21 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.FastLava:
                 case Block.Deadly_ActiveLava:
                     if (!lvl.CheckSpongeWater(x, y, z)) {
-                        lvl.AddUpdate(b, Block.Stone, default(PhysicsArgs));
+                        lvl.AddUpdate(index, Block.Stone, default(PhysicsArgs));
                     }
                     break;
 
                 case Block.Sand:
                 case Block.Gravel:
                 case Block.FloatWood:
-                    lvl.AddCheck(b); break;
+                    lvl.AddCheck(index); break;
                     
                 default:
                     // Adv physics kills flowers and mushrooms in water
                     if (!lvl.Props[block].WaterKills) break;
                     
                     if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
-                        lvl.AddUpdate(b, Block.Air, default(PhysicsArgs));
+                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
                     }
                     break;
             }

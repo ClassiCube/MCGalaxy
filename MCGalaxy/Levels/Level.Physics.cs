@@ -183,7 +183,7 @@ namespace MCGalaxy {
                     // Is the Ext flag just an indicator for the block update?
                     if (C.data.ExtBlock && (C.data.Raw & PhysicsArgs.TypeMask) == 0) {
                         block |= Block.Extended;
-                        C.data.ExtBlock = false;
+                        C.data.Raw &= ~PhysicsArgs.ExtBit;
                     }
                     
                     if (DoPhysicsBlockchange(C.b, block, false, C.data, true))
@@ -233,7 +233,7 @@ namespace MCGalaxy {
 
         internal bool AddUpdate(int index, BlockID block, bool overRide = false) {
             PhysicsArgs args = default(PhysicsArgs);
-            args.ExtBlock = block >= Block.Extended;
+            if (block >= Block.Extended) args.Raw |= PhysicsArgs.ExtBit;
             return AddUpdate(index, block, args, overRide);
         }
         
@@ -247,7 +247,7 @@ namespace MCGalaxy {
                 if (overRide) {
                     // Is the Ext flag just an indicator for the block update?
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        data.ExtBlock = false;
+                        data.Raw &= ~PhysicsArgs.ExtBit;
                     }
                     AddCheck(index, true, data); //Dont need to check physics here....AddCheck will do that
                     Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data);
