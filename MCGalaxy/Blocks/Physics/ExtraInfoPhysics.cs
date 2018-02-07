@@ -20,18 +20,18 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
-    public delegate bool ExtraInfoHandler(Level lvl, ref Check C);
+    public delegate bool ExtraInfoHandler(Level lvl, ref PhysInfo C);
     
     public static class ExtraInfoPhysics {
         
-        public static bool DoDoorsOnly(Level lvl, ref Check C) {
-            if (C.data.Type1 == PhysicsArgs.Custom) return true;
-            if (!C.data.HasWait && lvl.blocks[C.b] == Block.Air)
-                C.data.ResetTypes();
-            if (!C.data.HasWait) return false;
+        public static bool DoDoorsOnly(Level lvl, ref PhysInfo C) {
+            if (C.Data.Type1 == PhysicsArgs.Custom) return true;
+            if (!C.Data.HasWait && C.Block == Block.Air)
+                C.Data.ResetTypes();
+            if (!C.Data.HasWait) return false;
             
-            if (C.data.Door && C.data.Data == 0) {
-                BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
+            if (C.Data.Door && C.Data.Data == 0) {
+                BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
                 bool tdoor = lvl.Props[block].IsTDoor;
                 
                 if (tdoor) DoorPhysics.tDoor(lvl, ref C);
@@ -39,46 +39,46 @@ namespace MCGalaxy.Blocks.Physics {
             }
             
             int waitTime = 0;
-            if (C.data.Type1 == PhysicsArgs.Wait) waitTime = C.data.Value1;
-            if (C.data.Type2 == PhysicsArgs.Wait) waitTime = C.data.Value2;
+            if (C.Data.Type1 == PhysicsArgs.Wait) waitTime = C.Data.Value1;
+            if (C.Data.Type2 == PhysicsArgs.Wait) waitTime = C.Data.Value2;
             
-            if (C.data.Data <= waitTime) { C.data.Data++; return true; }
-            if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
-            if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
+            if (C.Data.Data <= waitTime) { C.Data.Data++; return true; }
+            if (C.Data.Type1 == PhysicsArgs.Wait) C.Data.Type1 = 0;
+            if (C.Data.Type2 == PhysicsArgs.Wait) C.Data.Type2 = 0;
             
-            if (C.data.Door) {
+            if (C.Data.Door) {
                 PhysicsArgs dArgs = default(PhysicsArgs);
-                dArgs.ExtBlock = C.data.ExtBlock;
-                lvl.AddUpdate(C.b, C.data.Value2, dArgs); 
+                dArgs.ExtBlock = C.Data.ExtBlock;
+                lvl.AddUpdate(C.Index, C.Data.Value2, dArgs); 
                 
-                C.data.ResetTypes();
-                C.data.Data = PhysicsArgs.RemoveFromChecks;
+                C.Data.ResetTypes();
+                C.Data.Data = PhysicsArgs.RemoveFromChecks;
             }
             return false;
         }
         
-        public static bool DoNormal(Level lvl, ref Check C) {
-            if (C.data.Type1 == PhysicsArgs.Custom) return true;
-            if (!C.data.HasWait && lvl.blocks[C.b] == Block.Air)
-                C.data.ResetTypes();
+        public static bool DoNormal(Level lvl, ref PhysInfo C) {
+            if (C.Data.Type1 == PhysicsArgs.Custom) return true;
+            if (!C.Data.HasWait && C.Block == Block.Air)
+                C.Data.ResetTypes();
             
             ExtraInfoArgs args = default(ExtraInfoArgs);
-            ParseType(C.data.Type1, ref args, C.data.Value1);
-            ParseType(C.data.Type2, ref args, C.data.Value2);
-            args.ExtBlock = C.data.ExtBlock;
+            ParseType(C.Data.Type1, ref args, C.Data.Value1);
+            ParseType(C.Data.Type2, ref args, C.Data.Value2);
+            args.ExtBlock = C.Data.ExtBlock;
             
             if (args.Wait) {
-                if (C.data.Door && C.data.Data == 0) {
-                    BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
+                if (C.Data.Door && C.Data.Data == 0) {
+                    BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
                     bool tdoor = lvl.Props[block].IsTDoor;
                     
                     if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                     else DoorPhysics.Door(lvl, ref C);
                 }
 
-                if (C.data.Data <= args.WaitTime) { C.data.Data++; return true; }
-                if (C.data.Type1 == PhysicsArgs.Wait) C.data.Type1 = 0;
-                if (C.data.Type2 == PhysicsArgs.Wait) C.data.Type2 = 0;
+                if (C.Data.Data <= args.WaitTime) { C.Data.Data++; return true; }
+                if (C.Data.Type1 == PhysicsArgs.Wait) C.Data.Type1 = 0;
+                if (C.Data.Type2 == PhysicsArgs.Wait) C.Data.Type2 = 0;
             }
             DoOther(lvl, ref C, ref args);
             return false;
@@ -101,10 +101,10 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        static void DoOther(Level lvl, ref Check C, ref ExtraInfoArgs args) {
+        static void DoOther(Level lvl, ref PhysInfo C, ref ExtraInfoArgs args) {
             Random rand = lvl.physRandom;
             if (args.Rainbow) {
-                if (C.data.Data < 4) C.data.Data++;
+                if (C.Data.Data < 4) C.Data.Data++;
                 else DoRainbow(lvl, ref C, rand, args.RainbowNum);
                 return;
             }
@@ -112,30 +112,28 @@ namespace MCGalaxy.Blocks.Physics {
             if (args.Revert) {
                 PhysicsArgs revertArgs = default(PhysicsArgs);
                 if (args.ExtBlock) revertArgs.Raw |= PhysicsArgs.ExtBit;
-                lvl.AddUpdate(C.b, args.RevertType, revertArgs);
+                lvl.AddUpdate(C.Index, args.RevertType, revertArgs);
                 
-                C.data.ResetTypes();
-                C.data.Data = PhysicsArgs.RemoveFromChecks;
+                C.Data.ResetTypes();
+                C.Data.Data = PhysicsArgs.RemoveFromChecks;
             }
             
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
+            ushort x = C.X, y = C.Y, z = C.Z;            
             // Not setting drop = false can cause occasional leftover blocks, since C.extraInfo is emptied, so
             // drop can generate another block with no dissipate/explode information.
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
                 if (!lvl.listUpdateExists.Get(x, y, z)) {
-                    lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                    C.data.ResetTypes();
+                    lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                    C.Data.ResetTypes();
                     args.Drop = false;
                 } else {
-                    lvl.AddUpdate(C.b, lvl.blocks[C.b], C.data);
+                    lvl.AddUpdate(C.Index, C.Block, C.Data);
                 }
             }
             
             if (args.Explode && rand.Next(1, 100) <= args.ExplodeNum) {
                 lvl.MakeExplosion(x, y, z, 0);
-                C.data.ResetTypes();
+                C.Data.ResetTypes();
                 args.Drop = false;
             }
             
@@ -143,31 +141,28 @@ namespace MCGalaxy.Blocks.Physics {
                 DoDrop(lvl, ref C, rand, args.DropNum, x, y, z);
         }
         
-        static void DoRainbow(Level lvl, ref Check C, Random rand, int rainbownum) {
+        static void DoRainbow(Level lvl, ref PhysInfo C, Random rand, int rainbownum) {
             if (rainbownum > 2) {
-                byte block = lvl.blocks[C.b];
+                BlockID block = C.Block;
                 if (block < Block.Red || block > Block.Pink) {
-                    lvl.AddUpdate(C.b, Block.Red, C.data);
+                    lvl.AddUpdate(C.Index, Block.Red, C.Data);
                 } else {
                     BlockID next = block == Block.Pink ? Block.Red : (BlockID)(block + 1);
-                    lvl.AddUpdate(C.b, next, default(PhysicsArgs));
+                    lvl.AddUpdate(C.Index, next, default(PhysicsArgs));
                 }
             } else {
-                lvl.AddUpdate(C.b, (BlockID)rand.Next(Block.Red, Block.Pink + 1), default(PhysicsArgs));
+                lvl.AddUpdate(C.Index, (BlockID)rand.Next(Block.Red, Block.Pink + 1), default(PhysicsArgs));
             }
         }
         
-        static void DoDrop(Level lvl, ref Check C, Random rand, int dropnum, ushort x, ushort y, ushort z) {
-            int index = lvl.PosToInt(x, (ushort)(y - 1), z);
-            if (index < 0) return;
+        static void DoDrop(Level lvl, ref PhysInfo C, Random rand, int dropnum, ushort x, ushort y, ushort z) {
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
+            if (!(below == Block.Air || below == Block.Lava || below == Block.Water)) return;
             
-            byte below = lvl.blocks[index];
-            if (!(below == Block.Air || below == Block.Lava || below == Block.Water))
-                return;
-            
-            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                C.data.ResetTypes();
+            if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, C.Block, C.Data)) {
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                C.Data.ResetTypes();
             }
         }
         

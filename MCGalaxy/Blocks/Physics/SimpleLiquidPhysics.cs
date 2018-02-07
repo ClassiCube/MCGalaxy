@@ -22,7 +22,7 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class SimpleLiquidPhysics {
         
-        public static void DoWater(Level lvl, ref Check C) {
+        public static void DoWater(Level lvl, ref PhysInfo C) {
             if (lvl.Config.FiniteLiquids) {
                 FinitePhysics.DoWaterOrLava(lvl, ref C);
             } else if (lvl.Config.RandomFlow) {
@@ -32,10 +32,10 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        public static void DoLava(Level lvl, ref Check C) {
+        public static void DoLava(Level lvl, ref PhysInfo C) {
             // upper 3 bits are time delay
-            if (C.data.Data < (4 << 5)) {
-                C.data.Data += (1 << 5); return;
+            if (C.Data.Data < (4 << 5)) {
+                C.Data.Data += (1 << 5); return;
             }
             
             if (lvl.Config.FiniteLiquids) {
@@ -47,11 +47,11 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        public static void DoFastLava(Level lvl, ref Check C) {
+        public static void DoFastLava(Level lvl, ref PhysInfo C) {
             if (lvl.Config.RandomFlow) {
                 DoLavaRandowFlow(lvl, ref C, false);
-                if (C.data.Data != PhysicsArgs.RemoveFromChecks)
-                    C.data.Data = 0; // no lava delay
+                if (C.Data.Data != PhysicsArgs.RemoveFromChecks)
+                    C.Data.Data = 0; // no lava delay
             } else {
                 DoLavaUniformFlow(lvl, ref C, false);
             }
@@ -66,16 +66,16 @@ namespace MCGalaxy.Blocks.Physics {
         const int flowed_maskAll = 0x1F;
         
         
-        static void DoWaterRandowFlow(Level lvl, ref Check C) {
+        static void DoWaterRandowFlow(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             if (!lvl.CheckSpongeWater(x, y, z)) {
-                byte data = C.data.Data;
-                byte block = lvl.blocks[C.b];
-                if (y < lvl.Height - 1)
-                    CheckFallingBlocks(lvl, C.b + lvl.Width * lvl.Length);
+                byte data = C.Data.Data;
+                BlockID block = C.Block;
+                if (y < lvl.Height - 1) {
+                    CheckFallingBlocks(lvl, C.Index + lvl.Width * lvl.Length);
+                }
                 
                 if ((data & flowed_xMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
@@ -115,41 +115,40 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 
                 // Have we spread now (or been blocked from spreading) in all directions?
-                C.data.Data = data;
-                if (!C.data.HasWait && (data & 0x1F) == 0x1F) {
-                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                C.Data.Data = data;
+                if (!C.Data.HasWait && (data & 0x1F) == 0x1F) {
+                    C.Data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                if (!C.data.HasWait) {
-                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                if (!C.Data.HasWait) {
+                    C.Data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             }
         }
         
-        static void DoWaterUniformFlow(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+        static void DoWaterUniformFlow(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             if (!lvl.CheckSpongeWater(x, y, z)) {
-                byte block = lvl.blocks[C.b];
-                if (y < lvl.Height - 1)
-                    CheckFallingBlocks(lvl, C.b + lvl.Width * lvl.Length);
+                BlockID block = C.Block;
+                if (y < lvl.Height - 1) {
+                    CheckFallingBlocks(lvl, C.Index + lvl.Width * lvl.Length);
+                }
+                
                 LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
                 LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }
-            if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+            if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
-            int b;
-            BlockID block = lvl.GetBlock(x, y, z, out b);
-            if (b == -1) return true;
+            BlockID block = lvl.GetBlock(x, y, z);
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
 
@@ -166,6 +165,9 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.FloatWood:
                     return false;
                     
+                case Block.Invalid:
+                    return true;
+                    
                 default:
                     // Adv physics kills flowers, mushroom blocks in water
                     if (!lvl.Props[block].WaterKills) break;
@@ -177,17 +179,16 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         
-        static void DoLavaRandowFlow(Level lvl, ref Check C, bool checkWait) {
+        static void DoLavaRandowFlow(Level lvl, ref PhysInfo C, bool checkWait) {
             Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
 
             if (!lvl.CheckSpongeLava(x, y, z)) {
-                byte data = C.data.Data;
+                byte data = C.Data.Data;
                 // Upper 3 bits are time flags - reset random delay
                 data &= flowed_maskAll;
                 data |= (byte)(rand.Next(3) << 5);
-                byte block = lvl.blocks[C.b];
+                BlockID block = C.Block;
 
                 if ((data & flowed_xMax) == 0 && rand.Next(4) == 0) {
                     LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
@@ -227,42 +228,39 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 
                 // Have we spread now (or been blocked from spreading) in all directions?
-                C.data.Data = data;
-                if ((!checkWait || !C.data.HasWait) && (data & flowed_maskAll) == flowed_maskAll) {
-                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                C.Data.Data = data;
+                if ((!checkWait || !C.Data.HasWait) && (data & flowed_maskAll) == flowed_maskAll) {
+                    C.Data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                if (!checkWait || !C.data.HasWait) {
-                    C.data.Data = PhysicsArgs.RemoveFromChecks;
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                if (!checkWait || !C.Data.HasWait) {
+                    C.Data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             }
         }
         
-        static void DoLavaUniformFlow(Level lvl, ref Check C, bool checkWait) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+        static void DoLavaUniformFlow(Level lvl, ref PhysInfo C, bool checkWait) {
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             if (!lvl.CheckSpongeLava(x, y, z)) {
-                byte block = lvl.blocks[C.b];
+                BlockID block = C.Block;
                 LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
                 LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }
             
-            if (!checkWait || !C.data.HasWait) {
-                C.data.Data = PhysicsArgs.RemoveFromChecks;
+            if (!checkWait || !C.Data.HasWait) {
+                C.Data.Data = PhysicsArgs.RemoveFromChecks;
             }
         }
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
-            int b;
-            BlockID block = lvl.GetBlock(x, y, z, out b);
-            if (b == -1) return true;
+            BlockID block = lvl.GetBlock(x, y, z);
             if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
             
@@ -278,7 +276,10 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.Sand:
                 case Block.Gravel:
                     return false;
-
+                    
+                case Block.Invalid:
+                    return true;
+                    
                 default:
                     // Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
                     if (!lvl.Props[block].LavaKills) break;

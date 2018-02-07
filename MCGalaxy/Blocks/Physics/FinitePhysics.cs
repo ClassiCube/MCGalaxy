@@ -23,19 +23,19 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class FinitePhysics {
         
-        public unsafe static void DoWaterOrLava(Level lvl, ref Check C) {
+        public unsafe static void DoWaterOrLava(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;            
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
             
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             if (below == Block.Air) {
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], C.data);
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                C.data.ResetTypes();
+                lvl.AddUpdate(index, C.Block, C.Data);
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                C.Data.ResetTypes();
             } else if (below == Block.StillWater || below == Block.StillLava) {
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                C.data.ResetTypes();
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                C.Data.ResetTypes();
             } else {
                 const int count = 25;
                 int* indices = stackalloc int[count];
@@ -67,10 +67,9 @@ namespace MCGalaxy.Blocks.Physics {
                             posZ = (ushort)((posZ + z + 1) / 2);
                         }
 
-                        int index;
-                        if (lvl.IsAirAt(posX, y, posZ, out index) && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
-                            lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                            C.data.ResetTypes();
+                        if (lvl.IsAirAt(posX, y, posZ, out index) && lvl.AddUpdate(index, C.Block, C.Data)) {
+                            lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                            C.Data.ResetTypes();
                             return;
                         }
                     }
@@ -78,19 +77,14 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        static bool Expand(Level lvl, int x, int y, int z) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index >= 0 && lvl.blocks[index] == Block.Air &&
-                lvl.AddUpdate(index, Block.FiniteWater, default(PhysicsArgs))) {
-                return true;
-            }
-            return false;
+        static bool Expand(Level lvl, ushort x, ushort y, ushort z) {
+            int index;
+            return lvl.IsAirAt(x, y, z, out index) && lvl.AddUpdate(index, Block.FiniteWater, default(PhysicsArgs));
         }
         
-        public unsafe static void DoFaucet(Level lvl, ref Check C) {
+        public unsafe static void DoFaucet(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;            
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             const int count = 6;
             int* indices = stackalloc int[count];
@@ -108,22 +102,22 @@ namespace MCGalaxy.Blocks.Physics {
                 int i = indices[j];
                 switch (i) {
                     case 0:
-                        if (Expand(lvl, x - 1, y, z)) return;
+                		if (Expand(lvl, (ushort)(x - 1), y, z)) return;
                         break;
                     case 1:
-                        if (Expand(lvl, x + 1, y, z)) return;
+                        if (Expand(lvl, (ushort)(x + 1), y, z)) return;
                         break;
                     case 2:
-                        if (Expand(lvl, x, y - 1, z)) return;
+                        if (Expand(lvl, x, (ushort)(y - 1), z)) return;
                         break;
                     case 3:
-                        if (Expand(lvl, x, y + 1, z)) return;
+                        if (Expand(lvl, x, (ushort)(y + 1), z)) return;
                         break;
                     case 4:
-                        if (Expand(lvl, x, y, z - 1)) return;
+                        if (Expand(lvl, x, y, (ushort)(z - 1))) return;
                         break;
                     case 5:
-                        if (Expand(lvl, x, y, z + 1)) return;
+                        if (Expand(lvl, x, y, (ushort)(z + 1))) return;
                         break;
                 }
             }

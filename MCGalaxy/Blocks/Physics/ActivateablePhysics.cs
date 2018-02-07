@@ -111,21 +111,17 @@ namespace MCGalaxy.Blocks.Physics {
         
         
         internal static void CheckNeighbours(Level lvl, ushort x, ushort y, ushort z) {
-            CheckAt(lvl, lvl.PosToInt((ushort)(x + 1), y, z));
-            CheckAt(lvl, lvl.PosToInt((ushort)(x - 1), y, z));
-            CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)));
-            CheckAt(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)));
-            CheckAt(lvl, lvl.PosToInt(x, (ushort)(y + 1), z));
+            CheckAt(lvl, (ushort)(x + 1), y, z);
+            CheckAt(lvl, (ushort)(x - 1), y, z);
+            CheckAt(lvl, x, y, (ushort)(z + 1));
+            CheckAt(lvl, x, y, (ushort)(z - 1));
+            CheckAt(lvl, x, (ushort)(y + 1), z);
             // ommission of y-1 to match original behaviour
         }
         
-        internal static void CheckAt(Level lvl, int index) {
-            if (index == -1) return;
-            byte block = lvl.blocks[index];
-            BlockID convBlock = Block.Convert(block);
-            if (convBlock == Block.Water || convBlock == Block.Lava || (block >= Block.Red && block <= Block.White)) {
-                lvl.AddCheck(index); return;
-            }
+        internal static void CheckAt(Level lvl, ushort x, ushort y, ushort z) {
+            int index;
+            BlockID block = lvl.GetBlock(x, y, z, out index);
 
             switch (block) {
                     //case Block.water:
@@ -145,6 +141,10 @@ namespace MCGalaxy.Blocks.Physics {
                     lvl.AddCheck(index);
                     break;
                 default:
+                    block = Block.Convert(block);
+                    if (block == Block.Water || block == Block.Lava || (block >= Block.Red && block <= Block.White)) {
+                        lvl.AddCheck(index);
+                    }
                     break;
             }
         }

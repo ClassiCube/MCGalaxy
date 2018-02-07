@@ -22,16 +22,15 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class ZombiePhysics {
         
-        public static void Do(Level lvl, ref Check C) {
+        public static void Do(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             // Make zombie fall down
             if (lvl.IsAirAt(x, (ushort)(y - 1), z)) {
-                lvl.AddUpdate(C.b, Block.ZombieHead);
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), lvl.blocks[C.b]);
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
+                lvl.AddUpdate(C.Index, Block.ZombieHead);
+                lvl.AddUpdate(lvl.IntOffset(C.Index, 0, -1, 0), C.Block);
+                lvl.AddUpdate(lvl.IntOffset(C.Index, 0, 1, 0), Block.Air);
                 return;
             }
             bool checkTime = true;
@@ -55,8 +54,8 @@ namespace MCGalaxy.Blocks.Physics {
                 checkTime = false;
             }
             
-            if (checkTime && C.data.Data < 3) {
-                C.data.Data++;
+            if (checkTime && C.Data.Data < 3) {
+                C.Data.Data++;
                 return;
             }
 
@@ -98,21 +97,19 @@ namespace MCGalaxy.Blocks.Physics {
                     if (dirsVisited >= 4) return;
                     goto case 1;
             }
-            lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-            lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air, default(PhysicsArgs));
+            lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+            lvl.AddUpdate(lvl.IntOffset(C.Index, 0, 1, 0), Block.Air, default(PhysicsArgs));
         }
         
-        public static void DoHead(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+        public static void DoHead(Level lvl, ref PhysInfo C) {
+            BlockID below = lvl.GetBlock(C.X, (ushort)(C.Y - 1), C.Z);
             
             if (below != Block.ZombieBody && below != Block.Creeper) {
-                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
+                C.Data.Type1 = PhysicsArgs.Revert; C.Data.Value1 = Block.Air;
             }
         }
         
-        static bool MoveZombie(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+        static bool MoveZombie(Level lvl, ref PhysInfo C, ushort x, ushort y, ushort z) {
             int index;
             
             // Move zombie up or down blocks
@@ -123,10 +120,10 @@ namespace MCGalaxy.Blocks.Physics {
                 return false;
             }
 
-            if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
+            if (lvl.AddUpdate(index, C.Block)) {
                 lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), Block.ZombieHead, default(PhysicsArgs));
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(lvl.IntOffset(C.Index, 0, 1, 0), Block.Air, default(PhysicsArgs));
                 return true;
             }
             return false;

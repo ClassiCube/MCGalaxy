@@ -34,7 +34,7 @@ namespace MCGalaxy.Blocks {
     public delegate bool HandleWalkthrough(Player p, BlockID block, ushort x, ushort y, ushort z);
 
     /// <summary> Called to handle the physics for this particular block. </summary>
-    public delegate void HandlePhysics(Level lvl, ref Check C);
+    public delegate void HandlePhysics(Level lvl, ref PhysInfo C);
     
     public static class BlockBehaviour {
 
@@ -104,9 +104,9 @@ namespace MCGalaxy.Blocks {
                 case Block.WaterDown: return ExtLiquidPhysics.DoWaterfall;
                 case Block.LavaDown: return ExtLiquidPhysics.DoLavafall;
                 
-                case Block.WaterFaucet: return (Level lvl, ref Check C) =>
+                case Block.WaterFaucet: return (Level lvl, ref PhysInfo C) =>
                     ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.WaterDown);
-                case Block.LavaFaucet: return (Level lvl, ref Check C) =>
+                case Block.LavaFaucet: return (Level lvl, ref PhysInfo C) =>
                     ExtLiquidPhysics.DoFaucet(lvl, ref C, Block.LavaDown);
                     
                 case Block.FiniteWater: return FinitePhysics.DoWaterOrLava;
@@ -126,25 +126,25 @@ namespace MCGalaxy.Blocks {
                 case Block.Gravel: return OtherPhysics.DoFalling;
                 case Block.FloatWood: return OtherPhysics.DoFloatwood;
 
-                case Block.Sponge: return (Level lvl, ref Check C) => 
+                case Block.Sponge: return (Level lvl, ref PhysInfo C) => 
                     OtherPhysics.DoSponge(lvl, ref C, false);
-                case Block.LavaSponge: return (Level lvl, ref Check C) => 
+                case Block.LavaSponge: return (Level lvl, ref PhysInfo C) => 
                     OtherPhysics.DoSponge(lvl, ref C, true);
 
                 // Special blocks that are not saved
-                case Block.Air_Flood: return (Level lvl, ref Check C) =>
+                case Block.Air_Flood: return (Level lvl, ref PhysInfo C) =>
                     AirPhysics.DoFlood(lvl, ref C, AirFlood.Full, Block.Air_Flood);
-                case Block.Air_FloodLayer: return (Level lvl, ref Check C) =>
+                case Block.Air_FloodLayer: return (Level lvl, ref PhysInfo C) =>
                     AirPhysics.DoFlood(lvl, ref C, AirFlood.Layer, Block.Air_FloodLayer);
-                case Block.Air_FloodDown: return (Level lvl, ref Check C) =>
+                case Block.Air_FloodDown: return (Level lvl, ref PhysInfo C) =>
                     AirPhysics.DoFlood(lvl, ref C, AirFlood.Down, Block.Air_FloodDown);
-                case Block.Air_FloodUp: return (Level lvl, ref Check C) =>
+                case Block.Air_FloodUp: return (Level lvl, ref PhysInfo C) =>
                     AirPhysics.DoFlood(lvl, ref C, AirFlood.Up, Block.Air_FloodUp);
                     
                 case Block.TNT_Small: return TntPhysics.DoSmallTnt;
-                case Block.TNT_Big: return (Level lvl, ref Check C) =>
+                case Block.TNT_Big: return (Level lvl, ref PhysInfo C) =>
                     TntPhysics.DoLargeTnt(lvl, ref C, 1);
-                case Block.TNT_Nuke: return (Level lvl, ref Check C) => 
+                case Block.TNT_Nuke: return (Level lvl, ref PhysInfo C) => 
                     TntPhysics.DoLargeTnt(lvl, ref C, 4);
                 case Block.TNT_Explosion: return TntPhysics.DoTntExplosion;
                 case Block.Train: return TrainPhysics.Do;
@@ -174,19 +174,19 @@ namespace MCGalaxy.Blocks {
             if (ai == AnimalAI.Fly) return BirdPhysics.Do;
 
             if (ai == AnimalAI.FleeAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Air, -1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Air, -1);
             } else if (ai == AnimalAI.FleeWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Water, -1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Water, -1);
             } else if (ai == AnimalAI.FleeLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Lava, -1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Lava, -1);
             }
             
             if (ai == AnimalAI.KillerAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Air, 1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Air, 1);
             } else if (ai == AnimalAI.KillerWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Water, 1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Water, 1);
             } else if (ai == AnimalAI.KillerLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Lava, 1);
+                return (Level lvl, ref PhysInfo C) => HunterPhysics.Do(lvl, ref C, Block.Lava, 1);
             }
             return null;
         }

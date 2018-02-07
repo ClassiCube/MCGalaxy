@@ -21,35 +21,32 @@ namespace MCGalaxy.Blocks.Physics {
 
     public static class LeafPhysics {
         
-        public static void DoLeaf(Level lvl, ref Check C) {
+        public static void DoLeaf(Level lvl, ref PhysInfo C) {
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
-                ushort x, y, z;
-                lvl.IntToPos(C.b, out x, out y, out z);            
-                ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
+                ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
             }
 
             // Just immediately remove from physics list
             if (!lvl.Config.LeafDecay) {
                 lvl.leaves.Clear();
-                C.data.Data = PhysicsArgs.RemoveFromChecks; return;
+                C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
             
             // Delay checking for decay for a random amount of time
-            if (C.data.Data < 5) {
+            if (C.Data.Data < 5) {
                 Random rand = lvl.physRandom;
-                if (rand.Next(10) == 0) C.data.Data++;
+                if (rand.Next(10) == 0) C.Data.Data++;
                 return;
             }
             
             // Perform actual leaf decay, then remove from physics list
-            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-            C.data.Data = PhysicsArgs.RemoveFromChecks;
+            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+            C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static bool DoLeafDecay(Level lvl, ref Check C) {
+        static bool DoLeafDecay(Level lvl, ref PhysInfo C) {
             const int dist = 4;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
 
             for (int xx = -dist; xx <= dist; xx++)
                 for (int yy = -dist; yy <= dist; yy++)
@@ -84,7 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
                     CheckLeaf(lvl, i, x + xx, y + yy, z + zz + 1);
                 }
             }
-            return lvl.leaves[C.b] < 0;
+            return lvl.leaves[C.Index] < 0;
         }
         
         static void CheckLeaf(Level lvl, int i, int x, int y, int z) {

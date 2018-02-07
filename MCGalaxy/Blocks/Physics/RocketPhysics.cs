@@ -22,13 +22,12 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class RocketPhysics {
         
-        public static void Do(Level lvl, ref Check C) {
+        public static void Do(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;            
             int dirX = rand.Next(1, 10) <= 5 ? 1 : -1;
             int dirY = rand.Next(1, 10) <= 5 ? 1 : -1;
             int dirZ = rand.Next(1, 10) <= 5 ? 1 : -1;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
 
             for (int cx = -dirX; cx != 2 * dirX; cx += dirX)
                 for (int cy = -dirY; cy != 2 * dirY; cy += dirY)
@@ -43,13 +42,13 @@ namespace MCGalaxy.Blocks.Physics {
                 
                 if (unblocked && (rocketHead == Block.Air || rocketHead == Block.RocketStart)) {
                     lvl.AddUpdate(headIndex, Block.RocketHead, default(PhysicsArgs));
-                    lvl.AddUpdate(C.b, Block.LavaFire, default(PhysicsArgs));
+                    lvl.AddUpdate(C.Index, Block.LavaFire, default(PhysicsArgs));
                 } else if (rocketHead == Block.LavaFire) {
                 } else {
                     if (lvl.physics > 2)
                         lvl.MakeExplosion(x, y, z, 2);
                     else
-                        lvl.AddUpdate(C.b, Block.LavaFire, default(PhysicsArgs));
+                        lvl.AddUpdate(C.Index, Block.LavaFire, default(PhysicsArgs));
                 }
             }
         }

@@ -22,25 +22,26 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class ExtLiquidPhysics {
         
-        public static void DoMagma(Level lvl, ref Check C) {
-            C.data.Data++;
-            if (C.data.Data < 3) return;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+        public static void DoMagma(Level lvl, ref PhysInfo C) {
+            C.Data.Data++;
+            if (C.Data.Data < 3) return;
+            
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
             
             if (below == Block.Air) {
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Magma, default(PhysicsArgs));
+                lvl.AddUpdate(index, Block.Magma, default(PhysicsArgs));
             } else if (below != Block.Magma) {
-                byte block = lvl.blocks[C.b];
+                BlockID block = C.Block;
                 LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
                 LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
             }
 
-            if (lvl.physics <= 1 || C.data.Data <= 10) return;
-            C.data.Data = 0;
+            if (lvl.physics <= 1 || C.Data.Data <= 10) return;
+            C.Data.Data = 0;
             bool flowUp = false;
             
             MagmaFlow(lvl, x - 1, y, z, ref flowUp);
@@ -56,30 +57,31 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
-            if (index >= 0 && lvl.Props[block].LavaKills) {
+            if (lvl.Props[block].LavaKills) {
                 lvl.AddUpdate(index, Block.Magma, default(PhysicsArgs));
                 flowUp = true;
             }
         }
         
-        public static void DoGeyser(Level lvl, ref Check C) {
-            C.data.Data++;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+        public static void DoGeyser(Level lvl, ref PhysInfo C) {
+            C.Data.Data++;
+            
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
             
             if (below == Block.Air) {
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Geyser, default(PhysicsArgs));
+                lvl.AddUpdate(index, Block.Geyser, default(PhysicsArgs));
             } else if (below != Block.Geyser) {
-                byte block = lvl.blocks[C.b];
+                BlockID block = C.Block;
                 LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
                 LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
             }
 
-            if (lvl.physics <= 1 || C.data.Data <= 10) return;
-            C.data.Data = 0;
+            if (lvl.physics <= 1 || C.Data.Data <= 10) return;
+            C.Data.Data = 0;
             bool flowUp = false;
             
             GeyserFlow(lvl, x - 1, y, z, ref flowUp);
@@ -95,21 +97,21 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
-            if (index >= 0 && lvl.Props[block].WaterKills) {
+            if (lvl.Props[block].WaterKills) {
                 lvl.AddUpdate(index, Block.Geyser, default(PhysicsArgs));
                 flowUp = true;
             }
         }
         
-        public static void DoWaterfall(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+        public static void DoWaterfall(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
             
             switch (below) {
                 case Block.Air:
-                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown, default(PhysicsArgs));
-                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+                    lvl.AddUpdate(index, Block.WaterDown, default(PhysicsArgs));
+                    if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.Air_FloodDown:
                 case Block.StillLava:
@@ -118,26 +120,26 @@ namespace MCGalaxy.Blocks.Physics {
                     break;
                     
                 default:
-                    byte block = lvl.blocks[C.b];
+                    BlockID block = C.Block;
                     LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
                     LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+                    if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
             }
         }
         
-        public static void DoLavafall(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+        public static void DoLavafall(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int index;
+            BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z, out index);
             
             switch (below)
             {
                 case Block.Air:
-                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.LavaDown, default(PhysicsArgs));
-                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+                    lvl.AddUpdate(index, Block.LavaDown, default(PhysicsArgs));
+                    if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.Air_FloodDown:
                 case Block.StillLava:
@@ -145,34 +147,33 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.LavaDown:
                     break;
                 default:
-                    byte block = lvl.blocks[C.b];
+                    BlockID block = C.Block;
                     LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
                     LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1),block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
-                    if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+                    if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
             }
         }
         
-        public static void DoFaucet(Level lvl, ref Check C, byte target) {
-            C.data.Data++;
-            if (C.data.Data < 2) return;
-            C.data.Data = 0;
-            
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            int index = lvl.PosToInt(x, (ushort)(y - 1), z);
-            if (index < 0) return;
+        public static void DoFaucet(Level lvl, ref PhysInfo C, BlockID target) {
+            C.Data.Data++;
+            if (C.Data.Data < 2) return;
+            C.Data.Data = 0;
 
-            Random rand = lvl.physRandom;            
-            byte block = lvl.blocks[index];
-            if (block == Block.Air || block == target) {
-                if (rand.Next(1, 10) > 7)
+            Random rand = lvl.physRandom;  
+            int index;
+            BlockID below = lvl.GetBlock(C.X, (ushort)(C.Y - 1), C.Z, out index);
+            
+            if (below == Block.Air || below == target) {
+            	if (rand.Next(1, 10) > 7) {
                     lvl.AddUpdate(index, Block.Air_FloodDown, default(PhysicsArgs));
-            } else if (block == Block.Air_FloodDown) {
-                if (rand.Next(1, 10) > 4)
+                }
+            } else if (below == Block.Air_FloodDown) {
+            	if (rand.Next(1, 10) > 4) {
                     lvl.AddUpdate(index, target);
+                }
             }
         }
     }

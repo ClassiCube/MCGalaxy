@@ -121,7 +121,7 @@ namespace MCGalaxy.Levels.IO {
                 Check C = checks[i];
                 // Does this check have extra physics data
                 if (C.data.Raw == 0) continue;
-                *ptrInt = C.b; ptrInt++;
+                *ptrInt = C.Index; ptrInt++;
                 *ptrInt = (int)C.data.Raw; ptrInt++;
                 entries++;
                 

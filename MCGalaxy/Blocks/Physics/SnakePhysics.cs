@@ -22,10 +22,9 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class SnakePhysics {
         
-        public static void Do(Level lvl, ref Check C) {
+        public static void Do(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
             int dirsVisited = 0;
             Player closest = HunterPhysics.ClosestPlayer(lvl, x, y, z);
             
@@ -99,21 +98,19 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        public static void DoTail(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
+        public static void DoTail(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
             bool revert =
                 lvl.GetBlock((ushort)(x - 1), y, z) != Block.Snake ||
                 lvl.GetBlock((ushort)(x + 1), y, z) != Block.Snake ||
                 lvl.GetBlock(x, y, (ushort)(z - 1)) != Block.Snake ||
                 lvl.GetBlock(x, y, (ushort)(z + 1)) != Block.Snake;
             if (revert) {
-                C.data.Type1 = PhysicsArgs.Revert; C.data.Value1 = Block.Air;
+                C.Data.Type1 = PhysicsArgs.Revert; C.Data.Value1 = Block.Air;
             }
         }
         
-        static bool MoveSnake(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+        static bool MoveSnake(Level lvl, ref PhysInfo C, ushort x, ushort y, ushort z) {
             int index;
             
             // Move snake up or down blocks
@@ -124,28 +121,28 @@ namespace MCGalaxy.Blocks.Physics {
                 return false;
             }
 
-            if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
+            if (lvl.AddUpdate(index, C.Block)) {
                 PhysicsArgs args = default(PhysicsArgs);
                 args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                 args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
-                lvl.AddUpdate(C.b, Block.SnakeTail, args, true);
+                lvl.AddUpdate(C.Index, Block.SnakeTail, args, true);
                 return true;
             }
             return false;
         }
         
-        static bool MoveSnakeY(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+        static bool MoveSnakeY(Level lvl, ref PhysInfo C, ushort x, ushort y, ushort z) {
             int index;
             BlockID block  = lvl.GetBlock(x, y, z, out index);
             BlockID above  = lvl.GetBlock(x, (ushort)(y + 1), z);
             BlockID above2 = lvl.GetBlock(x, (ushort)(y + 2), z);
             
             if (block == Block.Air && (above == Block.Grass || above == Block.Dirt && above2 == Block.Air)) {
-                if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
+                if (lvl.AddUpdate(index, C.Block)) {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = Block.Air;
-                    lvl.AddUpdate(C.b, Block.SnakeTail, args, true);
+                    lvl.AddUpdate(C.Index, Block.SnakeTail, args, true);
                     return true;
                 }
             }

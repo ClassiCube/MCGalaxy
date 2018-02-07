@@ -21,10 +21,9 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Blocks.Physics {    
     public static class BirdPhysics {
         
-        public static void Do(Level lvl, ref Check C) {
+        public static void Do(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+            ushort x = C.X, y = C.Y, z = C.Z;
             BlockID block = lvl.GetBlock(x, y, z);
             int index;
 
@@ -60,11 +59,11 @@ namespace MCGalaxy.Blocks.Physics {
                     FlyTo(lvl, ref C, x, y, (ushort)(z + 1), block);
                     break;
             }
-            lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-            C.data.Data = PhysicsArgs.RemoveFromChecks;
+            lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+            C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, BlockID block) {
+        static void FlyTo(Level lvl, ref PhysInfo C, ushort x, ushort y, ushort z, BlockID block) {
             int index;
             BlockID neighbour = lvl.GetBlock(x, y, z, out index);
             if (neighbour == Block.Invalid) return;
@@ -79,7 +78,7 @@ namespace MCGalaxy.Blocks.Physics {
                     // bird died by hitting a block
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 25;
-                    lvl.AddUpdate(C.b, Block.Red, args);
+                    lvl.AddUpdate(C.Index, Block.Red, args);
                     break;
             }
         }

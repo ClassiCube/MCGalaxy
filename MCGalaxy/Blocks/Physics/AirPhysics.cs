@@ -23,58 +23,56 @@ namespace MCGalaxy.Blocks.Physics {
     public enum AirFlood { Full, Layer, Down, Up, }
     public static class AirPhysics {
         
-        public static void DoAir(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
+        public static void DoAir(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
             ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
-            ActivateablePhysics.CheckAt(lvl, lvl.PosToInt(x, (ushort)(y - 1), z)); 
+            ActivateablePhysics.CheckAt(lvl, x, (ushort)(y - 1), z); 
 
             //Edge of map water
             if (lvl.Config.EdgeWater && (y < lvl.Config.EdgeLevel && y >= (lvl.Config.EdgeLevel + lvl.Config.SidesOffset))) {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1) {
                     BlockID block = Block.FromRaw(lvl.Config.HorizonBlock);
-                    lvl.AddUpdate(C.b, block);
+                    lvl.AddUpdate(C.Index, block);
                 }
             }
-            if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
+            if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        public static void DoFlood(Level lvl, ref Check C, AirFlood mode, byte block) {           
-            if (C.data.Data >= 1) {
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
-                C.data.Data = PhysicsArgs.RemoveFromChecks; return;
+        public static void DoFlood(Level lvl, ref PhysInfo C, AirFlood mode, BlockID block) {           
+            if (C.Data.Data >= 1) {
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            
-            FloodAir(lvl, lvl.PosToInt((ushort)(x + 1), y, z), block);
-            FloodAir(lvl, lvl.PosToInt((ushort)(x - 1), y, z), block);
-            FloodAir(lvl, lvl.PosToInt(x, y, (ushort)(z + 1)), block);
-            FloodAir(lvl, lvl.PosToInt(x, y, (ushort)(z - 1)), block);
+    		
+            ushort x = C.X, y = C.Y, z = C.Z;            
+            FloodAir(lvl, (ushort)(x + 1), y, z, block);
+            FloodAir(lvl, (ushort)(x - 1), y, z, block);
+            FloodAir(lvl, x, y, (ushort)(z + 1), block);
+            FloodAir(lvl, x, y, (ushort)(z - 1), block);
             
             switch (mode) {
                 case AirFlood.Full:
-                    FloodAir(lvl, lvl.PosToInt(x, (ushort)(y - 1), z), block);
-                    FloodAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z), block);
+                    FloodAir(lvl, x, (ushort)(y - 1), z, block);
+                    FloodAir(lvl, x, (ushort)(y + 1), z, block);
                     break;
                 case AirFlood.Layer:
                     break;
                 case AirFlood.Down:
-                    FloodAir(lvl, lvl.PosToInt(x, (ushort)(y - 1), z), block);
+                    FloodAir(lvl, x, (ushort)(y - 1), z, block);
                     break;
                 case AirFlood.Up:
-                    FloodAir(lvl, lvl.PosToInt(x, (ushort)(y + 1), z), block);
+                    FloodAir(lvl, x, (ushort)(y + 1), z, block);
                     break;
             }
-            C.data.Data++;
+            C.Data.Data++;
         }
         
-        static void FloodAir(Level lvl, int index, byte block) {
-            if (index == -1) return;
-            BlockID curBlock = Block.Convert(lvl.blocks[index]);
-            if (curBlock == Block.Water || curBlock == Block.Lava)
+        static void FloodAir(Level lvl, ushort x, ushort y, ushort z, BlockID block) {
+            int index;
+            BlockID curBlock = Block.Convert(lvl.GetBlock(x, y, z, out index));
+            if (curBlock == Block.Water || curBlock == Block.Lava) {
                 lvl.AddUpdate(index, block);
+            }
         }
     }
 }

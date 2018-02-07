@@ -32,21 +32,20 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        public static void DoTntExplosion(Level lvl, ref Check C) {
+        public static void DoTntExplosion(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
             if (rand.Next(1, 11) <= 7)
-                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
         }
         
-        public static void DoLargeTnt(Level lvl, ref Check C, int power) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
+        public static void DoLargeTnt(Level lvl, ref PhysInfo C, int power) {
+            ushort x = C.X, y = C.Y, z = C.Z;
             
             if (lvl.physics < 3) {
                 lvl.Blockchange(x, y, z, Block.Air);
             } else {
-                if (C.data.Data < 5 && lvl.physics == 3) {
-                    C.data.Data++;
+                if (C.Data.Data < 5 && lvl.physics == 3) {
+                    C.Data.Data++;
                     
                     ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     ToggleFuse(lvl, x, (ushort)(y - 1), z);
@@ -60,10 +59,9 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        public static void DoSmallTnt(Level lvl, ref Check C) {
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            Player p = GetPlayer(ref C.data);
+        public static void DoSmallTnt(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
+            Player p = GetPlayer(ref C.Data);
             
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
@@ -77,8 +75,8 @@ namespace MCGalaxy.Blocks.Physics {
                         power = 3; break;
                 }
                 
-                if ((C.data.Data >> 4) < threshold) {
-                    C.data.Data += (1 << 4);
+                if ((C.Data.Data >> 4) < threshold) {
+                    C.Data.Data += (1 << 4);
                     ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     return;
                 }
@@ -98,8 +96,8 @@ namespace MCGalaxy.Blocks.Physics {
             } else if (lvl.physics < 3) {
                 lvl.Blockchange(x, y, z, Block.Air);
             } else {
-                if (C.data.Data < 5 && lvl.physics == 3) {
-                    C.data.Data++;
+                if (C.Data.Data < 5 && lvl.physics == 3) {
+                    C.Data.Data++;
                     ToggleFuse(lvl, x, (ushort)(y + 1), z);
                     return;
                 }
