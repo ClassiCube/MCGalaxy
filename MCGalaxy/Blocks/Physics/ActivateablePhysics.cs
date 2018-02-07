@@ -38,8 +38,8 @@ namespace MCGalaxy.Blocks.Physics {
                         !lvl.listUpdateExists.Get(x + dx * 2, y + dy * 2, z + dz * 2);
                     
                     if (isFree) {
-                        lvl.AddUpdate(bHead, Block.RocketHead);
-                        lvl.AddUpdate(bTail, Block.LavaFire);
+                        lvl.AddUpdate(bHead, Block.RocketHead, default(PhysicsArgs));
+                        lvl.AddUpdate(bTail, Block.LavaFire, default(PhysicsArgs));
                     }
                 } else if (block == Block.Fireworks) {
                     bool isFree = 
@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks.Physics {
                         !lvl.listUpdateExists.Get(x + dx, y + dy + 2, z + dz);
                     
                     if (isFree) {
-                        lvl.AddUpdate(bHead, Block.Fireworks);
+                        lvl.AddUpdate(bHead, Block.Fireworks, default(PhysicsArgs));
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 100;
                         lvl.AddUpdate(bTail, Block.StillLava, args);
@@ -123,8 +123,7 @@ namespace MCGalaxy.Blocks.Physics {
             if (index == -1) return;
             byte block = lvl.blocks[index];
             BlockID convBlock = Block.Convert(block);
-            if (convBlock == Block.Water || convBlock == Block.Lava ||
-                (block >= Block.Red && block <= Block.White)) {
+            if (convBlock == Block.Water || convBlock == Block.Lava || (block >= Block.Red && block <= Block.White)) {
                 lvl.AddCheck(index); return;
             }
 

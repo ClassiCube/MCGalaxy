@@ -69,7 +69,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (args.Wait) {
                 if (C.data.Door && C.data.Data == 0) {
-            	    BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
+                    BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
                     bool tdoor = lvl.Props[block].IsTDoor;
                     
                     if (tdoor) DoorPhysics.tDoor(lvl, ref C);
@@ -125,7 +125,7 @@ namespace MCGalaxy.Blocks.Physics {
             // drop can generate another block with no dissipate/explode information.
             if (args.Dissipate && rand.Next(1, 100) <= args.DissipateNum) {
                 if (!lvl.listUpdateExists.Get(x, y, z)) {
-                    lvl.AddUpdate(C.b, Block.Air);
+                    lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                     C.data.ResetTypes();
                     args.Drop = false;
                 } else {
@@ -150,10 +150,10 @@ namespace MCGalaxy.Blocks.Physics {
                     lvl.AddUpdate(C.b, Block.Red, C.data);
                 } else {
                     BlockID next = block == Block.Pink ? Block.Red : (BlockID)(block + 1);
-                    lvl.AddUpdate(C.b, next);
+                    lvl.AddUpdate(C.b, next, default(PhysicsArgs));
                 }
             } else {
-                lvl.AddUpdate(C.b, (BlockID)rand.Next(Block.Red, Block.Pink + 1));
+                lvl.AddUpdate(C.b, (BlockID)rand.Next(Block.Red, Block.Pink + 1), default(PhysicsArgs));
             }
         }
         
@@ -166,7 +166,7 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
             
             if (rand.Next(1, 100) < dropnum && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 C.data.ResetTypes();
             }
         }

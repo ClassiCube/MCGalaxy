@@ -31,10 +31,10 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             if (below == Block.Air) {
                 lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), lvl.blocks[C.b], C.data);
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 C.data.ResetTypes();
             } else if (below == Block.StillWater || below == Block.StillLava) {
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 C.data.ResetTypes();
             } else {
                 const int count = 25;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Blocks.Physics {
 
                         int index;
                         if (lvl.IsAirAt(posX, y, posZ, out index) && lvl.AddUpdate(index, lvl.blocks[C.b], C.data)) {
-                            lvl.AddUpdate(C.b, Block.Air);
+                            lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                             C.data.ResetTypes();
                             return;
                         }
@@ -81,7 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
         static bool Expand(Level lvl, int x, int y, int z) {
             int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
             if (index >= 0 && lvl.blocks[index] == Block.Air &&
-                lvl.AddUpdate(index, Block.FiniteWater)) {
+                lvl.AddUpdate(index, Block.FiniteWater, default(PhysicsArgs))) {
                 return true;
             }
             return false;

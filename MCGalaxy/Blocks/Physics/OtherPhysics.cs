@@ -59,7 +59,7 @@ namespace MCGalaxy.Blocks.Physics {
             } while (true);
 
             if (movedDown) {
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 if (lvl.physics > 1)
                     lvl.AddUpdate(index, block);
                 else
@@ -76,13 +76,13 @@ namespace MCGalaxy.Blocks.Physics {
             int index;
             
             if (lvl.GetBlock(x, (ushort)(y - 1), z, out index) == Block.Air) {
-                lvl.AddUpdate(C.b, Block.Air);
-                lvl.AddUpdate(index, Block.FloatWood);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(index, Block.FloatWood, default(PhysicsArgs));
             } else {
                 BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z, out index);
                 if (above == Block.StillWater || Block.Convert(above) == Block.Water) {
                     lvl.AddUpdate(C.b, lvl.blocks[index]);
-                    lvl.AddUpdate(index, Block.FloatWood);
+                    lvl.AddUpdate(index, Block.FloatWood, default(PhysicsArgs));
                 }
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -168,7 +168,7 @@ namespace MCGalaxy.Blocks.Physics {
                 if (block == Block.Invalid) continue;
                 
                 if (Block.Convert(block) == target || Block.Convert(block) == alt) {
-                    lvl.AddUpdate(index, Block.Air);
+                    lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
                 }
             }
             C.data.Data = PhysicsArgs.RemoveFromChecks;
@@ -184,7 +184,7 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int zz = -3; zz <= +3; ++zz)
                     for (int xx = -3; xx <= +3; ++xx)
             {
-            	if (Math.Abs(xx) == 3 || Math.Abs(yy) == 3 || Math.Abs(zz) == 3) { // Calc only edge
+                if (Math.Abs(xx) == 3 || Math.Abs(yy) == 3 || Math.Abs(zz) == 3) { // Calc only edge
                     int index;
                     BlockID block = lvl.GetBlock((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz), out index);
                     if (block == Block.Invalid) continue;

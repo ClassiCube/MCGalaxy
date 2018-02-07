@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
             }
             bool checkTime = true;
-            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
+            Player closest = HunterPhysics.ClosestPlayer(lvl, x, y, z);
 
             if (closest != null && rand.Next(1, 20) < 18) {
                 ushort xx, zz;
@@ -98,8 +98,8 @@ namespace MCGalaxy.Blocks.Physics {
                     if (dirsVisited >= 4) return;
                     goto case 1;
             }
-            lvl.AddUpdate(C.b, Block.Air);
-            lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
+            lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+            lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air, default(PhysicsArgs));
         }
         
         public static void DoHead(Level lvl, ref Check C) {
@@ -124,9 +124,9 @@ namespace MCGalaxy.Blocks.Physics {
             }
 
             if (lvl.AddUpdate(index, lvl.blocks[C.b])) {
-                lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), Block.ZombieHead);
-                lvl.AddUpdate(C.b, Block.Air);
-                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air);
+                lvl.AddUpdate(lvl.IntOffset(index, 0, 1, 0), Block.ZombieHead, default(PhysicsArgs));
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
+                lvl.AddUpdate(lvl.IntOffset(C.b, 0, 1, 0), Block.Air, default(PhysicsArgs));
                 return true;
             }
             return false;

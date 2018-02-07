@@ -42,14 +42,14 @@ namespace MCGalaxy.Blocks.Physics {
                 bool unblocked = !lvl.listUpdateExists.Get(x, y, z) && (headIndex < 0 || !lvl.listUpdateExists.Get(x - cx, y - cy, z - cz));
                 
                 if (unblocked && (rocketHead == Block.Air || rocketHead == Block.RocketStart)) {
-                    lvl.AddUpdate(headIndex, Block.RocketHead);
-                    lvl.AddUpdate(C.b, Block.LavaFire);
+                    lvl.AddUpdate(headIndex, Block.RocketHead, default(PhysicsArgs));
+                    lvl.AddUpdate(C.b, Block.LavaFire, default(PhysicsArgs));
                 } else if (rocketHead == Block.LavaFire) {
                 } else {
                     if (lvl.physics > 2)
                         lvl.MakeExplosion(x, y, z, 2);
                     else
-                        lvl.AddUpdate(C.b, Block.LavaFire);
+                        lvl.AddUpdate(C.b, Block.LavaFire, default(PhysicsArgs));
                 }
             }
         }

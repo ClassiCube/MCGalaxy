@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
                         args.Type1 = PhysicsArgs.Wait; args.Value1 = 1;
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 100;
                         
-                        lvl.AddUpdate(bAbove, Block.Fireworks);
+                        lvl.AddUpdate(bAbove, Block.Fireworks, default(PhysicsArgs));
                         lvl.AddUpdate(C.b, Block.StillLava, args);
                         args.Data = C.data.Data;
                         C.data = args;
@@ -60,7 +60,7 @@ namespace MCGalaxy.Blocks.Physics {
             int min = Math.Min(rand1, rand2), max = Math.Max(rand1, rand2);
             // Not using override, since override = true makes it more likely that a colored block will be
             // generated with no extraInfo, because it sets a Check for that position with no extraInfo.
-            lvl.AddUpdate(lvl.PosToInt(x, y, z), Block.Air);
+            lvl.AddUpdate(lvl.PosToInt(x, y, z), Block.Air, default(PhysicsArgs));
             
             int index;
             for (int yy = y - (size + 1); yy <= y + (size + 1); ++yy)

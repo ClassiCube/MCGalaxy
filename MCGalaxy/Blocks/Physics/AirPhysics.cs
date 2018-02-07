@@ -42,7 +42,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static void DoFlood(Level lvl, ref Check C, AirFlood mode, byte block) {           
             if (C.data.Data >= 1) {
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 C.data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
             ushort x, y, z;

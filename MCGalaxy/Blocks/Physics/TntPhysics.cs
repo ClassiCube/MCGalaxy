@@ -35,7 +35,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void DoTntExplosion(Level lvl, ref Check C) {
             Random rand = lvl.physRandom;
             if (rand.Next(1, 11) <= 7)
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
         }
         
         public static void DoLargeTnt(Level lvl, ref Check C, int power) {
@@ -125,8 +125,9 @@ namespace MCGalaxy.Blocks.Physics {
             
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (index >= 0 && !lvl.Props[block].OPBlock)
-                lvl.AddUpdate(index, Block.TNT_Explosion, true);
+            if (index >= 0 && !lvl.Props[block].OPBlock) {
+                lvl.AddUpdate(index, Block.TNT_Explosion, default(PhysicsArgs), true);
+            }
 
             Explode(lvl, x, y, z, size + 1, rand, -1, game);
             Explode(lvl, x, y, z, size + 2, rand, 7, game);
@@ -152,9 +153,9 @@ namespace MCGalaxy.Blocks.Physics {
                     
                     int mode = rand.Next(1, 11);
                     if (mode <= 4) {
-                        lvl.AddUpdate(index, Block.TNT_Explosion);
+                        lvl.AddUpdate(index, Block.TNT_Explosion, default(PhysicsArgs));
                     } else if (mode <= 8) {
-                        lvl.AddUpdate(index, Block.Air);
+                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
                     } else {
                         PhysicsArgs args = default(PhysicsArgs);
                         args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
@@ -162,7 +163,7 @@ namespace MCGalaxy.Blocks.Physics {
                         lvl.AddCheck(index, false, args);
                     }
                 } else if (block == Block.TNT) {
-                    lvl.AddUpdate(index, Block.TNT_Small);
+                    lvl.AddUpdate(index, Block.TNT_Small, default(PhysicsArgs));
                 } else if (block == Block.TNT_Small || block == Block.TNT_Big || block == Block.TNT_Nuke) {
                     lvl.AddCheck(index);
                 }

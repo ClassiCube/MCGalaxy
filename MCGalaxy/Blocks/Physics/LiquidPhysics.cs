@@ -31,13 +31,17 @@ namespace MCGalaxy.Blocks.Physics {
 
             switch (block) {
                 case Block.Air:
-                    if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, type);
+            		if (!lvl.CheckSpongeWater(x, y, z)) {
+            		    lvl.AddUpdate(b, type);
+            		}
                     break;
 
                 case Block.Lava:
                 case Block.FastLava:
                 case Block.Deadly_ActiveLava:
-                    if (!lvl.CheckSpongeWater(x, y, z)) lvl.AddUpdate(b, Block.Stone);
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(b, Block.Stone, default(PhysicsArgs));
+                    }
                     break;
 
                 case Block.Sand:
@@ -49,8 +53,9 @@ namespace MCGalaxy.Blocks.Physics {
                     // Adv physics kills flowers and mushrooms in water
                     if (!lvl.Props[block].WaterKills) break;
                     
-                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) 
-                        lvl.AddUpdate(b, Block.Air);
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(b, Block.Air, default(PhysicsArgs));
+                    }
                     break;
             }
         }
@@ -64,17 +69,23 @@ namespace MCGalaxy.Blocks.Physics {
 
             switch (block) {
                 case Block.Air:
-                    if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, type);
+            		if (!lvl.CheckSpongeLava(x, y, z)) {
+            		    lvl.AddUpdate(b, type);
+            		}
                     break;
                     
                 case Block.Water:
                 case Block.Deadly_ActiveWater:
-                    if (!lvl.CheckSpongeLava(x, y, z)) lvl.AddUpdate(b, Block.Stone); 
+                    if (!lvl.CheckSpongeLava(x, y, z)) {
+                        lvl.AddUpdate(b, Block.Stone, default(PhysicsArgs));
+                    }
                     break;
                     
                 case Block.Sand:
                     if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
-                        if (lvl.physics != 5) lvl.AddUpdate(b, Block.Glass);
+                    	if (lvl.physics != 5) {
+                    	    lvl.AddUpdate(b, Block.Glass, default(PhysicsArgs));
+                    	}
                     } else {
                         lvl.AddCheck(b);
                     } break;
@@ -86,8 +97,9 @@ namespace MCGalaxy.Blocks.Physics {
                     //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
                     if (!lvl.Props[block].LavaKills) break;
                     
-                    if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) 
-                        lvl.AddUpdate(b, Block.Air);
+                    if (lvl.physics > 1 && !lvl.CheckSpongeLava(x, y, z)) {
+                        lvl.AddUpdate(b, Block.Air, default(PhysicsArgs));
+                    }
                     break;
             }
         }

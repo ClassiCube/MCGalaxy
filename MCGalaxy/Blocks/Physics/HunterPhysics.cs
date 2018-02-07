@@ -22,13 +22,13 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class HunterPhysics {
 
-        // dir is  1 for hunting birds (they go towards the closest player)
-        // dir is -1 for fleeing birds (they go away from the closest player)
+        // dir is  1 for hunting animals (they go towards the closest player)
+        // dir is -1 for fleeing animals (they go away from the closest player)
         public static void Do(Level lvl, ref Check C, BlockID target, int dir) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
+            Player closest = ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
                 int dirsVisited = 0;
@@ -102,6 +102,24 @@ namespace MCGalaxy.Blocks.Physics {
                 return true;
             }
             return false;
+        }
+        
+        public static Player ClosestPlayer(Level lvl, ushort x, ushort y, ushort z) {
+            if (!lvl.Config.AnimalHuntAI) return null;
+            int closestDist = 75;
+            Player closetPlayer = null;
+            Player[] players = PlayerInfo.Online.Items;
+            
+            foreach (Player p in players) {
+                if (p.level != lvl || p.invincible) continue;
+                Position pos = p.Pos;
+                int curDist = Math.Abs(pos.BlockX - x) + Math.Abs(pos.BlockY - y) + Math.Abs(pos.BlockZ - z);
+                if (curDist < closestDist) {
+                    closestDist = curDist;
+                    closetPlayer = p;
+                }
+            }
+            return closetPlayer;
         }
     }
 }

@@ -120,7 +120,7 @@ namespace MCGalaxy.Blocks.Physics {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 if (!C.data.HasWait) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
@@ -141,7 +141,7 @@ namespace MCGalaxy.Blocks.Physics {
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
             }
             if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
         }
@@ -232,7 +232,7 @@ namespace MCGalaxy.Blocks.Physics {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
                 if (!checkWait || !C.data.HasWait) {
                     C.data.Data = PhysicsArgs.RemoveFromChecks;
                 }
@@ -251,7 +251,7 @@ namespace MCGalaxy.Blocks.Physics {
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
             } else { //was placed near sponge
-                lvl.AddUpdate(C.b, Block.Air);
+                lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));
             }
             
             if (!checkWait || !C.data.HasWait) {

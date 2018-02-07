@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks.Physics {
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             int dirsVisited = 0;
-            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
+            Player closest = HunterPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
                 switch (rand.Next(1, 10)) {

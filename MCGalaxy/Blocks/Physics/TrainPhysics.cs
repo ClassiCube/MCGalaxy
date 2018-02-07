@@ -41,8 +41,8 @@ namespace MCGalaxy.Blocks.Physics {
                 bool isRails = lvl.Props[below].IsRails;
                 
                 if (isRails && (block == Block.Air || block == Block.Water) && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
-                    lvl.AddUpdate(index, Block.Train);
-                    lvl.AddUpdate(C.b, Block.Air);                    
+                    lvl.AddUpdate(index, Block.Train, default(PhysicsArgs));
+                    lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));                    
                     BlockID newBlock = below == Block.Op_Air ? Block.Glass : Block.Obsidian;
                     
                     int belowIndex;

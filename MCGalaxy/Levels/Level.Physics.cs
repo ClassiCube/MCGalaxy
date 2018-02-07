@@ -210,7 +210,8 @@ namespace MCGalaxy {
                 if (x >= Width || y >= Height || z >= Length) return;
                 
                 if (!listCheckExists.Get(x, y, z)) {
-                    ListCheck.Add(new Check(index, data)); //Adds block to list to be updated
+                    Check check; check.b = index; check.data = data;
+                    ListCheck.Add(check); // Adds block to list to be updated
                     listCheckExists.Set(x, y, z, true);
                 } else if (overRide) {
                     Check[] items = ListCheck.Items;
@@ -260,7 +261,10 @@ namespace MCGalaxy {
                 } else {
                     return false;
                 }
-                ListUpdate.Add(new Update(index, (byte)block, data));
+                
+                data.Data = (byte)block;
+                Update update; update.b = index; update.data = data;
+                ListUpdate.Add(update);
                 
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
@@ -383,24 +387,20 @@ namespace MCGalaxy {
         }
     }
     
+    public struct PhysInfo {
+        public ushort X, Y, Z;
+        public BlockID Block;
+        public int Index;
+        public PhysicsArgs Data;
+    }
+    
     public struct Check {
         public int b;
         public PhysicsArgs data;
-
-        public Check(int b, PhysicsArgs data) {
-            this.b = b;
-            this.data = data;
-        }
     }
 
     public struct Update {
         public int b;
         public PhysicsArgs data;
-
-        public Update(int b, byte type, PhysicsArgs data) {
-            this.b = b;
-            this.data = data;
-            this.data.Data = type;
-        }
     }
 }

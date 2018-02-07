@@ -30,7 +30,7 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             if (below == Block.Air) {
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Magma);
+                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Magma, default(PhysicsArgs));
             } else if (below != Block.Magma) {
                 byte block = lvl.blocks[C.b];
                 LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
@@ -57,7 +57,7 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
             if (index >= 0 && lvl.Props[block].LavaKills) {
-                lvl.AddUpdate(index, Block.Magma);
+                lvl.AddUpdate(index, Block.Magma, default(PhysicsArgs));
                 flowUp = true;
             }
         }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
             if (below == Block.Air) {
-                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Geyser);
+                lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.Geyser, default(PhysicsArgs));
             } else if (below != Block.Geyser) {
                 byte block = lvl.blocks[C.b];
                 LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
@@ -96,7 +96,7 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID block = lvl.GetBlock((ushort)x, (ushort)y, (ushort)z, out index);
             
             if (index >= 0 && lvl.Props[block].WaterKills) {
-                lvl.AddUpdate(index, Block.Geyser);
+                lvl.AddUpdate(index, Block.Geyser, default(PhysicsArgs));
                 flowUp = true;
             }
         }
@@ -108,7 +108,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             switch (below) {
                 case Block.Air:
-                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown);
+                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.WaterDown, default(PhysicsArgs));
                     if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.Air_FloodDown:
@@ -136,7 +136,7 @@ namespace MCGalaxy.Blocks.Physics {
             switch (below)
             {
                 case Block.Air:
-                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.LavaDown);
+                    lvl.AddUpdate(lvl.PosToInt(x, (ushort)(y - 1), z), Block.LavaDown, default(PhysicsArgs));
                     if (!C.data.HasWait) C.data.Data = PhysicsArgs.RemoveFromChecks;
                     break;
                 case Block.Air_FloodDown:
@@ -169,7 +169,7 @@ namespace MCGalaxy.Blocks.Physics {
             byte block = lvl.blocks[index];
             if (block == Block.Air || block == target) {
                 if (rand.Next(1, 10) > 7)
-                    lvl.AddUpdate(index, Block.Air_FloodDown);
+                    lvl.AddUpdate(index, Block.Air_FloodDown, default(PhysicsArgs));
             } else if (block == Block.Air_FloodDown) {
                 if (rand.Next(1, 10) > 4)
                     lvl.AddUpdate(index, target);
