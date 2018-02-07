@@ -21,74 +21,24 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Blocks.Physics {
     
     public static class HunterPhysics {
-        
-        public static void DoKiller(Level lvl, ref Check C, byte target) {
-            Random rand = lvl.physRandom;       
-            ushort x, y, z;
-            lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID block = lvl.GetBlock(x, y, z);
-            Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
-            
-            if (closest != null && rand.Next(1, 20) < 19) {
-                int index = 0, dirsVisited = 0;
 
-                switch (rand.Next(1, 10)) {
-                    case 1:
-                    case 2:
-                    case 3:
-                        if (closest.Pos.BlockX != x) {
-                            index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
-                        
-                        dirsVisited++;
-                        if (dirsVisited >= 3) break;
-                        goto case 4;
-                    case 4:
-                    case 5:
-                    case 6:
-                        if (closest.Pos.BlockY != y) {
-                            index = lvl.PosToInt(x, (ushort)(y + Math.Sign(closest.Pos.BlockY - y)), z);
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
-                        
-                        dirsVisited++;
-                        if (dirsVisited >= 3) break;
-                        goto case 7;
-                    case 7:
-                    case 8:
-                    case 9:
-                        if (closest.Pos.BlockZ != z) {
-                            index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
-                        
-                        dirsVisited++;
-                        if (dirsVisited >= 3) break;
-                        goto case 1;
-                }
-            }
-            RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
-        }
-        
-        public static void DoFlee(Level lvl, ref Check C, byte target) {
+        // dir is  1 for hunting birds (they go towards the closest player)
+        // dir is -1 for fleeing birds (they go away from the closest player)
+        public static void Do(Level lvl, ref Check C, BlockID target, int dir) {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            BlockID block = lvl.GetBlock(x, y, z);
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
-                int index = 0, dirsVisited = 0;
+                int dirsVisited = 0;
 
                 switch (rand.Next(1, 10)) {
                     case 1:
                     case 2:
                     case 3:
-                        if (closest.Pos.BlockX != x) {
-                            index = lvl.PosToInt((ushort)(x - Math.Sign(closest.Pos.BlockX - x)), y, z);
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
+                        ushort xx = (ushort)(x + Math.Sign(closest.Pos.BlockX - x) * dir);
+                        if (xx != x && MoveTo(lvl, ref C, target, xx, y, z)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
@@ -96,10 +46,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 4:
                     case 5:
                     case 6:
-                        if (closest.Pos.BlockY != y) {
-                            index = lvl.PosToInt(x, (ushort)(y - Math.Sign(closest.Pos.BlockY - y)), z);
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
+                        ushort yy = (ushort)(y + Math.Sign(closest.Pos.BlockY - y) * dir);
+                        if (yy != y && MoveTo(lvl, ref C, target, x, yy, z)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
@@ -107,57 +55,53 @@ namespace MCGalaxy.Blocks.Physics {
                     case 7:
                     case 8:
                     case 9:
-                        if (closest.Pos.BlockZ != z) {
-                            index = lvl.PosToInt(x, y, (ushort)(z - Math.Sign(closest.Pos.BlockZ - z)));
-                            if (MoveTo(lvl, block, C.b, index, target)) return;
-                        }
+                        ushort zz = (ushort)(z + Math.Sign(closest.Pos.BlockZ - z) * dir);
+                        if (zz != z && MoveTo(lvl, ref C, target, x, y, zz)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
                         goto case 1;
                 }
             }
-            RandomlyMove(lvl, ref C, block, rand, x, y, z, target);
-        }
-        
-        static bool MoveTo(Level lvl, BlockID block, int index, int targetIndex, byte target) {
-            if (targetIndex >= 0 && lvl.blocks[targetIndex] == target && lvl.AddUpdate(targetIndex, block)) {
-                lvl.AddUpdate(index, target);
-                return true;
-            }
-            return false;
-        }
-        
-        static void RandomlyMove(Level lvl, ref Check C, BlockID block, Random rand, 
-                                 ushort x, ushort y, ushort z, byte target) {
+            
             switch (rand.Next(1, 15)) {
                 case 1:
-                    if (MoveTo(lvl, block, C.b, lvl.PosToInt(x, (ushort)(y - 1), z), target)) return;
+                    if (MoveTo(lvl, ref C, target, x, (ushort)(y - 1), z)) return;
                     goto case 3;
                 case 2:
-                    if (MoveTo(lvl, block, C.b, lvl.PosToInt(x, (ushort)(y + 1), z), target)) return;
+                    if (MoveTo(lvl, ref C, target, x, (ushort)(y + 1), z)) return;
                     goto case 6;
                 case 3:
                 case 4:
                 case 5:
-                    if (MoveTo(lvl, block, C.b, lvl.PosToInt((ushort)(x - 1), y, z), target)) return;
+                    if (MoveTo(lvl, ref C, target, (ushort)(x - 1), y, z)) return;
                     goto case 9;
                 case 6:
                 case 7:
                 case 8:
-                    if (MoveTo(lvl, block, C.b, lvl.PosToInt((ushort)(x + 1), y, z), target)) return;
+                    if (MoveTo(lvl, ref C, target, (ushort)(x + 1), y, z)) return;
                     goto case 12;
                 case 9:
                 case 10:
                 case 11:
-                    MoveTo(lvl, block, C.b, lvl.PosToInt(x, y, (ushort)(z - 1)), target);
+                    MoveTo(lvl, ref C, target, x, y, (ushort)(z - 1));
                     break;
                 case 12:
                 case 13:
                 case 14:
-                    MoveTo(lvl, block, C.b, lvl.PosToInt(x, y, (ushort)(z + 1)), target);
+                    MoveTo(lvl, ref C, target, x, y, (ushort)(z + 1));
                     break;
             }
+        }
+        
+        static bool MoveTo(Level lvl, ref Check C, BlockID target, ushort x, ushort y, ushort z) {
+            int index;
+            BlockID block = lvl.GetBlock(x, y, z, out index);            
+            if (block == target && lvl.AddUpdate(index, lvl.blocks[C.b])) {
+                lvl.AddUpdate(C.b, target);
+                return true;
+            }
+            return false;
         }
     }
 }

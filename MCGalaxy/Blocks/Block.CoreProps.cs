@@ -151,7 +151,7 @@ namespace MCGalaxy {
                 "Small_TNT", "Big_TNT", "TNT_Explosion", "Lava_Fire", "Nuke_TNT", "RocketStart",
                 "RocketHead", "Firework", "Hot_Lava", "Cold_Water", "Nerve_Gas", "Active_Cold_Water",
                 "Active_Hot_Lava", "Magma", "Geyser", "Checkpoint", null, null, "Air_Flood",
-                "Door_Air", "air_flood_Layer", "air_Flood_Down", "Air_Flood_Up", null,
+                "Door_Air", "Air_Flood_Layer", "Air_Flood_Down", "Air_Flood_Up", null,
                 null, null, null, null, null, "Door8_Air",
                 "Door9_Air", null, null, null, null, null,
                 null, null, "Door_Iron", "Door_Dirt", "Door_Grass", "Door_Blue", "Door_Book",

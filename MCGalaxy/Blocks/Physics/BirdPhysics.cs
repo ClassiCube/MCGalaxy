@@ -65,16 +65,18 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void FlyTo(Level lvl, ref Check C, ushort x, ushort y, ushort z, BlockID block) {
-            int index = lvl.PosToInt(x, y, z);
-            if (index < 0) return;
+            int index;
+            BlockID neighbour = lvl.GetBlock(x, y, z, out index);
+            if (neighbour == Block.Invalid) return;
             
-            switch (lvl.blocks[index]) {
+            switch (neighbour) {
                 case Block.Air:
                     lvl.AddUpdate(index, block);
                     break;
                 case Block.Op_Air:
                     break;
                 default:
+                    // bird died by hitting a block
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Dissipate; args.Value1 = 25;
                     lvl.AddUpdate(C.b, Block.Red, args);

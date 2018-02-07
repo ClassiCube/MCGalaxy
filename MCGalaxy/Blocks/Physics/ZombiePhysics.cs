@@ -35,22 +35,22 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
             }
             bool checkTime = true;
-            int index = 0;
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
 
             if (closest != null && rand.Next(1, 20) < 18) {
+                ushort xx, zz;
                 if (rand.Next(1, 7) <= 3) {
-                    index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
-                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
+                    xx = (ushort)(x + Math.Sign(closest.Pos.BlockX - x));
+                    if (xx != x && MoveZombie(lvl, ref C, xx, y, z)) return;
                     
-                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign((closest.Pos.BlockZ - z))));
-                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
+                    zz = (ushort)(z + Math.Sign(closest.Pos.BlockZ - z));
+                    if (zz != z && MoveZombie(lvl, ref C, x, y, zz)) return;
                 } else {
-                    index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
-                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
+                    zz = (ushort)(z + Math.Sign(closest.Pos.BlockZ - z));
+                    if (zz != z && MoveZombie(lvl, ref C, x, y, zz)) return;
                     
-                    index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
-                    if (index != C.b && MoveZombie(lvl, ref C, index)) return;
+                    xx = (ushort)(x + Math.Sign(closest.Pos.BlockX - x));
+                    if (xx != x && MoveZombie(lvl, ref C, xx, y, z)) return;
                 }
                 checkTime = false;
             }
@@ -66,8 +66,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 1:
                 case 2:
                 case 3:
-                    index = lvl.IntOffset(C.b, -1, 0, 0);
-                    if (MoveZombie(lvl, ref C, index)) return;
+                    if (MoveZombie(lvl, ref C, (ushort)(x - 1), y, z)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -76,8 +75,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 4:
                 case 5:
                 case 6:
-                    index = lvl.IntOffset(C.b, 1, 0, 0);
-                    if (MoveZombie(lvl, ref C, index)) return;
+                    if (MoveZombie(lvl, ref C, (ushort)(x + 1), y, z)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -86,8 +84,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 7:
                 case 8:
                 case 9:
-                    index = lvl.IntOffset(C.b, 0, 0, 1);
-                    if (MoveZombie(lvl, ref C, index)) return;
+                    if (MoveZombie(lvl, ref C, x, y, (ushort)(z + 1))) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -95,8 +92,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 10:
                 case 11:
                 case 12:
-                    index = lvl.IntOffset(C.b, 0, 0, -1);
-                    if (MoveZombie(lvl, ref C, index)) return;
+                    if (MoveZombie(lvl, ref C, x, y, (ushort)(z - 1))) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -107,7 +103,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void DoHead(Level lvl, ref Check C) {
-		    ushort x, y, z;
+            ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
             BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
             
@@ -116,16 +112,13 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        static bool MoveZombie(Level lvl, ref Check C, int index) {
-            ushort x, y, z;
-            lvl.IntToPos(index, out x, out y, out z);
+        static bool MoveZombie(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+            int index;
             
-            // Move zombie up or down tiles
-            if (lvl.IsAirAt(x, (ushort)(y - 1), z) && lvl.IsAirAt(x, y, z)) {
-                index = lvl.IntOffset(index, 0, -1, 0);
-            } else if (lvl.IsAirAt(x, y, z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-            } else if (lvl.IsAirAt(x, (ushort)(y + 2), z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-                index = lvl.IntOffset(index, 0, 1, 0);
+            // Move zombie up or down blocks
+            if (       lvl.IsAirAt(x, (ushort)(y - 1), z, out index) && lvl.IsAirAt(x, y,               z)) {
+            } else if (lvl.IsAirAt(x, y,               z, out index) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
+            } else if (lvl.IsAirAt(x, (ushort)(y + 1), z, out index) && lvl.IsAirAt(x, (ushort)(y + 2), z)) {
             } else {
                 return false;
             }

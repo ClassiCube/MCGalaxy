@@ -26,7 +26,7 @@ namespace MCGalaxy.Blocks.Physics {
             Random rand = lvl.physRandom;
             ushort x, y, z;
             lvl.IntToPos(C.b, out x, out y, out z);
-            int dirsVisited = 0, index = 0;
+            int dirsVisited = 0;
             Player closest = AIPhysics.ClosestPlayer(lvl, x, y, z);
             
             if (closest != null && rand.Next(1, 20) < 19) {
@@ -34,8 +34,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 1:
                     case 2:
                     case 3:
-                        index = lvl.PosToInt((ushort)(x + Math.Sign(closest.Pos.BlockX - x)), y, z);
-                        if (index != C.b && MoveSnake(lvl, ref C, index)) return;
+                        ushort xx = (ushort)(x + Math.Sign(closest.Pos.BlockX - x));
+                        if (xx != x && MoveSnake(lvl, ref C, xx, y, z)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
@@ -43,8 +43,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 4:
                     case 5:
                     case 6:
-                        index = lvl.PosToInt(x, (ushort) (y + Math.Sign(closest.Pos.BlockY - y)), z);
-                        if (index != C.b && MoveSnakeY(lvl, ref C, index)) return;
+                        ushort yy = (ushort)(y + Math.Sign(closest.Pos.BlockY - y));
+                        if (yy != y && MoveSnakeY(lvl, ref C, x, yy, z)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
@@ -52,8 +52,8 @@ namespace MCGalaxy.Blocks.Physics {
                     case 7:
                     case 8:
                     case 9:
-                        index = lvl.PosToInt(x, y, (ushort)(z + Math.Sign(closest.Pos.BlockZ - z)));
-                        if (index != C.b && MoveSnake(lvl, ref C, index)) return;
+                        ushort zz = (ushort)(z + Math.Sign(closest.Pos.BlockZ - z));
+                        if (zz != z && MoveSnake(lvl, ref C, x, y, zz)) return;
                         
                         dirsVisited++;
                         if (dirsVisited >= 3) break;
@@ -66,8 +66,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 1:
                 case 2:
                 case 3:
-                    index = lvl.IntOffset(C.b, -1, 0, 0);
-                    if (MoveSnake(lvl, ref C, index)) return;
+                    if (MoveSnake(lvl, ref C, (ushort)(x - 1), y, z)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -75,8 +74,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 4:
                 case 5:
                 case 6:
-                    index = lvl.IntOffset(C.b, 1, 0, 0);
-                    if (MoveSnake(lvl, ref C, index)) return;
+                    if (MoveSnake(lvl, ref C, (ushort)(x + 1), y, z)) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -84,8 +82,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 7:
                 case 8:
                 case 9:
-                    index = lvl.IntOffset(C.b, 0, 0, 1);
-                    if (MoveSnake(lvl, ref C, index)) return;
+                    if (MoveSnake(lvl, ref C, x, y, (ushort)(z + 1))) return;
 
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -94,8 +91,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case 11:
                 case 12:
                 default:
-                    index = lvl.IntOffset(C.b, 0, 0, -1);
-                    if (MoveSnake(lvl, ref C, index)) return;
+                    if (MoveSnake(lvl, ref C, x, y, (ushort)(z - 1))) return;
                     
                     dirsVisited++;
                     if (dirsVisited >= 4) return;
@@ -117,16 +113,13 @@ namespace MCGalaxy.Blocks.Physics {
             }
         }
         
-        static bool MoveSnake(Level lvl, ref Check C, int index) {
-            ushort x, y, z;
-            lvl.IntToPos(index, out x, out y, out z);
+        static bool MoveSnake(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+            int index;
             
-            // Move snake up or down tiles
-            if (lvl.IsAirAt(x, (ushort)(y - 1), z) && lvl.IsAirAt(x, y, z)) {
-                index = lvl.IntOffset(index, 0, -1, 0);
-            } else if (lvl.IsAirAt(x, y, z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-            } else if (lvl.IsAirAt(x, (ushort)(y + 2), z) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-                index = lvl.IntOffset(index, 0, 1, 0);
+            // Move snake up or down blocks
+            if (       lvl.IsAirAt(x, (ushort)(y - 1), z, out index) && lvl.IsAirAt(x, y,               z)) {
+            } else if (lvl.IsAirAt(x, y,               z, out index) && lvl.IsAirAt(x, (ushort)(y + 1), z)) {
+            } else if (lvl.IsAirAt(x, (ushort)(y + 1), z, out index) && lvl.IsAirAt(x, (ushort)(y + 2), z)) {
             } else {
                 return false;
             }
@@ -141,11 +134,9 @@ namespace MCGalaxy.Blocks.Physics {
             return false;
         }
         
-        static bool MoveSnakeY(Level lvl, ref Check C, int index) {
-            ushort x, y, z;
-            lvl.IntToPos(index, out x, out y, out z);
-            
-            BlockID block  = lvl.GetBlock(x, y, z);
+        static bool MoveSnakeY(Level lvl, ref Check C, ushort x, ushort y, ushort z) {
+            int index;
+            BlockID block  = lvl.GetBlock(x, y, z, out index);
             BlockID above  = lvl.GetBlock(x, (ushort)(y + 1), z);
             BlockID above2 = lvl.GetBlock(x, (ushort)(y + 2), z);
             

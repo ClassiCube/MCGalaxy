@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -30,8 +31,8 @@ namespace MCGalaxy.Blocks.Physics {
             if (!C.data.HasWait) return false;
             
             if (C.data.Door && C.data.Data == 0) {
-                int i = C.data.Value2 + (C.data.ExtBlock ? Block.Count : 0);
-                bool tdoor = lvl.Props[i].IsTDoor;
+                BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
+                bool tdoor = lvl.Props[block].IsTDoor;
                 
                 if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                 else DoorPhysics.Door(lvl, ref C);
@@ -68,8 +69,8 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (args.Wait) {
                 if (C.data.Door && C.data.Data == 0) {
-                    int i = C.data.Value2 + (C.data.ExtBlock ? Block.Count : 0);
-                    bool tdoor = lvl.Props[i].IsTDoor;
+            	    BlockID block = (BlockID)(C.data.Value2 | (C.data.ExtBlock ? Block.Extended : 0));
+                    bool tdoor = lvl.Props[block].IsTDoor;
                     
                     if (tdoor) DoorPhysics.tDoor(lvl, ref C);
                     else DoorPhysics.Door(lvl, ref C);
@@ -148,11 +149,11 @@ namespace MCGalaxy.Blocks.Physics {
                 if (block < Block.Red || block > Block.Pink) {
                     lvl.AddUpdate(C.b, Block.Red, C.data);
                 } else {
-                    ushort next = block == Block.Pink ? Block.Red : (ushort)(block + 1);
+                    BlockID next = block == Block.Pink ? Block.Red : (BlockID)(block + 1);
                     lvl.AddUpdate(C.b, next);
                 }
             } else {
-                lvl.AddUpdate(C.b, (ushort)rand.Next(Block.Red, Block.Pink + 1));
+                lvl.AddUpdate(C.b, (BlockID)rand.Next(Block.Red, Block.Pink + 1));
             }
         }
         

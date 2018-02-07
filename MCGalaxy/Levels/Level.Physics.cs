@@ -133,6 +133,7 @@ namespace MCGalaxy {
             ushort x, y, z;
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
+            BlockID block;
             
             HandlePhysics[] handlers = physicsHandlers;
             ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
@@ -149,10 +150,12 @@ namespace MCGalaxy {
                         OnPhysicsUpdateEvent.Call(x, y, z, C.data, this);
                     
                     if ((C.data.Raw & mask) == 0 || extraHandler(this, ref C)) {
-                        int idx = blocks[C.b];
-                        if (idx == Block.custom_block) idx = Block.Count + GetExtTileNoCheck(x, y, z);
+                        block = blocks[C.b];
+                        if (block == Block.custom_block) {
+                            block = (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
+                        }
                         
-                        HandlePhysics handler = handlers[idx];
+                        HandlePhysics handler = handlers[block];
                         if (handler != null) {
                             handler(this, ref C);
                         } else if ((C.data.Raw & mask) == 0 || !C.data.HasWait) {
@@ -170,8 +173,7 @@ namespace MCGalaxy {
             lastUpdate = ListUpdate.Count;
             if (ListUpdate.Count > 0 && bulkSender == null)
                 bulkSender = new BufferedBlockSender(this);
-            
-            BlockID block;
+                        
             for (int i = 0; i < ListUpdate.Count; i++) {
                 Update C = ListUpdate.Items[i];
                 try {
@@ -196,25 +198,25 @@ namespace MCGalaxy {
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
-        public void AddCheck(int b, bool overRide = false) {
-            AddCheck(b, overRide, default(PhysicsArgs));
+        public void AddCheck(int index, bool overRide = false) {
+            AddCheck(index, overRide, default(PhysicsArgs));
         }
         
-        public void AddCheck(int b, bool overRide, PhysicsArgs data) {
+        public void AddCheck(int index, bool overRide, PhysicsArgs data) {
             try {
-                int x = b % Width;
-                int y = (b / Width) / Length;
-                int z = (b / Width) % Length;
+                int x = index % Width;
+                int y = (index / Width) / Length;
+                int z = (index / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return;
                 
                 if (!listCheckExists.Get(x, y, z)) {
-                    ListCheck.Add(new Check(b, data)); //Adds block to list to be updated
+                    ListCheck.Add(new Check(index, data)); //Adds block to list to be updated
                     listCheckExists.Set(x, y, z, true);
                 } else if (overRide) {
                     Check[] items = ListCheck.Items;
                     int count = ListCheck.Count;
                     for (int i = 0; i < count; i++) {
-                        if (items[i].b != b) continue;
+                        if (items[i].b != index) continue;
                         items[i].data = data; return;
                     }
                     //Dont need to check physics here because if the list is active, then physics is active :)
@@ -228,17 +230,17 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int b, BlockID block, bool overRide = false) {
+        internal bool AddUpdate(int index, BlockID block, bool overRide = false) {
             PhysicsArgs args = default(PhysicsArgs);
             args.ExtBlock = block >= Block.Extended;
-            return AddUpdate(b, block, args, overRide);
+            return AddUpdate(index, block, args, overRide);
         }
         
-        internal bool AddUpdate(int b, BlockID block, PhysicsArgs data, bool overRide = false) {
+        internal bool AddUpdate(int index, BlockID block, PhysicsArgs data, bool overRide = false) {
             try {
-                int x = b % Width;
-                int y = (b / Width) / Length;
-                int z = (b / Width) % Length;
+                int x = index % Width;
+                int y = (index / Width) / Length;
+                int z = (index / Width) % Length;
                 if (x >= Width || y >= Height || z >= Length) return false;
                 
                 if (overRide) {
@@ -246,7 +248,7 @@ namespace MCGalaxy {
                     if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
                         data.ExtBlock = false;
                     }
-                    AddCheck(b, true, data); //Dont need to check physics here....AddCheck will do that
+                    AddCheck(index, true, data); //Dont need to check physics here....AddCheck will do that
                     Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data);
                     return true;
                 }
@@ -254,11 +256,11 @@ namespace MCGalaxy {
                 if (!listUpdateExists.Get(x, y, z)) {
                     listUpdateExists.Set(x, y, z, true);
                 } else if (block == Block.Sand || block == Block.Gravel)  {
-                    RemoveUpdatesAtPos(b);
+                    RemoveUpdatesAtPos(index);
                 } else {
                     return false;
                 }
-                ListUpdate.Add(new Update(b, (byte)block, data));
+                ListUpdate.Add(new Update(index, (byte)block, data));
                 
                 if (!physThreadStarted && physics > 0)
                     StartPhysics();
@@ -385,7 +387,7 @@ namespace MCGalaxy {
         public int b;
         public PhysicsArgs data;
 
-        public Check(int b, PhysicsArgs data = default(PhysicsArgs)) {
+        public Check(int b, PhysicsArgs data) {
             this.b = b;
             this.data = data;
         }
@@ -395,7 +397,7 @@ namespace MCGalaxy {
         public int b;
         public PhysicsArgs data;
 
-        public Update(int b, byte type, PhysicsArgs data = default(PhysicsArgs)) {
+        public Update(int b, byte type, PhysicsArgs data) {
             this.b = b;
             this.data = data;
             this.data.Data = type;

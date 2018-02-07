@@ -136,16 +136,16 @@ namespace MCGalaxy.Blocks.Physics {
         static void Explode(Level lvl, ushort x, ushort y, ushort z,
                             int size, Random rand, int prob, TntWarsGame game) {
             for (int xx = (x - size); xx <= (x + size ); ++xx)
-                for (int yy = (y - size ); yy <= (y + size); ++yy)
+                for (int yy = (y - size); yy <= (y + size); ++yy)
                     for (int zz = (z - size); zz <= (z + size); ++zz)
             {
-                int index = lvl.PosToInt((ushort)xx, (ushort)yy, (ushort)zz);
-                if (index < 0) continue;
-                byte b = lvl.blocks[index];
+                int index;
+                BlockID block = lvl.GetBlock((ushort)xx, (ushort)yy, (ushort)zz, out index);
+                if (block == Block.Invalid) continue;
                 
                 bool doDestroy = prob < 0 || rand.Next(1, 10) < prob;
-                if (doDestroy && Block.Convert(b) != Block.TNT) {
-                    if (game != null && b != Block.Air) {
+                if (doDestroy && Block.Convert(block) != Block.TNT) {
+                    if (game != null && block != Block.Air) {
                         if (game.InZone((ushort)xx, (ushort)yy, (ushort)zz, false))
                             continue;
                     }
@@ -161,9 +161,9 @@ namespace MCGalaxy.Blocks.Physics {
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
                         lvl.AddCheck(index, false, args);
                     }
-                } else if (b == Block.TNT) {
+                } else if (block == Block.TNT) {
                     lvl.AddUpdate(index, Block.TNT_Small);
-                } else if (b == Block.TNT_Small || b == Block.TNT_Big || b == Block.TNT_Nuke) {
+                } else if (block == Block.TNT_Small || block == Block.TNT_Big || block == Block.TNT_Nuke) {
                     lvl.AddCheck(index);
                 }
             }

@@ -116,7 +116,7 @@ namespace MCGalaxy {
             }
             if (ModeBlock != Block.Air) block = ModeBlock;
             
-            //Ignores updating blocks that are the same and revert block back only to the player
+            // Ignores updating blocks that are the same and revert block back only to the player
             BlockID newB = deletingBlock ? Block.Air : block;
             if (old == newB) {
                 if (painting || !Block.VisuallyEquals(old, held)) RevertBlock(x, y, z);

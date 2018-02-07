@@ -174,19 +174,19 @@ namespace MCGalaxy.Blocks {
             if (ai == AnimalAI.Fly) return BirdPhysics.Do;
 
             if (ai == AnimalAI.FleeAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Air);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Air, -1);
             } else if (ai == AnimalAI.FleeWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Water);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Water, -1);
             } else if (ai == AnimalAI.FleeLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoFlee(lvl, ref C, Block.Lava);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Lava, -1);
             }
             
             if (ai == AnimalAI.KillerAir) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Air);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Air, 1);
             } else if (ai == AnimalAI.KillerWater) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Water);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Water, 1);
             } else if (ai == AnimalAI.KillerLava) {
-                return (Level lvl, ref Check C) => HunterPhysics.DoKiller(lvl, ref C, Block.Lava);
+                return (Level lvl, ref Check C) => HunterPhysics.Do(lvl, ref C, Block.Lava, 1);
             }
             return null;
         }

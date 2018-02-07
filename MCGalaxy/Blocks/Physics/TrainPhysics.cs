@@ -17,6 +17,7 @@
  */
 using System;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Blocks.Physics {
     
@@ -34,23 +35,24 @@ namespace MCGalaxy.Blocks.Physics {
                 for (int dy = -dirY; dy != 2 * dirY; dy += dirY)
                     for (int dz = -dirZ; dz != 2 * dirZ; dz += dirZ)
             {
+                int index;
                 BlockID below = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy - 1), (ushort)(z + dz));
-                BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy),     (ushort)(z + dz));
+                BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy),     (ushort)(z + dz), out index);
                 bool isRails = lvl.Props[below].IsRails;
                 
-                if (isRails && (block == Block.Air || block == Block.Water) 
-                    && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
-                    lvl.AddUpdate(lvl.PosToInt((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz)), Block.Train);
-                    lvl.AddUpdate(C.b, Block.Air, default(PhysicsArgs));                    
-                    byte newBlock = below == Block.Op_Air ? Block.Glass : Block.Obsidian;
+                if (isRails && (block == Block.Air || block == Block.Water) && !lvl.listUpdateExists.Get(x + dx, y + dy, z + dz)) {
+                    lvl.AddUpdate(index, Block.Train);
+                    lvl.AddUpdate(C.b, Block.Air);                    
+                    BlockID newBlock = below == Block.Op_Air ? Block.Glass : Block.Obsidian;
                     
-                    below = lvl.GetBlock(x, (ushort)(y - 1), z);
+                    int belowIndex;
+                    below = lvl.GetBlock(x, (ushort)(y - 1), z, out belowIndex);
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
-                    args.Type2 = PhysicsArgs.Revert; args.Value2 = (byte)below;
+                    args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)below;
                     args.ExtBlock = below >= Block.Extended;
                     
-                    lvl.AddUpdate(lvl.IntOffset(C.b, 0, -1, 0), newBlock, args, true);
+                    lvl.AddUpdate(belowIndex, newBlock, args, true);
                     return;
                 }
             }
