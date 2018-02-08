@@ -56,6 +56,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             Level newLvl = ResizeLevel(lvl, x, y, z);
+            if (newLvl == null) { Player.Message(p, "&cError resizing map."); return false; }
             LevelActions.Replace(lvl, newLvl);
             return true;
         }
