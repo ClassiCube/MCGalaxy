@@ -92,36 +92,36 @@ namespace MCGalaxy {
         public int JailZ;
 
         // Environment settings
+        const int envRange = 0xFFFFFF;
         [ConfigByte("Weather", "Env", 0, 0, 2)]
         public byte Weather;
-        
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
-        [ConfigInt("EdgeLevel", "Env", -1, short.MinValue, short.MaxValue)]
+        [ConfigInt("EdgeLevel", "Env", -1, -envRange, envRange)]
         public int EdgeLevel;
         /// <summary> Offset of the "bedrock" that surrounds map sides from edge level. Default is -2. </summary>
-        [ConfigInt("SidesOffset", "Env", -2, short.MinValue, short.MaxValue)]
+        [ConfigInt("SidesOffset", "Env", -2, -envRange, envRange)]
         public int SidesOffset = -2;
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
-        [ConfigInt("CloudsHeight", "Env", -1, short.MinValue, short.MaxValue)]
+        [ConfigInt("CloudsHeight", "Env", -1, -envRange, envRange)]
         public int CloudsHeight;
         
         /// <summary> Max fog distance the client can see. Default is 0, means use client-side defined max fog distance. </summary>
-        [ConfigInt("MaxFog", "Env", 0, short.MinValue, short.MaxValue)]
+        [ConfigInt("MaxFog", "Env", 0, -envRange, envRange)]
         public int MaxFogDistance;
         /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("clouds-speed", "Env", 256, short.MinValue, short.MaxValue)]
+        [ConfigInt("clouds-speed", "Env", 256, -envRange, envRange)]
         public int CloudsSpeed = 256;
         /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-speed", "Env", 256, short.MinValue, short.MaxValue)]
+        [ConfigInt("weather-speed", "Env", 256, -envRange, envRange)]
         public int WeatherSpeed = 256;
         /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-fade", "Env", 128, short.MinValue, short.MaxValue)]
+        [ConfigInt("weather-fade", "Env", 128, -envRange, envRange)]
         public int WeatherFade = 128;
         /// <summary> Skybox horizontal speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-hor-speed", "Env", 0, short.MinValue, short.MaxValue)]
+        [ConfigInt("skybox-hor-speed", "Env", 0, -envRange, envRange)]
         public int SkyboxHorSpeed = 0;
         /// <summary> Skybox vertical speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-ver-speed", "Env", 0, short.MinValue, short.MaxValue)]
+        [ConfigInt("skybox-ver-speed", "Env", 0, -envRange, envRange)]
         public int SkyboxVerSpeed = 0;
         
         /// <summary> The block which will be displayed on the horizon. </summary>
