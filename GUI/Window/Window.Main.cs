@@ -28,23 +28,25 @@ namespace MCGalaxy.Gui {
             return (Player)(main_Players.SelectedRows[0].DataBoundItem);
         }
         
-        void PlayerCmd(string com) {
-            if (GetSelectedPlayer() != null)
-                Command.all.Find(com).Use(null, GetSelectedPlayer().name);
+        void PlayerCmd(string command) {
+            Player player = GetSelectedPlayer();
+            if (player == null) return;
+            UIHelpers.HandleCommand(command + " " + player.name);
         }
         
-        void PlayerCmd(string com, string prefix, string suffix) {
-            if (GetSelectedPlayer() != null)
-                Command.all.Find(com).Use(null, prefix + GetSelectedPlayer().name + suffix);
+        void PlayerCmd(string command, string prefix, string suffix) {
+            Player player = GetSelectedPlayer();
+            if (player == null) return;
+            UIHelpers.HandleCommand(command + " " + prefix + player.name + suffix);
         }
         
-        void tsPlayer_Clones_Click(object sender, EventArgs e) { PlayerCmd("clones"); }
-        void tsPlayer_Voice_Click(object sender, EventArgs e) { PlayerCmd("voice"); }
-        void tsPlayer_Whois_Click(object sender, EventArgs e) { PlayerCmd("whois"); }       
-        void tsPlayer_Ban_Click(object sender, EventArgs e) { PlayerCmd("ban"); }
-        void tsPlayer_Kick_Click(object sender, EventArgs e) { PlayerCmd("kick", "", " You have been kicked by the console."); }
-        void tsPlayer_Promote_Click(object sender, EventArgs e) { PlayerCmd("rank", "+up ", ""); }
-        void tsPlayer_Demote_Click(object sender, EventArgs e) { PlayerCmd("rank", "-down ", ""); }
+        void tsPlayer_Clones_Click(object sender, EventArgs e) { PlayerCmd("Clones"); }
+        void tsPlayer_Voice_Click(object sender, EventArgs e) { PlayerCmd("Voice"); }
+        void tsPlayer_Whois_Click(object sender, EventArgs e) { PlayerCmd("WhoIs"); }       
+        void tsPlayer_Ban_Click(object sender, EventArgs e) { PlayerCmd("Ban"); }
+        void tsPlayer_Kick_Click(object sender, EventArgs e) { PlayerCmd("Kick", "", " You have been kicked by the console."); }
+        void tsPlayer_Promote_Click(object sender, EventArgs e) { PlayerCmd("SetRank", "+up ", ""); }
+        void tsPlayer_Demote_Click(object sender, EventArgs e) { PlayerCmd("SetRank", "-down ", ""); }
 
 
         
@@ -53,27 +55,29 @@ namespace MCGalaxy.Gui {
             return (Level)(main_Maps.SelectedRows[0].DataBoundItem);
         }
         
-        void LevelCmd(string com) {
-            if (GetSelectedLevel() != null)
-                Command.all.Find(com).Use(null, GetSelectedLevel().name);
+        void LevelCmd(string command) {
+            Level level = GetSelectedLevel();
+            if (level == null) return;
+            UIHelpers.HandleCommand(command + " " + level.name);
         }
 
-        void LevelCmd(string com, string args) {
-            if (GetSelectedLevel() != null)
-                Command.all.Find(com).Use(null, GetSelectedLevel().name + args);
+        void LevelCmd(string command, string prefix, string suffix) {
+            Level level = GetSelectedLevel();
+            if (level == null) return;
+            UIHelpers.HandleCommand(command + " " + prefix + level.name + suffix);
         }  
         
-        void tsMap_Info_Click(object sender, EventArgs e) { LevelCmd("map"); LevelCmd("mapinfo"); }
-        void tsMap_MoveAll_Click(object sender, EventArgs e) { LevelCmd("moveall"); }
-        void tsMap_Physics0_Click(object sender, EventArgs e) { LevelCmd("physics", " 0"); }
-        void tsMap_Physics1_Click(object sender, EventArgs e) { LevelCmd("physics", " 1"); }
-        void tsMap_Physics2_Click(object sender, EventArgs e) { LevelCmd("physics", " 2"); }
-        void tsMap_Physics3_Click(object sender, EventArgs e) { LevelCmd("physics", " 3"); }
-        void tsMap_Physics4_Click(object sender, EventArgs e) { LevelCmd("physics", " 4"); }
-        void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("physics", " 5"); }
-        void tsMap_Save_Click(object sender, EventArgs e) { LevelCmd("save"); }
-        void tsMap_Unload_Click(object sender, EventArgs e) { LevelCmd("unload"); }
-        void tsMap_Reload_Click(object sender, EventArgs e) { LevelCmd("reload"); }
+        void tsMap_Info_Click(object sender, EventArgs e) { LevelCmd("Map"); LevelCmd("mapinfo"); }
+        void tsMap_MoveAll_Click(object sender, EventArgs e) { LevelCmd("MoveAll"); }
+        void tsMap_Physics0_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 0"); }
+        void tsMap_Physics1_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 1"); }
+        void tsMap_Physics2_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 2"); }
+        void tsMap_Physics3_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 3"); }
+        void tsMap_Physics4_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 4"); }
+        void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 5"); }
+        void tsMap_Save_Click(object sender, EventArgs e) { LevelCmd("Save"); }
+        void tsMap_Unload_Click(object sender, EventArgs e) { LevelCmd("Unload"); }
+        void tsMap_Reload_Click(object sender, EventArgs e) { LevelCmd("Reload", "all ", ""); }
         
         
         

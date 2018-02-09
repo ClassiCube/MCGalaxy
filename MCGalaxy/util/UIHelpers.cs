@@ -74,11 +74,14 @@ namespace MCGalaxy.UI {
             }
             
             Thread thread = new Thread(
-                () =>
-                {
+                () => {
                     try {
                         cmd.Use(null, args);
-                        Logger.Log(LogType.CommandUsage, "(console) used /" + text);
+                        if (args.Length == 0) {
+                            Logger.Log(LogType.CommandUsage, "(console) used /" + cmd.name);
+                        } else {
+                            Logger.Log(LogType.CommandUsage, "(console) used /" + cmd.name + " " + args);
+                        }
                     } catch (Exception ex) {
                         Logger.LogError(ex);
                         Logger.Log(LogType.CommandUsage, "(console): FAILED COMMAND");

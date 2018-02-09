@@ -88,27 +88,28 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
-            Player.Message(curPlayer, "<CONSOLE> " + pl_txtMessage.Text);
-            AppendPlayerStatus("Sent player message '<CONSOLE> " + pl_txtMessage.Text + "'");
+            string text = pl_txtMessage.Text.Trim();
+            if (text.Length == 0) { AppendPlayerStatus("No message to send"); return; }
+            
+            Player.Message(curPlayer, "<CONSOLE>: &f" + pl_txtMessage.Text);            
+            AppendPlayerStatus("Sent player message: " + pl_txtMessage.Text);
             pl_txtMessage.Text = "";
         }
 
         void pl_BtnSendCommand_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            string text = pl_txtImpersonate.Text.Trim();
+            if (text.Length == 0) { AppendPlayerStatus("No command to execute"); return; }
             
             try {
-                string[] args = pl_txtImpersonate.Text.Trim().SplitSpaces(2);
-                args[0] = args[0].Replace("/", "");
-                Command cmd = Command.all.Find(args[0]);
-                if (cmd == null) {
-                    AppendPlayerStatus("There is no command '" + args[0] + "'"); return;
-                }
+                string[] args = text.SplitSpaces(2);
+                string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
+                curPlayer.HandleCommand(cmdName, cmdArgs);
                 
-                cmd.Use(curPlayer, args.Length > 1 ? args[1] : "");
                 if (args.Length > 1) {
-                    AppendPlayerStatus("Used command '" + args[0] + "' with parameters '" + args[1] + "' as player");
+                    AppendPlayerStatus("Made player do /" + cmdName + " " + cmdArgs);
                 } else {
-                    AppendPlayerStatus("Used command '" + args[0] + "' with no parameters as player");
+                    AppendPlayerStatus("Made player do /" + cmdName);
                 }
                 pl_txtImpersonate.Text = "";
             } catch {

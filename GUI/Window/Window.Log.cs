@@ -28,27 +28,13 @@ namespace MCGalaxy.Gui {
             string month = logs_dateGeneral.Value.Month.ToString().PadLeft(2, '0');
 
             string date = year + "-" + month + "-" + day;
-            string filename = date + ".txt";
+            string path = Path.Combine("logs", date + ".txt");
 
-            if (!File.Exists(Path.Combine("logs/", filename))) {
+            if (!File.Exists(path)) {
                 logs_txtGeneral.Text = "No logs found for: " + date;
             } else {
                 logs_txtGeneral.Text = null;
-                logs_txtGeneral.Text = File.ReadAllText(Path.Combine("logs/", filename));
-            }
-        }
-
-        void LogErrorMessage(string message) {
-            try {
-                if (logs_txtError.InvokeRequired) {
-                    Invoke(new LogDelegate(LogErrorMessage), new object[] { message });
-                } else {
-                    string date = "----" + DateTime.Now + "----";
-                    message = date + Environment.NewLine + message;
-                    message = message + Environment.NewLine + "-------------------------";
-                    logs_txtError.AppendText(message + Environment.NewLine);
-                }
-            } catch { 
+                logs_txtGeneral.Text = File.ReadAllText(path);
             }
         }
     }
