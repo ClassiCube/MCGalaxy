@@ -51,16 +51,5 @@ namespace MCGalaxy.Gui {
             } catch { 
             }
         }
-        
-        void LogSystemMessage(string message) {
-            try {
-                if (logs_txtSystem.InvokeRequired) {
-                    Invoke(new LogDelegate(LogSystemMessage), new object[] { message });
-                } else {
-                    logs_txtSystem.AppendText(message + Environment.NewLine);
-                }
-            } catch { 
-            }
-        }
     }
 }

@@ -111,24 +111,36 @@ namespace MCGalaxy.Gui {
         }
         
         void LogMessage(LogType type, string message) {
-            string now;
+            if (InvokeRequired) {
+                BeginInvoke((Action<LogType, string>)LogMessage, type, message);
+                return;
+            }           
+            if (Server.shuttingDown) return;
+            string newline = Environment.NewLine;
+            
             switch (type) {
                 case LogType.Error:
-                    WriteLine("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
-                    LogErrorMessage(message); 
+                    main_txtLog.AppendLog("!!!Error! See " + FileLogger.ErrorLogPath + " for more information." + newline);
+                    message = FormatError(message);
+                    logs_txtError.AppendText(message + newline);
                     break;
                 case LogType.BackgroundActivity:
-                    now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    LogSystemMessage(now + message); 
+                    message = DateTime.Now.ToString("(HH:mm:ss) ") + message;
+                    logs_txtSystem.AppendText(message + newline);
                     break;
                 case LogType.CommandUsage:
-                    now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    WriteCommand(now + message); 
+                    message = DateTime.Now.ToString("(HH:mm:ss) ") + message;
+                    main_txtLog.AppendLog(message + newline, main_txtLog.ForeColor, false);
                     break;
                 default:
-                    WriteLine(message);
+                    main_txtLog.AppendLog(message + newline);
                     break;
             }
+        }
+        
+        static string FormatError(string message) {
+            string date = "----" + DateTime.Now + "----";
+            return date + Environment.NewLine + message + Environment.NewLine + "-------------------------";
         }
 
         static volatile bool msgOpen = false;
@@ -204,30 +216,8 @@ namespace MCGalaxy.Gui {
                 UpdateNotifyIconText();
             }
         }
-		
-        delegate void LogDelegate(string message);
-
-        /// <summary> Does the same as Console.WriteLine() only in the form </summary>
-        /// <param name="s">The line to write</param>
-        public void WriteLine(string s) {
-            if (Server.shuttingDown) return;
-            
-            if (InvokeRequired) {
-                Invoke(new LogDelegate(WriteLine), new object[] { s });
-            } else {
-                main_txtLog.AppendLog(s + Environment.NewLine);
-            }
-        }
         
-        void WriteCommand(string s) {
-            if (Server.shuttingDown) return;
-            
-            if (InvokeRequired) {
-                Invoke(new LogDelegate(WriteCommand), new object[] { s });
-            } else {
-                main_txtLog.AppendLog(s + Environment.NewLine, main_txtLog.ForeColor, false);
-            }
-        }
+        delegate void LogDelegate(string message);
 
         /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
