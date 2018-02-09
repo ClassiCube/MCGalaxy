@@ -219,15 +219,17 @@ namespace MCGalaxy {
             }
         }
         
-        public static void Stop(bool restart) { Stop(restart, ""); }
-        public static void Stop(bool restart, string msg) {
+        public static Thread Stop(bool restart) { return Stop(restart, ""); }
+        public static Thread Stop(bool restart, string msg) {
             Server.shuttingDown = true;
             if (msg.Length == 0) {
                 msg = restart ? "Server restarted. Sign in again and rejoin." : ServerConfig.DefaultShutdownMessage;
             }
             
             Exit(restart, msg);
-            new Thread(() => ShutdownThread(restart, msg)).Start();
+            Thread stopThread = new Thread(() => ShutdownThread(restart, msg));
+            stopThread.Start();
+            return stopThread;
         }
         
         static void ShutdownThread(bool restarting, string msg) {
@@ -256,11 +258,12 @@ namespace MCGalaxy {
                 Logger.LogError(ex); 
             }
             
+            try { FileLogger.Flush(null); } catch { }
             if (restarting) Process.Start(RestartPath);
             Environment.Exit(0);
         }
         
-        public static void Exit(bool restarting, string msg) {
+        static void Exit(bool restarting, string msg) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
             foreach (Player p in players) { p.Leave(msg); }

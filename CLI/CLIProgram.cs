@@ -69,7 +69,8 @@ namespace MCGalaxy.Cli {
             
             Thread.Sleep(500);
             if (ServerConfig.restartOnError) {
-                Server.Stop(true, "Server restart - unhandled error");
+                Thread stopThread = Server.Stop(true, "Server restart - unhandled error");
+                stopThread.Join();
             }
         }
         
