@@ -23,7 +23,7 @@ namespace MCGalaxy.Blocks.Physics {
     public static class ActivateablePhysics {
         
         /// <summary> Activates fireworks, rockets, and TNT in 1 block radius around (x, y, z) </summary>
-        public static void DoNeighbours(Level lvl, int index, ushort x, ushort y, ushort z) {
+        public static void DoNeighbours(Level lvl, ushort x, ushort y, ushort z) {
             int bHead = 0, bTail = 0;
             for (int dy = -1; dy <= 1; dy++)
                 for (int dz = -1; dz <= 1; dz++)
@@ -73,7 +73,7 @@ namespace MCGalaxy.Blocks.Physics {
                 else lvl.Blockchange(index, physForm, false, args);
             } else if (lvl.Props[block].IsTDoor) {
                 PhysicsArgs args = GetTDoorArgs(block);
-                lvl.AddUpdate(index, Block.Air,  args);
+                lvl.AddUpdate(index, Block.Air, args);
             } else {
                 BlockID oDoor = lvl.Props[block].oDoorBlock;
                 if (oDoor == Block.Invalid) return;

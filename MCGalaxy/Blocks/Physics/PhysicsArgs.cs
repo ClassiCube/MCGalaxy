@@ -35,38 +35,32 @@ namespace MCGalaxy.Blocks.Physics {
         
         public byte Type1 {
             get { return (byte)(Raw & TypeBitsMask); }
-            set { Raw &= ~TypeBitsMask;
-                Raw |= (uint)value << 0; }
+            set { Raw &= ~TypeBitsMask; Raw |= (uint)value << 0; }
         }
         
         public byte Type2 {
             get { return (byte)((Raw >> 3) & TypeBitsMask); }
-            set { Raw &= ~(TypeBitsMask << 3);
-                Raw |= (uint)value << 3; }
+            set { Raw &= ~(TypeBitsMask << 3); Raw |= (uint)value << 3; }
         }
         
         public byte Value1 {
             get { return (byte)(Raw >> 6); }
-            set { Raw &= ~(ValueBitsMask << 6);
-                Raw |= (uint)value << 6; }
+            set { Raw &= ~(ValueBitsMask << 6); Raw |= (uint)value << 6; }
         }
         
         public byte Value2 {
             get { return (byte)(Raw >> 14); }
-            set { Raw &= ~(ValueBitsMask << 14);
-                Raw |= (uint)value << 14; }
+            set { Raw &= ~(ValueBitsMask << 14); Raw |= (uint)value << 14; }
         }
         
         public byte Data {
             get { return (byte)(Raw >> 22); }
-            set { Raw &= ~(ValueBitsMask << 22);
-                Raw |= (uint)value << 22; }
+            set { Raw &= ~(ValueBitsMask << 22); Raw |= (uint)value << 22; }
         }
         
         public bool Door {
             get { return (Raw & (1u << 30)) != 0; }
-            set { Raw &= ~(1u << 30);
-                Raw |= (value ? 1u : 0u) << 30; }
+            set { Raw &= ~(1u << 30); Raw |= (value ? 1u : 0u) << 30; }
         }
         
         public bool ExtBlock {
@@ -76,9 +70,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         
         public bool HasWait {
-            get { return (Raw & TypeBitsMask) == Wait 
-                    || ((Raw >> 3) & TypeBitsMask) == Wait;
-            }
+            get { return (Raw & TypeBitsMask) == Wait || ((Raw >> 3) & TypeBitsMask) == Wait; }
         }
         
         public void ResetTypes() { Raw &= ~TypeMask; }

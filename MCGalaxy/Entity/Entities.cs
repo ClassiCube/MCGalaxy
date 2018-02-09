@@ -147,7 +147,7 @@ namespace MCGalaxy {
             } else {
                 dst.Send(Packet.AddEntity(id, name, pos, rot, dst.hasCP437, dst.hasExtPositions));
             }
-            
+
             if (dst.hasChangeModel && !model.CaselessEq("humanoid")) SendModel(dst, id, model);
             if (dst.Supports(CpeExt.EntityProperty)) {
                 dst.Send(Packet.EntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX)));

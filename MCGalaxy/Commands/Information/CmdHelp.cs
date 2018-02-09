@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands.Info {
                 case "nerve_gas":
                     Player.Message(p, "Nerve gas is an invisible, killer, static block."); break;
                 case "train":
-                    Player.Message(p, "Place a train on red wool and it will move with physics on. Can ride with /ride."); break;
+                    Player.Message(p, "Place a train on {0} wool and it will move with physics on. Can ride with /ride.", Block.GetName(p, Block.Red)); break;
                 case "snake":
                     Player.Message(p, "Snake crawls along the ground and kills players it touches if physics are on."); break;
                 case "zombie":
@@ -156,7 +156,7 @@ namespace MCGalaxy.Commands.Info {
                     Player.Message(p, "Place a faucet block which spews out and places water on the map a few blocks at a time."); break;
                 case "water_faucet":
                 case "lava_faucet":
-                    Player.Message(p, "Place a faucet block, which water, or lava will come out of.  Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
+                    Player.Message(p, "Place a faucet block, which water, or lava will come out of. Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
                 case "waterfall":
                 case "lavafall":
                     Player.Message(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava."); break;
