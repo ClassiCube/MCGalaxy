@@ -36,16 +36,18 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length == 0 || !p.staticCommands) return;
 
             string[] parts = message.SplitSpaces(2);
-            Command cmd = Command.all.Find(parts[0]);
+            string cmdName = parts[0], cmdArgs = parts.Length > 1 ? parts[1] : "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            Command cmd = Command.all.FindByName(cmdName);
             if (cmd == null) {
-                Player.Message(p, "There is no command \"{0}\"", parts[0]); return;
+                Player.Message(p, "Unknown command \"" + cmdName + "\"."); return;
             }
             
             if (!p.group.CanExecute(cmd)) {
-                Player.Message(p, "Cannot use the \"{0}\" command.", parts[0]); return;
+                Player.Message(p, "Cannot use the \"{0}\" command.", cmdName); return;
             }
-            string args = parts.Length > 1 ? parts[1] : "";
-            cmd.Use(p, args);
+            cmd.Use(p, cmdArgs);
         }
         
         public override void Help(Player p) {
