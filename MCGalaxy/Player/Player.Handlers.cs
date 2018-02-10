@@ -535,9 +535,9 @@ namespace MCGalaxy {
                 return true;
             }
 
-            if (text.ToLower().Contains("^detail.user=")) {
+            if (text.CaselessContains("^detail.user=")) {
                 SendMessage("&cYou cannot use WoM detail strings in a chat message.");
-                text = text.Replace("^detail.user=", "");
+                return true;
             }
 
             if (partialMessage.Length > 0 && !(IsPartialSpaced(text) || IsPartialJoined(text))) {

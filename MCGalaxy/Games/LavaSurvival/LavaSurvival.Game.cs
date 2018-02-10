@@ -22,17 +22,17 @@ namespace MCGalaxy.Games {
     public sealed partial class LavaSurvival : IGame {
         
         public override bool HandlesChatMessage(Player p, string message) {
+            if (!HasPlayer(p)) return false;
             message = message.ToLower();
-            if (HasPlayer(p) && HasVote(message)) {
-                if (AddVote(p, message)) {
-                    Player.Message(p, "Your vote for &5" + message.Capitalize() + " %Shas been placed. Thanks!");
-                    return true;
-                } else {
-                    Player.Message(p, "&cYou already voted!");
-                    return true;
-                }
+            if (!HasVote(message)) return false;
+            
+            if (AddVote(p, message)) {
+                Player.Message(p, "Your vote for &5" + message.Capitalize() + " %Shas been placed. Thanks!");
+                return true;
+            } else {
+                Player.Message(p, "&cYou already voted!");
+                return true;
             }
-            return false;
         }
 
 
