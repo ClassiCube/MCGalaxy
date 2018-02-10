@@ -216,7 +216,7 @@ namespace MCGalaxy.Commands.Info {
 
                 path = LevelInfo.PropertiesPath(name);
                 LevelConfig cfg = new LevelConfig();
-                cfg.EdgeLevel = Height / 2; cfg.CloudsHeight = Height + 2;
+                cfg.Reset(Height);
                 LevelConfig.Load(path, cfg);
                 Config = cfg;
                 

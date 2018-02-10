@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public abstract class AreaConfig {
@@ -43,11 +44,54 @@ namespace MCGalaxy {
         [ConfigStringList("BuildBlacklist", "Permissions")]
         public List<string> BuildBlacklist = new List<string>();
         
-        // Env settings
+
+        // Environment settings
+        const int envRange = 0xFFFFFF;
+        [ConfigInt("Weather", "Env", 0, 0, 2)]
+        public int Weather = -1;
+        /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
+        [ConfigInt("EdgeLevel", "Env", -1, -envRange, envRange)]
+        public int EdgeLevel = -1;
+        /// <summary> Offset of the "bedrock" that surrounds map sides from edge level. Default is -2. </summary>
+        [ConfigInt("SidesOffset", "Env", -2, -envRange, envRange)]
+        public int SidesOffset = -1;
+        /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
+        [ConfigInt("CloudsHeight", "Env", -1, -envRange, envRange)]
+        public int CloudsHeight = -1;
+        
+        /// <summary> Max fog distance the client can see. Default is 0, means use client-side defined max fog distance. </summary>
+        [ConfigInt("MaxFog", "Env", 0, -envRange, envRange)]
+        public int MaxFogDistance = -1;
+        /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("clouds-speed", "Env", 256, -envRange, envRange)]
+        public int CloudsSpeed = -1;
+        /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("weather-speed", "Env", 256, -envRange, envRange)]
+        public int WeatherSpeed = -1;
+        /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
+        [ConfigInt("weather-fade", "Env", 128, -envRange, envRange)]
+        public int WeatherFade = -1;
+        /// <summary> Skybox horizontal speed, in units of 1024ths. Default is 0 (0 speed). </summary>
+        [ConfigInt("skybox-hor-speed", "Env", 0, -envRange, envRange)]
+        public int SkyboxHorSpeed = -1;
+        /// <summary> Skybox vertical speed, in units of 1024ths. Default is 0 (0 speed). </summary>
+        [ConfigInt("skybox-ver-speed", "Env", 0, -envRange, envRange)]
+        public int SkyboxVerSpeed = -1;
+        
+        /// <summary> The block which will be displayed on the horizon. </summary>
+        [ConfigBlock("HorizonBlock", "Env", Block.Water)]
+        public BlockID HorizonBlock = Block.Invalid;
+        /// <summary> The block which will be displayed on the edge of the map. </summary>
+        [ConfigBlock("EdgeBlock", "Env", Block.Bedrock)]
+        public BlockID EdgeBlock = Block.Invalid;
+        /// <summary> Whether exponential fog mode is used client-side. </summary>
+        [ConfigBool("ExpFog", "Env", false)]
+        public bool ExpFog;
         [ConfigString("Texture", "Env", "", true, null, NetUtils.StringSize)]
         public string Terrain = "";
         [ConfigString("TexturePack", "Env", "", true, null, NetUtils.StringSize)]
         public string TexturePack = "";
+        
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("CloudColor", "Env", "", true)]
         public string CloudColor = "";
@@ -63,6 +107,32 @@ namespace MCGalaxy {
         /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
+        
+        public void Reset(int height) {
+            Weather = 0;
+            EdgeLevel = 0;
+            SidesOffset = -2;
+            CloudsHeight = 0;
+            
+            MaxFogDistance = 0;
+            CloudsSpeed = 256;
+            WeatherSpeed = 256;
+            WeatherFade = 128;
+            SkyboxHorSpeed = 0;
+            SkyboxVerSpeed = 0;
+            
+            HorizonBlock = Block.Water;
+            EdgeBlock = Block.Bedrock;
+            ExpFog = false;
+            
+            Terrain = "";
+            TexturePack = "";
+            CloudColor = "";
+            FogColor = "";
+            SkyColor = "";
+            ShadowColor = "";
+            LightColor = "";
+        }
     }
     
     public sealed class LevelConfig : AreaConfig {
@@ -90,49 +160,6 @@ namespace MCGalaxy {
         public int JailY;
         [ConfigInt("JailZ", "Jail", 0, 0, 65535)]
         public int JailZ;
-
-        // Environment settings
-        const int envRange = 0xFFFFFF;
-        [ConfigByte("Weather", "Env", 0, 0, 2)]
-        public byte Weather;
-        /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
-        [ConfigInt("EdgeLevel", "Env", -1, -envRange, envRange)]
-        public int EdgeLevel;
-        /// <summary> Offset of the "bedrock" that surrounds map sides from edge level. Default is -2. </summary>
-        [ConfigInt("SidesOffset", "Env", -2, -envRange, envRange)]
-        public int SidesOffset = -2;
-        /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
-        [ConfigInt("CloudsHeight", "Env", -1, -envRange, envRange)]
-        public int CloudsHeight;
-        
-        /// <summary> Max fog distance the client can see. Default is 0, means use client-side defined max fog distance. </summary>
-        [ConfigInt("MaxFog", "Env", 0, -envRange, envRange)]
-        public int MaxFogDistance;
-        /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("clouds-speed", "Env", 256, -envRange, envRange)]
-        public int CloudsSpeed = 256;
-        /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-speed", "Env", 256, -envRange, envRange)]
-        public int WeatherSpeed = 256;
-        /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-fade", "Env", 128, -envRange, envRange)]
-        public int WeatherFade = 128;
-        /// <summary> Skybox horizontal speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-hor-speed", "Env", 0, -envRange, envRange)]
-        public int SkyboxHorSpeed = 0;
-        /// <summary> Skybox vertical speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-ver-speed", "Env", 0, -envRange, envRange)]
-        public int SkyboxVerSpeed = 0;
-        
-        /// <summary> The block which will be displayed on the horizon. </summary>
-        [ConfigByte("HorizonBlock", "Env", Block.Water)]
-        public byte HorizonBlock = Block.Water;
-        /// <summary> The block which will be displayed on the edge of the map. </summary>
-        [ConfigByte("EdgeBlock", "Env", Block.Bedrock)]
-        public byte EdgeBlock = Block.Bedrock;
-        /// <summary> Whether exponential fog mode is used client-side. </summary>
-        [ConfigBool("ExpFog", "Env", false)]
-        public bool ExpFog;
         
         // Permission settings
         [ConfigString("RealmOwner", "Permissions", "", true)]

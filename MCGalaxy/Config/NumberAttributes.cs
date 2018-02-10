@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Config {
     
@@ -52,16 +53,16 @@ namespace MCGalaxy.Config {
         }
     }   
     
-    public class ConfigByteAttribute : ConfigIntAttribute {
+    public class ConfigBlockAttribute : ConfigIntAttribute {
         
-        public ConfigByteAttribute(string name, string section, int defValue,
-                                  int min = byte.MinValue, int max = byte.MaxValue)
-            : base(name, section, defValue, min, max) {
+        public ConfigBlockAttribute(string name, string section, int defValue)
+            : base(name, section, defValue, 0, Block.ExtendedCount - 1) {
         }
         
         public override object Parse(string value) {
             int intValue = (int)base.Parse(value);
-            return (byte)intValue; // Can't directly unbox object to byte - must unbox to int, then cast to byte
+            // Can't directly unbox object to block ID - must unbox to int, then cast to block ID
+            return Block.MapOldRaw((BlockID)intValue);
         }
     }
     

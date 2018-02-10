@@ -102,7 +102,8 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentMapAppearance() {
-            byte side = (byte)level.Config.EdgeBlock, edge = (byte)level.Config.HorizonBlock;
+            byte side = (byte)level.Config.EdgeBlock;
+            byte edge = (byte)level.Config.HorizonBlock;
             if (!hasBlockDefs) side = level.RawFallback(side);
             if (!hasBlockDefs) edge = level.RawFallback(edge);
             

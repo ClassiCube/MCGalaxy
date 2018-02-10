@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Config;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
@@ -31,8 +32,8 @@ namespace MCGalaxy.Games {
         public int RedFlagY;
         [ConfigInt("base.red.z", null, 0)]
         public int RedFlagZ;
-        [ConfigByte("base.red.block", null, 0)]
-        public byte RedFlagBlock;
+        [ConfigBlock("base.red.block", null, Block.Air)]
+        public BlockID RedFlagBlock;
         
         [ConfigInt("base.blue.x", null, 0)]
         public int BlueFlagX;
@@ -40,8 +41,8 @@ namespace MCGalaxy.Games {
         public int BlueFlagY;
         [ConfigInt("base.blue.z", null, 0)]
         public int BlueFlagZ;
-        [ConfigByte("base.blue.block", null, 0)]
-        public byte BlueFlagBlock;
+        [ConfigBlock("base.blue.block", null, Block.Air)]
+        public BlockID BlueFlagBlock;
         
         [ConfigInt("base.red.spawnx", null, 0)]
         public int RedSpawnX;

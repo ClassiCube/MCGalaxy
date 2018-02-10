@@ -31,8 +31,7 @@ namespace MCGalaxy.Blocks.Physics {
             //Edge of map water
             if (lvl.Config.EdgeWater && (y < lvl.Config.EdgeLevel && y >= (lvl.Config.EdgeLevel + lvl.Config.SidesOffset))) {
                 if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1) {
-                    BlockID block = Block.FromRaw(lvl.Config.HorizonBlock);
-                    lvl.AddUpdate(C.Index, block);
+                    lvl.AddUpdate(C.Index, lvl.Config.HorizonBlock);
                 }
             }
             if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;

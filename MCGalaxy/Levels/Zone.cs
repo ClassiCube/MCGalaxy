@@ -28,8 +28,8 @@ namespace MCGalaxy {
         public string Name = "";
         [ConfigString("ShowColor", "General", "000000", true)]
         public string ShowColor = "000000";
-        [ConfigByte("ShowAlpha", "General", 0)]
-        public byte ShowAlpha = 0;
+        [ConfigInt("ShowAlpha", "General", 0, 255)]
+        public int ShowAlpha = 0;
         
         public string Color { get { return Group.GetColor(BuildMin); } }
     }
@@ -122,7 +122,7 @@ namespace MCGalaxy {
             p.Send(Packet.MakeSelection(
                 ID, Config.Name, new Vec3U16(MinX, MinY, MinZ),
                 new Vec3U16((ushort)(MaxX + 1), (ushort)(MaxY + 1), (ushort)(MaxZ + 1)),
-                col.R, col.G, col.B, Config.ShowAlpha, p.hasCP437));
+                col.R, col.G, col.B, (byte)Config.ShowAlpha, p.hasCP437));
         }
         
         public void ShowAll(Level lvl) {
