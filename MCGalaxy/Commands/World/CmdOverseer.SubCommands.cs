@@ -31,7 +31,10 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleEnv(Player p, string type, string value) {
             string arg = value.Length == 0 ? "normal" : value;
-            if (CmdEnvironment.Handle(p, type.ToLower(), arg)) return;
+            type = type.ToLower();
+            Level lvl = p.level;
+            
+            if (CmdEnvironment.Handle(p, type, arg, lvl.Config, lvl.ColoredName)) return;
             Player.MessageLines(p, envHelp);
         }
 

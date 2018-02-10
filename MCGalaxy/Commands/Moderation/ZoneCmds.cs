@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
@@ -110,25 +111,24 @@ namespace MCGalaxy.Commands.Moderation {
         
         void SetZoneProp(Player p, string[] args, Zone zone) {
             ColorDesc desc = default(ColorDesc);
-            string opt = args[2];
+            string opt = args[2], value = args[3];
             
             if (opt.CaselessEq("col")) {
-                if (!CommandParser.GetHex(p, args[3], ref desc)) return;
+                if (!CommandParser.GetHex(p, value, ref desc)) return;
                 
-                zone.Config.ShowColor = args[3];
+                zone.Config.ShowColor = value;
                 zone.ShowAll(p.level);
             } else if (opt.CaselessEq("alpha")) {
                 byte alpha = 0;
-                if (!CommandParser.GetByte(p, args[3], "Alpha", ref alpha)) return;
+                if (!CommandParser.GetByte(p, value, "Alpha", ref alpha)) return;
                 
                 zone.UnshowAll(p.level);
                 zone.Config.ShowAlpha = alpha;
                 zone.ShowAll(p.level);
             } else if (opt.CaselessEq("motd")) {
-                zone.Config.MOTD = args[3];
+                zone.Config.MOTD = value;
                 OnChangedZone(zone);
-            } else if (opt.CaselessEq("clouds")) {
-                zone.Config.CloudColor = args[3];
+            } else if (CmdEnvironment.Handle(p, opt, value, zone.Config, "zone " + zone.ColoredName)) {
                 OnChangedZone(zone);
             }  else {
                 Player.Message(p, "?????");

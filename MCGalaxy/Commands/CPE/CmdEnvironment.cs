@@ -29,25 +29,24 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Use(Player p, string message) {
             message = message.ToLower();
-            if (message == "preset") {
+            if (message.CaselessEq("preset")) {
                 SendPresetsMessage(p); return;
             }
             
             string[] args = message.SplitSpaces();
+            string opt = args[0];
             if (args.Length <= 1) {
-                if (!message.CaselessEq("normal")) { Help(p); return; }
+                if (!opt.CaselessEq("normal")) { Help(p); return; }
                 ResetEnv(p);
-            } else if (args[0] == "preset") {
+            } else if (opt.CaselessEq("preset")) {
                 SetPreset(p, args[1]);
-            } else if (!Handle(p, args[0], args[1])) {
+            } else if (!Handle(p, opt, args[1], p.level.Config, p.level.ColoredName)) {
                 Help(p);
             }
         }
         
-        internal static bool Handle(Player p, string opt, string value) {
+        internal static bool Handle(Player p, string opt, string value, AreaConfig cfg, string area) {
             Level lvl = p.level;
-            LevelConfig cfg = lvl.Config;
-            string area = p.level.ColoredName;
             // using if else instead of switch here reduces IL by about 200 bytes
             
             if (opt == "sky") {

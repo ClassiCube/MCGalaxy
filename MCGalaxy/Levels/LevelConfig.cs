@@ -110,9 +110,9 @@ namespace MCGalaxy {
         
         public void Reset(int height) {
             Weather = 0;
-            EdgeLevel = 0;
+            EdgeLevel = height / 2;
             SidesOffset = -2;
-            CloudsHeight = 0;
+            CloudsHeight = height + 2;
             
             MaxFogDistance = 0;
             CloudsSpeed = 256;
@@ -132,6 +132,15 @@ namespace MCGalaxy {
             SkyColor = "";
             ShadowColor = "";
             LightColor = "";
+        }
+        
+        public string GetColor(int i) {
+            if (i == 0) return SkyColor;
+            if (i == 1) return CloudColor;
+            if (i == 2) return FogColor;
+            if (i == 3) return ShadowColor;
+            if (i == 4) return LightColor;
+            return null;
         }
     }
     

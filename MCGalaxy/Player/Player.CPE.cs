@@ -150,11 +150,9 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentEnvColors() {
-            SendEnvColor(0, level.Config.SkyColor);
-            SendEnvColor(1, level.Config.CloudColor);
-            SendEnvColor(2, level.Config.FogColor);
-            SendEnvColor(3, level.Config.ShadowColor);
-            SendEnvColor(4, level.Config.LightColor);
+            for (int i = 0; i <= 4; i++) {
+                SendEnvColor((byte)i, level.Config.GetColor(i));
+            }
         }
         
         public void SendEnvColor(byte type, string hex) {

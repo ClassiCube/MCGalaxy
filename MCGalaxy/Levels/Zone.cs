@@ -28,7 +28,7 @@ namespace MCGalaxy {
         public string Name = "";
         [ConfigString("ShowColor", "General", "000000", true)]
         public string ShowColor = "000000";
-        [ConfigInt("ShowAlpha", "General", 0, 255)]
+        [ConfigInt("ShowAlpha", "General", 0, 0, 255)]
         public int ShowAlpha = 0;
         
         public string Color { get { return Group.GetColor(BuildMin); } }

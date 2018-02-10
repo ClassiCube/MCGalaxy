@@ -371,8 +371,14 @@ namespace MCGalaxy {
         public void OnChangedZone() {
             if (Supports(CpeExt.InstantMOTD)) SendMapMotd();
             Zone zone = ZoneIn;
-            string cloudsCol = zone == null || zone.Config.CloudColor == "" ? level.Config.CloudColor : zone.Config.CloudColor;
-            if (Supports(CpeExt.EnvColors)) SendEnvColor(1, cloudsCol);
+            
+            for (int i = 0; i <= 4; i++) {
+                string col = level.Config.GetColor(i);
+                if (zone != null && zone.Config.GetColor(i) != "") {
+                    col = zone.Config.GetColor(i);
+                }
+                if (Supports(CpeExt.EnvColors)) SendEnvColor((byte)i, col);
+            }
             
             // TODO: get rid of this
             Server.s.Log("I MOVED");
