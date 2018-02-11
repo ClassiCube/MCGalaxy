@@ -37,11 +37,11 @@ namespace MCGalaxy.Commands.Chatting {
             if (logoutMsg.Length == 0) {
                 string path = PlayerDB.LogoutPath(who.name);
                 if (File.Exists(path)) File.Delete(path);
-                Player.Message(p, "The logout message of {0} %Shas been removed.",
+                Player.Message(p, "Logout message of {0} %Swas removed.",
                                who.ColoredName);
             } else {
                 PlayerDB.SetLogoutMessage(who.name, logoutMsg);
-                Player.Message(p, "The logout message of {0} %Shas been changed to: {1}",
+                Player.Message(p, "Logout message of {0} %Swas changed to: {1}",
                                who.ColoredName, logoutMsg);
             }
         }

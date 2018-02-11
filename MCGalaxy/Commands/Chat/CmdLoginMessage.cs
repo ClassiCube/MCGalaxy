@@ -37,11 +37,11 @@ namespace MCGalaxy.Commands.Chatting {
             if (loginMsg.Length == 0) {
                 string path = PlayerDB.LoginPath(who.name);
                 if (File.Exists(path)) File.Delete(path);
-                Player.Message(p, "The login message of {0} %Shas been removed.",
+                Player.Message(p, "Login message of {0} %Swas removed.",
                                who.ColoredName);
             } else {
                 PlayerDB.SetLoginMessage(who.name, loginMsg);
-                Player.Message(p, "The login message of {0} %Shas been changed to: {1}",
+                Player.Message(p, "Login message of {0} %Swas changed to: {1}",
                                who.ColoredName, loginMsg);
             }
         }
