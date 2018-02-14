@@ -137,7 +137,7 @@ namespace MCGalaxy.Blocks {
                     continue;
                 }
                 
-                // todo fix fix fix
+                // TODO fix fix fix
                 byte raw;
                 if (!Byte.TryParse(parts[0], out raw)) {
                     Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1} block properties", line, group);

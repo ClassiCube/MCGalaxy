@@ -180,7 +180,7 @@ namespace MCGalaxy.Commands.Info {
                            (cfg.CloudsSpeed / 256f).ToString("F2"),
                            (cfg.WeatherSpeed / 256f).ToString("F2"));
             Player.Message(p, "Weather fade rate: &b{0}%%S, Exponential fog: {1}",
-                           (cfg.WeatherFade / 128).ToString("F2"),
+                           (cfg.WeatherFade / 128f).ToString("F2"),
                            cfg.ExpFog ? "&aON" : "&cOFF");
             Player.Message(p, "Skybox rotations: Horizontal &b{0}%S, Vertical &b{1}",
                            SkyboxSpeed(cfg.SkyboxHorSpeed), SkyboxSpeed(cfg.SkyboxVerSpeed));
