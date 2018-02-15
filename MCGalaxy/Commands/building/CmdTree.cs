@@ -53,10 +53,10 @@ namespace MCGalaxy.Commands.Building {
                 }
                 
                 dArgs.size = size;
-                dArgs.brushMsg = parts.Length >= 3 ? parts[2] : ""; // type value brush
+                dArgs.brushMsg = message.Splice(2, 0); // type value/height brush
             } else {
-                dArgs.brushMsg = parts.Length >= 2 ? parts[1] : ""; // type brush
-            }            
+                dArgs.brushMsg = message.Splice(1, 0); // type brush
+            }
 
             if (!CheckBrush(p, dArgs.brushMsg)) return;           
             Player.Message(p, "Select where you wish your tree to grow");
