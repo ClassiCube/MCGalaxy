@@ -33,14 +33,16 @@ namespace MCGalaxy {
         readonly object updateLock = new object();
         readonly object checkLock = new object();
         
-        public void setPhysics(int newValue) {
-            if (physics == 0 && newValue != 0 && blocks != null) {
+        public void SetPhysics(int level) {
+            if (physics == 0 && level != 0 && blocks != null) {
                 for (int i = 0; i < blocks.Length; i++)
                     // Optimization hack, since no blocks under 183 ever need a restart
                     if (blocks[i] > 183 && Block.NeedRestart(blocks[i]))
                         AddCheck(i);
             }
-            physics = newValue;
+        	
+        	if (physics != level) OnPhysicsLevelChangedEvent.Call(this, level);
+            physics = level;
             //StartPhysics(); This isnt needed, the physics will start when we set the new value above
         }
         
@@ -91,8 +93,7 @@ namespace MCGalaxy {
 
                     if (wait < (int)(-Config.PhysicsOverload * 0.75f)) {
                         if (wait < -Config.PhysicsOverload) {
-                            if (!ServerConfig.PhysicsRestart)
-                                setPhysics(0);
+                            if (!ServerConfig.PhysicsRestart) SetPhysics(0);
                             ClearPhysics();
 
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);

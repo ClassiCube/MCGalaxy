@@ -56,12 +56,39 @@ namespace MCGalaxy.Events.LevelEvents {
         }
     }
     
+    public delegate void OnLevelAdded(Level lvl);
+    public sealed class OnLevelAddedEvent : IEvent<OnLevelAdded> {
+        
+        public static void Call(Level lvl) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(lvl));
+        }
+    }
+    
+    public delegate void OnLevelRemoved(Level lvl);
+    public sealed class OnLevelRemovedEvent : IEvent<OnLevelRemoved> {
+        
+        public static void Call(Level lvl) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(lvl));
+        }
+    }
+    
     public delegate void OnPhysicsStateChanged(Level lvl, PhysicsState state);
     public sealed class OnPhysicsStateChangedEvent : IEvent<OnPhysicsStateChanged> {
         
         public static void Call(Level lvl, PhysicsState state) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(lvl, state));
+        }
+    }
+    
+    public delegate void OnPhysicsLevelChanged(Level lvl, int level);
+    public sealed class OnPhysicsLevelChangedEvent : IEvent<OnPhysicsLevelChanged> {
+        
+        public static void Call(Level lvl, int level) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(lvl, level));
         }
     }
     

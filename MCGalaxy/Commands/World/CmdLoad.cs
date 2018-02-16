@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Events.LevelEvents;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdLoad : Command {
@@ -62,6 +63,7 @@ namespace MCGalaxy.Commands.World {
             }
 
             LevelInfo.Loaded.Add(lvl);
+            OnLevelAddedEvent.Call(lvl);
             if (!autoLoaded)
                 Chat.MessageWhere("Level {0} %Sloaded.", pl => Entities.CanSee(pl, p), lvl.ColoredName);
             return lvl;

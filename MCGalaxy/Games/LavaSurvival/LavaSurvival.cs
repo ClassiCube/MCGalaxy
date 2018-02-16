@@ -130,7 +130,7 @@ namespace MCGalaxy.Games
             {
                 try { mapData.Dispose(); }
                 catch { }
-                map.setPhysics(5);
+                map.SetPhysics(5);
                 map.ChatLevel("The round has ended!");
                 Logger.Log(LogType.GameActivity, "[Lava Survival] Round ended. Voting...");
                 StartVote();
@@ -227,7 +227,7 @@ namespace MCGalaxy.Games
                 mapSettings = LoadMapSettings(name);
                 mapData = GenerateMapData(mapSettings);
 
-                map.setPhysics(mapData.destroy ? 2 : 1);
+                map.SetPhysics(mapData.destroy ? 2 : 1);
                 map.Config.PhysicsOverload = 1000000;
                 map.Config.AutoUnload = false;
                 map.Config.LoadOnGoto = false;

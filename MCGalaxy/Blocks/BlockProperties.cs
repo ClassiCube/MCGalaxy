@@ -111,8 +111,9 @@ namespace MCGalaxy.Blocks {
                     w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor    + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
-                                + (byte)props.AnimalAI + ":" + props.StackBlock + ":" + props.OPBlock     + ":"
-                                + props.oDoorBlock + ":" + props.Drownable + ":" + props.GrassBlock + ":" + props.DirtBlock);
+                                + (byte)props.AnimalAI + ":" + props.StackBlock + ":" + props.OPBlock  + ":"
+                                + props.oDoorBlock + ":" + props.Drownable + ":" + props.GrassBlock    + ":" 
+                                + props.DirtBlock);
                 }
             }
         }

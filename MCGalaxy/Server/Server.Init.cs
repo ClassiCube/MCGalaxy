@@ -35,7 +35,7 @@ namespace MCGalaxy {
                 if (mainLevel == null) GenerateMain();
                 
                 mainLevel.Config.AutoUnload = false;
-                LevelInfo.Loaded.Add(mainLevel);
+                LevelInfo.Add(mainLevel);
             } catch (Exception e) {
                 Logger.LogError(e);
             }

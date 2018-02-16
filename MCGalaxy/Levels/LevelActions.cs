@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -167,10 +168,10 @@ namespace MCGalaxy {
         
         public static void Replace(Level old, Level lvl) {
             LevelDB.SaveBlockDB(old);
-            LevelInfo.Loaded.Remove(old);
-            LevelInfo.Loaded.Add(lvl);
+            LevelInfo.Remove(old);        
+            LevelInfo.Add(lvl);
             
-            old.setPhysics(0);
+            old.SetPhysics(0);
             old.ClearPhysics();
             lvl.StartPhysics();
             

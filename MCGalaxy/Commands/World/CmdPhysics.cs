@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         internal static void SetPhysics(Level lvl, int state) {
-            lvl.setPhysics(state);
+            lvl.SetPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];
             lvl.ChatLevel("Physics are now " + stateDesc + " %Son " + lvl.ColoredName + "%S.");

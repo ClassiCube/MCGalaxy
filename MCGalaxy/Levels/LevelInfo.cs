@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Events.LevelEvents;
 
 namespace MCGalaxy {
 
@@ -33,6 +34,16 @@ namespace MCGalaxy {
                 if (lvl.name.CaselessEq(name)) return lvl;
             }
             return null;
+        }
+        
+        public static void Add(Level lvl) {
+            Loaded.Add(lvl);
+            OnLevelAddedEvent.Call(lvl);
+        }
+        
+        public static void Remove(Level lvl) {
+            Loaded.Remove(lvl);
+            OnLevelRemovedEvent.Call(lvl);
         }
         
         

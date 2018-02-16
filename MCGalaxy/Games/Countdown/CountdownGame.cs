@@ -347,7 +347,7 @@ namespace MCGalaxy.Games {
             Level lvl = CountdownMapGen.Generate(width, height, length);
             Level cur = LevelInfo.FindExact("countdown");
             if (cur != null) LevelActions.Replace(cur, lvl);
-            else LevelInfo.Loaded.Add(lvl);
+            else LevelInfo.Add(lvl);
             
             lvl.Save();
             Map = lvl;

@@ -180,7 +180,7 @@ namespace MCGalaxy {
 
             }
             MovePlayersToMain();
-            LevelInfo.Loaded.Remove(this);
+            LevelInfo.Remove(this);
 
             try {
                 if (!unloadedBots) {
@@ -350,7 +350,7 @@ namespace MCGalaxy {
                 bool propsExisted = LevelConfig.Load(propsPath, lvl.Config);
                 
                 if (propsExisted) {
-                    lvl.setPhysics(lvl.Config.Physics);
+                    lvl.SetPhysics(lvl.Config.Physics);
                 } else {
                     Logger.Log(LogType.ConsoleMessage, ".properties file for level {0} was not found.", lvl.MapName);
                 }

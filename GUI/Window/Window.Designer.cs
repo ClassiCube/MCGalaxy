@@ -1065,7 +1065,7 @@ namespace MCGalaxy.Gui
             this.pl_btnMessage.Name = "pl_btnMessage";
             this.pl_btnMessage.Size = new System.Drawing.Size(98, 23);
             this.pl_btnMessage.TabIndex = 9;
-            this.pl_btnMessage.Text = "Message:";
+            this.pl_btnMessage.Text = "Send message:";
             this.pl_btnMessage.UseVisualStyleBackColor = true;
             this.pl_btnMessage.Click += new System.EventHandler(this.pl_BtnMessage_Click);
             // 

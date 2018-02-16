@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void SetLevelProps(Level lvl) {
-            lvl.setPhysics(0);
+            lvl.SetPhysics(0);
             lvl.backedup = true;
             lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.IsMuseum = true;

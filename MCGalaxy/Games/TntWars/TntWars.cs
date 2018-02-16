@@ -104,7 +104,7 @@ namespace MCGalaxy.Games
                 Logger.Log(LogType.SystemActivity, "Backed up {0} ({1}) for TNT Wars", lvl.name, BackupNumber);
             }
             //Map stuff
-            lvl.setPhysics(3);
+            lvl.SetPhysics(3);
             lvl.BuildAccess.Min = Group.standard.Permission;
             lvl.VisitAccess.Min = Group.standard.Permission;
             lvl.Config.KillerBlocks = true;

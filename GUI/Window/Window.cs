@@ -39,8 +39,6 @@ namespace MCGalaxy.Gui {
         public NotifyIcon notifyIcon = new NotifyIcon();
         Player curPlayer;
 
-        readonly System.Timers.Timer UpdateListTimer = new System.Timers.Timer(10000);
-
         public Window() {
             InitializeComponent();
         }
@@ -67,14 +65,6 @@ namespace MCGalaxy.Gui {
 
             main_Maps.DataSource = new LevelCollection(); // Otherwise "-1 does not have a value" exception when clicking a row
             main_Maps.Font = new Font("Calibri", 8.25f);
-
-            UpdateListTimer.Elapsed += delegate {
-                try {
-                    UpdateMapList();
-                } catch { } // needed for slower computers
-                //Server.s.Log("Lists updated!");
-            }; UpdateListTimer.Start();
-
         }
         
         void UpdateNotifyIconText() {
@@ -169,13 +159,14 @@ namespace MCGalaxy.Gui {
             OnPlayerDisconnectEvent.Register(Player_PlayerDisconnect, Priority.Low);
             OnJoinedLevelEvent.Register(Player_OnJoinedLevel, Priority.Low);
 
-            OnLevelLoadedEvent.Register(Level_LevelLoaded, Priority.Low);
-            OnLevelUnloadEvent.Register(Level_LevelUnload, Priority.Low);
+            OnLevelAddedEvent.Register(Level_LevelAdded, Priority.Low);
+            OnLevelRemovedEvent.Register(Level_LevelRemoved, Priority.Low);
+            OnPhysicsLevelChangedEvent.Register(Level_PhysicsLevelChanged, Priority.Low);
 
-            RunOnUiThread(() => main_btnProps.Enabled = true);
+            RunOnUI_Async(() => main_btnProps.Enabled = true);
         }
 
-        public void RunOnUiThread(Action act) { Invoke(act); }
+        public void RunOnUI_Async(Action act) { BeginInvoke(act); }
         
         void Player_PlayerConnect(Player p) {
             UpdatePlayers();
@@ -186,25 +177,32 @@ namespace MCGalaxy.Gui {
         }
         
         void Player_OnJoinedLevel(Player p, Level prevLevel, Level lvl) {
-            RunOnUiThread(() => {
-                UpdatePlayerMapCombo();
-            });
-        }
-        
-        void Level_LevelUnload(Level l) {
-            RunOnUiThread(() => {
+            RunOnUI_Async(() => {
                 UpdateMapList();
-                UpdatePlayerMapCombo();
+                UpdatePlayerSelected(); 
+            });
+        }
+        
+        void Level_LevelAdded(Level lvl) {
+            RunOnUI_Async(() => {
+                UpdateMapList();
                 UpdateUnloadedList();
             });
         }
         
-        void Level_LevelLoaded(Level l) {
-            RunOnUiThread(() => {
-                UpdatePlayerMapCombo();
+        void Level_LevelRemoved(Level lvl) {
+            RunOnUI_Async(() => {
+                UpdateMapList();
                 UpdateUnloadedList();
             });
         }
+        
+        void Level_PhysicsLevelChanged(Level lvl, int level) {
+        	RunOnUI_Async(() => {
+                UpdateMapList();
+            });
+        }
+
 
         void SettingsUpdate() {
             if (Server.shuttingDown) return;
@@ -257,11 +255,7 @@ namespace MCGalaxy.Gui {
             notifyIcon.ShowBalloonTip(3000, ServerConfig.Name, message, icon);
         }
 
-        public void UpdateMapList() {
-            if (InvokeRequired) {
-                Invoke(new VoidDelegate(UpdateMapList)); return;
-            }
-            
+        void UpdateMapList() {
             if (main_Maps.DataSource == null)
                 main_Maps.DataSource = lc;
 

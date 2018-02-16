@@ -138,19 +138,15 @@ namespace MCGalaxy.Gui {
         }
         
         void main_BtnSaveAll_Click(object sender, EventArgs e) {
-            Command.all.FindByName("Save").Use(null, "all");
+            UIHelpers.HandleCommand("Save all");
         }
 
         void main_BtnKillPhysics_Click(object sender, EventArgs e) {
-            Command.all.FindByName("Physics").Use(null, "kill");
-            try { UpdateMapList(); }
-            catch { }
+            UIHelpers.HandleCommand("Physics kill");
         }
 
         void main_BtnUnloadEmpty_Click(object sender, EventArgs e) {
-            Command.all.FindByName("Unload").Use(null, "empty");
-            try { UpdateMapList(); }
-            catch { }
+            UIHelpers.HandleCommand("Unload empty");
         }
         
 

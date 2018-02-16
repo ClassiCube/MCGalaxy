@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.UI;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
@@ -55,11 +56,10 @@ namespace MCGalaxy.Gui {
 
                 if (LevelInfo.MapExists(name)) {
                     MessageBox.Show("Level successfully generated.");
-                    try {
+                    RunOnUI_Async(() => {
                         UpdateUnloadedList();
                         UpdateMapList();
-                    } catch { 
-                    }
+                    });
                 } else {
                     MessageBox.Show("Level was not generated. Check main log for details.");
                 }
@@ -81,12 +81,8 @@ namespace MCGalaxy.Gui {
         }
         
         void map_BtnLoad_Click(object sender, EventArgs e) {
-            try {
-                Command.all.FindByName("Load").Use(null, map_lbUnloaded.SelectedItem.ToString());
-            } catch { 
-            }
-            UpdateUnloadedList();
-            UpdateMapList();
+            string mapName = map_lbUnloaded.SelectedItem.ToString();
+            UIHelpers.HandleCommand("Load " + mapName);
         }
         
         string last = null;
@@ -112,28 +108,25 @@ namespace MCGalaxy.Gui {
             map_gbProps.Text = "Properties for " + name;
         }
         
-        public void UpdateUnloadedList() {
-            RunOnUiThread(() =>
-            {
-                string selectedLvl = null;
-                if (map_lbUnloaded.SelectedItem != null)
-                    selectedLvl = map_lbUnloaded.SelectedItem.ToString();
-                
-                map_lbUnloaded.Items.Clear();
-                string[] files = LevelInfo.AllMapFiles();
-                foreach (string file in files) {
-                    string name = Path.GetFileNameWithoutExtension(file);
-                    if (LevelInfo.FindExact(name) == null)
-                        map_lbUnloaded.Items.Add(name);
-                }
-                
-                if (selectedLvl != null) {
-                    int index = map_lbUnloaded.Items.IndexOf(selectedLvl);
-                    map_lbUnloaded.SelectedIndex = index;
-                } else {
-                    map_lbUnloaded.SelectedIndex = -1;
-                }
-            });
+        void UpdateUnloadedList() {
+            string selectedLvl = null;
+            if (map_lbUnloaded.SelectedItem != null)
+                selectedLvl = map_lbUnloaded.SelectedItem.ToString();
+            
+            map_lbUnloaded.Items.Clear();
+            string[] files = LevelInfo.AllMapFiles();
+            foreach (string file in files) {
+                string name = Path.GetFileNameWithoutExtension(file);
+                if (LevelInfo.FindExact(name) == null)
+                    map_lbUnloaded.Items.Add(name);
+            }
+            
+            if (selectedLvl != null) {
+                int index = map_lbUnloaded.Items.IndexOf(selectedLvl);
+                map_lbUnloaded.SelectedIndex = index;
+            } else {
+                map_lbUnloaded.SelectedIndex = -1;
+            }
         }
     }
 }

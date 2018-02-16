@@ -17,13 +17,14 @@
 */
 using System;
 using System.Windows.Forms;
+using MCGalaxy.UI;
 
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
         PlayerProperties playerProps;
          
         void UpdatePlayers() {
-            RunOnUiThread(
+            RunOnUI_Async(
                 delegate {
                     pl_listBox.Items.Clear();
                     UpdateNotifyIconText();
@@ -62,28 +63,21 @@ namespace MCGalaxy.Gui {
             pl_pgProps.SelectedObject = playerProps;
             curPlayer = p;
             
-            try {
-                UpdatePlayerMapCombo();
-            } catch { }
+            UpdatePlayerSelected();
         }
 
-        void UpdatePlayerMapCombo() {          
+        void UpdatePlayerSelected() {          
             if (tabs.SelectedTab != tp_Players) return;
-            pl_pgProps.Refresh();
+            try { pl_pgProps.Refresh(); } catch { }
         }
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
-            if (pl_txtUndo.Text.Trim().Length == 0)  {
-                AppendPlayerStatus("You didn't specify a time"); return;
-            }
+            string time = pl_txtUndo.Text.Trim();
+            if (time.Length == 0) { AppendPlayerStatus("Amount of time to undo required"); return; }
 
-            try {
-                Command.all.FindByName("UndoPlayer").Use(null, curPlayer.name + " " + pl_txtUndo.Text);
-                AppendPlayerStatus("Undid player for " + pl_txtUndo.Text + " seconds");
-            } catch {
-                AppendPlayerStatus("Something went wrong!!");
-            }
+            UIHelpers.HandleCommand("UndoPlayer " + curPlayer.name + " " + time);
+            AppendPlayerStatus("Undid player for " + time + " seconds");
         }
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
@@ -101,44 +95,40 @@ namespace MCGalaxy.Gui {
             string text = pl_txtImpersonate.Text.Trim();
             if (text.Length == 0) { AppendPlayerStatus("No command to execute"); return; }
             
-            try {
-                string[] args = text.SplitSpaces(2);
-                string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
-                curPlayer.HandleCommand(cmdName, cmdArgs);
+            string[] args = text.SplitSpaces(2);
+            string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
+            curPlayer.HandleCommand(cmdName, cmdArgs);
                 
-                if (args.Length > 1) {
-                    AppendPlayerStatus("Made player do /" + cmdName + " " + cmdArgs);
-                } else {
-                    AppendPlayerStatus("Made player do /" + cmdName);
-                }
-                pl_txtImpersonate.Text = "";
-            } catch {
-                AppendPlayerStatus("Something went wrong");
+            if (args.Length > 1) {
+                AppendPlayerStatus("Made player do /" + cmdName + " " + cmdArgs);
+            } else {
+                AppendPlayerStatus("Made player do /" + cmdName);
             }
+            pl_txtImpersonate.Text = "";
         }
 
-        void pl_BtnSlap_Click(object sender, EventArgs e) { DoCmd("slap", "Slapped"); }
-        void pl_BtnKill_Click(object sender, EventArgs e) { DoCmd("kill", "Killed"); }
-        void pl_BtnWarn_Click(object sender, EventArgs e) { DoCmd("warn", "Warned"); }
-        void pl_BtnKick_Click(object sender, EventArgs e) { DoCmd("kick", "Kicked"); }
-        void pl_BtnBan_Click(object sender, EventArgs e) { DoCmd("ban", "Banned"); }
+        void pl_BtnSlap_Click(object sender, EventArgs e) {  DoCmd("slap", "Slapped"); }
+        void pl_BtnKill_Click(object sender, EventArgs e) {  DoCmd("kill", "Killed"); }
+        void pl_BtnWarn_Click(object sender, EventArgs e) {  DoCmd("warn", "Warned"); }
+        void pl_BtnKick_Click(object sender, EventArgs e) {  DoCmd("kick", "Kicked"); }
+        void pl_BtnBan_Click(object sender, EventArgs e) {   DoCmd("ban", "Banned"); }
         void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
         void DoCmd(string cmdName, string action) {
             if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
-            Command.all.Find(cmdName).Use(null, curPlayer.name);
+            UIHelpers.HandleCommand(cmdName + " " + curPlayer.name);
             AppendPlayerStatus(action + " player");
         }
 
         void pl_BtnRules_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
-            Command.all.FindByName("Rules").Use(curPlayer, "");
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            UIHelpers.HandleCommand("Rules " + curPlayer.name);
             AppendPlayerStatus("Sent rules to player");
         }
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No Player Selected"); return; }
-            Command.all.FindByName("Spawn").Use(curPlayer, "");
+            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            curPlayer.HandleCommand("Spawn", "");
             AppendPlayerStatus("Sent player to spawn");
         }
 
