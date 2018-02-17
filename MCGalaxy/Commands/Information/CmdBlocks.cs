@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Info {
         static List<BlockID> ComplexBlocks() {
             List<BlockID> blocks = new List<BlockID>(Block.Count);
             for (BlockID block = Block.CpeCount; block < Block.Count; block++) {
-                if (!Block.Undefined(block)) blocks.Add(block);
+                if (Block.ExistsGlobal(block)) blocks.Add(block);
             }
             return blocks;
         }
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Info {
             List<BlockID> blocks = new List<BlockID>(Block.Count);
             foreach (BlockPerms perms in BlockPerms.List) {
                 if (!BlockPerms.UsableBy(perm, perms.ID)) continue;
-                if (Block.Undefined(perms.ID)) continue;
+                if (!Block.ExistsGlobal(perms.ID)) continue;
                 blocks.Add(perms.ID);
             }
             return blocks;

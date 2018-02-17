@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui {
                 blockPropsChanged[b].ChangedScope = 0;
                 
                 BlockID block = (BlockID)b;
-                if (!BlockExists(block)) continue;
+                if (!Block.ExistsGlobal(block)) continue;
                 
                 string name = Block.GetName(null, block);
                 blk_list.Items.Add(name);
@@ -56,12 +56,6 @@ namespace MCGalaxy.Gui {
             if (blk_list.SelectedIndex == -1) {
                 blk_list.SelectedIndex = 0;
             }
-        }
-        
-        bool BlockExists(BlockID b) {
-            if (b < Block.Count) return !Block.Undefined(b);
-            BlockRaw raw = (BlockRaw)b;
-            return BlockDefinition.GlobalDefs[raw] != null;
         }
 
         void SaveBlocks() {
