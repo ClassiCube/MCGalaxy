@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.CPE;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdHelp : Command {
@@ -123,83 +124,88 @@ namespace MCGalaxy.Commands.Info {
         }
         
         bool ParseBlock(Player p, string message) {
-            byte b = Block.Byte(message);
+            BlockID b = CommandParser.RawGetBlock(p, message);
             if (b == Block.Invalid) return false;
             
-            //give more useful help messages for doors and other physics blocks and killer blocks
-            switch (message.ToLower())
-            {
-                case "door":
-                    Player.Message(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. door_green toggles to red instead of air - also see, odoor and tdoor."); break;
-                case "odoor":
-                    Player.Message(p, "Odoor behaves like a user togglable door, does not auto close.  Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work."); break;
-                case "tdoor":
-                    Player.Message(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened."); break;
-                case "air_switch":
-                    Player.Message(p, "Air_switch can be placed in front of doors to act as an automatic door opener when the player walks into the air_switch block."); break;
-                case "fire":
-                    Player.Message(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind."); break;
-                case "nerve_gas":
-                    Player.Message(p, "Nerve gas is an invisible, killer, static block."); break;
-                case "train":
-                    Player.Message(p, "Place a train on {0} wool and it will move with physics on. Can ride with /ride.", Block.GetName(p, Block.Red)); break;
-                case "snake":
-                    Player.Message(p, "Snake crawls along the ground and kills players it touches if physics are on."); break;
-                case "zombie":
-                    Player.Message(p, "Place a zombie on the map. Moves with physics and kills players on touch"); break;
-                case "creeper":
-                    Player.Message(p, "Place a creeper on the map. Moves with physics and kills players on touch, also explodes like tnt."); break;
-                case "firework":
-                    Player.Message(p, "Place a firework. Left click to send a firework into the sky, which explodes into different colored wool."); break;
-                case "rocketstart":
-                    Player.Message(p, "Place a rocket starter. Left click to fire, explodes like tnt."); break;
-                case "finite_faucet":
-                    Player.Message(p, "Place a faucet block which spews out and places water on the map a few blocks at a time."); break;
-                case "water_faucet":
-                case "lava_faucet":
-                    Player.Message(p, "Place a faucet block, which water, or lava will come out of. Works like water/lavafall but water/lava disappears and is redropped periodically."); break;
-                case "waterfall":
-                case "lavafall":
-                    Player.Message(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava."); break;
-                case "finite_water":
-                case "finite_lava":
-                    Player.Message(p, "Finite water and lava flow like active_water/lava, but never create more blocks than you place."); break;
-                case "hot_lava":
-                case "cold_water":
-                    Player.Message(p, "Hot lava and cold water are nonmoving killer blocks which kill players on touch."); break;
-                case "active_water":
-                case "acw":
-                case "geyser":
-                case "active_cold_water":
-                    Player.Message(p, "Active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards."); break;
-                case "active_lava":
-                case "ahl":
-                case "magma":
-                case "active_hot_lava":
-                case "fast_hot_lava":
-                case "lava_fast":
-                    Player.Message(p, "Active_lava and its fast counterparts flow horizontally through the map, active_hot_lava and magma kill players, magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out."); break;
-                case "shark":
-                case "lava_shark":
-                case "goldfish":
-                case "sea_sponge":
-                case "salmon":
-                case "betta_fish":
-                    Player.Message(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), sharks and lava sharks eat players they touch."); break;
-                case "phoenix":
-                case "killer_phoenix":
-                case "dove":
-                case "blue_bird":
-                case "red_robin":
-                case "pidgeon":
-                case "duck":
-                    Player.Message(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches"); break;
-                default:
-                    Player.Message(p, "Block \"" + message + "\" appears as &b" + Block.GetName(p, Block.Convert(b))); break;
+            Player.Message(p, "Block \"{0}\" appears as &b{1}",
+                           message, Block.GetName(p, Block.Convert(b)));
+            BlockPerms.List[b].MessageCannotUse(p, "use");         
+            DescribePhysics(p, message, b);
+            return true;
+        }
+        
+        void DescribePhysics(Player p, string message, BlockID b) {
+            BlockProps props = Player.IsSuper(p) ? Block.Props[b] : p.level.Props[b];
+            
+            if (props.IsDoor) {
+                Player.Message(p, "Door can be used as an 'openable' block if physics are enabled, will automatically toggle back to closed after a few seconds. " +
+                               "door_green toggles to red instead of air - also see, odoor and tdoor.");
+            }
+            if (props.oDoorBlock != Block.Invalid) {
+                Player.Message(p, "Odoor behaves like a user togglable door, does not auto close. " +
+                               "Needs to be opened with a normal /door of any type and touched by other physics blocks, such as air_door to work.");
+            }
+            if (props.IsTDoor) {
+                Player.Message(p, "Tdoor behaves like a regular /door, but allows physics blocks, e.g. active_water to flow through when opened.");
+            }
+            if (b == Block.Door_AirActivatable) {
+                Player.Message(p, "Air_switch can be placed in front of doors to act as an automatic door opener when the player walks into the air_switch block.");
+            }
+            if (b == Block.Fire || b == Block.LavaFire) {
+                Player.Message(p, "Fire blocks burn through wood and temporarily leaves coal and obsidian behind.");
+            }
+            if (b == Block.Deadly_Air) {
+                Player.Message(p, "Nerve gas is an invisible, killer, static block.");
+            }
+            if (b == Block.Train) {
+                Player.Message(p, "Place a train on {0} wool and it will move with physics on. Can ride with /ride.", Block.GetName(p, Block.Red));
+            }
+            if (b == Block.Snake || b == Block.SnakeTail) {
+                Player.Message(p, "Snake crawls along the ground and kills players it touches if physics are on.");
+            }
+            if (b == Block.ZombieBody) {
+                Player.Message(p, "Place a zombie on the map. Moves with physics and kills players on touch"); 
+            }
+            if (b == Block.Creeper) {
+                Player.Message(p, "Place a creeper on the map. Moves with physics and kills players on touch, also explodes like tnt.");
+            }
+            if (b == Block.Fireworks) {
+                Player.Message(p, "Place a firework. Left click to send a firework into the sky, which explodes into different colored wool.");
+            }
+            if (b == Block.RocketStart) {
+                Player.Message(p, "Place a rocket starter. Left click to fire, explodes like tnt.");
+            }
+            if (b == Block.FiniteFaucet) {
+                Player.Message(p, "Place a faucet block which spews out and places water on the map a few blocks at a time.");
+            }
+            if (b == Block.WaterFaucet || b == Block.LavaFaucet) {
+                Player.Message(p, "Place a faucet block which water/lava will come out of. Works like waterfall/lavafall but water/lava disappears and is redropped periodically.");
+            }
+            if (b == Block.WaterDown || b == Block.LavaDown) {
+                Player.Message(p, "Waterfall and lavafall flow straight down, catch them at the bottom, or they will flood the map like regular active_water/lava.");
+            }
+            if (b == Block.FiniteWater || b == Block.FiniteLava) {
+                Player.Message(p, "Finite water and lava flow like active_water/lava, but never create more blocks than you place.");
+            }
+            if (b == Block.Deadly_Water || b == Block.Deadly_Lava) {
+                Player.Message(p, "Hot lava and cold water are nonmoving killer blocks which kill players on touch.");
+            }
+            if (b == Block.Water || b == Block.Geyser || b == Block.Deadly_ActiveWater) {
+                Player.Message(p, "Active_water flows horizontally through the map, active_cold_water and geyser kill players, geyser flows upwards.");
+            }
+            if (b == Block.Lava || b == Block.Magma || b == Block.Deadly_ActiveLava || b == Block.FastLava || b == Block.Deadly_FastLava) {
+                Player.Message(p, "Active_lava and its fast counterparts flow horizontally through the map, active_hot_lava and magma kill players, " +
+                               "magma flows upwards slowly if it is placed in a spot where it cannot flow then broken out.");
             }
             
-            BlockPerms.List[b].MessageCannotUse(p, "use");
-            return true;
+            AnimalAI ai = props.AnimalAI;
+            if (ai == AnimalAI.KillerAir || ai == AnimalAI.Fly || ai == AnimalAI.FleeAir) {
+                Player.Message(p, "The bird blocks are different colored blocks that fly through the air if physics is on. Killer_phoenix kills players it touches");
+            }
+            if (ai == AnimalAI.FleeLava || ai == AnimalAI.FleeWater || ai == AnimalAI.KillerLava || ai == AnimalAI.KillerWater) {
+                Player.Message(p, "The fish blocks are different colored blocks that swim around in active_water (lava_shark in active_lava), " +
+                               "sharks and lava sharks eat players they touch.");
+            }
         }
         
         bool ParsePlugin(Player p, string message) {

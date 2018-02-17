@@ -30,26 +30,27 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            string modifier = args.Length > 1 ? args[1] : "";
+            string modifier = args.Length > 1 ? args[1] : "";            
+            string type = args[0];
             
-            if (args[0].Length == 0 || args[0].CaselessEq("basic")) {
+            if (type.Length == 0 || type.CaselessEq("basic")) {
                 Player.Message(p, "Basic blocks: ");
                 MultiPageOutput.Output(p, BasicBlocks(), 
                                        b => FormatBlockName(p, b),
                                        "Blocks basic", "blocks", modifier, false);
-            } else if (args[0].CaselessEq("all") || args[0].CaselessEq("complex")) {
+            } else if (type.CaselessEq("all") || type.CaselessEq("complex")) {
                 Player.Message(p, "Complex blocks: ");
                 MultiPageOutput.Output(p, ComplexBlocks(), 
                                        b => FormatBlockName(p, b),
                                        "Blocks complex", "blocks", modifier, false);
-            } else if (Block.Byte(args[0]) != Block.Invalid) {
-                OutputBlockData(p, args[0]);
-            } else if (Group.Find(args[0]) != null) {
-                Group grp = Group.Find(args[0]);
+            } else if (CommandParser.RawGetBlock(p, type) != Block.Invalid) {
+                OutputBlockData(p, type);
+            } else if (Group.Find(type) != null) {
+                Group grp = Group.Find(type);
                 Player.Message(p, "Blocks which {0} %Scan place: ", grp.ColoredName);
                 MultiPageOutput.Output(p, RankBlocks(grp.Permission), 
                                        b => FormatBlockName(p, b),
-                                       "Blocks " + args[0], "blocks", modifier, false);
+                                       "Blocks " + type, "blocks", modifier, false);
             } else if (args.Length > 1) {
                 Help(p);
             } else {
@@ -88,35 +89,36 @@ namespace MCGalaxy.Commands.Info {
             return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         
-        static void OutputBlockData(Player p, string block) {
-            byte b = Block.Byte(block);
-            if (b >= Block.CpeCount) {
-                Player.Message(p, "&bComplex information for \"{0}\":", block);
-                Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.GetName(p, Block.Convert(b)));
-                OutputBlockProps(p, b);
+        static void OutputBlockData(Player p, string blockName) {
+            BlockID block = CommandParser.RawGetBlock(p, blockName);
+            if (Block.IsPhysicsType(block)) {
+                Player.Message(p, "&bComplex information for \"{0}\":", blockName);
+                Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.GetName(p, Block.Convert(block)));
+                OutputBlockProps(p, block);
                 return;
             }
             
             string msg = "";
-            for (byte i = Block.CpeCount; i < Block.Invalid; i++) {
-                if (Block.Convert(i) != b) continue;
-                msg += Block.GetName(p, i) + ", ";
+            for (BlockID b = Block.CpeCount; b < Block.Count; b++) {
+                if (Block.Convert(b) != block) continue;
+                msg += Block.GetName(p, b) + ", ";
             }
 
             if (msg.Length > 0) {
-                Player.Message(p, "Blocks which look like \"{0}\":", block);
+                Player.Message(p, "Blocks which look like \"{0}\":", blockName);
                 Player.Message(p, msg.Remove(msg.Length - 2));
             } else {
-                Player.Message(p, "No Complex Blocks look like \"{0}\"", block);
+                Player.Message(p, "No Complex Blocks look like \"{0}\"", blockName);
             }
         }
         
-        static void OutputBlockProps(Player p, byte b) {
-            BlockProps props = Block.Props[b];
+        static void OutputBlockProps(Player p, BlockID b) {
+        	BlockProps[] scope = Player.IsSuper(p) ? Block.Props : p.level.Props;
+        	BlockProps props = scope[b];
 
             if (Block.LightPass(b))
                 Player.Message(p, "Block will allow light through");
-            if (Physics(b))
+            if (Physics(scope, b))
                 Player.Message(p, "Block affects physics in some way"); //AFFECT!
             else
                 Player.Message(p, "Block will not affect physics in any way"); //It's AFFECT!
@@ -132,18 +134,18 @@ namespace MCGalaxy.Commands.Info {
             if (props.IsTDoor) Player.Message(p, "Block is a tdoor, which allows other blocks through when open");
             if (props.oDoorBlock != Block.Invalid) Player.Message(p, "Block is an odoor, which can be toggled by doors and toggles other odoors");
 
-            if (Mover(b)) Player.Message(p, "Block can be activated by walking through it");
+            if (Mover(scope, b)) Player.Message(p, "Block can be activated by walking through it");
         }
         
-        static bool Mover(byte b) {
+        static bool Mover(BlockProps[] scope, BlockID b) {
             bool nonSolid = Block.Walkthrough(Block.Convert(b));
-            return BlockBehaviour.GetWalkthroughHandler(b, Block.Props, nonSolid) != null;
+            return BlockBehaviour.GetWalkthroughHandler(b, scope, nonSolid) != null;
         }
         
-        static bool Physics(byte b) {
-            if (Block.Props[b].IsMessageBlock || Block.Props[b].IsPortal) return false;
-            if (Block.Props[b].IsDoor || Block.Props[b].IsTDoor) return false;
-            if (Block.Props[b].OPBlock) return false;
+        static bool Physics(BlockProps[] scope, BlockID b) {
+            if (scope[b].IsMessageBlock || scope[b].IsPortal) return false;
+            if (scope[b].IsDoor || scope[b].IsTDoor) return false;
+            if (scope[b].OPBlock) return false;
             
             return BlockBehaviour.GetPhysicsHandler(b, Block.Props) != null;
         }
