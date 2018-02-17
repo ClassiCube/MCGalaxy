@@ -42,11 +42,11 @@ namespace MCGalaxy.Gui {
         
         [Category("Properties")]
         [DisplayName("Login message")]
-        public string LoginMsg { get { return inMsg; } set { inMsg = DoCmd("loginmessage", value); } }
+        public string LoginMsg { get { return inMsg; } set { inMsg = value; DoCmd("loginmessage", value); } }
         
         [Category("Properties")]
         [DisplayName("Logout message")]
-        public string LogoutMsg { get { return outMsg; } set { outMsg = DoCmd("logoutmessage", value); } }
+        public string LogoutMsg { get { return outMsg; } set { outMsg = value; DoCmd("logoutmessage", value); } }
         
         [Category("Properties")]
         [DisplayName("Rank")]
@@ -113,12 +113,11 @@ namespace MCGalaxy.Gui {
         [DisplayName("Voiced")]
         public bool Voiced { get { return p.voice; } set { DoCmd("voice"); } }
         
-        void DoCmd(string cmd) { DoCmd(cmd, ""); }
-        
-        string DoCmd(string cmd, string args) {
+        void DoCmd(string cmd) { DoCmd(cmd, ""); }      
+        void DoCmd(string cmd, string args) {
             // Is the player still on the server?
             Player pl = PlayerInfo.FindExact(p.name);
-            if (pl == null) return args;
+            if (pl == null) return;
 
             try {
                 string cmdArgs = args.Length == 0 ? p.name : p.name + " " + args;
@@ -126,7 +125,6 @@ namespace MCGalaxy.Gui {
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
-            return args;
         }
     }
 }

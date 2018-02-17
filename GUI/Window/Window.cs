@@ -34,8 +34,8 @@ namespace MCGalaxy.Gui {
         delegate void VoidDelegate();
         bool mapgen = false;
 
-        PlayerCollection pc = new PlayerCollection();
-        LevelCollection lc = new LevelCollection();
+        PlayerCollection pc;
+        LevelCollection lc;
         public NotifyIcon notifyIcon = new NotifyIcon();
         Player curPlayer;
 
@@ -198,7 +198,7 @@ namespace MCGalaxy.Gui {
         }
         
         void Level_PhysicsLevelChanged(Level lvl, int level) {
-        	RunOnUI_Async(() => {
+            RunOnUI_Async(() => {
                 UpdateMapList();
             });
         }
@@ -220,34 +220,29 @@ namespace MCGalaxy.Gui {
         /// <summary> Updates the list of client names in the window </summary>
         /// <param name="players">The list of players to add</param>
         public void UpdateClientList() {
-            if (InvokeRequired) { Invoke(new VoidDelegate(UpdateClientList)); return; }
-            
+            if (InvokeRequired) { Invoke(new VoidDelegate(UpdateClientList)); return; }            
             UpdateNotifyIconText();
-            if (main_Players.DataSource == null)
-                main_Players.DataSource = pc;
+            Player[] players = PlayerInfo.Online.Items;
 
             // Try to keep the same selection on update
             string selected = null;
             var selectedRows = main_Players.SelectedRows;
-            if (pc.Count > 0 && selectedRows.Count > 0)
-                selected = pc[selectedRows[0].Index].name;
+            if (selectedRows.Count > 0) {
+                selected = (string)selectedRows[0].Cells[0].Value;
+            }
 
             // Update the data source and control
-            pc = new PlayerCollection();
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players)
-                pc.Add(pl);
-
+            pc = new PlayerCollection();          
+            foreach (Player pl in players) { pc.Add(pl); }
             main_Players.DataSource = pc;
             
             // Reselect player
             if (selected != null) {
-                for (int i = 0; i < main_Players.Rows.Count; i++) {
-                    if (Equals(main_Players.Rows[i].Cells[0].Value, selected))
-                        main_Players.Rows[i].Selected = true;
+                foreach (DataGridViewRow row in main_Players.Rows) {
+                    string name = (string)row.Cells[0].Value;
+                    if (name.CaselessEq(selected)) row.Selected = true;
                 }
             }
-
             main_Players.Refresh();
         }
 
@@ -256,59 +251,48 @@ namespace MCGalaxy.Gui {
         }
 
         void UpdateMapList() {
-            if (main_Maps.DataSource == null)
-                main_Maps.DataSource = lc;
-
+            Level[] loaded = LevelInfo.Loaded.Items;
+            
             // Try to keep the same selection on update
-            List<string> selected = null;
-            if (lc.Count > 0 && main_Maps.SelectedRows.Count > 0) {
-                selected = new List<string>();
-                foreach (DataGridViewRow row in main_Maps.SelectedRows) {
-                    string lvlName = (string)row.Cells[0].Value;
-                    selected.Add(lvlName);
+            string selected = null;
+            var selectedRows = main_Maps.SelectedRows;
+            if (selectedRows.Count > 0) {
+                selected = (string)selectedRows[0].Cells[0].Value;
+            }
+            
+            // Update the data source and control
+            lc = new LevelCollection();
+            foreach (Level lvl in loaded) { lc.Add(lvl); }
+            main_Maps.DataSource = lc;            
+            
+            // Reselect map
+            if (selected != null) {
+                foreach (DataGridViewRow row in main_Maps.Rows) {
+                    string name = (string)row.Cells[0].Value;
+                    if (name.CaselessEq(selected)) row.Selected = true;
                 }
             }
-
-            // Update the data source and control
-            //dgvPlayers.SuspendLayout();
-            lc.Clear();
-            string selectedLvl = null;
-            if (map_lbLoaded.SelectedItem != null)
-                selectedLvl = map_lbLoaded.SelectedItem.ToString();
+            main_Maps.Refresh();
+                        
+            
+            // Try to keep the same selection on update
+            selected = null;
+            if (map_lbLoaded.SelectedItem != null) {
+                selected = map_lbLoaded.SelectedItem.ToString();
+            }
             
             map_lbLoaded.Items.Clear();
-            //lc = new LevelCollection(new LevelListView());
-            Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
-                lc.Add(lvl);
                 map_lbLoaded.Items.Add(lvl.name);
             }
             
-            if (selectedLvl != null) {
-                int index = map_lbLoaded.Items.IndexOf(selectedLvl);
+            if (selected != null) {
+                int index = map_lbLoaded.Items.IndexOf(selected);
                 map_lbLoaded.SelectedIndex = index;
             } else {
                 map_lbLoaded.SelectedIndex = -1;
             }
             UpdateSelectedMap(null, null);
-
-            //dgvPlayers.Invalidate();
-            main_Maps.DataSource = null;
-            main_Maps.DataSource = lc;
-            
-            // Reselect map
-            if (selected != null) {
-                foreach (DataGridViewRow row in main_Maps.Rows) {
-                    string lvlName = (string)row.Cells[0].Value;
-                    if (selected.Contains(lvlName)) row.Selected = true;
-                }
-            }
-
-            main_Maps.Refresh();
-            //dgvPlayers.ResumeLayout();
-
-            // Update the data source and control
-            //dgvPlayers.SuspendLayout();
         }
 
         /// <summary> Places the server's URL at the top of the window </summary>
