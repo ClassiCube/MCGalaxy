@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
         
         BlockID GetBlock(Player p, string name, ref bool allMessage) {
             if (name == "show") { ShowMessageBlocks(p); return Block.Invalid; }
-            BlockID block = CommandParser.RawGetBlock(p, name);
+            BlockID block = Block.Parse(p, name);
             if (block != Block.Invalid && p.level.Props[block].IsMessageBlock)
                 return block;
             

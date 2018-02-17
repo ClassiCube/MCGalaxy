@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
         
         BlockID GetBlock(Player p, string name) {
             if (name == "show") { ShowPortals(p); return Block.Invalid; }
-            BlockID block = CommandParser.RawGetBlock(p, name);
+            BlockID block = Block.Parse(p, name);
             if (block != Block.Invalid && p.level.Props[block].IsPortal) return block;
             
             // Hardcoded aliases for backwards compatibility

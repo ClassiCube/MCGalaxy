@@ -721,7 +721,7 @@ namespace MCGalaxy {
             
             Command command = Command.all.Find(cmd);
             if (command == null) {
-                if (CommandParser.RawGetBlock(this, cmd) != Block.Invalid) {
+                if (Block.Parse(this, cmd) != Block.Invalid) {
                     cmdArgs = cmd.ToLower(); cmd = "mode";
                     command = Command.all.FindByName("Mode");
                 } else {

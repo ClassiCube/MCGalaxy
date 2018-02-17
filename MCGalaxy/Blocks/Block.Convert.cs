@@ -33,15 +33,6 @@ namespace MCGalaxy {
             return BlockDefinition.GlobalDefs[raw] != null;
         }
         
-        public static byte Byte(string type) {
-            byte block;
-            if (byte.TryParse(type, out block) && block < CpeCount)
-                return block;
-            if (Aliases.TryGetValue(type.ToLower(), out block))
-                return block;
-            return Invalid;
-        }
-        
         public static string GetName(Player p, BlockID block) {
             BlockRaw raw = (BlockRaw)block;
             if (IsPhysicsType(block)) return coreNames[raw];
@@ -55,6 +46,22 @@ namespace MCGalaxy {
             if (def != null) return def.Name.Replace(" ", "");
             
             return block < Block.Extended ? coreNames[block] : raw.ToString();
+        }
+        
+        public static BlockID Parse(Player p, string input) {
+            BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            byte id;
+            // raw ID is treated specially, before names
+            if (byte.TryParse(input, out id) && (id < CpeCount || defs[id] != null)) {
+                return FromRaw(id);
+            }
+            
+            // try parse as a block name
+            int raw = BlockDefinition.GetBlock(input, defs);
+            if (raw != -1) return FromRaw((byte)raw);
+            
+            bool success = Aliases.TryGetValue(input.ToLower(), out id);
+            return success ? id : Invalid;
         }
         
         public static byte ConvertCPE(byte block) {

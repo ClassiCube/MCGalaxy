@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.World {
             if (scope == null) return;
             
             Player pScope = scope == Block.Props ? null : p;
-            BlockID block = CommandParser.RawGetBlock(pScope, args[1]);
+            BlockID block = Block.Parse(pScope, args[1]);
             if (block == Block.Invalid) {
                 Player.Message(p, "&cThere is no block \"{0}\".", args[1]); return;
             }

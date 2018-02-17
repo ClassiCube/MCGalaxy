@@ -142,7 +142,8 @@ namespace MCGalaxy.Blocks {
                 
                 BlockID block;
                 if (!BlockID.TryParse(args[0], out block)) {
-                    block = Block.Byte(args[0]);
+                    // backwards compatibility with older versions
+                    block = Block.Parse(null, args[0]);
                 }
                 if (block == Block.Invalid) continue;
                 

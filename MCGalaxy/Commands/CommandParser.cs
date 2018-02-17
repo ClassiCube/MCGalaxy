@@ -173,24 +173,9 @@ namespace MCGalaxy.Commands {
                 block = Block.Invalid; return true;
             }
             
-            block = RawGetBlock(p, input);
+            block = Block.Parse(p, input);
             if (block == Block.Invalid) Player.Message(p, "&cThere is no block \"{0}\".", input);
             return block != Block.Invalid;
-        }
-        
-        /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
-        /// <remarks> This does not output any messages to the player. </remarks>
-        public static BlockID RawGetBlock(Player p, string input) {
-            BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            byte id;
-            // raw ID is treated specially, before names
-            if (byte.TryParse(input, out id) && (id < Block.CpeCount || defs[id] != null)) {
-                return Block.FromRaw(id);
-            }
-            
-            int raw = BlockDefinition.GetBlock(input, defs);
-            if (raw != -1) return Block.FromRaw((byte)raw);
-            return Block.Byte(input);
         }
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>

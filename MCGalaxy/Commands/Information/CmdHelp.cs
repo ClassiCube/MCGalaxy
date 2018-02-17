@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         bool ParseBlock(Player p, string message) {
-            BlockID b = CommandParser.RawGetBlock(p, message);
+            BlockID b = Block.Parse(p, message);
             if (b == Block.Invalid) return false;
             
             Player.Message(p, "Block \"{0}\" appears as &b{1}",

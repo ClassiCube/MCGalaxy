@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Info {
                 MultiPageOutput.Output(p, ComplexBlocks(), 
                                        b => FormatBlockName(p, b),
                                        "Blocks complex", "blocks", modifier, false);
-            } else if (CommandParser.RawGetBlock(p, type) != Block.Invalid) {
+            } else if (Block.Parse(p, type) != Block.Invalid) {
                 OutputBlockData(p, type);
             } else if (Group.Find(type) != null) {
                 Group grp = Group.Find(type);
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputBlockData(Player p, string blockName) {
-            BlockID block = CommandParser.RawGetBlock(p, blockName);
+            BlockID block = Block.Parse(p, blockName);
             if (Block.IsPhysicsType(block)) {
                 Player.Message(p, "&bComplex information for \"{0}\":", blockName);
                 Player.Message(p, "&cBlock will appear as a \"{0}\" block", Block.GetName(p, Block.Convert(block)));
