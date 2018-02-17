@@ -163,13 +163,12 @@ namespace MCGalaxy.Blocks {
         }       
         
         static void SetDefaultPerms() {
-            BlockProps defProps = BlockProps.MakeDefault();
-            for (int i = 0; i < Block.ExtendedCount; i++) {
+            for (BlockID block = 0; block < Block.ExtendedCount; block++) {
                 BlockPerms perms = new BlockPerms();
-                perms.ID = (BlockID)i;
-                BlockProps props = i < Block.Count ? Block.Props[i] : defProps;
+                perms.ID = block;
+                BlockProps props = Block.Props[block];
                 
-                if (i == Block.Invalid) {
+                if (block == Block.Invalid) {
                     perms.MinRank = LevelPermission.Admin;
                 } else if (props.OPBlock) {
                     perms.MinRank = LevelPermission.Operator;
@@ -178,9 +177,9 @@ namespace MCGalaxy.Blocks {
                 } else if (props.IsPortal || props.IsMessageBlock) {
                     perms.MinRank = LevelPermission.AdvBuilder;
                 } else {
-                    perms.MinRank = DefaultPerm(i);
+                    perms.MinRank = DefaultPerm(block);
                 }
-                List[i] = perms;
+                List[block] = perms;
             }
         }
         

@@ -225,7 +225,7 @@ namespace MCGalaxy.Commands.World {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
             } else if (cmd == "DEL") {
-                if (name.Length == 0) { Player.Message(p, "You need to provide a player name, or \"ALL\"."); return; }
+                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 DeleteBuildPlayer(p, name);
             } else if (cmd == "BLOCK") {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }

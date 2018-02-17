@@ -75,7 +75,7 @@ namespace MCGalaxy.Blocks {
         public BlockID DirtBlock;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
-        public bool Changed;
+        public byte ChangedScope;
         
         public static BlockProps MakeDefault() {
             BlockProps props = default(BlockProps);
@@ -86,29 +86,27 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        public static void Save(string group, BlockProps[] scope, object locker, Predicate<int> selector) {
+        public static void Save(string group, BlockProps[] list, object locker, byte scope) {
             lock (locker) {
                 if (!Directory.Exists("blockprops"))
                     Directory.CreateDirectory("blockprops");
-                SaveCore(group, scope, selector);
+                SaveCore(group, list, scope);
             }
         }
         
-        static void SaveCore(string group, BlockProps[] scope, Predicate<int> selector) {
+        static void SaveCore(string group, BlockProps[] list, byte scope) {
             using (StreamWriter w = new StreamWriter("blockprops/" + group + ".txt")) {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
                             "Killed by water : Killed by lava : Kills players : death message : " +
                             "Animal AI type : Stack block : Is OP block : oDoor block : Drownable : " +
                             "Grass block : Dirt block");
-                for (int i = 0; i < scope.Length; i++) {
-                    if (!scope[i].Changed || (selector != null && !selector(i))) continue;
-                    BlockProps props = scope[i];
-                    // Convert ext to raw ids
-                    int id = i >= Block.Count ? (i - Block.Count) : i;
+                for (int b = 0; b < list.Length; b++) {
+                    if ((list[b].ChangedScope & scope) == 0) continue;
+                    BlockProps props = list[b];
                     
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
-                    w.WriteLine(id + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor    + ":"
+                    w.WriteLine(b + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
                                 + (byte)props.AnimalAI + ":" + props.StackBlock + ":" + props.OPBlock  + ":"
@@ -118,71 +116,71 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        public static void Load(string group, BlockProps[] scope, object locker, bool lbScope) {
+        public static string PropsPath(string group) { return "blockprops/" + group + ".txt"; }
+        
+        public static void Load(string group, BlockProps[] list, object locker, byte scope, bool mapOld) {
             lock (locker) {
                 if (!Directory.Exists("blockprops")) return;
-                if (!File.Exists("blockprops/" + group + ".txt")) return;
-                LoadCore(group, scope, lbScope);
+                string path = PropsPath(group);
+                if (File.Exists(path)) LoadCore(path, list, scope, mapOld);
             }
         }
         
-        static void LoadCore(string group, BlockProps[] scope, bool lbScope) {
-            string[] lines = File.ReadAllLines("blockprops/" + group + ".txt");
+        static void LoadCore(string path, BlockProps[] list, byte scope, bool mapOld) {
+            string[] lines = File.ReadAllLines(path);
             for (int i = 0; i < lines.Length; i++) {
                 string line = lines[i].Trim();
                 if (line.Length == 0 || line[0] == '#') continue;
                 
                 string[] parts = line.Split(':');
                 if (parts.Length < 10) {
-                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1} block properties", line, group);
+                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1}", line, path);
                     continue;
                 }
                 
-                // TODO fix fix fix
-                byte raw;
-                if (!Byte.TryParse(parts[0], out raw)) {
-                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1} block properties", line, group);
+                BlockID b;
+                if (!BlockID.TryParse(parts[0], out b)) {
+                    Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1}", line, path);
                     continue;
                 }
-                int idx = raw;
-                if (lbScope && raw >= Block.CpeCount) idx += Block.Count;
+                if (mapOld) b = Block.MapOldRaw(b);
                 
-                bool.TryParse(parts[1], out scope[idx].IsRails);
-                bool.TryParse(parts[2], out scope[idx].IsTDoor);
-                bool.TryParse(parts[3], out scope[idx].IsDoor);
-                bool.TryParse(parts[4], out scope[idx].IsMessageBlock);
-                bool.TryParse(parts[5], out scope[idx].IsPortal);
-                bool.TryParse(parts[6], out scope[idx].WaterKills);
-                bool.TryParse(parts[7], out scope[idx].LavaKills);
-                bool.TryParse(parts[8], out scope[idx].KillerBlock);
+                bool.TryParse(parts[1], out list[b].IsRails);
+                bool.TryParse(parts[2], out list[b].IsTDoor);
+                bool.TryParse(parts[3], out list[b].IsDoor);
+                bool.TryParse(parts[4], out list[b].IsMessageBlock);
+                bool.TryParse(parts[5], out list[b].IsPortal);
+                bool.TryParse(parts[6], out list[b].WaterKills);
+                bool.TryParse(parts[7], out list[b].LavaKills);
+                bool.TryParse(parts[8], out list[b].KillerBlock);
                 
-                scope[idx].Changed = true;
-                scope[idx].DeathMessage = parts[9].Replace("\\;", ":");
-                if (scope[idx].DeathMessage.Length == 0)
-                    scope[idx].DeathMessage = null;
+                list[b].ChangedScope = scope;
+                list[b].DeathMessage = parts[9].Replace("\\;", ":");
+                if (list[b].DeathMessage.Length == 0)
+                    list[b].DeathMessage = null;
                 
                 if (parts.Length > 10) {
                     byte ai; byte.TryParse(parts[10], out ai);
-                    scope[idx].AnimalAI = (AnimalAI)ai;
+                    list[b].AnimalAI = (AnimalAI)ai;
                 }
                 if (parts.Length > 11) {
-                    BlockID.TryParse(parts[11], out scope[idx].StackBlock);
-                    scope[idx].StackBlock = Block.MapOldRaw(scope[idx].StackBlock);
+                    BlockID.TryParse(parts[11], out list[b].StackBlock);
+                    list[b].StackBlock = Block.MapOldRaw(list[b].StackBlock);
                 }
                 if (parts.Length > 12) {
-                    bool.TryParse(parts[12], out scope[idx].OPBlock);
+                    bool.TryParse(parts[12], out list[b].OPBlock);
                 }
                 if (parts.Length > 13) {
-                    BlockID.TryParse(parts[13], out scope[idx].oDoorBlock);
+                    BlockID.TryParse(parts[13], out list[b].oDoorBlock);
                 }
                 if (parts.Length > 14) {
-                    bool.TryParse(parts[14], out scope[idx].Drownable);
+                    bool.TryParse(parts[14], out list[b].Drownable);
                 }
                 if (parts.Length > 15) {
-                    BlockID.TryParse(parts[15], out scope[idx].GrassBlock);
+                    BlockID.TryParse(parts[15], out list[b].GrassBlock);
                 }
                 if (parts.Length > 16) {
-                    BlockID.TryParse(parts[16], out scope[idx].DirtBlock);
+                    BlockID.TryParse(parts[16], out list[b].DirtBlock);
                 }
             }
         }

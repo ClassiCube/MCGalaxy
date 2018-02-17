@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands.CPE {
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
             if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
             
-            BlockProps props = global ? BlockDefinition.GlobalProps[srcRaw] : p.level.Props[src];
+            BlockProps props = global ? Block.Props[src] : p.level.Props[src];
             dstDef = srcDef.Copy();
             dstDef.BlockID = dstRaw;
             dstDef.InventoryOrder = -1;
@@ -287,8 +287,7 @@ namespace MCGalaxy.Commands.CPE {
                 bd.FallBack = fallback;
                 
                 BlockID block = Block.FromRaw(bd.BlockID);
-                BlockProps props = BlockDefinition.DefaultProps(block);
-                if (!AddBlock(p, bd, global, cmd, props)) return;
+                if (!AddBlock(p, bd, global, cmd, Block.Props[block])) return;
                 
                 SetBD(p, global, null);
                 SetStep(p, global, 0);
@@ -314,17 +313,17 @@ namespace MCGalaxy.Commands.CPE {
             BlockID block;
             if (!CheckBlock(p, parts[1], out block)) return;
             BlockRaw raw = (BlockRaw)block;
-             
+            
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[raw], globalDef = BlockDefinition.GlobalDefs[raw];
             
             if (def == null && block < Block.CpeCount) {
                 def = DefaultSet.MakeCustomBlock(block);
-                AddBlock(p, def, global, cmd, BlockDefinition.DefaultProps(block));
+                AddBlock(p, def, global, cmd, Block.Props[block]);
             }
             if (def != null && !global && def == globalDef) {
                 def = globalDef.Copy();
-                AddBlock(p, def, global, cmd, BlockDefinition.DefaultProps(block));
+                AddBlock(p, def, global, cmd, Block.Props[block]);
             }
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
@@ -432,7 +431,7 @@ namespace MCGalaxy.Commands.CPE {
                     def.InventoryOrder = order == def.BlockID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, level);
                     BlockDefinition.Save(global, level);
-                    Player.Message(p, "Set inventory order for {0} to {1}", blockName, 
+                    Player.Message(p, "Set inventory order for {0} to {1}", blockName,
                                    order == def.BlockID ? "default" : order.ToString());
                     return;
                 default:
@@ -557,39 +556,19 @@ namespace MCGalaxy.Commands.CPE {
             if (!global) {
                 p.level.Props[block] = props;
                 p.level.UpdateBlockHandler(block);
-                return;
-            }
-            
-            BlockRaw raw = (BlockRaw)block;
-            BlockDefinition.GlobalProps[raw] = props;
-            Level[] loaded = LevelInfo.Loaded.Items;
-            
-            foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.Props[block] = props;
-                lvl.UpdateBlockHandler(block);
+            } else {
+                Block.ChangeGlobalProps(block, props);
             }
         }
         
         static void RemoveBlockProps(bool global, BlockID block, Player p) {
-            // Level block reverts to using global block
             if (!global) {
-                p.level.Props[block] = BlockDefinition.DefaultProps(block);
+                p.level.Props[block] = Block.Props[block];
                 p.level.UpdateBlockHandler(block);
-                return;
-            }
-            
-            BlockProps props = BlockProps.MakeDefault();
-            if (block < Block.Extended) props = Block.Props[block];
-            
-            BlockRaw raw = (BlockRaw)block;
-            BlockDefinition.GlobalProps[raw] = props;
-            Level[] loaded = LevelInfo.Loaded.Items;
-            
-            foreach (Level lvl in loaded) {
-                if (lvl.CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw]) continue;
-                lvl.Props[block] = BlockDefinition.GlobalProps[raw];
-                lvl.UpdateBlockHandler(block);
+            } else {
+                BlockProps[] defProps = new BlockProps[Block.ExtendedCount];
+                Block.MakeDefaultProps(defProps);             
+                Block.ChangeGlobalProps(block, defProps[block]);
             }
         }
         
@@ -724,7 +703,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         internal static void Help(Player p, string cmd, string args) {
-            if (!args.CaselessStarts("edit ")) { Help(p, cmd); return; }            
+            if (!args.CaselessStarts("edit ")) { Help(p, cmd); return; }
             string prop = args.Substring(args.IndexOf(' ') + 1);
             prop = MapPropertyName(prop.ToLower());
 

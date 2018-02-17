@@ -18,104 +18,118 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
     public sealed partial class Block {
         
-        public static BlockProps[] Props = new BlockProps[Block.Count];
-        public static readonly object CorePropsLock = new object();
+        public static BlockProps[] Props = new BlockProps[Block.ExtendedCount];
+        public static readonly object PropsLock = new object();
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
-        static void SetCoreProperties() {
-            for (int i = 0; i < Block.Count; i++)
-                Props[i] = BlockProps.MakeDefault();
-            for (int i = 0; i < Block.Count; i++) {                
-                if ((i >= Op_Glass && i <= Op_Lava) || i == Invalid || i == RocketStart || i == Bedrock) {
-                    Props[i].OPBlock = true;
+        internal static void ChangeGlobalProps(BlockID block, BlockProps props) {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            Block.Props[block] = props;
+            
+            foreach (Level lvl in loaded) {
+                if (lvl.HasCustomProps(block)) continue;
+                lvl.Props[block] = props;
+                lvl.UpdateBlockHandler(block);
+            }
+        }
+        
+        internal static void MakeDefaultProps(BlockProps[] props) {
+            for (int b = 0; b < props.Length; b++) {
+                props[b] = BlockProps.MakeDefault();
+                if ((b >= Op_Glass && b <= Op_Lava) || b == Invalid || b == RocketStart || b == Bedrock) {
+                    props[b].OPBlock = true;
                 }
                 
-                if ((i >= tDoor_Log && i <= tDoor_Green) || (i >= tDoor_TNT && i <= tDoor_Lava)) {
-                    Props[i].IsTDoor = true;
+                if ((b >= tDoor_Log && b <= tDoor_Green) || (b >= tDoor_TNT && b <= tDoor_Lava)) {
+                    props[b].IsTDoor = true;
                 }                
-                if (i >= MB_White && i <= MB_Lava) {
-                    Props[i].IsMessageBlock = true;
+                if (b >= MB_White && b <= MB_Lava) {
+                    props[b].IsMessageBlock = true;
                 }             
-                if (i == Portal_Blue || i == Portal_Orange || (i >= Portal_Air && i <= Portal_Lava)) {
-                    Props[i].IsPortal = true;
+                if (b == Portal_Blue || b == Portal_Orange || (b >= Portal_Air && b <= Portal_Lava)) {
+                    props[b].IsPortal = true;
                 }
                 
                 // oDoor blocks
-                if (i >= oDoor_Log && i <= oDoor_Wood) {
-                    Props[i].oDoorBlock = (ushort)(oDoor_Log_air + (i - oDoor_Log));
+                if (b >= oDoor_Log && b <= oDoor_Wood) {
+                    props[b].oDoorBlock = (ushort)(oDoor_Log_air + (b - oDoor_Log));
                 }
-                if (i >= oDoor_Green && i <= oDoor_Water) {
-                    Props[i].oDoorBlock = (ushort)(oDoor_Green_air + (i - oDoor_Green));
+                if (b >= oDoor_Green && b <= oDoor_Water) {
+                    props[b].oDoorBlock = (ushort)(oDoor_Green_air + (b - oDoor_Green));
                 }
-                if (i >= oDoor_Log_air && i <= oDoor_Wood_air) {
-                    Props[i].oDoorBlock = (ushort)(oDoor_Log + (i - oDoor_Log_air));
+                if (b >= oDoor_Log_air && b <= oDoor_Wood_air) {
+                    props[b].oDoorBlock = (ushort)(oDoor_Log + (b - oDoor_Log_air));
                 }
-                if (i >= oDoor_Green_air && i <= oDoor_Water_air) {
-                    Props[i].oDoorBlock = (ushort)(oDoor_Green + (i - oDoor_Green_air));
+                if (b >= oDoor_Green_air && b <= oDoor_Water_air) {
+                    props[b].oDoorBlock = (ushort)(oDoor_Green + (b - oDoor_Green_air));
                 }
                 
-                if ((i >= Red && i <= White) || (i >= LightPink && i <= turquoise)) {
-                    Props[i].LavaKills = true;
+                if ((b >= Red && b <= White) || (b >= LightPink && b <= turquoise)) {
+                    props[b].LavaKills = true;
                 }
-                if (i == Air || i == Sapling || (i >= Dandelion && i <= RedMushroom)) {
-                    Props[i].LavaKills = true;
-                    Props[i].WaterKills = true;
+                if (b == Air || b == Sapling || (b >= Dandelion && b <= RedMushroom)) {
+                    props[b].LavaKills = true;
+                    props[b].WaterKills = true;
                 }
                 
                 // Door blocks
-                if (i >= Door_Obsidian && i <= Door_Slab) Props[i].IsDoor = true;
-                if (i >= Door_Iron && i <= Door_Bookshelf) Props[i].IsDoor = true;
-                if (i >= Door_Orange && i <= Door_White) Props[i].IsDoor = true;
+                if (b >= Door_Obsidian && b <= Door_Slab) props[b].IsDoor = true;
+                if (b >= Door_Iron && b <= Door_Bookshelf) props[b].IsDoor = true;
+                if (b >= Door_Orange && b <= Door_White) props[b].IsDoor = true;
             }
             
             // Other door blocks, since they aren't in a consistent order
-            Props[Door_Log].IsDoor = true;
-            Props[Door_Red].IsDoor = true;
-            Props[Door_Cobblestone].IsDoor = true;
-            Props[Door_Gold].IsDoor = true;
-            Props[Door_Air].IsDoor = true;
-            Props[Door_AirActivatable].IsDoor = true;
-            Props[Door_Water].IsDoor = true;
-            Props[Door_Lava].IsDoor = true;
+            props[Door_Log].IsDoor = true;
+            props[Door_Red].IsDoor = true;
+            props[Door_Cobblestone].IsDoor = true;
+            props[Door_Gold].IsDoor = true;
+            props[Door_Air].IsDoor = true;
+            props[Door_AirActivatable].IsDoor = true;
+            props[Door_Water].IsDoor = true;
+            props[Door_Lava].IsDoor = true;
             
             // Block specific properties
-            Props[Wood].LavaKills = true; Props[Log].LavaKills = true;
-            Props[Sponge].LavaKills = true; Props[Bookshelf].LavaKills = true;
-            Props[Leaves].LavaKills = true; Props[Crate].LavaKills = true;
-            Props[Red].IsRails = true; Props[Op_Air].IsRails = true;
-            Props[Slab].StackBlock = DoubleSlab;
-            Props[CobblestoneSlab].StackBlock = Cobblestone;
-            Props[Water].Drownable = true; Props[StillWater].Drownable = true;
-            Props[Lava].Drownable = true; Props[StillLava].Drownable = true;
-            Props[Dirt].GrassBlock = Block.Grass; Props[Grass].DirtBlock = Block.Dirt;
+            props[Wood].LavaKills = true; props[Log].LavaKills = true;
+            props[Sponge].LavaKills = true; props[Bookshelf].LavaKills = true;
+            props[Leaves].LavaKills = true; props[Crate].LavaKills = true;
+            props[Red].IsRails = true; props[Op_Air].IsRails = true;
+            props[Slab].StackBlock = DoubleSlab;
+            props[CobblestoneSlab].StackBlock = Cobblestone;
+            props[Water].Drownable = true; props[StillWater].Drownable = true;
+            props[Lava].Drownable = true; props[StillLava].Drownable = true;
+            props[Dirt].GrassBlock = Block.Grass; props[Grass].DirtBlock = Block.Dirt;
             
             // Block specific physics properties
-            Props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;
-            Props[Block.Bird_White].AnimalAI = AnimalAI.Fly;
-            Props[Block.Bird_Lava].AnimalAI = AnimalAI.Fly;
-            Props[Block.Bird_Water].AnimalAI = AnimalAI.Fly;
+            props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;
+            props[Block.Bird_White].AnimalAI = AnimalAI.Fly;
+            props[Block.Bird_Lava].AnimalAI = AnimalAI.Fly;
+            props[Block.Bird_Water].AnimalAI = AnimalAI.Fly;
             
-            Props[Block.Bird_Red].AnimalAI = AnimalAI.KillerAir;
-            Props[Block.Bird_Blue].AnimalAI = AnimalAI.KillerAir;
-            Props[Block.Bird_Killer].AnimalAI = AnimalAI.KillerAir;
+            props[Block.Bird_Red].AnimalAI = AnimalAI.KillerAir;
+            props[Block.Bird_Blue].AnimalAI = AnimalAI.KillerAir;
+            props[Block.Bird_Killer].AnimalAI = AnimalAI.KillerAir;
 
-            Props[Block.Fish_Betta].AnimalAI = AnimalAI.KillerWater;
-            Props[Block.Fish_Shark].AnimalAI = AnimalAI.KillerWater;
-            Props[Block.Fish_LavaShark].AnimalAI = AnimalAI.KillerLava;
+            props[Block.Fish_Betta].AnimalAI = AnimalAI.KillerWater;
+            props[Block.Fish_Shark].AnimalAI = AnimalAI.KillerWater;
+            props[Block.Fish_LavaShark].AnimalAI = AnimalAI.KillerLava;
             
-            Props[Block.Fish_Gold].AnimalAI = AnimalAI.FleeWater;
-            Props[Block.Fish_Salmon].AnimalAI = AnimalAI.FleeWater;
-            Props[Block.Fish_Sponge].AnimalAI = AnimalAI.FleeWater;
-            
+            props[Block.Fish_Gold].AnimalAI = AnimalAI.FleeWater;
+            props[Block.Fish_Salmon].AnimalAI = AnimalAI.FleeWater;
+            props[Block.Fish_Sponge].AnimalAI = AnimalAI.FleeWater;
+        }
+        
+        static void SetCoreProperties() {
+            MakeDefaultProps(Props);
             SetDefaultNames();
             SetDefaultDeaths();
         }
-        
+
         internal static void SetDefaultNames() {
             string[] names = new string[] { "Air", "Stone", "Grass", "Dirt", "Cobblestone", 
                 "Wood", "Sapling", "Bedrock", "Active_Water", "Water", "Active_Lava", "Lava", 

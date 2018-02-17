@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
@@ -151,15 +152,23 @@ namespace MCGalaxy {
                                 def.MaxX * 2, def.MaxZ * 2, def.MaxY * 2);
             }
             
-            if (block >= Block.Extended) return new AABB(0, 0, 0, 32, 32, 32);            
+            if (block >= Block.Extended) return new AABB(0, 0, 0, 32, 32, 32);
             BlockID core = Convert(block);
             return new AABB(0, 0, 0, 32, DefaultSet.Height(core) * 2, 32);
-        }
+        }        
         
         public static void SetBlocks() {
             SetCoreProperties();
-            BlockProps.Load("core", Props, CorePropsLock, false);
-            BlockDefinition.UpdateGlobalBlockProps();
+            string propsPath = BlockProps.PropsPath("default");
+                
+            // backwards compatibility with older versions
+            if (!File.Exists(propsPath)) {
+                BlockProps.Load("core",    Props, PropsLock, 1, false);
+                BlockProps.Load("global",  Props, PropsLock, 1, true);
+            } else {
+                BlockProps.Load("default", Props, PropsLock, 1, false);
+            }
+            
             BlockPerms.Load();
             UpdateLoadedLevels();
         }
@@ -169,7 +178,7 @@ namespace MCGalaxy {
             foreach (Level lvl in loaded) {
                 lvl.UpdateBlockProps();
                 lvl.UpdateBlockHandlers();
-            }            
+            }
         }
         
         public static BlockID FromRaw(byte raw) {
@@ -181,6 +190,7 @@ namespace MCGalaxy {
         }
         
         public static BlockID MapOldRaw(BlockID raw) {
+            // old raw form was: 0 - 65 core block ids, 66 - 255 custom block ids
             return IsPhysicsType(raw) ? ((BlockID)(Block.Extended | raw)) : raw;
         }
         

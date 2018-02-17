@@ -195,18 +195,15 @@ namespace MCGalaxy.Commands.Building {
             return Block.GetName(p, block);
         }
         
-        static void AllNames(Player p, List<string> names) {
-            for (int i = 0; i < Block.ExtendedCount; i++) {
-                string name = Format((ushort)i, p, p.level.Props);
+        static List<string> SupportedBlocks(Player p) {
+            List<string> names = new List<string>();
+            BlockProps[] props = Player.IsSuper(p) ? Block.Props : p.level.Props;
+            
+            for (int i = 0; i < props.Length; i++) {
+                string name = Format((BlockID)i, p, props);
                 if (name != null) names.Add(name);
             }
-        }
-        
-        static void CoreNames(List<string> names) {
-            for (int i = 0; i < Block.Count; i++) {
-                string name = Format((ushort)i, null, Block.Props);
-                if (name != null) names.Add(name);
-            }
+            return names;
         }
         
         public override void Help(Player p) {
@@ -215,11 +212,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%T/Portal [block] multi");
             Player.Message(p, "%HPlace multiple blocks for entries, then a red block for exit.");
             Player.Message(p, "%H  Note: The exit can be on a different level.");
-            
-            List<string> names = new List<string>();
-            if (Player.IsSuper(p)) CoreNames(names);
-            else AllNames(p, names);
-            
+            List<string> names = SupportedBlocks(p); 
             Player.Message(p, "%H  Supported blocks: %S{0}", names.Join());
             Player.Message(p, "%T/Portal show %H- Shows portals (green = entry, red = exit)");
         }

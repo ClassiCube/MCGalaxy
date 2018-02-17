@@ -50,7 +50,6 @@ namespace MCGalaxy {
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefs;
-        public static BlockProps[] GlobalProps = new BlockProps[Block.Count];
         internal static readonly object GlobalPropsLock = new object();
         
         public BlockDefinition Copy() {
@@ -145,26 +144,6 @@ namespace MCGalaxy {
             if (oldDefs != null) UpdateLoadedLevels(oldDefs);
         }
         
-        public static void UpdateGlobalBlockProps() {
-            for (int i = 0; i < GlobalProps.Length; i++) {
-                BlockID_ block = Block.FromRaw((byte)i);
-                GlobalProps[i] = BlockProps.MakeDefault();
-                GlobalProps[i] = DefaultProps(block);
-            }
-            BlockProps.Load("global", GlobalProps, GlobalPropsLock, false);
-        }
-        
-        internal static BlockProps DefaultProps(BlockID_ block) {
-            BlockRaw raw = (BlockRaw)block;
-            if (Block.IsPhysicsType(block)) {
-                return Block.Props[block];
-            } else if (block < Block.Extended && GlobalDefs[raw] == null) {
-                return Block.Props[raw];
-            } else {
-                return GlobalProps[raw];
-            }
-        }
-        
         static void UpdateLoadedLevels(BlockDefinition[] oldGlobalDefs) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
@@ -172,7 +151,7 @@ namespace MCGalaxy {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
                     BlockID_ block = Block.FromRaw((byte)i);
-                    lvl.Props[block] = DefaultProps(block);
+                    lvl.Props[block] = Block.Props[block];
                     lvl.UpdateCustomBlock((BlockRaw)block, GlobalDefs[i]);
                 }
             }

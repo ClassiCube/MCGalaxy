@@ -444,6 +444,8 @@ namespace MCGalaxy {
         }
         
         internal bool HasCustomProps(BlockID block) {
+            if ((Props[block].ChangedScope & 2) != 0) return true;
+            
             if (Block.IsPhysicsType(block)) return false;
             BlockRaw raw = (BlockRaw)block;
             return CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw];
@@ -453,7 +455,7 @@ namespace MCGalaxy {
             for (int i = 0; i < Props.Length; i++) {
                 BlockID block = (BlockID)i;
                 if (!HasCustomProps(block)) {
-                    Props[i] = BlockDefinition.DefaultProps(block);
+                    Props[i] = Block.Props[i];
                 } else {
                     Props[i] = BlockProps.MakeDefault();
                 }
@@ -462,7 +464,14 @@ namespace MCGalaxy {
         
         public void UpdateBlockProps() {
             LoadCoreProps();
-            BlockProps.Load("lvl_" + MapName, Props, PropsLock, true);
+            string propsPath = BlockProps.PropsPath("_" + MapName);
+                
+            // backwards compatibility with older versions
+            if (!File.Exists(propsPath)) {
+                BlockProps.Load("lvl_" + MapName, Props, PropsLock, 2, true);
+            } else {
+                BlockProps.Load("_" + MapName,    Props, PropsLock, 2, false);
+            }            
         }
         
         public void UpdateBlockHandlers() {
