@@ -150,7 +150,10 @@ namespace MCGalaxy {
                     if (lvl.CustomBlockDefs[i] != oldGlobalDefs[i]) continue;
                     
                     BlockID_ block = Block.FromRaw((byte)i);
-                    lvl.Props[block] = Block.Props[block];
+                    // Can't use normal lvl.HasCustomProps here because we changed global list
+                    if ((lvl.Props[block].ChangedScope & 2) == 0) {
+                        lvl.Props[block] = Block.Props[block];
+                    }
                     lvl.UpdateCustomBlock((BlockRaw)block, GlobalDefs[i]);
                 }
             }
@@ -173,8 +176,7 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[raw] != GlobalDefs[raw]) continue;
                 
                 pl.Send(def.MakeDefinePacket(pl));
-                if (pl.Supports(CpeExt.BlockPermissions))
-                    pl.Send(Packet.BlockPermission(def.BlockID, pl.level.CanPlace, pl.level.CanDelete));
+                pl.SendCurrentBlockPermissions();
             }
             Save(global, level);
         }
@@ -191,10 +193,10 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
+                if (!pl.hasBlockDefs) continue;
                 if (global && pl.level.CustomBlockDefs[raw] != null) continue;
                 
-                if (pl.hasBlockDefs)
-                    pl.Send(Packet.UndefineBlock(raw));
+                pl.Send(Packet.UndefineBlock(raw));
             }
             Save(global, level);
         }
