@@ -50,7 +50,6 @@ namespace MCGalaxy {
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
         public static BlockDefinition[] GlobalDefs;
-        internal static readonly object GlobalPropsLock = new object();
         
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();

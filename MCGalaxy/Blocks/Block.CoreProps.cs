@@ -122,14 +122,44 @@ namespace MCGalaxy {
             props[Block.Fish_Gold].AnimalAI = AnimalAI.FleeWater;
             props[Block.Fish_Salmon].AnimalAI = AnimalAI.FleeWater;
             props[Block.Fish_Sponge].AnimalAI = AnimalAI.FleeWater;
+            
+            // Block specific death messages and killer states
+            const string drowned = "@p %S&cdrowned.";
+            const string coldDied = "@p %Sstepped in &dcold water and froze.";
+            const string lavaDied = "@p %Sstood in &cmagma and melted.";
+            
+            SetKiller(props, Block.TNT_Explosion, "@p %S&cblew into pieces.");                 
+            SetKiller(props, Block.Deadly_Air, "@p %Swalked into &cnerve gas and suffocated.");     
+            SetKiller(props, Block.Deadly_Water, coldDied);
+            SetKiller(props, Block.Deadly_ActiveWater, coldDied);           
+            SetKiller(props, Block.Deadly_Lava, lavaDied);
+            SetKiller(props, Block.Deadly_ActiveLava, lavaDied);
+            SetKiller(props, Block.Deadly_FastLava, lavaDied);
+                                  
+            SetKiller(props, Block.Magma, "@p %Swas hit by &cflowing magma and melted.");
+            SetKiller(props, Block.Geyser, "@p %Swas hit by &cboiling water and melted.");
+            SetKiller(props, Block.Bird_Killer, "@p %Swas hit by a &cphoenix and burnt.");            
+            SetKiller(props, Block.Train, "@p %Swas hit by a &ctrain.");
+            SetKiller(props, Block.Fish_Shark, "@p %Swas eaten by a &cshark.");
+            SetKiller(props, Block.LavaFire, "@p %Sburnt to a &ccrisp.");           
+            SetKiller(props, Block.RocketHead, "@p %Swas &cin a fiery explosion.");
+            SetKiller(props, Block.ZombieBody, "@p %Sdied due to lack of &5brain.");
+            SetKiller(props, Block.Creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");           
+            SetKiller(props, Block.Fish_LavaShark, "@p %Swas eaten by a ... LAVA SHARK?!");
+            SetKiller(props, Block.Snake, "@p %Swas bit by a deadly snake.");
+            
+            props[Block.Air].DeathMessage = "@p %Shit the floor &chard.";
+            props[Block.Water].DeathMessage = drowned;
+            props[Block.StillWater].DeathMessage = drowned;
+            props[Block.Lava].DeathMessage = drowned;
+            props[Block.StillLava].DeathMessage = drowned;
         }
         
-        static void SetCoreProperties() {
-            MakeDefaultProps(Props);
-            SetDefaultNames();
-            SetDefaultDeaths();
+        static void SetKiller(BlockProps[] props, BlockID block, string msg) {
+            props[block].DeathMessage = msg;
+            props[block].KillerBlock = true;
         }
-
+        
         internal static void SetDefaultNames() {
             string[] names = new string[] { "Air", "Stone", "Grass", "Dirt", "Cobblestone", 
                 "Wood", "Sapling", "Bedrock", "Active_Water", "Water", "Active_Lava", "Lava", 
@@ -241,40 +271,6 @@ namespace MCGalaxy {
             Aliases["step"] = Slab; Aliases["double_step"] = DoubleSlab;
             Aliases["grey"] = Gray; Aliases["door_darkgray"] = Door_Black;
             Aliases["door_lightgray"] = Door_Gray;
-        }
-        
-        static void SetDefaultDeaths() {
-            SetDeath(Block.TNT_Explosion, "@p %S&cblew into pieces.");
-            SetDeath(Block.Deadly_Air, "@p %Swalked into &cnerve gas and suffocated.");
-            SetDeath(Block.Deadly_Water, "@p %Sstepped in &dcold water and froze.");
-            SetDeath(Block.Deadly_ActiveWater, Props[Block.Deadly_Water].DeathMessage);
-            SetDeath(Block.Deadly_Lava, "@p %Sstood in &cmagma and melted.");
-            SetDeath(Block.Deadly_ActiveLava, Props[Block.Deadly_Lava].DeathMessage);
-            SetDeath(Block.Deadly_FastLava, Props[Block.Deadly_Lava].DeathMessage);
-            
-            SetDeath(Block.Magma, "@p %Swas hit by &cflowing magma and melted.");
-            SetDeath(Block.Geyser, "@p %Swas hit by &cboiling water and melted.");
-            SetDeath(Block.Bird_Killer, "@p %Swas hit by a &cphoenix and burnt.");
-            SetDeath(Block.Train, "@p %Swas hit by a &ctrain.");
-            SetDeath(Block.Fish_Shark, "@p %Swas eaten by a &cshark.");
-            SetDeath(Block.LavaFire, "@p %Sburnt to a &ccrisp.");
-            SetDeath(Block.RocketHead, "@p %Swas &cin a fiery explosion.");
-            SetDeath(Block.ZombieBody, "@p %Sdied due to lack of &5brain.");
-            SetDeath(Block.Creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");
-            SetDeath(Block.Fish_LavaShark, "@p %Swas eaten by a ... LAVA SHARK?!");
-            SetDeath(Block.Snake, "@p %Swas bit by a deadly snake.");
-            
-            const string drowned = "@p %S&cdrowned.";
-            SetDeath(Block.Air, "@p %Shit the floor &chard.", false);
-            SetDeath(Block.Water, drowned, false);
-            SetDeath(Block.StillWater, drowned, false);
-            SetDeath(Block.Lava, drowned, false);
-            SetDeath(Block.StillLava, drowned, false);
-        }
-        
-        static void SetDeath(byte block, string message, bool collideKill = true) {
-            Props[block].DeathMessage = message;
-            Props[block].KillerBlock = collideKill;
         }
     }
 }
