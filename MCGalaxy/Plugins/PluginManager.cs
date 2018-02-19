@@ -85,7 +85,7 @@ namespace MCGalaxy {
 
                 Plugin.all.Add(instance);
                 
-                if (instance.LoadAtStartup) {
+                if (instance.LoadAtStartup || !startup) {
                     instance.Load(startup);
                     Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", instance.name, instance.build);
                 } else {
