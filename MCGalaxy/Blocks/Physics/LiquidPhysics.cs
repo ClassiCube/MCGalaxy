@@ -81,9 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
                     
                 case Block.Sand:
                     if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
-                    	if (lvl.physics != 5) {
-                    	    lvl.AddUpdate(index, Block.Glass, default(PhysicsArgs));
-                    	}
+                    	lvl.AddUpdate(index, Block.Glass, default(PhysicsArgs));
                     } else {
                         lvl.AddCheck(index);
                     } break;

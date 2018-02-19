@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Worlds"; } }
         public override string shortcut { get { return "Unloaded"; } }
         public override string type { get { return CommandTypes.Information; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string[] files = LevelInfo.AllMapFiles();
             Player.Message(p, "Maps (&c[no] %Sif not visitable): ");

@@ -36,7 +36,7 @@ namespace MCGalaxy.Gui.Components {
             get { return _autoScroll; }
             set {
                 _autoScroll = value;
-                if ( value ) ScrollToEnd(0);
+                if (value) ScrollToEnd(0);
             }
         }
         
@@ -79,11 +79,6 @@ namespace MCGalaxy.Gui.Components {
 
         /// <summary> Appends text to this textbox. </summary>
         public void AppendLog(string text, Color color, bool dateStamp) {
-            if (InvokeRequired) {
-                Invoke((MethodInvoker)(() => AppendLog(text, color, dateStamp)));
-                return;
-            }
-            
             int line = GetLineFromCharIndex(Math.Max(0, TextLength - 1));
             int selLength = SelectionLength, selStart = 0;
             if (selLength > 0) selStart = SelectionStart;
@@ -125,7 +120,6 @@ namespace MCGalaxy.Gui.Components {
         }
         
         /// <summary> Appends text with a specific color to this textbox. </summary>
-        /// <remarks> NOT THREAD SAFE </remarks>
         internal void AppendColoredText(string text, Color color) {
             SelectionStart = TextLength;
             SelectionLength = 0;

@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Search"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }

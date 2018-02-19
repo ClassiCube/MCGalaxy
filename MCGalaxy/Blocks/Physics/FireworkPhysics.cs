@@ -53,7 +53,6 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void Firework(ref PhysInfo C, int size, Level lvl, Random rand) {
-            if (lvl.physics < 1 || lvl.physics == 5) return;
             int rand1 = rand.Next(Block.Red, Block.White);
             int rand2 = rand.Next(Block.Red, Block.White);
             int min = Math.Min(rand1, rand2), max = Math.Max(rand1, rand2);

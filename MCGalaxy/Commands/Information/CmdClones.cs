@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "Alts"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WhoIP") }; }
         }

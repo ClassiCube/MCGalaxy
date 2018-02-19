@@ -51,7 +51,9 @@ namespace MCGalaxy {
         /// <summary> Whether this command is restricted in usage in message blocks. 
         /// Restricted commands require the player to have the extra permission for /mb to be able to be placed in message blocks. </summary>
         public virtual bool MessageBlockRestricted { get { return false; } }
-
+        /// <summary> Whether this command can be used by players who are frozen. </summary>
+        public virtual bool UseableWhenFrozen { get { return false; } }
+        
         public static CommandList all = new CommandList();
         public static CommandList core = new CommandList();
         

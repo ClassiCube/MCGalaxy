@@ -742,6 +742,9 @@ namespace MCGalaxy {
             if (level.IsMuseum && !command.museumUsable ) {
                 SendMessage("Cannot use this command while in a museum."); return null;
             }
+            if (frozen && !command.UseableWhenFrozen) {
+                SendMessage("Cannot use this command while frozen."); return null;
+            }
             return command;
         }
         

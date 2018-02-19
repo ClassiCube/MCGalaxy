@@ -68,7 +68,7 @@ namespace MCGalaxy.Core {
                 p.aiming = false;
                 p.ClearBlockchange();
             }
-            if (!p.level.Config.UseBlockDB) {
+            if (!level.Config.UseBlockDB) {
                 Player.Message(p, "BlockDB is disabled here, &cyou will not be able to /undo or /redo");
             }
         }

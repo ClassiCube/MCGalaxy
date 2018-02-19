@@ -161,7 +161,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "ZTest"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
-
+        
         public override void Use(Player p, string message) {
             Player.Message(p, "Place or delete a block where you would like to check for zones.");
             p.MakeSelection(1, null, TestZone);
@@ -197,7 +197,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "Zones"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             Zone[] zones = p.level.Zones.Items;
             MultiPageOutput.Output(p, zones, FormatZone, "ZoneList", "zones", message, true);

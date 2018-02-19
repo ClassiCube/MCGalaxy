@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdBlocks : Command {
         public override string name { get { return "Blocks"; } }
         public override string type { get { return CommandTypes.Information; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Materials") }; }
         }

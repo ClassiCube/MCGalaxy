@@ -21,7 +21,8 @@ namespace MCGalaxy.Commands.Info {
     public sealed class CmdBanInfo : Command {
         public override string name { get { return "BanInfo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) message = p.name;

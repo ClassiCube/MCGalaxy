@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool museumUsable { get { return false; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WInfo"), new CommandAlias("WorldInfo") }; }
         }

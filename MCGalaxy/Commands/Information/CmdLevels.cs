@@ -22,7 +22,8 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Levels"; } }
         public override string shortcut { get { return "Maps"; } }
         public override string type { get { return CommandTypes.Information; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             Level[] loaded = LevelInfo.Loaded.Items;
             Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");

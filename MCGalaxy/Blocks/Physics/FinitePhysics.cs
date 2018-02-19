@@ -102,7 +102,7 @@ namespace MCGalaxy.Blocks.Physics {
                 int i = indices[j];
                 switch (i) {
                     case 0:
-                		if (Expand(lvl, (ushort)(x - 1), y, z)) return;
+                        if (Expand(lvl, (ushort)(x - 1), y, z)) return;
                         break;
                     case 1:
                         if (Expand(lvl, (ushort)(x + 1), y, z)) return;

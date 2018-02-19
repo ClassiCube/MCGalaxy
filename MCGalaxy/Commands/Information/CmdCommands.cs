@@ -20,6 +20,7 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Commands"; } }
         public override string shortcut { get { return "Cmds"; } }
         public override string type { get { return CommandTypes.Information; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("CmdList") }; }
         }

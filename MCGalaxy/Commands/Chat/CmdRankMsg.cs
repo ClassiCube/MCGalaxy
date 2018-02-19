@@ -25,7 +25,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string shortcut { get { return "rm"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             if (!MessageCmd.CanSpeak(p, name)) return;

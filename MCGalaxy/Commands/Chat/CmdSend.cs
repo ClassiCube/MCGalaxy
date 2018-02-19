@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Send"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-
+        public override bool UseableWhenFrozen { get { return true; } }
+        
         public override void Use(Player p, string message) {
             string[] parts = message.SplitSpaces(2);
             if (message.Length == 0 || parts.Length == 1) { Help(p); return; }

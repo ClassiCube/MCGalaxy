@@ -106,7 +106,7 @@ namespace MCGalaxy.Blocks {
                     BlockProps props = list[b];
                     
                     string deathMsg = props.DeathMessage == null ? "" : props.DeathMessage.Replace(":", "\\;");
-                    w.WriteLine(b + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor + ":"
+                    w.WriteLine(b + ":" + props.IsRails + ":" + props.IsTDoor + ":" + props.IsDoor     + ":"
                                 + props.IsMessageBlock + ":" + props.IsPortal + ":" + props.WaterKills + ":"
                                 + props.LavaKills + ":" + props.KillerBlock + ":" + deathMsg           + ":"
                                 + (byte)props.AnimalAI + ":" + props.StackBlock + ":" + props.OPBlock  + ":"
