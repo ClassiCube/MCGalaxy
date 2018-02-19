@@ -26,58 +26,31 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("WLock", "map"), new CommandAlias("WUnlock", "map") }; }
+            get { return new[] { new CommandAlias("WLock"), new CommandAlias("WUnlock") }; }
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces();
-            if (args.Length != 2 || !(args[0].CaselessEq("map") || args[0].CaselessEq("player"))) {
-                Help(p); return;
-            }
-
-            if (args[0].CaselessEq("map")) {
-                if (!Formatter.ValidName(p, args[1], "level")) return;
-                
-                bool unlocking = Server.lockdown.Contains(args[1]);
-                Chat.MessageGlobal("The map {0} has been {1}locked", args[1], unlocking ? "un" : "");
-                string srcName = (p == null) ? "(console)" : p.ColoredName;
-                
-                if (unlocking) {
-                    Server.lockdown.Remove(args[1]);
-                    Chat.MessageOps("Unlocked by: " + srcName);
-                } else {
-                    Server.lockdown.AddIfNotExists(args[1]);
-                    Chat.MessageOps("Locked by: " + srcName);
-                }
-                Server.lockdown.Save();
+            if (message.Length == 0) { Help(p); return; }
+            if (!Formatter.ValidName(p, message, "level")) return;
+            
+            bool unlocking = Server.lockdown.Contains(message);
+            Chat.MessageGlobal("The map {0} has been {1}locked", message, unlocking ? "un" : "");
+            string srcName = (p == null) ? "(console)" : p.ColoredName;
+            
+            if (unlocking) {
+                Server.lockdown.Remove(message);
+                Chat.MessageOps("Unlocked by: " + srcName);
             } else {
-                Player who = PlayerInfo.FindMatches(p, args[1]);
-                if (who == null) return;
-
-                if (!who.jailed) {
-                    if (p != null && who.Rank >= p.Rank) {
-                        Player.Message(p, "Cannot lock down someone of equal or greater rank."); return;
-                    }
-                    if (p != null && who.level != p.level) {
-                        Player.Message(p, "Moving player to your map...");
-                        PlayerActions.ChangeMap(who, p.level);
-                        who.BlockUntilLoad(500);
-                    }
-                    Chat.MessageGlobal("{0} %Shas been locked down!", who.ColoredName);
-                    Chat.MessageOps("Locked by: " + ((p == null) ? "Console" : p.name));
-                } else {
-                    Chat.MessageGlobal("{0} %Shas been unlocked.", who.ColoredName);
-                    Chat.MessageOps("Unlocked by: " + ((p == null) ? "Console" : p.name));
-                }
-                who.jailed = !who.jailed;
+                Server.lockdown.AddIfNotExists(message);
+                Chat.MessageOps("Locked by: " + srcName);
             }
+            Server.lockdown.Save();
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Lockdown map/player [name]");
-            Player.Message(p, "%H\"map\" - prevents new players from joining that map.");
-            Player.Message(p, "%H\"player\" - prevents that player from using commands.");
-            Player.Message(p, "%HUsing /lockdown again will unlock that map/player.");
+            Player.Message(p, "%T/Lockdown [map]");
+            Player.Message(p, "%HPrevents new players from joining that map.");
+            Player.Message(p, "%HUsing /lockdown again will unlock that map");
         }
     }
 }

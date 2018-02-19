@@ -32,7 +32,6 @@ namespace MCGalaxy.Core {
             
             LoadWaypoints(p);
             p.Ignores.Load(p);
-            CheckLoginJailed(p);
         }
         
         static void CheckReviewList(Player p) {
@@ -65,22 +64,6 @@ namespace MCGalaxy.Core {
                 p.Waypoints.Load();
             } catch (IOException ex) {
                 Player.Message(p, "Error loading waypoints.");
-                Logger.LogError(ex);
-            }
-        }
-        
-        static void CheckLoginJailed(Player p) {
-            string level = Server.jailed.FindData(p.name);
-            if (level == null) return;
-            
-            try {
-                PlayerActions.ChangeMap(p, level);
-                ModAction action = new ModAction(p.name, null, ModActionType.Jailed, "Auto jail");
-                action.Announce = false;
-                OnModActionEvent.Call(action);
-                Chat.MessageGlobal(p, p.DisplayName + " &cis still jailed from previously.", false);
-            } catch (Exception ex) {
-                p.Leave("Error occured", "Error occured", true);
                 Logger.LogError(ex);
             }
         }

@@ -298,7 +298,6 @@
     <Compile Include="Commands\Moderation\CmdHide.cs" />
     <Compile Include="Commands\Moderation\CmdHighlight.cs" />
     <Compile Include="Commands\Moderation\CmdIrcControllers.cs" />
-    <Compile Include="Commands\Moderation\CmdJail.cs" />
     <Compile Include="Commands\Moderation\CmdJoker.cs" />
     <Compile Include="Commands\Moderation\CmdKick.cs" />
     <Compile Include="Commands\Moderation\CmdLocation.cs" />
@@ -327,7 +326,6 @@
     <Compile Include="Commands\Moderation\CmdWarn.cs" />
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
-    <Compile Include="Commands\Moderation\CmdXJail.cs" />
     <Compile Include="Commands\Moderation\ZoneCmds.cs" />
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />

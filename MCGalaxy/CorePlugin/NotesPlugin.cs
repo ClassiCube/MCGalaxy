@@ -37,8 +37,6 @@ namespace MCGalaxy.Core {
             switch (action.Type) {
                 case ModActionType.Frozen:
                     AddNote(action, "F"); break;
-                case ModActionType.Jailed:
-                    AddNote(action, "J"); break;
                 case ModActionType.Kicked:
                     AddNote(action, "K"); break;
                 case ModActionType.Muted:

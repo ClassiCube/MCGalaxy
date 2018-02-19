@@ -91,10 +91,6 @@ namespace MCGalaxy.Gui {
         [Category("Status")]
         [DisplayName("Hidden")]
         public bool Hidden { get { return p.hidden; } set { DoCmd("ohide"); } }
-
-        [Category("Status")]
-        [DisplayName("Jailed")]
-        public bool Jailed { get { return p.jailed; } set { DoCmd("jail"); } }
         
         [Category("Status")]
         [DisplayName("Jokered")]

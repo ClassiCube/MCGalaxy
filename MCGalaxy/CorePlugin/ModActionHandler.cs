@@ -29,8 +29,6 @@ namespace MCGalaxy.Core {
             switch (action.Type) {
                 case ModActionType.Frozen: DoFreeze(action); break;
                 case ModActionType.Unfrozen: DoUnfreeze(action); break;
-                case ModActionType.Jailed: DoJail(action); break;
-                case ModActionType.Unjailed: DoUnjail(action); break;
                 case ModActionType.Muted: DoMute(action); break;
                 case ModActionType.Unmuted: DoUnmute(action); break;
                 case ModActionType.Ban: DoBan(action); break;
@@ -80,34 +78,6 @@ namespace MCGalaxy.Core {
             Server.frozen.Remove(e.Target);
             ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
-        }
-        
-        
-        static void DoJail(ModAction e) {
-            Player who = PlayerInfo.FindExact(e.Target);
-            if (who == null) return;
-            
-            who.jailed = true;
-            Server.jailed.AddOrReplace(who.name, who.level.name);
-            LogAction(e, who, "&8jailed");
-            
-            Entities.GlobalDespawn(who, false);
-            Position pos = new Position(who.level.Config.JailX, who.level.Config.JailY, who.level.Config.JailZ);
-            Orientation rot = new Orientation(who.level.Config.jailrotx, who.level.Config.jailroty);
-            Entities.GlobalSpawn(who, pos, rot, true);
-            Server.jailed.Save(true);
-        }
-        
-        static void DoUnjail(ModAction e) {
-            Player who = PlayerInfo.FindExact(e.Target);
-            if (who == null) return;
-            
-            who.jailed = false;
-            Server.jailed.Remove(who.name);
-            LogAction(e, who, "&afreed from jail");
-            
-            Command.all.FindByName("Spawn").Use(who, "");
-            Server.jailed.Save(true);
         }
         
         

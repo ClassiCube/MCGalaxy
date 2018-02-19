@@ -63,7 +63,7 @@ namespace MCGalaxy {
             BlockID old = level.GetBlock(x, y, z);
             if (old == Block.Invalid) return;
             
-            if (jailed || !canBuild) { RevertBlock(x, y, z); return; }
+            if (jailed || frozen || !canBuild) { RevertBlock(x, y, z); return; }
             if (!agreed) {
                 SendMessage(mustAgreeMsg);
                 RevertBlock(x, y, z); return;
@@ -273,7 +273,6 @@ namespace MCGalaxy {
                 ushort x = NetUtils.ReadU16(buffer, offset + 1);
                 ushort y = NetUtils.ReadU16(buffer, offset + 3);
                 ushort z = NetUtils.ReadU16(buffer, offset + 5);
-                if (frozen) { RevertBlock(x, y, z); return; }
                 
                 byte action = buffer[offset + 7];
                 if (action > 1) {

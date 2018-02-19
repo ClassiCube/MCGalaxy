@@ -117,8 +117,10 @@ namespace MCGalaxy.Events {
         /// <summary> Player was unfrozen. </summary>
         Unfrozen,
         /// <summary> Player was jailed. </summary>
+        [Obsolete]
         Jailed,
         /// <summary> Player was unjailed. </summary>
+        [Obsolete]
         Unjailed,
         /// <summary> Player was given a warning. </summary>
         Warned,
