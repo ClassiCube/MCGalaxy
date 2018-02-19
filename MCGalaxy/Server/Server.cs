@@ -111,7 +111,7 @@ namespace MCGalaxy {
 
             Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
-            Plugin.Load();
+            Plugin.LoadAll();
             Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
@@ -268,7 +268,7 @@ namespace MCGalaxy {
             foreach (Player p in players) { p.Leave(msg); }
 
             Player.connections.ForEach(p => p.Leave(msg));
-            Plugin.Unload();
+            Plugin.UnloadAll();
             if (Listener != null) Listener.Close();
             
             try {

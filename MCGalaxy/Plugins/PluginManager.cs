@@ -14,115 +14,77 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using MCGalaxy.Core;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
     public abstract partial class Plugin {
-
-        /// <summary> List of core plugins. </summary>
         internal static List<Plugin> core = new List<Plugin>();
-        
-        /// <summary> List of all plugins. </summary>
         public static List<Plugin> all = new List<Plugin>();
 
-        /// <summary> Look to see if a plugin is loaded </summary>
-        /// <param name="name">The name of the plugin</param>
-        /// <returns>Returns the plugin (returns null if non is found)</returns>
-        public static Plugin Find(string name) {
-            List<Plugin> tempList = new List<Plugin>();
-            tempList.AddRange(all);
-            Plugin match = null; int matches = 0;
-
-            foreach (Plugin p in tempList) {
-                if (p.name.CaselessEq(name)) return p;
-                if (p.name.CaselessContains(name)) {
-                    match = p; matches++;
-                }
-            }
-            return matches == 1 ? match : null;
-        }
-
-        
-        /// <summary> Load a plugin </summary>
-        /// <param name="name">The name of the plugin.</param>
-        /// <param name="startup">Is this startup?</param>
-        public static void Load(string name, bool startup) {
+        public static bool Load(string name, bool startup) {
             string creator = "";
             string path = "plugins/" + name + ".dll";
+            
             try {
-                Plugin instance = null;
                 byte[] data = File.ReadAllBytes(path);
                 Assembly lib = Assembly.Load(data);
-
-                try {
-                    foreach (Type t in lib.GetTypes()) {
-                        if (!t.IsSubclassOf(typeof(Plugin))) continue;
-                        instance = (Plugin)Activator.CreateInstance(t);
-                        break;
+                List<Plugin> plugins = IScripting.LoadTypes<Plugin>(lib);
+                
+                foreach (Plugin plugin in plugins) {
+                    creator = plugin.creator;
+                    string ver = plugin.MCGalaxy_Version;
+                    if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
+                        Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", plugin.name, Server.SoftwareName);
+                        return false;
                     }
-                } catch { }
-                if (instance == null) {
-                    Logger.Log(LogType.Warning, "The plugin {0} couldn't be loaded!", name);
-                    return;
-                }
-                creator = instance.creator;
-                
-                string ver = instance.MCGalaxy_Version;
-                if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
-                    Logger.Log(LogType.Warning, "This plugin ({0}) isn't compatible with this version of {1}!", instance.name, Server.SoftwareName);
-                    Thread.Sleep(1000);
-                    if (!ServerConfig.unsafe_plugin) return;
+                    Plugin.all.Add(plugin);
                     
-                    Logger.Log(LogType.Warning, "Will attempt to load plugin anyways!");
+                    if (plugin.LoadAtStartup || !startup) {
+                        plugin.Load(startup);
+                        Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", plugin.name, plugin.build);
+                    } else {
+                        Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", plugin.name);
+                    }
+                    Logger.Log(LogType.SystemActivity, plugin.welcome);
                 }
-
-                Plugin.all.Add(instance);
-                
-                if (instance.LoadAtStartup || !startup) {
-                    instance.Load(startup);
-                    Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", instance.name, instance.build);
-                } else {
-                    Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", instance.name);
-                }
-                Logger.Log(LogType.SystemActivity, instance.welcome);
+                return true;
             } catch (Exception e) {
                 Logger.LogError(e);
                 Logger.Log(LogType.Warning, "The plugin {0} failed to load!", name);
-                if (creator.Length > 0) Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
-                Thread.Sleep(1000);
+                if (!String.IsNullOrEmpty(creator)) Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
+                return false;
             }
         }
-        
-        /// <summary> Unload a plugin </summary>
-        /// <param name="p">The plugin to unload</param>
-        /// <param name="shutdown">Is this shutdown?</param>
-        public static void Unload(Plugin p, bool shutdown) {
+
+        public static bool Unload(Plugin p, bool shutdown) {
+            bool success = true;
             try {
-                p.Unload(shutdown);             
+                p.Unload(shutdown);
                 Logger.Log(LogType.SystemActivity, p.name + " was unloaded.");
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "An error occurred while unloading a plugin.");
+                success = false;
             }
+            
             all.Remove(p);
+            return success;
         }
 
-        /// <summary> Unload all plugins </summary>
-        public static void Unload() {
+        public static void UnloadAll() {
             for (int i = 0; i < all.Count; i++) {
                 Unload(all[i], true); i--;
             }
         }
-        
-        /// <summary> Load all plugins </summary>
-        public static void Load() {
+
+        public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
             LoadCorePlugin(new NotesPlugin());
             

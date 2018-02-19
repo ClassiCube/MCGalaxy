@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
@@ -57,7 +58,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         void btnLoad_Click(object sender, EventArgs e) {
-            Command[] commands = null;
+            List<Command> commands = null;
             using (FileDialog dialog = new OpenFileDialog()) {
                 dialog.RestoreDirectory = true;
                 dialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
@@ -67,7 +68,7 @@ namespace MCGalaxy.Gui.Popups {
                 if (fileName.EndsWith(".dll")) {
                     byte[] data = File.ReadAllBytes(fileName);
                     Assembly lib = Assembly.Load(data);
-                    commands = IScripting.LoadFrom(lib).ToArray();
+                    commands = IScripting.LoadTypes<Command>(lib);
                 } else {
                     IScripting engine = fileName.EndsWith(".cs") ? IScripting.CS : IScripting.VB;
                     if (!File.Exists(fileName)) return;
@@ -87,12 +88,12 @@ namespace MCGalaxy.Gui.Popups {
                         MessageBox.Show("Error compiling from source. Check logs for more details.");
                         return;
                     }
-                    commands = IScripting.LoadFrom(result.CompiledAssembly).ToArray();
+                    commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
                 }
             }
 
             if (commands == null) { MessageBox.Show("Error compiling files"); return; }
-            for (int i = 0; i < commands.Length; i++) {
+            for (int i = 0; i < commands.Count; i++) {
                 Command cmd = commands[i];
 
                 if (lstCommands.Items.Contains(cmd.name)) {

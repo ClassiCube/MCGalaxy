@@ -31,11 +31,11 @@ namespace MCGalaxy.Commands.Scripting {
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {            
+        public override void Use(Player p, string message) {
             if (message.CaselessEq("list")) {
                 Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));
                 return;
-            }  
+            }
             
             string[] parts = message.SplitSpaces(2);
             if (parts.Length == 1) { Help(p); return; }
@@ -71,21 +71,33 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void LoadPlugin(Player p, string name) {
             if (File.Exists("plugins/" + name + ".dll")) {
-                Plugin.Load(name, false);
+                if (Plugin.Load(name, false)) {
+                    Player.Message(p, "Plugin loaded successfully.");
+                } else {
+                    Player.Message(p, "Error loading plugin. See error logs for more information.");
+                }
             } else {
                 Player.Message(p, "File &9" + name + ".dll %Snot found.");
             }
         }
         
         static void UnloadPlugin(Player p, string name) {
-            Plugin plugin = Plugin.Find(name);
+            int matches;
+            Plugin plugin = Matcher.Find<Plugin>(p, name, out matches, Plugin.all, 
+                                                 null, pln => pln.name, "plugins");
+            if (plugin == null) return;
+            
             if (Plugin.core.Contains(plugin)) {
                 Player.Message(p, plugin.name + " is a core plugin and cannot be unloaded.");
                 return;
             }
             
             if (plugin != null) {
-                Plugin.Unload(plugin, false);
+                if (Plugin.Unload(plugin, false)) {
+                    Player.Message(p, "Plugin unloaded successfully.");
+                } else {
+                    Player.Message(p, "Error unloading plugin. See error logs for more information.");
+                }
             } else {
                 Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));
             }

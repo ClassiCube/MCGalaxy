@@ -106,7 +106,6 @@ namespace MCGalaxy {
         public static bool forceCuboid = false;
         [ConfigBool("repeat-messages", "Other", false)]
         public static bool RepeatMBs = false;
-        public static bool unsafe_plugin = true;
         [ConfigString("money-name", "Other", "moneys")]
         public static string Currency = "moneys";        
         [ConfigString("server-owner", "Other", "Notch")]

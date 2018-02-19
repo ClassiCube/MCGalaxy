@@ -36,8 +36,9 @@ namespace MCGalaxy.Commands.Scripting {
             }
             
             Command.all.Remove(cmd);
-            foreach (Group grp in Group.GroupList)
+            foreach (Group grp in Group.GroupList) {
                grp.Commands.Remove(cmd);
+            }
             Player.Message(p, "Command was successfully unloaded.");
         }
 

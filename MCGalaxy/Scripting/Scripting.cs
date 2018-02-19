@@ -180,51 +180,46 @@ namespace MCGalaxy.Scripting {
         /// <returns>Error string on failure, null on success.</returns>
         public static string Load(string command) {
             if (!command.CaselessStarts("cmd")) return "Invalid command name specified.";
+            string file = command + ".dll";
+            
             try {
-                byte[] data = File.ReadAllBytes(DllDir + command + ".dll");
+                byte[] data = File.ReadAllBytes(DllDir + file);
                 Assembly lib = Assembly.Load(data); // TODO: Assembly.LoadFile instead?
-                List<Command> commands = LoadFrom(lib);
+                List<Command> commands = LoadTypes<Command>(lib);
                 
-                if (commands.Count == 0) return null;
-                foreach (Command cmd in commands)
-                    Command.all.Add(cmd);
-            } catch (FileNotFoundException e) {
-                Logger.LogError(e);
-                return command + ".dll does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
-            } catch (BadImageFormatException e) {
-                Logger.LogError(e);
-                return command + ".dll is not a valid assembly, or has an invalid dependency. Details in the error log.";
-            } catch (PathTooLongException) {
-                return "Class name is too long.";
-            } catch (FileLoadException e) {
-                Logger.LogError(e);
-                return command + ".dll or one of its dependencies could not be loaded. Details in the error log.";
-            } catch (InvalidCastException e) {
-                //if the structure of the code is wrong, or it has syntax error or other code problems
-                Logger.LogError(e);
-                return command + ".dll has invalid code structure, please check code again for errors.";
+                if (commands.Count == 0) return "No commands in dll file";
+                foreach (Command cmd in commands) { Command.all.Add(cmd); }
             } catch (Exception e) {
                 Logger.LogError(e);
+                
+                if (e is FileNotFoundException) {
+                    return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
+                } else if (e is BadImageFormatException) {
+                    return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
+                } else if (e is PathTooLongException) {
+                    return "Class name is too long.";
+                } else if (e is FileLoadException) {
+                    return file + " or one of its dependencies could not be loaded. Details in the error log.";
+                }
                 return "An unknown error occured and has been logged.";
             }
             return null;
         }
         
-        public static List<Command> LoadFrom(Assembly lib) {
-            //Allows unloading and deleting dlls without server restart
-            List<Command> commands = new List<Command>();
+        public static List<T> LoadTypes<T>(Assembly lib) {
+            List<T> instances = new List<T>();
             
             foreach (Type t in lib.GetTypes()) {
-                if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(Command))) continue;
+                if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(T))) continue;
                 object instance = Activator.CreateInstance(t);
                 
                 if (instance == null) {
-                    Logger.Log(LogType.Warning, "Command \"{0}\" could not be loaded.", t.Name);
+                    Logger.Log(LogType.Warning, "{0} \"{1}\" could not be loaded", typeof(T).Name, t.Name);
                     throw new BadImageFormatException();
                 }
-                commands.Add((Command)instance);
+                instances.Add((T)instance);
             }
-            return commands;
+            return instances;
         }
     }
 }
