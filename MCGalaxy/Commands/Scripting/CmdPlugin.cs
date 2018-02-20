@@ -56,28 +56,30 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void CompilePlugin(Player p, string name) {
             IScripting engine = IScripting.CS;
-            string path = "plugins/" + name;
+            string srcPath = "plugins/" + name + engine.Ext;
+            string dstPath = IScripting.PluginPath(name);
             
-            if (File.Exists(path + engine.Ext)) {
-                if (engine.Compile(path, path)) {
+            if (File.Exists(srcPath)) {
+                if (engine.Compile(srcPath, dstPath)) {
                     Player.Message(p, "Plugin compiled successfully.");
                 } else {
                     Player.Message(p, "Compilation error. See " + IScripting.ErrorPath + " for more information.");
                 }
             } else {
-                Player.Message(p, "File &9" + path + engine.Ext + " %Snot found.");
+                Player.Message(p, "File &9{0} %Snot found.", srcPath);
             }
         }
         
         static void LoadPlugin(Player p, string name) {
-            if (File.Exists("plugins/" + name + ".dll")) {
+            string path = IScripting.PluginPath(name);
+            if (File.Exists(path)) {
                 if (Plugin.Load(name, false)) {
                     Player.Message(p, "Plugin loaded successfully.");
                 } else {
                     Player.Message(p, "Error loading plugin. See error logs for more information.");
                 }
             } else {
-                Player.Message(p, "File &9" + name + ".dll %Snot found.");
+                Player.Message(p, "File &9{0} %Snot found.", path);
             }
         }
         

@@ -83,9 +83,9 @@ namespace MCGalaxy.Undo {
         }
         
         public static UndoFormat GetFormat(string file) {
-            if (file.EndsWith(TxtFormat.Ext)) return TxtFormat;
-            if (file.EndsWith(BinFormat.Ext)) return BinFormat;
-            if (file.EndsWith(NewFormat.Ext)) return NewFormat;
+            if (file.CaselessEnds(TxtFormat.Ext)) return TxtFormat;
+            if (file.CaselessEnds(BinFormat.Ext)) return BinFormat;
+            if (file.CaselessEnds(NewFormat.Ext)) return NewFormat;
             return null;
         }
         

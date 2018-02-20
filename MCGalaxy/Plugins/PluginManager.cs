@@ -30,7 +30,7 @@ namespace MCGalaxy {
 
         public static bool Load(string name, bool startup) {
             string creator = "";
-            string path = "plugins/" + name + ".dll";
+            string path = IScripting.PluginPath(name);
             
             try {
                 byte[] data = File.ReadAllBytes(path);

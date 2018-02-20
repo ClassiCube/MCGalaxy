@@ -39,8 +39,9 @@ namespace MCGalaxy.Commands.Scripting {
                 Help(p); return;
             }
             
-            if (engine.SourceFileExists(args[0])) {
-                Player.Message(p, "File Cmd" + args[0] + engine.Ext + " already exists. Choose another name."); return;
+            string path = engine.SourcePath(args[0]);
+            if (File.Exists(path)) {
+                Player.Message(p, "File {0} already exists. Choose another name.", path); return;
             }
             
             try {

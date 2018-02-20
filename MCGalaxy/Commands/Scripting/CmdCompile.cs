@@ -39,11 +39,13 @@ namespace MCGalaxy.Commands.Scripting {
                 Help(p); return;
             }
 
-            if (!engine.SourceFileExists(args[0])) {
-                Player.Message(p, "File &9Cmd" + args[0] + engine.Ext + " %Snot found."); return;
+            string path = engine.SourcePath(args[0]);
+            if (!File.Exists(path)) {
+                Player.Message(p, "File &9{0} %Snot found.", path); return;
             }
             
-            if (engine.Compile(args[0])) {
+            string dstPath = IScripting.DllPath(args[0]);            
+            if (engine.Compile(path, dstPath)) {
                 Player.Message(p, "Command compiled successfully.");
             } else {
                 Player.Message(p, "Compilation error. See " + IScripting.ErrorPath + " for more information.");

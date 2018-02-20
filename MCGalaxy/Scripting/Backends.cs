@@ -98,8 +98,8 @@ Imports System
 Namespace MCGalaxy
 \tPublic Class Cmd{0}
 \t\tInherits Command
-' The command's name, IN ALL LOWERCASE. What you'll be putting behind the slash when using it.
 
+' The command's name, IN ALL LOWERCASE. What you'll be putting behind the slash when using it.
 \t\tPublic Overrides ReadOnly Property name() As String
 \t\t\tGet
 \t\t\t\tReturn ""{1}""

@@ -56,9 +56,9 @@ namespace MCGalaxy.Scripting {
             }
         }
         
-        public bool SourceFileExists(string cmdName) {
-            return File.Exists(SourceDir + "Cmd" + cmdName + Ext);
-        }
+        public static string DllPath(string cmdName) { return DllDir + "Cmd" + cmdName + ".dll"; }
+        public static string PluginPath(string name) { return "plugins/" + name + ".dll"; }
+        public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
         
         public void CreateNew(string cmdName) {
             if (!Directory.Exists(SourceDir))
@@ -66,7 +66,7 @@ namespace MCGalaxy.Scripting {
             cmdName = cmdName.ToLower();
             
             string syntax = CommandSkeleton;
-            // Make sure we are using the OS's line endings
+            // Make sure we use the OS's line endings
             syntax = syntax.Replace(@"\t", "\t");
             syntax = syntax.Replace("\r\n", "\n");
             syntax = syntax.Replace("\n", Environment.NewLine);
@@ -76,31 +76,16 @@ namespace MCGalaxy.Scripting {
             using (StreamWriter sw = new StreamWriter(path))
                 sw.WriteLine(syntax);
         }
-        
-        /// <summary> Compiles a command from source into a DLL. </summary>
-        /// <param name="commandName">Name of the command file to be compiled (without the extension)</param>
-        /// <returns> True on successful compile, false on failure. </returns>
-        public bool Compile(string cmdName) {
-            if (!Directory.Exists(DllDir)) {
-                Directory.CreateDirectory(DllDir);
-            }
-            return Compile(SourceDir + "Cmd" + cmdName, DllDir + "Cmd" + cmdName);
-        }
-        
-        /// <summary> Compiles a written function from source into a DLL. </summary>
-        /// <param name="baseName"> Path to file to be compiled (**without** the extension) </param>
-        /// <param name="baseOutName"> Path of file to be compiled to (**without** the extension) </param>
-        /// <returns> True on successful compile, false on failure. </returns>
-        public bool Compile(string baseName, string baseOutName) {
-            string path = baseName + Ext;
+
+        public bool Compile(string srcPath, string dstPath) {
             StringBuilder sb = null;
             bool exists = File.Exists(ErrorPath);
             
-            if (!File.Exists(path)) {
+            if (!File.Exists(srcPath)) {
                 sb = new StringBuilder();
                 using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
                     AppendDivider(sb, exists);
-                    sb.AppendLine("File not found: " + path);
+                    sb.AppendLine("File not found: " + srcPath);
                     w.Write(sb.ToString());
                 }
                 return false;
@@ -108,9 +93,9 @@ namespace MCGalaxy.Scripting {
 
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
-            args.OutputAssembly = baseOutName + ".dll";
+            args.OutputAssembly = dstPath;
             
-            List<string> source = ReadSourceCode(path, args);
+            List<string> source = ReadSourceCode(srcPath, args);
             results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return true;
 
@@ -161,29 +146,23 @@ namespace MCGalaxy.Scripting {
         }
         
         
-        /// <summary> Automatically loads all .dll commands specified in the autoload file. </summary>
         public static void Autoload() {
             if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
             string[] list = File.ReadAllLines(AutoloadFile);
             
             foreach (string cmdName in list) {
                 if (cmdName.Length == 0) continue;
-                string error = IScripting.Load("Cmd" + cmdName);
-                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
+                string path = DllPath(cmdName);
+                string error = IScripting.Load(path);
                 
+                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
                 Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
             }
         }
         
-        /// <summary> Loads a command for use on the server. </summary>
-        /// <param name="command">Name of the command to be loaded (make sure it's prefixed by Cmd before bringing it in here or you'll have problems).</param>
-        /// <returns>Error string on failure, null on success.</returns>
-        public static string Load(string command) {
-            if (!command.CaselessStarts("cmd")) return "Invalid command name specified.";
-            string file = command + ".dll";
-            
+        public static string Load(string path) {
             try {
-                byte[] data = File.ReadAllBytes(DllDir + file);
+                byte[] data = File.ReadAllBytes(path);
                 Assembly lib = Assembly.Load(data); // TODO: Assembly.LoadFile instead?
                 List<Command> commands = LoadTypes<Command>(lib);
                 
@@ -192,6 +171,7 @@ namespace MCGalaxy.Scripting {
             } catch (Exception e) {
                 Logger.LogError(e);
                 
+                string file = Path.GetFileName(path);
                 if (e is FileNotFoundException) {
                     return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
                 } else if (e is BadImageFormatException) {
@@ -201,7 +181,7 @@ namespace MCGalaxy.Scripting {
                 } else if (e is FileLoadException) {
                     return file + " or one of its dependencies could not be loaded. Details in the error log.";
                 }
-                return "An unknown error occured and has been logged.";
+                return "An unknown error occured. Details in the error log.";
             }
             return null;
         }

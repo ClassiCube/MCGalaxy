@@ -29,12 +29,14 @@ namespace MCGalaxy.Commands.Scripting {
             if (!Formatter.ValidName(p, message, "command")) return;            
             if (Command.all.Contains(message)) {
                 Player.Message(p, "That command is already loaded!"); return;
-            }           
-            if (!File.Exists(IScripting.DllDir + "Cmd" + message + ".dll")) {
-                Player.Message(p, "File &9Cmd" + message + ".dll %Snot found."); return;
             }
             
-            string error = IScripting.Load("Cmd" + message);
+            string path = IScripting.DllPath(message);
+            if (!File.Exists(path)) {
+                Player.Message(p, "File &9{0} %Snot found.", path); return;
+            }
+            
+            string error = IScripting.Load(path);
             if (error != null) { Player.Message(p, error); return; }
             CommandPerms.Load();
             Player.Message(p, "Command was successfully loaded.");

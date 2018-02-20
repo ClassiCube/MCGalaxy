@@ -42,7 +42,8 @@ namespace MCGalaxy.Gui.Popups {
             
             string cmdName = txtCmdName.Text.Trim().ToLower();
             IScripting engine = radVB.Checked ? IScripting.VB : IScripting.CS;
-            if (engine.SourceFileExists(cmdName)) {
+            string path = engine.SourcePath(cmdName);
+            if (File.Exists(path)) {
                 MessageBox.Show("Command already exists", "", MessageBoxButtons.OK);
                 return;
             }
@@ -59,37 +60,38 @@ namespace MCGalaxy.Gui.Popups {
 
         void btnLoad_Click(object sender, EventArgs e) {
             List<Command> commands = null;
+            string fileName;
             using (FileDialog dialog = new OpenFileDialog()) {
                 dialog.RestoreDirectory = true;
                 dialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                fileName = dialog.FileName;
+            }
+            
+            if (fileName.CaselessEnds(".dll")) {
+                byte[] data = File.ReadAllBytes(fileName);
+                Assembly lib = Assembly.Load(data);
+                commands = IScripting.LoadTypes<Command>(lib);
+            } else {
+                IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
+                if (!File.Exists(fileName)) return;
+                
+                CompilerParameters args = new CompilerParameters();
+                args.GenerateInMemory = true;
+                var result = engine.CompileSource(File.ReadAllText(fileName), args);
+                if (result == null) { MessageBox.Show("Error compiling files"); return; }
 
-                string fileName = dialog.FileName;
-                if (fileName.EndsWith(".dll")) {
-                    byte[] data = File.ReadAllBytes(fileName);
-                    Assembly lib = Assembly.Load(data);
-                    commands = IScripting.LoadTypes<Command>(lib);
-                } else {
-                    IScripting engine = fileName.EndsWith(".cs") ? IScripting.CS : IScripting.VB;
-                    if (!File.Exists(fileName)) return;
-                    
-                    CompilerParameters args = new CompilerParameters();
-                    args.GenerateInMemory = true;
-                    var result = engine.CompileSource(File.ReadAllText(fileName), args);
-                    if (result == null) { MessageBox.Show("Error compiling files"); return; }
-
-                    if (result.Errors.HasErrors) {
-                        foreach (CompilerError err in result.Errors) {
-                            Logger.Log(LogType.Warning, "Error #" + err.ErrorNumber);
-                            Logger.Log(LogType.Warning, "Message: " + err.ErrorText);
-                            Logger.Log(LogType.Warning, "Line: " + err.Line);
-                            Logger.Log(LogType.Warning, "=================================");
-                        }
-                        MessageBox.Show("Error compiling from source. Check logs for more details.");
-                        return;
+                if (result.Errors.HasErrors) {
+                    foreach (CompilerError err in result.Errors) {
+                        Logger.Log(LogType.Warning, "Error #" + err.ErrorNumber);
+                        Logger.Log(LogType.Warning, "Message: " + err.ErrorText);
+                        Logger.Log(LogType.Warning, "Line: " + err.Line);
+                        Logger.Log(LogType.Warning, "=================================");
                     }
-                    commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
+                    MessageBox.Show("Error compiling from source. Check logs for more details.");
+                    return;
                 }
+                commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
             }
 
             if (commands == null) { MessageBox.Show("Error compiling files"); return; }

@@ -269,7 +269,6 @@ namespace MCGalaxy {
             } else {
                 raw = (BlockRaw)Block.Convert(block);
             }
-            if (!hasCustomBlocks) raw = Block.ConvertCPE(raw); // client doesn't support CPE
             
             // Custom block replaced a core block
             if (!hasBlockDefs && raw < Block.CpeCount) {
@@ -277,6 +276,7 @@ namespace MCGalaxy {
                 if (def != null) raw = def.FallBack;
             }
             
+            if (!hasCustomBlocks) raw = Block.ConvertCPE(raw); // doesn't support CPE blocks            
             buffer[7] = raw;
             Socket.SendLowPriority(buffer);
         }
