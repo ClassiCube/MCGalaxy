@@ -42,19 +42,19 @@ namespace MCGalaxy
 {{
 \tpublic class Cmd{0} : Command
 \t{{
-\t\t// The command's name, in all lowercase.  What you'll be putting behind the slash when using it.
+\t\t// The command's name (what you put after a slash to use this command)
 \t\tpublic override string name {{ get {{ return ""{1}""; }} }}
 
-\t\t// Command's shortcut (please take care not to use an existing one, or you may have issues.
+\t\t// Command's shortcut (please take care not to use an existing one, or you may have issues.)
 \t\tpublic override string shortcut {{ get {{ return """"; }} }}
 
-\t\t// Determines which submenu the command displays in under /help.
+\t\t// Determines which submenu this command displays in under /help.
 \t\tpublic override string type {{ get {{ return ""other""; }} }}
 
 \t\t// Determines whether or not this command can be used in a museum. Block/map altering commands should be made false to avoid errors.
 \t\tpublic override bool museumUsable {{ get {{ return false; }} }}
 
-\t\t// Determines the command's default rank. Valid values are:
+\t\t// Determines the default rank required to use this command. Valid values are:
 \t\t// LevelPermission.Nobody, LevelPermission.Banned, LevelPermission.Guest
 \t\t// LevelPermission.Builder, LevelPermission.AdvBuilder, LevelPermission.Operator, LevelPermission.Admin
 \t\tpublic override LevelPermission defaultRank {{ get {{ return LevelPermission.Banned; }} }}
@@ -99,35 +99,35 @@ Namespace MCGalaxy
 \tPublic Class Cmd{0}
 \t\tInherits Command
 
-' The command's name, IN ALL LOWERCASE. What you'll be putting behind the slash when using it.
+' The command's name (what you put after a slash to use this command)
 \t\tPublic Overrides ReadOnly Property name() As String
 \t\t\tGet
 \t\t\t\tReturn ""{1}""
 \t\t\tEnd Get
 \t\tEnd Property
 
-' Command's shortcut (please take care not to use an existing one, or you may have issues.
+' Command's shortcut (please take care not to use an existing one, or you may have issues.)
 \t\tPublic Overrides ReadOnly Property shortcut() As String
 \t\t\tGet
 \t\t\t\tReturn """"
 \t\t\tEnd Get
 \t\tEnd Property
 
-' Determines which submenu the command displays in under /help.   
+' Determines which submenu this command displays in under /help.   
 \t\tPublic Overrides ReadOnly Property type() As String
 \t\t\tGet
 \t\t\t\tReturn ""other""
 \t\t\tEnd Get
 \t\t End Property
 
-' Determines whether or not this command can be used in a museum.  Block/map altering commands should be made false to avoid errors.
+' Determines whether or not this command can be used in a museum. Block/map altering commands should be made false to avoid errors.
 \t\tPublic Overrides ReadOnly Property museumUsable() As Boolean
 \t\t\tGet
 \t\t\t\tReturn False
 \t\t\tEnd Get
 \t\tEnd Property
 
-' Determines the command's default rank. Valid values are:
+' Determines the default rank required to use this command. Valid values are:
 ' LevelPermission.Nobody, LevelPermission.Banned, LevelPermission.Guest
 ' LevelPermission.Builder, LevelPermission.AdvBuilder, LevelPermission.Operator, LevelPermission.Admin
 \t\tPublic Overrides ReadOnly Property defaultRank() As LevelPermission

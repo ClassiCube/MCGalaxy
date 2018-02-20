@@ -49,7 +49,7 @@ namespace MCGalaxy.Gui.Popups {
             }
             
             try {
-                engine.CreateNew(cmdName);
+                engine.CreateNew(path, cmdName);
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 MessageBox.Show("An error occurred creating the class file.", "", MessageBoxButtons.OK);

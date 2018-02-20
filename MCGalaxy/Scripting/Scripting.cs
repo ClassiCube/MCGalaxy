@@ -50,7 +50,7 @@ namespace MCGalaxy.Scripting {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
             if (compiler == null) {
                 Logger.Log(LogType.Warning, 
-                           "WARNING: Provider {0} is missing, you will be unable to compile {1} commands.", 
+                           "WARNING: {0} compiler is missing, you will be unable to compile {1} commands.", 
                            ProviderName, Ext);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
@@ -60,9 +60,7 @@ namespace MCGalaxy.Scripting {
         public static string PluginPath(string name) { return "plugins/" + name + ".dll"; }
         public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
         
-        public void CreateNew(string cmdName) {
-            if (!Directory.Exists(SourceDir))
-                Directory.CreateDirectory(SourceDir);
+        public void CreateNew(string path, string cmdName) {
             cmdName = cmdName.ToLower();
             
             string syntax = CommandSkeleton;
@@ -72,9 +70,9 @@ namespace MCGalaxy.Scripting {
             syntax = syntax.Replace("\n", Environment.NewLine);
             syntax = String.Format(syntax, cmdName.Capitalize(), cmdName);
             
-            string path = SourceDir + "Cmd" + cmdName + Ext;
-            using (StreamWriter sw = new StreamWriter(path))
+            using (StreamWriter sw = new StreamWriter(path)) {
                 sw.WriteLine(syntax);
+            }
         }
 
         public bool Compile(string srcPath, string dstPath) {

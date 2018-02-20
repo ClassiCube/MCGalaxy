@@ -37,7 +37,7 @@ namespace MCGalaxy.Games {
             string toSend = "&9- to team - " + source.ColoredName + ": &f" + message;
             foreach (string name in Members) {
                 Player p = PlayerInfo.FindExact(name);
-                if (p == null) continue;
+                if (p == null || !MCGalaxy.Chat.NotIgnoring(p, source)) continue;
                 Player.Message(p, toSend);
             }
         }

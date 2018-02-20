@@ -46,9 +46,10 @@ namespace MCGalaxy.Games {
                 string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
                 
                 foreach (Player pl in players) {
-                    if (!pl.level.name.CaselessEq(MapName)) continue;
-                    if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected)
+                    if (!pl.level.name.CaselessEq(MapName) || !Chat.NotIgnoring(pl, p)) continue;
+                    if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected) {
                         pl.SendMessage(p.ColoredName + type + message.Substring(1));
+                    }
                 }
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
