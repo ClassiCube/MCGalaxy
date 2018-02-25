@@ -34,7 +34,8 @@ namespace MCGalaxy.Commands.World {
             type = type.ToLower();
             Level lvl = p.level;
             
-            if (CmdEnvironment.Handle(p, type, arg, lvl.Config, lvl.ColoredName)) return;
+            Predicate<Player> selector = pl => pl.level == lvl;
+            if (CmdEnvironment.Handle(p, selector, type, arg, lvl.Config, lvl.ColoredName)) return;
             Player.MessageLines(p, envHelp);
         }
 

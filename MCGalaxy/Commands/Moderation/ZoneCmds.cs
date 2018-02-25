@@ -113,6 +113,7 @@ namespace MCGalaxy.Commands.Moderation {
             ColorDesc desc = default(ColorDesc);
             string opt = args[2], value = args[3];
             
+            Predicate<Player> selector = pl => pl.ZoneIn == zone;
             if (opt.CaselessEq("col")) {
                 if (!CommandParser.GetHex(p, value, ref desc)) return;
                 
@@ -128,7 +129,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (opt.CaselessEq("motd")) {
                 zone.Config.MOTD = value;
                 OnChangedZone(zone);
-            } else if (CmdEnvironment.Handle(p, opt, value, zone.Config, "zone " + zone.ColoredName)) {
+            } else if (CmdEnvironment.Handle(p, selector, opt, value, zone.Config, "zone " + zone.ColoredName)) {
                 OnChangedZone(zone);
             }  else {
                 Player.Message(p, "?????");

@@ -126,32 +126,35 @@ namespace MCGalaxy {
         }
 
         
-        internal static void UpdateWeather(Level lvl, byte weather) {
+        internal static void UpdateWeather(Predicate<Player> selector, byte weather) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.Supports(CpeExt.EnvWeatherType)) continue;
+                if (!selector(pl) || !pl.Supports(CpeExt.EnvWeatherType)) continue;
                 pl.Send(Packet.EnvWeatherType(weather));
+                if (pl.ZoneIn != null) pl.OnChangedZone();
             }
         }
         
-        internal static void UpdateAppearance(Level lvl, EnvProp prop, int value) {
+        internal static void UpdateAppearance(Predicate<Player> selector, EnvProp prop, int value) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != lvl) continue;
+                if (!selector(pl)) continue;
                 
                 if (pl.Supports(CpeExt.EnvMapAspect)) {
                     pl.Send(Packet.EnvMapProperty(prop, value));
                 } else {
                     pl.SendCurrentMapAppearance();
                 }
+                if (pl.ZoneIn != null) pl.OnChangedZone();
             }
         }
         
-        internal static void UpdateColor(Level lvl, byte type, string hex) {
+        internal static void UpdateColor(Predicate<Player> selector, byte type, string hex) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.Supports(CpeExt.EnvColors)) continue;
+                if (!selector(pl) || !pl.Supports(CpeExt.EnvColors)) continue;
                 pl.SendEnvColor(type, hex);
+                if (pl.ZoneIn != null) pl.OnChangedZone();
             }
         }
     }
