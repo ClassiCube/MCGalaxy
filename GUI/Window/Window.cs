@@ -90,7 +90,6 @@ namespace MCGalaxy.Gui {
         }
         
         void InitServer() {
-            Server s = new Server();
             Logger.LogHandler += LogMessage;
             Updater.NewerVersionDetected += LogNewerVersionDetected;
 
@@ -207,7 +206,7 @@ namespace MCGalaxy.Gui {
         void SettingsUpdate() {
             if (Server.shuttingDown) return;
             
-            if (main_txtLog.InvokeRequired) {
+            if (InvokeRequired) {
                 Invoke(new VoidDelegate(SettingsUpdate));
             } else {
                 Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
@@ -232,7 +231,7 @@ namespace MCGalaxy.Gui {
             }
 
             // Update the data source and control
-            pc = new PlayerCollection();          
+            pc = new PlayerCollection();
             foreach (Player pl in players) { pc.Add(pl); }
             main_Players.DataSource = pc;
             

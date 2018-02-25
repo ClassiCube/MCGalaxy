@@ -116,7 +116,7 @@ namespace MCGalaxy.Blocks.Physics {
             CheckAt(lvl, x, y, (ushort)(z + 1));
             CheckAt(lvl, x, y, (ushort)(z - 1));
             CheckAt(lvl, x, (ushort)(y + 1), z);
-            // ommission of y-1 to match original behaviour
+            // NOTE: omission of y-1 to match original behaviour
         }
         
         internal static void CheckAt(Level lvl, ushort x, ushort y, ushort z) {

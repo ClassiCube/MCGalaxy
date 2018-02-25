@@ -491,7 +491,7 @@ namespace MCGalaxy {
         
         public void UpdateCustomBlock(byte raw, BlockDefinition def) {
             CustomBlockDefs[raw] = def;
-            BlockID block = Block.FromRaw(raw);            
+            BlockID block = Block.FromRaw(raw);
             UpdateBlockHandler(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
         }

@@ -139,12 +139,7 @@ namespace MCGalaxy.Gui.Components {
         }
 
         /// <summary> Scrolls to the end of the log </summary>
-        public void ScrollToEnd(int startIndex) {
-            if ( InvokeRequired ) {
-                Invoke((MethodInvoker)(() => ScrollToEnd(startIndex)));
-                return;
-            }
-            
+        internal void ScrollToEnd(int startIndex) {
             int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
             for (int i = 0; i < lines; i++) {
                 SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);

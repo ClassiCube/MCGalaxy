@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui {
         void AppendPlayerStatus(string text) {
             if (InvokeRequired) {
                 Action<string> d = AppendPlayerStatus;
-                Invoke(d, new object[] { text, true });
+                Invoke(d, new object[] { text });
             } else {
                 pl_statusBox.AppendText(text + Environment.NewLine);
             }

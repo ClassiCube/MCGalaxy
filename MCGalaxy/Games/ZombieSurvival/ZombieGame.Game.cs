@@ -44,11 +44,12 @@ namespace MCGalaxy.Games {
             if (message[0] == '~' && message.Length > 1) {
                 Player[] players = PlayerInfo.Online.Items;
                 string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
+                string toSend = p.ColoredName + type + message.Substring(1);
                 
                 foreach (Player pl in players) {
                     if (!pl.level.name.CaselessEq(MapName) || !Chat.NotIgnoring(pl, p)) continue;
                     if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected) {
-                        pl.SendMessage(p.ColoredName + type + message.Substring(1));
+                        pl.SendMessage(toSend);
                     }
                 }
                 return true;
