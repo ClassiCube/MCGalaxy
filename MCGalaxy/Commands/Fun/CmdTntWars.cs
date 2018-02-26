@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can use admin commands for tntwars") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage TNT wars") }; }
         }
         bool NoTntZone = false;
 
@@ -183,7 +183,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "TNT Wars Rules:");
                 SendRules(p); return;
             }
-            if (!HasExtraPerm(p, 1)) return;
+            if (!CheckExtraPerm(p, 1)) return;
             
             switch (text[1]) {
                 case "all":
@@ -312,9 +312,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void DoSetup(Player p, string[] text) {
-            if (!HasExtraPerm(p, 1)) {
-                Player.Message(p, "Sorry, you aren't a high enough rank for that!"); return;
-            }
+            if (!CheckExtraPerm(p, 1)) return;
             
             TntWarsGame it = TntWarsGame.FindFromGameNumber(p.CurrentTntGameNumber);
             if (it == null && text[1] != "new" && text[1] != "n") {

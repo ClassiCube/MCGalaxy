@@ -381,15 +381,15 @@ namespace MCGalaxy {
             
             for (EnvProp i = 0; i < EnvProp.Max; i++) {
                 int value = level.Config.GetEnvProp(i);
-                if (i < EnvProp.EdgeBlock) {
-                    if (zone != null && zone.Config.GetEnvProp(i) != -1) {
-                        value = zone.Config.GetEnvProp(i);
-                    }
-                } else {
+                if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
                     }
-                    if (!hasBlockDefs) value = level.RawFallback((byte)value);
+                    if (!hasBlockDefs) value = level.RawFallback((byte)value);                    
+                } else {
+                    if (zone != null && zone.Config.GetEnvProp(i) != -1) {
+                        value = zone.Config.GetEnvProp(i);
+                    }
                 }
                 if (Supports(CpeExt.EnvMapAspect)) Send(Packet.EnvMapProperty(i, value));                
             }

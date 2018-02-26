@@ -82,29 +82,6 @@ namespace MCGalaxy.Commands.Building {
             
             Help(p); return Block.Invalid;
         }
-        
-        bool CheckCommand(Player p, string message) {
-            bool allCmds = HasExtraPerm(p, 1);
-            string[] parts = message.SplitSpaces(2);
-            string alias = parts[0], cmdArgs = "";
-            Command.Search(ref alias, ref cmdArgs);
-            
-            foreach (Command cmd in Command.all.commands) {
-                if (p.group.CanExecute(cmd) && (allCmds || !cmd.type.CaselessContains("mod"))) continue;
-                
-                if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
-                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
-                }
-                if (cmd.shortcut.Length > 0 && IsCommand(message, cmd.shortcut)) {
-                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
-                }
-            }
-            return true;
-        }
-        
-        bool IsCommand(string message, string cmd) {
-            return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
-        }
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;

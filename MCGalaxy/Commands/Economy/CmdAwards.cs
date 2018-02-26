@@ -61,10 +61,12 @@ namespace MCGalaxy.Commands.Eco {
             if (plName.Length == 0) return Awards.AwardsList;
             
             List<Awards.Award> awards = new List<Awards.Award>();
-            foreach (string s in Awards.GetPlayerAwards(plName)) {
+            foreach (string name in Awards.GetPlayerAwards(plName)) {
                 Awards.Award award = new Awards.Award();
-                award.Name = s;
-                award.Description = Awards.GetDescription(s);
+                award.Name = name;
+                
+                Awards.Award match = Awards.FindExact(name);
+                if (match != null) award.Description = match.Description;
                 awards.Add(award);
             }
             return awards;

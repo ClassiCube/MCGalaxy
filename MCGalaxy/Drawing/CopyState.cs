@@ -187,8 +187,8 @@ namespace MCGalaxy.Drawing {
                 ushort y = BitConverter.ToUInt16(raw, i + 2);
                 ushort z = BitConverter.ToUInt16(raw, i + 4);
                 
-                ushort block = raw[i + 6];
-                Set(block, x - X, y - Y, z - Z);
+                byte rawBlock = raw[i + 6];
+                Set(rawBlock, x - X, y - Y, z - Z);
             }
             UsedBlocks = Volume;
             OriginX = X; OriginY = Y; OriginZ = Z;

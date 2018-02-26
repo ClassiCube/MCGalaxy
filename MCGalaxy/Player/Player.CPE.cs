@@ -129,8 +129,9 @@ namespace MCGalaxy {
         
         public string GetTextureUrl() {
             string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
-            if (url.Length == 0)
+            if (url.Length == 0) {
                 url = ServerConfig.DefaultTexture.Length == 0 ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
+            }
             return url;
         }
 

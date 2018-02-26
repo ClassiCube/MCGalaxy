@@ -47,7 +47,7 @@ namespace MCGalaxy {
 
         // Environment settings
         const int envRange = 0xFFFFFF;
-        [ConfigInt("Weather", "Env", 0, 0, 2)]
+        [ConfigInt("Weather", "Env", 0, -1, 2)]
         public int Weather = -1;
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
         [ConfigInt("EdgeLevel", "Env", -1, -envRange, envRange)]

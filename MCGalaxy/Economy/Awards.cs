@@ -161,8 +161,7 @@ namespace MCGalaxy.Eco {
         
         
         #region Awards management
-        
-        /// <summary> Adds a new award with the given name. </summary>
+
         public static bool Add(string name, string desc) {
             if (Exists(name)) return false;
 
@@ -172,35 +171,24 @@ namespace MCGalaxy.Eco {
             AwardsList.Add(award);
             return true;
         }
-        
-        /// <summary> Removes the award with the given name. </summary>
+
         public static bool Remove(string name) {
-            foreach (Award award in AwardsList) {
-                if (!award.Name.CaselessEq(name)) continue;
-                AwardsList.Remove(award);
-                return true;
-            }
-            return false;
+            Award award = FindExact(name);
+            if (award == null) return false;
+            
+            AwardsList.Remove(award);
+            return true;
         }
+
+        public static bool Exists(string name) { return FindExact(name) != null; }
         
-        /// <summary> Whether an award with that name exists. </summary>
-        public static bool Exists(string name) {
-            foreach (Award award in AwardsList)
-                if (award.Name.CaselessEq(name)) return true;
-            return false;
-        }
-        
-        public static string FindExact(string name) {
-            foreach (Award award in AwardsList)
-                if (award.Name.CaselessEq(name)) return award.Name;
+        public static Award FindExact(string name) {
+        	foreach (Award award in AwardsList) {
+                if (award.Name.CaselessEq(name)) return award;
+        	}
             return null;
         }
 
-        public static string GetDescription(string name) {
-            foreach (Award award in AwardsList)
-                if (award.Name.CaselessEq(name)) return award.Description;
-            return "";
-        }
         #endregion
     }
 }

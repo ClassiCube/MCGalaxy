@@ -57,12 +57,12 @@ namespace MCGalaxy.Levels.IO {
             ushort x, y, z;
             byte[] blocks = lvl.blocks;
             for (int i = 0; i < blocks.Length; i++) {
-                byte block = blocks[i];
-                if (block <= Block.CpeMaxBlock) continue;
+                byte raw = blocks[i];
+                if (raw <= Block.CpeMaxBlock) continue;
                 
                 blocks[i] = Block.custom_block;
                 lvl.IntToPos(i, out x, out y, out z);
-                lvl.SetExtTileNoCheck(x, y, z, block);
+                lvl.SetExtTileNoCheck(x, y, z, raw);
             }
         }
     }

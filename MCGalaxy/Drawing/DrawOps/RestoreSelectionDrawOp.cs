@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops {
 
@@ -49,9 +50,9 @@ namespace MCGalaxy.Drawing.Ops {
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                ushort block = blocks[x + width * (z + y * length)];
+                BlockID block = blocks[x + width * (z + y * length)];
                 if (block == Block.custom_block) {
-                    block = (ushort)(Block.Extended | Source.GetExtTileNoCheck(x, y, z));
+                    block = (BlockID)(Block.Extended | Source.GetExtTileNoCheck(x, y, z));
                 }
                 output(Place(x, y, z, block));
             }
