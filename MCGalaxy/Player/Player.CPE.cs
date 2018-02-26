@@ -101,33 +101,18 @@ namespace MCGalaxy {
         }
         
         string lastUrl = "";
-        public void SendCurrentMapAppearance() {
+        public void SendCurrentTextures() {
             byte side = (byte)level.Config.EdgeBlock;
             byte edge = (byte)level.Config.HorizonBlock;
             if (!hasBlockDefs) side = level.RawFallback(side);
             if (!hasBlockDefs) edge = level.RawFallback(edge);
             
-            if (Supports(CpeExt.EnvMapAspect)) {
-                string url = GetTextureUrl();
+            string url = GetTextureUrl();
+            if (Supports(CpeExt.EnvMapAspect)) {                
                 // reset all other textures back to client default.
                 if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
                 Send(Packet.EnvMapUrl(url, hasCP437));
-                
-                Send(Packet.EnvMapProperty(EnvProp.SidesBlock, side));
-                Send(Packet.EnvMapProperty(EnvProp.EdgeBlock, edge));               
-                Send(Packet.EnvMapProperty(EnvProp.EdgeLevel, level.Config.EdgeLevel));
-                Send(Packet.EnvMapProperty(EnvProp.SidesOffset, level.Config.SidesOffset));
-                Send(Packet.EnvMapProperty(EnvProp.CloudsLevel, level.Config.CloudsHeight));
-                
-                Send(Packet.EnvMapProperty(EnvProp.MaxFog, level.Config.MaxFogDistance));
-                Send(Packet.EnvMapProperty(EnvProp.CloudsSpeed, level.Config.CloudsSpeed));
-                Send(Packet.EnvMapProperty(EnvProp.WeatherSpeed, level.Config.WeatherSpeed));
-                Send(Packet.EnvMapProperty(EnvProp.WeatherFade, level.Config.WeatherFade));
-                Send(Packet.EnvMapProperty(EnvProp.ExpFog, level.Config.ExpFog ? 1 : 0));
-                Send(Packet.EnvMapProperty(EnvProp.SkyboxHorSpeed, level.Config.SkyboxHorSpeed));
-                Send(Packet.EnvMapProperty(EnvProp.SkyboxVerSpeed, level.Config.SkyboxVerSpeed));
             } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
-                string url = GetTextureUrl();
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
                     Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel,
@@ -137,7 +122,7 @@ namespace MCGalaxy {
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (Supports(CpeExt.EnvMapAppearance)) {
-                string url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
+                url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, level.Config.EdgeLevel, hasCP437));
             }
         }
@@ -148,13 +133,7 @@ namespace MCGalaxy {
                 url = ServerConfig.DefaultTexture.Length == 0 ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
             return url;
         }
-        
-        public void SendCurrentEnvColors() {
-            for (int i = 0; i <= 4; i++) {
-                SendEnvColor((byte)i, level.Config.GetColor(i));
-            }
-        }
-        
+
         public void SendEnvColor(byte type, string hex) {
             if (String.IsNullOrEmpty(hex)) {
                 Send(Packet.EnvColor(type, -1, -1, -1)); return;
@@ -235,6 +214,8 @@ namespace MCGalaxy {
         CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
         WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
         SidesOffset = 9, SkyboxHorSpeed = 10, SkyboxVerSpeed = 11,
+        
+        Max,
     }
     
     public enum EntityProp : byte {

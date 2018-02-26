@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2011 MCGalaxy
+    Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -27,6 +27,7 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message) {
             if (!Directory.Exists("extra/text/")) 
                 Directory.CreateDirectory("extra/text");
+            
             if (message.Length == 0) {
                 string[] files = Directory.GetFiles("extra/text", "*.txt");
                 string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
@@ -38,17 +39,11 @@ namespace MCGalaxy.Commands.Info {
                     Player.Message(p, all);
                 }
             } else {
-                Player who = p;
-                string[] args = message.SplitSpaces();
-                if (args.Length > 1) {
-                    who = PlayerInfo.FindMatches(p, args[1]);
-                    if (who == null) return;
-                }
-                args[0] = Path.GetFileName(args[0]);
+                message = Path.GetFileName(message);
                 
-                if (File.Exists("extra/text/" + args[0] + ".txt")) {
-                    string[] lines = File.ReadAllLines("extra/text/" + args[0] + ".txt");
-                    Player.MessageLines(who, lines);
+                if (File.Exists("extra/text/" + message + ".txt")) {
+                    string[] lines = File.ReadAllLines("extra/text/" + message + ".txt");
+                    Player.MessageLines(p, lines);
                 } else {
                     Player.Message(p, "File specified doesn't exist");
                 }
@@ -56,9 +51,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/view [file] [player] - Views [file]'s contents");
-            Player.Message(p, "/view by itself will list all files you can view");
-            Player.Message(p, "If [player] is given, that player is shown the file");
+            Player.Message(p, "%T/view %H- Lists all files you can view");
+            Player.Message(p, "%T/view [file] %H- Views [file]'s contents");
         }
     }
 }

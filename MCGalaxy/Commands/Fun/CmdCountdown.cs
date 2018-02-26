@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Fun {
             if(!int.TryParse(x, out width) || !int.TryParse(y, out height) || !int.TryParse(z, out length)) {
                 width = 32; height = 32; length = 32;
             }
-            if (width < 32 || !MapGen.OkayAxis(width)) width = 32;
+            if (width < 32  || !MapGen.OkayAxis(width)) width = 32;
             if (height < 32 || !MapGen.OkayAxis(height)) height = 32;
             if (length < 32 || !MapGen.OkayAxis(length)) length = 32;
             

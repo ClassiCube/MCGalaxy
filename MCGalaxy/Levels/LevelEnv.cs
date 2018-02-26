@@ -143,7 +143,7 @@ namespace MCGalaxy {
                 if (pl.Supports(CpeExt.EnvMapAspect)) {
                     pl.Send(Packet.EnvMapProperty(prop, value));
                 } else {
-                    pl.SendCurrentMapAppearance();
+                    pl.SendCurrentTextures();
                 }
                 if (pl.ZoneIn != null) pl.OnChangedZone();
             }

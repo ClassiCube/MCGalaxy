@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.CPE {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 string url = zip ? pl.level.Config.TexturePack : pl.level.Config.Terrain;
-                if (url.Length == 0) pl.SendCurrentMapAppearance();
+                if (url.Length == 0) pl.SendCurrentTextures();
             }
             SrvProperties.Save();
         }
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.CPE {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != p.level) continue;
-                pl.SendCurrentMapAppearance();
+                pl.SendCurrentTextures();
             }
             Level.SaveSettings(p.level);
         }

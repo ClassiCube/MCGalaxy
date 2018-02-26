@@ -379,6 +379,27 @@ namespace MCGalaxy {
                 if (Supports(CpeExt.EnvColors)) SendEnvColor((byte)i, col);
             }
             
+            for (EnvProp i = 0; i < EnvProp.Max; i++) {
+                int value = level.Config.GetEnvProp(i);
+                if (i < EnvProp.EdgeBlock) {
+                    if (zone != null && zone.Config.GetEnvProp(i) != -1) {
+                        value = zone.Config.GetEnvProp(i);
+                    }
+                } else {
+                    if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
+                        value = zone.Config.GetEnvProp(i);
+                    }
+                    if (!hasBlockDefs) value = level.RawFallback((byte)value);
+                }
+                if (Supports(CpeExt.EnvMapAspect)) Send(Packet.EnvMapProperty(i, value));                
+            }
+            
+            if (Supports(CpeExt.EnvWeatherType)) {
+                int weather = level.Config.Weather;
+                if (zone != null && zone.Config.Weather != -1) weather = zone.Config.Weather;
+                Send(Packet.EnvWeatherType((byte)weather));
+            }
+            
             // TODO: get rid of this
             Server.s.Log("I MOVED");
             if (ZoneIn != null) Server.s.Log(ZoneIn.ColoredName);

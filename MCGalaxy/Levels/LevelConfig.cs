@@ -142,6 +142,22 @@ namespace MCGalaxy {
             if (i == 4) return LightColor;
             return null;
         }
+        
+        public int GetEnvProp(EnvProp i) {
+            if (i == EnvProp.SidesBlock)     return EdgeBlock;
+            if (i == EnvProp.EdgeBlock)      return HorizonBlock;
+            if (i == EnvProp.EdgeLevel)      return EdgeLevel;
+            if (i == EnvProp.CloudsLevel)    return CloudsHeight;
+            if (i == EnvProp.MaxFog)         return MaxFogDistance;
+            if (i == EnvProp.CloudsSpeed)    return CloudsSpeed;
+            if (i == EnvProp.WeatherSpeed)   return WeatherSpeed;
+            if (i == EnvProp.WeatherFade)    return WeatherFade;
+            if (i == EnvProp.ExpFog)         return ExpFog ? 1 : 0;
+            if (i == EnvProp.SidesOffset)    return SidesOffset;
+            if (i == EnvProp.SkyboxHorSpeed) return SkyboxHorSpeed;
+            if (i == EnvProp.SkyboxVerSpeed) return SkyboxVerSpeed;
+            return -1;
+        }
     }
     
     public sealed class LevelConfig : AreaConfig {

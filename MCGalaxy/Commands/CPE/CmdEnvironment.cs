@@ -132,14 +132,8 @@ namespace MCGalaxy.Commands.CPE {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != lvl) continue;
-                pl.SendCurrentMapAppearance();
-                
-                if (pl.Supports(CpeExt.EnvColors)) {
-                    pl.SendCurrentEnvColors();
-                }
-                if (pl.Supports(CpeExt.EnvWeatherType)) {
-                    pl.Send(Packet.EnvWeatherType(0));
-                }
+                pl.SendCurrentTextures();
+                pl.OnChangedZone();
             }
             Level.SaveSettings(lvl);
         }

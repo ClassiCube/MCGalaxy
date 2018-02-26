@@ -50,12 +50,11 @@ namespace MCGalaxy.Core {
                 Player.Message(p, "You cannot use /fly on this map.");
                 p.isFlying = false;
             }
+
+            p.ZoneIn = null;
+            p.OnChangedZone();
             
-            if (p.Supports(CpeExt.EnvWeatherType))
-                p.Send(Packet.EnvWeatherType((byte)level.Config.Weather));
-            if (p.Supports(CpeExt.EnvColors))
-                p.SendCurrentEnvColors();
-            p.SendCurrentMapAppearance();
+            p.SendCurrentTextures();
             p.SendCurrentBlockPermissions();
             
             // TODO: unshow old zones here??
