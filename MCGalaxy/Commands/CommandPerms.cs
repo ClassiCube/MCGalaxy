@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,19 +33,30 @@ namespace MCGalaxy.Commands {
         public LevelPermission MinRank;
         
         /// <summary> Ranks specifically allowed to use the command. </summary>
-        public List<LevelPermission> Allowed = new List<LevelPermission>();
+        public List<LevelPermission> Allowed;
         
         /// <summary> Ranks specifically prevented from using the command. </summary>
-        public List<LevelPermission> Disallowed = new List<LevelPermission>();
+        public List<LevelPermission> Disallowed;
+        
+        public CommandPerms(string cmd, LevelPermission minRank, List<LevelPermission> allowed, 
+                            List<LevelPermission> disallowed) {
+            Init(cmd, minRank, allowed, disallowed);
+        }
+        
+        void Init(string cmd, LevelPermission minRank, List<LevelPermission> allowed, 
+                  List<LevelPermission> disallowed) {
+            CmdName = cmd; MinRank = minRank;
+            if (allowed == null) allowed = new List<LevelPermission>();
+            if (disallowed == null) disallowed = new List<LevelPermission>();
+            Allowed = allowed;
+            Disallowed = disallowed;
+        }
         
         /// <summary> Creates a copy of this instance. </summary>
         public CommandPerms Copy() {
-            CommandPerms perms = new CommandPerms();
-            perms.CmdName = CmdName;
-            perms.MinRank = MinRank;
-            perms.Allowed = new List<LevelPermission>(Allowed);
-            perms.Disallowed = new List<LevelPermission>(Disallowed);
-            return perms;
+            List<LevelPermission> allowed = new List<LevelPermission>(Allowed);
+            List<LevelPermission> disallowed = new List<LevelPermission>(Disallowed);
+            return new CommandPerms(CmdName, MinRank, allowed, disallowed);
         }
         
         static List<CommandPerms> list = new List<CommandPerms>();
@@ -60,7 +71,7 @@ namespace MCGalaxy.Commands {
             return null;
         }
 
-        /// <summary> Returns the lowest rank that can use the given command. </summary>        
+        /// <summary> Returns the lowest rank that can use the given command. </summary>
         public static LevelPermission MinPerm(Command cmd) {
             CommandPerms perms = Find(cmd.name);
             return perms == null ? cmd.defaultRank : perms.MinRank;
@@ -74,22 +85,17 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Sets the rank permissions for a given command. </summary>
         public static void Set(string cmd, LevelPermission min,
-                              List<LevelPermission> allowed, List<LevelPermission> disallowed) {
+                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             if (min > LevelPermission.Nobody) return;
             
             // add or replace existing
             CommandPerms perms = Find(cmd);
             if (perms == null) {
-                perms = new CommandPerms(); list.Add(perms);
+                perms = new CommandPerms(cmd, min, allowed, disallowed);
+                list.Add(perms);
+            } else {
+                perms.Init(cmd, min, allowed, disallowed);
             }
-            
-            if (allowed == null) allowed = new List<LevelPermission>();
-            if (disallowed == null) disallowed = new List<LevelPermission>();
-            
-            perms.CmdName = cmd;
-            perms.MinRank = min;
-            perms.Allowed = allowed;
-            perms.Disallowed = disallowed;
         }
         
         
@@ -122,8 +128,8 @@ namespace MCGalaxy.Commands {
                 }
             }
             return commands;
-        }        
-                
+        }
+        
         public void MessageCannotUse(Player p) {
             StringBuilder builder = new StringBuilder("Only ");
             Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
@@ -163,7 +169,7 @@ namespace MCGalaxy.Commands {
         }
         
 
-        /// <summary> Loads the list of all command permissions. </summary>        
+        /// <summary> Loads the list of all command permissions. </summary>
         public static void Load() {
             foreach (Command cmd in Command.all.All()) {
                 Set(cmd.name, cmd.defaultRank, null, null);
@@ -180,7 +186,7 @@ namespace MCGalaxy.Commands {
                 grp.SetUsableCommands();
             }
         }
-                
+        
         static void ProcessLines(string[] lines) {
             string[] args = new string[4];
             foreach (string line in lines) {
@@ -188,13 +194,13 @@ namespace MCGalaxy.Commands {
                 //Name : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
-                try {                    
-                    LevelPermission minRank = (LevelPermission)int.Parse(args[1]);
+                try {
+                    LevelPermission min = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
                     
-                    List<LevelPermission> allow = ExpandPerms(allowRaw);
-                    List<LevelPermission> disallow = ExpandPerms(disallowRaw);
-                    Set(args[0], minRank, allow, disallow);
+                    List<LevelPermission> allowed = ExpandPerms(allowRaw);
+                    List<LevelPermission> disallowed = ExpandPerms(disallowRaw);
+                    Set(args[0], min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;
                 }

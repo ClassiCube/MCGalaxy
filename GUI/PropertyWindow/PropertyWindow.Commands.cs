@@ -80,11 +80,7 @@ namespace MCGalaxy.Gui {
             
             // fix for when command is added to server but doesn't have permissions defined
             if (commandPermsOrig == null) {
-                commandPermsOrig = new CommandPerms();
-                commandPermsOrig.CmdName = cmdName;
-                commandPermsOrig.MinRank = cmd.defaultRank;
-                commandPermsOrig.Allowed = new List<LevelPermission>();
-                commandPermsOrig.Disallowed = new List<LevelPermission>();
+                commandPermsOrig = new CommandPerms(cmdName, cmd.defaultRank, null, null);
             }
 
             commandSupressEvents = true;

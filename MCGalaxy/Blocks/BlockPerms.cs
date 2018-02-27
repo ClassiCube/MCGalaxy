@@ -35,19 +35,30 @@ namespace MCGalaxy.Blocks {
         public LevelPermission MinRank;
         
         /// <summary> Ranks specifically allowed to use the block </summary>
-        public List<LevelPermission> Allowed = new List<LevelPermission>();
+        public List<LevelPermission> Allowed;
         
         /// <summary> Ranks specifically prevented from using the block. </summary>
-        public List<LevelPermission> Disallowed = new List<LevelPermission>();
+        public List<LevelPermission> Disallowed;
+        
+        public BlockPerms(BlockID id, LevelPermission minRank, List<LevelPermission> allowed, 
+                            List<LevelPermission> disallowed) {
+            Init(id, minRank, allowed, disallowed);
+        }
+        
+        void Init(BlockID id, LevelPermission minRank, List<LevelPermission> allowed, 
+                  List<LevelPermission> disallowed) {
+            ID = id; MinRank = minRank;
+            if (allowed == null) allowed = new List<LevelPermission>();
+            if (disallowed == null) disallowed = new List<LevelPermission>();
+            Allowed = allowed;
+            Disallowed = disallowed;
+        }
         
         /// <summary> Creates a copy of this instance. </summary>
         public BlockPerms Copy() {
-            BlockPerms perms = new BlockPerms();
-            perms.ID = ID;
-            perms.MinRank = MinRank;
-            perms.Allowed = new List<LevelPermission>(Allowed);
-            perms.Disallowed = new List<LevelPermission>(Disallowed);
-            return perms;
+            List<LevelPermission> allowed = new List<LevelPermission>(Allowed);
+            List<LevelPermission> disallowed = new List<LevelPermission>(Disallowed);
+            return new BlockPerms(ID, MinRank, allowed, disallowed);
         }
         
         public static BlockPerms[] List = new BlockPerms[Block.ExtendedCount];
@@ -146,41 +157,38 @@ namespace MCGalaxy.Blocks {
                     block = Block.Parse(null, args[0]);
                 }
                 if (block == Block.Invalid) continue;
-                
-                BlockPerms perms = new BlockPerms();
-                perms.ID = block;
+
                 try {
-                    perms.MinRank = (LevelPermission)int.Parse(args[1]);
+                    LevelPermission min = (LevelPermission)int.Parse(args[1]);
                     string disallowRaw = args[2], allowRaw = args[3];
                     
-                    perms.Allowed = CommandPerms.ExpandPerms(allowRaw);
-                    perms.Disallowed = CommandPerms.ExpandPerms(disallowRaw);
+                    List<LevelPermission> allowed = CommandPerms.ExpandPerms(allowRaw);
+                    List<LevelPermission> disallowed = CommandPerms.ExpandPerms(disallowRaw);
+                    List[block] = new BlockPerms(block, min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the block " + line);
                     continue;
                 }
-                List[perms.ID] = perms;
             }
         }       
         
         static void SetDefaultPerms() {
             for (BlockID block = 0; block < Block.ExtendedCount; block++) {
-                BlockPerms perms = new BlockPerms();
-                perms.ID = block;
                 BlockProps props = Block.Props[block];
+                LevelPermission min;
                 
                 if (block == Block.Invalid) {
-                    perms.MinRank = LevelPermission.Admin;
+                    min = LevelPermission.Admin;
                 } else if (props.OPBlock) {
-                    perms.MinRank = LevelPermission.Operator;
+                    min = LevelPermission.Operator;
                 } else if (props.IsDoor || props.IsTDoor || props.oDoorBlock != Block.Invalid) {
-                    perms.MinRank = LevelPermission.Builder;
+                    min = LevelPermission.Builder;
                 } else if (props.IsPortal || props.IsMessageBlock) {
-                    perms.MinRank = LevelPermission.AdvBuilder;
+                    min = LevelPermission.AdvBuilder;
                 } else {
-                    perms.MinRank = DefaultPerm(block);
+                    min = DefaultPerm(block);
                 }
-                List[block] = perms;
+                List[block] = new BlockPerms(block, min, null, null);
             }
         }
         
