@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands.Fun {
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
-            byte amount = 0;
-            if (!CommandParser.GetByte(p, args[1], "Bounty amount", ref amount)) return;
+            int amount = 0;
+            if (!CommandParser.GetInt(p, args[1], "Bounty amount", ref amount, 1, 256)) return;
             
             if (p.money < amount) {
                 Player.Message(p, "You do not have enough " + ServerConfig.Currency + " to place such a large bountry."); return;

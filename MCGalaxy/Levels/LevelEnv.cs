@@ -33,7 +33,7 @@ namespace MCGalaxy {
         public static void SetWeather(Player p, string input, string area, ref int target) {
             byte value;
             if (IsResetString(input)) {
-                Player.Message(p, "Reset weather for {0} %Sto 0 (%SSun)", area);
+                Player.Message(p, "Reset weather for {0} %Sto 0 (Sun)", area);
                 value = 0;
             } else {
                 if (byte.TryParse(input, out value)) {
@@ -113,15 +113,17 @@ namespace MCGalaxy {
         }
         
         public static void SetBool(Player p, string value, string area,
-                                   string variable, bool defValue, ref bool target) {
+                                   string variable, int defValue, ref int target) {
             if (IsResetString(value)) {
                 Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
                 target = defValue;
             } else {
-                if (!CommandParser.GetBool(p, value, ref target)) return;
+                bool enabled = false;
+                if (!CommandParser.GetBool(p, value, ref enabled)) return;
                 
+                target = enabled ? 1 : 0;
                 Player.Message(p, "Set {0} for {1} %Sto {2}", variable,
-                               area, target ? "&aON" : "&cOFF");
+                               area, enabled ? "&aON" : "&cOFF");
             }
         }
 

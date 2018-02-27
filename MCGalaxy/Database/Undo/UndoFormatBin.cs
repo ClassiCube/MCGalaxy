@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Undo {
 
@@ -57,10 +58,15 @@ namespace MCGalaxy.Undo {
                     pos.Y = U16(temp, offset + 4);
                     pos.Z = U16(temp, offset + 6);
                     
-                    pos.Block = temp[offset + 8]; 
-                    if (pos.Block == Block.custom_block) pos.Block = temp[offset + 9];
-                    pos.NewBlock = temp[offset + 10]; 
-                    if (pos.NewBlock == Block.custom_block) pos.NewBlock = temp[offset + 11];
+                    pos.Block = temp[offset + 8];
+                    if (pos.Block == Block.custom_block) {
+                        pos.Block = (BlockID)(Block.Extended | temp[offset + 9]);
+                    }
+                    
+                    pos.NewBlock = temp[offset + 10];
+                    if (pos.NewBlock == Block.custom_block) {
+                        pos.NewBlock = (BlockID)(Block.Extended | temp[offset + 11]);
+                    }
                     args.Output(pos);
                 }
             }

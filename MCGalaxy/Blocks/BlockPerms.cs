@@ -192,9 +192,8 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        static LevelPermission DefaultPerm(int i) {
-            switch (i)
-            {
+        static LevelPermission DefaultPerm(BlockID block) {
+            switch (block) {
                 case Block.Bedrock:
                 case Block.Air_Flood:
                 case Block.Air_FloodDown:

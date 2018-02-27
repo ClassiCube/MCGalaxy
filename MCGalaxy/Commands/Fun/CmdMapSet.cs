@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Set build type to: " + value);
                 HUD.UpdateAllSecondary(Server.zombie);
             } else if (args[0].CaselessEq("minroundtime") || args[0].CaselessEq("minround")) {
-                byte time = GetRoundTime(p, args[1]);
+                int time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
                 if (time > p.level.Config.MaxRoundTime) {
@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.level.Config.MinRoundTime = time;
                 Player.Message(p, "Set min round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("maxroundtime") || args[0].CaselessEq("maxround")) {
-                byte time = GetRoundTime(p, args[1]);
+                int time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
                 if (time < p.level.Config.MinRoundTime) {
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.level.Config.MaxRoundTime = time;
                 Player.Message(p, "Set max round time to: " + time + " minutes");
             } else if (args[0].CaselessEq("roundtime") || args[0].CaselessEq("round")) {
-                byte time = GetRoundTime(p, args[1]);
+                int time = GetRoundTime(p, args[1]);
                 if (time == 0) return;
                 
                 p.level.Config.MinRoundTime = time;
@@ -99,10 +99,9 @@ namespace MCGalaxy.Commands.Fun {
             Level.SaveSettings(p.level);
         }
         
-        static byte GetRoundTime(Player p, string arg) {
-            byte time = 0;
-            if (!CommandParser.GetByte(p, arg, "Minutes", ref time, 1, 10)) return 0;
-            
+        static int GetRoundTime(Player p, string arg) {
+            int time = 0;
+            if (!CommandParser.GetInt(p, arg, "Minutes", ref time, 1, 10)) return 0;            
             return time;
         }
         

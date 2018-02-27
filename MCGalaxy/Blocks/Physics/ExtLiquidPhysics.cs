@@ -150,7 +150,7 @@ namespace MCGalaxy.Blocks.Physics {
                     BlockID block = C.Block;
                     LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
                     LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
-                    LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1),block);
+                    LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
                     LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                     if (!C.Data.HasWait) C.Data.Data = PhysicsArgs.RemoveFromChecks;
                     break;

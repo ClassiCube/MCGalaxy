@@ -107,8 +107,8 @@ namespace MCGalaxy.Commands.CPE {
                 LevelEnv.SetBlock(p, value, area, "sides block", Block.Bedrock, ref cfg.EdgeBlock);
                 LevelEnv.UpdateAppearance(selector, EnvProp.SidesBlock, cfg.EdgeBlock);
             } else if (opt == "expfog") {
-                LevelEnv.SetBool(p, value, area, "exp fog", false, ref cfg.ExpFog);
-                LevelEnv.UpdateAppearance(selector, EnvProp.ExpFog, cfg.ExpFog ? 1 : 0);
+                LevelEnv.SetBool(p, value, area, "exp fog", 0, ref cfg.ExpFog);
+                LevelEnv.UpdateAppearance(selector, EnvProp.ExpFog, cfg.ExpFog);
             } else if (opt == "skyboxhorspeed" || opt == "skyboxhor") {
                 LevelEnv.SetFloat(p, value, area, 1024, "skybox horizontal speed",
                                   0, ref cfg.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);

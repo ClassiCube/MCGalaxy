@@ -85,8 +85,8 @@ namespace MCGalaxy {
         [ConfigBlock("EdgeBlock", "Env", Block.Bedrock)]
         public BlockID EdgeBlock = Block.Invalid;
         /// <summary> Whether exponential fog mode is used client-side. </summary>
-        [ConfigBool("ExpFog", "Env", false)]
-        public bool ExpFog;
+        [ConfigBoolInt("ExpFog", "Env", 0)]
+        public int ExpFog = -1;
         [ConfigString("Texture", "Env", "", true, null, NetUtils.StringSize)]
         public string Terrain = "";
         [ConfigString("TexturePack", "Env", "", true, null, NetUtils.StringSize)]
@@ -123,7 +123,7 @@ namespace MCGalaxy {
             
             HorizonBlock = Block.Water;
             EdgeBlock = Block.Bedrock;
-            ExpFog = false;
+            ExpFog = 0;
             
             Terrain = "";
             TexturePack = "";
@@ -152,7 +152,7 @@ namespace MCGalaxy {
             if (i == EnvProp.CloudsSpeed)    return CloudsSpeed;
             if (i == EnvProp.WeatherSpeed)   return WeatherSpeed;
             if (i == EnvProp.WeatherFade)    return WeatherFade;
-            if (i == EnvProp.ExpFog)         return ExpFog ? 1 : 0;
+            if (i == EnvProp.ExpFog)         return ExpFog;
             if (i == EnvProp.SidesOffset)    return SidesOffset;
             if (i == EnvProp.SkyboxHorSpeed) return SkyboxHorSpeed;
             if (i == EnvProp.SkyboxVerSpeed) return SkyboxVerSpeed;

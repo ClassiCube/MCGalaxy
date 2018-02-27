@@ -4138,7 +4138,7 @@ namespace MCGalaxy.Gui
             // rank_numCopy
             // 
             this.rank_numCopy.Location = new System.Drawing.Point(85, 74);
-            this.rank_numMaps.Maximum = new decimal(new int[] {
+            this.rank_numCopy.Maximum = new decimal(new int[] {
                                     255,
                                     0,
                                     0,

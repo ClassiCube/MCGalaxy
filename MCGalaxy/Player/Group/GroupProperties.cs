@@ -102,7 +102,7 @@ namespace MCGalaxy {
                     temp.MOTD = value;
                     break;
                 case "osmaps":
-                    temp.OverseerMaps = byte.Parse(value);
+                    temp.OverseerMaps = int.Parse(value);
                     break;
                 case "prefix":
                     if (!String.IsNullOrEmpty(value))
@@ -114,7 +114,7 @@ namespace MCGalaxy {
                     }
                     break;
                 case "copyslots":
-                    temp.CopySlots = byte.Parse(value);
+                    temp.CopySlots = int.Parse(value);
                     break;
             }
         }

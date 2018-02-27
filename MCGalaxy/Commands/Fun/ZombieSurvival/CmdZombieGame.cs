@@ -138,8 +138,8 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
             
-            byte precision = 0;
-            if (!CommandParser.GetByte(p, args[2], "Hitbox detection", ref precision)) return;
+            int precision = 0;
+            if (!CommandParser.GetInt(p, args[2], "Hitbox detection", ref precision, 0, 256)) return;
             
             ZSConfig.HitboxPrecision = precision;
             Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
@@ -152,8 +152,8 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
             
-            byte distance = 0;
-            if (!CommandParser.GetByte(p, args[2], "Maxmimum move distance", ref distance)) return;
+            int distance = 0;
+            if (!CommandParser.GetInt(p, args[2], "Maxmimum move distance", ref distance, 0, 256)) return;
             
             ZSConfig.MaxMoveDistance = distance;
             Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");

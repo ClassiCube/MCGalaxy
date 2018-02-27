@@ -46,7 +46,7 @@ namespace MCGalaxy {
         public int MaxUndo;
         public string MOTD = "";
         public int GenVolume = mapGenLimit;
-        public byte OverseerMaps = 3;
+        public int OverseerMaps = 3;
         public bool AfkKicked = true;
         public int AfkKickMinutes = 45;
         public string Prefix = "";   

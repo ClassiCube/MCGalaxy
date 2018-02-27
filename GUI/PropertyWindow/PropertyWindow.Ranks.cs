@@ -132,7 +132,7 @@ namespace MCGalaxy.Gui {
         }
         
         void rank_numMaps_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (byte)rank_numMaps.Value;
+            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (int)rank_numMaps.Value;
         }
         
         void rank_numGen_ValueChanged(object sender, EventArgs e) {

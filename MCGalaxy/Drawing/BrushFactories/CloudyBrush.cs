@@ -65,7 +65,7 @@ namespace MCGalaxy.Drawing.Brushes {
             if (opt == 'p') return ParseDecimal(p, arg, ref args.Persistence, 0.75f);
             
             if (opt == 'o') {
-                if (!CommandParser.GetByte(p, arg, "Octaves", ref args.Octaves, 1, 16)) return false;
+                if (!CommandParser.GetInt(p, arg, "Octaves", ref args.Octaves, 1, 16)) return false;
             } else if (opt == 's') {
                 if (!CommandParser.GetInt(p, arg, "Seed", ref args.Seed)) return false;
             } else {
@@ -87,8 +87,7 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     public struct NoiseArgs {
-        public byte Octaves;
-        public int Seed;
+        public int Octaves, Seed;
         public float Frequency, Amplitude, Persistence, Lacunarity;
     }
 }
