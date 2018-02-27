@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
         bool DoMeasure(Player p, Vec3S32[] m, object state, BlockID block) {
             BlockID[] toCount = (BlockID[])state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
-            int[] counts = new int[Block.Extended];
+            int[] counts = new int[Block.ExtendedCount];
             
             for (ushort y = (ushort)min.Y; y <= (ushort)max.Y; y++)
                 for (ushort z = (ushort)min.Z; z <= (ushort)max.Z; z++)
