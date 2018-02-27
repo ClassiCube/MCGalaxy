@@ -51,10 +51,11 @@ namespace MCGalaxy {
             } else {
                 PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
             }
-            Player.Message(p, builder.ToString());
-            
+            Player.Message(p, builder.ToString());            
             PrintAliases(p, cmd);
+            
             List<CommandExtraPerms> extraPerms = CommandExtraPerms.FindAll(cmd.name);
+            if (cmd.ExtraPerms == null) extraPerms.Clear();
             if (extraPerms.Count == 0) return;
             
             Player.Message(p, "%TExtra permissions:");

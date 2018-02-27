@@ -24,7 +24,7 @@ namespace MCGalaxy.Gui {
         bool commandSupressEvents = true;
         ComboBox[] commandAllowBoxes, commandDisallowBoxes, commandExtraBoxes;
         Label[] commandExtraLabels;
-        string commandName;
+        Command cmd;
         
         // need to keep a list of changed command perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
@@ -35,11 +35,11 @@ namespace MCGalaxy.Gui {
         
         void LoadCommands() {
             cmd_list.Items.Clear();
-            List<CommandPerms> temp = CommandPerms.CopyAll();
-            temp.Sort((a, b) => a.CmdName.CompareTo(b.CmdName));
+            List<Command> all = Command.all.All();
+            all.Sort((a, b) => a.name.CompareTo(b.name));
             
-            foreach (CommandPerms perms in temp) {
-                cmd_list.Items.Add(perms.CmdName);
+            foreach (Command cmd in all) {
+                cmd_list.Items.Add(cmd.name);
             }
 
             if (cmd_list.SelectedIndex == -1)
@@ -70,10 +70,22 @@ namespace MCGalaxy.Gui {
         
         
         void cmd_list_SelectedIndexChanged(object sender, EventArgs e) {
-            commandName = cmd_list.SelectedItem.ToString();
-            commandPermsOrig = CommandPerms.Find(commandName);
-            commandPerms = commandPermsChanged.Find(p => p.CmdName == commandName);
+            string cmdName = cmd_list.SelectedItem.ToString();        
             CommandInitSpecificArrays();
+            
+            cmd = Command.all.FindByName(cmdName);
+            if (cmd == null) return;
+            commandPermsOrig = CommandPerms.Find(cmdName);
+            commandPerms = commandPermsChanged.Find(p => p.CmdName.CaselessEq(cmdName));
+            
+            // fix for when command is added to server but doesn't have permissions defined
+            if (commandPermsOrig == null) {
+                commandPermsOrig = new CommandPerms();
+                commandPermsOrig.CmdName = cmdName;
+                commandPermsOrig.MinRank = cmd.defaultRank;
+                commandPermsOrig.Allowed = new List<LevelPermission>();
+                commandPermsOrig.Disallowed = new List<LevelPermission>();
+            }
 
             commandSupressEvents = true;
             CommandPerms perms = commandPerms != null ? commandPerms : commandPermsOrig;
@@ -153,11 +165,12 @@ namespace MCGalaxy.Gui {
         
         
         void CommandInitExtraPerms() {
-            extraPermsList = CommandExtraPerms.FindAll(commandName);
+            extraPermsList = CommandExtraPerms.FindAll(cmd.name);
             for (int i = 0; i < commandExtraBoxes.Length; i++) {
                 commandExtraBoxes[i].Visible = false;
                 commandExtraLabels[i].Visible = false;
-            }
+            }            
+            if (cmd.ExtraPerms == null) extraPermsList.Clear();
             
             int height = 12;
             for (int i = 0; i < extraPermsList.Count; i++) {
