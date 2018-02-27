@@ -92,6 +92,7 @@ namespace MCGalaxy.Commands.World {
             { "preset", new SubCommand(HandlePreset, presetHelp) },
             { "setspawn", new SubCommand(HandleSpawn, spawnHelp) },
             { "zone", new SubCommand(HandleZone, zoneHelp) },
+            { "zones", new SubCommand(HandleZones, zonesHelp) },
         };
         
         
@@ -191,6 +192,11 @@ namespace MCGalaxy.Commands.World {
             "%T/os zone block [name] %H- Prevents them from joining your map.",
             "%T/os zone unblock [name] %H- Allows them to join your map.",
             "%T/os zone blacklist %H- Shows currently blacklisted players.",
+        };
+        
+        static string[] zonesHelp = new string[] {
+            "%T/os zones [cmd] [args]",
+            "%HManages zones in your map. See %T/Help zone",
         };
         #endregion
     }

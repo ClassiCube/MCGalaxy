@@ -399,10 +399,6 @@ namespace MCGalaxy {
                 if (zone != null && zone.Config.Weather != -1) weather = zone.Config.Weather;
                 Send(Packet.EnvWeatherType((byte)weather));
             }
-            
-            // TODO: get rid of this
-            Server.s.Log("I MOVED");
-            if (ZoneIn != null) Server.s.Log(ZoneIn.ColoredName);
         }
         
         void CheckBlocks(Position pos) {

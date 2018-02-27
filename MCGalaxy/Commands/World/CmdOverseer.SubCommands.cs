@@ -296,5 +296,13 @@ namespace MCGalaxy.Commands.World {
             blacklist.Add(name);
             p.level.VisitAccess.OnListChanged(p, name, false, false);
         }
+        
+        static void HandleZones(Player p, string cmd, string args) {
+            if (args.Length == 0) {
+                Player.Message(p, "Arguments required. See %T/Help zone");
+            } else {
+                Command.all.FindByName("Zone").Use(p, cmd + " " + args);
+            }
+        }
     }
 }
