@@ -77,7 +77,9 @@ namespace MCGalaxy.Config {
         
         public override object Parse(string value) {
             int intValue = (int)base.Parse(value);
+            
             // Can't directly unbox object to block ID - must unbox to int, then cast to block ID
+            if (intValue == Block.Invalid) return Block.Invalid;
             return Block.MapOldRaw((BlockID)intValue);
         }
     }
