@@ -155,11 +155,11 @@ namespace MCGalaxy.Commands.Bots {
             Player.Message(p, "%H  If [name] is \"all\", removes all bots on your map");
             Player.Message(p, "%T/Bot text [name] <text>");
             Player.Message(p, "%HSets the text shown when a player clicks on this bot");
-            Player.Message(p, "%HSee %T/help mb %Hfor more details on <text>");
+            Player.Message(p, "%HSee %T/Help mb %Hfor more details on <text>");
             Player.Message(p, "%T/Bot deathmessage [name] <message>");
             Player.Message(p, "%HSets the message shown when this bot kills a player");
             Player.Message(p, "%T/Bot rename [name] [new name] %H- Renames a bot");
-            Player.Message(p, "%H  Note: To only change name tag of a bot, use %T/nick bot");
+            Player.Message(p, "%H  Note: To only change name tag of a bot, use %T/Nick bot");
         }
     }
 }

@@ -111,29 +111,32 @@ namespace MCGalaxy.Commands.Moderation {
         
         void SetZoneProp(Player p, string[] args, Zone zone) {
             ColorDesc desc = default(ColorDesc);
-            string opt = args[2], value = args[3];
+            if (args.Length < 4) { 
+                Player.Message(p, "No value provided. See %T/Help zone properties");
+                return;
+            }
             
+            string opt = args[2], value = args[3];           
             Predicate<Player> selector = pl => pl.ZoneIn == zone;
-            if (opt.CaselessEq("col")) {
+            if (opt.CaselessEq("alpha")) {
+                float alpha = 0;
+                if (!CommandParser.GetReal(p, value, "Alpha", ref alpha, 0, 1)) return;
+                
+                zone.UnshowAll(p.level);
+                zone.Config.ShowAlpha = (byte)(alpha * 255);
+                zone.ShowAll(p.level);
+            } else if (opt.CaselessEq("col")) {
                 if (!CommandParser.GetHex(p, value, ref desc)) return;
                 
                 zone.Config.ShowColor = value;
-                zone.ShowAll(p.level);
-            } else if (opt.CaselessEq("alpha")) {
-                byte alpha = 0;
-                if (!CommandParser.GetByte(p, value, "Alpha", ref alpha)) return;
-                
-                zone.UnshowAll(p.level);
-                zone.Config.ShowAlpha = alpha;
                 zone.ShowAll(p.level);
             } else if (opt.CaselessEq("motd")) {
                 zone.Config.MOTD = value;
                 OnChangedZone(zone);
             } else if (CmdEnvironment.Handle(p, selector, opt, value, zone.Config, "zone " + zone.ColoredName)) {
                 OnChangedZone(zone);
-            }  else {
-                Player.Message(p, "?????");
-                return;
+            } else {
+                Help(p, "properties"); return;
             }
             p.level.Save(true);
         }
@@ -154,12 +157,20 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%HSets build permissions for the given zone");
             Player.Message(p, "%H  For syntax of permissions, see %T/Help PerBuild");
             Player.Message(p, "%T/Zone set [property] [value]");
-            Player.Message(p, "%HSets a property of this zone. See %T/help zone properties");
+            Player.Message(p, "%HSets a property of this zone. See %T/Help zone properties");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("properties")) {
-                
+                Player.Message(p, "%T/Zone set alpha [value]");
+                Player.Message(p, "%HSets how solid the box shown around the zone is");
+                Player.Message(p, "%H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
+                Player.Message(p, "%T/Zone set color [hex color]");
+                Player.Message(p, "%HSets the color of the box shown around the zone");
+                Player.Message(p, "%T/Zone set motd [value]");
+                Player.Message(p, "%HSets the MOTD applied when in the zone. See %T/Help map motd");
+                Player.Message(p, "%T/Zone set [env property] [value]");
+                Player.Message(p, "%HSets an env setting applied when in the zone. See %T/Help env");
             } else {
                 base.Help(p, message);
             }

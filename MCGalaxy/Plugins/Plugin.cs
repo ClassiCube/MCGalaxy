@@ -39,8 +39,8 @@ namespace MCGalaxy {
         /// <param name="shutdown"> True if plugin is being auto unloaded due to server shutting down, false if manually. </param>
         public abstract void Unload(bool shutdown);
         
-        /// <summary> Called when a player does /help on the plugin. Typically, shows to the player what this plugin is about. </summary>
-        /// <param name="p"> Player who is doing /help. </param>
+        /// <summary> Called when a player does /Help on the plugin. Typically, shows to the player what this plugin is about. </summary>
+        /// <param name="p"> Player who is doing /Help. </param>
         public abstract void Help(Player p);
         
         /// <summary> Name of the plugin. </summary>

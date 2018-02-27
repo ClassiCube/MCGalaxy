@@ -35,10 +35,10 @@ namespace MCGalaxy {
         public virtual LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         /// <summary> Executes this command. </summary>
         public abstract void Use(Player p, string message);
-        /// <summary> Outputs usage information about this command, for when a user does /help [command]. </summary>
+        /// <summary> Outputs usage information about this command, for when a user does /Help [command]. </summary>
         public abstract void Help(Player p);
         
-        /// <summary> Outputs further usage information about this command, for when a user does /help [command] [message]. </summary>
+        /// <summary> Outputs further usage information about this command, for when a user does /Help [command] [message]. </summary>
         /// <remarks> Defaults to just calling Help(p). </remarks>
         public virtual void Help(Player p, string message) { Help(p); Formatter.PrintCommandInfo(p, this); }
         /// <summary> Extra permissions required to use certain aspects of this command. </summary>

@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands {
             using (StreamWriter sw = new StreamWriter(Paths.AliasesFile)) {
                 sw.WriteLine("# The format goes trigger : command");
                 sw.WriteLine("# For example, \"y : help me\" means that when /y is typed,");
-                sw.WriteLine("# it is treated as /help me <args given by user>.");
+                sw.WriteLine("# it is treated as /Help me <args given by user>.");
                 
                 foreach (Alias a in aliases) {
                     if (a.Prefix == null) {

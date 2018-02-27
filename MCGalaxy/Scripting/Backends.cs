@@ -48,7 +48,7 @@ namespace MCGalaxy
 \t\t// Command's shortcut (please take care not to use an existing one, or you may have issues.)
 \t\tpublic override string shortcut {{ get {{ return """"; }} }}
 
-\t\t// Determines which submenu this command displays in under /help.
+\t\t// Determines which submenu this command displays in under /Help.
 \t\tpublic override string type {{ get {{ return ""other""; }} }}
 
 \t\t// Determines whether or not this command can be used in a museum. Block/map altering commands should be made false to avoid errors.
@@ -66,7 +66,7 @@ namespace MCGalaxy
 \t\t\tPlayer.Message(p, ""Hello World!"");
 \t\t}}
 
-\t\t// This one controls what happens when you use /help [commandname].
+\t\t// This one controls what happens when you use /Help [commandname].
 \t\tpublic override void Help(Player p)
 \t\t{{
 \t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."");
@@ -113,7 +113,7 @@ Namespace MCGalaxy
 \t\t\tEnd Get
 \t\tEnd Property
 
-' Determines which submenu this command displays in under /help.   
+' Determines which submenu this command displays in under /Help.   
 \t\tPublic Overrides ReadOnly Property type() As String
 \t\t\tGet
 \t\t\t\tReturn ""other""
@@ -142,7 +142,7 @@ Namespace MCGalaxy
 \t\t\tPlayer.Message(p, ""Hello World!"")
 \t\tEnd Sub
 
-' This one controls what happens when you use /help [commandname].
+' This one controls what happens when you use /Help [commandname].
 \t\tPublic Overrides Sub Help(p As Player)
 \t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."")
 

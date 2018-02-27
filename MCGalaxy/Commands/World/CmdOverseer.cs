@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "%T/os [command] [args]");
             Player.Message(p, "%HAllows you to modify and manage your personal realms.");
             Player.Message(p, "%HCommands: %S{0}", subCommands.Keys.Join());
-            Player.Message(p, "%HType %T/help os [command] %Hfor more details");
+            Player.Message(p, "%HType %T/Help os [command] %Hfor more details");
         }
         
         
@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands.World {
 
         static string[] blockPropsHelp = new string[] {
             "%T/os blockprops [id] [action] <args> %H- Manages properties for custom blocks on your map.",
-            "%H  See %T/help blockprops %Hfor a list of actions",
+            "%H  See %T/Help blockprops %Hfor a list of actions",
         };
         
         static string[] envHelp = new string[] {
@@ -155,13 +155,13 @@ namespace MCGalaxy.Commands.World {
 
         static string[] levelBlockHelp = new string[] {
             "%T/os lb [action] <args> %H- Manages custom blocks on your map.",
-            "%H  See %T/help lb %Hfor a list of actions",
+            "%H  See %T/Help lb %Hfor a list of actions",
         };
         
         static string[] mapHelp = new string[] {
             "%T/os map add [type - default is flat] %H- Creates your map (128x64x128)",
             "%T/os map add [width] [height] [length] [type]",
-            "%H  See %T/help newlvl types %Hfor a list of map types.",
+            "%H  See %T/Help newlvl types %Hfor a list of map types.",
             "%T/os map physics [level] %H- Sets the physics on your map.",
             "%T/os map delete %H- Deletes your map",
             "%T/os map restore [num] %H- Restores backup [num] of your map",
@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands.World {
             "%T/os map texture [url] %H- Sets terrain.png for your map",
             "%T/os map texturepack [url] %H- Sets texture pack .zip for your map",
             "%T/os map [option] <value> %H- Toggles that map option.",
-            "%H  See %T/help map %Hfor a list of map options",
+            "%H  See %T/Help map %Hfor a list of map options",
         };
         
         static string[] presetHelp = new string[] {

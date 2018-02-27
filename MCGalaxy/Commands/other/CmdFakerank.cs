@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Misc {
                 string rankMsg   = who.ColoredName + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
                 
                 Chat.MessageGlobal(rankMsg);
-                Player.Message(who, "You are now ranked {0}%S, type /help for your new set of commands.", 
+                Player.Message(who, "You are now ranked {0}%S, type /Help for your new set of commands.", 
                                newRank.ColoredName);
             }
             
