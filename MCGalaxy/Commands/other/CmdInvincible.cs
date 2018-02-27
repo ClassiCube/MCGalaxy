@@ -25,14 +25,19 @@ namespace MCGalaxy.Commands.Misc {
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("GodMode") }; }
         }
-
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can toggle inviciblity of others") }; }
+        }
+        
         public override void Use(Player p, string message) {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 
+            if (p != who && !CheckExtraPerm(p, 1)) return;
             if (p != null && who.Rank > p.Rank) {
                 MessageTooHighRank(p, "toggle invinciblity", true); return;
             }
+            
             who.invincible = !who.invincible;
             ShowPlayerMessage(p, who);
         }
