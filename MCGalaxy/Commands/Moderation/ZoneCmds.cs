@@ -153,7 +153,16 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/Zone edit [name] [permissions]");
             Player.Message(p, "%HSets build permissions for the given zone");
             Player.Message(p, "%H  For syntax of permissions, see %T/Help PerBuild");
-            Player.Message(p, "%T/Zone rename [old name] [new name]");
+            Player.Message(p, "%T/Zone set [property] [value]");
+            Player.Message(p, "%HSets a property of this zone. See %T/help zone properties");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("properties")) {
+                
+            } else {
+                base.Help(p, message);
+            }
         }
     }
     
@@ -214,7 +223,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             Player.Message(p, "%T/ZoneList %H- Lists all zones in current level");
         }
-    }    
+    }
     
     public sealed class CmdZoneMark : Command {
         public override string name { get { return "ZoneMark"; } }

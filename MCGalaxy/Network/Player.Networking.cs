@@ -164,12 +164,12 @@ namespace MCGalaxy {
             string motd = level.GetMotd(this);
             motd = Chat.Format(motd, this);
             
+            OnSendingMotdEvent.Call(this, ref motd);
             byte[] packet = Packet.Motd(this, motd);
-            OnSendingMotdEvent.Call(this, packet);
             Send(packet);
             
             if (!Supports(CpeExt.HackControl)) return;
-            Send(Hacks.MakeHackControl(this, level.GetMotd(this)));
+            Send(Hacks.MakeHackControl(this, motd));
             if (Game.Referee) Send(Packet.HackControl(true, true, true, true, true, -1));
         }
         

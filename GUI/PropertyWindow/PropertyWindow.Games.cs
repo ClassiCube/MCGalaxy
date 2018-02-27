@@ -236,35 +236,23 @@ namespace MCGalaxy.Gui {
                 TntWrsMpsList.Items.Clear();
                 tw_lstGames.Items.Clear();
                 TntWrsDiffCombo.Items.Clear();
-                foreach (Level lvl in Server.levels) {
-                    if (TntWarsGame.Find(lvl) == null) {
+                
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
+                    TntWarsGame game = TntWarsGame.Find(lvl);
+                    if (game == null) {
                         TntWrsMpsList.Items.Add(lvl.name);
-                    }
-                    else {
-                        TntWarsGame T = TntWarsGame.Find(lvl);
-                        string msg = lvl.name + " - ";
-                        if (T.GameMode == TntWarsGame.TntWarsGameMode.FFA) msg += "FFA";
-                        if (T.GameMode == TntWarsGame.TntWarsGameMode.TDM) msg += "TDM";
-                        msg += " - ";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Easy) msg += "(Easy)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Normal) msg += "(Normal)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Hard) msg += "(Hard)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
-                        msg += " - ";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) msg += "(Waiting For Players)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart) msg += "(Starting)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod) msg += "(Started)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) msg += "(In Progress)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) msg += "(Finished)";
-                        tw_lstGames.Items.Add(msg);
+                    } else {
+                        string desc = DescribeTNTWars(lvl, game);
+                        tw_lstGames.Items.Add(desc);
                     }
                 }
+                
                 TntWrsDiffCombo.Items.Add("Easy");
                 TntWrsDiffCombo.Items.Add("Normal");
                 TntWrsDiffCombo.Items.Add("Hard");
                 TntWrsDiffCombo.Items.Add("Extreme");
-            }
-            else {
+            } else {
                 //Load settings
                 //Top
                 SlctdTntWrsLvl.Text = tw_selected.lvl.name;
@@ -274,43 +262,45 @@ namespace MCGalaxy.Gui {
                 if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) tw_txtStatus.Text = "In Progress";
                 if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) tw_txtStatus.Text = "Finished";
                 tw_txtPlayers.Text = tw_selected.PlayingPlayers().ToString(CultureInfo.InvariantCulture);
+                
                 //Difficulty
                 if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
                     TntWrsDiffCombo.Enabled = true;
                     TntWrsDiffSlctBt.Enabled = true;
-                }
-                else {
+                } else {
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
                 }
+                
                 TntWrsDiffCombo.SelectedIndex = TntWrsDiffCombo.FindString(tw_selected.Difficulty.ToString());
                 //scores
                 tw_numScoreLimit.Value = tw_selected.ScoreLimit;
                 tw_numScoreLimit.Enabled = true;
                 tw_numScorePerKill.Value = tw_selected.Config.ScorePerKill;
                 tw_numScorePerKill.Enabled = true;
+                
                 if (tw_selected.Config.AssistScore == 0) {
                     tw_cbScoreAssists.Checked = false;
                     tw_cbScoreAssists.Enabled = true;
                     tw_numScoreAssists.Enabled = false;
-                }
-                else {
+                } else {
                     tw_numScoreAssists.Value = tw_selected.Config.AssistScore;
                     tw_numScoreAssists.Enabled = true;
                     tw_cbScoreAssists.Checked = true;
                     tw_cbScoreAssists.Enabled = true;
                 }
+                
                 if (tw_selected.Config.MultiKillBonus == 0) {
                     tw_cbMultiKills.Checked = false;
                     tw_cbMultiKills.Enabled = true;
                     tw_numMultiKills.Enabled = false;
-                }
-                else {
+                } else {
                     tw_numMultiKills.Value = tw_selected.Config.MultiKillBonus;
                     tw_numMultiKills.Enabled = true;
                     tw_cbMultiKills.Checked = true;
                     tw_cbMultiKills.Enabled = true;
                 }
+                
                 //Grace period
                 TntWrsGracePrdChck.Checked = tw_selected.Config.InitialGracePeriod;
                 TntWrsGracePrdChck.Enabled = true;
@@ -358,38 +348,27 @@ namespace MCGalaxy.Gui {
                 TntWrsMpsList.Items.Clear();
                 tw_lstGames.Items.Clear();
                 TntWrsDiffCombo.Items.Clear();
-                foreach (Level lvl in Server.levels) {
-                    if (TntWarsGame.Find(lvl) == null) {
+                
+                Level[] loaded = LevelInfo.Loaded.Items;
+                foreach (Level lvl in loaded) {
+                    TntWarsGame game = TntWarsGame.Find(lvl);
+                    if (game == null) {
                         TntWrsMpsList.Items.Add(lvl.name);
-                    }
-                    else {
-                        TntWarsGame T = TntWarsGame.Find(lvl);
-                        string msg = "";
-                        if (T == tw_selected) { msg += "-->  "; }
-                        msg += lvl.name + " - ";
-                        if (T.GameMode == TntWarsGame.TntWarsGameMode.FFA) msg += "FFA";
-                        if (T.GameMode == TntWarsGame.TntWarsGameMode.TDM) msg += "TDM";
-                        msg += " - ";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Easy) msg += "(Easy)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Normal) msg += "(Normal)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Hard) msg += "(Hard)";
-                        if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
-                        msg += " - ";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) msg += "(Waiting For Players)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart) msg += "(Starting)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod) msg += "(Started)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) msg += "(In Progress)";
-                        if (T.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) msg += "(Finished)";
-                        tw_lstGames.Items.Add(msg);
+                    } else {
+                        string desc = "";
+                        if (game == tw_selected) desc += "-->  ";
+                        desc += DescribeTNTWars(lvl, game);
+                        tw_lstGames.Items.Add(desc);
                     }
                 }
+                
                 TntWrsDiffCombo.Items.Add("Easy");
                 TntWrsDiffCombo.Items.Add("Normal");
                 TntWrsDiffCombo.Items.Add("Hard");
                 TntWrsDiffCombo.Items.Add("Extreme");
 
                 //Disable things because game is in progress
-                if (!TntWarsEditable(sender, e)) {
+                if (tw_selected.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
                     //Difficulty
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
@@ -412,9 +391,28 @@ namespace MCGalaxy.Gui {
                 }
             }
         }
+        
+        string DescribeTNTWars(Level lvl, TntWarsGame game) {
+            string msg = lvl.name;
 
-        private bool TntWarsEditable(object sender, EventArgs e) {
-            return tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers;
+            msg += " - ";
+            if (game.GameMode == TntWarsGame.TntWarsGameMode.FFA) msg += "FFA";
+            if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM) msg += "TDM";
+            
+            msg += " - ";            
+            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Easy)    msg += "(Easy)";
+            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Normal)  msg += "(Normal)";
+            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Hard)    msg += "(Hard)";
+            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
+            
+            msg += " - ";
+            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) msg += "(Waiting For Players)";
+            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart)      msg += "(Starting)";
+            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod)       msg += "(Started)";
+            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress)        msg += "(In Progress)";
+            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.Finished)          msg += "(Finished)";
+            
+            return msg;
         }
 
         void tabControl2_Click(object sender, EventArgs e) {

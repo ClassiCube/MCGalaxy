@@ -180,13 +180,20 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnSendingMotd(Player p, byte[] packet);
+    public delegate void OnSendingMotd(Player p, ref string motd);
     /// <summary> Called when MOTD is being send to the user. </summary>
     public sealed class OnSendingMotdEvent : IEvent<OnSendingMotd> {
         
-        public static void Call(Player p, byte[] packet) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(p, packet));
+        public static void Call(Player p, ref string motd) {
+            IEvent<OnSendingMotd>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try {
+                    items[i].method(p, ref motd);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, items[i]);
+                }
+            }
         }
     }
     
