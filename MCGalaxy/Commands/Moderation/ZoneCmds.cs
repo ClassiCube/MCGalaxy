@@ -156,20 +156,20 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/Zone edit [name] [permissions]");
             Player.Message(p, "%HSets build permissions for the given zone");
             Player.Message(p, "%H  For syntax of permissions, see %T/Help PerBuild");
-            Player.Message(p, "%T/Zone set [property] [value]");
+            Player.Message(p, "%T/Zone set [name] [property] [value]");
             Player.Message(p, "%HSets a property of this zone. See %T/Help zone properties");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("properties")) {
-                Player.Message(p, "%T/Zone set alpha [value]");
+                Player.Message(p, "%T/Zone set [name] alpha [value]");
                 Player.Message(p, "%HSets how solid the box shown around the zone is");
                 Player.Message(p, "%H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
-                Player.Message(p, "%T/Zone set color [hex color]");
+                Player.Message(p, "%T/Zone set [name] col [hex color]");
                 Player.Message(p, "%HSets the color of the box shown around the zone");
-                Player.Message(p, "%T/Zone set motd [value]");
+                Player.Message(p, "%T/Zone set [name] motd [value]");
                 Player.Message(p, "%HSets the MOTD applied when in the zone. See %T/Help map motd");
-                Player.Message(p, "%T/Zone set [env property] [value]");
+                Player.Message(p, "%T/Zone set [name] [env property] [value]");
                 Player.Message(p, "%HSets an env setting applied when in the zone. See %T/Help env");
             } else {
                 base.Help(p, message);
