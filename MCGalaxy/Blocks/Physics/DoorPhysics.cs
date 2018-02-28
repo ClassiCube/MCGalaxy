@@ -30,11 +30,11 @@ namespace MCGalaxy.Blocks.Physics {
                 if (tdoor) tDoor(lvl, ref C);
                 else Door(lvl, ref C);
             }
-			
-			if (C.Data.Data <= C.Data.Value1) { // value1 for wait time
+            
+            if (C.Data.Data <= C.Data.Value1) { // value1 for wait time
                 C.Data.Data++;
             } else {
-				PhysicsArgs dArgs = default(PhysicsArgs);
+                PhysicsArgs dArgs = default(PhysicsArgs);
                 dArgs.ExtBlock = C.Data.ExtBlock;
                 lvl.AddUpdate(C.Index, C.Data.Value2, dArgs);
                 C.Data.Data = PhysicsArgs.RemoveFromChecks;
