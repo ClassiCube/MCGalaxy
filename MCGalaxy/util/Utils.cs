@@ -25,15 +25,6 @@ namespace MCGalaxy {
 
         /// <summary> The absolute path on disc of the folder MCGalaxy.exe is currently running from. </summary>
         public static string FolderPath { get { return AppDomain.CurrentDomain.BaseDirectory; } }
-
-        public static bool IsValidHex(string hex) {
-            if (hex.Length != 6) return false;
-            
-            for (int i = 0; i < hex.Length; i++) {
-                if (!Colors.IsStandard(hex[i])) return false;
-            }
-            return true;
-        }
         
         public static string Hex(byte r, byte g, byte b) {
              return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");

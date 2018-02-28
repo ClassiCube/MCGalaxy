@@ -30,7 +30,7 @@ namespace MCGalaxy {
         
         const int posShift = 32;
         const int idShift = 12;
-        const int blockMask = 0x7FF;
+        const int blockMask = (1 << 12) - 1;
 
         public static void Loop(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;

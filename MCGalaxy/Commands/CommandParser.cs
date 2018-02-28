@@ -135,14 +135,11 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as a hex color. </summary>
         public static bool GetHex(Player p, string input, ref ColorDesc col) {
-            if (input.Length > 0 && input[0] == '#')
-                input = input.Substring(1);
-            
-            if (!Utils.IsValidHex(input)) {
+            ColorDesc tmp;
+            if (!Colors.TryParseHex(input, out tmp)) {
                 Player.Message(p, "\"#{0}\" is not a valid HEX color.", input); return false;
             }
-            
-            col = Colors.ParseHex(input); return true;
+            col = tmp; return true;
         }
         
         internal static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {

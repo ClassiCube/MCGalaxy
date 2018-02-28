@@ -314,13 +314,16 @@ namespace MCGalaxy {
 
         
         /// <summary> Parses an #RRGGBB hex color string. </summary>
-        public static ColorDesc ParseHex(string hex) {
-            if (hex.Length > 0 && hex[0] == '#') hex = hex.Remove(0, 1);
-            if (!(hex.Length == 3 || hex.Length == 6)) {
-                throw new ArgumentException("hex must be either 3 or 6 chars long");
-            }
+        public static bool TryParseHex(string hex, out ColorDesc c) {
+            c = default(ColorDesc);
+            if (hex == null || hex.Length == 0) return false;
+            if (hex[0] == '#') hex = hex.Remove(0, 1);
+            if (!(hex.Length == 3 || hex.Length == 6)) return false;
             
-            ColorDesc c = default(ColorDesc);
+            for (int i = 0; i < hex.Length; i++) {
+                if (Hex(hex[i]) == -1) return false;
+            }
+                        
             int R, G, B;
             if (hex.Length == 6) {
                 R = (Hex(hex[0]) << 4) | Hex(hex[1]);
@@ -331,20 +334,27 @@ namespace MCGalaxy {
                 G = Hex(hex[1]); G |= (G << 4);
                 B = Hex(hex[2]); B |= (B << 4);
             }
-            
+
             c.R = (byte)R; c.G = (byte)G; c.B = (byte)B; c.A = 255;
+            return true;
+        }
+        
+        /// <summary> Parses an #RRGGBB hex color string. </summary>        
+        public static ColorDesc ParseHex(string hex) {
+            ColorDesc c;
+            if (!TryParseHex(hex, out c)) throw new ArgumentException("invalid input");
             return c;
         }
         
-        /// <summary> Gets the index of the given hex character. </summary>
-        public static int Hex(char value) {
+        static int Hex(char value) {
             if (value >= '0' && value <= '9')
                 return (int)(value - '0');
             if (value >= 'a' && value <= 'f')
                 return (int)(value - 'a') + 10;
             if (value >= 'A' && value <= 'F')
                 return (int)(value - 'A') + 10;
-            throw new ArgumentException("Non hex char: " + value);
+            
+            return -1;
         }
     }
     

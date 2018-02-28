@@ -55,7 +55,7 @@ namespace MCGalaxy {
         public BlockID GetBlock(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return Block.Invalid; }
             index = x + Width * (z + y * Length);
-            byte raw = blocks[x + Width * (z + y * Length)];
+            byte raw = blocks[index];
             return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
         }
         

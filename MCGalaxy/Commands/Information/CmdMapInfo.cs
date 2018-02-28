@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands.Info {
                            Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));
             
             Player.Message(p, "Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
-                           cfg.EdgeLevel,cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
+                           cfg.EdgeLevel, cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
             Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", 
                            Block.GetName(p, cfg.EdgeBlock), Block.GetName(p, cfg.HorizonBlock));
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",

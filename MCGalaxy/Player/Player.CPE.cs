@@ -136,14 +136,10 @@ namespace MCGalaxy {
         }
 
         public void SendEnvColor(byte type, string hex) {
-            if (String.IsNullOrEmpty(hex)) {
-                Send(Packet.EnvColor(type, -1, -1, -1)); return;
-            }
-            
-            try {
-                ColorDesc c = Colors.ParseHex(hex);
+            ColorDesc c;
+            if (Colors.TryParseHex(hex, out c)) {
                 Send(Packet.EnvColor(type, c.R, c.G, c.B));
-            } catch (ArgumentException) {
+            } else {
                 Send(Packet.EnvColor(type, -1, -1, -1));
             }
         }

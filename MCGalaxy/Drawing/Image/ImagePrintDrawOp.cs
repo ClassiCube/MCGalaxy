@@ -74,22 +74,22 @@ namespace MCGalaxy.Drawing.Ops {
             PaletteEntry[] front = new PaletteEntry[Palette.Entries.Length];
             PaletteEntry[] back  = new PaletteEntry[Palette.Entries.Length];
             
-            ColorDesc sun  = Colors.ParseHex("FFFFFF");
-            ColorDesc dark = Colors.ParseHex("9B9B9B");
-            if (Utils.IsValidHex(Level.Config.LightColor)) {
-                sun = Colors.ParseHex(Level.Config.LightColor);
+            ColorDesc sun, dark, bright;
+            if (!Colors.TryParseHex(Level.Config.LightColor, out sun)) {
+                sun = Colors.ParseHex("FFFFFF");
             }
-            if (Utils.IsValidHex(Level.Config.ShadowColor)) {
-                dark = Colors.ParseHex(Level.Config.ShadowColor);
+            if (!Colors.TryParseHex(Level.Config.ShadowColor, out dark)) {
+                dark = Colors.ParseHex("9B9B9B");
             }
+            bright = Colors.ParseHex("FFFFFF");
             
             for (int i = 0; i < Palette.Entries.Length; i++) {
                 PaletteEntry entry = Palette.Entries[i];
                 BlockDefinition def = Level.GetBlockDef(entry.Block);
                 
                 if (def != null && def.FullBright) {
-                    front[i] = Multiply(entry, Colors.ParseHex("FFFFFF"));
-                    back[i]  = Multiply(entry, Colors.ParseHex("FFFFFF"));
+                    front[i] = Multiply(entry, bright);
+                    back[i]  = Multiply(entry, bright);
                 } else {
                     front[i] = Multiply(entry,  sun);
                     back[i]  = Multiply(entry, dark);
