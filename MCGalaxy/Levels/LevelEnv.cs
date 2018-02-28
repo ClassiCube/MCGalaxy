@@ -47,7 +47,7 @@ namespace MCGalaxy {
                 }
                 string type = value == 0 ? "%SSun" : (value == 1 ? "&1Rain" : "&fSnow");
                 Player.Message(p, "Set weather for {0} %Sto {1} ({2}%S)", area, value, type);
-            }            
+            }
             target = value;
         }
         
@@ -76,7 +76,7 @@ namespace MCGalaxy {
                 target = (short)defValue;
             } else {
                 int value = 0;
-                if (!CommandParser.GetInt(p, input, variable, ref value, 
+                if (!CommandParser.GetInt(p, input, variable, ref value,
                                           short.MinValue, short.MaxValue)) return;
                 
                 target = (short)value;
@@ -139,6 +139,10 @@ namespace MCGalaxy {
         
         internal static void UpdateAppearance(Predicate<Player> selector, EnvProp prop, int value) {
             Player[] players = PlayerInfo.Online.Items;
+            if (prop == EnvProp.SidesBlock || prop == EnvProp.EdgeBlock) {
+                value = (byte)value;
+            }
+            
             foreach (Player pl in players) {
                 if (!selector(pl)) continue;
                 
