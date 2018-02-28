@@ -123,7 +123,7 @@ namespace MCGalaxy {
             
             string propsPath = PropertiesPath(map);
             LevelConfig cfg = new LevelConfig();
-            cfg.Reset(lvl.Height);
+            cfg.Reset(0);
             LevelConfig.Load(propsPath, cfg); 
             return cfg;
         }
