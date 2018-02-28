@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces();
+            string[] args = message.SplitSpaces(4);
             if (message.Length == 0) { Help(p); return; }
             string opt = args[0];
             
