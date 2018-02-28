@@ -176,7 +176,7 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
                            cfg.EdgeLevel,cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
             Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", 
-                           cfg.EdgeBlock, cfg.HorizonBlock);
+                           Block.GetName(p, cfg.EdgeBlock), Block.GetName(p, cfg.HorizonBlock));
             Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
                            (cfg.CloudsSpeed / 256f).ToString("F2"),
                            (cfg.WeatherSpeed / 256f).ToString("F2"));

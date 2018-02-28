@@ -24,6 +24,10 @@ namespace MCGalaxy.Blocks.Physics {
     public static class AirPhysics {
         
         public static void DoAir(Level lvl, ref PhysInfo C) {
+            if (C.Data.Type1 == PhysicsArgs.Custom) {
+                DoorPhysics.Do(lvl, ref C); return;
+            }
+            
             ushort x = C.X, y = C.Y, z = C.Z;
             ActivateablePhysics.CheckNeighbours(lvl, x, y, z);
             ActivateablePhysics.CheckAt(lvl, x, (ushort)(y - 1), z); 
@@ -42,7 +46,7 @@ namespace MCGalaxy.Blocks.Physics {
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
                 C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
-    		
+            
             ushort x = C.X, y = C.Y, z = C.Z;            
             FloodAir(lvl, (ushort)(x + 1), y, z, block);
             FloodAir(lvl, (ushort)(x - 1), y, z, block);

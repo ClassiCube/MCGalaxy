@@ -25,18 +25,9 @@ namespace MCGalaxy.Blocks.Physics {
     public static class ExtraInfoPhysics {
         
         public static bool DoDoorsOnly(Level lvl, ref PhysInfo C) {
-            if (C.Data.Type1 == PhysicsArgs.Custom) return true;
             if (!C.Data.HasWait && C.Block == Block.Air)
                 C.Data.ResetTypes();
             if (!C.Data.HasWait) return false;
-            
-            if (C.Data.Door && C.Data.Data == 0) {
-                BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
-                bool tdoor = lvl.Props[block].IsTDoor;
-                
-                if (tdoor) DoorPhysics.tDoor(lvl, ref C);
-                else DoorPhysics.Door(lvl, ref C);
-            }
             
             int waitTime = 0;
             if (C.Data.Type1 == PhysicsArgs.Wait) waitTime = C.Data.Value1;
@@ -46,19 +37,10 @@ namespace MCGalaxy.Blocks.Physics {
             if (C.Data.Type1 == PhysicsArgs.Wait) C.Data.Type1 = 0;
             if (C.Data.Type2 == PhysicsArgs.Wait) C.Data.Type2 = 0;
             
-            if (C.Data.Door) {
-                PhysicsArgs dArgs = default(PhysicsArgs);
-                dArgs.ExtBlock = C.Data.ExtBlock;
-                lvl.AddUpdate(C.Index, C.Data.Value2, dArgs); 
-                
-                C.Data.ResetTypes();
-                C.Data.Data = PhysicsArgs.RemoveFromChecks;
-            }
             return false;
         }
         
         public static bool DoNormal(Level lvl, ref PhysInfo C) {
-            if (C.Data.Type1 == PhysicsArgs.Custom) return true;
             if (!C.Data.HasWait && C.Block == Block.Air)
                 C.Data.ResetTypes();
             
@@ -68,14 +50,6 @@ namespace MCGalaxy.Blocks.Physics {
             args.ExtBlock = C.Data.ExtBlock;
             
             if (args.Wait) {
-                if (C.Data.Door && C.Data.Data == 0) {
-                    BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
-                    bool tdoor = lvl.Props[block].IsTDoor;
-                    
-                    if (tdoor) DoorPhysics.tDoor(lvl, ref C);
-                    else DoorPhysics.Door(lvl, ref C);
-                }
-
                 if (C.Data.Data <= args.WaitTime) { C.Data.Data++; return true; }
                 if (C.Data.Type1 == PhysicsArgs.Wait) C.Data.Type1 = 0;
                 if (C.Data.Type2 == PhysicsArgs.Wait) C.Data.Type2 = 0;

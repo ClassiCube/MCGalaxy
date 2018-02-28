@@ -38,8 +38,7 @@ namespace MCGalaxy.Commands.Building {
             p.DefaultBrushArgs = "";
             p.Transform = NoTransform.Instance;
             
-            lock (p.level.queueLock)
-                p.level.blockqueue.RemoveAll(b => (int)((b >> 9) & Player.SessionIDMask) == p.SessionID);
+            BlockQueue.RemoveAll(p);
             Player.Message(p, "Every toggle or action was aborted.");
         }
         

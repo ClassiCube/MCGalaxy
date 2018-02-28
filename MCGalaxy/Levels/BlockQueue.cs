@@ -27,7 +27,10 @@ namespace MCGalaxy {
         public static int Interval = 100;
         public static int UpdatesPerTick = 750;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
-        public const int BlockMask = 0x1FF;
+        
+        const int posShift = 32;
+        const int idShift = 12;
+        const int blockMask = 0x7FF;
 
         public static void Loop(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
@@ -44,15 +47,21 @@ namespace MCGalaxy {
             if (index == -1) return;
             // Bit packing format
             // 32-63: index
-            // 9-31: session ID
-            // 8: is ext block or not
-            // 0-7: raw type
-            ulong flags = (ulong)index << 32;
-            flags |= (ulong)p.SessionID << 9;
-            flags |= (ulong)block & BlockMask;
+            // 12-31: session ID
+            // 0-11: block type
+            ulong flags = (ulong)index << posShift;
+            flags |= (ulong)p.SessionID << idShift;
+            flags |= (ulong)block & blockMask;
             
-            lock (p.level.queueLock)
+            lock (p.level.queueLock) {
                 p.level.blockqueue.Add(flags);
+            }
+        }
+        
+        public static void RemoveAll(Player p) {
+            lock (p.level.queueLock) {
+                p.level.blockqueue.RemoveAll(b => (int)((b >> idShift) & Player.SessionIDMask) == p.SessionID);
+            }
         }
         
         static void ProcessLevelBlocks(Level lvl) {
@@ -67,8 +76,8 @@ namespace MCGalaxy {
 
                 for (int i = 0; i < count; i++) {
                     ulong flags = lvl.blockqueue[i];
-                    int index = (int)(flags >> 32);
-                    BlockID block = (BlockID)(flags & BlockMask);
+                    int index = (int)(flags >> posShift);
+                    BlockID block = (BlockID)(flags & blockMask);
                     bulkSender.Add(index, block);
                 }
                 bulkSender.Send(true);

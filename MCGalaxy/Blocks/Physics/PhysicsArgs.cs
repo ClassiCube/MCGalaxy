@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks.Physics {
         public const uint TypeMask = 0x3F;
         public const uint TypeBitsMask = 0x07;
         public const uint ValueBitsMask = 0xFF;
-        public const uint ExtBit = 1u << 31;
+        public const uint ExtBit = 1u << 30;
         
         /// <summary> Indicates that this physics entry should be removed from the list of 
         /// entries that are checked for physics, at the end of the current tick. </summary>
@@ -56,11 +56,6 @@ namespace MCGalaxy.Blocks.Physics {
         public byte Data {
             get { return (byte)(Raw >> 22); }
             set { Raw &= ~(ValueBitsMask << 22); Raw |= (uint)value << 22; }
-        }
-        
-        public bool Door {
-            get { return (Raw & (1u << 30)) != 0; }
-            set { Raw &= ~(1u << 30); Raw |= (value ? 1u : 0u) << 30; }
         }
         
         public bool ExtBlock {

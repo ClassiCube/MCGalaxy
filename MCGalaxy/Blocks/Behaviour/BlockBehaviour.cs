@@ -89,6 +89,10 @@ namespace MCGalaxy.Blocks {
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsHandler(BlockID block, BlockProps[] props) {
             switch (block) {
+                case Block.Door_Log_air:   return DoorPhysics.Do;
+                case Block.Door_TNT_air:   return DoorPhysics.Do;
+                case Block.Door_Green_air: return DoorPhysics.Do;
+                
                 case Block.SnakeTail: return SnakePhysics.DoTail;
                 case Block.Snake: return SnakePhysics.Do;
                 case Block.RocketHead: return RocketPhysics.Do;
@@ -166,6 +170,10 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsDoorsHandler(BlockID block, BlockProps[] props) {
+            if (block == Block.Air)            return DoorPhysics.Do;
+            if (block == Block.Door_Log_air)   return DoorPhysics.Do;
+            if (block == Block.Door_TNT_air)   return DoorPhysics.Do;
+            if (block == Block.Door_Green_air) return DoorPhysics.Do;
             if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
             return null;
         }

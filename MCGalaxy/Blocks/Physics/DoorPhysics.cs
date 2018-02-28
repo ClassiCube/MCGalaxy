@@ -20,9 +20,29 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
     public static class DoorPhysics {
+        
+        public static void Do(Level lvl, ref PhysInfo C) {
+            if (C.Data.Type1 != PhysicsArgs.Custom) return;
+            if (C.Data.Data == 0) {
+                BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
+                bool tdoor = lvl.Props[block].IsTDoor;
+                
+                if (tdoor) tDoor(lvl, ref C);
+                else Door(lvl, ref C);
+            }
+			
+			if (C.Data.Data <= C.Data.Value1) { // value1 for wait time
+                C.Data.Data++;
+            } else {
+				PhysicsArgs dArgs = default(PhysicsArgs);
+                dArgs.ExtBlock = C.Data.ExtBlock;
+                lvl.AddUpdate(C.Index, C.Data.Value2, dArgs);
+                C.Data.Data = PhysicsArgs.RemoveFromChecks;
+            }
+        }
 
         // Change anys door blocks nearby into air forms
-        public static void Door(Level lvl, ref PhysInfo C) {
+        static void Door(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
             BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
             bool instant = block == Block.Door_Air || block == Block.Door_AirActivatable;
@@ -42,7 +62,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void oDoor(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
             BlockID block = C.Block;
-             
+            
             ActivateODoor(lvl, block, (ushort)(x - 1), y, z);
             ActivateODoor(lvl, block, (ushort)(x + 1), y, z);
             ActivateODoor(lvl, block, x, (ushort)(y - 1), z);
@@ -60,10 +80,9 @@ namespace MCGalaxy.Blocks.Physics {
             if (index >= 0 && block == target) {
                 lvl.AddUpdate(index, target, true);
             }
-        }
+        }        
         
-        
-        public static void tDoor(Level lvl, ref PhysInfo C) {
+         static void tDoor(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
             ActivateTDoor(lvl, (ushort)(x - 1), y, z);
             ActivateTDoor(lvl, (ushort)(x + 1), y, z);

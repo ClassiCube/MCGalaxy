@@ -84,9 +84,8 @@ namespace MCGalaxy.Blocks.Physics {
         
         internal static PhysicsArgs GetDoorArgs(BlockID block, out BlockID physForm) {
             PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16 - 1;
+            args.Type1 = PhysicsArgs.Custom; args.Value1 = 16 - 1;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)block;
-            args.Door = true;
             args.ExtBlock = block >= Block.Extended;
             
             physForm = Block.Door_Log_air; // air
@@ -102,9 +101,8 @@ namespace MCGalaxy.Blocks.Physics {
         
         internal static PhysicsArgs GetTDoorArgs(BlockID block) {
             PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.Wait; args.Value1 = 16;
+            args.Type1 = PhysicsArgs.Custom; args.Value1 = 16;
             args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)block;
-            args.Door = true;
             args.ExtBlock = block >= Block.Extended;
             return args;
         }

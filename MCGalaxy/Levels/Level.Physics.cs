@@ -156,7 +156,7 @@ namespace MCGalaxy {
                         C.Block = (BlockID)(Block.Extended | GetExtTileNoCheck(C.X, C.Y, C.Z));
                     }
                     
-                    if ((C.Data.Raw & mask) == 0 || extraHandler(this, ref C)) {
+                    if ((C.Data.Raw & mask) == 0 || C.Data.Type1 == PhysicsArgs.Custom || extraHandler(this, ref C)) {
                         HandlePhysics handler = handlers[C.Block];
                         if (handler != null) {
                             handler(this, ref C);
