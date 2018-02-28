@@ -47,31 +47,31 @@ namespace MCGalaxy.Commands.Building {
                 Help(p); return false;
             }
             byte type = 0, value = 0;
-            bool isExt = false;
+            byte extBits = 0;
             
             if (parts.Length >= 2) {
-                if (!Parse(p, parts[0], parts[1], ref type, ref value, ref isExt)) return false;
+                if (!Parse(p, parts[0], parts[1], ref type, ref value, ref extBits)) return false;
                 args.Type1 = type; args.Value1 = value;
             }
             if (parts.Length >= 4) {
-                if (!Parse(p, parts[2], parts[3], ref type, ref value, ref isExt)) return false;
+                if (!Parse(p, parts[2], parts[3], ref type, ref value, ref extBits)) return false;
                 args.Type2 = type; args.Value2 = value;
             }
             if (parts.Length >= 6) {
                 Player.Message(p, "You can only use up to two types of physics."); return false;
             }
             
-            args.ExtBlock = isExt;
+            args.ExtBlock = extBits;
             return true;
         }
         
-        bool Parse(Player p, string name, string arg, ref byte type, ref byte value, ref bool isExt) {
+        bool Parse(Player p, string name, string arg, ref byte type, ref byte value, ref byte isExt) {
             if (name == "revert") {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, arg, out block)) return false;
 
                 type = PhysicsArgs.Revert; value = (BlockRaw)block;
-                isExt = block >= Block.Extended;
+                isExt = (byte)(block >> Block.ExtendedShift);
                 return true;
             }
             

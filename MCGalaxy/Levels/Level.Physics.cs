@@ -184,9 +184,10 @@ namespace MCGalaxy {
                     U.data.Data = 0;
                     
                     // Is the Ext flag just an indicator for the block update?
-                    if (U.data.ExtBlock && (U.data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        block |= Block.Extended;
-                        U.data.Raw &= ~PhysicsArgs.ExtBit;
+                    byte extBits = U.data.ExtBlock;
+                    if (extBits != 0 && (U.data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        block |= (BlockID)(extBits << Block.ExtendedShift);
+                        U.data.Raw &= ~PhysicsArgs.ExtBits;
                     }
                     
                     if (DoPhysicsBlockchange(U.Index, block, false, U.data, true))
@@ -235,7 +236,7 @@ namespace MCGalaxy {
 
         internal bool AddUpdate(int index, BlockID block, bool overRide = false) {
             PhysicsArgs args = default(PhysicsArgs);
-            if (block >= Block.Extended) args.Raw |= PhysicsArgs.ExtBit;
+            args.Raw |= (uint)(PhysicsArgs.ExtBit * (block >> Block.ExtendedShift));
             return AddUpdate(index, block, args, overRide);
         }
         
@@ -248,8 +249,8 @@ namespace MCGalaxy {
                 
                 if (overRide) {
                     // Is the Ext flag just an indicator for the block update?
-                    if (data.ExtBlock && (data.Raw & PhysicsArgs.TypeMask) == 0) {
-                        data.Raw &= ~PhysicsArgs.ExtBit;
+                    if (data.ExtBlock != 0 && (data.Raw & PhysicsArgs.TypeMask) == 0) {
+                        data.Raw &= ~PhysicsArgs.ExtBits;
                     }
                     AddCheck(index, true, data); //Dont need to check physics here....AddCheck will do that
                     Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data);
@@ -331,13 +332,13 @@ namespace MCGalaxy {
                     ushort x, y, z;
                     IntToPos(C.Index, out x, out y, out z);
                     
-                    BlockID block = Block.FromRaw(args.Value1, args.ExtBlock);
+                    BlockID block = (BlockID)(args.Value1 | (args.ExtBlock << 8));
                     Blockchange(C.Index, block, true, default(PhysicsArgs));
                 } else if (args.Type2 == PhysicsArgs.Revert) {
                     ushort x, y, z;
                     IntToPos(C.Index, out x, out y, out z);
                     
-                    BlockID block = Block.FromRaw(args.Value2, args.ExtBlock);
+                    BlockID block = (BlockID)(args.Value2 | (args.ExtBlock << 8));
                     Blockchange(C.Index, block, true, default(PhysicsArgs));
                 }
             } catch (Exception e) {

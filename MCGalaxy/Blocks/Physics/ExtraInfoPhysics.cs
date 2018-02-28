@@ -85,7 +85,7 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (args.Revert) {
                 PhysicsArgs revertArgs = default(PhysicsArgs);
-                if (args.ExtBlock) revertArgs.Raw |= PhysicsArgs.ExtBit;
+                revertArgs.ExtBlock = args.ExtBlock;
                 lvl.AddUpdate(C.Index, args.RevertType, revertArgs);
                 
                 C.Data.ResetTypes();
@@ -141,9 +141,9 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         struct ExtraInfoArgs {
-            public bool Wait, Drop, Dissipate, Revert, Explode, Rainbow, ExtBlock;
+            public bool Wait, Drop, Dissipate, Revert, Explode, Rainbow;
             public int WaitTime, DropNum, DissipateNum, ExplodeNum, RainbowNum;
-            public byte RevertType;
+            public byte RevertType, ExtBlock;
         }
     }
 }

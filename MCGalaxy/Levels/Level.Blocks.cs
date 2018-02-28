@@ -247,12 +247,14 @@ namespace MCGalaxy {
                 else p.TotalPlaced++;
                 
                 errorLocation = "Setting tile";
-                BlockRaw raw = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
-                SetTile(x, y, z, raw);   
                 if (block >= Block.Extended) {
+                    SetTile(x, y, z, Block.custom_block);   
                     SetExtTileNoCheck(x, y, z, (BlockRaw)block);
-                } else if (old >= Block.Extended) {
-                    RevertExtTileNoCheck(x, y, z);
+                } else {
+                    SetTile(x, y, z, (BlockRaw)block);   
+                    if (old >= Block.Extended) {
+                        RevertExtTileNoCheck(x, y, z);
+                    }
                 }
 
                 errorLocation = "Adding physics";
@@ -329,17 +331,20 @@ namespace MCGalaxy {
                     }
                     currentUndo++;
                 }
-
-                blocks[b] = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
+                
                 Changed = true;
                 if (block >= Block.Extended) {
+                    blocks[b] = Block.custom_block;
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
                     SetExtTileNoCheck(x, y, z, (BlockRaw)block);
-                } else if (old >= Block.Extended) {
-                    ushort x, y, z;
-                    IntToPos(b, out x, out y, out z);
-                    RevertExtTileNoCheck(x, y, z);
+                } else {
+                    blocks[b] = (BlockRaw)block;
+                    if (old >= Block.Extended) {               
+                        ushort x, y, z;
+                        IntToPos(b, out x, out y, out z);
+                        RevertExtTileNoCheck(x, y, z);
+                    }
                 }
                 if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0)) {
                     AddCheck(b, false, data);
@@ -348,7 +353,6 @@ namespace MCGalaxy {
                 // Save bandwidth sending identical looking blocks, like air/op_air changes.
                 return !Block.VisuallyEquals(old, block);
             } catch {
-                blocks[b] = block >= Block.Extended ? Block.custom_block : (BlockRaw)block;
                 return false;
             }
         }

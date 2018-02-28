@@ -175,13 +175,16 @@ namespace MCGalaxy.Drawing.Ops {
                 // Check to make sure the block is actually different and that we can change it
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
-                // Set the block (inlined)
-                lvl.blocks[index] = b.Block >= Block.Extended ? Block.custom_block : (BlockRaw)b.Block;
+                // Set the block (inlined)              
                 lvl.Changed = true;
                 if (b.Block >= Block.Extended) {
+                    lvl.blocks[index] = Block.custom_block;
                     lvl.SetExtTileNoCheck(b.X, b.Y, b.Z, (BlockRaw)b.Block);
-                } else if (old >= Block.Extended) {
-                    lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
+                } else {
+                    lvl.blocks[index] = (BlockRaw)b.Block;
+                    if (old >= Block.Extended) {
+                        lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
+                    }
                 }
                 
                 if (p != null) {

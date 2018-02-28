@@ -24,7 +24,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void Do(Level lvl, ref PhysInfo C) {
             if (C.Data.Type1 != PhysicsArgs.Custom) return;
             if (C.Data.Data == 0) {
-                BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
+                BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock << Block.ExtendedShift));
                 bool tdoor = lvl.Props[block].IsTDoor;
                 
                 if (tdoor) tDoor(lvl, ref C);
@@ -44,7 +44,7 @@ namespace MCGalaxy.Blocks.Physics {
         // Change anys door blocks nearby into air forms
         static void Door(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
-            BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock ? Block.Extended : 0));
+            BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock << Block.ExtendedShift));
             bool instant = block == Block.Door_Air || block == Block.Door_AirActivatable;
             
             ActivateablePhysics.DoDoors(lvl, (ushort)(x + 1), y, z, instant);

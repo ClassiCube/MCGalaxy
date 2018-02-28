@@ -54,7 +54,7 @@ namespace MCGalaxy {
         /// <summary> Returns whether the given color code is defined. </summary>
         /// <remarks> NOTE: This returns false for A to F, be warned! </remarks>
         public static bool IsDefined(char c) {
-            if (c >= '~' && c <= '~') return List[c].Fallback != '\0';
+            if (c >= ' ' && c <= '~') return List[c].Fallback != '\0';
             return List[c.UnicodeToCp437()].Fallback != '\0';
         }
         

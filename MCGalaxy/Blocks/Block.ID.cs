@@ -331,5 +331,6 @@ namespace MCGalaxy
         public const byte Invalid = 0xff;
         
         public const ushort Extended = 256;
+        public const int ExtendedShift = 8;
     }
 }

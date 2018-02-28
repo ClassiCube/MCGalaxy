@@ -49,7 +49,7 @@ namespace MCGalaxy.Blocks.Physics {
                     PhysicsArgs args = default(PhysicsArgs);
                     args.Type1 = PhysicsArgs.Wait; args.Value1 = 5;
                     args.Type2 = PhysicsArgs.Revert; args.Value2 = (BlockRaw)below;
-                    args.ExtBlock = below >= Block.Extended;
+                    args.ExtBlock = (byte)(below >> Block.ExtendedShift);
                     
                     lvl.AddUpdate(belowIndex, newBlock, args, true);
                     return;
