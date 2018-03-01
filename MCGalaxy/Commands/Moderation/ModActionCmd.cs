@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {
                     who.BlockBindings[b] = (BlockID)b;
                     Player.Message(who, "   Hence, binding for &b{0} %Swas unbound",
-                                   Block.GetName(who, defaultBinding));
+                                   Block.GetName(who, (BlockID)b));
                 }
             }
         }

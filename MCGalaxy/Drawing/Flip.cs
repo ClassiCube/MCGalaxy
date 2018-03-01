@@ -104,7 +104,7 @@ namespace MCGalaxy.Drawing {
             return flipped;
         }
         
-        const int posX = 0x100, negX = 0x200, posY = 0x010, negY = 0x020, posZ = 0x001, negZ = 0x002;
+        const int posX = 0, negX = 1, posY = 2, negY = 3, posZ = 4, negZ = 5;
         static int Rotate(int row, int x, int y, int z, CopyState state) {
             switch (row) {
                     case posX: return x;
