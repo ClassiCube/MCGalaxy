@@ -110,7 +110,7 @@ namespace MCGalaxy {
             }
 
             BlockID held = block;
-            if (!Block.IsPhysicsType(block)) block = BlockBindings[(BlockRaw)block];
+            block = BlockBindings[block];
             if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }

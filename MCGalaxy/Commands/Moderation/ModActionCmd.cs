@@ -114,13 +114,12 @@ namespace MCGalaxy.Commands.Moderation {
                                Block.GetName(who, block));
             }
             
-            for (int i = 0; i < who.BlockBindings.Length; i++) {
-                block = who.BlockBindings[i];
-                BlockID defaultBinding = Block.FromRaw((byte)i);
-                if (block == defaultBinding) continue;
+            for (int b = 0; b < who.BlockBindings.Length; b++) {
+                block = who.BlockBindings[b];
+                if (block == b) continue;
                 
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {
-                    who.BlockBindings[i] = defaultBinding;
+                    who.BlockBindings[b] = (BlockID)b;
                     Player.Message(who, "   Hence, binding for &b{0} %Swas unbound",
                                    Block.GetName(who, defaultBinding));
                 }

@@ -195,7 +195,7 @@ namespace MCGalaxy {
 
         public BlockID ModeBlock;
         public BlockID RawHeldBlock = Block.Stone;
-        public BlockID[] BlockBindings = new BlockID[Block.Count];        
+        public BlockID[] BlockBindings = new BlockID[Block.ExtendedCount];        
         public string[] CmdBindings = new string[10];
         public string[] CmdArgsBindings = new string[10];
         

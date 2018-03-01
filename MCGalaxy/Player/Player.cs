@@ -54,8 +54,8 @@ namespace MCGalaxy {
         internal Player() {
             spamChecker = new SpamChecker(this);
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            for (int i = 0; i < BlockBindings.Length; i++) {
-                BlockBindings[i] = Block.FromRaw((byte)i);
+            for (int b = 0; b < BlockBindings.Length; b++) {
+                BlockBindings[b] = (BlockID)b;
             }
         }
         
@@ -93,7 +93,7 @@ namespace MCGalaxy {
         
         public BlockID GetHeldBlock() {
             if (ModeBlock != Block.Air) return ModeBlock;
-            return BlockBindings[(BlockRaw)RawHeldBlock];
+            return BlockBindings[RawHeldBlock];
         }
         
         public void SetPrefix() {
@@ -472,7 +472,7 @@ namespace MCGalaxy {
                 SelectionHandler callback = selCallback;
                 ClearSelection();
 
-                if (!Block.IsPhysicsType(block)) block = p.BlockBindings[(BlockRaw)block];
+                block = p.BlockBindings[block];
                 bool canRepeat = callback(this, selMarks, state, block);
                 
                 if (canRepeat && staticCommands) {

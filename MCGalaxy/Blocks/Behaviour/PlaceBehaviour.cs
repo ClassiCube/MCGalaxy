@@ -67,7 +67,7 @@ namespace MCGalaxy.Blocks {
             }
             
             // Use red wool to detonate c4
-            BlockID held = p.BlockBindings[(BlockRaw)p.RawHeldBlock];
+            BlockID held = p.BlockBindings[p.RawHeldBlock];
             if (held == Block.Red) {
                 Player.Message(p, "Placed detonator block, delete it to detonate.");
                 C4Det(p, Block.C4Detonator, x, y, z); return;
