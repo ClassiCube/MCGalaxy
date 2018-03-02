@@ -43,11 +43,25 @@ namespace MCGalaxy {
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
+        /// <returns> Undefined behaviour if coordinates are invalid. </returns>
+        public BlockID FastGetBlock(int index) {
+            byte raw = blocks[index];
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTile(index));
+        }
+        
+        /// <summary> Gets the block at the given coordinates. </summary>
+        /// <returns> Undefined behaviour if coordinates are invalid. </returns>
+        public BlockID FastGetBlock(ushort x, ushort y, ushort z) {
+            byte raw = blocks[x + Width * (z + y * Length)];
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | FastGetExtTile(x, y, z));
+        }
+        
+        /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Block.Invalid if coordinates outside map. </returns>
         public BlockID GetBlock(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return Block.Invalid;
             byte raw = blocks[x + Width * (z + y * Length)];
-            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | FastGetExtTile(x, y, z));
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
@@ -56,7 +70,7 @@ namespace MCGalaxy {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return Block.Invalid; }
             index = x + Width * (z + y * Length);
             byte raw = blocks[index];
-            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | GetExtTileNoCheck(x, y, z));
+            return raw != Block.custom_block ? raw : (BlockID)(Block.Extended | FastGetExtTile(x, y, z));
         }
         
         /// <summary> Gets whether the block at the given coordinates is air. </summary>
@@ -81,7 +95,7 @@ namespace MCGalaxy {
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
-        public byte GetExtTileNoCheck(ushort x, ushort y, ushort z) {
+        public byte FastGetExtTile(ushort x, ushort y, ushort z) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
@@ -115,10 +129,10 @@ namespace MCGalaxy {
         public void SetExtTile(ushort x, ushort y, ushort z, byte extBlock) {
             int index = PosToInt(x, y, z);
             if (index < 0 || blocks == null) return;
-            SetExtTileNoCheck(x, y, z, extBlock);
+            FastSetExtTile(x, y, z, extBlock);
         }
         
-        public void SetExtTileNoCheck(ushort x, ushort y, ushort z, byte extBlock) {
+        public void FastSetExtTile(ushort x, ushort y, ushort z, byte extBlock) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
@@ -249,7 +263,7 @@ namespace MCGalaxy {
                 errorLocation = "Setting tile";
                 if (block >= Block.Extended) {
                     SetTile(x, y, z, Block.custom_block);   
-                    SetExtTileNoCheck(x, y, z, (BlockRaw)block);
+                    FastSetExtTile(x, y, z, (BlockRaw)block);
                 } else {
                     SetTile(x, y, z, (BlockRaw)block);   
                     if (old >= Block.Extended) {
@@ -337,7 +351,7 @@ namespace MCGalaxy {
                     blocks[b] = Block.custom_block;
                     ushort x, y, z;
                     IntToPos(b, out x, out y, out z);
-                    SetExtTileNoCheck(x, y, z, (BlockRaw)block);
+                    FastSetExtTile(x, y, z, (BlockRaw)block);
                 } else {
                     blocks[b] = (BlockRaw)block;
                     if (old >= Block.Extended) {               

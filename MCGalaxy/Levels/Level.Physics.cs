@@ -153,7 +153,7 @@ namespace MCGalaxy {
                     
                     C.Block = blocks[chk.Index];
                     if (C.Block == Block.custom_block) {
-                        C.Block = (BlockID)(Block.Extended | GetExtTileNoCheck(C.X, C.Y, C.Z));
+                        C.Block = (BlockID)(Block.Extended | FastGetExtTile(C.X, C.Y, C.Z));
                     }
                     
                     if ((C.Data.Raw & mask) == 0 || C.Data.Type1 == PhysicsArgs.Custom || extraHandler(this, ref C)) {

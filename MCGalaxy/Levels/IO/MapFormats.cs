@@ -62,7 +62,7 @@ namespace MCGalaxy.Levels.IO {
                 
                 blocks[i] = Block.custom_block;
                 lvl.IntToPos(i, out x, out y, out z);
-                lvl.SetExtTileNoCheck(x, y, z, raw);
+                lvl.FastSetExtTile(x, y, z, raw);
             }
         }
     }

@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.World {
                     temp.blocks[x + width * (z + y * length)] = block;
                     if (block != Block.custom_block) continue;
                     
-                    byte extBlock = lvl.GetExtTileNoCheck(x, y, z);
-                    temp.SetExtTileNoCheck(x, y, z, extBlock);
+                    byte extBlock = lvl.FastGetExtTile(x, y, z);
+                    temp.FastSetExtTile(x, y, z, extBlock);
                 }
                 
                 temp.spawnx = lvl.spawnx; temp.spawny = lvl.spawny; temp.spawnz = lvl.spawnz;

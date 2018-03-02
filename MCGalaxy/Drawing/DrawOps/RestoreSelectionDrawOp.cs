@@ -38,23 +38,16 @@ namespace MCGalaxy.Drawing.Ops {
         public Level Source;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            Max.X = Math.Min(Max.X, Source.Width - 1);
+            Max.X = Math.Min(Max.X, Source.Width  - 1);
             Max.Y = Math.Min(Max.Y, Source.Height - 1);
             Max.Z = Math.Min(Max.Z, Source.Length - 1);
             
-            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            int width = Source.Width, length = Source.Length;
-            byte[] blocks = Source.blocks;
-            
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);            
             for (ushort y = p1.Y; y <= p2.Y; y++)
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                BlockID block = blocks[x + width * (z + y * length)];
-                if (block == Block.custom_block) {
-                    block = (BlockID)(Block.Extended | Source.GetExtTileNoCheck(x, y, z));
-                }
-                output(Place(x, y, z, block));
+                output(Place(x, y, z, Source.FastGetBlock(x, y, z)));
             }
             
             Source.Dispose();
