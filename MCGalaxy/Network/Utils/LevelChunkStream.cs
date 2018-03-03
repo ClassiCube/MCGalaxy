@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network {
     
@@ -89,28 +90,39 @@ namespace MCGalaxy.Network {
             
             // Store on stack instead of performing function call for every block in map
             byte* conv = stackalloc byte[Block.Count];
-            byte* convCPE = stackalloc byte[Block.Count];
-            for (int i = 0; i < 256; i++) {
+            byte* convExt = stackalloc byte[Block.Count];
+            
+            for (int i = 0; i < Block.Count; i++) {
                 conv[i] = (byte)Block.Convert((byte)i);
                 if (conv[i] > Block.CpeCount) conv[i] = Block.Orange;
             }
             
-            // Convert custom blocks (that overwrote core blocks) to their fallbacks
             if (!p.hasBlockDefs) {
-                for (int i = 0; i < Block.CpeCount ; i++) {
-                    BlockDefinition def = p.level.CustomBlockDefs[i];
-                    if (def != null) conv[i] = def.FallBack;
+                // Convert custom blocks (that overwrote core blocks) to their fallbacks
+                for (int b = 0; b < Block.CpeCount; b++) {
+                    BlockDefinition def = p.level.CustomBlockDefs[b];
+                    if (def != null) conv[b] = def.FallBack;
+                }
+                
+                for (int i = 0; i < Block.Count; i++) {
+                    BlockID block = Block.FromRaw((byte)i);
+                    BlockDefinition def = p.level.CustomBlockDefs[block];
+                    
+                    if (def == null) {
+                        convExt[i] = block < Block.CpeCount ? (byte)block : Block.Air;
+                    } else {
+                        convExt[i] = def.FallBack;
+                    }
                 }
             }
             
             // Convert CPE blocks to their fallbacks
             if (!p.hasCustomBlocks) {
-                for (int i = 0; i < Block.Count; i++) {
-                    convCPE[i] = Block.ConvertCPE((byte)i);
-                    conv[i] = Block.ConvertCPE(conv[i]);
+                for (int b = 0; b < Block.Count; b++) {
+                    conv[b] = Block.ConvertCPE(conv[b]);
+                    convExt[b] = Block.ConvertCPE(convExt[b]);
                 }
-            }
-            
+            }            
             
             Level lvl = p.level;
             bool hasBlockDefs = p.hasBlockDefs;
@@ -121,11 +133,11 @@ namespace MCGalaxy.Network {
                 dst.length = blocks.Length;
                 
                 // compress the map data in 64 kb chunks
-                if (p.hasCustomBlocks) {
+                if (p.hasBlockDefs) {
                     for (int i = 0; i < blocks.Length; ++i) {
                         byte block = blocks[i];
                         if (block == Block.custom_block) {
-                            buffer[bIndex] = hasBlockDefs ? lvl.GetExtTile(i) : lvl.GetFallbackExtTile(i);
+                            buffer[bIndex] = lvl.GetExtTile(i);
                         } else {
                             buffer[bIndex] = conv[block];
                         }
@@ -140,11 +152,9 @@ namespace MCGalaxy.Network {
                     for (int i = 0; i < blocks.Length; ++i) {
                         byte block = blocks[i];
                         if (block == Block.custom_block) {
-                            block = hasBlockDefs ? lvl.GetExtTile(i) : lvl.GetFallbackExtTile(i);
-                            buffer[bIndex] = convCPE[block];
-                        } else {
-                            buffer[bIndex] = conv[block];
+                            block = convExt[lvl.GetExtTile(i)];
                         }
+                        buffer[bIndex] = conv[block];
                         
                         bIndex++;
                         if (bIndex == bufferSize) {

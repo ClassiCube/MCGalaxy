@@ -21,7 +21,6 @@ using System.IO;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : Command {

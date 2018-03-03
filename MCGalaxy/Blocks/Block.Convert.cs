@@ -28,9 +28,7 @@ namespace MCGalaxy {
         public static bool ExistsGlobal(BlockID b) {
             if (b < Block.Count) return !Undefined(b);
             if (b >= Block.Extended && b < Block.Extended + Block.CpeCount) return false;
-            
-            BlockRaw raw = (BlockRaw)b;
-            return BlockDefinition.GlobalDefs[raw] != null;
+            return BlockDefinition.GlobalDefs[b] != null;
         }
         
         public static string GetName(Player p, BlockID block) {
@@ -41,7 +39,7 @@ namespace MCGalaxy {
             if (!Player.IsSuper(p)) {
                 def = p.level.GetBlockDef(block);
             } else {
-                def = BlockDefinition.GlobalDefs[raw];
+                def = BlockDefinition.GlobalDefs[block];
             }
             if (def != null) return def.Name.Replace(" ", "");
             

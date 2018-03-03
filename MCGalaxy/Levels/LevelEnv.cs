@@ -21,7 +21,6 @@ using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public static class LevelEnv {

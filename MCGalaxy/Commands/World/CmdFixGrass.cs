@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
                 Help(p); return;
             }
             
-            Player.Message(p, "Fixed " + totalFixed + " blocks");
+            Player.Message(p, "Fixed " + totalFixed + " blocks.");
         }        
         
         static void Fix(Player p, Level lvl, ref int totalFixed, bool fixGrass, bool fixDirt) {

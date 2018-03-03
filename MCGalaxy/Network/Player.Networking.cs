@@ -235,7 +235,7 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def == BlockDefinition.GlobalDefs[i]) continue;                
-                Send(Packet.UndefineBlock((byte)i));
+                Send(Packet.UndefineBlock(def));
             }
         }
         
@@ -265,7 +265,7 @@ namespace MCGalaxy {
             
             BlockRaw raw;
             if (block >= Block.Extended) {
-                raw = hasBlockDefs ? (BlockRaw)block : level.RawFallback((BlockRaw)block);
+                raw = hasBlockDefs ? (BlockRaw)block : level.RawFallback(block);
             } else {
                 raw = (BlockRaw)Block.Convert(block);
             }

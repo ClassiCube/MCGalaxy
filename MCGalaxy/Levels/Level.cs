@@ -481,7 +481,7 @@ namespace MCGalaxy {
         
         public void UpdateBlockHandlers() {
             for (int i = 0; i < Props.Length; i++) {
-                UpdateBlockHandler((ushort)i);
+                UpdateBlockHandler((BlockID)i);
             }
         }
         
@@ -494,9 +494,8 @@ namespace MCGalaxy {
             physicsDoorsHandlers[block] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
         }
         
-        public void UpdateCustomBlock(byte raw, BlockDefinition def) {
-            CustomBlockDefs[raw] = def;
-            BlockID block = Block.FromRaw(raw);
+        public void UpdateCustomBlock(BlockID block, BlockDefinition def) {
+            CustomBlockDefs[block] = def;
             UpdateBlockHandler(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
         }

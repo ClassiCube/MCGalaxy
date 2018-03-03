@@ -366,8 +366,8 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] UndefineBlock(byte block) {
-            return new byte[] { Opcode.CpeRemoveBlockDefinition, block };
+        public static byte[] UndefineBlock(BlockDefinition def) {
+            return new byte[] { Opcode.CpeRemoveBlockDefinition, (byte)def.BlockID };
         }
         
         public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437) {
@@ -386,7 +386,7 @@ namespace MCGalaxy.Network {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
-            buffer[i++] = def.BlockID;
+            buffer[i++] = (byte)def.BlockID;
             NetUtils.Write(def.Name, buffer, i, hasCP437);
             i += NetUtils.StringSize;
             buffer[i++] = def.CollideType;

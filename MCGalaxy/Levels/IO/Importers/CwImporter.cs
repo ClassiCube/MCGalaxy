@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using fNbt;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Levels.IO {
     public sealed class CwImporter : IMapImporter {
@@ -149,12 +150,13 @@ namespace MCGalaxy.Levels.IO {
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
                 // Don't define level custom block if same as global custom block
-                BlockDefinition globalDef = BlockDefinition.GlobalDefs[def.BlockID];
+                BlockID block = def.GetBlock();
+                BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
                 if (PropsEquals(def, globalDef)) continue;
                 
                 def.SideTex = def.LeftTex;
                 def.Version2 = true;
-                lvl.UpdateCustomBlock(def.BlockID, def);
+                lvl.UpdateCustomBlock(block, def);
                 hasBlockDefs = true;
             }
             

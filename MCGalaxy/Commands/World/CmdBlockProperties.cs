@@ -18,7 +18,6 @@
 using System;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdBlockProperties : Command {

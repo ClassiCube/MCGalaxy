@@ -25,7 +25,7 @@ namespace MCGalaxy.Network {
     public sealed class BufferedBlockSender {
         
         int[] indices = new int[256];
-        byte[] types = new byte[256];
+        BlockID[] blocks = new BlockID[256];
         int count = 0;
         public Level level;
         public Player player;
@@ -48,9 +48,9 @@ namespace MCGalaxy.Network {
         public bool Add(int index, BlockID block) {
             indices[count] = index;            
             if (Block.IsPhysicsType(block)) {
-                types[count] = (BlockRaw)Block.Convert(block);
+                blocks[count] = Block.Convert(block);
             } else {
-                types[count] = (BlockRaw)block;
+                blocks[count] = block;
             }
             
             count++;
@@ -117,8 +117,9 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(index >> 24); data[j++] = (byte)(index >> 16);
                 data[j++] = (byte)(index >> 8); data[j++] = (byte)index;
             }
-            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++)
-                data[j++] = types[i];
+            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
+                data[j++] = (BlockRaw)blocks[i];
+            }
             return data;
         }
         
@@ -134,7 +135,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = types[i];
+                data[j++] = (BlockRaw)blocks[i];
             }
             return data;
         }
@@ -151,7 +152,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = level.RawFallback(types[i]);
+                data[j++] = level.RawFallback(blocks[i]);
             }
             return data;
         }
@@ -168,7 +169,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = Block.ConvertCPE(level.RawFallback(types[i]));
+                data[j++] = Block.ConvertCPE(level.RawFallback(blocks[i]));
             }
             return data;
         }

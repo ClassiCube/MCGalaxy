@@ -28,7 +28,7 @@ namespace MCGalaxy.Blocks {
         /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block. </summary>
         public static BlockDefinition MakeCustomBlock(BlockID b) {
             BlockDefinition def = new BlockDefinition();
-            def.BlockID = (BlockRaw)b;
+            def.SetBlock(b);
             def.Name = Name(b);
             def.CollideType = Collide(b);
             def.Speed = 1;

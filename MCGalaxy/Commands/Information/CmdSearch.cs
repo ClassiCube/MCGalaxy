@@ -19,6 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Info {
     public class CmdSearch : Command {
@@ -58,9 +59,10 @@ namespace MCGalaxy.Commands.Info {
             }
             
             if (!Player.IsSuper(p)) {
-                for (int id = Block.CpeCount; id < Block.Count; id++) {
-                    if (p.level.CustomBlockDefs[id] == null) continue;
-                    blocks.Add((BlockID)(Block.Extended | id));
+                for (int b = Block.CpeCount; b < Block.Count; b++) {
+                    BlockID block = Block.FromRaw((BlockRaw)b);
+                    if (p.level.CustomBlockDefs[block] == null) continue;
+                    blocks.Add(block);
                 }
             } 
 

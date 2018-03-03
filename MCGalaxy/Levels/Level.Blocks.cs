@@ -101,16 +101,10 @@ namespace MCGalaxy {
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
-        public byte GetFallbackExtTile(int index) {
-            byte tile = GetExtTile(index);
-            BlockDefinition def = CustomBlockDefs[tile];
-            return def == null ? Block.Air : def.FallBack;
-        }
-        
-        public byte RawFallback(byte raw) {
-            BlockDefinition def = CustomBlockDefs[raw];
+        public byte RawFallback(BlockID b) {
+            BlockDefinition def = CustomBlockDefs[b];
             if (def != null) return def.FallBack;
-            return raw < Block.CpeCount ? raw : Block.Air;
+            return b < Block.CpeCount ? (byte)b : Block.Air;
         }
         
         public void SetTile(int index, byte block) {
@@ -414,10 +408,8 @@ namespace MCGalaxy {
         }
         
         public BlockDefinition GetBlockDef(BlockID block) {
-            if (block >= Block.Extended) return CustomBlockDefs[(BlockRaw)block];
-            if (block == Block.Air) return null;
-            
-            if (block >= Block.CpeCount) {
+            if (block == Block.Air) return null;           
+            if (Block.IsPhysicsType(block)) {
                 return CustomBlockDefs[Block.Convert(block)];
             } else {
                 return CustomBlockDefs[block];

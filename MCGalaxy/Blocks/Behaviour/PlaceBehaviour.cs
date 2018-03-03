@@ -18,7 +18,6 @@
 using MCGalaxy.Blocks.Physics;
 using System;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Blocks {
     

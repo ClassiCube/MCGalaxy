@@ -28,7 +28,6 @@ using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public class ChatMessage {

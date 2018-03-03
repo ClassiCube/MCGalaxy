@@ -104,8 +104,8 @@ namespace MCGalaxy {
         public void SendCurrentTextures() {
             byte side = (byte)level.Config.EdgeBlock;
             byte edge = (byte)level.Config.HorizonBlock;
-            if (!hasBlockDefs) side = level.RawFallback(side);
-            if (!hasBlockDefs) edge = level.RawFallback(edge);
+            if (!hasBlockDefs) side = level.RawFallback(level.Config.EdgeBlock);
+            if (!hasBlockDefs) edge = level.RawFallback(level.Config.HorizonBlock);
             
             string url = GetTextureUrl();
             if (Supports(CpeExt.EnvMapAspect)) {                

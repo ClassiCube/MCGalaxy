@@ -295,9 +295,8 @@ namespace MCGalaxy {
                 }
                 
                 if (held >= Block.Extended) {
-                    BlockRaw raw = (BlockRaw)held;
-                    if (!hasBlockDefs || level.CustomBlockDefs[raw] == null) {
-                        SendMessage("Invalid block type: " + raw);
+                    if (!hasBlockDefs || level.CustomBlockDefs[held] == null) {
+                        SendMessage("Invalid block type: " + (BlockRaw)held);
                         RevertBlock(x, y, z); return;
                     }
                 }
@@ -385,8 +384,9 @@ namespace MCGalaxy {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
                     }
-                    value = (byte)value;
-                    if (!hasBlockDefs) value = level.RawFallback((byte)value);                    
+                	
+                    if (!hasBlockDefs) value = level.RawFallback((BlockID)value);
+                    value = (byte)value;                   
                 } else {
                     if (zone != null && zone.Config.GetEnvProp(i) != -1) {
                         value = zone.Config.GetEnvProp(i);

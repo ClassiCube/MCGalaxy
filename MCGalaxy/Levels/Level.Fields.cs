@@ -39,7 +39,7 @@ namespace MCGalaxy {
         public ushort spawnx, spawny, spawnz;
         public Position SpawnPos { get { return new Position(16 + spawnx * 32, 32 + spawny * 32, 16 + spawnz * 32); } }
             
-        public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.Count];
+        public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.ExtendedCount];
         public BlockProps[] Props = new BlockProps[Block.ExtendedCount];
         internal readonly object PropsLock = new object();
         public ExtrasCollection Extras = new ExtrasCollection();
