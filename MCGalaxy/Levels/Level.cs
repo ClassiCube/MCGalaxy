@@ -452,8 +452,7 @@ namespace MCGalaxy {
             if ((Props[block].ChangedScope & 2) != 0) return true;
             
             if (Block.IsPhysicsType(block)) return false;
-            BlockRaw raw = (BlockRaw)block;
-            return CustomBlockDefs[raw] != BlockDefinition.GlobalDefs[raw];
+            return CustomBlockDefs[block] != BlockDefinition.GlobalDefs[block];
         }
         
         void LoadCoreProps() {
