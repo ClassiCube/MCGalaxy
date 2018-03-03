@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands.CPE {
             
             for (int i = 0; i < Block.Count; i++) {
                 BlockDefinition def = defs[i];
-                BlockID block = Block.FromRaw((byte)i);
+                BlockID block = def.GetBlock();
                 
                 if (!ExistsInScope(def, block, global)) continue;
                 defsInScope.Add(def);
@@ -469,7 +469,7 @@ namespace MCGalaxy.Commands.CPE {
             string scope = global ? "global" : "level";
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
-            block = Block.FromRaw(def.BlockID);
+            block = def.GetBlock();
             BlockDefinition.Add(def, defs, p == null ? null : p.level);
             UpdateBlockProps(global, p, block, props);
             return true;

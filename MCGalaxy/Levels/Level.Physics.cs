@@ -329,15 +329,9 @@ namespace MCGalaxy {
                 PhysicsArgs args = C.data;
                 // Copy paste here because it's worthwhile inlining
                 if (args.Type1 == PhysicsArgs.Revert) {
-                    ushort x, y, z;
-                    IntToPos(C.Index, out x, out y, out z);
-                    
                     BlockID block = (BlockID)(args.Value1 | (args.ExtBlock << Block.ExtendedShift));
                     Blockchange(C.Index, block, true, default(PhysicsArgs));
                 } else if (args.Type2 == PhysicsArgs.Revert) {
-                    ushort x, y, z;
-                    IntToPos(C.Index, out x, out y, out z);
-                    
                     BlockID block = (BlockID)(args.Value2 | (args.ExtBlock << Block.ExtendedShift));
                     Blockchange(C.Index, block, true, default(PhysicsArgs));
                 }

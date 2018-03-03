@@ -46,6 +46,7 @@ namespace MCGalaxy {
         public byte LeftTex, RightTex, FrontTex, BackTex;
         
         public int InventoryOrder = -1;
+        public BlockID_ GetBlock() { return Block.FromRaw(BlockID); }
         
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         

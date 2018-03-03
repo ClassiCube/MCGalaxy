@@ -99,7 +99,7 @@ namespace MCGalaxy.Maths {
             AABB bb;
             byte raw;
             if (byte.TryParse(model, out raw)) {
-                BlockID block = Block.FromRaw(raw);                
+                BlockID block = Block.FromRaw(raw);
                 bb = Block.BlockAABB(block, lvl);
                 bb = bb.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]
             } else {

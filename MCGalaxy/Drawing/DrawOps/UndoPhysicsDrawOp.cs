@@ -58,17 +58,15 @@ namespace MCGalaxy.Drawing.Ops {
         
         bool CheckBlockPhysics(Player p, Level lvl, int i) {
             Level.UndoPos undo = lvl.UndoBuffer[i];
-            DateTime time = Server.StartTime.AddTicks((undo.flags >> 2) * TimeSpan.TicksPerSecond);
-            if (time < Start) return false;
+            if (undo.Time < Start) return false;
             
             ushort x, y, z;
-            lvl.IntToPos(undo.index, out x, out y, out z);
+            lvl.IntToPos(undo.Index, out x, out y, out z);
             BlockID cur = lvl.GetBlock(x, y, z);
             
-            BlockID newBlock = Block.FromRaw(undo.newRaw, (undo.flags & 2) != 0);
+            BlockID newBlock = undo.NewBlock;
             if (cur == newBlock || Block.Convert(cur) == Block.Water || Block.Convert(cur) == Block.Lava) {
-                BlockID oldBlock = Block.FromRaw(undo.oldRaw, (undo.flags & 1) != 0);
-                lvl.Blockchange(x, y, z, oldBlock, true, default(PhysicsArgs), false);
+                lvl.Blockchange(x, y, z, undo.OldBlock, true, default(PhysicsArgs), false);
             }
             return true;
         }

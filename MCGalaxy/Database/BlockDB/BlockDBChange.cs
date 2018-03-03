@@ -26,9 +26,7 @@ namespace MCGalaxy.DB {
     public static class BlockDBChange {
         
         public static void Output(Player p, string name, BlockDBEntry e) {
-            BlockID oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
-            BlockID newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
-            
+            BlockID oldBlock = e.OldBlock, newBlock = e.NewBlock;            
             DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
             name = PlayerInfo.GetColoredName(p, name);

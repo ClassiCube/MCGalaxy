@@ -430,8 +430,13 @@ namespace MCGalaxy {
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct UndoPos {
-            public int flags, index; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
-            public byte oldRaw, newRaw;
+            public int Index; 
+            int flags; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
+            byte oldRaw, newRaw;
+            
+            public BlockID OldBlock { get { return Block.FromRaw(oldRaw, (flags & 1) != 0); } }
+            public BlockID NewBlock { get { return Block.FromRaw(newRaw, (flags & 2) != 0); } }
+            public DateTime Time { get { return Server.StartTime.AddTicks((flags >> 2) * TimeSpan.TicksPerSecond); } }
             
             public void SetData(BlockID oldBlock, BlockID newBlock) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);

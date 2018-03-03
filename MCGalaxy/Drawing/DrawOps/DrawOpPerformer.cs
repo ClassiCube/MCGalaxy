@@ -183,7 +183,7 @@ namespace MCGalaxy.Drawing.Ops {
                 } else {
                     lvl.blocks[index] = (BlockRaw)b.Block;
                     if (old >= Block.Extended) {
-                        lvl.RevertExtTileNoCheck(b.X, b.Y, b.Z);
+                        lvl.FastRevertExtTile(b.X, b.Y, b.Z);
                     }
                 }
                 

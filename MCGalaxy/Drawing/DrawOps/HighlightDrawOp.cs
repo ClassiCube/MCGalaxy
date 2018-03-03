@@ -76,9 +76,9 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void HighlightBlock(BlockDBEntry e) {
-            BlockID oldBlock = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID oldBlock = e.OldBlock;
             if (oldBlock == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
-            BlockID newBlock = Block.FromRaw(e.NewRaw, (e.Flags & BlockDBFlags.NewCustom) != 0);
+            BlockID newBlock = e.NewBlock;
             
             BlockID highlight = (newBlock == Block.Air
                                   || Block.Convert(oldBlock) == Block.Water || oldBlock == Block.StillWater

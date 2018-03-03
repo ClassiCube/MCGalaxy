@@ -217,8 +217,8 @@ namespace MCGalaxy.Drawing {
                 }
                 
                 if (transformed == null) continue;
-                BlockID src = Block.FromRaw(defs[i].BlockID);
-                transform[src] = Block.FromRaw(transformed.BlockID);
+                BlockID src = defs[i].GetBlock();
+                transform[src] = transformed.GetBlock();
             }
             return transform;
         }

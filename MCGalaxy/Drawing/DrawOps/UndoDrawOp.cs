@@ -80,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops {
         Vec3U16 dims;
         
         void UndoBlock(BlockDBEntry e) {
-            BlockID block = Block.FromRaw(e.OldRaw, (e.Flags & BlockDBFlags.OldCustom) != 0);
+            BlockID block = e.OldBlock;
             if (block == Block.Invalid) return; // Exported BlockDB SQL table entries don't have previous block
             
             int x = e.Index % dims.X;

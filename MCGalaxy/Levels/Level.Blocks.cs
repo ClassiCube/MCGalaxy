@@ -144,7 +144,7 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = extBlock;
         }
         
-        public void RevertExtTileNoCheck(ushort x, ushort y, ushort z) {
+        public void FastRevertExtTile(ushort x, ushort y, ushort z) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             int cIndex = (cy * ChunksZ + cz) * ChunksX + cx;
             byte[] chunk = CustomBlocks[cIndex];
@@ -267,7 +267,7 @@ namespace MCGalaxy {
                 } else {
                     SetTile(x, y, z, (BlockRaw)block);   
                     if (old >= Block.Extended) {
-                        RevertExtTileNoCheck(x, y, z);
+                        FastRevertExtTile(x, y, z);
                     }
                 }
 
@@ -333,7 +333,7 @@ namespace MCGalaxy {
 
                 if (addUndo) {
                     UndoPos uP = default(UndoPos);
-                    uP.index = b;
+                    uP.Index = b;
                     uP.SetData(old, block);
 
                     if (UndoBuffer.Count < ServerConfig.PhysicsUndo) {
@@ -357,7 +357,7 @@ namespace MCGalaxy {
                     if (old >= Block.Extended) {               
                         ushort x, y, z;
                         IntToPos(b, out x, out y, out z);
-                        RevertExtTileNoCheck(x, y, z);
+                        FastRevertExtTile(x, y, z);
                     }
                 }
                 if (physics > 0 && (ActivatesPhysics(block) || data.Raw != 0)) {

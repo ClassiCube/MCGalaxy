@@ -17,6 +17,7 @@
  */
 using System;
 using System.Runtime.InteropServices;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.DB {
 
@@ -39,6 +40,9 @@ namespace MCGalaxy.DB {
         
         /// <summary> Flags for the block change. </summary>
         public ushort Flags;
+        
+        public BlockID OldBlock { get { return Block.FromRaw(OldRaw, (Flags & BlockDBFlags.OldCustom) != 0); } }
+        public BlockID NewBlock { get { return Block.FromRaw(NewRaw, (Flags & BlockDBFlags.NewCustom) != 0); } }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]    
