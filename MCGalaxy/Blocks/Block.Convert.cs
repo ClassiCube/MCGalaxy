@@ -32,8 +32,7 @@ namespace MCGalaxy {
         }
         
         public static string GetName(Player p, BlockID block) {
-            BlockRaw raw = (BlockRaw)block;
-            if (IsPhysicsType(block)) return coreNames[raw];
+            if (IsPhysicsType(block)) return coreNames[block];
             
             BlockDefinition def;
             if (!Player.IsSuper(p)) {
@@ -43,7 +42,7 @@ namespace MCGalaxy {
             }
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block < Block.Extended ? coreNames[block] : raw.ToString();
+            return block < Block.Extended ? coreNames[block] : ToRaw(block).ToString();
         }
         
         public static BlockID Parse(Player p, string input) {

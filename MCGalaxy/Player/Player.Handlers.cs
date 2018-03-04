@@ -296,7 +296,7 @@ namespace MCGalaxy {
                 
                 if (held >= Block.Extended) {
                     if (!hasBlockDefs || level.CustomBlockDefs[held] == null) {
-                        SendMessage("Invalid block type: " + (BlockRaw)held);
+                        SendMessage("Invalid block type: " + Block.ToRaw(held));
                         RevertBlock(x, y, z); return;
                     }
                 }

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Info {
             
             string blockName = Block.GetName(p, block);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.",
-                           x, y, z, (BlockRaw)block, blockName);
+                           x, y, z, Block.ToRaw(block), blockName);
             
             if (HasExtraPerm(p, 1)) {
                 BlockDBChange.OutputMessageBlock(p, block, x, y, z);

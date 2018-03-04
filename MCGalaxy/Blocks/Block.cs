@@ -182,8 +182,12 @@ namespace MCGalaxy {
             }
         }
         
-        public static BlockID FromRaw(byte raw) {
-            return raw < Block.CpeCount ? raw : (BlockID)(Block.Extended | raw);
+        public static BlockID FromRaw(BlockID raw) {
+            return raw < CpeCount ? raw : (BlockID)(raw + Block.Extended);
+        }
+        
+        public static BlockID ToRaw(BlockID raw) {
+            return raw < CpeCount ? raw : (BlockID)(raw - Block.Extended);
         }
         
         public static BlockID FromRaw(byte raw, bool extended) {
@@ -192,7 +196,8 @@ namespace MCGalaxy {
         
         public static BlockID MapOldRaw(BlockID raw) {
             // old raw form was: 0 - 65 core block ids, 66 - 255 custom block ids
-            return IsPhysicsType(raw) ? ((BlockID)(Block.Extended | raw)) : raw;
+            // 256+ remain unchanged
+            return IsPhysicsType(raw) ? ((BlockID)(raw + Block.Extended)) : raw;
         }
         
         public static bool IsPhysicsType(BlockID block) {

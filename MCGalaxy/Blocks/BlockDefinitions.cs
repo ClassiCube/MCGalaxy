@@ -26,7 +26,7 @@ using BlockRaw = System.Byte;
 namespace MCGalaxy {
     public sealed class BlockDefinition {
         
-        public ushort BlockID;
+        public ushort BlockID; // really raw block ID
         public string Name;
         public byte CollideType;
         public float Speed;
@@ -47,12 +47,8 @@ namespace MCGalaxy {
         
         public int InventoryOrder = -1;
         
-        public BlockID_ GetBlock() { 
-            return (BlockID_)(BlockID < Block.CpeCount ? BlockID : (Block.Extended + BlockID));
-        }
-        public void SetBlock(BlockID_ b) { 
-            BlockID = (BlockID_)(b < Block.CpeCount ? b : (b - Block.Extended));
-        }
+        public BlockID_ GetBlock() { return Block.FromRaw(BlockID); }
+        public void SetBlock(BlockID_ b) { BlockID = Block.ToRaw(b); }
         
         public const string GlobalPath = "blockdefs/global.json", GlobalBackupPath = "blockdefs/global.json.bak";
         
@@ -262,10 +258,10 @@ namespace MCGalaxy {
         
         internal static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            for (int i = 0; i < defs.Length; i++) {
-                BlockDefinition def = defs[i];
+            for (int b = 0; b < defs.Length; b++) {
+                BlockDefinition def = defs[b];
                 if (def != null && def.InventoryOrder >= 0) {
-                    pl.Send(Packet.SetInventoryOrder((byte)i, (byte)def.InventoryOrder));
+                    pl.Send(Packet.SetInventoryOrder((byte)def.BlockID, (byte)def.InventoryOrder));
                 }
             }
         }

@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.CPE {
             AddBlock(p, dstDef, global, cmd, props);
             string scope = global ? "global" : "level";
             Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, 
-                           (BlockRaw)src, (BlockRaw)dst);
+                           Block.ToRaw(src), Block.ToRaw(dst));
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = defs[block];
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
-            Player.Message(p, "About {0} ({1})", def.Name, (BlockRaw)def.BlockID);
+            Player.Message(p, "About {0} ({1})", def.Name, Block.ToRaw(block));
             Player.Message(p, "  Draw type: {0}, Blocks light: {1}, collide type: {2}",
                            def.BlockDraw, def.BlocksLight, def.CollideType);
             Player.Message(p, "  Fallback ID: {0}, Sound: {1}, Speed: {2}",
@@ -512,13 +512,13 @@ namespace MCGalaxy.Commands.CPE {
         
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", (BlockRaw)block, scope);
+            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", (BlockRaw)block, scope);
+            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
             Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
