@@ -143,7 +143,12 @@ namespace MCGalaxy.Blocks {
                     Logger.Log(LogType.Warning, "Invalid line \"{0}\" in {1}", line, path);
                     continue;
                 }
+                
                 if (mapOld) b = Block.MapOldRaw(b);
+                if (b >= list.Length) {
+                    Logger.Log(LogType.Warning, "Invalid block ID: " + b);
+                    continue;
+                } 
                 
                 bool.TryParse(parts[1], out list[b].IsRails);
                 bool.TryParse(parts[2], out list[b].IsTDoor);

@@ -122,7 +122,7 @@ namespace MCGalaxy.Network {
                     conv[b] = Block.ConvertCPE(conv[b]);
                     convExt[b] = Block.ConvertCPE(convExt[b]);
                 }
-            }            
+            }
             
             Level lvl = p.level;
             bool hasBlockDefs = p.hasBlockDefs;

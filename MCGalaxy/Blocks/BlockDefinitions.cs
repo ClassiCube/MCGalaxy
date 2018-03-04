@@ -89,7 +89,7 @@ namespace MCGalaxy {
             if (defs == null) return new BlockDefinition[Block.ExtendedCount];
             
             for (int i = 0; i < defs.Length; i++) {
-                if (defs[i] != null && defs[i].Name == null) defs[i] = null;                
+                if (defs[i] != null && defs[i].Name == null) defs[i] = null;
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 
@@ -104,8 +104,14 @@ namespace MCGalaxy {
             for (int b = 0; b < defs.Length; b++) {
                 BlockDefinition def = defs[b];
                 if (def == null) continue;
-                adjDefs[def.GetBlock()] = def;
-            }          
+                
+                BlockID_ block = def.GetBlock();
+                if (block >= adjDefs.Length) {
+                    Logger.Log(LogType.Warning, "Invalid block ID: " + block);
+                } else {
+                    adjDefs[block] = def;
+                }
+            }
             return adjDefs;
         }
         
@@ -217,14 +223,14 @@ namespace MCGalaxy {
         }
         
         static void UpdateGlobalCustom(BlockID_ block, BlockDefinition def) {
-            Level[] loaded = LevelInfo.Loaded.Items;          
+            Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 if (lvl.CustomBlockDefs[block] != GlobalDefs[block]) continue;
                 lvl.UpdateCustomBlock(block, def);
             }
         }
         
- 
+        
         public static int GetBlock(string msg, BlockDefinition[] defs) {
             for (int i = 1; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
@@ -249,7 +255,7 @@ namespace MCGalaxy {
         
         
         internal static void SendLevelCustomBlocks(Player pl) {
-            BlockDefinition[] defs = pl.level.CustomBlockDefs;            
+            BlockDefinition[] defs = pl.level.CustomBlockDefs;
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def != null) pl.Send(def.MakeDefinePacket(pl));

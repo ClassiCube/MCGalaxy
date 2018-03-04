@@ -31,10 +31,13 @@ namespace MCGalaxy.Events {
         /// <param name="priority"> The priority (imporantance) of the given handler. </param>
         /// <param name="bypass"> Whether the given handler is able to be registered multiple times. </param>
         public static void Register(IMethod method, Priority priority,  bool bypass = false) {
-            if (Find(method) != null && !bypass)
-                throw new ArgumentException("Method already registered as a handler!");
+            IEvent<IMethod> handler = Find(method);
+            if (handler != null && !bypass) {
+                string msg = MethodFormat("Method {0} already registered as a {1} event handler", method);
+                throw new ArgumentException(msg);
+            }
             
-            IEvent<IMethod> handler = new IEvent<IMethod>();
+            handler = new IEvent<IMethod>();
             handler.method = method; handler.priority = priority;
             AddHandler(handler);
         }
@@ -42,8 +45,10 @@ namespace MCGalaxy.Events {
         /// <summary> Unregisters the given handler from this event. </summary>
         public static void Unregister(IMethod method) {
             IEvent<IMethod> handler = Find(method);
-            if (handler == null)
-                throw new ArgumentException("Method was not registered as a handler!");
+            if (handler == null) {
+                string msg = MethodFormat("Method {0} was not registered as a {1} event handler", method);
+                throw new ArgumentException(msg);
+            }
             
             handlers.Remove(handler);
         }
@@ -89,9 +94,13 @@ namespace MCGalaxy.Events {
         }
         
         protected static void LogHandlerException(Exception ex, IEvent<IMethod> handler) {
-            Logger.Log(LogType.Warning, "Plugin {0} errored when calling {1} event",
-                       GetFullMethodName(handler.method), typeof(IMethod).Name);
+            string msg = MethodFormat("Method {0} errored when calling {1} event", handler.method);
+            Logger.Log(LogType.Warning, msg);
             Logger.LogError(ex);
+        }
+        
+        static string MethodFormat(string format, IMethod handler) {
+            return String.Format(format, GetFullMethodName(handler), typeof(IMethod).Name);
         }
         
         static string GetFullMethodName(object method) {
