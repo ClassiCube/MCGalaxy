@@ -54,17 +54,16 @@ namespace MCGalaxy.Commands.Info {
         
         static void SearchBlocks(Player p, string keyword, string modifier) {
             List<BlockID> blocks = new List<BlockID>();
-            for (BlockID block = 0; block < Block.Count; block++) {
-                if (!Block.Undefined(block)) blocks.Add(block);
-            }
+            BlockDefinition[] defs = Player.IsSuper(p) ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
-            if (!Player.IsSuper(p)) {
-                for (int b = Block.CpeCount; b < Block.Count; b++) {
-                    BlockID block = Block.FromRaw((BlockRaw)b);
-                    if (p.level.CustomBlockDefs[block] == null) continue;
-                    blocks.Add(block);
+            for (int b = 0; b < Block.ExtendedCount; b++) {
+                BlockID block = (BlockID)b;
+                if (Block.IsPhysicsType(block)) {
+                    if (!Block.Undefined(block)) blocks.Add(block);
+                } else {
+                    if (defs[block] != null) blocks.Add(block);
                 }
-            } 
+            }
 
             List<string> blockNames = FilterList(blocks, keyword, 
                                                  b => Block.GetName(p, b), null,

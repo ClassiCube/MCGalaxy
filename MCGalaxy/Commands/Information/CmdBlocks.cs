@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Info {
         
         static List<BlockID> BasicBlocks() {
             List<BlockID> blocks = new List<BlockID>(Block.CpeCount);
-            for (BlockID block = 0; block < Block.CpeCount; block++) { 
+            for (BlockID block = Block.Air; block < Block.CpeCount; block++) { 
                 blocks.Add(block); 
             }
             return blocks;

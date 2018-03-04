@@ -496,14 +496,14 @@ namespace MCGalaxy.Commands.CPE {
             // Start from opposite ends to avoid overlap.
             if (global) {
                 BlockDefinition[] defs = BlockDefinition.GlobalDefs;
-                for (int b = Block.CpeCount; b < Block.Invalid; b++) {
-                    BlockID block = Block.FromRaw((BlockRaw)b);
+                for (BlockID b = Block.CpeCount; b < Block.Invalid; b++) {
+                    BlockID block = Block.FromRaw(b);
                     if (defs[block] == null) return block;
                 }
             } else {
                 BlockDefinition[] defs = lvl.CustomBlockDefs;
-                for (int b = Block.Invalid - 1; b >= Block.CpeCount; b--) {
-                    BlockID block = Block.FromRaw((BlockRaw)b);
+                for (BlockID b = Block.Invalid - 1; b >= Block.CpeCount; b--) {
+                    BlockID block = Block.FromRaw(b);
                     if (defs[block] == null) return block;
                 }
             }
