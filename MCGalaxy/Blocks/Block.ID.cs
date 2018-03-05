@@ -18,14 +18,33 @@
 using System;
 
 namespace MCGalaxy {
-    public sealed partial class Block {
+    public static partial class Block {
         public const byte OriginalMaxBlock = Obsidian;
         public const byte OriginalCount = OriginalMaxBlock + 1;
         public const byte CpeMaxBlock = StoneBrick;
         public const byte CpeCount = CpeMaxBlock + 1;
         public const int Count = 256;
+
+        #if TEN_BIT_BLOCKS
+        public const ushort MaxRaw = 767;
+        public const int ExtendedCount = 256 * 4;
+        public static ushort[] ExtendedBase = new ushort[Block.Count];
+        public static byte[] ExtendedClass = new byte[4];
+        
+        static Block() {
+            ExtendedBase[custom_block]   = Extended;
+            ExtendedBase[custom_block_2] = Extended * 2;
+            ExtendedBase[custom_block_3] = Extended * 3;
+            
+            ExtendedClass[0] = Air;
+            ExtendedClass[1] = custom_block;
+            ExtendedClass[2] = custom_block_2;
+            ExtendedClass[3] = custom_block_3;
+        }
+        #else
         public const ushort MaxRaw = 255;
         public const int ExtendedCount = 256 * 2;
+        #endif
         
         // Original blocks
         public const byte Air = 0;
@@ -261,7 +280,10 @@ namespace MCGalaxy {
         public const byte Geyser = 196;
         
         public const byte Checkpoint = 197;
-        // 198, 199 free
+        #if TEN_BIT_BLOCKS
+        public const byte custom_block_2 = 198;
+        public const byte custom_block_3 = 199;
+        #endif
         
         // Air type blocks
         public const byte Air_Flood = 200;

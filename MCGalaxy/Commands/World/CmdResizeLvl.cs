@@ -69,7 +69,11 @@ namespace MCGalaxy.Commands.World {
                 {
                     byte block = lvl.blocks[x + lvl.Width * (z + y * lvl.Length)];
                     temp.blocks[x + width * (z + y * length)] = block;
+                    #if TEN_BIT_BLOCKS
+                    if (Block.ExtendedBase[block] == 0) continue;
+                    #else
                     if (block != Block.custom_block) continue;
+                    #endif
                     
                     byte extBlock = lvl.FastGetExtTile(x, y, z);
                     temp.FastSetExtTile(x, y, z, extBlock);

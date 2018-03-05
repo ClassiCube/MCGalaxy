@@ -36,8 +36,8 @@ namespace MCGalaxy.Generator.Foliage {
         
         public override void SetData(Random rnd, int value) {
             this.rnd = rnd;           
-            height = (byte)value;
-            size = (byte)(maxExtent + maxCluster);
+            height = value;
+            size = maxExtent + maxCluster;
             
             branchBaseHeight = height / 4;
             branchAmount = rnd.Next(10, 25);

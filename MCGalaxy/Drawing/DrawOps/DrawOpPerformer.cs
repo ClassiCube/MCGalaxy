@@ -169,16 +169,25 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 int index = b.X + lvl.Width * (b.Z + b.Y * lvl.Length);
                 BlockID old = lvl.blocks[index];
+                #if TEN_BIT_BLOCKS
+                BlockID extended = Block.ExtendedBase[old];
+                if (extended > 0) old = (BlockID)(extended | lvl.FastGetExtTile(b.X, b.Y, b.Z));
+                #else
                 if (old == Block.custom_block) old = (BlockID)(Block.Extended | lvl.FastGetExtTile(b.X, b.Y, b.Z));
-                if (old == Block.Invalid) return;
+                #endif
                 
+                if (old == Block.Invalid) return;                
                 // Check to make sure the block is actually different and that we can change it
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
                 // Set the block (inlined)              
                 lvl.Changed = true;
                 if (b.Block >= Block.Extended) {
+                    #if TEN_BIT_BLOCKS
+                    lvl.blocks[index] = Block.ExtendedClass[b.Block >> Block.ExtendedShift];
+                    #else
                     lvl.blocks[index] = Block.custom_block;
+                    #endif
                     lvl.FastSetExtTile(b.X, b.Y, b.Z, (BlockRaw)b.Block);
                 } else {
                     lvl.blocks[index] = (BlockRaw)b.Block;

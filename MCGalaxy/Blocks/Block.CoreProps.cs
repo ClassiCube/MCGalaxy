@@ -21,8 +21,7 @@ using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
-    
-    public sealed partial class Block {
+    public static partial class Block {
         
         public static BlockProps[] Props = new BlockProps[Block.ExtendedCount];
         public static readonly object PropsLock = new object();

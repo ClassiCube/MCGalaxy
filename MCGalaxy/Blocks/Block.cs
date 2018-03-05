@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
-    public sealed partial class Block {
+    public static partial class Block {
 
         public static bool Walkthrough(BlockID block) {
             return block == Air || block == Sapling || block == Block.Snow

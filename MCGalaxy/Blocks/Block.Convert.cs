@@ -20,7 +20,7 @@ using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
-    public sealed partial class Block {
+    public static partial class Block {
         
         internal static string[] coreNames = new string[Block.Count];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
