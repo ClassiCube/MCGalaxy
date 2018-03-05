@@ -47,18 +47,29 @@ namespace MCGalaxy {
         
         public static BlockID Parse(Player p, string input) {
             BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            byte id;
+            BlockID block;
             // raw ID is treated specially, before names
-            if (byte.TryParse(input, out id) && (id < CpeCount || defs[id] != null)) {
-                return FromRaw(id);
+            if (BlockID.TryParse(input, out block)) {
+                if (block < Block.CpeCount || (block <= Block.MaxRaw && defs[block] != null)) {
+                    return FromRaw(block);
+                }
             }
             
-            // try parse as a block name
-            int raw = BlockDefinition.GetBlock(input, defs);
-            if (raw != -1) return FromRaw((byte)raw);
+            block = GetBlockByName(input, defs);
+            if (block != Block.Invalid) return block;
             
-            bool success = Aliases.TryGetValue(input.ToLower(), out id);
-            return success ? id : Invalid;
+            byte coreID;
+            bool success = Aliases.TryGetValue(input.ToLower(), out coreID);
+            return success ? coreID : Invalid;
+        }
+        
+        static BlockID GetBlockByName(string msg, BlockDefinition[] defs) {
+            for (int i = 1; i < defs.Length; i++) {
+                BlockDefinition def = defs[i];
+                if (def == null) continue;
+                if (def.Name.Replace(" ", "").CaselessEq(msg)) return def.GetBlock();
+            }
+            return Block.Invalid;
         }
         
         public static byte ConvertCPE(byte block) {

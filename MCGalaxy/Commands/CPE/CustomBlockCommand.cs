@@ -546,9 +546,10 @@ namespace MCGalaxy.Commands.CPE {
         
         static bool CheckBlock(Player p, string arg, out BlockID block, bool allowAir = false) {
             block = Block.Invalid;
-            BlockRaw raw = 0;
-            BlockRaw min = (BlockRaw)(allowAir ? 0 : 1), max = 255;
-            bool success = CommandParser.GetByte(p, arg, "Block ID", ref raw, min, max);
+            BlockID raw = 0;
+            BlockID min = (BlockID)(allowAir ? 0 : 1);
+            BlockID max = Block.MaxRaw;
+            bool success = CommandParser.GetUShort(p, arg, "Block ID", ref raw, min, max);
             
             block = Block.FromRaw(raw);
             return success;

@@ -97,8 +97,8 @@ namespace MCGalaxy.Maths {
             float scale = GetScaleFrom(ref model);
             
             AABB bb;
-            byte raw;
-            if (byte.TryParse(model, out raw)) {
+            BlockID raw;
+            if (BlockID.TryParse(model, out raw) && raw <= Block.MaxRaw) {
                 BlockID block = Block.FromRaw(raw);
                 bb = Block.BlockAABB(block, lvl);
                 bb = bb.Offset(-16, 0, -16); // centre around [-16, 16] instead of [0, 32]

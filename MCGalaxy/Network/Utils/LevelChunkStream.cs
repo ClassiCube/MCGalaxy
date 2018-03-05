@@ -92,9 +92,9 @@ namespace MCGalaxy.Network {
             byte* conv = stackalloc byte[Block.Count];
             byte* convExt = stackalloc byte[Block.Count];
             
-            for (int i = 0; i < Block.Count; i++) {
-                conv[i] = (byte)Block.Convert((byte)i);
-                if (conv[i] > Block.CpeCount) conv[i] = Block.Orange;
+            for (int b = 0; b < Block.Count; b++) {
+                conv[b] = (byte)Block.Convert((byte)b);
+                if (conv[b] > Block.CpeCount) conv[b] = Block.Orange;
             }
             
             if (!p.hasBlockDefs) {
@@ -104,14 +104,14 @@ namespace MCGalaxy.Network {
                     if (def != null) conv[b] = def.FallBack;
                 }
                 
-                for (int i = 0; i < Block.Count; i++) {
-                    BlockID block = Block.FromRaw((byte)i);
+                for (int b = 0; b < Block.Count; b++) {
+                    BlockID block = Block.FromRaw((byte)b);
                     BlockDefinition def = p.level.CustomBlockDefs[block];
                     
                     if (def == null) {
-                        convExt[i] = block < Block.CpeCount ? (byte)block : Block.Air;
+                        convExt[b] = block < Block.CpeCount ? (byte)block : Block.Air;
                     } else {
-                        convExt[i] = def.FallBack;
+                        convExt[b] = def.FallBack;
                     }
                 }
             }

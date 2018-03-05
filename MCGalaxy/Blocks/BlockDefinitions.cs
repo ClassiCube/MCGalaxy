@@ -230,19 +230,6 @@ namespace MCGalaxy {
             }
         }
         
-        
-        public static int GetBlock(string msg, BlockDefinition[] defs) {
-            for (int i = 1; i < defs.Length; i++) {
-                BlockDefinition def = defs[i];
-                if (def == null) continue;
-                if (def.Name.Replace(" ", "").CaselessEq(msg)) return def.BlockID;
-            }
-            
-            BlockRaw id;
-            if (!BlockRaw.TryParse(msg, out id) || defs[id] == null) return -1;
-            return id;
-        }
-        
         public void SetAllTex(byte id) {
             SideTex = id; TopTex = id; BottomTex = id;
             LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;

@@ -17,15 +17,14 @@
 */
 using System;
 
-namespace MCGalaxy
-{
-    public sealed partial class Block
-    {
+namespace MCGalaxy {
+    public sealed partial class Block {
         public const byte OriginalMaxBlock = Obsidian;
         public const byte OriginalCount = OriginalMaxBlock + 1;
         public const byte CpeMaxBlock = StoneBrick;
         public const byte CpeCount = CpeMaxBlock + 1;
         public const int Count = 256;
+        public const ushort MaxRaw = 255;
         public const int ExtendedCount = 256 * 2;
         
         // Original blocks
