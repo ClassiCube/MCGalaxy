@@ -50,7 +50,7 @@ namespace MCGalaxy {
             BlockID block;
             // raw ID is treated specially, before names
             if (BlockID.TryParse(input, out block)) {
-                if (block < Block.CpeCount || (block <= Block.MaxRaw && defs[block] != null)) {
+                if (block < Block.CpeCount || (block <= Block.MaxRaw && defs[FromRaw(block)] != null)) {
                     return FromRaw(block);
                 }
             }
