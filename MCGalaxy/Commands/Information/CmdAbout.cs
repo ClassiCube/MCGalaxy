@@ -62,11 +62,10 @@ namespace MCGalaxy.Commands.Info {
                 }
             }
             
-            if (!foundAny) Player.Message(p, "No block change records found for this block.");
-            
+            if (!foundAny) Player.Message(p, "No block change records found for this block.");            
+            BlockID raw = Block.IsPhysicsType(block) ? block : Block.ToRaw(block);
             string blockName = Block.GetName(p, block);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.",
-                           x, y, z, Block.ToRaw(block), blockName);
+            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
             
             if (HasExtraPerm(p, 1)) {
                 BlockDBChange.OutputMessageBlock(p, block, x, y, z);

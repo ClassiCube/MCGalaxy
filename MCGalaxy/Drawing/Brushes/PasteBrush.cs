@@ -41,13 +41,14 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            return state.Get(x, y, z);
+            int index = (y * state.Length + z) * state.Width + x;
+            return state.Get(index);
         }
     }
     
     public sealed class PasteBrush : Brush {
-        readonly CopyState state;     
-        public BlockID[] Include, Exclude;
+        readonly CopyState state;
+        public BlockID[] Include;
         
         public PasteBrush(CopyState state) { this.state = state; }
         
@@ -66,18 +67,43 @@ namespace MCGalaxy.Drawing.Brushes {
             int z = (op.Coords.Z - op.Min.Z) % state.Length;
             if (z < 0) z += state.Length;
             
-            BlockID block = state.Get(x, y, z);            
-            if (Exclude != null) {
-                for (int i = 0; i < Exclude.Length; i++) {
-                    if (block == Exclude[i]) return Block.Invalid;
-                }
-                return block;
-            } else {
-                for (int i = 0; i < Include.Length; i++) {
-                    if (block == Include[i]) return block;
-                }
-                return Block.Invalid;
+            int index = (y * state.Length + z) * state.Width + x;
+            BlockID block = state.Get(index);
+            for (int i = 0; i < Include.Length; i++) {
+                if (block == Include[i]) return block;
             }
+            return Block.Invalid;
+        }
+    }
+    
+    
+    public sealed class PasteNotBrush : Brush {
+        readonly CopyState state;
+        public BlockID[] Exclude;
+        
+        public PasteNotBrush(CopyState state) { this.state = state; }
+        
+        public override string Name { get { return "Paste"; } }
+
+        public override void Configure(DrawOp op, Player p) {
+            op.Flags = BlockDBFlags.Pasted;
+        }
+        
+        public override BlockID NextBlock(DrawOp op) {
+            // Figure out local coords for this block
+            int x = (op.Coords.X - op.Min.X) % state.Width;
+            if (x < 0) x += state.Width;
+            int y = (op.Coords.Y - op.Min.Y) % state.Height;
+            if (y < 0) y += state.Height;
+            int z = (op.Coords.Z - op.Min.Z) % state.Length;
+            if (z < 0) z += state.Length;
+            
+            int index = (y * state.Length + z) * state.Width + x;
+            BlockID block = state.Get(index);
+            for (int i = 0; i < Exclude.Length; i++) {
+                if (block == Exclude[i]) return Block.Invalid;
+            }
+            return block;
         }
     }
 }

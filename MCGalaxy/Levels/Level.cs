@@ -435,10 +435,10 @@ namespace MCGalaxy {
             BlockRaw oldRaw, newRaw;
             
             public BlockID OldBlock { 
-                get { return (BlockID)(oldRaw | ((flags & 0x03)        << Block.ExtendedShift)); }
+                get { return (BlockID)(oldRaw | ((flags & 0x03)       << Block.ExtendedShift)); }
             }
             public BlockID NewBlock { 
-                get { return (BlockID)(newRaw | (((flags & 0x18 >> 2)) << Block.ExtendedShift)); }
+                get { return (BlockID)(newRaw | (((flags & 0xC >> 2)) << Block.ExtendedShift)); }
             }
             public DateTime Time { 
                 get { return Server.StartTime.AddTicks((flags >> 4) * TimeSpan.TicksPerSecond); } 

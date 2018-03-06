@@ -268,6 +268,8 @@ namespace MCGalaxy {
                 raw = hasBlockDefs ? (BlockRaw)block : level.RawFallback(block);
             } else {
                 raw = (BlockRaw)Block.Convert(block);
+                // Invalid block physics won't have converted form
+                if (raw >= Block.CpeCount) raw = Block.Orange;
             }
             
             // Custom block replaced a core block

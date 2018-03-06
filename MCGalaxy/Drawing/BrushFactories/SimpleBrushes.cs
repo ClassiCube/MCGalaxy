@@ -108,17 +108,17 @@ namespace MCGalaxy.Drawing.Brushes {
             
             if (args.Message.Length == 0)
                 return new SimplePasteBrush(cState);
-            string[] parts = args.Message.SplitSpaces();
-            PasteBrush brush = new PasteBrush(cState);
+            string[] parts = args.Message.SplitSpaces();            
             
             if (parts[0].CaselessEq("not")) {
+                PasteNotBrush brush = new PasteNotBrush(cState);
                 brush.Exclude = ReplaceBrushFactory.GetBlocks(args.Player, 1, parts.Length, parts);
-                if (brush.Exclude == null) return null;
+                return brush.Exclude == null ? null : brush;
             } else {
+                PasteBrush brush = new PasteBrush(cState);
                 brush.Include = ReplaceBrushFactory.GetBlocks(args.Player, 0, parts.Length, parts);
-                if (brush.Include == null) return null;
+                return brush.Include == null ? null : brush;
             }
-            return brush;
         }
     }
     
