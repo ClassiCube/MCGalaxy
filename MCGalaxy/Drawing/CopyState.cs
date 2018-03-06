@@ -173,7 +173,6 @@ namespace MCGalaxy.Drawing {
             extBlocks = new byte[(Volume + (chunkSize - 1)) / chunkSize][];
             
             if (id == identifier1) {
-            	Server.s.Log("1");
                 blocks = r.ReadBytes(Volume);
                 allExtBlocks = r.ReadBytes(Volume);
                 UnpackExtBlocks(allExtBlocks);
@@ -182,20 +181,16 @@ namespace MCGalaxy.Drawing {
                 blocks = r.ReadBytes(dataLen).Decompress(Volume);
                 
                 if (id == identifier2) {
-                	Server.s.Log("2");
                     dataLen = r.ReadInt32();
                     allExtBlocks = r.ReadBytes(dataLen).Decompress(Volume);
                     UnpackExtBlocks(allExtBlocks);
                 } else if (id == identifier3) {
-                	Server.s.Log("3");
                     dataLen = r.ReadInt32();
                     allExtBlocks = r.ReadBytes(dataLen).Decompress((Volume + 7) / 8);
                     UnpackPackedExtBlocks(allExtBlocks);
                 } else {
                     for (int i = 0; i < extBlocks.Length; i++) {
                         if (r.ReadByte() == 0) continue;
-                        Server.s.Log("4");
-                        
                         dataLen = r.ReadUInt16();
                         extBlocks[i] = r.ReadBytes(dataLen).Decompress(chunkSize);
                     }
