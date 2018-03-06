@@ -431,20 +431,25 @@ namespace MCGalaxy {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct UndoPos {
             public int Index; 
-            int flags; // bit 0 = is old ext, bit 1 = is new ext, rest bits = time delta
-            byte oldRaw, newRaw;
+            int flags;
+            BlockRaw oldRaw, newRaw;
             
-            public BlockID OldBlock { get { return Block.FromRaw(oldRaw, (flags & 1) != 0); } }
-            public BlockID NewBlock { get { return Block.FromRaw(newRaw, (flags & 2) != 0); } }
-            public DateTime Time { get { return Server.StartTime.AddTicks((flags >> 2) * TimeSpan.TicksPerSecond); } }
+            public BlockID OldBlock { 
+                get { return (BlockID)(oldRaw | ((flags & 0x03)        << Block.ExtendedShift)); }
+            }
+            public BlockID NewBlock { 
+                get { return (BlockID)(newRaw | (((flags & 0x18 >> 2)) << Block.ExtendedShift)); }
+            }
+            public DateTime Time { 
+                get { return Server.StartTime.AddTicks((flags >> 4) * TimeSpan.TicksPerSecond); } 
+            }
             
             public void SetData(BlockID oldBlock, BlockID newBlock) {
                 TimeSpan delta = DateTime.UtcNow.Subtract(Server.StartTime);
-                flags = (int)delta.TotalSeconds << 2;
+                flags = (int)delta.TotalSeconds << 4;
                 
-                oldRaw = (byte)oldBlock; newRaw = (byte)newBlock;
-                if (oldBlock >= Block.Extended) flags |= 1;
-                if (newBlock >= Block.Extended) flags |= 2;
+                oldRaw = (BlockRaw)oldBlock; flags |= (oldBlock >> Block.ExtendedShift);
+                newRaw = (BlockRaw)newBlock; flags |= (newBlock >> Block.ExtendedShift) << 2;
             }
         }
         
