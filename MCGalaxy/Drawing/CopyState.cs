@@ -199,15 +199,14 @@ namespace MCGalaxy.Drawing {
         }
         
         void UnpackExtBlocks(byte[] allExtBlocks) {
-            for (int i = 0; i < blocks.Length; i += chunkSize) {
+            for (int i = 0; i < blocks.Length; i++) {
                 if (blocks[i] != Block.custom_block) continue;
                 Set((BlockID)(Block.Extended | allExtBlocks[i]), i);
             }
         }
         
         void UnpackPackedExtBlocks(byte[] allExtBlocks) {
-
-            for (int i = 0; i < blocks.Length; i += chunkSize) {
+            for (int i = 0; i < blocks.Length; i++) {
                 bool isExt = (allExtBlocks[i >> 3] & (1 << (i & 0x7))) != 0;
                 if (isExt) { Set((BlockID)(Block.Extended | blocks[i]), i); }
             }
