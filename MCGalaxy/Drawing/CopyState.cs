@@ -95,7 +95,7 @@ namespace MCGalaxy.Drawing {
         public void Set(BlockID block, int index) {
             if (block >= Block.Extended) {
                 #if TEN_BIT_BLOCKS
-                blocks[index] = Block.ExtendedClass[b.Block >> Block.ExtendedShift];
+                blocks[index] = Block.ExtendedClass[block >> Block.ExtendedShift];
                 #else
                 blocks[index] = Block.custom_block;
                 #endif

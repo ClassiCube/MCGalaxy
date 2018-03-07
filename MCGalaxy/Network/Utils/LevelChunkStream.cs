@@ -133,6 +133,33 @@ namespace MCGalaxy.Network {
                 dst.length = blocks.Length;
                 
                 // compress the map data in 64 kb chunks
+                #if TEN_BIT_BLOCKS
+                if (p.hasExtBlocks) {
+                    for (int i = 0; i < blocks.Length; ++i) {
+                        byte block = blocks[i];
+                        if (block == Block.custom_block) {
+                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex + 1] = 0;
+                        } else if (block == Block.custom_block_2) {
+                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex + 1] = 1;
+                        } else if (block == Block.custom_block_3) {
+                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex + 1] = 2;
+                        } else {
+                            buffer[bIndex] = conv[block];
+                            buffer[bIndex + 1] = 0;
+                        }
+                        
+                        bIndex += 2;
+                        if (bIndex == bufferSize) {
+                            dst.position = i;
+                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                        }
+                    }
+                } else 
+                #endif
+                
                 if (p.hasBlockDefs) {
                     for (int i = 0; i < blocks.Length; ++i) {
                         byte block = blocks[i];

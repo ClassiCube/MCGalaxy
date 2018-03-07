@@ -93,7 +93,12 @@ namespace MCGalaxy {
                 hasTwoWayPing = true;
             } else if (ext.ExtName == CpeExt.BulkBlockUpdate) {
                 hasBulkBlockUpdate = true;
+            } 
+            #if TEN_BIT_BLOCKS
+            else if (ext.ExtName == CpeExt.ExtBlocks) {
+                hasExtBlocks = true;
             }
+            #endif
         }
 
         /// <summary> Returns whether this player's client supports the given CPE extension. </summary>
@@ -148,13 +153,9 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentBlockPermissions() {
-            if (!Supports(CpeExt.BlockPermissions)) return;
-            
+            if (!Supports(CpeExt.BlockPermissions)) return;           
             // Write the block permissions as one bulk TCP packet
-            int count = NumBlockPermissions();
-            byte[] bulk = new byte[count * (hasExtBlocks ? 5 : 4)];
-            WriteBlockPermissions(bulk);
-            Send(bulk);
+            SendAllBlockPermissions();
         }
         
         int NumBlockPermissions() {
@@ -163,14 +164,18 @@ namespace MCGalaxy {
             return hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
         }
         
-        void WriteBlockPermissions(byte[] bulk) {
+        void SendAllBlockPermissions() {
             int count = NumBlockPermissions();
+            int size = hasExtBlocks ? 5 : 4;
+            byte[] bulk = new byte[count * size];
+            
             for (int i = 0; i < count; i++) {
-                BlockID block = Block.FromRaw((byte)i);
+                BlockID block = Block.FromRaw((BlockID)i);
                 bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
                 bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
-                Packet.WriteBlockPermission((byte)i, place, delete, hasExtBlocks, bulk, i * 4);
+                Packet.WriteBlockPermission((BlockID)i, place, delete, hasExtBlocks, bulk, i * size);
             }
+            Send(bulk);
         }
     }
     
