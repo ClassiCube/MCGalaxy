@@ -202,7 +202,7 @@ namespace MCGalaxy {
                 if (!pl.hasBlockDefs) continue;
                 if (global && pl.level.CustomBlockDefs[block] != null) continue;
                 
-                pl.Send(Packet.UndefineBlock(def));
+                pl.Send(Packet.UndefineBlock(def, pl.hasExtBlocks));
             }
             Save(global, level);
         }
@@ -210,7 +210,6 @@ namespace MCGalaxy {
         public static void UpdateOrder(BlockDefinition def, bool global, Level level) {
             if (def.InventoryOrder == -1) return;
             BlockID_ block = def.GetBlock();
-            byte order = (byte)def.InventoryOrder;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -218,7 +217,7 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
 
                 if (!pl.Supports(CpeExt.InventoryOrder)) continue;
-                pl.Send(Packet.SetInventoryOrder((BlockRaw)block, order));
+                pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
             }
         }
         
@@ -254,18 +253,18 @@ namespace MCGalaxy {
             for (int b = 0; b < defs.Length; b++) {
                 BlockDefinition def = defs[b];
                 if (def != null && def.InventoryOrder >= 0) {
-                    pl.Send(Packet.SetInventoryOrder((byte)def.BlockID, (byte)def.InventoryOrder));
+                    pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
                 }
             }
         }
         
         public byte[] MakeDefinePacket(Player pl) {
             if (pl.Supports(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
-                return Packet.DefineBlockExt(this, true, pl.hasCP437);
+                return Packet.DefineBlockExt(this, true, pl.hasCP437, pl.hasExtBlocks);
             } else if (pl.Supports(CpeExt.BlockDefinitionsExt) && Shape != 0) {
-                return Packet.DefineBlockExt(this, false, pl.hasCP437);
+                return Packet.DefineBlockExt(this, false, pl.hasCP437, pl.hasExtBlocks);
             } else {
-                return Packet.DefineBlock(this, pl.hasCP437);
+                return Packet.DefineBlock(this, pl.hasCP437, pl.hasExtBlocks);
             }
         }
         

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     /// <summary> Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
@@ -64,6 +65,11 @@ namespace MCGalaxy {
                 WriteI32(pos.Z, arr, offset + 8);
             }
             return extPos ? 12 : 6;
+        }
+        
+        public static void WriteBlock(BlockID raw, byte[] array, int index, bool extBlocks) {
+            if (extBlocks) { array[index++] = (byte)(raw >> 8); }
+            array[index++] = (byte)raw;
         }
         
 

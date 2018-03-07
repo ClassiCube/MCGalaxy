@@ -235,7 +235,7 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 if (def == BlockDefinition.GlobalDefs[i]) continue;                
-                Send(Packet.UndefineBlock(def));
+                Send(Packet.UndefineBlock(def, hasExtBlocks));
             }
         }
         
@@ -257,29 +257,28 @@ namespace MCGalaxy {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
-            byte[] buffer = new byte[8];
+            byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
             buffer[0] = Opcode.SetBlock;
             NetUtils.WriteU16(x, buffer, 1);
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            BlockRaw raw;
             if (block >= Block.Extended) {
-                raw = hasBlockDefs ? (BlockRaw)block : level.RawFallback(block);
+                block = hasBlockDefs ? Block.ToRaw(block) : level.RawFallback(block);
             } else {
-                raw = (BlockRaw)Block.Convert(block);
+                block = Block.Convert(block);
                 // Invalid block physics won't have converted form
-                if (raw >= Block.CpeCount) raw = Block.Orange;
+                if (block >= Block.CpeCount) block = Block.Orange;
             }
             
             // Custom block replaced a core block
-            if (!hasBlockDefs && raw < Block.CpeCount) {
-                BlockDefinition def = level.CustomBlockDefs[raw];
-                if (def != null) raw = def.FallBack;
+            if (!hasBlockDefs && block < Block.CpeCount) {
+                BlockDefinition def = level.CustomBlockDefs[block];
+                if (def != null) block = def.FallBack;
             }
             
-            if (!hasCustomBlocks) raw = Block.ConvertCPE(raw); // doesn't support CPE blocks            
-            buffer[7] = raw;
+            if (!hasCustomBlocks) block = Block.ConvertCPE((BlockRaw)block); // doesn't support CPE blocks
+            NetUtils.WriteBlock(block, buffer, 7, hasExtBlocks);            
             Socket.SendLowPriority(buffer);
         }
 

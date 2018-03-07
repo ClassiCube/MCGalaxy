@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network {
 
@@ -137,14 +138,17 @@ namespace MCGalaxy.Network {
         }
         
         public static byte[] CustomBlockSupportLevel(byte level) {
-            return new byte[] { Opcode.CpeCustomBlockSupportLevel, level };
+            byte[] buffer = new byte[2];
+            buffer[0] = Opcode.CpeCustomBlockSupportLevel;
+            buffer[1] = level;
+            return buffer;
         }
         
-        public static byte[] HoldThis(byte block, bool locked) {
-            byte[] buffer = new byte[3];
+        public static byte[] HoldThis(BlockID raw, bool locked, bool extBlocks) {
+            byte[] buffer = new byte[extBlocks ? 4 : 3];
             buffer[0] = Opcode.CpeHoldThis;
-            buffer[1] = block;
-            buffer[2] = (byte)(locked ? 1 : 0);
+            NetUtils.WriteBlock(raw, buffer, 1, extBlocks);
+            buffer[extBlocks ? 3 : 2] = (byte)(locked ? 1 : 0);
             return buffer;
         }
         
@@ -225,17 +229,18 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] BlockPermission(byte block, bool place, bool delete) {
-            byte[] buffer = new byte[4];
-            WriteBlockPermission(block, place, delete, buffer, 0);
+        public static byte[] BlockPermission(BlockID raw, bool place, bool delete, bool extBlocks) {
+        	byte[] buffer = new byte[extBlocks ? 5 : 4];
+            WriteBlockPermission(raw, place, delete, extBlocks, buffer, 0);
             return buffer;
         }
         
-        public static void WriteBlockPermission(byte block, bool place, bool delete, byte[] buffer, int index) {
-            buffer[index + 0] = Opcode.CpeSetBlockPermission;
-            buffer[index + 1] = block;
-            buffer[index + 2] = place ? (byte)1 : (byte)0;
-            buffer[index + 3] = delete ? (byte)1 : (byte)0;
+        public static void WriteBlockPermission(BlockID raw, bool place, bool delete, bool extBlocks, byte[] buffer, int index) {
+            buffer[index++] = Opcode.CpeSetBlockPermission;
+            NetUtils.WriteBlock(raw, buffer, index, extBlocks);
+            index += extBlocks ? 2 : 1;
+            buffer[index++] = place  ? (byte)1 : (byte)0;
+            buffer[index++] = delete ? (byte)1 : (byte)0;
         }
         
         public static byte[] ChangeModel(byte entityID, string model, bool hasCP437) {
@@ -347,8 +352,12 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] SetInventoryOrder(byte block, byte position) {
-            return new byte[] { Opcode.CpeSetInventoryOrder, block, position };
+        public static byte[] SetInventoryOrder(BlockDefinition def, bool extBlocks) {
+            byte[] buffer = new byte[extBlocks ? 4 : 3];
+            buffer[0] = Opcode.CpeSetInventoryOrder;
+            NetUtils.WriteBlock(def.BlockID, buffer, 1, extBlocks);
+            buffer[extBlocks ? 3 : 2] = (byte)def.InventoryOrder;
+            return buffer;
         }
         
         #endregion
@@ -356,25 +365,28 @@ namespace MCGalaxy.Network {
         
         #region Block definitions
         
-        public static byte[] DefineBlock(BlockDefinition def, bool hasCP437) {
-            byte[] buffer = new byte[80];
+        public static byte[] DefineBlock(BlockDefinition def, bool hasCP437, bool extBlocks) {
+            byte[] buffer = new byte[extBlocks ? 81 : 80];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlock;
-            MakeDefineBlockStart(def, buffer, ref i, false, hasCP437);
+            MakeDefineBlockStart(def, buffer, ref i, false, hasCP437, extBlocks);
             buffer[i++] = def.Shape;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
         }
         
-        public static byte[] UndefineBlock(BlockDefinition def) {
-            return new byte[] { Opcode.CpeRemoveBlockDefinition, (byte)def.BlockID };
+        public static byte[] UndefineBlock(BlockDefinition def, bool extBlocks) {
+            byte[] buffer = new byte[extBlocks ? 3 : 2];
+            buffer[0] = Opcode.CpeUndefineBlock;
+            NetUtils.WriteBlock(def.BlockID, buffer, 1, extBlocks);
+            return buffer;
         }
         
-        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437) {
-            byte[] buffer = new byte[uniqueSideTexs ? 88 : 85];
+        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437, bool extBlocks) {
+            byte[] buffer = new byte[(extBlocks ? 86 : 85) + (uniqueSideTexs ? 3 : 0)];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlockExt;
-            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs, hasCP437);
+            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs, hasCP437, extBlocks);
             buffer[i++] = def.MinX; buffer[i++] = def.MinZ; buffer[i++] = def.MinY;
             buffer[i++] = def.MaxX; buffer[i++] = def.MaxZ; buffer[i++] = def.MaxY;
             MakeDefineBlockEnd(def, ref i, buffer);
@@ -382,11 +394,12 @@ namespace MCGalaxy.Network {
         }
         
         static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i,
-                                         bool uniqueSideTexs, bool hasCP437) {
+                                         bool uniqueSideTexs, bool hasCP437, bool extBlocks) {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
-            buffer[i++] = (byte)def.BlockID;
+            NetUtils.WriteBlock(def.BlockID, buffer, i, extBlocks);
+            i += extBlocks ? 2 : 1;
             NetUtils.Write(def.Name, buffer, i, hasCP437);
             i += NetUtils.StringSize;
             buffer[i++] = def.CollideType;

@@ -48,7 +48,10 @@ namespace MCGalaxy {
             new ExtEntry(CpeExt.EnvMapAspect),     new ExtEntry(CpeExt.PlayerClick),
             new ExtEntry(CpeExt.EntityProperty),   new ExtEntry(CpeExt.ExtEntityPositions),
             new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
-            new ExtEntry(CpeExt.InstantMOTD),
+            new ExtEntry(CpeExt.InstantMOTD),      
+            #if TEN_BIT_BLOCKS
+            new ExtEntry(CpeExt.ExtBlocks),
+            #endif
         };
         
         ExtEntry FindExtension(string extName) {
@@ -59,7 +62,7 @@ namespace MCGalaxy {
         }
         
         // these are checked very frequently, so avoid overhead of HasCpeExt
-        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, 
+        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
         hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate;
 
         void AddExtension(string extName, int version) {
@@ -149,12 +152,13 @@ namespace MCGalaxy {
             
             // Write the block permissions as one bulk TCP packet
             int count = NumBlockPermissions();
-            byte[] bulk = new byte[4 * count];
+            byte[] bulk = new byte[count * (hasExtBlocks ? 5 : 4)];
             WriteBlockPermissions(bulk);
             Send(bulk);
         }
         
         int NumBlockPermissions() {
+            if (hasExtBlocks) return Block.MaxRaw + 1;
             if (hasBlockDefs) return Block.Count;
             return hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
         }
@@ -165,7 +169,7 @@ namespace MCGalaxy {
                 BlockID block = Block.FromRaw((byte)i);
                 bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
                 bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
-                Packet.WriteBlockPermission((byte)i, place, delete, bulk, i * 4);
+                Packet.WriteBlockPermission((byte)i, place, delete, hasExtBlocks, bulk, i * 4);
             }
         }
     }
@@ -198,6 +202,7 @@ namespace MCGalaxy {
         public const string TwoWayPing = "TwoWayPing";
         public const string InventoryOrder = "InventoryOrder";
         public const string InstantMOTD = "InstantMOTD";
+        public const string ExtBlocks = "ExtBlocks";
     }
     
     public enum CpeMessageType : byte {

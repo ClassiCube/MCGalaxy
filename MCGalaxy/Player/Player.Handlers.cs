@@ -214,22 +214,16 @@ namespace MCGalaxy {
         int PacketSize(byte opcode) {
             switch (opcode) {
                 case (byte)'G': return -1; // HTTP GET, ignore it
-                case Opcode.Handshake: return 131;
-                case Opcode.SetBlockClient:
-                    if (!loggedIn) goto default;
-                    return 9;
-                case Opcode.EntityTeleport:
-                    if (!loggedIn) goto default;
-                    return 10 + (hasExtPositions ? 6 : 0);
-                case Opcode.Message:
-                    if (!loggedIn) goto default;
-                    return 66;
-                    case Opcode.CpeExtInfo: return 67;
-                    case Opcode.CpeExtEntry: return 69;
-                    case Opcode.CpeCustomBlockSupportLevel: return 2;
-                    case Opcode.CpePlayerClick: return 15;
-                    case Opcode.Ping: return 1;
-                    case Opcode.CpeTwoWayPing: return 4;
+                case Opcode.Handshake:      return 1 + 1 + 64 + 64 + 1;
+                case Opcode.SetBlockClient: return 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
+                case Opcode.EntityTeleport: return 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
+                case Opcode.Message:        return 1 + 1 + 64;
+                case Opcode.CpeExtInfo:     return 1 + 64 + 2;
+                case Opcode.CpeExtEntry:    return 1 + 64 + 4;
+                case Opcode.CpeCustomBlockSupportLevel: return 1 + 1;
+                case Opcode.CpePlayerClick: return 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
+                case Opcode.Ping:           return 1;
+                case Opcode.CpeTwoWayPing:  return 1 + 1 + 2;
 
                 default:
                     if (!nonPlayerClient) {
@@ -266,6 +260,22 @@ namespace MCGalaxy {
                     HandleTwoWayPing(buffer, offset); break;
             }
         }
+        
+        #if TEN_BIT_BLOCKS
+        BlockID ReadBlock(byte[] buffer, int offset) {
+            BlockID block;
+            if (hasExtBlocks) {
+                block = NetUtils.ReadU16(buffer, offset);
+            } else {
+                block = buffer[offset];
+            }
+            
+            if (block > Block.MaxRaw) block = Block.MaxRaw;
+            return Block.FromRaw(block);
+        }
+        #else
+        BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
+        #endif
 
         void HandleBlockchange(byte[] buffer, int offset) {
             try {
@@ -283,7 +293,7 @@ namespace MCGalaxy {
                 LastAction = DateTime.UtcNow;
                 if (IsAfk) CmdAfk.ToggleAfk(this, "");
                 
-                BlockID held = Block.FromRaw(buffer[offset + 8]);
+                BlockID held = ReadBlock(buffer, offset + 8);
                 RawHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {
@@ -312,7 +322,8 @@ namespace MCGalaxy {
         void HandleMovement(byte[] buffer, int offset) {
             if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
-                RawHeldBlock = Block.FromRaw(buffer[offset + 1]);
+                RawHeldBlock = ReadBlock(buffer, offset + 1);
+                if (hasExtBlocks) offset++; // corret offset for position later
             }
             
             int x, y, z;
@@ -384,7 +395,7 @@ namespace MCGalaxy {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
                     }
-                	
+                    
                     if (!hasBlockDefs) value = level.RawFallback((BlockID)value);
                     value = (byte)value;                   
                 } else {
