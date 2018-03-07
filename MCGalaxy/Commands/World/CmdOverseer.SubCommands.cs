@@ -221,7 +221,7 @@ namespace MCGalaxy.Commands.World {
         static void HandleZone(Player p, string cmd, string name) {
             cmd = cmd.ToUpper();
             if (cmd == "LIST") {
-                Command.all.FindByName("Zone").Use(p, "");
+                Command.all.FindByName("ZoneList").Use(p, "");
             } else if (cmd == "ADD") {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
