@@ -42,27 +42,31 @@ namespace MCGalaxy.DB {
         public void Add(Player p, ushort x, ushort y, ushort z, ushort flags, BlockID old, BlockID block) {
             if (!Enabled) return;
             BlockDBCacheEntry entry;
-            entry.Packed1 = (uint)p.DatabaseID;
+            entry.Packed = p.DatabaseID << 8;
             int timeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
             entry.Index = x + Dims.X * (z + Dims.Z * y);
             
             entry.OldRaw = (byte)old; entry.NewRaw = (byte)block;
-            entry.Flags = flags;
-            if (block >= Block.Extended) entry.Flags |= BlockDBFlags.NewCustom;
-            if (old >= Block.Extended)   entry.Flags |= BlockDBFlags.OldCustom;
+            // Bit flags -> bit index
+            for (int i = 0; i <= 13; i++) {
+                if ((flags & (1 << i)) == 0) continue;
+                entry.Packed |= i; break;
+            }
+            
+            // Icky, match extended BlockDBFlags flags >> 4
+            entry.Packed |= (old   & (1 << 9)) >> 5;
+            entry.Packed |= (block & (1 << 9)) >> 4;
+            entry.Packed |= (old   & (1 << 8)) >> 2;
+            entry.Packed |= (block & (1 << 8)) >> 1;
 
             lock (Locker) {
-                const int maxTime = (1 << 11); // 11 bits for time
                 if (Head == null || Head.Count == Head.Entries.Length 
-                    || Math.Abs(timeDelta - Head.BaseTimeDelta) >= maxTime) {
+                    || Math.Abs(timeDelta - Head.BaseTimeDelta) > ushort.MaxValue) {
                     AddNextNode();
                 }
                 
                 // pack the time delta
-                int delta = Math.Abs(timeDelta - Head.BaseTimeDelta);
-                entry.Packed1 |= (uint)(delta & 0xFF) << 24;
-                entry.Flags |= (ushort)((delta & 0x700) << 3);
-                
+                entry.TimeDelta = (ushort)Math.Abs(timeDelta - Head.BaseTimeDelta);
                 Head.Entries[Head.Count] = entry; 
                 Head.Count++; Count++;
             }
@@ -119,21 +123,15 @@ namespace MCGalaxy.DB {
             BaseTimeDelta = (int)DateTime.UtcNow.Subtract(BlockDB.Epoch).TotalSeconds;
         }
         
-        const int idMask = (1 << 24) - 1, idShift = 24;
         public BlockDBEntry Unpack(BlockDBCacheEntry cEntry) {
             BlockDBEntry entry;
-            entry.PlayerID = (int)(cEntry.Packed1 & idMask);
-            entry.Index = cEntry.Index;
-            entry.NewRaw = cEntry.NewRaw;
-            entry.OldRaw = cEntry.OldRaw;
+            entry.PlayerID = (int)((uint)cEntry.Packed >> 8);
+            entry.Index = cEntry.Index;            
+            entry.TimeDelta = BaseTimeDelta + cEntry.TimeDelta;
             
-            const int hiTimeBits = 7 << 11;
-            entry.Flags = (ushort)(cEntry.Flags & ~hiTimeBits); // hi 3 bits for time
-            entry.TimeDelta = BaseTimeDelta;
-            
-            // offset from base delta
-            entry.TimeDelta += (int)(cEntry.Packed1 >> idShift); // lo 8 bits for time
-            entry.TimeDelta += (cEntry.Flags & hiTimeBits) >> 3; // hi 3 bits for time
+            entry.OldRaw = cEntry.OldRaw; entry.NewRaw = cEntry.NewRaw;
+            entry.Flags = (ushort)(1 << (cEntry.Packed & 0x0F));
+            entry.Flags |= (ushort)((cEntry.Packed & 0xF0) << 8);
             return entry;
         }
     }

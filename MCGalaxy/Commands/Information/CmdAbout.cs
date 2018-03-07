@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Info {
                     byte flags = ParseFlags(row["Deleted"].ToString());
                     if ((flags & 1) == 0) { // block was placed
                         entry.NewRaw = byte.Parse(row["Type"].ToString());
-                        entry.Flags |= (flags & 2) != 0 ? BlockDBFlags.NewCustom : BlockDBFlags.None;
+                        if ((flags & 2) != 0) entry.Flags |= BlockDBFlags.NewExtended;
                     }
                     BlockDBChange.Output(p, name, entry);
                 }

@@ -41,16 +41,20 @@ namespace MCGalaxy.DB {
         /// <summary> Flags for the block change. </summary>
         public ushort Flags;
         
-        public BlockID OldBlock { get { return Block.FromRaw(OldRaw, (Flags & BlockDBFlags.OldCustom) != 0); } }
-        public BlockID NewBlock { get { return Block.FromRaw(NewRaw, (Flags & BlockDBFlags.NewCustom) != 0); } }
+        public BlockID OldBlock { 
+            get { return (BlockID)(OldRaw | ((Flags & BlockDBFlags.OldExtended) >> 6) | ((Flags & BlockDBFlags.OldExtended2) >> 3)); }
+        }
+        public BlockID NewBlock { 
+            get { return (BlockID)(NewRaw | ((Flags & BlockDBFlags.NewExtended) >> 7) | ((Flags & BlockDBFlags.NewExtended2) >> 4)); }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]    
     public struct BlockDBCacheEntry {
 
-        /// <summary> ID within Players table of player who made the change, and part of time offset </summary>
-        /// <remarks> lowest 24 bits for player id, 8 bits for lower part of time offset. </remarks>
-        public uint Packed1;
+        /// <summary> ID within Players table of player who made the change, and block flags </summary>
+        /// <remarks> lowest 8 bits for block flags, remaining 24 bits for player id. </remarks>
+        public int Packed;
         
         /// <summary> Packed coordinates of where the change occured at. </summary>
         public int Index;
@@ -61,32 +65,27 @@ namespace MCGalaxy.DB {
         /// <summary> Raw block that is now there due to the change. </summary>
         public byte NewRaw;
         
-        /// <summary> Flags for the block change. </summary>
-        /// <remarks> 13 bits for block flags, 3 bits for higher part of time offset. </remarks>
-        public ushort Flags;
+        /// <summary> Time offset for the block change. </summary>
+        public ushort TimeDelta;
     }
 
     public static class BlockDBFlags {
-        public const ushort None        = 0x0000;
-        public const ushort ManualPlace = 0x0001;
-        public const ushort Painted     = 0x0002;
-        public const ushort Drawn       = 0x0004;
-        public const ushort Replaced    = 0x0008;
-        public const ushort Pasted      = 0x0010;
-        public const ushort Cut         = 0x0020;
-        public const ushort Filled      = 0x0040;
-        public const ushort Restored    = 0x0080;
-        public const ushort UndoOther   = 0x0100;
-        public const ushort UndoSelf    = 0x0200;
-        public const ushort RedoSelf    = 0x0400;
+        public const ushort ManualPlace = 1 << 0;
+        public const ushort Painted     = 1 << 1;
+        public const ushort Drawn       = 1 << 2;
+        public const ushort Replaced    = 1 << 3;
+        public const ushort Pasted      = 1 << 4;
+        public const ushort Cut         = 1 << 5;
+        public const ushort Filled      = 1 << 6;
+        public const ushort Restored    = 1 << 7;
+        public const ushort UndoOther   = 1 << 8;
+        public const ushort UndoSelf    = 1 << 9;
+        public const ushort RedoSelf    = 1 << 10;        
+        public const ushort Unused      = 1 << 11;
         
-        // NOTE !! If you define these, you must reduce the bits used
-        // by TimeOffset in the Flags field in a BlockDBCacheEntry
-        public const ushort Unused1     = 0x0800;
-        public const ushort Unused2     = 0x1000;
-        public const ushort Unused3     = 0x2000;
-        
-        public const ushort OldCustom   = 0x4000;
-        public const ushort NewCustom   = 0x8000;
+        public const ushort OldExtended2 = 1 << 12;
+        public const ushort NewExtended2 = 1 << 13;        
+        public const ushort OldExtended  = 1 << 14;
+        public const ushort NewExtended  = 1 << 15;
     }
 }

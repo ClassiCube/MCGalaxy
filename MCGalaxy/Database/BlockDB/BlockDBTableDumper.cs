@@ -133,7 +133,7 @@ namespace MCGalaxy.DB {
                 entry.NewRaw = Block.Air;
             }
             if ((blockFlags & 2) != 0) { // new block is custom
-                entry.Flags |= BlockDBFlags.NewCustom;
+                entry.Flags |= BlockDBFlags.NewExtended;
             }
         }
         
