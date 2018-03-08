@@ -425,7 +425,7 @@ namespace MCGalaxy.Commands.CPE {
                     
                 case "order":
                     int order = 0;
-                    if (!CommandParser.GetInt(p, value, "Inventory order", ref order, 1, 255)) {
+                    if (!CommandParser.GetInt(p, value, "Inventory order", ref order, 1, Block.MaxRaw)) {
                         SendEditHelp(p, arg); return;
                     }
                     
