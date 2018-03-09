@@ -171,16 +171,13 @@ namespace MCGalaxy.Commands.CPE {
             
             Level lvl = p.level;
             Predicate<Player> selector = pl => pl.level == lvl;
-            LevelEnv.UpdateColor(selector, 0, preset.Sky);
-            lvl.Config.SkyColor = preset.Sky;
-            LevelEnv.UpdateColor(selector, 1, preset.Clouds);
-            lvl.Config.CloudColor = preset.Clouds;
-            LevelEnv.UpdateColor(selector, 2, preset.Fog);
-            lvl.Config.FogColor = preset.Fog;
-            LevelEnv.UpdateColor(selector, 3, preset.Shadow);
-            lvl.Config.ShadowColor = preset.Shadow;
-            LevelEnv.UpdateColor(selector, 4, preset.Sun);
-            lvl.Config.LightColor = preset.Sun;
+            LevelConfig cfg = lvl.Config;
+            
+            cfg.SkyColor = preset.Sky;       LevelEnv.UpdateColor(selector, 0, cfg.SkyColor);
+            cfg.CloudColor = preset.Clouds;  LevelEnv.UpdateColor(selector, 1, cfg.CloudColor);
+            cfg.FogColor = preset.Fog;       LevelEnv.UpdateColor(selector, 2, cfg.FogColor);           
+            cfg.ShadowColor = preset.Shadow; LevelEnv.UpdateColor(selector, 3, cfg.ShadowColor);
+            cfg.LightColor = preset.Sun;     LevelEnv.UpdateColor(selector, 4, cfg.LightColor);
             
             Level.SaveSettings(p.level);
             return true;
