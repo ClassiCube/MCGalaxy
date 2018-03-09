@@ -31,7 +31,9 @@ namespace MCGalaxy.Commands.CPE {
             message = message.ToLower();
             if (message.CaselessEq("preset")) {
                 SendPresetsMessage(p); return;
-            }           
+            }
+            
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set env settings of this level")) return;
             string[] args = message.SplitSpaces();
             string opt = args[0];
             
