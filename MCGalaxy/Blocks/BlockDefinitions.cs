@@ -242,20 +242,18 @@ namespace MCGalaxy {
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            BlockID_ maxRaw = pl.MaxRawBlock;
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def == null || def.BlockID > maxRaw) continue;
+                if (def == null || def.BlockID > pl.MaxRawBlock) continue;
                 pl.Send(def.MakeDefinePacket(pl));
             }
         }
         
         internal static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            BlockID_ maxRaw = pl.MaxRawBlock;
             for (int b = 0; b < defs.Length; b++) {
                 BlockDefinition def = defs[b];
-                if (def == null || def.BlockID > maxRaw) continue;
+                if (def == null || def.BlockID > pl.MaxRawBlock) continue;
                 if (def.InventoryOrder >= 0) {
                     pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
                 }

@@ -264,22 +264,23 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
+            BlockID raw;
             if (block >= Block.Extended) {
-                block = hasBlockDefs ? Block.ToRaw(block) : level.RawFallback(block);
+                raw = Block.ToRaw(block);
             } else {
-                block = Block.Convert(block);
-                // Invalid block physics won't have converted form
-                if (block >= Block.CpeCount) block = Block.Orange;
-            }
+                raw = Block.Convert(block);
+                if (raw >= Block.CpeCount) raw = Block.Orange;
+            }           
+            if (raw > MaxRawBlock) raw = level.RawFallback(block);
             
             // Custom block replaced a core block
-            if (!hasBlockDefs && block < Block.CpeCount) {
-                BlockDefinition def = level.CustomBlockDefs[block];
-                if (def != null) block = def.FallBack;
-            }
+            if (!hasBlockDefs && raw < Block.CpeCount) {
+                BlockDefinition def = level.CustomBlockDefs[raw];
+                if (def != null) raw = def.FallBack;
+            }            
+            if (!hasCustomBlocks) raw = Block.ConvertCPE((BlockRaw)raw);
             
-            if (!hasCustomBlocks) block = Block.ConvertCPE((BlockRaw)block); // doesn't support CPE blocks
-            NetUtils.WriteBlock(block, buffer, 7, hasExtBlocks);
+            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
             Socket.SendLowPriority(buffer);
         }
 

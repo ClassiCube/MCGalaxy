@@ -55,6 +55,7 @@ namespace MCGalaxy {
         internal bool nonPlayerClient = false;
         public INetworkSocket Socket;
         public PingList Ping = new PingList();
+        public BlockID MaxRawBlock = Block.OriginalMaxBlock;
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk, AutoAfk;

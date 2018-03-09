@@ -58,13 +58,6 @@ namespace MCGalaxy {
             }
         }
         
-        public BlockID MaxRawBlock { get {
-                if (hasExtBlocks) return 767;
-                if (hasBlockDefs) return 255;
-                return hasCustomBlocks ? Block.CpeMaxBlock : Block.OriginalMaxBlock;
-            }
-        }
-        
         internal void Connect(Socket s) {
             try {
                 Socket = new TcpSocket(this, s);

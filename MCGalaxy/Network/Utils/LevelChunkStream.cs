@@ -38,8 +38,8 @@ namespace MCGalaxy.Network {
         
         internal int index, position, length;
         Player p;
-        byte[] data = new byte[chunkSize + 4];        
-        const int chunkSize = 1024;      
+        byte[] data = new byte[chunkSize + 4];
+        const int chunkSize = 1024;
         public LevelChunkStream(Player p) { this.p = p; }
         
         public override void Close() {
@@ -96,14 +96,11 @@ namespace MCGalaxy.Network {
                 conv[b] = (byte)Block.Convert((byte)b);
                 if (conv[b] > Block.CpeCount) conv[b] = Block.Orange;
             }
-            
+
+            // Convert custom blocks (that overwrote core blocks) to their fallbacks
+            #if !TEN_BIT_BLOCKS
             if (!p.hasBlockDefs) {
-                // Convert custom blocks (that overwrote core blocks) to their fallbacks
-                for (int b = 0; b < Block.CpeCount; b++) {
-                    BlockDefinition def = p.level.CustomBlockDefs[b];
-                    if (def != null) conv[b] = def.FallBack;
-                }
-                
+            #endif    
                 for (int b = 0; b < Block.Count; b++) {
                     BlockID block = Block.FromRaw((byte)b);
                     BlockDefinition def = p.level.CustomBlockDefs[block];
@@ -113,6 +110,16 @@ namespace MCGalaxy.Network {
                     } else {
                         convExt[b] = def.FallBack;
                     }
+                }
+            #if !TEN_BIT_BLOCKS    
+            }
+            #endif
+             
+             // Convert custom blocks (that overwrote core blocks) to their fallbacks
+            if (!p.hasBlockDefs) {
+                for (int b = 0; b < Block.CpeCount; b++) {
+                    BlockDefinition def = p.level.CustomBlockDefs[b];
+                    if (def != null) conv[b] = def.FallBack;
                 }
             }
             
@@ -157,9 +164,39 @@ namespace MCGalaxy.Network {
                             gs.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
-                } else 
-                #endif
-                
+                } else if (p.hasBlockDefs) {
+                    for (int i = 0; i < blocks.Length; ++i) {
+                        byte block = blocks[i];
+                        if (block == Block.custom_block) {
+                            buffer[bIndex] = lvl.GetExtTile(i);
+                        } else if (block == Block.custom_block_2 || block == Block.custom_block_3) {
+                            buffer[bIndex] = convExt[lvl.GetExtTile(i)];
+                        } else {
+                            buffer[bIndex] = conv[block];
+                        }
+                        
+                        bIndex++;
+                        if (bIndex == bufferSize) {
+                            dst.position = i;
+                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < blocks.Length; ++i) {
+                        byte block = blocks[i];
+                        if (block == Block.custom_block || block == Block.custom_block_2 || block == Block.custom_block_3) {
+                            block = convExt[lvl.GetExtTile(i)];
+                        }
+                        buffer[bIndex] = conv[block];
+                        
+                        bIndex++;
+                        if (bIndex == bufferSize) {
+                            dst.position = i;
+                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                        }
+                    }
+                }
+                #else
                 if (p.hasBlockDefs) {
                     for (int i = 0; i < blocks.Length; ++i) {
                         byte block = blocks[i];
@@ -190,6 +227,9 @@ namespace MCGalaxy.Network {
                         }
                     }
                 }
+                #endif
+                
+                
                 if (bIndex > 0) gs.Write(buffer, 0, bIndex);
             }
         }

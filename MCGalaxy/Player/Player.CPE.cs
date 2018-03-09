@@ -73,6 +73,7 @@ namespace MCGalaxy {
             if (ext.ExtName == CpeExt.CustomBlocks) {
                 if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
                 hasCustomBlocks = true;
+                if (MaxRawBlock < Block.CpeMaxBlock) MaxRawBlock = Block.CpeMaxBlock;
             } else if (ext.ExtName == CpeExt.ChangeModel) {
                 hasChangeModel = true;
             } else if (ext.ExtName == CpeExt.FullCP437) {
@@ -81,6 +82,7 @@ namespace MCGalaxy {
                 hasExtList = true;
             } else if (ext.ExtName == CpeExt.BlockDefinitions) {
                 hasBlockDefs = true;
+                if (MaxRawBlock < 255) MaxRawBlock = 255;
             } else if (ext.ExtName == CpeExt.TextColors) {
                 hasTextColors = true;
                 for (int i = 0; i < Colors.List.Length; i++) {
@@ -97,6 +99,7 @@ namespace MCGalaxy {
             #if TEN_BIT_BLOCKS
             else if (ext.ExtName == CpeExt.ExtBlocks) {
                 hasExtBlocks = true;
+                if (MaxRawBlock < 767) MaxRawBlock = 767;
             }
             #endif
         }
