@@ -178,7 +178,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (!pl.hasBlockDefs) continue;
+                if (!pl.hasBlockDefs || def.BlockID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
                 
                 pl.Send(def.MakeDefinePacket(pl));
@@ -199,7 +199,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (!pl.hasBlockDefs) continue;
+                if (!pl.hasBlockDefs || def.BlockID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != null) continue;
                 
                 pl.Send(Packet.UndefineBlock(def, pl.hasExtBlocks));
@@ -216,7 +216,7 @@ namespace MCGalaxy {
                 if (!global && pl.level != level) continue;
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
 
-                if (!pl.Supports(CpeExt.InventoryOrder)) continue;
+                if (!pl.Supports(CpeExt.InventoryOrder) || def.BlockID > pl.MaxRawBlock) continue;
                 pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
             }
         }
@@ -242,17 +242,21 @@ namespace MCGalaxy {
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
+            BlockID_ maxRaw = pl.MaxRawBlock;
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def != null) pl.Send(def.MakeDefinePacket(pl));
+                if (def == null || def.BlockID > maxRaw) continue;
+                pl.Send(def.MakeDefinePacket(pl));
             }
         }
         
         internal static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
+            BlockID_ maxRaw = pl.MaxRawBlock;
             for (int b = 0; b < defs.Length; b++) {
                 BlockDefinition def = defs[b];
-                if (def != null && def.InventoryOrder >= 0) {
+                if (def == null || def.BlockID > maxRaw) continue;
+                if (def.InventoryOrder >= 0) {
                     pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
                 }
             }

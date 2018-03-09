@@ -158,14 +158,8 @@ namespace MCGalaxy {
             SendAllBlockPermissions();
         }
         
-        int NumBlockPermissions() {
-            if (hasExtBlocks) return Block.MaxRaw + 1;
-            if (hasBlockDefs) return Block.Count;
-            return hasCustomBlocks ? Block.CpeCount : Block.OriginalCount;
-        }
-        
         void SendAllBlockPermissions() {
-            int count = NumBlockPermissions();
+            int count = MaxRawBlock + 1;
             int size = hasExtBlocks ? 5 : 4;
             byte[] bulk = new byte[count * size];
             
