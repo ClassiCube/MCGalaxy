@@ -225,6 +225,7 @@ namespace MCGalaxy.Blocks {
         public const byte SlipperyIce = 4; // Solid and fully slidable on.        
         public const byte LiquidWater = 5; // Water style 'swimming'/'bobbing'    
         public const byte LiquidLava  = 6; // Lava style 'swimming'/'bobbing'
+        public const byte ClimbRope   = 7; // Rope style 'climbing'
         
         public static bool IsSolid(byte collide) {
             return collide >= Solid && collide <= SlipperyIce;

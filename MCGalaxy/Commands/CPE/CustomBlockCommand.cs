@@ -255,7 +255,7 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 bd.Shape = bd.MaxY;
             } else if (step == 9) {
-                if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 6))
+                if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 7))
                     step++;
             } else if (step == 10) {
                 if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
@@ -671,7 +671,7 @@ namespace MCGalaxy.Commands.CPE {
                     "0 - block is walk-through (e.g. air).", "1 - block is swim-through/climbable (e.g. rope).",
                     "2 - block is solid (e.g. dirt).", "3 - block is solid, but slippery like ice",
                     "4 - block is solid, but even slipperier than ice", "5 - block is swim-through like water",
-                    "6 - block is swim-through like lava" } },
+                    "6 - block is swim-through like lava", "7 - block is climbable like rope" } },
             { "speed", new string[] { "Type a number between '0.25' (25% speed) and '3.96' (396% speed).",
                     "This speed is used when inside or walking on the block. Default speed is 1" }
             },
