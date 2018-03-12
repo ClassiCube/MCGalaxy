@@ -43,6 +43,9 @@ namespace MCGalaxy.Commands.CPE {
                 case "add":
                 case "create":
                     AddHandler(p, parts, global, cmd); break;
+                case "copyall":
+                case "copyfrom":
+                    CopyAllHandler(p, parts, global, cmd); break;
                 case "copy":
                 case "clone":
                 case "duplicate":
@@ -106,19 +109,60 @@ namespace MCGalaxy.Commands.CPE {
             SendStepHelp(p, global);
         }
         
+        static void CopyAllHandler(Player p, string[] parts, bool global, string cmd) {
+            if (parts.Length < 2) { Help(p, cmd); return; }
+            string map = Matcher.FindMaps(p, parts[1]);
+            if (map == null) return;
+            
+            Level lvl = null;
+            LevelConfig cfg = LevelInfo.GetConfig(map, out lvl); 
+            AccessController visit = new LevelAccessController(cfg, map, true);
+            if (!visit.CheckDetailed(p)) {
+                Player.Message(p, "Hence, you cannot copy custom blocks from that level"); return;
+            }
+            
+            int copied = 0;
+            BlockDefinition[] defs = BlockDefinition.Load(false, map);
+            for (int i = 0; i < defs.Length; i++) {
+                if (defs[i] == null) continue;
+                
+                BlockID b = (BlockID)i;
+                if (!DoCopy(p, global, cmd, defs[i], b, b)) continue;
+                copied++;
+                
+                string scope = global ? "global" : "level";
+                Player.Message(p, "Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
+            }
+            
+            string prefix = copied > 0 ? copied.ToString() : "No";
+            Player.Message(p, "{0} custom blocks were copied from level {1}", 
+                           prefix, cfg.Color + map);
+        }
+        
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 2) { Help(p, cmd); return; }
             BlockID src, dst;
             if (!CheckBlock(p, parts[1], out src, true)) return;
             if (!CheckBlock(p, parts[2], out dst)) return;
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
-            BlockDefinition srcDef = defs[src], dstDef = defs[dst];
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition srcDef = defs[src];
+            if (!DoCopy(p, global, cmd, srcDef, src, dst)) return;
+            
+            string scope = global ? "global" : "level";
+            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope,
+                           Block.ToRaw(src), Block.ToRaw(dst));
+        }
+
+        static bool DoCopy(Player p, bool global, string cmd, BlockDefinition srcDef, BlockID src, BlockID dst) {
             if (srcDef == null && src < Block.CpeCount) {
                 srcDef = DefaultSet.MakeCustomBlock(src);
             }
-            if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return; }
-            if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return; }
+            if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return false; }
+            
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition dstDef = defs[dst];
+            if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return false; }
             
             BlockProps props = global ? Block.Props[src] : p.level.Props[src];
             dstDef = srcDef.Copy();
@@ -126,9 +170,7 @@ namespace MCGalaxy.Commands.CPE {
             dstDef.InventoryOrder = -1;
             
             AddBlock(p, dstDef, global, cmd, props);
-            string scope = global ? "global" : "level";
-            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope, 
-                           Block.ToRaw(src), Block.ToRaw(dst));
+            return true;
         }
         
         static void InfoHandler(Player p, string[] parts, bool global, string cmd) {
@@ -451,7 +493,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockID block = def.GetBlock();
             BlockDefinition old = defs[block];
-            if (!global && old == BlockDefinition.GlobalDefs[block]) old = null;           
+            if (!global && old == BlockDefinition.GlobalDefs[block]) old = null;
             
             // in case the list is modified before we finish the command.
             if (old != null) {
@@ -513,13 +555,13 @@ namespace MCGalaxy.Commands.CPE {
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
+            Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            Player.Message(p, "Type \"%T{0} list\" %Sto see a list of {1} custom blocks.", cmd, scope);
+            Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target, string help) {
@@ -571,7 +613,7 @@ namespace MCGalaxy.Commands.CPE {
                 p.level.UpdateBlockHandler(block);
             } else {
                 BlockProps[] defProps = new BlockProps[Block.ExtendedCount];
-                Block.MakeDefaultProps(defProps);             
+                Block.MakeDefaultProps(defProps);
                 Block.ChangeGlobalProps(block, defProps[block]);
             }
         }
@@ -697,13 +739,14 @@ namespace MCGalaxy.Commands.CPE {
         
         
         internal static void Help(Player p, string cmd) {
-            Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block.", cmd);
-            Player.Message(p, "%T{0} copy [source id] [new id] %H- clones a new custom block from an existing custom block.", cmd);
-            Player.Message(p, "%T{0} edit [id] [property] [value] %H- edits the given property of that custom block.", cmd);
-            Player.Message(p, "%T{0} list <offset> %H- lists all custom blocks.", cmd);
-            Player.Message(p, "%T{0} remove [id] %H- removes that custom block.", cmd);
-            Player.Message(p, "%T{0} info [id] %H- shows info about that custom block.", cmd);
-            Player.Message(p, "%HTo see the list of editable properties, type {0} edit.", cmd);
+            Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block", cmd);
+            Player.Message(p, "%T{0} copyall [map] %H- clones all custom blocks in [map]", cmd);            
+            Player.Message(p, "%T{0} copy [id] [new id] %H- clones an existing custom block", cmd);
+            Player.Message(p, "%T{0} edit [id] [property] [value] %H- edits that custom block", cmd);
+            Player.Message(p, "%T{0} list <offset> %H- lists all custom blocks", cmd);
+            Player.Message(p, "%T{0} remove [id] %H- removes that custom block", cmd);
+            Player.Message(p, "%T{0} info [id] %H- shows info about that custom block", cmd);
+            Player.Message(p, "%HTo see the list of editable properties, type {0} edit", cmd);
         }
         
         internal static void Help(Player p, string cmd, string args) {

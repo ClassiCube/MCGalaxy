@@ -75,9 +75,9 @@ namespace MCGalaxy {
         }
         
         
-        internal static BlockDefinition[] Load(bool global, Level lvl) {
+        internal static BlockDefinition[] Load(bool global, string mapName) {
             BlockDefinition[] defs = null;
-            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
+            string path = global ? GlobalPath : "blockdefs/lvl_" + mapName + ".json";
             try {
                 if (File.Exists(path)) {
                     string json = File.ReadAllText(path);
