@@ -22,11 +22,13 @@ namespace MCGalaxy {
     public static class Hacks {
         
         public static bool CanUseHacks(Player p, Level lvl) {
-            string motd = lvl.GetMotd(p);
-            bool noHacks = motd.CaselessContains("-hax");
-            if (noHacks && p.Rank >= LevelPermission.Operator && motd.CaselessContains("+ophax"))
-                return true;
-            return !noHacks;
+            byte[] packet = MakeHackControl(p, lvl.GetMotd(p));
+            return packet[1] != 0 && packet[2] != 0 && packet[3] != 0 && packet[4] != 0 && packet[5] != 0;
+        }
+        
+        public static bool CanUseFly(Player p, Level lvl) {
+            byte[] packet = MakeHackControl(p, lvl.GetMotd(p));
+            return packet[1] != 0;
         }
         
         public static byte[] MakeHackControl(Player p, string motd) {
@@ -39,8 +41,6 @@ namespace MCGalaxy {
             for (int i = 0; i < parts.Length; i++) {
                 string part = parts[i];
                 if (part.CaselessEq("-hax")) {
-                    fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
-                } if (part.CaselessEq("-hax")) {
                     fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
                 } else if (part.CaselessEq("-ophax") && isOp) {
                     fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
