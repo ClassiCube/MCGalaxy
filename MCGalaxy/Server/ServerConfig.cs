@@ -27,7 +27,9 @@ namespace MCGalaxy {
         [ConfigString("server-name", "General", "[MCGalaxy] Default", false, asciiChars, 64)]
         public static string Name = "[MCGalaxy] Default";
         [ConfigString("motd", "General", "Welcome", false, asciiChars, 128)]
-        public static string MOTD = "Welcome!";        
+        public static string MOTD = "Welcome!";
+        [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.")]
+        public static string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
         [ConfigInt("max-players", "Server", 12, 1, 128)]
         public static int MaxPlayers = 12;
         [ConfigInt("max-guests", "Server", 10, 1, 128)]

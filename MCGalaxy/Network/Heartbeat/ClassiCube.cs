@@ -25,14 +25,13 @@ namespace MCGalaxy.Network {
     
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
     public sealed class ClassiCubeBeat : Heartbeat {
-        
-        string url = "http://www.classicube.net/heartbeat.jsp";
         string proxyUrl;
-        public override string URL { get { return url; } }
+        public override string URL { get { return ServerConfig.HeartbeatURL; } }
         
         public override void Init() {
             try {
-                IPAddress[] addresses = Dns.GetHostAddresses("www.classicube.net");
+                string hostUrl = new Uri(URL).Host;
+                IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
                 EnsureIPv4Url(addresses);
             } catch (Exception ex) {
                 Logger.Log(LogType.Warning, "Error while trying to retrieve DNS information for classicube.net");
