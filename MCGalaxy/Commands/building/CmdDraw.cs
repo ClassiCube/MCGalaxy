@@ -112,8 +112,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Draw [mode] [baseradius] [height] <brush args>");
-            Player.Message(p, "%T/Draw [mode] [radius] <brush args>");
+            Player.Message(p, "%T/Draw [object] [baseradius] [height] <brush args>");
+            Player.Message(p, "%T/Draw [object] [radius] <brush args>");
             Player.Message(p, "%HDraws an object at the specified point.");
             Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
             Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
