@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             if (dArgs.Mode == DrawMode.solid)  dArgs.BrushName = "Normal";
             if (dArgs.Mode == DrawMode.holes)  dArgs.BrushName = "Checkered";
             if (dArgs.Mode == DrawMode.random) dArgs.BrushName = "Random";
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.DefaultBrushEndCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
         }
         
         public override void Help(Player p) {

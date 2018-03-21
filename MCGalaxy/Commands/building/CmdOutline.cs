@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
-            dArgs.BrushArgs = dArgs.Message.Splice(1, dArgs.DefaultBrushEndCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(1, dArgs.ModeArgsCount);
         }
 
         public override void Help(Player p) {

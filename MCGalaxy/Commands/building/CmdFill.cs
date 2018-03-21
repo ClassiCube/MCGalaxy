@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArg) { return new FillDrawOp(); }
 
         protected override void GetBrush(DrawArgs dArgs) {
-            int endCount = dArgs.DefaultBrushEndCount;
+            int endCount = dArgs.ModeArgsCount;
             if (IsConfirmed(dArgs.Message)) endCount++;
             dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }

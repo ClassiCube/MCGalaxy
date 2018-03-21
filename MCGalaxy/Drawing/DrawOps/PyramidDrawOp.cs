@@ -32,21 +32,17 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            Vec3S32 oMin = Min, oMax = Max;
-            baseOp.Min = oMin; baseOp.Max = oMax;
             Vec3S32 p1 = Min, p2 = Max;
             long total = 0;
             
-            while (true) {
-                total += baseOp.BlocksAffected(lvl, marks);
-                if (p1.Y >= lvl.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
-                    break;
-                p1.X++; p2.X--;
-                p1.Z++; p2.Z--;
-                p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
+            while (p1.Y >= 0 && p1.Y < lvl.Height && p1.X <= p2.X && p1.Z <= p2.Z) {
                 baseOp.Min = p1; baseOp.Max = p2;
+                total += baseOp.BlocksAffected(lvl, marks);
+
+                p1.X++; p2.X--; 
+                p1.Z++; p2.Z--;
+                p1.Y += yDir; p2.Y = p1.Y;                
             }
-            baseOp.Min = oMin; baseOp.Max = oMax;
             return total;
         }
         
@@ -55,15 +51,13 @@ namespace MCGalaxy.Drawing.Ops {
             baseOp.SetLevel(Level);
             baseOp.Player = Player;
             
-            while (true) {
+            while (p1.Y >= 0 && p1.Y < Level.Height && p1.X <= p2.X && p1.Z <= p2.Z) {
+                baseOp.Min = p1; baseOp.Max = p2;
                 baseOp.Perform(marks, brush, output);
-                if (p1.Y >= Level.Height || Math.Abs(p2.X - p1.X) <= 1 || Math.Abs(p2.Z - p1.Z) <= 1)
-                    return;
-                
+
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
-                p1.Y = (ushort)(p1.Y + yDir); p2.Y = p1.Y;
-                baseOp.Min = p1; baseOp.Max = p2;
+                p1.Y += yDir; p2.Y = p1.Y;               
             }
         }
     }

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetBrush(DrawArgs dArgs) {
             LineDrawOp line = (LineDrawOp)dArgs.Op;
-            int endCount = dArgs.DefaultBrushEndCount;
+            int endCount = dArgs.ModeArgsCount;
             if (line.MaxLength != int.MaxValue) endCount++;
             dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }

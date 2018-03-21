@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetBrush(DrawArgs dArgs) {
             if (dArgs.Mode == DrawMode.solid) dArgs.BrushName = "Normal";
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.DefaultBrushEndCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {
