@@ -89,45 +89,37 @@ namespace MCGalaxy.Network {
             int bIndex = 0;
             
             // Store on stack instead of performing function call for every block in map
-            byte* conv = stackalloc byte[Block.Count];
-            byte* convExt = stackalloc byte[Block.Count];
-            
-            for (int b = 0; b < Block.Count; b++) {
-                conv[b] = (byte)Block.Convert((byte)b);
-                if (conv[b] > Block.CpeCount) conv[b] = Block.Orange;
-            }
-
-            // Convert custom blocks (that overwrote core blocks) to their fallbacks
-            #if !TEN_BIT_BLOCKS
-            if (!p.hasBlockDefs) {
-            #endif    
-                for (int b = 0; b < Block.Count; b++) {
-                    BlockID block = Block.FromRaw((byte)b);
-                    BlockDefinition def = p.level.CustomBlockDefs[block];
-                    
-                    if (def == null) {
-                        convExt[b] = block < Block.CpeCount ? (byte)block : Block.Air;
-                    } else {
-                        convExt[b] = def.FallBack;
-                    }
-                }
-            #if !TEN_BIT_BLOCKS    
-            }
+            byte* conv = stackalloc byte[Block.ExtendedCount];
+            byte* convExt = conv + Block.Count;
+            #if TEN_BIT_BLOCKS
+            byte* convExt2 = conv + Block.Count * 2;
+            byte* convExt3 = conv + Block.Count * 3;
             #endif
-             
-             // Convert custom blocks (that overwrote core blocks) to their fallbacks
-            if (!p.hasBlockDefs) {
-                for (int b = 0; b < Block.CpeCount; b++) {
-                    BlockDefinition def = p.level.CustomBlockDefs[b];
-                    if (def != null) conv[b] = def.FallBack;
+
+            for (int b = 0; b < Block.ExtendedCount; b++) {
+                BlockID block = (BlockID)b;
+                if (Block.IsPhysicsType(block)) {
+                    conv[b] = (byte)Block.Convert(block);
+                    if (conv[b] > Block.CpeCount) conv[b] = Block.Orange;
+                    continue;
+                }
+                
+                // Map [256, 256 + 65] to [0, 65]
+                if (block >= Block.Count && block < Block.Count + Block.CpeCount) block -= Block.Count;
+                
+                // Use custom block fallback, if possible
+                BlockDefinition def = p.level.CustomBlockDefs[block];
+                if (def == null) {
+                    conv[b] = block < Block.CpeCount ? (byte)block : Block.Air;
+                } else {
+                    conv[b] = def.FallBack;
                 }
             }
             
             // Convert CPE blocks to their fallbacks
             if (!p.hasCustomBlocks) {
-                for (int b = 0; b < Block.Count; b++) {
+                for (int b = 0; b < Block.ExtendedCount; b++) {
                     conv[b] = Block.ConvertCPE(conv[b]);
-                    convExt[b] = Block.ConvertCPE(convExt[b]);
                 }
             }
             
@@ -169,8 +161,10 @@ namespace MCGalaxy.Network {
                         byte block = blocks[i];
                         if (block == Block.custom_block) {
                             buffer[bIndex] = lvl.GetExtTile(i);
-                        } else if (block == Block.custom_block_2 || block == Block.custom_block_3) {
-                            buffer[bIndex] = convExt[lvl.GetExtTile(i)];
+                        } else if (block == Block.custom_block_2) {
+                            buffer[bIndex] = convExt2[lvl.GetExtTile(i)];
+                        } else if (block == Block.custom_block_3) {
+                            buffer[bIndex] = convExt3[lvl.GetExtTile(i)];
                         } else {
                             buffer[bIndex] = conv[block];
                         }
@@ -184,8 +178,12 @@ namespace MCGalaxy.Network {
                 } else {
                     for (int i = 0; i < blocks.Length; ++i) {
                         byte block = blocks[i];
-                        if (block == Block.custom_block || block == Block.custom_block_2 || block == Block.custom_block_3) {
+                        if (block == Block.custom_block) {
                             block = convExt[lvl.GetExtTile(i)];
+                        } else if (block == Block.custom_block_2) {
+                            block = convExt2[lvl.GetExtTile(i)];
+                        } else if (block == Block.custom_block_3) {
+                            block = convExt3[lvl.GetExtTile(i)];
                         }
                         buffer[bIndex] = conv[block];
                         
