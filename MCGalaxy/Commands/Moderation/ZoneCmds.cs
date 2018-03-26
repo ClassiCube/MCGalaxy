@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             Player.Message(p, "Creating zone " + z.ColoredName);
             Player.Message(p, "Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, z, AddZone);
+            p.MakeSelection(2, "Selecting region for %SNew zone", z, AddZone);
         }
         
         bool AddZone(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message) {
             Player.Message(p, "Place or delete a block where you would like to check for zones.");
-            p.MakeSelection(1, null, TestZone);
+            p.MakeSelection(1, "Selecting point for %SZone check", null, TestZone);
         }
         
         bool TestZone(Player p, Vec3S32[] marks, object state, BlockID block) {

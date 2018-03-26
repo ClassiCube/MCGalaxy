@@ -107,6 +107,9 @@ namespace MCGalaxy.Network {
                 // Map [256, 256 + 65] to [0, 65]
                 if (block >= Block.Count && block < Block.Count + Block.CpeCount) block -= Block.Count;
                 
+                // Players with block defs don't need fallbacks for first 256 blocks
+                if (block < Block.Count && p.hasBlockDefs) { conv[b] = (byte)block; continue; }
+                	
                 // Use custom block fallback, if possible
                 BlockDefinition def = p.level.CustomBlockDefs[block];
                 if (def == null) {

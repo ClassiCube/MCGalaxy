@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "Place or break two blocks to determine the edges.");
                 HighlightAreaArgs args = new HighlightAreaArgs();
                 args.ids = ids; args.who = parts[0]; args.delta = delta;
-                p.MakeSelection(2, args, DoHighlightArea);
+                p.MakeSelection(2,  "Selecting region for %SHighlight", args, DoHighlightArea);
             }
         }
         
