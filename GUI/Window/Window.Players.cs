@@ -22,87 +22,39 @@ using MCGalaxy.UI;
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
         PlayerProperties playerProps;
-         
-        void UpdatePlayers() {
-            RunOnUI_Async(
-                delegate {
-                    pl_listBox.Items.Clear();
-                    UpdateNotifyIconText();
-                    
-                    Player[] players = PlayerInfo.Online.Items;
-                    foreach (Player p in players)
-                        pl_listBox.Items.Add(p.name);
-                    
-                    if (curPlayer == null) return;
-                    if (PlayerInfo.FindExact(curPlayer.name) != null) return;
-                    
-                    curPlayer = null;
-                    playerProps = null;
-                    pl_gbProps.Text = "Properties for (none selected)";
-                    pl_pgProps.SelectedObject = null;
-                });
-        }
-        
-        void AppendPlayerStatus(string text) {
-            if (InvokeRequired) {
-                Action<string> d = AppendPlayerStatus;
-                Invoke(d, new object[] { text });
-            } else {
-                pl_statusBox.AppendText(text + Environment.NewLine);
-            }
-        }
-        
-        void LoadPlayerTabDetails(object sender, EventArgs e) {
-            Player p = PlayerInfo.FindExact(pl_listBox.Text);
-            if (p == null || p == curPlayer) return;
-            
-            pl_statusBox.Text = "";
-            AppendPlayerStatus("==" + p.name + "==");
-            playerProps = new PlayerProperties(p);
-            pl_gbProps.Text = "Properties for " + p.name;
-            pl_pgProps.SelectedObject = playerProps;
-            curPlayer = p;
-            
-            UpdatePlayerSelected();
-        }
-
-        void UpdatePlayerSelected() {          
-            if (tabs.SelectedTab != tp_Players) return;
-            try { pl_pgProps.Refresh(); } catch { }
-        }
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             string time = pl_txtUndo.Text.Trim();
-            if (time.Length == 0) { AppendPlayerStatus("Amount of time to undo required"); return; }
+            if (time.Length == 0) { Players_AppendStatus("Amount of time to undo required"); return; }
 
             UIHelpers.HandleCommand("UndoPlayer " + curPlayer.name + " " + time);
-            AppendPlayerStatus("Undid player for " + time + " seconds");
+            Players_AppendStatus("Undid player for " + time + " seconds");
         }
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             string text = pl_txtMessage.Text.Trim();
-            if (text.Length == 0) { AppendPlayerStatus("No message to send"); return; }
+            if (text.Length == 0) { Players_AppendStatus("No message to send"); return; }
             
             Player.Message(curPlayer, "<CONSOLE>: &f" + pl_txtMessage.Text);            
-            AppendPlayerStatus("Sent player message: " + pl_txtMessage.Text);
+            Players_AppendStatus("Sent player message: " + pl_txtMessage.Text);
             pl_txtMessage.Text = "";
         }
 
         void pl_BtnSendCommand_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             string text = pl_txtImpersonate.Text.Trim();
-            if (text.Length == 0) { AppendPlayerStatus("No command to execute"); return; }
+            if (text.Length == 0) { Players_AppendStatus("No command to execute"); return; }
             
             string[] args = text.SplitSpaces(2);
             string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
             curPlayer.HandleCommand(cmdName, cmdArgs);
                 
             if (args.Length > 1) {
-                AppendPlayerStatus("Made player do /" + cmdName + " " + cmdArgs);
+                Players_AppendStatus("Made player do /" + cmdName + " " + cmdArgs);
             } else {
-                AppendPlayerStatus("Made player do /" + cmdName);
+                Players_AppendStatus("Made player do /" + cmdName);
             }
             pl_txtImpersonate.Text = "";
         }
@@ -115,25 +67,35 @@ namespace MCGalaxy.Gui {
         void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
         
         void DoCmd(string cmdName, string action) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             UIHelpers.HandleCommand(cmdName + " " + curPlayer.name);
-            AppendPlayerStatus(action + " player");
+            Players_AppendStatus(action + " player");
         }
 
         void pl_BtnRules_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             UIHelpers.HandleCommand("Rules " + curPlayer.name);
-            AppendPlayerStatus("Sent rules to player");
+            Players_AppendStatus("Sent rules to player");
         }
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { AppendPlayerStatus("No player selected"); return; }
+            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             curPlayer.HandleCommand("Spawn", "");
-            AppendPlayerStatus("Sent player to spawn");
+            Players_AppendStatus("Sent player to spawn");
         }
 
         void pl_listBox_Click(object sender, EventArgs e) {
-            LoadPlayerTabDetails(sender, e);
+            Player p = PlayerInfo.FindExact(pl_listBox.Text);
+            if (p == null || p == curPlayer) return;
+            
+            pl_statusBox.Text = "";
+            Players_AppendStatus("==" + p.name + "==");
+            playerProps = new PlayerProperties(p);
+            pl_gbProps.Text = "Properties for " + p.name;
+            pl_pgProps.SelectedObject = playerProps;
+            curPlayer = p;
+            
+            Players_UpdateSelected();
         }
 
         void pl_txtImpersonate_KeyDown(object sender, KeyEventArgs e) {
@@ -144,6 +106,36 @@ namespace MCGalaxy.Gui {
         }
         void pl_txtMessage_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) pl_BtnMessage_Click(sender, e);
+        }
+                
+        void Players_AppendStatus(string text) {
+            if (InvokeRequired) {
+                Action<string> d = Players_AppendStatus;
+                Invoke(d, new object[] { text });
+            } else {
+                pl_statusBox.AppendText(text + Environment.NewLine);
+            }
+        }
+
+        void Players_UpdateSelected() {
+            if (tabs.SelectedTab != tp_Players) return;
+            try { pl_pgProps.Refresh(); } catch { }
+        }
+        
+        void Players_UpdateList() {
+            pl_listBox.Items.Clear();
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                pl_listBox.Items.Add(p.name);
+            }
+            
+            if (curPlayer == null) return;
+            if (PlayerInfo.FindExact(curPlayer.name) != null) return;
+            
+            curPlayer = null;
+            playerProps = null;
+            pl_gbProps.Text = "Properties for (none selected)";
+            pl_pgProps.SelectedObject = null;
         }
     }
 }

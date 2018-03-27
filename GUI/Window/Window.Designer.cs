@@ -799,7 +799,7 @@ namespace MCGalaxy.Gui
             this.map_lbLoaded.Name = "map_lbLoaded";
             this.map_lbLoaded.Size = new System.Drawing.Size(379, 199);
             this.map_lbLoaded.TabIndex = 0;
-            this.map_lbLoaded.SelectedIndexChanged += new System.EventHandler(this.UpdateSelectedMap);
+            this.map_lbLoaded.SelectedIndexChanged += new System.EventHandler(this.Map_UpdateSelected);
             // 
             // map_gbUnloaded
             // 

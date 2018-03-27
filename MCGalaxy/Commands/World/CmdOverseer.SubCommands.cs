@@ -30,9 +30,13 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleEnv(Player p, string type, string value) {
-            string arg = value.Length == 0 ? "normal" : value;
             type = type.ToLower();
+            if (type == "preset") {
+                Command.all.Find("Environment").Use(p, "preset " + value); return;
+            }
+            
             Level lvl = p.level;
+            string arg = value.Length == 0 ? "normal" : value;
             
             Predicate<Player> selector = pl => pl.level == lvl;
             if (CmdEnvironment.Handle(p, selector, type, arg, lvl.Config, lvl.ColoredName)) return;
@@ -210,7 +214,7 @@ namespace MCGalaxy.Commands.World {
 
 
         static void HandlePreset(Player p, string preset, string ignored) {
-            Command.all.FindByName("Environment").Use(p, "preset " + preset);
+            HandleEnv(p, "preset", preset);
         }
 
         static void HandleSpawn(Player p, string ignored1, string ignored2) {

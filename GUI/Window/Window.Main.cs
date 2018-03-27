@@ -40,13 +40,13 @@ namespace MCGalaxy.Gui {
             UIHelpers.HandleCommand(command + " " + prefix + player.name + suffix);
         }
         
-        void tsPlayer_Clones_Click(object sender, EventArgs e) { PlayerCmd("Clones"); }
-        void tsPlayer_Voice_Click(object sender, EventArgs e) { PlayerCmd("Voice"); }
-        void tsPlayer_Whois_Click(object sender, EventArgs e) { PlayerCmd("WhoIs"); }       
-        void tsPlayer_Ban_Click(object sender, EventArgs e) { PlayerCmd("Ban"); }
-        void tsPlayer_Kick_Click(object sender, EventArgs e) { PlayerCmd("Kick", "", " You have been kicked by the console."); }
+        void tsPlayer_Clones_Click(object sender, EventArgs e) {  PlayerCmd("Clones"); }
+        void tsPlayer_Voice_Click(object sender, EventArgs e) {   PlayerCmd("Voice"); }
+        void tsPlayer_Whois_Click(object sender, EventArgs e) {   PlayerCmd("WhoIs"); }       
+        void tsPlayer_Ban_Click(object sender, EventArgs e) {     PlayerCmd("Ban"); }
+        void tsPlayer_Kick_Click(object sender, EventArgs e) {    PlayerCmd("Kick", "", " You have been kicked by the console."); }
         void tsPlayer_Promote_Click(object sender, EventArgs e) { PlayerCmd("SetRank", "+up ", ""); }
-        void tsPlayer_Demote_Click(object sender, EventArgs e) { PlayerCmd("SetRank", "-down ", ""); }
+        void tsPlayer_Demote_Click(object sender, EventArgs e) {  PlayerCmd("SetRank", "-down ", ""); }
 
 
         
@@ -67,17 +67,17 @@ namespace MCGalaxy.Gui {
             UIHelpers.HandleCommand(command + " " + prefix + level.name + suffix);
         }  
         
-        void tsMap_Info_Click(object sender, EventArgs e) { LevelCmd("Map"); LevelCmd("mapinfo"); }
-        void tsMap_MoveAll_Click(object sender, EventArgs e) { LevelCmd("MoveAll"); }
+        void tsMap_Info_Click(object sender, EventArgs e) {     LevelCmd("Map"); LevelCmd("MapInfo"); }
+        void tsMap_MoveAll_Click(object sender, EventArgs e) {  LevelCmd("MoveAll"); }
         void tsMap_Physics0_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 0"); }
         void tsMap_Physics1_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 1"); }
         void tsMap_Physics2_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 2"); }
         void tsMap_Physics3_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 3"); }
         void tsMap_Physics4_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 4"); }
         void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 5"); }
-        void tsMap_Save_Click(object sender, EventArgs e) { LevelCmd("Save"); }
-        void tsMap_Unload_Click(object sender, EventArgs e) { LevelCmd("Unload"); }
-        void tsMap_Reload_Click(object sender, EventArgs e) { LevelCmd("Reload", "all ", ""); }
+        void tsMap_Save_Click(object sender, EventArgs e) {     LevelCmd("Save"); }
+        void tsMap_Unload_Click(object sender, EventArgs e) {   LevelCmd("Unload"); }
+        void tsMap_Reload_Click(object sender, EventArgs e) {   LevelCmd("Reload", "all ", ""); }
         
         
         
@@ -184,6 +184,58 @@ namespace MCGalaxy.Gui {
             if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 main_txtLog.ClearLog();
             }
+        }
+        
+        
+        void Main_UpdateMapList() {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            
+            // Try to keep the same selection on update
+            string selected = null;
+            var selectedRows = main_Maps.SelectedRows;
+            if (selectedRows.Count > 0) {
+                selected = (string)selectedRows[0].Cells[0].Value;
+            }
+            
+            // Update the data source and control
+            lc = new LevelCollection();
+            foreach (Level lvl in loaded) { lc.Add(lvl); }
+            main_Maps.DataSource = lc;
+            
+            // Reselect map
+            if (selected != null) {
+                foreach (DataGridViewRow row in main_Maps.Rows) {
+                    string name = (string)row.Cells[0].Value;
+                    if (name.CaselessEq(selected)) row.Selected = true;
+                }
+            }
+            main_Maps.Refresh();
+        }
+        
+        void Main_UpdatePlayersList() {
+            UpdateNotifyIconText();
+            Player[] players = PlayerInfo.Online.Items;
+
+            // Try to keep the same selection on update
+            string selected = null;
+            var selectedRows = main_Players.SelectedRows;
+            if (selectedRows.Count > 0) {
+                selected = (string)selectedRows[0].Cells[0].Value;
+            }
+
+            // Update the data source and control
+            pc = new PlayerCollection();
+            foreach (Player pl in players) { pc.Add(pl); }
+            main_Players.DataSource = pc;
+            
+            // Reselect player
+            if (selected != null) {
+                foreach (DataGridViewRow row in main_Players.Rows) {
+                    string name = (string)row.Cells[0].Value;
+                    if (name.CaselessEq(selected)) row.Selected = true;
+                }
+            }
+            main_Players.Refresh();
         }
     }
 }

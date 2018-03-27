@@ -31,13 +31,13 @@ namespace MCGalaxy.Gui {
             string seed = map_txtSeed.Text.ToLower();
             if (String.IsNullOrEmpty(name)) { MessageBox.Show("Map name cannot be blank."); return; }
             
-            string x = GetComboboxItem(map_cmbX, "width");
+            string x = Map_GetComboboxItem(map_cmbX, "width");
             if (x == null) return;           
-            string y = GetComboboxItem(map_cmbY, "height");
+            string y = Map_GetComboboxItem(map_cmbY, "height");
             if (y == null) return;            
-            string z = GetComboboxItem(map_cmbZ, "length");
+            string z = Map_GetComboboxItem(map_cmbZ, "length");
             if (z == null) return;            
-            string type = GetComboboxItem(map_cmbType, "type");
+            string type = Map_GetComboboxItem(map_cmbType, "type");
             if (type == null) return;            
 
             Thread genThread = new Thread(() =>
@@ -57,8 +57,9 @@ namespace MCGalaxy.Gui {
                 if (LevelInfo.MapExists(name)) {
                     MessageBox.Show("Level successfully generated.");
                     RunOnUI_Async(() => {
-                        UpdateUnloadedList();
-                        UpdateMapList();
+                        Map_UpdateUnloadedList();
+                        Map_UpdateLoadedList();
+                        Main_UpdateMapList();
                     });
                 } else {
                     MessageBox.Show("Level was not generated. Check main log for details.");
@@ -69,7 +70,7 @@ namespace MCGalaxy.Gui {
             genThread.Start();
         }
         
-        string GetComboboxItem(ComboBox box, string propName) {
+        string Map_GetComboboxItem(ComboBox box, string propName) {
             object selected = box.SelectedItem;
             string value = selected == null ? "" : selected.ToString().ToLower();
             
@@ -86,7 +87,7 @@ namespace MCGalaxy.Gui {
         }
         
         string last = null;
-        void UpdateSelectedMap(object sender, EventArgs e) {
+        void Map_UpdateSelected(object sender, EventArgs e) {
             if (map_lbLoaded.SelectedItem == null) {
                 if (map_pgProps.SelectedObject == null) return;
                 map_pgProps.SelectedObject = null; last = null;
@@ -108,7 +109,7 @@ namespace MCGalaxy.Gui {
             map_gbProps.Text = "Properties for " + name;
         }
         
-        void UpdateUnloadedList() {
+        void Map_UpdateUnloadedList() {
             string selectedLvl = null;
             if (map_lbUnloaded.SelectedItem != null)
                 selectedLvl = map_lbUnloaded.SelectedItem.ToString();
@@ -127,6 +128,28 @@ namespace MCGalaxy.Gui {
             } else {
                 map_lbUnloaded.SelectedIndex = -1;
             }
+        }
+        
+        void Map_UpdateLoadedList() {
+            Level[] loaded = LevelInfo.Loaded.Items;
+            // Try to keep the same selection on update
+            string selected = null;
+            if (map_lbLoaded.SelectedItem != null) {
+                selected = map_lbLoaded.SelectedItem.ToString();
+            }
+            
+            map_lbLoaded.Items.Clear();
+            foreach (Level lvl in loaded) {
+                map_lbLoaded.Items.Add(lvl.name);
+            }
+            
+            int index = -1;
+            if (selected != null) {
+                index = map_lbLoaded.Items.IndexOf(selected);                
+            }
+            
+            map_lbLoaded.SelectedIndex = index;
+            Map_UpdateSelected(null, null);
         }
     }
 }

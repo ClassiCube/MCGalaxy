@@ -76,7 +76,7 @@ namespace MCGalaxy.Gui {
 
         void PropertyWindow_Unload(object sender, EventArgs e) {
             lavaUpdateTimer.Dispose();
-            Window.prevLoaded = false;
+            Window.hasPropsForm = false;
             tw_selected = null;
         }
 

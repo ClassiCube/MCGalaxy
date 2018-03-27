@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.CPE {
             }
         }
         
-        internal static bool Handle(Player p, Predicate<Player> selector, string opt, string value, 
+        internal static bool Handle(Player p, Predicate<Player> selector, string opt, string value,
                                     AreaConfig cfg, string area) {
             Level lvl = p.level;
             // using if else instead of switch here reduces IL by about 200 bytes
@@ -175,7 +175,7 @@ namespace MCGalaxy.Commands.CPE {
             
             cfg.SkyColor    = preset.Sky;    LevelEnv.UpdateColor(selector, 0, cfg.SkyColor);
             cfg.CloudColor  = preset.Clouds; LevelEnv.UpdateColor(selector, 1, cfg.CloudColor);
-            cfg.FogColor    = preset.Fog;    LevelEnv.UpdateColor(selector, 2, cfg.FogColor);           
+            cfg.FogColor    = preset.Fog;    LevelEnv.UpdateColor(selector, 2, cfg.FogColor);
             cfg.ShadowColor = preset.Shadow; LevelEnv.UpdateColor(selector, 3, cfg.ShadowColor);
             cfg.LightColor  = preset.Sun;    LevelEnv.UpdateColor(selector, 4, cfg.LightColor);
             
@@ -205,12 +205,20 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Environment [variable] [value]");
-            Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
-            Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
-            Player.Message(p, "%H   weatherspeed, weatherfade, expfog, sidesoffset,");
-            Player.Message(p, "%H   skyboxhorspeed, skyboxverspeed");
-            Player.Message(p, "%HUsing 'normal' as a value will reset the variable");
+            Player.Message(p, "%HSee %T/Help env variables %Hfor list of variables");
+            Player.Message(p, "%HUsing 'normal' for [value] will reset the variable");
             Player.Message(p, "%T/Environment normal %H- resets all variables");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("variable") || message.CaselessEq("variables")) {
+                Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
+                Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
+                Player.Message(p, "%H   weatherspeed, weatherfade, expfog, sidesoffset,");
+                Player.Message(p, "%H   skyboxhorspeed, skyboxverspeed");
+            } else {
+                base.Help(p, message);
+            }
         }
     }
 }
