@@ -18,6 +18,7 @@ using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy {
 
@@ -214,10 +215,14 @@ namespace MCGalaxy {
         }
         
         static void SendModel(Player pl, byte id, string model) {
-            byte block;
-            // Fallback block models for clients that don't support block definitions
-            if (byte.TryParse(model, out block) && !pl.hasBlockDefs) {
-                model = pl.level.RawFallback(block).ToString();
+            BlockID raw;
+            if (BlockID.TryParse(model, out raw) && raw > pl.MaxRawBlock) {
+                BlockID block = Block.FromRaw(raw);
+                if (block >= Block.ExtendedCount) {
+                    model = "humanoid"; // invalid block ids
+                } else {
+                    model = pl.level.RawFallback(block).ToString();
+                }                
             }
             pl.Send(Packet.ChangeModel(id, model, pl.hasCP437));
         }

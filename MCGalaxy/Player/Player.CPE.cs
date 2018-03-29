@@ -113,28 +113,26 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentTextures() {
-            byte side = (byte)level.Config.EdgeBlock;
-            byte edge = (byte)level.Config.HorizonBlock;
-            if (!hasBlockDefs) side = level.RawFallback(level.Config.EdgeBlock);
-            if (!hasBlockDefs) edge = level.RawFallback(level.Config.HorizonBlock);
-            
+            BlockID side = level.Config.EdgeBlock;    if (side > MaxRawBlock) side = level.RawFallback(side);
+            BlockID edge = level.Config.HorizonBlock; if (edge > MaxRawBlock) edge = level.RawFallback(edge);
+
             string url = GetTextureUrl();
-            if (Supports(CpeExt.EnvMapAspect)) {                
+            if (Supports(CpeExt.EnvMapAspect)) {
                 // reset all other textures back to client default.
                 if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
                 Send(Packet.EnvMapUrl(url, hasCP437));
             } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                    Send(Packet.MapAppearanceV2("", side, edge, level.Config.EdgeLevel,
+                	Send(Packet.MapAppearanceV2("", (byte)side, (byte)edge, level.Config.EdgeLevel,
                                                 level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 }
-                Send(Packet.MapAppearanceV2(url, side, edge, level.Config.EdgeLevel,
+                Send(Packet.MapAppearanceV2(url, (byte)side, (byte)edge, level.Config.EdgeLevel,
                                             level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 lastUrl = url;
             } else if (Supports(CpeExt.EnvMapAppearance)) {
                 url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
-                Send(Packet.MapAppearance(url, side, edge, level.Config.EdgeLevel, hasCP437));
+                Send(Packet.MapAppearance(url, (byte)side, (byte)edge, level.Config.EdgeLevel, hasCP437));
             }
         }
         
