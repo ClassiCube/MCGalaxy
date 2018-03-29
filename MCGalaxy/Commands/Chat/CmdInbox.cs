@@ -97,7 +97,8 @@ namespace MCGalaxy.Commands.Chatting {
             Player.Message(p, "%T/Inbox [num]");
             Player.Message(p, "%HDisplays the message at [num]");
             Player.Message(p, "%T/Inbox del [num]/all");
-            Player.Message(p, "%HDeletes the message at [num], deletes all messages if \"all\".");
+            Player.Message(p, "%HDeletes the message at [num], deletes all messages if \"all\"");
+            Player.Message(p, "  %HUse %T/Send %Hto reply to a message");
         }
     }
 }
