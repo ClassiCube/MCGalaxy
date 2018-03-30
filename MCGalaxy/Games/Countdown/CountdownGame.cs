@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
@@ -35,6 +36,8 @@ namespace MCGalaxy.Games {
         
         CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();
+        BufferedBlockSender bulk = new BufferedBlockSender();
+        
         
         public override void EndRound() { EndRound(null); }
         
@@ -66,22 +69,24 @@ namespace MCGalaxy.Games {
             Thread.Sleep(2000);
             SpawnPlayers(xSpawn, ySpawn, zSpawn);
             Map.ChatLevel("-----&b5%S-----");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
             
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air, Map);
+            if (Status != CountdownGameStatus.RoundCountdown) return;            
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air);
+            bulk.Send(true);
             Thread.Sleep(1000);
-            if (Status != CountdownGameStatus.RoundCountdown) return;
             
+            if (Status != CountdownGameStatus.RoundCountdown) return;           
             Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
-            Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air, Map);
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air);
+            bulk.Send(true);
             
+            if (Status != CountdownGameStatus.RoundCountdown) return;            
             Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("GO!!!!!!!");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
             
+            if (Status != CountdownGameStatus.RoundCountdown) return;          
             Player[] players = Players.Items;
             Remaining.Clear();
             foreach (Player pl in players) { Remaining.Add(pl); }
@@ -175,21 +180,23 @@ namespace MCGalaxy.Games {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             
             // Cuboid the borders around game board with air
-            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.Air, Map);
-            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.Air, Map);
-            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air, Map);
-            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air, Map);
+            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.Air);
+            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.Air);
+            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air);
+            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air);
+            bulk.Send(true);
         }
         
         
         void RemoveAllSquareBorders() {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             for (int xx = 6 - 1; xx <= Map.Width - 6; xx += 3) {
-                Cuboid(xx, 4, 4, xx, 4, maxZ - 4, Block.Air, Map);
+                Cuboid(xx, 4, 4, xx, 4, maxZ - 4, Block.Air);
             }
             for (int zz = 6 - 1; zz <= Map.Length - 6; zz += 3) {
-                Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.Air, Map);
+                Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.Air);
             }
+            bulk.Send(true);
         }
         
         void RemoveSquares() {
@@ -209,13 +216,20 @@ namespace MCGalaxy.Games {
         
         void RemoveSquare(SquarePos pos) {
             ushort x1 = pos.X, x2 = (ushort)(pos.X + 1), y = 4, z1 = pos.Z, z2 = (ushort)(pos.Z + 1);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Yellow, Map);
+            Cuboid(x1, y, z1, x2, y, z2, Block.Yellow);
+            bulk.Send(true);
+            
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Orange, Map);
+            Cuboid(x1, y, z1, x2, y, z2, Block.Orange);
+            bulk.Send(true);
+            
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Red, Map);
+            Cuboid(x1, y, z1, x2, y, z2, Block.Red);
+            bulk.Send(true);
+            
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Air, Map);
+            Cuboid(x1, y, z1, x2, y, z2, Block.Air);
+            bulk.Send(true);
             // Remove glass borders if neighbouring squared were previously removed.
             
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
@@ -322,6 +336,7 @@ namespace MCGalaxy.Games {
                 Map = LevelInfo.FindExact("countdown");
             }
             
+            bulk.level = Map;
             Map.Config.Deletable = false;
             Map.Config.Buildable = false;
             Map.BuildAccess.Min = LevelPermission.Nobody;
@@ -364,30 +379,37 @@ namespace MCGalaxy.Games {
             SetGlassTube(Block.Air, Block.Air);
 
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass, Map);
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);
             for(int zz = 6; zz < maxZ - 6; zz += 3)
                 for (int xx = 6; xx < maxX - 6; xx += 3)
-                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green, Map);
+            {
+                Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green);
+            }
             
+            bulk.Send(true);
             Map.ChatLevel("Countdown map has been reset");
         }
         
         
         void SetGlassTube(BlockID block, BlockID floorBlock) {
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
-            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block, Map);
-            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block, Map);
-            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block, Map);
-            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block, Map);
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock, Map);
+            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block);
+            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block);
+            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block);
+            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock);            
+            bulk.Send(true);
         }
         
-        static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block, Level lvl) {
+       void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)
             {
-                lvl.Blockchange((ushort)x, (ushort)y, (ushort)z, block);
+                int index = Map.PosToInt((ushort)x, (ushort)y, (ushort)z);
+                if (Map.DoPhysicsBlockchange(index, block)) {
+                    bulk.Add(index, block);
+                }
             }
         }
         
