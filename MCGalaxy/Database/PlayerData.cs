@@ -105,8 +105,9 @@ namespace MCGalaxy.DB {
             } catch {
                 data.TotalTime = row[ColumnTimeSpent].ToString().ParseDBTime();
             }
-            data.FirstLogin = DateTime.Parse(row[ColumnFirstLogin].ToString());
-            data.LastLogin = DateTime.Parse(row[ColumnLastLogin].ToString());
+            
+            data.FirstLogin = ParseDate(row[ColumnFirstLogin]);
+            data.LastLogin  = ParseDate(row[ColumnLastLogin]);
             
             data.Title = row[ColumnTitle].ToString().Trim();
             data.Title.Cp437ToUnicodeInPlace();
@@ -128,6 +129,10 @@ namespace MCGalaxy.DB {
             return data;
         }
         
+        static DateTime ParseDate(object value) {
+            if (value is DateTime) return (DateTime)value;
+            return DateTime.Parse(value.ToString());
+        }
         
         internal static long ParseLong(string value) {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : long.Parse(value);

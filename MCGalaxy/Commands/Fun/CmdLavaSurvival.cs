@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleStart(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 2)) return;
+            if (!CheckExtraPerm(p, 1)) return;
             
             string map = args.Length > 1 ? args[1] : "";
             switch (Server.lava.Start(map)) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleStop(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 2)) return;
+            if (!CheckExtraPerm(p, 1)) return;
             
             switch (Server.lava.Stop()) {
                 case 0: Chat.MessageGlobal("Lava Survival has ended! We hope you had fun!"); return;
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnd(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 2)) return;
+            if (!CheckExtraPerm(p, 1)) return;
             
             if (!Server.lava.active) { Player.Message(p, "There isn't an active Lava Survival game."); return; }
             if (Server.lava.roundActive) Server.lava.EndRound();
