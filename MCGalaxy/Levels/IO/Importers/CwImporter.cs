@@ -81,9 +81,9 @@ namespace MCGalaxy.Levels.IO {
         
         static void ParseEnvMapAppearance(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvMapAppearance"];
-            lvl.Config.HorizonBlock = comp["EdgeBlock"].ByteValue;
-            lvl.Config.EdgeBlock = comp["SideBlock"].ByteValue;
-            lvl.Config.EdgeLevel = comp["SideLevel"].ShortValue;
+            lvl.Config.HorizonBlock = Block.FromRaw(comp["EdgeBlock"].ByteValue);
+            lvl.Config.EdgeBlock    = Block.FromRaw(comp["SideBlock"].ByteValue);
+            lvl.Config.EdgeLevel    = comp["SideLevel"].ShortValue;
             
             if (lvl.Config.EdgeLevel == -1)
                 lvl.Config.EdgeLevel = (short)(lvl.Height / 2);
@@ -98,10 +98,10 @@ namespace MCGalaxy.Levels.IO {
         
         static void ParseEnvColors(NbtCompound cpe, Level lvl) {
             NbtCompound comp = (NbtCompound)cpe["EnvColors"];
-            lvl.Config.SkyColor = GetColor(comp, "Sky");
-            lvl.Config.CloudColor = GetColor(comp, "Cloud");
-            lvl.Config.FogColor = GetColor(comp, "Fog");
-            lvl.Config.LightColor = GetColor(comp, "Sunlight");
+            lvl.Config.SkyColor    = GetColor(comp, "Sky");
+            lvl.Config.CloudColor  = GetColor(comp, "Cloud");
+            lvl.Config.FogColor    = GetColor(comp, "Fog");
+            lvl.Config.LightColor  = GetColor(comp, "Sunlight");
             lvl.Config.ShadowColor = GetColor(comp, "Ambient");
         }
         

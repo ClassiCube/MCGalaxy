@@ -332,7 +332,7 @@ namespace MCGalaxy {
             Blockchange(PosToInt(x, y, z), block, false, default(PhysicsArgs)); //Block change made by physics
         }
         
-        internal bool DoPhysicsBlockchange(int b, BlockID block, bool overRide = false,
+        public bool DoPhysicsBlockchange(int b, BlockID block, bool overRide = false,
                                            PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
             BlockID old = blocks[b];

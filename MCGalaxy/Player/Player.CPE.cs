@@ -113,8 +113,10 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentTextures() {
-            BlockID side = level.Config.EdgeBlock;    if (side > MaxRawBlock) side = level.RawFallback(side);
-            BlockID edge = level.Config.HorizonBlock; if (edge > MaxRawBlock) edge = level.RawFallback(edge);
+            BlockID side = Block.ToRaw(level.Config.EdgeBlock);
+            if (side > MaxRawBlock) side = level.RawFallback(level.Config.EdgeBlock);
+            BlockID edge = Block.ToRaw(level.Config.HorizonBlock);
+            if (edge > MaxRawBlock) edge = level.RawFallback(level.Config.HorizonBlock);
 
             string url = GetTextureUrl();
             if (Supports(CpeExt.EnvMapAspect)) {
@@ -124,7 +126,7 @@ namespace MCGalaxy {
             } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
                 // reset all other textures back to client default.
                 if (url != lastUrl) {
-                	Send(Packet.MapAppearanceV2("", (byte)side, (byte)edge, level.Config.EdgeLevel,
+                    Send(Packet.MapAppearanceV2("", (byte)side, (byte)edge, level.Config.EdgeLevel,
                                                 level.Config.CloudsHeight, level.Config.MaxFogDistance, hasCP437));
                 }
                 Send(Packet.MapAppearanceV2(url, (byte)side, (byte)edge, level.Config.EdgeLevel,

@@ -396,7 +396,9 @@ namespace MCGalaxy {
                         value = zone.Config.GetEnvProp(i);
                     }
                     
-                    if (value > MaxRawBlock) value = level.RawFallback((BlockID)value);                 
+                    BlockID raw = Block.ToRaw((BlockID)value);
+                    if (raw > MaxRawBlock) raw = level.RawFallback((BlockID)value);
+                    value = raw;
                 } else {
                     if (zone != null && zone.Config.GetEnvProp(i) != -1) {
                         value = zone.Config.GetEnvProp(i);
