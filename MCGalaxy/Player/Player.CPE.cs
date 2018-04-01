@@ -205,7 +205,7 @@ namespace MCGalaxy {
         public const string InventoryOrder = "InventoryOrder";
         public const string InstantMOTD = "InstantMOTD";
         public const string FastMap = "FastMap";
-        public const string ExtBlocks = "ExtBlocks";
+        public const string ExtBlocks = "ExtendedBlocks";
     }
     
     public enum CpeMessageType : byte {

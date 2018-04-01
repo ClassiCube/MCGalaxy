@@ -194,8 +194,8 @@ namespace MCGalaxy {
             AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
             
             try {
+                int volume = level.blocks.Length;
                 if (Supports(CpeExt.FastMap)) {
-                    int volume = level.blocks.Length;
                     Send(Packet.LevelInitaliseExt(volume));
                 } else {
                     Send(Packet.LevelInitalise());
@@ -212,8 +212,14 @@ namespace MCGalaxy {
                     }
                 }
                 
-                using (LevelChunkStream s = new LevelChunkStream(this)) {
-                    LevelChunkStream.CompressMap(this, s);
+                using (LevelChunkStream dst = new LevelChunkStream(this))
+                    using (Stream stream = LevelChunkStream.CompressMapHeader(this, volume, dst))
+                {
+                	if (!level.MayHaveCustomBlocks) {
+                		LevelChunkStream.CompressMapSimple(this, stream, dst);
+                	} else {
+                    	LevelChunkStream.CompressMap(this, stream, dst);
+                	}
                 }
                 
                 // Force players to read the MOTD (clamped to 3 seconds at most)

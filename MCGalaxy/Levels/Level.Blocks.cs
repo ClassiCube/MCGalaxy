@@ -35,9 +35,12 @@ namespace MCGalaxy {
         
         public bool MayHaveCustomBlocks {
             get {
-                if (CustomBlocks == null) return false;
-                for (int i = 0; i < CustomBlocks.Length; i++)
-                    if (CustomBlocks[i] != null) return true;
+                byte[][] customBlocks = CustomBlocks;
+                if (customBlocks == null) return false;
+                
+                for (int i = 0; i < customBlocks.Length; i++) {
+                    if (customBlocks[i] != null) return true;
+                }
                 return false;
             }
         }
