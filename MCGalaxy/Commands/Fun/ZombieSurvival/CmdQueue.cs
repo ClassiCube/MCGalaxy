@@ -53,8 +53,8 @@ namespace MCGalaxy.Commands.Fun {
         public override void Help(Player p) {
             Player.Message(p, "%T/Queue zombie [name]");
             Player.Message(p, "%HNext round [name] will be infected/start zombie");
-            Player.Message(p, "%T/Queue level [name]");
-            Player.Message(p, "%HNext round [name] will be the level used");
+            Player.Message(p, "%T/Queue level [map]");
+            Player.Message(p, "%HNext round [map] will be the level used");
         }
     }
 }

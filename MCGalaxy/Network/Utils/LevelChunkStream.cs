@@ -36,7 +36,8 @@ namespace MCGalaxy.Network {
         public override long Seek(long offset, SeekOrigin origin) { throw ex; }
         public override void SetLength(long length) { throw ex; }
         
-        internal int index, position, length;
+        int index;
+        byte chunkValue;
         Player p;
         byte[] data = new byte[chunkSize + 4];
         const int chunkSize = 1024;
@@ -77,11 +78,23 @@ namespace MCGalaxy.Network {
         void WritePacket() {
             data[0] = Opcode.LevelDataChunk;
             NetUtils.WriteU16((ushort)index, data, 1);
-            data[1027] = (byte)(100 * (float)position / length);
+            data[1027] = chunkValue;
             p.Send(data);
             index = 0;
         }
         
+        
+        static Stream CompressMapHeader(Player player, int volume, LevelChunkStream dst) {
+            Stream stream = null;
+            if (player.Supports(CpeExt.FastMap)) {
+                stream = new DeflateStream(dst, CompressionMode.Compress, true);
+            } else {
+                stream = new GZipStream(dst, CompressionMode.Compress, true);
+                byte[] buffer = new byte[4]; NetUtils.WriteI32(volume, buffer, 0);
+                stream.Write(buffer, 0, sizeof(int));
+            }
+            return stream;
+        }
         
         public unsafe static void CompressMap(Player p, LevelChunkStream dst) {
             const int bufferSize = 64 * 1024;
@@ -109,7 +122,7 @@ namespace MCGalaxy.Network {
                 
                 // Players with block defs don't need fallbacks for first 256 blocks
                 if (block < Block.Count && p.hasBlockDefs) { conv[b] = (byte)block; continue; }
-                	
+                    
                 // Use custom block fallback, if possible
                 BlockDefinition def = p.level.CustomBlockDefs[block];
                 if (def == null) {
@@ -128,12 +141,10 @@ namespace MCGalaxy.Network {
             
             Level lvl = p.level;
             bool hasBlockDefs = p.hasBlockDefs;
-            using (GZipStream gs = new GZipStream(dst, CompressionMode.Compress, true)) {
-                byte[] blocks = lvl.blocks;
-                NetUtils.WriteI32(blocks.Length, buffer, 0);
-                gs.Write(buffer, 0, sizeof(int));
-                dst.length = blocks.Length;
-                
+            byte[] blocks = lvl.blocks;
+            float progScale = 100.0f / blocks.Length;
+            
+            using (Stream stream = CompressMapHeader(p, blocks.Length, dst)) {
                 // compress the map data in 64 kb chunks
                 #if TEN_BIT_BLOCKS
                 if (p.hasExtBlocks) {
@@ -155,8 +166,8 @@ namespace MCGalaxy.Network {
                         
                         bIndex += 2;
                         if (bIndex == bufferSize) {
-                            dst.position = i;
-                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                            dst.chunkValue = (byte)(i * progScale);
+                            stream.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 } else if (p.hasBlockDefs) {
@@ -174,8 +185,8 @@ namespace MCGalaxy.Network {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
-                            dst.position = i;
-                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                            dst.chunkValue = (byte)(i * progScale);
+                            stream.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 } else {
@@ -192,8 +203,8 @@ namespace MCGalaxy.Network {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
-                            dst.position = i;
-                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                            dst.chunkValue = (byte)(i * progScale);
+                            stream.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 }
@@ -209,8 +220,8 @@ namespace MCGalaxy.Network {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
-                            dst.position = i;
-                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                            dst.chunkValue = (byte)(i * progScale);
+                            stream.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 } else {
@@ -223,15 +234,14 @@ namespace MCGalaxy.Network {
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
-                            dst.position = i;
-                            gs.Write(buffer, 0, bufferSize); bIndex = 0;
+                            dst.chunkValue = (byte)(i * progScale);
+                            stream.Write(buffer, 0, bufferSize); bIndex = 0;
                         }
                     }
                 }
                 #endif
-                
-                
-                if (bIndex > 0) gs.Write(buffer, 0, bIndex);
+                             
+                if (bIndex > 0) stream.Write(buffer, 0, bIndex);
             }
         }
     }

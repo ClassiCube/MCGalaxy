@@ -46,7 +46,13 @@ namespace MCGalaxy.Network {
         
         public static byte[] Ping() { return new byte[] { Opcode.Ping }; }
         
-        public static byte[] LevelInitalise() { return new byte[] { Opcode.LevelInitialise }; }
+        public static byte[] LevelInitalise() { return new byte[] { Opcode.LevelInitialise }; }        
+        public static byte[] LevelInitaliseExt(int volume) {
+            byte[] buffer = new byte[5];
+            buffer[0] = Opcode.LevelInitialise;
+            NetUtils.WriteI32(volume, buffer, 1);
+            return buffer;
+        }
         
         public static byte[] LevelFinalise(ushort width, ushort height, ushort length) {
             byte[] buffer = new byte[7];
@@ -230,7 +236,7 @@ namespace MCGalaxy.Network {
         }
         
         public static byte[] BlockPermission(BlockID raw, bool place, bool delete, bool extBlocks) {
-        	byte[] buffer = new byte[extBlocks ? 5 : 4];
+            byte[] buffer = new byte[extBlocks ? 5 : 4];
             WriteBlockPermission(raw, place, delete, extBlocks, buffer, 0);
             return buffer;
         }

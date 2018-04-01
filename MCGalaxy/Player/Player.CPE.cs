@@ -48,7 +48,7 @@ namespace MCGalaxy {
             new ExtEntry(CpeExt.EnvMapAspect),     new ExtEntry(CpeExt.PlayerClick),
             new ExtEntry(CpeExt.EntityProperty),   new ExtEntry(CpeExt.ExtEntityPositions),
             new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
-            new ExtEntry(CpeExt.InstantMOTD),      
+            new ExtEntry(CpeExt.InstantMOTD),      new ExtEntry(CpeExt.FastMap),
             #if TEN_BIT_BLOCKS
             new ExtEntry(CpeExt.ExtBlocks),
             #endif
@@ -204,6 +204,7 @@ namespace MCGalaxy {
         public const string TwoWayPing = "TwoWayPing";
         public const string InventoryOrder = "InventoryOrder";
         public const string InstantMOTD = "InstantMOTD";
+        public const string FastMap = "FastMap";
         public const string ExtBlocks = "ExtBlocks";
     }
     

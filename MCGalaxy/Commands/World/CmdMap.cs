@@ -132,7 +132,7 @@ namespace MCGalaxy.Commands.World {
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Map [level] [option] <value> %H- Sets [option] on [level]");
+            Player.Message(p, "%T/Map [map] [option] <value> %H- Sets [option] on that map");
             Player.Message(p, "%HPossible options: %S{0}", LevelOptions.Options.Keys.Join());
             Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option.");
         }

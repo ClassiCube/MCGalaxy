@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.World {
             string map = args.Length == 1 ? p.level.name : Matcher.FindMaps(p, args[0]);
             if (map == null) return;           
             Level lvl;
-            LevelConfig cfg = LevelInfo.GetConfig(map, out lvl);            
+            LevelConfig cfg = LevelInfo.GetConfig(map, out lvl);
             int offset = args.Length == 1 ? 0 : 1;
             
             AccessController access;
@@ -94,13 +94,13 @@ namespace MCGalaxy.Commands.World {
         }      
 
         protected void ShowHelp(Player p, string action, string action2) {
-            Player.Message(p, "%T/{0} [level] [rank]", name);
-            Player.Message(p, "%HSets the lowest rank able to {0} the given level.", action);
-            Player.Message(p, "%T/{0} -max [Level] [Rank]", name);
-            Player.Message(p, "%HSets the highest rank able to {0} the given level.", action);
-            Player.Message(p, "%T/{0} [level] +[name]", name);
+            Player.Message(p, "%T/{0} [map] [rank]", name);
+            Player.Message(p, "%HSets the lowest rank able to {0} the given map.", action);
+            Player.Message(p, "%T/{0} -max [map] [Rank]", name);
+            Player.Message(p, "%HSets the highest rank able to {0} the given map.", action);
+            Player.Message(p, "%T/{0} [map] +[name]", name);
             Player.Message(p, "%HAllows [name] to {0}, even if their rank cannot.", action2);
-            Player.Message(p, "%T/{0} [level] -[name]", name);
+            Player.Message(p, "%T/{0} [map] -[name]", name);
             Player.Message(p, "%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
