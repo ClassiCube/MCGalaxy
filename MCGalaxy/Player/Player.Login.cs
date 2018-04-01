@@ -252,12 +252,10 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
+            LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);           
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
-            if (p.group.Permission < adminChatRank || !ServerConfig.AdminsJoinSilently) {
-                Chat.MessageOps(altsMsg);
-                //IRCBot.Say(temp, true); //Tells people in op channel on IRC
-            }
+            Chat.MessageWhere(altsMsg, pl => pl.Rank >= rank && Entities.CanSee(pl, p));
+            //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             Logger.Log(LogType.UserActivity, altsMsg);
         }
     }
