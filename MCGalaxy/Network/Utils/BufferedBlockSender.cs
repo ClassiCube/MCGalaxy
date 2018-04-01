@@ -42,11 +42,11 @@ namespace MCGalaxy.Network {
             this.level = player.level;
         }
         
-        /// <summary> Adds a block change, and potentially sends block change packets if 
+        /// <summary> Adds a block change, and potentially sends block change packets if
         /// number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
         public bool Add(int index, BlockID block) {
-            indices[count] = index;            
+            indices[count] = index;
             if (Block.IsPhysicsType(block)) {
                 blocks[count] = Block.Convert(block);
             } else {
@@ -57,7 +57,7 @@ namespace MCGalaxy.Network {
             return Send(false);
         }
         
-        /// <summary> Sends the block change packets if either 'force' is true, 
+        /// <summary> Sends the block change packets if either 'force' is true,
         /// or the number of buffered block changes has reached the limit. </summary>
         /// <returns> Whether block change packets were actually sent. </returns>
         public bool Send(bool force) {
@@ -71,31 +71,36 @@ namespace MCGalaxy.Network {
         }
         
         void SendLevel() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null;
+            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null, extBulk = null;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != level) continue;
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
-                                           ref noBlockDefs, ref original, ref ext);
+                                           ref noBlockDefs, ref original, ref ext, ref extBulk);
                 p.Socket.SendLowPriority(packet);
             }
         }
         
         void SendPlayer() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null;
+            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null, extBulk = null;
             byte[] packet = MakePacket(player, ref bulk, ref normal,
-                                       ref noBlockDefs, ref original, ref ext);
+                                       ref noBlockDefs, ref original, ref ext, ref extBulk);
             player.Socket.SendLowPriority(packet);
         }
         
         #region Packet construction
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
-                          ref byte[] noBlockDefs, ref byte[] original, ref byte[] ext) {
+                          ref byte[] noBlockDefs, ref byte[] original, ref byte[] ext, ref byte[] extBulk) {
             #if TEN_BIT_BLOCKS
             if (p.hasExtBlocks) {
-                if (ext == null) ext = MakeExt();
-                return ext;
+                if (p.hasBulkBlockUpdate && count >= 150) {
+                    if (bulk == null) bulk = MakeBulkExt();
+                    return bulk;
+                } else {
+                    if (ext == null) ext = MakeExt();
+                    return ext;
+                }
             }
             #endif
             
@@ -116,6 +121,32 @@ namespace MCGalaxy.Network {
         }
 
         #if TEN_BIT_BLOCKS
+        byte[] MakeBulkExt() {
+            byte[] data = new byte[2 + 256 * 5 + (256 / 4)];
+            data[0] = Opcode.CpeBulkBlockUpdate;
+            data[1] = (byte)(count - 1);
+            
+            for (int i = 0, j = 2; i < count; i++) {
+                int index = indices[i];
+                data[j++] = (byte)(index >> 24); data[j++] = (byte)(index >> 16);
+                data[j++] = (byte)(index >> 8);  data[j++] = (byte)index;
+            }
+            
+            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
+                data[j++] = (BlockRaw)blocks[i];
+            }
+            
+            for (int i = 0, j = 2 + 256 * (sizeof(int) + 1); i < count; i += 4) {
+                int flags = 0;
+                flags |= (Block.ToRaw(blocks[i    ]) >> 8) & 0x03;
+                flags |= (Block.ToRaw(blocks[i + 1]) >> 6) & 0x0C;
+                flags |= (Block.ToRaw(blocks[i + 2]) >> 4) & 0x30;
+                flags |= (Block.ToRaw(blocks[i + 3]) >> 2) & 0xC0;
+                data[j++] = (byte)flags;
+            }
+            return data;
+        }
+        
         byte[] MakeExt() {
             byte[] data = new byte[count * 9];
             for (int i = 0, j = 0; i < count; i++) {
