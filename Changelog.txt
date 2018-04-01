@@ -1,3 +1,78 @@
+v 1.9.0.5
+Added: Allow configuring heartbeat URL
+Added: rope/lader collide type 7
+Added: gb/lb copyall [map], which copies all custom blocks from given map
+Improved: /os env preset alias for /os preset too
+Improved: Allow using 3 and 6 char codes for hex colours.
+Improved: Optimise /resizelvl to be twice-thrice as fast
+Improved: Ignore colours for /team members, disallow creating two teams with same colour-stripped name
+Improved: Bulk block sending for Countdown
+Improved: Can use /pervisit and /perbuild on unloaded maps too
+Improved: Optimised map sending to be quicker, less CPU
+Fixed: /bind with source block being custom causing error
+Fixed: /search blocks not including global blocks from console
+Fixed: Make /os zone list actually worked
+Fixed: Don't let you change /env on maps no perbuild access to (Thanks AndyFC)
+Fixed: outdated sun colour if standing in a zone and someone changes env
+Fixed: Should be able to use /fly when +fly in MOTD
+Fixed: pyramid drawop sometimes having inaccurate count
+Fixed: /ls start/end erroring on fresh servers
+
+v 1.9.0.4
+Added: /team list
+Added: /zonemark
+Added: Redesigned how zones work. Permissions are separarate from zone name, and allow defining per-zone env and MOTD. 
+Added: /os zones to let you create/manage zones in realms
+Added: Support custom blocks for /help [block], /blocks [block], and /[block]
+Added: Rename /scripting to /plugin and add /plugins
+Added: Support non ASCII custom colour codes
+Added: Global chat message when player joins for first time
+Fixed: plugins not loading with /pload when specified to not autoload on startup
+Fixed: Plugin dlls can have multiple plugin classes in them
+Fixed: Disallow loading plugin that target future versions
+Fixed: gb/lb replacing core block with CPE fallback, not converting CPE to classic block
+Fixed: Don't show ZS group or team chat when you've ignored someone
+Fixed: /summon all not showing any message when insufficient permission
+Fixed: Commands tab in GUI shows properly cased command names
+Fixed: Weatherfade truncation in /mi
+Fixed: /tree type [brush name] [brush args] not actually keeping args
+Fixed: (should) very rare crashing when returning from GUI minimised
+Fixed: Reset blockprops not properly resetting death message / killer block state
+Fixed: main map sometimes being corrupted when server is restarted due to unhandled error
+Fixed: /entrot resetting on joining map (have to /reload)
+Fixed: /buy commands erroring when your username is Bot
+Fixed: Various env properties getting clamped to a too small min/max range
+Fixed: Block physics to work properly with extended blocks
+Fixed: /resizelvl erroring stuffing up server (bots/portals/goto/draw commands stop working)
+Fixed: Fireworks not working on min borders of map
+Fixed: Disallow using /joker while muted
+Fixed: /location not showing your own location when no arguments are given
+Fixed: Log which file fails to save in /server backup
+Fixed: /opstats not actually recording mod commands
+Fixed: Economy GUI crashing if max rank was set so low that no ranks appeared in listbox
+Improved: Maps made using /eco level now set realm owner and build perms)
+Improved: Completely separate blockprops from blocks list. (can change any block props on per-level basis)
+Improved: Require extra permission to toggle /inv of others
+Improved: /help ranks layout
+Improved: Most GUI actions no longer on UI thread (pressing buttons doesn't freeze UI for a bit)
+Improved: Command aliases can be used in /static
+Improved: Compiling commands/plugins shouldn't reference GUI exe (unless explicitly added)
+Improved: Better messages in /report
+Improved: Import zones from .fcm maps
+Improved: /blockset works with custom blocks now
+Improved: Integrate pervisitmax/perbuildmax commands into pervisit/perbuild
+Improved: CommandParser.GetBlock preferences (raw ID is first now)
+Improved: Allow maps with axis lengths not divisible by 16
+Improved: X/Y/Z scale is multiplied by generic model scale
+Improved: Default layering for imageprint is single layer
+Improved: Make /draw more intuitive
+Improved: Make /draw draw over all blocks, not only non-air
+Improved: Support map sizes from 1-15 blocks too
+Improved: Store level theme and seed in level.properties when generating map
+Removed: /view to another player
+Removed: /jail,/xjail,/lockdown player - no longer needed now that /freeze prevents you using most commands
+Removed: autorestart/restarttime from ServerConfig, since they never worked
+
 v 1.9.0.3
 Added: /team list
 Added: /zonemark
