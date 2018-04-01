@@ -53,11 +53,18 @@ namespace MCGalaxy.Commands.World {
                 Command.SuperRequiresArgs(name, p, "level"); return;
             }
             
-            Level level = args.Length == 1 ? p.level : Matcher.FindLevels(p, args[0]);
-            if (level == null) return;
-            
+            string map = args.Length == 1 ? p.level.name : Matcher.FindMaps(p, args[0]);
+            if (map == null) return;           
+            Level lvl;
+            LevelConfig cfg = LevelInfo.GetConfig(map, out lvl);            
             int offset = args.Length == 1 ? 0 : 1;
-            AccessController access = visit ? level.VisitAccess : level.BuildAccess;
+            
+            AccessController access;
+            if (lvl == null) {
+                access = new LevelAccessController(cfg, map, visit);
+            } else {
+                access = visit ? lvl.VisitAccess : lvl.BuildAccess;
+            }
             Do(p, args, offset, max, access);
         }
         

@@ -114,22 +114,22 @@ namespace MCGalaxy.DB {
             data.TitleColor = ParseColor(row[ColumnTColor]);
             data.Color = ParseColor(row[ColumnColor]);
             
-            data.Money = ParseInt(row[ColumnMoney].ToString());
-            data.Deaths = ParseInt(row[ColumnDeaths].ToString());
-            data.Logins = ParseInt(row[ColumnLogins].ToString());
-            data.Kicks = ParseInt(row[ColumnKicked].ToString());
+            data.Money    = ParseInt(row[ColumnMoney].ToString());
+            data.Deaths   = ParseInt(row[ColumnDeaths].ToString());
+            data.Logins   = ParseInt(row[ColumnLogins].ToString());
+            data.Kicks    = ParseInt(row[ColumnKicked].ToString());
             data.Messages = ParseInt(row[ColumnMessages].ToString());
             
-            long blocks = ParseLong(row[ColumnTotalBlocks].ToString());
+            long blocks   = ParseLong(row[ColumnTotalBlocks].ToString());
             long cuboided = ParseLong(row[ColumnTotalCuboided].ToString());
             data.TotalModified = blocks & LowerBitsMask;
-            data.TotalPlaced = blocks >> LowerBits;
-            data.TotalDrawn = cuboided & LowerBitsMask;
-            data.TotalDeleted = cuboided >> LowerBits;
+            data.TotalPlaced   = blocks >> LowerBits;
+            data.TotalDrawn    = cuboided & LowerBitsMask;
+            data.TotalDeleted  = cuboided >> LowerBits;
             return data;
         }
         
-        static DateTime ParseDate(object value) {
+        internal static DateTime ParseDate(object value) {
             if (value is DateTime) return (DateTime)value;
             return DateTime.Parse(value.ToString());
         }

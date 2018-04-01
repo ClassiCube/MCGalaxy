@@ -260,7 +260,7 @@ namespace MCGalaxy {
         [ConfigInt("RoundsHumanWon", "Game", 0)]
         public int RoundsHumanWon = 0;
         
-        
+        readonly object saveLock = new object();
         public string Color {
             get {
                 LevelPermission maxPerm = VisitMin;
@@ -280,12 +280,15 @@ namespace MCGalaxy {
             }
         }
         
-        public static void Save(string path, LevelConfig config, string lvlname) {
+        public void Save(string path) {
             try {
-                using (StreamWriter w = new StreamWriter(path)) {
-                    w.WriteLine("#Level properties for " + lvlname);
-                    w.WriteLine("#Drown-time in seconds is [drown time] * 200 / 3 / 1000");
-                    ConfigElement.Serialise(Server.levelConfig, " settings", w, config);
+                string mapName = Path.GetFileNameWithoutExtension(path);
+                lock (saveLock) {
+                    using (StreamWriter w = new StreamWriter(path)) {
+                        w.WriteLine("#Level properties for " + mapName);
+                        w.WriteLine("#Drown-time is in tenths of a second");
+                        ConfigElement.Serialise(Server.levelConfig, " settings", w, this);
+                    }
                 }
             } catch (Exception ex) {
                 Logger.Log(LogType.Warning, "Failed to save level properties!");

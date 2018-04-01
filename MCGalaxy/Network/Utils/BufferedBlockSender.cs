@@ -128,9 +128,9 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                BlockID block = Block.ToRaw(blocks[i]);
-                data[j++] = (byte)(block >> 8);
-                data[j++] = (byte)block;
+                BlockID raw = Block.ToRaw(blocks[i]);
+                data[j++] = (byte)(raw >> 8);
+                data[j++] = (byte)raw;
             }
             return data;
         }
@@ -144,7 +144,7 @@ namespace MCGalaxy.Network {
             for (int i = 0, j = 2; i < count; i++) {
                 int index = indices[i];
                 data[j++] = (byte)(index >> 24); data[j++] = (byte)(index >> 16);
-                data[j++] = (byte)(index >> 8); data[j++] = (byte)index;
+                data[j++] = (byte)(index >> 8);  data[j++] = (byte)index;
             }
             for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
                 #if TEN_BIT_BLOCKS

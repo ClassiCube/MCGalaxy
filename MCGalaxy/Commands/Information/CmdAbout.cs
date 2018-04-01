@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Info {
                     DataRow row = Blocks.Rows[i];
                     string name = row["Username"].ToString().Trim();
                     
-                    DateTime time = DateTime.Parse(row["TimePerformed"].ToString());
+                    DateTime time = PlayerData.ParseDate(row["TimePerformed"]);
                     TimeSpan delta = time - BlockDB.Epoch;
                     entry.TimeDelta = (int)delta.TotalSeconds;
                     entry.Flags = BlockDBFlags.ManualPlace;

@@ -27,7 +27,7 @@ namespace MCGalaxy {
         
         public abstract LevelPermission Min { get; set; }
         public abstract LevelPermission Max { get; set; }
-        public abstract List<string> Whitelisted { get; }        
+        public abstract List<string> Whitelisted { get; }
         public abstract List<string> Blacklisted { get; }
         
         protected abstract string ColoredName { get; }
@@ -198,15 +198,8 @@ namespace MCGalaxy {
     public sealed class LevelAccessController : AccessController {
         
         public readonly bool IsVisit;
-        readonly Level lvl;
         readonly LevelConfig cfg;
         readonly string lvlName;
-        
-        public LevelAccessController(Level lvl, bool isVisit) {
-            this.lvl = lvl;
-            this.cfg = lvl.Config;
-            IsVisit = isVisit;
-        }
         
         public LevelAccessController(LevelConfig cfg, string levelName, bool isVisit) {
             this.cfg = cfg;
@@ -238,9 +231,7 @@ namespace MCGalaxy {
             get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }
         
-        protected override string ColoredName {
-            get { return lvl != null ? lvl.ColoredName : cfg.Color + lvlName; }
-        }
+        protected override string ColoredName { get { return cfg.Color + lvlName; } }
         protected override string Action { get { return IsVisit ? "go to" : "build in"; } }
         protected override string ActionIng { get { return IsVisit ? "going to" : "building in"; } }
         protected override string Type { get { return IsVisit ? "visit" : "build"; } }
@@ -248,14 +239,10 @@ namespace MCGalaxy {
         
 
         public override void OnPermissionChanged(Player p, Group grp, string type) {
-            Update();
-            Logger.Log(LogType.UserActivity, "{0} rank changed to {1} on {2}.", type, grp.Name, lvl.name);
-            Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + "%S.");
-            if (p != null && p.level != lvl) {
-                Player.Message(p, "{0} rank changed to {1} %Son {2}%S.", type, grp.ColoredName, ColoredName);
-            }
+            string msg = type + " rank changed to " + grp.ColoredName;
+            DoChange(p, msg);
         }
- 
+        
         public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
             string type = IsVisit ? "visit" : "build";
             string msg = PlayerInfo.GetColoredName(p, name);
@@ -264,63 +251,50 @@ namespace MCGalaxy {
             } else {
                 msg += " %Swas " + type + (whitelist ? " whitelisted" : " blacklisted");
             }
+            DoChange(p, msg);
+        }
+        
+        void DoChange(Player p, string msg) {
+            Level lvl = LevelInfo.FindExact(lvlName);
+            Update(lvl);
+            Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvlName);
             
-            Update();
-            Logger.Log(LogType.UserActivity, "{0} on {1}", msg, lvl.name);
-            Chat.MessageLevel(lvl, msg);
+            if (lvl != null) Chat.MessageLevel(lvl, msg);           
             if (p != null && p.level != lvl) {
-                Player.Message(p, "{0} on %S{1}", msg, ColoredName);
+                Player.Message(p, "{0} %Son {1}", msg, ColoredName);
             }
         }
         
-        
-        void Update() {
-            Level.SaveSettings(lvl);
-            UpdateAllowBuild();
-            UpdateAllowVisit();
-        }
-        
-        void UpdateAllowBuild() {
-            if (IsVisit) return;
+        void Update(Level lvl) {
+            cfg.Save(LevelInfo.PropertiesPath(lvlName));
+            if (lvl == null) return;
+            if (IsVisit && lvl == Server.mainLevel) return;
             Player[] players = PlayerInfo.Online.Items;
+            
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
-                
                 AccessResult access = Check(p);
-                p.AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
-            }
-        }
-        
-        void UpdateAllowVisit() {
-            if (!IsVisit || lvl == Server.mainLevel) return;
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != lvl) continue;
+                bool allowed = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
                 
-                AccessResult access = Check(p);
-                bool allowVisit = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
-                if (allowVisit) continue;
-                
-                Player.Message(p, "&cNo longer allowed to visit %S{0}", lvl.ColoredName);
-                PlayerActions.ChangeMap(p, Server.mainLevel);
+                if (!IsVisit) {
+                    p.AllowBuild = allowed;
+                } else if (!allowed) {                    
+                    Player.Message(p, "&cNo longer allowed to visit %S{0}", ColoredName);
+                    PlayerActions.ChangeMap(p, Server.mainLevel);
+                }
             }
         }
     }
     
-    public enum AccessResult {
-        
+    public enum AccessResult {        
         /// <summary> The player is whitelisted and always allowed. </summary>
-        Whitelisted,
-        
+        Whitelisted,        
         /// <summary> The player is blacklisted and never allowed. </summary>
-        Blacklisted,
-        
+        Blacklisted,       
         /// <summary> The player is allowed (by their rank) </summary>
-        Allowed,
-        
+        Allowed,        
         /// <summary> The player's rank is below the minimum rank allowed. </summary>
-        BelowMinRank,
-        
+        BelowMinRank,       
         /// <summary> The player's rank is above the maximum rank allowed. </summary>
         AboveMaxRank,
     }

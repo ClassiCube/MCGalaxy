@@ -73,8 +73,8 @@ namespace MCGalaxy {
             spawnz = (ushort)(Length / 2);
             rotx = 0; roty = 0;
             
-            VisitAccess = new LevelAccessController(this, true);
-            BuildAccess = new LevelAccessController(this, false);
+            VisitAccess = new LevelAccessController(Config, name, true);
+            BuildAccess = new LevelAccessController(Config, name, false);
             listCheckExists = new SparseBitSet(Width, Height, Length);
             listUpdateExists = new SparseBitSet(Width, Height, Length);
         }
@@ -218,12 +218,9 @@ namespace MCGalaxy {
         }
 
         public static void SaveSettings(Level lvl) {
-            if (lvl.IsMuseum) return; // museums do not save properties
-            
-            lock (lvl.savePropsLock) {
-                string propsPath = LevelInfo.PropertiesPath(lvl.MapName);
-                LevelConfig.Save(propsPath, lvl.Config, lvl.name);
-            }
+            if (lvl.IsMuseum) return; // museums do not save properties            
+            string path = LevelInfo.PropertiesPath(lvl.MapName);
+            lvl.Config.Save(path);
         }
 
         // Returns true if ListCheck does not already have an check in the position.

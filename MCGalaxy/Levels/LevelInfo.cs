@@ -117,7 +117,7 @@ namespace MCGalaxy {
             return "levels/level properties/" + name + ".properties";
         }
         
-        internal static LevelConfig GetConfig(string map, out Level lvl) {
+        public static LevelConfig GetConfig(string map, out Level lvl) {
             lvl = FindExact(map);
             if (lvl != null) return lvl.Config;
             
