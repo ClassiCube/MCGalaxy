@@ -105,7 +105,7 @@ namespace MCGalaxy.Network {
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
         public void Send(byte[] buffer, bool sync = false) {
-            if (player.disconnected || !socket.Connected) return;
+            if (player.disconnected || !socket.Connected || buffer == null) return;
 
             try {
                 if (sync) {

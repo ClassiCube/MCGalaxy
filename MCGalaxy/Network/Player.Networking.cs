@@ -246,7 +246,8 @@ namespace MCGalaxy {
             BlockDefinition[] defs = oldLevel.CustomBlockDefs;
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
-                if (def == BlockDefinition.GlobalDefs[i]) continue;
+                if (def == BlockDefinition.GlobalDefs[i] || def == null) continue;
+                
                 if (def.BlockID > MaxRawBlock) continue;
                 Send(Packet.UndefineBlock(def, hasExtBlocks));
             }
