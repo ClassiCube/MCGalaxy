@@ -136,14 +136,17 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void UpdateAppearance(Predicate<Player> selector, EnvProp prop, int value) {
+        internal static void UpdateAppearance(Predicate<Player> selector, EnvProp prop, int origValue) {
             Player[] players = PlayerInfo.Online.Items;
-            if (prop == EnvProp.SidesBlock || prop == EnvProp.EdgeBlock) {
-                value = (byte)value;
-            }
-            
             foreach (Player pl in players) {
                 if (!selector(pl)) continue;
+                int value = origValue;
+                
+                if (prop == EnvProp.SidesBlock || prop == EnvProp.EdgeBlock) {
+                    BlockID raw = Block.ToRaw((BlockID)value);
+                    if (raw > pl.MaxRawBlock) raw = pl.level.RawFallback((BlockID)value);
+                    value = raw;
+                }
                 
                 if (pl.Supports(CpeExt.EnvMapAspect)) {
                     pl.Send(Packet.EnvMapProperty(prop, value));
