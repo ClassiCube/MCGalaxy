@@ -19,7 +19,6 @@ using System;
 using System.IO;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
-using MCGalaxy.Events;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -30,19 +29,7 @@ namespace MCGalaxy {
         /// <summary> Renames the .lvl (and related) files and database tables. Does not unload. </summary>
         public static void Rename(string src, string dst) {
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
-            
-            MoveIfExists(LevelInfo.MapPath(src) + ".backup",
-                         LevelInfo.MapPath(dst) + ".backup");
-            MoveIfExists("levels/level properties/" + src + ".properties",
-                         "levels/level properties/" + dst + ".properties");
-            MoveIfExists("levels/level properties/" + src,
-                         "levels/level properties/" + dst + ".properties");
-            MoveIfExists("blockdefs/lvl_" + src + ".json",
-                         "blockdefs/lvl_" + dst + ".json");
-            MoveIfExists("blockprops/lvl_" + src + ".txt",
-                         "blockprops/lvl_" + dst + ".txt");
-            MoveIfExists(BotsFile.BotsPath(src),
-                         BotsFile.BotsPath(dst));
+            DoAll(src, dst, action_move);
             
             // TODO: Should we move backups still
             try {
@@ -78,15 +65,6 @@ namespace MCGalaxy {
             }
         }
         
-        static void MoveIfExists(string src, string dst) {
-            if (!File.Exists(src)) return;
-            try {
-                File.Move(src, dst);
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
-        }
-        
         /*static void MoveBackups(string src, string dst) {
             string srcBase = LevelInfo.BackupBasePath(src);
             string dstBase = LevelInfo.BackupBasePath(dst);
@@ -97,7 +75,7 @@ namespace MCGalaxy {
             for (int i = 0; i < backups.Length; i++) {
                 string name = LevelInfo.BackupNameFrom(backups[i]);
                 string srcFile = LevelInfo.BackupFilePath(src, name);
-                string dstFile = LevelInfo.BackupFilePath(dst, name);                
+                string dstFile = LevelInfo.BackupFilePath(dst, name);
                 string dstDir = LevelInfo.BackupDirPath(dst, name);
                 
                 Directory.CreateDirectory(dstDir);
@@ -126,13 +104,7 @@ namespace MCGalaxy {
                 File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name));
             }
 
-            DeleteIfExists(LevelInfo.MapPath(name) + ".backup");
-            DeleteIfExists("levels/level properties/" + name);
-            DeleteIfExists("levels/level properties/" + name + ".properties");
-            DeleteIfExists("blockdefs/lvl_" + name + ".json");
-            DeleteIfExists("blockprops/lvl_" + name + ".txt");
-            DeleteIfExists(BotsFile.BotsPath(name));
-            
+            DoAll(name, "", action_delete);
             DeleteDatabaseTables(name);
             BlockDBFile.DeleteBackingFile(name);
             return true;
@@ -155,20 +127,11 @@ namespace MCGalaxy {
                 }
             }
         }
-
-        static void DeleteIfExists(string src) {
-            if (!File.Exists(src)) return;
-            try {
-                File.Delete(src);
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
-        }
         
         
         public static void Replace(Level old, Level lvl) {
             LevelDB.SaveBlockDB(old);
-            LevelInfo.Remove(old);        
+            LevelInfo.Remove(old);
             LevelInfo.Add(lvl);
             
             old.SetPhysics(0);
@@ -187,39 +150,9 @@ namespace MCGalaxy {
                 Server.mainLevel = lvl;
         }
         
-        public static void ReloadMap(Player p, Player who, bool showMessage) {
-            who.Loading = true;
-            Entities.DespawnEntities(who);
-            who.SendMap(who.level);
-            Entities.SpawnEntities(who);
-            who.Loading = false;
-            if (!showMessage) return;
-            
-            if (p == null || !Entities.CanSee(who, p)) {
-                who.SendMessage("&bMap reloaded");
-            } else {
-                who.SendMessage("&bMap reloaded by " + p.ColoredName);
-            }
-            if (Entities.CanSee(p, who)) {
-                Player.Message(p, "&4Finished reloading for " + who.ColoredName);
-            }
-        }
-        
-        
         public static void CopyLevel(string src, string dst) {
             File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
-            
-            CopyIfExists("levels/level properties/" + src,
-                         "levels/level properties/" + dst + ".properties");
-            CopyIfExists("levels/level properties/" + src + ".properties",
-                         "levels/level properties/" + dst + ".properties");
-            CopyIfExists("blockdefs/lvl_" + src + ".json",
-                         "blockdefs/lvl_" + dst + ".json");
-            CopyIfExists("blockprops/lvl_" + src + ".txt",
-                         "blockprops/lvl_" + dst + ".txt");
-            CopyIfExists(BotsFile.BotsPath(src),
-                         BotsFile.BotsPath(dst));
-            
+            DoAll(src, dst, action_copy);
             CopyDatabaseTables(src, dst);
         }
         
@@ -243,11 +176,57 @@ namespace MCGalaxy {
                 }
             }
         }
+
         
-        static void CopyIfExists(string src, string dst) {
+        public static void ReloadMap(Player p, Player who, bool showMessage) {
+            who.Loading = true;
+            Entities.DespawnEntities(who);
+            who.SendMap(who.level);
+            Entities.SpawnEntities(who);
+            who.Loading = false;
+            if (!showMessage) return;
+            
+            if (p == null || !Entities.CanSee(who, p)) {
+                who.SendMessage("&bMap reloaded");
+            } else {
+                who.SendMessage("&bMap reloaded by " + p.ColoredName);
+            }
+            if (Entities.CanSee(p, who)) {
+                Player.Message(p, "&4Finished reloading for " + who.ColoredName);
+            }
+        }
+        
+        const byte action_delete = 0;
+        const byte action_move = 1;
+        const byte action_copy = 2;
+        
+        static void DoAll(string src, string dst, byte action) {
+            DoAction(LevelInfo.MapPath(src) + ".backup",
+                     LevelInfo.MapPath(dst) + ".backup", action);
+            DoAction("levels/level properties/" + src + ".properties",
+                     "levels/level properties/" + dst + ".properties", action);
+            DoAction("levels/level properties/" + src,
+                     "levels/level properties/" + dst + ".properties", action);
+            DoAction("blockdefs/lvl_" + src + ".json",
+                     "blockdefs/lvl_" + dst + ".json", action);
+            DoAction("blockprops/lvl_" + src + ".txt",
+                     "blockprops/lvl_" + dst + ".txt", action);
+            DoAction("blockprops/_" + src + ".txt", "" +
+                     "blockprops/_" + dst + ".txt", action);
+            DoAction(BotsFile.BotsPath(src),
+                     BotsFile.BotsPath(dst), action);
+        }
+        
+        static void DoAction(string src, string dst, byte action) {
             if (!File.Exists(src)) return;
             try {
-                File.Copy(src, dst, true);
+                if (action == action_delete) {
+                    File.Delete(src);
+                } else if (action == action_move) {
+                    File.Move(src, dst);
+                } else if (action == action_copy) {
+                    File.Copy(src, dst, true);
+                }
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
