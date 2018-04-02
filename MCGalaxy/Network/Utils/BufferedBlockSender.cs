@@ -95,8 +95,8 @@ namespace MCGalaxy.Network {
             #if TEN_BIT_BLOCKS
             if (p.hasExtBlocks) {
                 if (p.hasBulkBlockUpdate && count >= 150) {
-                    if (bulk == null) bulk = MakeBulkExt();
-                    return bulk;
+                    if (extBulk == null) extBulk = MakeBulkExt();
+                    return extBulk;
                 } else {
                     if (ext == null) ext = MakeExt();
                     return ext;
