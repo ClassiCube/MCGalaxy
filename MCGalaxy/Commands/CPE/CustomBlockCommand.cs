@@ -209,6 +209,14 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "  Texture IDs (left: {0}, right: {1}, front: {2}, back: {3}, top: {4}, bottom: {5})",
                                def.LeftTex, def.RightTex, def.FrontTex, def.BackTex, def.TopTex, def.BottomTex);
             }
+            
+            if (def.InventoryOrder < 0) {
+                Player.Message(p, "Order: None");
+            } else if (def.InventoryOrder == 255) {
+                Player.Message(p, "Order: Hidden from inventory");
+            } else {
+                Player.Message(p, "Order: " + def.InventoryOrder);
+            }
         }
         
         static void ListHandler(Player p, string[] parts, bool global, string cmd) {
