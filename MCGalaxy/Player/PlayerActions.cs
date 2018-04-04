@@ -38,7 +38,7 @@ namespace MCGalaxy {
         
         static bool ChangeMap(Player p, Level lvl, string name) {
             if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
-                Player.Message(p, "Cannot use /goto, already joining a map."); return false; 
+                Player.Message(p, "Cannot use /goto, already joining a map."); return false;
             }
             Level oldLevel = p.level;
             bool didJoin = false;
@@ -107,7 +107,7 @@ namespace MCGalaxy {
             p.Loading = true;
             Entities.DespawnEntities(p);
             Level oldLevel = p.level;
-            p.level = lvl; 
+            p.level = lvl;
             p.SendMap(oldLevel);
 
             Position pos = lvl.SpawnPos;
@@ -115,13 +115,15 @@ namespace MCGalaxy {
             byte yaw = lvl.rotx, pitch = lvl.roty;
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, false);
             
-            rot.RotY = yaw; rot.HeadX = pitch; 
+            rot.RotY = yaw; rot.HeadX = pitch;
             Entities.SpawnEntities(p, pos, rot);
             CheckGamesJoin(p, oldLevel);
             
             if (p.level.ShouldShowJoinMessage(oldLevel)) {
-                string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
-                Chat.MessageGlobal(p, p.ColoredName + msg + lvl.ColoredName, false, true);
+                if (ServerConfig.ShowWorldChanges) {
+                    string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
+                    Chat.MessageGlobal(p, p.ColoredName + msg + lvl.ColoredName, false, true);
+                }
                 OnPlayerActionEvent.Call(p, PlayerAction.JoinWorld, lvl.name);
             }
             return true;

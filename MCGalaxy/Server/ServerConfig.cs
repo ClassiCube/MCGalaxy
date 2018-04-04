@@ -119,6 +119,8 @@ namespace MCGalaxy {
         public static bool GuestJoinsNotify = true;
         [ConfigBool("guest-leave-notify", "Other", true)]
         public static bool GuestLeavesNotify = true;
+        [ConfigBool("show-world-changes", "Other", true)]
+        public static bool ShowWorldChanges = true;
 
         [ConfigBool("kick-on-hackrank", "Other", true)]
         public static bool HackrankKicks = true;

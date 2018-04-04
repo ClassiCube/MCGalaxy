@@ -75,7 +75,7 @@ namespace MCGalaxy {
         }
         
         
-        internal static BlockDefinition[] Load(bool global, string mapName) {
+        public static BlockDefinition[] Load(bool global, string mapName) {
             BlockDefinition[] defs = null;
             string path = global ? GlobalPath : "blockdefs/lvl_" + mapName + ".json";
             try {
@@ -115,7 +115,7 @@ namespace MCGalaxy {
             return adjDefs;
         }
         
-        internal static void Save(bool global, Level lvl) {
+        public static void Save(bool global, Level lvl) {
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
             // We don't want to save global blocks in the level's custom blocks list
             if (!global) {
