@@ -31,7 +31,8 @@ namespace MCGalaxy.Commands.Bots{
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (args[0].CaselessEq("list")) {
+            string cmd = args[0];
+            if (cmd.CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 HandleList(p, modifier);
                 return;
@@ -43,11 +44,14 @@ namespace MCGalaxy.Commands.Bots{
             if (!Formatter.ValidName(p, ai, "bot AI")) return;
             if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
 
-            switch (args[0].ToLower()) {
-                case "add": HandleAdd(p, ai, args); break;
-                case "del": HandleDelete(p, ai, args); break;
-                case "info": HandleInfo(p, ai); break;
-                default: Help(p); break;
+            if (cmd.CaselessEq("add")) {
+                HandleAdd(p, ai, args);
+            } else if (cmd.CaselessEq("del")) {
+                HandleDelete(p, ai, args);
+            } else if (cmd.CaselessEq("info")) {
+                HandleInfo(p, ai);
+            } else {
+                Help(p);
             }
         }
         
@@ -55,7 +59,7 @@ namespace MCGalaxy.Commands.Bots{
             if (!Directory.Exists("bots/deleted"))
                 Directory.CreateDirectory("bots/deleted");
             if (!File.Exists("bots/" + ai)) {
-                Player.Message(p, "Could not find specified AI."); return;
+                Player.Message(p, "Could not find specified bot AI."); return;
             }
             
             for (int attempt = 0; attempt < 10; attempt++) {
@@ -78,7 +82,7 @@ namespace MCGalaxy.Commands.Bots{
             } else {
                 File.Move("bots/" + ai, "bots/deleted/" + ai + attempt);
             }
-            Player.Message(p, "Deleted &b" + ai);
+            Player.Message(p, "Deleted bot AI &b" + ai);
         }
         
         static void DeleteLast(Player p, string ai) {
@@ -86,47 +90,39 @@ namespace MCGalaxy.Commands.Bots{
             if (lines.Count > 0) lines.RemoveAt(lines.Count - 1);
 
             File.WriteAllLines("bots/" + ai, lines.ToArray());
-            Player.Message(p, "Deleted the last instruction from " + ai);
+            Player.Message(p, "Deleted last instruction from bot AI &b" + ai);
         }
 
         void HandleAdd(Player p, string ai, string[] args) {
-            string[] instructions;
-            try { instructions = File.ReadAllLines("bots/" + ai); }
-            catch { instructions = new string[1]; }
-
-            try {
-                if (!File.Exists("bots/" + ai)) {
-                    Player.Message(p, "Created new bot AI: &b" + ai);
-                    using (StreamWriter w = new StreamWriter("bots/" + ai))
-                        w.WriteLine("#Version 2");
-                } else if (!instructions[0].CaselessEq("#Version 2")) {
-                    Player.Message(p, "File found is out-of-date. Overwriting");
-                    File.Delete("bots/" + ai);
-                    using (StreamWriter w = new StreamWriter("bots/" + ai))
-                        w.WriteLine("#Version 2");
-                } else {
-                    Player.Message(p, "Appended to bot AI: &b" + ai);
+            if (!File.Exists("bots/" + ai)) {
+                Player.Message(p, "Created new bot AI: &b" + ai);
+                using (StreamWriter w = new StreamWriter("bots/" + ai)) {
+                    // For backwards compatibility
+                    w.WriteLine("#Version 2");
                 }
-            } catch {
-                Player.Message(p, "An error occurred when accessing the files. You may need to delete it."); return;
             }
 
-            try {
-                string action = args.Length > 2 ? args[2] : "";
-                if (!action.CaselessEq("reverse")) {
-                    ScriptFile.Append(p, ai, action, args); return;
+            string action = args.Length > 2 ? args[2] : "";
+            if (action.CaselessEq("reverse")) {
+                HandleReverse(p, ai);
+            } else {
+                string instruction = ScriptFile.Append(p, ai, action, args);
+                if (instruction != null) {
+                    Player.Message(p, "Appended " + instruction + " instruction to bot AI &b" + ai);
                 }
-                
-                using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                    for (int i = instructions.Length - 1; i > 0; i--) {
-                        if (instructions[i].Length > 0 && instructions[i][0] != '#') {
-                            w.WriteLine(instructions[i]);
-                        }
+            }
+        }
+        
+        void HandleReverse(Player p, string ai) {
+            string[] instructions = File.ReadAllLines("bots/" + ai);
+            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
+                for (int i = instructions.Length - 1; i > 0; i--) {
+                    if (instructions[i].Length > 0 && instructions[i][0] != '#') {
+                        w.WriteLine(instructions[i]);
                     }
                 }
-            } catch {
-                Player.Message(p, "Invalid parameter");
             }
+            Player.Message(p, "Appended all instructions in reverse order to bot AI &b" + ai);
         }
         
         void HandleList(Player p, string modifier) {
@@ -157,7 +153,7 @@ namespace MCGalaxy.Commands.Bots{
             Player.Message(p, "%T/BotAI add [name] [instruction] <args>");
             
             Player.Message(p, "%HInstructions: %S{0}, reverse",
-                           BotInstruction.Instructions.Join(ins => ins.Name.ToLower()));
+                           BotInstruction.Instructions.Join(ins => ins.Name));
             Player.Message(p, "%HTo see detailed help, type %T/Help BotAI [instruction]");
         }
         
@@ -165,7 +161,7 @@ namespace MCGalaxy.Commands.Bots{
             BotInstruction ins = BotInstruction.Find(message);
             if (ins == null) {
                 Player.Message(p, "%HInstructions: %S{0}, reverse",
-                               BotInstruction.Instructions.Join(ins2 => ins2.Name.ToLower()));
+                               BotInstruction.Instructions.Join(ins2 => ins2.Name));
             } else {
                 Player.MessageLines(p, ins.Help);
             }

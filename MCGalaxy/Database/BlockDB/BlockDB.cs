@@ -60,9 +60,9 @@ namespace MCGalaxy.DB {
                 BlockDBFile.ReadHeader(s, out Dims);
         }
 
-        /// <summary> Writes the entries from the in-memory cache to disc. </summary>
+        /// <summary> Flushes the entries from the in-memory cache to disc. </summary>
         /// <remarks> You must lock using Locker.AccquireWrite() **before** entering this method. </remarks>
-        public void WriteEntries() {
+        public void FlushCache() {
             if (Cache.Head == null) return;
             
             BlockDBFile format = ValidateBackingFile();

@@ -49,7 +49,7 @@ namespace MCGalaxy.Bots {
         }
         
        public override void Output(Player p, string[] args, StreamWriter w) {
-            string time = args.Length > 3 ? args[3] : "10";
+            string time  = args.Length > 3 ? args[3] : "10";
             string speed = args.Length > 4 ? args[4] : "2";
             w.WriteLine(Name + " " + short.Parse(time) + " " + byte.Parse(speed));
         }

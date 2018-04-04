@@ -34,7 +34,7 @@ namespace MCGalaxy {
                     Logger.Log(LogType.Warning, "Couldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
                     return;
                 }
-                lvl.BlockDB.WriteEntries();
+                lvl.BlockDB.FlushCache();
             }
             Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }

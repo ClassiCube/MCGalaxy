@@ -224,7 +224,7 @@ namespace MCGalaxy.Drawing.Ops {
                 op.TotalModified++;
                 
                 
-                // Attempt to prevent the BlockDB from growing too large (> 1,000,000 entries)
+                // Attempt to prevent BlockDB in-memory cache from growing too large (> 1,000,000 entries)
                 int count = lvl.BlockDB.Cache.Count;
                 if (count == 0 || (count % 1000000) != 0) return;
                 
@@ -236,7 +236,7 @@ namespace MCGalaxy.Drawing.Ops {
                 }
                 
                 using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(100)) {
-                    if (wLock != null) lvl.BlockDB.WriteEntries();
+                    if (wLock != null) lvl.BlockDB.FlushCache();
                 }
                 
                 if (!hasReadLock) return;

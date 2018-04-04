@@ -130,13 +130,7 @@ namespace MCGalaxy.Commands.World {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
                 if (grp != null) p.level.BuildAccess.SetMin(null, grp);
-            } else if (cmd == "TEXTURE") {
-                if (value.Length == 0) {
-                    Command.all.FindByName("Texture").Use(p, "level normal");
-                } else {
-                    Command.all.FindByName("Texture").Use(p, "level " + value);
-                }
-            } else if (cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
+            } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) {
                     Command.all.FindByName("Texture").Use(p, "levelzip normal");
                 } else {

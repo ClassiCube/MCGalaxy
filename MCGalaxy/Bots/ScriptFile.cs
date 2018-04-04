@@ -23,13 +23,13 @@ namespace MCGalaxy.Bots {
     public static class ScriptFile {
         
         public static bool Parse(Player p, PlayerBot bot, string file) {
-            if (!File.Exists(file)) { 
-                Player.Message(p, "Could not find specified AI."); return false; 
+            if (!File.Exists(file)) {
+                Player.Message(p, "Could not find specified AI."); return false;
             }
 
             string[] instructions = File.ReadAllLines(file);
-            if (instructions.Length == 0 || !instructions[0].CaselessEq("#Version 2")) {
-                Player.Message(p, "Invalid file version. Remake"); return false; 
+            if (instructions.Length == 0) {
+                Player.Message(p, "No instructions in the AI."); return false;
             }
 
             bot.Instructions.Clear();
@@ -53,22 +53,29 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public static void Append(Player p, string ai, string action, string[] args) {
+        public static string Append(Player p, string ai, string action, string[] args) {
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                if (action.Length == 0) action = "walk";
+                if (action.Length == 0)      action = "walk";
                 if (action.CaselessEq("tp")) action = "teleport";
 
                 BotInstruction ins = BotInstruction.Find(action);
                 if (ins == null) {
-                    Player.Message(p, "Could not find instruction \"" + action + "\""); return;
+                    Player.Message(p, "Could not find instruction \"" + action + "\""); return null;
                 }
                 
                 LevelPermission killPerm = CommandExtraPerms.MinPerm("botset");
                 if (ins.Name.CaselessEq("kill") && p.Rank < killPerm) {
                     Formatter.MessageNeedMinPerm(p, "+ can toggle a bot's killer instinct.", killPerm);
-                    return;
+                    return null;
                 }
-                ins.Output(p, args, w);
+                
+                try {
+                    ins.Output(p, args, w);
+                } catch {
+                    Player.Message(p, "Invalid arguments given for instruction " + ins.Name);
+                    return null;
+                }
+                return ins.Name;
             }
         }
     }
