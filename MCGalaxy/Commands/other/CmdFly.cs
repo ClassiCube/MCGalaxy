@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
             Player.Message(p, "%T/Fly");
-            Player.Message(p, "%HCreates a grass platform underneath you that moves with you.");
+            Player.Message(p, "%HCreates a glass platform underneath you that moves with you.");
             Player.Message(p, "%H  May not work if you have high latency.");
             Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
                            "(unless you are {0}%H+ and the motd has +ophax)", name);

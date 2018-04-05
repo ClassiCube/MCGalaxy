@@ -66,7 +66,9 @@ namespace MCGalaxy.Commands.Building {
             BlockID old = p.level.GetBlock(x, y, z);
             if (!CommandParser.IsBlockAllowed(p, "fill over", old)) return false;
             
-            if (dArgs.Mode == DrawMode.volcano) dArgs.Mode = Calc2DFill(p, marks);            
+            bool is2D = dArgs.Mode == DrawMode.volcano;
+            if (is2D) dArgs.Mode = Calc2DFill(p, marks);
+            
             FillDrawOp op = (FillDrawOp)dArgs.Op;
             op.Positions = FillDrawOp.FloodFill(p, p.level.PosToInt(x, y, z), old, dArgs.Mode);
             int count = op.Positions.Count;
@@ -79,6 +81,7 @@ namespace MCGalaxy.Commands.Building {
                 success = base.DoDraw(p, marks, state, block);
             }
             
+            if (is2D) dArgs.Mode = DrawMode.volcano;
             op.Positions = null;
             return success;
         }
