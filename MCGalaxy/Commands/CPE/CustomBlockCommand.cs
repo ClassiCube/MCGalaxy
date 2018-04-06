@@ -211,11 +211,11 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             if (def.InventoryOrder < 0) {
-                Player.Message(p, "Order: None");
+                Player.Message(p, "  Order: None");
             } else if (def.InventoryOrder == 255) {
-                Player.Message(p, "Order: Hidden from inventory");
+                Player.Message(p, "  Order: Hidden from inventory");
             } else {
-                Player.Message(p, "Order: " + def.InventoryOrder);
+                Player.Message(p, "  Order: " + def.InventoryOrder);
             }
         }
         
@@ -477,6 +477,15 @@ namespace MCGalaxy.Commands.CPE {
                     int order = 0;
                     if (!CommandParser.GetInt(p, value, "Inventory order", ref order, 1, Block.MaxRaw)) {
                         SendEditHelp(p, arg); return;
+                    }
+                    
+                    // Don't let multiple blocks be assigned to same order
+                    if (order != def.BlockID) {
+                        for (int i = 0; i < defs.Length; i++) {
+                            if (defs[i] == null || defs[i].InventoryOrder != order) continue;
+                            Player.Message(p, "Block {0} already had order {1}", defs[i].Name, order);
+                            return;
+                        }
                     }
                     
                     def.InventoryOrder = order == def.BlockID ? -1 : order;

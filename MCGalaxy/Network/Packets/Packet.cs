@@ -358,11 +358,11 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] SetInventoryOrder(BlockDefinition def, bool extBlocks) {
+        public static byte[] SetInventoryOrder(BlockID rawId, BlockID rawOrder, bool extBlocks) {
             byte[] buffer = new byte[extBlocks ? 5 : 3];
             buffer[0] = Opcode.CpeSetInventoryOrder;
-            NetUtils.WriteBlock(def.BlockID, buffer, 1, extBlocks);
-            NetUtils.WriteBlock((BlockID)def.InventoryOrder, buffer, extBlocks ? 3 : 2, extBlocks);
+            NetUtils.WriteBlock(rawId, buffer, 1, extBlocks);
+            NetUtils.WriteBlock(rawOrder, buffer, extBlocks ? 3 : 2, extBlocks);
             return buffer;
         }
         

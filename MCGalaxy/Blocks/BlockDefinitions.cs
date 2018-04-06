@@ -208,16 +208,11 @@ namespace MCGalaxy {
         }
         
         public static void UpdateOrder(BlockDefinition def, bool global, Level level) {
-            if (def.InventoryOrder == -1) return;
-            BlockID_ block = def.GetBlock();
-            
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (!global && pl.level != level) continue;
-                if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
-
                 if (!pl.Supports(CpeExt.InventoryOrder) || def.BlockID > pl.MaxRawBlock) continue;
-                pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
+                SendLevelInventoryOrder(pl);
             }
         }
         
@@ -249,14 +244,69 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void SendLevelInventoryOrder(Player pl) {
+        internal unsafe static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            for (int b = 0; b < defs.Length; b++) {
-                BlockDefinition def = defs[b];
+            
+            int count = pl.MaxRawBlock + 1;
+            int* order_to_blocks = stackalloc int[Block.ExtendedCount];
+            int* block_to_orders = stackalloc int[Block.ExtendedCount];
+            for (int b = 0; b < Block.ExtendedCount; b++) {
+                order_to_blocks[b] = -1;
+                block_to_orders[b] = -1;
+            }
+            
+            // Fill slots with explicit order
+            for (int i = 0; i < defs.Length; i++) {
+                BlockDefinition def = defs[i];
                 if (def == null || def.BlockID > pl.MaxRawBlock) continue;
-                if (def.InventoryOrder >= 0) {
-                    pl.Send(Packet.SetInventoryOrder(def, pl.hasExtBlocks));
+                if (def.InventoryOrder == -1) continue;
+                
+                if (def.InventoryOrder != 255) {
+                    if (order_to_blocks[def.InventoryOrder] != -1) continue;
+                    order_to_blocks[def.InventoryOrder] = def.BlockID;
                 }
+                block_to_orders[def.BlockID] = def.InventoryOrder;
+            }
+            
+            // Put blocks into their default slot if slot is unused
+            for (int i = 0; i < defs.Length; i++) {
+                BlockDefinition def = defs[i];
+                int raw = def != null ? def.BlockID : i;
+                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CpeCount)) continue;
+                
+                if (def != null && def.InventoryOrder >= 0) continue;              
+                if (order_to_blocks[raw] == -1) {
+                    order_to_blocks[raw] = raw;
+                    block_to_orders[raw] = raw;
+                }
+            }
+            
+            // Push blocks whose slots conflict with other blocks into free slots at end
+            for (int i = defs.Length - 1; i >= 0; i--) {
+                BlockDefinition def = defs[i];
+                int raw = def != null ? def.BlockID : i;
+                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CpeCount)) continue;
+                
+                if (block_to_orders[raw] != -1) continue;
+                for (int slot = count - 1; slot >= 1; slot--) {
+                    if (order_to_blocks[slot] != -1) continue;
+                    
+                    block_to_orders[raw]  = slot;
+                    order_to_blocks[slot] = raw;
+                    break;
+                }
+            }
+            
+            for (int raw = 0; raw < count; raw++) {
+                int order = block_to_orders[raw];
+                if (order == -1) order = 255;
+                
+                BlockDefinition def = defs[Block.FromRaw((BlockID_)raw)];
+                if (def == null && raw >= Block.CpeCount) continue;
+                // Special case, don't want 255 getting hidden by default
+                if (raw == 255 && def.InventoryOrder == -1) continue;
+                
+                pl.Send(Packet.SetInventoryOrder((BlockID_)raw, (BlockID_)order, pl.hasExtBlocks));
             }
         }
         
