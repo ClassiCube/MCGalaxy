@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (defs[i] == null) continue;
                 
                 BlockID b = (BlockID)i;
-                if (!DoCopy(p, global, cmd, defs[i], b, b)) continue;
+                if (!DoCopy(p, global, cmd, true, defs[i], b, b)) continue;
                 copied++;
                 
                 string scope = global ? "global" : "level";
@@ -147,14 +147,15 @@ namespace MCGalaxy.Commands.CPE {
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition srcDef = defs[src];
-            if (!DoCopy(p, global, cmd, srcDef, src, dst)) return;
+            if (!DoCopy(p, global, cmd, false, srcDef, src, dst)) return;
             
             string scope = global ? "global" : "level";
             Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope,
                            Block.ToRaw(src), Block.ToRaw(dst));
         }
 
-        static bool DoCopy(Player p, bool global, string cmd, BlockDefinition srcDef, BlockID src, BlockID dst) {
+        static bool DoCopy(Player p, bool global, string cmd, bool keepOrder, 
+		                   BlockDefinition srcDef, BlockID src, BlockID dst) {
             if (srcDef == null && src < Block.CpeCount) {
                 srcDef = DefaultSet.MakeCustomBlock(src);
             }
@@ -167,7 +168,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockProps props = global ? Block.Props[src] : p.level.Props[src];
             dstDef = srcDef.Copy();
             dstDef.SetBlock(dst);
-            dstDef.InventoryOrder = -1;
+            if (!keepOrder) dstDef.InventoryOrder = -1;
             
             AddBlock(p, dstDef, global, cmd, props);
             return true;
