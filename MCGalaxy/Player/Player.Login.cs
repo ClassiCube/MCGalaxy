@@ -254,7 +254,8 @@ namespace MCGalaxy {
             
             LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);           
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
-            Chat.MessageWhere(altsMsg, pl => pl.Rank >= rank && Entities.CanSee(pl, p));
+            Chat.MessageWhere(altsMsg, 
+                              pl => pl.Rank >= rank && Entities.CanSee(pl, p) && pl.level.SeesServerWideChat);
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             Logger.Log(LogType.UserActivity, altsMsg);
         }
