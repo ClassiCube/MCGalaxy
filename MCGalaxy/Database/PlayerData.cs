@@ -110,7 +110,7 @@ namespace MCGalaxy.DB {
             data.LastLogin  = ParseDate(row[ColumnLastLogin]);
             
             data.Title = row[ColumnTitle].ToString().Trim();
-            data.Title.Cp437ToUnicodeInPlace();
+            data.Title = data.Title.Cp437ToUnicode();
             data.TitleColor = ParseColor(row[ColumnTColor]);
             data.Color = ParseColor(row[ColumnColor]);
             

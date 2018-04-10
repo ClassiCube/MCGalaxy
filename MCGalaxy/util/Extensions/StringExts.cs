@@ -59,25 +59,6 @@ namespace MCGalaxy {
                 c[i] = UnicodeToCp437(str[i]);
             return new String(c);
         }
-
-        /// <summary> Modifies the characters of a string consisting of code page 437 indices into unicode. </summary>
-        public unsafe static void Cp437ToUnicodeInPlace(this string str) {
-            fixed (char* ptr = str) {
-                for (int i = 0; i < str.Length; i++) {
-                    ptr[i] = Cp437ToUnicode(ptr[i]);
-                }
-            }
-        }
-
-        /// <summary> Modifies the characters of a unicode string into code page 437 indices. </summary>
-        /// <remarks> Unicode characters not in code page 437 are replaced with '?'. </remarks>              
-        public static unsafe void UnicodeToCp437InPlace(this string str) {
-            fixed (char* ptr = str) {
-                for (int i = 0; i < str.Length; i++) {
-                    ptr[i] = UnicodeToCp437(ptr[i]);
-                }
-            }
-        }
         
         
         /// <summary> Converts a code page 437 indice into unicode. </summary>

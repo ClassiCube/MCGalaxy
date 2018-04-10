@@ -34,7 +34,7 @@ namespace MCGalaxy.Blocks.Extended {
                 
                 string message = Messages.Rows[last]["Message"].ToString().Trim();
                 message = message.Replace("\\'", "\'");
-                message.Cp437ToUnicodeInPlace();
+                message = message.Cp437ToUnicode();
                 message = message.Replace("@p", p.name);
                 
                 if (message != p.prevMsg || (alwaysRepeat || ServerConfig.RepeatMBs)) {
