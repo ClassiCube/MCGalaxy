@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.CPE {
                     new CommandPerm(LevelPermission.Operator, "+ can change the model of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("XModel") }; }
+            get { return new[] { new CommandAlias("XModel", "-own") }; }
         }
 
         public override void Use(Player p, string message) {
