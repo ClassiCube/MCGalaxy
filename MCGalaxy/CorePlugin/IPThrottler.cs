@@ -32,16 +32,16 @@ namespace MCGalaxy.Core {
             DateTime blockedUntil, now = DateTime.UtcNow;
             
             lock (ipsLock) {
-                IPThrottleEntry entries;
-                if (!ips.TryGetValue(p.ip, out entries)) {
-                    entries = new IPThrottleEntry();
-                    ips[p.ip] = entries;
+                IPThrottleEntry entry;
+                if (!ips.TryGetValue(p.ip, out entry)) {
+                    entry = new IPThrottleEntry();
+                    ips[p.ip] = entry;
                 }
-                blockedUntil = entries.BlockedUntil;
+                blockedUntil = entry.BlockedUntil;
                 
                 if (blockedUntil < now) {
-                    if (!entries.AddSpamEntry(ServerConfig.IPSpamCount, ServerConfig.IPSpamInterval)) {
-                        entries.BlockedUntil = now.AddSeconds(ServerConfig.IPSpamBlockTime);
+                    if (!entry.AddSpamEntry(ServerConfig.IPSpamCount, ServerConfig.IPSpamInterval)) {
+                        entry.BlockedUntil = now.AddSeconds(ServerConfig.IPSpamBlockTime);
                     }
                     return true;
                 }

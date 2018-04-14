@@ -481,7 +481,7 @@ namespace MCGalaxy.Commands.CPE {
                     }
                     
                     // Don't let multiple blocks be assigned to same order
-                    if (order != def.BlockID) {
+                    if (order != def.BlockID && order != 255) {
                         for (int i = 0; i < defs.Length; i++) {
                             if (defs[i] == null || defs[i].InventoryOrder != order) continue;
                             Player.Message(p, "Block {0} already had order {1}", defs[i].Name, order);
