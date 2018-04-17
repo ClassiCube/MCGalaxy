@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Info {
             
             string realmOwner = cfg.RealmOwner;
             if (String.IsNullOrEmpty(cfg.RealmOwner)) {
-                realmOwner = GetRealmMapOwner(data.Name);
+                realmOwner = DefaultRealmOwner(data.Name);
             }
             if (String.IsNullOrEmpty(realmOwner)) return;
             
@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands.Info {
                            cfg.Likes, cfg.Dislikes);
         }
         
-        static string GetRealmMapOwner(string map) {
+        static string DefaultRealmOwner(string map) {
             bool plus = ServerConfig.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
             if (plus && map.IndexOf('+') == -1) return null;

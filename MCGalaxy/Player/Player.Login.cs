@@ -211,9 +211,8 @@ namespace MCGalaxy {
                 byte.TryParse(bits[0], out rot.RotX);
                 byte.TryParse(bits[1], out rot.RotZ);
                 Rot = rot;
-            }
-            
-            ModelBB = AABB.ModelAABB(this, level);
+            }            
+            SetModel(Model, level);
         }
         
         void GetPlayerStats() {

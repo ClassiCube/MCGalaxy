@@ -44,7 +44,7 @@ namespace MCGalaxy.Bots {
                 PlayerBot bot = new PlayerBot(props.Name, lvl);
                 props.ApplyTo(bot);
                 
-                bot.ModelBB = AABB.ModelAABB(bot, lvl);
+                bot.SetModel(bot.Model, lvl);
                 LoadAi(props, bot);
                 PlayerBot.Add(bot, false);
             }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Bots {
             }            
         }
         
-        static void LoadAi(BotProperties props, PlayerBot bot) {
+        internal static void LoadAi(BotProperties props, PlayerBot bot) {
             if (String.IsNullOrEmpty(props.AI)) return;
             try {
                 ScriptFile.Parse(null, bot, "bots/" + props.AI);
@@ -128,7 +128,7 @@ namespace MCGalaxy.Bots {
         }
         
         public void ApplyTo(PlayerBot bot) {
-            bot.Pos = new Position(X, Y, Z);
+            bot.SetInitialPos(new Position(X, Y, Z));
             bot.SetYawPitch(RotX, RotY);
             Orientation rot = bot.Rot;
             rot.RotX = BodyX; rot.RotZ = BodyZ;

@@ -35,39 +35,42 @@ namespace MCGalaxy.Commands.Bots {
             if (args.Length < 2) { Help(p); return; }
             if (!Formatter.ValidName(p, args[1], "bot")) return;
             
+            string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {
-                AddBot(p, args[1]);
+                AddBot(p, bot);
             } else if (args[0].CaselessEq("remove")) {
-                RemoveBot(p, args[1]);
+                RemoveBot(p, bot);
             } else if (args[0].CaselessEq("text")) {
-                string text = args.Length > 2 ? args[2] : null;
-                SetBotText(p, args[1], text);
+                SetBotText(p, bot, value);
             } else if (args[0].CaselessEq("deathmsg") || args[0].CaselessEq("deathmessage")) {
-                string text = args.Length > 2 ? args[2] : null;
-                SetDeathMessage(p, args[1], text);
+                SetDeathMessage(p, bot, value);
             } else if (args[0].CaselessEq("rename")) {
-                string newName = args.Length > 2 ? args[2] : null;
-                RenameBot(p, args[1], newName);
-            } else {
+                RenameBot(p, bot, value);
+            } else if (args[0].CaselessEq("copy")) {
+                CopyBot(p, bot, value);
+            }  else {
                 Help(p);
             }
         }
         
         void AddBot(Player p, string botName) {
             if (!LevelInfo.ValidateAction(p, p.level.name, "add bots to this level")) return;
-            
-            if (BotExists(p.level, botName, null)) {
+            PlayerBot bot = new PlayerBot(botName, p.level);
+            TryAddBot(p, bot);
+        }
+        
+        void TryAddBot(Player p, PlayerBot bot) {
+            if (BotExists(p.level, bot.name, null)) {
                 Player.Message(p, "A bot with that name already exists."); return;
             }
             if (p.level.Bots.Count >= ServerConfig.MaxBotsPerLevel) {
                 Player.Message(p, "Reached maximum number of bots allowed on this map."); return;
             }
             
-            PlayerBot bot = new PlayerBot(botName, p.level);
-            bot.Pos = p.Pos; bot.lastPos = bot.Pos;
+            bot.SetInitialPos(p.Pos);
             bot.SetYawPitch(p.Rot.RotY, 0);
             
-            Player.Message(p, "You added the bot " + bot.ColoredName );
+            Player.Message(p, "You added the bot " + bot.ColoredName);
             PlayerBot.Add(bot);
         }
         
@@ -95,9 +98,41 @@ namespace MCGalaxy.Commands.Bots {
             }
         }
         
+        void SetBotText(Player p, string botName, string text) {
+            PlayerBot bot = Matcher.FindBots(p, botName);
+            if (bot == null) return;
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set bot text of that bot")) return;
+            
+            if (text == null) {
+                Player.Message(p, "Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
+                bot.ClickedOnText = null;
+            } else {
+                if (!MessageBlock.Validate(p, text, false)) return;
+                Player.Message(p, "Set text shown when bot {0} %Sis clicked on to {1}", bot.ColoredName, text);
+                bot.ClickedOnText = text;
+            }
+            BotsFile.Save(bot.level);
+        }
+        
+        void SetDeathMessage(Player p, string botName, string text) {
+            PlayerBot bot = Matcher.FindBots(p, botName);
+            if (bot == null) return;
+            if (!LevelInfo.ValidateAction(p, p.level.name, "set kill message of that bot")) return;
+            
+            if (text == null) {
+                Player.Message(p, "Reset shown when bot {0} %Skills someone", bot.ColoredName);
+                bot.DeathMessage = null;
+            } else {
+                if (!MessageBlock.Validate(p, text, false)) return;
+                Player.Message(p, "Set message shown when bot {0} %Skills someone to {1}", bot.ColoredName, text);
+                bot.DeathMessage = text;
+            }
+            BotsFile.Save(bot.level);
+        }
+        
         void RenameBot(Player p, string botName, string newName) {
             if (!LevelInfo.ValidateAction(p, p.level.name, "rename bots on this level")) return;
-            if (newName == null) { Player.Message(p, "New name of bot required."); return; }            
+            if (newName == null) { Player.Message(p, "New name of bot required."); return; }
             if (!Formatter.ValidName(p, newName, "bot")) return;
             
             PlayerBot bot = Matcher.FindBots(p, botName);
@@ -117,36 +152,24 @@ namespace MCGalaxy.Commands.Bots {
             BotsFile.Save(bot.level);
         }
         
-        void SetBotText(Player p, string botName, string text) {
+        void CopyBot(Player p, string botName, string newName) {
+            if (!LevelInfo.ValidateAction(p, p.level.name, "copy bots on this level")) return;
+            if (newName == null) { Player.Message(p, "Name of new bot required."); return; }
+            if (!Formatter.ValidName(p, newName, "bot")) return;
+            
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level.name, "set bot text of that bot")) return;
             
-            if (text == null) {
-                Player.Message(p, "Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
-                bot.ClickedOnText = null;
-            } else {                
-                if (!MessageBlock.Validate(p, text, false)) return;
-                Player.Message(p, "Set text shown when bot {0} %Sis clicked on to {1}", bot.ColoredName, text);
-                bot.ClickedOnText = text;
-            }
-            BotsFile.Save(bot.level);
-        }
-        
-        void SetDeathMessage(Player p, string botName, string text) {
-            PlayerBot bot = Matcher.FindBots(p, botName);
-            if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level.name, "set kill message of that bot")) return;
-            
-            if (text == null) {
-                Player.Message(p, "Reset shown when bot {0} %Skills someone", bot.ColoredName);
-                bot.DeathMessage = null;
-            } else {                
-                if (!MessageBlock.Validate(p, text, false)) return;
-                Player.Message(p, "Set message shown when bot {0} %Skills someone to {1}", bot.ColoredName, text);
-                bot.DeathMessage = text;
-            }
-            BotsFile.Save(bot.level);
+            PlayerBot clone = new PlayerBot(newName, p.level);
+            BotProperties props = new BotProperties();
+            props.FromBot(bot);
+            props.ApplyTo(clone);
+
+            clone.SetModel(clone.Model, p.level);
+            BotsFile.LoadAi(props, clone);
+            // Preserve custom name tag
+            if (bot.DisplayName == bot.name) clone.DisplayName = newName;
+            TryAddBot(p, clone);
         }
         
         public override void Help(Player p) {
@@ -160,6 +183,7 @@ namespace MCGalaxy.Commands.Bots {
             Player.Message(p, "%HSets the message shown when this bot kills a player");
             Player.Message(p, "%T/Bot rename [name] [new name] %H- Renames a bot");
             Player.Message(p, "%H  Note: To only change name tag of a bot, use %T/Nick bot");
+            Player.Message(p, "%T/Bot copy [name] [new name] %H- Clones an existing bot");
         }
     }
 }

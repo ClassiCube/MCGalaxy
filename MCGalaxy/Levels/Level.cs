@@ -242,7 +242,7 @@ namespace MCGalaxy {
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
                 if (Changed || !File.Exists(path) || force || (physicschanged && clearPhysics)) {
-                    lock (saveLock) SaveCore(path);                    
+                    lock (saveLock) SaveCore(path);
                     if (clearPhysics) ClearPhysics();
                 } else {
                     Logger.Log(LogType.SystemActivity, "Skipping level save for " + name + ".");

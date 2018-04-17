@@ -182,9 +182,8 @@ namespace MCGalaxy {
 
         public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
-            entity.Model = model;
             Level lvl = entity.Level;
-            entity.ModelBB = AABB.ModelAABB(entity, lvl);
+            entity.SetModel(model, lvl);
             
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.ChangeModel)) continue;

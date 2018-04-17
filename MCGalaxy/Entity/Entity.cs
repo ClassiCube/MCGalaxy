@@ -46,6 +46,15 @@ namespace MCGalaxy {
             set { Interlocked.Exchange(ref _pos, value.Pack()); OnSetPos(); }
         }
         
+        public void SetInitialPos(Position pos) {
+            Pos = pos; lastPos = pos;
+        }
+        
+        public void SetModel(string model, Level lvl) {
+            Model = model;
+            ModelBB = AABB.ModelAABB(this, lvl);
+        }
+        
         public void SetYawPitch(byte yaw, byte pitch) {
             Orientation rot = Rot;
             rot.RotY = yaw; rot.HeadX = pitch;
