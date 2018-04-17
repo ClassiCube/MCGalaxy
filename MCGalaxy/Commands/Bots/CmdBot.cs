@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Bots {
             }
             
             PlayerBot bot = new PlayerBot(botName, p.level);
-            bot.Pos = p.Pos;
+            bot.Pos = p.Pos; bot.lastPos = bot.Pos;
             bot.SetYawPitch(p.Rot.RotY, 0);
             
             Player.Message(p, "You added the bot " + bot.ColoredName );
