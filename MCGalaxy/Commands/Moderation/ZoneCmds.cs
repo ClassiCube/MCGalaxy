@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Zone z = new Zone(p.level);
             z.Config.Name = args[offset];
-            if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access)) return;
+            if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, p.level)) return;
 
             Player.Message(p, "Creating zone " + z.ColoredName);
             Player.Message(p, "Place or break two blocks to determine the edges.");
@@ -105,8 +105,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void EditZone(Player p, string[] args, Zone zone) {
-            if (!PermissionCmd.Do(p, args, 2, false, zone.Access)) return;
-            p.level.Save(true);
+            PermissionCmd.Do(p, args, 2, false, zone.Access, p.level);
         }
         
         void SetZoneProp(Player p, string[] args, Zone zone) {

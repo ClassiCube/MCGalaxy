@@ -35,13 +35,10 @@ namespace MCGalaxy {
     }
     
     /// <summary> Encapuslates build access permissions for a zone. </summary>
-    public sealed class ZoneAccessController : AccessController {
-        
-        readonly Level lvl;
+    public sealed class ZoneAccessController : AccessController {        
         readonly ZoneConfig cfg;
         
-        public ZoneAccessController(Level lvl, ZoneConfig cfg) {
-            this.lvl = lvl;
+        public ZoneAccessController(ZoneConfig cfg) {
             this.cfg = cfg;
         }
         
@@ -62,16 +59,12 @@ namespace MCGalaxy {
         protected override string Type { get { return "build"; } }
         protected override string MaxCmd { get { return null; } }
         
-        public override void OnPermissionChanged(Player p, Group grp, string type) {
-            Update();
-            Logger.Log(LogType.UserActivity, "{0} rank changed to {1} in zone {2}.", type, grp.Name, cfg.Name);
-            Chat.MessageLevel(lvl, type + " rank changed to " + grp.ColoredName + " %Sin zone " + cfg.Color + cfg.Name);
-            if (p != null && p.level != lvl) {
-                Player.Message(p, "{0} rank changed to {1} %Sin {2}%S.", type, grp.ColoredName, ColoredName);
-            }
+        public override void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
+            string msg = type + " rank changed to " + grp.ColoredName + " %Sin " + ColoredName;
+            DoChange(p, lvl, msg);
         }
         
-        public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
+        public override void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
             string msg = PlayerInfo.GetColoredName(p, name);
             if (removedFromOpposite) {
                 msg += " %Swas removed from the build" + (whitelist ? " blacklist" : " whitelist");
@@ -79,15 +72,19 @@ namespace MCGalaxy {
                 msg += " %Swas build" + (whitelist ? " whitelisted" : " blacklisted");
             }
             
-            Update();
-            Logger.Log(LogType.UserActivity, "{0} in zone {1}", msg, cfg.Name);
-            Chat.MessageLevel(lvl, msg + " in zone " + cfg.Color + cfg.Name);
-            if (p != null && p.level != lvl) {
-                Player.Message(p, "{0} in %S{1}", msg, ColoredName);
-            }
+            msg += "in " + ColoredName;
+            DoChange(p, lvl, msg);
         }
         
-        void Update() { lvl.Save(true); }
+        void DoChange(Player p, Level lvl, string msg) {
+            lvl.Save(true);
+            Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvl.name);
+            
+            Chat.MessageLevel(lvl, msg);           
+            if (p != null && p.level != lvl) {
+                Player.Message(p, "{0} %Son {1}", msg, lvl.ColoredName);
+            }
+        }
     }
     
     public class Zone {
@@ -101,7 +98,7 @@ namespace MCGalaxy {
         
         public Zone(Level lvl) {
             Config = new ZoneConfig();
-            Access = new ZoneAccessController(lvl, Config);
+            Access = new ZoneAccessController(Config);
         }
         
         

@@ -104,28 +104,28 @@ namespace MCGalaxy {
         }
         
 
-        public bool SetMin(Player p, Group grp) {
+        public bool SetMin(Player p, Level lvl, Group grp) {
             string minType = "Min " + Type;
             if (!CheckRank(p, Min, minType, false)) return false;
             if (!CheckRank(p, grp.Permission, minType, true)) return false;
             
             Min = grp.Permission;
-            OnPermissionChanged(p, grp, minType);
+            OnPermissionChanged(p, lvl, grp, minType);
             return true;
         }
 
-        public bool SetMax(Player p, Group grp) {
+        public bool SetMax(Player p, Level lvl, Group grp) {
             string maxType = "Max " + Type;
             const LevelPermission ignore = LevelPermission.Nobody;
             if (Max != ignore && !CheckRank(p, Max, maxType, false)) return false;
             if (grp.Permission != ignore && !CheckRank(p, grp.Permission, maxType, true)) return false;
             
             Max = grp.Permission;
-            OnPermissionChanged(p, grp, maxType);
+            OnPermissionChanged(p, lvl, grp, maxType);
             return true;
         }
 
-        public bool Whitelist(Player p, string target) {
+        public bool Whitelist(Player p, Level lvl, string target) {
             if (!CheckList(p, target, true)) return false;
             if (Whitelisted.CaselessContains(target)) {
                 Player.Message(p, "{0} %Sis already whitelisted.", PlayerInfo.GetColoredName(p, target));
@@ -137,11 +137,11 @@ namespace MCGalaxy {
                 Whitelisted.Add(target);
                 removed = false;
             }
-            OnListChanged(p, target, true, removed);
+            OnListChanged(p, lvl, target, true, removed);
             return true;
         }
         
-        public bool Blacklist(Player p, string target) {
+        public bool Blacklist(Player p, Level lvl, string target) {
             if (!CheckList(p, target, false)) return false;
             if (Blacklisted.CaselessContains(target)) {
                 Player.Message(p, "{0} %Sis already blacklisted.", PlayerInfo.GetColoredName(p, target));
@@ -153,19 +153,18 @@ namespace MCGalaxy {
                 Blacklisted.Add(target);
                 removed = false;
             }
-            OnListChanged(p, target, false, removed);
+            OnListChanged(p, lvl, target, false, removed);
             return true;
         }
 
 
-        public abstract void OnPermissionChanged(Player p, Group grp, string type);
-        public abstract void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite);
+        public abstract void OnPermissionChanged(Player p, Level lvl, Group grp, string type);
+        public abstract void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite);
         
         bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
                 Player.Message(p, "You cannot change the {0} rank of this level{1} higher than yours.",
-                               type.ToLower(),
-                               newPerm ? " to a rank" : ", as its current " + type.ToLower() + " rank is");
+                               type.ToLower(), newPerm ? " to a rank" : ", as its current " + type.ToLower() + " rank is");
                 return false;
             }
             return true;
@@ -238,12 +237,12 @@ namespace MCGalaxy {
         protected override string MaxCmd { get { return IsVisit ? "PerVisit" : "PerBuild"; } }
         
 
-        public override void OnPermissionChanged(Player p, Group grp, string type) {
+        public override void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
             string msg = type + " rank changed to " + grp.ColoredName;
-            DoChange(p, msg);
+            DoChange(p, lvl, msg);
         }
         
-        public override void OnListChanged(Player p, string name, bool whitelist, bool removedFromOpposite) {
+        public override void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
             string type = IsVisit ? "visit" : "build";
             string msg = PlayerInfo.GetColoredName(p, name);
             if (removedFromOpposite) {
@@ -251,15 +250,14 @@ namespace MCGalaxy {
             } else {
                 msg += " %Swas " + type + (whitelist ? " whitelisted" : " blacklisted");
             }
-            DoChange(p, msg);
+            DoChange(p, lvl, msg);
         }
         
-        void DoChange(Player p, string msg) {
-            Level lvl = LevelInfo.FindExact(lvlName);
+        void DoChange(Player p, Level lvl, string msg) {
             Update(lvl);
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvlName);
             
-            if (lvl != null) Chat.MessageLevel(lvl, msg);           
+            if (lvl != null) Chat.MessageLevel(lvl, msg);
             if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} %Son {1}", msg, ColoredName);
             }

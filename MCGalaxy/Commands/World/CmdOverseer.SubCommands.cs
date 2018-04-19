@@ -119,17 +119,18 @@ namespace MCGalaxy.Commands.World {
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
-                if (!p.level.VisitAccess.Whitelisted.CaselessContains(p.name)) {
-                    p.level.VisitAccess.Whitelist(null, p.name);
+                AccessController access = p.level.VisitAccess;
+                if (!access.Whitelisted.CaselessContains(p.name)) {
+                    access.Whitelist(null, p.level, p.name);
                 }
                 
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) p.level.VisitAccess.SetMin(null, grp);
+                if (grp != null) access.SetMin(null, p.level, grp);
             } else if (cmd == "PERBUILD") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) p.level.BuildAccess.SetMin(null, grp);
+                if (grp != null) p.level.BuildAccess.SetMin(null, p.level, grp);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) {
                     Command.all.FindByName("Texture").Use(p, "levelzip normal");
@@ -181,13 +182,13 @@ namespace MCGalaxy.Commands.World {
         
         internal static bool SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
-            lvl.BuildAccess.Whitelist(null, p.name);
-            lvl.VisitAccess.Whitelist(null, p.name);
+            lvl.BuildAccess.Whitelist(null, lvl, p.name);
+            lvl.VisitAccess.Whitelist(null, lvl, p.name);
 
             Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
             if (grp == null) return false;
             
-            lvl.BuildAccess.SetMin(null, grp);
+            lvl.BuildAccess.SetMin(null, lvl, grp);
             return true;
         }
         
@@ -258,11 +259,11 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "Added zone for &b" + name);
             LevelAccessController access = p.level.BuildAccess;
             if (access.Blacklisted.CaselessRemove(name)) {
-                access.OnListChanged(p, name, true, true);
+                access.OnListChanged(p, p.level, name, true, true);
             }
             if (!access.Whitelisted.CaselessContains(name)) {
                 access.Whitelisted.Add(name);
-                access.OnListChanged(p, name, true, false);
+                access.OnListChanged(p, p.level, name, true, false);
             }
         }
         
@@ -271,7 +272,7 @@ namespace MCGalaxy.Commands.World {
             
             LevelAccessController access = p.level.BuildAccess;
             if (access.Whitelisted.CaselessRemove(name)) {
-                access.OnListChanged(p, name, false, true);
+                access.OnListChanged(p, p.level, name, false, true);
             } else {
                 Player.Message(p, name + " was not whitelisted.");
             }
@@ -283,7 +284,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, name + " is not blacklisted."); return;
             }
             blacklist.CaselessRemove(name);
-            p.level.VisitAccess.OnListChanged(p, name, true, true);
+            p.level.VisitAccess.OnListChanged(p, p.level, name, true, true);
         }
         
         static void RemoveVisitPlayer(Player p, string name) {
@@ -292,7 +293,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, name + " is already blacklisted."); return;
             }
             blacklist.Add(name);
-            p.level.VisitAccess.OnListChanged(p, name, false, false);
+            p.level.VisitAccess.OnListChanged(p, p.level, name, false, false);
         }
         
         static void HandleZones(Player p, string cmd, string args) {

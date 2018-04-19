@@ -24,19 +24,19 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public static bool Do(Player p, string[] args, int offset, bool max, AccessController access) {
+        public static bool Do(Player p, string[] args, int offset, bool max, AccessController access, Level lvl) {
             for (int i = offset; i < args.Length; i++) {
                 string arg = args[i];
                 if (arg[0] == '+' || arg[0] == '-') {
-                    if (!SetList(p, access, arg)) return false;
+                    if (!SetList(p, access, arg, lvl)) return false;
                 } else if (max) {
                     Group grp = Matcher.FindRanks(p, arg);
                     if (grp == null) return false;
-                    access.SetMax(p, grp);
+                    access.SetMax(p, lvl, grp);
                 } else {
                     Group grp = Matcher.FindRanks(p, arg);
                     if (grp == null) return false;
-                    access.SetMin(p, grp);
+                    access.SetMin(p, lvl, grp);
                 }
             }
             return true;
@@ -65,10 +65,10 @@ namespace MCGalaxy.Commands.World {
             } else {
                 access = visit ? lvl.VisitAccess : lvl.BuildAccess;
             }
-            Do(p, args, offset, max, access);
+            Do(p, args, offset, max, access, lvl);
         }
         
-        static bool SetList(Player p, AccessController access, string name) {
+        static bool SetList(Player p, AccessController access, string name, Level lvl) {
             bool include = name[0] == '+';
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
@@ -86,9 +86,9 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (include) {
-                access.Whitelist(p, name);
+                access.Whitelist(p, lvl, name);
             } else {
-                access.Blacklist(p, name);
+                access.Blacklist(p, lvl, name);
             }
             return true;
         }      
