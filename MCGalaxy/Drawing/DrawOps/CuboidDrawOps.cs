@@ -90,6 +90,7 @@ namespace MCGalaxy.Drawing.Ops {
     
     public class RainbowDrawOp : CuboidDrawOp {
         
+        public bool AllowAir;
         public override string Name { get { return "Rainbow"; } }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -117,7 +118,7 @@ namespace MCGalaxy.Drawing.Ops {
                     int startX = i;
                     for (ushort x = p1.X; x <= p2.X; x++) {
                         i = (i + stepX) % repeat;
-                        if (!Level.IsAirAt(x, y, z)) {
+                        if (AllowAir || !Level.IsAirAt(x, y, z)) {
                             // Need this because RainbowBrush works on world coords
                             Coords.X = (ushort)i; Coords.Y = 0; Coords.Z = 0;
                             BlockID block = brush.NextBlock(this);

@@ -23,12 +23,19 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdRainbow : DrawCmd {
         public override string name { get { return "Rainbow"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new RainbowDrawOp(); }        
         protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "normal"; }
         
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            string args = dArgs.Message;
+            RainbowDrawOp op = new RainbowDrawOp();
+            if (args.Length > 0 && !CommandParser.GetBool(dArgs.Player, args, ref op.AllowAir)) return null;
+            return op;
+        }
+        
         public override void Help(Player p) {
-            Player.Message(p, "%T/Rainbow");
-            Player.Message(p, "%HTaste the rainbow");
+            Player.Message(p, "%T/Rainbow <replace air>");
+            Player.Message(p, "%HReplaces blocks with a rainbow between two points.");
+            Player.Message(p, "%H<replace air> if given, also replaces over air.");
         }
     }
 }
