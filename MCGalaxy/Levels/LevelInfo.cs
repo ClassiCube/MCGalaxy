@@ -113,7 +113,7 @@ namespace MCGalaxy {
                
         
         /// <summary> Relative path of a level's property file </summary>
-        public static string PropertiesPath(string name) {
+        public static string PropsPath(string name) {
             return "levels/level properties/" + name + ".properties";
         }
         
@@ -121,7 +121,7 @@ namespace MCGalaxy {
             lvl = FindExact(map);
             if (lvl != null) return lvl.Config;
             
-            string propsPath = PropertiesPath(map);
+            string propsPath = PropsPath(map);
             LevelConfig cfg = new LevelConfig();
             cfg.Reset(0);
             LevelConfig.Load(propsPath, cfg); 

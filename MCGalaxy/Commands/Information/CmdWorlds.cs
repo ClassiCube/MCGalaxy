@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
             build = LevelPermission.Guest;
             loadOnGoto = true;
             
-            string propsPath = LevelInfo.PropertiesPath(level);
+            string propsPath = LevelInfo.PropsPath(level);
             SearchArgs args = new SearchArgs();
             if (!PropertiesFile.Read(propsPath, ref args, ProcessLine)) return;
             

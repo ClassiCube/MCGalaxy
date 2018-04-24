@@ -219,7 +219,7 @@ namespace MCGalaxy {
 
         public static void SaveSettings(Level lvl) {
             if (lvl.IsMuseum) return; // museums do not save properties            
-            string path = LevelInfo.PropertiesPath(lvl.MapName);
+            string path = LevelInfo.PropsPath(lvl.MapName);
             lvl.Config.Save(path);
         }
 
@@ -278,24 +278,15 @@ namespace MCGalaxy {
         public int Backup(bool Forced = false, string backupName = "") {
             if (!backedup || Forced) {
                 string backupPath = LevelInfo.BackupBasePath(name);
-                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
+                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);                
                 int next = LevelInfo.LatestBackup(name) + 1;
+                if (backupName.Length == 0) backupName = next.ToString();
 
-                string path = Path.Combine(backupPath, next.ToString());
-                if (backupName.Length > 0) path = Path.Combine(backupPath, backupName);
-                Directory.CreateDirectory(path);
-
-                string backup = Path.Combine(path, name + ".lvl");
-                string current = LevelInfo.MapPath(name);
-                try {
-                    File.Copy(current, backup, true);
-                    backedup = true;
-                    return next;
-                } catch (Exception e) {
-                    Logger.LogError(e);
+                if (!LevelActions.Backup(name, backupName)) {
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
                     return -1;
                 }
+                return next;
             }
             Logger.Log(LogType.SystemActivity, "Level unchanged, skipping backup");
             return -1;
@@ -343,7 +334,7 @@ namespace MCGalaxy {
         
         public static void LoadMetadata(Level lvl) {
             try {
-                string propsPath = LevelInfo.PropertiesPath(lvl.MapName);
+                string propsPath = LevelInfo.PropsPath(lvl.MapName);
                 bool propsExisted = LevelConfig.Load(propsPath, lvl.Config);
                 
                 if (propsExisted) {

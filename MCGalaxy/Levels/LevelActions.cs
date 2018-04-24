@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Blocks;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
@@ -25,6 +26,26 @@ using MCGalaxy.Util;
 namespace MCGalaxy {
     
     public static class LevelActions {
+        
+        static string BlockPropsLvlPath(string map) { return BlockProps.PropsPath("_" + map); }
+        static string BlockPropsOldPath(string map) { return BlockProps.PropsPath("lvl" + map); }
+        static string BlockDefsPath(string map)     { return "blockdefs/lvl_" + map + ".json"; }
+        
+        public static bool Backup(string map, string backupName) {
+            string basePath = LevelInfo.BackupBasePath(map);
+            if (!Directory.Exists(basePath)) Directory.CreateDirectory(basePath);
+            string path = Path.Combine(basePath, backupName);
+            Directory.CreateDirectory(path);
+            
+            bool lvl    = DoAction(LevelInfo.MapPath(map),   Path.Combine(path, map + ".lvl"),     action_copy);
+            bool props  = DoAction(LevelInfo.PropsPath(map), Path.Combine(path, "map.properties"), action_copy);
+            bool defs   = DoAction(BlockDefsPath(map),       Path.Combine(path, "blockdefs.json"), action_copy);
+            bool blkOld = DoAction(BlockPropsOldPath(map),   Path.Combine(path, "blockprops.txt"), action_copy);
+            bool blkCur = DoAction(BlockPropsLvlPath(map),   Path.Combine(path, "blockprops.txt"), action_copy);
+            bool bots   = DoAction(BotsFile.BotsPath(map),   Path.Combine(path, "bots.json"),      action_copy);
+            
+            return lvl && props && defs && blkOld && blkCur && bots;
+        }
         
         /// <summary> Renames the .lvl (and related) files and database tables. Does not unload. </summary>
         public static void Rename(string src, string dst) {
@@ -88,42 +109,42 @@ namespace MCGalaxy {
         
         public const string DeleteFailedMessage = "Unable to delete the level, because it could not be unloaded. A game may currently be running on it.";
         /// <summary> Deletes the .lvl (and related) files and database tables. Unloads level if it is loaded. </summary>
-        public static bool Delete(string name) {
-            Level lvl = LevelInfo.FindExact(name);
+        public static bool Delete(string map) {
+            Level lvl = LevelInfo.FindExact(map);
             if (lvl != null && !lvl.Unload()) return false;
             
             if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
             
-            if (File.Exists(LevelInfo.DeletedPath(name))) {
+            if (File.Exists(LevelInfo.DeletedPath(map))) {
                 int num = 0;
-                while (File.Exists(LevelInfo.DeletedPath(name + num))) num++;
+                while (File.Exists(LevelInfo.DeletedPath(map + num))) num++;
 
-                File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name + num));
+                File.Move(LevelInfo.MapPath(map), LevelInfo.DeletedPath(map + num));
             } else {
-                File.Move(LevelInfo.MapPath(name), LevelInfo.DeletedPath(name));
+                File.Move(LevelInfo.MapPath(map), LevelInfo.DeletedPath(map));
             }
 
-            DoAll(name, "", action_delete);
-            DeleteDatabaseTables(name);
-            BlockDBFile.DeleteBackingFile(name);
+            DoAll(map, "", action_delete);
+            DeleteDatabaseTables(map);
+            BlockDBFile.DeleteBackingFile(map);
             return true;
         }
         
-        static void DeleteDatabaseTables(string name) {
-            if (Database.Backend.TableExists("Block" + name))
-                Database.Backend.DeleteTable("Block" + name);
+        static void DeleteDatabaseTables(string map) {
+            if (Database.Backend.TableExists("Block" + map))
+                Database.Backend.DeleteTable("Block" + map);
             
-            object locker = ThreadSafeCache.DBCache.GetLocker(name);
+            object locker = ThreadSafeCache.DBCache.GetLocker(map);
             lock (locker) {
-                if (Database.TableExists("Portals" + name)) {
-                    Database.Backend.DeleteTable("Portals" + name);
+                if (Database.TableExists("Portals" + map)) {
+                    Database.Backend.DeleteTable("Portals" + map);
                 }
-                if (Database.TableExists("Messages" + name)) {
-                    Database.Backend.DeleteTable("Messages" + name);
+                if (Database.TableExists("Messages" + map)) {
+                    Database.Backend.DeleteTable("Messages" + map);
                 }
-                if (Database.TableExists("Zone" + name)) {
-                    Database.Backend.DeleteTable("Zone" + name);
+                if (Database.TableExists("Zone" + map)) {
+                    Database.Backend.DeleteTable("Zone" + map);
                 }
             }
         }
@@ -203,22 +224,22 @@ namespace MCGalaxy {
         static void DoAll(string src, string dst, byte action) {
             DoAction(LevelInfo.MapPath(src) + ".backup",
                      LevelInfo.MapPath(dst) + ".backup", action);
-            DoAction("levels/level properties/" + src + ".properties",
-                     "levels/level properties/" + dst + ".properties", action);
+            DoAction(LevelInfo.PropsPath(src),
+                     LevelInfo.PropsPath(dst), action);
             DoAction("levels/level properties/" + src,
-                     "levels/level properties/" + dst + ".properties", action);
-            DoAction("blockdefs/lvl_" + src + ".json",
-                     "blockdefs/lvl_" + dst + ".json", action);
-            DoAction("blockprops/lvl_" + src + ".txt",
-                     "blockprops/lvl_" + dst + ".txt", action);
-            DoAction("blockprops/_" + src + ".txt", "" +
-                     "blockprops/_" + dst + ".txt", action);
+                     LevelInfo.PropsPath(dst), action);
+            DoAction(BlockDefsPath(src),
+                     BlockDefsPath(dst), action);
+            DoAction(BlockPropsOldPath(src),
+                     BlockPropsOldPath(dst), action);
+            DoAction(BlockPropsLvlPath(src),
+                     BlockPropsLvlPath(dst), action);
             DoAction(BotsFile.BotsPath(src),
                      BotsFile.BotsPath(dst), action);
         }
         
-        static void DoAction(string src, string dst, byte action) {
-            if (!File.Exists(src)) return;
+        static bool DoAction(string src, string dst, byte action) {
+            if (!File.Exists(src)) return true;
             try {
                 if (action == action_delete) {
                     File.Delete(src);
@@ -227,8 +248,10 @@ namespace MCGalaxy {
                 } else if (action == action_copy) {
                     File.Copy(src, dst, true);
                 }
+                return true;
             } catch (Exception ex) {
                 Logger.LogError(ex);
+                return false;
             }
         }
     }

@@ -79,7 +79,7 @@ namespace MCGalaxy {
         }
         
         static bool LoadOfflineLevel(Player p, string name) {
-            string propsPath = LevelInfo.PropertiesPath(name);
+            string propsPath = LevelInfo.PropsPath(name);
             LevelConfig cfg = new LevelConfig();
             LevelConfig.Load(propsPath, cfg);
             

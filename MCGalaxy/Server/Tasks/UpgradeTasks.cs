@@ -44,7 +44,7 @@ namespace MCGalaxy.Tasks {
                 
                 if (names.Count > 0) {
                     string lvlName = Path.GetFileNameWithoutExtension(files[i]);
-                    string propsPath = LevelInfo.PropertiesPath(lvlName);
+                    string propsPath = LevelInfo.PropsPath(lvlName);
                     using (StreamWriter w = new StreamWriter(propsPath, true)) {
                         w.WriteLine("VisitBlacklist = " + names.Join());
                     }
@@ -116,7 +116,7 @@ namespace MCGalaxy.Tasks {
         
         static void Combine(string envFile) {
             string name = Path.GetFileNameWithoutExtension(envFile);
-            string propsPath = LevelInfo.PropertiesPath(name);
+            string propsPath = LevelInfo.PropsPath(name);
             
             List<string> lines = new List<string>();
             if (File.Exists(propsPath)) {
