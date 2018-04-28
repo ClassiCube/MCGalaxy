@@ -37,7 +37,7 @@ namespace MCGalaxy.Tasks {
         }
         
         
-        internal static void LocationChecks(SchedulerTask task) {
+        internal static void TickPlayers(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;
             players = PlayerInfo.Online.Items;
             int delay = players.Length == 0 ? 100 : 20;

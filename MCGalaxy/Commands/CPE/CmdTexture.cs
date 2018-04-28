@@ -80,10 +80,10 @@ namespace MCGalaxy.Commands.CPE {
                     Player.Message(p, "Reset level textures to server default");
                 } else if (url.CaselessEnds(".png")) {
                     p.level.Config.Terrain = url;
-                    Player.Message(p, "Set level's default terrain to " + url);
+                    Player.Message(p, "Set level's terrain to " + url);
                 } else if (url.CaselessEnds(".zip")) {
                     p.level.Config.TexturePack = url;
-                    Player.Message(p, "Set level's default texture pack to " + url);
+                    Player.Message(p, "Set level's texture pack to " + url);
                 }
                 UpdateLevel(p);
             } else {

@@ -140,7 +140,7 @@ namespace MCGalaxy.Network {
             } else {
                 Buffer.BlockCopy(buffer, 0, sendBuffer, 0, buffer.Length);
             }
-            
+
             sendArgs.SetBuffer(0, buffer.Length);
             // SendAsync returns false if completed sync
             return socket.SendAsync(sendArgs);
