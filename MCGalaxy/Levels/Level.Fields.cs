@@ -64,6 +64,7 @@ namespace MCGalaxy {
         public bool cancelsave;
         public bool cancelunload;
         public bool Changed;
+         /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
         public bool SaveChanges = true;
         
         /// <summary> Whether this map sees server-wide chat. </summary>

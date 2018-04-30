@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.World {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 try {
-                    if (lvl.ShouldSaveChanges()) {
+                    if (lvl.SaveChanges) {
                         lvl.Save();
                     } else { 
                         Logger.Log(LogType.SystemActivity, "Level \"{0}\" is running a game, skipping save.", lvl.name);

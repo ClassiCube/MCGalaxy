@@ -127,7 +127,7 @@ namespace MCGalaxy.Tasks {
             
             foreach (Level lvl in loaded) {
                 try {
-                    if (!lvl.ShouldSaveChanges()) continue;
+                    if (!lvl.SaveChanges) continue;
                     lvl.SaveBlockDBChanges();
                 } catch (Exception e) {
                     Logger.LogError(e);
@@ -142,7 +142,7 @@ namespace MCGalaxy.Tasks {
             
             foreach (Level lvl in levels) {
                 try {
-                    if (!lvl.Changed || !lvl.ShouldSaveChanges()) continue;
+                    if (!lvl.Changed || !lvl.SaveChanges) continue;
 
                     lvl.Save();
                     if (count == 0)  {

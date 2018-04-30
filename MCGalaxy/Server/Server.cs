@@ -243,7 +243,7 @@ namespace MCGalaxy {
                 string autoload = null;
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    if (!lvl.ShouldSaveChanges()) continue;
+                    if (!lvl.SaveChanges) continue;
                     
                     autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
                     lvl.Save(false, true);

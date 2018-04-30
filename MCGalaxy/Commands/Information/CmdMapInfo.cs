@@ -149,7 +149,7 @@ namespace MCGalaxy.Commands.Info {
                 map = map.Substring(0, map.Length - 1);
             }
             
-            if (name == null) name = PlayerInfo.FindName(map);           
+            if (name == null) name = PlayerInfo.FindName(map);
             if (name != null && !LevelInfo.IsRealmOwner(name, origMap)) return null;
             return name;
         }

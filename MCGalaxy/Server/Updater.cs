@@ -77,8 +77,7 @@ namespace MCGalaxy {
 
                 Level[] levels = LevelInfo.Loaded.Items;
                 foreach (Level lvl in levels) {
-                    if (!lvl.ShouldSaveChanges()) continue;
-                    
+                    if (!lvl.SaveChanges) continue;                    
                     lvl.Save();
                     lvl.SaveBlockDBChanges();
                 }

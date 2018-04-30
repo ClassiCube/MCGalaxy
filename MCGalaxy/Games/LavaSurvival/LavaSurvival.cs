@@ -226,7 +226,8 @@ namespace MCGalaxy.Games
             {
                 mapSettings = LoadMapSettings(name);
                 mapData = GenerateMapData(mapSettings);
-
+                map.SaveChanges = false;
+                
                 map.SetPhysics(mapData.destroy ? 2 : 1);
                 map.Config.PhysicsOverload = 1000000;
                 map.Config.AutoUnload = false;

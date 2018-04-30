@@ -114,14 +114,6 @@ namespace MCGalaxy {
             }
             return null;
         }
-
-        /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
-        public bool ShouldSaveChanges() {
-            if (!SaveChanges) return false;
-            if (Server.lava.active && Server.lava.HasMap(name))
-                return false;
-            return true;
-        }
         
         public bool ShouldShowJoinMessage(Level prev) {
             ZSGame zs = Server.zombie;
@@ -164,8 +156,8 @@ namespace MCGalaxy {
             }
             MovePlayersToMain();
 
-            if (save && Changed && ShouldSaveChanges()) Save(false, true);
-            if (save && ShouldSaveChanges()) SaveBlockDBChanges();
+            if (save && SaveChanges && Changed) Save(false, true);
+            if (save && SaveChanges) SaveBlockDBChanges();
             
             if (TntWarsGame.Find(this) != null) {
                 foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players) {
