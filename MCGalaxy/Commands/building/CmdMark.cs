@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             BlockID block = p.GetHeldBlock();
-            p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);            
+            p.DoBlockchangeCallback((ushort)x, (ushort)y, (ushort)z, block);
             return true;
         }
         

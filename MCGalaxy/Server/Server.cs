@@ -211,6 +211,10 @@ namespace MCGalaxy {
             ChatTokens.LoadCustom();
             SrvProperties.FixupOldPerms();
             
+            TextFile announcementsFile = TextFile.Files["Announcements"];
+            announcementsFile.EnsureExists();
+            announcements = announcementsFile.GetText();
+            
             // Reload custom plugins
             foreach (Plugin plugin in plugins) {
                 if (Plugin.core.Contains(plugin)) continue;
@@ -286,8 +290,8 @@ namespace MCGalaxy {
         }
 
         static void RandomMessage(SchedulerTask task) {
-            if (PlayerInfo.Online.Count > 0 && messages.Count > 0) {
-                Chat.MessageGlobal(messages[new Random().Next(0, messages.Count)]);
+            if (PlayerInfo.Online.Count > 0 && announcements.Length > 0) {
+                Chat.MessageGlobal(announcements[new Random().Next(0, announcements.Length)]);
             }
         }
 

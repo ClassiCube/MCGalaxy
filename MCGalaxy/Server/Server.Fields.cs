@@ -73,7 +73,7 @@ namespace MCGalaxy {
         public static List<Level> levels;
 
         public static List<string> reviewlist = new List<string>();
-        public static List<string> messages = new List<string>();
+        static string[] announcements = new string[0];
         [Obsolete("Use %S or ServerConfig.DefaultColor")]
         public static string DefaultColor;
         [Obsolete("Use ServerConfig.Currency")]

@@ -111,12 +111,6 @@ namespace MCGalaxy {
         }
         
         static void InitTimers(SchedulerTask task) {
-            TextFile announcementsFile = TextFile.Files["Announcements"];
-            announcementsFile.EnsureExists();
-
-            string[] lines = announcementsFile.GetText();
-            messages = new List<string>(lines);
-            
             MainScheduler.QueueRepeat(RandomMessage, null, 
                                       TimeSpan.FromMinutes(5));
             Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
