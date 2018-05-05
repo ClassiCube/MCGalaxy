@@ -183,6 +183,7 @@ namespace MCGalaxy.Gui {
         void Player_OnJoinedLevel(Player p, Level prevLevel, Level lvl) {
             RunOnUI_Async(() => {
                 Main_UpdateMapList();
+                Main_UpdatePlayersList();
                 Players_UpdateSelected(); 
             });
         }
