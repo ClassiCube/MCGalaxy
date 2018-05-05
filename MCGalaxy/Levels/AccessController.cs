@@ -163,8 +163,9 @@ namespace MCGalaxy {
         
         bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
-                Player.Message(p, "You cannot change the {0} rank of this level{1} higher than yours.",
-                               type.ToLower(), newPerm ? " to a rank" : ", as its current " + type.ToLower() + " rank is");
+                Player.Message(p, "You cannot change the {0} rank of {1}{2} higher than yours.",
+                               type.ToLower(), ColoredName,
+                               newPerm ? " %Sto a rank" : ", %Sas its current " + type.ToLower() + " rank is");
                 return false;
             }
             return true;
