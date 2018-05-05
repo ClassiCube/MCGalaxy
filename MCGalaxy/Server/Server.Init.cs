@@ -136,7 +136,7 @@ namespace MCGalaxy {
             if (!ZSConfig.StartImmediately) return;
             try {
                 Level oldMain = Server.mainLevel;
-                Server.zombie.Start(ZombieGameStatus.InfiniteRounds, null, 0);
+                Server.zombie.Start(null, int.MaxValue);
                 // Did zombie survival change the main world?
                 if (oldMain != null && oldMain != Server.mainLevel)
                     oldMain.Unload(true, false);

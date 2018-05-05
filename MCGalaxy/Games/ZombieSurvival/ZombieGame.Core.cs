@@ -24,57 +24,10 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class ZSGame {
-        
-        void MainLoop() {
-            // Make sure that in the worst case, we do not crash the entire server.
-            try {
-                MainLoopCore();
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-                Chat.MessageGlobal("&cZombie survival disabled due to an error.");
-                try {
-                    End();
-                } catch (Exception ex2) {
-                    Logger.LogError(ex2);
-                }
-            }
-        }
-        
-        void MainLoopCore() {
-            if (Status == ZombieGameStatus.NotStarted) return;
-            while (true) {
-                RoundInProgress = false;
-                RoundsDone++;
-                
-                if (!Running) {
-                    return;
-                } else if (Status == ZombieGameStatus.InfiniteRounds) {
-                    DoRound();
-                    MoveToNextLevel();
-                } else if (Status == ZombieGameStatus.SingleRound) {
-                    DoRound();
-                    End(); return;
-                } else if (Status == ZombieGameStatus.VariableRounds) {
-                    if (RoundsDone == MaxRounds) {
-                        End(); return;
-                    } else {
-                        DoRound();
-                        MoveToNextLevel();
-                    }
-                } else if (Status == ZombieGameStatus.LastRound) {
-                    End(); return;
-                }
-            }
-        }
-        
-        void MoveToNextLevel() {
-            if (!ZSConfig.ChangeLevels) return;
-            string map = Picker.ChooseNextLevel(this);
-            if (map != null) ChangeLevel(map);
-        }
+    public sealed partial class ZSGame : RoundsGame {        
+        public override string GameName { get { return "Zombie survival"; } }
 
-        void DoRound() {
+        protected override void DoRound() {
             if (!Running) return;
             List<Player> players = DoRoundCountdown();
             if (players == null) return;
@@ -98,10 +51,14 @@ namespace MCGalaxy.Games {
             InfectPlayer(first, null);
 
             DoCoreGame(random);
-            if (!Running) { Status = ZombieGameStatus.LastRound; return; }
-            
+            if (!Running) return;         
             EndRound();
             Picker.AddRecentMap(MapName);
+            
+            if (RoundsLeft > 0 && ZSConfig.ChangeLevels) {
+                string map = Picker.ChooseNextLevel(this);
+                if (map != null) ChangeLevel(map);
+            }
         }
         
         Player PickFirstZombie(Random random, List<Player> players) {
@@ -161,11 +118,11 @@ namespace MCGalaxy.Games {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
-                if (seconds <= 0) { 
-                    SendLevelRaw("", true); 
+                if (seconds <= 0) {
+                    SendLevelRaw("", true);
                     EndRound();
-                    return; 
-                }                
+                    return;
+                }
                 if (seconds <= 5 && seconds != lastCountdown) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
                     SendLevelRaw("&4Ending in &f" + seconds + suffix, true);
@@ -249,7 +206,7 @@ namespace MCGalaxy.Games {
                 DateTime end = p.Game.InvisibilityEnd;
                 if (now >= end) {
                     Player.Message(p, "&cYou are &bvisible &cagain");
-                    ResetInvisibility(p); 
+                    ResetInvisibility(p);
                     continue;
                 }
                 
@@ -291,7 +248,7 @@ namespace MCGalaxy.Games {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 Map.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
-                                   bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName + "%S.");
+                              bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName + "%S.");
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
@@ -306,8 +263,8 @@ namespace MCGalaxy.Games {
             }
             
             Map.ChatLevel(String.Format(text,
-                                             "&c" + pKiller.DisplayName + "%S",
-                                             pAlive.ColoredName + "%S"));
+                                        "&c" + pKiller.DisplayName + "%S",
+                                        pAlive.ColoredName + "%S"));
         }
 
         static void UpdatePlayerColor(Player p, string color) {

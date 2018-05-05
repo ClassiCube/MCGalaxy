@@ -25,7 +25,7 @@ namespace MCGalaxy.Games {
         public abstract bool Running { get; }
         
         /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
-        public virtual bool TeleportAllowed { get { return true; } }    
+        public virtual bool TeleportAllowed { get { return true; } }
         /// <summary> Returns whether this game handled the player sending a chat message. </summary>
         public virtual bool HandlesChatMessage(Player p, string message) {  return false; }
         
@@ -39,5 +39,34 @@ namespace MCGalaxy.Games {
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
         
         public abstract void EndRound();
+    }
+    
+    public abstract class RoundsGame : IGame {
+        public int RoundsLeft;
+        public bool RoundInProgress;
+        
+        public abstract string GameName { get; }
+        public abstract void End();
+        protected abstract void DoRound();
+        
+        public void RunGame() {
+            try {
+                while (Running && RoundsLeft > 0) {
+                    RoundInProgress = false;
+                    if (RoundsLeft != int.MaxValue) RoundsLeft--;
+                    DoRound();
+                }
+                End();
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+                Chat.MessageGlobal("&c" + GameName + " disabled due to an error.");
+                
+                try {
+                    End();
+                } catch (Exception ex2) {
+                    Logger.LogError(ex2);
+                }
+            }
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            ZSGame game = Server.zombie;            
+            ZSGame game = Server.zombie;
             if (message.CaselessEq("go")) {
                 HandleGo(p, game);
             } else if (message.CaselessEq("status")) {
@@ -54,47 +54,35 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         static void HandleGo(Player p, ZSGame game) {
-            if (!game.Running) {
-                Player.Message(p, "Zombie Survival is not running."); return;
-            }
+            if (!game.Running) { Player.Message(p, "Zombie Survival is not running"); return; }
             PlayerActions.ChangeMap(p, game.Map);
         }
         
         static void HandleStatus(Player p, ZSGame game) {
-            switch (game.Status) {
-                case ZombieGameStatus.NotStarted:
-                    Player.Message(p, "Zombie Survival is not currently running."); break;
-                case ZombieGameStatus.InfiniteRounds:
-                    Player.Message(p, "Zombie Survival is currently in progress with infinite rounds."); break;
-                case ZombieGameStatus.SingleRound:
-                    Player.Message(p, "Zombie Survival game currently in progress."); break;
-                case ZombieGameStatus.VariableRounds:
-                    Player.Message(p, "Zombie Survival game currently in progress with " + game.MaxRounds + " rounds."); break;
-                case ZombieGameStatus.LastRound:
-                    Player.Message(p, "Zombie Survival game currently in progress, with this round being the final round."); break;
+            if (!game.Running) { Player.Message(p, "Zombie Survival is not running"); return; }            
+            switch (game.RoundsLeft) {
+                case int.MaxValue:
+                    Player.Message(p, "Zombie Survival running with infinite rounds"); break;
+                case 0:
+                    Player.Message(p, "Zombie Survival running, with this round being the final round"); break;
+                default:
+                    Player.Message(p, "Zombie Survival running, with " + (game.RoundsLeft + 1) + " rounds left"); break;
             }
-            
-            if (game.Status == ZombieGameStatus.NotStarted || game.MapName.Length == 0) return;
+
             Player.Message(p, "Running on map: " + game.MapName);
         }
         
         void HandleStart(Player p, ZSGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
-            if (game.Running) {
-                Player.Message(p, "There is already a Zombie Survival game currently in progress."); return;
-            }
+            if (game.Running) { Player.Message(p, "Zombie Survival is already running"); return; }
             Level lvl = Player.IsSuper(p) ? null : p.level;
+            int rounds = 1;
             
             if (args.Length == 2) {
-                int rounds = 1;
                 if (!CommandParser.GetInt(p, args[1], "Rounds", ref rounds, 0)) return;
-
-                ZombieGameStatus status = rounds == 0 ?
-                    ZombieGameStatus.InfiniteRounds : ZombieGameStatus.VariableRounds;
-                game.Start(status, lvl, rounds);
-            } else {
-                game.Start(ZombieGameStatus.SingleRound, lvl, 0);
+                if (rounds == 0) rounds = int.MaxValue;
             }
+            game.Start(lvl, rounds);
         }
         
         void HandleEnd(Player p, ZSGame game) {
@@ -123,7 +111,7 @@ namespace MCGalaxy.Commands.Fun {
             game.End();
         }
         
-       void HandleSet(Player p, ZSGame game, string[] args) {
+        void HandleSet(Player p, ZSGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             if (args.Length == 1) { Help(p, "set"); return; }
             
@@ -161,7 +149,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ZG start 0 %H- Runs Zombie Survival for infinite rounds.");         
+            Player.Message(p, "%T/ZG start 0 %H- Runs Zombie Survival for infinite rounds.");
             Player.Message(p, "%T/ZG start [x] %H- Runs Zombie Survival for [x] rounds.");
             Player.Message(p, "%T/ZG end %H- Ends current round of Zombie Survival.");
             Player.Message(p, "%T/ZG stop %H- Immediately stops Zombie Survival.");

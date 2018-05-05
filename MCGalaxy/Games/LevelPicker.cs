@@ -101,6 +101,8 @@ namespace MCGalaxy.Games {
             
             for (int i = 0; i < 20; i++) {
                 players = PlayerInfo.Online.Items;
+                if (!game.Running) return;
+                
                 foreach (Player pl in players) {
                     if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");

@@ -37,8 +37,6 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public enum ZombieGameStatus { NotStarted, InfiniteRounds, SingleRound, VariableRounds, LastRound }
-    
     public struct ZombieStats {
         public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
     }
@@ -46,11 +44,7 @@ namespace MCGalaxy.Games {
     public sealed partial class ZSGame {
         
         public const string InfectCol = "&infect";
-        public int RoundsDone = 0;
-        public int MaxRounds = 0;
-        public ZombieGameStatus Status = ZombieGameStatus.NotStarted;
         
-        public bool RoundInProgress = false;
         public DateTime RoundStart, RoundEnd;
         public string LastLevelName = "";
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
@@ -60,20 +54,20 @@ namespace MCGalaxy.Games {
 
         List<string> infectMessages = new List<string>();
         string lastPlayerToInfect = "";
-        int infectCombo = 0;        
+        int infectCombo = 0;
+        bool running;
         ZSPlugin plugin = new ZSPlugin();
         
-        public void Start(ZombieGameStatus status, Level level, int rounds) {
-            Status = status;
-            RoundInProgress = false;
-            MaxRounds = rounds + 1;
-            RoundsDone = 0;
-            if (!SetStartLevel(level)) return;
-            
+        public void Start(Level level, int rounds) {
+            running = true;
+            RoundInProgress = false;           
+            if (!SetStartLevel(level)) { running = false; return; }
+
+            RoundsLeft = rounds;
             HookStats();
             if (plugin.Game == null) { plugin.Game = this; plugin.Load(false); }
             
-            Thread t = new Thread(MainLoop);
+            Thread t = new Thread(RunGame);
             t.Name = "MCG_ZombieGame";
             t.Start();
         }
@@ -167,7 +161,7 @@ namespace MCGalaxy.Games {
             Entities.GlobalSpawn(p, false);
         }
 
-        internal void ChangeLevel(string next) {
+       void ChangeLevel(string next) {
             Player[] online = PlayerInfo.Online.Items;
             if (Map != null) {
                 Level.SaveSettings(Map);
@@ -213,9 +207,9 @@ namespace MCGalaxy.Games {
             }
         }
 
-        public void End() {
-            Status = ZombieGameStatus.NotStarted;
-            MaxRounds = 0;
+        public override void End() {
+            running = false;
+            RoundsLeft = 0;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;

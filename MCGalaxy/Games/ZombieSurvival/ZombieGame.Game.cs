@@ -21,11 +21,11 @@ using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class ZSGame : IGame {
+    public sealed partial class ZSGame {
         
         public LevelPicker Picker = new ZSLevelPicker();
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
-        public override bool Running { get { return Status != ZombieGameStatus.NotStarted; } }
+        public override bool Running { get { return running; } }
         
         public override void PlayerLeftGame(Player p) {
             Alive.Remove(p);
