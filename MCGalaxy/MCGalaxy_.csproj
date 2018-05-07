@@ -575,7 +575,6 @@
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Network\IRCPlugin\IRCBot.cs" />
     <Compile Include="Network\IRCPlugin\IRCHandlers.cs" />
-    <Compile Include="Network\IRCPlugin\IRCPlugin.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
     <Compile Include="Network\Socket\Interfaces.cs" />

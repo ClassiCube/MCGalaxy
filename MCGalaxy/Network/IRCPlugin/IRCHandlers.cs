@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
+using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.DB;
 using Sharkbite.Irc;
 
@@ -32,14 +34,17 @@ namespace MCGalaxy.Network {
         volatile bool hookedEvents = false;
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
         DateTime lastWho, lastOpWho;
-        IRCPlugin plugin = new IRCPlugin();
         
         /// <summary> Hooks IRC events so they are handled. </summary>
         public void Hook() {
             if (hookedEvents) return;
             hookedEvents = true;
-            plugin.Bot = bot;
-            plugin.Load(false);
+            
+            OnPlayerConnectEvent.Register(HandleConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.Low);
+            OnPlayerChatEvent.Register(HandleChat, Priority.Low);
+            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
+            OnModActionEvent.Register(HandleModerationAction, Priority.Low);
 
             // Regster events for incoming
             bot.connection.Listener.OnNick += Listener_OnNick;
@@ -64,7 +69,12 @@ namespace MCGalaxy.Network {
             if (!hookedEvents) return;
             hookedEvents = false;
             userMap.Clear();
-            plugin.Unload(false);
+            
+            OnPlayerConnectEvent.Unregister(HandleConnect);
+            OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
+            OnPlayerChatEvent.Unregister(HandleChat);
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            OnModActionEvent.Unregister(HandleModerationAction);
             
             // Regster events for incoming
             bot.connection.Listener.OnNick -= Listener_OnNick;
@@ -82,6 +92,77 @@ namespace MCGalaxy.Network {
             bot.connection.Listener.OnKick -= Listener_OnKick;
             bot.connection.Listener.OnKill -= Listener_OnKill;
             bot.connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
+        }
+        
+        
+        void HandleModerationAction(ModAction e) {
+            if (!e.Announce) return;           
+            switch (e.Type) {
+                case ModActionType.Warned:
+                    bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
+                case ModActionType.Ban:
+                    bot.Say(e.FormatMessage(e.TargetName, "&8banned")); break;
+                case ModActionType.Unban:
+                    bot.Say(e.FormatMessage(e.TargetName, "&8unbanned")); break;
+                case ModActionType.BanIP:
+                    bot.Say(e.FormatMessage(e.TargetName, "&8IP banned"), true);
+                    bot.Say(e.FormatMessage("An IP", "&8IP banned")); break;
+                case ModActionType.UnbanIP:
+                    bot.Say(e.FormatMessage(e.TargetName, "&8IP unbanned"), true);
+                    bot.Say(e.FormatMessage("An IP", "&8IP unbanned")); break;
+                case ModActionType.Rank:
+                    bot.Say(e.FormatMessage(e.TargetName, GetRankAction(e))); break;
+            }
+        }
+        
+        static string GetRankAction(ModAction action) {
+            Group newRank = (Group)action.Metadata;
+            string prefix = newRank.Permission >= action.TargetGroup.Permission ? "promoted to " : "demoted to ";
+            return prefix + newRank.ColoredName;
+        }
+        
+        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
+            if (!p.level.SeesServerWideChat) return;
+            string msg = null;
+            if (p.muted || (Server.chatmod && !p.voice)) return;
+            
+            if (action == PlayerAction.AFK && ServerConfig.IRCShowAFK && !p.hidden)
+                msg = p.ColoredName + " %Sis AFK " + message;
+            else if (action == PlayerAction.UnAFK && ServerConfig.IRCShowAFK && !p.hidden)
+                msg = p.ColoredName + " %Sis no longer AFK";
+            else if (action == PlayerAction.Joker)
+                msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
+            else if (action == PlayerAction.Unjoker)
+                msg = p.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S";
+            else if (action == PlayerAction.Me)
+                msg = "*" + p.DisplayName + " " + message;
+            else if (action == PlayerAction.Review)
+                msg = p.ColoredName + " %Sis requesting a review.";
+            else if (action == PlayerAction.JoinWorld && ServerConfig.IRCShowWorldChanges && !p.hidden)
+                msg = p.ColoredName + " %Swent to &8" + message;
+            
+            if (msg != null) bot.Say(msg, stealth);
+        }       
+        
+        void HandleDisconnect(Player p, string reason) {
+            if (p.hidden) return;
+            if (!ServerConfig.GuestLeavesNotify && p.Rank <= LevelPermission.Guest) return;            
+            bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+        }
+
+        void HandleConnect(Player p) {
+            if (p.hidden || p.cancellogin) return;
+            if (!ServerConfig.GuestJoinsNotify && p.Rank <= LevelPermission.Guest) return;
+            bot.Say(p.ColoredName + " %Sjoined the game", false);
+        }
+
+        static char[] trimChars = new char[] { ' ' };
+        void HandleChat(Player p, string message) {
+            if (p.cancelchat || !p.level.SeesServerWideChat) return;
+            if (message.Trim(trimChars).Length == 0) return;
+            
+            string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
+            bot.Say(name + "%S: " + message, p.opchat);
         }
         
         
