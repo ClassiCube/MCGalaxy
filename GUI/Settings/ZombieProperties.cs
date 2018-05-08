@@ -23,12 +23,6 @@ using MCGalaxy.Games;
 namespace MCGalaxy.Gui {
     public sealed class ZombieProperties {
         
-        [Description("Whether at the end of each round, different levels are randomly picked for the next round. " +
-                     "You should generallly leave this as true.")]
-        [Category("Levels settings")]
-        [DisplayName("Change levels")]
-        public bool ChangeLevels { get; set; }
-        
         [Description("Comma separated list of levels that are never chosen for zombie survival. (e.g. main,spawn)")]
         [Category("Levels settings")]
         [DisplayName("Ignored level list")]
@@ -141,7 +135,6 @@ namespace MCGalaxy.Gui {
         public string FailureMessage { get; set; }
         
         public void LoadFromServer() {
-            ChangeLevels = ZSConfig.ChangeLevels;
             IgnoredLevelsList = ZSConfig.IgnoredLevelList.Join(",");
             LevelsList = ZSConfig.LevelList.Join(",");
             
@@ -169,7 +162,6 @@ namespace MCGalaxy.Gui {
         }
         
         public void ApplyToServer() {
-            ZSConfig.ChangeLevels = ChangeLevels;
             string list = IgnoredLevelsList.Replace(" ", "");
             if (list.Length == 0) ZSConfig.IgnoredLevelList = new List<string>();
             else ZSConfig.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));

@@ -24,33 +24,18 @@ namespace MCGalaxy.Gui {
         
         [DisplayName("Lives")]
         public int Lives { get; set; }
-
-        [DisplayName("Vote time (minutes)")]
-        public double VoteTime { get; set; }
-        
-        [DisplayName("Vote maps count")]
-        public byte VoteCount { get; set; }
         
         [DisplayName("Start on server start")]
         public bool StartImmediately { get; set; }
         
-        [DisplayName("Send AFK to main")]
-        public bool AFKToMain { get; set; }
-        
-        public void LoadFromServer() {            
-            Lives = Server.lava.lifeNum;
-            VoteTime = Server.lava.voteTime;
-            VoteCount = Server.lava.voteCount;
-            StartImmediately = Server.lava.startOnStartup;
-            AFKToMain = Server.lava.sendAfkMain;
+        public void LoadFromServer() {
+            Lives = Server.lava.MaxLives;
+            StartImmediately = Server.lava.StartOnStartup;
         }
         
         public void ApplyToServer() {
-            Server.lava.lifeNum = Lives;
-            Server.lava.voteTime = VoteTime;
-            Server.lava.voteCount = VoteCount;
-            Server.lava.startOnStartup = StartImmediately;
-            Server.lava.sendAfkMain = AFKToMain;
+            Server.lava.MaxLives = Lives;
+            Server.lava.StartOnStartup = StartImmediately;
         }    
     }
 }

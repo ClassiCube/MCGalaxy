@@ -54,22 +54,16 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleInfo(Player p, LSGame game) {
             if (!game.Running) { Player.Message(p, "Lava survival is not running"); return; }
-            if (!game.roundActive) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
+            if (!game.RoundInProgress) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
             game.AnnounceRoundInfo(p, p == null);
-            game.AnnounceTimeLeft(!game.flooded, true, p, p == null);
+            game.AnnounceTimeLeft(!game.Flooded, true, p, p == null);
         }
         
         void HandleStart(Player p, string[] args, LSGame game) {
             if (!CheckExtraPerm(p, 1)) return;
             
             string map = args.Length > 1 ? args[1] : "";
-            switch (game.Start(map)) {
-                case 0: Chat.MessageGlobal("Lava Survival has started! Join the fun with /ls go"); return;
-                case 1: Player.Message(p, "There is already an active Lava Survival game."); return;
-                case 2: Player.Message(p, "You must have at least 3 configured maps to play Lava Survival."); return;
-                case 3: Player.Message(p, "The specified map doesn't exist."); return;
-                default: Player.Message(p, "An unknown error occurred."); return;
-            }
+            game.Start(p, map, int.MaxValue);
         }
         
         void HandleStop(Player p, LSGame game) {
@@ -83,12 +77,13 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleEnd(Player p, LSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
+            if (!CheckExtraPerm(p, 1)) return;        
             
-            if (!game.Running) { Player.Message(p, "Lava survival is not running"); return; }
-            if (game.roundActive) game.EndRound();
-            else if (game.voteActive) game.EndVote();
-            else Player.Message(p, "There isn't an active round or vote to end.");
+            if (game.RoundInProgress) {
+                game.EndRound();
+            } else {
+                Player.Message(p, "No round is currently in progress");
+            }
         }
 
         void HandleSetup(Player p, string[] args,  LSGame game) {
@@ -164,31 +159,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleSetupSettings(Player p, string[] args, LSGame game) {
-            if (args.Length < 3) {
-                Player.Message(p, "Maps: &b" + game.Maps.Join(", "));
-                Player.Message(p, "Start on server startup: " + (game.startOnStartup ? "&aON" : "&cOFF"));
-                Player.Message(p, "Send AFK to main: " + (game.sendAfkMain ? "&aON" : "&cOFF"));
-                Player.Message(p, "Vote count: &b" + game.voteCount);
-                Player.Message(p, "Vote time: &b" + game.voteTime + " minutes");
-                return;
-            }
-
-            string opt = args[2], value = args.Length > 3 ? args[3] : "";
-            TimeSpan span = default(TimeSpan);
-            if (opt.CaselessEq("sendafkmain")) {
-                game.sendAfkMain = !game.sendAfkMain;
-                Player.Message(p, "Send AFK to main: " + (game.sendAfkMain ? "&aON" : "&cOFF"));
-            } else if (opt.CaselessEq("votecount")) {
-                if (!CommandParser.GetByte(p, value, "Count", ref game.voteCount, 2, 10)) return;
-                Player.Message(p, "Vote count: &b" + game.voteCount);
-            } else if (opt.CaselessEq("votetime")) {
-                if (!CommandParser.GetTimespan(p, value, ref span, "set time to", "m")) return;
-                game.voteTime = span.TotalMinutes;
-                Player.Message(p, "Vote time: &b" + span.Shorten(true));
-            } else {
-                SetupHelp(p, "settings"); return;
-            }
-            game.SaveSettings();
+            Player.Message(p, "Maps: &b" + game.Maps.Join(", "));
+            Player.Message(p, "Start on server startup: " + (game.StartOnStartup ? "&aON" : "&cOFF"));
         }
         
         void HandleSetupMapSettings(Player p, string[] args, LSGame game) {
@@ -205,9 +177,9 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Layer time: &b" + settings.layerInterval + " minutes");
                 Player.Message(p, "Round time: &b" + settings.roundTime + " minutes");
                 Player.Message(p, "Flood time: &b" + settings.floodTime + " minutes");
-                Player.Message(p, "Flood position: &b" + settings.FloodPos.ToString(", "));
-                Player.Message(p, "Layer position: &b" + settings.LayerPos.ToString(", "));
-                Player.Message(p, "Safe zone: &b({0}) ({1})", settings.safeZone[0].ToString(", "), settings.safeZone[1].ToString(", "));
+                Player.Message(p, "Flood position: &b" + settings.FloodPos);
+                Player.Message(p, "Layer position: &b" + settings.LayerPos);
+                Player.Message(p, "Safe zone: &b({0}) ({1})", settings.safeZone[0], settings.safeZone[1]);
                 return;
             }
 
@@ -281,10 +253,7 @@ namespace MCGalaxy.Commands.Fun {
                     Player.Message(p, "layer - Set the position for the layer flood base.");
                     break;
                 case "settings":
-                    Player.Message(p, "View or change the settings for Lava Survival.");
-                    Player.Message(p, "sendafkmain - Toggle sending AFK users to the main map when the map changes.");
-                    Player.Message(p, "votecount <2-10> - Set how many maps will be in the next map vote.");
-                    Player.Message(p, "votetime <time> - Set how long until the next map vote ends.");
+                    Player.Message(p, "View settings for Lava Survival.");
                     break;
                 case "mapsettings":
                     Player.Message(p, "View or change the settings for a Lava Survival map.");
@@ -317,7 +286,7 @@ namespace MCGalaxy.Commands.Fun {
             settings.FloodPos = (Vec3U16)m[0];
             game.SaveMapSettings(settings);
 
-            Player.Message(p, "Position set! &b({0}, {1}, {2})", m[0].X, m[0].Y, m[0].Z);
+            Player.Message(p, "Position set! &b({0})", m[0]);
             return false;
         }
         
@@ -327,7 +296,7 @@ namespace MCGalaxy.Commands.Fun {
             settings.LayerPos = (Vec3U16)m[0];
             game.SaveMapSettings(settings);
 
-            Player.Message(p, "Position set! &b({0}, {1}, {2})", m[0].X, m[0].Y, m[0].Z);
+            Player.Message(p, "Position set! &b({0})", m[0]);
             return false;
         }
         
@@ -340,8 +309,7 @@ namespace MCGalaxy.Commands.Fun {
             settings.safeZone = new Vec3U16[] { (Vec3U16)min, (Vec3U16)max };
             game.SaveMapSettings(settings);
 
-            Player.Message(p, "Safe zone set! &b({0}, {1}, {2}) ({3}, {4}, {5})",
-                           min.X, min.Y, min.Z, max.X, max.Y, max.Z);
+            Player.Message(p, "Safe zone set! &b({0}) ({1})", min, max);
             return false;
         }
     }

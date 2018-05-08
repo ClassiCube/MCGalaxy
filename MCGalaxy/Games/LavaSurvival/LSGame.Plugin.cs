@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
         }
 
-		
+        
         void HandleLevelUnload(Level lvl) {
             if (lvl == Map) lvl.cancelunload = true;
         }

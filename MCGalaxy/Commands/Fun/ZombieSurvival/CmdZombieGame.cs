@@ -87,10 +87,11 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleEnd(Player p, ZSGame game) {
             if (!CheckExtraPerm(p, 1)) return;
+            
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
-                Player.Message(p, "No round is currently in progress.");
+                Player.Message(p, "No round is currently in progress");
             }
         }
         

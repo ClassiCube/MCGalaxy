@@ -60,8 +60,8 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public byte ExtBlock {
-        	get { return (byte)(Raw >> 30); }
-        	set { Raw &= ~ExtBits; Raw |= (uint)value << 30; }
+            get { return (byte)(Raw >> 30); }
+            set { Raw &= ~ExtBits; Raw |= (uint)value << 30; }
         }
         
         

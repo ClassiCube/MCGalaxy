@@ -61,13 +61,9 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleStart(Player p) {
             if (!CheckExtraPerm(p, 1)) return;
-            if (Server.ctf == null)  {
-                Player.Message(p, "Initialising CTF..");
-                Server.ctf = new CTFGame();
-            }
-            
-            if (!Server.ctf.Start(p)) return;
-            Chat.MessageGlobal("A CTF GAME IS STARTING! TYPE %T/CTF go %Sto join!");
+            if (Server.ctf == null) Server.ctf = new CTFGame();
+            if (!Server.ctf.Start(p, int.MaxValue)) return;
+            Chat.MessageGlobal("A CTF game is starting! Type %T/CTF go %Sto join!");
         }
         
         void HandleStop(Player p) {
@@ -144,7 +140,7 @@ namespace MCGalaxy.Commands.Fun {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];           
             cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
-            Player.Message(p, "Set flag position of blue team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
+            Player.Message(p, "Set flag position of blue team to ({0})", P);
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Blue;
@@ -159,7 +155,7 @@ namespace MCGalaxy.Commands.Fun {
             CTFConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];            
             cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
-            Player.Message(p, "Set flag position of red team to ({0}, {1}, {2})", P.X, P.Y, P.Z);
+            Player.Message(p, "Set flag position of red team to ({0})", P);
             
             block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
             if (block == Block.Air) block = Block.Red;

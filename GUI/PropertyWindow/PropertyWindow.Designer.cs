@@ -249,7 +249,6 @@ namespace MCGalaxy.Gui
             this.tabGames = new System.Windows.Forms.TabControl();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
-            this.lsBtnEndVote = new System.Windows.Forms.Button();
             this.ls_btnEndRound = new System.Windows.Forms.Button();
             this.ls_btnStopGame = new System.Windows.Forms.Button();
             this.ls_btnStartGame = new System.Windows.Forms.Button();
@@ -2657,7 +2656,6 @@ namespace MCGalaxy.Gui
             // 
             // groupBox23
             // 
-            this.groupBox23.Controls.Add(this.lsBtnEndVote);
             this.groupBox23.Controls.Add(this.ls_btnEndRound);
             this.groupBox23.Controls.Add(this.ls_btnStopGame);
             this.groupBox23.Controls.Add(this.ls_btnStartGame);
@@ -2667,16 +2665,6 @@ namespace MCGalaxy.Gui
             this.groupBox23.TabIndex = 4;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Controls";
-            // 
-            // lsBtnEndVote
-            // 
-            this.lsBtnEndVote.Location = new System.Drawing.Point(280, 20);
-            this.lsBtnEndVote.Name = "lsBtnEndVote";
-            this.lsBtnEndVote.Size = new System.Drawing.Size(80, 23);
-            this.lsBtnEndVote.TabIndex = 3;
-            this.lsBtnEndVote.Text = "End Vote";
-            this.lsBtnEndVote.UseVisualStyleBackColor = true;
-            this.lsBtnEndVote.Click += new System.EventHandler(this.lsBtnEndVote_Click);
             // 
             // ls_btnEndRound
             // 
@@ -4595,7 +4583,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button ls_btnEndRound;
         private System.Windows.Forms.Button ls_btnStopGame;
         private System.Windows.Forms.Button ls_btnStartGame;
-        private System.Windows.Forms.Button lsBtnEndVote;
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox srv_grpUpdate;

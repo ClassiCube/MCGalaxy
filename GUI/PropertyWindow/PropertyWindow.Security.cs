@@ -78,9 +78,9 @@ namespace MCGalaxy.Gui {
             ServerConfig.IPSpamInterval = (int)sec_numIPSecs.Value;
             ServerConfig.IPSpamBlockTime = (int)sec_numIPMute.Value;
         }
-		
-		
-		        
+        
+        
+                
         void sec_cbChatAuto_Checked(object sender, EventArgs e) {
             ToggleChatSpamSettings(sec_cbChatAuto.Checked);
         }

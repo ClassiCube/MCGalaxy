@@ -41,14 +41,13 @@ namespace MCGalaxy.Games {
         public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
     }
     
-	public sealed partial class ZSGame : RoundsGame {
+    public sealed partial class ZSGame : RoundsGame {
         public override string GameName { get { return "Zombie survival"; } }
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
         public override bool Running { get { return running; } }
         
-        public LevelPicker Picker = new ZSLevelPicker();
+        public ZSGame() { Picker = new ZSLevelPicker(); }
         public DateTime RoundStart, RoundEnd;
-        public string LastMap = "";
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
@@ -67,7 +66,7 @@ namespace MCGalaxy.Games {
             HookEventHandlers();
             
             Thread t = new Thread(RunGame);
-            t.Name = "MCG_ZombieGame";
+            t.Name = "MCG_ZSGame";
             t.Start();
         }
         
@@ -418,8 +417,8 @@ namespace MCGalaxy.Games {
             Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
         }
         #endregion
-    }	
-	    
+    }    
+        
     internal class ZSLevelPicker : LevelPicker {
         
         public override List<string> GetCandidateMaps() {

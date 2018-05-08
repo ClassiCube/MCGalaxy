@@ -61,7 +61,7 @@ namespace MCGalaxy.Blocks.Physics {
                 return;
             }
 
-		    ushort x = C.X, y = C.Y, z = C.Z;
+            ushort x = C.X, y = C.Y, z = C.Z;
             Random rand = lvl.physRandom;
             if (rand.Next(1, 20) == 1 && C.Data.Data % 2 == 0) {
                 int max = rand.Next(1, 18);

@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         static bool DoCopy(Player p, bool global, string cmd, bool keepOrder, 
-		                   BlockDefinition srcDef, BlockID src, BlockID dst) {
+                           BlockDefinition srcDef, BlockID src, BlockID dst) {
             if (srcDef == null && src < Block.CpeCount) {
                 srcDef = DefaultSet.MakeCustomBlock(src);
             }

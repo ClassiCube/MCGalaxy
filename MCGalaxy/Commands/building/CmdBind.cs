@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (args[0].CaselessEq("clear")) {
                 for (int b = 0; b < p.BlockBindings.Length; b++) {
-            	    p.BlockBindings[b] = (BlockID)b;
+                    p.BlockBindings[b] = (BlockID)b;
                 }
                 Player.Message(p, "All bindings were unbound.");
                 return;

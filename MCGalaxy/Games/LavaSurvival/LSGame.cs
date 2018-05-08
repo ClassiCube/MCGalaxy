@@ -14,71 +14,65 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Timers;
+using System.Threading;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
-        // Private variables
         const string propsDir = "properties/lavasurvival/";
-        List<string> maps, voted;
-        Dictionary<string, int> votes, deaths;
+        List<string> maps;
+        Dictionary<string, int> deaths = new Dictionary<string, int>();
         Random rand = new Random();
-        Timer announceTimer, voteTimer, transferTimer;
         DateTime startTime;
-
-        // Public variables
-        public bool running = false, roundActive = false, flooded = false, voteActive = false, sendingPlayers = false;
-        public MapSettings mapSettings;
-        public MapData mapData;
+        MapData data;
+        MapSettings mapSettings;
         
         public override string GameName { get { return "Lava survival"; } }
-        public override bool Running { get { return running; } }
-
-        // Settings
-        public bool startOnStartup, sendAfkMain = true;
-        public byte voteCount = 2;
-        public int lifeNum = 3;
-        public double voteTime = 2;
-
-        // Constructors
+        public override bool Running { get { return running; } }        
+        public bool running, Flooded, StartOnStartup;
+        public int MaxLives = 3;
+        
         public LSGame() {
+            Picker = new LSLevelPicker();
             maps = new List<string>();
-            voted = new List<string>();
-            votes = new Dictionary<string, int>();
-            deaths = new Dictionary<string, int>();
-            announceTimer = new Timer(60000);
-            announceTimer.AutoReset = true;
-            announceTimer.Elapsed += delegate
-            {
-                if (!flooded) AnnounceTimeLeft(true, false);
-            };
+            ((LSLevelPicker)Picker).maps = maps;
             LoadSettings();
         }
 
-        // Public methods
-        public byte Start(string mapName = "")
-        {
-            if (running) return 1; // Already started
-            if (maps.Count < 3) return 2; // Not enough maps
-            if (!String.IsNullOrEmpty(mapName) && !HasMap(mapName)) return 3; // Map doesn't exist
-
-            deaths.Clear();
-            running = true;
-            Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
-            
-            try { 
-                LoadMap(String.IsNullOrEmpty(mapName) ? maps[rand.Next(maps.Count)] : mapName); 
-                HookEventHandlers();
-            } catch (Exception e) { 
-                Logger.LogError(e); running = false; return 4; 
+        public bool Start(Player p, string mapName, int rounds) {
+            if (running) {
+                Player.Message(p, "Lava survival game already running."); return false;
             }
-            return 0;
+            
+            List<string> maps = Picker.GetCandidateMaps();
+            if (maps == null || maps.Count == 0) {
+                Player.Message(p, "No maps have been setup for lava survival yet"); return false;
+            }         
+            if (mapName.Length > 0 && !HasMap(mapName)) {
+                Player.Message(p, "Given map has not been setup for lava survival"); return false;
+            }
+            
+            mapName = mapName.Length == 0 ? maps[rand.Next(maps.Count)] : mapName;
+            if (!SetMap(mapName)) {
+                Player.Message(p, "Failed to load initial map!"); return false;
+            }
+            
+            RoundsLeft = rounds;
+            deaths.Clear();
+                     
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
+            running = true;
+            HookEventHandlers();
+            
+            Thread t = new Thread(RunGame);
+            t.Name = "MCG_LSGame";
+            t.Start();
+            return true;
         }
         
         public override void End() {
@@ -86,17 +80,10 @@ namespace MCGalaxy.Games {
             UnhookEventHandlers();
 
             running = false;
-            roundActive = false;
-            voteActive = false;
-            flooded = false;
+            RoundInProgress = false;
+            Flooded = false;
             deaths.Clear();
-            if (announceTimer.Enabled) announceTimer.Stop();
-            try { mapData.Dispose(); }
-            catch { }
-            try { voteTimer.Dispose(); }
-            catch { }
-            try { transferTimer.Dispose(); }
-            catch { }
+
             Map.Unload(true, false);
             Map = null;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Game stopped.");
@@ -104,9 +91,9 @@ namespace MCGalaxy.Games {
         
         public bool IsPlayerDead(Player p) {
             string name = p.name.ToLower();
-            if (lifeNum < 1 || !deaths.ContainsKey(name))
+            if (MaxLives < 1 || !deaths.ContainsKey(name))
                 return false;
-            return (deaths[name] >= lifeNum);
+            return (deaths[name] >= MaxLives);
         }
 
         public void AddMap(string name) {
@@ -128,38 +115,31 @@ namespace MCGalaxy.Games {
 
         public bool InSafeZone(ushort x, ushort y, ushort z) {
             if (mapSettings == null) return false;
-            return x >= mapSettings.safeZone[0].X && x <= mapSettings.safeZone[1].X && y >= mapSettings.safeZone[0].Y 
+            return x >= mapSettings.safeZone[0].X && x <= mapSettings.safeZone[1].X && y >= mapSettings.safeZone[0].Y
                 && y <= mapSettings.safeZone[1].Y && z >= mapSettings.safeZone[0].Z && z <= mapSettings.safeZone[1].Z;
         }
 
         public List<string> Maps { get { return new List<string>(maps); } }
         
-                
         public override bool HandlesChatMessage(Player p, string message) {
             if (!running || p.level != Map) return false;
-            message = message.ToLower();
-            if (!HasVote(message)) return false;
-            
-            if (AddVote(p, message)) {
-                Player.Message(p, "Your vote for &5" + message.Capitalize() + " %Shas been placed. Thanks!");
-                Map.ChatLevelOps(p.name + " voted for &5" + message.Capitalize() + "%S.");
-                return true;
-            } else {
-                Player.Message(p, "&cYou already voted!");
-                return true;
-            }
+            return Picker.HandlesMessage(p, message);
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLevl) {
-            if (running && !sendingPlayers && Map == lvl) {
-                if (roundActive) {
-                    AnnounceRoundInfo(p);
-                    AnnounceTimeLeft(!flooded, true, p);
-                } else {
-                    Player.Message(p, "Vote for the next map!");
-                    Player.Message(p, "Choices: &5" + votes.Keys.Join("%S, &5"));
-                }
+            if (!running || Map != lvl) return;
+            
+            if (RoundInProgress) {
+                AnnounceRoundInfo(p);
+                AnnounceTimeLeft(!Flooded, true, p);
+            } else if (Picker.Voting) {
+                Picker.SendVoteMessage(p);
             }
         }
+    }
+    
+    internal class LSLevelPicker : LevelPicker {
+        public List<string> maps;
+        public override List<string> GetCandidateMaps() { return new List<string>(maps); }
     }
 }

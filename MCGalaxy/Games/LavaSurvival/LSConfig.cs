@@ -33,10 +33,11 @@ namespace MCGalaxy.Games {
             data.layer   = rand.Next(1, 101) <= settings.layer;
             data.fast    = rand.Next(1, 101) <= settings.fast && !data.water;
             
-            byte block = data.water ? (data.killer ? Block.Deadly_ActiveWater : Block.Water) 
-                : (data.fast ? (data.killer ? Block.Deadly_FastLava : Block.FastLava) 
-                   : (data.killer ? Block.Deadly_ActiveLava : Block.Lava));
-            data.block = (ushort)block;
+            BlockID block = 
+                data.water   ? (data.killer ? Block.Deadly_ActiveWater : Block.Water)
+                : (data.fast ? (data.killer ? Block.Deadly_FastLava    : Block.FastLava) 
+                             : (data.killer ? Block.Deadly_ActiveLava  : Block.Lava));
+            data.block = block;
             return data;
         }
 
@@ -54,11 +55,8 @@ namespace MCGalaxy.Games {
         
         void ProcessSettingsLine(string key, string value) {
             switch (key.ToLower()) {
-                case "start-on-startup": startOnStartup = bool.Parse(value); break;
-                case "send-afk-to-main": sendAfkMain = bool.Parse(value); break;
-                case "vote-count": voteCount = (byte)Utils.Clamp(int.Parse(value), 2, 10); break;
-                case "vote-time": voteTime = double.Parse(value); break;
-                case "lives": lifeNum = int.Parse(value); break;
+                case "start-on-startup": StartOnStartup = bool.Parse(value); break;
+                case "lives": MaxLives = int.Parse(value); break;
                     
                 case "setup-rank":
                     LevelPermission setupRank = Group.ParsePermOrName(value, LevelPermission.Admin);
@@ -71,8 +69,9 @@ namespace MCGalaxy.Games {
                 case "maps":
                     foreach (string name in value.Split(',')) {
                         string map = name.Trim();
-                        if (map.Length > 0 && !maps.CaselessContains(map))
+                        if (map.Length > 0 && !maps.CaselessContains(map)) {
                             maps.Add(map);
+                        }
                     }
                     break;
             }
@@ -88,17 +87,16 @@ namespace MCGalaxy.Games {
         public void SaveSettings() {
             using (StreamWriter w = new StreamWriter("properties/lavasurvival.properties")) {
                 w.WriteLine("#Lava Survival main properties");
-                w.WriteLine("start-on-startup = " + startOnStartup);
-                w.WriteLine("send-afk-to-main = " + sendAfkMain);
-                w.WriteLine("vote-count = " + voteCount);
-                w.WriteLine("vote-time = " + voteTime);
-                w.WriteLine("lives = " + lifeNum);
+                w.WriteLine("start-on-startup = " + StartOnStartup);
+                w.WriteLine("lives = " + MaxLives);
                 w.WriteLine("maps = " + maps.Join());
             }
         }
 
         public MapSettings LoadMapSettings(string name) {
-            MapSettings settings = new MapSettings(name);
+            MapSettings settings = new MapSettings();
+            settings.name = name;
+            
             if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
             string path = propsDir + name + ".properties";
             if (!File.Exists(path)) { SaveMapSettings(settings); return settings; }
@@ -157,60 +155,27 @@ namespace MCGalaxy.Games {
         }
 
         // Internal classes
-        public class MapSettings
-        {
+        public class MapSettings {
             public string name;
-            public byte fast, killer, destroy, water, layer;
-            public int LayerHeight, LayerCount;
-            public double layerInterval, roundTime, floodTime;
+            public byte fast, killer = 100, destroy, water, layer;
+            public int LayerHeight = 3, LayerCount = 10;
+            public double layerInterval = 2, roundTime = 15, floodTime = 5;
             public Vec3U16 FloodPos, LayerPos;
-            public Vec3U16[] safeZone;
-
-            public MapSettings(string name)
-            {
-                this.name = name;
-                fast = 0;
-                killer = 100;
-                destroy = 0;
-                water = 0;
-                layer = 0;
-                LayerHeight = 3;
-                LayerCount = 10;
-                layerInterval = 2;
-                roundTime = 15;
-                floodTime = 5;
-                FloodPos = new Vec3U16();
-                LayerPos = new Vec3U16();
-                safeZone = new Vec3U16[2];
-            }
+            public Vec3U16[] safeZone = new Vec3U16[2];
         }
 
-        public class MapData : IDisposable
-        {
+        public class MapData {
             public bool fast, killer, destroy, water, layer;
             public BlockID block;
             public int currentLayer;
-            public Timer roundTimer, floodTimer, layerTimer;
+            public int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
 
-            public MapData(MapSettings settings)
-            {
-                fast = false;
-                killer = false;
-                destroy = false;
-                water = false;
-                layer = false;
+            public MapData(MapSettings settings) {
                 block = Block.Lava;
                 currentLayer = 1;
-                roundTimer = new Timer(TimeSpan.FromMinutes(settings.roundTime).TotalMilliseconds); roundTimer.AutoReset = false;
-                floodTimer = new Timer(TimeSpan.FromMinutes(settings.floodTime).TotalMilliseconds); floodTimer.AutoReset = false;
-                layerTimer = new Timer(TimeSpan.FromMinutes(settings.layerInterval).TotalMilliseconds); layerTimer.AutoReset = true;
-            }
-
-            public void Dispose()
-            {
-                roundTimer.Dispose();
-                floodTimer.Dispose();
-                layerTimer.Dispose();
+                roundTotalSecs = (int)(settings.roundTime * 60);
+                floodDelaySecs = (int)(settings.floodTime * 60);
+                layerIntervalSecs = (int)(settings.layerInterval * 60);
             }
         }
     }

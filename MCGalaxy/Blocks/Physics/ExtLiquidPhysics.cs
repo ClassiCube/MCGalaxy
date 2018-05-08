@@ -167,11 +167,11 @@ namespace MCGalaxy.Blocks.Physics {
             BlockID below = lvl.GetBlock(C.X, (ushort)(C.Y - 1), C.Z, out index);
             
             if (below == Block.Air || below == target) {
-            	if (rand.Next(1, 10) > 7) {
+                if (rand.Next(1, 10) > 7) {
                     lvl.AddUpdate(index, Block.Air_FloodDown, default(PhysicsArgs));
                 }
             } else if (below == Block.Air_FloodDown) {
-            	if (rand.Next(1, 10) > 4) {
+                if (rand.Next(1, 10) > 4) {
                     lvl.AddUpdate(index, target);
                 }
             }

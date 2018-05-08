@@ -183,9 +183,9 @@ namespace MCGalaxy.Eco {
         public static bool Exists(string name) { return FindExact(name) != null; }
         
         public static Award FindExact(string name) {
-        	foreach (Award award in AwardsList) {
+            foreach (Award award in AwardsList) {
                 if (award.Name.CaselessEq(name)) return award;
-        	}
+            }
             return null;
         }
 

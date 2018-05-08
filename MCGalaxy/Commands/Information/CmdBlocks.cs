@@ -114,8 +114,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputBlockProps(Player p, BlockID b) {
-        	BlockProps[] scope = Player.IsSuper(p) ? Block.Props : p.level.Props;
-        	BlockProps props = scope[b];
+            BlockProps[] scope = Player.IsSuper(p) ? Block.Props : p.level.Props;
+            BlockProps props = scope[b];
 
             if (Block.LightPass(b))
                 Player.Message(p, "Block will allow light through");

@@ -79,7 +79,7 @@ namespace MCGalaxy.Drawing {
         static PaletteEntry ParseEntry(string[] parts) {
             BlockID block = BlockID.Parse(parts[0]);
             block = Block.MapOldRaw(block);
-        	
+            
             byte r = byte.Parse(parts[1]);
             byte g = byte.Parse(parts[2]);
             byte b = byte.Parse(parts[3]);            

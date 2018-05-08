@@ -30,9 +30,9 @@ namespace MCGalaxy.Blocks.Physics {
 
             switch (block) {
                 case Block.Air:
-            		if (!lvl.CheckSpongeWater(x, y, z)) {
-            		    lvl.AddUpdate(index, type);
-            		}
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, type);
+                    }
                     break;
 
                 case Block.Lava:
@@ -67,9 +67,9 @@ namespace MCGalaxy.Blocks.Physics {
 
             switch (block) {
                 case Block.Air:
-            		if (!lvl.CheckSpongeLava(x, y, z)) {
-            		    lvl.AddUpdate(index, type);
-            		}
+                    if (!lvl.CheckSpongeLava(x, y, z)) {
+                        lvl.AddUpdate(index, type);
+                    }
                     break;
                     
                 case Block.Water:
@@ -81,7 +81,7 @@ namespace MCGalaxy.Blocks.Physics {
                     
                 case Block.Sand:
                     if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
-                    	lvl.AddUpdate(index, Block.Glass, default(PhysicsArgs));
+                        lvl.AddUpdate(index, Block.Glass, default(PhysicsArgs));
                     } else {
                         lvl.AddCheck(index);
                     } break;

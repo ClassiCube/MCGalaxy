@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.World {
             {
                 block = lvl.FastGetBlock(index);
                 if (fixGrass && lvl.Props[block].GrassBlock != Block.Invalid) {
-                	above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
+                    above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
                     BlockID grass = lvl.Props[block].GrassBlock;
                     
                     if (lvl.LightPasses(above) && p.level.DoBlockchange(p, x, y, z, grass) == 2) {

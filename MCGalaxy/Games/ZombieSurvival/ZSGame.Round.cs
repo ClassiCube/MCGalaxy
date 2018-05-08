@@ -39,14 +39,8 @@ namespace MCGalaxy.Games {
             StartRound(players);
             if (!running) return;
             
-            if (!running) return;
-            EndRound();
-            Picker.AddRecentMap(Map.MapName);
-            
-            if (RoundsLeft > 0) {
-                string map = Picker.ChooseNextLevel(this);
-                if (map != null) ChangeLevel(map);
-            }
+            if (running) EndRound();
+            if (running) VoteAndMoveToNextMap();
         }
         
         void StartRound(List<Player> players) {
@@ -139,7 +133,7 @@ namespace MCGalaxy.Games {
             string lastTimeLeft = null;
             int lastCountdown = -1;
             
-            while (alive.Length > 0 && running) {
+            while (alive.Length > 0 && running && RoundInProgress) {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
@@ -288,52 +282,10 @@ namespace MCGalaxy.Games {
                                         pAlive.ColoredName + "%S"));
         }
         
-        bool SetMap(string map) {
-            Picker.QueuedMap = null;
-            Map = LevelInfo.FindExact(map) ?? CmdLoad.LoadLevel(null, map);
-            if (Map == null) return false;
-            
-            Map.SaveChanges = false;
-            if (ZSConfig.SetMainLevel) Server.mainLevel = Map;
-            return true;
-        }
-
-        void ChangeLevel(string next) {
-            Map.ChatLevel("The next map has been chosen - &c" + next.ToLower());
-            Map.ChatLevel("Please wait while you are transfered.");
-            LastMap = Map.MapName;
-            
-            if (!SetMap(next)) {
-                Map.ChatLevel("&cFailed to change map to " + next);
-                Map.ChatLevel("Continuing ZS on this map again");
-            } else {
-                MoveToNextMap(LastMap);
-                
-                Command.all.FindByName("Unload").Use(null, LastMap);
-            }
-        }
-        
-        void MoveToNextMap(string lastMap) {
-            Random rnd = new Random();
-            Player[] online = PlayerInfo.Online.Items;
-            List<Player> players = new List<Player>(online.Length);
-            
-            foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
-                if (pl.level != Map && pl.level.name.CaselessEq(lastMap)) {
-                    players.Add(pl);
-                }
-            }
-            
-            while (players.Count > 0) {
-                int i = rnd.Next(0, players.Count);
-                Player pl = players[i];
-                
-                pl.SendMessage("Going to the next map - &a" + Map.MapName);
-                PlayerActions.ChangeMap(pl, Map);
-                players.RemoveAt(i);
-            }
+        protected override bool SetMap(string map) {
+            bool success = base.SetMap(map);
+            if (success && ZSConfig.SetMainLevel) Server.mainLevel = Map;
+            return success;
         }
 
         internal static void RespawnPlayer(Player p) {

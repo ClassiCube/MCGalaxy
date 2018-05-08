@@ -215,11 +215,11 @@ namespace MCGalaxy {
                 using (LevelChunkStream dst = new LevelChunkStream(this))
                     using (Stream stream = LevelChunkStream.CompressMapHeader(this, volume, dst))
                 {
-                	if (!level.MayHaveCustomBlocks) {
-                		LevelChunkStream.CompressMapSimple(this, stream, dst);
-                	} else {
-                    	LevelChunkStream.CompressMap(this, stream, dst);
-                	}
+                    if (!level.MayHaveCustomBlocks) {
+                        LevelChunkStream.CompressMapSimple(this, stream, dst);
+                    } else {
+                        LevelChunkStream.CompressMap(this, stream, dst);
+                    }
                 }
                 
                 // Force players to read the MOTD (clamped to 3 seconds at most)

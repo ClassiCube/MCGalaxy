@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, block);
             string blockName = Block.GetName(p, block);
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "{3} block was placed at ({0}, {1}, {2}).", P.X, P.Y, P.Z, blockName);
+                Player.Message(p, "{1} block was placed at ({0}).", P, blockName);
             }
         }
         

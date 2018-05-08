@@ -28,23 +28,16 @@ namespace MCGalaxy.Games {
         
         protected override void DoRound() {
             if (!running) return;
-            RoundInProgress = true;
             
+            RoundInProgress = true;       
             while (Blue.Points < Config.RoundPoints && Red.Points < Config.RoundPoints) {
                 if (!running) return;
                 if (!RoundInProgress) break;
                 Tick();
             }
             
-            if (!running) return;
-            EndRound();
-            Picker.AddRecentMap(Map.MapName);
-            
-            // TODO: Move players here
-            if (RoundsLeft > 0) {
-                string map = Picker.ChooseNextLevel(this);
-                // (map != null) ChangeLevel(map);
-            }
+            if (running) EndRound();
+            if (running) VoteAndMoveToNextMap();
         }
         
         void Tick() {
@@ -76,7 +69,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void EndRound() {
-	        if (!RoundInProgress) return;
+            if (!RoundInProgress) return;
             RoundInProgress = false;
             
             if (Blue.Points >= Config.RoundPoints || Blue.Points > Red.Points) {
@@ -94,15 +87,7 @@ namespace MCGalaxy.Games {
                               Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
                                                           "WHERE Name = @0", d.p.name, d.Points, d.Captures, d.Tags);
                           });
-            
-            Picker.AddRecentMap(Map.name);
-            string nextMap = Picker.ChooseNextLevel(this);
-            
-            Chat.MessageLevel(Map, "Starting a new game!");
-            Blue.Members.Clear();
-            Red.Members.Clear();
-            Thread.Sleep(2000);
-            SetMap(nextMap);
+            Chat.MessageLevel(Map, "Starting next round!");
         }
         
         

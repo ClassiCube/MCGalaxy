@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Games {
 
@@ -25,12 +27,12 @@ namespace MCGalaxy.Games {
         public abstract string GameName { get; }
         public virtual bool TeleportAllowed { get { return true; } }
 
-        public virtual bool HandlesChatMessage(Player p, string message) { return false; }        
+        public virtual bool HandlesChatMessage(Player p, string message) { return false; }
         public virtual void PlayerJoinedGame(Player p) { }
         public virtual void PlayerLeftGame(Player p) { }
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
         
-        public virtual void AdjustPrefix(Player p, ref string prefix) { }        
+        public virtual void AdjustPrefix(Player p, ref string prefix) { }
         public abstract void EndRound();
         
         public void MessageMap(CpeMessageType type, string message) {
@@ -47,6 +49,8 @@ namespace MCGalaxy.Games {
     public abstract class RoundsGame : IGame {
         public int RoundsLeft;
         public bool RoundInProgress;
+        public string LastMap = "";
+        public LevelPicker Picker;
         
         public abstract void End();
         protected abstract void DoRound();
@@ -68,6 +72,56 @@ namespace MCGalaxy.Games {
                 } catch (Exception ex2) {
                     Logger.LogError(ex2);
                 }
+            }
+        }
+        
+        protected void VoteAndMoveToNextMap() {
+            Picker.AddRecentMap(Map.MapName);
+            if (RoundsLeft == 0) return;
+            string map = Picker.ChooseNextLevel(this);
+            if (map == null) return;
+            
+            Map.ChatLevel("The next map has been chosen - &c" + map.ToLower());
+            Map.ChatLevel("Please wait while you are transfered.");
+            LastMap = Map.MapName;
+            
+            if (!SetMap(map)) {
+                Map.ChatLevel("&cFailed to change map to " + map);
+                Map.ChatLevel("Continuing " + GameName + " on the same map");
+            } else {
+                TransferPlayers(LastMap);
+                Command.all.FindByName("Unload").Use(null, LastMap);
+            }
+        }
+        
+        protected virtual bool SetMap(string map) {
+            Picker.QueuedMap = null;
+            Map = LevelInfo.FindExact(map);
+            if (Map == null) Map = CmdLoad.LoadLevel(null, map);
+            
+            if (Map == null) return false;
+            Map.SaveChanges = false;
+            return true;
+        }
+        
+        void TransferPlayers(string lastMap) {
+            Random rnd = new Random();
+            Player[] online = PlayerInfo.Online.Items;
+            List<Player> transfers = new List<Player>(online.Length);
+            
+            foreach (Player pl in online) {
+                pl.Game.RatedMap = false;
+                pl.Game.PledgeSurvive = false;
+                if (pl.level != Map && pl.level.name.CaselessEq(lastMap)) { transfers.Add(pl); }
+            }
+            
+            while (transfers.Count > 0) {
+                int i = rnd.Next(0, transfers.Count);
+                Player pl = transfers[i];
+                
+                pl.SendMessage("Going to the next map - &a" + Map.MapName);
+                PlayerActions.ChangeMap(pl, Map);
+                transfers.RemoveAt(i);
             }
         }
     }

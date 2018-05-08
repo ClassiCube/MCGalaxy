@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
         }
 
-		
+        
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
             if (p == null || p.level != Map) return;

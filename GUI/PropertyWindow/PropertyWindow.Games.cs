@@ -37,24 +37,23 @@ namespace MCGalaxy.Gui {
             try {
                 ls_btnStartGame.Enabled = !Server.lava.running;
                 ls_btnStopGame.Enabled = Server.lava.running;
-                ls_btnEndRound.Enabled = Server.lava.roundActive;
-                lsBtnEndVote.Enabled = Server.lava.voteActive;
+                ls_btnEndRound.Enabled = Server.lava.RoundInProgress;
             }
             catch { }
         }
 
         void lsBtnStartGame_Click(object sender, EventArgs e) {
-            if (!Server.lava.running) Server.lava.Start();
+            if (!Server.lava.running) Server.lava.Start(null, "", int.MaxValue);
             UpdateLavaControls();
         }
 
         void lsBtnStopGame_Click(object sender, EventArgs e) {
-            if (Server.lava.running) Server.lava.Stop();
+            if (Server.lava.running) Server.lava.End();
             UpdateLavaControls();
         }
 
         void lsBtnEndRound_Click(object sender, EventArgs e) {
-            if (Server.lava.roundActive) Server.lava.EndRound();
+            if (Server.lava.RoundInProgress) Server.lava.EndRound();
             UpdateLavaControls();
         }
 
@@ -95,7 +94,7 @@ namespace MCGalaxy.Gui {
 
         void lsAddMap_Click(object sender, EventArgs e) {
             try {
-                Server.lava.Stop(); // Doing this so we don't break something...
+                Server.lava.End(); // Doing this so we don't break something...
                 UpdateLavaControls();
 
                 string name;
@@ -130,7 +129,7 @@ namespace MCGalaxy.Gui {
 
         void lsRemoveMap_Click(object sender, EventArgs e) {
             try {
-                Server.lava.Stop(); // Doing this so we don't break something...
+                Server.lava.End(); // Doing this so we don't break something...
                 UpdateLavaControls();
 
                 string name;
@@ -179,11 +178,6 @@ namespace MCGalaxy.Gui {
             if (pg_lavaMap.SelectedObject == null) return;
             LavaMapProperties props = (LavaMapProperties)pg_lavaMap.SelectedObject;
             Server.lava.SaveMapSettings(props.m);
-        }
-
-        void lsBtnEndVote_Click(object sender, EventArgs e) {
-            if (Server.lava.voteActive) Server.lava.EndVote();
-            UpdateLavaControls();
         }
 
         public void LoadTNTWarsTab(object sender, EventArgs e) {

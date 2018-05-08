@@ -34,8 +34,8 @@ namespace MCGalaxy.Games {
         public bool hasflag, tagging, TeamChatting;
         public CtfData(Player p) { this.p = p; }
     }
-	
-	public sealed class CtfTeam2 {
+    
+    public sealed class CtfTeam2 {
         public string Name, Color;
         public string ColoredName { get { return Color + Name; } }
         public int Points;
@@ -56,7 +56,7 @@ namespace MCGalaxy.Games {
         public CtfTeam2 Red  = new CtfTeam2("Red", Colors.red);
         public CtfTeam2 Blue = new CtfTeam2("Blue", Colors.blue);
         public CTFConfig Config = new CTFConfig();
-        public LevelPicker Picker = new CTFLevelPicker();
+        public CTFGame() { Picker = new CTFLevelPicker(); }
 
         List<CtfData> cache = new List<CtfData>();
         internal CtfData Get(Player p) {
@@ -66,13 +66,10 @@ namespace MCGalaxy.Games {
             return null;
         }
 
-        
-        /// <summary> Load a map into CTF </summary>
-        public void SetMap(string mapName) {
-            CmdLoad.LoadLevel(null, mapName);
-            Map = LevelInfo.FindExact(mapName);
-            Map.SaveChanges = false;
-            UpdateConfig();
+        protected override bool SetMap(string map) {
+            bool success = base.SetMap(map);
+            if (success) UpdateConfig();
+            return success;
         }
         
         public void UpdateConfig() {
@@ -97,22 +94,25 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Captures", ColumnType.UInt24),
             new ColumnDesc("tags", ColumnType.UInt24),
         };
-        
-        /// <summary> Start the CTF game </summary>
-        public bool Start(Player p) {
+
+        public bool Start(Player p, int rounds) {
             if (running) {
                 Player.Message(p, "CTF game already running."); return false;
-            }
+            } 
             
-            List<string> maps = Picker.GetCandidateMaps();
+            List<string> maps = Picker.GetCandidateMaps();           
             if (maps == null || maps.Count == 0) {
-                Player.Message(p, "No CTF maps were found."); return false;
+                Player.Message(p, "No maps have been setup for CTF yet"); return false;
             }
             
-            Blue = new CtfTeam2("Blue", Colors.blue);
-            Red  = new CtfTeam2("Red", Colors.red);
+            if (!SetMap(LevelPicker.GetRandomMap(new Random(), maps))) {
+                Player.Message(p, "Failed to load initial map!"); return false;
+            }       
             
-            SetMap(LevelPicker.GetRandomMap(new Random(), maps));
+            RoundsLeft = rounds;
+            Blue.Members.Clear();
+            Red.Members.Clear();
+            
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
             running = true;
             Database.Backend.CreateTable("CTF", createSyntax);
@@ -129,6 +129,10 @@ namespace MCGalaxy.Games {
             RoundsLeft = 0;
             RoundInProgress = false;
             
+            Blue.Members.Clear();
+            Red.Members.Clear();
+            
+            LastMap = "";
             UnhookEventHandlers();
             Picker.Clear();
             Map = null;

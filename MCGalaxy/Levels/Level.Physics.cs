@@ -40,8 +40,8 @@ namespace MCGalaxy {
                     if (blocks[i] > 183 && Block.NeedRestart(blocks[i]))
                         AddCheck(i);
             }
-        	
-        	if (physics != level) OnPhysicsLevelChangedEvent.Call(this, level);
+            
+            if (physics != level) OnPhysicsLevelChangedEvent.Call(this, level);
             physics = level;
             //StartPhysics(); This isnt needed, the physics will start when we set the new value above
         }

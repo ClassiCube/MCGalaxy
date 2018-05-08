@@ -22,7 +22,7 @@ using MCGalaxy.Events.PlayerEvents;
 namespace MCGalaxy.Games {
     
     public sealed partial class CountdownGame : IGame {
-		
+        
         void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
