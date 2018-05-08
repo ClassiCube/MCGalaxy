@@ -72,10 +72,10 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleStop(Player p) {
             if (!CheckExtraPerm(p, 1)) return;
-            if (Server.ctf == null || !Server.ctf.started) {
-                Player.Message(p, "No CTF game is active."); return;
+            if (Server.ctf == null || !Server.ctf.Running) {
+                Player.Message(p, "CTF is not running"); return;
             }
-            Server.ctf.Stop();
+            Server.ctf.End();
         }
         
         

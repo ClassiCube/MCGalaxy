@@ -61,8 +61,6 @@ namespace MCGalaxy.Games {
         public static int ZombieInvisibilityDuration = 5;
         [ConfigInt("zombie-zinvisibility-potions", "Zombie", 4, 1)]
         public static int ZombieInvisibilityPotions = 4;
-        [ConfigBool("enable-changing-levels", "Zombie", true)]
-        public static bool ChangeLevels = true;
         
         [ConfigString("revive-notime-msg", "Revive",
                       "It's too late. The humans do not have enough time left to make more revive potions.")]

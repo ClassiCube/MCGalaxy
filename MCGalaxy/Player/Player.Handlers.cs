@@ -77,7 +77,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if ( Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this) ) {
+            if ( Server.lava.running && Server.lava.Map == level && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
                 RevertBlock(x, y, z); return;
             }
@@ -435,12 +435,13 @@ namespace MCGalaxy {
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
         
-        public void HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
-            OnPlayerDeathEvent.Call(this, block);
+        public bool HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
+            if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return false;
+            if (invincible || hidden) return false;
             
-            if (Server.lava.active && Server.lava.HasPlayer(this) && Server.lava.IsPlayerDead(this)) return;
-            if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return;
-            if (!level.Config.KillerBlocks || invincible || hidden) return;
+            cancelDeath = false;
+            OnPlayerDeathEvent.Call(this, block);
+            if (cancelDeath) { cancelDeath = false; return false; }
 
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
@@ -463,12 +464,7 @@ namespace MCGalaxy {
             
             if (PlayingTntWars) {
                 TntWarsKillStreak = 0;
-                TntWarsScoreMultiplier = 1f;
-            } else if ( Server.lava.active && Server.lava.HasPlayer(this) ) {
-                if (!Server.lava.IsPlayerDead(this)) {
-                    Server.lava.KillPlayer(this);
-                    Command.all.FindByName("Spawn").Use(this, "");
-                }
+                TntWarsScoreMultiplier = 1.0f;
             } else {
                 Command.all.FindByName("Spawn").Use(this, "");
                 TimesDied++;
@@ -476,9 +472,11 @@ namespace MCGalaxy {
                 if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
             }
 
-            if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0))
+            if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
                 Chat.MessageLevel(this, ColoredName + " %Shas died &3" + TimesDied + " times", false, level);
+            }
             lastDeath = DateTime.UtcNow;
+            return true;
         }
 
         void HandleChat(byte[] buffer, int offset) {
@@ -502,17 +500,6 @@ namespace MCGalaxy {
             // People who are muted can't speak or vote
             if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
 
-            // Lava Survival map vote recorder
-            if ( Server.lava.HasPlayer(this) && Server.lava.HasVote(text.ToLower()) ) {
-                if ( Server.lava.AddVote(this, text.ToLower()) ) {
-                    SendMessage("Your vote for &5" + text.ToLower().Capitalize() + " %Shas been placed. Thanks!");
-                    Server.lava.map.ChatLevelOps(name + " voted for &5" + text.ToLower().Capitalize() + "%S.");
-                    return;
-                } else {
-                    SendMessage("&cYou already voted!");
-                    return;
-                }
-            }
             // Filter out bad words
             if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
             

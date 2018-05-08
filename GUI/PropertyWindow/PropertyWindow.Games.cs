@@ -35,8 +35,8 @@ namespace MCGalaxy.Gui {
 
         void UpdateLavaControls() {
             try {
-                ls_btnStartGame.Enabled = !Server.lava.active;
-                ls_btnStopGame.Enabled = Server.lava.active;
+                ls_btnStartGame.Enabled = !Server.lava.running;
+                ls_btnStopGame.Enabled = Server.lava.running;
                 ls_btnEndRound.Enabled = Server.lava.roundActive;
                 lsBtnEndVote.Enabled = Server.lava.voteActive;
             }
@@ -44,12 +44,12 @@ namespace MCGalaxy.Gui {
         }
 
         void lsBtnStartGame_Click(object sender, EventArgs e) {
-            if (!Server.lava.active) Server.lava.Start();
+            if (!Server.lava.running) Server.lava.Start();
             UpdateLavaControls();
         }
 
         void lsBtnStopGame_Click(object sender, EventArgs e) {
-            if (Server.lava.active) Server.lava.Stop();
+            if (Server.lava.running) Server.lava.Stop();
             UpdateLavaControls();
         }
 
@@ -109,9 +109,9 @@ namespace MCGalaxy.Gui {
 
                 Server.lava.AddMap(name);
 
-                LavaSurvival.MapSettings settings = Server.lava.LoadMapSettings(level.name);
-                settings.blockFlood = new Vec3U16((ushort)(level.Width / 2), (ushort)(level.Height - 1), (ushort)(level.Length / 2));
-                settings.blockLayer = new Vec3U16(0, (ushort)(level.Height / 2), 0);
+                LSGame.MapSettings settings = Server.lava.LoadMapSettings(level.name);
+                settings.FloodPos = new Vec3U16((ushort)(level.Width / 2), (ushort)(level.Height - 1), (ushort)(level.Length / 2));
+                settings.LayerPos = new Vec3U16(0, (ushort)(level.Height / 2), 0);
                 ushort x = (ushort)(level.Width / 2), y = (ushort)(level.Height / 2), z = (ushort)(level.Length / 2);
                 settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
                 Server.lava.SaveMapSettings(settings);
@@ -167,7 +167,7 @@ namespace MCGalaxy.Gui {
             ls_grpMapSettings.Text = "Map settings (" + name + ")";
             
             try {
-                LavaSurvival.MapSettings m = Server.lava.LoadMapSettings(name);
+                LSGame.MapSettings m = Server.lava.LoadMapSettings(name);
                 pg_lavaMap.SelectedObject = new LavaMapProperties(m);
             } catch (Exception ex) { 
                 Logger.LogError(ex); 

@@ -132,11 +132,8 @@ namespace MCGalaxy.Commands.World {
                 Group grp = Matcher.FindRanks(p, rank);
                 if (grp != null) p.level.BuildAccess.SetMin(null, p.level, grp);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
-                if (value.Length == 0) {
-                    Command.all.FindByName("Texture").Use(p, "levelzip normal");
-                } else {
-                    Command.all.FindByName("Texture").Use(p, "levelzip " + value);
-                }
+                if (value.Length == 0) value = "normal";
+                Command.all.FindByName("Texture").Use(p, "levelzip " + value);
             } else {
                 cmd = LevelOptions.Map(cmd.ToLower());
                 if (cmd == "physicspeed" || cmd == "overload" || cmd == "realmowner") {

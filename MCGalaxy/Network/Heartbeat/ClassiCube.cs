@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using MCGalaxy.Events.ServerEvents;
 using Newtonsoft.Json;
 
 namespace MCGalaxy.Network {
@@ -59,7 +60,7 @@ namespace MCGalaxy.Network {
 
         public override string GetHeartbeatData()  {
             string name = ServerConfig.Name;
-            Server.zombie.OnHeartbeat(ref name);
+            OnSendingHeartbeatEvent.Call(this, ref name);
             name = Colors.Strip(name);
             
             return 

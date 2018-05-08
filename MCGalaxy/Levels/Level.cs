@@ -117,10 +117,10 @@ namespace MCGalaxy {
         
         public bool ShouldShowJoinMessage(Level prev) {
             ZSGame zs = Server.zombie;
-            if (zs.Running && name.CaselessEq(zs.MapName) &&
-                (prev == this || zs.LastLevelName.Length == 0 || prev.name.CaselessEq(zs.LastLevelName)))
+            if (zs.Running && this == zs.Map &&
+                (prev == this || zs.LastMap.Length == 0 || prev.name.CaselessEq(zs.LastMap)))
                 return false;
-            if (Server.lava.active && Server.lava.HasMap(name))
+            if (Server.lava.Running && Server.lava.HasMap(name))
                 return false;
             return true;
         }
@@ -128,10 +128,8 @@ namespace MCGalaxy {
         /// <summary> The currently active game running on this map,
         /// or null if there is no game running. </summary>
         public IGame CurrentGame() {
-            if (Server.zombie.Running && name.CaselessEq(Server.zombie.MapName))
-                return Server.zombie;
-            if (Server.lava.active && Server.lava.map == this)
-                return Server.lava;
+            if (Server.zombie.Running && Server.zombie.Map == this) return Server.zombie;
+            if (Server.lava.Running && Server.lava.Map == this) return Server.lava;
             return null;
         }
         
@@ -148,7 +146,6 @@ namespace MCGalaxy {
         
         public bool Unload(bool silent = false, bool save = true) {
             if (Server.mainLevel == this || IsMuseum) return false;
-            if (Server.lava.active && Server.lava.map == this) return false;
             OnLevelUnloadEvent.Call(this);
             if (cancelunload) {
                 Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);

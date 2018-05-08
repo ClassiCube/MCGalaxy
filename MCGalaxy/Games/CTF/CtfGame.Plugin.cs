@@ -25,13 +25,9 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
-    public sealed class CtfPlugin : Plugin_Simple {
-        public override string creator { get { return Server.SoftwareName + " team"; } }
-        public override string MCGalaxy_Version { get { return Server.VersionString; } }
-        public override string name { get { return "Core_CTFPlugin"; } }
-        public CTFGame Game;
+    public sealed partial class CTFGame : RoundsGame {
 
-        public override void Load(bool startup) {
+        void HookEventHandlers() {
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);
@@ -45,7 +41,7 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
         }
         
-        public override void Unload(bool shutdown) {
+        void UnhookEventHandlers() {
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerCommandEvent.Unregister(HandlePlayerCommand);
@@ -61,38 +57,19 @@ namespace MCGalaxy.Games {
         
         
         void HandlePlayerDeath(Player p, BlockID deathblock) {
-            if (!Game.started || p.level != Game.Map) return;
-            if (!Game.Get(p).hasflag) return;
+            if (!running || p.level != Map) return;
+            if (!Get(p).hasflag) return;
             
-            CtfTeam2 team = Game.TeamOf(p);
-            if (team != null) Game.DropFlag(p, team);
+            CtfTeam2 team = TeamOf(p);
+            if (team != null) DropFlag(p, team);
         }
         
         void HandlePlayerChat(Player p, string message) {
-            if (Game.voting) {
-                if (message == "1" || message.CaselessEq(Game.map1)) {
-                    Player.Message(p, "Thanks for voting :D");
-                    Game.vote1++;
-                    p.cancelchat = true;
-                } else if (message == "2" || message.CaselessEq(Game.map2)) {
-                    Player.Message(p, "Thanks for voting :D");
-                    Game.vote2++;
-                    p.cancelchat = true;
-                } else if (message == "3" || message.CaselessEq(Game.map3)) {
-                    Player.Message(p, "Thanks for voting :D");
-                    Game.vote3++;
-                    p.cancelchat = true;
-                } else {
-                    Player.Message(p, "%2VOTE:");
-                    Player.Message(p, "1. " + Game.map1 + " 2. " + Game.map2 + " 3. " + Game.map3);
-                    p.cancelchat = true;
-                }
-            }
+            if (Picker.HandlesMessage(p, message)) { p.cancelchat = true; return; }
+            if (!running || p.level != Map) return;
+            if (!Get(p).TeamChatting) return;
             
-            if (!Game.started || p.level != Game.Map) return;
-            if (!Game.Get(p).TeamChatting) return;
-            
-            CtfTeam2 team = Game.TeamOf(p);
+            CtfTeam2 team = TeamOf(p);
             if (team == null) return;
             Player[] members = team.Members.Items;
             
@@ -103,8 +80,8 @@ namespace MCGalaxy.Games {
         }
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
-            if (!Game.started || p.level != Game.Map) return;
-            CtfTeam2 team = Game.TeamOf(p);
+            if (!running || p.level != Map) return;
+            CtfTeam2 team = TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
                 Player.Message(p, "You are not on a team!");
@@ -113,43 +90,43 @@ namespace MCGalaxy.Games {
             }
             
             Vec3U16 pos = new Vec3U16(x, y, z);
-            if (pos == Game.Opposing(team).FlagPos && !Game.Map.IsAirAt(x, y, z)) {
-                Game.TakeFlag(p, team);
+            if (pos == Opposing(team).FlagPos && !Map.IsAirAt(x, y, z)) {
+                TakeFlag(p, team);
             }
-            if (pos == team.FlagPos && !Game.Map.IsAirAt(x, y, z)) {
-                Game.ReturnFlag(p, team);
+            if (pos == team.FlagPos && !Map.IsAirAt(x, y, z)) {
+                ReturnFlag(p, team);
             }
         }
         
         void HandleDisconnect(Player p, string reason) {
-            if (p.level != Game.Map) return;
-            CtfTeam2 team = Game.TeamOf(p);
+            if (p.level != Map) return;
+            CtfTeam2 team = TeamOf(p);
             if (team == null) return;
             
-            Game.DropFlag(p, team);
+            DropFlag(p, team);
             team.Remove(p);
-            Chat.MessageLevel(Game.Map, team.Color + p.DisplayName + " %Sleft the ctf game");
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
         }
 
         void HandleLevelUnload(Level lvl) {
-            if (Game.started && lvl == Game.Map) {
+            if (running && lvl == Map) {
                 Logger.Log(LogType.GameActivity, "Unload Failed!, A ctf game is currently going on!");
                 lvl.cancelunload = true;
             }
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (!Game.started || p.level != Game.Map) return;
+            if (!running || p.level != Map) return;
             
-            CtfTeam2 team = Game.TeamOf(p);
+            CtfTeam2 team = TeamOf(p);
             if (team != null) pos = team.SpawnPos;
-            if (team != null && respawning) Game.DropFlag(p, team);
+            if (team != null && respawning) DropFlag(p, team);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
-            if (p == null || !Game.started || p.level != Game.Map) return;
-            CtfTeam2 team = Game.TeamOf(p);
+            if (p == null || !running || p.level != Map) return;
+            CtfTeam2 team = TeamOf(p);
             
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";
@@ -161,31 +138,31 @@ namespace MCGalaxy.Games {
         }
         
         void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {
-            if (p == null || !Game.started) return;
+            if (p == null || !running) return;
             
-            if (prevLevel == Game.Map) {
-                CtfTeam2 team = Game.TeamOf(p);
+            if (prevLevel == Map) {
+                CtfTeam2 team = TeamOf(p);
                 if (team == null) return;
                 
-                Game.DropFlag(p, team);
+                DropFlag(p, team);
                 team.Remove(p);
-                Chat.MessageLevel(Game.Map, team.Color + p.DisplayName + " %Sleft the ctf game");
-            } else if (level == Game.Map) {
-                if (Game.Blue.Members.Count > Game.Red.Members.Count) {
-                    Game.JoinTeam(p, Game.Red);
-                } else if (Game.Red.Members.Count > Game.Blue.Members.Count) {
-                    Game.JoinTeam(p, Game.Blue);
+                Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
+            } else if (level == Map) {
+                if (Blue.Members.Count > Red.Members.Count) {
+                    JoinTeam(p, Red);
+                } else if (Red.Members.Count > Blue.Members.Count) {
+                    JoinTeam(p, Blue);
                 } else if (new Random().Next(2) == 0) {
-                    Game.JoinTeam(p, Game.Red);
+                    JoinTeam(p, Red);
                 } else {
-                    Game.JoinTeam(p, Game.Blue);
+                    JoinTeam(p, Blue);
                 }
             }
         }
         
         void HandlePlayerCommand(Player p, string cmd, string args) {
-            if (!Game.started || p.level != Game.Map || cmd != "teamchat") return;
-            CtfData data = Game.Get(p);
+            if (!running || p.level != Map || cmd != "teamchat") return;
+            CtfData data = Get(p);
             if (data == null) return;
             
             if (data.TeamChatting) {

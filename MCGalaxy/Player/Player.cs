@@ -457,7 +457,7 @@ namespace MCGalaxy {
                 // Mark callback cancelled selection
                 if (selCallback == null) return;
                 
-                selIndex++;                
+                selIndex++;
                 if (selIndex == 1 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1" + FormatSelectionMark(selMarks[0]));
                 } else if (selIndex == 2 && selTitle != null) {

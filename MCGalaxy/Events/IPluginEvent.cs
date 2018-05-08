@@ -99,13 +99,10 @@ namespace MCGalaxy.Events {
             Logger.LogError(ex);
         }
         
-        static string MethodFormat(string format, IMethod handler) {
-            return String.Format(format, GetFullMethodName(handler), typeof(IMethod).Name);
-        }
-        
-        static string GetFullMethodName(object method) {
+        static string MethodFormat(string format, IMethod method) {
             Delegate del = (Delegate)((object)method);
-            return del.Method.ReflectedType.FullName + "." + del.Method.Name;
+            string fullName = del.Method.ReflectedType.FullName + "." + del.Method.Name;
+            return String.Format(format, fullName, typeof(IMethod).Name);
         }
     }
 }

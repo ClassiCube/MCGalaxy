@@ -148,7 +148,6 @@ namespace MCGalaxy {
                 Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
             }
             Game.InfectMessages = PlayerDB.GetInfectMessages(this);
-            Server.lava.PlayerJoinedServer(this);
             
             Position pos = level.SpawnPos;
             byte yaw = level.rotx, pitch = level.roty;

@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Fun {
                     Player.Message(p, "Zombie Survival running, with " + (game.RoundsLeft + 1) + " rounds left"); break;
             }
 
-            Player.Message(p, "Running on map: " + game.MapName);
+            Player.Message(p, "Running on map: " + game.Map.ColoredName);
         }
         
         void HandleStart(Player p, ZSGame game, string[] args) {
@@ -97,18 +97,10 @@ namespace MCGalaxy.Commands.Fun {
         void HandleStop(Player p, ZSGame game) {
             if (!CheckExtraPerm(p, 1)) return;
             if (!game.Running) {
-                Player.Message(p, "There is no Zombie Survival game currently in progress."); return;
+                Player.Message(p, "Zombie Survival is not running");
+            } else {
+                game.End();
             }
-            
-            string src = p == null ? "(console)" : p.ColoredName;
-            Level lvl = game.Map;
-            if (lvl != null) {
-                Chat.MessageLevel(game.Map, "Zombie Survival was stopped by " + src);
-            }
-            
-            src = p == null ? "(console)" : p.name;
-            Logger.Log(LogType.GameActivity, "Zombie Survival stopped by " + src);
-            game.End();
         }
         
         void HandleSet(Player p, ZSGame game, string[] args) {

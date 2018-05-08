@@ -21,45 +21,48 @@ using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Games.ZS;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games.ZS {
-    public sealed class ZSPlugin : Plugin_Simple {
-        public override string creator { get { return Server.SoftwareName + " team"; } }
-        public override string MCGalaxy_Version { get { return Server.VersionString; } }
-        public override string name { get { return "Core_ZSPlugin"; } }
-        public ZSGame Game;
+namespace MCGalaxy.Games {
+    public sealed partial class ZSGame : RoundsGame {
 
-        public override void Load(bool startup) {
+        void HookEventHandlers() {
             OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
+            OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
+            OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
+            
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
-            OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
         }
         
-        public override void Unload(bool shutdown) {
+        void UnhookEventHandlers() {
             OnEntitySpawnedEvent.Unregister(HandleEntitySpawned);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
+            OnBlockChangeEvent.Unregister(HandleBlockChange);
+            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
+            OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
+            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
-            OnBlockChangeEvent.Unregister(HandleBlockChange);
-            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
         }
-        
+
+		
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
-            if (p == null || p.level != Game.Map) return;
+            if (p == null || p.level != Map) return;
             
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";
@@ -76,7 +79,7 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandleMoneyChanged(Player p) {
-            if (p.level != Game.Map) return;
+            if (p.level != Map) return;
             HUD.UpdateTertiary(p);
         }
         
@@ -93,16 +96,16 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandlePlayerConnect(Player p) {
-            if (!ZSConfig.SetMainLevel) return;
-            Player.Message(p, "Zombie Survival is running! Type %T/ZS go %Sto join.");
+            if (ZSConfig.SetMainLevel) return;
+            Player.Message(p, "&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
         }
         
         void HandlePlayerDisconnect(Player p, string reason) {
-            Game.PlayerLeftGame(p);
+            PlayerLeftGame(p);
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
-            if (!Game.RoundInProgress || p.level != Game.Map) return;
+            if (!RoundInProgress || p.level != Map) return;
             
             bool reverted = MovementCheck.DetectNoclip(p, next)
                 || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
@@ -111,10 +114,10 @@ namespace MCGalaxy.Games.ZS {
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (!(action == PlayerAction.Referee || action == PlayerAction.UnReferee)) return;
-            if (p.level != Game.Map) return;
+            if (p.level != Map) return;
             
             if (action == PlayerAction.UnReferee) {
-                Game.PlayerJoinedLevel(p, Game.Map, Game.Map);
+                PlayerJoinedLevel(p, Map, Map);
                 Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
                 
@@ -137,25 +140,24 @@ namespace MCGalaxy.Games.ZS {
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (p.level != Game.Map) return;
-            
-            if (!p.Game.Referee && !p.Game.Infected && Game.RoundInProgress) {
-                Game.InfectPlayer(p, null);
+            if (p.level != Map) return;            
+            if (!p.Game.Referee && !p.Game.Infected && RoundInProgress) {
+                InfectPlayer(p, null);
             }
         }
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
-            if (p.level != Game.Map) return;
-            BlockID old = Game.Map.GetBlock(x, y, z);
+            if (p.level != Map) return;
+            BlockID old = Map.GetBlock(x, y, z);
             
-            if (Game.Map.Config.BuildType == BuildType.NoModify) {
+            if (Map.Config.BuildType == BuildType.NoModify) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
-            if (Game.Map.Config.BuildType == BuildType.ModifyOnly && Game.Map.Props[old].OPBlock) {
+            if (Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock) {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
             
-            if (Pillaring.Handles(p, x, y, z, placing, block, old, Game)) {
+            if (Pillaring.Handles(p, x, y, z, placing, block, old, this)) {
                  p.cancelBlock = true; return;
             }
             
@@ -167,13 +169,19 @@ namespace MCGalaxy.Games.ZS {
                 }
 
                 p.Game.BlocksLeft--;
-                if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10))
+                if ((p.Game.BlocksLeft % 10) == 0 || (p.Game.BlocksLeft >= 0 && p.Game.BlocksLeft <= 10)) {
                     Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
+                }
             }
         }
         
         void HandleLevelUnload(Level lvl) {
-            if (lvl == Game.Map) lvl.cancelunload = true;
+            if (lvl == Map) lvl.cancelunload = true;
+        }
+        
+        void HandleSendingHeartbeat(Heartbeat service, ref string name) {
+            if (!ZSConfig.IncludeMapInHeartbeat || Map == null) return;
+            name += " (map: " + Map.MapName + ")";
         }
     }
 }

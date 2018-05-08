@@ -30,7 +30,7 @@ namespace MCGalaxy {
             if (enable == CommandEnable.Economy && !Economy.Enabled)
                 return "economy is disabled.";
             
-            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.active))
+            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.running))
                 return "neither zombie nor lava survival is running.";
             if (enable == CommandEnable.Zombie && !Server.zombie.Running)
                 return "zombie survival is not running.";

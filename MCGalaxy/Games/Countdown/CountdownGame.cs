@@ -19,25 +19,39 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Events;
+using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
-    public sealed class CountdownGame : IGame {
+    
+    public enum CountdownGameStatus {
+        /// <summary> Countdown is not running. </summary>
+        Disabled,
+        /// <summary> Countdown is running, but no round has begun yet. </summary>
+        Enabled,
+        /// <summary> Timer is counting down to start of round. </summary>
+        RoundCountdown,
+        /// <summary> Round is in progress. </summary>
+        RoundInProgress,
+    }
+    
+    public sealed partial class CountdownGame : IGame {
         
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
-        public CountdownGameStatus Status = CountdownGameStatus.Disabled;        
+        public CountdownGameStatus Status = CountdownGameStatus.Disabled;
         public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }
+        public override string GameName { get { return "Countdown"; } }
         
-        public bool FreezeMode = false;
+        public bool FreezeMode;
         public int Interval;
         public string SpeedType;
         
-        CountdownPlugin plugin = new CountdownPlugin();
         List<SquarePos> squaresLeft = new List<SquarePos>();
         BufferedBlockSender bulk = new BufferedBlockSender();
-        
         
         public override void EndRound() { EndRound(null); }
         
@@ -70,23 +84,23 @@ namespace MCGalaxy.Games {
             SpawnPlayers(xSpawn, ySpawn, zSpawn);
             Map.ChatLevel("-----&b5%S-----");
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;            
+            if (Status != CountdownGameStatus.RoundCountdown) return;
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air);
             bulk.Send(true);
             Thread.Sleep(1000);
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;           
+            if (Status != CountdownGameStatus.RoundCountdown) return;
             Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
             Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air);
             bulk.Send(true);
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;            
+            if (Status != CountdownGameStatus.RoundCountdown) return;
             Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
             Map.ChatLevel("GO!!!!!!!");
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;          
+            if (Status != CountdownGameStatus.RoundCountdown) return;
             Player[] players = Players.Items;
             Remaining.Clear();
             foreach (Player pl in players) { Remaining.Add(pl); }
@@ -323,10 +337,7 @@ namespace MCGalaxy.Games {
         
         
         public void Enable(Player p) {
-            plugin.Game = this;
-            plugin.Load(false);
-            
-            MapName = "countdown";
+            HookEventHandlers();
             CmdLoad.LoadLevel(null, "countdown");
             Map = LevelInfo.FindExact("countdown");
             
@@ -347,10 +358,9 @@ namespace MCGalaxy.Games {
         }
 
         public void Disable() {
-            if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);
-            
+            if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);            
             Status = CountdownGameStatus.Disabled;
-            plugin.Unload(false);
+            UnhookEventHandlers();
             
             Map.ChatLevel("Countdown was disabled.");
             Players.Clear();
@@ -397,11 +407,11 @@ namespace MCGalaxy.Games {
             Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block);
             Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block);
             Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block);
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock);            
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock);
             bulk.Send(true);
         }
         
-       void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {
+        void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)
@@ -436,19 +446,5 @@ namespace MCGalaxy.Games {
             Remaining.Remove(p);
             UpdatePlayersLeft();
         }
-    }
-
-    public enum CountdownGameStatus {
-        /// <summary> Countdown is not running. </summary>
-        Disabled,
-        
-        /// <summary> Countdown is running, but no round has begun yet. </summary>
-        Enabled,
-        
-        /// <summary> Timer is counting down to start of round. </summary>
-        RoundCountdown,
-        
-        /// <summary> Round is in progress. </summary>
-        RoundInProgress,
     }
 }

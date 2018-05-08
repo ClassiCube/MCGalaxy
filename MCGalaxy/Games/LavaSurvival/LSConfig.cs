@@ -23,15 +23,15 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
-    public sealed partial class LavaSurvival {
+    public sealed partial class LSGame : RoundsGame {
 
         public MapData GenerateMapData(MapSettings settings) {
             MapData data = new MapData(settings);
-            data.killer = rand.Next(1, 101) <= settings.killer;
+            data.killer  = rand.Next(1, 101) <= settings.killer;
             data.destroy = rand.Next(1, 101) <= settings.destroy;
-            data.water = rand.Next(1, 101) <= settings.water;
-            data.layer = rand.Next(1, 101) <= settings.layer;
-            data.fast = rand.Next(1, 101) <= settings.fast && !data.water;
+            data.water   = rand.Next(1, 101) <= settings.water;
+            data.layer   = rand.Next(1, 101) <= settings.layer;
+            data.fast    = rand.Next(1, 101) <= settings.fast && !data.water;
             
             byte block = data.water ? (data.killer ? Block.Deadly_ActiveWater : Block.Water) 
                 : (data.fast ? (data.killer ? Block.Deadly_FastLava : Block.FastLava) 
@@ -99,8 +99,8 @@ namespace MCGalaxy.Games {
 
         public MapSettings LoadMapSettings(string name) {
             MapSettings settings = new MapSettings(name);
-            if (!Directory.Exists(propsPath)) Directory.CreateDirectory(propsPath);
-            string path = propsPath + name + ".properties";
+            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
+            string path = propsDir + name + ".properties";
             if (!File.Exists(path)) { SaveMapSettings(settings); return settings; }
 
             try {
@@ -112,55 +112,47 @@ namespace MCGalaxy.Games {
         }
         
         void ProcessMapLine(string key, string value, ref MapSettings map) {
-            string[] sp;
             switch (key.ToLower()) {
                 case "fast-chance": map.fast = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
                 case "killer-chance": map.killer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
                 case "destroy-chance": map.destroy = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
                 case "water-chance": map.water = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
                 case "layer-chance": map.layer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                case "layer-height": map.layerHeight = int.Parse(value); break;
-                case "layer-count": map.layerCount = int.Parse(value); break;
+                case "layer-height": map.LayerHeight = int.Parse(value); break;
+                case "layer-count": map.LayerCount = int.Parse(value); break;
                 case "layer-interval": map.layerInterval = double.Parse(value); break;
                 case "round-time": map.roundTime = double.Parse(value); break;
                 case "flood-time": map.floodTime = double.Parse(value); break;
                 
                 case "block-flood":
-                    sp = value.Split(',');
-                    map.blockFlood = new Vec3U16(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
-                    break;
+                    map.FloodPos = Vec3U16.Parse(value); break;
                 case "block-layer":
-                    sp = value.Split(',');
-                    map.blockLayer = new Vec3U16(ushort.Parse(sp[0]), ushort.Parse(sp[1]), ushort.Parse(sp[2]));
-                    break;
+                    map.LayerPos = Vec3U16.Parse(value); break;
                 case "safe-zone":
-                    sp = value.Split('-');
-                    string[] p1 = sp[0].Split(','), p2 = sp[1].Split(',');
-                    map.safeZone = new Vec3U16[] {
-                        new Vec3U16(ushort.Parse(p1[0]), ushort.Parse(p1[1]), ushort.Parse(p1[2])),
-                        new Vec3U16(ushort.Parse(p2[0]), ushort.Parse(p2[1]), ushort.Parse(p2[2])) };
+                    string[] p = value.Split('-');
+                    map.safeZone = new Vec3U16[] { Vec3U16.Parse(p[0]), Vec3U16.Parse(p[1]) };
                     break;
             }
         }
         
         public void SaveMapSettings(MapSettings settings) {
-            if (!Directory.Exists(propsPath)) Directory.CreateDirectory(propsPath);
+            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
 
-            using (StreamWriter w = new StreamWriter(propsPath + settings.name + ".properties")) {
+            using (StreamWriter w = new StreamWriter(propsDir + settings.name + ".properties")) {
                 w.WriteLine("#Lava Survival properties for " + settings.name);
                 w.WriteLine("fast-chance = " + settings.fast);
                 w.WriteLine("killer-chance = " + settings.killer);
                 w.WriteLine("destroy-chance = " + settings.destroy);
                 w.WriteLine("water-chance = " + settings.water);
                 w.WriteLine("layer-chance = " + settings.layer);
-                w.WriteLine("layer-height = " + settings.layerHeight);
-                w.WriteLine("layer-count = " + settings.layerCount);
+                w.WriteLine("layer-height = " + settings.LayerHeight);
+                w.WriteLine("layer-count = " + settings.LayerCount);
                 w.WriteLine("layer-interval = " + settings.layerInterval);
                 w.WriteLine("round-time = " + settings.roundTime);
                 w.WriteLine("flood-time = " + settings.floodTime);
-                w.WriteLine("block-flood = " + settings.blockFlood);
-                w.WriteLine("block-layer = " + settings.blockLayer);
-                w.WriteLine(String.Format("safe-zone = {0}-{1}", settings.safeZone[0].ToString(), settings.safeZone[1].ToString()));
+                w.WriteLine("block-flood = " + settings.FloodPos);
+                w.WriteLine("block-layer = " + settings.LayerPos);
+                w.WriteLine("safe-zone = " + settings.safeZone[0] + " - " + settings.safeZone[1]);
             }
         }
 
@@ -169,9 +161,9 @@ namespace MCGalaxy.Games {
         {
             public string name;
             public byte fast, killer, destroy, water, layer;
-            public int layerHeight, layerCount;
+            public int LayerHeight, LayerCount;
             public double layerInterval, roundTime, floodTime;
-            public Vec3U16 blockFlood, blockLayer;
+            public Vec3U16 FloodPos, LayerPos;
             public Vec3U16[] safeZone;
 
             public MapSettings(string name)
@@ -182,13 +174,13 @@ namespace MCGalaxy.Games {
                 destroy = 0;
                 water = 0;
                 layer = 0;
-                layerHeight = 3;
-                layerCount = 10;
+                LayerHeight = 3;
+                LayerCount = 10;
                 layerInterval = 2;
                 roundTime = 15;
                 floodTime = 5;
-                blockFlood = new Vec3U16();
-                blockLayer = new Vec3U16();
+                FloodPos = new Vec3U16();
+                LayerPos = new Vec3U16();
                 safeZone = new Vec3U16[2];
             }
         }

@@ -67,11 +67,12 @@ namespace MCGalaxy.Maths {
         
         
         public override string ToString() {
-            return X + "," + Y + "," + Z;
+            return X + ", " + Y + ", " + Z;
         }
         
-        public string ToString(string separator) {
-            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
+        public static Vec3U16 Parse(string input) {
+            string[] p = input.Replace(" ", "").Split(',');
+            return new Vec3U16(ushort.Parse(p[0]), ushort.Parse(p[1]), ushort.Parse(p[2]));
         }
     }
     
@@ -166,14 +167,9 @@ namespace MCGalaxy.Maths {
         public static bool operator != (Vec3S32 a, Vec3S32 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
-
         
         public override string ToString() {
-            return X + "," + Y + "," + Z;
-        }
-        
-        public string ToString(string separator) {
-            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
+            return X + ", " + Y + ", " + Z;
         }
     }
     

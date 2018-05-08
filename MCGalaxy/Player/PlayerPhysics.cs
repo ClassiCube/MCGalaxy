@@ -51,7 +51,7 @@ namespace MCGalaxy.Blocks.Physics {
                 if (!p.level.Props[block].KillerBlock) continue;               
                 if (block == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
                 if (block == Block.Train && p.trainInvincible) continue;
-                p.HandleDeath(block);
+                if (p.level.Config.KillerBlocks) p.HandleDeath(block);
             }
             
             if (!hitWalkthrough) p.lastWalkthrough = -1;
@@ -71,8 +71,9 @@ namespace MCGalaxy.Blocks.Physics {
                 if (!CollideType.IsSolid(collide)) continue;
                 
                 int fallHeight = p.startFallY - bb.Min.Y;
-                if (fallHeight > p.level.Config.FallHeight * 32)
+                if (fallHeight > p.level.Config.FallHeight * 32) {
                     p.HandleDeath(Block.Air, null, false, true);
+                }
                 
                 p.startFallY = -1;          
                 return;

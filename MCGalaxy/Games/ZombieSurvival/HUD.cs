@@ -23,7 +23,7 @@ namespace MCGalaxy.Games.ZS {
         internal static void UpdateAllPrimary(ZSGame game) {
             int left = (int)(game.RoundEnd - DateTime.UtcNow).TotalSeconds;
             string status = FormatPrimary(game, left);
-            MessageAll(game, CpeMessageType.Status1, status);
+            game.MessageMap(CpeMessageType.Status1, status);
         }
         
         internal static void UpdatePrimary(ZSGame game, Player p) {
@@ -34,7 +34,7 @@ namespace MCGalaxy.Games.ZS {
 
         internal static void UpdateAllSecondary(ZSGame game) {
             string status = FormatSecondary(game);
-            MessageAll(game, CpeMessageType.Status2, status);
+            game.MessageMap(CpeMessageType.Status2, status);
         }
         
         internal static void UpdateSecondary(ZSGame game, Player p) {
@@ -70,10 +70,10 @@ namespace MCGalaxy.Games.ZS {
             string timespan = GetTimeLeft(seconds);
             if (timespan.Length > 0) {
                 const string format = "&a{0} %Salive %S({2}, map: {1})";
-                return String.Format(format, game.Alive.Count, game.MapName, timespan);
+                return String.Format(format, game.Alive.Count, game.Map.MapName, timespan);
             } else {
                 const string format = "&a{0} %Salive %S(map: {1})";
-                return String.Format(format, game.Alive.Count, game.MapName);
+                return String.Format(format, game.Alive.Count, game.Map.MapName);
             }
         }
         
@@ -87,15 +87,6 @@ namespace MCGalaxy.Games.ZS {
             string money = "&a" + p.money + " %S" + ServerConfig.Currency;
             string state = ", you are " + (p.Game.Infected ? "&cdead" : "&aalive");
             return money + state;
-        }
-        
-        static void MessageAll(ZSGame game, CpeMessageType type, string message) {
-            if (!game.Running) return;
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player p in online) {
-                if (!p.level.name.CaselessEq(game.MapName)) continue;
-                p.SendCpeMessage(type, message);
-            }
         }
     }
 }

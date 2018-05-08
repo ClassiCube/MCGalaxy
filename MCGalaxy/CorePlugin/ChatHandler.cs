@@ -30,7 +30,7 @@ namespace MCGalaxy.Core {
             if (cmd == "pony") {
                 p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
-                int ponycount = p.Extras.GetInt("MCGalaxy_Core_Pony", 0);                
+                int ponycount = p.Extras.GetInt("MCGalaxy_Core_Pony", 0);
                             
                 if (ponycount < 2) {
                     Chat.MessageGlobal("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", p.ColoredName);

@@ -123,12 +123,11 @@ namespace MCGalaxy.Commands.Fun {
             Player pl = GetPlayer(args.player, pos, true);
             if (pl == null) return false;
             
-            BlockID stone = Block.Cobblestone;
             Player p = args.player;
             if (p.level.physics >= 3 && args.weaponType >= WeaponType.Explode) {
-                pl.HandleDeath(stone, "@p %Swas blown up by " + p.ColoredName, true);
+                pl.HandleDeath(Block.Cobblestone, "@p %Swas blown up by " + p.ColoredName, true);
             } else {
-                pl.HandleDeath(stone, "@p %Swas hit by a missile from " + p.ColoredName);
+                pl.HandleDeath(Block.Cobblestone, "@p %Swas hit by a missile from " + p.ColoredName);
             }
             return true;
         }

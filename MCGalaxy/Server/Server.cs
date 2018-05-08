@@ -99,7 +99,7 @@ namespace MCGalaxy {
             MoveSqliteDll();
             MoveOutdatedFiles();
 
-            lava = new LavaSurvival();
+            lava = new LSGame();
             zombie = new ZSGame();
             Countdown = new CountdownGame();
             LoadAllSettings();

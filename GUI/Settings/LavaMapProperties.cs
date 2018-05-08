@@ -22,9 +22,9 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public sealed class LavaMapProperties {
-        internal readonly LavaSurvival.MapSettings m;
+        internal readonly LSGame.MapSettings m;
         
-        public LavaMapProperties(LavaSurvival.MapSettings m) {
+        public LavaMapProperties(LSGame.MapSettings m) {
             this.m = m;
         }
 
@@ -45,10 +45,10 @@ namespace MCGalaxy.Gui {
         
 
         [DisplayName("Layer height")]
-        public int LayerHeight { get { return m.layerHeight; } set { m.layerHeight = ClampI(value); } }
+        public int LayerHeight { get { return m.LayerHeight; } set { m.LayerHeight = ClampI(value); } }
 
         [DisplayName("Layer count")]
-        public int LayerCount { get { return m.layerCount; } set { m.layerCount = ClampI(value); } }
+        public int LayerCount { get { return m.LayerCount; } set { m.LayerCount = ClampI(value); } }
 
         [DisplayName("Layer time (mins)")]
         public double LayerTime { get { return m.layerInterval; } set { m.layerInterval = ClampD(value); } }

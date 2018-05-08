@@ -41,31 +41,30 @@ namespace MCGalaxy.Games {
         public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
     }
     
-    public sealed partial class ZSGame {
+	public sealed partial class ZSGame : RoundsGame {
+        public override string GameName { get { return "Zombie survival"; } }
+        public override bool TeleportAllowed { get { return !RoundInProgress; } }
+        public override bool Running { get { return running; } }
         
-        public const string InfectCol = "&infect";
-        
+        public LevelPicker Picker = new ZSLevelPicker();
         public DateTime RoundStart, RoundEnd;
-        public string LastLevelName = "";
+        public string LastMap = "";
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
 
-        List<string> infectMessages = new List<string>();
-        string lastPlayerToInfect = "";
-        int infectCombo = 0;
+        List<string> infectMessages = new List<string>();       
         bool running;
-        ZSPlugin plugin = new ZSPlugin();
         
         public void Start(Level level, int rounds) {
             running = true;
-            RoundInProgress = false;           
+            RoundInProgress = false;
             if (!SetStartLevel(level)) { running = false; return; }
 
             RoundsLeft = rounds;
             HookStats();
-            if (plugin.Game == null) { plugin.Game = this; plugin.Load(false); }
+            HookEventHandlers();
             
             Thread t = new Thread(RunGame);
             t.Name = "MCG_ZombieGame";
@@ -73,53 +72,23 @@ namespace MCGalaxy.Games {
         }
         
         bool SetStartLevel(Level level) {
+            string mapName;
             if (level == null) {
-                List<string> levels = Picker.GetCandidateLevels();
-                if (levels == null) return false;
-                
-                MapName = LevelPicker.GetRandomLevel(new Random(), levels);
-                Map = LevelInfo.FindExact(MapName)
-                    ?? CmdLoad.LoadLevel(null, MapName);
-                if (Map == null) return false;
+                List<string> maps = Picker.GetCandidateMaps();
+                if (maps == null) return false;
+                mapName = LevelPicker.GetRandomMap(new Random(), maps);
             } else {
-                MapName = level.name;
-                Map = level;
-            }
+                mapName = level.name;
+            }           
+            if (!SetMap(mapName)) return false;
             
-            Map.SaveChanges = false;
-            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", MapName);
+            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", Map.ColoredName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != Map) continue;
                 PlayerJoinedLevel(p, p.level, p.level);
             }
-            
-            if (ZSConfig.SetMainLevel)
-                Server.mainLevel = Map;
             return true;
-        }
-
-        /// <summary> If there are no infected players left, randomly selected one of the alive players to continue the infection. </summary>
-        public void AssignFirstZombie() {
-            if (!Running || !RoundInProgress || Infected.Count > 0) return;
-            Random random = new Random();
-            Player[] alive = Alive.Items;
-            if (alive.Length == 0) return;
-            int index = random.Next(alive.Length);
-            
-            while (alive[index].Game.Referee || !alive[index].level.name.CaselessEq(MapName)) {
-                if (index >= alive.Length - 1) {
-                    index = 0;
-                    alive = Alive.Items;
-                    if (alive.Length == 0) return;
-                } else {
-                    index++;
-                }
-            }
-            
-            Player zombie = alive[index];
-            Map.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
-            InfectPlayer(zombie, null);
         }
 
         public void InfectPlayer(Player p, Player killer) {
@@ -130,7 +99,9 @@ namespace MCGalaxy.Games {
             p.Game.CurrentRoundsSurvived = 0;
             p.Game.TimeInfected = DateTime.UtcNow;
             p.SetPrefix();
+            
             ResetPlayerState(p, true);
+            RespawnPlayer(p);
             
             CheckHumanPledge(p, killer);
             CheckBounty(p, killer);
@@ -140,16 +111,16 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p == null) return;
             Infected.Remove(p);
             Alive.Add(p);
+            
             ResetPlayerState(p, false);
+            RespawnPlayer(p);
         }
         
         void ResetPlayerState(Player p, bool infected) {
             p.Game.Infected = infected;
             p.Game.BlocksLeft = infected ? 25 : 50;
-            string col = infected ? Colors.red : p.color;
             
             ResetInvisibility(p);
-            UpdatePlayerColor(p, col);
             HUD.UpdateAllPrimary(this);
             HUD.UpdateTertiary(p);
         }
@@ -161,61 +132,15 @@ namespace MCGalaxy.Games {
             Entities.GlobalSpawn(p, false);
         }
 
-       void ChangeLevel(string next) {
-            Player[] online = PlayerInfo.Online.Items;
-            if (Map != null) {
-                Level.SaveSettings(Map);
-                Map.ChatLevel("The next map has been chosen - " + Colors.red + next.ToLower());
-                Map.ChatLevel("Please wait while you are transfered.");
-            }
-            string lastLevel = MapName;
-            
-            MapName = next;
-            Picker.QueuedMap = null;
-            CmdLoad.LoadLevel(null, next);
-            Map = LevelInfo.FindExact(next);
-            Map.SaveChanges = false;
-            if (ZSConfig.SetMainLevel)
-                Server.mainLevel = Map;
-            
-            online = PlayerInfo.Online.Items;
-            List<Player> players = new List<Player>(online.Length);
-            foreach (Player pl in online) {
-                pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
-                if (!pl.level.name.CaselessEq(next) && pl.level.name.CaselessEq(lastLevel)) {
-                    players.Add(pl);
-                }
-            }
-            JoinInRandomOrder(players, next);
-            
-            if (LastLevelName.Length > 0) {
-                Command.all.FindByName("Unload").Use(null, LastLevelName);
-            }
-            LastLevelName = next;
-        }
-        
-        static void JoinInRandomOrder(List<Player> players, string next) {
-            Random rnd = new Random();
-            while (players.Count > 0) {
-                int index = rnd.Next(0, players.Count);
-                Player pl = players[index];
-                
-                pl.SendMessage("Going to the next map - &a" + next);
-                PlayerActions.ChangeMap(pl, next);
-                players.RemoveAt(index);
-            }
-        }
-
         public override void End() {
             running = false;
             RoundsLeft = 0;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            if (plugin.Game != null) { plugin.Game = null; plugin.Unload(false); }
+            UnhookEventHandlers();
             
-            Player[] online = PlayerInfo.Online.Items;           
+            Player[] online = PlayerInfo.Online.Items;
             Alive.Clear();
             Infected.Clear();
 
@@ -229,12 +154,11 @@ namespace MCGalaxy.Games {
                 ResetInvisibility(pl);
                 pl.SetPrefix();
                 
-                if (pl.level == null || !pl.level.name.CaselessEq(MapName)) continue;
+                if (pl.level == null || pl.level != Map) continue;
                 HUD.Reset(pl);
             }
             
-            LastLevelName = "";
-            MapName = "";
+            LastMap = "";
             Map = null;
             UnhookStats();
         }
@@ -245,6 +169,111 @@ namespace MCGalaxy.Games {
                 if (bounty.Target.CaselessEq(target)) return bounty;
             }
             return null;
+        }
+
+        public override void PlayerLeftGame(Player p) {
+            Alive.Remove(p);
+            Infected.Remove(p);
+            p.Game.Infected = false;
+            RemoveBounties(p);
+            
+            AssignFirstZombie();
+            HUD.UpdateAllPrimary(this);
+        }
+        
+        public override bool HandlesChatMessage(Player p, string message) {
+            if (!Running || (p.level == null || p.level != Map)) return false;
+            if (Picker.Voting && Picker.HandlesMessage(p, message)) return true;
+            
+            if (message[0] == '~' && message.Length > 1) {
+                Player[] players = PlayerInfo.Online.Items;
+                string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
+                string toSend = p.ColoredName + type + message.Substring(1);
+                
+                foreach (Player pl in players) {
+                    if (pl.level != Map || !Chat.NotIgnoring(pl, p)) continue;
+                    if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected) {
+                        pl.SendMessage(toSend);
+                    }
+                }
+                return true;
+            } else if (message[0] == '`' && message.Length > 1) {
+                if (p.Game.Team == null) {
+                    Player.Message(p, "You are not on a team, so cannot send a team message."); return true;
+                }
+                p.Game.Team.Chat(p, message.Substring(1));
+                return true;
+            }
+            return false;
+        }
+        
+        void RemoveBounties(Player p) {
+            BountyData[] bounties = Bounties.Items;
+            foreach (BountyData b in bounties) {
+                if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
+                
+                string target = PlayerInfo.GetColoredName(p, b.Target);
+                Map.ChatLevel("Bounty on " + target + " %Sis no longer active.");
+                Bounties.Remove(b);
+                
+                Player setter = PlayerInfo.FindExact(b.Origin);
+                if (setter != null) setter.SetMoney(setter.money + b.Amount);
+            }
+        }
+        
+        public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
+            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
+            
+            if (RoundInProgress && lvl == Map && Running && p != null) {
+                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
+                p.Game.BlocksLeft = 25;
+                InfectPlayer(p, null);
+            }
+            if (RoundInProgress && oldLvl == Map && lvl != Map) {
+                PlayerLeftGame(p);
+            }
+            
+            if (lvl == Map) {
+                double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
+                if (startLeft >= 0)
+                    Player.Message(p, "%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
+                Player.Message(p, "This map has &a" + Map.Config.Likes +
+                              " likes %Sand &c" + Map.Config.Dislikes + " dislikes");
+                Player.Message(p, "This map's win chance is &a" + Map.WinChance + "%S%");
+                
+                if (Map.Config.Authors.Length > 0) {
+                    string[] authors = Map.Config.Authors.Replace(" ", "").Split(',');
+                    Player.Message(p, "It was created by {0}",
+                                   authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+                }
+
+                HUD.UpdatePrimary(this, p);
+                HUD.UpdateSecondary(this, p);
+                HUD.UpdateTertiary(p);
+                
+                if (Picker.Voting) Picker.SendVoteMessage(p);
+                return;
+            }
+
+            p.SetPrefix();
+            HUD.Reset(p);
+            Alive.Remove(p);
+            Infected.Remove(p);
+            
+            if (oldLvl != null && oldLvl == Map) {
+                HUD.UpdateAllPrimary(this);
+            }
+        }
+
+        public override void AdjustPrefix(Player p, ref string prefix) {
+            int winStreak = p.Game.CurrentRoundsSurvived;
+            
+            if (winStreak == 1)      prefix += "&4*" + p.color;
+            else if (winStreak == 2) prefix += "&7*" + p.color;
+            else if (winStreak == 3) prefix += "&6*" + p.color;
+            else if (winStreak > 0)  prefix += "&6" + winStreak + p.color;
         }
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
@@ -389,5 +418,31 @@ namespace MCGalaxy.Games {
             Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
         }
         #endregion
+    }	
+	    
+    internal class ZSLevelPicker : LevelPicker {
+        
+        public override List<string> GetCandidateMaps() {
+            List<string> maps = null;
+            bool useLevelList = ZSConfig.LevelList.Count > 0;
+            
+            if (useLevelList) {
+                maps = new List<string>(ZSConfig.LevelList);
+            } else {
+                string[] files = LevelInfo.AllMapFiles();
+                for (int i = 0; i < files.Length; i++) {
+                    files[i] = Path.GetFileNameWithoutExtension(files[i]);
+                }
+                maps = new List<string>(files);
+            }
+            
+            foreach (string ignore in ZSConfig.IgnoredLevelList) { maps.Remove(ignore); }
+            if (maps.Count < 3) {
+                string group = useLevelList ? "in your level list " : "";
+                Logger.Log(LogType.Warning, "You must have more than 3 levels {0}to change levels in Zombie Survival", group);
+                return null;
+            }
+            return maps;
+        }
     }
 }

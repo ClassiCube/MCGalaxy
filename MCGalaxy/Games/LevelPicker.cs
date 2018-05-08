@@ -24,7 +24,9 @@ namespace MCGalaxy.Games {
     public abstract class LevelPicker {
         public string QueuedMap;
         public List<string> RecentMaps = new List<string>();
-        
+        public int VoteTime = 20;
+        public bool Voting;
+
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
         internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
         
@@ -43,16 +45,16 @@ namespace MCGalaxy.Games {
             if (QueuedMap != null) return QueuedMap;
             
             try {
-                List<string> maps = GetCandidateLevels();
+                List<string> maps = GetCandidateMaps();
                 if (maps == null) return null;
                 
                 RemoveRecentLevels(maps);
                 Votes1 = 0; Votes2 = 0; Votes3 = 0;
                 
                 Random r = new Random();
-                Candidate1 = GetRandomLevel(r, maps);
-                Candidate2 = GetRandomLevel(r, maps);
-                Candidate3 = GetRandomLevel(r, maps);
+                Candidate1 = GetRandomMap(r, maps);
+                Candidate2 = GetRandomMap(r, maps);
+                Candidate3 = GetRandomMap(r, maps);
                 
                 if (!game.Running) return null;
                 DoLevelVote(game);
@@ -80,7 +82,7 @@ namespace MCGalaxy.Games {
         }
         
         void DoLevelVote(IGame game) {
-            Server.votingforlevel = true;
+            Voting = true;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != game.Map) continue;
@@ -88,7 +90,7 @@ namespace MCGalaxy.Games {
             }
             
             VoteCountdown(game);
-            Server.votingforlevel = false;
+            Voting = false;
         }
         
         void VoteCountdown(IGame game) {
@@ -96,16 +98,17 @@ namespace MCGalaxy.Games {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != game.Map || pl.Supports(CpeExt.MessageTypes)) continue;
-                pl.SendMessage("You have 20 seconds to vote for the next map");
+                pl.SendMessage("You have " + VoteTime + " seconds to vote for the next map");
             }
             
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < VoteTime; i++) {
                 players = PlayerInfo.Online.Items;
                 if (!game.Running) return;
                 
                 foreach (Player pl in players) {
                     if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
-                    pl.SendCpeMessage(CpeMessageType.BottomRight1, "&e" + (20 - i) + "s %Sleft to vote");
+                    string timeLeft = "&e" + (VoteTime - i) + "s %Sleft to vote";
+                    pl.SendCpeMessage(CpeMessageType.BottomRight1, timeLeft);
                 }
                 Thread.Sleep(1000);
             }
@@ -115,33 +118,25 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) pl.voted = false;
             
-            if (Votes1 >= Votes2) {
-                if (Votes3 > Votes1 && Votes3 > Votes2) {
-                   return Candidate3;
-                } else {
-                    return Candidate1;
-                }
+            if (Votes3 > Votes1 && Votes3 > Votes2) {
+                return Candidate3;
+            } else if (Votes1 >= Votes2) {
+                return Candidate1;
             } else {
-                if (Votes3 > Votes1 && Votes3 > Votes2) {
-                    return Candidate3;
-                } else {
-                    return Candidate2;
-                }
+                return Candidate2;
             }
-            
         }
         
-        internal static string GetRandomLevel(Random r, List<string> maps) {
+        internal static string GetRandomMap(Random r, List<string> maps) {
             int i = r.Next(0, maps.Count);
-            string map = maps[i];
-            
+            string map = maps[i];          
             maps.RemoveAt(i);
             return map;
         }
         
         /// <summary> Returns a list of maps that can be used for a round of this game. </summary>
         /// <returns> null if not enough levels are available, otherwise the list of levels. </returns>
-        public abstract List<string> GetCandidateLevels();
+        public abstract List<string> GetCandidateMaps();
         
         /// <summary> Sends the formatted vote message to the player (using bottom right if supported) </summary>
         public void SendVoteMessage(Player p) {
@@ -155,6 +150,16 @@ namespace MCGalaxy.Games {
                 Player.Message(p, line1);
                 Player.Message(p, line2);
             }
+        }
+        
+        public bool HandlesMessage(Player p, string message) {
+            if (!Voting) return false;
+            message = message.ToLower();
+            
+            return
+                Player.CheckVote(message, p, "1", "one",   ref Votes1) ||
+                Player.CheckVote(message, p, "2", "two",   ref Votes2) ||
+                Player.CheckVote(message, p, "3", "three", ref Votes3);
         }
     }
 }

@@ -149,7 +149,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (Server.lava.running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
 
             switch (block) {
@@ -261,7 +261,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (Server.lava.active && Server.lava.map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (Server.lava.running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
                 return true;
             
             switch (block) {

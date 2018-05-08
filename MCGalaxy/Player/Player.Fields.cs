@@ -243,7 +243,7 @@ namespace MCGalaxy {
         
         
         public bool cancelcommand, cancelchat, cancelmove, cancelBlock, cancelmysql;
-        public bool cancelmessage, cancellogin, cancelconnecting;        
+        public bool cancelmessage, cancellogin, cancelconnecting, cancelDeath;     
       
         /// <summary> Called when a player removes or places a block.
         /// NOTE: Currently this prevents the OnBlockChange event from being called. </summary>

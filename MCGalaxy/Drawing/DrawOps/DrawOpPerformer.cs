@@ -180,7 +180,7 @@ namespace MCGalaxy.Drawing.Ops {
                 // Check to make sure the block is actually different and that we can change it
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
-                // Set the block (inlined)              
+                // Set the block (inlined)
                 lvl.Changed = true;
                 if (b.Block >= Block.Extended) {
                     #if TEN_BIT_BLOCKS

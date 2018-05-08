@@ -20,32 +20,34 @@ using System;
 namespace MCGalaxy.Games {
 
     public abstract class IGame {
-        public string MapName;
         public Level Map;
         public abstract bool Running { get; }
-        
-        /// <summary> Whether players are allowed to teleport to others when not in referee mode. </summary>
+        public abstract string GameName { get; }
         public virtual bool TeleportAllowed { get { return true; } }
-        /// <summary> Returns whether this game handled the player sending a chat message. </summary>
-        public virtual bool HandlesChatMessage(Player p, string message) {  return false; }
-        
-        public virtual void PlayerJoinedServer(Player p) { }
+
+        public virtual bool HandlesChatMessage(Player p, string message) { return false; }        
         public virtual void PlayerJoinedGame(Player p) { }
         public virtual void PlayerLeftGame(Player p) { }
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
-        public virtual void OnHeartbeat(ref string name) { }
         
-        /// <summary> Adjusts the prefix (e.g. title) shown before the player's name in chat. </summary>
-        public virtual void AdjustPrefix(Player p, ref string prefix) { }
-        
+        public virtual void AdjustPrefix(Player p, ref string prefix) { }        
         public abstract void EndRound();
+        
+        public void MessageMap(CpeMessageType type, string message) {
+            if (!Running) return;
+            Player[] online = PlayerInfo.Online.Items;
+            
+            foreach (Player p in online) {
+                if (p.level != Map) continue;
+                p.SendCpeMessage(type, message);
+            }
+        }
     }
     
     public abstract class RoundsGame : IGame {
         public int RoundsLeft;
         public bool RoundInProgress;
         
-        public abstract string GameName { get; }
         public abstract void End();
         protected abstract void DoRound();
         

@@ -92,9 +92,9 @@ namespace MCGalaxy {
         public static ZSGame zombie;
         
         public static int YesVotes = 0, NoVotes = 0;
-        public static bool voting = false, votingforlevel = false;
+        public static bool voting = false;
 
-        public static LavaSurvival lava;
+        public static LSGame lava;
         public static CountdownGame Countdown;
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");

@@ -44,7 +44,6 @@ namespace MCGalaxy {
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
         public static void GlobalSpawn(Player p, Position pos, Orientation rot, bool self, string possession = "") {
             Player[] players = PlayerInfo.Online.Items;
-            p.Game.lastSpawnColor = p.Game.Infected ? ZSGame.InfectCol : p.color;
             TabList.Update(p, self);
             
             foreach (Player other in players) {
