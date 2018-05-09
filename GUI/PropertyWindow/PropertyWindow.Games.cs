@@ -75,12 +75,11 @@ namespace MCGalaxy.Gui {
                     catch { }
                 }
                 if (noUseList) {
-                    string[] files = LevelInfo.AllMapFiles();
-                    foreach (string file in files) {
+                    string[] allMaps = LevelInfo.AllMapNames();
+                    foreach (string map in allMaps) {
                         try {
-                            string name = Path.GetFileNameWithoutExtension(file);
-                            if (name.ToLower() != Server.mainLevel.name && !Server.lava.HasMap(name))
-                                ls_lstNotUsed.Items.Add(name);
+                            if (map.ToLower() != Server.mainLevel.name && !Server.lava.HasMap(map))
+                                ls_lstNotUsed.Items.Add(map);
                         }
                         catch (NullReferenceException) { }
                     }

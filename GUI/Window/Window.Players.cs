@@ -109,12 +109,7 @@ namespace MCGalaxy.Gui {
         }
                 
         void Players_AppendStatus(string text) {
-            if (InvokeRequired) {
-                Action<string> d = Players_AppendStatus;
-                Invoke(d, new object[] { text });
-            } else {
-                pl_statusBox.AppendText(text + Environment.NewLine);
-            }
+            pl_statusBox.AppendText(text + Environment.NewLine);
         }
 
         void Players_UpdateSelected() {

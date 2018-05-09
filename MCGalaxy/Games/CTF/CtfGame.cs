@@ -125,15 +125,16 @@ namespace MCGalaxy.Games {
         }
         
         public override void End() {
+            if (!running) return;
+            UnhookEventHandlers();
             running = false;
-            RoundsLeft = 0;
-            RoundInProgress = false;
             
+            RoundsLeft = 0;
+            RoundInProgress = false;            
             Blue.Members.Clear();
             Red.Members.Clear();
             
-            LastMap = "";
-            UnhookEventHandlers();
+            LastMap = "";          
             Picker.Clear();
             Map = null;
         }

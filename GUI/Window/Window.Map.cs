@@ -115,11 +115,10 @@ namespace MCGalaxy.Gui {
                 selectedLvl = map_lbUnloaded.SelectedItem.ToString();
             
             map_lbUnloaded.Items.Clear();
-            string[] files = LevelInfo.AllMapFiles();
-            foreach (string file in files) {
-                string name = Path.GetFileNameWithoutExtension(file);
-                if (LevelInfo.FindExact(name) == null)
-                    map_lbUnloaded.Items.Add(name);
+            string[] allMaps = LevelInfo.AllMapNames();
+            foreach (string map in allMaps) {
+                if (LevelInfo.FindExact(map) == null)
+                    map_lbUnloaded.Items.Add(map);
             }
             
             if (selectedLvl != null) {

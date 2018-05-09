@@ -96,10 +96,11 @@ namespace MCGalaxy.Games {
         
         protected virtual bool SetMap(string map) {
             Picker.QueuedMap = null;
-            Map = LevelInfo.FindExact(map);
-            if (Map == null) Map = CmdLoad.LoadLevel(null, map);
+            Level next = LevelInfo.FindExact(map);
+            if (next == null) next = CmdLoad.LoadLevel(null, map);
             
-            if (Map == null) return false;
+            if (next == null) return false;
+            Map = next;
             Map.SaveChanges = false;
             return true;
         }

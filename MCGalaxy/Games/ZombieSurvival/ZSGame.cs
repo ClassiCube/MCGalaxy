@@ -132,12 +132,14 @@ namespace MCGalaxy.Games {
         }
 
         public override void End() {
+            if (!running) return;            
             running = false;
+            UnhookEventHandlers();
+             
             RoundsLeft = 0;
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            UnhookEventHandlers();
             
             Player[] online = PlayerInfo.Online.Items;
             Alive.Clear();
@@ -428,11 +430,8 @@ namespace MCGalaxy.Games {
             if (useLevelList) {
                 maps = new List<string>(ZSConfig.LevelList);
             } else {
-                string[] files = LevelInfo.AllMapFiles();
-                for (int i = 0; i < files.Length; i++) {
-                    files[i] = Path.GetFileNameWithoutExtension(files[i]);
-                }
-                maps = new List<string>(files);
+                string[] allMaps = LevelInfo.AllMapNames();
+                maps = new List<string>(allMaps);
             }
             
             foreach (string ignore in ZSConfig.IgnoredLevelList) { maps.Remove(ignore); }

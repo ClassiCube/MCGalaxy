@@ -107,9 +107,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void SearchMaps(Player p, string keyword, string modifier) {
-            string[] files = LevelInfo.AllMapFiles();
-            List<string> maps = FilterList(files, keyword,
-                                           map => Path.GetFileNameWithoutExtension(map));
+            string[] allMaps = LevelInfo.AllMapNames();
+            List<string> maps = FilterList(allMaps, keyword, map => map);
             OutputList(p, keyword, "search levels", "maps", modifier, maps);
         }
         

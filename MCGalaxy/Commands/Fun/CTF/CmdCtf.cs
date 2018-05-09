@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static void HandleGo(Player p) {
             if (Server.ctf == null || !Server.ctf.Running)  {
-                Player.Message(p, "CTF is not running."); return;
+                Player.Message(p, "CTF is not running"); return;
             }
             PlayerActions.ChangeMap(p, Server.ctf.Map.name);
         }

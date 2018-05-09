@@ -50,7 +50,15 @@ namespace MCGalaxy {
         // TODO: support loading other map files eventually
         public static string[] AllMapFiles() {
             return Directory.GetFiles("levels", "*.lvl");
-        }       
+        }
+        
+        public static string[] AllMapNames() {
+            string[] files = AllMapFiles();
+            for (int i = 0; i < files.Length; i++) {
+                files[i] = Path.GetFileNameWithoutExtension(files[i]);
+            }
+            return files;
+        }
         
         public static bool MapExists(string name) {
             return File.Exists(MapPath(name));

@@ -35,9 +35,11 @@ namespace MCGalaxy.Games {
             List<Player> players = DoRoundCountdown();
             if (players == null) return;
 
+            if (!running) return;
             RoundInProgress = true;
             StartRound(players);
             if (!running) return;
+            DoCoreGame();
             
             if (running) EndRound();
             if (running) VoteAndMoveToNextMap();
@@ -128,10 +130,11 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void DoCoreGame(Random random) {
+        void DoCoreGame() {
             Player[] alive = Alive.Items;
             string lastTimeLeft = null;
             int lastCountdown = -1;
+            Random random = new Random();
             
             while (alive.Length > 0 && running && RoundInProgress) {
                 Player[] infected = Infected.Items;
