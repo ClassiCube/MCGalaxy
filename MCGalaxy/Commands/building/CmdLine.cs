@@ -43,11 +43,17 @@ namespace MCGalaxy.Commands.Building {
             if (msg == "normal")   return DrawMode.solid;
             if (msg == "walls")    return DrawMode.walls;
             if (msg == "straight") return DrawMode.straight;
+            if (msg == "connected") return DrawMode.wire;
             return DrawMode.normal;
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             LineDrawOp line = new LineDrawOp();
+            if (dArgs.Mode == DrawMode.wire) {
+                Player.Message(dArgs.Player, "%HIn connected lines mode, endpoint of each line also forms the " +
+            	               "start point of next line. Use %T/Abort %Hto stop drawing");
+            }
+            
             line.WallsMode = dArgs.Mode == DrawMode.walls;
             string msg = dArgs.Message;
             if (msg.IndexOf(' ') == -1 || dArgs.Mode == DrawMode.normal) return line;
@@ -79,10 +85,22 @@ namespace MCGalaxy.Commands.Building {
             dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
         }
         
+        protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
+            if (!base.DoDraw(p, marks, state, block)) return false;
+            DrawArgs dArgs = (DrawArgs)state;
+            if (dArgs.Mode != DrawMode.wire) return true;
+            
+            // special for connected line mode
+            p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
+            Vec3U16 pos = p.lastClick;
+            p.DoBlockchangeCallback(pos.X, pos.Y, pos.Z, p.GetHeldBlock());
+            return false;
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/Line <brush args> <mode> <length>");
             Player.Message(p, "%HCreates a line between two points.");
-            Player.Message(p, "   %HModes: &fnormal/walls/straight");
+            Player.Message(p, "   %HModes: &fnormal/walls/straight/connected");
             Player.Message(p, "   %HLength specifies the max number of blocks in the line.");
             Player.Message(p, BrushHelpLine);
         }
