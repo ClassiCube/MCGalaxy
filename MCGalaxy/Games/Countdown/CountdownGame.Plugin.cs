@@ -69,7 +69,9 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (!respawning || !Remaining.Contains(p)) return;
-            PlayerDied(p);
+            Map.ChatLevel(p.ColoredName + " %Sis out of countdown!");
+            Remaining.Remove(p);
+            UpdatePlayersLeft();
         }
     }
 }

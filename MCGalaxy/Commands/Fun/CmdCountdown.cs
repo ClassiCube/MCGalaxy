@@ -221,7 +221,7 @@ namespace MCGalaxy.Commands.Fun {
             
             game.FreezeMode = mode == "freeze" || mode == "frozen";
             game.SpeedType = speed;
-            game.BeginRound(p);
+            game.BeginRound();
         }
         
         void HandleEnd(Player p, CountdownGame game) {
