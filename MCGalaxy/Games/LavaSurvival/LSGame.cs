@@ -79,15 +79,12 @@ namespace MCGalaxy.Games {
             if (!running) return;
             running = false;
             UnhookEventHandlers();
-
-            RoundsLeft = 0;
-            RoundInProgress = false;
+            
             Flooded = false;
             deaths.Clear();
-
-            LastMap = "";
             Map.Unload(true, false);
-            Map = null;
+            
+            ResetState();
             Logger.Log(LogType.GameActivity, "[Lava Survival] Game stopped.");
         }
         

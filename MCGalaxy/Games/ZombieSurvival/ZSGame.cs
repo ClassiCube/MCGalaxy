@@ -135,19 +135,15 @@ namespace MCGalaxy.Games {
             if (!running) return;            
             running = false;
             UnhookEventHandlers();
-             
-            RoundsLeft = 0;
-            RoundInProgress = false;
+            
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            
-            Player[] online = PlayerInfo.Online.Items;
+                       
             Alive.Clear();
             Infected.Clear();
-
             Bounties.Clear();
-            Picker.Clear();
             
+            Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
                 pl.Game.RatedMap = false;
@@ -159,8 +155,7 @@ namespace MCGalaxy.Games {
                 HUD.Reset(pl);
             }
             
-            LastMap = "";
-            Map = null;
+            ResetState();
             UnhookStats();
         }
         
@@ -223,10 +218,6 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
-            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
-            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
-            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
-            
             if (RoundInProgress && lvl == Map && Running && p != null) {
                 Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
                 p.Game.BlocksLeft = 25;

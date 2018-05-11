@@ -33,6 +33,7 @@ namespace MCGalaxy.Games {
         public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
         
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
+        public abstract void End();
         public abstract void EndRound();
         
         public void MessageMap(CpeMessageType type, string message) {
@@ -51,8 +52,6 @@ namespace MCGalaxy.Games {
         public bool RoundInProgress;
         public string LastMap = "";
         public LevelPicker Picker;
-        
-        public abstract void End();
         protected abstract void DoRound();
         
         public void RunGame() {
@@ -124,6 +123,21 @@ namespace MCGalaxy.Games {
                 PlayerActions.ChangeMap(pl, Map);
                 transfers.RemoveAt(i);
             }
+        }
+        
+        protected void ResetState() {
+            RoundsLeft = 0;
+            RoundInProgress = false;
+            
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online) {
+                if (pl.level != Map) continue;
+                TabList.Update(pl, true);
+            }
+            
+            Picker.Clear();
+            LastMap = "";
+            Map = null;
         }
     }
 }

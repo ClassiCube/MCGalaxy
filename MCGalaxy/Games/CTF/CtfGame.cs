@@ -131,17 +131,12 @@ namespace MCGalaxy.Games {
             running = false;
             UnhookEventHandlers();          
             
-            RoundsLeft = 0;
-            RoundInProgress = false;
-            
             Blue.Members.Clear();
             Red.Members.Clear();
             Blue.Points = 0;
             Red.Points = 0;
             
-            LastMap = "";          
-            Picker.Clear();
-            Map = null;
+            ResetState();
         }
         
 

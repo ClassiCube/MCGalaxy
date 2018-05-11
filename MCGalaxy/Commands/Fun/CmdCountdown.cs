@@ -187,7 +187,7 @@ namespace MCGalaxy.Commands.Fun {
             if (game.Status == CountdownGameStatus.Disabled) {
                 Player.Message(p, "Countdown is not running."); return;
             }
-            game.Disable();
+            game.End();
         }
         
         

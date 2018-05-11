@@ -34,6 +34,7 @@ namespace MCGalaxy.Games {
                 if (!running) return;
                 if (!RoundInProgress) break;
                 Tick();
+                Thread.Sleep(300);
             }
             
             if (running) EndRound();

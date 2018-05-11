@@ -103,7 +103,7 @@ namespace MCGalaxy.Games {
             
             for (int i = 0; i < VoteTime; i++) {
                 players = PlayerInfo.Online.Items;
-                if (!game.Running) return;
+                if (!game.Running) break;
                 
                 foreach (Player pl in players) {
                     if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
@@ -112,8 +112,17 @@ namespace MCGalaxy.Games {
                 }
                 Thread.Sleep(1000);
             }
+            
+            // Reset vote messages for CPE clients
+            players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
+                pl.SendCpeMessage(CpeMessageType.BottomRight3, "");
+                pl.SendCpeMessage(CpeMessageType.BottomRight2, "");
+                pl.SendCpeMessage(CpeMessageType.BottomRight1, "");
+            }
         }
-                
+        
         string NextLevel(Random r, List<string> levels) {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) pl.voted = false;
@@ -129,7 +138,7 @@ namespace MCGalaxy.Games {
         
         internal static string GetRandomMap(Random r, List<string> maps) {
             int i = r.Next(0, maps.Count);
-            string map = maps[i];          
+            string map = maps[i];
             maps.RemoveAt(i);
             return map;
         }

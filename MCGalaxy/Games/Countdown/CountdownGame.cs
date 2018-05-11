@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
             Chat.MessageGlobal("Countdown has been enabled!");
         }
 
-        public void Disable() {
+        public override void End() {
             if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);            
             Status = CountdownGameStatus.Disabled;
             UnhookEventHandlers();

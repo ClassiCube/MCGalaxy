@@ -64,7 +64,7 @@ namespace MCGalaxy.Games {
         
         void HandleLevelUnload(Level lvl) {
             if (Status == CountdownGameStatus.Disabled || lvl != Map) return;
-            Disable();
+            End();
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
