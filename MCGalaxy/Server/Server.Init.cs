@@ -144,7 +144,7 @@ namespace MCGalaxy {
         }
 
         static void InitLavaSurvival() {
-            if (!Server.lava.StartOnStartup) return;
+	        if (!Server.lava.StartOnStartup) return;
             try {
                 Server.lava.Start(null, "", int.MaxValue);
             } catch (Exception e) { Logger.LogError(e); }
