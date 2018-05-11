@@ -17,12 +17,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
-namespace MCGalaxy.Commands.CPE {
-    
-    public sealed class CmdCustomColors : Command {
-        
+namespace MCGalaxy.Commands.CPE {    
+    public sealed class CmdCustomColors : Command {        
         public override string name { get { return "CustomColors"; } }
         public override string shortcut { get { return "ccols"; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -32,21 +29,17 @@ namespace MCGalaxy.Commands.CPE {
             string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
             
-            switch (args[0].ToLower()) {
-                case "add":
-                case "create":
-                    AddHandler(p, args); break;
-                case "remove":
-                case "delete":
-                    RemoveHandler(p, args); break;
-                case "list":
-                    string modifer = args.Length > 1 ? args[1] : "";
-                    ListHandler(p, "ccols list", modifer); break;
-                case "edit":
-                case "modify":
-                    EditHandler(p, args); break;
-                default:
-                    Help(p); break;
+            if (IsCreateCommand(args[0])) {
+                AddHandler(p, args);
+            } else if (IsDeleteCommand(args[0])) {
+                RemoveHandler(p, args);
+            } else if (IsEditCommand(args[0])) {
+                EditHandler(p, args);
+            } else if (args[0].CaselessEq("list")) {
+                string modifer = args.Length > 1 ? args[1] : "";
+                ListHandler(p, "ccols list", modifer);
+            } else {
+                Help(p);
             }
         }
         

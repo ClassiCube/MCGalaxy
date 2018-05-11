@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Chatting {
                         OutputMessage(p, row);
                     }
                 }
-            } else if (args[0].CaselessEq("del") || args[0].CaselessEq("delete")) {
+            } else if (IsDeleteCommand(args[0])) {
                 if (args.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
                 } else if (args[1].CaselessEq("all")) {

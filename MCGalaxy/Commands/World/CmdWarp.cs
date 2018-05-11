@@ -59,13 +59,13 @@ namespace MCGalaxy.Commands.Misc {
             }
             
             string name = args[1];
-            if (cmd.CaselessEq("create") || cmd.CaselessEq("add")) {
+            if (IsCreateCommand(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, 1)) return;
                 if (warps.Exists(name)) { Player.Message(p, "{0} already exists", group); return; }
 
                 warps.Create(name, p);
                 Player.Message(p, "{0} {1} created.", group, name);
-            } else if (cmd.CaselessEq("delete") || cmd.CaselessEq("remove")) {
+            } else if (IsDeleteCommand(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, 2)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;

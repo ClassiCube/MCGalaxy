@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Bots {
             string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {
                 AddBot(p, bot);
-            } else if (args[0].CaselessEq("remove")) {
+            } else if (IsDeleteCommand(args[0])) {
                 RemoveBot(p, bot);
             } else if (args[0].CaselessEq("text")) {
                 SetBotText(p, bot, value);

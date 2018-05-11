@@ -27,9 +27,8 @@ namespace MCGalaxy.Commands.Eco {
         public override void Use(Player p, string message) {
             if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }            
             string[] args = message.SplitSpaces(2);
-            if (!(args[0].CaselessEq("add") || args[0].CaselessEq("del"))) { Help(p); return; }
 
-            if (args[0].CaselessEq("add")) {
+            if (IsCreateCommand(args[0])) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
                     Player.Message(p, "&cUse a : to separate the award name from its description."); 
@@ -42,13 +41,15 @@ namespace MCGalaxy.Commands.Eco {
                     Chat.MessageGlobal("Award added: &6{0} : {1}", args[0], args[1]);
                     Awards.SaveAwards();
                 }
-            } else {
+            } else if (IsDeleteCommand(args[0])) {
                 if (!Awards.Remove(args[1])) {
                     Player.Message(p, "This award does not exist."); return;
                 } else {
                     Chat.MessageGlobal("Award removed: &6{0}", args[1]);
                     Awards.SaveAwards();
                 }
+            } else {
+                Help(p);
             }
         }
         

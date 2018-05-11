@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands.Bots{
             if (!Formatter.ValidName(p, ai, "bot AI")) return;
             if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
 
-            if (cmd.CaselessEq("add")) {
+            if (IsCreateCommand(cmd)) {
                 HandleAdd(p, ai, args);
-            } else if (cmd.CaselessEq("del")) {
+            } else if (IsDeleteCommand(cmd)) {
                 HandleDelete(p, ai, args);
             } else if (cmd.CaselessEq("info")) {
                 HandleInfo(p, ai);

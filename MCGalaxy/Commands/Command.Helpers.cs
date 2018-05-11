@@ -74,6 +74,18 @@ namespace MCGalaxy {
             else
                 Player.Message(p, "Can only {0} players ranked below {1}", action, grp.ColoredName);
         }
+        
+        protected internal static bool IsCreateCommand(string str) {
+            return str.CaselessEq("create") || str.CaselessEq("add") || str.CaselessEq("new");
+        } 
+        
+        protected internal static bool IsDeleteCommand(string str) {
+            return str.CaselessEq("del") || str.CaselessEq("delete") || str.CaselessEq("remove");
+        }
+        
+        protected internal static bool IsEditCommand(string str) {
+            return str.CaselessEq("edit") || str.CaselessEq("change") || str.CaselessEq("modify");
+        }        
     }
     
     public sealed class CommandTypes {

@@ -38,10 +38,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             string opt = args[0];
             
-            if (opt.CaselessEq("add")) {
+            if (IsCreateCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 CreateZone(p, args, 1);
-            } else if (opt.CaselessEq("del")) {
+            } else if (IsDeleteCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 DeleteZone(p, args);
             } else if (opt.CaselessEq("edit") || opt.CaselessEq("set")) {

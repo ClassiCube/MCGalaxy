@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
                 } else {
                     Help(p);
                 }
-            } else if (args[1].CaselessEq("delete") || args[1].CaselessEq("remove")) {
+            } else if (IsDeleteCommand(args[1])) {
                 Delete(p, args[0]);
             } else if (args[1].CaselessEq("information") || args[1].CaselessEq("info")) {
                 Info(p, args[0]);

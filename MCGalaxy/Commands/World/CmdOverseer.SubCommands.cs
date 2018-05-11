@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.World {
                 } else {
                     Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
-            } else if (cmd == "DELETE" || cmd == "REMOVE") {
+            } else if (IsDeleteCommand(cmd)) {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
                 Command.all.FindByName("Save").Use(p, "");
@@ -221,7 +221,7 @@ namespace MCGalaxy.Commands.World {
             } else if (cmd == "ADD") {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
-            } else if (cmd == "DEL") {
+            } else if (IsDeleteCommand(cmd)) {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 DeleteBuildPlayer(p, name);
             } else if (cmd == "BLOCK") {

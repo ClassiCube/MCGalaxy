@@ -103,19 +103,16 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             LevelPreset preset = FindPreset(args[2]);
-            switch (args[1].ToLower()) {
-                case "new":
-                case "create":
-                case "add":
-                    AddPreset(p, args, preset); break;
-                case "delete":
-                case "remove":
-                    RemovePreset(p, args, preset); break;
-                case "edit":
-                case "change":
-                    EditPreset(p, args, preset); break;
-                default:
-                    OnSetupCommandHelp(p); break;
+            string cmd = args[1];
+            
+            if (Command.IsCreateCommand(cmd)) {
+                AddPreset(p, args, preset);
+            } else if (Command.IsDeleteCommand(cmd)) {
+                RemovePreset(p, args, preset);
+            } else if (Command.IsEditCommand(cmd)) {
+                EditPreset(p, args, preset);
+            } else {
+                OnSetupCommandHelp(p);
             }
         }
         

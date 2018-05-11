@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args[0].CaselessEq("add")) {
                 if (args.Length < 2) { Help(p); return; }
                 AddVIP(p, args[1]);
-            } else if (args[0].CaselessEq("remove")) {
+            } else if (IsDeleteCommand(args[0])) {
                 if (args.Length < 2) { Help(p); return; }
                 RemoveVIP(p, args[1]);
             } else if (args[0].CaselessEq("list")) {
