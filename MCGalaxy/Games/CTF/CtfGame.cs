@@ -112,6 +112,8 @@ namespace MCGalaxy.Games {
             RoundsLeft = rounds;
             Blue.Members.Clear();
             Red.Members.Clear();
+            Blue.Points = 0;
+            Red.Points = 0;
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
             running = true;
@@ -126,13 +128,16 @@ namespace MCGalaxy.Games {
         
         public override void End() {
             if (!running) return;
-            UnhookEventHandlers();
             running = false;
+            UnhookEventHandlers();          
             
             RoundsLeft = 0;
-            RoundInProgress = false;            
+            RoundInProgress = false;
+            
             Blue.Members.Clear();
             Red.Members.Clear();
+            Blue.Points = 0;
+            Red.Points = 0;
             
             LastMap = "";          
             Picker.Clear();

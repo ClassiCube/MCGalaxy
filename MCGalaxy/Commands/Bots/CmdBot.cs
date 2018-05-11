@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Bots {
                 RenameBot(p, bot, value);
             } else if (args[0].CaselessEq("copy")) {
                 CopyBot(p, bot, value);
-            }  else {
+            } else {
                 Help(p);
             }
         }

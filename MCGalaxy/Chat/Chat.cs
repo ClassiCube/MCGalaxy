@@ -99,10 +99,11 @@ namespace MCGalaxy {
             foreach (Player p in players) {
                 if (!NotIgnoring(p, source)) continue;
                 
-                if (p.Chatroom == chatRoom)
+                if (p.Chatroom == chatRoom) {
                     Player.Message(p, message);
-                if (p.spyChatRooms.Contains(chatRoom) && p.Chatroom != chatRoom)
+                } else if (p.spyChatRooms.CaselessContains(chatRoom)) {
                     Player.Message(p, spyMessage);
+                }
             }
         }
         

@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Use(Player p, string message) {
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             string action = args[0].ToLower();
             
@@ -51,15 +52,8 @@ namespace MCGalaxy.Commands.Chatting {
                 p.Ignores.Output(p); return;
             }
             
-            string unignore = null;
-            for (int i = 0; i < p.Ignores.Names.Count; i++) {
-                if (!action.CaselessEq(p.Ignores.Names[i])) continue;
-                unignore = p.Ignores.Names[i]; break;
-            }
-            
-            if (unignore != null) {
-                p.Ignores.Names.Remove(unignore);
-                Player.Message(p, "&aNo longer ignoring {0}", unignore);
+            if (p.Ignores.Names.CaselessRemove(action)) {
+                Player.Message(p, "&aNo longer ignoring {0}", action);
             } else {
                 int matches = 0;
                 Player who = PlayerInfo.FindMatches(p, action, out matches);

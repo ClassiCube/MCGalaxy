@@ -80,6 +80,8 @@ namespace MCGalaxy.Games {
                 Chat.MessageLevel(Map, "The round ended in a tie!");
             }
             
+            Blue.Points = 0;
+            Red.Points = 0;
             Thread.Sleep(4000);
             //MYSQL!
             cache.ForEach(delegate(CtfData d) {

@@ -81,12 +81,11 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleJoin(Player p, string[] parts) {
-            if (parts.Length > 1 && Chatrooms.Contains(parts[1])) {
+            if (parts.Length > 1 && Chatrooms.CaselessContains(parts[1])) {
                 string room = parts[1];
-                if (p.spyChatRooms.Contains(room)) {
+                if (p.spyChatRooms.CaselessRemove(room)) {
                     Player.Message(p, "The chat room '{0}' has been removed " +
                                       "from your spying list because you are joining the room.", room);
-                    p.spyChatRooms.Remove(room);
                 }
                 
                 Player.Message(p, "You joined the chat room '{0}'", room);
@@ -111,7 +110,7 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             string room = parts[1];
-            if (Chatrooms.Contains(parts[1])) {
+            if (Chatrooms.CaselessContains(parts[1])) {
                 Player.Message(p, "The chatoom '{0}' already exists", room);
             } else {
                 Chatrooms.Add(room);
@@ -132,7 +131,7 @@ namespace MCGalaxy.Commands.Chatting {
                 return;
             }
 
-            if (!Chatrooms.Contains(room)) {
+            if (!Chatrooms.CaselessContains(room)) {
                 Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
             
@@ -148,7 +147,7 @@ namespace MCGalaxy.Commands.Chatting {
             Chat.MessageGlobal("{0} is being deleted", room);
             if (p.Chatroom == room)
                 HandleLeave(p);
-            Chatrooms.Remove(room);
+            Chatrooms.CaselessRemove(room);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
@@ -157,8 +156,7 @@ namespace MCGalaxy.Commands.Chatting {
                     Player.Message(pl, "You left the chatroom '{0}' because it is being deleted", room);
                 }
                 
-                if (pl.spyChatRooms.Contains(room)) {
-                    pl.spyChatRooms.Remove(room);
+                if (pl.spyChatRooms.CaselessRemove(room)) {
                     Player.Message(pl, "Stopped spying on chatroom '{0}' because it was deleted by: {1}", 
                                    room, p.ColoredName);
                 }
@@ -173,12 +171,12 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             string room = parts[1];
-            if (Chatrooms.Contains(room)) {
+            if (Chatrooms.CaselessContains(room)) {
                 if (p.Chatroom == room) {
                     Player.Message(p, "You cannot spy on your own room"); return;
                 }
                 
-                if (p.spyChatRooms.Contains(room)) {
+                if (p.spyChatRooms.CaselessContains(room)) {
                     Player.Message(p, "'{0}' is already in your spying list.", room);
                 } else {
                     p.spyChatRooms.Add(room);
@@ -199,15 +197,14 @@ namespace MCGalaxy.Commands.Chatting {
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             
-            if (!Chatrooms.Contains(room)) {
+            if (!Chatrooms.CaselessContains(room)) {
                 Player.Message(p, "There is no chatroom with the name '{0}'", room); return;
             }
             if (pl.Rank >= p.Rank) { MessageTooHighRank(p, "force-join", false); return;}
             
-            if (pl.spyChatRooms.Contains(room)) {
+            if (pl.spyChatRooms.CaselessRemove(room)) {
                 Player.Message(pl, "The chat room '{0}' has been removed from your spying list " +
                                    "because you are force joining the room '{0}'", room);
-                pl.spyChatRooms.Remove(room);
             }
             
             Player.Message(pl, "You've been forced to join the chat room '{0}'", room);
@@ -254,7 +251,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         void HandleOther(Player p, string[] parts) {
             string room = parts[0];
-            if (Chatrooms.Contains(room)) {
+            if (Chatrooms.CaselessContains(room)) {
                 Player.Message(p, "Players in room '" + room + "' :");
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
