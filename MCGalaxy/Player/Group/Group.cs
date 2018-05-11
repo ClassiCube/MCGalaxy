@@ -167,10 +167,10 @@ namespace MCGalaxy {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks
-                Register(new Group(LevelPermission.Builder, 400, 300, "Builder", '2'));
-                Register(new Group(LevelPermission.AdvBuilder, 1200, 900, "AdvBuilder", '3'));
-                Register(new Group(LevelPermission.Operator, 2500, 5400, "Operator", 'c'));
-                Register(new Group(LevelPermission.Admin, 65536, int.MaxValue, "SuperOP", 'e'));
+                Register(new Group(LevelPermission.Builder, 262144, 300, "Builder", '2')); //64^3 build perm
+                Register(new Group(LevelPermission.AdvBuilder, 2097152, 900, "AdvBuilder", '3')); //128^3 build perm
+                Register(new Group(LevelPermission.Operator, 16777216, 5400, "Operator", 'c')); //256^3 build perm
+                Register(new Group(LevelPermission.Admin, 134217728, int.MaxValue, "SuperOP", 'e')); //512^3 build perm
             }
 
             if (BannedRank == null)
