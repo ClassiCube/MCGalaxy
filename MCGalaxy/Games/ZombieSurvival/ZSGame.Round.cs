@@ -180,7 +180,6 @@ namespace MCGalaxy.Games {
                         && killer.level == Map && alive.level == Map)
                     {
                         InfectPlayer(alive, killer);
-                        alive.Game.LastInfecter = killer.name;
                         
                         if (lastKiller == killer.name) {
                             infectCombo++;

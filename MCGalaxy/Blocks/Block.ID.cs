@@ -116,9 +116,9 @@ namespace MCGalaxy {
         public const byte Crate = 64;
         public const byte StoneBrick = 65;
 
-        //public const byte Door_Pink_air = 66;      // unused in core
+        //public const byte Door_Pink_air  = 66;     // unused in core
         //public const byte Door_Black_Air = 67;     // unused in core
-        //public const byte Door_Gray_Air = 68;      // unused in core
+        //public const byte Door_Gray_Air  = 68;     // unused in core
         //public const byte Door_White_Air = 69;     // unused in core
         public const byte FlagBase = 70;
 

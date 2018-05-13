@@ -54,9 +54,6 @@ namespace MCGalaxy.Games {
         /// <summary> Point in time this player was infected at. </summary>
         public DateTime TimeInfected;
         
-        /// <summary> Name of last player to infect this player, if any. </summary>
-        public string LastInfecter;
-        
         /// <summary> Whether the real names of zombies are always shown to the player. </summary>
         public bool Aka = false;
         
@@ -100,7 +97,6 @@ namespace MCGalaxy.Games {
             InvisibilityPotions = 0;
             RevivesUsed = 0;
             TimeInfected = DateTime.MinValue;
-            LastInfecter = null;
         }
                 
         public int TotalRoundsSurvived;

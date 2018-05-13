@@ -73,9 +73,9 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress) return;
             RoundInProgress = false;
             
-            if (Blue.Points >= Config.RoundPoints || Blue.Points > Red.Points) {
+            if (Blue.Points > Red.Points) {
                 Chat.MessageLevel(Map, Blue.ColoredName + " %Swon this round of CTF!");
-            } else if (Red.Points >= Config.RoundPoints || Red.Points > Blue.Points) {
+            } else if (Red.Points > Blue.Points) {
                 Chat.MessageLevel(Map, Red.ColoredName + " %Swon this round of CTF!");
             } else {
                 Chat.MessageLevel(Map, "The round ended in a tie!");
