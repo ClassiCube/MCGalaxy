@@ -234,7 +234,7 @@ namespace MCGalaxy.Gui {
             }
             
             if (Server.shuttingDown || MessageBox.Show("Really shutdown the server? All players will be disconnected!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                if (!Server.shuttingDown) Server.Stop(false);
+                Server.Stop(false, ServerConfig.DefaultShutdownMessage);
                 notifyIcon.Dispose();
             } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'

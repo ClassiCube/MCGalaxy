@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui {
         
         void main_BtnRestart_Click(object sender, EventArgs e) {
             if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                Server.Stop(true);
+                Server.Stop(true, ServerConfig.DefaultRestartMessage);
             }
         }
         

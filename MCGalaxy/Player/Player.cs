@@ -293,7 +293,6 @@ namespace MCGalaxy {
                 save();
 
                 PlayerInfo.Online.Remove(this);
-                Server.PlayerListUpdate();
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 
                 if (ServerConfig.AutoLoadMaps && level.Config.AutoUnload && !level.IsMuseum && !level.HasPlayers())

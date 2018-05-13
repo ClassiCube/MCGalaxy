@@ -53,6 +53,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 } else {
                     reason = args[0]; secTime = 10;
                 }
+                
                 if (secTime <= 0) { Player.Message(p, "Countdown time must be greater than zero"); return; } 
                 DoShutdown(secTime, reason);
             }
@@ -80,7 +81,9 @@ namespace MCGalaxy.Commands.Maintenance {
         static void ShutdownCallback(SchedulerTask task) {
             ShutdownArgs args = (ShutdownArgs)task.State;
             if (args.Delay == 0) {
-                Server.Stop(false, args.Reason);
+                string reason = args.Reason;
+                if (reason.Length == 0) reason = ServerConfig.DefaultShutdownMessage;
+                Server.Stop(false, reason);
             } else {
                 Log("Server shutdown in " + args.Delay + " seconds");
                 args.Delay--;

@@ -31,7 +31,6 @@ namespace MCGalaxy {
         public delegate void VoidHandler();
         
         public static event MessageEventHandler OnURLChange;
-        public static event VoidHandler OnPlayerListChange;
         public static event VoidHandler OnSettingsUpdate;
         
         public static IRCBot IRC;

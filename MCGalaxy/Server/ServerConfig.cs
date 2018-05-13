@@ -225,6 +225,8 @@ namespace MCGalaxy {
         public static string DefaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
         [ConfigString("custom-demote-message", "Messages", "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(")]
         public static string DefaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";       
+        [ConfigString("custom-restart-message", "Messages", "Server restarted. Sign in again and rejoin.")]
+        public static string DefaultRestartMessage = "Server restarted. Sign in again and rejoin.";
         
         [ConfigBool("log-notes", "Other", true)]
         public static bool LogNotes = true;

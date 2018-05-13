@@ -48,7 +48,7 @@ namespace MCGalaxy {
         
         [Obsolete("Use Logger.Log(LogType, String)")]
         public void Log(string message) { Logger.Log(LogType.SystemActivity, message); }
-                
+        
         [Obsolete("Use Logger.Log(LogType, String)")]
         public void Log(string message, bool systemMsg = false) {
             LogType type = systemMsg ? LogType.BackgroundActivity : LogType.SystemActivity;
@@ -222,25 +222,30 @@ namespace MCGalaxy {
             }
         }
         
-        public static Thread Stop(bool restart) { return Stop(restart, ""); }
+        static readonly object stopLock = new object();
+        static volatile Thread stopThread;
         public static Thread Stop(bool restart, string msg) {
             Server.shuttingDown = true;
-            if (msg.Length == 0) {
-                msg = restart ? "Server restarted. Sign in again and rejoin." : ServerConfig.DefaultShutdownMessage;
+            lock (stopLock) {
+                if (stopThread != null) return stopThread;
+                Exit(restart, msg);
+                
+                stopThread = new Thread(() => ShutdownThread(restart, msg));
+                stopThread.Start();
+                return stopThread;
             }
-            
-            Exit(restart, msg);
-            Thread stopThread = new Thread(() => ShutdownThread(restart, msg));
-            stopThread.Start();
-            return stopThread;
         }
         
         static void ShutdownThread(bool restarting, string msg) {
             try {
-                Player[] players = PlayerInfo.Online.Items; 
+                Logger.Log(LogType.SystemActivity, "Server shutting down ({0})", msg);
+            } catch { }
+            
+            try {
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) { p.Leave(msg); }
-            } catch (Exception ex) { 
-                Logger.LogError(ex); 
+            } catch (Exception ex) {
+                Logger.LogError(ex);
             }
 
             try {
@@ -258,8 +263,12 @@ namespace MCGalaxy {
                     File.WriteAllText("text/autoload.txt", autoload);
                 }
             } catch (Exception ex) {
-                Logger.LogError(ex); 
+                Logger.LogError(ex);
             }
+            
+            try {
+                Logger.Log(LogType.SystemActivity, "Server shutdown completed");
+            } catch { }
             
             try { FileLogger.Flush(null); } catch { }
             if (restarting) Process.Start(RestartPath);
@@ -279,10 +288,6 @@ namespace MCGalaxy {
                 IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
             } catch {
             }
-        }
-
-        public static void PlayerListUpdate() {
-            if (OnPlayerListChange != null) OnPlayerListChange();
         }
 
         public static void UpdateUrl(string url) {

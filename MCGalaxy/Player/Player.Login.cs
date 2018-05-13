@@ -73,8 +73,7 @@ namespace MCGalaxy {
             loggedIn = true;
             connections.Remove(this);
             RemoveFromPending();
-            Server.PlayerListUpdate();
-            
+
             SessionStartTime = DateTime.UtcNow;
             LastLogin = DateTime.Now;
             TotalTime = TimeSpan.FromSeconds(1);
