@@ -29,10 +29,8 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
     
     internal sealed class CtfData {
-        public Player p;
         public int Captures, Tags, Points;
-        public bool hasflag, tagging, TeamChatting;
-        public CtfData(Player p) { this.p = p; }
+        public bool HasFlag, TagCooldown, TeamChatting;
     }
     
     public sealed class CtfTeam2 {
@@ -58,12 +56,13 @@ namespace MCGalaxy.Games {
         public CTFConfig Config = new CTFConfig();
         public CTFGame() { Picker = new CTFLevelPicker(); }
 
-        List<CtfData> cache = new List<CtfData>();
         internal CtfData Get(Player p) {
-            foreach (CtfData d in cache) {
-                if (d.p == p) return d;
+            object data;
+            if (!p.Extras.TryGet("MCG_CTF_DATA", out data)) {
+                data = new CtfData();
+                p.Extras.Put("MCG_CTF_DATA", data);
             }
-            return null;
+            return (CtfData)data;
         }
 
         protected override bool SetMap(string map) {
@@ -141,12 +140,7 @@ namespace MCGalaxy.Games {
         
 
         public void JoinTeam(Player p, CtfTeam2 team) {
-            if (Get(p) == null) {
-                cache.Add(new CtfData(p));
-            } else {
-                Get(p).hasflag = false;
-            }
-            
+            Get(p).HasFlag = false;
             team.Members.Add(p);
             Chat.MessageLevel(Map, p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             Player.Message(p, "You are now on the " + team.ColoredName + " team!");

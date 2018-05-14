@@ -199,13 +199,13 @@ namespace MCGalaxy {
         }
 
         
-        public static void ReloadMap(Player p, Player who, bool showMessage) {
+        public static void ReloadMap(Player p, Player who, bool announce) {
             who.Loading = true;
             Entities.DespawnEntities(who);
             who.SendMap(who.level);
             Entities.SpawnEntities(who);
             who.Loading = false;
-            if (!showMessage) return;
+            if (!announce) return;
             
             if (p == null || !Entities.CanSee(who, p)) {
                 who.SendMessage("&bMap reloaded");

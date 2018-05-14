@@ -58,7 +58,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerDeath(Player p, BlockID deathblock) {
             if (!running || p.level != Map) return;
-            if (!Get(p).hasflag) return;
+            if (!Get(p).HasFlag) return;
             
             CtfTeam2 team = TeamOf(p);
             if (team != null) DropFlag(p, team);
@@ -166,9 +166,9 @@ namespace MCGalaxy.Games {
             if (data == null) return;
             
             if (data.TeamChatting) {
-                Player.Message(data.p, "You are no longer chatting with your team!");
+                Player.Message(p, "You are no longer chatting with your team!");
             } else {
-                Player.Message(data.p, "You are now chatting with your team!");
+                Player.Message(p, "You are now chatting with your team!");
             }
             
             data.TeamChatting = !data.TeamChatting;

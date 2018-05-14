@@ -188,11 +188,8 @@ namespace MCGalaxy.Events.PlayerEvents {
             IEvent<OnSendingMotd>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
-                try {
-                    items[i].method(p, ref motd);
-                } catch (Exception ex) {
-                    LogHandlerException(ex, items[i]);
-                }
+                try { items[i].method(p, ref motd); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
     }

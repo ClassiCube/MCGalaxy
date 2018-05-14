@@ -29,7 +29,7 @@ namespace MCGalaxy.Games {
         protected override void DoRound() {
             if (!running) return;
             
-            RoundInProgress = true;       
+            RoundInProgress = true;
             while (Blue.Points < Config.RoundPoints && Red.Points < Config.RoundPoints) {
                 if (!running) return;
                 if (!RoundInProgress) break;
@@ -45,26 +45,28 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level != Map) continue;
-                
                 CtfTeam2 team = TeamOf(p);
-                if (team == null || Get(p).tagging) continue;
+                CtfData data = Get(p);
+                
+                if (team == null || data.TagCooldown) continue;
                 if (!OnOwnTeamSide(p.Pos.BlockZ, team)) continue;
                 CtfTeam2 opposing = Opposing(team);
                 
                 Player[] opponents = opposing.Members.Items;
                 foreach (Player other in opponents) {
                     if (!MovementCheck.InRange(p, other, 2 * 32)) continue;
+                    CtfData otherData = Get(other);
 
-                    Get(other).tagging = true;
+                    otherData.TagCooldown = true;
                     Player.Message(other, p.ColoredName + " %Stagged you!");
                     Command.all.FindByName("Spawn").Use(other, "");
-                    Thread.Sleep(300);
+                    Thread.Sleep(300); // TODO: get rid of this
                     
-                    if (Get(other).hasflag) DropFlag(p, opposing);
-                    Get(p).Points += Config.Tag_PointsGained;
-                    Get(other).Points -= Config.Tag_PointsLost;
-                    Get(p).Tags++;
-                    Get(other).tagging = false;
+                    if (otherData.HasFlag) DropFlag(p, opposing);
+                    data.Points += Config.Tag_PointsGained;
+                    otherData.Points -= Config.Tag_PointsLost;
+                    data.Tags++;
+                    otherData.TagCooldown = false;
                 }
             }
         }
@@ -84,13 +86,21 @@ namespace MCGalaxy.Games {
             Blue.Points = 0;
             Red.Points = 0;
             Thread.Sleep(4000);
-            //MYSQL!
-            cache.ForEach(delegate(CtfData d) {
-                              d.hasflag = false;
-                              Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
-                                                          "WHERE Name = @0", d.p.name, d.Points, d.Captures, d.Tags);
-                          });
+            SaveDB();
             Chat.MessageLevel(Map, "Starting next round!");
+        }
+        
+        void SaveDB() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != Map) continue;
+                CtfData data = Get(p);
+                
+                // TODO: Move to MySQL save event
+                data.HasFlag = false;
+                Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
+                                            "WHERE Name = @0", p.name, data.Points, data.Captures, data.Tags);
+            }
         }
         
         
@@ -98,7 +108,7 @@ namespace MCGalaxy.Games {
         void TakeFlag(Player p, CtfTeam2 team) {
             CtfTeam2 opposing = Opposing(team);
             Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
-            Get(p).hasflag = true;
+            Get(p).HasFlag = true;
         }
         
         /// <summary> Called when the given player, while holding opposing team's flag, clicks on their own flag. </summary>
@@ -108,9 +118,9 @@ namespace MCGalaxy.Games {
             p.cancelBlock = true;
             
             CtfData data = Get(p);
-            if (data.hasflag) {
+            if (data.HasFlag) {
                 Chat.MessageLevel(Map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
-                data.hasflag = false;
+                data.HasFlag = false;
                 data.Points += Config.Capture_PointsGained;
                 data.Captures++;
                 
@@ -126,9 +136,9 @@ namespace MCGalaxy.Games {
         /// <summary> Called when the given player drops the opposing team's flag. </summary>
         void DropFlag(Player p, CtfTeam2 team) {
             CtfData data = Get(p);
-            if (!data.hasflag) return;
+            if (!data.HasFlag) return;
             
-            data.hasflag = false;
+            data.HasFlag = false;
             Chat.MessageLevel(Map, team.Color + p.DisplayName + " DROPPED THE FLAG!");
             data.Points -= Config.Capture_PointsLost;
             
