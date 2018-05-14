@@ -163,7 +163,6 @@ namespace MCGalaxy.Games {
         void HandlePlayerCommand(Player p, string cmd, string args) {
             if (!running || p.level != Map || cmd != "teamchat") return;
             CtfData data = Get(p);
-            if (data == null) return;
             
             if (data.TeamChatting) {
                 Player.Message(p, "You are no longer chatting with your team!");

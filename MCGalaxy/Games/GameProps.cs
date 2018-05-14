@@ -104,7 +104,7 @@ namespace MCGalaxy.Games {
         public int CurrentRoundsSurvived;
         public int TotalInfected;
         public int MaxInfected;
-        public int CurrentInfected;        
+        public int CurrentInfected;
         
         internal List<DateTime> NoclipLog = new List<DateTime>(5);
         internal List<DateTime> SpeedhackLog = new List<DateTime>(5);

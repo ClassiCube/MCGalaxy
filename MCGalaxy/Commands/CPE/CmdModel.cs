@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("models")) {
-                Player.Message(p, "%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sitting");
+                Player.Message(p, "%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
                 Player.Message(p, "%HTo set a block model, use a block ID for the model name.");
                 Player.Message(p, "%HType %T/Help Model scale %Hfor how to scale a model.");
             } else if (message.CaselessEq("scale")) {
