@@ -36,4 +36,13 @@ namespace MCGalaxy.Events.ServerEvents {
             }
         }
     }
+    
+    public delegate void OnShuttingDown(bool restarting, string message);
+    public sealed class OnShuttingDownEvent : IEvent<OnShuttingDown> {
+        
+        public static void Call(bool restarting, string message) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(restarting, message));
+        }        
+    }
 }

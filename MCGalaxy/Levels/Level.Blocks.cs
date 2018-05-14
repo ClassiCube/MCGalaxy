@@ -386,7 +386,7 @@ namespace MCGalaxy {
                     FastSetExtTile(x, y, z, (BlockRaw)block);
                 } else {
                     blocks[b] = (BlockRaw)block;
-                    if (old >= Block.Extended) {               
+                    if (old >= Block.Extended) {
                         ushort x, y, z;
                         IntToPos(b, out x, out y, out z);
                         FastRevertExtTile(x, y, z);

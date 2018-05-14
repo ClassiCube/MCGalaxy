@@ -25,6 +25,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Scripting;
@@ -275,19 +276,16 @@ namespace MCGalaxy {
             Environment.Exit(0);
         }
         
-        static void Exit(bool restarting, string msg) {
+        static void Exit(bool restarting, string message) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) { p.save(); }
-            foreach (Player p in players) { p.Leave(msg); }
+            foreach (Player p in players) { p.Leave(message); }
 
-            Player.connections.ForEach(p => p.Leave(msg));
+            Player.connections.ForEach(p => p.Leave(message));
             Plugin.UnloadAll();
             if (Listener != null) Listener.Close();
             
-            try {
-                IRC.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
-            } catch {
-            }
+            OnShuttingDownEvent.Call(restarting, message);
         }
 
         public static void UpdateUrl(string url) {

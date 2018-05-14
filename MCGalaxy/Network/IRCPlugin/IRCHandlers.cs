@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.DB;
 using Sharkbite.Irc;
 
@@ -45,6 +46,7 @@ namespace MCGalaxy.Network {
             OnPlayerChatEvent.Register(HandleChat, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
+            OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
 
             // Regster events for incoming
             bot.connection.Listener.OnNick += Listener_OnNick;
@@ -75,6 +77,7 @@ namespace MCGalaxy.Network {
             OnPlayerChatEvent.Unregister(HandleChat);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnModActionEvent.Unregister(HandleModerationAction);
+            OnShuttingDownEvent.Unregister(HandleShutdown);
             
             // Regster events for incoming
             bot.connection.Listener.OnNick -= Listener_OnNick;
@@ -163,6 +166,10 @@ namespace MCGalaxy.Network {
             
             string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
             bot.Say(name + "%S: " + message, p.opchat);
+        }
+        
+        void HandleShutdown(bool restarting, string message) {
+            bot.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
         }
         
         
