@@ -132,7 +132,7 @@ namespace MCGalaxy.Games {
         }
 
         public override void End() {
-            if (!running) return;            
+            if (!running) return;
             running = false;
             UnhookEventHandlers();
             

@@ -19,7 +19,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using MCGalaxy;
 using MCGalaxy.UI;
 
 namespace MCGalaxy.Cli {
@@ -56,10 +55,28 @@ namespace MCGalaxy.Cli {
                 
                 Server.Start();
                 Console.Title = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
+                Console.CancelKeyPress += OnCancelKeyPress;
                 ConsoleLoop();
             } catch (Exception e) {
                 Logger.LogError(e);
                 FileLogger.Flush(null);
+            }
+        }
+        
+        static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) {
+            switch (e.SpecialKey) {
+                case ConsoleSpecialKey.ControlBreak:
+                    // Cannot set e.Cancel for this one
+                    AppendFormatted("&e-- Server shutdown (Ctrl+Break) --");
+                    Thread stopThread = Server.Stop(false, ServerConfig.DefaultShutdownMessage);
+                    stopThread.Join();
+                    break;
+                    
+                case ConsoleSpecialKey.ControlC:
+                    e.Cancel = true;
+                    AppendFormatted("&e-- Server shutdown (Ctrl+C) --" );
+                    Server.Stop(false, ServerConfig.DefaultShutdownMessage);
+                    break;
             }
         }
         
@@ -93,11 +110,7 @@ namespace MCGalaxy.Cli {
         }
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
-            ConsoleColor prevColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Update for MCGalaxy was found!");
-            Console.WriteLine("To update, replace with the files from " + Updater.UploadsURL);
-            Console.ForegroundColor = prevColor;
+            AppendFormatted("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
         
         static void WriteToConsole(string message) {
@@ -109,18 +122,14 @@ namespace MCGalaxy.Cli {
         static void ConsoleLoop() {
             while (true) {
                 try {
-                    string msg = Console.ReadLine().Trim(); // Make sure we have no whitespace!
-                    Thread t = null;
-                    
+                    string msg = Console.ReadLine().Trim(); // Trim whitespace                
                     if (msg == "/") {
-                        t = UIHelpers.RepeatCommand();
+                        UIHelpers.RepeatCommand();
                     } else if (msg.Length > 0 && msg[0] == '/') {
-                        t = UIHelpers.HandleCommand(msg.Substring(1));
+                        UIHelpers.HandleCommand(msg.Substring(1));
                     } else {
                         UIHelpers.HandleChat(msg);
                     }
-                    
-                    if (t != null && msg.CaselessEq("/restart")) { t.Join(); break; }
                 } catch (Exception ex) {
                     Logger.LogError(ex);
                 }

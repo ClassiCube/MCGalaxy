@@ -33,20 +33,20 @@ namespace MCGalaxy.UI {
             Logger.Log(LogType.PlayerChat, "(console): " + text);
         }
         
-        public static Thread RepeatCommand() {
+        public static void RepeatCommand() {
             if (lastCMD.Length == 0) {
                 Logger.Log(LogType.CommandUsage, "(console): Cannot repeat command - no commands used yet.");
-                return null;
+                return;
             }
             Logger.Log(LogType.CommandUsage, "Repeating %T/" + lastCMD);
-            return HandleCommand(lastCMD);
+            HandleCommand(lastCMD);
         }
         
-        public static Thread HandleCommand(string text) {
+        public static void HandleCommand(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) {
                 Logger.Log(LogType.CommandUsage, "(console): Whitespace commands are not allowed."); 
-                return null;
+                return;
             }
             if (text[0] == '/' && text.Length > 1)
                 text = text.Substring(1);
@@ -63,14 +63,14 @@ namespace MCGalaxy.UI {
             }
             
             Command.Search(ref name, ref args);
-            if (Server.Check(name, args)) { Server.cancelcommand = false; return null; }            
+            if (Server.Check(name, args)) { Server.cancelcommand = false; return; }            
             Command cmd = Command.all.Find(name);
             
             if (cmd == null) { 
-                Logger.Log(LogType.CommandUsage, "(console): Unknown command \"{0}\"", name); return null; 
+                Logger.Log(LogType.CommandUsage, "(console): Unknown command \"{0}\"", name); return; 
             }
             if (!cmd.SuperUseable) { 
-                Logger.Log(LogType.CommandUsage, "(console): /{0} can only be used in-game.", cmd.name); return null; 
+                Logger.Log(LogType.CommandUsage, "(console): /{0} can only be used in-game.", cmd.name); return; 
             }
             
             Thread thread = new Thread(
@@ -90,7 +90,6 @@ namespace MCGalaxy.UI {
             thread.Name = "MCG_ConsoleCommand";
             thread.IsBackground = true;
             thread.Start();
-            return thread;
         }
         
         public static string Format(string message) {

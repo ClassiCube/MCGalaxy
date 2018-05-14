@@ -63,7 +63,6 @@ namespace MCGalaxy.Gui.Components {
 
         string CurrentDate { get { return "[" + DateTime.Now.ToString("T") + "] "; } }
 
-        /// <summary> Initializes a new instance of the <see cref="ColoredTextBox"/> class. </summary>
         public ColoredTextBox() : base() {
             LinkClicked += HandleLinkClicked;
         }
