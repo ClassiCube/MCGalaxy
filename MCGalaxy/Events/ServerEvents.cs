@@ -28,11 +28,8 @@ namespace MCGalaxy.Events.ServerEvents {
             IEvent<OnSendingHeartbeat>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
-                try {
-                    items[i].method(service, ref name);
-                } catch (Exception ex) {
-                    LogHandlerException(ex, items[i]);
-                }
+                try { items[i].method(service, ref name); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
     }

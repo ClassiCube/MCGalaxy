@@ -53,7 +53,7 @@ namespace MCGalaxy.Games {
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
 
-        List<string> infectMessages = new List<string>();       
+        List<string> infectMessages = new List<string>();
         bool running;
         
         public void Start(Level level, int rounds) {
@@ -78,14 +78,14 @@ namespace MCGalaxy.Games {
                 mapName = LevelPicker.GetRandomMap(new Random(), maps);
             } else {
                 mapName = level.name;
-            }           
+            }
             if (!SetMap(mapName)) return false;
             
             Chat.MessageGlobal("A game of zombie survival is starting on: {0}", Map.ColoredName);
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != Map) continue;
-                PlayerJoinedLevel(p, p.level, p.level);
+                PlayerJoinedGame(p);
             }
             return true;
         }
@@ -138,7 +138,7 @@ namespace MCGalaxy.Games {
             
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-                       
+            
             Alive.Clear();
             Infected.Clear();
             Bounties.Clear();
@@ -166,6 +166,32 @@ namespace MCGalaxy.Games {
             }
             return null;
         }
+        
+        public override void PlayerJoinedGame(Player p) {
+            p.SetPrefix();
+            HUD.UpdatePrimary(this, p);
+            HUD.UpdateSecondary(this, p);
+            HUD.UpdateTertiary(p);
+            
+            if (RoundInProgress) {
+                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
+                p.Game.BlocksLeft = 25;
+                InfectPlayer(p, null);
+            }
+
+            double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
+            if (startLeft >= 0) {
+                Player.Message(p, "&a{0}%Sseconds left until the round starts. &aRun!", (int)startLeft);
+            }
+            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes", 
+                           Map.Config.Likes, Map.Config.Dislikes);
+            Player.Message(p, "This map's win chance is &a{0}%S%", Map.WinChance);
+            
+            if (Map.Config.Authors.Length == 0) return;
+            string[] authors = Map.Config.Authors.Replace(" ", "").Split(',');
+            Player.Message(p, "It was created by {0}",
+                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+        }
 
         public override void PlayerLeftGame(Player p) {
             Alive.Remove(p);
@@ -173,8 +199,14 @@ namespace MCGalaxy.Games {
             p.Game.Infected = false;
             RemoveBounties(p);
             
-            AssignFirstZombie();
-            HUD.UpdateAllPrimary(this);
+            if (!running || !RoundInProgress || Infected.Count > 0) return;
+            Random random = new Random();
+            Player[] alive = Alive.Items;
+            if (alive.Length == 0) return;
+            
+            Player zombie = alive[random.Next(alive.Length)];
+            Map.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
+            InfectPlayer(zombie, null);
         }
         
         public override bool HandlesChatMessage(Player p, string message) {
@@ -214,48 +246,6 @@ namespace MCGalaxy.Games {
                 
                 Player setter = PlayerInfo.FindExact(b.Origin);
                 if (setter != null) setter.SetMoney(setter.money + b.Amount);
-            }
-        }
-        
-        public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) {
-            if (RoundInProgress && lvl == Map && Running && p != null) {
-                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
-                p.Game.BlocksLeft = 25;
-                InfectPlayer(p, null);
-            }
-            if (RoundInProgress && oldLvl == Map && lvl != Map) {
-                PlayerLeftGame(p);
-            }
-            
-            if (lvl == Map) {
-                double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
-                if (startLeft >= 0)
-                    Player.Message(p, "%a" + (int)startLeft + " %Sseconds left until the round starts. %aRun!");
-                Player.Message(p, "This map has &a" + Map.Config.Likes +
-                              " likes %Sand &c" + Map.Config.Dislikes + " dislikes");
-                Player.Message(p, "This map's win chance is &a" + Map.WinChance + "%S%");
-                
-                if (Map.Config.Authors.Length > 0) {
-                    string[] authors = Map.Config.Authors.Replace(" ", "").Split(',');
-                    Player.Message(p, "It was created by {0}",
-                                   authors.Join(n => PlayerInfo.GetColoredName(p, n)));
-                }
-
-                HUD.UpdatePrimary(this, p);
-                HUD.UpdateSecondary(this, p);
-                HUD.UpdateTertiary(p);
-                
-                if (Picker.Voting) Picker.SendVoteMessage(p);
-                return;
-            }
-
-            p.SetPrefix();
-            HUD.Reset(p);
-            Alive.Remove(p);
-            Infected.Remove(p);
-            
-            if (oldLvl != null && oldLvl == Map) {
-                HUD.UpdateAllPrimary(this);
             }
         }
 
@@ -410,8 +400,8 @@ namespace MCGalaxy.Games {
             Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
         }
         #endregion
-    }    
-        
+    }
+    
     internal class ZSLevelPicker : LevelPicker {
         
         public override List<string> GetCandidateMaps() {

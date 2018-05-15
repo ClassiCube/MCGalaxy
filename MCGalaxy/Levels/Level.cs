@@ -115,16 +115,6 @@ namespace MCGalaxy {
             return null;
         }
         
-        public bool ShouldShowJoinMessage(Level prev) {
-            ZSGame zs = Server.zombie;
-            if (zs.Running && this == zs.Map &&
-                (prev == this || zs.LastMap.Length == 0 || prev.name.CaselessEq(zs.LastMap)))
-                return false;
-            if (Server.lava.Running && Server.lava.HasMap(name))
-                return false;
-            return true;
-        }
-        
         /// <summary> The currently active game running on this map,
         /// or null if there is no game running. </summary>
         public IGame CurrentGame() {

@@ -167,7 +167,21 @@ namespace MCGalaxy.Events.PlayerEvents {
             CallCommon(pl => pl(p, prevLevl, level));
         }
     }
-
+    
+    public delegate void OnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce);
+    /// <summary> Called when a player has been sent a new map, and has been spawned in that map. </summary>
+    public sealed class OnJoinedLevelEvent : IEvent<OnJoinedLevel> {
+        
+        public static void Call(Player p, Level prevLevel, Level level, ref bool announce) {
+            IEvent<OnJoinedLevel>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, prevLevel, level, ref announce); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
     public delegate void OnPlayerAction(Player p, PlayerAction action, 
                                         string message, bool stealth);
     /// <summary> Called when a player performs an action. </summary>

@@ -30,7 +30,6 @@ namespace MCGalaxy.Games {
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }
         public virtual void PlayerJoinedGame(Player p) { }
         public virtual void PlayerLeftGame(Player p) { }
-        public virtual void PlayerJoinedLevel(Player p, Level lvl, Level oldLvl) { }
         
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
         public abstract void End();
@@ -66,11 +65,8 @@ namespace MCGalaxy.Games {
                 Logger.LogError(ex);
                 Chat.MessageGlobal("&c" + GameName + " disabled due to an error.");
                 
-                try {
-                    End();
-                } catch (Exception ex2) {
-                    Logger.LogError(ex2);
-                }
+                try { End(); } 
+                catch (Exception ex2) { Logger.LogError(ex2); }
             }
         }
         
@@ -138,6 +134,24 @@ namespace MCGalaxy.Games {
             Picker.Clear();
             LastMap = "";
             Map = null;
+        }
+        
+        protected void HandleJoinedCommon(Player p, Level prevLevel, Level level, ref bool announce) {
+            if (prevLevel == Map && level != Map) {
+                if (Picker.Voting) Picker.ResetVoteMessage(p);
+            } else if (level == Map) {
+                if (Picker.Voting) Picker.SendVoteMessage(p);
+            }
+            
+            if (level != Map) return;
+            if (prevLevel == Map || LastMap.Length == 0 || prevLevel.name.CaselessEq(LastMap))
+                announce = false;
+        }
+        
+        protected void HandleLevelUnload(Level lvl) {
+            if (lvl != Map) return;
+            Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);
+            lvl.cancelunload = true;
         }
     }
 }

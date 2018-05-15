@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
-            OnSentMapEvent.Register(HandleOnSentMap, Priority.High);
+            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
         }
         
         void UnhookEventHandlers() {
@@ -52,22 +52,19 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
-            OnSentMapEvent.Unregister(HandleOnSentMap);
+            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
         }
         
         
         void HandlePlayerDeath(Player p, BlockID deathblock) {
-            if (!running || p.level != Map) return;
-            if (!Get(p).HasFlag) return;
-            
+            if (p.level != Map || !Get(p).HasFlag) return;
             CtfTeam2 team = TeamOf(p);
             if (team != null) DropFlag(p, team);
         }
         
         void HandlePlayerChat(Player p, string message) {
             if (Picker.HandlesMessage(p, message)) { p.cancelchat = true; return; }
-            if (!running || p.level != Map) return;
-            if (!Get(p).TeamChatting) return;
+            if (p.level != Map || !Get(p).TeamChatting) return;
             
             CtfTeam2 team = TeamOf(p);
             if (team == null) return;
@@ -79,8 +76,22 @@ namespace MCGalaxy.Games {
             p.cancelchat = true;
         }
         
+        void HandlePlayerCommand(Player p, string cmd, string args) {
+            if (p.level != Map || cmd != "teamchat") return;
+            CtfData data = Get(p);
+            
+            if (data.TeamChatting) {
+                Player.Message(p, "You are no longer chatting with your team!");
+            } else {
+                Player.Message(p, "You are now chatting with your team!");
+            }
+            
+            data.TeamChatting = !data.TeamChatting;
+            p.cancelcommand = true;
+        }
+        
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
-            if (!running || p.level != Map) return;
+            if (p.level != Map) return;
             CtfTeam2 team = TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
@@ -100,32 +111,20 @@ namespace MCGalaxy.Games {
         
         void HandleDisconnect(Player p, string reason) {
             if (p.level != Map) return;
-            CtfTeam2 team = TeamOf(p);
-            if (team == null) return;
-            
-            DropFlag(p, team);
-            team.Remove(p);
-            Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
-        }
-
-        void HandleLevelUnload(Level lvl) {
-            if (running && lvl == Map) {
-                Logger.Log(LogType.GameActivity, "Unload Failed!, A ctf game is currently going on!");
-                lvl.cancelunload = true;
-            }
+            PlayerLeftGame(p);
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (!running || p.level != Map) return;
-            
+            if (p.level != Map) return;
             CtfTeam2 team = TeamOf(p);
+            
             if (team != null) pos = team.SpawnPos;
             if (team != null && respawning) DropFlag(p, team);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
-            if (p == null || !running || p.level != Map) return;
+            if (p == null || p.level != Map) return;
             CtfTeam2 team = TeamOf(p);
             
             if (p.Game.Referee) {
@@ -137,41 +136,22 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void HandleOnSentMap(Player p, Level prevLevel, Level level) {
-            if (p == null || !running) return;
+        void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            HandleJoinedCommon(p, prevLevel, level, ref announce);
+            if (prevLevel == Map && level != Map) {
+                PlayerLeftGame(p);
+            } else if (level != Map) { return; }
+            if (TeamOf(p) != null) return;
             
-            if (prevLevel == Map) {
-                CtfTeam2 team = TeamOf(p);
-                if (team == null) return;
-                
-                DropFlag(p, team);
-                team.Remove(p);
-                Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
-            } else if (level == Map) {
-                if (Blue.Members.Count > Red.Members.Count) {
-                    JoinTeam(p, Red);
-                } else if (Red.Members.Count > Blue.Members.Count) {
-                    JoinTeam(p, Blue);
-                } else if (new Random().Next(2) == 0) {
-                    JoinTeam(p, Red);
-                } else {
-                    JoinTeam(p, Blue);
-                }
-            }
-        }
-        
-        void HandlePlayerCommand(Player p, string cmd, string args) {
-            if (!running || p.level != Map || cmd != "teamchat") return;
-            CtfData data = Get(p);
-            
-            if (data.TeamChatting) {
-                Player.Message(p, "You are no longer chatting with your team!");
+            if (Blue.Members.Count > Red.Members.Count) {
+                JoinTeam(p, Red);
+            } else if (Red.Members.Count > Blue.Members.Count) {
+                JoinTeam(p, Blue);
+            } else if (new Random().Next(2) == 0) {
+                JoinTeam(p, Red);
             } else {
-                Player.Message(p, "You are now chatting with your team!");
+                JoinTeam(p, Blue);
             }
-            
-            data.TeamChatting = !data.TeamChatting;
-            p.cancelcommand = true;
         }
     }
 }

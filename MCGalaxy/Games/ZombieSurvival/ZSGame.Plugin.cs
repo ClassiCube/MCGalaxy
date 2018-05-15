@@ -42,6 +42,7 @@ namespace MCGalaxy.Games {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
         }
         
         void UnhookEventHandlers() {
@@ -57,6 +58,7 @@ namespace MCGalaxy.Games {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
         }
 
         
@@ -117,21 +119,13 @@ namespace MCGalaxy.Games {
             if (p.level != Map) return;
             
             if (action == PlayerAction.UnReferee) {
-                PlayerJoinedLevel(p, Map, Map);
+                PlayerJoinedGame(p);
                 Command.all.FindByName("Spawn").Use(p, "");
                 p.Game.Referee = false;
-                
-                if (p.Supports(CpeExt.HackControl)) {
-                    p.Send(Hacks.MakeHackControl(p, p.level.GetMotd(p)));
-                }
             } else {
-                HandlePlayerDisconnect(p, null);                
+                PlayerLeftGame(p);
                 p.Game.Referee = true;
                 Entities.GlobalDespawn(p, false, false);
-                
-                if (p.Supports(CpeExt.HackControl)) {
-                    p.Send(Packet.HackControl(true, true, true, true, true, -1));
-                }
             }
             
             Entities.GlobalSpawn(p, false, "");
@@ -140,10 +134,21 @@ namespace MCGalaxy.Games {
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (p.level != Map) return;            
+            if (p.level != Map) return;
             if (!p.Game.Referee && !p.Game.Infected && RoundInProgress) {
                 InfectPlayer(p, null);
             }
+        }
+        
+        void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            HandleJoinedCommon(p, prevLevel, level, ref announce);
+            p.SetPrefix(); // TODO: Kinda hacky, not sure if needed 
+            
+            if (prevLevel == Map && level != Map) {
+                HUD.Reset(p);
+                if (RoundInProgress) PlayerLeftGame(p);
+            } else if (level != Map) { return; }
+            PlayerJoinedGame(p);
         }
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
@@ -173,10 +178,6 @@ namespace MCGalaxy.Games {
                     Player.Message(p, "Blocks Left: &4" + p.Game.BlocksLeft);
                 }
             }
-        }
-        
-        void HandleLevelUnload(Level lvl) {
-            if (lvl == Map) lvl.cancelunload = true;
         }
         
         void HandleSendingHeartbeat(Heartbeat service, ref string name) {

@@ -163,24 +163,16 @@ namespace MCGalaxy.Games
             }
         }
 
-        public static byte GetColorBlock(char color)
-        {
-            if (color == '2')
-                return Block.Green;
-            if (color == '5')
-                return Block.Indigo;
-            if (color == '8')
-                return Block.Black;
-            if (color == '9')
-                return Block.Blue;
-            if (color == 'c')
-                return Block.Red;
-            if (color == 'e')
-                return Block.Yellow;
-            if (color == 'f')
-                return Block.White;
-            else
-                return Block.Air;
+        public static byte GetColorBlock(char color) {
+            if (color == '2') return Block.Green;
+            if (color == '5') return Block.Indigo;
+            if (color == '8') return Block.Black;
+            if (color == '9') return Block.Blue;
+            if (color == 'c') return Block.Red;
+            if (color == 'e') return Block.Yellow;
+            if (color == 'f') return Block.White;
+            
+            return Block.Orange;
         }
 
         public struct CatchPos { public ushort x, y, z; public BlockID type; }

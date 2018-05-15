@@ -23,14 +23,14 @@ using MCGalaxy.UI;
 
 namespace MCGalaxy.Cli {
     public static class CLIProgram {
-  
-#if CLI        
+        
+        #if CLI
         [STAThread]
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             RunCLI();
         }
-#endif
+        #endif
 
         public static void RunCLI() {
             if (!File.Exists("MCGalaxy_.dll")) {
@@ -67,14 +67,14 @@ namespace MCGalaxy.Cli {
             switch (e.SpecialKey) {
                 case ConsoleSpecialKey.ControlBreak:
                     // Cannot set e.Cancel for this one
-                    AppendFormatted("&e-- Server shutdown (Ctrl+Break) --");
+                    Write("&e-- Server shutdown (Ctrl+Break) --");
                     Thread stopThread = Server.Stop(false, ServerConfig.DefaultShutdownMessage);
                     stopThread.Join();
                     break;
                     
                 case ConsoleSpecialKey.ControlC:
                     e.Cancel = true;
-                    AppendFormatted("&e-- Server shutdown (Ctrl+C) --" );
+                    Write("&e-- Server shutdown (Ctrl+C) --" );
                     Server.Stop(false, ServerConfig.DefaultShutdownMessage);
                     break;
             }
@@ -98,31 +98,29 @@ namespace MCGalaxy.Cli {
         static void LogMessage(LogType type, string message) {
             switch (type) {
                 case LogType.Error:
-                    WriteToConsole("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    Write("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
                     break;
                 case LogType.BackgroundActivity:
                     break;
                 default:
                     string now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    WriteToConsole(now + message);
+                    Write(now + message);
                     break;
             }
         }
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
-            AppendFormatted("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
-        }
-        
-        static void WriteToConsole(string message) {
-            AppendFormatted(message);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine();
+            Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
 
         static void ConsoleLoop() {
             while (true) {
                 try {
-                    string msg = Console.ReadLine().Trim(); // Trim whitespace                
+                    string msg = Console.ReadLine();
+                    // msg is null when pressing Ctrl+C to shutdown CLI on Windows
+                    if (msg == null) { Write("&e** EOF, console no longer accepts input **"); break; }
+                    
+                    msg = msg.Trim(); // Trim whitespace
                     if (msg == "/") {
                         UIHelpers.RepeatCommand();
                     } else if (msg.Length > 0 && msg[0] == '/') {
@@ -131,12 +129,15 @@ namespace MCGalaxy.Cli {
                         UIHelpers.HandleChat(msg);
                     }
                 } catch (Exception ex) {
+                    // ArgumentException is raised on Mono when you type a message into a large CLI window,
+                    // resize the CLI window to be smaller, and try to backspace when the message is biger
+                    // than the smaller resized CLI window
                     Logger.LogError(ex);
                 }
             }
         }
         
-        static void AppendFormatted(string message) {
+        static void Write(string message) {
             int index = 0;
             char col = 'S';
             message = UIHelpers.Format(message);
@@ -149,6 +150,9 @@ namespace MCGalaxy.Cli {
                     Console.Write(part);
                 }
             }
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
         }
 
         static ConsoleColor GetConsoleCol(char c) {
@@ -163,7 +167,7 @@ namespace MCGalaxy.Cli {
                     case '4': return ConsoleColor.DarkRed;
                     case '5': return ConsoleColor.DarkMagenta;
                     case '6': return ConsoleColor.DarkYellow;
-                    case '7': return ConsoleColor.Gray;                   
+                    case '7': return ConsoleColor.Gray;
                     case '8': return ConsoleColor.DarkGray;
                     case '9': return ConsoleColor.Blue;
                     case 'a': return ConsoleColor.Green;

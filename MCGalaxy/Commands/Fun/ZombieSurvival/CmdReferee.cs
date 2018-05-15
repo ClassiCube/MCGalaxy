@@ -14,17 +14,17 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using MCGalaxy.Games;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands.Fun {    
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdReferee : Command {
         public override string name { get { return "Ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }   
+        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
@@ -36,6 +36,16 @@ namespace MCGalaxy.Commands.Fun {
                 Chat.MessageGlobal(p, p.ColoredName + " %Sis now a referee", false);
                 OnPlayerActionEvent.Call(p, PlayerAction.Referee);
                 p.Game.Referee = true;
+            }
+            
+            if (p.Supports(CpeExt.InstantMOTD)) {
+                p.SendMapMotd();
+            } else if (p.Supports(CpeExt.HackControl)) {
+                if (p.Game.Referee) {
+                    p.Send(Packet.HackControl(true, true, true, true, true, -1));
+                } else {
+                    p.Send(Hacks.MakeHackControl(p, p.level.GetMotd(p)));
+                }
             }
         }
         

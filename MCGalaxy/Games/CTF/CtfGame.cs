@@ -128,7 +128,7 @@ namespace MCGalaxy.Games {
         public override void End() {
             if (!running) return;
             running = false;
-            UnhookEventHandlers();          
+            UnhookEventHandlers();
             
             Blue.Members.Clear();
             Red.Members.Clear();
@@ -136,9 +136,17 @@ namespace MCGalaxy.Games {
             Red.Points = 0;
             
             ResetState();
-        }
-        
+        }     
 
+		public override void PlayerLeftGame(Player p) {
+			CtfTeam2 team = TeamOf(p);
+            if (team == null) return;
+            
+            DropFlag(p, team);
+            team.Remove(p);
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
+		}
+        
         public void JoinTeam(Player p, CtfTeam2 team) {
             Get(p).HasFlag = false;
             team.Members.Add(p);

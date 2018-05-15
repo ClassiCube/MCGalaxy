@@ -109,30 +109,34 @@ namespace MCGalaxy {
             Level oldLevel = p.level;
             p.level = lvl;
             p.SendMap(oldLevel);
-
-            Position pos = lvl.SpawnPos;
-            Orientation rot = p.Rot;
-            byte yaw = lvl.rotx, pitch = lvl.roty;
-            OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, false);
             
-            rot.RotY = yaw; rot.HeadX = pitch;
-            Entities.SpawnEntities(p, pos, rot);
-            CheckGamesJoin(p, oldLevel);
-            
-            if (p.level.ShouldShowJoinMessage(oldLevel)) {
-                if (ServerConfig.ShowWorldChanges) {
-                    string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
-                    Chat.MessageGlobal(p, p.ColoredName + msg + lvl.ColoredName, false, true);
-                }
-                OnPlayerActionEvent.Call(p, PlayerAction.JoinWorld, lvl.name);
-            }
+            PostSentMap(p, oldLevel, lvl, true);
             return true;
         }
         
-        internal static void CheckGamesJoin(Player p, Level oldLvl) {
-            Server.lava.PlayerJoinedLevel(p, p.level, oldLvl);
-            Server.zombie.PlayerJoinedLevel(p, p.level, oldLvl);
+        internal static void PostSentMap(Player p, Level prevLevel, Level level, bool announce) {
+            Position pos = level.SpawnPos;
+            Orientation rot = p.Rot;
+            byte yaw = level.rotx, pitch = level.roty;
             
+            OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, false);
+            rot.RotY = yaw; rot.HeadX = pitch;
+            p.Pos = pos;
+            p.SetYawPitch(yaw, pitch);
+            
+            Entities.SpawnEntities(p, pos, rot);
+            CheckGamesJoin(p, prevLevel);
+            OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);
+            if (!announce) return;
+            
+            if (ServerConfig.ShowWorldChanges) {
+                string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
+                Chat.MessageGlobal(p, p.ColoredName + msg + level.ColoredName, false, true);
+            }
+            OnPlayerActionEvent.Call(p, PlayerAction.JoinWorld, level.name);
+        }
+        
+        static void CheckGamesJoin(Player p, Level oldLvl) {
             if (p.inTNTwarsMap) p.canBuild = true;
             TntWarsGame game = TntWarsGame.Find(p.level);
             if (game == null) return;

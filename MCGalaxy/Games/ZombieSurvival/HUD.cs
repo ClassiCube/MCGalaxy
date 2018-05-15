@@ -60,9 +60,6 @@ namespace MCGalaxy.Games.ZS {
             p.SendCpeMessage(CpeMessageType.Status1, "");
             p.SendCpeMessage(CpeMessageType.Status2, "");
             p.SendCpeMessage(CpeMessageType.Status3, "");
-            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
-            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
-            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
         }
 
         

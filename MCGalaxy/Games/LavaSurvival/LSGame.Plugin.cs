@@ -26,6 +26,7 @@ namespace MCGalaxy.Games {
 
         void HookEventHandlers() {
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
+            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
@@ -33,16 +34,20 @@ namespace MCGalaxy.Games {
         
         void UnhookEventHandlers() {
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
+            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
         }
-
-        
-        void HandleLevelUnload(Level lvl) {
-            if (lvl == Map) lvl.cancelunload = true;
+		
+		void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            HandleJoinedCommon(p, prevLevel, level, ref announce);
+            if (Map != level || !RoundInProgress) return;
+            
+            AnnounceRoundInfo(p);
+            AnnounceTimeLeft(!Flooded, true, p);
         }
-        
+
         void HandlePlayerConnect(Player p) {
             Player.Message(p, "&cLava Survival %Sis running! Type %T/ls go %Sto join");
         }

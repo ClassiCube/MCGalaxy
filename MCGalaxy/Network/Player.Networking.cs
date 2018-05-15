@@ -156,6 +156,7 @@ namespace MCGalaxy {
                 if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
             }
+        	
             message = Chat.Format(message, this, colorParse);
             Send(Packet.Message(message, type, hasCP437));
         }

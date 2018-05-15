@@ -85,11 +85,8 @@ namespace MCGalaxy.Events {
             for (int i = 0; i < items.Length; i++) {
                 IEvent<IMethod> handler = items[i];
                 
-                try {
-                    action(handler.method);
-                } catch (Exception ex) {
-                    LogHandlerException(ex, handler);
-                }
+                try { action(handler.method); } 
+                catch (Exception ex) { LogHandlerException(ex, handler); }
             }
         }
         

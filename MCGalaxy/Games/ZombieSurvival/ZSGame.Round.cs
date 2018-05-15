@@ -68,29 +68,6 @@ namespace MCGalaxy.Games {
             Map.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
             InfectPlayer(first, null);
         }
-
-        /// <summary> If there are no infected players left, randomly selected one of the alive players to continue the infection. </summary>
-        void AssignFirstZombie() {
-            if (!running || !RoundInProgress || Infected.Count > 0) return;
-            Random random = new Random();
-            Player[] alive = Alive.Items;
-            if (alive.Length == 0) return;
-            int index = random.Next(alive.Length);
-            
-            while (alive[index].Game.Referee || alive[index].level != Map) {
-                if (index >= alive.Length - 1) {
-                    index = 0;
-                    alive = Alive.Items;
-                    if (alive.Length == 0) return;
-                } else {
-                    index++;
-                }
-            }
-            
-            Player zombie = alive[index];
-            Map.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
-            InfectPlayer(zombie, null);
-        }
         
         List<Player> DoRoundCountdown() {
             while (true) {

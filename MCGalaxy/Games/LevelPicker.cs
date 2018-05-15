@@ -101,25 +101,22 @@ namespace MCGalaxy.Games {
                 pl.SendMessage("You have " + VoteTime + " seconds to vote for the next map");
             }
             
+            Level map = game.Map;
             for (int i = 0; i < VoteTime; i++) {
                 players = PlayerInfo.Online.Items;
                 if (!game.Running) break;
                 
                 foreach (Player pl in players) {
-                    if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
+                    if (pl.level != map || !pl.Supports(CpeExt.MessageTypes)) continue;
                     string timeLeft = "&e" + (VoteTime - i) + "s %Sleft to vote";
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, timeLeft);
                 }
                 Thread.Sleep(1000);
             }
             
-            // Reset vote messages for CPE clients
             players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != game.Map || !pl.Supports(CpeExt.MessageTypes)) continue;
-                pl.SendCpeMessage(CpeMessageType.BottomRight3, "");
-                pl.SendCpeMessage(CpeMessageType.BottomRight2, "");
-                pl.SendCpeMessage(CpeMessageType.BottomRight1, "");
+                if (pl.level == map) ResetVoteMessage(pl);
             }
         }
         
@@ -159,6 +156,12 @@ namespace MCGalaxy.Games {
                 Player.Message(p, line1);
                 Player.Message(p, line2);
             }
+        }
+        
+        public void ResetVoteMessage(Player p) {
+            p.SendCpeMessage(CpeMessageType.BottomRight3, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight2, "");
+            p.SendCpeMessage(CpeMessageType.BottomRight1, "");
         }
         
         public bool HandlesMessage(Player p, string message) {

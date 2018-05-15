@@ -124,17 +124,6 @@ namespace MCGalaxy.Games {
             if (!running || p.level != Map) return false;
             return Picker.HandlesMessage(p, message);
         }
-        
-        public override void PlayerJoinedLevel(Player p, Level lvl, Level oldLevl) {
-            if (!running || Map != lvl) return;
-            
-            if (RoundInProgress) {
-                AnnounceRoundInfo(p);
-                AnnounceTimeLeft(!Flooded, true, p);
-            } else if (Picker.Voting) {
-                Picker.SendVoteMessage(p);
-            }
-        }
     }
     
     internal class LSLevelPicker : LevelPicker {
