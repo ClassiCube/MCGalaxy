@@ -162,8 +162,8 @@ namespace MCGalaxy.Cli {
                     case '3': return ConsoleColor.DarkCyan;
                     case '4': return ConsoleColor.DarkRed;
                     case '5': return ConsoleColor.DarkMagenta;
-                    case '7': return ConsoleColor.Gray;
                     case '6': return ConsoleColor.DarkYellow;
+                    case '7': return ConsoleColor.Gray;                   
                     case '8': return ConsoleColor.DarkGray;
                     case '9': return ConsoleColor.Blue;
                     case 'a': return ConsoleColor.Green;

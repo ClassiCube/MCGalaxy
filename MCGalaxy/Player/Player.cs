@@ -295,8 +295,7 @@ namespace MCGalaxy {
                 PlayerInfo.Online.Remove(this);
                 OnPlayerDisconnectEvent.Call(this, discMsg);
                 
-                if (ServerConfig.AutoLoadMaps && level.Config.AutoUnload && !level.IsMuseum && !level.HasPlayers())
-                    level.Unload(true);
+                level.AutoUnload();
                 Dispose();
             } catch (Exception e) { 
                 Logger.LogError(e); 

@@ -51,7 +51,7 @@ namespace MCGalaxy {
             }
             
             if (!didJoin) return false;
-            Unload(oldLevel);
+            oldLevel.AutoUnload();
             return true;
         }
         
@@ -143,17 +143,6 @@ namespace MCGalaxy {
                 Player.Message(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
             }
             p.inTNTwarsMap = true;
-        }
-        
-        static void Unload(Level lvl) {
-            bool unloadOld = true;
-            if (lvl.IsMuseum || !lvl.Config.AutoUnload) return;
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level == lvl) { unloadOld = false; break; }
-            }
-            if (unloadOld && ServerConfig.AutoLoadMaps) lvl.Unload(true);
         }
     }
 }

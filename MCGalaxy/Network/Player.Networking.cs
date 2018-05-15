@@ -230,7 +230,7 @@ namespace MCGalaxy {
                 Send(buffer);
                 Loading = false;
                 
-                OnJoinedLevelEvent.Call(this, oldLevel, level);
+                OnSentMapEvent.Call(this, oldLevel, level);
             } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);

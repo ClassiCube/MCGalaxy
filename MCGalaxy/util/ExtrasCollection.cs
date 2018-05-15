@@ -34,6 +34,7 @@ namespace MCGalaxy {
         
         public void Clear() { lock (locker) { dict.Clear(); } }
         public bool Contains(string key) { lock (locker) { return dict.ContainsKey(key); } }
+        public bool Remove(string key) { lock (locker) { return dict.Remove(key); } }
         
         public bool TryGet(string key, out object value) {
             lock (locker) { return dict.TryGetValue(key, out value); }

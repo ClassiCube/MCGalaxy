@@ -158,9 +158,9 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnJoinedLevel(Player p, Level prevLevel, Level level);
-    /// <summary> Called when a player has joined a level. </summary>
-    public sealed class OnJoinedLevelEvent : IEvent<OnJoinedLevel> {
+    public delegate void OnSentMap(Player p, Level prevLevel, Level level);
+    /// <summary> Called when a player has been sent a new map. </summary>
+    public sealed class OnSentMapEvent : IEvent<OnSentMap> {
         
         public static void Call(Player p, Level prevLevl, Level level) {
             if (handlers.Count == 0) return;

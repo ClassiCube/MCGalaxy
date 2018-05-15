@@ -155,7 +155,7 @@ namespace MCGalaxy.Gui {
 
             OnPlayerConnectEvent.Register(Player_PlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(Player_PlayerDisconnect, Priority.Low);
-            OnJoinedLevelEvent.Register(Player_OnJoinedLevel, Priority.Low);
+            OnSentMapEvent.Register(Player_OnJoinedLevel, Priority.Low);
 
             OnLevelAddedEvent.Register(Level_LevelAdded, Priority.Low);
             OnLevelRemovedEvent.Register(Level_LevelRemoved, Priority.Low);

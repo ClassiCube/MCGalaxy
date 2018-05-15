@@ -35,7 +35,7 @@ namespace MCGalaxy.Core {
             OnPlayerCommandEvent.Register(ChatHandler.HandleCommand, Priority.Critical);
             OnPlayerConnectingEvent.Register(ConnectingHandler.HandleConnecting, Priority.Critical);
             
-            OnJoinedLevelEvent.Register(MiscHandlers.HandleOnJoinedLevel, Priority.Critical);
+            OnSentMapEvent.Register(MiscHandlers.HandleOnMapSent, Priority.Critical);
             OnPlayerMoveEvent.Register(MiscHandlers.HandlePlayerMove, Priority.Critical);
             OnPlayerClickEvent.Register(MiscHandlers.HandlePlayerClick, Priority.Critical);
             
@@ -52,7 +52,7 @@ namespace MCGalaxy.Core {
             OnPlayerCommandEvent.Unregister(ChatHandler.HandleCommand);
             OnPlayerConnectingEvent.Unregister(ConnectingHandler.HandleConnecting);
             
-            OnJoinedLevelEvent.Unregister(MiscHandlers.HandleOnJoinedLevel);
+            OnSentMapEvent.Unregister(MiscHandlers.HandleOnMapSent);
             OnPlayerMoveEvent.Unregister(MiscHandlers.HandlePlayerMove);
             OnPlayerClickEvent.Unregister(MiscHandlers.HandlePlayerClick);
             

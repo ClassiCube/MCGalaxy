@@ -144,6 +144,11 @@ namespace MCGalaxy {
             return true;
         }
         
+        public bool AutoUnload() {
+            return ServerConfig.AutoLoadMaps && Config.AutoUnload 
+                && !IsMuseum && !HasPlayers() && Unload(true);
+        }
+        
         public bool Unload(bool silent = false, bool save = true) {
             if (Server.mainLevel == this || IsMuseum) return false;
             OnLevelUnloadEvent.Call(this);

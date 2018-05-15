@@ -39,7 +39,7 @@ namespace MCGalaxy.Core {
             p.cancelmove = true;
         }
         
-        internal static void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {
+        internal static void HandleOnMapSent(Player p, Level prevLevel, Level level) {
             p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             p.prevMsg = "";
             p.showMBs = false;

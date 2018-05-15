@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
-            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
+            OnSentMapEvent.Register(HandleOnSentMap, Priority.High);
         }
         
         void UnhookEventHandlers() {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
-            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
+            OnSentMapEvent.Unregister(HandleOnSentMap);
         }
         
         
@@ -137,7 +137,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void HandleOnJoinedLevel(Player p, Level prevLevel, Level level) {
+        void HandleOnSentMap(Player p, Level prevLevel, Level level) {
             if (p == null || !running) return;
             
             if (prevLevel == Map) {
