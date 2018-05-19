@@ -170,6 +170,9 @@ namespace MCGalaxy {
                 BlockID block = Block.FromRaw((BlockID)i);
                 bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
                 bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
+                
+                // Placing air is the same as deleting existing block at that position in the world
+                if (block == Block.Air) place &= delete;
                 Packet.WriteBlockPermission((BlockID)i, place, delete, hasExtBlocks, bulk, i * size);
             }
             Send(bulk);

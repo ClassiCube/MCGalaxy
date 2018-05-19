@@ -263,7 +263,7 @@ namespace MCGalaxy {
                     Blockchange((ushort)x, (ushort)y, (ushort)z, block, true, data);
                     return true;
                 }
-
+                
                 if (listUpdateExists.TrySetOn(x, y, z)) {
                 } else if (block == Block.Sand || block == Block.Gravel)  {
                     RemoveUpdatesAtPos(index);
