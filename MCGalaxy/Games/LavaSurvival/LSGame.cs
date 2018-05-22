@@ -17,23 +17,23 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using MCGalaxy.Commands.World;
-using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
+    internal sealed class LSData {
+        public int TimesDied;
+    }
+    
     public sealed partial class LSGame : RoundsGame {
         const string propsDir = "properties/lavasurvival/";
         List<string> maps;
-        Dictionary<string, int> deaths = new Dictionary<string, int>();
         Random rand = new Random();
         DateTime startTime;
         MapData data;
         MapSettings mapSettings;
         
         public override string GameName { get { return "Lava survival"; } }
-        public override bool Running { get { return running; } }        
+        public override bool Running { get { return running; } }
         public bool running, Flooded, StartOnStartup;
         public int MaxLives = 3;
         
@@ -42,6 +42,15 @@ namespace MCGalaxy.Games {
             maps = new List<string>();
             ((LSLevelPicker)Picker).maps = maps;
             LoadSettings();
+        }
+        
+        LSData Get(Player p) {
+            object data;
+            if (!p.Extras.TryGet("MCG_LS_DATA", out data)) {
+                data = new LSData();
+                p.Extras.Put("MCG_LS_DATA", data);
+            }
+            return (LSData)data;
         }
 
         public bool Start(Player p, string mapName, int rounds) {
@@ -63,7 +72,7 @@ namespace MCGalaxy.Games {
             }
             
             RoundsLeft = rounds;
-            deaths.Clear();
+            ResetPlayerDeaths();
                      
             Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
             running = true;
@@ -81,7 +90,7 @@ namespace MCGalaxy.Games {
             UnhookEventHandlers();
             
             Flooded = false;
-            deaths.Clear();
+            ResetPlayerDeaths();
             Map.Unload(true, false);
             
             ResetState();
@@ -89,10 +98,14 @@ namespace MCGalaxy.Games {
         }
         
         public bool IsPlayerDead(Player p) {
-            string name = p.name.ToLower();
-            if (MaxLives < 1 || !deaths.ContainsKey(name))
-                return false;
-            return (deaths[name] >= MaxLives);
+            return MaxLives > 0 && Get(p).TimesDied >= MaxLives;
+        }
+        
+        void ResetPlayerDeaths() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level == Map) Get(p).TimesDied = 0;
+            }
         }
 
         public void AddMap(string name) {

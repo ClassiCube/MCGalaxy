@@ -21,6 +21,7 @@ using System;
 using System.Threading;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
@@ -45,12 +46,15 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
                 if (p.level != Map) continue;
-                CtfTeam2 team = TeamOf(p);
+                CtfTeam team = TeamOf(p);
                 CtfData data = Get(p);
+                
+                // Draw flag above player head
+                if (data.HasFlag) DrawPlayerFlag(p, data);
                 
                 if (team == null || data.TagCooldown) continue;
                 if (!OnOwnTeamSide(p.Pos.BlockZ, team)) continue;
-                CtfTeam2 opposing = Opposing(team);
+                CtfTeam opposing = Opposing(team);
                 
                 Player[] opponents = opposing.Members.Items;
                 foreach (Player other in opponents) {
@@ -70,7 +74,29 @@ namespace MCGalaxy.Games {
                 }
             }
         }
+		
+		void ResetPlayerFlag(Player p, CtfData data) {
+	        Vec3S32 last = data.LastHeadPos;
+            ushort x = (ushort)last.X, y = (ushort)last.Y, z = (ushort)last.Z;
+            data.LastHeadPos = default(Vec3S32);
+            
+            BlockID origBlock = Map.GetBlock(x, y, z);
+            if (origBlock != Block.Invalid) {
+                Player.GlobalBlockchange(Map, x, y, z, origBlock);
+            }
+        }
         
+        void DrawPlayerFlag(Player p, CtfData data) {
+            Vec3S32 coords = p.Pos.BlockCoords; coords.Y += 3;
+            if (coords == data.LastHeadPos) return;         
+            ResetPlayerFlag(p, data);
+            
+            data.LastHeadPos = coords;
+            ushort x = (ushort)coords.X, y = (ushort)coords.Y, z = (ushort)coords.Z;
+            CtfTeam opposing = Opposing(TeamOf(p));
+            Player.GlobalBlockchange(Map, x, y, z, opposing.FlagBlock);
+        }
+		
         public override void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
@@ -85,6 +111,8 @@ namespace MCGalaxy.Games {
             
             Blue.Points = 0;
             Red.Points = 0;
+            ResetPlayerFlags();
+            
             Thread.Sleep(4000);
             SaveDB();
             Chat.MessageLevel(Map, "Starting next round!");
@@ -105,14 +133,17 @@ namespace MCGalaxy.Games {
         
         
         /// <summary> Called when the given player takes the opposing team's flag. </summary>
-        void TakeFlag(Player p, CtfTeam2 team) {
-            CtfTeam2 opposing = Opposing(team);
+        void TakeFlag(Player p, CtfTeam team) {
+            CtfTeam opposing = Opposing(team);
             Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
-            Get(p).HasFlag = true;
+            
+            CtfData data = Get(p);
+            data.HasFlag = true;
+            DrawPlayerFlag(p, data);
         }
         
         /// <summary> Called when the given player, while holding opposing team's flag, clicks on their own flag. </summary>
-        void ReturnFlag(Player p, CtfTeam2 team) {
+        void ReturnFlag(Player p, CtfTeam team) {
             Vec3U16 flagPos = team.FlagPos;
             p.RevertBlock(flagPos.X, flagPos.Y, flagPos.Z);
             p.cancelBlock = true;
@@ -121,10 +152,12 @@ namespace MCGalaxy.Games {
             if (data.HasFlag) {
                 Chat.MessageLevel(Map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
                 data.HasFlag = false;
+                ResetPlayerFlag(p, data);
+                
                 data.Points += Config.Capture_PointsGained;
                 data.Captures++;
                 
-                CtfTeam2 opposing = Opposing(team);
+                CtfTeam opposing = Opposing(team);
                 team.Points++;
                 flagPos = opposing.FlagPos;
                 Map.Blockchange(flagPos.X, flagPos.Y, flagPos.Z, opposing.FlagBlock);
@@ -134,15 +167,17 @@ namespace MCGalaxy.Games {
         }
 
         /// <summary> Called when the given player drops the opposing team's flag. </summary>
-        void DropFlag(Player p, CtfTeam2 team) {
+        void DropFlag(Player p, CtfTeam team) {
             CtfData data = Get(p);
             if (!data.HasFlag) return;
             
             data.HasFlag = false;
+            ResetPlayerFlag(p, data);
+            
             Chat.MessageLevel(Map, team.Color + p.DisplayName + " DROPPED THE FLAG!");
             data.Points -= Config.Capture_PointsLost;
             
-            CtfTeam2 opposing = Opposing(team);
+            CtfTeam opposing = Opposing(team);
             Vec3U16 pos = opposing.FlagPos;
             Map.Blockchange(pos.X, pos.Y, pos.Z, opposing.FlagBlock);
         }

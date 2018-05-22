@@ -39,8 +39,8 @@ namespace MCGalaxy.Games {
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
         }
-		
-		void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+        
+        void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
             if (Map != level || !RoundInProgress) return;
             

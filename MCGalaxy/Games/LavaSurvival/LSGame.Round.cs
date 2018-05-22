@@ -25,7 +25,7 @@ namespace MCGalaxy.Games {
         protected override void DoRound() {
             if (!running) return;
 
-            deaths.Clear();
+            ResetPlayerDeaths();
             startTime = DateTime.UtcNow;
             RoundInProgress = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
@@ -122,10 +122,8 @@ namespace MCGalaxy.Games {
         }
 
         void KillPlayer(Player p) {
-            if (MaxLives < 1) return;
-            string name = p.name.ToLower();
-            if (!deaths.ContainsKey(name)) deaths.Add(name, 0);
-            deaths[name]++;
+            if (MaxLives <= 0) return;
+            Get(p).TimesDied++;
             if (!IsPlayerDead(p)) return;
             
             Player[] online = PlayerInfo.Online.Items;

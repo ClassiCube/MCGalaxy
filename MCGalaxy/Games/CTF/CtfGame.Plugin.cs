@@ -58,7 +58,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerDeath(Player p, BlockID deathblock) {
             if (p.level != Map || !Get(p).HasFlag) return;
-            CtfTeam2 team = TeamOf(p);
+            CtfTeam team = TeamOf(p);
             if (team != null) DropFlag(p, team);
         }
         
@@ -66,7 +66,7 @@ namespace MCGalaxy.Games {
             if (Picker.HandlesMessage(p, message)) { p.cancelchat = true; return; }
             if (p.level != Map || !Get(p).TeamChatting) return;
             
-            CtfTeam2 team = TeamOf(p);
+            CtfTeam team = TeamOf(p);
             if (team == null) return;
             Player[] members = team.Members.Items;
             
@@ -92,7 +92,7 @@ namespace MCGalaxy.Games {
         
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (p.level != Map) return;
-            CtfTeam2 team = TeamOf(p);
+            CtfTeam team = TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
                 Player.Message(p, "You are not on a team!");
@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (p.level != Map) return;
-            CtfTeam2 team = TeamOf(p);
+            CtfTeam team = TeamOf(p);
             
             if (team != null) pos = team.SpawnPos;
             if (team != null && respawning) DropFlag(p, team);
@@ -125,7 +125,7 @@ namespace MCGalaxy.Games {
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
             if (p == null || p.level != Map) return;
-            CtfTeam2 team = TeamOf(p);
+            CtfTeam team = TeamOf(p);
             
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";

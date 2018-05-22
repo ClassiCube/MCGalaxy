@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Building {
             LineDrawOp line = new LineDrawOp();
             if (dArgs.Mode == DrawMode.wire) {
                 Player.Message(dArgs.Player, "%HIn connected lines mode, endpoint of each line also forms the " +
-            	               "start point of next line. Use %T/Abort %Hto stop drawing");
+                               "start point of next line. Use %T/Abort %Hto stop drawing");
             }
             
             line.WallsMode = dArgs.Mode == DrawMode.walls;

@@ -34,9 +34,6 @@ namespace MCGalaxy.Commands.Fun {
             if (!p.level.Config.Guns) {
                 Player.Message(p, Weapon + "s cannot be used on this map!"); return;
             }
-            if (p.Game.hasflag != null) {
-                Player.Message(p, "You can't use a " + Weapon.ToLower() + " while you have the flag!"); return;
-            }
 
             if (p.aiming && message.Length == 0) {
                 p.aiming = false;

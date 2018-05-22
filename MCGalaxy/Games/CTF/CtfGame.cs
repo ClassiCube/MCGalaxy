@@ -26,14 +26,14 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
+namespace MCGalaxy.Games {   
     internal sealed class CtfData {
         public int Captures, Tags, Points;
         public bool HasFlag, TagCooldown, TeamChatting;
+        public Vec3S32 LastHeadPos;
     }
     
-    public sealed class CtfTeam2 {
+    public sealed class CtfTeam {
         public string Name, Color;
         public string ColoredName { get { return Color + Name; } }
         public int Points;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
         public BlockID FlagBlock;
         public VolatileArray<Player> Members = new VolatileArray<Player>();
                 
-        public CtfTeam2(string name, string color) { Name = name; Color = color; }      
+        public CtfTeam(string name, string color) { Name = name; Color = color; }      
         public bool Remove(Player p) { return Members.Remove(p); }
     }
 
@@ -51,12 +51,12 @@ namespace MCGalaxy.Games {
         public override bool Running { get { return running; } }
         public override string GameName { get { return "CTF"; } }
         
-        public CtfTeam2 Red  = new CtfTeam2("Red", Colors.red);
-        public CtfTeam2 Blue = new CtfTeam2("Blue", Colors.blue);
+        public CtfTeam Red  = new CtfTeam("Red", Colors.red);
+        public CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
         public CTFConfig Config = new CTFConfig();
         public CTFGame() { Picker = new CTFLevelPicker(); }
 
-        internal CtfData Get(Player p) {
+        CtfData Get(Player p) {
             object data;
             if (!p.Extras.TryGet("MCG_CTF_DATA", out data)) {
                 data = new CtfData();
@@ -134,40 +134,53 @@ namespace MCGalaxy.Games {
             Red.Members.Clear();
             Blue.Points = 0;
             Red.Points = 0;
+            ResetPlayerFlags();
             
             ResetState();
-        }     
+        }  
 
-		public override void PlayerLeftGame(Player p) {
-			CtfTeam2 team = TeamOf(p);
+        void ResetPlayerFlags() {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != Map) continue;
+                CtfData data = Get(p); 
+                
+                if (!data.HasFlag) continue;
+                data.HasFlag = false;
+                ResetPlayerFlag(p, data);
+            }
+        }
+
+        public override void PlayerLeftGame(Player p) {
+            CtfTeam team = TeamOf(p);
             if (team == null) return;
             
             DropFlag(p, team);
             team.Remove(p);
-            Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft the ctf game");
-		}
+            Chat.MessageLevel(Map, team.Color + p.DisplayName + " %Sleft CTF");
+        }
         
-        public void JoinTeam(Player p, CtfTeam2 team) {
+        void JoinTeam(Player p, CtfTeam team) {
             Get(p).HasFlag = false;
             team.Members.Add(p);
             Chat.MessageLevel(Map, p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             Player.Message(p, "You are now on the " + team.ColoredName + " team!");
         }
         
-        bool OnOwnTeamSide(int z, CtfTeam2 team) {
+        bool OnOwnTeamSide(int z, CtfTeam team) {
             int baseZ = team.FlagPos.Z, zline = Config.ZDivider;
             if (baseZ < zline && z < zline) return true;
             if (baseZ > zline && z > zline) return true;
             return false;
         }
         
-        public CtfTeam2 TeamOf(Player p) {
+        public CtfTeam TeamOf(Player p) {
             if (Red.Members.Contains(p)) return Red;
             if (Blue.Members.Contains(p)) return Blue;
             return null;
         }
         
-        public CtfTeam2 Opposing(CtfTeam2 team) {
+        public CtfTeam Opposing(CtfTeam team) {
             return team == Red ? Blue : Red;
         }
     }

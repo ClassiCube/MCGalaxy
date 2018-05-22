@@ -33,10 +33,6 @@ namespace MCGalaxy.Games {
         
         /// <summary> Whether the player has pledged that they will survive/win in this round. </summary>
         internal bool PledgeSurvive = false;
-        
-        //CTF
-        public CtfTeam team;
-        public CtfTeam hasflag;
 
         //Zombie
         public bool Referee = false;

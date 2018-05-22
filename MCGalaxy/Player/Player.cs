@@ -281,7 +281,6 @@ namespace MCGalaxy {
                     return;
                 }
 
-                if ( Game.team != null ) Game.team.RemoveMember(this);
                 TntWarsGame tntwarsgame = TntWarsGame.GameIn(this);
                 if ( tntwarsgame != null ) {
                     tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
