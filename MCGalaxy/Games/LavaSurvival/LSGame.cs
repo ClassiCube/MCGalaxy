@@ -93,8 +93,7 @@ namespace MCGalaxy.Games {
             ResetPlayerDeaths();
             Map.Unload(true, false);
             
-            ResetState();
-            Logger.Log(LogType.GameActivity, "[Lava Survival] Game stopped.");
+            EndCommon();
         }
         
         public bool IsPlayerDead(Player p) {

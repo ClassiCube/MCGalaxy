@@ -74,9 +74,9 @@ namespace MCGalaxy.Games {
                 }
             }
         }
-		
-		void ResetPlayerFlag(Player p, CtfData data) {
-	        Vec3S32 last = data.LastHeadPos;
+        
+        void ResetPlayerFlag(Player p, CtfData data) {
+            Vec3S32 last = data.LastHeadPos;
             ushort x = (ushort)last.X, y = (ushort)last.Y, z = (ushort)last.Z;
             data.LastHeadPos = default(Vec3S32);
             
@@ -96,7 +96,7 @@ namespace MCGalaxy.Games {
             CtfTeam opposing = Opposing(TeamOf(p));
             Player.GlobalBlockchange(Map, x, y, z, opposing.FlagBlock);
         }
-		
+        
         public override void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
@@ -111,7 +111,7 @@ namespace MCGalaxy.Games {
             
             Blue.Points = 0;
             Red.Points = 0;
-            ResetPlayerFlags();
+            ResetFlagsState();
             
             Thread.Sleep(4000);
             SaveDB();
@@ -156,11 +156,10 @@ namespace MCGalaxy.Games {
                 
                 data.Points += Config.Capture_PointsGained;
                 data.Captures++;
+                team.Points++;
                 
                 CtfTeam opposing = Opposing(team);
-                team.Points++;
-                flagPos = opposing.FlagPos;
-                Map.Blockchange(flagPos.X, flagPos.Y, flagPos.Z, opposing.FlagBlock);
+                opposing.RespawnFlag(Map);
             } else {
                 Player.Message(p, "You cannot take your own flag!");
             }
@@ -178,8 +177,7 @@ namespace MCGalaxy.Games {
             data.Points -= Config.Capture_PointsLost;
             
             CtfTeam opposing = Opposing(team);
-            Vec3U16 pos = opposing.FlagPos;
-            Map.Blockchange(pos.X, pos.Y, pos.Z, opposing.FlagBlock);
+            opposing.RespawnFlag(Map);
         }
     }
 }

@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
                 HUD.Reset(pl);
             }
             
-            ResetState();
+            EndCommon();
             UnhookStats();
         }
         

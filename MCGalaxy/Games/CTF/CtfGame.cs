@@ -44,6 +44,11 @@ namespace MCGalaxy.Games {
                 
         public CtfTeam(string name, string color) { Name = name; Color = color; }      
         public bool Remove(Player p) { return Members.Remove(p); }
+        
+        public void RespawnFlag(Level lvl) {
+            Vec3U16 pos = FlagPos;
+            lvl.Blockchange(pos.X, pos.Y, pos.Z, FlagBlock);
+        }
     }
 
     public sealed partial class CTFGame : RoundsGame {
@@ -109,10 +114,9 @@ namespace MCGalaxy.Games {
             }       
             
             RoundsLeft = rounds;
-            Blue.Members.Clear();
-            Red.Members.Clear();
-            Blue.Points = 0;
-            Red.Points = 0;
+            Blue.RespawnFlag(Map);
+            Red.RespawnFlag(Map);
+            ResetTeams();
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
             running = true;
@@ -130,17 +134,23 @@ namespace MCGalaxy.Games {
             running = false;
             UnhookEventHandlers();
             
+            ResetTeams();
+            ResetFlagsState();
+            EndCommon();
+        }
+        
+        void ResetTeams() {
             Blue.Members.Clear();
             Red.Members.Clear();
             Blue.Points = 0;
             Red.Points = 0;
-            ResetPlayerFlags();
-            
-            ResetState();
-        }  
+        }
 
-        void ResetPlayerFlags() {
+        void ResetFlagsState() {
+            Blue.RespawnFlag(Map);
+            Red.RespawnFlag(Map);
             Player[] players = PlayerInfo.Online.Items;
+            
             foreach (Player p in players) {
                 if (p.level != Map) continue;
                 CtfData data = Get(p); 

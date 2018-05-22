@@ -121,7 +121,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected void ResetState() {
+        protected void EndCommon() {
             RoundsLeft = 0;
             RoundInProgress = false;
             
@@ -130,6 +130,9 @@ namespace MCGalaxy.Games {
                 if (pl.level != Map) continue;
                 TabList.Update(pl, true);
             }
+            
+            if (Map != null) Map.ChatLevel(GameName + " %Sgame ended");
+            Logger.Log(LogType.GameActivity, "[{0}] Game ended", GameName);
             
             Picker.Clear();
             LastMap = "";
