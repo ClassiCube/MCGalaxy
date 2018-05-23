@@ -84,13 +84,25 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnPlayerConnecting(Player p, string mppass);
+    public delegate void OnPlayerStartConnecting(Player p, string mppass);
     /// <summary> Called whenever a player tries connecting to the server </summary>
-    public sealed class OnPlayerConnectingEvent: IEvent<OnPlayerConnecting> {
+    /// <remarks> Called just after Handshake received, but before CPE handshake is performed. </remarks>
+    public sealed class OnPlayerStartConnectingEvent: IEvent<OnPlayerStartConnecting> {
         
         public static void Call(Player p, string mppass) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p, mppass));
+        }
+    }
+    
+    public delegate void OnPlayerFinishConnecting(Player p);
+    /// <summary> Called whenever a player tries connecting to the server </summary>
+    /// <remarks> Called after CPE handshake has been performed, and just before spawn map is sent. </remarks>
+    public sealed class OnPlayerFinishConnectingEvent: IEvent<OnPlayerFinishConnecting> {
+        
+        public static void Call(Player p) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(p));
         }
     }
 

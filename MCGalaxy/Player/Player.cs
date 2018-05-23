@@ -325,9 +325,9 @@ namespace MCGalaxy {
                 if (cState != null) cState.Clear();
             }
             CopySlots.Clear();
+            
             DrawOps.Clear();
-            if (spamChecker != null)
-                spamChecker.Clear();
+            if (spamChecker != null) spamChecker.Clear();
             spyChatRooms.Clear();
         }
 

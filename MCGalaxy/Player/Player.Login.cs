@@ -40,7 +40,7 @@ namespace MCGalaxy {
             if (ServerConfig.ClassicubeAccountPlus) name += "+";
             
             string mppass = NetUtils.ReadString(buffer, offset + 66);
-            OnPlayerConnectingEvent.Call(this, mppass);
+            OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
             
             byte protocolType = buffer[offset + 130];
@@ -63,6 +63,9 @@ namespace MCGalaxy {
         
         void CompleteLoginProcess() {
             Player clone = null;
+            OnPlayerFinishConnectingEvent.Call(this);
+            if (cancelconnecting) { cancelconnecting = false; return; }
+            
             lock (PlayerInfo.Online.locker) {
                 // Check if any players online have same name
                 Player[] players = PlayerInfo.Online.Items;
