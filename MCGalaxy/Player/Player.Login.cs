@@ -62,17 +62,31 @@ namespace MCGalaxy {
         }
         
         void CompleteLoginProcess() {
-            // Lock to ensure that no two players can end up with the same playerid
+            Player clone = null;
             lock (PlayerInfo.Online.locker) {
+                // Check if any players online have same name
+                Player[] players = PlayerInfo.Online.Items;
+                foreach (Player pl in players) {
+                    if (pl.truename == truename) { clone = pl; break; }
+                }
+                
+                // Remove clone from list (hold lock for as short time as possible)
+                if (clone != null && ServerConfig.VerifyNames) PlayerInfo.Online.Remove(clone);
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
+            }
+            
+            if (clone != null && ServerConfig.VerifyNames) {
+                string reason = ip == clone.ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
+                clone.Leave(reason);
+            } else if (clone != null) {
+                Leave(null, "Already logged in!", true); return;
             }
 
             SendMap(null);
             if (disconnected) return;
             loggedIn = true;
-            connections.Remove(this);
-            RemoveFromPending();
+            pending.Remove(this);
 
             SessionStartTime = DateTime.UtcNow;
             LastLogin = DateTime.Now;

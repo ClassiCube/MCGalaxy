@@ -36,7 +36,6 @@ namespace MCGalaxy.Core {
       
             if (!VerifyName(p, mppass)) return false;
             if (!IPThrottler.CheckIP(p)) return false;
-            if (!CheckPendingAlts(p)) return false;
             if (!CheckTempban(p)) return false;
 
             bool whitelisted = CheckWhitelist(p.name, p.ip);
@@ -48,7 +47,6 @@ namespace MCGalaxy.Core {
             Group group = Group.GroupIn(p.name);
             if (!CheckBanned(group, p, whitelisted)) return false;
             if (!CheckPlayersCount(group, p)) return false;
-            if (!CheckOnlinePlayers(p)) return false;    
             p.group = group;
             return true;
         }
@@ -56,24 +54,7 @@ namespace MCGalaxy.Core {
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         static object md5Lock = new object();        
-        
-        static bool CheckPendingAlts(Player p) {
-            int altsCount = 0;
-            lock (Player.pendingLock) {
-                DateTime now = DateTime.UtcNow;
-                foreach (Player.PendingItem item in Player.pendingNames) {
-                    if (item.Name == p.truename && (now - item.Connected).TotalSeconds <= 60)
-                        altsCount++;
-                }
-                Player.pendingNames.Add(new Player.PendingItem(p.truename));
-            }
-            
-            if (altsCount > 0) {
-                p.Leave(null, "Already logged in!", true); return false;
-            }
-            return true;
-        }
-        
+     
         static bool VerifyName(Player p, string mppass) {
             if (!ServerConfig.VerifyNames) return true;
             
@@ -143,22 +124,6 @@ namespace MCGalaxy.Core {
             Logger.Log(LogType.Warning, "Guest {0} couldn't log in - too many guests.", p.truename);
             p.Leave(null, "Server has reached max number of guests", true);
             return false;
-        }
-        
-        static bool CheckOnlinePlayers(Player p) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.name != p.name) continue;
-                
-                if (ServerConfig.VerifyNames) {
-                    string reason = pl.ip == p.ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
-                    pl.Leave(reason); break;
-                } else {
-                    p.Leave(null, "Already logged in!", true);
-                    return false;
-                }
-            }
-            return true;
         }
         
         static bool CheckBanned(Group group, Player p, bool whitelisted) {

@@ -32,22 +32,7 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
-        
-        bool removedFromPending = false;
         const string mustAgreeMsg = "You must read /rules then agree to them with /agree!";
-        
-        internal void RemoveFromPending() {
-            if (removedFromPending) return;
-            removedFromPending = true;
-            
-            lock (pendingLock) {
-                for (int i = 0; i < pendingNames.Count; i++) {
-                    PendingItem item = pendingNames[i];
-                    if (item.Name != truename) continue;
-                    pendingNames.RemoveAt(i); return;
-                }
-            }
-        }
         
         internal bool HasBlockChange() { return Blockchange != null; }
         internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, BlockID block) {

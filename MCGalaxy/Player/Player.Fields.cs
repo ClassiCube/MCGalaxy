@@ -30,18 +30,7 @@ namespace MCGalaxy {
 
     public partial class Player : IDisposable {
 
-        internal class PendingItem {
-            public string Name;
-            public DateTime Connected;
-            
-            public PendingItem(string name) {
-                Name = name;
-                Connected = DateTime.UtcNow;
-            }
-        }
-        internal static List<PendingItem> pendingNames = new List<PendingItem>();
-        internal static object pendingLock = new object();
-        public static List<Player> connections = new List<Player>(ServerConfig.MaxPlayers);
+        public static VolatileArray<Player> pending = new VolatileArray<Player>(false);
         public PlayerIgnores Ignores = new PlayerIgnores();
         public static string lastMSG = "";
         public Zone ZoneIn;

@@ -300,7 +300,7 @@ namespace MCGalaxy {
 
         internal void CloseSocket() { 
             Socket.Close();
-            RemoveFromPending();
+            pending.Remove(this);
         }
     }
 }

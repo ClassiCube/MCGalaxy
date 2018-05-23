@@ -93,8 +93,8 @@ namespace MCGalaxy.Network {
             }  catch (ObjectDisposedException) {
                 // Socket was closed by another thread, mark as disconnected
                 if (p == null) return;
-                Player.connections.Remove(p);
-                p.RemoveFromPending();
+                
+                Player.pending.Remove(p);
                 p.disconnected = true;
             } catch (Exception ex) {
                 Logger.LogError(ex);

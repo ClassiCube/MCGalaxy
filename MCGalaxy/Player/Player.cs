@@ -66,7 +66,7 @@ namespace MCGalaxy {
                 
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
                 Socket.ReceiveNextAsync();
-                connections.Add(this);
+                pending.Add(this);
             } catch ( Exception e ) {
                 Leave("Login failed!"); Logger.LogError(e);
             }
@@ -242,7 +242,7 @@ namespace MCGalaxy {
             //Umm...fixed?
             if (name == null || name.Length == 0) {
                 if (Socket != null) CloseSocket();
-                connections.Remove(this);
+                pending.Remove(this);
                 disconnected = true;
                 Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
                 return;
@@ -252,7 +252,6 @@ namespace MCGalaxy {
             try { 
                 if (disconnected) {
                     CloseSocket();
-                    connections.Remove(this);
                     PlayerInfo.Online.Remove(this);
                     return;
                 }
@@ -272,8 +271,7 @@ namespace MCGalaxy {
                 if (isKick) TimesBeenKicked++;
                 
                 if (!loggedIn) {
-                    connections.Remove(this);
-                    RemoveFromPending();
+                    pending.Remove(this);
                     PlayerInfo.Online.Remove(this);
                     
                     string user = name + " (" + ip + ")";
@@ -320,8 +318,7 @@ namespace MCGalaxy {
         }
 
         public void Dispose() {
-            connections.Remove(this);
-            RemoveFromPending();
+            pending.Remove(this);
             Extras.Clear();
             
             foreach (CopyState cState in CopySlots) { 

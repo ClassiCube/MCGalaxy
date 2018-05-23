@@ -229,8 +229,6 @@ namespace MCGalaxy {
             Server.shuttingDown = true;
             lock (stopLock) {
                 if (stopThread != null) return stopThread;
-                Exit(restart, msg);
-                
                 stopThread = new Thread(() => ShutdownThread(restart, msg));
                 stopThread.Start();
                 return stopThread;
@@ -242,12 +240,23 @@ namespace MCGalaxy {
                 Logger.Log(LogType.SystemActivity, "Server shutting down ({0})", msg);
             } catch { }
             
+            // Stop accepting new connections and disconnect existing sessions
+            try {
+                if (Listener != null) Listener.Close();
+            } catch (Exception ex) { Logger.LogError(ex); }
+            
             try {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) { p.Leave(msg); }
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
+            } catch (Exception ex) { Logger.LogError(ex); }
+            
+             try {
+                Player[] pending = Player.pending.Items;
+                foreach (Player p in pending) { p.Leave(msg); }
+            } catch (Exception ex) { Logger.LogError(ex); }
+
+            Plugin.UnloadAll();
+            OnShuttingDownEvent.Call(restarting, msg);
 
             try {
                 string autoload = null;
@@ -274,18 +283,6 @@ namespace MCGalaxy {
             try { FileLogger.Flush(null); } catch { }
             if (restarting) Process.Start(RestartPath);
             Environment.Exit(0);
-        }
-        
-        static void Exit(bool restarting, string message) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) { p.save(); }
-            foreach (Player p in players) { p.Leave(message); }
-
-            Player.connections.ForEach(p => p.Leave(message));
-            Plugin.UnloadAll();
-            if (Listener != null) Listener.Close();
-            
-            OnShuttingDownEvent.Call(restarting, message);
         }
 
         public static void UpdateUrl(string url) {
