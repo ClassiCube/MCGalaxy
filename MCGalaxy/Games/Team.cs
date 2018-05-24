@@ -113,11 +113,13 @@ namespace MCGalaxy.Games {
         
         public static void LoadList() {
             if (!File.Exists("extra/teams.txt")) return;
-            Team tmp = new Team();
-            lock (ioLock)
-                PropertiesFile.Read("extra/teams.txt", ref tmp, LineProcessor, '=');
+            Team tmp = new Team();            
             
-            if (tmp.Name != null) Add(tmp);
+            lock (ioLock) {
+                Teams.Clear();
+                PropertiesFile.Read("extra/teams.txt", ref tmp, LineProcessor, '=');       
+                if (tmp.Name != null) Add(tmp);
+            }
         }
         
         static void LineProcessor(string key, string value, ref Team tmp) {
