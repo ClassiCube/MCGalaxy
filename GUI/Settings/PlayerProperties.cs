@@ -109,7 +109,7 @@ namespace MCGalaxy.Gui {
         [DisplayName("Voiced")]
         public bool Voiced { get { return p.voice; } set { DoCmd("voice"); } }
         
-        void DoCmd(string cmd) { DoCmd(cmd, ""); }      
+        void DoCmd(string cmd) { DoCmd(cmd, ""); }
         void DoCmd(string cmd, string args) {
             // Is the player still on the server?
             Player pl = PlayerInfo.FindExact(p.name);

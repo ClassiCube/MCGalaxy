@@ -135,14 +135,20 @@ namespace MCGalaxy.Commands.World {
                 if (value.Length == 0) value = "normal";
                 Command.all.FindByName("Texture").Use(p, "levelzip " + value);
             } else {
-                cmd = LevelOptions.Map(cmd.ToLower());
-                if (cmd == "physicspeed" || cmd == "overload" || cmd == "realmowner") {
+                LevelOption opt = LevelOptions.Find(cmd);
+                if (opt == null) {
+                    Player.MessageLines(p, mapHelp);
+                } else if (DisallowedMapOption(opt.Name)) {
                     Player.Message(p, "&cYou cannot change that map option via /os map."); return;
+                } else {
+                    opt.SetFunc(p, p.level, value);
+                    Level.SaveSettings(p.level);
                 }
-                if (CmdMap.SetMapOption(p, p.level, cmd, value)) return;
-                
-                Player.MessageLines(p, mapHelp);
             }
+        }
+        
+        static bool DisallowedMapOption(string opt) {
+            return opt == LevelOptions.Speed || opt == LevelOptions.Overload || opt == LevelOptions.RealmOwner;
         }
         
         static void AddMap(Player p, string value) {
