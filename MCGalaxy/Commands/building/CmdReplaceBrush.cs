@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Building {
             Player p = dArgs.Player;
             if (args.Length < 2) { Help(p); return null; }
             
-            string replaceCmd = ReplaceNot ? "replacenot" : "replace";
-            if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("brush")) {
+            string replaceCmd = ReplaceNot ? "ReplaceNot" : "Replace";
+            if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("Brush")) {
                 Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 
                                    ", so therefore cannot use this command."); return null;
             }

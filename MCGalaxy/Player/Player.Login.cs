@@ -114,7 +114,7 @@ namespace MCGalaxy {
             if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
 
             LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
-            hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
+            hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
             if (Rank >= adminChatRank && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
@@ -143,7 +143,7 @@ namespace MCGalaxy {
             }
             
             try {
-                if (group.CanExecute("inbox") && Database.TableExists("Inbox" + name) ) {
+                if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name) ) {
                     using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
                         if (table.Rows.Count > 0)
                             SendMessage("You have &a" + table.Rows.Count + " %Smessages in %T/Inbox");

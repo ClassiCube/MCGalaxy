@@ -26,45 +26,23 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
 
         public override void Use(Player p, string message) {
+            int totalPlayers = 0;
             if (message.Length > 0) {
                 Group grp = Matcher.FindRanks(p, message);
                 if (grp == null) return;
-                string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
-                Section rankSec = MakeSection(grp, title);
                 
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.group != grp) continue;
-                    if (p == pl || Entities.CanSee(p, pl)) {
-                        string name = Colors.Strip(pl.DisplayName);
-                        AddStates(pl, ref name);
-                        rankSec.Append(pl, name);
-                    }
-                }
-                
-                if (rankSec.Empty) {
+                GroupPlayers rankPlayers = Make(p, grp, ref totalPlayers);
+                if (totalPlayers == 0) {
                     Player.Message(p, "There are no players of that rank online.");
                 } else {
-                    rankSec.Print(p, false);
+                    Output(rankPlayers, p, false);
                 }
                 return;
             }
             
-            List<Section> playerList = new List<Section>();
+            List<GroupPlayers> allPlayers = new List<GroupPlayers>();
             foreach (Group grp in Group.GroupList) {
-                string title = ":" + grp.Color + GetPlural(grp.Name) + ":";
-                playerList.Add(MakeSection(grp, title));
-            }
-
-            int totalPlayers = 0;
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online) {
-                if (p == pl || Entities.CanSee(p, pl)) {
-                    string name = Colors.Strip(pl.DisplayName);
-                    AddStates(pl, ref name);
-                    totalPlayers++;
-                    playerList.Find(grp => grp.group == pl.group).Append(pl, name);
-                }
+                allPlayers.Add(Make(p, grp, ref totalPlayers));
             }
             
             if (totalPlayers == 1) {
@@ -73,62 +51,60 @@ namespace MCGalaxy.Commands.Info {
                 Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
             }
             
-            for (int i = playerList.Count - 1; i >= 0; i--) {
-                playerList[i].Print(p, ServerConfig.ListEmptyRanks);
+            for (int i = allPlayers.Count - 1; i >= 0; i--) {
+                Output(allPlayers[i], p, ServerConfig.ListEmptyRanks);
             }
         }
         
-        static void AddStates(Player pl, ref string name) {
-            if (pl.hidden) name += "-hidden";
-            if (pl.muted) name += "-muted";
-            if (pl.frozen) name += "-frozen";
-            if (pl.Game.Referee) name += "-ref";
-            if (pl.IsAfk) name += "-afk";
-        }
-        
-        struct Section {
-            public Group group;
-            public StringBuilder builder;
-            public string title;
+        struct GroupPlayers { public Group group; public StringBuilder builder; }      
+        static GroupPlayers Make(Player p, Group group, ref int totalPlayers) {
+            GroupPlayers list;
+            list.group = group;
+            list.builder = new StringBuilder();
             
-            public bool Empty { get { return builder.Length == 0; } }
-            
-            public void Print(Player p, bool showEmpty) {
-                if (builder.Length == 0 && !showEmpty) return;
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online) {
+                if (p.group != group) continue;
+                if (p != pl && !Entities.CanSee(p, pl)) continue;
                 
-                if (builder.Length > 0)
-                    builder.Remove(builder.Length - 1, 1);
-                string message = title + builder.ToString();
-                Player.Message(p, message);
+                totalPlayers++;
+                Append(list, pl);
             }
+            return list;
+        }
+        
+        static void Append(GroupPlayers list, Player pl) {
+            StringBuilder data = list.builder;
+            data.Append(' ');
+            if (pl.voice) { data.Append("&f+").Append(list.group.Color); }
+            data.Append(Colors.Strip(pl.DisplayName));
             
-            public void Append(Player pl, string name) {
-                builder.Append(' ');
-                if (pl.voice) {
-                    builder.Append("&f+").Append(group.Color);
-                }
-                
-                builder.Append(name);
-                string lvlName = Colors.Strip(pl.level.name); // for museums
-                builder.Append(" (").Append(lvlName).Append("),");
-            }
+            if (pl.hidden)       data.Append("-hidden");
+            if (pl.muted)        data.Append("-muted");
+            if (pl.frozen)       data.Append("-frozen");
+            if (pl.Game.Referee) data.Append("-ref");
+            if (pl.IsAfk)        data.Append("-afk");
+            
+            string lvlName = Colors.Strip(pl.level.name); // for museums
+            data.Append(" (").Append(lvlName).Append("),");
         }
         
-        static Section MakeSection(Group group, string title) {
-            Section sec;
-            sec.group = group;
-            sec.builder = new StringBuilder();
-            sec.title = title;
-            return sec;
+        static string GetPlural(string name) {
+            if (name.Length < 2) return name;
+            
+            string last2 = name.Substring(name.Length - 2).ToLower();
+            if ((last2 != "ed" || name.Length <= 3) && last2[1] != 's')
+                return name + "s";
+            return name;
         }
         
-        static string GetPlural(string groupName) {
-            if (groupName.Length < 2)
-                return groupName;
-            string last2 = groupName.Substring(groupName.Length - 2).ToLower();
-            if ((last2 != "ed" || groupName.Length <= 3) && last2[1] != 's')
-                return groupName + "s";
-            return groupName;
+        static void Output(GroupPlayers list, Player p, bool showWhenEmpty) {
+            StringBuilder data = list.builder;
+            if (data.Length == 0 && !showWhenEmpty) return;
+            if (data.Length > 0) data.Remove(data.Length - 1, 1);
+            
+            string title = ":" + list.group.Color + GetPlural(list.group.Name) + ":";
+            Player.Message(p, title + data.ToString());
         }
         
         public override void Help(Player p) {

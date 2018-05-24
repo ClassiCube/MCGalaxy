@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
-            if (!p.group.CanExecute("write")) {
+            if (!p.group.CanExecute("Write")) {
                 Player.Message(p, "You must be able to use /write to use /writetext."); return;
             }
             

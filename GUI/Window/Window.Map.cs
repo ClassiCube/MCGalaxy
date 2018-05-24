@@ -27,8 +27,8 @@ namespace MCGalaxy.Gui {
         void map_BtnGen_Click(object sender, EventArgs e) {
             if (mapgen) { Popup.Warning("Another map is already being generated."); return; }
 
-            string name = map_txtName.Text.ToLower();
-            string seed = map_txtSeed.Text.ToLower();
+            string name = map_txtName.Text;
+            string seed = map_txtSeed.Text;
             if (String.IsNullOrEmpty(name)) { Popup.Warning("Map name cannot be blank."); return; }
             
             string x = Map_GetComboboxItem(map_cmbX, "width");
