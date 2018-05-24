@@ -40,7 +40,6 @@ namespace MCGalaxy.Games {
             lvl.spawnx = (ushort)(lvl.Width / 2);
             lvl.spawny = (ushort)(lvl.Height / 2 + 4);
             lvl.spawnz = (ushort)(lvl.Length / 2);
-            lvl.Config.MOTD = "-hax";
             return lvl;
         }
         

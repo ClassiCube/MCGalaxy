@@ -62,11 +62,6 @@ namespace MCGalaxy.Games {
             }
             
             bulk.level = Map;
-            Map.Config.Deletable = false;
-            Map.Config.Buildable = false;
-            Map.BuildAccess.Min = LevelPermission.Nobody;
-            Map.Config.MOTD = "Welcome to the Countdown map! -hax";
-            
             Status = CountdownGameStatus.Enabled;
             Chat.MessageGlobal("Countdown has been enabled!");
         }
