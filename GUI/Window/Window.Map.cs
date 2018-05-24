@@ -87,7 +87,7 @@ namespace MCGalaxy.Gui {
             object selected = map_lbUnloaded.SelectedItem;
             if (selected == null) { Popup.Warning("No map file selected."); return; }
 
-            UIHelpers.HandleCommand("Load " +selected.ToString());
+            UIHelpers.HandleCommand("Load " + selected.ToString());
         }
         
         string last = null;
@@ -114,34 +114,27 @@ namespace MCGalaxy.Gui {
         }
         
         void Map_UpdateUnloadedList() {
-            string selectedLvl = null;
-            if (map_lbUnloaded.SelectedItem != null)
-                selectedLvl = map_lbUnloaded.SelectedItem.ToString();
-            
+            object selected = map_lbUnloaded.SelectedItem;            
             map_lbUnloaded.Items.Clear();
+            
             string[] allMaps = LevelInfo.AllMapNames();
             foreach (string map in allMaps) {
                 if (LevelInfo.FindExact(map) == null)
                     map_lbUnloaded.Items.Add(map);
             }
             
-            if (selectedLvl != null) {
-                int index = map_lbUnloaded.Items.IndexOf(selectedLvl);
-                map_lbUnloaded.SelectedIndex = index;
-            } else {
-                map_lbUnloaded.SelectedIndex = -1;
+            int index = -1;
+            if (selected != null) {
+                index = map_lbUnloaded.Items.IndexOf(selected);
             }
+            map_lbUnloaded.SelectedIndex = index;
         }
         
         void Map_UpdateLoadedList() {
-            Level[] loaded = LevelInfo.Loaded.Items;
-            // Try to keep the same selection on update
-            string selected = null;
-            if (map_lbLoaded.SelectedItem != null) {
-                selected = map_lbLoaded.SelectedItem.ToString();
-            }
-            
+            object selected = map_lbLoaded.SelectedItem;           
             map_lbLoaded.Items.Clear();
+            
+            Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 map_lbLoaded.Items.Add(lvl.name);
             }
@@ -149,8 +142,7 @@ namespace MCGalaxy.Gui {
             int index = -1;
             if (selected != null) {
                 index = map_lbLoaded.Items.IndexOf(selected);                
-            }
-            
+            }            
             map_lbLoaded.SelectedIndex = index;
             Map_UpdateSelected(null, null);
         }

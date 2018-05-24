@@ -119,7 +119,7 @@ namespace MCGalaxy.Gui.Popups {
                 Popup.Warning("Command " + cmdName + " is not loaded."); return;
             }
 
-            lstCommands.Items.Remove( cmd.name );
+            lstCommands.Items.Remove(cmd.name);
             Command.all.Remove(cmd);
             CommandPerms.Load();
             Popup.Message("Command successfully unloaded.");

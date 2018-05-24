@@ -21,7 +21,6 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdMode : Command {
         public override string name { get { return "Mode"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("TNT", "tnt") }; }

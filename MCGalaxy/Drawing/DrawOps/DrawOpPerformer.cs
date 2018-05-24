@@ -50,7 +50,6 @@ namespace MCGalaxy.Drawing.Ops {
         public static bool Do(DrawOp op, Brush brush, Player p,
                               Vec3S32[] marks, bool checkLimit = true) {
             Level lvl = Setup(op, p, marks);
-            
             if (lvl != null && !lvl.Config.DrawingAllowed) {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;

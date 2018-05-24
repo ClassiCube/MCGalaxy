@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdVoteKick : Command {
         public override string name { get { return "VoteKick"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
 

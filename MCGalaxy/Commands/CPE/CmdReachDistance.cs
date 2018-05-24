@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.CPE {
         public override string name { get { return "ReachDistance"; } }
         public override string shortcut { get { return "Reach"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 

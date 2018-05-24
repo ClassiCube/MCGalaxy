@@ -29,7 +29,6 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "MapInfo"; } }
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override bool museumUsable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WInfo"), new CommandAlias("WorldInfo") }; }
@@ -74,13 +73,13 @@ namespace MCGalaxy.Commands.Info {
             Player.Message(p, "  Physics are {0}%S, gun usage is {1}",
                            physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
 
-            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.Name));
+            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.MapName));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
-            string backupPath = LevelInfo.BackupBasePath(data.Name);
+            string backupPath = LevelInfo.BackupBasePath(data.MapName);
             
             if (Directory.Exists(backupPath)) {
-                int latest = LevelInfo.LatestBackup(data.Name);
-                DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupFilePath(data.Name, latest.ToString()));
+                int latest = LevelInfo.LatestBackup(data.MapName);
+                DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupFilePath(data.MapName, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
                 Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
                                latest, backupDelta.Shorten(), createDelta.Shorten());
@@ -97,7 +96,7 @@ namespace MCGalaxy.Commands.Info {
             }
             
             ShowPermissions(p, data, cfg);
-            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.Name);
+            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.MapName);
             ShowZombieSurvival(p, data, cfg);
         }
         
@@ -107,7 +106,7 @@ namespace MCGalaxy.Commands.Info {
             
             string realmOwner = cfg.RealmOwner;
             if (String.IsNullOrEmpty(cfg.RealmOwner)) {
-                realmOwner = DefaultRealmOwner(data.Name);
+                realmOwner = DefaultRealmOwner(data.MapName);
             }
             if (String.IsNullOrEmpty(realmOwner)) return;
             
@@ -123,7 +122,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
-            if (!Server.zombie.IsZombieMap(data.Name)) return;
+            if (!Server.zombie.IsZombieMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.Replace(" ", "").Split(',');
             Player.Message(p, "Map authors: {0}",
@@ -193,13 +192,13 @@ namespace MCGalaxy.Commands.Info {
         
         class MapInfoData {
             public ushort Width, Height, Length;
-            public string Name;
+            public string Name, MapName;
             public long BlockDBEntries = -1;
             public LevelAccessController Visit, Build;
             public LevelConfig Config;
 
             public void FromOnlineLevel(Level lvl) {
-                Name = lvl.name;
+                Name = lvl.name; MapName = lvl.MapName;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
                 Config = lvl.Config;
@@ -209,7 +208,7 @@ namespace MCGalaxy.Commands.Info {
             }
             
             public void FromOfflineLevel(string name) {
-                this.Name = name;
+                this.Name = name; MapName = name;
                 string path = LevelInfo.MapPath(name);
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
