@@ -149,14 +149,16 @@ namespace MCGalaxy.Network {
         
         void HandleDisconnect(Player p, string reason) {
             if (p.hidden) return;
-            if (!ServerConfig.GuestLeavesNotify && p.Rank <= LevelPermission.Guest) return;            
-            bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+            if (ServerConfig.GuestLeavesNotify || p.Rank > LevelPermission.Guest) {
+                bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
+            }
         }
 
         void HandleConnect(Player p) {
             if (p.hidden || p.cancellogin) return;
-            if (!ServerConfig.GuestJoinsNotify && p.Rank <= LevelPermission.Guest) return;
-            bot.Say(p.ColoredName + " %Sjoined the game", false);
+            if (ServerConfig.GuestJoinsNotify || p.Rank > LevelPermission.Guest) {
+                bot.Say(p.ColoredName + " %Sjoined the game", false);
+            }
         }
 
         static char[] trimChars = new char[] { ' ' };

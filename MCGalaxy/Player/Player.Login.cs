@@ -110,15 +110,13 @@ namespace MCGalaxy {
             SetPrefix();
             LoadCpeData();
             
-            if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.VerifyAdminsRank)
-                adminpen = true;
-            if (Server.noEmotes.Contains(name))
-                parseEmotes = !ServerConfig.ParseEmotes;
+            if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) adminpen = true;
+            if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
 
             LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             hidden = group.CanExecute("hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
-            if (group.Permission >= adminChatRank && ServerConfig.AdminsJoinSilently) {
+            if (Rank >= adminChatRank && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
             }
             
@@ -128,17 +126,16 @@ namespace MCGalaxy {
             string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
             
-            const LevelPermission perm = LevelPermission.Guest;
-            if (group.Permission > perm || (ServerConfig.GuestJoinsNotify && group.Permission <= perm)) {
+            if (ServerConfig.GuestJoinsNotify || Rank > LevelPermission.Guest) {
                 Chat.MessageGlobal(this, joinm, false, true);
             }
 
-            if (ServerConfig.AgreeToRulesOnEntry && group.Permission == LevelPermission.Guest && !Server.agreed.Contains(name)) {
+            if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 SendMessage("&9You must read the &c/Rules&9 and &c/Agree&9 to them before you can build and use commands!");
                 agreed = false;
             }
 
-            if (ServerConfig.verifyadmins && group.Permission >= ServerConfig.VerifyAdminsRank) {
+            if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
                     SendMessage("&cPlease set your admin verification password with %T/SetPass [Password]!");
                 else

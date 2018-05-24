@@ -12,48 +12,13 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void EconomyWindow_Load(object sender, EventArgs e) {
-            RankItem rankItem = Economy.Ranks;
+            UpdateRanks();
+            UpdateLevels();
+            UpdateEnabledItems();
+            
             ttl_numPrice.Value = Economy.Title.Price;
             col_numPrice.Value = Economy.Color.Price;
             tcl_numPrice.Value = Economy.TitleColor.Price;
-            eco_cbEnabled.Checked = Economy.Enabled;
-            ttl_cbEnabled.Checked = Economy.Title.Enabled;
-            col_cbEnabled.Checked = Economy.Color.Enabled;
-            tcl_cbEnabled.Checked = Economy.TitleColor.Enabled;
-            rnk_cbEnabled.Checked = rankItem.Enabled;
-            lvl_cbEnabled.Checked = Economy.Levels.Enabled;
-
-            //load all ranks in combobox
-            List<string> groupList = new List<string>();
-            foreach (Group group in Group.GroupList)
-                if (group.Permission > LevelPermission.Guest && group.Permission < LevelPermission.Nobody)
-                    groupList.Add(group.Name);
-            rnk_cmbMax.DataSource = groupList;
-            rnk_cmbMax.SelectedItem = rankItem.MaxRank;
-
-            UpdateRanks();
-            UpdateLevels();
-            
-            ttl_gb.Enabled = eco_cbEnabled.Checked;
-            col_gb.Enabled = eco_cbEnabled.Checked;
-            tcl_gb.Enabled = eco_cbEnabled.Checked;
-            rnk_gb.Enabled = eco_cbEnabled.Checked;
-            lvl_gb.Enabled = eco_cbEnabled.Checked;
-            
-            ttl_lblPrice.Enabled = ttl_cbEnabled.Checked;
-            ttl_numPrice.Enabled = ttl_cbEnabled.Checked;
-            col_lblPrice.Enabled = col_cbEnabled.Checked;
-            col_numPrice.Enabled = col_cbEnabled.Checked;
-            tcl_lblPrice.Enabled = tcl_cbEnabled.Checked;
-            tcl_numPrice.Enabled = tcl_cbEnabled.Checked;
-            
-            rnk_lblMax.Enabled = rnk_cbEnabled.Checked;
-            rnk_cmbMax.Enabled = rnk_cbEnabled.Checked;
-            rnk_lbRanks.Enabled = rnk_cbEnabled.Checked;
-            rnk_lblPrice.Enabled = rnk_cbEnabled.Checked;
-            rnk_numPrice.Enabled = rnk_cbEnabled.Checked;
-            lvl_dgvMaps.Enabled = lvl_cbEnabled.Checked;
-            lvl_btnAdd.Enabled = lvl_cbEnabled.Checked;
             CheckLevelEnables();
 
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
@@ -69,18 +34,44 @@ namespace MCGalaxy.Gui.Eco {
         void PropertyWindow_FormClosing(object sender, FormClosingEventArgs e) {
             SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         }
+        
+        void UpdateEnabledItems() {
+            eco_cbEnabled.Checked = Economy.Enabled;
+            
+            ttl_cbEnabled.Checked = eco_cbEnabled.Checked && Economy.Title.Enabled;
+            ttl_gb.Enabled        = ttl_cbEnabled.Checked;
+            ttl_lblPrice.Enabled  = ttl_cbEnabled.Checked;
+            ttl_numPrice.Enabled  = ttl_cbEnabled.Checked;
+            
+            col_cbEnabled.Checked = eco_cbEnabled.Checked && Economy.Color.Enabled;
+            col_gb.Enabled        = col_cbEnabled.Checked;
+            col_lblPrice.Enabled  = col_cbEnabled.Checked;
+            col_numPrice.Enabled  = col_cbEnabled.Checked;
+            
+            tcl_cbEnabled.Checked = eco_cbEnabled.Checked && Economy.TitleColor.Enabled;
+            tcl_gb.Enabled        = tcl_cbEnabled.Checked;
+            tcl_lblPrice.Enabled  = tcl_cbEnabled.Checked;
+            tcl_numPrice.Enabled  = tcl_cbEnabled.Checked;
+            
+            rnk_cbEnabled.Checked = eco_cbEnabled.Checked && Economy.Ranks.Enabled;
+            rnk_gb.Enabled        = rnk_cbEnabled.Checked;
+            rnk_lbRanks.Enabled   = rnk_cbEnabled.Checked;
+            rnk_lblPrice.Enabled  = rnk_cbEnabled.Checked;
+            rnk_numPrice.Enabled  = rnk_cbEnabled.Checked;
+            
+            lvl_cbEnabled.Checked = eco_cbEnabled.Checked && Economy.Levels.Enabled;
+            lvl_gb.Enabled        = lvl_cbEnabled.Checked;      
+            lvl_dgvMaps.Enabled   = lvl_cbEnabled.Checked;
+            lvl_btnAdd.Enabled    = lvl_cbEnabled.Checked;            
+        }
 
         void UpdateRanks() {
-            RankItem rankItem = Economy.Ranks;
-            rankItem.UpdatePrices();
-
-            List<string> ranks = new List<string>();
-            foreach (RankItem.Rank rank in rankItem.RanksList) {
-                ranks.Add(rank.group.Name);
-                if (rank.group.Permission >= rankItem.MaxRank) break;
+            rnk_lbRanks.Items.Clear();
+            for (int i = 0; i < GuiPerms.RankPerms.Length; i++) {
+                RankItem.RankEntry rank = Economy.Ranks.Find(GuiPerms.RankPerms[i]);
+                int price = rank == null ? 0 : rank.Price;
+                rnk_lbRanks.Items.Add(GuiPerms.RankNames[i] + " - " + price);
             }
-            rnk_lbRanks.DataSource = ranks;
-            rnk_lbRanks.SelectedItem = rnk_cmbMax.SelectedItem;
             rnk_lbRanks_SelectedIndexChanged(null, null);
         }
 
@@ -97,31 +88,23 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void eco_cbEnabled_CheckedChanged(object sender, EventArgs e) {
-            ttl_gb.Enabled = eco_cbEnabled.Checked;
-            col_gb.Enabled = eco_cbEnabled.Checked;
-            tcl_gb.Enabled = eco_cbEnabled.Checked;
-            rnk_gb.Enabled = eco_cbEnabled.Checked;
-            lvl_gb.Enabled = eco_cbEnabled.Checked;
-            Economy.Enabled = eco_cbEnabled.Checked;
+            UpdateEnabledItems();
         }
 
         void ttl_cbEnabled_CheckedChanged(object sender, EventArgs e) {
-            ttl_lblPrice.Enabled = ttl_cbEnabled.Checked;
-            ttl_numPrice.Enabled = ttl_cbEnabled.Checked;
+            UpdateEnabledItems();
             Economy.Title.Enabled = ttl_cbEnabled.Checked;
             Economy.Title.Price = (int)ttl_numPrice.Value;
         }
 
         void col_cbEnabled_CheckedChanged(object sender, EventArgs e) {
-            col_lblPrice.Enabled = col_cbEnabled.Checked;
-            col_numPrice.Enabled = col_cbEnabled.Checked;
+            UpdateEnabledItems();
             Economy.Color.Enabled = col_cbEnabled.Checked;
             Economy.Color.Price = (int)col_numPrice.Value;
         }
 
         void tcl_cbEnabled_CheckedChanged(object sender, EventArgs e) {
-            tcl_lblPrice.Enabled = tcl_cbEnabled.Checked;
-            tcl_numPrice.Enabled = tcl_cbEnabled.Checked;
+            UpdateEnabledItems();
             Economy.TitleColor.Enabled = tcl_cbEnabled.Checked;
             Economy.TitleColor.Price = (int)tcl_numPrice.Value;
         }
@@ -139,33 +122,28 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void rnk_cbEnabled_CheckedChanged(object sender, EventArgs e) {
-            rnk_lblMax.Enabled = rnk_cbEnabled.Checked;
-            rnk_cmbMax.Enabled = rnk_cbEnabled.Checked;
-            rnk_lbRanks.Enabled = rnk_cbEnabled.Checked;
-            rnk_lblPrice.Enabled = rnk_cbEnabled.Checked;
-            rnk_numPrice.Enabled = rnk_cbEnabled.Checked;
+            UpdateEnabledItems();
             Economy.Ranks.Enabled = rnk_cbEnabled.Checked;
         }
 
-        void rnk_cmbMax_SelectionChangeCommitted(object sender, EventArgs e) {
-            Economy.Ranks.MaxRank = GuiPerms.GetPermission(rnk_cmbMax, LevelPermission.AdvBuilder);
-            UpdateRanks();
-        }
-
         void rnk_numPrice_ValueChanged(object sender, EventArgs e) {
-            if (rnk_lbRanks.SelectedItem != null) {
-                RankItem.Rank rank = Economy.Ranks.FindRank(rnk_lbRanks.SelectedItem.ToString());
-                if (rank != null) rank.price = (int)rnk_numPrice.Value;
-            }
+            int selI = rnk_lbRanks.SelectedIndex;
+            if (selI == -1) return;
+            LevelPermission perm = GuiPerms.RankPerms[selI];
+            
+            RankItem.RankEntry rank = Economy.Ranks.GetOrAdd(perm);
+            rank.Price = (int)rnk_numPrice.Value;
+            if (rank.Price == 0) Economy.Ranks.Remove(perm);
+            rnk_lbRanks.Items[selI] = GuiPerms.RankNames[selI] + " - " + rank.Price;
         }
 
         void rnk_lbRanks_SelectedIndexChanged(object sender, EventArgs e) {
-            if (rnk_lbRanks.SelectedItem == null) {
-                rnk_numPrice.Value = 0;
-            } else {
-                RankItem.Rank rank = Economy.Ranks.FindRank(rnk_lbRanks.SelectedItem.ToString());
-                rnk_numPrice.Value = rank != null ? rank.price : 0;
-            }
+            int selI = rnk_lbRanks.SelectedIndex;
+            if (selI == -1) { rnk_numPrice.Value = 0; return; }
+            LevelPermission perm = GuiPerms.RankPerms[selI];
+            
+            RankItem.RankEntry rank = Economy.Ranks.Find(perm);
+            rnk_numPrice.Value = rank == null ? 0 : rank.Price;
         }
 
         void EconomyWindow_FormClosing(object sender, FormClosingEventArgs e) {
@@ -204,7 +182,7 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void lvl_dgvMaps_CellContentClick(object sender, DataGridViewCellEventArgs e) {
-            lvl_btnEdit.Enabled = true;
+            lvl_btnEdit.Enabled   = true;
             lvl_btnRemove.Enabled = true;
         }
     }

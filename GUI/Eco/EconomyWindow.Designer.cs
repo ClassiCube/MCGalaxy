@@ -40,8 +40,6 @@ namespace MCGalaxy.Gui.Eco {
             this.rnk_numPrice = new System.Windows.Forms.NumericUpDown();
             this.rnk_lblPrice = new System.Windows.Forms.Label();
             this.rnk_lbRanks = new System.Windows.Forms.ListBox();
-            this.rnk_cmbMax = new System.Windows.Forms.ComboBox();
-            this.rnk_lblMax = new System.Windows.Forms.Label();
             this.rnk_cbEnabled = new System.Windows.Forms.CheckBox();
             this.tcl_gb = new System.Windows.Forms.GroupBox();
             this.tcl_numPrice = new System.Windows.Forms.NumericUpDown();
@@ -211,8 +209,6 @@ namespace MCGalaxy.Gui.Eco {
             this.rnk_gb.Controls.Add(this.rnk_numPrice);
             this.rnk_gb.Controls.Add(this.rnk_lblPrice);
             this.rnk_gb.Controls.Add(this.rnk_lbRanks);
-            this.rnk_gb.Controls.Add(this.rnk_cmbMax);
-            this.rnk_gb.Controls.Add(this.rnk_lblMax);
             this.rnk_gb.Controls.Add(this.rnk_cbEnabled);
             this.rnk_gb.Enabled = false;
             this.rnk_gb.Location = new System.Drawing.Point(176, 48);
@@ -225,7 +221,7 @@ namespace MCGalaxy.Gui.Eco {
             // rnk_numPrice
             // 
             this.rnk_numPrice.Enabled = false;
-            this.rnk_numPrice.Location = new System.Drawing.Point(6, 100);
+            this.rnk_numPrice.Location = new System.Drawing.Point(6, 68);
             this.rnk_numPrice.Maximum = new decimal(new int[] {
             16777215,
             0,
@@ -245,7 +241,7 @@ namespace MCGalaxy.Gui.Eco {
             // 
             this.rnk_lblPrice.AutoSize = true;
             this.rnk_lblPrice.Enabled = false;
-            this.rnk_lblPrice.Location = new System.Drawing.Point(6, 80);
+            this.rnk_lblPrice.Location = new System.Drawing.Point(6, 48);
             this.rnk_lblPrice.Name = "rnk_lblPrice";
             this.rnk_lblPrice.Size = new System.Drawing.Size(40, 17);
             this.rnk_lblPrice.TabIndex = 5;
@@ -256,32 +252,11 @@ namespace MCGalaxy.Gui.Eco {
             this.rnk_lbRanks.Enabled = false;
             this.rnk_lbRanks.FormattingEnabled = true;
             this.rnk_lbRanks.ItemHeight = 16;
-            this.rnk_lbRanks.Location = new System.Drawing.Point(114, 80);
+            this.rnk_lbRanks.Location = new System.Drawing.Point(114, 48);
             this.rnk_lbRanks.Name = "rnk_lbRanks";
-            this.rnk_lbRanks.Size = new System.Drawing.Size(127, 148);
+            this.rnk_lbRanks.Size = new System.Drawing.Size(127, 180);
             this.rnk_lbRanks.TabIndex = 8;
             this.rnk_lbRanks.SelectedIndexChanged += new System.EventHandler(this.rnk_lbRanks_SelectedIndexChanged);
-            // 
-            // rnk_cmbMax
-            // 
-            this.rnk_cmbMax.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.rnk_cmbMax.Enabled = false;
-            this.rnk_cmbMax.FormattingEnabled = true;
-            this.rnk_cmbMax.Location = new System.Drawing.Point(77, 42);
-            this.rnk_cmbMax.Name = "rnk_cmbMax";
-            this.rnk_cmbMax.Size = new System.Drawing.Size(164, 24);
-            this.rnk_cmbMax.TabIndex = 7;
-            this.rnk_cmbMax.SelectionChangeCommitted += new System.EventHandler(this.rnk_cmbMax_SelectionChangeCommitted);
-            // 
-            // rnk_lblMax
-            // 
-            this.rnk_lblMax.AutoSize = true;
-            this.rnk_lblMax.Enabled = false;
-            this.rnk_lblMax.Location = new System.Drawing.Point(6, 45);
-            this.rnk_lblMax.Name = "rnk_lblMax";
-            this.rnk_lblMax.Size = new System.Drawing.Size(65, 17);
-            this.rnk_lblMax.TabIndex = 6;
-            this.rnk_lblMax.Text = "Max rank";
             // 
             // rnk_cbEnabled
             // 
@@ -516,8 +491,6 @@ namespace MCGalaxy.Gui.Eco {
         private System.Windows.Forms.CheckBox lvl_cbEnabled;
         private System.Windows.Forms.GroupBox rnk_gb;
         private System.Windows.Forms.ListBox rnk_lbRanks;
-        private System.Windows.Forms.ComboBox rnk_cmbMax;
-        private System.Windows.Forms.Label rnk_lblMax;
         private System.Windows.Forms.CheckBox rnk_cbEnabled;
         private System.Windows.Forms.NumericUpDown tcl_numPrice;
         private System.Windows.Forms.Label tcl_lblPrice;

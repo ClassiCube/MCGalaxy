@@ -306,8 +306,7 @@ namespace MCGalaxy {
             
             if (!isKick) {
                 string leavem = "&c- " + FullName + " %S" + chatMsg;
-                const LevelPermission perm = LevelPermission.Guest;
-                if (group.Permission > perm || (ServerConfig.GuestLeavesNotify && group.Permission <= perm)) {
+                if (ServerConfig.GuestLeavesNotify || Rank > LevelPermission.Guest) {
                     Chat.MessageGlobal(this, leavem, false, true);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);

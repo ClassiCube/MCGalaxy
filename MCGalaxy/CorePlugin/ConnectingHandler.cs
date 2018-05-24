@@ -33,7 +33,7 @@ namespace MCGalaxy.Core {
             if (!Player.ValidName(p.truename)) {
                 p.Leave(null, "Invalid player name", true); return false;
             }
-      
+            
             if (!VerifyName(p, mppass)) return false;
             if (!IPThrottler.CheckIP(p)) return false;
             if (!CheckTempban(p)) return false;
@@ -44,17 +44,16 @@ namespace MCGalaxy.Core {
                 return false;
             }
             
-            Group group = Group.GroupIn(p.name);
-            if (!CheckBanned(group, p, whitelisted)) return false;
-            if (!CheckPlayersCount(group, p)) return false;
-            p.group = group;
+            p.group = Group.GroupIn(p.name);
+            if (!CheckBanned(p, whitelisted)) return false;
+            if (!CheckPlayersCount(p)) return false;
             return true;
         }
         
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-        static object md5Lock = new object();        
-     
+        static object md5Lock = new object();
+        
         static bool VerifyName(Player p, string mppass) {
             if (!ServerConfig.VerifyNames) return true;
             
@@ -104,14 +103,14 @@ namespace MCGalaxy.Core {
             return Server.whiteList.Contains(name) && PlayerInfo.FindAccounts(ip).Contains(name);
         }
         
-        static bool CheckPlayersCount(Group group, Player p) {
+        static bool CheckPlayersCount(Player p) {
             if (Server.vip.Contains(p.name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
             if (online.Length >= ServerConfig.MaxPlayers && !HttpUtil.IsPrivateIP(p.ip)) {
                 p.Leave(null, "Server full!", true); return false;
             }
-            if (group.Permission > LevelPermission.Guest) return true;
+            if (p.Rank > LevelPermission.Guest) return true;
             
             online = PlayerInfo.Online.Items;
             int guests = 0;
@@ -126,25 +125,23 @@ namespace MCGalaxy.Core {
             return false;
         }
         
-        static bool CheckBanned(Group group, Player p, bool whitelisted) {
+        static bool CheckBanned(Player p, bool whitelisted) {
             if (Server.bannedIP.Contains(p.ip) && (!ServerConfig.WhitelistedOnly || !whitelisted)) {
                 p.Kick(null, ServerConfig.DefaultBanMessage, true);
                 return false;
             }
+            if (p.Rank != LevelPermission.Banned) return true;
             
-            if (group.Permission == LevelPermission.Banned) {
-                string banner, reason, prevRank;
-                DateTime time;
-                Ban.GetBanData(p.name, out banner, out reason, out time, out prevRank);
-                
-                if (banner != null) {
-                    p.Kick(null, "Banned by " + banner + ": " + reason, true);
-                } else {
-                    p.Kick(null, ServerConfig.DefaultBanMessage, true);
-                }
-                return false;
+            string banner, reason, prevRank;
+            DateTime time;
+            Ban.GetBanData(p.name, out banner, out reason, out time, out prevRank);
+            
+            if (banner != null) {
+                p.Kick(null, "Banned by " + banner + ": " + reason, true);
+            } else {
+                p.Kick(null, ServerConfig.DefaultBanMessage, true);
             }
-            return true;
+            return false;
         }
     }
 }
