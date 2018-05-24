@@ -36,26 +36,24 @@ namespace MCGalaxy.Gui.Popups {
         
         void btnCreate_Click(object sender, EventArgs e) {
             if (String.IsNullOrEmpty(txtCmdName.Text.Trim())) {
-                MessageBox.Show("Command must have a name");
-                return;
+                Popup.Warning("Command must have a name"); return;
             }
             
             string cmdName = txtCmdName.Text.Trim().ToLower();
             IScripting engine = radVB.Checked ? IScripting.VB : IScripting.CS;
             string path = engine.SourcePath(cmdName);
             if (File.Exists(path)) {
-                MessageBox.Show("Command already exists", "", MessageBoxButtons.OK);
-                return;
+                Popup.Warning("Command already exists"); return;
             }
             
             try {
                 engine.CreateNew(path, cmdName);
             } catch (Exception ex) {
                 Logger.LogError(ex);
-                MessageBox.Show("An error occurred creating the class file.", "", MessageBoxButtons.OK);
+                Popup.Error("Failed to generate command. Check error logs for more details.");
                 return;
             }
-            MessageBox.Show("Command: Cmd" + cmdName + engine.Ext + " created.");
+            Popup.Message("Command: Cmd" + cmdName + engine.Ext + " created.");
         }
 
         void btnLoad_Click(object sender, EventArgs e) {
@@ -79,7 +77,9 @@ namespace MCGalaxy.Gui.Popups {
                 CompilerParameters args = new CompilerParameters();
                 args.GenerateInMemory = true;
                 var result = engine.CompileSource(File.ReadAllText(fileName), args);
-                if (result == null) { MessageBox.Show("Error compiling files"); return; }
+                if (result == null) { 
+                    Popup.Error("Error compiling files. Check logs for more details."); return; 
+                }
 
                 if (result.Errors.HasErrors) {
                     foreach (CompilerError err in result.Errors) {
@@ -88,18 +88,20 @@ namespace MCGalaxy.Gui.Popups {
                         Logger.Log(LogType.Warning, "Line: " + err.Line);
                         Logger.Log(LogType.Warning, "=================================");
                     }
-                    MessageBox.Show("Error compiling from source. Check logs for more details.");
+                    Popup.Error("Error compiling from source. Check logs for more details.");
                     return;
                 }
                 commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
             }
 
-            if (commands == null) { MessageBox.Show("Error compiling files"); return; }
+            if (commands == null) { 
+                Popup.Error("Error compiling files. Check logs for more details"); return; 
+            }
             for (int i = 0; i < commands.Count; i++) {
                 Command cmd = commands[i];
 
                 if (lstCommands.Items.Contains(cmd.name)) {
-                    MessageBox.Show("Command " + cmd.name + " already exists. As a result, it was not loaded");
+                    Popup.Warning("Command " + cmd.name + " already exists, so was not loaded");
                     continue;
                 }
 
@@ -114,13 +116,13 @@ namespace MCGalaxy.Gui.Popups {
             string cmdName = lstCommands.SelectedItem.ToString();
             Command cmd = Command.all.Find(cmdName);
             if (cmd == null) {
-                MessageBox.Show(cmdName + " is not a valid or loaded command.", ""); return;
+                Popup.Warning("Command " + cmdName + " is not loaded."); return;
             }
 
             lstCommands.Items.Remove( cmd.name );
             Command.all.Remove(cmd);
             CommandPerms.Load();
-            MessageBox.Show("Command was successfully unloaded.", "");
+            Popup.Message("Command successfully unloaded.");
         }
         
         void lstCommands_SelectedIndexChanged(object sender, EventArgs e) {

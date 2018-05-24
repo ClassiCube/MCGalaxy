@@ -23,8 +23,33 @@ using System.Windows.Forms;
 using MCGalaxy.Cli;
 
 namespace MCGalaxy.Gui {
+    
+    public static class Popup {
+        public static void Message(string message, string title = "") {
+            MessageBox.Show(message, title);
+        }
+        
+        public static void Error(string message) {
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        
+        public static void Warning(string message) {
+            MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        
+        public static bool OKCancel(string message, string title) {
+            return MessageBox.Show(message, title, MessageBoxButtons.OKCancel,
+                                  MessageBoxIcon.Warning) == DialogResult.OK;
+        }
+        
+        public static bool YesNo(string message, string title) {
+            return MessageBox.Show(message, title, MessageBoxButtons.YesNo, 
+                                   MessageBoxIcon.Question) == DialogResult.Yes;
+        }
+    }
+    
     public static class Program {
-
+        
         [STAThread]
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -57,8 +82,8 @@ namespace MCGalaxy.Gui {
         
         static void RunGUI() {
             if (!File.Exists("MCGalaxy_.dll")) {
-                MessageBox.Show("Cannot start server as MCGalaxy_.dll is missing\r\n" +
-                                "Download it from https://github.com/Hetal728/MCGalaxy/tree/master/Uploads");
+                Popup.Error("Cannot start server as MCGalaxy_.dll is missing\r\n" +
+                            "Download it from https://github.com/Hetal728/MCGalaxy/tree/master/Uploads");
                 return;
             }
             // separate method, in case MCGalaxy_.dll is missing

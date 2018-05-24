@@ -74,19 +74,12 @@ namespace MCGalaxy {
         }
 
         public override object GetValue(object component) { return _func((T)component); }
-
         public override Type ComponentType { get { return typeof(T); } }
-
         public override Type PropertyType { get { return _returnType; } }
-
         public override bool CanResetValue(object component) { return false; }
-
         public override void ResetValue(object component) { }
-
         public override bool IsReadOnly { get { return true; } }
-
         public override void SetValue(object component, object value) { }
-
         public override bool ShouldSerializeValue(object component) { return false; }
     }
 }

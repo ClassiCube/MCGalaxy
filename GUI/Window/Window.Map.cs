@@ -25,11 +25,11 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         
         void map_BtnGen_Click(object sender, EventArgs e) {
-            if (mapgen) { MessageBox.Show("Another map is already being generated."); return; }
+            if (mapgen) { Popup.Warning("Another map is already being generated."); return; }
 
             string name = map_txtName.Text.ToLower();
             string seed = map_txtSeed.Text.ToLower();
-            if (String.IsNullOrEmpty(name)) { MessageBox.Show("Map name cannot be blank."); return; }
+            if (String.IsNullOrEmpty(name)) { Popup.Warning("Map name cannot be blank."); return; }
             
             string x = Map_GetComboboxItem(map_cmbX, "width");
             if (x == null) return;           
@@ -40,34 +40,36 @@ namespace MCGalaxy.Gui {
             string type = Map_GetComboboxItem(map_cmbType, "type");
             if (type == null) return;            
 
-            Thread genThread = new Thread(() =>
-            {
-                mapgen = true;
-                try {
-                    string args = name + " " + x + " " + y + " " + z + " " + type;
-                    if (!String.IsNullOrEmpty(seed)) args += " " + seed;
-                    Command.all.FindByName("NewLvl").Use(null, args);
-                } catch (Exception ex) {
-                    Logger.LogError(ex);
-                    MessageBox.Show("Failed to generate level. Check error logs for details.");
-                    mapgen = false;
-                    return;
-                }
-
-                if (LevelInfo.MapExists(name)) {
-                    MessageBox.Show("Level successfully generated.");
-                    RunOnUI_Async(() => {
-                        Map_UpdateUnloadedList();
-                        Map_UpdateLoadedList();
-                        Main_UpdateMapList();
-                    });
-                } else {
-                    MessageBox.Show("Level was not generated. Check main log for details.");
-                }
-                mapgen = false;
-            });
+            string args = name + " " + x + " " + y + " " + z + " " + type;
+            if (!String.IsNullOrEmpty(seed)) args += " " + seed;
+            
+            Thread genThread = new Thread(() => DoGen(name, args));
             genThread.Name = "MCG_GuiGenMap";
             genThread.Start();
+        }
+        
+        void DoGen(string name, string args) {
+            mapgen = true;
+            try {
+                Command.all.FindByName("NewLvl").Use(null, args);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+                Popup.Error("Failed to generate level. Check error logs for details.");
+                mapgen = false;
+                return;
+            }
+            
+            if (LevelInfo.MapExists(name)) {
+                Popup.Message("Level successfully generated.");
+                RunOnUI_Async(() => {
+                    Map_UpdateUnloadedList();
+                    Map_UpdateLoadedList();
+                    Main_UpdateMapList();
+                });
+            } else {
+               Popup.Error("Level was not generated. Check main log for details.");
+            }
+            mapgen = false;
         }
         
         string Map_GetComboboxItem(ComboBox box, string propName) {
@@ -75,7 +77,7 @@ namespace MCGalaxy.Gui {
             string value = selected == null ? "" : selected.ToString().ToLower();
             
             if (value.Length == 0) {
-                MessageBox.Show("Map " + propName + " cannot be blank.");
+                Popup.Warning("Map " + propName + " cannot be blank.");
                 return null;
             }
             return value;
@@ -83,7 +85,7 @@ namespace MCGalaxy.Gui {
         
         void map_BtnLoad_Click(object sender, EventArgs e) {
             object selected = map_lbUnloaded.SelectedItem;
-            if (selected == null) { MessageBox.Show("No map file selected"); return; }
+            if (selected == null) { Popup.Warning("No map file selected."); return; }
 
             UIHelpers.HandleCommand("Load " +selected.ToString());
         }

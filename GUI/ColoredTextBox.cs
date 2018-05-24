@@ -129,10 +129,7 @@ namespace MCGalaxy.Gui.Components {
         }
 
         void HandleLinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
-            if (MessageBox.Show("Never open links from people that you don't trust!", "Warning!!",
-                                MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                return;
-
+            if (!Popup.OKCancel("Never open links from people that you don't trust!", "Warning!!")) return;
             try { Process.Start(e.LinkText); }
             catch { }
         }

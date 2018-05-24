@@ -45,7 +45,7 @@ namespace MCGalaxy.Gui.Popups {
                 Text = "Editing " + curFile.Filename;
             } catch (Exception ex) {
                 Logger.LogError(ex);
-                MessageBox.Show("Failed to read text from " + curFile.Filename);
+                Popup.Error("Failed to read text from " + curFile.Filename);
                 
                 curFile = null;
                 cmbList.Text = "";
@@ -58,10 +58,9 @@ namespace MCGalaxy.Gui.Popups {
             string[] userLines = txtEdit.Lines;
             if (!HasTextChanged(userLines)) return;
             
-            string msg = "Save changes to " + curFile.Filename + "?";
-            if (MessageBox.Show(msg, "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+            if (Popup.YesNo("Save changes to " + curFile.Filename + "?", "Save changes")) {
                 curFile.SetText(userLines);
-                MessageBox.Show("Saved " + curFile.Filename);
+                Popup.Message("Saved " + curFile.Filename);
             }
         }
         

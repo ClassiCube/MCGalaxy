@@ -85,9 +85,9 @@ namespace MCGalaxy.Gui {
 
         void forceUpdateBtn_Click(object sender, EventArgs e) {
             srv_btnForceUpdate.Enabled = false;
-            DialogResult result = MessageBox.Show("Would you like to force update " + Server.SoftwareName + " now?", "Force Update",
-                                                  MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.OK) {
+            string msg = "Would you like to force update " + Server.SoftwareName + " now?";
+            
+            if (Popup.YesNo(msg, "Force update")) {
                 SaveChanges();
                 Updater.PerformUpdate();
                 Dispose();

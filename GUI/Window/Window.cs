@@ -142,7 +142,7 @@ namespace MCGalaxy.Gui {
         
         static void ShowUpdateMessageAsync() {
             msgOpen = true;
-            if (MessageBox.Show("New version found. Would you like to update?", "Update?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+            if (Popup.YesNo("New version found. Would you like to update?", "Update?")) {
                 Updater.PerformUpdate();
             }
             msgOpen = false;
@@ -233,7 +233,7 @@ namespace MCGalaxy.Gui {
                 notifyIcon.Dispose();
             }
             
-            if (Server.shuttingDown || MessageBox.Show("Really shutdown the server? All players will be disconnected!", "Exit", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+            if (Server.shuttingDown || Popup.OKCancel("Really shutdown the server? All players will be disconnected!", "Exit")) {
                 Server.Stop(false, ServerConfig.DefaultShutdownMessage);
                 notifyIcon.Dispose();
             } else {

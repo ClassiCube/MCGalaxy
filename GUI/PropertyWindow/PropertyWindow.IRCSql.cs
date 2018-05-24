@@ -118,7 +118,7 @@ namespace MCGalaxy.Gui {
             try {
                 System.Diagnostics.Process.Start("http://dev.mysql.com/downloads/");
             } catch {
-                MessageBox.Show("Failed to open link!");
+                Popup.Error("Failed to open link!");
             }
         }
 

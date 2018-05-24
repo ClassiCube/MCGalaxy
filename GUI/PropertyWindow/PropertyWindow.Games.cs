@@ -618,9 +618,8 @@ namespace MCGalaxy.Gui {
             if (tw_selected == null) return;
             if (tw_selected.PlayingPlayers() >= 2) {
                 new Thread(tw_selected.Start).Start();
-            }
-            else {
-                MessageBox.Show("Not enough players (2 or more needed!)", "More players needed!");
+            } else {
+                Popup.Warning("Not enough players (2 or more needed!)");
             }
             LoadTNTWarsTab(sender, e);
         }
@@ -684,7 +683,8 @@ namespace MCGalaxy.Gui {
             msg += "Hard (1 Hit to die, TNT has short delay and team kills are on)";
             msg += Environment.NewLine;
             msg += "Extreme (1 Hit to die, TNT has short delay, big explosion and team kills are on)";
-            MessageBox.Show(msg, "Difficulty");
+            
+            Popup.Message(msg, "Difficulty");
         }
     }
 }

@@ -128,7 +128,7 @@ namespace MCGalaxy.Gui {
         }
         
         void main_BtnRestart_Click(object sender, EventArgs e) {
-            if (MessageBox.Show("Are you sure you want to restart?", "Restart", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+            if (Popup.OKCancel("Are you sure you want to restart?", "Restart")) {
                 Server.Stop(true, ServerConfig.DefaultRestartMessage);
             }
         }
@@ -181,7 +181,7 @@ namespace MCGalaxy.Gui {
         }
         
         void tsLog_Clear_Click(object sender, EventArgs e) {
-            if (MessageBox.Show("Are you sure you want to clear logs?", "You sure?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+            if (Popup.OKCancel("Are you sure you want to clear logs?", "Clear logs")) {
                 main_txtLog.ClearLog();
             }
         }
