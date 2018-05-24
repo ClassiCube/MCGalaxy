@@ -82,8 +82,10 @@ namespace MCGalaxy.Gui {
         }
         
         void map_BtnLoad_Click(object sender, EventArgs e) {
-            string mapName = map_lbUnloaded.SelectedItem.ToString();
-            UIHelpers.HandleCommand("Load " + mapName);
+            object selected = map_lbUnloaded.SelectedItem;
+            if (selected == null) { MessageBox.Show("No map file selected"); return; }
+
+            UIHelpers.HandleCommand("Load " +selected.ToString());
         }
         
         string last = null;

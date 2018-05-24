@@ -35,8 +35,8 @@ namespace MCGalaxy {
         
         PropertyDescriptor[] MakeProperties() {
             return new PropertyDescriptor[] {
-                new MethodDescriptor<Player>("Name", p => p.name, typeof(string)),
-                new MethodDescriptor<Player>("Map", p => p.level.name, typeof(string)),
+                new MethodDescriptor<Player>("Name", p => p.name,       typeof(string)),
+                new MethodDescriptor<Player>("Map",  p => p.level.name, typeof(string)),
                 new MethodDescriptor<Player>("Rank", p => p.group.Name, typeof(string)),
             };
         }
@@ -57,9 +57,9 @@ namespace MCGalaxy {
         
         PropertyDescriptor[] MakeProperties() {
             return new PropertyDescriptor[] {
-                new MethodDescriptor<Level>("Name", l => l.name, typeof(string)),
+                new MethodDescriptor<Level>("Name",    l => l.name,          typeof(string)),
                 new MethodDescriptor<Level>("Players", l => l.players.Count, typeof(int)),
-                new MethodDescriptor<Level>("Physics", l => l.physics, typeof(int)),
+                new MethodDescriptor<Level>("Physics", l => l.physics,       typeof(int)),
             };
         }
     }
