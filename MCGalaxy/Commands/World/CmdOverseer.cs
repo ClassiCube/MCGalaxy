@@ -40,21 +40,22 @@ namespace MCGalaxy.Commands.World {
             if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
-
-            // used to be /os spawn, keep alias for backwards compatibility
-            if (cmd.CaselessEq("spawn")) cmd = "setspawn";
-            foreach (var subCmd in subCommands) {
-                if (!subCmd.Key.CaselessEq(cmd)) continue;
-                subCmd.Value.Handler(p, arg, arg2);
-                return;
+            
+            if (cmd.CaselessEq("Spawn"))           cmd = "SetSpawn";
+            if (cmd.CaselessEq("BlockProperties")) cmd = "BlockProps";
+            
+            foreach (SubCommand subCmd in subCommands) {
+                if (!subCmd.Group.CaselessEq(cmd)) continue;
+                
+                subCmd.Handler(p, arg, arg2); return;
             }
             Help(p);
         }
         
         public override void Help(Player p, string message) {
-            foreach (var subCmd in subCommands) {
-                if (!subCmd.Key.CaselessEq(message)) continue;
-                Player.MessageLines(p, subCmd.Value.Help);
+            foreach (SubCommand subCmd in subCommands) {
+                if (!subCmd.Group.CaselessEq(message)) continue;
+                Player.MessageLines(p, subCmd.Help);
                 return;
             }
             Player.Message(p, "Unrecognised command \"{0}\".", message);
@@ -63,36 +64,37 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             Player.Message(p, "%T/os [command] [args]");
             Player.Message(p, "%HAllows you to modify and manage your personal realms.");
-            Player.Message(p, "%HCommands: %S{0}", subCommands.Keys.Join());
+            Player.Message(p, "%HCommands: %S{0}", subCommands.Join(grp => grp.Group));
             Player.Message(p, "%HType %T/Help os [command] %Hfor more details");
         }
         
         
         delegate void SubCommandHandler(Player p, string cmd, string value);
         class SubCommand {
+            public string Group;
             public SubCommandHandler Handler;
             public string[] Help;
             
-            public SubCommand(SubCommandHandler handler, string[] help) {
+            public SubCommand(string grpName, SubCommandHandler handler, string[] help) {
+                Group   = grpName;
                 Handler = handler;
-                Help = help;
+                Help    = help;
             }
         }
         
-        Dictionary<string, SubCommand> subCommands = new Dictionary<string, SubCommand>() {
-            { "blockprops", new SubCommand(HandleBlockProps, blockPropsHelp) },
-            { "blockproperties", new SubCommand(HandleBlockProps, blockPropsHelp) },
-            { "env", new SubCommand(HandleEnv, envHelp) },
-            { "go", new SubCommand(HandleGoto, gotoHelp) },
-            { "kick", new SubCommand(HandleKick, kickHelp) },
-            { "kickall", new SubCommand(HandleKickAll, kickAllHelp) },
-            { "lb", new SubCommand(HandleLevelBlock, levelBlockHelp) },
-            { "levelblock", new SubCommand(HandleLevelBlock, levelBlockHelp) },
-            { "map", new SubCommand(HandleMap, mapHelp) },
-            { "preset", new SubCommand(HandlePreset, presetHelp) },
-            { "setspawn", new SubCommand(HandleSpawn, spawnHelp) },
-            { "zone", new SubCommand(HandleZone, zoneHelp) },
-            { "zones", new SubCommand(HandleZones, zonesHelp) },
+       List<SubCommand> subCommands = new List<SubCommand>() {
+            new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp),
+            new SubCommand("Env",        HandleEnv,        envHelp),
+            new SubCommand("go",         HandleGoto,       gotoHelp),
+            new SubCommand("Kick",       HandleKick,       kickHelp),
+            new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
+            new SubCommand("lb",         HandleLevelBlock, levelBlockHelp),
+            new SubCommand("LevelBlock", HandleLevelBlock, levelBlockHelp),
+            new SubCommand("Map",        HandleMap,        mapHelp),
+            new SubCommand("Preset",     HandlePreset,     presetHelp),
+            new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp),
+            new SubCommand("Zone",       HandleZone,       zoneHelp),
+            new SubCommand("Zones",      HandleZones,      zonesHelp),
         };
         
         
