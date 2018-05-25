@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.World {
             } else {
                 if (!CheckExtraPerm(p, 1)) return;
                 if (!Formatter.ValidName(p, message, "level")) return;
-                if (!LevelInfo.ValidateAction(p, ServerConfig.MainLevel, "set main to another level")) return;
+                if (!LevelInfo.ValidateAction(p, Server.mainLevel, "set main to another level")) return;
                 
                 string map = Matcher.FindMaps(p, message);
                 if (map == null) return;

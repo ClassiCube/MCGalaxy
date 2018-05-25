@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message) {
             int totalFixed = 0;
             Level lvl = p.level;
-            if (!LevelInfo.ValidateAction(p, lvl.name, "use %T/fixgrass %Son this level")) return;
+            if (!LevelInfo.ValidateAction(p, lvl, "use %T/fixgrass %Son this level")) return;
             
             if (message.Length == 0) {
                 Fix(p, lvl, ref totalFixed, true, true);

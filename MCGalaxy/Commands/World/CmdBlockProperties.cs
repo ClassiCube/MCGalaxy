@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
                     return null;
                 }
                 
-                if (!LevelInfo.ValidateAction(p, p.level.name, "change block properties in this level")) return null;
+                if (!LevelInfo.ValidateAction(p, p.level, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             

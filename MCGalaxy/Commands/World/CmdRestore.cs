@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                 }
             }
 
-            if (!LevelInfo.ValidateAction(p, lvl.name, "restore a backup of this level")) return;
+            if (!LevelInfo.ValidateAction(p, lvl, "restore a backup of this level")) return;
             if (File.Exists(LevelInfo.BackupFilePath(lvl.name, args[0]))) {
                 try {
                     DoRestore(lvl, args[0]);

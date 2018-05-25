@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (!LevelInfo.ValidateAction(p, p.level.name, "set spawn of this level")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "set spawn of this level")) return;
             
             if (message.Length == 0) {
                 Player.Message(p, "Spawn location set to your current location.");

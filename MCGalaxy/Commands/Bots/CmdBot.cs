@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void AddBot(Player p, string botName) {
-            if (!LevelInfo.ValidateAction(p, p.level.name, "add bots to this level")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "add bots to this level")) return;
             PlayerBot bot = new PlayerBot(botName, p.level);
             TryAddBot(p, bot);
         }
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void RemoveBot(Player p, string botName) {
-            if (!LevelInfo.ValidateAction(p, p.level.name, "remove bots from this level")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "remove bots from this level")) return;
             
             if (botName.CaselessEq("all")) {
                 PlayerBot.RemoveLoadedBots(p.level, false);
@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetBotText(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level.name, "set bot text of that bot")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "set bot text of that bot")) return;
             
             if (text == null) {
                 Player.Message(p, "Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetDeathMessage(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level.name, "set kill message of that bot")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "set kill message of that bot")) return;
             
             if (text == null) {
                 Player.Message(p, "Reset shown when bot {0} %Skills someone", bot.ColoredName);
@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void RenameBot(Player p, string botName, string newName) {
-            if (!LevelInfo.ValidateAction(p, p.level.name, "rename bots on this level")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "rename bots on this level")) return;
             if (newName == null) { Player.Message(p, "New name of bot required."); return; }
             if (!Formatter.ValidName(p, newName, "bot")) return;
             
@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void CopyBot(Player p, string botName, string newName) {
-            if (!LevelInfo.ValidateAction(p, p.level.name, "copy bots on this level")) return;
+            if (!LevelInfo.ValidateAction(p, p.level, "copy bots on this level")) return;
             if (newName == null) { Player.Message(p, "Name of new bot required."); return; }
             if (!Formatter.ValidName(p, newName, "bot")) return;
             

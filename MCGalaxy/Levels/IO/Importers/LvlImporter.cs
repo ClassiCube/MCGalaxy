@@ -51,11 +51,11 @@ namespace MCGalaxy.Levels.IO {
                 lvl.roty = header[offset + 11];
                 
                 gs.Read(lvl.blocks, 0, lvl.blocks.Length);
-                ReadCustomBlocksSection(lvl, gs);             
+                ReadCustomBlocksSection(lvl, gs);
                 if (!metadata) return lvl;
                 
                 for (;;) {
-                    int section = gs.ReadByte();                    
+                    int section = gs.ReadByte();
                     if (section == 0xFC) { // 'ph'ysics 'c'hecks
                         ReadPhysicsSection(lvl, gs); continue;
                     }
@@ -142,43 +142,50 @@ namespace MCGalaxy.Levels.IO {
             if (count == 0) return;
             
             for (int i = 0; i < count; i++) {
-                Zone z = new Zone(lvl);
-                if (!TryRead_U16(buffer, gs, ref z.MinX) || !TryRead_U16(buffer, gs, ref z.MaxX)) return;
-                if (!TryRead_U16(buffer, gs, ref z.MinY) || !TryRead_U16(buffer, gs, ref z.MaxY)) return;
-                if (!TryRead_U16(buffer, gs, ref z.MinZ) || !TryRead_U16(buffer, gs, ref z.MaxZ)) return;
-                
-                int metaCount = TryRead_I32(buffer, gs);
-                ConfigElement[] elems = Server.zoneConfig;
-                
-                for (int j = 0; j < metaCount; j++) {
-                    ushort size = 0;
-                    if (!TryRead_U16(buffer, gs, ref size)) return;
-                    if (size > buffer.Length) buffer = new byte[size + 16];
-                    gs.Read(buffer, 0, size);
-                    
-                    string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
-                    PropertiesFile.ParseLine(line, '=', out key, out value);
-                    if (key == null) continue;
-                    
-                    value = value.Trim();
-                    ConfigElement.Parse(elems, key, value, z.Config);
+                try {
+                    ParseZone(lvl, ref buffer, gs);
+                } catch (Exception ex) {
+                    Logger.Log(LogType.Warning, "Error importing zone #" + i + " from MCSharp map");
+                    Logger.LogError(ex);
                 }
-                
-                z.AddTo(lvl);
             }
+        }
+        
+        static void ParseZone(Level lvl, ref byte[] buffer, Stream gs) {
+            Zone z = new Zone(lvl);
+            z.MinX = Read_U16(buffer, gs); z.MaxX = Read_U16(buffer, gs);
+            z.MinY = Read_U16(buffer, gs); z.MaxY = Read_U16(buffer, gs);
+            z.MinZ = Read_U16(buffer, gs); z.MaxZ = Read_U16(buffer, gs);
+            
+            int metaCount = TryRead_I32(buffer, gs);
+            ConfigElement[] elems = Server.zoneConfig;
+            
+            for (int j = 0; j < metaCount; j++) {
+                int size = Read_U16(buffer, gs);
+                if (size > buffer.Length) buffer = new byte[size + 16];
+                gs.Read(buffer, 0, size);
+                
+                string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
+                PropertiesFile.ParseLine(line, '=', out key, out value);
+                if (key == null) continue;
+                
+                value = value.Trim();
+                ConfigElement.Parse(elems, key, value, z.Config);
+            }
+            z.AddTo(lvl);
         }
         
         static int TryRead_I32(byte[] buffer, Stream gs) {
             int read = gs.Read(buffer, 0, sizeof(int));
             if (read < sizeof(int)) return 0;
-            return NetUtils.ReadI32(buffer, 0); 
+            return NetUtils.ReadI32(buffer, 0);
         }
         
-        static bool TryRead_U16(byte[] buffer, Stream gs, ref ushort value) {
+        static ushort Read_U16(byte[] buffer, Stream gs) {
             int read = gs.Read(buffer, 0, sizeof(ushort));
-            if (read < sizeof(ushort)) return false;
-            value = NetUtils.ReadU16(buffer, 0);
-            return true;
+            if (read < sizeof(ushort)) throw new EndOfStreamException("End of stream reading U16");
+            
+            return NetUtils.ReadU16(buffer, 0);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (isBot) {
                 if (!CheckExtraPerm(p, 2)) return;
                 
-                if (!LevelInfo.ValidateAction(p, bot.level.name, "change the " + type + " of that bot")) return;
+                if (!LevelInfo.ValidateAction(p, bot.level, "change the " + type + " of that bot")) return;
                 SetBotData(p, bot, args.Length > 2 ? args[2] : "");
             } else {
                 if (p != who && !CheckExtraPerm(p, 1)) return;
