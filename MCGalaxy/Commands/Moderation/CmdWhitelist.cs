@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message) {
             if (!ServerConfig.WhitelistedOnly) { Player.Message(p, "Whitelist is not enabled."); return; }
-            if (message.Length == 0) { Help(p); return; }
+            if (message.Length == 0) { List(p, ""); return; }
             string[] args = message.SplitSpaces();
 
             if (args[0].CaselessEq("add")) {
@@ -36,7 +36,8 @@ namespace MCGalaxy.Commands.Moderation {
                 if (args.Length < 2) { Help(p); return; }
                 Remove(p, args[1]);
             } else if (args[0].CaselessEq("list")) {
-                List(p, args);
+                string modifier = args.Length > 1 ? args[1] : "";
+                List(p, modifier);
             } else if (args.Length == 1) {
                 Add(p, args[0]);
             } else {
@@ -68,10 +69,8 @@ namespace MCGalaxy.Commands.Moderation {
             Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
         }
         
-        static void List(Player p, string[] args) {
+        static void List(Player p, string modifier) {
             List<string> list = Server.whiteList.All();
-            string modifier = args.Length > 1 ? args[1] : "";
-            
             if (list.Count == 0) {
                 Player.Message(p, "There are no whitelisted players.");
             } else {
