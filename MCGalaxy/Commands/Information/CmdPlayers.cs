@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                if (p.group != group) continue;
+                if (pl.group != group) continue;
                 if (p != pl && !Entities.CanSee(p, pl)) continue;
                 
                 totalPlayers++;
