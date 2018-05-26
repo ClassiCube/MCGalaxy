@@ -107,10 +107,12 @@ namespace MCGalaxy.Drawing.Ops {
         
         void OutputPixels(PixelGetter pixels, DrawOpOutput output) {
             int width = pixels.Width, height = pixels.Height;
-            for (int yy = 0; yy < height; yy++)
+            int srcY = height - 1; // need to flip coords in bitmap vertically
+            
+            for (int yy = 0; yy < height; yy++, srcY--)
                 for (int xx = 0; xx < width; xx++) 
             {
-                Pixel P = pixels.Get(xx, yy);
+                Pixel P = pixels.Get(xx, srcY);
                 ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
                 ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                 ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);

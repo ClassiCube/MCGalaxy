@@ -17,11 +17,10 @@
  */
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
-using System.Net;
 using System.Threading;
 using MCGalaxy.Drawing;
-using System.Drawing.Drawing2D;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using MCGalaxy.Maths;
@@ -45,47 +44,47 @@ namespace MCGalaxy.Commands.Building {
             if (!Directory.Exists("extra/images/"))
                 Directory.CreateDirectory("extra/images/");
             if (message.Length == 0) { Help(p); return; }
-            string[] parts = message.SplitSpaces(3);
+            string[] parts = message.SplitSpaces(5);
             
             DrawArgs dArgs = new DrawArgs();
-            dArgs.palette = ImagePalette.Find("color");
-            if (dArgs.palette == null) dArgs.palette = ImagePalette.Palettes[0];
-            dArgs.dualLayered = false;
+            dArgs.Pal = ImagePalette.Find("color");
+            if (dArgs.Pal == null) dArgs.Pal = ImagePalette.Palettes[0];
             
-            if (parts.Length == 3) {
-                string mode = parts[2];
-                if (mode.CaselessEq("horizontal")) dArgs.layer = true;
-                if (mode.CaselessEq("vertical2layer"))   dArgs.dualLayered = true;
-            }
-            
-            if (parts.Length >= 2) {
-                dArgs.palette = ImagePalette.Find(parts[1]);
-                if (dArgs.palette == null) {
+            if (parts.Length > 1) {
+                dArgs.Pal = ImagePalette.Find(parts[1]);
+                if (dArgs.Pal == null) {
                     Player.Message(p, "Palette {0} not found.", parts[1]); return;
                 }
                 
-                if (dArgs.palette.Entries == null || dArgs.palette.Entries.Length == 0) {
-                    Player.Message(p, "Palette {0} does not have any entries", dArgs.palette.Name);
+                if (dArgs.Pal.Entries == null || dArgs.Pal.Entries.Length == 0) {
+                    Player.Message(p, "Palette {0} does not have any entries", dArgs.Pal.Name);
                     Player.Message(p, "Use %T/Palette %Sto add entries to it"); return;
                 }
             }
             
+            if (parts.Length > 2) {
+                string mode = parts[2];
+                if (mode.CaselessEq("horizontal"))     dArgs.Layer = true;
+                if (mode.CaselessEq("vertical2layer")) dArgs.Dual  = true;
+            }
+            
+            if (parts.Length > 4) {
+                if (!CommandParser.GetInt(p, parts[3], "Width",  ref dArgs.Width,  1, 1024)) return;
+                if (!CommandParser.GetInt(p, parts[4], "Height", ref dArgs.Height, 1, 1024)) return;
+            }
+            
             if (parts[0].IndexOf('.') != -1) {
-                if (!DownloadWebFile(parts[0], p)) return;
-                dArgs.name = "tempImage_" + p.name;
+                if (!HeightmapGen.DownloadImage(parts[0], "extra/images/", p)) return;
+                dArgs.Name = "tempImage_" + p.name;
             } else {
-                dArgs.name = parts[0];
+                dArgs.Name = parts[0];
             }
 
-            if (!File.Exists("extra/images/" + dArgs.name + ".bmp")) {
+            if (!File.Exists("extra/images/" + dArgs.Name + ".bmp")) {
                 Player.Message(p, "The URL entered was invalid!"); return;
             }
             Player.Message(p, "Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
-        }
-        
-        bool DownloadWebFile(string url, Player p) {
-            return HeightmapGen.DownloadImage(url, "extra/images/", p);
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {
@@ -106,58 +105,61 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
-            Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.name, "extra/images/", p);
+            Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.Name, "extra/images/", p);
             if (bmp == null) return;
-            try {
-                bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-                bmp.Dispose();
-                return;
-            }
 
             ImagePrintDrawOp op = new ImagePrintDrawOp();
-            op.LayerMode = dArgs.layer; op.DualLayer = dArgs.dualLayered;
+            op.LayerMode = dArgs.Layer; op.DualLayer = dArgs.Dual;
             op.CalcState(marks);
             
-            ResizeImage(p, marks, op, ref bmp);
+            int width  = dArgs.Width  == 0 ? bmp.Width  : dArgs.Width;
+            int height = dArgs.Height == 0 ? bmp.Height : dArgs.Height;
+            Clamp(p, marks, op, ref width, ref height);
+            
+            if (width < bmp.Width || height < bmp.Height) {
+                bmp = Resize(bmp, width, height);
+            }
+            
             op.SetLevel(p.level);
             op.Player = p; op.Source = bmp;
-            
-            op.Palette = dArgs.palette; op.Filename = dArgs.name;
+            op.Palette = dArgs.Pal; op.Filename = dArgs.Name;
             DrawOpPerformer.Do(op, null, p, marks, false);
         }
         
-        void ResizeImage(Player p, Vec3S32[] m, ImagePrintDrawOp op, ref Bitmap bmp) {
+        void Clamp(Player p, Vec3S32[] m, ImagePrintDrawOp op, ref int width, ref int height) {
             Level lvl = p.level;
-            Vec3S32 xEnd = m[0] + op.dx * (bmp.Width  - 1);
-            Vec3S32 yEnd = m[0] + op.dy * (bmp.Height - 1);
+            Vec3S32 xEnd = m[0] + op.dx * (width  - 1);
+            Vec3S32 yEnd = m[0] + op.dy * (height - 1);
             if (lvl.IsValidPos(xEnd.X, xEnd.Y, xEnd.Z) && lvl.IsValidPos(yEnd.X, yEnd.Y, yEnd.Z)) return;
             
-            int resizedWidth  = bmp.Width  - LargestDelta(lvl, xEnd);
-            int resizedHeight = bmp.Height - LargestDelta(lvl, yEnd);
+            int resizedWidth  = width  - LargestDelta(lvl, xEnd);
+            int resizedHeight = height - LargestDelta(lvl, yEnd);
+            
             // Preserve aspect ratio of image
-            float ratioX = resizedWidth / (float)bmp.Width, ratioY = resizedHeight / (float)bmp.Height;
-            float ratio = Math.Min(ratioX, ratioY);
-            resizedWidth = (int)(bmp.Width * ratio); resizedHeight = (int)(bmp.Height * ratio);
+            float ratio = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
+            resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
             
             Player.Message(p, "&cImage is too large ({0}x{1}), resizing to ({2}x{3})",
-                           bmp.Width, bmp.Height, resizedWidth, resizedHeight);
-            
-            Bitmap resized = new Bitmap(resizedWidth, resizedHeight);
+                           width, height, resizedWidth, resizedHeight);
+            width = resizedWidth; height = resizedHeight;
+        }
+        
+        Bitmap Resize(Bitmap bmp, int width, int height) {
+            Bitmap resized = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(resized)) {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                g.DrawImage(bmp, 0, 0, resizedWidth, resizedHeight);
+                g.SmoothingMode     = SmoothingMode.HighQuality;
+                g.PixelOffsetMode   = PixelOffsetMode.HighQuality;
+                g.DrawImage(bmp, 0, 0, width, height);
             }
+            
             bmp.Dispose();
-            bmp = resized;
+            return resized;
         }
         
         static int LargestDelta(Level lvl, Vec3S32 point) {
             Vec3S32 clamped;
-            clamped.X = Math.Max(0, Math.Min(point.X, lvl.Width - 1));
+            clamped.X = Math.Max(0, Math.Min(point.X, lvl.Width  - 1));
             clamped.Y = Math.Max(0, Math.Min(point.Y, lvl.Height - 1));
             clamped.Z = Math.Max(0, Math.Min(point.Z, lvl.Length - 1));
             
@@ -168,13 +170,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ImagePrint [file] [palette] <mode> %H- Prints image in extra/images/ folder. (File must have .bmp extension)");
-            Player.Message(p, "%T/ImagePrint [url] [palette] <mode> %H- Downloads then prints the given image. (transparency supported)");
+            Player.Message(p, "%T/ImagePrint [file/url] [palette] <mode> <width height>");
+            Player.Message(p, "%HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
             Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
             Player.Message(p, "%HModes: &fVertical, Vertical2Layer, Horizontal");
+            Player.Message(p, "%H  <width height> optionally resize the printed image");
         }
 
-        class DrawArgs { public bool layer, dualLayered; public ImagePalette palette; public string name; }
+        class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public string Name; public int Width, Height; }
     }
 }
 
