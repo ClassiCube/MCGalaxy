@@ -32,7 +32,6 @@ namespace MCGalaxy.Tasks {
         public Scheduler(string name) {
             thread = new Thread(Loop);
             thread.Name = name;
-            thread.IsBackground = true;
             thread.Start();
         }
         
