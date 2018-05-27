@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Info {
             Player.MessageLines(who, rules);
             
             if (who != null && p != who) {
-                Player.Message(p, "Sent the rules to " + who.ColoredName + "%S.");
+                Player.Message(p, "Sent the rules to {0}%S.", who.ColoredName);
                 string sender = p == null ? "(console)" : p.ColoredName;
                 Player.Message(who, sender + " %Ssent you the rules.");
             }

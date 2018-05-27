@@ -43,12 +43,14 @@ namespace MCGalaxy.Core {
         static void LogAction(ModAction e, Player who, string action) {
             if (e.Announce) {
                 if (who != null) {
-                    Chat.MessageGlobal(who, e.FormatMessage(e.TargetName, action), false);
+                    Chat.MessageFrom(ChatScope.Global, who, e.FormatMessage(e.TargetName, action),
+                                     null, null, true);
                 } else {
-                    Chat.MessageGlobal(e.FormatMessage(e.TargetName, action));
+                    Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
+                                 null, null, true);
                 }
             } else {
-                Chat.MessageOps(e.FormatMessage(e.TargetName, action));            
+                Chat.MessageOps(e.FormatMessage(e.TargetName, action));
             }
             
             action = Colors.Strip(action);
@@ -147,8 +149,8 @@ namespace MCGalaxy.Core {
         
         static void DoBanIP(ModAction e) {
             LevelPermission perm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere(e.FormatMessage("An IP", "&8IP banned"), pl => pl.Rank < perm);
-            Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP banned"), pl => pl.Rank >= perm);
+            Chat.MessageBelowRank(perm,       e.FormatMessage("An IP", "&8IP banned"));
+            Chat.MessageAboveOrSameRank(perm, e.FormatMessage(e.TargetName, "&8IP banned"));
             
             Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Add(e.Target);
@@ -157,8 +159,8 @@ namespace MCGalaxy.Core {
         
         static void DoUnbanIP(ModAction e) {
             LevelPermission perm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageWhere(e.FormatMessage("An IP", "&8IP unbanned"), pl => pl.Rank < perm);
-            Chat.MessageWhere(e.FormatMessage(e.TargetName, "&8IP unbanned"), pl => pl.Rank >= perm);
+            Chat.MessageBelowRank(perm,       e.FormatMessage("An IP", "&8IP unbanned"));
+            Chat.MessageAboveOrSameRank(perm, e.FormatMessage(e.TargetName, "&8IP unbanned"));
             
             Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Remove(e.Target);

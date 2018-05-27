@@ -84,13 +84,10 @@ namespace MCGalaxy {
                                         LevelPermission perm, string group) {
             string displayName = p == null ? "(console)" : p.ColoredName;
             string name = p == null ? "(console)" : p.name;
-            string format = "To " + group + " &f-{0}&f- {1}";
+            string chatMsg = "To " + group + " &f-" + displayName + "&f-" + message;
             
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
-            
-            Chat.MessageWhere(format,
-                              pl => (p == pl || pl.Rank >= perm) && Chat.NotIgnoring(pl, p),
-                              displayName, message);
+            Chat.MessageFrom(ChatScope.AboveOrSameRank, p, chatMsg, perm, null);
             
             if (p != null) p.CheckForMessageSpam();
             Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, name, message);

@@ -42,14 +42,16 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "There is already a larger active bounty for " + who.name + "."); return;
             }
             
+            string msg;
             if (old == null) {
-                Chat.MessageGlobal("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
-                                who.ColoredName, amount, ServerConfig.Currency);
+                msg = string.Format("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
+                                    who.ColoredName, amount, ServerConfig.Currency);
             } else {
-                Chat.MessageGlobal("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
-                                who.ColoredName, amount, ServerConfig.Currency, old.Amount);
+                msg = string.Format("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
+                                    who.ColoredName, amount, ServerConfig.Currency, old.Amount);
                 Server.zombie.Bounties.Remove(old);
             }
+            Server.zombie.Map.ChatLevel(msg);
             
             Server.zombie.Bounties.Add(new BountyData(p.name, who.name, amount));
             p.SetMoney(p.money - amount);

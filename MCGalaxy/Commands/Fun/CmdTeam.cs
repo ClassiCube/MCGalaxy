@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Fun {
             p.SetPrefix();
             Team.Add(team);
             Team.SaveList();
-            Chat.MessageGlobal(p, p.ColoredName + " %Sjust created the &a" + args[1] + " %Steam.", false);
+            Chat.MessageGlobal(p, p.ColoredName + " %S created the &a" + args[1] + " %Steam");
         }
         
         void HandleJoin(Player p, string[] args) {

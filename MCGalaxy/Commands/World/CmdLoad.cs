@@ -64,8 +64,11 @@ namespace MCGalaxy.Commands.World {
 
             LevelInfo.Loaded.Add(lvl);
             OnLevelAddedEvent.Call(lvl);
-            if (!autoLoaded)
-                Chat.MessageWhere("Level {0} %Sloaded.", pl => Entities.CanSee(pl, p), lvl.ColoredName);
+            
+            if (!autoLoaded) {
+                string autoloadMsg = "Level " + lvl.ColoredName + " %Sloaded.";
+                Chat.Message(ChatScope.All, autoloadMsg, null, Chat.FilterVisible(p));
+            }
             return lvl;
         }
         

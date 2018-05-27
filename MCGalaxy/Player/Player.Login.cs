@@ -127,7 +127,7 @@ namespace MCGalaxy {
             if (hidden) joinm = "&8(hidden)" + joinm;
             
             if (ServerConfig.GuestJoinsNotify || Rank > LevelPermission.Guest) {
-                Chat.MessageGlobal(this, joinm, false, true);
+                Chat.MessageGlobalOrLevel(this, joinm, Chat.FilterVisible(this), !hidden);
             }
 
             if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
@@ -224,7 +224,7 @@ namespace MCGalaxy {
             DataTable data = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
             if (data.Rows.Count == 0) {
                 PlayerData.Create(this);
-                Chat.MessageGlobal(ColoredName + " %Shas connected for the first time!", false);
+                Chat.MessageGlobal(ColoredName + " %Shas connected for the first time!");
                 SendMessage("Welcome " + ColoredName + "%S! This is your first visit.");
             } else {
                 PlayerData.Load(data, this);
@@ -237,12 +237,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageGlobal(this, ColoredName + " &cis still muted from previously.", false);
+                Chat.MessageGlobal(this, ColoredName + " &cis still muted from previously.");
             }
             
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageGlobal(this, ColoredName + " &cis still frozen from previously.", false);
+                Chat.MessageGlobal(this, ColoredName + " &cis still frozen from previously.");
             }
         }
         
@@ -256,10 +256,12 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);           
+            LevelPermission rank = CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator);           
             string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
-            Chat.MessageWhere(altsMsg, 
-                              pl => pl.Rank >= rank && Entities.CanSee(pl, p) && pl.level.SeesServerWideChat);
+
+            Chat.MessageGlobalOrLevel(p, altsMsg, 
+                                      (pl, obj) => Entities.CanSee(pl, p) && pl.Rank >= rank);
+                         
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             Logger.Log(LogType.UserActivity, altsMsg);
         }

@@ -433,17 +433,18 @@ namespace MCGalaxy {
             
             string deathMsg = level.Props[block].DeathMessage;
             if (deathMsg != null) {
-                Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName), false, level);
+                Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName));
             }
             
             if (block == Block.RocketHead) level.MakeExplosion(x, y, z, 0);
             if (block == Block.Creeper) level.MakeExplosion(x, y, z, 1);
+            
             if (block == Block.Stone || block == Block.Cobblestone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
                 if (block == Block.Stone) {
-                    Chat.MessageGlobal(this, customMsg.Replace("@p", ColoredName), false);
+                    Chat.MessageGlobal(this, customMsg.Replace("@p", ColoredName));
                 } else {
-                    Chat.MessageLevel(this, customMsg.Replace("@p", ColoredName), false, level);
+                    Chat.MessageLevel(this,  customMsg.Replace("@p", ColoredName));
                 }
             }
             
@@ -458,7 +459,7 @@ namespace MCGalaxy {
             }
 
             if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
-                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + TimesDied + " times", false, level);
+                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + TimesDied + " times");
             }
             lastDeath = DateTime.UtcNow;
             return true;
@@ -523,7 +524,7 @@ namespace MCGalaxy {
             if (levelOnly) {
                 Chat.MessageLevel(this, text, true, level);
             } else {
-                SendChatFrom(this, text);
+                Chat.MessageGlobal(this, text, true, false);
             }
             CheckForMessageSpam();
         }

@@ -151,31 +151,6 @@ namespace MCGalaxy {
                 if (p.level == level) p.SendBlockchange(x, y, z, block);
             }
         }
-        
-        public static void SendChatFrom(Player from, string message) { SendChatFrom(from, message, true); }
-        public static void SendChatFrom(Player from, string message, bool showname) {
-            if (from == null) return;            
-            if (Last50Chat.Count == 50) Last50Chat.RemoveAt(0);
-            ChatMessage chatmessage = new ChatMessage();
-            chatmessage.text = message;
-            chatmessage.username = from.color + from.name;
-            chatmessage.time = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
-            Last50Chat.Add(chatmessage);
-            
-            Chat.MessageGlobal(from, message, showname, false);
-        }
-
-        public static List<ChatMessage> Last50Chat = new List<ChatMessage>();
-        public static void GlobalIRCMessage(string srcNick, string message) {
-            message = Colors.Escape(message);
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player p in players) {
-                if (p.Ignores.All || p.Ignores.IRC || p.Ignores.IRCNicks.Contains(srcNick)) continue;
-                
-                if (p.level.SeesServerWideChat && p.Chatroom == null)
-                    Player.Message(p, message);
-            }
-        }
 
         public bool MarkPossessed(string marker = "") {
             if (marker.Length > 0) {
@@ -307,11 +282,11 @@ namespace MCGalaxy {
             if (!isKick) {
                 string leavem = "&c- " + FullName + " %S" + chatMsg;
                 if (ServerConfig.GuestLeavesNotify || Rank > LevelPermission.Guest) {
-                    Chat.MessageGlobal(this, leavem, false, true);
+                    Chat.MessageGlobalOrLevel(this, leavem, Chat.FilterVisible(this), !hidden);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg, false);
+                Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg);
                 Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }
         }

@@ -50,14 +50,14 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
             if (colName.Length == 0) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed");
                 who.color = who.group.Color;
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
                 if (color == who.color) { Player.Message(p, who.ColoredName + " %Salready has that color."); return; }
                 
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color) + "%S.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color));
                 who.color = color;
             }
             

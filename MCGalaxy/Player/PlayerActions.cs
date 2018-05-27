@@ -127,13 +127,12 @@ namespace MCGalaxy {
             Entities.SpawnEntities(p, pos, rot);
             CheckGamesJoin(p, prevLevel);
             OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);
-            if (!announce) return;
+            if (!announce || !ServerConfig.ShowWorldChanges) return; 
             
-            if (ServerConfig.ShowWorldChanges) {
-                string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
-                Chat.MessageGlobal(p, p.ColoredName + msg + level.ColoredName, false, true);
-            }
-            OnPlayerActionEvent.Call(p, PlayerAction.JoinWorld, level.name);
+            announce = !p.hidden && ServerConfig.IRCShowWorldChanges;
+            string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
+            Chat.MessageFrom(ChatScope.Global, p, p.ColoredName + msg + level.ColoredName,
+                             null, Chat.FilterVisible(p), announce);
         }
         
         static void CheckGamesJoin(Player p, Level oldLvl) {

@@ -236,13 +236,13 @@ namespace MCGalaxy.Games {
             
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {
-                Map.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active.");
+                Map.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active");
                 if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 Map.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
-                              bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName + "%S.");
+                              bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName);
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
@@ -256,7 +256,7 @@ namespace MCGalaxy.Games {
                 text = infectMessages[random.Next(infectMessages.Count)];
             }
             
-            Map.ChatLevel(String.Format(text,
+            Map.ChatLevel(string.Format(text,
                                         "&c" + pKiller.DisplayName + "%S",
                                         pAlive.ColoredName + "%S"));
         }

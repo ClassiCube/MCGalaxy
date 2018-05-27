@@ -93,19 +93,19 @@ namespace MCGalaxy {
         }
         
         public static void Log(LogType type, string format, object arg0) {
-            Log(type, String.Format(format, arg0));
+            Log(type, string.Format(format, arg0));
         }
         
         public static void Log(LogType type, string format, object arg0, object arg1) {
-            Log(type, String.Format(format, arg0, arg1));
+            Log(type, string.Format(format, arg0, arg1));
         }
         
         public static void Log(LogType type, string format, object arg0, object arg1, object arg2) {
-            Log(type, String.Format(format, arg0, arg1, arg2));
+            Log(type, string.Format(format, arg0, arg1, arg2));
         }
         
         public static void Log(LogType type, string format, params object[] args) {
-            Log(type, String.Format(format, args));
+            Log(type, string.Format(format, args));
         }
         
         

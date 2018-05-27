@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
             if (colName.Length == 0) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed.", false);
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed");
             } else  {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
                 if (color == who.titlecolor) { Player.Message(p, who.ColoredName + " %Salready has that title color."); return; }
                 
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color) + "%S.", false);                
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color));                
             }
             
             who.titlecolor = color;

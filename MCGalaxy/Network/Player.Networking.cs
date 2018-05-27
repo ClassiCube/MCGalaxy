@@ -92,19 +92,19 @@ namespace MCGalaxy {
         }
         
         public static void Message(Player p, string message, object a0) {
-            SendMessage(p, String.Format(message, a0));
+            SendMessage(p, string.Format(message, a0));
         }
         
         public static void Message(Player p, string message, object a0, object a1) {
-            SendMessage(p, String.Format(message, a0, a1));
+            SendMessage(p, string.Format(message, a0, a1));
         }
         
         public static void Message(Player p, string message, object a0, object a1, object a2) {
-            SendMessage(p, String.Format(message, a0, a1, a2));
+            SendMessage(p, string.Format(message, a0, a1, a2));
         }
         
         public static void Message(Player p, string message, params object[] args) {
-            SendMessage(p, String.Format(message, args));
+            SendMessage(p, string.Format(message, args));
         }
 
         public static void SendMessage(Player p, string message) {

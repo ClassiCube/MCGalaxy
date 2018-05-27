@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
                 }
                 
-                string discMsg = PlayerDB.GetLogoutMessage(p);
-                Chat.MessageGlobal(p, "&c- " + p.FullName + " %S" + discMsg, false);
-                Server.IRC.Say(p.DisplayName + " %Sleft the game (disconnected%S)");
+                string leaveM = "&c- " + p.FullName + " %S" + PlayerDB.GetLogoutMessage(p);
+                Chat.MessageGlobalOrLevel(p, leaveM, null, true);
+                
                 if (announceToOps && !p.opchat) opchat.Use(p, "");
                 Server.hidden.AddIfNotExists(p.name);
             } else {                
@@ -69,8 +69,9 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &fvisible%S.");
                 }
                 
-                Chat.MessageGlobal(p, "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p), false);
-                Server.IRC.Say(p.DisplayName + " %Sjoined the game");
+                string joinM = "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p);
+                Chat.MessageGlobalOrLevel(p, joinM, null, true);
+                
                 if (p.opchat) opchat.Use(p, "");
                 if (p.adminchat) adminchat.Use(p, "");
                 Server.hidden.Remove(p.name);

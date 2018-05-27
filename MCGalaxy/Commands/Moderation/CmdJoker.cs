@@ -44,16 +44,14 @@ namespace MCGalaxy.Commands.Moderation {
                 if (stealth) { 
                     Chat.MessageOps(who.ColoredName + " %Sis now STEALTH jokered."); 
                 } else {
-                    Chat.MessageGlobal(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", false);              
+                    Chat.MessageGlobalOrLevel(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", null, true);
                 }
-                OnPlayerActionEvent.Call(p, PlayerAction.Joker, null, stealth);
             } else {
                 if (stealth) { 
                     Chat.MessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
                 } else {
-                    Chat.MessageGlobal(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", false);
+                    Chat.MessageGlobalOrLevel(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", null, true);
                 }
-                OnPlayerActionEvent.Call(p, PlayerAction.Unjoker, null, stealth);
             }
             who.joker = !who.joker;
         }

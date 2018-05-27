@@ -66,11 +66,11 @@ namespace MCGalaxy.Games.ZS {
         static string FormatPrimary(ZSGame game, int seconds) {
             string timespan = GetTimeLeft(seconds);
             if (timespan.Length > 0) {
-                const string format = "&a{0} %Salive %S({2}, map: {1})";
-                return String.Format(format, game.Alive.Count, game.Map.MapName, timespan);
+                return string.Format("&a{0} %Salive %S({2}, map: {1})", 
+                                     game.Alive.Count, game.Map.MapName, timespan);
             } else {
-                const string format = "&a{0} %Salive %S(map: {1})";
-                return String.Format(format, game.Alive.Count, game.Map.MapName);
+                return string.Format("&a{0} %Salive %S(map: {1})", 
+                                     game.Alive.Count, game.Map.MapName);
             }
         }
         

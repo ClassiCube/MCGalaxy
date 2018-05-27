@@ -32,7 +32,7 @@ namespace MCGalaxy.SQL {
         
         static string connFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
         public override string ConnectionString {
-            get { return String.Format(connFormat, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
+            get { return string.Format(connFormat, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
                                        ServerConfig.MySQLUsername, ServerConfig.MySQLPassword, ServerConfig.DatabasePooling); }
         }
         public override bool EnforcesTextLength { get { return true; } }

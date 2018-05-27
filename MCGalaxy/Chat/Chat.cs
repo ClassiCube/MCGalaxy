@@ -49,6 +49,10 @@ namespace MCGalaxy {
         public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
         public static bool FilterAboveOrSameRank(Player pl, object arg) { return pl.Rank >= (LevelPermission)arg; }       
         public static bool FilterBelowRank(Player pl, object arg) { return pl.Rank < (LevelPermission)arg; }
+
+        public static ChatMessageFilter FilterVisible(Player source) { 
+            return (pl, obj) => Entities.CanSee(pl, source); 
+        }
         
         static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
             FilterAll, FilterGlobal, FilterLevel,
@@ -70,7 +74,8 @@ namespace MCGalaxy {
             Message(ChatScope.BelowRank, msg, rank, null);
         }
         
-        public static void Message(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
+        public static void Message(ChatScope scope, string msg, object arg, 
+                                   ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
                 
@@ -80,6 +85,33 @@ namespace MCGalaxy {
                 
                 Player.Message(pl, msg);
             }
+            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
+        }
+        
+        
+        
+        public static void MessageGlobal(Player source, string msg) { 
+            MessageFrom(ChatScope.Global, source, msg, null, null); 
+        }
+        public static void MessageLevel(Player source, string msg) { 
+            MessageFrom(ChatScope.Level, source, msg, source.level, null); 
+        }
+        
+        public static void MessageFrom(ChatScope scope, Player source, string msg, object arg, 
+                                       ChatMessageFilter filter, bool irc = false) {
+            Player[] players = PlayerInfo.Online.Items;
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+                
+            foreach (Player pl in players) {
+                if (!NotIgnoring(pl, source)) continue;
+                // Always show message to self (unless ignoring self)
+                if (pl == source) { Player.Message(pl, msg); continue; }
+                
+                if (!scopeFilter(pl, arg)) continue;
+                if (filter != null && !filter(pl, arg)) continue;
+                Player.Message(pl, msg);
+            }
+            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
 
         #region Player messaging
@@ -130,23 +162,6 @@ namespace MCGalaxy {
                     Player.Message(p, message);
             }
         }
-
-        /// <summary> Sends a message to all players who are in any chatroom,
-        /// and are not ignoring source player. </summary>
-        /// <remarks> Optionally prefixes message by &lt;GlobalChatRoom&gt; [source name]: </remarks>
-        public static void MessageAllChatRooms(Player source, string message, bool showPrefix) {
-            Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", source.name, message);
-            if (showPrefix)
-                message = "<GlobalChatRoom> " + source.FullName + ": &f" + message;
-
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (!NotIgnoring(p, source)) continue;
-                
-                if (p.Chatroom != null)
-                    Player.Message(p, message);
-            }
-        }
         
         /// <summary> Sends a message to all players who are either in or spying on the given chatroom,
         /// and are not ignoring source player. </summary>
@@ -174,14 +189,6 @@ namespace MCGalaxy {
         
         
         #region Server messaging
-        
-        /// <summary> Sends a message to all players who match the given filter. </summary>
-        public static void MessageWhere(string message, Predicate<Player> filter) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (filter(p)) Player.Message(p, message);
-            }
-        }
         
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
         public static void MessageOps(string msg) {
@@ -224,39 +231,39 @@ namespace MCGalaxy {
         
         
         #region Format helpers
+        static bool FilterIRC(Player pl, object arg) {
+            return pl.Ignores.IRC || pl.Ignores.IRCNicks.Contains((string)arg);
+        }
+        static ChatMessageFilter filterIRC = FilterIRC;
+        
+        public static void MessageGlobalOrLevel(Player source, string msg, 
+                                                ChatMessageFilter filter, bool irc = false) {
+            if (source.level.SeesServerWideChat) {
+                MessageFrom(ChatScope.Global, source, msg, null, filter, irc);
+            } else {
+                MessageFrom(ChatScope.Level, source, "<Map>" + msg, source.level, filter);
+            }
+        }
+        
+        public static void MessageGlobalIRC(string srcNick, string message) {
+            Message(ChatScope.Global, message, srcNick, filterIRC);
+        }
         
         public static void MessageGlobal(string message, object a0) {
-            MessageGlobal(String.Format(message, a0));
+            MessageGlobal(string.Format(message, a0));
         }
         
         public static void MessageGlobal(string message, object a0, object a1) {
-            MessageGlobal(String.Format(message, a0, a1));
+            MessageGlobal(string.Format(message, a0, a1));
         }
         
         public static void MessageGlobal(string message, object a0, object a1, object a2) {
-            MessageGlobal(String.Format(message, a0, a1, a2));
+            MessageGlobal(string.Format(message, a0, a1, a2));
         }
         
         public static void MessageGlobal(string message, params object[] args) {
-            MessageGlobal(String.Format(message, args));
+            MessageGlobal(string.Format(message, args));
         }
-        
-        public static void MessageWhere(string message, Predicate<Player> filter, object a0) {
-            MessageWhere(String.Format(message, a0), filter);
-        }
-        
-        public static void MessageWhere(string message, Predicate<Player> filter, object a0, object a1) {
-            MessageWhere(String.Format(message, a0, a1), filter);
-        }
-        
-        public static void MessageWhere(string message, Predicate<Player> filter, object a0, object a1, object a2) {
-            MessageWhere(String.Format(message, a0, a1, a2), filter);
-        }
-        
-        public static void MessageWhere(string message, Predicate<Player> filter, params object[] args) {
-            MessageWhere(String.Format(message, args), filter);
-        }
-        
         #endregion
     }
 }

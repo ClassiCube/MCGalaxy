@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Chatting {
             Group grp = Matcher.FindRanks(p, rank);
             if (grp == null) return;
             
-            Chat.MessageWhere("{3}<{2}>{0}: &f{1}", 
-                              pl => Chat.NotIgnoring(pl, p) && (pl.group == grp || pl == p),
-                              p.ColoredName, text.Trim(), grp.Name, grp.Color);
+            string msg = String.Format("{3}<{2}>{0}: &f{1}", p.ColoredName, 
+                                       text, grp.Name, grp.Color);
+            Chat.MessageFrom(ChatScope.Rank, p, msg, grp.Permission, null);
             p.CheckForMessageSpam();
         }
         

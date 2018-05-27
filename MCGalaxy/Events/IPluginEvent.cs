@@ -99,7 +99,7 @@ namespace MCGalaxy.Events {
         static string MethodFormat(string format, IMethod method) {
             Delegate del = (Delegate)((object)method);
             string fullName = del.Method.ReflectedType.FullName + "." + del.Method.Name;
-            return String.Format(format, fullName, typeof(IMethod).Name);
+            return string.Format(format, fullName, typeof(IMethod).Name);
         }
     }
 }

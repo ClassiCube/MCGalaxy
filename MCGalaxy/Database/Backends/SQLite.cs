@@ -32,7 +32,7 @@ namespace MCGalaxy.SQL {
         
         static string connFormat = "Data Source =" + Utils.FolderPath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
         public override string ConnectionString {
-            get { return String.Format(connFormat, ServerConfig.DatabasePooling); }
+            get { return string.Format(connFormat, ServerConfig.DatabasePooling); }
         }
         public override bool EnforcesTextLength { get { return false; } }
         

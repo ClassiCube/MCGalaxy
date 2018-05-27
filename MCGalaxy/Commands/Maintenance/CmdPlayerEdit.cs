@@ -208,9 +208,11 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
             name = PlayerInfo.GetColoredName(p, name);
-            string msg = value.Length == 0 ? String.Format("The {1} data for &b{0} %Shas been reset.", name, type)
-                : String.Format("The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
-            Player.Message(p, msg);
+            if (value.Length == 0) {
+                Player.Message(p, "The {1} data for &b{0} %Shas been reset.", name, type);
+            } else {
+                Player.Message(p, "The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
+            }
         }
 
         static void MessageValidTypes(Player p) {

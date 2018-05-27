@@ -257,7 +257,7 @@ namespace MCGalaxy.Maths {
         }
         
         public string ToString(string separator) {
-            return String.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
+            return string.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
         }
     }
 }

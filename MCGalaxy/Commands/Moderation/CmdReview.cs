@@ -83,8 +83,9 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, msg);
             
             string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-            Chat.MessageWhere(p.ColoredName + " %Sentered the review queue", pl => pl.Rank >= nextPerm);
-            Chat.MessageWhere(start + " waiting for a &creview!", pl => pl.Rank >= nextPerm);
+            Chat.MessageAboveOrSameRank(nextPerm, p.ColoredName + " %Sentered the review queue");
+            Chat.MessageAboveOrSameRank(nextPerm, start + " waiting for a &creview!");
+            
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
             OnPlayerActionEvent.Call(p, PlayerAction.Review, null, true);
         }

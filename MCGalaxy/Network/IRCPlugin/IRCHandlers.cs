@@ -41,11 +41,8 @@ namespace MCGalaxy.Network {
             if (hookedEvents) return;
             hookedEvents = true;
             
-            OnPlayerConnectEvent.Register(HandleConnect, Priority.Low);
-            OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.Low);
             OnPlayerChatEvent.Register(HandleChat, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
-            OnModActionEvent.Register(HandleModerationAction, Priority.Low);
             OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
 
             // Regster events for incoming
@@ -72,11 +69,8 @@ namespace MCGalaxy.Network {
             hookedEvents = false;
             userMap.Clear();
             
-            OnPlayerConnectEvent.Unregister(HandleConnect);
-            OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
             OnPlayerChatEvent.Unregister(HandleChat);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
-            OnModActionEvent.Unregister(HandleModerationAction);
             OnShuttingDownEvent.Unregister(HandleShutdown);
             
             // Regster events for incoming
@@ -96,70 +90,20 @@ namespace MCGalaxy.Network {
             bot.connection.Listener.OnKill -= Listener_OnKill;
             bot.connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
         }
-        
-        
-        void HandleModerationAction(ModAction e) {
-            if (!e.Announce) return;           
-            switch (e.Type) {
-                case ModActionType.Warned:
-                    bot.Say(e.FormatMessage(e.TargetName, "&ewarned")); break;
-                case ModActionType.Ban:
-                    bot.Say(e.FormatMessage(e.TargetName, "&8banned")); break;
-                case ModActionType.Unban:
-                    bot.Say(e.FormatMessage(e.TargetName, "&8unbanned")); break;
-                case ModActionType.BanIP:
-                    bot.Say(e.FormatMessage(e.TargetName, "&8IP banned"), true);
-                    bot.Say(e.FormatMessage("An IP", "&8IP banned")); break;
-                case ModActionType.UnbanIP:
-                    bot.Say(e.FormatMessage(e.TargetName, "&8IP unbanned"), true);
-                    bot.Say(e.FormatMessage("An IP", "&8IP unbanned")); break;
-                case ModActionType.Rank:
-                    bot.Say(e.FormatMessage(e.TargetName, GetRankAction(e))); break;
-            }
-        }
-        
-        static string GetRankAction(ModAction action) {
-            Group newRank = (Group)action.Metadata;
-            string prefix = newRank.Permission >= action.TargetGroup.Permission ? "promoted to " : "demoted to ";
-            return prefix + newRank.ColoredName;
-        }
+
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (!p.level.SeesServerWideChat) return;
             string msg = null;
             if (p.muted || (Server.chatmod && !p.voice)) return;
             
-            if (action == PlayerAction.AFK && ServerConfig.IRCShowAFK && !p.hidden)
-                msg = p.ColoredName + " %Sis AFK " + message;
-            else if (action == PlayerAction.UnAFK && ServerConfig.IRCShowAFK && !p.hidden)
-                msg = p.ColoredName + " %Sis no longer AFK";
-            else if (action == PlayerAction.Joker)
-                msg = p.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S";
-            else if (action == PlayerAction.Unjoker)
-                msg = p.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S";
-            else if (action == PlayerAction.Me)
+            if (action == PlayerAction.Me)
                 msg = "*" + p.DisplayName + " " + message;
             else if (action == PlayerAction.Review)
                 msg = p.ColoredName + " %Sis requesting a review.";
-            else if (action == PlayerAction.JoinWorld && ServerConfig.IRCShowWorldChanges && !p.hidden)
-                msg = p.ColoredName + " %Swent to &8" + message;
             
             if (msg != null) bot.Say(msg, stealth);
         }       
-        
-        void HandleDisconnect(Player p, string reason) {
-            if (p.hidden) return;
-            if (ServerConfig.GuestLeavesNotify || p.Rank > LevelPermission.Guest) {
-                bot.Say(p.ColoredName + " %Sleft the game (" + reason + "%S)", false);
-            }
-        }
-
-        void HandleConnect(Player p) {
-            if (p.hidden || p.cancellogin) return;
-            if (ServerConfig.GuestJoinsNotify || p.Rank > LevelPermission.Guest) {
-                bot.Say(p.ColoredName + " %Sjoined the game", false);
-            }
-        }
 
         static char[] trimChars = new char[] { ' ' };
         void HandleChat(Player p, string message) {
@@ -176,7 +120,7 @@ namespace MCGalaxy.Network {
         
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
-            Player.GlobalIRCMessage(user.Nick, String.Format("%I(IRC) * {0} {1}", user.Nick, description));
+            Chat.MessageGlobalIRC(user.Nick, string.Format("%I(IRC) * {0} {1}", user.Nick, description));
         }
         
         void Listener_OnJoin(UserInfo user, string channel) {
@@ -194,7 +138,7 @@ namespace MCGalaxy.Network {
         void DoJoinLeaveMessage(string nick, string verb, string channel) {
             Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", nick, verb, channel);
             string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
-            Player.GlobalIRCMessage(nick, String.Format("%I(IRC) {0} {1} the{2} channel", nick, verb, which));
+            Chat.MessageGlobalIRC(nick, string.Format("%I(IRC) {0} {1} the{2} channel", nick, verb, which));
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
@@ -207,7 +151,7 @@ namespace MCGalaxy.Network {
             
             if (user.Nick == bot.nick) return;
             Logger.Log(LogType.IRCCActivity, user.Nick + " left IRC");
-            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " left");
+            Chat.MessageGlobalIRC(user.Nick, "%I(IRC) " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
@@ -247,11 +191,11 @@ namespace MCGalaxy.Network {
 
             if (opchat) {
                 Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
-                Chat.MessageOps(String.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
+                Chat.MessageOps(string.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
                                               ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
                 Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
-                Player.GlobalIRCMessage(user.Nick, String.Format("%I(IRC) {0}: &f{1}", user.Nick,
+                Chat.MessageGlobalIRC(user.Nick, string.Format("%I(IRC) {0}: &f{1}", user.Nick,
                                                       ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
@@ -418,7 +362,7 @@ namespace MCGalaxy.Network {
                 }
             }
 
-            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " %Sis now known as %I" + newNick);
+            Chat.MessageGlobalIRC(user.Nick, "%I(IRC) " + user.Nick + " %Sis now known as %I" + newNick);
         }
         
         void Listener_OnNames(string channel, string[] nicks, bool last) {
@@ -437,7 +381,7 @@ namespace MCGalaxy.Network {
             
             if (reason.Length > 0) reason = " (" + reason + ")";
             Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
-            Player.GlobalIRCMessage(user.Nick, "%I(IRC) " + user.Nick + " kicked " + kickee + reason);
+            Chat.MessageGlobalIRC(user.Nick, "%I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {

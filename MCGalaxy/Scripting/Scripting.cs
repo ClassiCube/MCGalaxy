@@ -68,7 +68,7 @@ namespace MCGalaxy.Scripting {
             syntax = syntax.Replace(@"\t", "\t");
             syntax = syntax.Replace("\r\n", "\n");
             syntax = syntax.Replace("\n", Environment.NewLine);
-            syntax = String.Format(syntax, cmdName.Capitalize(), cmdName);
+            syntax = string.Format(syntax, cmdName.Capitalize(), cmdName);
             
             using (StreamWriter sw = new StreamWriter(path)) {
                 sw.WriteLine(syntax);

@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.CPE {
             string format = "{0} &{1}({2})%S - %&S{1}, falls back to &{3}%&{3}{3}";
             if (col.Code == col.Fallback) format = "{0} &{1}({2})%S - %&S{1}";
 
-            return String.Format(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
+            return string.Format(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
         }
         
         void EditHandler(Player p, string[] args) {

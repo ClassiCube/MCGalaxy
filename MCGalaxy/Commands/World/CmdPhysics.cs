@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.World {
             lvl.SetPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];
-            lvl.ChatLevel("Physics are now " + stateDesc + " %Son " + lvl.ColoredName + "%S.");
+            lvl.ChatLevel("Physics are now " + stateDesc + " %Son " + lvl.ColoredName);
             
             stateDesc = stateDesc.Substring( 2 );
-            string logInfo = "Physics are now " + stateDesc + " on " + lvl.name + ".";
+            string logInfo = "Physics are now " + stateDesc + " on " + lvl.name;
             Logger.Log(LogType.SystemActivity, logInfo);
             lvl.Changed = true;
         }

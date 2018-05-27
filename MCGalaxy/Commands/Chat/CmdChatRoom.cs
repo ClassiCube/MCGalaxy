@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdChatRoom : Command {        
+    public sealed class CmdChatRoom : Command {
         public override string name { get { return "ChatRoom"; } }
         public override string shortcut { get { return "cr"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { 
+            get { return new[] {
                     new CommandPerm(LevelPermission.AdvBuilder, "+ can create chatrooms"),
                     new CommandPerm(LevelPermission.AdvBuilder, "+ can delete an empty chatroom"),
                     new CommandPerm(LevelPermission.Operator, "+ can delete a chatroom"),
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting {
         static List<string> Chatrooms = new List<string>();
         
         public override void Use(Player p, string message) {
-            string[] parts = message.ToLower().SplitSpaces();
+            string[] parts = message.ToLower().SplitSpaces(2);
             
             if (message.Length == 0) {
                 if (Chatrooms.Count == 0) {
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Chatting {
                 string room = parts[1];
                 if (p.spyChatRooms.CaselessRemove(room)) {
                     Player.Message(p, "The chat room '{0}' has been removed " +
-                                      "from your spying list because you are joining the room.", room);
+                                   "from your spying list because you are joining the room.", room);
                 }
                 
                 Player.Message(p, "You joined the chat room '{0}'", room);
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             if (!canDeleteForce) {
-                Player[] players = PlayerInfo.Online.Items; 
+                Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
                     if (pl != p && pl.Chatroom == room) {
                         Player.Message(p, "Sorry, someone else is in the chatroom"); return;
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands.Chatting {
                 }
                 
                 if (pl.spyChatRooms.CaselessRemove(room)) {
-                    Player.Message(pl, "Stopped spying on chatroom '{0}' because it was deleted by: {1}", 
+                    Player.Message(pl, "Stopped spying on chatroom '{0}' because it was deleted by: {1}",
                                    room, p.ColoredName);
                 }
             }
@@ -204,7 +204,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (pl.spyChatRooms.CaselessRemove(room)) {
                 Player.Message(pl, "The chat room '{0}' has been removed from your spying list " +
-                                   "because you are force joining the room '{0}'", room);
+                               "because you are force joining the room '{0}'", room);
             }
             
             Player.Message(pl, "You've been forced to join the chat room '{0}'", room);
@@ -234,15 +234,15 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleAll(Player p, string[] parts, string message) {
-            int length = parts.Length > 1 ? parts[0].Length + 1 : parts[0].Length;
-            message = message.Substring( length );
-            if (HasExtraPerm(p, 7)) {
-                Chat.MessageAllChatRooms(p, message, true);
-                return;
-            }
+            message = parts.Length > 1 ? parts[1] : ""; // TODO: don't let you send empty message            
+            bool canSend = HasExtraPerm(p, 7) || p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow;
             
-            if (p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow) {
-                Chat.MessageAllChatRooms(p, message, true);
+            if (canSend) {
+                Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", p.name, message);
+                message = "<GlobalChatRoom> " + p.FullName + ": &f" + message;
+                
+                Chat.MessageFrom(ChatScope.All, p, message,
+                                 null, (pl, arg) => pl.Chatroom != null);
                 p.lastchatroomglobal = DateTime.UtcNow;
             } else {
                 Player.Message(p, "Sorry, you must wait 30 seconds in between each global chatroom message!!");
@@ -260,7 +260,7 @@ namespace MCGalaxy.Commands.Chatting {
                 }
             } else {
                 Player.Message(p, "There is no command with the type '" + room + "'," +
-                                   "nor is there a chat room with that name.");
+                               "nor is there a chat room with that name.");
                 Help(p);
             }
         }
@@ -289,7 +289,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Player.Message(p, "/chatroom all [message] - sends a global message to all rooms");
             else
                 Player.Message(p, "/chatroom all [message] - sends a global message to all rooms " +
-                                   "(limited to 1 every 30 seconds)");
+                               "(limited to 1 every 30 seconds)");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) { ToggleAfk(p, message); }        
+        public override void Use(Player p, string message) { ToggleAfk(p, message); }
         internal static void ToggleAfk(Player p, string message) {
             if (p.joker) message = "";
             p.AutoAfk = false;
@@ -38,28 +38,23 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are now marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);                    
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);
                     p.CheckForMessageSpam();
                 }
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                OnPlayerActionEvent.Call(p, PlayerAction.AFK, message);
             } else {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");                    
+                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");
                     p.CheckForMessageSpam();
                 }
-                OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, message);
             }
         }
         
-        static void ShowMessage(Player p, string message) {                        
-            if (p.level.SeesServerWideChat) {
-                 Chat.MessageGlobal(p, message, false, true);
-            } else {
-                Chat.MessageLevel(p, "<Level>" + message, false, p.level);
-            }
+        static void ShowMessage(Player p, string message) {
+            bool announce = !p.hidden && ServerConfig.IRCShowAFK;
+            Chat.MessageGlobalOrLevel(p, message, Chat.FilterVisible(p), announce);
         }
         
         public override void Help(Player p) {
