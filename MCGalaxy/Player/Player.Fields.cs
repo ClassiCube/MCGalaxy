@@ -26,8 +26,6 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     
-    public enum VoteKickChoice { NotYetVoted, Yes, No }
-
     public partial class Player : IDisposable {
 
         public static VolatileArray<Player> pending = new VolatileArray<Player>(false);
@@ -204,9 +202,6 @@ namespace MCGalaxy {
         
         public string summonedMap;
         internal Position tempPos;
-
-        // CmdVoteKick
-        public VoteKickChoice voteKickChoice = VoteKickChoice.NotYetVoted;
 
         // Extra storage for custom commands
         public ExtrasCollection Extras = new ExtrasCollection();

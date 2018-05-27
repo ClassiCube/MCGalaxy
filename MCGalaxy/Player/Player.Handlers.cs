@@ -618,18 +618,6 @@ namespace MCGalaxy {
         }
         
         bool IsHandledMessage(string text) {
-            if (Server.voteKickInProgress && text.Length == 1) {
-                if (text.CaselessEq("y")) {
-                    voteKickChoice = VoteKickChoice.Yes;
-                    SendMessage("Thanks for voting!");
-                    return true;
-                } else if (text.CaselessEq("n")) {
-                    voteKickChoice = VoteKickChoice.No;
-                    SendMessage("Thanks for voting!");
-                    return true;
-                }
-            }
-
             if (Server.voting) {
                 string test = text.ToLower();
                 if (CheckVote(test, this, "y", "yes", ref Server.YesVotes) ||

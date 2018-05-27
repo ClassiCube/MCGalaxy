@@ -322,7 +322,6 @@
     <Compile Include="Commands\Moderation\CmdUndoPlayer.cs" />
     <Compile Include="Commands\Moderation\CmdVIP.cs" />
     <Compile Include="Commands\Moderation\CmdVoice.cs" />
-    <Compile Include="Commands\Moderation\CmdVoteKick.cs" />
     <Compile Include="Commands\Moderation\CmdWarn.cs" />
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />

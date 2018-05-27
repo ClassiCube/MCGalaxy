@@ -79,10 +79,6 @@ namespace MCGalaxy {
         public static string moneys;
         public static string IP;
         public static string RestartPath;
-        
-        //Global VoteKick In Progress Flag
-        public static bool voteKickInProgress = false;
-        public static int voteKickVotesNeeded = 0;
 
         // Extra storage for custom commands
         public static ExtrasCollection Extras = new ExtrasCollection();
