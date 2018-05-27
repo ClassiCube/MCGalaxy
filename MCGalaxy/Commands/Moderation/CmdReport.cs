@@ -160,8 +160,8 @@ namespace MCGalaxy.Commands.Moderation {
             File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
             Player.Message(p, "&aReport sent! It should be viewed when a {0}&a+ is online", checkRankName);
             
-            Chat.MessageWhere(p.ColoredName + " %Smade a report, view it with %T/Report check " + target,
-                              pl => pl.Rank >= checkRank);
+            string opsMsg = p.ColoredName + " %Smade a report, view it with %T/Report check " + target;
+            Chat.MessageAboveOrSameRank(checkRank, opsMsg);
         }
         
         public override void Help(Player p) {

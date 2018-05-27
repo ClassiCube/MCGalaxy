@@ -17,13 +17,76 @@ using System.Text;
 using MCGalaxy.Commands;
 
 namespace MCGalaxy {
+    public enum ChatScope {
+        /// <summary> Messages all players on the server </summary>
+        All,
+        /// <summary> Messages all players on levels which see server-wide chat </summary>
+        /// <remarks> Excludes players who are ignoring all chat, or are in a chatroom </remarks>
+        Global,
+        /// <summary> Messages all players on a particular level </summary>
+        /// <remarks> Excludes players who are ignoring all chat, or are in a chatroom </remarks>
+        Level,
+        
+        /// <summary> Messages all players of a given rank </summary>
+        Rank,
+        /// <summary> Messages all players of or above a given rank (e.g. /opchat) </summary>
+        AboveOrSameRank,
+        /// <summary> Messages all players below a given rank </summary>
+        BelowRank,
+    }
+    
+    public delegate bool ChatMessageFilter(Player pl, object arg);
     public static class Chat {
+        
+        public static bool FilterAll(Player pl, object arg) { return true; }
+        public static bool FilterGlobal(Player pl, object arg) { 
+            return pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null;
+        }
+        public static bool FilterLevel(Player pl, object arg) { 
+            return pl.level == arg && !pl.Ignores.All && pl.Chatroom == null;
+        }
+        
+        public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
+        public static bool FilterAboveOrSameRank(Player pl, object arg) { return pl.Rank >= (LevelPermission)arg; }       
+        public static bool FilterBelowRank(Player pl, object arg) { return pl.Rank < (LevelPermission)arg; }
+        
+        static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
+            FilterAll, FilterGlobal, FilterLevel,
+            FilterRank, FilterAboveOrSameRank, FilterBelowRank,
+        };
+        
+        
+        public static void MessageAll(string msg) { Message(ChatScope.All, msg, null, null); }
+        public static void MessageGlobal(string msg) { Message(ChatScope.Global, msg, null, null); }
+        public static void MessageLevel(Level lvl, string msg) { Message(ChatScope.Level, msg, lvl, null); }
+        
+        public static void MessageRank(LevelPermission rank, string msg) {
+            Message(ChatScope.Rank, msg, rank, null);
+        }
+        public static void MessageAboveOrSameRank(LevelPermission rank, string msg) {
+            Message(ChatScope.AboveOrSameRank, msg, rank, null);
+        }       
+        public static void MessageBelowRank(LevelPermission rank, string msg) {
+            Message(ChatScope.BelowRank, msg, rank, null);
+        }
+        
+        public static void Message(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
+            Player[] players = PlayerInfo.Online.Items;
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+                
+            foreach (Player pl in players) {
+                if (!scopeFilter(pl, arg)) continue;
+                if (filter != null && !filter(pl, arg)) continue;
+                
+                Player.Message(pl, msg);
+            }
+        }
 
         #region Player messaging
 
         /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
         /// are not on a level that does not have isolated/level only chat, and are not ignoring source. </summary>
-        public static void MessageGlobal(Player source, string message, bool showPrefix, 
+        public static void MessageGlobal(Player source, string message, bool showPrefix,
                                          bool visibleOnly = false) {
             string msg_NT = message, msg_NN = message, msg_NNNT = message;
             if (showPrefix) {
@@ -53,7 +116,7 @@ namespace MCGalaxy {
         /// <summary> Sends a message to all players who in the player's level,
         /// and are not ignoring source player or in a chatroom. </summary>
         /// <remarks> Optionally prefixes message by &lt;Level&gt; [source name]: </remarks>
-        public static void MessageLevel(Player source, string message, bool showPrefix, 
+        public static void MessageLevel(Player source, string message, bool showPrefix,
                                         Level lvl, bool visibleOnly = false) {
             if (showPrefix)
                 message = "<Level>" + source.FullName + ": &f" + message;
@@ -89,7 +152,7 @@ namespace MCGalaxy {
         /// and are not ignoring source player. </summary>
         /// <remarks> Optionally prefixes message by &lt;ChatRoom: [chatRoom]&gt; [source name]: </remarks>
         public static void MessageChatRoom(Player source, string message, bool showPrefix, string chatRoom) {
-            Logger.Log(LogType.ChatroomChat, "<ChatRoom {0}>{1}: {2}", 
+            Logger.Log(LogType.ChatroomChat, "<ChatRoom {0}>{1}: {2}",
                        chatRoom, source.name, message);
             string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.FullName + ": &f" + message;
             if (showPrefix)
@@ -120,34 +183,16 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Sends a message to all players who are on the given level,
-        /// are not in a chatroom, and are not ignoring all chat. </summary>
-        public static void MessageLevel(Level lvl, string message) {
-            MessageWhere(message, pl => !pl.Ignores.All && pl.level == lvl && pl.Chatroom == null);
-        }
-        
         /// <summary> Sends a message to all players who are have the permission to read opchat. </summary>
-        public static void MessageOps(string message) {
-            LevelPermission rank = CommandExtraPerms.MinPerm("opchat", LevelPermission.Operator);
-            MessageWhere(message, pl => pl.Rank >= rank);
+        public static void MessageOps(string msg) {
+            LevelPermission rank = CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator);
+            MessageAboveOrSameRank(rank, msg);
         }
         
         /// <summary> Sends a message to all players who are have the permission to read adminchat. </summary>
-        public static void MessageAdmins(string message) {
-            LevelPermission rank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
-            MessageWhere(message, pl => pl.Rank >= rank);
-        }
-        
-        /// <summary> Sends a message to all players, who are not in a chatroom, are not ignoring all chat,
-        /// and are not on a level that does not have isolated/level only chat. </summary>
-        public static void MessageGlobal(string message) {
-            MessageWhere(message, pl => !pl.Ignores.All && pl.level.SeesServerWideChat && pl.Chatroom == null);
-        }
-        
-        /// <summary> Sends a message to everyone, regardless of their level, chatroom or ignoring all chat. </summary>
-        /// <remarks> Typically used for situations such as shutting down or updating the server. </remarks>
-        public static void MessageAll(string message) {
-            MessageWhere(message, pl => true);
+        public static void MessageAdmins(string msg) {
+            LevelPermission rank = CommandExtraPerms.MinPerm("AdminChat", LevelPermission.Admin);
+            MessageAboveOrSameRank(rank, msg);
         }
         
         #endregion
