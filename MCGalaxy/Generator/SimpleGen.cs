@@ -56,6 +56,7 @@ namespace MCGalaxy.Generator {
         static bool GenEmpty(MapGenArgs args) {
             int maxX = args.Level.Width - 1, maxZ = args.Level.Length - 1;
             Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
+            args.Level.Config.EdgeLevel = 1;
             return true;
         }
         
