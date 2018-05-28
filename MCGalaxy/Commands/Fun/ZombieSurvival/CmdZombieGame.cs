@@ -20,11 +20,10 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdZombieGame : Command {
+    public sealed class CmdZombieGame : RoundsGameCmd {
         public override string name { get { return "ZombieGame"; } }
         public override string shortcut { get { return "ZG"; } }
-        public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return false; } }
+        protected override RoundsGame Game { get { return Server.zombie; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ZS"), new CommandAlias("ZombieSurvival") }; }
         }
@@ -32,33 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage zombie survival") }; }
         }
         
-        public override void Use(Player p, string message) {
-            ZSGame game = Server.zombie;
-            if (message.CaselessEq("go")) {
-                HandleGo(p, game);
-            } else if (message.CaselessEq("status")) {
-                HandleStatus(p, game);
-            } else if (message.CaselessEq("start") || message.CaselessStarts("start ")) {
-                string[] args = message.SplitSpaces();
-                HandleStart(p, game, args);
-            } else if (message.CaselessEq("end")) {
-                HandleEnd(p, game);
-            } else if (message.CaselessEq("stop")) {
-                HandleStop(p, game);
-            } else if (message.CaselessStarts("set ")) {
-                string[] args = message.SplitSpaces();
-                HandleSet(p, game, args);
-            } else {
-                Help(p);
-            }
-        }
-
-        static void HandleGo(Player p, ZSGame game) {
-            if (!game.Running) { Player.Message(p, "Zombie Survival is not running"); return; }
-            PlayerActions.ChangeMap(p, game.Map);
-        }
-        
-        static void HandleStatus(Player p, ZSGame game) {
+        protected override void HandleStatus(Player p, RoundsGame game) {
             if (!game.Running) { Player.Message(p, "Zombie Survival is not running"); return; }            
             switch (game.RoundsLeft) {
                 case int.MaxValue:
@@ -72,44 +45,13 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Running on map: " + game.Map.ColoredName);
         }
         
-        void HandleStart(Player p, ZSGame game, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (game.Running) { Player.Message(p, "Zombie Survival is already running"); return; }
-            Level lvl = Player.IsSuper(p) ? null : p.level;
-            int rounds = 1;
-            
-            if (args.Length == 2) {
-                if (!CommandParser.GetInt(p, args[1], "Rounds", ref rounds, 0)) return;
-                if (rounds == 0) rounds = int.MaxValue;
-            }
-            game.Start(lvl, rounds);
-        }
-        
-        void HandleEnd(Player p, ZSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
-            
-            if (game.RoundInProgress) {
-                game.EndRound();
-            } else {
-                Player.Message(p, "No round is currently in progress");
-            }
-        }
-        
-        void HandleStop(Player p, ZSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (!game.Running) {
-                Player.Message(p, "Zombie Survival is not running");
-            } else {
-                game.End();
-            }
-        }
-        
-        void HandleSet(Player p, ZSGame game, string[] args) {
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             if (args.Length == 1) { Help(p, "set"); return; }
             
-            if (args[1].CaselessEq("hitbox")) { SetHitbox(p, game, args); return; }
-            if (args[1].CaselessEq("maxmove")) { SetMaxMove(p, game, args); return; }
+            ZSGame zs = (ZSGame)game;
+            if (args[1].CaselessEq("hitbox"))  { SetHitbox(p,  zs, args); return; }
+            if (args[1].CaselessEq("maxmove")) { SetMaxMove(p, zs, args); return; }
             Help(p, "set");
         }
         

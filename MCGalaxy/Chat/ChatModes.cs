@@ -26,10 +26,10 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (text[0] == '@' || (p != null && p.whisper)) {
+            if (text[0] == '@' || p.whisper) {
                 if (text[0] == '@') text = text.Remove(0, 1).Trim();
                 
-                if (p == null || p.whisperTo.Length == 0) {
+                if (p.whisperTo.Length == 0) {
                     int sepIndex = text.IndexOf(' ');
                     if (sepIndex != -1) {
                         string target = text.Substring(0, sepIndex);
@@ -44,10 +44,10 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (p != null && p.opchat) {
+            if (p.opchat) {
                 MessageOps(p, text);
                 return true;
-            } else if (p != null && p.adminchat) {
+            } else if (p.adminchat) {
                 MessageAdmins(p, text);
                 return true;
             } else if (text[0] == '#') {
@@ -82,16 +82,14 @@ namespace MCGalaxy {
         
         public static void MessageStaff(Player p, string message,
                                         LevelPermission perm, string group) {
-            string displayName = p == null ? "(console)" : p.ColoredName;
-            string name = p == null ? "(console)" : p.name;
-            string chatMsg = "To " + group + " &f-" + displayName + "&f-" + message;
+            string chatMsg = "To " + group + " &f-" + p.ColoredName + "&f- " + message;
             
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             Chat.MessageFrom(ChatScope.AboveOrSameRank, p, chatMsg, perm, null);
             
-            if (p != null) p.CheckForMessageSpam();
-            Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, name, message);
-            Server.IRC.Say(displayName + "%S: " + message, true);
+            p.CheckForMessageSpam();
+            Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, p.name, message);
+            Server.IRC.Say(p.ColoredName + "%S: " + message, true);
         }
         
         static void HandleWhisper(Player p, string target, string message) {
@@ -101,37 +99,32 @@ namespace MCGalaxy {
             
             if (who.Ignores.All) {
                 DoFakePM(p, who, message);
-            } else if (p != null && who.Ignores.Names.CaselessContains(p.name)) {
+            } else if (who.Ignores.Names.CaselessContains(p.name)) {
                 DoFakePM(p, who, message);
             } else {
                 DoPM(p, who, message);
             }
             
-            if (p != null) p.CheckForMessageSpam();
+            p.CheckForMessageSpam();
         }
         
         static void DoConsolePM(Player p, string message) {
             if (message.Length < 1) { Player.Message(p, "No message entered"); return; }
             Player.Message(p, "[<] Console: &f" + message);
-            string name = p == null ? "(console)" : p.name;
-            Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", name, message);
+            Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", p.name, message);
             
-            if (p != null) p.CheckForMessageSpam();
+            p.CheckForMessageSpam();
         }
         
         static void DoFakePM(Player p, Player who, string message) {
-            string name = p == null ? "(console)" : p.name;
-            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", name, who.name, message);
+            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
             Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
         }
         
         static void DoPM(Player p, Player who, string message) {
-            string name = p == null ? "(console)" : p.name;
-            string fullName = p == null ? "%S(console)" : p.ColoredName;
-            
-            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", name, who.name, message);
-            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
-            Player.Message(who, "&9[>] {0}: &f{1}", fullName, message);
+            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
+            Player.Message(p,     "[<] {0}: &f{1}", who.ColoredName, message);
+            Player.Message(who, "&9[>] {0}: &f{1}", p.ColoredName, message);
         }
     }
 }

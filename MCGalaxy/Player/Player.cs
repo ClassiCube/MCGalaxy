@@ -36,6 +36,23 @@ namespace MCGalaxy {
         public string username { get; set; }
     }
     
+    public sealed class ConsolePlayer : Player {
+        public ConsolePlayer() : base("(console)") {
+            group = Group.NobodyRank;
+            DatabaseID = NameConverter.InvalidNameID("(console)");
+            color = "%S";
+        }
+	    public static Player Instance = new ConsolePlayer();
+        
+        public override string FullName {
+            get { return "Console [&a" + ServerConfig.ConsoleName + "%S]"; }
+        }
+        
+        public override void SendMessage(byte id, string message) {
+            Logger.Log(LogType.ConsoleMessage, message);
+        }
+    }
+    
     public partial class Player : Entity, IDisposable {
 
         static int sessionCounter;

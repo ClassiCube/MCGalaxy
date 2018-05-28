@@ -58,12 +58,12 @@ namespace MCGalaxy.Commands.Chatting {
         
         protected override void SetPlayerData(Player p, Player who, string nick) {
             if (nick.Length == 0) {                
-                Chat.MessageGlobal(who, who.FullName + " %Sreverted their nick to their original name");
+                Chat.MessageGlobal(who, who.ColoredName + " %Sreverted their nick to their original name");
                 who.DisplayName = who.truename;
             } else {
                 if (nick.Length >= 30) { Player.Message(p, "Nick must be under 30 letters."); return; }     
                 
-                Chat.MessageGlobal(who, who.FullName + " %Shad their nick changed to " + who.color + nick);
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their nick changed to " + who.color + nick);
                 who.DisplayName = nick;
             }
             

@@ -239,7 +239,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (canSend) {
                 Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", p.name, message);
-                message = "<GlobalChatRoom> " + p.FullName + ": &f" + message;
+                message = "<GlobalChatRoom> " + p.ColoredName + ": &f" + message;
                 
                 Chat.MessageFrom(ChatScope.All, p, message,
                                  null, (pl, arg) => pl.Chatroom != null);

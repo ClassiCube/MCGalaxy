@@ -38,5 +38,3 @@ namespace MCGalaxy.Commands.Chatting {
         }
     }
 }
-
-

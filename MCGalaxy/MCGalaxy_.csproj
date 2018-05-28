@@ -227,12 +227,14 @@
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
     <Compile Include="Commands\Fun\CmdMapSet.cs" />
     <Compile Include="Commands\Fun\CmdMissile.cs" />
+    <Compile Include="Commands\Fun\CmdReferee.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
     <Compile Include="Commands\Fun\CmdTeam.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
     <Compile Include="Commands\Fun\CTF\CmdCtf.cs" />
     <Compile Include="Commands\Fun\RateMapCmds.cs" />
+    <Compile Include="Commands\Fun\RoundsGameCmd.cs" />
     <Compile Include="Commands\Fun\WeaponCmd.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAka.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAlive.cs" />
@@ -245,7 +247,6 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfected.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdLastLevels.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdQueue.cs" />
-    <Compile Include="Commands\Fun\ZombieSurvival\CmdReferee.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdShowQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieGame.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />

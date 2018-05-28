@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Chatting {
             if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (title.Length == 0) {
-                Chat.MessageGlobal(who, who.FullName + " %Shad their title removed");
+                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title removed");
             } else {
-                Chat.MessageGlobal(who, who.FullName + " %Swas given the title of &b[" + title + "&b]");
+                Chat.MessageGlobal(who, who.ColoredName + " %Swas given the title of &b[" + title + "&b]");
             }
             
             who.title = title;

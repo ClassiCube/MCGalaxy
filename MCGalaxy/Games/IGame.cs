@@ -51,6 +51,8 @@ namespace MCGalaxy.Games {
         public bool RoundInProgress;
         public string LastMap = "";
         public LevelPicker Picker;
+        
+        public abstract void Start(Player p, string map, int rounds);
         protected abstract void DoRound();
         
         public void RunGame() {
@@ -87,6 +89,14 @@ namespace MCGalaxy.Games {
                 TransferPlayers(LastMap);
                 Command.all.FindByName("Unload").Use(null, LastMap);
             }
+        }
+        
+        protected string GetStartMap(string forcedMap) {
+            if (forcedMap.Length > 0) return forcedMap;
+            List<string> maps = Picker.GetCandidateMaps();
+            
+            if (maps == null || maps.Count == 0) return null;
+            return LevelPicker.GetRandomMap(new Random(), maps);
         }
         
         protected virtual bool SetMap(string map) {

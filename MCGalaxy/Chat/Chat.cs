@@ -169,9 +169,9 @@ namespace MCGalaxy {
         public static void MessageChatRoom(Player source, string message, bool showPrefix, string chatRoom) {
             Logger.Log(LogType.ChatroomChat, "<ChatRoom {0}>{1}: {2}",
                        chatRoom, source.name, message);
-            string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.FullName + ": &f" + message;
+            string spyMessage = "<ChatRoomSPY: " + chatRoom + "> " + source.ColoredName + ": &f" + message;
             if (showPrefix)
-                message = "<ChatRoom: " + chatRoom + "> " + source.FullName + ": &f" + message;
+                message = "<ChatRoom: " + chatRoom + "> " + source.ColoredName + ": &f" + message;
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {

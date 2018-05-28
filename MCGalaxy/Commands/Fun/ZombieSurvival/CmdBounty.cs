@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Fun {
             
             BountyData old = Server.zombie.FindBounty(who.name);
             if (old != null && old.Amount >= amount) {
-                Player.Message(p, "There is already a larger active bounty for " + who.name + "."); return;
+                Player.Message(p, "There is already a larger active bounty for " + who.ColoredName); return;
             }
             
             string msg;

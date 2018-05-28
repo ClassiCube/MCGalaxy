@@ -161,7 +161,7 @@ namespace MCGalaxy.Scripting {
         public static string Load(string path) {
             try {
                 byte[] data = File.ReadAllBytes(path);
-                Assembly lib = Assembly.Load(data); // TODO: Assembly.LoadFile instead?
+                Assembly lib = Assembly.Load(data);
                 List<Command> commands = LoadTypes<Command>(lib);
                 
                 if (commands.Count == 0) return "No commands in dll file";

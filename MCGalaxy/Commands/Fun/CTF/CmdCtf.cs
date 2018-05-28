@@ -23,60 +23,57 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdCTF : Command {
+    public sealed class CmdCTF : RoundsGameCmd {
         public override string name { get { return "CTF"; } }
         public override string shortcut { get { return "CTFSetup"; } }
-        public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return false; } }
+        protected override RoundsGame Game { get { return Server.ctf; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage CTF") }; }
         }
+
+        // TODO: avoid code duplication with CTFLevelPicker
+        static List<string> GetCtfMaps() {
+            if (!File.Exists("CTF/maps.config")) return new List<string>();
+            string[] lines = File.ReadAllLines("CTF/maps.config");
+            return new List<string>(lines);
+        }
         
-        public override void Use(Player p, string message) {
-            if (message.CaselessEq("go")) {
-                HandleGo(p);
-            } else if (message.CaselessEq("start")) {
-                HandleStart(p);
-            } else if (message.CaselessEq("stop")) {
-                HandleStop(p);
-            } else if (message.CaselessEq("add")) {
+        // TODO: Actually make this show something
+        protected override void HandleStatus(Player p, RoundsGame game) { }
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
+            if (!CheckExtraPerm(p, 1)) return;
+            CTFConfig cfg = RetrieveConfig(p);
+            
+            string prop = args[1];
+            if (prop.CaselessEq("add")) {
                 HandleAdd(p);
-            } else if (message.CaselessEq("remove")) {
+            } else if (IsDeleteCommand(prop)) {
                 HandleRemove(p);
-            } else if (message.CaselessStarts("set ")) {
-                string[] args = message.SplitSpaces(2);
-                HandleSet(p, args[1]);
-            } else {
-                Help(p);
+            } if (prop.CaselessEq("bluespawn")) {
+                cfg.BlueSpawnX = p.Pos.X; cfg.BlueSpawnY = p.Pos.Y; cfg.BlueSpawnZ = p.Pos.Z;
+                Player.Message(p, "Set spawn of blue team to your position.");
+                UpdateConfig(p, cfg);
+            } else if (prop.CaselessEq("redspawn")) {
+                cfg.RedSpawnX = p.Pos.X; cfg.RedSpawnY = p.Pos.Y; cfg.RedSpawnZ = p.Pos.Z;
+                Player.Message(p, "Set spawn of red team to your position.");
+                UpdateConfig(p, cfg);
+            } else if (prop.CaselessEq("blueflag")) {
+                Player.Message(p, "Place or delete a block to set blue team's flag.");
+                p.MakeSelection(1, null, BlueFlagCallback);
+            } else if (prop.CaselessEq("redflag")) {
+                Player.Message(p, "Place or delete a block to set red team's flag.");
+                p.MakeSelection(1, null, RedFlagCallback);
+            } else if (prop.CaselessEq("divider")) {
+                cfg.ZDivider = p.Pos.BlockZ;
+                Player.Message(p, "Set Z line divider to {0}.", cfg.ZDivider);
+                UpdateConfig(p, cfg);
+            }  else {
+                Help(p, "set");
             }
         }
-        
-        static void HandleGo(Player p) {
-            if (Server.ctf == null || !Server.ctf.Running)  {
-                Player.Message(p, "CTF is not running"); return;
-            }
-            PlayerActions.ChangeMap(p, Server.ctf.Map.name);
-        }
-        
-        void HandleStart(Player p) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (Server.ctf == null) Server.ctf = new CTFGame();
-            if (!Server.ctf.Start(p, int.MaxValue)) return;
-            Chat.MessageGlobal("A CTF game is starting! Type %T/CTF go %Sto join!");
-        }
-        
-        void HandleStop(Player p) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (Server.ctf == null || !Server.ctf.Running) {
-                Player.Message(p, "CTF is not running"); return;
-            }
-            Server.ctf.End();
-        }
-        
-        
-        void HandleAdd(Player p) {
-            if (!CheckExtraPerm(p, 1)) return;
+
+        static void HandleAdd(Player p) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
@@ -89,8 +86,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void HandleRemove(Player p) {
-            if (!CheckExtraPerm(p, 1)) return;
+        static void HandleRemove(Player p) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
@@ -99,40 +95,6 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 Player.Message(p, "Removed {0} %Sfrom the list of CTF maps.", p.level.ColoredName);
                 File.WriteAllLines("CTF/maps.config", maps.ToArray());
-            }
-        }
-        
-        static List<string> GetCtfMaps() {
-            if (!File.Exists("CTF/maps.config")) return new List<string>();
-            string[] lines = File.ReadAllLines("CTF/maps.config");
-            return new List<string>(lines);
-        }
-
-        
-        void HandleSet(Player p, string property) {
-            if (!CheckExtraPerm(p, 1)) return;
-            CTFConfig cfg = RetrieveConfig(p);
-            
-            if (property.CaselessEq("bluespawn")) {
-                cfg.BlueSpawnX = p.Pos.X; cfg.BlueSpawnY = p.Pos.Y; cfg.BlueSpawnZ = p.Pos.Z;
-                Player.Message(p, "Set spawn of blue team to your position.");
-                UpdateConfig(p, cfg);
-            } else if (property.CaselessEq("redspawn")) {
-                cfg.RedSpawnX = p.Pos.X; cfg.RedSpawnY = p.Pos.Y; cfg.RedSpawnZ = p.Pos.Z;
-                Player.Message(p, "Set spawn of red team to your position.");
-                UpdateConfig(p, cfg);
-            } else if (property.CaselessEq("blueflag")) {
-                Player.Message(p, "Place or delete a block to set blue team's flag.");
-                p.MakeSelection(1, null, BlueFlagCallback);
-            } else if (property.CaselessEq("redflag")) {
-                Player.Message(p, "Place or delete a block to set red team's flag.");
-                p.MakeSelection(1, null, RedFlagCallback);
-            } else if (property.CaselessEq("divider")) {
-                cfg.ZDivider = p.Pos.BlockZ;
-                Player.Message(p, "Set Z line divider to {0}.", cfg.ZDivider);
-                UpdateConfig(p, cfg);
-            }  else {
-                Help(p, "set");
             }
         }
         
@@ -181,7 +143,7 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/CTF start/stop %H- Starts/stops the CTF game");
-            Player.Message(p, "%T/CTF add/remove %H- Adds/removes current map from CTF map list");
+            Player.Message(p, "%T/CTF set add/remove %H- Adds/removes current map from CTF map list");
             Player.Message(p, "%T/CTF set [property]");
             Player.Message(p, "%HSets a CTF game property, see %T/Help CTF set");
             Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");

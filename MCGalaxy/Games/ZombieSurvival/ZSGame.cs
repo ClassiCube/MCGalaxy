@@ -56,38 +56,33 @@ namespace MCGalaxy.Games {
         List<string> infectMessages = new List<string>();
         bool running;
         
-        public void Start(Level level, int rounds) {
-            running = true;
-            RoundInProgress = false;
-            if (!SetStartLevel(level)) { running = false; return; }
-
+        public override void Start(Player p, string map, int rounds) {
+            // ZS starts on current map by default
+            if (!Player.IsSuper(p) && map.Length == 0) map = p.level.name;
+            
+            map = GetStartMap(map);
+            if (map == null) {
+                Player.Message(p, "No maps have been setup for Zombie Survival yet"); return;
+            }
+            if (!SetMap(map)) {
+                Player.Message(p, "Failed to load initial map!"); return;
+            }
+            
+            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", Map.ColoredName);
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == Map) PlayerJoinedGame(pl);
+            }
+            
             RoundsLeft = rounds;
             HookStats();
+            
+            running = true;
             HookEventHandlers();
             
             Thread t = new Thread(RunGame);
             t.Name = "MCG_ZSGame";
             t.Start();
-        }
-        
-        bool SetStartLevel(Level level) {
-            string mapName;
-            if (level == null) {
-                List<string> maps = Picker.GetCandidateMaps();
-                if (maps == null) return false;
-                mapName = LevelPicker.GetRandomMap(new Random(), maps);
-            } else {
-                mapName = level.name;
-            }
-            if (!SetMap(mapName)) return false;
-            
-            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", Map.ColoredName);
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != Map) continue;
-                PlayerJoinedGame(p);
-            }
-            return true;
         }
 
         public void InfectPlayer(Player p, Player killer) {

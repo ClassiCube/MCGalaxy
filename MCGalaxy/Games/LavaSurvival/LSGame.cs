@@ -53,22 +53,16 @@ namespace MCGalaxy.Games {
             return (LSData)data;
         }
 
-        public bool Start(Player p, string mapName, int rounds) {
-            if (running) {
-                Player.Message(p, "Lava survival game already running."); return false;
-            }
-            
-            List<string> maps = Picker.GetCandidateMaps();
-            if (maps == null || maps.Count == 0) {
-                Player.Message(p, "No maps have been setup for lava survival yet"); return false;
+        public override void Start(Player p, string map, int rounds) {
+            map = GetStartMap(map);
+            if (map == null) {
+                Player.Message(p, "No maps have been setup for lava survival yet"); return;
             }         
-            if (mapName.Length > 0 && !HasMap(mapName)) {
-                Player.Message(p, "Given map has not been setup for lava survival"); return false;
+            if (!HasMap(map)) {
+                Player.Message(p, "Given map has not been setup for lava survival"); return;
             }
-            
-            mapName = mapName.Length == 0 ? maps[rand.Next(maps.Count)] : mapName;
-            if (!SetMap(mapName)) {
-                Player.Message(p, "Failed to load initial map!"); return false;
+            if (!SetMap(map)) {
+                Player.Message(p, "Failed to load initial map!"); return;
             }
             
             RoundsLeft = rounds;
@@ -81,7 +75,6 @@ namespace MCGalaxy.Games {
             Thread t = new Thread(RunGame);
             t.Name = "MCG_LSGame";
             t.Start();
-            return true;
         }
         
         public override void End() {

@@ -26,10 +26,11 @@ namespace MCGalaxy.UI {
         public static void HandleChat(string text) {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) return;
-            if (ChatModes.Handle(null, text)) return;
             
-            Chat.MessageGlobal("Console [&a{0}%S]:&f {1}", ServerConfig.ConsoleName, text);
-            Server.IRC.Say("Console [&a" + ServerConfig.ConsoleName + "%S]: " + text);
+            Player p = ConsolePlayer.Instance;
+            if (ChatModes.Handle(p, text)) return;
+            
+            Chat.Message(ChatScope.Global, p.FullName + ":&f " + text, null, null, true);
             Logger.Log(LogType.PlayerChat, "(console): " + text);
         }
         

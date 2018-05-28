@@ -99,19 +99,14 @@ namespace MCGalaxy.Games {
             new ColumnDesc("tags", ColumnType.UInt24),
         };
 
-        public bool Start(Player p, int rounds) {
-            if (running) {
-                Player.Message(p, "CTF game already running."); return false;
-            } 
-            
-            List<string> maps = Picker.GetCandidateMaps();           
-            if (maps == null || maps.Count == 0) {
-                Player.Message(p, "No maps have been setup for CTF yet"); return false;
+        public override void Start(Player p, string map, int rounds) {
+        	map = GetStartMap(map);
+            if (map == null) {
+                Player.Message(p, "No maps have been setup for CTF yet"); return;
             }
-            
-            if (!SetMap(LevelPicker.GetRandomMap(new Random(), maps))) {
-                Player.Message(p, "Failed to load initial map!"); return false;
-            }       
+            if (!SetMap(map)) {
+                Player.Message(p, "Failed to load initial map!"); return;
+            }
             
             RoundsLeft = rounds;
             Blue.RespawnFlag(Map);
@@ -119,6 +114,7 @@ namespace MCGalaxy.Games {
             ResetTeams();
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
+            Chat.MessageGlobal("A CTF game is starting! Type %T/CTF go %Sto join!");
             running = true;
             Database.Backend.CreateTable("CTF", createSyntax);
             HookEventHandlers();
@@ -126,7 +122,6 @@ namespace MCGalaxy.Games {
             Thread t = new Thread(RunGame);
             t.Name = "MCG_CTFGame";
             t.Start();
-            return true;
         }
         
         public override void End() {

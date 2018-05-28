@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (Player.IsSuper(p)) {
                 // undo them across all loaded levels
                 Level[] levels = LevelInfo.Loaded.Items;
-                if (p == null) p = new ConsolePlayer();
+                if (p == null) p = ConsolePlayer.Instance;
                 
                 foreach (Level lvl in levels) {
                     op.SetMarks(marks);
@@ -96,18 +96,6 @@ namespace MCGalaxy.Commands.Moderation {
                 Logger.Log(LogType.UserActivity, "Actions of {0} for the past {1} were undone.", names.Join(), delta.Shorten(true));
             } else {
                 Player.Message(p, "No changes found by {1} %Sin the past &b{0}", delta.Shorten(true), namesStr);
-            }
-        }
-        
-        // TODO: nasty hack, need to find a better way of doing this
-        sealed class ConsolePlayer : Player {
-            public ConsolePlayer() : base("(console)") {
-                group = Group.NobodyRank;
-                DatabaseID = NameConverter.InvalidNameID("(console)");
-            }
-            
-            public override void SendMessage(byte id, string message) {
-                Logger.Log(LogType.ConsoleMessage, message);
             }
         }
         

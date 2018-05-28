@@ -22,71 +22,24 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdLavaSurvival : Command {
+    public sealed class CmdLavaSurvival : RoundsGameCmd {
         public override string name { get { return "LavaSurvival"; } }
         public override string shortcut { get { return "LS"; } }
-        public override string type { get { return CommandTypes.Games; } }
-        public override bool museumUsable { get { return false; } }
+        protected override RoundsGame Game { get { return Server.lava; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage lava survival") }; }
         }
         
-        public override void Use(Player p, string message)  {
-            if (message.Length == 0) { Help(p); return; }
-            string[] args = message.ToLower().SplitSpaces();
-            LSGame game = Server.lava;
-            
-            switch (args[0]) {
-                case "go": HandleGo(p, game); return;
-                case "info": HandleInfo(p, game); return;
-                case "start": HandleStart(p, args, game); return;
-                case "stop": HandleStop(p, game); return;
-                case "end": HandleEnd(p, game); return;
-                case "setup": HandleSetup(p, args, game); return;
-            }
-            Help(p);
-        }
-        
-        void HandleGo(Player p, LSGame game) {
-            if (!game.Running) { Player.Message(p, "Lava survival is not running"); return; }
-            PlayerActions.ChangeMap(p, game.Map);
-        }
-        
-        void HandleInfo(Player p, LSGame game) {
+        protected override void HandleStatus(Player p, RoundsGame game) {
             if (!game.Running) { Player.Message(p, "Lava survival is not running"); return; }
             if (!game.RoundInProgress) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
-            game.AnnounceRoundInfo(p, p == null);
-            game.AnnounceTimeLeft(!game.Flooded, true, p, p == null);
-        }
-        
-        void HandleStart(Player p, string[] args, LSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
             
-            string map = args.Length > 1 ? args[1] : "";
-            game.Start(p, map, int.MaxValue);
-        }
-        
-        void HandleStop(Player p, LSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (!game.Running) {
-                Player.Message(p, "Lava survival is not running");
-            } else {
-                game.End();
-                Chat.MessageGlobal("Lava Survival has ended! We hope you had fun!");
-            }
-        }
-        
-        void HandleEnd(Player p, LSGame game) {
-            if (!CheckExtraPerm(p, 1)) return;        
-            
-            if (game.RoundInProgress) {
-                game.EndRound();
-            } else {
-                Player.Message(p, "No round is currently in progress");
-            }
+            LSGame ls = (LSGame)game;
+            ls.AnnounceRoundInfo(p, p == null);
+            ls.AnnounceTimeLeft(!ls.Flooded, true, p, p == null);
         }
 
-        void HandleSetup(Player p, string[] args,  LSGame game) {
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             
             if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }
@@ -94,16 +47,17 @@ namespace MCGalaxy.Commands.Fun {
             if (game.Running) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
             string group = args[1];
             
+            LSGame ls = (LSGame)game;
             if (group.CaselessEq("map")) {
-                HandleSetupMap(p, args, game);
+                HandleSetupMap(p, args, ls);
             } else if (group.CaselessEq("block")) {
-                HandleSetupBlock(p, args, game);
+                HandleSetupBlock(p, args, ls);
             } else if (group.CaselessEq("safe") || group.CaselessEq("safezone")) {
-                HandleSetupSafeZone(p, args, game);
+                HandleSetupSafeZone(p, args, ls);
             } else if (group.CaselessEq("settings")) {
-                HandleSetupSettings(p, args, game);
+                HandleSetupSettings(p, args, ls);
             } else if (group.CaselessEq("mapsettings")) {
-                HandleSetupMapSettings(p, args, game);
+                HandleSetupMapSettings(p, args, ls);
             } else {
                 SetupHelp(p);
             }
@@ -231,15 +185,6 @@ namespace MCGalaxy.Commands.Fun {
             } catch { Player.Message(p, "INVALID INPUT"); return; }
             game.SaveMapSettings(settings);
         }
-        
-        public override void Help(Player p) {
-            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
-            Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");
-            Player.Message(p, "%T/LS end %H- End the current round or vote.");
-            Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info.");
-            Player.Message(p, "%T/LS info %H- View current round info and time.");
-            Player.Message(p, "%T/LS go %H- Join the fun!");
-        }
 
         void SetupHelp(Player p, string mode = "") {
             switch (mode) {
@@ -311,6 +256,15 @@ namespace MCGalaxy.Commands.Fun {
 
             Player.Message(p, "Safe zone set! &b({0}) ({1})", min, max);
             return false;
+        }       
+                
+        public override void Help(Player p) {
+            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
+            Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");
+            Player.Message(p, "%T/LS end %H- End the current round or vote.");
+            Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info.");
+            Player.Message(p, "%T/LS info %H- View current round info and time.");
+            Player.Message(p, "%T/LS go %H- Join the fun!");
         }
     }
 }
