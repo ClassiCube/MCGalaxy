@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
-            string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) : LevelInfo.BackupFilePath(args[0], args[1]);
+            string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) :
+                LevelInfo.BackupFilePath(args[0], args[1]);
             if (!File.Exists(path)) {
                 Player.Message(p, "Level or backup could not be found."); return;
             }
@@ -68,11 +69,16 @@ namespace MCGalaxy.Commands.World {
             lvl.backedup = true;
             lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.IsMuseum = true;
+
+            lvl.Config.JailX = lvl.spawnx * 32;
+            lvl.Config.JailY = lvl.spawny * 32;
+            lvl.Config.JailZ = lvl.spawnz * 32;
+            lvl.Config.jailrotx = lvl.rotx; lvl.Config.jailroty = lvl.roty;
         }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Museum [map] [restore]");
-            Player.Message(p, "%HAllows you to access a restore of the map entered. Works on unloaded maps");
+            Player.Message(p, "%HAllows you to access a restored version of the map stored on the server. Works on unloaded maps");
         }
     }
 }
