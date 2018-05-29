@@ -42,8 +42,8 @@ namespace MCGalaxy.Games.ZS {
             p.SendCpeMessage(CpeMessageType.Status2, status);
         }
         
-        internal static void UpdateTertiary(Player p) {
-            string status = FormatTertiary(p);
+        internal static void UpdateTertiary(Player p, bool infected) {
+            string status = FormatTertiary(p, infected);
             p.SendCpeMessage(CpeMessageType.Status3, status);
         }
         
@@ -80,9 +80,9 @@ namespace MCGalaxy.Games.ZS {
             return pillar + type;
         }
 
-        static string FormatTertiary(Player p) {
+        static string FormatTertiary(Player p, bool infected) {
             string money = "&a" + p.money + " %S" + ServerConfig.Currency;
-            string state = ", you are " + (p.Game.Infected ? "&cdead" : "&aalive");
+            string state = ", you are " + (infected ? "&cdead" : "&aalive");
             return money + state;
         }
     }

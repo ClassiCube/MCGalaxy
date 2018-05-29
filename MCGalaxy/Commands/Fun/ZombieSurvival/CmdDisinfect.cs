@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
-            if (!who.Game.Infected || !Server.zombie.RoundInProgress) {
+            if (!Server.zombie.RoundInProgress || !Server.zombie.Get(who).Infected) {
                 Player.Message(p, "Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.DisinfectPlayer(who);

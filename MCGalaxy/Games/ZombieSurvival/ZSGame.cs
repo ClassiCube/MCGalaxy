@@ -35,10 +35,38 @@ namespace MCGalaxy.Games {
         public BountyData(string origin, string target, int amount) {
             Origin = origin; Target = target; Amount = amount;
         }
-    }
+    }  
+    public struct ZombieStats { public int TotalRounds, MaxRounds, TotalInfected, MaxInfected; }
     
-    public struct ZombieStats {
-        public int TotalRounds, MaxRounds, TotalInfected, MaxInfected;
+    internal sealed class ZSData {
+        public int BlocksLeft = 50, BlocksStacked;
+        internal int LastX, LastY, LastZ;
+        
+        public bool Infected, AkaMode, Invisible;
+        public DateTime TimeInfected, InvisibilityEnd;
+        public List<string> InfectMessages;
+        
+        public int TotalRoundsSurvived, MaxRoundsSurvived, CurrentRoundsSurvived;
+        public int TotalInfected, MaxInfected, CurrentInfected;
+        public int InvisibilityTime = -1, InvisibilityPotions, RevivesUsed;
+        
+        public DateTime LastPillarWarn;
+        public bool PillarFined;
+        
+        public void ResetInvisibility() {
+            Invisible = false;
+            InvisibilityEnd = DateTime.MinValue;
+            InvisibilityTime = -1;
+        }
+
+        public void ResetState() {
+            BlocksLeft = 50;
+            CurrentInfected = 0;
+            Infected = false;           
+            InvisibilityPotions = 0;
+            RevivesUsed = 0;
+            TimeInfected = DateTime.MinValue;
+        }
     }
     
     public sealed partial class ZSGame : RoundsGame {
@@ -55,6 +83,31 @@ namespace MCGalaxy.Games {
 
         List<string> infectMessages = new List<string>();
         bool running;
+        
+        const string zsExtrasKey = "MCG_ZS_DATA";
+        internal ZSData Get(Player p) {
+            object data;
+            if (!p.Extras.TryGet("MCG_ZS_DATA", out data)) {
+                data = new ZSData();
+                // TODO: Is this even thread-safe
+                InitData((ZSData)data, p);
+                p.Extras.Put("MCG_ZS_DATA", data);
+            }
+            return (ZSData)data;
+        }
+
+        internal ZSData TryGet(Player p) {
+            object data;
+            bool success = p.Extras.TryGet("MCG_ZS_DATA", out data);
+            return success ? (ZSData)data : null;
+        }
+        
+        void InitData(ZSData data, Player p) {
+            data.InfectMessages = PlayerDB.GetInfectMessages(p);
+            ZombieStats stats = LoadZombieStats(p.name);
+            data.MaxInfected = stats.MaxInfected;     data.TotalInfected = stats.TotalInfected;
+            data.MaxRoundsSurvived = stats.MaxRounds; data.TotalRoundsSurvived = stats.TotalRounds;
+        }
         
         public override void Start(Player p, string map, int rounds) {
             // ZS starts on current map by default
@@ -90,11 +143,12 @@ namespace MCGalaxy.Games {
             Infected.Add(p);
             Alive.Remove(p);
             
-            p.Game.CurrentRoundsSurvived = 0;
-            p.Game.TimeInfected = DateTime.UtcNow;
-            p.SetPrefix();
+            ZSData data = Get(p);
+            data.CurrentRoundsSurvived = 0;
+            data.TimeInfected = DateTime.UtcNow;
             
-            ResetPlayerState(p, true);
+            p.SetPrefix();
+            ResetPlayerState(p, data, true);
             RespawnPlayer(p);
             
             CheckHumanPledge(p, killer);
@@ -106,23 +160,25 @@ namespace MCGalaxy.Games {
             Infected.Remove(p);
             Alive.Add(p);
             
-            ResetPlayerState(p, false);
+            ZSData data = Get(p);
+            ResetPlayerState(p, data, false);
             RespawnPlayer(p);
         }
         
-        void ResetPlayerState(Player p, bool infected) {
-            p.Game.Infected = infected;
-            p.Game.BlocksLeft = infected ? 25 : 50;
+        void ResetPlayerState(Player p, ZSData data, bool infected) {
+            data.Infected = infected;
+            data.BlocksLeft = infected ? 25 : 50;
             
-            ResetInvisibility(p);
+            ResetInvisibility(p, data);
             HUD.UpdateAllPrimary(this);
-            HUD.UpdateTertiary(p);
+            HUD.UpdateTertiary(p, infected);
         }
         
-        void ResetInvisibility(Player p) {
-            if (!p.Game.Invisible) return;
+        void ResetInvisibility(Player p, ZSData data) {
+            if (!data.Invisible) return;
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
-            p.Game.ResetInvisibility();
+            
+            data.ResetInvisibility();
             Entities.GlobalSpawn(p, false);
         }
 
@@ -141,12 +197,15 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 pl.Game.Referee = false;
-                pl.Game.RatedMap = false;
-                pl.Game.ResetZombieState();
-                ResetInvisibility(pl);
-                pl.SetPrefix();
+                pl.Game.RatedMap = false; 
+                pl.Game.PledgeSurvive = false;
                 
+                pl.SetPrefix();
                 if (pl.level == null || pl.level != Map) continue;
+                
+                ZSData data = Get(pl);
+                data.ResetState();
+                ResetInvisibility(pl, data);
                 HUD.Reset(pl);
             }
             
@@ -163,14 +222,15 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedGame(Player p) {
+            ZSData data = Get(p); // usually this Get() performs the expensive DB stats read
             p.SetPrefix();
             HUD.UpdatePrimary(this, p);
             HUD.UpdateSecondary(this, p);
-            HUD.UpdateTertiary(p);
+            HUD.UpdateTertiary(p, data.Infected);
             
             if (RoundInProgress) {
                 Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
-                p.Game.BlocksLeft = 25;
+                data.BlocksLeft = 25;
                 InfectPlayer(p, null);
             }
 
@@ -191,7 +251,7 @@ namespace MCGalaxy.Games {
         public override void PlayerLeftGame(Player p) {
             Alive.Remove(p);
             Infected.Remove(p);
-            p.Game.Infected = false;
+            Get(p).Infected = false;
             RemoveBounties(p);
             
             if (!running || !RoundInProgress || Infected.Count > 0) return;
@@ -210,13 +270,14 @@ namespace MCGalaxy.Games {
             
             if (message[0] == '~' && message.Length > 1) {
                 Player[] players = PlayerInfo.Online.Items;
-                string type = p.Game.Infected ? " &cto zombies%S: " : " &ato humans%S: ";
-                string toSend = p.ColoredName + type + message.Substring(1);
+                bool infected = Get(p).Infected;
+                string type = infected ? " &cto zombies%S: " : " &ato humans%S: ";
+                string msg = p.ColoredName + type + message.Substring(1);
                 
                 foreach (Player pl in players) {
                     if (pl.level != Map || !Chat.NotIgnoring(pl, p)) continue;
-                    if (pl.Game.Referee || pl.Game.Infected == p.Game.Infected) {
-                        pl.SendMessage(toSend);
+                    if (pl.Game.Referee || Get(pl).Infected == infected) {
+                        pl.SendMessage(msg);
                     }
                 }
                 return true;
@@ -245,12 +306,13 @@ namespace MCGalaxy.Games {
         }
 
         public override void AdjustPrefix(Player p, ref string prefix) {
-            int winStreak = p.Game.CurrentRoundsSurvived;
+            if (!running) return;
+            int winStreak = Get(p).CurrentRoundsSurvived;
             
-            if (winStreak == 1)      prefix += "&4*" + p.color;
+            if      (winStreak == 1) prefix += "&4*" + p.color;
             else if (winStreak == 2) prefix += "&7*" + p.color;
             else if (winStreak == 3) prefix += "&6*" + p.color;
-            else if (winStreak > 0)  prefix += "&6" + winStreak + p.color;
+            else if (winStreak > 0)  prefix += "&6"  + winStreak + p.color;
         }
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
@@ -315,24 +377,6 @@ namespace MCGalaxy.Games {
             return stats;
         }
         
-        public void SaveZombieStats(Player p) {
-            if (p.Game.TotalRoundsSurvived == 0 && p.Game.TotalInfected == 0) return;
-            int count = 0;
-            using (DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name)) {
-                count = table.Rows.Count;
-            }
-
-            if (count == 0) {
-                Database.Backend.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name",
-                                        p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
-                                        p.Game.TotalInfected, p.Game.MaxInfected, p.name);
-            } else {
-                Database.Backend.UpdateRows("ZombieStats", "TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3",
-                                            "WHERE Name=@4", p.Game.TotalRoundsSurvived, p.Game.MaxRoundsSurvived,
-                                            p.Game.TotalInfected, p.Game.MaxInfected, p.name);
-            }
-        }
-        
         TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
         OfflineStatPrinter offlineZSStats;
         OnlineStatPrinter onlineZSStats;
@@ -350,9 +394,9 @@ namespace MCGalaxy.Games {
                                           () => "Most consecutive rounds survived", TopStat.FormatInteger);
             
             infectedToken = new ChatToken("$infected", "Total number of players infected",
-                                          p => p.Game.TotalInfected.ToString());
+                                          p => Get(p).TotalInfected.ToString());
             survivedToken = new ChatToken("$survived", "Total number of rounds survived",
-                                          p => p.Game.TotalRoundsSurvived.ToString());
+                                          p => Get(p).TotalRoundsSurvived.ToString());
             
             offlineZSStats = PrintOfflineZSStats;
             onlineZSStats = PrintOnlineZSStats;
@@ -379,13 +423,14 @@ namespace MCGalaxy.Games {
             TopStat.Stats.Remove(statMaxSurvived);
         }
         
-        static void PrintOnlineZSStats(Player p, Player who) {
-            PrintZSStats(p, who.Game.TotalRoundsSurvived, who.Game.TotalInfected,
-                         who.Game.MaxRoundsSurvived, who.Game.MaxInfected);
+        void PrintOnlineZSStats(Player p, Player who) {
+            ZSData data = Get(who);
+            PrintZSStats(p, data.TotalRoundsSurvived, data.TotalInfected,
+                         data.MaxRoundsSurvived, data.MaxInfected);
         }
         
-        static void PrintOfflineZSStats(Player p, PlayerData who) {
-            ZombieStats stats = Server.zombie.LoadZombieStats(who.Name);
+        void PrintOfflineZSStats(Player p, PlayerData who) {
+            ZombieStats stats = LoadZombieStats(who.Name);
             PrintZSStats(p, stats.TotalRounds, stats.TotalInfected,
                          stats.MaxRounds, stats.MaxInfected);
         }

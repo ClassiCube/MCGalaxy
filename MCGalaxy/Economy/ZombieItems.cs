@@ -43,7 +43,8 @@ namespace MCGalaxy.Eco {
                                Name, count * 10, ServerConfig.Currency); return;
             }
             
-            p.Game.BlocksLeft += 10 * count;
+            ZSData data = Server.zombie.Get(p);
+            data.BlocksLeft += 10 * count;
             Economy.MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
         }
         
@@ -104,9 +105,11 @@ namespace MCGalaxy.Eco {
                                "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
+            ZSData data = Server.zombie.Get(p);
+            if (data.InfectMessages == null) data.InfectMessages = new List<string>();
+            data.InfectMessages.Add(text);
+            
             PlayerDB.AppendInfectMessage(p.name, text);
-            if (p.Game.InfectMessages == null) p.Game.InfectMessages = new List<string>();
-            p.Game.InfectMessages.Add(text);
             Player.Message(p, "%aAdded infect message: &f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
@@ -130,20 +133,22 @@ namespace MCGalaxy.Eco {
             if (p.money < Price) {
                 Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, ServerConfig.Currency); return;
             }
-            if (p.Game.Invisible) { Player.Message(p, "You are already invisible."); return; }
-            if (p.Game.InvisibilityPotions >= MaxPotions) {
-                Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
-            }
-            if (ForHumans && p.Game.Infected) {
-                Player.Message(p, "Use %T/Buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
-            }
-            if (!ForHumans && !p.Game.Infected) {
-                Player.Message(p, "Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
-            }
-            
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.Message(p, "You can only buy an invisiblity potion " +
                                "when a round of zombie survival is in progress."); return;
+            }
+            
+            ZSData data = Server.zombie.Get(p);
+            
+            if (data.Invisible) { Player.Message(p, "You are already invisible."); return; }
+            if (data.InvisibilityPotions >= MaxPotions) {
+                Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
+            }
+            if (ForHumans && data.Infected) {
+                Player.Message(p, "Use %T/Buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
+            }
+            if (!ForHumans && !data.Infected) {
+                Player.Message(p, "Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
             }
             
             DateTime end = Server.zombie.RoundEnd;
@@ -151,10 +156,11 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "You cannot buy an invisibility potion " +
                                "during the last minute of a round."); return;
             }
-            p.Game.Invisible = true;
-            p.Game.InvisibilityEnd = DateTime.UtcNow.AddSeconds(Duration);
-            p.Game.InvisibilityPotions++;
-            int left = MaxPotions - p.Game.InvisibilityPotions;
+            
+            data.Invisible = true;
+            data.InvisibilityEnd = DateTime.UtcNow.AddSeconds(Duration);
+            data.InvisibilityPotions++;
+            int left = MaxPotions - data.InvisibilityPotions;
             
             Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
             Server.zombie.Map.ChatLevel(p.ColoredName + " %Svanished. &a*POOF*");

@@ -100,7 +100,7 @@ namespace MCGalaxy.Games {
         };
 
         public override void Start(Player p, string map, int rounds) {
-        	map = GetStartMap(map);
+            map = GetStartMap(map);
             if (map == null) {
                 Player.Message(p, "No maps have been setup for CTF yet"); return;
             }

@@ -16,17 +16,19 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
     
-    public sealed class CmdAka : Command {        
+    public sealed class CmdAka : Command {
         public override string name { get { return "AKA"; } }
         public override string type { get { return CommandTypes.Games; } }
         
         public override void Use(Player p, string message) {
-            p.Game.Aka = !p.Game.Aka;
+            ZSData data = Server.zombie.Get(p);
+            data.AkaMode = !data.AkaMode;
             Player[] players = PlayerInfo.Online.Items;
-            Player.Message(p, "AKA mode is now: " + (p.Game.Aka ? "&aOn" : "&cOff"));
+            Player.Message(p, "AKA mode is now: " + (data.AkaMode ? "&aOn" : "&cOff"));
             
             foreach (Player other in players) {
                 if (other.level != p.level || p == other || !p.CanSeeEntity(other)) continue;

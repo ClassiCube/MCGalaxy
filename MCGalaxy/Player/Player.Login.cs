@@ -99,9 +99,6 @@ namespace MCGalaxy {
             
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
-            ZombieStats stats = Server.zombie.LoadZombieStats(name);
-            Game.MaxInfected = stats.MaxInfected; Game.TotalInfected = stats.TotalInfected;
-            Game.MaxRoundsSurvived = stats.MaxRounds; Game.TotalRoundsSurvived = stats.TotalRounds;
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
@@ -160,7 +157,6 @@ namespace MCGalaxy {
             } else {
                 Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
             }
-            Game.InfectMessages = PlayerDB.GetInfectMessages(this);
             
             PlayerActions.PostSentMap(this, null, level, false);
             Loading = false;

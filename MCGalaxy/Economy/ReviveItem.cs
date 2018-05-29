@@ -34,13 +34,15 @@ namespace MCGalaxy.Eco {
             if (p.money < Price) {
                 Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy a " + Name + "."); return;
             }
-            if (!p.Game.Infected) {
-                Player.Message(p, "You are already a human."); return;
-            }
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.Message(p, "You can only buy an revive potion " +
                                    "when a round of zombie survival is in progress."); return;
             }
+            
+            ZSData data = Server.zombie.Get(p);
+            if (!data.Infected) {
+                Player.Message(p, "You are already a human."); return;
+            }            
             
             DateTime end = Server.zombie.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(ZSConfig.ReviveNoTime) > end) {
@@ -50,10 +52,10 @@ namespace MCGalaxy.Eco {
             if (count < ZSConfig.ReviveFewZombies) {
                 Player.Message(p, ZSConfig.ReviveFewZombiesMessage); return;
             }
-            if (p.Game.RevivesUsed >= ZSConfig.ReviveTimes) {
+            if (data.RevivesUsed >= ZSConfig.ReviveTimes) {
                 Player.Message(p, "You cannot buy any more revive potions."); return;
             }
-            if (p.Game.TimeInfected.AddSeconds(ZSConfig.ReviveTooSlow) < DateTime.UtcNow) {
+            if (data.TimeInfected.AddSeconds(ZSConfig.ReviveTooSlow) < DateTime.UtcNow) {
                 Player.Message(p, "&cYou can only revive within the first {0} seconds after you were infected.",
                                ZSConfig.ReviveTooSlow); return;
             }
@@ -66,7 +68,7 @@ namespace MCGalaxy.Eco {
                 Server.zombie.Map.ChatLevel(p.ColoredName + " %S" + ZSConfig.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
-            p.Game.RevivesUsed++;
+            data.RevivesUsed++;
         }
         
         protected override void DoPurchase(Player p, string message, string[] args) { }

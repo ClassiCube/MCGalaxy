@@ -145,14 +145,15 @@ namespace MCGalaxy.Games {
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
             int dist = ZSConfig.HitboxPrecision;
             foreach (Player killer in deadList) {
-                killer.Game.Infected = true;
+                ZSData killerData = Get(killer);
+                killerData.Infected = true;
                 aliveList = Alive.Items;
 
                 foreach (Player alive in aliveList) {
                     if (alive == killer) continue;
                     if (!MovementCheck.InRange(alive, killer, dist)) continue;
                     
-                    if (killer.Game.Infected && !alive.Game.Infected
+                    if (killerData.Infected && !Get(alive).Infected
                         && !alive.Game.Referee && !killer.Game.Referee
                         && killer.level == Map && alive.level == Map)
                     {
@@ -170,9 +171,9 @@ namespace MCGalaxy.Games {
                         }
                         
                         lastKiller = killer.name;
-                        killer.Game.CurrentInfected++;
-                        killer.Game.TotalInfected++;
-                        killer.Game.MaxInfected = Math.Max(killer.Game.CurrentInfected, killer.Game.MaxInfected);
+                        killerData.CurrentInfected++;
+                        killerData.TotalInfected++;
+                        killerData.MaxInfected = Math.Max(killerData.CurrentInfected, killerData.MaxInfected);
                         
                         ShowInfectMessage(random, alive, killer);
                         Thread.Sleep(50);
@@ -196,17 +197,20 @@ namespace MCGalaxy.Games {
             DateTime now = DateTime.UtcNow;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                if (!p.Game.Invisible || p.level != Map) continue;
-                DateTime end = p.Game.InvisibilityEnd;
+                if (p.level != Map) continue;
+                ZSData data = Get(p);
+                if (!data.Invisible) continue;
+                
+                DateTime end = data.InvisibilityEnd;
                 if (now >= end) {
                     Player.Message(p, "&cYou are &bvisible &cagain");
-                    ResetInvisibility(p);
+                    ResetInvisibility(p, data);
                     continue;
                 }
                 
                 int left = (int)Math.Ceiling((end - now).TotalSeconds);
-                if (left == p.Game.InvisibilityTime) continue;
-                p.Game.InvisibilityTime = left;
+                if (left == data.InvisibilityTime) continue;
+                data.InvisibilityTime = left;
                 
                 string msg = "&bInvisibility for &a" + left;
                 if (p.Supports(CpeExt.MessageTypes)) {
@@ -249,7 +253,8 @@ namespace MCGalaxy.Games {
         
         void ShowInfectMessage(Random random, Player pAlive, Player pKiller) {
             string text = null;
-            List<string> infectMsgs = pKiller.Game.InfectMessages;
+            List<string> infectMsgs = Get(pKiller).InfectMessages;
+            
             if (infectMsgs != null && infectMsgs.Count > 0 && random.Next(0, 10) < 5) {
                 text = infectMsgs[random.Next(infectMsgs.Count)];
             } else {
@@ -300,21 +305,20 @@ namespace MCGalaxy.Games {
 
         void AnnounceWinners(Player[] alive, Player[] dead) {
             if (alive.Length > 0) {
-                Map.ChatLevel(alive.Join(p => p.ColoredName));
-                return;
+                Map.ChatLevel(alive.Join(p => p.ColoredName)); return;
             }
             
             int maxKills = 0, count = 0;
             for (int i = 0; i < dead.Length; i++) {
-                maxKills = Math.Max(maxKills, dead[i].Game.CurrentInfected);
+                maxKills = Math.Max(maxKills, Get(dead[i]).CurrentInfected);
             }
             for (int i = 0; i < dead.Length; i++) {
-                if (dead[i].Game.CurrentInfected == maxKills) count++;
+                if (Get(dead[i]).CurrentInfected == maxKills) count++;
             }
             
             string group = count == 1 ? " zombie " : " zombies ";
             string suffix = maxKills == 1 ? " %Skill" : " %Skills";
-            StringFormatter<Player> formatter = p => p.Game.CurrentInfected == maxKills ? p.ColoredName : null;
+            StringFormatter<Player> formatter = p => Get(p).CurrentInfected == maxKills ? p.ColoredName : null;
             Map.ChatLevel("&8Best" + group + "%S(&b" + maxKills + suffix + "%S)&8: " + dead.Join(formatter));
         }
 
@@ -325,9 +329,10 @@ namespace MCGalaxy.Games {
                 p.SetMoney(p.money + 5);
             }
             
-            p.Game.CurrentRoundsSurvived++;
-            p.Game.TotalRoundsSurvived++;
-            p.Game.MaxRoundsSurvived = Math.Max(p.Game.CurrentRoundsSurvived, p.Game.MaxRoundsSurvived);
+            ZSData data = Get(p);
+            data.CurrentRoundsSurvived++;
+            data.TotalRoundsSurvived++;
+            data.MaxRoundsSurvived = Math.Max(data.CurrentRoundsSurvived, data.MaxRoundsSurvived);
             p.SetPrefix(); // stars before name
         }
 
@@ -337,8 +342,9 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in online) {
                 if (pl.level != Map) continue;
-                pl.Game.ResetInvisibility();
-                int reward = GetMoneyReward(pl, alive, rand);
+                ZSData data = Get(pl);
+                data.ResetInvisibility();
+                int reward = GetMoneyReward(pl, data, alive, rand);
                 
                 if (reward == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + ServerConfig.Currency + " for you."); reward = 0;
@@ -347,25 +353,27 @@ namespace MCGalaxy.Games {
                 }
                 
                 pl.SetMoney(pl.money + reward);
-                pl.Game.ResetZombieState();
+                data.ResetState();
+                pl.Game.PledgeSurvive = false;
+                
                 if (pl.Game.Referee) {
                     pl.SendMessage("You gained one " + ServerConfig.Currency + " because you're a ref. Would you like a medal as well?");
                     pl.SetMoney(pl.money + 1);
                 }
                 
                 ZSGame.RespawnPlayer(pl);
-                HUD.UpdateTertiary(pl);
+                HUD.UpdateTertiary(pl, data.Infected);
             }
         }
 
-        static int GetMoneyReward(Player pl, Player[] alive, Random rand) {
+        static int GetMoneyReward(Player pl, ZSData data, Player[] alive, Random rand) {
             if (pl.CheckIfInsideBlock()) return -1;
             
             if (alive.Length == 0) {
-                return rand.Next(1 + pl.Game.CurrentInfected, 5 + pl.Game.CurrentInfected);
-            } else if (alive.Length == 1 && !pl.Game.Infected) {
+                return rand.Next(1 + data.CurrentInfected, 5 + data.CurrentInfected);
+            } else if (alive.Length == 1 && !data.Infected) {
                 return rand.Next(5, 10);
-            } else if (alive.Length > 1 && !pl.Game.Infected) {
+            } else if (alive.Length > 1 && !data.Infected) {
                 return rand.Next(2, 6);
             }
             return 0;

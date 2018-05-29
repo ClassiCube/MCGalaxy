@@ -326,8 +326,16 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (p == pl || p.level != pl.level || !p.CanSeeEntity(pl)) continue;
                 
-                Orientation rot = pl.Rot;
-                rot.HeadX = p.hasChangeModel ? MakePitch(pl, rot.HeadX) : MakeClassicPitch(pl, rot.HeadX);
+                Orientation rot = pl.Rot; byte pitch = rot.HeadX;
+                if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
+                
+                // flip head when infected, but doesn't support model
+                if (!p.hasChangeModel) {
+                    ZSData data = Server.zombie.TryGet(p);
+                    if (data != null && data.Infected) pitch = FlippedPitch(pitch);
+                }
+            
+                rot.HeadX = pitch;
                 Entities.GetPositionPacket(ref ptr, pl.id, pl.hasExtPositions, p.hasExtPositions,
                                            pl.tempPos, pl.lastPos, rot, pl.lastRot);
             }
@@ -340,18 +348,9 @@ namespace MCGalaxy {
             p.Send(packet);
         }
         
-        static byte MakePitch(Player p, byte pitch) {
-            if (Server.flipHead || p.flipHead)
-                if (pitch > 64 && pitch < 192) return pitch;
-            else return 128;
-            return pitch;
-        }
-        
-        static byte MakeClassicPitch(Player p, byte pitch) {
-            if (Server.flipHead || p.flipHead || p.Game.Infected)
-                if (pitch > 64 && pitch < 192) return pitch;
-            else return 128;
-            return pitch;
+        static byte FlippedPitch(byte pitch) {
+             if (pitch > 64 && pitch < 192) return pitch;
+             else return 128;
         }
         #endregion
     }

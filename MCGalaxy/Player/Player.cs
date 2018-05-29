@@ -42,7 +42,7 @@ namespace MCGalaxy {
             DatabaseID = NameConverter.InvalidNameID("(console)");
             color = "%S";
         }
-	    public static Player Instance = new ConsolePlayer();
+        public static Player Instance = new ConsolePlayer();
         
         public override string FullName {
             get { return "Console [&a" + ServerConfig.ConsoleName + "%S]"; }
@@ -94,17 +94,18 @@ namespace MCGalaxy {
         
         public override bool CanSeeEntity(Entity other) {
             Player target = other as Player;
-            if (target == null) return true; // not a player
+            if (target == null)  return true; // not a player
+            if (target == other) return true; // always see self
             
-            bool mayBeHidden = target.hidden;
-            mayBeHidden |= (target.Game.Referee || target.Game.Invisible) && Server.zombie.Running;
-            if (!mayBeHidden || this == other) return true;
+            // hidden via /hide or /ohide
+            if (target.hidden) {
+                if (target.otherRankHidden) return Rank >= target.oHideRank;
+                return Rank >= target.Rank;
+            }
             
-            if (target.Game.Referee && !Game.Referee && Server.zombie.Running) return false;
-            if (target.Game.Invisible && !Game.Referee && Server.zombie.Running) return false;
-            
-            if (target.otherRankHidden) return Rank >= target.oHideRank;
-            return Rank >= target.Rank;
+            if (!Server.zombie.Running || Game.Referee) return true;
+            ZSData data = Server.zombie.TryGet(target);
+            return data == null || !(target.Game.Referee || data.Invisible);
         }        
         
         public BlockID GetHeldBlock() {
@@ -150,8 +151,6 @@ namespace MCGalaxy {
                                         ip, LastLogin.ToString("yyyy-MM-dd HH:mm:ss"),
                                         TimesVisited, TimesDied, money, blocks,
                                         cuboided, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
-            
-            Server.zombie.SaveZombieStats(this);
         }
 
         #region == GLOBAL MESSAGES ==
