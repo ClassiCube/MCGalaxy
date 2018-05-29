@@ -165,7 +165,7 @@ namespace MCGalaxy.Scripting {
                 List<Command> commands = LoadTypes<Command>(lib);
                 
                 if (commands.Count == 0) return "No commands in dll file";
-                foreach (Command cmd in commands) { Command.all.Add(cmd); }
+                foreach (Command cmd in commands) { Command.Register(cmd); }
             } catch (Exception e) {
                 Logger.LogError(e);
                 

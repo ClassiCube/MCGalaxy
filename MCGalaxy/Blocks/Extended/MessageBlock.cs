@@ -71,27 +71,17 @@ namespace MCGalaxy.Blocks.Extended {
         
         static bool CheckCommand(Player p, string message, bool allCmds) {
             string[] parts = message.SplitSpaces(2);
-            string alias = parts[0], cmdArgs = "";
-            Command.Search(ref alias, ref cmdArgs);
+            string cmdName = parts[0], cmdArgs = "";
+            Command.Search(ref cmdName, ref cmdArgs);
             
-            foreach (Command cmd in Command.all.commands) {
-                bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
-                if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) continue;
-                
-                if (IsCommand(message, cmd.name) || IsCommand(alias, cmd.name)) {
-                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
-                }
-                if (cmd.shortcut.Length > 0 && IsCommand(message, cmd.shortcut)) {
-                    Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name); return false;
-                }
-            }
-            return true;
-        }
-        
-        static bool IsCommand(string message, string cmd) {
-            return message.CaselessEq(cmd) || message.CaselessStarts(cmd + " ");
-        }
-        
+            Command cmd = Command.Find(cmdName);
+            if (cmd == null) return true;            
+            bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
+            
+            if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) return true;
+            Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name);
+            return false;
+        }        
         
         static string[] sep = new string[] { " |/" };
         const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;

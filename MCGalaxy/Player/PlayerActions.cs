@@ -71,7 +71,7 @@ namespace MCGalaxy {
                 lvl = Matcher.FindLevels(p, name);
                 if (lvl == null) {
                     Player.Message(p, "There is no level \"{0}\" loaded. Did you mean..", name);
-                    Command.all.FindByName("Search").Use(p, "levels " + name);
+                    Command.Find("Search").Use(p, "levels " + name);
                     return false;
                 }
                 return GotoLevel(p, lvl);

@@ -452,7 +452,7 @@ namespace MCGalaxy {
                 TntWarsKillStreak = 0;
                 TntWarsScoreMultiplier = 1.0f;
             } else {
-                Command.all.FindByName("Spawn").Use(this, "");
+                Command.Find("Spawn").Use(this, "");
                 TimesDied++;
                 // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
                 if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
@@ -694,29 +694,29 @@ namespace MCGalaxy {
             return true;
         }
         
-        Command GetCommand(ref string cmd, ref string cmdArgs) {
-            if (!CheckCommand(cmd)) return null;
-            Command.Search(ref cmd, ref cmdArgs);
+        Command GetCommand(ref string cmdName, ref string cmdArgs) {
+            if (!CheckCommand(cmdName)) return null;
+            Command.Search(ref cmdName, ref cmdArgs);
             
             byte bindIndex;
-            if (byte.TryParse(cmd, out bindIndex) && bindIndex < CmdBindings.Length) {
-                if (CmdArgsBindings[bindIndex] == null) { SendMessage("No command is bound to: /" + cmd); return null; }
-                cmd = CmdBindings[bindIndex];
+            if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
+                if (CmdArgsBindings[bindIndex] == null) { SendMessage("No command is bound to: /" + cmdName); return null; }
+                cmdName = CmdBindings[bindIndex];
                 cmdArgs = CmdArgsBindings[bindIndex] + " " + cmdArgs;
                 cmdArgs = cmdArgs.TrimEnd(' ');
             }
             
-            OnPlayerCommandEvent.Call(this, cmd, cmdArgs);
+            OnPlayerCommandEvent.Call(this, cmdName, cmdArgs);
             if (cancelcommand) { cancelcommand = false; return null; }
             
-            Command command = Command.all.Find(cmd);
+            Command command = Command.Find(cmdName);
             if (command == null) {
-                if (Block.Parse(this, cmd) != Block.Invalid) {
-                    cmdArgs = cmd.ToLower(); cmd = "mode";
-                    command = Command.all.FindByName("Mode");
+                if (Block.Parse(this, cmdName) != Block.Invalid) {
+                    cmdArgs = cmdName.ToLower(); cmdName = "mode";
+                    command = Command.Find("Mode");
                 } else {
-                    Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmd, cmdArgs);
-                    SendMessage("Unknown command \"" + cmd + "\"."); return null;
+                    Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmdName, cmdArgs);
+                    SendMessage("Unknown command \"" + cmdName + "\"."); return null;
                 }
             }
 

@@ -26,13 +26,13 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {
             string args = ("level " + arg1 + " " + arg2).Trim();
-            Command.all.FindByName("BlockProperties").Use(p, args);
+            Command.Find("BlockProperties").Use(p, args);
         }
         
         static void HandleEnv(Player p, string type, string value) {
             type = type.ToLower();
             if (type == "preset") {
-                Command.all.Find("Environment").Use(p, "preset " + value); return;
+                Command.Find("Environment").Use(p, "preset " + value); return;
             }
             
             Level lvl = p.level;
@@ -105,14 +105,14 @@ namespace MCGalaxy.Commands.World {
             } else if (IsDeleteCommand(cmd)) {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
-                Command.all.FindByName("Save").Use(p, "");
+                Command.Find("Save").Use(p, "");
                 Player.Message(p, "Map has been saved.");
             } else if (cmd == "RESTORE") {
-                Command.all.FindByName("Restore").Use(p, value);
+                Command.Find("Restore").Use(p, value);
             } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
                 string[] args = value.SplitSpaces();
-                if (args.Length < 4) { Command.all.FindByName("ResizeLvl").Help(p); return; }
+                if (args.Length < 4) { Command.Find("ResizeLvl").Help(p); return; }
 
                 if (CmdResizeLvl.DoResize(p, args)) return;
                 Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.World {
                 if (grp != null) p.level.BuildAccess.SetMin(null, p.level, grp);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) value = "normal";
-                Command.all.FindByName("Texture").Use(p, "levelzip " + value);
+                Command.Find("Texture").Use(p, "levelzip " + value);
             } else {
                 LevelOption opt = LevelOptions.Find(cmd);
                 if (opt == null) {
@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands.World {
             string[] args = value.TrimEnd().SplitSpaces();
             if (args.Length == 3) value += " flat";
 
-            CmdNewLvl newLvl = (CmdNewLvl)Command.all.FindByName("NewLvl"); // TODO: this is a nasty hack, find a better way
+            CmdNewLvl newLvl = (CmdNewLvl)Command.Find("NewLvl"); // TODO: this is a nasty hack, find a better way
             args = (level + " " + value).SplitSpaces();
             Level lvl = newLvl.GenerateMap(p, args);
             if (lvl == null) return;
@@ -216,14 +216,14 @@ namespace MCGalaxy.Commands.World {
         }
 
         static void HandleSpawn(Player p, string ignored1, string ignored2) {
-            Command.all.FindByName("SetSpawn").Use(p, "");
+            Command.Find("SetSpawn").Use(p, "");
         }
         
         
         static void HandleZone(Player p, string cmd, string name) {
             cmd = cmd.ToUpper();
             if (cmd == "LIST") {
-                Command.all.FindByName("ZoneList").Use(p, "");
+                Command.Find("ZoneList").Use(p, "");
             } else if (cmd == "ADD") {
                 if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
@@ -303,7 +303,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length == 0) {
                 Player.Message(p, "Arguments required. See %T/Help zone");
             } else {
-                Command.all.FindByName("Zone").Use(p, cmd + " " + args);
+                Command.Find("Zone").Use(p, cmd + " " + args);
             }
         }
     }

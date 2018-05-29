@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
-            List<string> commands = FilterList(Command.all.commands, keyword, cmd => cmd.name,
+            List<string> commands = FilterList(Command.allCmds, keyword, cmd => cmd.name,
                                                null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
-            List<string> shortcuts = FilterList(Command.all.commands, keyword, cmd => cmd.shortcut,
+            List<string> shortcuts = FilterList(Command.allCmds, keyword, cmd => cmd.shortcut,
                                                 cmd => !String.IsNullOrEmpty(cmd.shortcut), 
                                                 cmd => CmdHelp.GetColor(cmd) + cmd.name);
             

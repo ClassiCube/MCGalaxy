@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (!p.hidden) return;
             if (!stealth) {
-                Command.all.FindByName("Hide").Use(p, "");
+                Command.Find("Hide").Use(p, "");
             } else {
                 Player.Message(p, "You are still hidden.");
             }
@@ -66,9 +66,9 @@ namespace MCGalaxy.Commands.Moderation {
             if (who.Rank >= p.Rank) { MessageTooHighRank(p, "follow", false); return;}
             if (who.following.Length > 0) { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
 
-            if (!p.hidden) Command.all.FindByName("Hide").Use(p, "");
+            if (!p.hidden) Command.Find("Hide").Use(p, "");
 
-            if (p.level != who.level) Command.all.FindByName("TP").Use(p, who.name);
+            if (p.level != who.level) Command.Find("TP").Use(p, who.name);
             if (p.following.Length > 0) {
                 Player old = PlayerInfo.FindExact(p.following);
                 if (old != null) Entities.Spawn(p, old);

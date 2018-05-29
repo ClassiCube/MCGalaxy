@@ -128,7 +128,7 @@ namespace MCGalaxy.Games {
             
             if (action == PlayerAction.UnReferee) {
                 PlayerJoinedGame(p);
-                Command.all.FindByName("Spawn").Use(p, "");
+                Command.Find("Spawn").Use(p, "");
                 p.Game.Referee = false;
             } else {
                 PlayerLeftGame(p);
@@ -236,7 +236,7 @@ namespace MCGalaxy.Games {
             } else if (data.BlocksStacked == 4) {
                 if (!data.PillarFined) {
                     Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
-                    Command.all.FindByName("Take").Use(null, p.name + " 10 Auto fine for pillaring");
+                    Command.Find("Take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
                 } else {                   
                     ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");

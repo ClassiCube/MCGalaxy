@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Misc {
             string cmdName = parts[1], cmdArgs = parts.Length > 2 ? parts[2] : "";
             Command.Search(ref cmdName, ref cmdArgs);
             
-            Command cmd = Command.all.FindByName(cmdName);
+            Command cmd = Command.Find(cmdName);
             if (cmd == null) {
                 Player.Message(p, "Unknown command \"" + cmdName + "\"."); return;
             }

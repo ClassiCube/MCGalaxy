@@ -222,7 +222,7 @@ namespace MCGalaxy.Network {
             try {
                 Player p = new IRCPlayer(channel, user.Nick, bot);
                 p.group = Group.GuestRank;
-                Command.all.FindByName("Players").Use(p, "");
+                Command.Find("Players").Use(p, "");
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -233,7 +233,7 @@ namespace MCGalaxy.Network {
         }
         
         bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
-            Command cmd = Command.all.Find(cmdName);
+            Command cmd = Command.Find(cmdName);
             Player p = new IRCPlayer(channel, user.Nick, bot);
             if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
 
@@ -271,7 +271,7 @@ namespace MCGalaxy.Network {
             if (!foundAtAll) {
                 error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
             }
-            if (bot.BannedCommands.Contains(cmdName)) {
+            if (bot.BannedCommands.CaselessContains(cmdName)) {
                 error = "You are not allowed to use this command from IRC.";
             }
             return false;

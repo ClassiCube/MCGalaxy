@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Info {
         
         static void PrintShortcuts(Player p, string modifier) {
             List<Command> shortcuts = new List<Command>();
-            foreach (Command cmd in Command.all.commands) {
+            foreach (Command cmd in Command.allCmds) {
                 if (cmd.shortcut.Length == 0) continue;
                 if (p != null && !p.group.CanExecute(cmd)) continue;
                 shortcuts.Add(cmd);
@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.Info {
         
         static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
             List<Command> cmds = new List<Command>();
-            foreach (Command c in Command.all.commands) {
+            foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if (!group.CanExecute(c) || disabled != null || c.name == null) continue;
                 cmds.Add(c);
@@ -128,12 +128,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void PrintAllCommands(Player p, string sort, string modifier) {
-            List<Command> cmds = new List<Command>();
-            foreach (Command c in Command.all.commands) {
-                if (c.name == null) continue;
-                cmds.Add(c);
-            }
-
+            List<Command> cmds = Command.CopyAll();
             SortCommands(cmds, sort);
             Player.Message(p, "All commands:");
             
@@ -148,7 +143,7 @@ namespace MCGalaxy.Commands.Info {
         static void PrintHelpForGroup(Player p, string sort, string modifier,
                                       string type, string category) {
             List<Command> cmds = new List<Command>();
-            foreach (Command c in Command.all.commands) {
+            foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if ((p == null || p.group.CanExecute(c)) && disabled == null) {
                     if (!c.type.CaselessContains(type) || c.name == null) continue;

@@ -25,7 +25,10 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces();
             if (args.Length == 1) { Help(p); return; }
             
-            Command cmd = Command.all.Find(args[0]);
+            string cmdName = args[0], cmdArgs = "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            Command cmd = Command.Find(cmdName);
+            
             if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
             if (p != null && !p.group.CanExecute(cmd)) {
                 Player.Message(p, "Your rank cannot use this command."); return;

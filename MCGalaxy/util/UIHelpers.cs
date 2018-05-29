@@ -64,8 +64,8 @@ namespace MCGalaxy.UI {
             }
             
             Command.Search(ref name, ref args);
-            if (Server.Check(name, args)) { Server.cancelcommand = false; return; }            
-            Command cmd = Command.all.Find(name);
+            if (Server.Check(name, args)) { Server.cancelcommand = false; return; }
+            Command cmd = Command.Find(name);
             
             if (cmd == null) { 
                 Logger.Log(LogType.CommandUsage, "(console): Unknown command \"{0}\"", name); return; 

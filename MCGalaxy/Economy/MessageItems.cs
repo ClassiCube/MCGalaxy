@@ -31,7 +31,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.FindByName("LoginMessage").Use(p, "-own");
+                Command.Find("LoginMessage").Use(p, "-own");
                 Player.Message(p, "%aYour login message was removed for free.");
                 return;
             }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Eco {
             if (text.Length > NetUtils.StringSize) {
                 Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }
-            Command.all.FindByName("LoginMessage").Use(p, "-own " + text);
+            Command.Find("LoginMessage").Use(p, "-own " + text);
             Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + text);
         }
     }
@@ -59,7 +59,7 @@ namespace MCGalaxy.Eco {
 
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.FindByName("LogoutMessage").Use(p, "-own");
+                Command.Find("LogoutMessage").Use(p, "-own");
                 Player.Message(p, "%aYour logout message was removed for free.");
                 return;
             }
@@ -71,7 +71,7 @@ namespace MCGalaxy.Eco {
             if (text.Length > NetUtils.StringSize) {
                 Player.Message(p, "%cLogin message must be 64 characters or less."); return;
             }            
-            Command.all.FindByName("LogoutMessage").Use(p, "-own " + text);
+            Command.Find("LogoutMessage").Use(p, "-own " + text);
             Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
         }
     }

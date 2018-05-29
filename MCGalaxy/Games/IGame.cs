@@ -87,7 +87,7 @@ namespace MCGalaxy.Games {
                 Map.ChatLevel("Continuing " + GameName + " on the same map");
             } else {
                 TransferPlayers(LastMap);
-                Command.all.FindByName("Unload").Use(null, LastMap);
+                Command.Find("Unload").Use(null, LastMap);
             }
         }
         

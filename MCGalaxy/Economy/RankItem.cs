@@ -96,7 +96,7 @@ namespace MCGalaxy.Eco {
             }
             
             string rankName = Group.Find(nextRank.Perm).Name; // TODO: What if null reference happens here
-            Command.all.FindByName("SetRank").Use(null, p.name + " " + rankName);
+            Command.Find("SetRank").Use(null, p.name + " " + rankName);
             Player.Message(p, "You bought the rank " + p.group.ColoredName);
             Economy.MakePurchase(p, nextRank.Price, "%3Rank: " + p.group.ColoredName);
         }

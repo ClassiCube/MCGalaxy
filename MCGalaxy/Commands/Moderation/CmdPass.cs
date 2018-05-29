@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
 
             if (message.IndexOf(' ') >= 0) { Player.Message(p, "Your password must be &cone %Sword!"); return; }
-            if (!File.Exists("extra/passwords/" + p.name + ".dat")) {
+            if (!PasswordHasher.Exists(p.name)) {
                 Player.Message(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!"); return;
             }
 
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void SetPassword(Player p, string message) {
-            if (p.adminpen && File.Exists("extra/passwords/" + p.name + ".dat")) {
+            if (p.adminpen && PasswordHasher.Exists(p.name)) {
                 Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
                                "%SIf you have &cforgotten %Syour password, contact &c" + ServerConfig.OwnerName + " %Sand they can &creset it!");
                 return;

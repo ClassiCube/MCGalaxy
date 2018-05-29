@@ -22,15 +22,10 @@ using System.Text;
 
 namespace MCGalaxy.Util {
     internal sealed class PasswordHasher {
-
-        const string path = "extra/passwords/{0}.dat";
+        public static string GetPath(string salt) { return "extra/passwords/" + salt + ".dat"; }
+        public static bool Exists(string salt) { return File.Exists(GetPath(salt)); }
 
         internal static byte[] Compute(string salt, string plainText) {
-            if (string.IsNullOrEmpty(salt) )
-                throw new ArgumentNullException("salt", "fileName is null or empty");
-            if ( string.IsNullOrEmpty(plainText))
-                throw new ArgumentNullException("plainText", "plainText is null or empty");
-
             salt = salt.Replace("<", "(");
             salt = salt.Replace(">", ")");
             plainText = plainText.Replace("<", "(");
@@ -48,14 +43,15 @@ namespace MCGalaxy.Util {
 
         internal static void StoreHash(string salt, string plainText) {
             byte[] hashed = Compute(salt, plainText);
-            using (Stream stream = File.Create(string.Format(path, salt)))
+            using (Stream stream = File.Create(GetPath(salt))) {
                 stream.Write(hashed, 0, hashed.Length);
+            }
         }
 
         internal static bool MatchesPass(string salt, string plainText) {
-            if (!File.Exists(string.Format(path, salt))) return false;
+            if (!Exists(salt)) return false;
             
-            byte[] hashed = File.ReadAllBytes(string.Format(path, salt));
+            byte[] hashed = File.ReadAllBytes(GetPath(salt));
             byte[] computed = Compute(salt, plainText);
             // Old passwords stored UTF8 string instead of just the raw 16 byte hashes
             // We need to support both since this behaviour was accidentally changed

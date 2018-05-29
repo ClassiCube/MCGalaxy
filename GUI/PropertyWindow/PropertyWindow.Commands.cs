@@ -35,7 +35,7 @@ namespace MCGalaxy.Gui {
         
         void LoadCommands() {
             cmd_list.Items.Clear();
-            List<Command> all = Command.all.All();
+            List<Command> all = Command.CopyAll();
             all.Sort((a, b) => a.name.CompareTo(b.name));
             
             foreach (Command cmd in all) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Gui {
             string cmdName = cmd_list.SelectedItem.ToString();        
             CommandInitSpecificArrays();
             
-            cmd = Command.all.FindByName(cmdName);
+            cmd = Command.Find(cmdName);
             if (cmd == null) return;
             commandPermsOrig = CommandPerms.Find(cmdName);
             commandPerms = commandPermsChanged.Find(p => p.CmdName.CaselessEq(cmdName));

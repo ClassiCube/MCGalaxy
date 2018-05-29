@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
         static bool CheckBrush(Player p, string brushMsg) {
             if (brushMsg.Length == 0) return true;
             
-            if (!p.group.CanExecute("brush")) {
+            if (!p.group.CanExecute("Brush")) {
                 Player.Message(p, "You cannot use %T/Brush%S, so therefore cannot use %T/Tree%S with a brush."); return false;
             }        
             return ParseBrush(brushMsg, p, Block.Air) != null;

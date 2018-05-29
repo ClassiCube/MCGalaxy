@@ -81,7 +81,7 @@ namespace MCGalaxy {
 
         public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }
         public bool CanExecute(string cmdName) {
-            Command cmd = Command.all.Find(cmdName);
+            Command cmd = Command.Find(cmdName);
             return cmd != null && Commands.Contains(cmd);
         }
 

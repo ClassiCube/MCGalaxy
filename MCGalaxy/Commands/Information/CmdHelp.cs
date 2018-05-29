@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands.Info {
             string cmdName = args[0], cmdArgs = "";
             Command.Search(ref cmdName, ref cmdArgs);
             
-            Command cmd = Command.all.FindByName(cmdName);
+            Command cmd = Command.Find(cmdName);
             if (cmd == null) return false;
             
             if (args.Length == 1) {

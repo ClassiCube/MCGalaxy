@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Server.reviewlist.Remove(user);
-            Command.all.FindByName("TP").Use(p, who.name);
+            Command.Find("TP").Use(p, who.name);
             Player.Message(p, "You have been teleported to " + user);
             Player.Message(who, "Your review request has been answered by " + p.name + ".");
             MessageReviewPosChanged();

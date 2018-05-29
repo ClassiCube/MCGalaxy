@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.FindByName("Title").Use(p, "-own");
+                Command.Find("Title").Use(p, "-own");
                 Player.Message(p, "%aYour title was removed for free."); return;
             }
             
@@ -42,7 +42,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cTitles must be under 20 characters."); return;
             }
             
-            Command.all.FindByName("Title").Use(p, "-own " + title);
+            Command.Find("Title").Use(p, "-own " + title);
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
@@ -58,7 +58,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.all.FindByName("Nick").Use(p, "-own");
+                Command.Find("Nick").Use(p, "-own");
                 Player.Message(p, "%aYour nickname was removed for free."); return;
             }
             
@@ -70,7 +70,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cNicknames must be under 30 characters."); return;
             }
             
-            Command.all.FindByName("Nick").Use(p, "-own " + nick);
+            Command.Find("Nick").Use(p, "-own " + nick);
             Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
     }
@@ -92,7 +92,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou already have a " + color + colName + "%c titlecolor"); return;
             }
             
-            Command.all.FindByName("TColor").Use(p, "-own " + colName);
+            Command.Find("TColor").Use(p, "-own " + colName);
             Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + colName);
         }
     }
@@ -114,7 +114,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "%cYou already have a " + color + colName + "%c color"); return;
             }
             
-            Command.all.FindByName("Color").Use(p, "-own " + colName);
+            Command.Find("Color").Use(p, "-own " + colName);
             Economy.MakePurchase(p, Price, "%3Color: " + color + colName);
         }
     }

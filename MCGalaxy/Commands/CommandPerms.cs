@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands {
             foreach (CommandPerms perms in list) {
                 bool canUse = perms.MinRank <= perm && !perms.Disallowed.Contains(perm);
                 if (canUse || perms.Allowed.Contains(perm)) {
-                    Command cmd = Command.all.FindByName(perms.CmdName);
+                    Command cmd = Command.Find(perms.CmdName);
                     if (cmd != null) commands.Add(cmd);
                 }
             }
@@ -171,7 +171,7 @@ namespace MCGalaxy.Commands {
 
         /// <summary> Loads the list of all command permissions. </summary>
         public static void Load() {
-            foreach (Command cmd in Command.all.All()) {
+            foreach (Command cmd in Command.CopyAll()) {
                 Set(cmd.name, cmd.defaultRank, null, null);
             }
 

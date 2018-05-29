@@ -71,7 +71,7 @@ namespace MCGalaxy.Eco {
             string map = Matcher.FindMaps(p, args[1]);
             if (map == null) return;
             
-            Command.all.FindByName("Queue").Use(p, "level " + map);
+            Command.Find("Queue").Use(p, "level " + map);
             Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
         }
         

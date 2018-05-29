@@ -25,13 +25,13 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
-            if (!Formatter.ValidName(p, message, "command")) return;            
-            if (Command.all.Contains(message)) {
+        public override void Use(Player p, string cmdName) {
+            if (!Formatter.ValidName(p, cmdName, "command")) return;
+            if (Command.Find(cmdName) != null) {
                 Player.Message(p, "That command is already loaded!"); return;
             }
             
-            string path = IScripting.DllPath(message);
+            string path = IScripting.DllPath(cmdName);
             if (!File.Exists(path)) {
                 Player.Message(p, "File &9{0} %Snot found.", path); return;
             }

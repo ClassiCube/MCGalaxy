@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui {
         void DoGen(string name, string args) {
             mapgen = true;
             try {
-                Command.all.FindByName("NewLvl").Use(null, args);
+                Command.Find("NewLvl").Use(null, args);
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Popup.Error("Failed to generate level. Check error logs for details.");

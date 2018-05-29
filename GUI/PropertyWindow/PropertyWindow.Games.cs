@@ -100,8 +100,9 @@ namespace MCGalaxy.Gui {
                 try { name = ls_lstNotUsed.Items[ls_lstNotUsed.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if (LevelInfo.FindExact(name) == null)
-                    Command.all.FindByName("Load").Use(null, name);
+                if (LevelInfo.FindExact(name) == null) {
+                    Command.Find("Load").Use(null, name);
+                }
                 Level level = LevelInfo.FindExact(name);
                 if (level == null) return;
 
@@ -135,8 +136,9 @@ namespace MCGalaxy.Gui {
                 try { name = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if (LevelInfo.FindExact(name) == null)
-                    Command.all.FindByName("Load").Use(null, name);
+                if (LevelInfo.FindExact(name) == null) {
+                    Command.Find("Load").Use(null, name);
+                }
                 Level level = LevelInfo.FindExact(name);
                 if (level == null) return;
 
@@ -639,7 +641,7 @@ namespace MCGalaxy.Gui {
         void TntWrsRstGame_Click(object sender, EventArgs e) {
             if (tw_selected == null) return;
             tw_selected.GameStatus = TntWarsGame.TntWarsGameStatus.WaitingForPlayers;
-            Command.all.FindByName("Restore").Use(null, tw_selected.BackupNumber + tw_selected.lvl.name);
+            Command.Find("Restore").Use(null, tw_selected.BackupNumber + tw_selected.lvl.name);
             tw_selected.RedScore = 0;
             tw_selected.BlueScore = 0;
             foreach (TntWarsGame.player pl in tw_selected.Players) {

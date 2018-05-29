@@ -146,7 +146,7 @@ namespace MCGalaxy.Gui {
             try {
                 string args = raw == null ? "" : raw.ToString();
                 string cmdArgs = args.Length == 0 ? lvl.name : lvl.name + " " + args;
-                Command.all.Find(cmd).Use(null, cmdArgs);
+                Command.Find(cmd).Use(null, cmdArgs);
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }

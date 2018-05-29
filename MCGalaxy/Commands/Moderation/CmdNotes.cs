@@ -24,14 +24,15 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string name) {
             if (!ServerConfig.LogNotes) {
                 Player.Message(p, "The server does not have notes logging enabled."); return;
             }
             
-            if (CheckSuper(p, message, "player name")) return;
-            if (message.Length == 0) message = p.name;
-            string name = PlayerInfo.FindMatchesPreferOnline(p, message);
+            if (CheckSuper(p, name, "player name")) return;
+            if (name.Length == 0) name = p.name;
+            
+            name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
             
             List<string> notes = new List<string>();

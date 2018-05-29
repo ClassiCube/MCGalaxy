@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Moderation {
                 announceToOps = false;
             }
             
-            Command adminchat = Command.all.FindByName("AdminChat");
-            Command opchat = Command.all.FindByName("OpChat");
+            Command adminchat = Command.Find("AdminChat");
+            Command opchat = Command.Find("OpChat");
             Entities.GlobalDespawn(p, false);
             
             p.hidden = !p.hidden;

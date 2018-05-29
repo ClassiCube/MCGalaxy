@@ -140,7 +140,7 @@ namespace MCGalaxy.Gui {
 
         void GetHelp(string toHelp) {
             ConsoleHelpPlayer player = new ConsoleHelpPlayer();
-            Command.all.FindByName("Help").Use(player, toHelp);
+            Command.Find("Help").Use(player, toHelp);
             Popup.Message(Colors.Strip(player.HelpOutput), "Help for /" + toHelp);
         }
         

@@ -28,9 +28,8 @@ namespace MCGalaxy.Gui.Popups {
             InitializeComponent();
 
             //Sigh. I wish there were SOME event to help me.
-            foreach (Command cmd in Command.all.commands) {
-                if (Command.core.commands.Contains(cmd)) continue;
-                lstCommands.Items.Add(cmd.name);
+            foreach (Command cmd in Command.allCmds) {
+                if (!Command.IsCore(cmd)) lstCommands.Items.Add(cmd.name);
             }
         }
         
@@ -106,22 +105,20 @@ namespace MCGalaxy.Gui.Popups {
                 }
 
                 lstCommands.Items.Add(cmd.name);
-                Command.all.Add(cmd);
+                Command.Register(cmd);
                 Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
             }
-            CommandPerms.Load();
         }
 
         void btnUnload_Click(object sender, EventArgs e) {
             string cmdName = lstCommands.SelectedItem.ToString();
-            Command cmd = Command.all.Find(cmdName);
+            Command cmd = Command.Find(cmdName);
             if (cmd == null) {
                 Popup.Warning("Command " + cmdName + " is not loaded."); return;
             }
 
             lstCommands.Items.Remove(cmd.name);
-            Command.all.Remove(cmd);
-            CommandPerms.Load();
+            Command.Unregister(cmd);
             Popup.Message("Command successfully unloaded.");
         }
         

@@ -196,7 +196,6 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\Command.Helpers.cs" />
     <Compile Include="Commands\CommandExtraPerms.cs" />
-    <Compile Include="Commands\CommandList.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\CommandPerms.cs" />
     <Compile Include="Commands\CPE\CmdCustomColors.cs" />
