@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Rainbow"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
-        protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "normal"; }
+        protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "Normal"; }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             string args = dArgs.Message;

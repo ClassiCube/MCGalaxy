@@ -16,98 +16,56 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator.Foliage;
-using MCGalaxy.Maths;
-using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdTree : Command {
+    public sealed class CmdTree : DrawCmd {
         public override string name { get { return "Tree"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
-            string[] parts = message.SplitSpaces(3);
+        protected override int MarksCount { get { return 1; } }
+        protected override string SelectionType { get { return "location"; } }
+        protected override string PlaceMessage { get { return "Select where you wish your tree to grow"; } }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            string[] args = dArgs.Message.SplitSpaces(3);            
+            Tree tree = Tree.Find(args[0]);
+            if (tree == null) tree = new NormalTree();
             
-            DrawArgs dArgs = new DrawArgs();
-            dArgs.size = -1;
-            
-            Tree tree = Tree.Find(parts[0]);
-            if (tree == null) {
-                dArgs.brushMsg = message;
-                tree = new NormalTree();
-            }
-            dArgs.tree = tree;
-            
-            int size;
-            if (parts.Length > 1 && int.TryParse(parts[1], out size)) {
-                if (size < tree.MinSize) {
-                    Player.Message(p, "Value must be {0} or above for {1} trees.", tree.MinSize, parts[0]); return;
-                }
-                if (size > tree.MaxSize) {
-                    Player.Message(p, "Value must be {0} or below for {1} trees.", tree.MaxSize, parts[0]); return;
-                }
-                
-                dArgs.size = size;
-                dArgs.brushMsg = message.Splice(2, 0); // type value/height brush
+            int size;            
+            if (args.Length > 1 && int.TryParse(args[1], out size)) {
+                Player p = dArgs.Player;
+                string opt = args[0] + " tree size";                
+                if (!CommandParser.GetInt(p, args[1], opt, ref size, tree.MinSize, tree.MaxSize)) return null;
             } else {
-                dArgs.brushMsg = message.Splice(1, 0); // type brush
+                size = -1;
             }
 
-            if (!CheckBrush(p, dArgs.brushMsg)) return;           
-            Player.Message(p, "Select where you wish your tree to grow");
-            p.MakeSelection(1, "Selecting location for %STree", dArgs, DoTree);
-        }
-        
-        static bool CheckBrush(Player p, string brushMsg) {
-            if (brushMsg.Length == 0) return true;
-            
-            if (!p.group.CanExecute("Brush")) {
-                Player.Message(p, "You cannot use %T/Brush%S, so therefore cannot use %T/Tree%S with a brush."); return false;
-            }        
-            return ParseBrush(brushMsg, p, Block.Air) != null;
-        }
-
-        bool DoTree(Player p, Vec3S32[] marks, object state, BlockID block) {
-            DrawArgs dArgs = (DrawArgs)state;
             TreeDrawOp op = new TreeDrawOp();
-            op.Tree = dArgs.tree;
-            op.Size = dArgs.size;
-            
-            Brush brush = null;
-            if (dArgs.brushMsg.Length > 0) brush = ParseBrush(dArgs.brushMsg, p, block);
-            DrawOpPerformer.Do(op, brush, p, marks);
-            return true;
+            op.Tree = tree; op.Size = size;
+            return op;
         }
         
-        
-        static Brush ParseBrush(string raw, Player p, BlockID block) {
-            string[] parts = raw.SplitSpaces(2);
-            BrushFactory brush = BrushFactory.Find(parts[0]);
-            if (brush == null) {
-                Player.Message(p, "No brush found with name \"{0}\".", parts[0]);
-                Player.Message(p, "Available brushes: " + BrushFactory.Available);
-                return null;
+        protected override void GetBrush(DrawArgs dArgs) {
+            TreeDrawOp op = (TreeDrawOp)dArgs.Op;
+            if (op.Size != -1) {
+                dArgs.BrushArgs = dArgs.Message.Splice(2, 0); // type, value/height, brush args
+            } else {
+                dArgs.BrushArgs = dArgs.Message.Splice(1, 0); // type, brush args
             }
-
-            string brushArgs = parts.Length >= 2 ? parts[1].ToLower() : "";
-            BrushArgs args = new BrushArgs(p, brushArgs, block);
-            return brush.Construct(args);
+            
+            // use leaf blocks by default
+            if (dArgs.BrushName.CaselessEq("Normal") && dArgs.BrushArgs.Length == 0) {
+                dArgs.BrushArgs = Block.Leaves.ToString();
+            }
         }
-        
-        class DrawArgs { public Tree tree; public string brushMsg; public int size; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Tree [type] %H- Draws a tree.");
-            Player.Message(p, "%T/Tree [type] [size] %H- Draws a tree of given size.");
-            Player.Message(p, "%T/Tree [type] [brush name] <brush args>");
-            Player.Message(p, "%T/Tree [type] [size] [brush name] <brush args>");
+            Player.Message(p, "%T/Tree [type] <brush args> %H- Draws a tree.");
+            Player.Message(p, "%T/Tree [type] [size/height] <brush args>");
             Player.Message(p, "%H  Types: &f{0}", Tree.TreeTypes.Join(t => t.Key));
-            Player.Message(p, "%H  For help about brushes, type %T/Help Brush%H.");
+            Player.Message(p, BrushHelpLine);
         }
     }
 }

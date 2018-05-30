@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Building {
 
         void DoCopyMark(Player p, Vec3S32[] m, int i, object state, BlockID block) {
             if (i == 2) {
-                CopyState copy = p.CopySlots[p.CurrentCopySlot];
+                CopyState copy = p.CurrentCopy;
                 copy.Offset.X = copy.OriginX - m[i].X;
                 copy.Offset.Y = copy.OriginY - m[i].Y;
                 copy.Offset.Z = copy.OriginZ - m[i].Z;
@@ -139,7 +139,8 @@ namespace MCGalaxy.Commands.Building {
             }
             
             cState.CopySource = "level " + p.level.name;
-            p.SetCurrentCopy(cState);
+            p.CurrentCopy = cState;
+            
             if (cArgs.cut) {
                 DrawOp op = new CuboidDrawOp();
                 op.Flags = BlockDBFlags.Cut;
@@ -172,11 +173,16 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
+            CopyState cState = p.CurrentCopy;
+            if (cState == null) { 
+                Player.Message(p, "You haven't copied anything yet"); return; 
+            }
+            
             string path = "extra/savecopy/" + p.name + "/" + file + ".cpb";
             using (FileStream fs = File.Create(path))
                 using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
             {
-                p.CopySlots[p.CurrentCopySlot].SaveTo(gs);
+                cState.SaveTo(gs);
             }
             Player.Message(p, "Saved copy as " + file);
         }
@@ -195,8 +201,9 @@ namespace MCGalaxy.Commands.Building {
                 } else {
                     state.LoadFromOld(gs, fs);
                 }
+                
                 state.CopySource = "file " + file;
-                p.SetCurrentCopy(state);
+                p.CurrentCopy = state;
             }
             Player.Message(p, "Loaded copy from " + file);
         }

@@ -27,9 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Donut"), new CommandAlias("Bagel") }; }
         }
-        protected override string PlaceMessage { 
-            get { return "Place a block for the centre, then another for the radius."; } 
-        }
+        protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
             int dx = m[0].X - m[1].X, dy = m[0].Y - m[1].Y, dz = m[0].Z - m[1].Z;

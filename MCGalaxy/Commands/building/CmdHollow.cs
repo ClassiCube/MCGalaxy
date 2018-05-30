@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             return op;
         }
         
-        protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "normal"; }
+        protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "Normal"; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Hollow");

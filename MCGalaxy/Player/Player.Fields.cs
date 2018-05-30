@@ -48,7 +48,7 @@ namespace MCGalaxy {
         public bool IsAfk, AutoAfk;
         public bool cmdTimer;
         public bool UsingWom;
-        public string BrushName = "normal", DefaultBrushArgs = "";
+        public string BrushName = "Normal", DefaultBrushArgs = "";
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
         public bool disconnected, ClickToMark = true;
@@ -160,6 +160,13 @@ namespace MCGalaxy {
 
         public List<CopyState> CopySlots = new List<CopyState>();
         public int CurrentCopySlot;
+        public CopyState CurrentCopy { 
+            get { return CurrentCopySlot >= CopySlots.Count ? null : CopySlots[CurrentCopySlot]; }
+            set {
+                while (CurrentCopySlot >= CopySlots.Count) { CopySlots.Add(null); }
+                CopySlots[CurrentCopySlot] = value;
+            }
+        }
         
         // BlockDefinitions
         internal int gbStep = 0, lbStep = 0;

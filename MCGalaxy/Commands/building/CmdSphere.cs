@@ -30,9 +30,7 @@ namespace MCGalaxy.Commands.Building {
                     new CommandAlias("sph", null, "hollow"), new CommandAlias("Circle", null, "circle" ),
                     new CommandAlias("CircleH", null, "hollowcircle") }; }
         }
-        protected override string PlaceMessage {
-            get { return "Place a block for the centre, then another for the radius."; }
-        }
+        protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
         protected override DrawMode GetMode(string[] parts) {
             string msg = parts[parts.Length - 1];

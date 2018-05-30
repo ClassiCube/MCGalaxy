@@ -36,14 +36,11 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            if (parts[parts.Length - 1].CaselessEq("confirm")) {
-                string prev = parts.Length >= 2 ? parts[parts.Length - 2] : "";
-                return ParseFillMode(prev);
+            string msg = parts[parts.Length - 1];
+            if (msg.CaselessEq("confirm")) {
+                msg = parts.Length >= 2 ? parts[parts.Length - 2] : "";
             }
-            return ParseFillMode(parts[parts.Length - 1]);
-        }
-        
-        DrawMode ParseFillMode(string msg) {
+            
             if (msg == "normal")     return DrawMode.solid;
             if (msg == "up")         return DrawMode.up;
             if (msg == "down")       return DrawMode.down;

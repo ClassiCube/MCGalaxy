@@ -57,9 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             
             pos = p1;            
-            foreach (char c in Text) {
-                DrawLetter(Player, c, brush, output);
-            }
+            foreach (char c in Text) { DrawLetter(Player, c, brush, output); }
         }
         
         void DrawLetter(Player p, char c, Brush brush, DrawOpOutput output) {

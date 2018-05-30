@@ -31,11 +31,11 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) message = "y";
-            if (p.CurrentCopySlot >= p.CopySlots.Count || p.CopySlots[p.CurrentCopySlot] == null) { 
+            if (p.CurrentCopy == null) { 
                 Player.Message(p, "You haven't copied anything yet"); return; 
             }
             
-            CopyState cState = p.CopySlots[p.CurrentCopySlot];
+            CopyState cState = p.CurrentCopy;
             string opt = message.ToLower();
             BlockDefinition[] defs = p.level.CustomBlockDefs;
             
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands.Building {
                 }
 
                 newState.CopySource = cState.CopySource;
-                newState.CopyTime = cState.CopyTime;
-                p.SetCurrentCopy(newState);
+                newState.CopyTime   = cState.CopyTime;
+                p.CurrentCopy = newState;
                 Player.Message(p, "Rotated copy {0} degrees around the {1} axis", angle, axis);
             }            
         }

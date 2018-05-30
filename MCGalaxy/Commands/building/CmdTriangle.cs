@@ -26,9 +26,7 @@ namespace MCGalaxy.Commands.Building {
         protected override int MarksCount { get { return 3; } }       
         protected override string PlaceMessage { get { return "Place three blocks to determine the edges."; } }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            return new TriangleDrawOp(); 
-        }
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new TriangleDrawOp();  }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Triangle <brush args>");

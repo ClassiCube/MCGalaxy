@@ -63,21 +63,21 @@ namespace MCGalaxy.Commands.Building {
 
             AdvDrawMeta meta = new AdvDrawMeta();
             bool success = false;
-            string[] parts = dArgs.Message.SplitSpaces();
+            string[] args = dArgs.Message.SplitSpaces();
             Player p = dArgs.Player;
             
             if (op.UsesHeight) {
-                if (parts.Length < 3) {
-                    Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[0]);
+                if (args.Length < 3) {
+                    Player.Message(p, "You need to provide the radius and the height for the {0}.", args[0]);
                 } else {
-                    success = CommandParser.GetInt(p, parts[1], "radius", ref meta.radius, 0, 2000)
-                        && CommandParser.GetInt(p, parts[2], "height", ref meta.height, 0, 2000);
+                    success = CommandParser.GetInt(p, args[1], "radius", ref meta.radius, 0, 2000)
+                        && CommandParser.GetInt(p, args[2], "height", ref meta.height, 0, 2000);
                 }
             } else {
-                if (parts.Length < 2) {
-                    Player.Message(p, "You need to provide the radius for the {0}.", parts[0]);
+                if (args.Length < 2) {
+                    Player.Message(p, "You need to provide the radius for the {0}.", args[0]);
                 } else {
-                    success = CommandParser.GetInt(p, parts[1], "radius", ref meta.radius, 0, 2000);
+                    success = CommandParser.GetInt(p, args[1], "radius", ref meta.radius, 0, 2000);
                 }
             }
             

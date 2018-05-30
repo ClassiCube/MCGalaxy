@@ -21,18 +21,15 @@ using MCGalaxy.Drawing.Ops;
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdBezier : DrawCmd {
         public override string name { get { return "Bezier"; } }
-                
-        protected override int MarksCount { get { return 3; } }
-        protected override string SelectionType { get { return "points"; } }
-        protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints, then another for the control point"; } }
-        
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("Curve") }; }
         }
         
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            return new BezierDrawOp();
-        }
+        protected override int MarksCount { get { return 3; } }
+        protected override string SelectionType { get { return "points"; } }
+        protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints, then another for the control point"; } }
+
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new BezierDrawOp(); }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Bezier <brush args>");

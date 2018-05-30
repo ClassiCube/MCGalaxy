@@ -334,11 +334,6 @@ namespace MCGalaxy {
             }
             return true;
         }
-        
-        public void SetCurrentCopy(CopyState state) {
-            while (CurrentCopySlot >= CopySlots.Count) { CopySlots.Add(null); }
-            CopySlots[CurrentCopySlot] = state;
-        }
 
         #endregion
 

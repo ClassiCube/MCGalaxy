@@ -40,11 +40,11 @@ namespace MCGalaxy.Commands.Building {
                 int i = 0;
                 if (!CommandParser.GetInt(p, message, "Slot number", ref i, 1, p.group.CopySlots)) return;
                 
-                i--; p.CurrentCopySlot = i;
-                if (i >= p.CopySlots.Count || p.CopySlots[i] == null) {
-                    Player.Message(p, "Selected copy slot {0} (unused)", i + 1);
+                p.CurrentCopySlot = i - 1;
+                if (p.CurrentCopy == null) {
+                    Player.Message(p, "Selected copy slot {0} (unused)", i);
                 } else {
-                    Player.Message(p, "Selected copy slot {0}: {1}", i + 1, p.CopySlots[i].Summary);
+                    Player.Message(p, "Selected copy slot {0}: {1}", i, p.CurrentCopy.Summary);
                 }
             }
         }

@@ -35,15 +35,12 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "Tree"; } }
         
         public Random random = new Random();
-        public Tree Tree;
-        static Brush defBrush = new SolidBrush(Block.Leaves);
-        
+        public Tree Tree;       
         public int Size = -1;
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) { return Tree.EstimateBlocksAffected(); }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            if (brush == null) brush = defBrush;
             Vec3U16 P = Clamp(marks[0]);
             Level lvl = Level;
             
@@ -54,7 +51,7 @@ namespace MCGalaxy.Drawing.Ops {
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                           {
                               if (bT != Block.Leaves) {
-                                  output(Place(xT, yT, zT, (ushort)bT));
+                                  output(Place(xT, yT, zT, bT));
                               } else if (lvl.IsAirAt(xT, yT, zT)) {
                                   leaves.Add(new Vec3U16(xT, yT, zT));
                               }
