@@ -16,56 +16,45 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
-using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {    
-    public class CmdWriteText : Command {        
+    public class CmdWriteText : DrawCmd {
         public override string name { get { return "WriteText"; } }
         public override string shortcut { get { return "wrt"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        protected override string SelectionType { get { return "direction"; } }
+        protected override string PlaceMessage { get { return "Place or break two blocks to determine direction."; } }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            Player p = dArgs.Player;
             if (!p.group.CanExecute("Write")) {
-                Player.Message(p, "You must be able to use /write to use /writetext."); return;
+                Player.Message(p, "You must be able to use %T/Write %Sto use %T/WriteText."); return null;
             }
             
-            if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(3);
-            if (args.Length < 3) { Help(p); return; }
+            string[] args = dArgs.Message.SplitSpaces(3);
+            if (args.Length < 3) { Help(p); return null; }
             
             byte scale = 1, spacing = 1;
-            if (!byte.TryParse(args[0], out scale)) scale = 1;
-            if (!byte.TryParse(args[1], out spacing)) spacing = 1;
-
-            WriteArgs wArgs = new WriteArgs();
-            wArgs.scale = scale; wArgs.spacing = spacing;
-            wArgs.message = args[2].ToUpper();
-            Player.Message(p, "Place or break two blocks to determine direction.");
-            p.MakeSelection(2, "Selecting direction for %SWrite", wArgs, DoWrite);
-        }
-
-        bool DoWrite(Player p, Vec3S32[] marks, object state, BlockID block) {
-            WriteArgs wArgs = (WriteArgs)state;
-            if (marks[0].X == marks[1].X && marks[0].Z == marks[1].Z) { 
-                Player.Message(p, "No direction was selected"); return false; 
-            }
+            if (!CommandParser.GetByte(p, args[0], "Scale",   ref scale))   return null;
+            if (!CommandParser.GetByte(p, args[1], "Spacing", ref spacing)) return null;
             
             WriteDrawOp op = new WriteDrawOp();
-            op.Text = wArgs.message;
-            op.Scale = wArgs.scale; op.Spacing = wArgs.spacing;
-            
-            Brush brush = new SolidBrush(block);
-            DrawOpPerformer.Do(op, brush, p, marks);
-            return true;
+            op.Scale = scale; op.Spacing = spacing;
+            op.Text = args[2].ToUpper();
+            return op;
+        }
+
+       
+        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
+            if (m[0].X != m[1].X || m[0].Z != m[1].Z) return; 
+            Player.Message(dArgs.Player, "No direction was selected");
+            m = null;
         }
         
-        class WriteArgs { public byte scale, spacing; public string message; }
+        protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushArgs = ""; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/WriteText [scale] [spacing] [message]");

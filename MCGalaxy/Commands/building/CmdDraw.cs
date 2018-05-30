@@ -23,8 +23,10 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Commands.Building {
     public sealed class CmdDraw : DrawCmd {
         public override string name { get { return "Draw"; } }
+        
+        protected override int MarksCount { get { return 1; } }
+        protected override string SelectionType { get { return "origin"; } }
         protected override string PlaceMessage { get { return "Place a block to determine the origin."; } }
-        public override int MarksCount { get { return 1; } }
         
         protected override DrawMode GetMode(string[] parts) {
             string msg = parts[0];
@@ -45,38 +47,49 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             AdvDrawOp op = null;
             switch (dArgs.Mode) {
-                    case DrawMode.cone: op = new AdvConeDrawOp(); break;
-                    case DrawMode.hcone: op = new AdvHollowConeDrawOp(); break;
-                    case DrawMode.icone: op = new AdvConeDrawOp(true); break;
-                    case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
-                    case DrawMode.pyramid: op = new AdvPyramidDrawOp(); break;
-                    case DrawMode.hpyramid: op = new AdvHollowPyramidDrawOp(); break;
-                    case DrawMode.ipyramid: op = new AdvPyramidDrawOp(true); break;
-                    case DrawMode.hipyramid: op = new AdvHollowPyramidDrawOp(true); break;
-                    case DrawMode.sphere: op = new AdvSphereDrawOp(); break;
-                    case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
-                    case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
+                case DrawMode.cone:   op = new AdvConeDrawOp(); break;
+                case DrawMode.hcone:  op = new AdvHollowConeDrawOp(); break;
+                case DrawMode.icone:  op = new AdvConeDrawOp(true); break;
+                case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
+                case DrawMode.pyramid:   op = new AdvPyramidDrawOp(); break;
+                case DrawMode.hpyramid:  op = new AdvHollowPyramidDrawOp(); break;
+                case DrawMode.ipyramid:  op = new AdvPyramidDrawOp(true); break;
+                case DrawMode.hipyramid: op = new AdvHollowPyramidDrawOp(true); break;
+                case DrawMode.sphere:  op = new AdvSphereDrawOp(); break;
+                case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
+                case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
             }
             if (op == null) { Help(dArgs.Player); return null; }
+
+            AdvDrawMeta meta = new AdvDrawMeta();
+            bool success = false;
+            string[] parts = dArgs.Message.SplitSpaces();
+            Player p = dArgs.Player;
             
-            // Validate radius/height when the user first uses the command
-            int radius = 0, height = 0;
-            string[] args = dArgs.Message.SplitSpaces();
-            if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
-                (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args)))
-                return null;
+            if (op.UsesHeight) {
+                if (parts.Length < 3) {
+                    Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[0]);
+                } else {
+                    success = CommandParser.GetInt(p, parts[1], "radius", ref meta.radius, 0, 2000)
+                        && CommandParser.GetInt(p, parts[2], "height", ref meta.height, 0, 2000);
+                }
+            } else {
+                if (parts.Length < 2) {
+                    Player.Message(p, "You need to provide the radius for the {0}.", parts[0]);
+                } else {
+                    success = CommandParser.GetInt(p, parts[1], "radius", ref meta.radius, 0, 2000);
+                }
+            }
+            
+            if (!success) return null;
+            dArgs.Meta = meta;
             return op;
         }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
-            int radius = 0, height = 0;
-            string[] args = dArgs.Message.SplitSpaces();
             AdvDrawOp op = (AdvDrawOp)dArgs.Op;
-            
-            if ((op.UsesHeight && !CheckTwoArgs(dArgs.Player, ref radius, ref height, args)) ||
-                (!op.UsesHeight && !CheckOneArg(dArgs.Player, ref radius, args))) {
-                m = null; return;
-            }
+            AdvDrawMeta meta = (AdvDrawMeta)dArgs.Meta;
+            int radius = meta.radius;
             
             Vec3S32 P = m[0];
             m = new Vec3S32[] {
@@ -85,7 +98,7 @@ namespace MCGalaxy.Commands.Building {
             };
 
             if (op.UsesHeight) {
-                m[1].Y += height;
+                m[1].Y += meta.height;
             } else {
                 m[0].Y -= radius; m[1].Y += radius;
             }
@@ -96,20 +109,7 @@ namespace MCGalaxy.Commands.Building {
             dArgs.BrushArgs = dArgs.Message.Splice(argsUsed, 0);
         }
         
-        bool CheckTwoArgs(Player p, ref int radius, ref int height, string[] parts) {
-            if (parts.Length < 3) {
-                Player.Message(p, "You need to provide the radius and the height for the {0}.", parts[0]); return false;
-            }
-            return CommandParser.GetInt(p, parts[1], "radius", ref radius, 0, 2000)
-                && CommandParser.GetInt(p, parts[2], "height", ref height, 0, 2000);
-        }
-        
-        bool CheckOneArg(Player p, ref int radius, string[] parts) {
-            if (parts.Length < 2) {
-                Player.Message(p, "You need to provide the radius for the {0}.", parts[0]); return false;
-            }
-            return CommandParser.GetInt(p, parts[1], "radius", ref radius, 0, 2000);
-        }
+        class AdvDrawMeta { public int radius, height; }
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Draw [object] [baseradius] [height] <brush args>");

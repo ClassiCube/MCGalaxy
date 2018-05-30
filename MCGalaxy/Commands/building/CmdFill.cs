@@ -25,13 +25,15 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdFill : DrawCmd {
         public override string name { get { return "Fill"; } }
         public override string shortcut { get { return "f"; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
-        public override int MarksCount { get { return 1; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }       
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("F3D"), new CommandAlias("F2D", "2d"),
                     new CommandAlias("Fill3D"), new CommandAlias("Fill2D", "2d") }; }
         }
+                
+        protected override int MarksCount { get { return 1; } }
+        protected override string SelectionType { get { return "origin"; } }
+        protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
         
         protected override DrawMode GetMode(string[] parts) {
             if (parts[parts.Length - 1].CaselessEq("confirm")) {

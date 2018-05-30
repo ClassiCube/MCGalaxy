@@ -24,6 +24,8 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdLine : DrawCmd {
         public override string name { get { return "Line"; } }
         public override string shortcut { get { return "l"; } }
+        
+        protected override string SelectionType { get { return "endpoints"; } }
         protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints."; } }
         
         protected override DrawMode GetMode(string[] parts) {
@@ -91,7 +93,7 @@ namespace MCGalaxy.Commands.Building {
             if (dArgs.Mode != DrawMode.wire) return true;
             
             // special for connected line mode
-            p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
+            p.MakeSelection(MarksCount, "Selecting endpoints for %S" + dArgs.Op.Name, dArgs, DoDraw);
             Vec3U16 pos = p.lastClick;
             p.DoBlockchangeCallback(pos.X, pos.Y, pos.Z, p.GetHeldBlock());
             return false;

@@ -47,16 +47,16 @@ namespace MCGalaxy.Drawing.Ops {
             return blocks;
         }
         
-        int dirX, dirZ;
-        Vec3U16 pos;
+        Vec3S32 dir, pos;
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            Vec3U16 p1 = Clamp(marks[0]), p2 = Clamp(marks[1]);
-            if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z))
-                dirX = p2.X > p1.X? 1 : -1;
-            else
-                dirZ = p2.Z > p1.Z ? 1 : -1;
-            pos = p1;
+            Vec3S32 p1 = marks[0], p2 = marks[1];
+            if (Math.Abs(p2.X - p1.X) > Math.Abs(p2.Z - p1.Z)) {
+                dir.X = p2.X > p1.X ? 1 : -1;
+            } else {
+                dir.Z = p2.Z > p1.Z ? 1 : -1;
+            }
             
+            pos = p1;            
             foreach (char c in Text) {
                 DrawLetter(Player, c, brush, output);
             }
@@ -65,8 +65,7 @@ namespace MCGalaxy.Drawing.Ops {
         void DrawLetter(Player p, char c, Brush brush, DrawOpOutput output) {
             if ((int)c >= 256 || letters[c] == 0) {
                 if (c != ' ') Player.Message(p, "\"{0}\" is not currently supported, replacing with space.", c);
-                pos.X = (ushort)(pos.X + dirX * 4 * Scale);
-                pos.Z = (ushort)(pos.Z + dirZ * 4 * Scale);
+                pos += dir * (4 * Scale);
             } else {
                 ulong flags = letters[c]; int shift = 56;
                 while (flags != 0) {
@@ -79,16 +78,14 @@ namespace MCGalaxy.Drawing.Ops {
                         for (int ver = 0; ver < Scale; ver++)
                             for (int hor = 0; hor < Scale; hor++) 
                         {
-                            int x = pos.X + dirX * hor, y = pos.Y + j * Scale + ver, z = pos.Z + dirZ * hor;
+                            int x = pos.X + dir.X * hor, y = pos.Y + j * Scale + ver, z = pos.Z + dir.Z * hor;
                             output(Place((ushort)x, (ushort)y, (ushort)z, brush));
                         }
                     }
-                    pos.X = (ushort)(pos.X + dirX * Scale);
-                    pos.Z = (ushort)(pos.Z + dirZ * Scale);
+                    pos += dir * Scale;
                 }
             }
-            pos.X = (ushort)(pos.X + dirX * Spacing);
-            pos.Z = (ushort)(pos.Z + dirZ * Spacing);
+            pos += dir * Spacing;
         }
         
         static int CountBits(int value) {

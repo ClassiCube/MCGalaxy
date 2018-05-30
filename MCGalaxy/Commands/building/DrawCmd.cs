@@ -26,8 +26,11 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public virtual int MarksCount { get { return 2; } }
         public override bool SuperUseable { get { return false; } }
+        
+        protected virtual int MarksCount { get { return 2; } }
+        protected virtual string SelectionType { get { return "region"; } }
+        protected virtual string PlaceMessage { get { return "Place or break two blocks to determine the edges."; } }
         protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush%H.";
         
         public override void Use(Player p, string message) {
@@ -47,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             if (!factory.Validate(bArgs)) return;
             
             Player.Message(p, PlaceMessage);
-            p.MakeSelection(MarksCount, "Selecting region for %S" + dArgs.Op.Name, dArgs, DoDraw);
+            p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for %S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
         protected virtual bool DoDraw(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -73,11 +76,7 @@ namespace MCGalaxy.Commands.Building {
             if (args.BrushArgs.Length == 0) args.BrushArgs = args.Player.DefaultBrushArgs;
             return BrushFactory.Find(args.BrushName);
         }
-        
-        protected virtual string PlaceMessage {
-            get { return "Place or break two blocks to determine the edges."; }
-        }
-        
+
         
         protected virtual DrawMode GetMode(string[] parts) { return DrawMode.normal; }
         
@@ -97,6 +96,7 @@ namespace MCGalaxy.Commands.Building {
             
             public DrawOp Op;
             public Player Player;
+            public object Meta;
         }
     }
     
