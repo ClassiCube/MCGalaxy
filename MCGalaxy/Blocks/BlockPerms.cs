@@ -27,17 +27,9 @@ namespace MCGalaxy.Blocks {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a block. </summary>
     public class BlockPerms {
-        
-        /// <summary> Extended block ID these permissions are for. </summary>
         public BlockID ID;
-        
-        /// <summary> Minimum rank normally able to use the block. </summary>
         public LevelPermission MinRank;
-        
-        /// <summary> Ranks specifically allowed to use the block </summary>
         public List<LevelPermission> Allowed;
-        
-        /// <summary> Ranks specifically prevented from using the block. </summary>
         public List<LevelPermission> Disallowed;
         
         public BlockPerms(BlockID id, LevelPermission minRank, List<LevelPermission> allowed, 
@@ -54,28 +46,18 @@ namespace MCGalaxy.Blocks {
             Disallowed = disallowed;
         }
         
-        /// <summary> Creates a copy of this instance. </summary>
         public BlockPerms Copy() {
             List<LevelPermission> allowed = new List<LevelPermission>(Allowed);
             List<LevelPermission> disallowed = new List<LevelPermission>(Disallowed);
             return new BlockPerms(ID, MinRank, allowed, disallowed);
         }
         
-        public static BlockPerms[] List = new BlockPerms[Block.ExtendedCount];
-
-
-        /// <summary> Returns whether the given rank can modify the given block. </summary>
-        public static bool UsableBy(Player p, BlockID block) {
-            BlockPerms b = List[block];
-            LevelPermission perm = p.Rank;
-            return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
+        public bool UsableBy(LevelPermission perm) {
+             return (perm >= MinRank || Allowed.Contains(perm)) && !Disallowed.Contains(perm);
         }
         
-        /// <summary> Returns whether the given rank can modify the given block. </summary>
-        public static bool UsableBy(LevelPermission perm, BlockID block) {
-            BlockPerms b = List[block];
-            return (perm >= b.MinRank || b.Allowed.Contains(perm)) && !b.Disallowed.Contains(perm);
-        }
+        public static BlockPerms[] List = new BlockPerms[Block.ExtendedCount];
+
         
         public static void ResendAllBlockPermissions() {
             Player[] players = PlayerInfo.Online.Items;
@@ -94,18 +76,15 @@ namespace MCGalaxy.Blocks {
         
         
         static readonly object saveLock = new object();
-        
-        /// <summary> Saves the list of all block permissions. </summary>
         public static void Save() {
             try {
-                lock (saveLock)
-                    SaveCore(List);
+                lock (saveLock) SaveCore();
             } catch (Exception e) {
                 Logger.LogError(e);
             }
         }
         
-        static void SaveCore(IEnumerable<BlockPerms> list) {
+        static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
                 w.WriteLine("#Version 2");
                 w.WriteLine("#   This file list the ranks that can use each block");
@@ -116,7 +95,7 @@ namespace MCGalaxy.Blocks {
                 w.WriteLine("#   lava : 60 : 80,67 : 40,41,55");
                 w.WriteLine("");
 
-                foreach (BlockPerms perms in list) {
+                foreach (BlockPerms perms in List) {
                     if (Block.Undefined(perms.ID)) continue;
                     
                     string line = perms.ID + " : " + (int)perms.MinRank + " : "
@@ -127,7 +106,6 @@ namespace MCGalaxy.Blocks {
         }
         
 
-        /// <summary> Loads the list of all block permissions. </summary>
         public static void Load() {
             SetDefaultPerms();
             

@@ -22,7 +22,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
-	
+    
     public abstract partial class Command {
         
         public abstract string name { get; }
@@ -61,9 +61,10 @@ namespace MCGalaxy {
         public static List<Command> CopyAll() { return new List<Command>(allCmds); }
         
         public static void InitAll() {
-            allCmds.Clear();
-            coreCmds.Clear();
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            allCmds.Clear();
+            coreCmds.Clear();      
+            foreach (Group grp in Group.GroupList) { grp.Commands.Clear(); }
             
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
@@ -80,10 +81,19 @@ namespace MCGalaxy {
         public static void Register(Command cmd) {
             allCmds.Add(cmd);
             
-            CommandPerm[] perms = cmd.ExtraPerms;
-            if (perms != null) {
-                for (int i = 0; i < perms.Length; i++) {
-                    CommandExtraPerms.Set(cmd.name, perms[i].Perm, perms[i].Description, i + 1);
+            CommandPerms perms = CommandPerms.Find(cmd.name);
+            if (perms == null) {
+                perms = new CommandPerms(cmd.name, cmd.defaultRank, null, null);
+                CommandPerms.List.Add(perms);
+            }
+            foreach (Group grp in Group.GroupList) {
+                if (perms.UsableBy(grp.Permission)) grp.Commands.Add(cmd);
+            }
+            
+            CommandPerm[] extra = cmd.ExtraPerms;
+            if (extra != null) {
+                for (int i = 0; i < extra.Length; i++) {
+                    CommandExtraPerms.Set(cmd.name, extra[i].Perm, extra[i].Description, i + 1);
                 }
             }
             
@@ -102,11 +112,12 @@ namespace MCGalaxy {
             return null;
         }
         
-        public static void Unregister(Command cmd) {
-            allCmds.Remove(cmd);
+        public static bool Unregister(Command cmd) {
+            bool removed = allCmds.Remove(cmd);
             foreach (Group grp in Group.GroupList) {
                 grp.Commands.Remove(cmd);
             }
+            return removed;
         }
         
         public static void Search(ref string cmdName, ref string cmdArgs) {
@@ -118,6 +129,7 @@ namespace MCGalaxy {
                     if (!cmd.shortcut.CaselessEq(cmdName)) continue;
                     cmdName = cmd.name; return;
                 }
+                return;
             }
             
             cmdName = alias.Target;
@@ -130,12 +142,12 @@ namespace MCGalaxy {
         }
     }
     
-	// Kept around for backwards compatibility
-	public sealed class CommandList {
+    // Kept around for backwards compatibility
+    public sealed class CommandList {
         [Obsolete("Use Command.Register() instead")]
-        public void Add(Command cmd) { Command.allCmds.Add(cmd); }
+        public void Add(Command cmd) { Command.Register(cmd); }
         [Obsolete("Use CommandUnregister() instead")]
-        public bool Remove(Command cmd) { return Command.allCmds.Remove(cmd); }
+        public bool Remove(Command cmd) { return Command.Unregister(cmd); }
         
         [Obsolete("Use Command.Find() instead")]
         public Command FindByName(string name) { return Command.Find(name); }        
@@ -147,7 +159,7 @@ namespace MCGalaxy {
             return null;
         }
     }
-	
+    
     [Flags]
     public enum CommandEnable {
         Always = 0, Economy = 1, Zombie = 2, Lava = 4,

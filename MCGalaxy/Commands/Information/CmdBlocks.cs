@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Info {
         static List<BlockID> RankBlocks(LevelPermission perm) {
             List<BlockID> blocks = new List<BlockID>(Block.Count);
             foreach (BlockPerms perms in BlockPerms.List) {
-                if (!BlockPerms.UsableBy(perm, perms.ID)) continue;
+                if (!perms.UsableBy(perm)) continue;
                 if (!Block.ExistsGlobal(perms.ID)) continue;
                 blocks.Add(perms.ID);
             }

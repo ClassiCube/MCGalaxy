@@ -168,8 +168,8 @@ namespace MCGalaxy {
             
             for (int i = 0; i < count; i++) {
                 BlockID block = Block.FromRaw((BlockID)i);
-                bool place  = BlockPerms.UsableBy(this, block) && level.CanPlace;
-                bool delete = BlockPerms.UsableBy(this, block) && level.CanDelete;
+                bool place  = group.Blocks[block] && level.CanPlace;
+                bool delete = group.Blocks[block] && level.CanDelete;
                 
                 // Placing air is the same as deleting existing block at that position in the world
                 if (block == Block.Air) place &= delete;

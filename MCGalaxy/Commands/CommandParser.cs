@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands {
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
         public static bool IsBlockAllowed(Player p, string action, BlockID block) {
-            if (p == null || BlockPerms.UsableBy(p, block)) return true;
+            if (p == null || p.group.Blocks[block]) return true;
             BlockPerms.List[block].MessageCannotUse(p, action);
             return false;
         }

@@ -70,12 +70,19 @@ namespace MCGalaxy {
         
         
         public void SetUsableCommands() {
-            Commands = CommandPerms.AllCommandsUsableBy(Permission);
+            List<Command> commands = new List<Command>();
+            foreach (CommandPerms perms in CommandPerms.List) {
+                if (!perms.UsableBy(Permission)) continue;
+                
+                Command cmd = Command.Find(perms.CmdName);
+                if (cmd != null) commands.Add(cmd);
+            }
+            Commands = commands;
         }
         
         public void SetUsableBlocks() {
-            for (int i = 0; i < Blocks.Length; i++) {
-                Blocks[i] = BlockPerms.UsableBy(Permission, (BlockID)i);
+            foreach (BlockPerms perms in BlockPerms.List) {
+                Blocks[perms.ID] = perms.UsableBy(Permission);
             }
         }
 

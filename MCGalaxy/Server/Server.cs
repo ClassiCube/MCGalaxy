@@ -199,8 +199,8 @@ namespace MCGalaxy {
             
             SrvProperties.Load();
             Group.InitAll();
-            Command.InitAll();
             CommandPerms.Load();
+            Command.InitAll();            
             Block.SetBlocks();
             Awards.Load();
             Economy.Load();

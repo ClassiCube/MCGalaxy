@@ -38,7 +38,6 @@ namespace MCGalaxy.Commands.Scripting {
             
             string error = IScripting.Load(path);
             if (error != null) { Player.Message(p, error); return; }
-            CommandPerms.Load();
             Player.Message(p, "Command was successfully loaded.");
         }
 
