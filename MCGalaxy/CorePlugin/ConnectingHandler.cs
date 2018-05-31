@@ -38,7 +38,7 @@ namespace MCGalaxy.Core {
             if (!IPThrottler.CheckIP(p)) return false;
             if (!CheckTempban(p)) return false;
 
-            bool whitelisted = CheckWhitelist(p.name, p.ip);
+            bool whitelisted = CheckWhitelist(p);
             if (!whitelisted) {
                 p.Leave(null, "This is a private server!", true);
                 return false;
@@ -95,12 +95,12 @@ namespace MCGalaxy.Core {
             return true;
         }
 
-        static bool CheckWhitelist(string name, string ip) {
+        static bool CheckWhitelist(Player p) {
             if (!ServerConfig.WhitelistedOnly) return true;
-            if (ServerConfig.VerifyNames) return Server.whiteList.Contains(name);
+            if (!Server.whiteList.Contains(p.name)) return false;
             
-            // Verify names is off, check if the player is on the same IP.
-            return Server.whiteList.Contains(name) && PlayerInfo.FindAccounts(ip).Contains(name);
+            // If verify names is off, check if the player is on the same IP.
+            return ServerConfig.VerifyNames || PlayerInfo.FindAccounts(p.ip).Contains(p.name);
         }
         
         static bool CheckPlayersCount(Player p) {

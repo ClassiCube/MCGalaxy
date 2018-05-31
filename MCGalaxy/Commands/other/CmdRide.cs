@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Misc {
                 return;
             }
             
-            Vec3S32 P = p.Pos.BlockFeetCoords;
+            Vec3S32 P = p.Pos.FeetBlockCoords;
             for (int dx = -1; dx <= 1; dx++)
                 for (int dy = -1; dy <= 1; dy++)
                     for (int dz = -1; dz <= 1; dz++)
@@ -66,7 +66,8 @@ namespace MCGalaxy.Commands.Misc {
                 else pitch = 8;
                 
                 if (dx != 0 || dy != 0 || dz != 0) {
-                    PlayerActions.MoveCoords(p, P.X + dx, P.Y + dy, P.Z + dz, yaw, pitch);
+                    Position pos = Position.FromFeetBlockCoords(P.X + dx, P.Y + dy, P.Z + dz);
+                	p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
                 }
                 return;
             }

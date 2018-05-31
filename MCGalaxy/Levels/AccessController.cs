@@ -244,12 +244,11 @@ namespace MCGalaxy {
         }
         
         public override void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
-            string type = IsVisit ? "visit" : "build";
             string msg = PlayerInfo.GetColoredName(p, name);
             if (removedFromOpposite) {
-                msg += " %Swas removed from the " + type + (whitelist ? " blacklist" : " whitelist");
+                msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
             } else {
-                msg += " %Swas " + type + (whitelist ? " whitelisted" : " blacklisted");
+                msg += " %Swas " + Type + (whitelist ? " whitelisted" : " blacklisted");
             }
             DoChange(p, lvl, msg);
         }

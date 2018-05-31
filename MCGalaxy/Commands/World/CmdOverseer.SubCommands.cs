@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "You may only perform that action on your own map."); return;
             }
             
-            if (cmd == "ADD") {
+            if (IsCreateCommand(cmd)) {
                 AddMap(p, value);
             } else if (cmd == "PHYSICS") {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {

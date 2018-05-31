@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/DeleteLvl [map]");
-            Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything");
+            Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything)");
             Player.Message(p, "%HA backup of the map will be placed in the levels/deleted folder");
         }
     }

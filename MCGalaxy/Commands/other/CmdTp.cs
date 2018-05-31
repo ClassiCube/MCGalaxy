@@ -28,16 +28,17 @@ namespace MCGalaxy.Commands.Misc {
             get { return new [] { new CommandAlias("Teleport"), new CommandAlias("TPP", "-precise") }; }
         }
         
-        public override void Use(Player p, string message) {
-            string[] args = message.SplitSpaces();
-            if (message.Length == 0 || args.Length > 4) { Help(p); return; }
-            if (args.Length == 3) { TeleportCoords(p, args); return; }
+        const string precisePrefix = "-precise ";
+        public override void Use(Player p, string message) {           
+            if (message.Length == 0) { Help(p); return; }
             
-            if (message.CaselessStarts("-precise ")) {
-                if (args.Length != 4) { Help(p); return; }
-                TeleportCoordsPrecise(p, args);
-                return;
+            bool preciseTP = message.CaselessStarts(precisePrefix);        
+            if (preciseTP) {
+                message = message.Substring(precisePrefix.Length);
             }
+            
+            string[] args = message.SplitSpaces();            
+            if (args.Length >= 3) { TeleportCoords(p, args, preciseTP); return; }
             
             Player target = null;
             PlayerBot bot = null;
@@ -70,21 +71,35 @@ namespace MCGalaxy.Commands.Misc {
             p.SendPos(Entities.SelfID, pos, rot);
         }
         
-        static void TeleportCoords(Player p, string[] args) {
-            Vec3S32 P = p.Pos.BlockFeetCoords;
-            if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
-
+        static void TeleportCoords(Player p, string[] args, bool precise) {
+            Vec3S32 P; Position pos;
+            
+            if (!precise) {
+                // relative to feet block coordinates
+                P = p.Pos.FeetBlockCoords;
+                if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
+                pos = Position.FromFeetBlockCoords(P.X, P.Y, P.Z);
+            } else {
+                // relative to feet position exactly
+                P = new Vec3S32(p.Pos.X, p.Pos.Y + Entities.CharacterHeight, p.Pos.Z);
+                if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
+                pos = new Position(P.X, P.Y - Entities.CharacterHeight, P.Z);
+            }
+            
+            byte yaw = p.Rot.RotY, pitch = p.Rot.HeadX;
+            int angle = 0;
+            
+            if (args.Length > 3) {
+                if (!CommandParser.GetInt(p, args[3], "Yaw angle", ref angle, -360, 360)) return;
+                yaw = Orientation.DegreesToPacked(angle);
+            }            
+            if (args.Length > 4) {
+                if (!CommandParser.GetInt(p, args[4], "Pitch angle", ref angle, -360, 360)) return;
+                pitch = Orientation.DegreesToPacked(angle);
+            }
+            
             SavePreTeleportState(p);
-            PlayerActions.MoveCoords(p, P.X, P.Y, P.Z, p.Rot.RotY, p.Rot.HeadX);
-        }
-        
-        static void TeleportCoordsPrecise(Player p, string[] args) {
-            Vec3S32 P = new Vec3S32(p.Pos.X, p.Pos.Y + Entities.CharacterHeight, p.Pos.Z);
-            if (!CommandParser.GetCoords(p, args, 1, ref P)) return;
-
-            SavePreTeleportState(p);
-            Position pos = new Position(P.X, P.Y - Entities.CharacterHeight, P.Z);
-            p.SendPos(Entities.SelfID, pos, p.Rot);
+            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
         }
         
         static void SavePreTeleportState(Player p) {
@@ -112,9 +127,9 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             Player.Message(p, "%HUse ~ before a coordinate to move relative to current position");
-            Player.Message(p, "%T/TP [x y z]");
+            Player.Message(p, "%T/TP [x y z] <yaw> <pitch>");
             Player.Message(p, "%HTeleports yourself to the given block coordinates.");
-            Player.Message(p, "%T/TP -precise [x y z]");
+            Player.Message(p, "%T/TP -precise [x y z] <yaw> <pitch>");
             Player.Message(p, "%HTeleports using precise units. (32 units = 1 block)");
             Player.Message(p, "%T/TP [player]");
             Player.Message(p, "%HTeleports yourself to that player.");

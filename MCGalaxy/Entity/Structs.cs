@@ -38,12 +38,15 @@ namespace MCGalaxy {
         public Position(int x, int y, int z) { X = x; Y = y; Z = z; }
         
         public static Position FromFeet(int x, int y, int z) { return new Position(x, y + Entities.CharacterHeight, z); }
+        public static Position FromFeetBlockCoords(int bX, int bY, int bZ) {
+            return Position.FromFeet(16 + bX * 32, bY * 32, 16 + bZ * 32);
+        }
         
         /// <summary> World/block coordinate of this position. </summary>
         public Vec3S32 BlockCoords { get { return new Vec3S32(X >> 5, Y >> 5, Z >> 5); } }
         
         /// <summary> World/block coordinate of this position. </summary>
-        public Vec3S32 BlockFeetCoords { get { return new Vec3S32(X >> 5, (Y - Entities.CharacterHeight) >> 5, Z >> 5); } }
+        public Vec3S32 FeetBlockCoords { get { return new Vec3S32(X >> 5, (Y - Entities.CharacterHeight) >> 5, Z >> 5); } }
         
         /// <summary> X block coordinate of this position. </summary>
         public int BlockX { get { return X >> 5; } }
