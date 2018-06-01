@@ -28,23 +28,20 @@ namespace MCGalaxy.SQL {
         public readonly bool AutoIncrement;
         public readonly bool PrimaryKey;
         public readonly bool NotNull;
-        public readonly string DefaultValue;
         
         public ColumnDesc(string col, ColumnType type)
-            : this(col, type, 0, false, false, false, null) { }        
+            : this(col, type, 0, false, false, false) { }        
         public ColumnDesc(string col, ColumnType type, ushort maxLen = 0)
-            : this(col, type, maxLen, false, false, false, null) { }
+            : this(col, type, maxLen, false, false, false) { }
         
         public ColumnDesc(string col, ColumnType type, ushort maxLen = 0,
-                            bool autoInc = false, bool priKey = false, 
-                            bool notNull = false, string def = null) {
+                            bool autoInc = false, bool priKey = false, bool notNull = false) {
             Column = col;
             Type = type;
             MaxLength = maxLen;
             AutoIncrement = autoInc;
             PrimaryKey = priKey;
             NotNull = notNull;
-            DefaultValue = def;
         }
         
         public string FormatType() {

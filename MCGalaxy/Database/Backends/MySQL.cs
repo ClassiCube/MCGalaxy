@@ -138,8 +138,6 @@ namespace MCGalaxy.SQL {
                 if (col.PrimaryKey) priKey = col.Column;
                 if (col.AutoIncrement) sql.Append(" AUTO_INCREMENT");
                 if (col.NotNull) sql.Append(" NOT NULL");
-                if (col.DefaultValue != null)
-                    sql.Append(" DEFAULT ").Append(col.DefaultValue);
                 
                 if (i < columns.Length - 1) {
                     sql.Append(',');
