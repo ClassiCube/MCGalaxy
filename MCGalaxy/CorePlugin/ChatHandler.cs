@@ -30,7 +30,7 @@ namespace MCGalaxy.Core {
             if (cmd == "pony") {
                 p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
-                int ponycount = p.Extras.GetInt("MCGalaxy_Core_Pony", 0);
+                int ponycount = p.Extras.GetInt("MCG_PONY", 0);
                             
                 if (ponycount < 2) {
                     Chat.MessageGlobal("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", p.ColoredName);
@@ -44,7 +44,7 @@ namespace MCGalaxy.Core {
             } else if (cmd == "rainbowdashlikescoolthings") {
                 p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
-                int rdcount = p.Extras.GetInt("MCGalaxy_Core_RD", 0);
+                int rdcount = p.Extras.GetInt("MCG_RD", 0);
                 
                 if (rdcount < 2) {
                     Chat.MessageGlobal("&4T&6H&eI&aS&3 S&9E&1R&4V&6E&eR &aJ&3U&9S&1T &4G&6O&eT &a2&30 &9P&1E&4R&6C&eE&aN&3T &9C&1O&4O&6L&eE&aR&3!");

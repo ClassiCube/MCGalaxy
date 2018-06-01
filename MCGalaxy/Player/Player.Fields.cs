@@ -119,7 +119,7 @@ namespace MCGalaxy {
         public DateTime FirstLogin, LastLogin;
 
         public bool staticCommands;
-        public DateTime ZoneSpam;
+        internal DateTime lastAccessStatus;
         public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
 
         public bool aiming;

@@ -58,26 +58,11 @@ namespace MCGalaxy {
         protected override string ActionIng { get { return "building in"; } }
         protected override string Type { get { return "build"; } }
         protected override string MaxCmd { get { return null; } }
+
         
-        public override void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
-            string msg = type + " rank changed to " + grp.ColoredName + " %Sin " + ColoredName;
-            DoChange(p, lvl, msg);
-        }
-        
-        public override void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
-            string msg = PlayerInfo.GetColoredName(p, name);
-            if (removedFromOpposite) {
-                msg += " %Swas removed from the build" + (whitelist ? " blacklist" : " whitelist");
-            } else {
-                msg += " %Swas build" + (whitelist ? " whitelisted" : " blacklisted");
-            }
-            
-            msg += "in " + ColoredName;
-            DoChange(p, lvl, msg);
-        }
-        
-        void DoChange(Player p, Level lvl, string msg) {
+        protected override void ApplyChanges(Player p, Level lvl, string msg) {
             lvl.Save(true);
+            msg += " %Sin " + ColoredName;
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvl.name);
             
             Chat.MessageLevel(lvl, msg);           

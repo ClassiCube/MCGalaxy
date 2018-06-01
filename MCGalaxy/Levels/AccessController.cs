@@ -158,8 +158,22 @@ namespace MCGalaxy {
         }
 
 
-        public abstract void OnPermissionChanged(Player p, Level lvl, Group grp, string type);
-        public abstract void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite);
+        public void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
+            string msg = type + " rank changed to " + grp.ColoredName;
+            ApplyChanges(p, lvl, msg);
+        }
+        
+        public void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
+        	string msg = PlayerInfo.GetColoredName(p, name);
+            if (removedFromOpposite) {
+                msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
+            } else {
+                msg += " %Swas build" + (whitelist ? " whitelisted" : " blacklisted");
+            }
+            ApplyChanges(p, lvl, msg);
+        }
+        
+        protected abstract void ApplyChanges(Player p, Level lvl, string msg);
         
         bool CheckRank(Player p, LevelPermission perm, string type, bool newPerm) {
             if (p != null && perm > p.Rank) {
@@ -236,24 +250,9 @@ namespace MCGalaxy {
         protected override string ActionIng { get { return IsVisit ? "going to" : "building in"; } }
         protected override string Type { get { return IsVisit ? "visit" : "build"; } }
         protected override string MaxCmd { get { return IsVisit ? "PerVisit" : "PerBuild"; } }
-        
 
-        public override void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
-            string msg = type + " rank changed to " + grp.ColoredName;
-            DoChange(p, lvl, msg);
-        }
         
-        public override void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
-            string msg = PlayerInfo.GetColoredName(p, name);
-            if (removedFromOpposite) {
-                msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
-            } else {
-                msg += " %Swas " + Type + (whitelist ? " whitelisted" : " blacklisted");
-            }
-            DoChange(p, lvl, msg);
-        }
-        
-        void DoChange(Player p, Level lvl, string msg) {
+        protected override void ApplyChanges(Player p, Level lvl, string msg) {
             Update(lvl);
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvlName);
             

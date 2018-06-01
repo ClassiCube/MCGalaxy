@@ -192,9 +192,9 @@ namespace MCGalaxy {
         }
         
         bool CheckRank(Player p) {
-            if (p.ZoneSpam <= DateTime.UtcNow) {
+            if (p.lastAccessStatus <= DateTime.UtcNow) {
                 BuildAccess.CheckDetailed(p);
-                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
+                p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
             }
             if (p.level == this) return p.AllowBuild;
             
@@ -233,9 +233,9 @@ namespace MCGalaxy {
                 AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
 
-                if (p.ZoneSpam > DateTime.UtcNow) return false;
+                if (p.lastAccessStatus > DateTime.UtcNow) return false;
                 zn.Access.CheckDetailed(p);
-                p.ZoneSpam = DateTime.UtcNow.AddSeconds(2);
+                p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
                 return false;
             }
             return CheckRank(p);
@@ -432,15 +432,16 @@ namespace MCGalaxy {
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, BlockID block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
-            BlockID old = GetBlock(x, y, z);
+            int index;
+            BlockID old = GetBlock(x, y, z, out index);
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
+            
             int type = DoBlockchange(p, x, y, z, block, drawn);
             if (type == 0) return; // no block change performed
             
             BlockDB.Cache.Add(p, x, y, z, flags, old, block);
             if (type == 1) return; // not different visually
             
-            int index = PosToInt(x, y, z);
             if (buffered) BlockQueue.Add(p, index, block);
             else Player.GlobalBlockchange(this, x, y, z, block);
         }
