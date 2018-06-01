@@ -26,25 +26,27 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("TopTen", "{args} 10"), new CommandAlias("TopFive", "{args} 5"),
-                    new CommandAlias("Top10", "{args} 10"), }; }
+            get { return new [] { new CommandAlias("TopTen", "10"), new CommandAlias("TopFive", "5"),
+                    new CommandAlias("Top10", "10"), }; }
         }
         
         public override void Use(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
-            int offset = ParseOffset(p, args);
-            int limit = ParseLimit(p, args);
-            if (limit == -1 || offset == -1) return;
-            
-            TopStat stat = FindTopStat(args[0]);
+            int maxResults = 0, offset = 0;       
+            if (!CommandParser.GetInt(p, args[0], "Max results", ref maxResults, 1, 15)) return;
+
+            TopStat stat = FindTopStat(args[1]);
             if (stat == null) {
-                Player.Message(p, "/Top: Unrecognised type \"{0}\".", args[0]);
-                return;
+                Player.Message(p, "/Top: Unrecognised type \"{0}\".", args[1]); return;
             }
             
-            string strLimit = " LIMIT " + offset + "," + limit;
+            if (args.Length > 2) {
+                if (!CommandParser.GetInt(p, args[2], "Offset", ref offset, 0)) return;
+            }
+            
+            string strLimit = " LIMIT " + offset + "," + maxResults;
             DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
                                                     "ORDER BY" + stat.OrderBy + strLimit);
             
@@ -55,22 +57,6 @@ namespace MCGalaxy.Commands.Info {
                 Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), player, stat.Formatter(item));
             }
             db.Dispose();
-        }
-        
-        static int ParseLimit(Player p, string[] args) {
-            int limit = 0;
-            string limitArg = args[args.Length - 1];
-            
-            if (!CommandParser.GetInt(p, limitArg, "Limit", ref limit, 1, 15)) return -1;
-            return limit;
-        }
-        
-        static int ParseOffset(Player p, string[] args) {
-            if (args.Length <= 2) return 0;
-            int offset = 0;
-            
-            if (!CommandParser.GetInt(p, args[1], "Offset", ref offset, 0)) return -1;
-            return offset;
         }
         
         static TopStat FindTopStat(string input) {
@@ -88,7 +74,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Top [stat] <offset> [number of players to show] ");
+            Player.Message(p, "%T/Top [max results] [stat] <offset>");
             Player.Message(p, "%HPrints a list of players who have the " +
                            "most/top of a particular stat. Available stats:");
             Player.Message(p, "&f" + TopStat.Stats.Join(stat => stat.Identifier));
