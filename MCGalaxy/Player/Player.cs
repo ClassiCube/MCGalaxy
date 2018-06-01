@@ -95,7 +95,7 @@ namespace MCGalaxy {
         public override bool CanSeeEntity(Entity other) {
             Player target = other as Player;
             if (target == null)  return true; // not a player
-            if (target == other) return true; // always see self
+            if (target == this) return true; // always see self
             
             // hidden via /hide or /ohide
             if (target.hidden) {
