@@ -371,11 +371,12 @@ namespace MCGalaxy.Network {
         
         #region Block definitions
         
-        public static byte[] DefineBlock(BlockDefinition def, bool hasCP437, bool extBlocks) {
-            byte[] buffer = new byte[extBlocks ? 81 : 80];
+        public static byte[] DefineBlock(BlockDefinition def, bool hasCP437, 
+                                         bool extBlocks, bool extTexs) {
+            byte[] buffer = new byte[(extBlocks ? 81 : 80) + (extTexs ? 3 : 0)];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlock;
-            MakeDefineBlockStart(def, buffer, ref i, false, hasCP437, extBlocks);
+            MakeDefineBlockStart(def, buffer, ref i, false, hasCP437, extBlocks, extTexs);
             buffer[i++] = def.Shape;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
@@ -388,19 +389,28 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437, bool extBlocks) {
-            byte[] buffer = new byte[(extBlocks ? 86 : 85) + (uniqueSideTexs ? 3 : 0)];
+        public static byte[] DefineBlockExt(BlockDefinition def, bool uniqueSideTexs, bool hasCP437, 
+                                            bool extBlocks, bool extTexs) {
+            byte[] buffer = new byte[(extBlocks ? 86 : 85) + (uniqueSideTexs ? 3 : 0) + (extTexs ? 6 : 0)];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlockExt;
-            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs, hasCP437, extBlocks);
+            MakeDefineBlockStart(def, buffer, ref i, uniqueSideTexs, hasCP437, extBlocks, extTexs);
             buffer[i++] = def.MinX; buffer[i++] = def.MinZ; buffer[i++] = def.MinY;
             buffer[i++] = def.MaxX; buffer[i++] = def.MaxZ; buffer[i++] = def.MaxY;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
         }
         
-        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i,
-                                         bool uniqueSideTexs, bool hasCP437, bool extBlocks) {
+        static void WriteTex(byte[] buffer, ref int i, ushort value, bool extTexs) {
+            if (extTexs) {
+                NetUtils.WriteU16(value, buffer, i); i += 2;
+            } else {
+                buffer[i++] = (byte)value;
+            }
+        }
+        
+        static void MakeDefineBlockStart(BlockDefinition def, byte[] buffer, ref int i, bool uniqueSideTexs, 
+                                         bool hasCP437, bool extBlocks, bool extTexs) {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
@@ -411,15 +421,15 @@ namespace MCGalaxy.Network {
             buffer[i++] = def.CollideType;
             buffer[i++] = rawSpeed;
             
-            buffer[i++] = def.TopTex;
+            WriteTex(buffer, ref i, def.TopTex, extTexs);
             if (uniqueSideTexs) {
-                buffer[i++] = def.LeftTex;  buffer[i++] = def.RightTex;
-                buffer[i++] = def.FrontTex; buffer[i++] = def.BackTex;
+                WriteTex(buffer, ref i, def.LeftTex,  extTexs); WriteTex(buffer, ref i, def.RightTex, extTexs);
+                WriteTex(buffer, ref i, def.FrontTex, extTexs); WriteTex(buffer, ref i, def.BackTex,  extTexs);
             } else {
-                buffer[i++] = def.SideTex;
-            }
+                WriteTex(buffer, ref i, def.SideTex, extTexs);
+            }            
+            WriteTex(buffer, ref i, def.BottomTex, extTexs);
             
-            buffer[i++] = def.BottomTex;
             buffer[i++] = (byte)(def.BlocksLight ? 0 : 1);
             buffer[i++] = def.WalkSound;
             buffer[i++] = (byte)(def.FullBright ? 1 : 0);

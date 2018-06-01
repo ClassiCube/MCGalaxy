@@ -30,7 +30,7 @@ namespace MCGalaxy {
         public string Name;
         public byte CollideType;
         public float Speed;
-        public byte TopTex, SideTex, BottomTex;
+        public ushort TopTex, SideTex, BottomTex;
         public bool BlocksLight;
         public byte WalkSound;
         public bool FullBright;
@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public byte MaxX, MaxY, MaxZ;
         // BlockDefinitionsExt version 2 fields
         public bool Version2;
-        public byte LeftTex, RightTex, FrontTex, BackTex;
+        public ushort LeftTex, RightTex, FrontTex, BackTex;
         
         public int InventoryOrder = -1;
         
@@ -224,12 +224,12 @@ namespace MCGalaxy {
             }
         }
         
-        public void SetAllTex(byte id) {
-            SideTex = id; TopTex = id; BottomTex = id;
-            LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
+        public void SetAllTex(ushort id) {
+            SetSideTex(id); 
+            TopTex = id; BottomTex = id;
         }
         
-        public void SetSideTex(byte id) {
+        public void SetSideTex(ushort id) {
             SideTex = id;
             LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
         }
@@ -312,11 +312,11 @@ namespace MCGalaxy {
         
         public byte[] MakeDefinePacket(Player pl) {
             if (pl.Supports(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
-                return Packet.DefineBlockExt(this, true, pl.hasCP437, pl.hasExtBlocks);
+                return Packet.DefineBlockExt(this, true, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
             } else if (pl.Supports(CpeExt.BlockDefinitionsExt) && Shape != 0) {
-                return Packet.DefineBlockExt(this, false, pl.hasCP437, pl.hasExtBlocks);
+                return Packet.DefineBlockExt(this, false, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
             } else {
-                return Packet.DefineBlock(this, pl.hasCP437, pl.hasExtBlocks);
+                return Packet.DefineBlock(this, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
             }
         }
         

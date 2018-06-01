@@ -49,6 +49,7 @@ namespace MCGalaxy {
             new ExtEntry(CpeExt.EntityProperty),   new ExtEntry(CpeExt.ExtEntityPositions),
             new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
             new ExtEntry(CpeExt.InstantMOTD),      new ExtEntry(CpeExt.FastMap),
+            new ExtEntry(CpeExt.ExtTextures), 
             #if TEN_BIT_BLOCKS
             new ExtEntry(CpeExt.ExtBlocks),
             #endif
@@ -63,7 +64,7 @@ namespace MCGalaxy {
         
         // these are checked very frequently, so avoid overhead of HasCpeExt
         public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
-        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate;
+        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate, hasExtTexs;
 
         void AddExtension(string extName, int version) {
             ExtEntry ext = FindExtension(extName.Trim());
@@ -95,6 +96,8 @@ namespace MCGalaxy {
                 hasTwoWayPing = true;
             } else if (ext.ExtName == CpeExt.BulkBlockUpdate) {
                 hasBulkBlockUpdate = true;
+            } else if (ext.ExtName == CpeExt.ExtTextures) {
+                hasExtTexs = true;
             } 
             #if TEN_BIT_BLOCKS
             else if (ext.ExtName == CpeExt.ExtBlocks) {
@@ -209,6 +212,7 @@ namespace MCGalaxy {
         public const string InstantMOTD = "InstantMOTD";
         public const string FastMap = "FastMap";
         public const string ExtBlocks = "ExtendedBlocks";
+        public const string ExtTextures = "ExtendedTextures";
     }
     
     public enum CpeMessageType : byte {

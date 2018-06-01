@@ -286,17 +286,17 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 }
             } else if (step == 4) {
-                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.TopTex)) {
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.TopTex, 0, 255)) {
                     step += (bd.Shape == 0 ? 5 : 1); // skip other texture steps for sprites
                     if (bd.Shape == 0) bd.SetAllTex(bd.TopTex);
                 }
             } else if (step == 5) {
-                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.SideTex)) {
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.SideTex, 0, 255)) {
                     bd.SetSideTex(bd.SideTex);
                     step++;
                 }
             } else if (step == 6) {
-                if (CommandParser.GetByte(p, value, "Texture ID", ref bd.BottomTex))
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.BottomTex, 0, 255))
                     step++;
             } else if (step == 7) {
                 if (ParseCoords(p, value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
@@ -398,30 +398,30 @@ namespace MCGalaxy.Commands.CPE {
                     def.Speed = fTemp; break;
                     
                 case "toptex":
-                    if (!EditByte(p, value, "Top texture", ref def.TopTex, arg)) return;
+                    if (!EditUShort(p, value, "Top texture", ref def.TopTex, arg)) return;
                     break;
                 case "alltex":
-                    if (!EditByte(p, value, "All textures", ref def.SideTex, arg)) return;
+                    if (!EditUShort(p, value, "All textures", ref def.SideTex, arg)) return;
                     def.SetAllTex(def.SideTex);
                     break;
                 case "sidetex":
-                    if (!EditByte(p, value, "Side texture", ref def.SideTex, arg)) return;
+                    if (!EditUShort(p, value, "Side texture", ref def.SideTex, arg)) return;
                     def.SetSideTex(def.SideTex);
                     break;
                 case "lefttex":
-                    if (!EditByte(p, value, "Left texture", ref def.LeftTex, arg)) return;
+                    if (!EditUShort(p, value, "Left texture", ref def.LeftTex, arg)) return;
                     break;
                 case "righttex":
-                    if (!EditByte(p, value, "Right texture", ref def.RightTex, arg)) return;
+                    if (!EditUShort(p, value, "Right texture", ref def.RightTex, arg)) return;
                     break;
                 case "fronttex":
-                    if (!EditByte(p, value, "Front texture", ref def.FrontTex, arg)) return;
+                    if (!EditUShort(p, value, "Front texture", ref def.FrontTex, arg)) return;
                     break;
                 case "backtex":
-                    if (!EditByte(p, value, "Back texture", ref def.BackTex, arg)) return;
+                    if (!EditUShort(p, value, "Back texture", ref def.BackTex, arg)) return;
                     break;
                 case "bottomtex":
-                    if (!EditByte(p, value, "Bottom texture", ref def.BottomTex, arg)) return;
+                    if (!EditUShort(p, value, "Bottom texture", ref def.BottomTex, arg)) return;
                     break;
                     
                 case "blockslight":
@@ -583,12 +583,17 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target, string help) {
-            byte temp = 0;
-            if (!CommandParser.GetByte(p, value, propName, ref temp, 0, 255)) {
-                SendEditHelp(p, help);
-                return false;
+            if (!CommandParser.GetByte(p, value, propName, ref target)) {
+                SendEditHelp(p, help); return false;
             }
-            target = temp; return true;
+            return true;
+        }
+         
+        static bool EditUShort(Player p, string value, string propName, ref ushort target, string help) {
+            if (!CommandParser.GetUShort(p, value, propName, ref target)) {
+                SendEditHelp(p, help); return false;
+            }
+            return true;
         }
         
         static bool ParseCoords(Player p, string parts, ref byte x, ref byte y, ref byte z) {
