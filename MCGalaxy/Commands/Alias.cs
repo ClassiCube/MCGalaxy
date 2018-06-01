@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands {
                 sw.WriteLine("#    e.g. \"xyz : help\" means /xyz is treated as /help <args given by user>");
                 sw.WriteLine("# trigger : command [prefix]");
                 sw.WriteLine("#    e.g. \"xyz : help me\" means /xyz is treated as /help me <args given by user>");
-                sw.WriteLine("# trigger : command {args}");
-                sw.WriteLine("#    e.g. \"mod : setrank {args} mod \" means /mod is treated as /setrank <args given by user> mod");
+                sw.WriteLine("# trigger : command <prefix> {args} <suffix>");
+                sw.WriteLine("#    e.g. \"mod : setrank {args} mod\" means /mod is treated as /setrank <args given by user> mod");
                 
                 foreach (Alias a in aliases) {
                     if (a.Format == null) {

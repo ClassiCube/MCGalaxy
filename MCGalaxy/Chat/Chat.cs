@@ -232,7 +232,7 @@ namespace MCGalaxy {
         
         #region Format helpers
         static bool FilterIRC(Player pl, object arg) {
-            return pl.Ignores.IRC || pl.Ignores.IRCNicks.Contains((string)arg);
+            return !pl.Ignores.IRC && !pl.Ignores.IRCNicks.Contains((string)arg);
         }
         static ChatMessageFilter filterIRC = FilterIRC;
         
