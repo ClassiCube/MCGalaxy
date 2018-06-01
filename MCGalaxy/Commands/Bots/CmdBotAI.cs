@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Bots{
                 HandleAdd(p, ai, args);
             } else if (IsDeleteCommand(cmd)) {
                 HandleDelete(p, ai, args);
-            } else if (cmd.CaselessEq("info")) {
+            } else if (IsInfoCommand(cmd)) {
                 HandleInfo(p, ai);
             } else {
                 Help(p);

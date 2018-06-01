@@ -35,20 +35,20 @@ namespace MCGalaxy.Gui {
 
         void UpdateLavaControls() {
             try {
-                ls_btnStartGame.Enabled = !Server.lava.running;
-                ls_btnStopGame.Enabled = Server.lava.running;
+                ls_btnStartGame.Enabled = !Server.lava.Running;
+                ls_btnStopGame.Enabled = Server.lava.Running;
                 ls_btnEndRound.Enabled = Server.lava.RoundInProgress;
             }
             catch { }
         }
 
         void lsBtnStartGame_Click(object sender, EventArgs e) {
-            if (!Server.lava.running) Server.lava.Start(null, "", int.MaxValue);
+            if (!Server.lava.Running) Server.lava.Start(null, "", int.MaxValue);
             UpdateLavaControls();
         }
 
         void lsBtnStopGame_Click(object sender, EventArgs e) {
-            if (Server.lava.running) Server.lava.End();
+            if (Server.lava.Running) Server.lava.End();
             UpdateLavaControls();
         }
 

@@ -36,11 +36,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place or break a block to mark the area you wish to fill."; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
-            if (msg.CaselessEq("confirm")) {
-                msg = parts.Length >= 2 ? parts[parts.Length - 2] : "";
-            }
-            
+            string msg = parts[0];            
             if (msg == "normal")     return DrawMode.solid;
             if (msg == "up")         return DrawMode.up;
             if (msg == "down")       return DrawMode.down;
@@ -54,9 +50,9 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArg) { return new FillDrawOp(); }
 
         protected override void GetBrush(DrawArgs dArgs) {
-            int endCount = dArgs.ModeArgsCount;
+            int endCount = 0;
             if (IsConfirmed(dArgs.Message)) endCount++;
-            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, endCount);
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -99,9 +95,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Fill [brush args] <mode>");
-            Player.Message(p, "%HFills the area specified with the output of the current brush.");
-            Player.Message(p, "   %HModes: &fnormal/up/down/layer/vertical_x/vertical_z/2d");
+            Player.Message(p, "%T/Fill <brush args>");
+            Player.Message(p, "%HFills the area specified with the output of your current brush.");
+            Player.Message(p, "%T/Fill [mode] <brush args>");
+            Player.Message(p, "%HModes: &fnormal/up/down/layer/vertical_x/vertical_z/2d");
             Player.Message(p, BrushHelpLine);
         }
     }

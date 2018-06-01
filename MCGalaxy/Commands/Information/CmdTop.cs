@@ -26,8 +26,8 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("TopTen", null, "10"), new CommandAlias("TopFive", null, "5"),
-                    new CommandAlias("Top10", null, "10"), }; }
+            get { return new [] { new CommandAlias("TopTen", "{args} 10"), new CommandAlias("TopFive", "{args} 5"),
+                    new CommandAlias("Top10", "{args} 10"), }; }
         }
         
         public override void Use(Player p, string message) {

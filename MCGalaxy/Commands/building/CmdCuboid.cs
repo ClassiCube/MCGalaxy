@@ -24,13 +24,13 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Cuboid"; } }
         public override string shortcut { get { return "z"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("cw", null, "wire"),
-                    new CommandAlias("ch", null, "hollow"), new CommandAlias("Walls", null, "walls"),
-                    new CommandAlias("box"), new CommandAlias("hbox", null, "hollow") }; }
+            get { return new[] { new CommandAlias("cw", "wire"),
+                    new CommandAlias("ch", "hollow"), new CommandAlias("Walls", "walls"),
+                    new CommandAlias("box"), new CommandAlias("hbox", "hollow") }; }
         }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
+            string msg = parts[0];
             if (msg == "solid")  return DrawMode.solid;
             if (msg == "hollow") return DrawMode.hollow;
             if (msg == "walls")  return DrawMode.walls;
@@ -43,9 +43,9 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
                 case DrawMode.hollow: return new CuboidHollowsDrawOp();
-                case DrawMode.walls: return new CuboidWallsDrawOp();
-                case DrawMode.holes: return new CuboidDrawOp();
-                case DrawMode.wire: return new CuboidWireframeDrawOp();
+                case DrawMode.walls:  return new CuboidWallsDrawOp();
+                case DrawMode.holes:  return new CuboidDrawOp();
+                case DrawMode.wire:   return new CuboidWireframeDrawOp();
                 case DrawMode.random: return new CuboidDrawOp();
             }
             return new CuboidDrawOp();
@@ -55,13 +55,14 @@ namespace MCGalaxy.Commands.Building {
             if (dArgs.Mode == DrawMode.solid)  dArgs.BrushName = "Normal";
             if (dArgs.Mode == DrawMode.holes)  dArgs.BrushName = "Checkered";
             if (dArgs.Mode == DrawMode.random) dArgs.BrushName = "Random";
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, 0);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Cuboid <brush args> <mode>");
+            Player.Message(p, "%T/Cuboid <brush args>");
             Player.Message(p, "%HDraws a cuboid between two points.");
-            Player.Message(p, "   %HModes: &fsolid/hollow/walls/holes/wire/random");
+            Player.Message(p, "%T/Cuboid [mode] <brush args>");
+            Player.Message(p, "%HModes: &fsolid/hollow/walls/holes/wire/random");
             Player.Message(p, BrushHelpLine);
         }
     }

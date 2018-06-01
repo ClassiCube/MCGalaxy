@@ -26,14 +26,14 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "sp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("SphereH", null, "hollow"),
-                    new CommandAlias("sph", null, "hollow"), new CommandAlias("Circle", null, "circle" ),
-                    new CommandAlias("CircleH", null, "hollowcircle") }; }
+            get { return new[] { new CommandAlias("SphereH", "hollow"),
+                    new CommandAlias("sph", "hollow"), new CommandAlias("Circle", "circle" ),
+                    new CommandAlias("CircleH", "hollowcircle") }; }
         }
         protected override string PlaceMessage { get { return "Place a block for the centre, then another for the radius."; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
+            string msg = parts[0];
             if (msg == "solid")        return DrawMode.solid;
             if (msg == "hollow")       return DrawMode.hollow;
             if (msg == "circle")       return DrawMode.circle;
@@ -43,8 +43,8 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
-                case DrawMode.hollow: return new AdvHollowSphereDrawOp();
-                case DrawMode.circle: return new EllipsoidDrawOp();
+                case DrawMode.hollow:  return new AdvHollowSphereDrawOp();
+                case DrawMode.circle:  return new EllipsoidDrawOp();
                 case DrawMode.hcircle: return new EllipsoidHollowDrawOp();
             }
             return new AdvSphereDrawOp();
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetBrush(DrawArgs dArgs) {
             if (dArgs.Mode == DrawMode.solid) dArgs.BrushName = "Normal";
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, 0);
         }
         
         static Vec3S32 GetRadius(DrawMode mode, Vec3S32[] m) {
@@ -85,9 +85,9 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Sphere <brush args> <mode>");
-            Player.Message(p, "%HCreates a sphere, with the first point as the centre, " +
-                           "and second being the radius.");
-            Player.Message(p, "   %HModes: &fsolid/hollow/circle/hollowcircle");
+            Player.Message(p, "%HCreates a sphere, with first point as centre, and second for radius");
+            Player.Message(p, "%T/Sphere [mode] <brush args>");
+            Player.Message(p, "%HModes: &fsolid/hollow/circle/hollowcircle");
             Player.Message(p, BrushHelpLine);
         }
     }

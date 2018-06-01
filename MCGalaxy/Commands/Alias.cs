@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands {
         
         public static List<Alias> coreAliases = new List<Alias>();
         public static List<Alias> aliases = new List<Alias>();
-        public string Trigger, Target, Prefix, Suffix;
+        public string Trigger, Target, Format;
 
         public Alias(string trigger, string target) {
             Trigger = trigger;
@@ -39,16 +39,15 @@ namespace MCGalaxy.Commands {
                 Target = target;
             } else {
                 Target = target.Substring(0, space);
-                Prefix = target.Substring(space + 1);
+                Format = target.Substring(space + 1);
             }
         }
         
-        public Alias(string trigger, string target, string prefix, string suffix) {
-            Trigger = trigger; Target = target;
-            Prefix = prefix; Suffix = suffix;
+        public Alias(string trigger, string target, string format) {
+            Trigger = trigger; Target = target; Format = format;
         }
 
-        public static void Load(){
+        public static void Load() {
             aliases.Clear();
             coreAliases.Clear();
             
@@ -67,10 +66,10 @@ namespace MCGalaxy.Commands {
                 sw.WriteLine("# it is treated as /Help me <args given by user>.");
                 
                 foreach (Alias a in aliases) {
-                    if (a.Prefix == null) {
+                    if (a.Format == null) {
                         sw.WriteLine(a.Trigger + " : " + a.Target);
                     } else {
-                        sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Prefix);
+                        sw.WriteLine(a.Trigger + " : " + a.Target + " " + a.Format);
                     }
                 }                   
             }

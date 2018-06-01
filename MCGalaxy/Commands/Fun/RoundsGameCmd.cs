@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
             RoundsGame game = Game;
             if (message.CaselessEq("go")) {
                 HandleGo(p, game);
-            } else if (message.CaselessEq("status") || message.CaselessEq("info")) {
+            } else if (IsInfoCommand(message)) {
                 HandleStatus(p, game);
             } else if (message.CaselessEq("start") || message.CaselessStarts("start ")) {
                 string[] args = message.SplitSpaces();

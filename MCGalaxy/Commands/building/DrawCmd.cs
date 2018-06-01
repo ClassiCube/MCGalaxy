@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual int MarksCount { get { return 2; } }
         protected virtual string SelectionType { get { return "region"; } }
         protected virtual string PlaceMessage { get { return "Place or break two blocks to determine the edges."; } }
-        protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush%H.";
+        protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush";
         
         public override void Use(Player p, string message) {
             message = message.ToLower();
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) { }
         
         protected virtual void GetBrush(DrawArgs dArgs) {
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, 0);
         }
         
         protected class DrawArgs {

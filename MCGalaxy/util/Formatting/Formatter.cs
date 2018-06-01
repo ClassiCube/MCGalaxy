@@ -82,11 +82,12 @@ namespace MCGalaxy {
                 if (!a.Target.CaselessEq(cmd.name)) continue;
                 
                 dst.Append('/').Append(a.Trigger);
-                string args = a.Prefix == null ? a.Suffix : a.Prefix;
-                if (args == null) { dst.Append(", "); continue; }
+                if (a.Format == null) { dst.Append(", "); continue; }
                 
                 string name = String.IsNullOrEmpty(cmd.shortcut) ? cmd.name : cmd.shortcut;
                 if (name.Length > cmd.name.Length) name = cmd.name;
+                string args = a.Format.Replace("{args}", "[args]");
+                
                 dst.Append(" for /").Append(name + " " + args);
                 dst.Append(", ");
             }

@@ -24,16 +24,16 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("eh", null, "hollow"), new CommandAlias("cylinder", null, "vertical") }; }
+            get { return new[] { new CommandAlias("eh", "hollow"), new CommandAlias("cylinder", "vertical") }; }
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
             if (dArgs.Mode == DrawMode.solid) dArgs.BrushName = "Normal";
-            dArgs.BrushArgs = dArgs.Message.Splice(0, dArgs.ModeArgsCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, 0);
         }
         
         protected override DrawMode GetMode(string[] parts) {
-            string msg = parts[parts.Length - 1];
+            string msg = parts[0];
             if (msg == "solid")    return DrawMode.solid;
             if (msg == "hollow")   return DrawMode.hollow;
             if (msg == "vertical") return DrawMode.vertical;
@@ -42,16 +42,17 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             switch (dArgs.Mode) {
-                case DrawMode.hollow: return new EllipsoidHollowDrawOp();
+                case DrawMode.hollow:   return new EllipsoidHollowDrawOp();
                 case DrawMode.vertical: return new CylinderDrawOp();
             }
             return new EllipsoidDrawOp();
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Spheroid <brush args> <mode>");
+            Player.Message(p, "%T/Spheroid <brush args>");
             Player.Message(p, "%HDraws a spheroid between two points.");
-            Player.Message(p, "   %HModes: &fsolid/hollow/vertical(a vertical tube)");    
+            Player.Message(p, "%T/Spheroid [mode] <brush args>");
+            Player.Message(p, "%HModes: &fsolid/hollow/vertical(a vertical tube)");    
             Player.Message(p, BrushHelpLine);
         }
     }

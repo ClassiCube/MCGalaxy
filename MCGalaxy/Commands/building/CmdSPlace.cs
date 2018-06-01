@@ -70,12 +70,13 @@ namespace MCGalaxy.Commands.Building {
             ushort endZ = (ushort)(m[0].Z + dirZ * distance);
             
             BlockID held = p.GetHeldBlock();
+            if (!CommandParser.IsBlockAllowed(p, "place", held)) return false;
             p.level.UpdateBlock(p, endX, endY, endZ, held, BlockDBFlags.Drawn, true);
             
             if (interval > 0) {
                 int x = m[0].X, y = m[0].Y, z = m[0].Z;
                 int delta = 0;
-                while (x >= 0 && y >= 0 && z >= 0 && x < p.level.Width && y < p.level.Height && z < p.level.Length && delta < distance) {
+                while (p.level.IsValidPos(x, y, z) && delta < distance) {
                     p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, held, BlockDBFlags.Drawn, true);
                     x += dirX * interval; y += dirY * interval; z += dirZ * interval;
                     delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);

@@ -30,7 +30,7 @@ namespace MCGalaxy {
             if (enable == CommandEnable.Economy && !Economy.Enabled)
                 return "economy is disabled.";
             
-            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.running))
+            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.Running))
                 return "neither zombie nor lava survival is running.";
             if (enable == CommandEnable.Zombie && !Server.zombie.Running)
                 return "zombie survival is not running.";
@@ -85,6 +85,10 @@ namespace MCGalaxy {
         
         protected internal static bool IsEditCommand(string str) {
             return str.CaselessEq("edit") || str.CaselessEq("change") || str.CaselessEq("modify");
+        }  
+
+        protected internal static bool IsInfoCommand(string str) {
+            return str.CaselessEq("info") || str.CaselessEq("status") || str.CaselessEq("about");
         }        
     }
     

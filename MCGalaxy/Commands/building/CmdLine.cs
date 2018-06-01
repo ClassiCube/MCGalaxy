@@ -29,19 +29,7 @@ namespace MCGalaxy.Commands.Building {
         protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints."; } }
         
         protected override DrawMode GetMode(string[] parts) {
-            string mode = parts[parts.Length - 1];
-            if (mode.Length == 0) return DrawMode.normal;
-            DrawMode dMode = ParseMode(mode);
-            if (dMode != DrawMode.normal) return dMode;
-            
-            // May be in the format <brush args> <mode> <max_length>
-            ushort len;
-            if (parts.Length == 1 || !ushort.TryParse(mode, out len))
-                return DrawMode.normal;
-            return ParseMode(parts[parts.Length - 2]);
-        }
-        
-        static DrawMode ParseMode(string msg) {
+            string msg = parts[0];
             if (msg == "normal")    return DrawMode.solid;
             if (msg == "walls")     return DrawMode.walls;
             if (msg == "straight")  return DrawMode.straight;
@@ -62,8 +50,7 @@ namespace MCGalaxy.Commands.Building {
             
             string arg = msg.Substring(msg.LastIndexOf(' ') + 1);
             ushort len;
-            if (ushort.TryParse(arg, out len))
-                line.MaxLength = len;
+            if (ushort.TryParse(arg, out len)) line.MaxLength = len;
             return line;
         }
         
@@ -82,9 +69,9 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetBrush(DrawArgs dArgs) {
             LineDrawOp line = (LineDrawOp)dArgs.Op;
-            int endCount = dArgs.ModeArgsCount;
+            int endCount = 0;
             if (line.MaxLength != int.MaxValue) endCount++;
-            dArgs.BrushArgs = dArgs.Message.Splice(0, endCount);
+            dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, endCount);
         }
         
         protected override bool DoDraw(Player p, Vec3S32[] marks, object state, ushort block) {
@@ -100,10 +87,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Line <brush args> <mode> <length>");
+            Player.Message(p, "%T/Line <brush args>");
             Player.Message(p, "%HCreates a line between two points.");
-            Player.Message(p, "   %HModes: &fnormal/walls/straight/connected");
-            Player.Message(p, "   %HLength specifies the max number of blocks in the line.");
+            Player.Message(p, "%T/Line [mode] <brush args> <length>");
+            Player.Message(p, "%HModes: &fnormal/walls/straight/connected");
+            Player.Message(p, "%HLength optionally specifies max number of blocks in the line");
             Player.Message(p, BrushHelpLine);
         }
     }

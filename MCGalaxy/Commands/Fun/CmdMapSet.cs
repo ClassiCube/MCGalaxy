@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("RoundTime", null, "roundtime") }; }
+            get { return new[] { new CommandAlias("RoundTime", "roundtime") }; }
         }
         
         public override void Use(Player p, string message) {
