@@ -162,7 +162,7 @@ namespace MCGalaxy.Commands.World {
         };
         
         static string[] mapHelp = new string[] {
-            "%T/os map add [type - default is flat] %H- Creates your map (128x64x128)",
+            "%T/os map add [type - default is flat] %H- Creates your map (128x128x128)",
             "%T/os map add [width] [height] [length] [type]",
             "%H  See %T/Help newlvl types %Hfor a list of map types.",
             "%T/os map physics [level] %H- Sets the physics on your map.",

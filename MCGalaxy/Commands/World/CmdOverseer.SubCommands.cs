@@ -158,8 +158,8 @@ namespace MCGalaxy.Commands.World {
             string level = NextLevel(p);
             if (level == null) return;
 
-            if (value.Length == 0) value = "128 64 128 flat";
-            else if (value.IndexOf(' ') == -1) value = "128 64 128 " + value;
+            if (value.Length == 0) value = "128 128 128 flat";
+            else if (value.IndexOf(' ') == -1) value = "128 128 128 " + value;
             
             string[] args = value.TrimEnd().SplitSpaces();
             if (args.Length == 3) value += " flat";
