@@ -27,8 +27,8 @@ namespace MCGalaxy {
     public static class Updater {
         
         public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
-        public const string BaseURL = "https://raw.githubusercontent.com/Hetal728/MCGalaxy/master/";
-        public const string UploadsURL = "https://github.com/Hetal728/MCGalaxy/tree/master/Uploads";
+        public const string BaseURL = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
+        public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";
         const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
         const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
         const string ChangelogLocation = BaseURL + "Changelog.txt";
