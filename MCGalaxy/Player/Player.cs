@@ -303,7 +303,8 @@ namespace MCGalaxy {
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                Chat.MessageGlobal(this, "&c- " + FullName + " %Skicked %S" + chatMsg);
+                string leavem = "&c- " + FullName + " %Skicked %S" + chatMsg;
+                Chat.MessageFrom(ChatScope.Global, this, leavem, null, null, true);
                 Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }
         }
