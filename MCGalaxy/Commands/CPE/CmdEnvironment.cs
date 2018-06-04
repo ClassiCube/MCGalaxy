@@ -142,9 +142,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static bool SetPreset(Player p,  string value) {
             EnvPreset preset = null; // fog, sky, clouds, sun, shadow
-            if (value.CaselessEq("midnight")) {
-                preset = new EnvPreset("8b8989", "191970", "000080", "0000cd", "918A3B");
-            } else if (value.CaselessEq("cartoon")) {
+            if (value.CaselessEq("cartoon")) {
                 preset = new EnvPreset("00ffff", "1e90ff", "00bfff", "f5deb3", "f4a460");
             } else if (value.CaselessEq("noir")) {
                 preset = new EnvPreset("000000", "1f1f1f", "000000", "696969", "1f1f1f");
@@ -160,7 +158,7 @@ namespace MCGalaxy.Commands.CPE {
                 preset = new EnvPreset("AFAFAF", "8E8E8E", "8E8E8E", "9b9b9b", "8C8C8C");
             } else if (value.CaselessEq("sunset")) {
                 preset = new EnvPreset("FFA322", "836668", "9A6551", "7F6C60", "46444C");
-            } else if (value.CaselessEq("midnight2")) {
+            } else if (value.CaselessEq("midnight")) {
                 preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
             } else if (File.Exists("presets/" + value.ToLower() + ".env")) {
                 string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
@@ -195,7 +193,7 @@ namespace MCGalaxy.Commands.CPE {
 
         static void SendPresetsMessage(Player p) {
             Player.Message(p, "%T/Env preset [type] %H- Uses an env preset on your current map");
-            Player.Message(p, "Valid types: Cartoon/Midnight/Midnight2/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+            Player.Message(p, "Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
             if (!Directory.Exists("presets")) return;
             
             string[] files = Directory.GetFiles("presets", "*.env");

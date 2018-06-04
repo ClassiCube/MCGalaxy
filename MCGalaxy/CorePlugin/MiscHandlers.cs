@@ -46,8 +46,8 @@ namespace MCGalaxy.Core {
             p.showPortals = false;
             p.SetModel(p.Model, level); // in case had been using a level-only custom block for their model
             
-            if (!Hacks.CanUseHacks(p, level) && p.isFlying) {
-                Player.Message(p, "You cannot use /fly on this map.");
+            if (!Hacks.CanUseFly(p, level) && p.isFlying) {
+                Player.Message(p, "You cannot use %T/Fly %Son this map.");
                 p.isFlying = false;
             }
 

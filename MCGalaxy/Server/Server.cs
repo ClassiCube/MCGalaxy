@@ -272,9 +272,7 @@ namespace MCGalaxy {
                 if (Server.ServerSetupFinished && !ServerConfig.AutoLoadMaps) {
                     File.WriteAllText("text/autoload.txt", autoload);
                 }
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
+            } catch (Exception ex) { Logger.LogError(ex); }
             
             try {
                 Logger.Log(LogType.SystemActivity, "Server shutdown completed");
