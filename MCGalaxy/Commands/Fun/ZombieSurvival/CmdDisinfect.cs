@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.DisinfectPlayer(who);
-                Chat.MessageGlobal("{0} %Swas disinfected.", who.ColoredName);
+                Chat.MessageFrom(who, "λNICK %Swas disinfected.");
             }
         }
         

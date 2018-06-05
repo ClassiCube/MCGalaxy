@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -50,14 +50,14 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
             if (colName.Length == 0) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color removed");
+                Chat.MessageFrom(who, "λNICK %Shad their color removed");
                 who.color = who.group.Color;
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
-                if (color == who.color) { Player.Message(p, who.ColoredName + " %Salready has that color."); return; }
+                if (color == who.color) { Player.Message(p, "λNICK %Salready has that color."); return; }
                 
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their color changed to " + color + Colors.Name(color));
+                Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
                 who.color = color;
             }
             

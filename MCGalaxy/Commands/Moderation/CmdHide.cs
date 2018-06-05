@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
                 }
                 
-                string leaveM = "&c- " + p.FullName + " %S" + PlayerDB.GetLogoutMessage(p);
-                Chat.MessageGlobalOrLevel(p, leaveM, null, true);
+                string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
+                Chat.MessageFrom(p, leaveM, null, true);
                 
                 if (announceToOps && !p.opchat) opchat.Use(p, "");
                 Server.hidden.AddIfNotExists(p.name);
@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &fvisible%S.");
                 }
                 
-                string joinM = "&a+ " + p.FullName + " %S" + PlayerDB.GetLoginMessage(p);
-                Chat.MessageGlobalOrLevel(p, joinM, null, true);
+                string joinM = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);
+                Chat.MessageFrom(p, joinM, null, true);
                 
                 if (p.opchat) opchat.Use(p, "");
                 if (p.adminchat) adminchat.Use(p, "");

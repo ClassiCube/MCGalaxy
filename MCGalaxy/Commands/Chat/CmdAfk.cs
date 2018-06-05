@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are now marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is AFK " + message);
+                    ShowMessage(p, "-λNICK%S- is AFK " + message);
                     p.CheckForMessageSpam();
                 }
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-" + p.ColoredName + "%S- is no longer AFK");
+                    ShowMessage(p, "-λNICK%S- is no longer AFK");
                     p.CheckForMessageSpam();
                 }
             }
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         static void ShowMessage(Player p, string message) {
             bool announce = !p.hidden && ServerConfig.IRCShowAFK;
-            Chat.MessageGlobalOrLevel(p, message, Chat.FilterVisible(p), announce);
+            Chat.MessageFrom(p, message, Chat.FilterVisible(p), announce);
         }
         
         public override void Help(Player p) {

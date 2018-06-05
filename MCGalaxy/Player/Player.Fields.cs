@@ -78,8 +78,9 @@ namespace MCGalaxy {
         public bool hackrank;
         public bool SuperUser;
         
-        public virtual string FullName { get { return color + prefix + DisplayName; } }       
+        public virtual string FullName { get { return color + prefix + DisplayName; } }  
         public string ColoredName { get { return color + DisplayName; } }
+        public string GroupPrefix { get { return group.Prefix.Length == 0 ? "" : "&f" + group.Prefix; } }
 
         public bool deleteMode;
         public bool ignoreGrief;

@@ -433,7 +433,7 @@ namespace MCGalaxy {
             
             string deathMsg = level.Props[block].DeathMessage;
             if (deathMsg != null) {
-                Chat.MessageLevel(this, deathMsg.Replace("@p", ColoredName));
+                Chat.MessageFromLevel(this, deathMsg.Replace("@p", "λNICK"));
             }
             
             if (block == Block.RocketHead) level.MakeExplosion(x, y, z, 0);
@@ -442,9 +442,9 @@ namespace MCGalaxy {
             if (block == Block.Stone || block == Block.Cobblestone) {
                 if (explode) level.MakeExplosion(x, y, z, 1);
                 if (block == Block.Stone) {
-                    Chat.MessageGlobal(this, customMsg.Replace("@p", ColoredName));
+                    Chat.MessageFrom(this, customMsg.Replace("@p", "λNICK"));
                 } else {
-                    Chat.MessageLevel(this,  customMsg.Replace("@p", ColoredName));
+                    Chat.MessageFromLevel(this, customMsg.Replace("@p", "λNICK"));
                 }
             }
             
@@ -459,7 +459,7 @@ namespace MCGalaxy {
             }
 
             if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
-                Chat.MessageLevel(this, ColoredName + " %Shas died &3" + TimesDied + " times");
+                Chat.MessageFromLevel(this, "λNICK %Shas died &3" + TimesDied + " times");
             }
             lastDeath = DateTime.UtcNow;
             return true;
@@ -512,20 +512,16 @@ namespace MCGalaxy {
             }
 
             text = HandleJoker(text);
-            if (Chatroom != null) { Chat.MessageChatRoom(this, text, true, Chatroom); return; }
-
-            bool levelOnly = !level.SeesServerWideChat;
-            string format = levelOnly ? "<{0}>[level] {1}" : "<{0}> {1}";
-            Logger.Log(LogType.PlayerChat, format, name, text);
+            if (Chatroom != null) { 
+                string roomMsg = "<ChatRoom: " + Chatroom + "> λNICK: &f";
+                Chat.MessageChat(ChatScope.Chatroom, this, roomMsg + text, Chatroom, null);
+                return; // TODO: Don't return here, because can be used to spam??
+            }
             
             OnPlayerChatEvent.Call(this, text);
             if (cancelchat) { cancelchat = false; return; }
-            
-            if (levelOnly) {
-                Chat.MessageLevel(this, text, true, level);
-            } else {
-                Chat.MessageGlobal(this, text, true, false);
-            }
+
+            Chat.MessageChat(this, "λFULL &f: " + text, null);
             CheckForMessageSpam();
         }
         

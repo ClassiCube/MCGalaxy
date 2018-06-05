@@ -1,4 +1,4 @@
-/*
+﻿/*
     Written by Jack1312
   
     Copyright 2011 MCForge
@@ -37,9 +37,8 @@ namespace MCGalaxy.Commands.Chatting {
             Group grp = Matcher.FindRanks(p, rank);
             if (grp == null) return;
             
-            string msg = String.Format("{3}<{2}>{0}: &f{1}", p.ColoredName, 
-                                       text, grp.Name, grp.Color);
-            Chat.MessageFrom(ChatScope.Rank, p, msg, grp.Permission, null);
+            string msg = grp.Color + "<" + grp.Name + ">λNICK: &f" + text;
+            Chat.MessageChat(ChatScope.Rank, p, msg, grp.Permission, null);
             p.CheckForMessageSpam();
         }
         

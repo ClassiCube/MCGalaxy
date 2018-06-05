@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Chatting {
             if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
 
             if (title.Length == 0) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title removed");
+                Chat.MessageFrom(who, "λNICK %Shad their title removed");
             } else {
-                Chat.MessageGlobal(who, who.ColoredName + " %Swas given the title of &b[" + title + "&b]");
+                Chat.MessageFrom(who, "λNICK %Shad their title changed to &b[" + title + "&b]");
             }
             
             who.title = title;

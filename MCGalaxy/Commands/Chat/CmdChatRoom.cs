@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Chatting {
                 }
                 
                 Player.Message(p, "You joined the chat room '{0}'", room);
-                Chat.MessageChatRoom(p, p.ColoredName + " %Shas joined your chat room", false, room);
+                Chat.MessageFrom(ChatScope.Chatroom, p, "λNICK %Sjoined your chat room", room, null);
                 p.Chatroom = room;
             } else {
                 Player.Message(p, "There is no chat room with that name");
@@ -98,8 +98,8 @@ namespace MCGalaxy.Commands.Chatting {
         
         void HandleLeave(Player p) {
             Player.Message(p, "You left the chat room '{0}'", p.Chatroom);
-            Chat.MessageChatRoom(p, p.ColoredName + " %Shas left the chat room", false, p.Chatroom);
-            Chat.MessageGlobal("{0} %Shas left their chat room {1}", p.ColoredName, p.Chatroom);
+            Chat.MessageFrom(ChatScope.Chatroom, p, "λNICK %Sleft your chat room", p.Chatroom, null);
+            Chat.MessageFrom(p, "λNICK %Sleft their chat room " + p.Chatroom);
             p.Chatroom = null;
         }
         
@@ -208,7 +208,8 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             Player.Message(pl, "You've been forced to join the chat room '{0}'", room);
-            Chat.MessageChatRoom(pl, pl.ColoredName + " %Shas force joined your chat room", false, room);
+            Chat.MessageFrom(ChatScope.Chatroom, pl, "λNICK %Shas force joined your chat room", room, null);
+            
             pl.Chatroom = room;
             Player.Message(p, pl.ColoredName + " %Swas forced to join the chatroom '{0}' by you", room);
         }
@@ -228,8 +229,8 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             Player.Message(pl, "You were kicked from the chat room '" + pl.Chatroom + "'");
-            Player.Message(p, pl.ColoredName + " %Swas kicked from the chat room '" + pl.Chatroom + "'");
-            Chat.MessageChatRoom(pl, pl.ColoredName + " %Swas kicked from your chat room", false, pl.Chatroom);
+            Player.Message(p, pl.ColoredName + " %Swas kicked from the chat room '" + pl.Chatroom + "'");          
+            Chat.MessageFrom(ChatScope.Chatroom, pl, "λNICK %Swas kicked from your chat room", pl.Chatroom, null);
             pl.Chatroom = null;
         }
         
@@ -239,7 +240,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (canSend) {
                 Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", p.name, message);
-                message = "<GlobalChatRoom> " + p.ColoredName + ": &f" + message;
+                message = "<GlobalChatRoom> λNICK: &f" + message;
                 
                 Chat.MessageFrom(ChatScope.All, p, message,
                                  null, (pl, arg) => pl.Chatroom != null);

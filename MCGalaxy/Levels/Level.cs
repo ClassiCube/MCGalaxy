@@ -346,21 +346,9 @@ namespace MCGalaxy {
         }
 
         public void ChatLevel(string message) {
-            ChatLevel(message, LevelPermission.Banned);
-        }
-        
-        public void ChatLevelOps(string message) {
-            LevelPermission rank = CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator);
-            ChatLevel(message, rank);
-        }
-
-        /// <summary> Sends a chat messages to all players in the level, who have at least the minPerm rank. </summary>
-        public void ChatLevel(string message, LevelPermission minPerm) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != this) continue;
-                if (pl.Rank < minPerm) continue;
-                
                 Player.Message(pl, message);
             }
         }

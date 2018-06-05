@@ -127,7 +127,7 @@ namespace MCGalaxy {
             const string coldDied = "@p %Sstepped in &dcold water and froze.";
             const string lavaDied = "@p %Sstood in &cmagma and melted.";
             
-            SetKiller(props, Block.TNT_Explosion, "@p %S&cblew into pieces.");                 
+            SetKiller(props, Block.TNT_Explosion, "@p %S&cblew into pieces.");
             SetKiller(props, Block.Deadly_Air, "@p %Swalked into &cnerve gas and suffocated.");     
             SetKiller(props, Block.Deadly_Water, coldDied);
             SetKiller(props, Block.Deadly_ActiveWater, coldDied);           

@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCGalaxy)
  
    Dual-licensed under the Educational Community License, Version 2.0 and
@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
             if (colName.Length == 0) {
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color removed");
+                Chat.MessageFrom(who, "λNICK %Shad their title color removed");
             } else  {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
                 if (color == who.titlecolor) { Player.Message(p, who.ColoredName + " %Salready has that title color."); return; }
                 
-                Chat.MessageGlobal(who, who.ColoredName + " %Shad their title color changed to " + color + Colors.Name(color));                
+                Chat.MessageFrom(who, "λNICK %Shad their title color changed to " + color + Colors.Name(color));
             }
             
             who.titlecolor = color;

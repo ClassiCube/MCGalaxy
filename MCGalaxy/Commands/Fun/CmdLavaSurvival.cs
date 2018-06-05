@@ -35,8 +35,7 @@ namespace MCGalaxy.Commands.Fun {
             if (!game.RoundInProgress) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
             
             LSGame ls = (LSGame)game;
-            ls.AnnounceRoundInfo(p, p == null);
-            ls.AnnounceTimeLeft(!ls.Flooded, true, p, p == null);
+            ls.MessageRoundStatus(p);
         }
 
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {

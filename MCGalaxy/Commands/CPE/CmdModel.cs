@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2015 MCGalaxy
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.UpdateModel(who, model);
             
             if (p != who) {
-                Chat.MessageGlobal(who, who.ColoredName + "'s %Smodel was changed to a &c" + model);
+                Chat.MessageFrom(who, "λNICK %Shad their model change to a &c" + model);
             } else {
                 Player.Message(who, "Changed your own model to a &c" + model);
             }

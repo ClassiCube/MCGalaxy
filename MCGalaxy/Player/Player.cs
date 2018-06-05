@@ -116,7 +116,8 @@ namespace MCGalaxy {
         
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
-            if (group.Prefix.Length > 0) prefix += "&f" + group.Prefix + color;
+            prefix += GroupPrefix;
+            
             Team team = Game.Team;
             prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
             
@@ -130,7 +131,7 @@ namespace MCGalaxy {
             string viptitle =
                 (devPrefix && isMod) ? string.Format("{0}[&aInfo{0}] ", color) :
                 (devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color)  : "";
-            prefix = prefix + viptitle;
+            prefix += viptitle;
             prefix = (title.Length == 0) ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
         }
         
@@ -297,13 +298,13 @@ namespace MCGalaxy {
             if (chatMsg == null) return;
             
             if (!isKick) {
-                string leavem = "&c- " + FullName + " %S" + chatMsg;
+                string leavem = "&c- λFULL %S" + chatMsg;
                 if (ServerConfig.GuestLeavesNotify || Rank > LevelPermission.Guest) {
-                    Chat.MessageGlobalOrLevel(this, leavem, Chat.FilterVisible(this), !hidden);
+                    Chat.MessageFrom(this, leavem, Chat.FilterVisible(this), !hidden);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                string leavem = "&c- " + FullName + " %Skicked %S" + chatMsg;
+                string leavem = "&c- λFULL %Skicked %S" + chatMsg;
                 Chat.MessageFrom(ChatScope.Global, this, leavem, null, null, true);
                 Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }

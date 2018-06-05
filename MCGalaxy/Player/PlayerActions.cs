@@ -124,8 +124,8 @@ namespace MCGalaxy {
             if (!announce || !ServerConfig.ShowWorldChanges) return; 
             
             announce = !p.hidden && ServerConfig.IRCShowWorldChanges;
-            string msg = p.level.IsMuseum ? " %Swent to the " : " %Swent to ";
-            Chat.MessageFrom(ChatScope.Global, p, p.ColoredName + msg + level.ColoredName,
+            string msg = p.level.IsMuseum ? "λNICK %Swent to the " : "λNICK %Swent to ";
+            Chat.MessageFrom(ChatScope.Global, p, msg + level.ColoredName,
                              null, Chat.FilterVisible(p), announce);
         }
         

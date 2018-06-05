@@ -69,20 +69,18 @@ namespace MCGalaxy {
         }
         
         public static void MessageOps(Player p, string message) {
-            LevelPermission rank = CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator);
             if (!MessageCmd.CanSpeak(p, "OpChat")) return;
-            MessageStaff(p, message, rank, "Ops");
+            MessageStaff(p, message, Chat.OpchatPerm, "Ops");
         }
 
         public static void MessageAdmins(Player p, string message) {
-            LevelPermission rank = CommandExtraPerms.MinPerm("AdminChat", LevelPermission.Admin);
             if (!MessageCmd.CanSpeak(p, "AdminChat")) return;
-            MessageStaff(p, message, rank, "Admins");
+            MessageStaff(p, message, Chat.AdminchatPerm, "Admins");
         }
         
         public static void MessageStaff(Player p, string message,
                                         LevelPermission perm, string group) {
-            string chatMsg = "To " + group + " &f-" + p.ColoredName + "&f- " + message;
+            string chatMsg = "To " + group + " &f-λNICK&f- " + message;
             
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             Chat.MessageFrom(ChatScope.AboveOrSameRank, p, chatMsg, perm, null);

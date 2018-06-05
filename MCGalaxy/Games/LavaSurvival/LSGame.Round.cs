@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace MCGalaxy.Games {
@@ -33,7 +34,7 @@ namespace MCGalaxy.Games {
             while (RoundInProgress && roundSecs < data.roundTotalSecs) {
                 if (!running) return;
                 if ((announceSecs % 60) == 0 && !Flooded) {
-                    AnnounceTimeLeft(true, false);
+                    Map.ChatLevel(FloodTimeLeftMessage());
                 }
                 if (floodSecs >= data.floodDelaySecs) DoFlood();
                 
@@ -69,43 +70,36 @@ namespace MCGalaxy.Games {
             Map.ChatLevel("The round has ended!");
         }
 
-        public void AnnounceTimeLeft(bool flood, bool round, Player p = null, bool console = false) {
-            if (!running || !RoundInProgress) return;
-            if (flood) {
-                double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.UtcNow).TotalMinutes);
-                string msg = "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the flood.";
-                if (p == null && !console) Map.ChatLevel(msg);
-                else Player.Message(p, msg);
-            }
-            if (round) {
-                double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.UtcNow).TotalMinutes);
-                string msg = "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the round ends.";
-                if (p == null && !console) Map.ChatLevel(msg);
-                else Player.Message(p, msg);
-            }
+        internal string FloodTimeLeftMessage() {
+            double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.UtcNow).TotalMinutes);
+            return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the flood.";
+        }
+        
+        internal string RoundTimeLeftMessage() {
+            double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.UtcNow).TotalMinutes);
+            return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the round ends.";
         }
 
-        public void AnnounceRoundInfo(Player p = null, bool console = false)  {
-            string blockType = data.water ? "water" : "lava";
-            if (p == null && !console) {
-                if (data.water) Map.ChatLevel("The map will be flooded with &9water %Sthis round!");
-                if (data.layer) {
-                    Map.ChatLevel("The " + blockType + " will &aflood in layers %Sthis round!");
-                    Map.ChatLevelOps("There will be " + mapSettings.LayerCount + " layers, each " + mapSettings.LayerHeight + " blocks high.");
-                    Map.ChatLevelOps("There will be another layer every " + mapSettings.layerInterval + " minutes.");
-                }
-                
-                if (data.fast) Map.ChatLevel("The lava will be &cfast %Sthis round!");
-                if (data.killer) Map.ChatLevel("The " + blockType + " will &ckill you %Sthis round!");
-                if (data.destroy) Map.ChatLevel("The " + blockType + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");
-            } else {
-                if (data.water) Player.Message(p, "The map will be flooded with &9water %Sthis round!");
-                if (data.layer) Player.Message(p, "The " + blockType + " will &aflood in layers %Sthis round!");
-                
-                if (data.fast) Player.Message(p, "The lava will be &cfast %Sthis round!");
-                if (data.killer) Player.Message(p, "The " + blockType + " will &ckill you %Sthis round!");
-                if (data.destroy) Player.Message(p, "The " + blockType + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");
-            }
+        // TODO: common abstract method
+        internal void MessageRoundStatus(Player p) {
+            string block = data.water ? "water" : "lava";
+            
+            // TODO: send these messages if player is op
+            //if (data.layer) {
+            //    Map.ChatLevelOps("There will be " + mapSettings.LayerCount + " layers, each " + mapSettings.LayerHeight + " blocks high.");
+            //    Map.ChatLevelOps("There will be another layer every " + mapSettings.layerInterval + " minutes.");
+            //}
+            
+            if (data.water) Player.Message(p, "The map will be flooded with &9water %Sthis round!");
+            if (data.layer) Player.Message(p, "The " + block + " will &aflood in layers %Sthis round!");
+            
+            if (data.fast) Player.Message(p, "The lava will be &cfast %Sthis round!");
+            if (data.killer) Player.Message(p, "The " + block + " will &ckill you %Sthis round!");
+            if (data.destroy) Player.Message(p, "The " + block + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");
+            
+            
+            if (!Flooded) Player.Message(p, FloodTimeLeftMessage());           
+            Player.Message(p, RoundTimeLeftMessage());
         }
 
         protected override bool SetMap(string map) {

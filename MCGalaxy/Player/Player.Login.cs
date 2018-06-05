@@ -110,21 +110,20 @@ namespace MCGalaxy {
             if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) adminpen = true;
             if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
 
-            LevelPermission adminChatRank = CommandExtraPerms.MinPerm("adminchat", LevelPermission.Admin);
             hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
-            if (Rank >= adminChatRank && ServerConfig.AdminsJoinSilently) {
+            if (Rank >= Chat.AdminchatPerm && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
             }
             
             OnPlayerConnectEvent.Call(this);
             if (cancellogin) { cancellogin = false; return; }
             
-            string joinm = "&a+ " + FullName + " %S" + PlayerDB.GetLoginMessage(this);
+            string joinm = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
             
             if (ServerConfig.GuestJoinsNotify || Rank > LevelPermission.Guest) {
-                Chat.MessageGlobalOrLevel(this, joinm, Chat.FilterVisible(this), !hidden);
+                Chat.MessageFrom(this, joinm, Chat.FilterVisible(this), !hidden);
             }
 
             if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
@@ -233,12 +232,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageGlobal(this, ColoredName + " &cis still muted from previously.");
+                Chat.MessageFrom(this, "λNICK &cis still muted from previously.");
             }
             
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageGlobal(this, ColoredName + " &cis still frozen from previously.");
+                Chat.MessageFrom(this, "λNICK &cis still frozen from previously.");
             }
         }
         
@@ -252,10 +251,10 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission rank = CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator);           
-            string altsMsg = p.ColoredName + " %Sis lately known as: " + alts.Join();
+            LevelPermission rank = Chat.OpchatPerm;         
+            string altsMsg = "λNICK %Sis lately known as: " + alts.Join();
 
-            Chat.MessageGlobalOrLevel(p, altsMsg, 
+            Chat.MessageFrom(p, altsMsg, 
                                       (pl, obj) => Entities.CanSee(pl, p) && pl.Rank >= rank);
                          
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC

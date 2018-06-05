@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             // rand.Next(min, max) is exclusive of max, so we need to use (max + 1)
             int adjMax = max == int.MaxValue ? int.MaxValue : max + 1;
-            string msg = p.ColoredName + " %Srolled a &a" + rand.Next(min, adjMax) + " %S(" + min + "|" + max + ")";
+            string msg = "λNICK %Srolled a &a" + rand.Next(min, adjMax) + " %S(" + min + "|" + max + ")";
             TryMessage(p, msg);
         }
         

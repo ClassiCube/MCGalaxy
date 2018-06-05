@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -44,13 +44,13 @@ namespace MCGalaxy.Commands.Moderation {
                 if (stealth) { 
                     Chat.MessageOps(who.ColoredName + " %Sis now STEALTH jokered."); 
                 } else {
-                    Chat.MessageGlobalOrLevel(who, who.ColoredName + " %Sis now a &aJ&bo&ck&5e&9r%S.", null, true);
+                    Chat.MessageFrom(who, "λNICK %Sis now a &aJ&bo&ck&5e&9r%S.", null, true);
                 }
             } else {
                 if (stealth) { 
                     Chat.MessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
                 } else {
-                    Chat.MessageGlobalOrLevel(who, who.ColoredName + " %Sis no longer a &aJ&bo&ck&5e&9r%S.", null, true);
+                    Chat.MessageFrom(who, "λNICK %Sis no longer a &aJ&bo&ck&5e&9r%S.", null, true);
                 }
             }
             who.joker = !who.joker;

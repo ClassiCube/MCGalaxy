@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (actions.Length > 0)
                 action = actions[new Random().Next(actions.Length)];
             
-            if (!TryMessage(p, p.ColoredName + " %S" + action)) return;
+            if (!TryMessage(p, "λNICK %S" + action)) return;
             p.NextEat = DateTime.UtcNow.AddSeconds(10);
             if (Economy.Enabled)
                 p.SetMoney(p.money - 1);  

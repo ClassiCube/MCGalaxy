@@ -30,8 +30,7 @@ namespace MCGalaxy.UI {
             Player p = ConsolePlayer.Instance;
             if (ChatModes.Handle(p, text)) return;
             
-            Chat.Message(ChatScope.Global, p.FullName + ":&f " + text, null, null, true);
-            Logger.Log(LogType.PlayerChat, "(console): " + text);
+            Chat.MessageChat(ChatScope.Global, p, "λFULL: &f" + text, null, null, true);
         }
         
         public static void RepeatCommand() {

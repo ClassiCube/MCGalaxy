@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -29,11 +29,11 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Use(Player p, string message) {
             if (p.Game.Referee) {
-                Chat.MessageGlobal(p, p.ColoredName + " %Sis no longer a referee");
+                Chat.MessageFrom(p, "λNICK %Sis no longer a referee");
                 OnPlayerActionEvent.Call(p, PlayerAction.UnReferee);
                 p.Game.Referee = false;
             } else {
-                Chat.MessageGlobal(p, p.ColoredName + " %Sis now a referee");
+                Chat.MessageFrom(p, "λNICK %Sis now a referee");
                 OnPlayerActionEvent.Call(p, PlayerAction.Referee);
                 p.Game.Referee = true;
             }

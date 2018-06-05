@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.GlobalRespawn(who);
             
             if (p != who) {
-                Chat.MessageGlobal(who, who.ColoredName + "'s %Sskin was changed to &c" + skin);
+                Chat.MessageFrom(who,"λNICK %Shad their skin changed to &c" + skin);
             } else {
                 Player.Message(who, "Changed your own skin to &c" + skin);
             }

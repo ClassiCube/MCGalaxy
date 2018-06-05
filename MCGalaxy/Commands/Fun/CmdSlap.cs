@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -59,14 +59,14 @@ namespace MCGalaxy.Commands.Fun {
             if (who.level.IsValidPos(x, y, z)) {
                 pos.Y = FindYAbove(who.level, (ushort)x, (ushort)y, (ushort)z);
                 if (pos.Y != -1) {
-                    who.level.ChatLevel(who.ColoredName + " %Swas slapped into the roof by " + src);
+                    Chat.MessageFromLevel(who, "λNICK %Swas slapped into the roof by " + src);
                     who.SendPos(Entities.SelfID, pos, who.Rot);
                     return;
                 }
             }
             
             pos.Y = 1000 * 32;
-            who.level.ChatLevel(who.ColoredName + " %Swas slapped sky high by " + src);
+            Chat.MessageFromLevel(who, "λNICK %Swas slapped sky high by " + src);
             who.SendPos(Entities.SelfID, pos, who.Rot);
         }
         

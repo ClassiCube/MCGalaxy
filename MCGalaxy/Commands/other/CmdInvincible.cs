@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Misc {
             
             string globalMsg = who.invincible ? ServerConfig.InvincibleMessage : "has stopped being invincible";
             if (ServerConfig.ShowInvincibleMessage && !who.hidden) {
-                Chat.MessageGlobal(who, who.ColoredName + " %S" + globalMsg);
+                Chat.MessageFrom(who, "λNICK %S" + globalMsg);
             }
         }
         

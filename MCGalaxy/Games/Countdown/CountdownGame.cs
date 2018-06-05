@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -142,7 +142,7 @@ namespace MCGalaxy.Games {
             if (!Players.Contains(p)) {
                 Players.Add(p);
                 Player.Message(p, "You've joined countdown!");
-                Chat.MessageGlobal("{0} %Sjoined countdown!", p.ColoredName);
+                Chat.MessageFrom(p, "λNICK %Sjoined countdown!");
                 if (p.level != Map) PlayerActions.ChangeMap(p, "countdown");
             } else {
                 Player.Message(p, "You've already joined countdown. To leave type /countdown leave");
