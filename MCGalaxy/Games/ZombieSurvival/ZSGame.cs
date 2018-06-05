@@ -252,7 +252,7 @@ namespace MCGalaxy.Games {
             Alive.Remove(p);
             Infected.Remove(p);
             Get(p).Infected = false;
-            RemoveBounties(p);
+            RemoveAssociatedBounties(p);
             
             if (!running || !RoundInProgress || Infected.Count > 0) return;
             Random random = new Random();
@@ -289,7 +289,7 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        void RemoveBounties(Player p) {
+        void RemoveAssociatedBounties(Player p) {
             BountyData[] bounties = Bounties.Items;
             foreach (BountyData b in bounties) {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;

@@ -227,7 +227,7 @@ namespace MCGalaxy.Games {
             if (data.BlocksStacked == 2) {
                 TimeSpan delta = DateTime.UtcNow - data.LastPillarWarn;
                 if (delta.TotalSeconds >= 5) {
-                    Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
+                    Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
                     data.LastPillarWarn = DateTime.UtcNow;
                 }
                 
@@ -235,7 +235,7 @@ namespace MCGalaxy.Games {
                 Player.Message(p, "You are pillaring! &cStop before you are " + action + "!");
             } else if (data.BlocksStacked == 4) {
                 if (!data.PillarFined) {
-                    Chat.MessageOps("  &cWarning: " + p.ColoredName + " %Sis pillaring!");
+                    Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
                     Command.Find("Take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
                 } else {                   

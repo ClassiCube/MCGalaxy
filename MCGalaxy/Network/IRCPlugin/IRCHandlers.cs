@@ -291,8 +291,9 @@ namespace MCGalaxy.Network {
                 color = "&a";
                 Bot = bot;
                 
-                if (ircNick != null)
+                if (ircNick != null) {
                     DatabaseID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
+                }
             }
             
             public override void SendMessage(byte id, string message) {

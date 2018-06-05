@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -35,14 +35,13 @@ namespace MCGalaxy.Commands.World {
             
             bool unlocking = Server.lockdown.Contains(message);
             Chat.MessageGlobal("The map {0} has been {1}locked", message, unlocking ? "un" : "");
-            string srcName = (p == null) ? "(console)" : p.ColoredName;
             
             if (unlocking) {
                 Server.lockdown.Remove(message);
-                Chat.MessageOps("Unlocked by: " + srcName);
+                Chat.MessageFromOps(p, "Map unlocked by: λNICK");
             } else {
                 Server.lockdown.AddIfNotExists(message);
-                Chat.MessageOps("Locked by: " + srcName);
+                Chat.MessageFromOps(p, "Map locked by: λNICK");
             }
             Server.lockdown.Save();
         }

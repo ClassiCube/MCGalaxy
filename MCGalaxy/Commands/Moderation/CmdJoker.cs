@@ -42,13 +42,13 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (!who.joker) {
                 if (stealth) { 
-                    Chat.MessageOps(who.ColoredName + " %Sis now STEALTH jokered."); 
+                    Chat.MessageFromOps(who, "λNICK %Sis now STEALTH jokered."); 
                 } else {
                     Chat.MessageFrom(who, "λNICK %Sis now a &aJ&bo&ck&5e&9r%S.", null, true);
                 }
             } else {
                 if (stealth) { 
-                    Chat.MessageOps(who.ColoredName + " %Sis now STEALTH unjokered.");
+                    Chat.MessageFromOps(who, "λNICK %Sis now STEALTH unjokered.");
                 } else {
                     Chat.MessageFrom(who, "λNICK %Sis no longer a &aJ&bo&ck&5e&9r%S.", null, true);
                 }

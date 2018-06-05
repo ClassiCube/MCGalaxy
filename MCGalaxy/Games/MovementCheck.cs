@@ -50,12 +50,12 @@ namespace MCGalaxy.Games {
         
         static void Warn(ref DateTime last, Player p, string action) {
             DateTime now = DateTime.UtcNow;
-            if (now >= last) {
-                Player.Message(p, "%4Do not {0} &c- ops have been warned.", action);
-                Chat.MessageOps(p.ColoredName + " &4appears to be " + action + "ing");
-                Logger.Log(LogType.SuspiciousActivity, "{0} appears to be {1}ing", p.name, action);
-                last = now.AddSeconds(5);
-            }
+            if (now < last) return;
+            
+            Player.Message(p, "%4Do not {0} &c- ops have been warned.", action);
+            Chat.MessageFromOps(p, "λNICK &4appears to be " + action + "ing");
+            Logger.Log(LogType.SuspiciousActivity, "{0} appears to be {1}ing", p.name, action);
+            last = now.AddSeconds(5);
         }
     }
 }

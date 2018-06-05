@@ -48,8 +48,6 @@ namespace MCGalaxy.Commands.Info {
             block = p.level.GetBlock(x, y, z);
             p.RevertBlock(x, y, z);
             Dictionary<int, string> names = new Dictionary<int, string>();
-            
-            System.Threading.Thread.Sleep(1000000);
 
             Player.Message(p, "Retrieving block change records..");
             bool foundAny = false;

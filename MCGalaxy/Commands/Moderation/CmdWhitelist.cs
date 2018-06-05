@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCGalaxy)
  
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -51,8 +51,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Server.whiteList.Add(player);
-            string src = p == null ? "(console)" : p.ColoredName;
-            Chat.MessageOps(src + " %Sadded &f" + player + " %Sto the whitelist.");
+            Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");
             Server.whiteList.Save();
             Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
         }
@@ -63,8 +62,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Server.whiteList.Remove(player);
-            string src = p == null ? "(console)" : p.ColoredName;
-            Chat.MessageOps(src + " %Sremoved &f" + player + " %Sfrom the whitelist.");
+            Chat.MessageFromOps(p, "λNICK %Sremoved &f" + player + " %Sfrom the whitelist.");
             Server.whiteList.Save();
             Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
         }

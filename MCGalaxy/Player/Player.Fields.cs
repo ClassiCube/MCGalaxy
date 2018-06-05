@@ -87,7 +87,6 @@ namespace MCGalaxy {
         public bool parseEmotes = ServerConfig.ParseEmotes;
         public bool opchat;
         public bool adminchat;
-        public bool onWhitelist;
         public bool whisper;
         public string whisperTo = "";
         string partialMessage = "";

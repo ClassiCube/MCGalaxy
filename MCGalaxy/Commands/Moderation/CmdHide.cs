@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (p.hidden) {                
                 if (announceToOps && !p.otherRankHidden) {
-                    Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &finvisible%S.");
+                    Chat.MessageFromOps(p, "To Ops -λNICK%S- is now &finvisible%S.");
                 }
                 
                 string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.otherRankHidden = false;
                 p.oHideRank = LevelPermission.Null;
                 if (announceToOps) {
-                    Chat.MessageOps("To Ops -" + p.ColoredName + "%S- is now &fvisible%S.");
+                    Chat.MessageFromOps(p, "To Ops -λNICK%S- is now &fvisible%S.");
                 }
                 
                 string joinM = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);

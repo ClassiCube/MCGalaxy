@@ -152,6 +152,7 @@ namespace MCGalaxy {
                 
                 Player.Message(pl, msg);
             }
+            
             if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
         #endregion
@@ -160,6 +161,10 @@ namespace MCGalaxy {
         #region Player messaging
         public static void MessageFromLevel(Player source, string msg) {
             MessageFrom(ChatScope.Level, source, msg, source.level, null);
+        }
+        
+        public static void MessageFromOps(Player source, string msg) { 
+            MessageFrom(ChatScope.AboveOrSameRank, source, msg, OpchatPerm, null);  
         }
         
         public static void MessageFrom(Player source, string msg,
@@ -172,6 +177,23 @@ namespace MCGalaxy {
             }
         }
         
+        public static void MessageFrom(ChatScope scope, Player source, string msg, object arg,
+                                       ChatMessageFilter filter, bool irc = false) {
+            Player[] players = PlayerInfo.Online.Items;
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+            if (source == null) source = ConsolePlayer.Instance;
+            
+            foreach (Player pl in players) {
+                if (!scopeFilter(pl, arg)) continue;
+                if (filter != null && !filter(pl, arg)) continue;
+                
+                if (!NotIgnoring(pl, source)) continue;
+                Player.Message(pl, UnescapeMessage(pl, source, msg));
+            }
+            
+            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
+        }
+        
         public static void MessageChat(Player source, string msg,
                                        ChatMessageFilter filter = null, bool irc = false) {
             if (source.level.SeesServerWideChat) {
@@ -182,6 +204,28 @@ namespace MCGalaxy {
             }
         }
         
+        public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
+                                       ChatMessageFilter filter, bool irc = false) {
+            Player[] players = PlayerInfo.Online.Items;
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+            if (source == null) source = ConsolePlayer.Instance;
+            
+            foreach (Player pl in players) {
+                if (!NotIgnoring(pl, source)) continue;
+                // Always show message to self too (unless ignoring self)
+                if (pl != source) {
+                    if (!scopeFilter(pl, arg)) continue;
+                    if (filter != null && !filter(pl, arg)) continue;
+                }
+                
+                Player.Message(pl, UnescapeMessage(pl, source, msg));
+            }
+            
+            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
+            source.CheckForMessageSpam();
+        }
+        
+                
         static string UnescapeMessage(Player pl, Player src, string msg) {
             if (pl.Ignores.Nicks && pl.Ignores.Titles) {
                 string srcColoredTruename = src.color + src.truename;
@@ -201,39 +245,6 @@ namespace MCGalaxy {
                     .Replace("λFULL", src.FullName)
                     .Replace("λNICK", src.ColoredName);
             }
-        }
-        
-        public static void MessageFrom(ChatScope scope, Player source, string msg, object arg,
-                                       ChatMessageFilter filter, bool irc = false) {
-            Player[] players = PlayerInfo.Online.Items;
-            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
-            
-            foreach (Player pl in players) {
-                if (!scopeFilter(pl, arg)) continue;
-                if (filter != null && !filter(pl, arg)) continue;
-                
-                if (!NotIgnoring(pl, source)) continue;
-                Player.Message(pl, UnescapeMessage(pl, source, msg));
-            }
-            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
-        }
-        
-        public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
-                                       ChatMessageFilter filter, bool irc = false) {
-            Player[] players = PlayerInfo.Online.Items;
-            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
-            
-            foreach (Player pl in players) {
-                if (!NotIgnoring(pl, source)) continue;
-                // Always show message to self too (unless ignoring self)
-                if (pl != source) {
-                    if (!scopeFilter(pl, arg)) continue;
-                    if (filter != null && !filter(pl, arg)) continue;
-                }
-                
-                Player.Message(pl, UnescapeMessage(pl, source, msg));
-            }
-            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
         #endregion
     }

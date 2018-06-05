@@ -19,7 +19,7 @@ using System;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
-    public enum PlayerAction { Joker, Unjoker, JoinWorld, Me, Review, Referee, UnReferee };
+    public enum PlayerAction { Me, Review, Referee, UnReferee };
     
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player chats on the server. </summary>

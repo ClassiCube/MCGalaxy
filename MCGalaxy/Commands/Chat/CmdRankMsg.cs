@@ -39,7 +39,6 @@ namespace MCGalaxy.Commands.Chatting {
             
             string msg = grp.Color + "<" + grp.Name + ">λNICK: &f" + text;
             Chat.MessageChat(ChatScope.Rank, p, msg, grp.Permission, null);
-            p.CheckForMessageSpam();
         }
         
         public override void Help(Player p) {

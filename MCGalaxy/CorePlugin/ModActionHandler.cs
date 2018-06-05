@@ -40,10 +40,10 @@ namespace MCGalaxy.Core {
             }
         }
         
-        static void LogAction(ModAction e, Player who, string action) {
+        static void LogAction(ModAction e, Player target, string action) {
             if (e.Announce) {
-                if (who != null) {
-                    Chat.MessageFrom(ChatScope.Global, who, e.FormatMessage(e.TargetName, action),
+                if (target != null) {
+                    Chat.MessageFrom(ChatScope.Global, target, e.FormatMessage(e.TargetName, action),
                                      null, null, true);
                 } else {
                     Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
@@ -179,7 +179,7 @@ namespace MCGalaxy.Core {
                 } else if (who.warn == 2) {
                     Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, e.ActorName);
                     string chatMsg = "by " + e.ActorName + "%S: " + e.Reason;
-                    string kickMsg = "Kicked by " + e.ActorName + "&f: " + e.Reason;
+                    string kickMsg = "Kicked by " + e.ActorName + ": &f" + e.Reason;
                     who.Kick(chatMsg, kickMsg);
                 }
                 who.warn++;

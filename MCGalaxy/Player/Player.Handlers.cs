@@ -512,17 +512,16 @@ namespace MCGalaxy {
             }
 
             text = HandleJoker(text);
-            if (Chatroom != null) { 
-                string roomMsg = "<ChatRoom: " + Chatroom + "> λNICK: &f";
-                Chat.MessageChat(ChatScope.Chatroom, this, roomMsg + text, Chatroom, null);
-                return; // TODO: Don't return here, because can be used to spam??
-            }
-            
+
             OnPlayerChatEvent.Call(this, text);
             if (cancelchat) { cancelchat = false; return; }
 
-            Chat.MessageChat(this, "λFULL &f: " + text, null);
-            CheckForMessageSpam();
+            if (Chatroom != null) { 
+                string roomPrefix = "<ChatRoom: " + Chatroom + "> λNICK: &f";
+                Chat.MessageChat(ChatScope.Chatroom, this, roomPrefix + text, Chatroom, null);
+            } else {
+                Chat.MessageChat(this, "λFULL: &f" + text, null, true);
+            }
         }
         
         bool FilterChat(ref string text, byte continued) {

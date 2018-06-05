@@ -80,14 +80,10 @@ namespace MCGalaxy {
         
         public static void MessageStaff(Player p, string message,
                                         LevelPermission perm, string group) {
-            string chatMsg = "To " + group + " &f-λNICK&f- " + message;
-            
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
-            Chat.MessageFrom(ChatScope.AboveOrSameRank, p, chatMsg, perm, null);
             
-            p.CheckForMessageSpam();
-            Logger.Log(LogType.StaffChat, "({0}): {1}: {2}", group, p.name, message);
-            Server.IRC.Say(p.ColoredName + "%S: " + message, true);
+            string chatMsg = "To " + group + " &f-λNICK&f- " + message;
+            Chat.MessageChat(ChatScope.AboveOrSameRank, p, chatMsg, perm, null, true);
         }
         
         static void HandleWhisper(Player p, string target, string message) {
