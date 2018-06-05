@@ -50,7 +50,7 @@ namespace MCGalaxy.Levels.IO {
         
         public static List<IMapImporter> Formats = new List<IMapImporter>() {
             new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), 
-            new DatImporter(), new BinVoxImporter(), new McLevelImporter(),
+            new DatImporter(), new McLevelImporter(),
         };
         
         protected void ConvertCustom(Level lvl) {
