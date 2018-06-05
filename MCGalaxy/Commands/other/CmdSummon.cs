@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Misc {
                     pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
                 }
             }
-            Chat.MessageLevel(p.level, p.ColoredName + " %Ssummoned everyone");
+            Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
         }
         
         static void SummonPlayer(Player p, string message) {

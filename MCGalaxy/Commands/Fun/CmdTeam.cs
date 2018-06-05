@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Fun {
             if (team == null) {
                 Player.Message(p, "You need to be in a team first to send a team message."); return;
             }
-            team.Chat(p, message);
+            team.Message(p, message);
         }
 
         void HandleOwner(Player p, string[] args) {
@@ -175,7 +175,7 @@ namespace MCGalaxy.Commands.Fun {
             
             // handle '/team leave me alone', for example
             if (args.Length > 1) {
-                team.Chat(p, args.Join(" ")); return;
+                team.Message(p, args.Join(" ")); return;
             }
             
             team.Action(p, "left the team.");

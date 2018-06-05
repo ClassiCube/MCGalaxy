@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands.Eco {
         public override void Help(Player p) {
             Player.Message(p, "%T/Award give/take [player] [award]");
             Player.Message(p, "%HGives/takes [award] award to/from [player]");
-            Player.Message(p, "%H  If only [player] and [award] are provided award is given.");
+            Player.Message(p, "%T/Award [player] [award]");
+            Player.Message(p, "%HShorthand for %T/Award give [player] [award]");
         }
     }
 }

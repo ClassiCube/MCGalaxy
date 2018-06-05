@@ -61,11 +61,14 @@ namespace MCGalaxy.Commands.Eco {
             if (plName.Length == 0) return Awards.AwardsList;
             
             List<Awards.Award> awards = new List<Awards.Award>();
-            foreach (string name in Awards.GetPlayerAwards(plName)) {
+            List<string> playerAwards = Awards.GetPlayerAwards(plName);
+            if (playerAwards == null) return awards;
+            
+            foreach (string awardName in playerAwards) {
                 Awards.Award award = new Awards.Award();
-                award.Name = name;
+                award.Name = awardName;
                 
-                Awards.Award match = Awards.FindExact(name);
+                Awards.Award match = Awards.FindExact(awardName);
                 if (match != null) award.Description = match.Description;
                 awards.Add(award);
             }
@@ -77,8 +80,8 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Awards <player> %H- Lists awards that player has.");
-            Player.Message(p, "%H  If <player> is not given, lists all awards the server has.");
+            Player.Message(p, "%T/Awards %H- Lists all awards the server has");
+            Player.Message(p, "%T/Awards [player] %H- Lists awards that player has");
         }
     }
 }

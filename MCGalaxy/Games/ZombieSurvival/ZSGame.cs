@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCLawl Team -
     Created by Snowl (David D.) and Cazzar (Cayde D.)
 
@@ -269,23 +269,21 @@ namespace MCGalaxy.Games {
             if (Picker.Voting && Picker.HandlesMessage(p, message)) return true;
             
             if (message[0] == '~' && message.Length > 1) {
-                Player[] players = PlayerInfo.Online.Items;
-                bool infected = Get(p).Infected;
-                string type = infected ? " &cto zombies%S: " : " &ato humans%S: ";
-                string msg = p.ColoredName + type + message.Substring(1);
+                message = message.Substring(1);
                 
-                foreach (Player pl in players) {
-                    if (pl.level != Map || !Chat.NotIgnoring(pl, p)) continue;
-                    if (pl.Game.Referee || Get(pl).Infected == infected) {
-                        pl.SendMessage(msg);
-                    }
+                if (Get(p).Infected) {
+                    Chat.MessageChat(ChatScope.Level, p, "λNICK &cto zombies%S: " + message,
+                                    Map, (pl, arg) => pl.Game.Referee || Get(pl).Infected);
+                } else {
+                    Chat.MessageChat(ChatScope.Level, p, "λNICK &ato humans%S: " + message,
+                                    Map, (pl, arg) => pl.Game.Referee || !Get(pl).Infected);
                 }
                 return true;
             } else if (message[0] == '`' && message.Length > 1) {
                 if (p.Game.Team == null) {
                     Player.Message(p, "You are not on a team, so cannot send a team message."); return true;
                 }
-                p.Game.Team.Chat(p, message.Substring(1));
+                p.Game.Team.Message(p, message.Substring(1));
                 return true;
             }
             return false;

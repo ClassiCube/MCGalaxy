@@ -164,7 +164,7 @@ namespace MCGalaxy {
         }
         
         public void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
-        	string msg = PlayerInfo.GetColoredName(p, name);
+            string msg = PlayerInfo.GetColoredName(p, name);
             if (removedFromOpposite) {
                 msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
             } else {

@@ -32,7 +32,7 @@ namespace MCGalaxy.Eco {
             new ColumnDesc("salary", ColumnType.VarChar, 255),
             new ColumnDesc("fine", ColumnType.VarChar, 255),
         };
-		
+        
         public static void LoadDatabase() {
             Database.Backend.CreateTable("Economy", createEconomy);
             using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
@@ -57,13 +57,13 @@ namespace MCGalaxy.Eco {
         public static void UpdateMoney(string name, int money) {
             Database.Backend.UpdateRows("Players", "Money = @1", "WHERE Name = @0", name, money);
         }
-		
+        
 
         public struct EcoStats {
             public string Player, Purchase, Payment, Salary, Fine; public int TotalSpent;
         }
-		
-		public static void UpdateStats(EcoStats stats) {
+        
+        public static void UpdateStats(EcoStats stats) {
             Database.Backend.AddOrReplaceRow("Economy", "player, money, total, purchase, payment, salary, fine",
                                              stats.Player, 0, stats.TotalSpent, stats.Purchase,
                                              stats.Payment, stats.Salary, stats.Fine);

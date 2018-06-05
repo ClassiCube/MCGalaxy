@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Eco {
         static char[] awardArgs = new char[] { ':' };
 
         public override void Use(Player p, string message) {
-            if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }            
+            if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 
             if (IsCreateCommand(args[0])) {
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Eco {
         public override void Help(Player p) {
             Player.Message(p, "%T/AwardMod add/del [award name] : [description]");
             Player.Message(p, "%HAdds or deletes a reward with the name [award name]");
-            Player.Message(p, "%T/AwardMod add Bomb joy : Bomb lots of people %His an example");
+            Player.Message(p, "%H  e.g. %T/AwardMod add Bomb voyage : Blow up a lot of TNT");
         }
     }
 }

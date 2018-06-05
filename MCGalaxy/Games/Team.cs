@@ -26,38 +26,29 @@ namespace MCGalaxy.Games {
         public string Color, Name, Owner;
         public List<string> Members = new List<string>();
         
-        public Team() { }        
+        public Team() { }
         public Team(string name, string owner) {
             Name = name;
             Owner = owner;
             Members.Add(owner);
         }
         
-        public void Chat(Player source, string message) {
-            string toSend = "&9- to team - " + source.ColoredName + ": &f" + message;
-            foreach (string name in Members) {
-                Player p = PlayerInfo.FindExact(name);
-                if (p == null || !MCGalaxy.Chat.NotIgnoring(p, source)) continue;
-                Player.Message(p, toSend);
-            }
+        public void Message(Player source, string message) {
+            MessageOnline(source, "&9- to team - λNICK: &f" + message);
         }
         
         public void Action(Player source, string message) {
-            string toSend = "Team - " + source.ColoredName + " %S" + message;
-            foreach (string name in Members) {
-                Player p = PlayerInfo.FindExact(name);
-                if (p == null) continue;
-                Player.Message(p, toSend);
-            }
+            MessageOnline(source, "Team - λNICK %S" + message);
+        }
+        
+        void MessageOnline(Player source, string message) {
+            Chat.MessageFrom(ChatScope.All, source, message, this,
+                             (pl, arg) => pl.Game.Team == arg);
         }
         
         public bool Remove(string name) {
-            for (int i = 0; i < Members.Count; i++) {
-                if (!name.CaselessEq(Members[i])) continue;
-                Members.RemoveAt(i); return true;
-            }
-            return false;
-        }        
+        	return Members.CaselessRemove(name);
+        }
                 
         public void RemoveIfEmpty() {
             if (Members.Count > 0) return;

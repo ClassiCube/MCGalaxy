@@ -224,7 +224,7 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
             foreach (Player pl in players) {
-                if (!NotIgnoring(pl, source)) continue;               
+                if (!NotIgnoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
                 if (pl != source) {
                     if (!scopeFilter(pl, arg)) continue;
