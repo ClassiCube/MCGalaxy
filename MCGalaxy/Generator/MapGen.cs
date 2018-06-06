@@ -82,7 +82,7 @@ namespace MCGalaxy.Generator {
         }
         
         
-        static Dictionary<string, MapGenerator> simpleGens, advGens;        
+        static Dictionary<string, MapGenerator> simpleGens, advGens;
         public static void RegisterSimpleGen(string theme, MapGenerator gen) {
             simpleGens[theme.ToLower()] = gen;
         }

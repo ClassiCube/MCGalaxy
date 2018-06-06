@@ -42,8 +42,10 @@ namespace MCGalaxy.Games {
             if (Status != CountdownGameStatus.RoundInProgress || !FreezeMode) return;
             if (!Remaining.Contains(p)) return;
             
-            if (next.X != p.CountdownFreezeX || next.Z != p.CountdownFreezeZ) {
-                next.X = p.CountdownFreezeX; next.Z = p.CountdownFreezeZ;
+            int freezeX = p.Extras.GetInt("MCG_CD_X");
+            int freezeZ = p.Extras.GetInt("MCG_CD_Z");
+            if (next.X != freezeX || next.Z != freezeZ) {
+                next.X = freezeX; next.Z = freezeZ;
                 p.SendPos(Entities.SelfID, next, new Orientation(yaw, pitch));
             }
             

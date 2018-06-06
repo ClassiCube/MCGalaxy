@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (args[0] == null) return;
             Player who = PlayerInfo.FindExact(args[0]);
             if (args.Length == 1) {
-                Player.Message(p, Colors.red + "You must specify a type to modify.");
+                Player.Message(p, "&cYou must specify a type to modify.");
                 MessageValidTypes(p); return;
             }
             
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Maintenance {
             } else if (opt == "titlecolor") {
                 SetColor(p, args, PlayerData.ColumnTColor, who, v => who.titlecolor = v);
             } else {
-                Player.Message(p, Colors.red + "Invalid type.");
+                Player.Message(p, "&cInvalid type");
                 MessageValidTypes(p);
             }
         }

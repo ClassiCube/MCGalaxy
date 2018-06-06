@@ -40,10 +40,10 @@ namespace MCGalaxy {
         public const string Chat = "Chat", Guns = "Guns", Buildable = "Buildable", Deletable = "Deletable", LoadDelay = "LoadDelay";
         
         public static List<LevelOption> Options = new List<LevelOption>() {
-             new LevelOption(MOTD,        SetMotd,  "%HSets the motd for this map. (leave blank to use default motd)"),
-             new LevelOption(RealmOwner,  SetOwner, "%HSets the players allowed to use /realm on this map."),
-             new LevelOption(TreeType,    SetTree,  "%HSets the type of trees saplings grow into."),
-             new LevelOption(Speed,       SetSpeed, "%HSets the delay (in milliseconds) between physics ticks."),
+             new LevelOption(MOTD,       SetMotd,  "%HSets the motd for this map. (leave blank to use default motd)"),
+             new LevelOption(RealmOwner, SetOwner, "%HSets the players allowed to use /realm on this map."),
+             new LevelOption(TreeType,   SetTree,  "%HSets the type of trees saplings grow into."),
+             new LevelOption(Speed,      SetSpeed, "%HSets the delay (in milliseconds) between physics ticks."),
              new LevelOption(Overload, SetOverload, "%HSets how hard (high values) or easy (low values) it is to kill physics."),
              new LevelOption(Fall,   SetFall,   "%HSets how many blocks you can fall before dying."),
              new LevelOption(Drown,  SetDrown,  "%HSets how long you can stay underwater (in tenths of a second) before drowning."),

@@ -25,9 +25,7 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Backend;
         
         /// <summary> Returns whether the given table exists in the database. </summary>
-        public static bool TableExists(string table) {
-            return Backend.TableExists(table);
-        }
+        public static bool TableExists(string table) { return Backend.TableExists(table); }
 
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
@@ -74,7 +72,7 @@ namespace MCGalaxy.SQL {
         
         static void DoDatabaseCall(ParameterisedQuery query, string sql, bool createDB, 
                                    DataTable results, ReaderCallback callback, params object[] args) {
-            BindParams(query, args);
+            query.parameters = args;
             string connString = Backend.ConnectionString;
             Exception e = null;
             
@@ -88,38 +86,27 @@ namespace MCGalaxy.SQL {
                         query.Fill(sql, connString, results);
                     }
                     
-                    query.ClearParams();
+                    query.parameters = null;
                     return;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
             }
             
+            query.parameters = null;
             File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
             Logger.LogError(e);
         }
 
         
-        static readonly object idsLock = new object();
-        static string[] ids = null;
-        static void BindParams(ParameterisedQuery query, object[] args) {
-            if (args == null || args.Length == 0) return;
-            string[] names = GetParamNames(args.Length);
-            for (int i = 0; i < args.Length; i++)
-                query.AddParam(names[i], args[i]);
-        }
-        
+        volatile static string[] ids;
         internal static string[] GetParamNames(int count) {
             // Avoid allocation overhead from string concat every query by caching
-            string[] names = null;
-            lock (idsLock) {
-                names = ids;
-                if (ids == null || count > ids.Length) {
-                    ids = new string[count];
-                    for (int i = 0; i < count; i++)
-                        ids[i] = "@" + i;
-                    names = ids;
-                }
+            string[] names = ids;
+            if (names == null || count > names.Length) {
+                names = new string[count];
+                for (int i = 0; i < names.Length; i++) { names[i] = "@" + i; }
+                ids = names;
             }
             return names;
         }

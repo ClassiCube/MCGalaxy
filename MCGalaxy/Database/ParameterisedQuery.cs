@@ -28,23 +28,12 @@ namespace MCGalaxy.SQL {
     /// <summary> Represents an SQL command or query, that takes named parameters/arguments. </summary>
     public abstract class ParameterisedQuery {
         
-        protected Dictionary<string, object> parameters = new Dictionary<string, object>();
-        
-        /// <summary> Adds a named parameter/argument to this query. </summary>
-        public void AddParam(string name, object param) { parameters.Add(name, param); }
-        
-        /// <summary> Clears the cached named parameters/arguments. </summary>
-        public void ClearParams() { parameters.Clear(); }
-
-        
+        internal object[] parameters;
         protected abstract bool MultipleSchema { get; }
         
-        protected abstract IDbConnection CreateConnection(string connString);
-        
-        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);
-        
-        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);
-        
+        protected abstract IDbConnection CreateConnection(string connString);        
+        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);        
+        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);        
         protected abstract IDbDataParameter CreateParameter();
         
         
@@ -97,12 +86,16 @@ namespace MCGalaxy.SQL {
         }
         
         void FillParams(IDbCommand cmd) {
-            foreach (var param in parameters) {
-                IDbDataParameter dParam = CreateParameter();
-                dParam.ParameterName = param.Key;
-                dParam.Value = param.Value;
-                cmd.Parameters.Add(dParam);
+            object[] args = parameters;
+            if (args == null || args.Length == 0) return;
+            
+            string[] names = Database.GetParamNames(args.Length);
+            for (int i = 0; i < args.Length; i++) {
+                IDbDataParameter dbParam = CreateParameter();
+                dbParam.ParameterName = names[i];
+                dbParam.Value = args[i];
+                cmd.Parameters.Add(dbParam);
             }
-        }     
+        }
     }
 }

@@ -189,53 +189,43 @@ namespace MCGalaxy.Gui {
         
         void Main_UpdateMapList() {
             Level[] loaded = LevelInfo.Loaded.Items;
+            string selected = GetSelected(main_Maps);
             
-            // Try to keep the same selection on update
-            string selected = null;
-            var selectedRows = main_Maps.SelectedRows;
-            if (selectedRows.Count > 0) {
-                selected = (string)selectedRows[0].Cells[0].Value;
-            }
-            
-            // Update the data source and control
-            lc = new LevelCollection();
+            // Always new data source, avoids "-1 does not have a value" when clicking a row
+            LevelCollection lc = new LevelCollection();
             foreach (Level lvl in loaded) { lc.Add(lvl); }
             main_Maps.DataSource = lc;
             
-            // Reselect map
-            if (selected != null) {
-                foreach (DataGridViewRow row in main_Maps.Rows) {
-                    string name = (string)row.Cells[0].Value;
-                    if (name.CaselessEq(selected)) row.Selected = true;
-                }
-            }
+            Reselect(main_Maps, selected);
             main_Maps.Refresh();
         }
         
         void Main_UpdatePlayersList() {
             UpdateNotifyIconText();
             Player[] players = PlayerInfo.Online.Items;
+            string selected = GetSelected(main_Players);
 
-            // Try to keep the same selection on update
-            string selected = null;
-            var selectedRows = main_Players.SelectedRows;
-            if (selectedRows.Count > 0) {
-                selected = (string)selectedRows[0].Cells[0].Value;
-            }
-
-            // Update the data source and control
-            pc = new PlayerCollection();
+            PlayerCollection pc = new PlayerCollection();
             foreach (Player pl in players) { pc.Add(pl); }
             main_Players.DataSource = pc;
             
-            // Reselect player
-            if (selected != null) {
-                foreach (DataGridViewRow row in main_Players.Rows) {
-                    string name = (string)row.Cells[0].Value;
-                    if (name.CaselessEq(selected)) row.Selected = true;
-                }
-            }
+            Reselect(main_Players, selected);
             main_Players.Refresh();
+        }
+        
+        static string GetSelected(DataGridView view) {
+            DataGridViewSelectedRowCollection selected = view.SelectedRows;
+            if (selected.Count == 0) return null;
+            return (string)selected[0].Cells[0].Value;
+        }
+        
+        static void Reselect(DataGridView view, string selected) {
+        	if (selected == null) return;
+        	
+        	foreach (DataGridViewRow row in view.Rows) {
+                string name = (string)row.Cells[0].Value;
+                if (name.CaselessEq(selected)) row.Selected = true;
+            }
         }
     }
 }

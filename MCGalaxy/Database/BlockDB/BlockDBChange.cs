@@ -48,7 +48,7 @@ namespace MCGalaxy.DB {
             if (!p.level.Props[block].IsMessageBlock) return;
 
             try {
-                if (!Database.Backend.TableExists("Messages" + p.level.name)) return;
+                if (!Database.TableExists("Messages" + p.level.name)) return;
                 DataTable messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
                 int last = messages.Rows.Count - 1;
@@ -65,7 +65,7 @@ namespace MCGalaxy.DB {
             if (!p.level.Props[block].IsPortal) return;
 
             try {
-                if (!Database.Backend.TableExists("Portals" + p.level.name)) return;
+                if (!Database.TableExists("Portals" + p.level.name)) return;
                 DataTable portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
                                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
                 int last = portals.Rows.Count - 1;

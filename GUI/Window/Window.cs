@@ -34,8 +34,6 @@ namespace MCGalaxy.Gui {
         delegate void VoidDelegate();
         bool mapgen = false;
 
-        PlayerCollection pc;
-        LevelCollection lc;
         public NotifyIcon notifyIcon = new NotifyIcon();
         Player curPlayer;
 
@@ -59,11 +57,9 @@ namespace MCGalaxy.Gui {
             Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
             MakeNotifyIcon();
             
-            // Bind player list
-            main_Players.DataSource = pc;
-            main_Players.Font = new Font("Calibri", 8.25f);
-
-            main_Maps.DataSource = new LevelCollection(); // Otherwise "-1 does not have a value" exception when clicking a row
+            main_Players.DataSource = new PlayerCollection();
+            main_Players.Font = new Font("Calibri", 8.25f);            
+            main_Maps.DataSource = new LevelCollection();
             main_Maps.Font = new Font("Calibri", 8.25f);
         }
         

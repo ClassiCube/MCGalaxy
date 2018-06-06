@@ -47,10 +47,10 @@ namespace MCGalaxy.Games {
         }
         
         public bool Remove(string name) {
-        	return Members.CaselessRemove(name);
+            return Members.CaselessRemove(name);
         }
                 
-        public void RemoveIfEmpty() {
+        public void DeleteIfEmpty() {
             if (Members.Count > 0) return;
             Teams.Remove(this);
         }        

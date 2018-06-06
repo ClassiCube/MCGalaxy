@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Fun {
                     who.SetPrefix();
                 }
                 
-                team.RemoveIfEmpty();
+                team.DeleteIfEmpty();
                 Team.SaveList();
             } else {
                 Player.Message(p, "The given player was not found. You need to use their full account name.");
@@ -182,7 +182,7 @@ namespace MCGalaxy.Commands.Fun {
             team.Remove(p.name);
             p.Game.Team = null;
             
-            team.RemoveIfEmpty();
+            team.DeleteIfEmpty();
             p.SetPrefix();
             Team.SaveList();
         }

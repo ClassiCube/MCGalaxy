@@ -143,10 +143,6 @@ namespace MCGalaxy {
         /// <summary> Temp unique ID for this session only. </summary>
         public int SessionID;
 
-        //Countdown
-        public int CountdownFreezeX;
-        public int CountdownFreezeZ;
-
         //Tnt Wars
         public bool PlayingTntWars;
         public int CurrentAmountOfTnt;

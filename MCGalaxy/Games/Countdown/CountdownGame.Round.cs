@@ -104,8 +104,8 @@ namespace MCGalaxy.Games {
                 Player[] players = Players.Items;
                 foreach (Player pl in players) {
                     Position pos = pl.Pos;
-                    pl.CountdownFreezeX = pos.X;
-                    pl.CountdownFreezeZ = pos.Z;
+                    pl.Extras.PutInt("MCG_CD_X", pos.X);
+                    pl.Extras.PutInt("MCG_CD_Z", pos.Z);
                 }
                 RemoveAllSquareBorders();
             }
