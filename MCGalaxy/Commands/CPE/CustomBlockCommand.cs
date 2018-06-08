@@ -181,7 +181,7 @@ namespace MCGalaxy.Commands.CPE {
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition def = defs[block];
-            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
+            if (def == null) { MessageNoBlock(p, block, global, cmd); return; }
             
             Player.Message(p, "About {0} ({1})", def.Name, Block.ToRaw(block));
             Player.Message(p, "  Draw type: {0}, Blocks light: {1}, collide type: {2}",
