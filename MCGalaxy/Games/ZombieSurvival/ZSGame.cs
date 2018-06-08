@@ -271,7 +271,7 @@ namespace MCGalaxy.Games {
             if (alive.Length == 0) return;
             
             Player zombie = alive[random.Next(alive.Length)];
-            Map.ChatLevel("&c" + zombie.DisplayName + " %Scontinued the infection!");
+            Map.Message("&c" + zombie.DisplayName + " %Scontinued the infection!");
             InfectPlayer(zombie, null);
         }
         
@@ -306,7 +306,7 @@ namespace MCGalaxy.Games {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
                 
                 string target = PlayerInfo.GetColoredName(p, b.Target);
-                Map.ChatLevel("Bounty on " + target + " %Sis no longer active.");
+                Map.Message("Bounty on " + target + " %Sis no longer active.");
                 Bounties.Remove(b);
                 
                 Player setter = PlayerInfo.FindExact(b.Origin);

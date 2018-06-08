@@ -65,7 +65,7 @@ namespace MCGalaxy {
             msg += " %Sin " + ColoredName;
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvl.name);
             
-            Chat.MessageLevel(lvl, msg);           
+            lvl.Message(msg);           
             if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} %Son {1}", msg, lvl.ColoredName);
             }

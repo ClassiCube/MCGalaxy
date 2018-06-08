@@ -603,7 +603,7 @@ namespace MCGalaxy {
         string HandleJoker(string text) {
             if (!joker) return text;
             Logger.Log(LogType.PlayerChat, "<JOKER>: {0}: {1}", name, text);
-            Chat.MessageOps("%S<&aJ&bO&cK&5E&9R%S>: " + ColoredName + ":&f " + text);
+            Chat.MessageFromOps(this, "%S<&aJ&bO&cK&5E&9R%S>: λNICK:&f " + text);
 
             TextFile jokerFile = TextFile.Files["Joker"];
             jokerFile.EnsureExists();

@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
             Status = CountdownGameStatus.Disabled;
             UnhookEventHandlers();
             
-            Map.ChatLevel("Countdown was disabled.");
+            Map.Message("Countdown was disabled.");
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
@@ -106,7 +106,7 @@ namespace MCGalaxy.Games {
             }
             
             bulk.Send(true);
-            Map.ChatLevel("Countdown map has been reset");
+            Map.Message("Countdown map has been reset");
         }
         
         

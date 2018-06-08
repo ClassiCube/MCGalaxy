@@ -34,7 +34,7 @@ namespace MCGalaxy.Games {
             while (RoundInProgress && roundSecs < data.roundTotalSecs) {
                 if (!running) return;
                 if ((announceSecs % 60) == 0 && !Flooded) {
-                    Map.ChatLevel(FloodTimeLeftMessage());
+                    Map.Message(FloodTimeLeftMessage());
                 }
                 if (floodSecs >= data.floodDelaySecs) DoFlood();
                 
@@ -54,7 +54,7 @@ namespace MCGalaxy.Games {
                     data.currentLayer++;
                 }
             } else if (!data.layer && floodSecs == data.floodDelaySecs) {
-                Map.ChatLevel("&4Look out, here comes the flood!");
+                Map.Message("&4Look out, here comes the flood!");
                 Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
                 Map.Blockchange(mapSettings.FloodPos.X, mapSettings.FloodPos.Y, mapSettings.FloodPos.Z, data.block, true);
             }
@@ -67,7 +67,7 @@ namespace MCGalaxy.Games {
             
             Flooded = false;
             Map.SetPhysics(5);
-            Map.ChatLevel("The round has ended!");
+            Map.Message("The round has ended!");
         }
 
         internal string FloodTimeLeftMessage() {

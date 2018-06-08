@@ -32,7 +32,7 @@ namespace MCGalaxy {
         /// <summary> Messages all players of a given rank </summary>
         Rank,
         /// <summary> Messages all players of or above a given rank (e.g. /opchat) </summary>
-        AboveOrSameRank,
+        AboveEqRank,
         /// <summary> Messages all players below a given rank </summary>
         BelowRank,
     }
@@ -71,8 +71,7 @@ namespace MCGalaxy {
             return source == null || !target.Ignores.Names.CaselessContains(source.name);
         }
         
-        
-        #region Filters
+
         public static bool FilterAll(Player pl, object arg) { return true; }
         public static bool FilterGlobal(Player pl, object arg) {
             return pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null;
@@ -99,30 +98,14 @@ namespace MCGalaxy {
         public static ChatMessageFilter FilterVisible(Player source) {
             return (pl, obj) => Entities.CanSee(pl, source);
         }
+ 
         
-        static bool FilterIRC(Player pl, object arg) {
-            return !pl.Ignores.IRC && !pl.Ignores.IRCNicks.Contains((string)arg);
-        }
-        static ChatMessageFilter filterIRC = FilterIRC;
-        
-        #endregion
-        
-        
-        #region Server messaging
         public static void MessageAll(string msg) { Message(ChatScope.All, msg, null, null); }
         public static void MessageGlobal(string msg) { Message(ChatScope.Global, msg, null, null); }
-        public static void MessageLevel(Level lvl, string msg) { Message(ChatScope.Level, msg, lvl, null); }
         public static void MessageOps(string msg) { MessageAboveOrSameRank(OpchatPerm, msg); }
         
         public static void MessageAboveOrSameRank(LevelPermission rank, string msg) {
-            Message(ChatScope.AboveOrSameRank, msg, rank, null);
-        }
-        public static void MessageBelowRank(LevelPermission rank, string msg) {
-            Message(ChatScope.BelowRank, msg, rank, null);
-        }
-        
-        public static void MessageGlobalIRC(string srcNick, string message) {
-            Message(ChatScope.Global, message, srcNick, filterIRC);
+            Message(ChatScope.AboveEqRank, msg, rank, null);
         }
         
         public static void MessageGlobal(string message, object a0) {
@@ -155,16 +138,14 @@ namespace MCGalaxy {
             
             if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
-        #endregion
         
         
-        #region Player messaging
         public static void MessageFromLevel(Player source, string msg) {
             MessageFrom(ChatScope.Level, source, msg, source.level, null);
         }
         
         public static void MessageFromOps(Player source, string msg) { 
-            MessageFrom(ChatScope.AboveOrSameRank, source, msg, OpchatPerm, null);  
+            MessageFrom(ChatScope.AboveEqRank, source, msg, OpchatPerm, null);  
         }
         
         public static void MessageFrom(Player source, string msg,
@@ -193,6 +174,7 @@ namespace MCGalaxy {
             
             if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
+        
         
         public static void MessageChat(Player source, string msg,
                                        ChatMessageFilter filter = null, bool irc = false) {
@@ -246,6 +228,5 @@ namespace MCGalaxy {
                     .Replace("λNICK", src.ColoredName);
             }
         }
-        #endregion
     }
 }

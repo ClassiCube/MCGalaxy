@@ -102,11 +102,11 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             
             if (Blue.Points > Red.Points) {
-                Chat.MessageLevel(Map, Blue.ColoredName + " %Swon this round of CTF!");
+                Map.Message(Blue.ColoredName + " %Swon this round of CTF!");
             } else if (Red.Points > Blue.Points) {
-                Chat.MessageLevel(Map, Red.ColoredName + " %Swon this round of CTF!");
+                Map.Message(Red.ColoredName + " %Swon this round of CTF!");
             } else {
-                Chat.MessageLevel(Map, "The round ended in a tie!");
+                Map.Message("The round ended in a tie!");
             }
             
             Blue.Points = 0;
@@ -115,7 +115,7 @@ namespace MCGalaxy.Games {
             
             Thread.Sleep(4000);
             SaveDB();
-            Chat.MessageLevel(Map, "Starting next round!");
+            Map.Message("Starting next round!");
         }
         
         void SaveDB() {
@@ -135,7 +135,7 @@ namespace MCGalaxy.Games {
         /// <summary> Called when the given player takes the opposing team's flag. </summary>
         void TakeFlag(Player p, CtfTeam team) {
             CtfTeam opposing = Opposing(team);
-            Chat.MessageLevel(Map, team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
+            Map.Message(team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
             
             CtfData data = Get(p);
             data.HasFlag = true;
@@ -150,7 +150,7 @@ namespace MCGalaxy.Games {
             
             CtfData data = Get(p);
             if (data.HasFlag) {
-                Chat.MessageLevel(Map, team.Color + p.DisplayName + " RETURNED THE FLAG!");
+                Map.Message(team.Color + p.DisplayName + " RETURNED THE FLAG!");
                 data.HasFlag = false;
                 ResetPlayerFlag(p, data);
                 
@@ -173,7 +173,7 @@ namespace MCGalaxy.Games {
             data.HasFlag = false;
             ResetPlayerFlag(p, data);
             
-            Chat.MessageLevel(Map, team.Color + p.DisplayName + " DROPPED THE FLAG!");
+            Map.Message(team.Color + p.DisplayName + " DROPPED THE FLAG!");
             data.Points -= Config.Capture_PointsLost;
             
             CtfTeam opposing = Opposing(team);

@@ -70,7 +70,7 @@ namespace MCGalaxy.Games {
                 
                 List<Player> players = GetPlayers();
                 if (players.Count >= 2) return players;
-                Map.ChatLevel("&cNeed 2 or more non-ref players to start a round.");
+                Map.Message("&cNeed 2 or more non-ref players to start a round.");
             }
         }
         
@@ -80,13 +80,13 @@ namespace MCGalaxy.Games {
             string map = Picker.ChooseNextLevel(this);
             if (map == null) return;
             
-            Map.ChatLevel("The next map has been chosen - &c" + map.ToLower());
-            Map.ChatLevel("Please wait while you are transfered.");
+            Map.Message("The next map has been chosen - &c" + map.ToLower());
+            Map.Message("Please wait while you are transfered.");
             LastMap = Map.MapName;
             
             if (!SetMap(map)) {
-                Map.ChatLevel("&cFailed to change map to " + map);
-                Map.ChatLevel("Continuing " + GameName + " on the same map");
+                Map.Message("&cFailed to change map to " + map);
+                Map.Message("Continuing " + GameName + " on the same map");
             } else {
                 TransferPlayers(LastMap);
                 Command.Find("Unload").Use(null, LastMap);
@@ -143,7 +143,7 @@ namespace MCGalaxy.Games {
                 TabList.Update(pl, true);
             }
             
-            if (Map != null) Map.ChatLevel(GameName + " %Sgame ended");
+            if (Map != null) Map.Message(GameName + " %Sgame ended");
             Logger.Log(LogType.GameActivity, "[{0}] Game ended", GameName);
             
             Picker.Clear();

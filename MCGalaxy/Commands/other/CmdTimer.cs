@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands.Misc {
             args.Player = p;
             
             p.cmdTimer = true;
-            Chat.MessageLevel(p.level, "Timer lasting for " + TotalTime + " seconds has started.");
-            Chat.MessageLevel(p.level, args.Message);
+            p.level.Message("Timer lasting for " + TotalTime + " seconds has started.");
+            p.level.Message(args.Message);
             Server.MainScheduler.QueueRepeat(TimerCallback, args, TimeSpan.FromSeconds(5));
         }
         
@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands.Misc {
                 p.cmdTimer = false;
                 task.Repeating = false;
             } else {
-                Chat.MessageLevel(p.level, args.Message);
-                Chat.MessageLevel(p.level, "Timer has " + (args.Repeats * 5) + " seconds remaining.");
+                p.level.Message(args.Message);
+                p.level.Message("Timer has " + (args.Repeats * 5) + " seconds remaining.");
             }
         }
         

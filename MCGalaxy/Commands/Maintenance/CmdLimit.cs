@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 Player.Message(p, type + ": &b" + target);
             } else {
                 target = value;
-                Chat.MessageGlobal(type + " set to &b" + target);                
+                Chat.MessageGlobal(type + " set to &b" + target);
                 SrvProperties.Save();
             }
         }

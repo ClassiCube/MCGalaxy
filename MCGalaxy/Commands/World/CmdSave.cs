@@ -72,10 +72,10 @@ namespace MCGalaxy.Commands.World {
             
             if (restoreName.Length == 0) {
                 Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, num);
-                lvl.ChatLevel("Backup " + num + " saved for " + lvl.ColoredName);
+                lvl.Message("Backup " + num + " saved for " + lvl.ColoredName);
             } else {
                 Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, restoreName);
-                lvl.ChatLevel(lvl.ColoredName + " %Shad a backup created named &b" + restoreName);
+                lvl.Message(lvl.ColoredName + " %Shad a backup created named &b" + restoreName);
             }
         }
         

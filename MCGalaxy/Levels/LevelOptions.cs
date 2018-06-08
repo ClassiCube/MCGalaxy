@@ -81,7 +81,7 @@ namespace MCGalaxy {
 
         static void SetMotd(Player p, Level lvl, string value) {
             lvl.Config.MOTD = value.Length == 0 ? "ignore" : value;
-            lvl.ChatLevel("Map's MOTD was changed to: &b" + lvl.Config.MOTD);
+            lvl.Message("Map's MOTD was changed to: &b" + lvl.Config.MOTD);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -173,7 +173,7 @@ namespace MCGalaxy {
         
         static void SetInt(Level lvl, int raw, ref int target, string name) {
             target = raw;
-            lvl.ChatLevel(name + ": &b" + target);
+            lvl.Message(name + ": &b" + target);
         }
         
         
@@ -198,7 +198,7 @@ namespace MCGalaxy {
             target = !target;
             bool display = not ? !target : target;
             string targetStr = display ? "&aON" : "&cOFF";
-            lvl.ChatLevel(name + ": " + targetStr);
+            lvl.Message(name + ": " + targetStr);
             
             if (p != null && p.level != lvl) {
                 Player.Message(p, name + ": " + targetStr);

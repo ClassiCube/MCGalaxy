@@ -49,7 +49,7 @@ namespace MCGalaxy.Games {
             Random random = new Random();
             int roundMins = random.Next(Map.Config.MinRoundTime, Map.Config.MaxRoundTime);
             string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
-            Map.ChatLevel("This round will last for &a" + roundMins + suffix);
+            Map.Message("This round will last for &a" + roundMins + suffix);
             RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
             
             Player[] online = PlayerInfo.Online.Items;
@@ -65,7 +65,7 @@ namespace MCGalaxy.Games {
                 QueuedZombie = null;
             } while (first == null || first.level != Map);
             
-            Map.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
+            Map.Message("&c" + first.DisplayName + " %Sstarted the infection!");
             InfectPlayer(first, null);
         }
         
@@ -126,7 +126,7 @@ namespace MCGalaxy.Games {
                             if (infectCombo >= 2) {
                                 killer.SendMessage("You gained " + (2 + infectCombo) + " " + ServerConfig.Currency);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
-                                Map.ChatLevel("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                Map.Message("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
                         } else {
                             infectCombo = 0;
@@ -186,7 +186,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player p, Player killer) {
             if (!p.Game.PledgeSurvive) return;
             p.Game.PledgeSurvive = false;
-            Map.ChatLevel("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
+            Map.Message("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
                 Player.Message(p, "As this was an automatic infection, you have not lost any &3" + ServerConfig.Currency);
@@ -202,12 +202,12 @@ namespace MCGalaxy.Games {
             
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {
-                Map.ChatLevel("Bounty on " + p.ColoredName + " %Sis no longer active");
+                Map.Message("Bounty on " + p.ColoredName + " %Sis no longer active");
                 if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
                 Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
             } else {
-                Map.ChatLevel("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
+                Map.Message("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
                               bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName);
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
@@ -223,7 +223,7 @@ namespace MCGalaxy.Games {
                 text = infectMessages[random.Next(infectMessages.Count)];
             }
             
-            Map.ChatLevel(string.Format(text,
+            Map.Message(string.Format(text,
                                         "&c" + pKiller.DisplayName + "%S",
                                         pAlive.ColoredName + "%S"));
         }
@@ -248,11 +248,11 @@ namespace MCGalaxy.Games {
             
             if (!Running) return;
             Player[] alive = Alive.Items, dead = Infected.Items;
-            Map.ChatLevel("&aThe game has ended!");
+            Map.Message("&aThe game has ended!");
             
-            if (alive.Length == 0) Map.ChatLevel("&4Zombies have won this round.");
-            else if (alive.Length == 1) Map.ChatLevel("&2Congratulations to the sole survivor:");
-            else Map.ChatLevel("&2Congratulations to the survivors:");
+            if (alive.Length == 0) Map.Message("&4Zombies have won this round.");
+            else if (alive.Length == 1) Map.Message("&2Congratulations to the sole survivor:");
+            else Map.Message("&2Congratulations to the survivors:");
             AnnounceWinners(alive, dead);
             
             Map.Config.RoundsPlayed++;
@@ -267,7 +267,7 @@ namespace MCGalaxy.Games {
 
         void AnnounceWinners(Player[] alive, Player[] dead) {
             if (alive.Length > 0) {
-                Map.ChatLevel(alive.Join(p => p.ColoredName)); return;
+                Map.Message(alive.Join(p => p.ColoredName)); return;
             }
             
             int maxKills = 0, count = 0;
@@ -281,7 +281,7 @@ namespace MCGalaxy.Games {
             string group = count == 1 ? " zombie " : " zombies ";
             string suffix = maxKills == 1 ? " %Skill" : " %Skills";
             StringFormatter<Player> formatter = p => Get(p).CurrentInfected == maxKills ? p.ColoredName : null;
-            Map.ChatLevel("&8Best" + group + "%S(&b" + maxKills + suffix + "%S)&8: " + dead.Join(formatter));
+            Map.Message("&8Best" + group + "%S(&b" + maxKills + suffix + "%S)&8: " + dead.Join(formatter));
         }
 
         void IncreaseAliveStats(Player p) {

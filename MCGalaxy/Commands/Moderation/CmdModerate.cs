@@ -25,9 +25,9 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length > 0) { Help(p); return; }
 
             if (Server.chatmod) {
-                Chat.MessageGlobal("Chat moderation has been disabled. Everyone can now speak.");
+                Chat.MessageAll("Chat moderation has been disabled. Everyone can now speak.");
             } else {
-                Chat.MessageGlobal("Chat moderation engaged! Silence the plebians!");
+                Chat.MessageAll("Chat moderation engaged! Silence the plebians!");
             }
             Server.chatmod = !Server.chatmod;
         }

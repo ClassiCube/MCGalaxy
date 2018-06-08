@@ -58,7 +58,7 @@ namespace MCGalaxy.Games {
             if (!Players.Contains(p)) return;
             
             if (Remaining.Contains(p)) {
-                Map.ChatLevel(p.ColoredName + " %Slogged out, and so is out of countdown");
+                Map.Message(p.ColoredName + " %Slogged out, and so is out of countdown");
                 PlayerLeftGame(p);
             }
             Players.Remove(p);
@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (!respawning || !Remaining.Contains(p)) return;
-            Map.ChatLevel(p.ColoredName + " %Sis out of countdown!");
+            Map.Message(p.ColoredName + " %Sis out of countdown!");
             Remaining.Remove(p);
             UpdatePlayersLeft();
         }

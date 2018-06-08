@@ -83,7 +83,7 @@ namespace MCGalaxy {
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             
             string chatMsg = "To " + group + " &f-λNICK&f- " + message;
-            Chat.MessageChat(ChatScope.AboveOrSameRank, p, chatMsg, perm, null, true);
+            Chat.MessageChat(ChatScope.AboveEqRank, p, chatMsg, perm, null, true);
         }
         
         static void HandleWhisper(Player p, string target, string message) {

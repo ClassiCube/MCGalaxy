@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Fun {
                                     who.ColoredName, amount, ServerConfig.Currency, old.Amount);
                 Server.zombie.Bounties.Remove(old);
             }
-            Server.zombie.Map.ChatLevel(msg);
+            Server.zombie.Map.Message(msg);
             
             Server.zombie.Bounties.Add(new BountyData(p.name, who.name, amount));
             p.SetMoney(p.money - amount);

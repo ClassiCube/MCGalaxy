@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Written By Jack1312
 
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
@@ -54,13 +54,26 @@ namespace MCGalaxy.Commands.Moderation {
                     HandleAdd(p, args); break;
             }
         }
-
-        void HandleList(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
-            string[] users = Directory.GetFiles("extra/reported", "*.txt");
+        
+        static string[] GetReportedUsers() {
+        	string[] users = Directory.GetFiles("extra/reported", "*.txt");
             for (int i = 0; i < users.Length; i++) {
                 users[i] = Path.GetFileNameWithoutExtension(users[i]);
             }
+        	return users;
+        }
+        
+        static void DeleteReport(string user) {
+            if (File.Exists("extra/reportedbackups/" + user + ".txt")) {
+                File.Delete("extra/reportedbackups/" + user + ".txt");
+            }            
+            File.Move("extra/reported/" + user + ".txt", 
+                      "extra/reportedbackups/" + user + ".txt");
+        }
+        
+        void HandleList(Player p, string[] args) {
+            if (!CheckExtraPerm(p, 1)) return;
+            string[] users = GetReportedUsers();
             
             if (users.Length > 0) {
                 Player.Message(p, "The following players have been reported:");
@@ -104,13 +117,11 @@ namespace MCGalaxy.Commands.Moderation {
             }
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
-            if (File.Exists("extra/reportedbackups/" + target + ".txt"))
-                File.Delete("extra/reportedbackups/" + target + ".txt");
             
-            File.Move("extra/reported/" + target + ".txt", "extra/reportedbackups/" + target + ".txt");
+            DeleteReport(target);
             string targetName = PlayerInfo.GetColoredName(p, target);
             Player.Message(p, "Reports on {0} %Swere deleted.", targetName);
-            Chat.MessageOps(p.ColoredName + " %Sdeleted " + target + "'s report.");
+            Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + targetName);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         
@@ -118,17 +129,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckExtraPerm(p, 1)) return;
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
-            string[] files = Directory.GetFiles("extra/reported", "*.txt");
             
-            foreach (string path in files) {
-                string user = Path.GetFileName(path);
-                if (File.Exists("extra/reportedbackups/" + user))
-                    File.Delete("extra/reportedbackups/" + user);
-                File.Move(path, "extra/reportedbackups/" + user);
-            }
+            string[] users = GetReportedUsers();
+            foreach (string user in users) { DeleteReport(user); }
             
-            Player.Message(p, "%aYou have cleared all reports!");
-            Chat.MessageOps(p.ColoredName + "%c cleared ALL reports!");
+            Player.Message(p, "&aYou have cleared all reports!");
+            Chat.MessageFromOps(p, "λNICK &ccleared ALL reports!");
             Logger.Log(LogType.UserActivity, p.name + " cleared ALL reports!");
         }
         
@@ -166,10 +172,10 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Report list %H- Lists all reported players.");
-            Player.Message(p, "%T/Report check [Player] %H- Views reports for that player.");
-            Player.Message(p, "%T/Report delete [Player] %H- Deletes reports for that player.");
+            Player.Message(p, "%T/Report check [player] %H- Views reports for that player.");
+            Player.Message(p, "%T/Report delete [player] %H- Deletes reports for that player.");
             Player.Message(p, "%T/Report clear %H- Clears &call%H reports.");
-            Player.Message(p, "%T/Report [Player] [Reason] %H- Reports that player for the given reason.");
+            Player.Message(p, "%T/Report [player] [reason] %H- Reports that player for the given reason.");
         }
     }
 }

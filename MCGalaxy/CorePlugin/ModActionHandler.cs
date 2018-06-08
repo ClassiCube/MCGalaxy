@@ -42,13 +42,9 @@ namespace MCGalaxy.Core {
         
         static void LogAction(ModAction e, Player target, string action) {
             if (e.Announce) {
-                if (target != null) {
-                    Chat.MessageFrom(ChatScope.Global, target, e.FormatMessage(e.TargetName, action),
-                                     null, null, true);
-                } else {
-                    Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
-                                 null, null, true);
-                }
+                // TODO: Chat.MessageFrom if target is online?
+                Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
+                             null, null, true);
             } else {
                 Chat.MessageOps(e.FormatMessage(e.TargetName, action));
             }
@@ -147,21 +143,21 @@ namespace MCGalaxy.Core {
         }
         
         
+        static void LogIPAction(ModAction e, string type) {
+            LevelPermission perm = CommandExtraPerms.MinPerm("WhoIs");
+            Chat.Message(ChatScope.BelowRank,   e.FormatMessage("An IP", type), perm, null, true);
+            Chat.Message(ChatScope.AboveEqRank, e.FormatMessage(e.TargetName, type), perm, null, true);
+        }
+        
         static void DoBanIP(ModAction e) {
-            LevelPermission perm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageBelowRank(perm,       e.FormatMessage("An IP", "&8IP banned"));
-            Chat.MessageAboveOrSameRank(perm, e.FormatMessage(e.TargetName, "&8IP banned"));
-            
+            LogIPAction(e, "&8IP banned");
             Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Add(e.Target);
             Server.bannedIP.Save();
         }
         
         static void DoUnbanIP(ModAction e) {
-            LevelPermission perm = CommandExtraPerms.MinPerm("whois");
-            Chat.MessageBelowRank(perm,       e.FormatMessage("An IP", "&8IP unbanned"));
-            Chat.MessageAboveOrSameRank(perm, e.FormatMessage(e.TargetName, "&8IP unbanned"));
-            
+            LogIPAction(e, "&8IP unbanned");            
             Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Remove(e.Target);
             Server.bannedIP.Save();
@@ -198,7 +194,7 @@ namespace MCGalaxy.Core {
             string action = newRank.Permission >= e.TargetGroup.Permission ? "promoted to " : "demoted to ";
             LogAction(e, who, action + newRank.ColoredName);
             
-            if (who != null) {
+            if (who != null && e.Announce) {
                 who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /Help for your new set of commands.");
             }
             if (Server.tempRanks.Remove(e.Target)) {

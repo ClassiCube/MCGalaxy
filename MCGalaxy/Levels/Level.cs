@@ -345,12 +345,8 @@ namespace MCGalaxy {
             lvl.UpdateBlockHandlers();
         }
 
-        public void ChatLevel(string message) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level != this) continue;
-                Player.Message(pl, message);
-            }
+        public void Message(string message) {
+            Chat.Message(ChatScope.Level, message, this, null);
         }
         
         public void UpdateBlockPermissions() {

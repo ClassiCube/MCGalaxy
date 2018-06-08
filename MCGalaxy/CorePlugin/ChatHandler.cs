@@ -33,7 +33,7 @@ namespace MCGalaxy.Core {
                 int ponycount = p.Extras.GetInt("MCG_PONY", 0);
                             
                 if (ponycount < 2) {
-                    Chat.MessageGlobal("{0} %Sjust so happens to be a proud brony! Everyone give {0} %Sa brohoof!", p.ColoredName);
+                    Chat.MessageFrom(p, "λNICK %Sjust so happens to be a proud brony! Everyone give λNICK %Sa brohoof!");
                     Logger.Log(LogType.CommandUsage, "{0} used /{1}", p.name, cmd);
                 } else {
                     Player.Message(p, "You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");

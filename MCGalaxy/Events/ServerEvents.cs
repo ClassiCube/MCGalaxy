@@ -42,4 +42,9 @@ namespace MCGalaxy.Events.ServerEvents {
             CallCommon(pl => pl(restarting, message));
         }        
     }
+    
+    public delegate void OnChat();
+    public sealed class OnChatEvent : IEvent<OnChat> {
+    	
+    }
 }

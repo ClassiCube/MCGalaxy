@@ -256,7 +256,7 @@ namespace MCGalaxy {
             Update(lvl);
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvlName);
             
-            if (lvl != null) Chat.MessageLevel(lvl, msg);
+            if (lvl != null) lvl.Message(msg);
             if (p != null && p.level != lvl) {
                 Player.Message(p, "{0} %Son {1}", msg, ColoredName);
             }

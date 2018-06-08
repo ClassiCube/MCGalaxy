@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
             Status = CountdownGameStatus.RoundCountdown;
             ResetMap();
             SetGlassTube(Block.Glass, Block.Glass);
-            Map.ChatLevel("Countdown is about to start!");
+            Map.Message("Countdown is about to start!");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
@@ -47,13 +47,13 @@ namespace MCGalaxy.Games {
                     squaresLeft.Add(new SquarePos(xx, zz));
             
             if (FreezeMode)
-                Map.ChatLevel("Countdown starting with difficulty " + SpeedType + " and mode freeze in:");
+                Map.Message("Countdown starting with difficulty " + SpeedType + " and mode freeze in:");
             else
-                Map.ChatLevel("Countdown starting with difficulty " + SpeedType + " and mode normal in:");
+                Map.Message("Countdown starting with difficulty " + SpeedType + " and mode normal in:");
             
             Thread.Sleep(2000);
             SpawnPlayers(spawnPos);
-            Map.ChatLevel("-----&b5%S-----");
+            Map.Message("-----&b5%S-----");
             
             if (Status != CountdownGameStatus.RoundCountdown) return;
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air);
@@ -61,15 +61,15 @@ namespace MCGalaxy.Games {
             Thread.Sleep(1000);
             
             if (Status != CountdownGameStatus.RoundCountdown) return;
-            Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b4%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b3%S-----"); Thread.Sleep(1000);
             Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air);
             bulk.Send(true);
             
             if (Status != CountdownGameStatus.RoundCountdown) return;
-            Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("GO!!!!!!!");
+            Map.Message("-----&b2%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b1%S-----"); Thread.Sleep(1000);
+            Map.Message("GO!!!!!!!");
             
             if (Status != CountdownGameStatus.RoundCountdown) return;
             Player[] players = Players.Items;
@@ -96,7 +96,7 @@ namespace MCGalaxy.Games {
         void DoRound() {
             if (FreezeMode) {
                 MessageFreezeCountdown();
-                Map.ChatLevel("&bPlayers Frozen");
+                Map.Message("&bPlayers Frozen");
                 
                 Player[] players = Players.Items;
                 foreach (Player pl in players) {
@@ -114,46 +114,46 @@ namespace MCGalaxy.Games {
 
         void MessageFreezeCountdown() {
             Thread.Sleep(500);
-            Map.ChatLevel("Welcome to Freeze Mode of countdown");
-            Map.ChatLevel("You have 15 seconds to stand on a square");
+            Map.Message("Welcome to Freeze Mode of countdown");
+            Map.Message("You have 15 seconds to stand on a square");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(500);
-            Map.ChatLevel("-----&b15%S-----"); Thread.Sleep(500);
-            Map.ChatLevel("Once the countdown is up, you are stuck on your square");
+            Map.Message("-----&b15%S-----"); Thread.Sleep(500);
+            Map.Message("Once the countdown is up, you are stuck on your square");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(500);
-            Map.ChatLevel("-----&b14%S-----"); Thread.Sleep(500);
-            Map.ChatLevel("The squares then start to disappear");
+            Map.Message("-----&b14%S-----"); Thread.Sleep(500);
+            Map.Message("The squares then start to disappear");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(500);
-            Map.ChatLevel("-----&b13%S-----"); Thread.Sleep(500);
-            Map.ChatLevel("Whoever is last out wins!");
+            Map.Message("-----&b13%S-----"); Thread.Sleep(500);
+            Map.Message("Whoever is last out wins!");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(500);
-            Map.ChatLevel("-----&b12%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b11%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b10%S-----");
-            Map.ChatLevel("Only 10 Seconds left to pick your places!");
+            Map.Message("-----&b12%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b11%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b10%S-----");
+            Map.Message("Only 10 Seconds left to pick your places!");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(1000);
-            Map.ChatLevel("-----&b9%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b8%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b7%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b6%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b5%S-----");
-            Map.ChatLevel("5 Seconds left to pick your places!");
+            Map.Message("-----&b9%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b8%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b7%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b6%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b5%S-----");
+            Map.Message("5 Seconds left to pick your places!");
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             Thread.Sleep(1000);
-            Map.ChatLevel("-----&b4%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b3%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b2%S-----"); Thread.Sleep(1000);
-            Map.ChatLevel("-----&b1%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b4%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b3%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b2%S-----"); Thread.Sleep(1000);
+            Map.Message("-----&b1%S-----"); Thread.Sleep(1000);
         }
 
         void CloseOffBoard() {
@@ -190,7 +190,7 @@ namespace MCGalaxy.Games {
 
                 if (squaresLeft.Count % 10 == 0) {
                     if (Status != CountdownGameStatus.RoundInProgress) return;
-                    Map.ChatLevel(squaresLeft.Count + " squares left and " + Remaining.Count + " players remaining!");
+                    Map.Message(squaresLeft.Count + " squares left and " + Remaining.Count + " players remaining!");
                 }
             }
         }
@@ -256,19 +256,19 @@ namespace MCGalaxy.Games {
             
             switch (players.Length) {
                 case 1:
-                    Map.ChatLevel(players[0].ColoredName + " %Sis the winner!");
+                    Map.Message(players[0].ColoredName + " %Sis the winner!");
                     EndRound(players[0]);
                     break;
                 case 2:
-                    Map.ChatLevel("Only 2 Players left:");
-                    Map.ChatLevel(players[0].ColoredName + " %Sand " + players[1].ColoredName);
+                    Map.Message("Only 2 Players left:");
+                    Map.Message(players[0].ColoredName + " %Sand " + players[1].ColoredName);
                     break;
                 case 5:
-                    Map.ChatLevel("Only 5 Players left:");
-                    Map.ChatLevel(players.Join(pl => pl.ColoredName));
+                    Map.Message("Only 5 Players left:");
+                    Map.Message(players.Join(pl => pl.ColoredName));
                     break;
                 default:
-                    Map.ChatLevel(players.Length + " players left!");
+                    Map.Message(players.Length + " players left!");
                     break;
             }
         }
@@ -288,7 +288,7 @@ namespace MCGalaxy.Games {
                 foreach (Player pl in players) {
                     Command.Find("Spawn").Use(pl, "");
                 }
-                Map.ChatLevel("Current round was force ended!");
+                Map.Message("Current round was force ended!");
             }
         }
 
