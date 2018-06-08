@@ -105,9 +105,7 @@ namespace MCGalaxy.Eco {
         }
         
         public override void Serialise(StreamWriter writer) {
-            writer.WriteLine(Name + ":enabled:" + Enabled);
             writer.WriteLine(Name + ":price:" + Price);
-            writer.WriteLine(Name + ":purchaserank:" + (int)PurchaseRank);
         }
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {

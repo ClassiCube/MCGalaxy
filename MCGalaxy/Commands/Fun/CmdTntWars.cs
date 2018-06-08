@@ -179,60 +179,17 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void DoRules(Player p, string[] text) {
-            if (String.IsNullOrEmpty(text[1])) {
-                Player.Message(p, "TNT Wars Rules:");
-                SendRules(p); return;
-            }
-            if (!CheckExtraPerm(p, 1)) return;
-            
-            switch (text[1]) {
-                case "all":
-                case "a":
-                    Player[] players = PlayerInfo.Online.Items;
-                    foreach (Player pl in players) {
-                        Player.Message(pl, "TNT Wars Rules: (sent to all players by " + p.ColoredName + " %S)");
-                        SendRules(pl);
-                    }
-                    Player.Message(p, "TNT Wars: Sent rules to all players");
-                    return;
-
-                case "level":
-                case "l":
-                    foreach (Player pl in p.level.players) {
-                        Player.Message(pl, "TNT Wars Rules: (sent to all players in map by " + p.ColoredName + " %S)");
-                        SendRules(pl);
-                    }
-                    Player.Message(p, "TNT Wars: Sent rules to all current players in map");
-                    return;
-
-                case "players":
-                case "p":
-                    TntWarsGame gm = TntWarsGame.GameIn(p);
-                    if (gm == null) { Player.Message(p, "TNT Wars Error: You aren't in a TNT Wars game!"); return; }
-                    
-                    foreach (TntWarsGame.player pl in gm.Players) {
-                        Player.Message(pl.p, "TNT Wars Rules: (sent to all current players by " + p.ColoredName + " %S)");
-                        SendRules(pl.p);
-                    }
-                    Player.Message(p, "TNT Wars: Sent rules to all current players");
-                    return;
-
-                default:
-                    Player who = PlayerInfo.FindMatches(p, text[1]);
-                    if (who == null) return;
-                    
-                    Player.Message(who, "TNT Wars Rules: (sent to you by " + p.ColoredName + " %S)");
-                    SendRules(who);
-                    Player.Message(p, "TNT Wars: Sent rules to " + who.color + who.name);
-                    return;
-            }
+            Player.Message(p, "TNT Wars Rules:");
+            Player.Message(p, "The aim of the game is to blow up people using TNT!");
+            Player.Message(p, "To place tnt simply place a TNT block and after a short delay it shall explode!");
+            Player.Message(p, "During the game the amount of TNT placable at one time may be limited!");
+            Player.Message(p, "You are not allowed to use hacks of any sort during the game!");
         }
         
         static void SendRules(Player p) {
             Player.Message(p, "The aim of the game is to blow up people using TNT!");
             Player.Message(p, "To place tnt simply place a TNT block and after a short delay it shall explode!");
             Player.Message(p, "During the game the amount of TNT placable at one time may be limited!");
-            Player.Message(p, "You are not allowed to use hacks of any sort during the game!");
         }
         
         void DoScores(Player p, string[] text) {
@@ -1009,23 +966,6 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "TNT Wars Help:");
-            Player.Message(p, "/tw list {l} - Lists all the current games");
-            Player.Message(p, "/tw join <team/level> - join a game on <level> or on <team>(red/blue)");
-            Player.Message(p, "/tw leave - leave the current game");
-            Player.Message(p, "/tw scores <top/team/me> - view the top score/team scores/your scores");
-            Player.Message(p, "/tw players {p} - view the current players in your game");
-            Player.Message(p, "/tw health {hp} - view your currrent amount of health left");
-            
-            if (HasExtraPerm(p, 1)) {
-                Player.Message(p, "/tw rules <all/level/players/<playername>> - send the rules to yourself, all, your map, all players in your game or to one person!");
-                Player.Message(p, "/tw setup {s} - setup the game (do '/tntwars setup help' for more info!");
-            } else {
-                Player.Message(p, "/tw rules - read the rules");
-            }
-        }
-        
         bool DeleteZoneCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             TntWarsGame it = TntWarsGame.GameIn(p);
@@ -1082,6 +1022,21 @@ namespace MCGalaxy.Commands.Fun {
             
             Player.Message(p, "Added zone");
             return false;
+        }
+        
+                
+        public override void Help(Player p) {
+            Player.Message(p, "/tw list {l} - Lists all running games");
+            Player.Message(p, "/tw join <team/level> - join a game on <level> or on <team>(red/blue)");
+            Player.Message(p, "/tw leave - leave the current game");
+            Player.Message(p, "/tw scores <top/team/me> - view the top score/team scores/your scores");
+            Player.Message(p, "/tw players {p} - view the current players in your game");
+            Player.Message(p, "/tw health {hp} - view your currrent amount of health left");
+            Player.Message(p, "/tw rules - read the rules");
+            
+            if (HasExtraPerm(p, 1)) {
+                Player.Message(p, "/tw setup {s} - setup the game (do '/tntwars setup help' for more info!");
+            }
         }
     }
 }

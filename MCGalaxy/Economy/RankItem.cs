@@ -48,9 +48,6 @@ namespace MCGalaxy.Eco {
         }
         
         public override void Serialise(StreamWriter writer) {
-            writer.WriteLine("rank:enabled:" + Enabled);
-            writer.WriteLine("rank:purchaserank:" + (int)PurchaseRank);
-            
             foreach (RankEntry rank in Ranks) {
                 writer.WriteLine("rank:price:" + (int)rank.Perm + ":" + rank.Price);
             }

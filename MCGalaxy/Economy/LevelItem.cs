@@ -60,17 +60,16 @@ namespace MCGalaxy.Eco {
         }
         
         public override void Serialise(StreamWriter writer) {
-            writer.WriteLine("level:enabled:" + Enabled);
-            writer.WriteLine("level:purchaserank:" + (int)PurchaseRank);
-            
             foreach (LevelPreset preset in Presets) {
                 writer.WriteLine();
-                writer.WriteLine("level:levels:" + preset.name + ":name:" + preset.name);
-                writer.WriteLine("level:levels:" + preset.name + ":price:" + preset.price);
-                writer.WriteLine("level:levels:" + preset.name + ":x:" + preset.x);
-                writer.WriteLine("level:levels:" + preset.name + ":y:" + preset.y);
-                writer.WriteLine("level:levels:" + preset.name + ":z:" + preset.z);
-                writer.WriteLine("level:levels:" + preset.name + ":type:" + preset.type);
+                string prefix = "level:levels:" + preset.name;
+                
+                writer.WriteLine(prefix + ":name:" + preset.name);
+                writer.WriteLine(prefix + ":price:" + preset.price);
+                writer.WriteLine(prefix + ":x:" + preset.x);
+                writer.WriteLine(prefix + ":y:" + preset.y);
+                writer.WriteLine(prefix + ":z:" + preset.z);
+                writer.WriteLine(prefix + ":type:" + preset.type);
             }
         }
         

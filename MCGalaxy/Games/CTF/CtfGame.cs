@@ -98,6 +98,13 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Captures", ColumnType.UInt24),
             new ColumnDesc("tags", ColumnType.UInt24),
         };
+        
+        protected override List<Player> GetPlayers() {
+            List<Player> playing = new List<Player>();
+            playing.AddRange(Red.Members.Items);
+            playing.AddRange(Blue.Members.Items);
+            return playing;
+        }
 
         public override void Start(Player p, string map, int rounds) {
             map = GetStartMap(map);

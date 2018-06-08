@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "players":
                     HandlePlayers(p, game); return;
                 case "rules":
-                    HandleRules(p, arg1); return;
+                    HandleRules(p); return;
                     
                 case "download":
                 case "generate":
@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void HandleRules(Player p, string target) {
+        void HandleRules(Player p) {
             Player.Message(p, "The aim of the game is to stay alive the longest.");
             Player.Message(p, "Don't fall in the lava!");
             Player.Message(p, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappearing.");

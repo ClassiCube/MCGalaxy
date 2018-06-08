@@ -28,7 +28,6 @@ namespace MCGalaxy.Games {
         const string propsDir = "properties/lavasurvival/";
         List<string> maps;
         Random rand = new Random();
-        DateTime startTime;
         MapData data;
         MapSettings mapSettings;
         
@@ -52,7 +51,11 @@ namespace MCGalaxy.Games {
             }
             return (LSData)data;
         }
-
+                
+        protected override List<Player> GetPlayers() {
+            return Map.getPlayers();
+        }
+        
         public override void Start(Player p, string map, int rounds) {
             map = GetStartMap(map);
             if (map == null) {

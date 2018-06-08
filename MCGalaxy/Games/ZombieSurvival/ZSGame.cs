@@ -75,7 +75,7 @@ namespace MCGalaxy.Games {
         public override bool Running { get { return running; } }
         
         public ZSGame() { Picker = new ZSLevelPicker(); }
-        public DateTime RoundStart, RoundEnd;
+        public DateTime RoundEnd;
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
@@ -107,6 +107,17 @@ namespace MCGalaxy.Games {
             ZombieStats stats = LoadZombieStats(p.name);
             data.MaxInfected = stats.MaxInfected;     data.TotalInfected = stats.TotalInfected;
             data.MaxRoundsSurvived = stats.MaxRounds; data.TotalRoundsSurvived = stats.TotalRounds;
+        }
+        
+        protected override List<Player> GetPlayers() {
+            Player[] players = PlayerInfo.Online.Items;
+            List<Player> playing = new List<Player>();
+            
+            foreach (Player pl in players) {
+                if (pl.level != Map || pl.Game.Referee) continue;
+                playing.Add(pl);
+            }
+            return playing;
         }
         
         public override void Start(Player p, string map, int rounds) {
@@ -366,10 +377,10 @@ namespace MCGalaxy.Games {
             
             if (table.Rows.Count > 0) {
                 DataRow row = table.Rows[0];
-                stats.TotalRounds = int.Parse(row["TotalRounds"].ToString());
-                stats.MaxRounds = int.Parse(row["MaxRounds"].ToString());
-                stats.TotalInfected = int.Parse(row["TotalInfected"].ToString());
-                stats.MaxInfected = int.Parse(row["MaxInfected"].ToString());
+                stats.TotalRounds   = PlayerData.ParseInt(row["TotalRounds"].ToString());
+                stats.MaxRounds     = PlayerData.ParseInt(row["MaxRounds"].ToString());
+                stats.TotalInfected = PlayerData.ParseInt(row["TotalInfected"].ToString());
+                stats.MaxInfected   = PlayerData.ParseInt(row["MaxInfected"].ToString());
             }
             table.Dispose();
             return stats;

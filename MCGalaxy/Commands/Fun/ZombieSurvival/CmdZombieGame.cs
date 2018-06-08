@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "%HSets how far apart players are allowed to move in a " +
                                "movement packet before they are considered speedhacking. (32 units = 1 block).");
             } else {
-                Help(p);
+                base.Help(p, message);
             }
         }
     }

@@ -39,9 +39,7 @@ namespace MCGalaxy.Games {
             if (Status != CountdownGameStatus.RoundCountdown) return;
             
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
-            int xSpawn = (midX * 32 + 16);
-            int ySpawn = ((Map.Height - 2) * 32);
-            int zSpawn = (midZ * 32 + 16);
+            Position spawnPos = Position.FromFeetBlockCoords(midX, Map.Height - 2, midZ);
             
             squaresLeft.Clear();
             for (int zz = 6; zz < Map.Length - 6; zz += 3)
@@ -54,7 +52,7 @@ namespace MCGalaxy.Games {
                 Map.ChatLevel("Countdown starting with difficulty " + SpeedType + " and mode normal in:");
             
             Thread.Sleep(2000);
-            SpawnPlayers(xSpawn, ySpawn, zSpawn);
+            SpawnPlayers(spawnPos);
             Map.ChatLevel("-----&b5%S-----");
             
             if (Status != CountdownGameStatus.RoundCountdown) return;
@@ -81,8 +79,7 @@ namespace MCGalaxy.Games {
             DoRound();
         }
         
-        void SpawnPlayers(int x, int y, int z) {
-            Position pos = new Position(x, y, z);
+        void SpawnPlayers(Position pos) {
             Player[] players = Players.Items;
             
             foreach (Player pl in players) {
@@ -214,8 +211,8 @@ namespace MCGalaxy.Games {
             Thread.Sleep(Interval);
             Cuboid(x1, y, z1, x2, y, z2, Block.Air);
             bulk.Send(true);
-            // Remove glass borders if neighbouring squared were previously removed.
             
+            // Remove glass borders, if neighbouring squares were previously removed           
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
             if (Map.IsAirAt(x1, y, (ushort)(z2 + 2))) {
                 Map.Blockchange(x1, y, (ushort)(z2 + 1), Block.Air);
@@ -238,7 +235,7 @@ namespace MCGalaxy.Games {
                 airMinX = true;
             }
             
-            // Remove glass borders for diagonals too.
+            // Remove glass borders, if all neighbours to this corner have been removed
             if (Map.IsAirAt((ushort)(x1 - 2), y, (ushort)(z1 - 2)) && airMinX && airMinZ) {
                 Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.Air);
             }

@@ -31,8 +31,8 @@ namespace MCGalaxy.Games {
         int infectCombo = 0;
         
         protected override void DoRound() {
-            if (!Running) return;
-            List<Player> players = DoRoundCountdown();
+            if (!running) return;
+            List<Player> players = DoRoundCountdown(30);
             if (players == null) return;
 
             if (!running) return;
@@ -67,44 +67,6 @@ namespace MCGalaxy.Games {
             
             Map.ChatLevel("&c" + first.DisplayName + " %Sstarted the infection!");
             InfectPlayer(first, null);
-        }
-        
-        List<Player> DoRoundCountdown() {
-            while (true) {
-                RoundStart = DateTime.UtcNow.AddSeconds(30);
-                if (!running) return null;
-                
-                SendLevelRaw("&4Starting in &f30 &4seconds", true);
-                Thread.Sleep(10000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f20 &4seconds", true);
-                Thread.Sleep(10000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f10 &4seconds", true);
-                Thread.Sleep(5000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f5 &4seconds", true);
-                Thread.Sleep(1000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f4 &4seconds", true);
-                Thread.Sleep(1000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f3 &4seconds", true);
-                Thread.Sleep(1000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f2 &4seconds", true);
-                Thread.Sleep(1000); if (!running) return null;
-                SendLevelRaw("&4Starting in &f1 &4second", true);
-                Thread.Sleep(1000); if (!running) return null;
-                SendLevelRaw("", true);
-                int nonRefPlayers = 0;
-                List<Player> players = new List<Player>();
-                
-                Player[] online = PlayerInfo.Online.Items;
-                foreach (Player p in online) {
-                    if (p.Game.Referee || p.level != Map) continue;
-                    players.Add(p);
-                    nonRefPlayers++;
-                }
-                
-                if (!running) return null;
-                if (nonRefPlayers >= 2) return players;
-                Map.ChatLevel("&cNeed 2 or more non-ref players to start a round.");
-            }
         }
         
         void DoCoreGame() {

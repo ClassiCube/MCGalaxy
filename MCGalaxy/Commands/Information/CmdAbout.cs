@@ -22,7 +22,6 @@ using MCGalaxy.DB;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdAbout : Command {

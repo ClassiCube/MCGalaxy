@@ -68,6 +68,8 @@ namespace MCGalaxy.Eco {
                 w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {
                     w.WriteLine();
+                    w.WriteLine(item.Name + ":enabled:" + item.Enabled);
+                    w.WriteLine(item.Name + ":purchaserank:" + (int)item.PurchaseRank);
                     item.Serialise(w);
                 }
             }

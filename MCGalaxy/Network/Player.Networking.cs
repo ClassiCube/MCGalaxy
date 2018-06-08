@@ -151,13 +151,13 @@ namespace MCGalaxy {
             return last.UnicodeToCp437() != last;
         }
         
-        public void SendCpeMessage(CpeMessageType type, string message, bool colorParse = true) {
+        public void SendCpeMessage(CpeMessageType type, string message) {
             if (type != CpeMessageType.Normal && !Supports(CpeExt.MessageTypes)) {
                 if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
             }
             
-            message = Chat.Format(message, this, colorParse);
+            message = Chat.Format(message, this);
             Send(Packet.Message(message, type, hasCP437));
         }
 

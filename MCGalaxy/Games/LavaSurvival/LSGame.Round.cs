@@ -27,7 +27,7 @@ namespace MCGalaxy.Games {
             if (!running) return;
 
             ResetPlayerDeaths();
-            startTime = DateTime.UtcNow;
+            RoundStart = DateTime.UtcNow;
             RoundInProgress = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
@@ -71,12 +71,12 @@ namespace MCGalaxy.Games {
         }
 
         internal string FloodTimeLeftMessage() {
-            double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.floodTime) - DateTime.UtcNow).TotalMinutes);
+            double mins = Math.Ceiling((RoundStart.AddMinutes(mapSettings.floodTime) - DateTime.UtcNow).TotalMinutes);
             return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the flood.";
         }
         
         internal string RoundTimeLeftMessage() {
-            double mins = Math.Ceiling((startTime.AddMinutes(mapSettings.roundTime) - DateTime.UtcNow).TotalMinutes);
+            double mins = Math.Ceiling((RoundStart.AddMinutes(mapSettings.roundTime) - DateTime.UtcNow).TotalMinutes);
             return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the round ends.";
         }
 
