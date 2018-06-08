@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message) {
-            message = message.ToLower();
             if (message.CaselessEq("preset")) {
                 SendPresetsMessage(p); return;
             }
+            message = message.ToLower();
             
             if (!LevelInfo.ValidateAction(p, p.level, "set env settings of this level")) return;
             string[] args = message.SplitSpaces();

@@ -77,6 +77,8 @@ namespace MCGalaxy {
         
         [ConfigBool("check-updates", "Update", false)]
         public static bool CheckForUpdates = true;
+        [ConfigBool("enable-cpe", "Server", true)]
+        public static bool EnableCPE = true;
         
         [ConfigInt("rplimit", "Other", 500, 0, 50000)]
         public static int PhysicsRestartLimit = 500;

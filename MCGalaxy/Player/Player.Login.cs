@@ -43,12 +43,12 @@ namespace MCGalaxy {
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
             
-            byte protocolType = buffer[offset + 130];
+            hasCpe = buffer[offset + 130] == 0x42 && ServerConfig.EnableCPE;
             Loading = true;
             if (disconnected) return;
             
-            if (protocolType == 0x42) { hasCpe = true; SendCpeExtensions(); }
-            if (protocolType != 0x42) CompleteLoginProcess();
+            if (hasCpe) { SendCpeExtensions(); } 
+            else { CompleteLoginProcess(); }
         }
         
         void SendCpeExtensions() {
