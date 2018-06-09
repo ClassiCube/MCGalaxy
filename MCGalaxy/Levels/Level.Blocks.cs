@@ -288,7 +288,7 @@ namespace MCGalaxy {
                     #endif
                     FastSetExtTile(x, y, z, (BlockRaw)block);
                 } else {
-                    SetTile(x, y, z, (BlockRaw)block);   
+                    SetTile(x, y, z, (BlockRaw)block);
                     if (old >= Block.Extended) {
                         FastRevertExtTile(x, y, z);
                     }

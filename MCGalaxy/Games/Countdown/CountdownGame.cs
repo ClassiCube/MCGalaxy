@@ -132,29 +132,25 @@ namespace MCGalaxy.Games {
             p.SendPos(Entities.SelfID, pos, p.Rot);
         }
         
-        public void ResetMap() {
-            SetGlassTube(Block.Air, Block.Air);
+        void ResetBoard() {
+            SetBoardOpening(Block.Glass);
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);          
+            squaresLeft.Clear();
             
-            for(int zz = 6; zz < Map.Length - 6; zz += 3)
+            for (int zz = 6; zz < Map.Length - 6; zz += 3)
                 for (int xx = 6; xx < Map.Width - 6; xx += 3)
             {
                 Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green);
+                squaresLeft.Add(new SquarePos(xx, zz));
             }
             
             bulk.Send(true);
-            Map.Message("Countdown map has been reset");
-        }
+        }        
         
-        
-        void SetGlassTube(BlockID block, BlockID floorBlock) {
+        void SetBoardOpening(BlockID block) {
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
-            Cuboid(midX - 1, midY + 1, midZ - 2, midX, midY + 2, midZ - 2, block);
-            Cuboid(midX - 1, midY + 1, midZ + 1, midX, midY + 2, midZ + 1, block);
-            Cuboid(midX - 2, midY + 1, midZ - 1, midX - 2, midY + 2, midZ, block);
-            Cuboid(midX + 1, midY + 1, midZ - 1, midX + 1, midY + 2, midZ, block);
-            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, floorBlock);
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, block);
             bulk.Send(true);
         }
         
@@ -183,7 +179,7 @@ namespace MCGalaxy.Games {
                 Chat.MessageFrom(p, "λNICK %Sjoined countdown!");
                 if (p.level != Map) PlayerActions.ChangeMap(p, "countdown");
             } else {
-                Player.Message(p, "You've already joined countdown. To leave type /countdown leave");
+                Player.Message(p, "You've already joined countdown. To leave, go to another map.");
             }
         }
         

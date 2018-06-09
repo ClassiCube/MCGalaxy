@@ -18,11 +18,8 @@
 //the whole of the game 'countdown' was made by edh649\\
 //======================================================\\
 using System;
-using System.Net;
-using System.Threading;
-using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
-using MCGalaxy.Generator;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
     

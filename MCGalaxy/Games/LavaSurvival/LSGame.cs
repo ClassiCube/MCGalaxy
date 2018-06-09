@@ -74,7 +74,8 @@ namespace MCGalaxy.Games {
             
             RoundsLeft = rounds;
             ResetPlayerDeaths();
-                     
+            
+            Running = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
             HookEventHandlers();
             
