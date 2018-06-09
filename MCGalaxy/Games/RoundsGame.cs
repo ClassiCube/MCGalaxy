@@ -29,7 +29,9 @@ namespace MCGalaxy.Games {
         public string LastMap = "";
         public LevelPicker Picker;
         
+        public abstract void OutputStatus(Player p);
         public abstract void Start(Player p, string map, int rounds);
+        
         protected abstract void DoRound();
         protected abstract List<Player> GetPlayers();
         
@@ -45,27 +47,31 @@ namespace MCGalaxy.Games {
                 Logger.LogError(ex);
                 Chat.MessageGlobal("&c" + GameName + " disabled due to an error.");
                 
-                try { End(); } 
+                try { End(); }
                 catch (Exception ex2) { Logger.LogError(ex2); }
             }
         }
-                 
+        
+        protected void DoCountdown(string format, int delay, int minThreshold) {
+            const CpeMessageType type = CpeMessageType.Announcement;            
+            for (int i = delay; i > 0 && Running; i--) {
+                if (i == 1) {
+                    MessageMap(type, String.Format(format, i)
+                               .Replace("seconds", "second"));
+                } else if (i < minThreshold || (i % 10) == 0) {
+                    MessageMap(type, String.Format(format, i));
+                }
+                Thread.Sleep(1000);
+            }           
+            MessageMap(type, "");
+        }
+        
         protected List<Player> DoRoundCountdown(int delay) {
             while (true) {
                 RoundStart = DateTime.UtcNow.AddSeconds(delay);
                 if (!Running) return null;
-                const CpeMessageType type = CpeMessageType.Announcement;
-                
-                for (int i = delay; i > 0 && Running; i--) {
-                    if (i == 1) {
-                        MessageMap(type, "&4Starting in &f1 &4seconds");
-                    } else if (i < 10 || (i % 10) == 0) {
-                        MessageMap(type, "&4Starting in &f" + i + " &4seconds");
-                    }
-                    Thread.Sleep(1000);
-                }
-                               
-                MessageMap(type, "");
+
+                DoCountdown("&4Starting in &f{0} &4seconds", delay, 10);
                 if (!Running) return null;
                 
                 List<Player> players = GetPlayers();

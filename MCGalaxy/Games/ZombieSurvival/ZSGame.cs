@@ -72,7 +72,6 @@ namespace MCGalaxy.Games {
     public sealed partial class ZSGame : RoundsGame {
         public override string GameName { get { return "Zombie survival"; } }
         public override bool TeleportAllowed { get { return !RoundInProgress; } }
-        public override bool Running { get { return running; } }
         
         public ZSGame() { Picker = new ZSLevelPicker(); }
         public DateTime RoundEnd;
@@ -80,9 +79,7 @@ namespace MCGalaxy.Games {
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
-
         List<string> infectMessages = new List<string>();
-        bool running;
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal ZSData Get(Player p) {
@@ -120,6 +117,11 @@ namespace MCGalaxy.Games {
             return playing;
         }
         
+        public override void OutputStatus(Player p) {
+            Player.Message(p, "{0} out of {1} players are alive",
+                           Alive.Count, Alive.Count + Infected.Count);
+        }
+        
         public override void Start(Player p, string map, int rounds) {
             // ZS starts on current map by default
             if (!Player.IsSuper(p) && map.Length == 0) map = p.level.name;
@@ -141,7 +143,7 @@ namespace MCGalaxy.Games {
             RoundsLeft = rounds;
             HookStats();
             
-            running = true;
+            Running = true;
             HookEventHandlers();
             
             Thread t = new Thread(RunGame);
@@ -194,8 +196,8 @@ namespace MCGalaxy.Games {
         }
 
         public override void End() {
-            if (!running) return;
-            running = false;
+            if (!Running) return;
+            Running = false;
             UnhookEventHandlers();
             
             RoundStart = DateTime.MinValue;
@@ -265,7 +267,7 @@ namespace MCGalaxy.Games {
             Get(p).Infected = false;
             RemoveAssociatedBounties(p);
             
-            if (!running || !RoundInProgress || Infected.Count > 0) return;
+            if (!Running || !RoundInProgress || Infected.Count > 0) return;
             Random random = new Random();
             Player[] alive = Alive.Items;
             if (alive.Length == 0) return;
@@ -315,7 +317,7 @@ namespace MCGalaxy.Games {
         }
 
         public override void AdjustPrefix(Player p, ref string prefix) {
-            if (!running) return;
+            if (!Running) return;
             int winStreak = Get(p).CurrentRoundsSurvived;
             
             if      (winStreak == 1) prefix += "&4*" + p.color;

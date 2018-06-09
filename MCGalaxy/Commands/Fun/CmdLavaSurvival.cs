@@ -33,9 +33,7 @@ namespace MCGalaxy.Commands.Fun {
         protected override void HandleStatus(Player p, RoundsGame game) {
             if (!game.Running) { Player.Message(p, "Lava survival is not running"); return; }
             if (!game.RoundInProgress) { Player.Message(p, "The round of Lava Survival hasn't started yet."); return; }
-            
-            LSGame ls = (LSGame)game;
-            ls.MessageRoundStatus(p);
+            game.OutputStatus(p);
         }
 
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {

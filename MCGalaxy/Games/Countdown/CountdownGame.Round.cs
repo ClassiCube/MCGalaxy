@@ -27,16 +27,24 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class CountdownGame : IGame {
+    public sealed partial class CountdownGame : RoundsGame {
         List<SquarePos> squaresLeft = new List<SquarePos>();
         BufferedBlockSender bulk = new BufferedBlockSender();
         
-        public void BeginRound() {
-            Status = CountdownGameStatus.RoundCountdown;
+        protected override void DoRound() {
+            BeginRound();
+            if (FreezeMode) { SetupFreezeMode(); }
+            
+            CloseOffBoard();
+            RoundInProgress = true;
+            RemoveSquares();
+        }
+        
+        void BeginRound() {
             ResetMap();
             SetGlassTube(Block.Glass, Block.Glass);
             Map.Message("Countdown is about to start!");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
             
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
             Position spawnPos = Position.FromFeetBlockCoords(midX, Map.Height - 2, midZ);
@@ -55,28 +63,26 @@ namespace MCGalaxy.Games {
             SpawnPlayers(spawnPos);
             Map.Message("-----&b5%S-----");
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, Block.Air);
             bulk.Send(true);
             Thread.Sleep(1000);
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
             Map.Message("-----&b4%S-----"); Thread.Sleep(1000);
             Map.Message("-----&b3%S-----"); Thread.Sleep(1000);
             Cuboid(midX, Map.Height - 5, midZ, midX + 1, Map.Height - 5, midZ + 1, Block.Air);
             bulk.Send(true);
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
             Map.Message("-----&b2%S-----"); Thread.Sleep(1000);
             Map.Message("-----&b1%S-----"); Thread.Sleep(1000);
             Map.Message("GO!!!!!!!");
             
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
             Player[] players = Players.Items;
             Remaining.Clear();
             foreach (Player pl in players) { Remaining.Add(pl); }
-
-            DoRound();
         }
         
         void SpawnPlayers(Position pos) {
@@ -92,68 +98,26 @@ namespace MCGalaxy.Games {
                 pl.SendPos(Entities.SelfID, pos, pl.Rot);
             }
         }
-        
-        void DoRound() {
-            if (FreezeMode) {
-                MessageFreezeCountdown();
-                Map.Message("&bPlayers Frozen");
-                
-                Player[] players = Players.Items;
-                foreach (Player pl in players) {
-                    Position pos = pl.Pos;
-                    pl.Extras.PutInt("MCG_CD_X", pos.X);
-                    pl.Extras.PutInt("MCG_CD_Z", pos.Z);
-                }
-                RemoveAllSquareBorders();
-            }
-            
-            CloseOffBoard();
-            Status = CountdownGameStatus.RoundInProgress;
-            RemoveSquares();
-        }
 
-        void MessageFreezeCountdown() {
+        void SetupFreezeMode() {
             Thread.Sleep(500);
             Map.Message("Welcome to Freeze Mode of countdown");
             Map.Message("You have 15 seconds to stand on a square");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            Map.Message("You won't be able to move from that square once the game starts!");
             
-            Thread.Sleep(500);
-            Map.Message("-----&b15%S-----"); Thread.Sleep(500);
-            Map.Message("Once the countdown is up, you are stuck on your square");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            if (!Running) return;
+            DoCountdown("&b{0} %Sseconds left", 15, 15);
+            if (!Running) return;
             
-            Thread.Sleep(500);
-            Map.Message("-----&b14%S-----"); Thread.Sleep(500);
-            Map.Message("The squares then start to disappear");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
+            Map.Message("&bPlayers Frozen");
             
-            Thread.Sleep(500);
-            Map.Message("-----&b13%S-----"); Thread.Sleep(500);
-            Map.Message("Whoever is last out wins!");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
-            
-            Thread.Sleep(500);
-            Map.Message("-----&b12%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b11%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b10%S-----");
-            Map.Message("Only 10 Seconds left to pick your places!");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
-            
-            Thread.Sleep(1000);
-            Map.Message("-----&b9%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b8%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b7%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b6%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b5%S-----");
-            Map.Message("5 Seconds left to pick your places!");
-            if (Status != CountdownGameStatus.RoundCountdown) return;
-            
-            Thread.Sleep(1000);
-            Map.Message("-----&b4%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b3%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b2%S-----"); Thread.Sleep(1000);
-            Map.Message("-----&b1%S-----"); Thread.Sleep(1000);
+            Player[] players = Players.Items;
+            foreach (Player pl in players) {
+                Position pos = pl.Pos;
+                pl.Extras.PutInt("MCG_CD_X", pos.X);
+                pl.Extras.PutInt("MCG_CD_Z", pos.Z);
+            }
+            RemoveAllSquareBorders();
         }
 
         void CloseOffBoard() {
@@ -166,8 +130,7 @@ namespace MCGalaxy.Games {
             Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air);
             Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air);
             bulk.Send(true);
-        }
-        
+        }        
         
         void RemoveAllSquareBorders() {
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
@@ -182,14 +145,14 @@ namespace MCGalaxy.Games {
         
         void RemoveSquares() {
             Random rng = new Random();
-            while (Status == CountdownGameStatus.RoundInProgress && squaresLeft.Count > 0 && Remaining.Count != 0) {
+            while (RoundInProgress && squaresLeft.Count > 0 && Remaining.Count > 0) {
                 int i = rng.Next(squaresLeft.Count);
                 SquarePos nextSquare = squaresLeft[i];
                 squaresLeft.RemoveAt(i);
                 RemoveSquare(nextSquare);
 
                 if (squaresLeft.Count % 10 == 0) {
-                    if (Status != CountdownGameStatus.RoundInProgress) return;
+                    if (!RoundInProgress) return;
                     Map.Message(squaresLeft.Count + " squares left and " + Remaining.Count + " players remaining!");
                 }
             }
@@ -212,7 +175,7 @@ namespace MCGalaxy.Games {
             Cuboid(x1, y, z1, x2, y, z2, Block.Air);
             bulk.Send(true);
             
-            // Remove glass borders, if neighbouring squares were previously removed           
+            // Remove glass borders, if neighbouring squares were previously removed
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
             if (Map.IsAirAt(x1, y, (ushort)(z2 + 2))) {
                 Map.Blockchange(x1, y, (ushort)(z2 + 1), Block.Air);
@@ -251,7 +214,7 @@ namespace MCGalaxy.Games {
         }
 
         void UpdatePlayersLeft() {
-            if (Status != CountdownGameStatus.RoundInProgress) return;
+            if (!RoundInProgress) return;
             Player[] players = Remaining.Items;
             
             switch (players.Length) {
@@ -276,7 +239,7 @@ namespace MCGalaxy.Games {
         public override void EndRound() { EndRound(null); }
         public void EndRound(Player winner) {
             squaresLeft.Clear();
-            Status = CountdownGameStatus.Enabled;
+            RoundInProgress = false;
             Remaining.Clear();
             squaresLeft.Clear();
             
@@ -291,6 +254,5 @@ namespace MCGalaxy.Games {
                 Map.Message("Current round was force ended!");
             }
         }
-
     }
 }

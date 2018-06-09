@@ -62,7 +62,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if ( Server.lava.running && Server.lava.Map == level && Server.lava.IsPlayerDead(this) ) {
+            if ( Server.lava.Running && Server.lava.Map == level && Server.lava.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
                 RevertBlock(x, y, z); return;
             }

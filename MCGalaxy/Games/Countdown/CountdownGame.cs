@@ -37,44 +37,82 @@ namespace MCGalaxy.Games {
         /// <summary> Round is in progress. </summary>
         RoundInProgress,
     }
+
+    class CountdownLevelPicker : LevelPicker {
+        public override List<string> GetCandidateMaps() { return new List<string>() { "countdown" }; }
+    }
     
-    public sealed partial class CountdownGame : IGame {
-        
+    public sealed partial class CountdownGame : RoundsGame {        
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
-        public CountdownGameStatus Status = CountdownGameStatus.Disabled;
-        public override bool Running { get { return Status != CountdownGameStatus.Disabled; } }
         public override string GameName { get { return "Countdown"; } }
         
         public bool FreezeMode;
         public int Interval;
         public string SpeedType;
         
-        public void Enable(Player p) {
-            HookEventHandlers();
-            CmdLoad.LoadLevel(null, "countdown");
-            Map = LevelInfo.FindExact("countdown");
+        public CountdownGame() {
+            Picker = new CountdownLevelPicker();
+        }
+        
+        protected override List<Player> GetPlayers() {
+            List<Player> playing = new List<Player>();
+            playing.AddRange(Players.Items);
+            return playing;
+        }
+        
+        public override void OutputStatus(Player p) {
+            Player[] players = Players.Items;            
+            Player.Message(p, "Players in countdown:");
             
-            if (Map == null) {
+            if (RoundInProgress) {               
+                Player.Message(p, players.Join(pl => FormatPlayer(pl)));
+            } else {
+                Player.Message(p, players.Join(pl => pl.ColoredName));
+            }
+            
+            Player.Message(p, squaresLeft.Count + " squares left");
+        }
+        
+        string FormatPlayer(Player pl) {
+            string suffix = Remaining.Contains(pl) ? " &a[IN]" : " &c[OUT]";
+            return pl.ColoredName + suffix;
+        }
+        
+        public override void Start(Player p, string map, int rounds) {
+            map = "countdown";
+            if (!LevelInfo.MapExists(map)) {
                 Player.Message(p, "Countdown level not found, generating..");
                 GenerateMap(p, 32, 32, 32);
-                Map = LevelInfo.FindExact("countdown");
+            }
+            
+            if (!SetMap(map)) {
+                Player.Message(p, "Failed to load initial map!"); return;
             }
             
             bulk.level = Map;
-            Status = CountdownGameStatus.Enabled;
             Chat.MessageGlobal("Countdown has been enabled!");
+            
+            RoundsLeft = rounds;
+            Running = true;
+            HookEventHandlers();
+            
+            Thread t = new Thread(RunGame);
+            t.Name = "MCG_CountdownGame";
+            t.Start();
         }
 
         public override void End() {
-            if (Status == CountdownGameStatus.RoundInProgress) EndRound(null);            
-            Status = CountdownGameStatus.Disabled;
+            if (!Running) return;
+            Running = false;
+            
+            if (RoundInProgress) EndRound(null);
             UnhookEventHandlers();
             
-            Map.Message("Countdown was disabled.");
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
+            EndCommon();
         }
         
         public void GenerateMap(Player p, int width, int height, int length) {
@@ -90,17 +128,17 @@ namespace MCGalaxy.Games {
             Player.Message(p, format, width, height, length);
             PlayerActions.ChangeMap(p, "countdown");
             
-            Position pos = new Position(16 + 8 * 32, 32 + 23 * 32, 16 + 17 * 32);
+            Position pos = Position.FromFeetBlockCoords(8, 23, 17);
             p.SendPos(Entities.SelfID, pos, p.Rot);
         }
         
         public void ResetMap() {
             SetGlassTube(Block.Air, Block.Air);
-
             int maxX = Map.Width - 1, maxZ = Map.Length - 1;
             Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);
-            for(int zz = 6; zz < maxZ - 6; zz += 3)
-                for (int xx = 6; xx < maxX - 6; xx += 3)
+            
+            for(int zz = 6; zz < Map.Length - 6; zz += 3)
+                for (int xx = 6; xx < Map.Width - 6; xx += 3)
             {
                 Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green);
             }

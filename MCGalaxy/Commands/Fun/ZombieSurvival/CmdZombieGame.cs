@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                 case int.MaxValue:
                     Player.Message(p, "Zombie Survival running with infinite rounds"); break;
                 case 0:
-                    Player.Message(p, "Zombie Survival running, with this round being the final round"); break;
+                    Player.Message(p, "Zombie Survival running, with this round being the last round"); break;
                 default:
                     Player.Message(p, "Zombie Survival running, with " + (game.RoundsLeft + 1) + " rounds left"); break;
             }

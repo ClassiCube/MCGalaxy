@@ -31,18 +31,18 @@ namespace MCGalaxy.Games {
         int infectCombo = 0;
         
         protected override void DoRound() {
-            if (!running) return;
+            if (!Running) return;
             List<Player> players = DoRoundCountdown(30);
             if (players == null) return;
 
-            if (!running) return;
+            if (!Running) return;
             RoundInProgress = true;
             StartRound(players);
-            if (!running) return;
+            if (!Running) return;
             DoCoreGame();
             
-            if (running) EndRound();
-            if (running) VoteAndMoveToNextMap();
+            if (Running) EndRound();
+            if (Running) VoteAndMoveToNextMap();
         }
         
         void StartRound(List<Player> players) {
@@ -75,7 +75,7 @@ namespace MCGalaxy.Games {
             int lastCountdown = -1;
             Random random = new Random();
             
-            while (alive.Length > 0 && running && RoundInProgress) {
+            while (alive.Length > 0 && Running && RoundInProgress) {
                 Player[] infected = Infected.Items;
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;

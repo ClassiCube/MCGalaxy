@@ -23,7 +23,7 @@ namespace MCGalaxy.Games {
 
     public abstract class IGame {
         public Level Map;
-        public abstract bool Running { get; }
+        public bool Running;
         public abstract string GameName { get; }
         public virtual bool TeleportAllowed { get { return true; } }
 

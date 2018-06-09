@@ -116,6 +116,7 @@ namespace MCGalaxy.Gui
             this.rank_numDraw = new System.Windows.Forms.NumericUpDown();
             this.rank_numUndo = new System.Windows.Forms.NumericUpDown();
             this.rank_numGen = new System.Windows.Forms.NumericUpDown();
+            this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
             this.rank_numAfk = new System.Windows.Forms.NumericUpDown();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
@@ -146,6 +147,7 @@ namespace MCGalaxy.Gui
             this.blk_list = new System.Windows.Forms.ListBox();
             this.pageRanks = new System.Windows.Forms.TabPage();
             this.rank_grpLimits = new System.Windows.Forms.GroupBox();
+            this.rank_lblCopy = new System.Windows.Forms.Label();
             this.rank_lblGen = new System.Windows.Forms.Label();
             this.rank_lblMaps = new System.Windows.Forms.Label();
             this.rank_lblDraw = new System.Windows.Forms.Label();
@@ -190,7 +192,6 @@ namespace MCGalaxy.Gui
             this.bak_lblLocation = new System.Windows.Forms.Label();
             this.bak_txtLocation = new System.Windows.Forms.TextBox();
             this.bak_lblTime = new System.Windows.Forms.Label();
-            this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
             this.pageIRC = new System.Windows.Forms.TabPage();
             this.gb_ircSettings = new System.Windows.Forms.GroupBox();
             this.irc_txtPrefix = new System.Windows.Forms.TextBox();
@@ -374,8 +375,7 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
-            this.rank_lblCopy = new System.Windows.Forms.Label();
+            this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -388,6 +388,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numDraw)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numAfk)).BeginInit();
             this.pageBlocks.SuspendLayout();
             this.blk_grpPhysics.SuspendLayout();
@@ -460,12 +461,12 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
             this.SuspendLayout();
             // 
             // pageChat
             // 
             this.pageChat.BackColor = System.Drawing.SystemColors.Control;
+            this.pageChat.Controls.Add(this.chkProfanityFilter);
             this.pageChat.Controls.Add(this.chat_grpTab);
             this.pageChat.Controls.Add(this.chat_grpMessages);
             this.pageChat.Controls.Add(this.chat_grpOther);
@@ -690,7 +691,7 @@ namespace MCGalaxy.Gui
             // chat_lblIRC
             // 
             this.chat_lblIRC.AutoSize = true;
-            this.chat_lblIRC.Location = new System.Drawing.Point(36, 56);
+            this.chat_lblIRC.Location = new System.Drawing.Point(36, 54);
             this.chat_lblIRC.Name = "chat_lblIRC";
             this.chat_lblIRC.Size = new System.Drawing.Size(74, 13);
             this.chat_lblIRC.TabIndex = 22;
@@ -698,7 +699,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_btnIRC
             // 
-            this.chat_btnIRC.Location = new System.Drawing.Point(113, 51);
+            this.chat_btnIRC.Location = new System.Drawing.Point(113, 49);
             this.chat_btnIRC.Name = "chat_btnIRC";
             this.chat_btnIRC.Size = new System.Drawing.Size(95, 23);
             this.chat_btnIRC.TabIndex = 24;
@@ -708,7 +709,7 @@ namespace MCGalaxy.Gui
             // chat_lblSyntax
             // 
             this.chat_lblSyntax.AutoSize = true;
-            this.chat_lblSyntax.Location = new System.Drawing.Point(41, 85);
+            this.chat_lblSyntax.Location = new System.Drawing.Point(41, 83);
             this.chat_lblSyntax.Name = "chat_lblSyntax";
             this.chat_lblSyntax.Size = new System.Drawing.Size(68, 13);
             this.chat_lblSyntax.TabIndex = 31;
@@ -716,7 +717,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_btnSyntax
             // 
-            this.chat_btnSyntax.Location = new System.Drawing.Point(113, 80);
+            this.chat_btnSyntax.Location = new System.Drawing.Point(113, 78);
             this.chat_btnSyntax.Name = "chat_btnSyntax";
             this.chat_btnSyntax.Size = new System.Drawing.Size(95, 23);
             this.chat_btnSyntax.TabIndex = 30;
@@ -726,7 +727,7 @@ namespace MCGalaxy.Gui
             // chat_lblDesc
             // 
             this.chat_lblDesc.AutoSize = true;
-            this.chat_lblDesc.Location = new System.Drawing.Point(19, 114);
+            this.chat_lblDesc.Location = new System.Drawing.Point(19, 112);
             this.chat_lblDesc.Name = "chat_lblDesc";
             this.chat_lblDesc.Size = new System.Drawing.Size(90, 13);
             this.chat_lblDesc.TabIndex = 32;
@@ -734,7 +735,7 @@ namespace MCGalaxy.Gui
             // 
             // chat_btnDesc
             // 
-            this.chat_btnDesc.Location = new System.Drawing.Point(113, 109);
+            this.chat_btnDesc.Location = new System.Drawing.Point(113, 107);
             this.chat_btnDesc.Name = "chat_btnDesc";
             this.chat_btnDesc.Size = new System.Drawing.Size(95, 23);
             this.chat_btnDesc.TabIndex = 33;
@@ -1217,6 +1218,30 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.rank_numGen, "Maximum volume of (number of blocks in) a map that players can generate");
             this.rank_numGen.ValueChanged += new System.EventHandler(this.rank_numGen_ValueChanged);
             // 
+            // rank_numCopy
+            // 
+            this.rank_numCopy.Location = new System.Drawing.Point(85, 74);
+            this.rank_numCopy.Maximum = new decimal(new int[] {
+                                    255,
+                                    0,
+                                    0,
+                                    0});
+            this.rank_numCopy.Minimum = new decimal(new int[] {
+                                    1,
+                                    0,
+                                    0,
+                                    0});
+            this.rank_numCopy.Name = "rank_numCopy";
+            this.rank_numCopy.Size = new System.Drawing.Size(81, 21);
+            this.rank_numCopy.TabIndex = 23;
+            this.toolTip.SetToolTip(this.rank_numCopy, "Maximum number of copies player can select in /copyslot");
+            this.rank_numCopy.Value = new decimal(new int[] {
+                                    1,
+                                    0,
+                                    0,
+                                    0});
+            this.rank_numCopy.ValueChanged += new System.EventHandler(this.rank_numCopy_ValueChanged);
+            // 
             // rank_numAfk
             // 
             this.rank_numAfk.Location = new System.Drawing.Point(113, 102);
@@ -1544,6 +1569,16 @@ namespace MCGalaxy.Gui
             this.rank_grpLimits.TabStop = false;
             this.rank_grpLimits.Text = "Rank limits";
             // 
+            // rank_lblCopy
+            // 
+            this.rank_lblCopy.AutoSize = true;
+            this.rank_lblCopy.Location = new System.Drawing.Point(18, 77);
+            this.rank_lblCopy.Name = "rank_lblCopy";
+            this.rank_lblCopy.Size = new System.Drawing.Size(61, 13);
+            this.rank_lblCopy.TabIndex = 22;
+            this.rank_lblCopy.Text = "/copy slots:";
+            this.rank_lblCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // rank_lblGen
             // 
             this.rank_lblGen.AutoSize = true;
@@ -1765,7 +1800,6 @@ namespace MCGalaxy.Gui
             this.pageMisc.Controls.Add(this.grpPhysics);
             this.pageMisc.Controls.Add(this.afk_grp);
             this.pageMisc.Controls.Add(this.bak_grp);
-            this.pageMisc.Controls.Add(this.chkProfanityFilter);
             this.pageMisc.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pageMisc.Location = new System.Drawing.Point(4, 22);
             this.pageMisc.Name = "pageMisc";
@@ -2013,17 +2047,6 @@ namespace MCGalaxy.Gui
             this.bak_lblTime.Size = new System.Drawing.Size(67, 13);
             this.bak_lblTime.TabIndex = 7;
             this.bak_lblTime.Text = "Backup time:";
-            // 
-            // chkProfanityFilter
-            // 
-            this.chkProfanityFilter.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkProfanityFilter.AutoSize = true;
-            this.chkProfanityFilter.Location = new System.Drawing.Point(535, 325);
-            this.chkProfanityFilter.Name = "chkProfanityFilter";
-            this.chkProfanityFilter.Size = new System.Drawing.Size(87, 23);
-            this.chkProfanityFilter.TabIndex = 30;
-            this.chkProfanityFilter.Text = "Profanity Filter";
-            this.chkProfanityFilter.UseVisualStyleBackColor = true;
             // 
             // pageIRC
             // 
@@ -4123,34 +4146,15 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // rank_numCopy
+            // chkProfanityFilter
             // 
-            this.rank_numCopy.Location = new System.Drawing.Point(85, 74);
-            this.rank_numCopy.Maximum = new decimal(new int[] {
-                                    255,
-                                    0,
-                                    0,
-                                    0});
-            this.rank_numCopy.Minimum = new decimal(new int[] {
-                                    1,
-                                    0,
-                                    0,
-                                    0});
-            this.rank_numCopy.Name = "rank_numCopy";
-            this.rank_numCopy.Size = new System.Drawing.Size(81, 21);
-            this.rank_numCopy.TabIndex = 23;
-            this.toolTip.SetToolTip(this.rank_numCopy, "Maximum number of copies player can select in /copyslot");
-            this.rank_numCopy.ValueChanged += new System.EventHandler(this.rank_numCopy_ValueChanged);
-            // 
-            // rank_lblCopy
-            // 
-            this.rank_lblCopy.AutoSize = true;
-            this.rank_lblCopy.Location = new System.Drawing.Point(18, 77);
-            this.rank_lblCopy.Name = "rank_lblCopy";
-            this.rank_lblCopy.Size = new System.Drawing.Size(61, 13);
-            this.rank_lblCopy.TabIndex = 22;
-            this.rank_lblCopy.Text = "/copy slots:";
-            this.rank_lblCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkProfanityFilter.AutoSize = true;
+            this.chkProfanityFilter.Location = new System.Drawing.Point(80, 380);
+            this.chkProfanityFilter.Name = "chkProfanityFilter";
+            this.chkProfanityFilter.Size = new System.Drawing.Size(96, 17);
+            this.chkProfanityFilter.TabIndex = 31;
+            this.chkProfanityFilter.Text = "Profanity Filter";
+            this.chkProfanityFilter.UseVisualStyleBackColor = true;
             // 
             // PropertyWindow
             // 
@@ -4171,6 +4175,7 @@ namespace MCGalaxy.Gui
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.pageChat.ResumeLayout(false);
+            this.pageChat.PerformLayout();
             this.chat_grpTab.ResumeLayout(false);
             this.chat_grpTab.PerformLayout();
             this.chat_grpMessages.ResumeLayout(false);
@@ -4186,6 +4191,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numDraw)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numAfk)).EndInit();
             this.pageBlocks.ResumeLayout(false);
             this.blk_grpPhysics.ResumeLayout(false);
@@ -4290,7 +4296,6 @@ namespace MCGalaxy.Gui
             this.sec_grpBlocks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksMsgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
             this.ResumeLayout(false);
         }
         private System.Windows.Forms.Label rank_lblCopy;

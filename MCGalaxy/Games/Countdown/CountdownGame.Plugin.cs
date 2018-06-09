@@ -21,13 +21,14 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class CountdownGame : IGame {
+    public sealed partial class CountdownGame : RoundsGame {
         
         void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
         }
         
         void UnhookEventHandlers() {
@@ -35,11 +36,12 @@ namespace MCGalaxy.Games {
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
         }
         
         
         void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
-            if (Status != CountdownGameStatus.RoundInProgress || !FreezeMode) return;
+            if (!RoundInProgress || !FreezeMode) return;
             if (!Remaining.Contains(p)) return;
             
             int freezeX = p.Extras.GetInt("MCG_CD_X");
@@ -64,16 +66,15 @@ namespace MCGalaxy.Games {
             Players.Remove(p);
         }
         
-        void HandleLevelUnload(Level lvl) {
-            if (Status == CountdownGameStatus.Disabled || lvl != Map) return;
-            End();
-        }
-        
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (!respawning || !Remaining.Contains(p)) return;
             Map.Message(p.ColoredName + " %Sis out of countdown!");
             Remaining.Remove(p);
             UpdatePlayersLeft();
+        }
+        
+        void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            if (prevLevel == Map && level != Map) { PlayerLeftGame(p); }
         }
     }
 }

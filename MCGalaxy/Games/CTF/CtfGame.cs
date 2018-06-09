@@ -36,7 +36,7 @@ namespace MCGalaxy.Games {
     public sealed class CtfTeam {
         public string Name, Color;
         public string ColoredName { get { return Color + Name; } }
-        public int Points;
+        public int Captures;
         public Vec3U16 FlagPos;
         public Position SpawnPos;
         public BlockID FlagBlock;
@@ -52,8 +52,6 @@ namespace MCGalaxy.Games {
     }
 
     public sealed partial class CTFGame : RoundsGame {
-        bool running = false;
-        public override bool Running { get { return running; } }
         public override string GameName { get { return "CTF"; } }
         
         public CtfTeam Red  = new CtfTeam("Red", Colors.red);
@@ -105,6 +103,11 @@ namespace MCGalaxy.Games {
             playing.AddRange(Blue.Members.Items);
             return playing;
         }
+        
+        public override void OutputStatus(Player p) {
+            Player.Message(p, "{0} %Steam: {1} captures", Blue.ColoredName, Blue.Captures);
+            Player.Message(p, "{0} %Steam: {1} captures", Red.ColoredName,  Red.Captures);
+        }
 
         public override void Start(Player p, string map, int rounds) {
             map = GetStartMap(map);
@@ -122,7 +125,7 @@ namespace MCGalaxy.Games {
             
             Logger.Log(LogType.GameActivity, "[CTF] Running...");
             Chat.MessageGlobal("A CTF game is starting! Type %T/CTF go %Sto join!");
-            running = true;
+            Running = true;
             Database.Backend.CreateTable("CTF", createSyntax);
             HookEventHandlers();
             
@@ -132,8 +135,8 @@ namespace MCGalaxy.Games {
         }
         
         public override void End() {
-            if (!running) return;
-            running = false;
+            if (!Running) return;
+            Running = false;
             UnhookEventHandlers();
             
             ResetTeams();
@@ -144,8 +147,8 @@ namespace MCGalaxy.Games {
         void ResetTeams() {
             Blue.Members.Clear();
             Red.Members.Clear();
-            Blue.Points = 0;
-            Red.Points = 0;
+            Blue.Captures = 0;
+            Red.Captures = 0;
         }
 
         void ResetFlagsState() {

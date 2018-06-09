@@ -24,7 +24,7 @@ namespace MCGalaxy.Games {
 
         int announceSecs, roundSecs, floodSecs, layerSecs;
         protected override void DoRound() {
-            if (!running) return;
+            if (!Running) return;
 
             ResetPlayerDeaths();
             RoundStart = DateTime.UtcNow;
@@ -32,7 +32,7 @@ namespace MCGalaxy.Games {
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
             while (RoundInProgress && roundSecs < data.roundTotalSecs) {
-                if (!running) return;
+                if (!Running) return;
                 if ((announceSecs % 60) == 0 && !Flooded) {
                     Map.Message(FloodTimeLeftMessage());
                 }
@@ -42,8 +42,8 @@ namespace MCGalaxy.Games {
                 Thread.Sleep(1000);
             }
             
-            if (running) EndRound();
-            if (running) VoteAndMoveToNextMap();
+            if (Running) EndRound();
+            if (Running) VoteAndMoveToNextMap();
         }
         
         void DoFlood() {
@@ -80,8 +80,7 @@ namespace MCGalaxy.Games {
             return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the round ends.";
         }
 
-        // TODO: common abstract method
-        internal void MessageRoundStatus(Player p) {
+        public override void OutputStatus(Player p) {
             string block = data.water ? "water" : "lava";
             
             // TODO: send these messages if player is op
@@ -98,7 +97,7 @@ namespace MCGalaxy.Games {
             if (data.destroy) Player.Message(p, "The " + block + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");
             
             
-            if (!Flooded) Player.Message(p, FloodTimeLeftMessage());           
+            if (!Flooded) Player.Message(p, FloodTimeLeftMessage());
             Player.Message(p, RoundTimeLeftMessage());
         }
 

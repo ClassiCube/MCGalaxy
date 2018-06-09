@@ -28,18 +28,18 @@ namespace MCGalaxy.Games {
     public sealed partial class CTFGame : RoundsGame {
         
         protected override void DoRound() {
-            if (!running) return;
+            if (!Running) return;
             
             RoundInProgress = true;
-            while (Blue.Points < Config.RoundPoints && Red.Points < Config.RoundPoints) {
-                if (!running) return;
+            while (Blue.Captures < Config.RoundPoints && Red.Captures < Config.RoundPoints) {
+                if (!Running) return;
                 if (!RoundInProgress) break;
                 Tick();
                 Thread.Sleep(300);
             }
             
-            if (running) EndRound();
-            if (running) VoteAndMoveToNextMap();
+            if (Running) EndRound();
+            if (Running) VoteAndMoveToNextMap();
         }
         
         void Tick() {
@@ -101,16 +101,16 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress) return;
             RoundInProgress = false;
             
-            if (Blue.Points > Red.Points) {
+            if (Blue.Captures > Red.Captures) {
                 Map.Message(Blue.ColoredName + " %Swon this round of CTF!");
-            } else if (Red.Points > Blue.Points) {
+            } else if (Red.Captures > Blue.Captures) {
                 Map.Message(Red.ColoredName + " %Swon this round of CTF!");
             } else {
                 Map.Message("The round ended in a tie!");
             }
             
-            Blue.Points = 0;
-            Red.Points = 0;
+            Blue.Captures = 0;
+            Red.Captures = 0;
             ResetFlagsState();
             
             Thread.Sleep(4000);
@@ -156,7 +156,7 @@ namespace MCGalaxy.Games {
                 
                 data.Points += Config.Capture_PointsGained;
                 data.Captures++;
-                team.Points++;
+                team.Captures++;
                 
                 CtfTeam opposing = Opposing(team);
                 opposing.RespawnFlag(Map);

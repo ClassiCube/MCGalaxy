@@ -23,7 +23,12 @@ namespace MCGalaxy.Games {
     internal sealed class LSData {
         public int TimesDied;
     }
-    
+	
+    class LSLevelPicker : LevelPicker {
+        public List<string> maps;
+        public override List<string> GetCandidateMaps() { return new List<string>(maps); }
+    }
+	
     public sealed partial class LSGame : RoundsGame {
         const string propsDir = "properties/lavasurvival/";
         List<string> maps;
@@ -32,8 +37,7 @@ namespace MCGalaxy.Games {
         MapSettings mapSettings;
         
         public override string GameName { get { return "Lava survival"; } }
-        public override bool Running { get { return running; } }
-        public bool running, Flooded, StartOnStartup;
+        public bool Flooded, StartOnStartup;
         public int MaxLives = 3;
         
         public LSGame() {
@@ -72,7 +76,6 @@ namespace MCGalaxy.Games {
             ResetPlayerDeaths();
                      
             Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
-            running = true;
             HookEventHandlers();
             
             Thread t = new Thread(RunGame);
@@ -81,8 +84,8 @@ namespace MCGalaxy.Games {
         }
         
         public override void End() {
-            if (!running) return;
-            running = false;
+            if (!Running) return;
+            Running = false;
             UnhookEventHandlers();
             
             Flooded = false;
@@ -129,13 +132,8 @@ namespace MCGalaxy.Games {
         public List<string> Maps { get { return new List<string>(maps); } }
         
         public override bool HandlesChatMessage(Player p, string message) {
-            if (!running || p.level != Map) return false;
+            if (!Running || p.level != Map) return false;
             return Picker.HandlesMessage(p, message);
         }
-    }
-    
-    internal class LSLevelPicker : LevelPicker {
-        public List<string> maps;
-        public override List<string> GetCandidateMaps() { return new List<string>(maps); }
     }
 }

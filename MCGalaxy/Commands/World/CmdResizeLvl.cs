@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
             ushort x = 0, y = 0, z = 0;
             if (!CmdNewLvl.CheckMapAxis(p, args[1], "Width",  ref x)) return false;
             if (!CmdNewLvl.CheckMapAxis(p, args[2], "Height", ref y)) return false;
-            if (!CmdNewLvl.CheckMapAxis(p, args[3], "Length", ref z)) return false;         
+            if (!CmdNewLvl.CheckMapAxis(p, args[3], "Length", ref z)) return false;
             if (!CmdNewLvl.CheckMapVolume(p, x, y, z)) return true;
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");

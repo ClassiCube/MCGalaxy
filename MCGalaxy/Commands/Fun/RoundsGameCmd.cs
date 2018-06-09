@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected void HandleStart(Player p, RoundsGame game, string[] args) {
+        protected virtual void HandleStart(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             if (game.Running) { Player.Message(p, "{0} is already running", game.GameName); return; }
             

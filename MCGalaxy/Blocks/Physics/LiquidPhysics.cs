@@ -25,7 +25,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (Server.lava.running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (Server.lava.Running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
 
             switch (block) {
@@ -62,7 +62,7 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (Server.lava.running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (Server.lava.Running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
                 return;
 
             switch (block) {
