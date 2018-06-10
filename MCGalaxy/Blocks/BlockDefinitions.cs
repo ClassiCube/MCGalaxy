@@ -261,7 +261,7 @@ namespace MCGalaxy {
                 if (def == null || def.BlockID > pl.MaxRawBlock) continue;
                 if (def.InventoryOrder == -1) continue;
                 
-                if (def.InventoryOrder != 255) {
+                if (def.InventoryOrder != 0) {
                     if (order_to_blocks[def.InventoryOrder] != -1) continue;
                     order_to_blocks[def.InventoryOrder] = def.BlockID;
                 }
@@ -299,7 +299,7 @@ namespace MCGalaxy {
             
             for (int raw = 0; raw < count; raw++) {
                 int order = block_to_orders[raw];
-                if (order == -1) order = 255;
+                if (order == -1) order = 0;
                 
                 BlockDefinition def = defs[Block.FromRaw((BlockID_)raw)];
                 if (def == null && raw >= Block.CpeCount) continue;

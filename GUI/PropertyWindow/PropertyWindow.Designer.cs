@@ -4171,7 +4171,7 @@ namespace MCGalaxy.Gui
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "PropertyWindow";
-            this.Text = "Properties";
+            this.Text = "Settings";
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.pageChat.ResumeLayout(false);

@@ -394,7 +394,7 @@ namespace MCGalaxy.Gui
             this.main_btnProps.Name = "main_btnProps";
             this.main_btnProps.Size = new System.Drawing.Size(80, 23);
             this.main_btnProps.TabIndex = 34;
-            this.main_btnProps.Text = "Properties";
+            this.main_btnProps.Text = "Settings";
             this.main_btnProps.UseVisualStyleBackColor = true;
             this.main_btnProps.Click += new System.EventHandler(this.btnProperties_Click);
             // 
