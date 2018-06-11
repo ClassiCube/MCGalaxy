@@ -112,6 +112,8 @@ namespace MCGalaxy.Games {
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
+            
+            MessageAllStatus();
             EndCommon();
         }
         
@@ -188,6 +190,21 @@ namespace MCGalaxy.Games {
             Players.Remove(p);
             Remaining.Remove(p);
             UpdatePlayersLeft();
+        }
+        
+        void MessageAllStatus() {
+            MessageAllStatus1();
+            MessageAllStatus2();
+        }
+        
+        void MessageAllStatus1() {
+            string msg = RoundInProgress ? squaresLeft.Count + " squares left" : "";
+            MessageMap(CpeMessageType.Status1, msg);
+        }
+        
+        void MessageAllStatus2() {
+            string msg = RoundInProgress ? Remaining.Count + " players left" : "";
+            MessageMap(CpeMessageType.Status2, msg);
         }
     }
 }

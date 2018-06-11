@@ -49,6 +49,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             RoundInProgress = true;
+            MessageAllStatus();
             RemoveSquares();
         }
         
@@ -72,7 +73,7 @@ namespace MCGalaxy.Games {
             Remaining.Clear();
             foreach (Player pl in players) { Remaining.Add(pl); }
             
-            if (!FreezeMode) return;        
+            if (!Running || !FreezeMode) return;
             Map.Message("&bPlayers Frozen");
             
             foreach (Player pl in players) {
@@ -131,65 +132,62 @@ namespace MCGalaxy.Games {
                 
                 RemoveSquare(nextSquare);
                 if (!Running || !RoundInProgress) return;
-                if (squaresLeft.Count % 10 != 0) continue;
-
-                MessageMap(CpeMessageType.Status1, squaresLeft.Count + " squares left");
-                MessageMap(CpeMessageType.Status2, Remaining.Count + " players left");
+                MessageAllStatus1();
             }
         }
         
         void RemoveSquare(SquarePos pos) {
-            ushort x1 = pos.X, x2 = (ushort)(pos.X + 1), y = 4, z1 = pos.Z, z2 = (ushort)(pos.Z + 1);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Yellow);
+            ushort x1 = pos.X, x2 = (ushort)(pos.X + 1), z1 = pos.Z, z2 = (ushort)(pos.Z + 1);
+            Cuboid(x1, 4, z1, x2, 4, z2, Block.Yellow);
             bulk.Send(true);
             
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Orange);
+            Cuboid(x1, 4, z1, x2, 4, z2, Block.Orange);
             bulk.Send(true);
             
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Red);
+            Cuboid(x1, 4, z1, x2, 4, z2, Block.Red);
             bulk.Send(true);
             
             Thread.Sleep(Interval);
-            Cuboid(x1, y, z1, x2, y, z2, Block.Air);
+            Cuboid(x1, 4, z1, x2, 4, z2, Block.Air);
             bulk.Send(true);
             
             // Remove glass borders, if neighbouring squares were previously removed
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
-            if (Map.IsAirAt(x1, y, (ushort)(z2 + 2))) {
-                Map.Blockchange(x1, y, (ushort)(z2 + 1), Block.Air);
-                Map.Blockchange(x2, y, (ushort)(z2 + 1), Block.Air);
+            if (Map.IsAirAt(x1, 4, (ushort)(z2 + 2))) {
+                Map.Blockchange(x1, 4, (ushort)(z2 + 1), Block.Air);
+                Map.Blockchange(x2, 4, (ushort)(z2 + 1), Block.Air);
                 airMaxZ = true;
             }
-            if (Map.IsAirAt(x1, y, (ushort)(z1 - 2))) {
-                Map.Blockchange(x1, y, (ushort)(z1 - 1), Block.Air);
-                Map.Blockchange(x2, y, (ushort)(z1 - 1), Block.Air);
+            if (Map.IsAirAt(x1, 4, (ushort)(z1 - 2))) {
+                Map.Blockchange(x1, 4, (ushort)(z1 - 1), Block.Air);
+                Map.Blockchange(x2, 4, (ushort)(z1 - 1), Block.Air);
                 airMinZ = true;
             }
-            if (Map.IsAirAt((ushort)(x2 + 2), y, z1)) {
-                Map.Blockchange((ushort)(x2 + 1), y, z1, Block.Air);
-                Map.Blockchange((ushort)(x2 + 1), y, z2, Block.Air);
+            if (Map.IsAirAt((ushort)(x2 + 2), 4, z1)) {
+                Map.Blockchange((ushort)(x2 + 1), 4, z1, Block.Air);
+                Map.Blockchange((ushort)(x2 + 1), 4, z2, Block.Air);
                 airMaxX = true;
             }
-            if (Map.IsAirAt((ushort)(x1 - 2), y, z1)) {
-                Map.Blockchange((ushort)(x1 - 1), y, z1, Block.Air);
-                Map.Blockchange((ushort)(x1 - 1), y, z2, Block.Air);
+            if (Map.IsAirAt((ushort)(x1 - 2), 4, z1)) {
+                Map.Blockchange((ushort)(x1 - 1), 4, z1, Block.Air);
+                Map.Blockchange((ushort)(x1 - 1), 4, z2, Block.Air);
                 airMinX = true;
             }
             
             // Remove glass borders, if all neighbours to this corner have been removed
-            if (Map.IsAirAt((ushort)(x1 - 2), y, (ushort)(z1 - 2)) && airMinX && airMinZ) {
-                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z1 - 1), Block.Air);
+            if (Map.IsAirAt((ushort)(x1 - 2), 4, (ushort)(z1 - 2)) && airMinX && airMinZ) {
+                Map.Blockchange((ushort)(x1 - 1), 4, (ushort)(z1 - 1), Block.Air);
             }
-            if (Map.IsAirAt((ushort)(x1 - 2), y, (ushort)(z2 + 2)) && airMinX && airMaxZ) {
-                Map.Blockchange((ushort)(x1 - 1), y, (ushort)(z2 + 1), Block.Air);
+            if (Map.IsAirAt((ushort)(x1 - 2), 4, (ushort)(z2 + 2)) && airMinX && airMaxZ) {
+                Map.Blockchange((ushort)(x1 - 1), 4, (ushort)(z2 + 1), Block.Air);
             }
-            if (Map.IsAirAt((ushort)(x2 + 2), y, (ushort)(z1 - 2)) && airMaxX && airMinZ) {
-                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z1 - 1), Block.Air);
+            if (Map.IsAirAt((ushort)(x2 + 2), 4, (ushort)(z1 - 2)) && airMaxX && airMinZ) {
+                Map.Blockchange((ushort)(x2 + 1), 4, (ushort)(z1 - 1), Block.Air);
             }
-            if (Map.IsAirAt((ushort)(x2 + 2), y, (ushort)(z2 + 2)) && airMaxX && airMaxZ) {
-                Map.Blockchange((ushort)(x2 + 1), y, (ushort)(z2 + 1), Block.Air);
+            if (Map.IsAirAt((ushort)(x2 + 2), 4, (ushort)(z2 + 2)) && airMaxX && airMaxZ) {
+                Map.Blockchange((ushort)(x2 + 1), 4, (ushort)(z2 + 1), Block.Air);
             }
         }
 
@@ -210,7 +208,7 @@ namespace MCGalaxy.Games {
                     Map.Message(players.Length + " players left!");
                     break;
             }
-            MessageMap(CpeMessageType.Status2, Remaining.Count + " players left");
+            MessageAllStatus2();
         }
         
         public override void EndRound() { EndRound(null); }
@@ -219,6 +217,7 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             Remaining.Clear();
             squaresLeft.Clear();
+            MessageAllStatus();
             
             if (winner != null) {
                 winner.SendMessage("Congratulations, you won this round of countdown!");

@@ -57,13 +57,8 @@ namespace MCGalaxy.Games {
         }
         
         void HandlePlayerDisconnect(Player p, string reason) {
-            if (!Players.Contains(p)) return;
-            
-            if (Remaining.Contains(p)) {
-                Map.Message(p.ColoredName + " %Slogged out, and so is out of countdown");
-                PlayerLeftGame(p);
-            }
-            Players.Remove(p);
+            if (!Players.Contains(p)) return;           
+            PlayerLeftGame(p);
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
