@@ -40,7 +40,7 @@ namespace MCGalaxy.Core {
             ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
             
             foreach (Player pl in players) {
-                if (pl == source || !Chat.NotIgnoring(pl, source)) continue;
+                if (pl == source || Chat.Ignoring(pl, source)) continue;
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
                 

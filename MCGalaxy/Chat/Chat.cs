@@ -68,10 +68,10 @@ namespace MCGalaxy {
             return message;
         }
         
-        /// <summary> Returns true if the target player can see chat messags by source. </summary>
-        public static bool NotIgnoring(Player target, Player source) {
-            if (target.Ignores.All) return source == target; // don't ignore messages from self
-            return source == null || !target.Ignores.Names.CaselessContains(source.name);
+        /// <summary> Returns true if the target player is ignoring chat messags by source. </summary>
+        public static bool Ignoring(Player target, Player source) {
+            if (target.Ignores.All) return source != target; // don't ignore messages from self
+            return source != null && target.Ignores.Names.CaselessContains(source.name);
         }
         
 
@@ -162,7 +162,7 @@ namespace MCGalaxy {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
                 
-                if (!NotIgnoring(pl, source)) continue;
+                if (Ignoring(pl, source)) continue;
                 Player.Message(pl, UnescapeMessage(pl, source, msg));
             }
         }
@@ -186,7 +186,7 @@ namespace MCGalaxy {
             
             OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
-                if (!NotIgnoring(pl, source)) continue;
+                if (Ignoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
                 if (pl != source) {
                     if (!scopeFilter(pl, arg)) continue;

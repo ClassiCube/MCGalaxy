@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.CPE {
         static void ListHandler(Player p, string cmd, string modifier) {
             List<ColorDesc> validCols = new List<ColorDesc>(Colors.List.Length);
             foreach (ColorDesc col in Colors.List) {
-                if (!col.Undefined) validCols.Add(col);
+                if (col.IsModified()) validCols.Add(col);
             }
             MultiPageOutput.Output(p, validCols, FormatColor, cmd, "Colors", modifier, true);
         }

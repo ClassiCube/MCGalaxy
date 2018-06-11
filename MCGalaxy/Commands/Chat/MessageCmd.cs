@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
             string reciever = p == target ? "themselves" : target.ColoredName;
             if (!TryMessage(p, msg.Replace("λTARGET", reciever))) return false;
 
-            if (messageWho && p != target && Chat.NotIgnoring(target, p)) {
+            if (messageWho && p != target && !Chat.Ignoring(target, p)) {
                 string giver = (p == null) ? "(console)" : p.ColoredName;
                 msg = msg.Replace("λNICK", giver);
                 Player.Message(target, msg.Replace("λTARGET", "you"));
