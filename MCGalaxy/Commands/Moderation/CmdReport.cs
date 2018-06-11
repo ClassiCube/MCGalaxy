@@ -56,11 +56,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static string[] GetReportedUsers() {
-        	string[] users = Directory.GetFiles("extra/reported", "*.txt");
+            string[] users = Directory.GetFiles("extra/reported", "*.txt");
             for (int i = 0; i < users.Length; i++) {
                 users[i] = Path.GetFileNameWithoutExtension(users[i]);
             }
-        	return users;
+            return users;
         }
         
         static void DeleteReport(string user) {
@@ -166,8 +166,9 @@ namespace MCGalaxy.Commands.Moderation {
             File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
             Player.Message(p, "&aReport sent! It should be viewed when a {0}&a+ is online", checkRankName);
             
-            string opsMsg = p.ColoredName + " %Smade a report, view it with %T/Report check " + target;
-            Chat.MessageAboveOrSameRank(checkRank, opsMsg);
+            string opsMsg = "λNICK %Smade a report, view it with %T/Report check " + target;
+            Chat.MessageFrom(ChatScope.AboveEqRank, p, opsMsg,
+                             checkRank, null, true);
         }
         
         public override void Help(Player p) {

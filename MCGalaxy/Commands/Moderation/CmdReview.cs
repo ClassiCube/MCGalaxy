@@ -1,4 +1,4 @@
-/*
+﻿/*
     Written by BeMacized
     Assisted by RedNoodle
     
@@ -72,22 +72,18 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Server.reviewlist.Add(p.name);
-            int pos = Server.reviewlist.IndexOf(p.name);
-            if (pos > 1) { Player.Message(p, "You entered the &creview %Squeue. You have &c" + pos + " %Speople in front of you in the queue"); }
-            if (pos == 1) { Player.Message(p, "You entered the &creview %Squeue. There is &c1 %Sperson in front of you in the queue"); }
-            if (pos == 0) { Player.Message(p, "You entered the &creview %Squeue. You are &cfirst %Sin line!"); }
+            int pos = Server.reviewlist.IndexOf(p.name) + 1;
+            Player.Message(p, "You entered the &creview %Squeue at &aposition #" + pos);
             
             string msg = opsOn ? 
-                "The Online staff have been notified. Someone should be with you shortly." :
+                "The online staff have been notified. Someone should be with you shortly." :
                 "There are currently no staff online. Staff will be notified when they join the server.";
             Player.Message(p, msg);
             
-            string start = pos > 0 ? "There are now &c" + (pos + 1) + " %Speople" : "There is now &c1 %Sperson";
-            Chat.MessageAboveOrSameRank(nextPerm, p.ColoredName + " %Sis requesting a review!");
-            Chat.MessageAboveOrSameRank(nextPerm, start + " waiting for a &creview!");
+            Chat.MessageFrom(ChatScope.AboveEqRank, p, 
+                             "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerm, null, true);
             
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
-            OnPlayerActionEvent.Call(p, PlayerAction.Review, null, true);
         }
         
         void HandleView(Player p) {
@@ -109,17 +105,12 @@ namespace MCGalaxy.Commands.Moderation {
         void HandleLeave(Player p) {
             if (p == null) { Player.Message(p, "Console cannot leave the review queue."); return; }
 
-            bool inQueue = false;
-            foreach (string who in Server.reviewlist) {
-                inQueue |= who.CaselessEq(p.name);
+            if (Server.reviewlist.CaselessRemove(p.name)) {
+                AnnounceQueueChanged();
+                Player.Message(p, "You have left the review queue!");
+            } else {
+                Player.Message(p, "You weren't in the review queue to begin with.");
             }
-            
-            if (!inQueue) {
-                Player.Message(p, "You aren't in the review queue so you cannot leave it."); return;
-            }
-            Server.reviewlist.Remove(p.name);
-            MessageReviewPosChanged();
-            Player.Message(p, "You have left the review queue!");
         }
         
         void HandleNext(Player p) {
@@ -131,21 +122,17 @@ namespace MCGalaxy.Commands.Moderation {
             
             string user = Server.reviewlist[0];
             Player who = PlayerInfo.FindExact(user);
+            Server.reviewlist.RemoveAt(0);
+            
             if (who == null) {
-                Player.Message(p, "Player " + user + " doesn't exist or is offline, and was removed from the review queue");
-                Server.reviewlist.Remove(user);
-                return;
-            } else if (who == p) {
-                Player.Message(p, "Cannot teleport to yourself. You have been removed from the review queue.");
-                Server.reviewlist.Remove(user);
+                Player.Message(p, "Player " + user + " is offline, and was removed from the review queue");
                 return;
             }
             
-            Server.reviewlist.Remove(user);
             Command.Find("TP").Use(p, who.name);
             Player.Message(p, "You have been teleported to " + user);
-            Player.Message(who, "Your review request has been answered by " + p.name + ".");
-            MessageReviewPosChanged();
+            Player.Message(who, "Your review request has been answered by " + p.ColoredName + ".");
+            AnnounceQueueChanged();
         }
         
         void HandleClear(Player p) {
@@ -154,13 +141,14 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "The review queue has been cleared");
         }
         
-        static void MessageReviewPosChanged() {
-            int count = 0;
+        static void AnnounceQueueChanged() {
+            int pos = 1;
             foreach (string name in Server.reviewlist) {
                 Player who = PlayerInfo.FindExact(name);
                 if (who == null) continue;
-                Player.Message(who, "The review queue has changed. You now have " + count + " players in front of you.");
-                count++;
+                
+                Player.Message(who, "The review queue has changed. You are now at &aposition #" + pos);
+                pos++;
             }
         }
         

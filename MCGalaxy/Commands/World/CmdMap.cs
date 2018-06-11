@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.World {
             if (message.CaselessEq("options")) {
                 Player.Message(p, "%HOptions: %S{0}", 
                                LevelOptions.Options.Join(opt_ => opt_.Name));
-        		Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option");
+                Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option");
                 return;
             }
             

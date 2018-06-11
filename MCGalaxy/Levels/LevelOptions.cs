@@ -139,7 +139,7 @@ namespace MCGalaxy {
             Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true);
         }
         static void SetDrawing(Player p, Level l, string v) { 
-        	Toggle(p, l, ref l.Config.Drawing, "Drawing commands"); 
+            Toggle(p, l, ref l.Config.Drawing, "Drawing commands"); 
         }
         
         static void SetLoadDelay(Player p, Level l, string value) {

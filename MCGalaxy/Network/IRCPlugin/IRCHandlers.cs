@@ -49,10 +49,13 @@ namespace MCGalaxy.Network {
         public void Hook() {
             if (hookedEvents) return;
             hookedEvents = true;
-            
-            OnPlayerChatEvent.Register(HandleChat, Priority.Low);
+
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
+            
+            OnChatEvent.Register(HandleChat, Priority.Low);
+            OnChatSysEvent.Register(HandleChatSys, Priority.Low);
+            OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
 
             // Regster events for incoming
             bot.connection.Listener.OnNick += Listener_OnNick;
@@ -78,9 +81,12 @@ namespace MCGalaxy.Network {
             hookedEvents = false;
             userMap.Clear();
             
-            OnPlayerChatEvent.Unregister(HandleChat);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnShuttingDownEvent.Unregister(HandleShutdown);
+            
+            OnChatEvent.Unregister(HandleChat);
+            OnChatSysEvent.Unregister(HandleChatSys);
+            OnChatFromEvent.Unregister(HandleChatFrom);
             
             // Regster events for incoming
             bot.connection.Listener.OnNick -= Listener_OnNick;
@@ -102,25 +108,33 @@ namespace MCGalaxy.Network {
 
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (!p.level.SeesServerWideChat) return;
-            string msg = null;
-            if (p.muted || (Server.chatmod && !p.voice)) return;
-            
-            if (action == PlayerAction.Me)
-                msg = "*" + p.DisplayName + " " + message;
-            else if (action == PlayerAction.Review)
-                msg = p.ColoredName + " %Sis requesting a review.";
-            
-            if (msg != null) bot.Say(msg, stealth);
-        }       
+            if (!p.level.SeesServerWideChat || action != PlayerAction.Me) return;
+            bot.Say("*" + p.DisplayName + " " + message, stealth);
+        }
 
-        static char[] trimChars = new char[] { ' ' };
-        void HandleChat(Player p, string message) {
-            if (p.cancelchat || !p.level.SeesServerWideChat) return;
-            if (message.Trim(trimChars).Length == 0) return;
-            
-            string name = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
-            bot.Say(name + "%S: " + message, p.opchat);
+        void HandleChatSys(ChatScope scope, ref string msg, object arg,
+                           ref ChatMessageFilter filter, bool irc) {
+            if (!irc) return;
+            // TODO: Check filter
+            bot.Say(msg);
+        }
+        
+        void HandleChatFrom(ChatScope scope, Player source, ref string msg,
+                            object arg, ref ChatMessageFilter filter, bool irc) {
+            if (!irc) return;
+            // TODO: Check filter
+            string full = ServerConfig.IRCShowPlayerTitles ? source.FullName : source.group.Prefix + source.ColoredName;
+            msg = msg.Replace("λFULL", full).Replace("λNICK", source.ColoredName);
+            bot.Say(msg);
+        }
+        
+        void HandleChat(ChatScope scope, Player source, ref string msg,
+                        object arg, ref ChatMessageFilter filter, bool irc) {
+            if (!irc) return;
+            // TODO: Check filter
+            string full = ServerConfig.IRCShowPlayerTitles ? source.FullName : source.group.Prefix + source.ColoredName;
+            msg = msg.Replace("λFULL", full).Replace("λNICK", source.ColoredName);
+            bot.Say(msg);
         }
         
         void HandleShutdown(bool restarting, string message) {
@@ -205,7 +219,7 @@ namespace MCGalaxy.Network {
             } else {
                 Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
                 MessageInGame(user.Nick, string.Format("%I(IRC) {0}: &f{1}", user.Nick,
-                                         ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+                                                       ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
         
@@ -250,12 +264,12 @@ namespace MCGalaxy.Network {
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
             
             try {
-                if (!p.group.CanExecute(cmd)) { 
+                if (!p.group.CanExecute(cmd)) {
                     CommandPerms.Find(cmd.name).MessageCannotUse(p);
-                    return false; 
-                }                
-                if (!cmd.SuperUseable) { 
-                    Player.Message(p, cmd.name + " can only be used in-game."); 
+                    return false;
+                }
+                if (!cmd.SuperUseable) {
+                    Player.Message(p, cmd.name + " can only be used in-game.");
                     return false;
                 }
                 cmd.Use(p, cmdArgs);

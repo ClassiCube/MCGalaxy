@@ -33,9 +33,9 @@ namespace MCGalaxy.Commands.Chatting {
                 if (args[1] == "loving" || args[1] == "creepy" || args[1] == "friendly" || args[1] == "deadly")
                     hugType = args[1];
             }
-            if (hugType == null) { TryMessageAction(p, args[0], "{0} %Shugged {1}", false); return; }
+            if (hugType == null) { TryMessageAction(p, args[0], "λNICK %Shugged λTARGET", false); return; }
             
-            TryMessageAction(p, args[0], "{0} %Sgave {1} %Sa " + hugType + " hug", false);
+            TryMessageAction(p, args[0], "λNICK %Sgave λTARGET %Sa " + hugType + " hug", false);
             if (hugType == "deadly") {
                 if (!CheckExtraPerm(p, 1)) return;
                 Player target = PlayerInfo.FindMatches(p, args[0]);

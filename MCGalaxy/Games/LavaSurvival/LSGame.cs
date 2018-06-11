@@ -23,12 +23,12 @@ namespace MCGalaxy.Games {
     internal sealed class LSData {
         public int TimesDied;
     }
-	
+    
     class LSLevelPicker : LevelPicker {
         public List<string> maps;
         public override List<string> GetCandidateMaps() { return new List<string>(maps); }
     }
-	
+    
     public sealed partial class LSGame : RoundsGame {
         const string propsDir = "properties/lavasurvival/";
         List<string> maps;

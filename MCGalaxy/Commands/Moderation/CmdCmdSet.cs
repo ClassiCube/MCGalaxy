@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdCmdSet : Command {        
+    public sealed class CmdCmdSet : Command {
         public override string name { get { return "CmdSet"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
                     perms.Allowed.Add(grp.Permission);
                 }
                 
-                UpdatePermissions(cmd, p, " can now be used by " + grp.ColoredName);
+                UpdatePermissions(cmd, p, " %Scan now be used by " + grp.ColoredName);
             } else if (args.Length == 2 && args[1][0] == '-') {
                 Group grp = GetGroup(p, args[1].Substring(1));
                 if (grp == null) return;
@@ -61,14 +61,14 @@ namespace MCGalaxy.Commands.Moderation {
                     perms.Disallowed.Add(grp.Permission);
                 }
                 
-                UpdatePermissions(cmd, p, " is no longer usable by " + grp.ColoredName);
+                UpdatePermissions(cmd, p, " %Sis no longer usable by " + grp.ColoredName);
             } else if (args.Length == 2) {
                 Group grp = GetGroup(p, args[1]);
                 if (grp == null) return;
                 CommandPerms perms = CommandPerms.Find(cmd.name);
                 
                 perms.MinRank = grp.Permission;
-                UpdatePermissions(cmd, p, "'s permission was set to " + grp.ColoredName);
+                UpdatePermissions(cmd, p, "%S's permission was set to " + grp.ColoredName);
             } else {
                 int otherPermIndex = 0;
                 if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref otherPermIndex)) return;
@@ -86,10 +86,8 @@ namespace MCGalaxy.Commands.Moderation {
                 perms.MinRank = grp.Permission;
                 CommandExtraPerms.Save();
                 
-                string permName = "extra permission " + otherPermIndex;
-                Chat.MessageGlobal("&d{0}%S's {1} was set to {2}", cmd.name, permName, grp.ColoredName);
-                if (Player.IsSuper(p))
-                    Player.Message(p, "{0}'s {1} was set to {2}", cmd.name, permName, grp.ColoredName);
+                string msg = "extra permission " + otherPermIndex;
+                Announce(p, cmd.name + "%S's " + msg + " was set to " + grp.ColoredName);
             }
         }
         
@@ -103,13 +101,15 @@ namespace MCGalaxy.Commands.Moderation {
             return grp;
         }
         
-        static void UpdatePermissions(Command cmd, Player p, string message) {
+        static void UpdatePermissions(Command cmd, Player p, string msg) {
             CommandPerms.Save();
             CommandPerms.Load();
-            
-            Chat.MessageGlobal("&d{0}%S{1}", cmd.name, message);
-            if (Player.IsSuper(p))
-                Player.Message(p, cmd.name + message);
+            Announce(p, cmd.name + msg);
+        }
+        
+        static void Announce(Player p, string msg) {
+            Chat.MessageAll("&d" + msg);
+            if (Player.IsSuper(p)) Player.Message(p, msg);
         }
         
         public override void Help(Player p) {

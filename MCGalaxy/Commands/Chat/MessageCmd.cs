@@ -19,26 +19,25 @@ namespace MCGalaxy.Commands.Chatting {
     public abstract class MessageCmd : Command {
         public override string type { get { return CommandTypes.Chat; } }
         
-        protected bool TryMessageAction(Player p, string name, string message, bool messageWho) {
+        protected bool TryMessageAction(Player p, string name, string msg, bool messageWho) {
             if (name.Length == 0) { Help(p); return false; }
             Player target = PlayerInfo.FindMatches(p, name);
             if (target == null) return false;
 
-            string giver = (p == null) ? "(console)" : p.ColoredName;
             string reciever = p == target ? "themselves" : target.ColoredName;
-            if (!TryMessage(p, string.Format(message, giver, reciever))) return false;
+            if (!TryMessage(p, msg.Replace("λTARGET", reciever))) return false;
 
             if (messageWho && p != target && Chat.NotIgnoring(target, p)) {
-                Player.Message(target, string.Format(message, giver, "you"));
+                string giver = (p == null) ? "(console)" : p.ColoredName;
+                msg = msg.Replace("λNICK", giver);
+                Player.Message(target, msg.Replace("λTARGET", "you"));
             }
             return true;
         }
         
-        protected bool TryMessage(Player p, string message) { return TryMessage(p, message, name); }
-        
-        protected static bool TryMessage(Player p, string message, string cmd) {
-            if (!CanSpeak(p, cmd)) return false;
-            Chat.MessageFrom(p, message, null);
+        protected bool TryMessage(Player p, string msg) {
+            if (!CanSpeak(p, name)) return false;
+            Chat.MessageFrom(p, msg, null);
             
             p.CheckForMessageSpam();
             return true;
@@ -61,7 +60,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "High5"; } }
         
         public override void Use(Player p, string message) {
-            TryMessageAction(p, message, "{0} %Sjust highfived {1}", true);
+            TryMessageAction(p, message, "λNICK %Sjust highfived λTARGET", true);
         }
 
         public override void Help(Player p) {

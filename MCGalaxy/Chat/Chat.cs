@@ -106,10 +106,8 @@ namespace MCGalaxy {
         
         public static void MessageAll(string msg) { Message(ChatScope.All, msg, null, null); }
         public static void MessageGlobal(string msg) { Message(ChatScope.Global, msg, null, null); }
-        public static void MessageOps(string msg) { MessageAboveOrSameRank(OpchatPerm, msg); }
-        
-        public static void MessageAboveOrSameRank(LevelPermission rank, string msg) {
-            Message(ChatScope.AboveEqRank, msg, rank, null);
+        public static void MessageOps(string msg) {
+            Message(ChatScope.AboveEqRank, msg, OpchatPerm, null);
         }
         
         public static void MessageGlobal(string message, object a0) {

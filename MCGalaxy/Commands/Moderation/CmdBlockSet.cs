@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
                     perms.Allowed.Add(grp.Permission);
                 }
                 
-                UpdatePermissions(block, p, " can now be used by " + grp.ColoredName);
+                UpdatePermissions(block, p, " %Scan now be used by " + grp.ColoredName);
             } else if (args.Length == 2 && args[1][0] == '-') {
                 Group grp = GetGroup(p, args[1].Substring(1));
                 if (grp == null) return;
@@ -60,14 +60,14 @@ namespace MCGalaxy.Commands.Moderation {
                     perms.Disallowed.Add(grp.Permission);
                 }
                 
-                UpdatePermissions(block, p, " is no longer usable by " + grp.ColoredName);
+                UpdatePermissions(block, p, " %Sis no longer usable by " + grp.ColoredName);
             } else if (args.Length == 2) {
                 Group grp = GetGroup(p, args[1]);
                 if (grp == null) return;
                 BlockPerms perms = BlockPerms.List[block];
                 
                 perms.MinRank = grp.Permission;
-                UpdatePermissions(block, p, "'s permission was set to " + grp.ColoredName);
+                UpdatePermissions(block, p, "%S's permission was set to " + grp.ColoredName);
             }
         }
         
@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             string name = Block.GetName(p, block);
-            Chat.MessageGlobal("&d{0}%S{1}", name, message);
+            Chat.MessageAll("&d" + name + message);
             if (Player.IsSuper(p)) Player.Message(p, name + message);
         }
         
