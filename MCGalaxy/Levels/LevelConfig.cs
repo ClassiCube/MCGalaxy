@@ -254,7 +254,7 @@ namespace MCGalaxy {
         [ConfigInt("MaxRoundTime", "Game", 7)]
         public int MaxRoundTime = 7;
         [ConfigBool("DrawingAllowed", "Game", true)]
-        public bool DrawingAllowed = true;
+        public bool Drawing = true;
         [ConfigInt("RoundsPlayed", "Game", 0)]
         public int RoundsPlayed = 0;
         [ConfigInt("RoundsHumanWon", "Game", 0)]

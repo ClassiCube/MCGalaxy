@@ -111,19 +111,26 @@ namespace MCGalaxy.Commands.World {
             Player.Message(p, "  Roleplay (level only) chat: " + GetBool(!cfg.ServerWideChat));
             Player.Message(p, "  Load on /goto: {0}%S, Auto unload: {1}",
                            GetBool(cfg.LoadOnGoto), GetBool(cfg.AutoUnload));
-            Player.Message(p, "  Buildable: {0}%S, Deletable: {1}",
-                           GetBool(cfg.Buildable), GetBool(cfg.Deletable));
+            Player.Message(p, "  Buildable: {0}%S, Deletable: {1}%S, Drawing: {2}",
+                           GetBool(cfg.Buildable), GetBool(cfg.Deletable), GetBool(cfg.Drawing));
         }
         
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Map [map] [option] <value> %H- Sets [option] on that map");
-            Player.Message(p, "%HPossible options: %S{0}", LevelOptions.Options.Join(opt => opt.Name));
-            Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option.");
+            Player.Message(p, "%HUse %T/Help map options %Hfor a list of options");
+            Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option");
         }
         
         public override void Help(Player p, string message) {
+            if (message.CaselessEq("options")) {
+                Player.Message(p, "%HOptions: %S{0}", 
+                               LevelOptions.Options.Join(opt_ => opt_.Name));
+        		Player.Message(p, "%HUse %T/Help map [option] %Hto see description for that option");
+                return;
+            }
+            
             LevelOption opt = LevelOptions.Find(message);
             if (opt == null) {
                 Player.Message(p, "Unrecognised option \"{0}\".", message); return;

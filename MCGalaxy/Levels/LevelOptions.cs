@@ -37,7 +37,8 @@ namespace MCGalaxy {
         public const string Overload = "Overload", Fall = "Fall", Drown = "Drown", Finite = "Finite", AI = "AI";
         public const string Edge = "Edge", Grass = "Grass", Death = "Death", Killer = "Killer", Unload = "Unload";
         public const string Goto = "LoadOnGoto", Decay = "LeafDecay", Flow = "RandomFlow", Trees = "GrowTrees";
-        public const string Chat = "Chat", Guns = "Guns", Buildable = "Buildable", Deletable = "Deletable", LoadDelay = "LoadDelay";
+        public const string Chat = "Chat", Guns = "Guns", Buildable = "Buildable", Deletable = "Deletable";
+        public const string LoadDelay = "LoadDelay", Drawing = "Drawing";
         
         public static List<LevelOption> Options = new List<LevelOption>() {
              new LevelOption(MOTD,       SetMotd,  "%HSets the motd for this map. (leave blank to use default motd)"),
@@ -60,9 +61,10 @@ namespace MCGalaxy {
              new LevelOption(Trees,  SetTrees,  "%HWhether saplings grow into trees after a while."),
              new LevelOption(Chat,   SetChat,   "%HWhether chat is only seen from and sent to players in the map."),
              new LevelOption(Guns,   SetGuns,   "%HWhether guns and missiles can be used"),
-             new LevelOption(Buildable,  SetBuildable, "%HWhether any blocks can be placed by players."),
-             new LevelOption(Deletable,  SetDeletable, "%HWhether any blocks can be deleted by players."),
-             new LevelOption(LoadDelay,  SetLoadDelay, 
+             new LevelOption(Buildable, SetBuildable, "%HWhether any blocks can be placed by players."),
+             new LevelOption(Deletable, SetDeletable, "%HWhether any blocks can be deleted by players."),
+             new LevelOption(Drawing,   SetDrawing,   "%HWhether drawing commands (e.g /z) can be used on this map."),
+             new LevelOption(LoadDelay, SetLoadDelay, 
                 "%HSets the delay before the end of the map is sent. Only useful for forcing players to see the map's MOTD at the loading screen."),
         };
 
@@ -135,6 +137,9 @@ namespace MCGalaxy {
         static void SetDeletable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Deletable, "Deletable"); }
         static void SetChat(Player p, Level l, string v) {
             Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true);
+        }
+        static void SetDrawing(Player p, Level l, string v) { 
+        	Toggle(p, l, ref l.Config.Drawing, "Drawing commands"); 
         }
         
         static void SetLoadDelay(Player p, Level l, string value) {

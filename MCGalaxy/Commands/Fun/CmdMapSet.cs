@@ -37,7 +37,6 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "Build type: " + p.level.Config.BuildType);
                 Player.Message(p, "Min round time: " + p.level.Config.MinRoundTime + " minutes");
                 Player.Message(p, "Max round time: " + p.level.Config.MaxRoundTime + " minutes");
-                Player.Message(p, "Drawing commands allowed: " + p.level.Config.DrawingAllowed);
                 return;
             }
             
@@ -87,12 +86,6 @@ namespace MCGalaxy.Commands.Fun {
                 p.level.Config.MinRoundTime = time;
                 p.level.Config.MaxRoundTime = time;
                 Player.Message(p, "Set round time to: " + time + " minutes");
-            } else if (args[0].CaselessEq("drawingallowed") || args[0].CaselessEq("drawingenabled")) {
-                bool value = false;
-                if (!CommandParser.GetBool(p, args[1], ref value)) return;
-                
-                p.level.Config.DrawingAllowed = value;
-                Player.Message(p, "Set drawing commands allowed to: " + value);
             } else {
                 Player.Message(p, "Unrecognised property \"" + args[0] + "\"."); return;
             }
@@ -113,7 +106,6 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/MapSet build [normal/modifyonly/nomodify]");
             Player.Message(p, "%T/MapSet minroundtime [minutes]");
             Player.Message(p, "%T/MapSet maxroundtime [minutes]");
-            Player.Message(p, "%T/MapSet drawingallowed [yes/no]");
         }
     }
 }
