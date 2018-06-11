@@ -20,6 +20,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Core {
@@ -33,6 +34,7 @@ namespace MCGalaxy.Core {
         public override void Load(bool startup) {
             OnPlayerConnectEvent.Register(ConnectHandler.HandleConnect, Priority.Critical);
             OnPlayerCommandEvent.Register(ChatHandler.HandleCommand, Priority.Critical);
+            OnChatEvent.Register(ChatHandler.HandleOnChat, Priority.Critical);
             OnPlayerStartConnectingEvent.Register(ConnectingHandler.HandleConnecting, Priority.Critical);
             
             OnSentMapEvent.Register(MiscHandlers.HandleOnMapSent, Priority.Critical);
@@ -50,6 +52,7 @@ namespace MCGalaxy.Core {
         public override void Unload(bool shutdown) {
             OnPlayerConnectEvent.Unregister(ConnectHandler.HandleConnect);
             OnPlayerCommandEvent.Unregister(ChatHandler.HandleCommand);
+            OnChatEvent.Unregister(ChatHandler.HandleOnChat);
             OnPlayerStartConnectingEvent.Unregister(ConnectingHandler.HandleConnecting);
             
             OnSentMapEvent.Unregister(MiscHandlers.HandleOnMapSent);

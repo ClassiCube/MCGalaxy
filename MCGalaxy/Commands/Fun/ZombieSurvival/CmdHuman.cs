@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Human %H- pledges that you will not be infected.");
-            Player.Message(p, "%HIf you survive, you receive an &aextra 5 %3" + ServerConfig.Currency);
-            Player.Message(p, "%HHowever, if you are infected, you will &close 2 %3" + ServerConfig.Currency);
+            Player.Message(p, "%HIf you survive, you receive an &aextra 5 &3" + ServerConfig.Currency);
+            Player.Message(p, "%HHowever, if you are infected, you will &close 2 &3" + ServerConfig.Currency);
         }
     }
 }

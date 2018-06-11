@@ -110,7 +110,7 @@ namespace MCGalaxy.Eco {
             data.InfectMessages.Add(text);
             
             PlayerDB.AppendInfectMessage(p.name, text);
-            Player.Message(p, "%aAdded infect message: &f" + text);
+            Player.Message(p, "&aAdded infect message: &f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
         
@@ -131,7 +131,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "%cYou don't have enough &3{1} &c to buy a {0}.", Name, ServerConfig.Currency); return;
+                Player.Message(p, "&cYou don't have enough &3{1} &cto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
                 Player.Message(p, "You can only buy an invisiblity potion " +

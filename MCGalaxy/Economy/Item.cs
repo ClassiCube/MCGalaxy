@@ -51,10 +51,10 @@ namespace MCGalaxy.Eco {
         internal void Setup(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.Message(p, "%aThe {0} item is now enabled.", Name);
+                    Player.Message(p, "&aThe {0} item is now enabled.", Name);
                     Enabled = true; break;
                 case "disable":
-                    Player.Message(p, "%aThe {0} item is now disabled.", Name);
+                    Player.Message(p, "&aThe {0} item is now disabled.", Name);
                     Enabled = false; break;
                 case "purchaserank":
                     if (args.Length == 2) { Player.Message(p, "You need to provide a rank name."); return; }
@@ -115,7 +115,7 @@ namespace MCGalaxy.Eco {
             // Must always provide an argument.
             if (args.Length < 2) { OnStoreCommand(p); return; }
             if (p.money < Price) {
-                Player.Message(p, "%cYou don't have enough &3{1}&c to buy a {0}.", Name, ServerConfig.Currency); return;
+                Player.Message(p, "&cYou don't have enough &3{1} &cto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             DoPurchase(p, message, args);
         }

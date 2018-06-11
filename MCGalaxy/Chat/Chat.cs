@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Text;
 using MCGalaxy.Commands;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy {
     public enum ChatScope {
@@ -28,6 +29,8 @@ namespace MCGalaxy {
         Level,
         /// <summary> Messages all players in (or spying on) a particular chatroom. </summary>
         Chatroom,
+        /// <summary> Messages all players in all chatrooms. </summary>
+        AllChatrooms,
         
         /// <summary> Messages all players of a given rank </summary>
         Rank,
@@ -85,14 +88,15 @@ namespace MCGalaxy {
             string room = (string)arg;
             return pl.Chatroom == room || pl.spyChatRooms.CaselessContains(room);
         }
+        public static bool FilterAllChatrooms(Player pl, object arg) { return pl.Chatroom != null; }
         
         public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
         public static bool FilterAboveOrSameRank(Player pl, object arg) { return pl.Rank >= (LevelPermission)arg; }
         public static bool FilterBelowRank(Player pl, object arg) { return pl.Rank < (LevelPermission)arg; }
 
-        static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
-            FilterAll, FilterGlobal, FilterLevel, FilterChatroom,
-            FilterRank, FilterAboveOrSameRank, FilterBelowRank,
+        public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
+            FilterAll, FilterGlobal, FilterLevel, FilterChatroom, 
+            FilterAllChatrooms, FilterRank, FilterAboveOrSameRank, FilterBelowRank,
         };
         
         public static ChatMessageFilter FilterVisible(Player source) {
@@ -129,14 +133,13 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
+            OnChatSysEvent.Call(scope, ref msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
                 
                 Player.Message(pl, msg);
             }
-            
-            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
         
         
@@ -164,6 +167,7 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             if (source == null) source = ConsolePlayer.Instance;
             
+            OnChatFromEvent.Call(scope, source, ref msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
@@ -171,8 +175,6 @@ namespace MCGalaxy {
                 if (!NotIgnoring(pl, source)) continue;
                 Player.Message(pl, UnescapeMessage(pl, source, msg));
             }
-            
-            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
         }
         
         
@@ -192,6 +194,7 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             if (source == null) source = ConsolePlayer.Instance;
             
+            OnChatEvent.Call(scope, source, ref msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!NotIgnoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
@@ -202,8 +205,6 @@ namespace MCGalaxy {
                 
                 Player.Message(pl, UnescapeMessage(pl, source, msg));
             }
-            
-            if (irc) Server.IRC.Say(msg); // TODO: check scope filter here
             source.CheckForMessageSpam();
         }
         

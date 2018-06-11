@@ -242,8 +242,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", p.name, message);
                 message = "<GlobalChatRoom> λNICK: &f" + message;
                 
-                Chat.MessageFrom(ChatScope.All, p, message,
-                                 null, (pl, arg) => pl.Chatroom != null);
+                Chat.MessageChat(ChatScope.AllChatrooms, p, message, null, null);
                 p.lastchatroomglobal = DateTime.UtcNow;
             } else {
                 Player.Message(p, "Sorry, you must wait 30 seconds in between each global chatroom message!!");

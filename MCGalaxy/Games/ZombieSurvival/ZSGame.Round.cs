@@ -286,7 +286,7 @@ namespace MCGalaxy.Games {
 
         void IncreaseAliveStats(Player p) {
             if (p.Game.PledgeSurvive) {
-                Player.Message(p, "You received &a5 %3" + ServerConfig.Currency +
+                Player.Message(p, "You received &a5 &3" + ServerConfig.Currency +
                                " %Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }

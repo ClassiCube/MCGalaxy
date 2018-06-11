@@ -82,13 +82,13 @@ namespace MCGalaxy.Commands.Eco {
             if (!DateTime.TryParseExact(date, dateFormat, null, 0, out time)) return false;
             
             TimeSpan delta = DateTime.Now - time;
-            value = prefix + " %f" + delta.Shorten() + " ago" + suffix;
+            value = prefix + " &f" + delta.Shorten() + " ago" + suffix;
             return true;
         }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Balance [player]");
-            Player.Message(p, "%HShows how much %3" + ServerConfig.Currency + " %H[player] has, " +
+            Player.Message(p, "%HShows how much &3" + ServerConfig.Currency + " %H[player] has, " +
                            "plus their most recent transactions.");
             Player.Message(p, "%HIf [player] is not given, shows your own balance.");
         }

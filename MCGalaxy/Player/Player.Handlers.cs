@@ -550,11 +550,11 @@ namespace MCGalaxy {
 
             if (IsPartialSpaced(text)) {
                 partialMessage += text.Substring(0, text.Length - 2) + " ";
-                SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
+                SendMessage("&3Partial message: &f" + partialMessage);
                 return true;
             } else if (IsPartialJoined(text)) {
                 partialMessage += text.Substring(0, text.Length - 2);
-                SendMessage(Colors.teal + "Partial message: &f" + partialMessage);
+                SendMessage("&3Partial message: &f" + partialMessage);
                 return true;
             }
 

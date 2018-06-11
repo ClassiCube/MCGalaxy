@@ -34,14 +34,13 @@ namespace MCGalaxy.Games {
         }
         
         public void Message(Player source, string message) {
-            MessageOnline(source, "&9- to team - λNICK: &f" + message);
+            message = "&9- to team - λNICK: &f" + message;
+            Chat.MessageChat(ChatScope.All, source, message, this,
+                             (pl, arg) => pl.Game.Team == arg);
         }
         
         public void Action(Player source, string message) {
-            MessageOnline(source, "Team - λNICK %S" + message);
-        }
-        
-        void MessageOnline(Player source, string message) {
+            message = "Team - λNICK %S" + message;
             Chat.MessageFrom(ChatScope.All, source, message, this,
                              (pl, arg) => pl.Game.Team == arg);
         }

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "%cYou can't take %3" + ServerConfig.Currency + "%c from yourself"); return; }
+            if (p != null && p == who) { Player.Message(p, "&cYou can't take &3" + ServerConfig.Currency + "&c from yourself"); return; }
             
             int money = 0;
             if (who == null) {

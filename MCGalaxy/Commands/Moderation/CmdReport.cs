@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands.Moderation {
             LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
             string checkRankName = Group.GetColoredName(checkRank);
             if (reports.Count >= 5) {
-                Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1}%c+ has reviewed these reports first!",
+                Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1}&c+ has reviewed these reports first!",
                                PlayerInfo.GetColoredName(p, target), checkRankName);
                 return;
             }

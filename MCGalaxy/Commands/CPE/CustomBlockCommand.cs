@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
             Player.Message(p, "  Use %T{0} revert %Sto go back a step", cmd);
             Player.Message(p, "  Use %T{0} [input] %Sto provide input", cmd);
-            Player.Message(p, "%f----------------------------------------------------------");
+            Player.Message(p, "&f----------------------------------------------------------");
             
             SetStep(p, global, 2);
             SendStepHelp(p, global);
@@ -680,7 +680,7 @@ namespace MCGalaxy.Commands.CPE {
             
             for (int i = 0; i < help.Length; i++)
                 Player.Message(p, help[i]);
-            Player.Message(p, "%f--------------------------");
+            Player.Message(p, "&f--------------------------");
         }
         
         static void SendEditHelp(Player p, string section) {

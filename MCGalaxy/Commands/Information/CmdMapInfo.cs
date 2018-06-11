@@ -156,14 +156,14 @@ namespace MCGalaxy.Commands.Info {
         void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
             string url = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
             if (url.Length > 0) {
-                Player.Message(p, "Terrain: %b" + url);
+                Player.Message(p, "Terrain: &b" + url);
             } else {
                 Player.Message(p, "No custom terrain set for this map.");
             }
             
             url = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
             if (url.Length > 0) {
-                Player.Message(p, "Texture pack: %b" + url);
+                Player.Message(p, "Texture pack: &b" + url);
             } else {
                 Player.Message(p, "No custom texture pack set for this map.");
             }
@@ -226,7 +226,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string Color(string src) {
-            return (src == null || src.Length == 0 || src == "-1") ? "%bnone%e" : "%b" + src + "%e";
+            return (src == null || src.Length == 0 || src == "-1") ? "&bnone&e" : "&b" + src + "&e";
         }
         
         public override void Help(Player p)  {

@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             if (item == null) { Help(p); return; }
 
             if (!item.Enabled) {
-                Player.Message(p, "%cThe {0} item is not currently buyable.", item.Name); return;
+                Player.Message(p, "&cThe {0} item is not currently buyable.", item.Name); return;
             }
             if (p.Rank < item.PurchaseRank) {
                 Formatter.MessageNeedMinPerm(p, "+ can purchase a " + item.Name, item.PurchaseRank); return;

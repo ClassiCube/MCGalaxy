@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Maintenance {
             Player.Message(p, "%T/BlockDB enable [map]");
             Player.Message(p, "%HEnables %Hrecording block changes to the BlockDB for [map]");
             Player.Message(p, "%HIf no map name is given, uses your current map.");
-            Player.Message(p, "%CUse these commands with great caution!");
+            Player.Message(p, "&cUse these commands with great caution!");
         }
     }
 }

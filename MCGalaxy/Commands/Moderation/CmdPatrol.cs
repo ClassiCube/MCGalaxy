@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Moderation {
         List<Player> GetPatrolCandidates(Player p) {
             List<Player> candidates = new List<Player>();
             LevelPermission perm = CommandExtraPerms.MinPerm(name);
-            Player[] online = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
             
-            foreach (Player target in online) {
+            foreach (Player target in players) {
                 if (target.Rank > perm || target == p || !Entities.CanSee(p, target)) continue;
                 if (target.LastPatrol > cutoff) continue;
                 candidates.Add(target);

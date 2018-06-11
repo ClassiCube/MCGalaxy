@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message) {        
             if (!message.CaselessEq("global")) {
                 ClearChat(p);
-                Player.Message(p, "%4Chat cleared.");
+                Player.Message(p, "&4Chat cleared.");
             } else {
                 if (!CheckExtraPerm(p, 1)) return;
                 
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Chatting {
                 foreach (Player pl in players) {
                     ClearChat(pl);
                 }
-                Chat.MessageAll("%4Global Chat cleared.");
+                Chat.MessageAll("&4Global Chat cleared.");
             }
         }
         
