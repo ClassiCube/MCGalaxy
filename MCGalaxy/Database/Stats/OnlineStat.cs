@@ -46,12 +46,12 @@ namespace MCGalaxy.DB {
         static void OnlineCoreLine(Player p, Player who) {
             string prefix = who.title.Length == 0 ? "" : who.color + "[" + who.titlecolor + who.title + who.color + "] ";
             string fullName = prefix + who.ColoredName;
-            CoreLine(p, fullName, who.name, who.group);
+            CoreLine(p, fullName, who.name, who.group, who.TotalMessagesSent);
         }
         
-        internal static void CoreLine(Player p, string fullName, string name, Group grp) {
-            Player.Message(p, fullName + " %S(" + name + ") has:");
-            Player.Message(p, "  Rank of " + grp.ColoredName);
+        internal static void CoreLine(Player p, string fullName, string name, Group grp, int messages) {
+            Player.Message(p, "{0} %S({1}) has:", fullName, name);
+            Player.Message(p, "  Rank of {0}%S, wrote &a{1} %Smessages", grp.ColoredName, messages);
         }
         
         internal static void MiscLine(Player p, string name, int deaths, int money) {

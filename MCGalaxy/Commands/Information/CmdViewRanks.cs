@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/viewranks [rank] - Shows all players who have [rank]");
-            Player.Message(p, "/viewranks banned - Shows all players who are banned.");
+            Player.Message(p, "%T/viewranks [rank] %H- Shows all players who have [rank]");
+            Player.Message(p, "%T/viewranks banned %H- Shows all players who are banned");
             Player.Message(p, "Available ranks: " + Group.GroupList.Join(g => g.ColoredName));
         }
     }

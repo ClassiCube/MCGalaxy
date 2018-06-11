@@ -46,7 +46,6 @@ namespace MCGalaxy.Commands.Moderation {
         static void Assign(Player p, string[] args) {
             string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (target == null) return;
-            Player who = PlayerInfo.FindExact(target);
 
             Group newRank = Matcher.FindRanks(p, args[1]);
             if (newRank == null) return;
@@ -57,12 +56,13 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
             }
             
-            if (p != null && who != null && p == who) {
+            if (p != null && p.name.CaselessEq(target)) {
                 Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
             }
-            Group curRank = who != null ? who.group : Group.GroupIn(target);
+            
+            Group curRank = PlayerInfo.GetGroup(target);
             string reason = args.Length > 3 ? args[3] : "assigning temp rank";
-            if (!CmdSetRank.CanChangeRank(target, curRank, newRank, who, p, ref reason)) return;
+            if (!CmdSetRank.CanChangeRank(target, curRank, newRank, p, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason, duration);
             action.targetGroup = curRank;
@@ -79,14 +79,13 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             string[] parts = line.SplitSpaces();
-            Player who = PlayerInfo.FindExact(target);
-            Group curRank = who != null ? who.group : Group.GroupIn(target);
+            Group curRank = PlayerInfo.GetGroup(target);
             
             Group oldRank = Group.Find(parts[4 - 1]); // -1 because data, not whole line
             if (oldRank == null) return;
             
             string reason = "temp rank unassigned";
-            if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, who, p, ref reason)) return;
+            if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, p, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
             action.Metadata = oldRank;

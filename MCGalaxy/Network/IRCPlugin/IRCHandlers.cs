@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Events;
+using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.DB;
@@ -30,7 +31,12 @@ namespace MCGalaxy.Network {
     public sealed class IRCHandlers {
         
         readonly IRCBot bot;
-        public IRCHandlers(IRCBot bot) { this.bot = bot; }
+        readonly Player ircGuest = new Player("IRC");
+        
+        public IRCHandlers(IRCBot bot) { 
+            this.bot = bot; 
+            ircGuest.group = Group.GuestRank;
+        }
         
         volatile bool hookedEvents = false;
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
@@ -52,6 +58,7 @@ namespace MCGalaxy.Network {
 
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
+            OnGroupLoadEvent.Register(HandleGroupLoad, Priority.Low);
             
             OnChatEvent.Register(HandleChat, Priority.Low);
             OnChatSysEvent.Register(HandleChatSys, Priority.Low);
@@ -83,6 +90,7 @@ namespace MCGalaxy.Network {
             
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnShuttingDownEvent.Unregister(HandleShutdown);
+            OnGroupLoadEvent.Unregister(HandleGroupLoad);
             
             OnChatEvent.Unregister(HandleChat);
             OnChatSysEvent.Unregister(HandleChatSys);
@@ -107,39 +115,44 @@ namespace MCGalaxy.Network {
         }
 
         
+        string Unescape(Player p, string msg) {
+            string full = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
+            return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
+        }
+        
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (!p.level.SeesServerWideChat || action != PlayerAction.Me) return;
             bot.Say("*" + p.DisplayName + " " + message, stealth);
         }
+        
+        bool ToPublicChannel(ChatScope scope, object arg, ChatMessageFilter filter) {
+             return Chat.scopeFilters[(int)scope](ircGuest, arg) 
+                 && (filter == null || filter(ircGuest, arg));
+        }
 
-        void HandleChatSys(ChatScope scope, ref string msg, object arg,
+        void HandleChatSys(ChatScope scope, string msg, object arg,
                            ref ChatMessageFilter filter, bool irc) {
             if (!irc) return;
-            // TODO: Check filter
-            bot.Say(msg);
+            bot.Say(msg, !ToPublicChannel(scope, arg, filter));
         }
         
-        void HandleChatFrom(ChatScope scope, Player source, ref string msg,
+        void HandleChatFrom(ChatScope scope, Player source, string msg,
                             object arg, ref ChatMessageFilter filter, bool irc) {
             if (!irc) return;
-            // TODO: Check filter
-            string full = ServerConfig.IRCShowPlayerTitles ? source.FullName : source.group.Prefix + source.ColoredName;
-            msg = msg.Replace("λFULL", full).Replace("λNICK", source.ColoredName);
-            bot.Say(msg);
+            bot.Say(Unescape(source, msg), !ToPublicChannel(scope, arg, filter));
         }
         
-        void HandleChat(ChatScope scope, Player source, ref string msg,
+        void HandleChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool irc) {
             if (!irc) return;
-            // TODO: Check filter
-            string full = ServerConfig.IRCShowPlayerTitles ? source.FullName : source.group.Prefix + source.ColoredName;
-            msg = msg.Replace("λFULL", full).Replace("λNICK", source.ColoredName);
-            bot.Say(msg);
+            bot.Say(Unescape(source, msg), !ToPublicChannel(scope, arg, filter));
         }
         
         void HandleShutdown(bool restarting, string message) {
             bot.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
         }
+        
+        void HandleGroupLoad() { ircGuest.group = Group.GuestRank; }
         
         
         void Listener_OnAction(UserInfo user, string channel, string description) {

@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands.Building {
             TransformFactory transform = TransformFactory.Find(args[0]);
             
             if (args[0].CaselessEq("list")) {
-                Player.Message(p, "%HAvailable transforms: %S" + TransformFactory.Available);
+                List(p);
             } else if (transform == null) {
                 Player.Message(p, "No transform found with name \"{0}\".", args[0]);
-                Player.Message(p, "Available transforms: " + TransformFactory.Available);
+                List(p);
             } else {
                 Player.Message(p, "Set your transform to: " + transform.Name);
                 Transform instance = transform.Construct(p, args.Length == 1 ? "" : args[1]);
@@ -49,19 +49,23 @@ namespace MCGalaxy.Commands.Building {
             }
         }
         
+        static void List(Player p) {
+            Player.Message(p, "%HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/Transform [name] <transform args>");
             Player.Message(p, "%HSets your current transform to the transform with that name.");
             Player.Message(p, "%T/Help Transform [name]");
             Player.Message(p, "%HOutputs the help for the transform with that name.");
-            Player.Message(p, "%HAvailable transforms: %S" + TransformFactory.Available);
+            List(p);
         }
         
         public override void Help(Player p, string message) {
             TransformFactory transform = TransformFactory.Find(message);
             if (transform == null) {
                 Player.Message(p, "No transform found with name \"{0}\".", message);
-                Player.Message(p, "%HAvailable transforms: %S" + TransformFactory.Available);
+                List(p);
             } else {
                 Player.MessageLines(p, transform.Help);
             }

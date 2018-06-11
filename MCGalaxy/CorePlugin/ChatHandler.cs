@@ -22,7 +22,7 @@ namespace MCGalaxy.Core {
 
     internal static class ChatHandler {
         
-        internal static void HandleOnChat(ChatScope scope, Player source, ref string msg, 
+        internal static void HandleOnChat(ChatScope scope, Player source, string msg, 
                                           object arg, ref ChatMessageFilter filter, bool irc) {
             msg = msg.Replace("λFULL", source.name).Replace("λNICK", source.name);
             LogType logType = LogType.PlayerChat;

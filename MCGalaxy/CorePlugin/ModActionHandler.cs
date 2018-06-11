@@ -146,7 +146,7 @@ namespace MCGalaxy.Core {
         static void LogIPAction(ModAction e, string type) {
             LevelPermission perm = CommandExtraPerms.MinPerm("WhoIs");
             Chat.Message(ChatScope.BelowRank,   e.FormatMessage("An IP", type), perm, null, true);
-            Chat.Message(ChatScope.AboveEqRank, e.FormatMessage(e.TargetName, type), perm, null, true);
+            Chat.Message(ChatScope.AboveEqRank, e.FormatMessage("An IP", type), perm, null, true);
         }
         
         static void DoBanIP(ModAction e) {

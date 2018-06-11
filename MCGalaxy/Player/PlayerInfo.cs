@@ -26,14 +26,16 @@ namespace MCGalaxy {
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
         
-        public static Group GetGroup(string name) { return Group.GroupIn(name); }
-        
-        public static string GetColor(string name) { return GetGroup(name).Color; }
+        public static Group GetGroup(string name) { 
+            Player target = FindExact(name);
+            return target != null ? target.group : Group.GroupIn(name);
+        }
         
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);
-            return target != null && Entities.CanSee(p, target) ? 
-                target.ColoredName : GetColor(name) + name.RemoveLastPlus(); // TODO: select color from database?
+            // TODO: select color from database?
+            return target != null && Entities.CanSee(p, target) ? target.ColoredName 
+                : Group.GroupIn(name).Color + name.RemoveLastPlus();
         }
                 
         public static int NonHiddenCount() {

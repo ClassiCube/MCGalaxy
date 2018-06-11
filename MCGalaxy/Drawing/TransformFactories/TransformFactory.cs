@@ -38,8 +38,6 @@ namespace MCGalaxy.Drawing.Transforms {
             new RotateTransformFactory(),
         };
         
-        public static string Available { get { return Transforms.Join(b => b.Name); } }
-        
         public static TransformFactory Find(string name) {
             foreach (TransformFactory entry in Transforms) {
                 if (entry.Name.CaselessEq(name)) return entry;

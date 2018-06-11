@@ -44,7 +44,7 @@ namespace MCGalaxy.DB {
             string color = data.Color.Length == 0 ? group.Color : data.Color;
             string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
             string fullName = prefix + color + data.Name.RemoveLastPlus();
-            OnlineStat.CoreLine(p, fullName, data.Name, group);
+            OnlineStat.CoreLine(p, fullName, data.Name, group, data.Messages);
         }
         
         static void BlocksModifiedLine(Player p, PlayerData who) {

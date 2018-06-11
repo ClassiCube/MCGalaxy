@@ -88,7 +88,7 @@ namespace MCGalaxy.DB {
             p.TotalDeleted = data.TotalDeleted;
             
             p.TimesDied = data.Deaths;
-            p.TotalMessagesSent = data.Messages;            
+            p.TotalMessagesSent = data.Messages;
             p.money = data.Money;
             p.TimesBeenKicked = data.Kicks;
         }

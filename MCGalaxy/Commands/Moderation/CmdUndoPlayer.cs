@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Moderation {
                 names[i] = PlayerInfo.FindOfflineNameMatches(p, parts[i]);
                 if (names[i] == null) return null;
                 
-                Group grp = Group.GroupIn(names[i]);
+                Group grp = PlayerInfo.GetGroup(names[i]);
                 bool canUndo = p == null || grp.Permission < p.Rank || p.name.CaselessEq(names[i]);
                 if (!canUndo) {
                     MessageTooHighRank(p, "undo", false); return null;

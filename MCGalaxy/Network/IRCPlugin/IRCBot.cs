@@ -50,11 +50,9 @@ namespace MCGalaxy {
         
 
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
-        public void Say(string message, bool opchat = false) {
+        public void Say(string message, bool opchat) {
             string[] chans = opchat ? opchannels : channels;
-            foreach (string chan in chans) {
-                Message(chan, message);
-            }
+            foreach (string chan in chans) { Message(chan, message); }
         }
         
         /// <summary> Sends an IRC private message to the given user. </summary>

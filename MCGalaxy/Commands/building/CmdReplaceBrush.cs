@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Building {
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {
                 Player.Message(p, "No brush found with name \"{0}\".", args[1]);
-                Player.Message(p, "Available brushes: " + BrushFactory.Available);
+                CmdBrush.List(p);
                 return null;
             }
             

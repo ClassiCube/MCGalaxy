@@ -34,9 +34,8 @@ namespace MCGalaxy.Commands.Moderation {
                                                  args.Length == 1 ? "" : " " + args[1],
                                                  args[0], ref reason);
             if (target == null) return;
-            Player who = PlayerInfo.FindExact(target);
             
-            Group grp = who == null ? PlayerInfo.GetGroup(target) : who.group;
+            Group grp = PlayerInfo.GetGroup(target);
             if (p != null && grp.Permission >= p.Rank) {
                 MessageTooHighRank(p, "temp ban", false); return;
             }

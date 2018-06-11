@@ -41,8 +41,6 @@ namespace MCGalaxy.Drawing.Brushes {
             new RandomBrushFactory(), new CloudyBrushFactory(),
         };
         
-        public static string Available { get { return Brushes.Join(b => b.Name); } }
-        
         public static BrushFactory Find(string name) {
             foreach (BrushFactory entry in Brushes) {
                 if (entry.Name.CaselessEq(name)) return entry;

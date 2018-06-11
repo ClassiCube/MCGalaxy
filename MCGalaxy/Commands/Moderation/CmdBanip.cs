@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (accounts == null || accounts.Count == 0) return true;
             
             foreach (string name in accounts) {
-                Group grp = Group.GroupIn(name);
+                Group grp = PlayerInfo.GetGroup(name);
                 if (grp == null || grp.Permission < p.Rank) continue;
                 
                 Player.Message(p, "You can only IP ban IPs used by players with a lower rank.");

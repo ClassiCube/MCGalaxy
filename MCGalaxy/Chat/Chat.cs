@@ -123,7 +123,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
-            OnChatSysEvent.Call(scope, ref msg, arg, ref filter, irc);
+            OnChatSysEvent.Call(scope, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
@@ -157,7 +157,7 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             if (source == null) source = ConsolePlayer.Instance;
             
-            OnChatFromEvent.Call(scope, source, ref msg, arg, ref filter, irc);
+            OnChatFromEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
@@ -184,7 +184,7 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             if (source == null) source = ConsolePlayer.Instance;
             
-            OnChatEvent.Call(scope, source, ref msg, arg, ref filter, irc);
+            OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!NotIgnoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
