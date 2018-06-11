@@ -47,6 +47,16 @@ namespace MCGalaxy.Drawing.Ops {
             return lvl;
         }
         
+        static bool CannotBuildIn(Player p, Level lvl) {
+            Zone[] zones = lvl.Zones.Items;
+            for (int i = 0; i < zones.Length; i++) {
+                AccessResult access = zones[i].Access.Check(p);
+                // player could potentially modify blocks in this particular zone
+                if (access == AccessResult.Whitelisted || access == AccessResult.Allowed) return false;
+            }            
+            return !lvl.BuildAccess.CheckDetailed(p);
+        }
+        
         public static bool Do(DrawOp op, Brush brush, Player p,
                               Vec3S32[] marks, bool checkLimit = true) {
             Level lvl = Setup(op, p, marks);
@@ -54,10 +64,7 @@ namespace MCGalaxy.Drawing.Ops {
                 Player.Message(p, "Drawing commands are turned off on this map.");
                 return false;
             }
-            if (lvl != null && !lvl.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence you cannot use draw commands on this map.");
-                return false;
-            }
+            if (lvl != null && CannotBuildIn(p, lvl)) return false;
             
             long affected = op.BlocksAffected(lvl, marks);
             if (p != null && op.AffectedByTransform)
