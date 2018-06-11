@@ -70,9 +70,11 @@ namespace MCGalaxy.Eco {
         }
         
         static string ParseField(object raw) {
-            if (raw == null) return "%cNone";
+            if (raw == null) return null;
             string value = raw.ToString();
-            return (value.Length == 0 || value.CaselessEq("NULL")) ? "%cNone" : value;
+            
+            if (value.Length == 0 || value.CaselessEq("NULL")) return null;           
+            return value.CaselessEq("%cNone") ? null : value;
         }
         
         static void ParseRow(DataRow row, ref EcoStats stats) {
@@ -86,10 +88,6 @@ namespace MCGalaxy.Eco {
         public static EcoStats RetrieveStats(string name) {
             EcoStats stats = default(EcoStats);
             stats.Player   = name;
-            stats.Purchase = "%cNone";
-            stats.Payment  = "%cNone";
-            stats.Salary   = "%cNone";
-            stats.Fine     = "%cNone";
             
             using (DataTable eco = Database.Backend.GetRows("Economy", "*", "WHERE player=@0", name)) {
                 if (eco.Rows.Count > 0) ParseRow(eco.Rows[0], ref stats);

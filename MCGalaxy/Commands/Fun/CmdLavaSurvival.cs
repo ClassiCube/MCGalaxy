@@ -114,6 +114,21 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Start on server startup: " + (game.StartOnStartup ? "&aON" : "&cOFF"));
         }
         
+        static bool ParseChance(Player p, string arg, string input, ref byte value) {
+            if (!CommandParser.GetByte(p, "Chance", input, ref value, 0, 100)) return false;
+            Player.Message(p, "{0} chance: &b{1}%", arg, value);
+            return true;
+        }
+        
+        static bool ParseTimespan(Player p, string arg, string input, ref double value) {
+            TimeSpan span = default(TimeSpan);
+            if (!CommandParser.GetTimespan(p, input, ref span, "set " + arg + " to", "m")) return false;
+            
+            value = span.TotalMinutes;
+            Player.Message(p, "{0}: &b{1}", arg, span.Shorten(true));
+            return true;
+        }
+        
         void HandleSetupMapSettings(Player p, string[] args, LSGame game) {
             if (!game.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
             LSGame.MapSettings settings = game.LoadMapSettings(p.level.name);
@@ -134,53 +149,35 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
 
-            try {
-                switch (args[2]) {
-                    case "fast":
-                        settings.fast = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
-                        Player.Message(p, "Fast lava chance: &b" + settings.fast + "%");
-                        break;
-                    case "killer":
-                        settings.killer = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
-                        Player.Message(p, "Killer lava/water chance: &b" + settings.killer + "%");
-                        break;
-                    case "destroy":
-                        settings.destroy = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
-                        Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
-                        break;
-                    case "water":
-                        settings.water = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
-                        Player.Message(p, "Water flood chance: &b" + settings.water + "%");
-                        break;
-                    case "layer":
-                        settings.layer = (byte)Utils.Clamp(int.Parse(args[3]), 0, 100);
-                        Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
-                        break;
-                    case "layerheight":
-                        settings.LayerHeight = int.Parse(args[3]);
-                        Player.Message(p, "Layer height: &b" + settings.LayerHeight + " blocks");
-                        break;
-                    case "layercount":
-                        settings.LayerCount = int.Parse(args[3]);
-                        Player.Message(p, "Layer count: &b" + settings.LayerCount);
-                        break;
-                    case "layertime":
-                        settings.layerInterval = double.Parse(args[3]);
-                        Player.Message(p, "Layer time: &b" + settings.layerInterval + " minutes");
-                        break;
-                    case "roundtime":
-                        settings.roundTime = double.Parse(args[3]);
-                        Player.Message(p, "Round time: &b" + settings.roundTime + " minutes");
-                        break;
-                    case "floodtime":
-                        settings.floodTime = double.Parse(args[3]);
-                        Player.Message(p, "Flood time: &b" + settings.floodTime + " minutes");
-                        break;
-                    default:
-                        SetupHelp(p, "mapsettings"); return;
-                }
-            } catch { Player.Message(p, "INVALID INPUT"); return; }
-            game.SaveMapSettings(settings);
+            string type = args[2], value = args[3];
+            bool ok = false;
+            if (type == "fast") {
+                ok = ParseChance(p, "Fast lava", value, ref settings.fast);
+            } else if (type == "killer") {
+                ok = ParseChance(p, "Killer lava/water", value, ref settings.killer);
+            } else if (type == "destroy") {
+                ok = ParseChance(p, "Destroy blocks", value, ref settings.destroy);
+            } else if (type == "water") {
+               ok = ParseChance(p, "Water flood", value, ref settings.water);
+            } else if (type == "layer") {
+                ok = ParseChance(p, "Layer flood", value, ref settings.layer);
+            } else if (type == "layerheight") {
+                if (!CommandParser.GetInt(p, value, "Height", ref settings.LayerHeight, 0)) return;
+                Player.Message(p, "Layer height: &b" + settings.LayerHeight + " blocks");
+            } else if (type == "layercount") {
+                if (!CommandParser.GetInt(p, value, "Count", ref settings.LayerCount, 0)) return;
+                Player.Message(p, "Layer count: &b" + settings.LayerCount);
+            } else if (type == "layertime") {
+                ok = ParseTimespan(p, "Layer time", value, ref settings.layerInterval);
+            } else if (type == "roundtime") {
+                ok = ParseTimespan(p, "Round time", value, ref settings.roundTime);
+            } else if (type == "floodtime") {
+                ok = ParseTimespan(p, "Flood time", value, ref settings.floodTime);
+            } else {
+                SetupHelp(p, "mapsettings");
+            }
+            
+            if (ok) game.SaveMapSettings(settings);
         }
 
         void SetupHelp(Player p, string mode = "") {
@@ -253,8 +250,8 @@ namespace MCGalaxy.Commands.Fun {
 
             Player.Message(p, "Safe zone set! &b({0}) ({1})", min, max);
             return false;
-        }       
-                
+        }
+        
         public override void Help(Player p) {
             Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
             Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");

@@ -208,15 +208,11 @@ namespace MCGalaxy.Core {
         }
         
         static void WriteRankInfo(ModAction e, Group newRank) {
-            string year = DateTime.Now.Year.ToString();
-            string month = DateTime.Now.Month.ToString();
-            string day = DateTime.Now.Day.ToString();
-            string hour = DateTime.Now.Hour.ToString();
-            string minute = DateTime.Now.Minute.ToString();
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
+            long time = DateTime.UtcNow.ToUnixTime();
 
-            string line = e.Target + " " + assigner + " " + minute + " " + hour + " " + day + " " + month
-                + " " + year + " " + newRank.Name + " " + e.TargetGroup.Name + " " + e.Reason.Replace(" ", "%20");
+            string line = e.Target + " " + assigner + " " + time + " " + newRank.Name 
+                + " " + e.TargetGroup.Name + " " + e.Reason.Replace(" ", "%20");
             Server.RankInfo.Append(line);
         }
         

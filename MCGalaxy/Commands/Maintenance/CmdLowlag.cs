@@ -24,16 +24,16 @@ namespace MCGalaxy.Commands.Maintenance {
         public override void Use(Player p, string message) {
             if (message.Length == 0 && ServerConfig.PositionUpdateInterval > 1000) {
                 ServerConfig.PositionUpdateInterval = 100;
-                Chat.MessageGlobal("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");
+                Chat.MessageAll("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");
             } else if (message.Length == 0) {
                 ServerConfig.PositionUpdateInterval = 2000;
-                Chat.MessageGlobal("&dLow lag %Sturned &aON %S- positions update every &b2000 %Sms.");
+                Chat.MessageAll("&dLow lag %Sturned &aON %S- positions update every &b2000 %Sms.");
             } else {
                 int interval = 0;
                 if (!CommandParser.GetInt(p, message, "Interval", ref interval, 20, 2000)) return;
 
                 ServerConfig.PositionUpdateInterval = interval;
-                Chat.MessageGlobal("Positions now update every &b{0} %Smilliseconds.", interval);
+                Chat.MessageAll("Positions now update every &b" + interval + " %Smilliseconds.");
             }
             SrvProperties.Save();
         }

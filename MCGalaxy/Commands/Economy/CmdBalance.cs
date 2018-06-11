@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Eco {
         
         const string dateFormat = "MM'/'dd'/'yyyy HH:mm:ss";
         static void Output(Player p, string value, string type) {
-            if (String.IsNullOrEmpty(value) || value == "%cNone") return;
+            if (value == null) return;
             
             if (!AdjustRelative(ref value, " on %f")) {
                 AdjustRelative(ref value, " - Date: %f"); // old date format for purchases

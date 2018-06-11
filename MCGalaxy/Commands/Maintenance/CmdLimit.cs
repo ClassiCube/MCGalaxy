@@ -59,15 +59,15 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[0].ToLower()) {
                 case "dl":
                 case "drawlimit":
-                    Chat.MessageGlobal("{0}%S's draw limit set to &b{1}", grp.ColoredName, limit);
+                    Chat.MessageAll(grp.ColoredName + "%S's draw limit set to &b" + limit);
                     grp.DrawLimit = limit; break;
                 case "mu":
                 case "maxundo":
-                    Chat.MessageGlobal("{0}%S's undo limit set to &b{1}", grp.ColoredName, limit);
+                    Chat.MessageAll(grp.ColoredName + "%S's undo limit set to &b" + limit);
                     grp.MaxUndo = limit; break;
                 case "gen":
                 case "genlimit":
-                    Chat.MessageGlobal("{0}%S's map gen volume limit set to &b{1}", grp.ColoredName, limit);
+                    Chat.MessageAll(grp.ColoredName + "%S's map gen volume limit set to &b" + limit);
                     grp.GenVolume = limit; break;
                 default:
                     Help(p); return;
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (!hasValue) {
                 Player.Message(p, type + ": &b" + percent);
             } else {
-                Chat.MessageGlobal(type + " set to &b" + percent);
+                Chat.MessageAll(type + " set to &b" + percent);
                 SrvProperties.Save();
             }
         }
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 Player.Message(p, type + ": &b" + target);
             } else {
                 target = value;
-                Chat.MessageGlobal(type + " set to &b" + target);
+                Chat.MessageAll(type + " set to &b" + target);
                 SrvProperties.Save();
             }
         }

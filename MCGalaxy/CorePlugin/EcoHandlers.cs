@@ -73,13 +73,14 @@ namespace MCGalaxy.Core {
             stats.Payment = Format(" to " + data.TargetName, data);
             Economy.UpdateStats(stats);
             data.SourcePlayer.SetMoney(data.SourcePlayer.money - data.Amount);
-        }        
+        }
         
         
         static void MessageAll(string format, EcoTransaction data) {
             string reason = data.Reason == null ? "" : " %S(" + data.Reason + "%S)";
-            Chat.MessageGlobal(format, data.SourceFormatted, data.TargetFormatted,
-                               data.Amount, ServerConfig.Currency, reason);
+            string msg = string.Format(format, data.SourceFormatted, data.TargetFormatted,
+                                       data.Amount, ServerConfig.Currency, reason);
+            Chat.MessageGlobal(msg);
         }
 
         static string Format(string action, EcoTransaction data) {

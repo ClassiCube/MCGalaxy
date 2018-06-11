@@ -118,14 +118,6 @@ namespace MCGalaxy {
             MessageGlobal(string.Format(message, a0, a1));
         }
         
-        public static void MessageGlobal(string message, object a0, object a1, object a2) {
-            MessageGlobal(string.Format(message, a0, a1, a2));
-        }
-        
-        public static void MessageGlobal(string message, params object[] args) {
-            MessageGlobal(string.Format(message, args));
-        }
-        
         public static void Message(ChatScope scope, string msg, object arg,
                                    ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
