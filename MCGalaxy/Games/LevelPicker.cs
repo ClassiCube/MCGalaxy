@@ -166,7 +166,6 @@ namespace MCGalaxy.Games {
         
         public bool HandlesMessage(Player p, string message) {
             if (!Voting) return false;
-            message = message.ToLower();
             
             return
                 Player.CheckVote(message, p, "1", "one",   ref Votes1) ||

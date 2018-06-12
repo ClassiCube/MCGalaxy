@@ -790,8 +790,7 @@ namespace MCGalaxy.Games
             return null;
         }
 
-        public static TntWarsGame GameIn(Player p)
-        {
+        public static TntWarsGame GameIn(Player p) {
             TntWarsGame it = TntWarsGame.Find(p.level);
             if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);

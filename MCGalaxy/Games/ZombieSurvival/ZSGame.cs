@@ -278,28 +278,8 @@ namespace MCGalaxy.Games {
         }
         
         public override bool HandlesChatMessage(Player p, string message) {
-            if (!Running || (p.level == null || p.level != Map)) return false;
-            if (Picker.Voting && Picker.HandlesMessage(p, message)) return true;
-            
-            if (message[0] == '~' && message.Length > 1) {
-                message = message.Substring(1);
-                
-                if (Get(p).Infected) {
-                    Chat.MessageChat(ChatScope.Level, p, "λNICK &cto zombies%S: " + message,
-                                    Map, (pl, arg) => pl.Game.Referee || Get(pl).Infected);
-                } else {
-                    Chat.MessageChat(ChatScope.Level, p, "λNICK &ato humans%S: " + message,
-                                    Map, (pl, arg) => pl.Game.Referee || !Get(pl).Infected);
-                }
-                return true;
-            } else if (message[0] == '`' && message.Length > 1) {
-                if (p.Game.Team == null) {
-                    Player.Message(p, "You are not on a team, so cannot send a team message."); return true;
-                }
-                p.Game.Team.Message(p, message.Substring(1));
-                return true;
-            }
-            return false;
+            if (!Running || p.level != Map) return false;
+            return Picker.HandlesMessage(p, message);
         }
         
         void RemoveAssociatedBounties(Player p) {

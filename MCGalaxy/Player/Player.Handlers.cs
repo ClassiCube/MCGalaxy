@@ -486,13 +486,19 @@ namespace MCGalaxy {
             // People who are muted can't speak or vote
             if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
 
-            // Filter out bad words
-            if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
-            
-            if (IsHandledMessage(text)) return;
+            if (Server.voting) {
+                if (CheckVote(text, this, "y", "yes", ref Server.YesVotes) ||
+                    CheckVote(text, this, "n", "no", ref Server.NoVotes)) return;
+            }
+
+            if (Server.lava.HandlesChatMessage(this, text)) return;
+            if (Server.zombie.HandlesChatMessage(this, text)) return;
             
             // Put this after vote collection so that people can vote even when chat is moderated
             if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
+            
+            // Filter out bad words
+            if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
 
             if (ChatModes.Handle(this, text)) return;
 
@@ -543,11 +549,6 @@ namespace MCGalaxy {
                 return true;
             }
 
-            if (partialMessage.Length > 0 && !(IsPartialSpaced(text) || IsPartialJoined(text))) {
-                text = partialMessage + text;
-                partialMessage = "";
-            }
-
             if (IsPartialSpaced(text)) {
                 partialMessage += text.Substring(0, text.Length - 2) + " ";
                 SendMessage("&3Partial message: &f" + partialMessage);
@@ -556,6 +557,9 @@ namespace MCGalaxy {
                 partialMessage += text.Substring(0, text.Length - 2);
                 SendMessage("&3Partial message: &f" + partialMessage);
                 return true;
+            } else if (partialMessage.Length > 0) {
+                text = partialMessage + text;
+                partialMessage = "";
             }
 
             text = Regex.Replace(text, "  +", " ");
@@ -591,11 +595,11 @@ namespace MCGalaxy {
             
             int sep = text.IndexOf(' ');
             if (sep == -1) {
-                HandleCommand(text.ToLower(), "");
+                HandleCommand(text, "");
             } else {
-                string cmd = text.Substring(0, sep).ToLower();
-                string msg = text.Substring(sep + 1);
-                HandleCommand(cmd, msg);
+                string cmd = text.Substring(0, sep);
+                string args = text.Substring(sep + 1);
+                HandleCommand(cmd, args);
             }
             return true;
         }
@@ -613,29 +617,13 @@ namespace MCGalaxy {
             return lines.Length > 0 ? lines[rnd.Next(lines.Length)] : text;
         }
         
-        bool IsHandledMessage(string text) {
-            if (Server.voting) {
-                string test = text.ToLower();
-                if (CheckVote(test, this, "y", "yes", ref Server.YesVotes) ||
-                    CheckVote(test, this, "n", "no", ref Server.NoVotes)) return true;
-                
-                if (!voice && (test == "y" || test == "n" || test == "yes" || test == "no")) {
-                    SendMessage("Chat moderation is on while voting is on!"); return true;
-                }
-            }
-
-            if (Server.lava.HandlesChatMessage(this, text)) return true;
-            if (Server.zombie.HandlesChatMessage(this, text)) return true;
-            return false;
-        }
-        
-        public void HandleCommand(string cmd, string message) {
+        public void HandleCommand(string cmd, string args) {
             cmd = cmd.ToLower();
             try {
-                Command command = GetCommand(ref cmd, ref message);
+                Command command = GetCommand(ref cmd, ref args);
                 if (command == null) return;
                 
-                Thread thread = new Thread(() => UseCommand(command, message));
+                Thread thread = new Thread(() => UseCommand(command, args));
                 thread.Name = "MCG_Command";
                 thread.IsBackground = true;
                 thread.Start();
@@ -651,12 +639,12 @@ namespace MCGalaxy {
                 foreach (string raw in cmds) {
                     string[] parts = raw.SplitSpaces(2);
                     string cmd = parts[0].ToLower();
-                    string message = parts.Length > 1 ? parts[1] : "";
+                    string args = parts.Length > 1 ? parts[1] : "";
                     
-                    Command command = GetCommand(ref cmd, ref message);
+                    Command command = GetCommand(ref cmd, ref args);
                     if (command == null) return;
                     
-                    messages.Add(message); commands.Add(command);
+                    messages.Add(args); commands.Add(command);
                 }
 
                 Thread thread = new Thread(() => UseCommands(commands, messages));

@@ -48,6 +48,7 @@ namespace MCGalaxy.Games {
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             
+            OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnSQLSaveEvent.Register(SavePlayerStats, Priority.High);
         }
         
@@ -66,6 +67,7 @@ namespace MCGalaxy.Games {
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             
+            OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnSQLSaveEvent.Unregister(SavePlayerStats);
         }
 
@@ -164,6 +166,31 @@ namespace MCGalaxy.Games {
             name += " (map: " + Map.MapName + ")";
         }
         
+        void HandlePlayerChat(Player p, string message) {
+            if (p.level != Map || message.Length <= 1) return;
+            
+            if (message[0] == '~') {
+                message = message.Substring(1);
+                
+                if (Get(p).Infected) {
+                    Chat.MessageChat(ChatScope.Level, p, "λNICK &cto zombies%S: " + message,
+                                    Map, (pl, arg) => pl.Game.Referee || Get(pl).Infected);
+                } else {
+                    Chat.MessageChat(ChatScope.Level, p, "λNICK &ato humans%S: " + message,
+                                    Map, (pl, arg) => pl.Game.Referee || !Get(pl).Infected);
+                }
+                p.cancelchat = true;
+            } else if (message[0] == '`') {
+                if (p.Game.Team == null) {
+                    Player.Message(p, "You are not on a team, so cannot send a team message.");
+                } else {
+                    p.Game.Team.Message(p, message.Substring(1));
+                }
+                p.cancelchat = true;
+            }
+        }
+        
+        
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (p.level != Map) return;
             BlockID old = Map.GetBlock(x, y, z);
@@ -201,8 +228,7 @@ namespace MCGalaxy.Games {
                     Player.Message(p, "Blocks Left: &4" + data.BlocksLeft);
                 }
             }
-        }
-        
+        }       
 
         bool NotPillaring(BlockID b, BlockID old) {
             byte collide = Map.CollideType(b);
@@ -238,7 +264,7 @@ namespace MCGalaxy.Games {
                     Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
                     Command.Find("Take").Use(null, p.name + " 10 Auto fine for pillaring");
                     Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
-                } else {                   
+                } else {
                     ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);
                     p.Kick("No pillaring allowed!");
@@ -251,6 +277,7 @@ namespace MCGalaxy.Games {
             }
             return false;
         }
+        
         
         void SavePlayerStats(Player p) {
             ZSData data = TryGet(p);

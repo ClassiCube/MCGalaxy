@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         protected void HandleGo(Player p, RoundsGame game) {
-            if (game.Running) {
+            if (!game.Running) {
                 Player.Message(p, "{0} is not running", game.GameName);
             } else {
                 PlayerActions.ChangeMap(p, game.Map);

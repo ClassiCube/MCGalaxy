@@ -378,14 +378,17 @@ namespace MCGalaxy {
             CurrentAmountOfTnt--;
         }
         
-        internal static bool CheckVote(string message, Player p, string a, string b, ref int totalVotes) {
-            if (!p.voted && (message == a || message == b)) {
+        internal static bool CheckVote(string msg, Player p, string a, string b, ref int totalVotes) {
+            if (!(msg.CaselessEq(a) || msg.CaselessEq(b))) return false;
+            
+            if (p.voted) {
+                Player.Message(p, "&cYou have already voted!");
+            } else {
                 totalVotes++;
-                Player.Message(p, Colors.red + "Thanks for voting!");
+                Player.Message(p, "&aThanks for voting!");
                 p.voted = true;
-                return true;
             }
-            return false;
+            return true;
         }
         
         public void CheckForMessageSpam() {
