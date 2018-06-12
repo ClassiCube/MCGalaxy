@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdInfect : Command {        
         public override string name { get { return "Infect"; } }
@@ -26,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
-            if (!Server.zombie.RoundInProgress || Server.zombie.Get(who).Infected) {
+            if (!Server.zombie.RoundInProgress || ZSGame.Get(who).Infected) {
                 Player.Message(p, "Cannot infect player");
             } else if (!who.Game.Referee) {
                 Server.zombie.InfectPlayer(who, p);

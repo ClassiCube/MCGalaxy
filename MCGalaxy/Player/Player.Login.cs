@@ -251,13 +251,14 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission rank = Chat.OpchatPerm;         
+            LevelPermission rank = Chat.OpchatPerm;
             string altsMsg = "λNICK %Sis lately known as: " + alts.Join();
 
             Chat.MessageFrom(p, altsMsg, 
                                       (pl, obj) => Entities.CanSee(pl, p) && pl.Rank >= rank);
                          
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
+            altsMsg = altsMsg.Replace("λNICK", name);
             Logger.Log(LogType.UserActivity, altsMsg);
         }
     }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
         [ConfigBool("zombie-map-inheartbeat", "Zombie", false)]
-        public static bool IncludeMapInHeartbeat = false;
+        public static bool IncludeMapInHeartbeat;
 
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public static bool NoPillaring = true;

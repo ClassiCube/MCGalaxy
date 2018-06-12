@@ -43,7 +43,7 @@ namespace MCGalaxy.Eco {
                                Name, count * 10, ServerConfig.Currency); return;
             }
             
-            ZSData data = Server.zombie.Get(p);
+            ZSData data = ZSGame.Get(p);
             data.BlocksLeft += 10 * count;
             Economy.MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
         }
@@ -105,7 +105,7 @@ namespace MCGalaxy.Eco {
                                "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
-            ZSData data = Server.zombie.Get(p);
+            ZSData data = ZSGame.Get(p);
             if (data.InfectMessages == null) data.InfectMessages = new List<string>();
             data.InfectMessages.Add(text);
             
@@ -138,7 +138,7 @@ namespace MCGalaxy.Eco {
                                "when a round of zombie survival is in progress."); return;
             }
             
-            ZSData data = Server.zombie.Get(p);
+            ZSData data = ZSGame.Get(p);
             
             if (data.Invisible) { Player.Message(p, "You are already invisible."); return; }
             if (data.InvisibilityPotions >= MaxPotions) {

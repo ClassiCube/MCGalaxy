@@ -331,7 +331,7 @@ namespace MCGalaxy {
                 
                 // flip head when infected, but doesn't support model
                 if (!p.hasChangeModel) {
-                    ZSData data = Server.zombie.TryGet(p);
+                    ZSData data = ZSGame.TryGet(p);
                     if (data != null && data.Infected) pitch = FlippedPitch(pitch);
                 }
             

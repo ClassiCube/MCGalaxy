@@ -39,7 +39,7 @@ namespace MCGalaxy.Eco {
                                    "when a round of zombie survival is in progress."); return;
             }
             
-            ZSData data = Server.zombie.Get(p);
+            ZSData data = ZSGame.Get(p);
             if (!data.Infected) {
                 Player.Message(p, "You are already a human."); return;
             }            

@@ -108,7 +108,6 @@ namespace MCGalaxy {
 
             InitDatabase();
             Economy.LoadDatabase();
-            Server.zombie.CheckTableExists();
 
             Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);

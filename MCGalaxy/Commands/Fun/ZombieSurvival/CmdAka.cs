@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         
         public override void Use(Player p, string message) {
-            ZSData data = Server.zombie.Get(p);
+            ZSData data = ZSGame.Get(p);
             data.AkaMode = !data.AkaMode;
             Player[] players = PlayerInfo.Online.Items;
             Player.Message(p, "AKA mode is now: " + (data.AkaMode ? "&aOn" : "&cOff"));

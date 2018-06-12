@@ -18,11 +18,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Threading;
 using MCGalaxy.DB;
-using MCGalaxy.Commands.World;
 using MCGalaxy.Games.ZS;
 using MCGalaxy.SQL;
 
@@ -82,26 +80,26 @@ namespace MCGalaxy.Games {
         List<string> infectMessages = new List<string>();
         
         const string zsExtrasKey = "MCG_ZS_DATA";
-        internal ZSData Get(Player p) {
+        internal static ZSData Get(Player p) {
             object data;
-            if (!p.Extras.TryGet("MCG_ZS_DATA", out data)) {
+            if (!p.Extras.TryGet(zsExtrasKey, out data)) {
                 data = new ZSData();
                 // TODO: Is this even thread-safe
                 InitData((ZSData)data, p);
-                p.Extras.Put("MCG_ZS_DATA", data);
+                p.Extras.Put(zsExtrasKey, data);
             }
             return (ZSData)data;
         }
 
-        internal ZSData TryGet(Player p) {
+        internal static ZSData TryGet(Player p) {
             object data;
-            bool success = p.Extras.TryGet("MCG_ZS_DATA", out data);
+            bool success = p.Extras.TryGet(zsExtrasKey, out data);
             return success ? (ZSData)data : null;
         }
         
-        void InitData(ZSData data, Player p) {
+        static void InitData(ZSData data, Player p) {
             data.InfectMessages = PlayerDB.GetInfectMessages(p);
-            ZombieStats stats = LoadZombieStats(p.name);
+            ZombieStats stats = LoadStats(p.name);
             data.MaxInfected = stats.MaxInfected;     data.TotalInfected = stats.TotalInfected;
             data.MaxRoundsSurvived = stats.MaxRounds; data.TotalRoundsSurvived = stats.TotalRounds;
         }
@@ -144,6 +142,7 @@ namespace MCGalaxy.Games {
             HookStats();
             
             Running = true;
+            Database.Backend.CreateTable("ZombieStats", createSyntax);
             HookEventHandlers();
             
             Thread t = new Thread(RunGame);
@@ -332,105 +331,6 @@ namespace MCGalaxy.Games {
             
             return ZSConfig.LevelList.Count == 0 || ZSConfig.LevelList.CaselessContains(name);
         }
-        
-        #region Database
-        
-        static ColumnDesc[] createSyntax = new ColumnDesc[] {
-            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnDesc("Name", ColumnType.Char, 20),
-            new ColumnDesc("TotalRounds", ColumnType.Int32),
-            new ColumnDesc("MaxRounds", ColumnType.Int32),
-            new ColumnDesc("TotalInfected", ColumnType.Int32),
-            new ColumnDesc("MaxInfected", ColumnType.Int32),
-            // reserve space for possible future additions
-            new ColumnDesc("Additional1", ColumnType.Int32),
-            new ColumnDesc("Additional2", ColumnType.Int32),
-            new ColumnDesc("Additional3", ColumnType.Int32),
-            new ColumnDesc("Additional4", ColumnType.Int32),
-        };
-        
-        public void CheckTableExists() {
-            Database.Backend.CreateTable("ZombieStats", createSyntax);
-        }
-        
-        public ZombieStats LoadZombieStats(string name) {
-            DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", name);
-            ZombieStats stats = default(ZombieStats);
-            
-            if (table.Rows.Count > 0) {
-                DataRow row = table.Rows[0];
-                stats.TotalRounds   = PlayerData.ParseInt(row["TotalRounds"].ToString());
-                stats.MaxRounds     = PlayerData.ParseInt(row["MaxRounds"].ToString());
-                stats.TotalInfected = PlayerData.ParseInt(row["TotalInfected"].ToString());
-                stats.MaxInfected   = PlayerData.ParseInt(row["MaxInfected"].ToString());
-            }
-            table.Dispose();
-            return stats;
-        }
-        
-        TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
-        OfflineStatPrinter offlineZSStats;
-        OnlineStatPrinter onlineZSStats;
-        ChatToken infectedToken, survivedToken;
-        void HookStats() {
-            if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
-            
-            statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
-                                           () => "Most players infected", TopStat.FormatInteger);
-            statMaxInfected = new TopStat("Survived", "ZombieStats", "TotalRounds",
-                                          () => "Most rounds survived", TopStat.FormatInteger);
-            statMostSurvived = new TopStat("ConsecutiveInfected", "ZombieStats", "MaxInfected",
-                                           () => "Most consecutive infections", TopStat.FormatInteger);
-            statMaxSurvived = new TopStat("ConsecutiveSurvived", "ZombieStats", "MaxRounds",
-                                          () => "Most consecutive rounds survived", TopStat.FormatInteger);
-            
-            infectedToken = new ChatToken("$infected", "Total number of players infected",
-                                          p => Get(p).TotalInfected.ToString());
-            survivedToken = new ChatToken("$survived", "Total number of rounds survived",
-                                          p => Get(p).TotalRoundsSurvived.ToString());
-            
-            offlineZSStats = PrintOfflineZSStats;
-            onlineZSStats = PrintOnlineZSStats;
-            OfflineStat.Stats.Add(offlineZSStats);
-            OnlineStat.Stats.Add(onlineZSStats);
-            ChatTokens.Standard.Add(infectedToken);
-            ChatTokens.Standard.Add(survivedToken);
-            
-            TopStat.Stats.Add(statMostInfected);
-            TopStat.Stats.Add(statMostSurvived);
-            TopStat.Stats.Add(statMaxInfected);
-            TopStat.Stats.Add(statMaxSurvived);
-        }
-        
-        void UnhookStats() {
-            OfflineStat.Stats.Remove(offlineZSStats);
-            OnlineStat.Stats.Remove(onlineZSStats);
-            ChatTokens.Standard.Remove(infectedToken);
-            ChatTokens.Standard.Remove(survivedToken);
-            
-            TopStat.Stats.Remove(statMostInfected);
-            TopStat.Stats.Remove(statMostSurvived);
-            TopStat.Stats.Remove(statMaxInfected);
-            TopStat.Stats.Remove(statMaxSurvived);
-        }
-        
-        void PrintOnlineZSStats(Player p, Player who) {
-            ZSData data = Get(who);
-            PrintZSStats(p, data.TotalRoundsSurvived, data.TotalInfected,
-                         data.MaxRoundsSurvived, data.MaxInfected);
-        }
-        
-        void PrintOfflineZSStats(Player p, PlayerData who) {
-            ZombieStats stats = LoadZombieStats(who.Name);
-            PrintZSStats(p, stats.TotalRounds, stats.TotalInfected,
-                         stats.MaxRounds, stats.MaxInfected);
-        }
-        
-        static void PrintZSStats(Player p, int rounds, int infected, int roundsMax, int infectedMax) {
-            Player.Message(p, "  Survived &a{0} %Srounds (max &e{1}%S)", rounds, roundsMax);
-            Player.Message(p, "  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
-        }
-        #endregion
     }
     
     internal class ZSLevelPicker : LevelPicker {

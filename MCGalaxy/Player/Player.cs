@@ -105,7 +105,7 @@ namespace MCGalaxy {
             }
             
             if (!Server.zombie.Running || Game.Referee) return true;
-            ZSData data = Server.zombie.TryGet(target);
+            ZSData data = ZSGame.TryGet(target);
             return data == null || !(target.Game.Referee || data.Invisible);
         }        
         

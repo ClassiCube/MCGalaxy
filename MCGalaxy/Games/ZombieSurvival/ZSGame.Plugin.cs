@@ -49,7 +49,7 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
-            OnSQLSaveEvent.Register(SavePlayerStats, Priority.High);
+            OnSQLSaveEvent.Register(SaveStats, Priority.High);
         }
         
         void UnhookEventHandlers() {
@@ -68,7 +68,7 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
-            OnSQLSaveEvent.Unregister(SavePlayerStats);
+            OnSQLSaveEvent.Unregister(SaveStats);
         }
 
         
@@ -276,27 +276,6 @@ namespace MCGalaxy.Games {
                 return true;
             }
             return false;
-        }
-        
-        
-        void SavePlayerStats(Player p) {
-            ZSData data = TryGet(p);
-            if (data == null || data.TotalRoundsSurvived == 0 && data.TotalInfected == 0) return;
-            
-            int count = 0;
-            using (DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name)) {
-                count = table.Rows.Count;
-            }
-
-            if (count == 0) {
-                Database.Backend.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name",
-                                        data.TotalRoundsSurvived, data.MaxRoundsSurvived,
-                                        data.TotalInfected,       data.MaxInfected, p.name);
-            } else {
-                Database.Backend.UpdateRows("ZombieStats", "TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3",
-                                            "WHERE Name=@4", data.TotalRoundsSurvived, data.MaxRoundsSurvived,
-                                                             data.TotalInfected,       data.MaxInfected, p.name);
-            }
         }
     }
 }
