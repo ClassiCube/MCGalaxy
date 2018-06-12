@@ -116,7 +116,7 @@ namespace MCGalaxy {
         
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
-            prefix += GroupPrefix;
+            if (GroupPrefix.Length > 0) { prefix += GroupPrefix + color; }
             
             Team team = Game.Team;
             prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
