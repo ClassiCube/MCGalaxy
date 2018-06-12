@@ -112,8 +112,7 @@ namespace MCGalaxy.Games {
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
-            
-            MessageAllStatus();
+
             EndCommon();
         }
         

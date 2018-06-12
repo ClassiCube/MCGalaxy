@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using MCGalaxy.DB;
-using MCGalaxy.Games.ZS;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Games {
@@ -182,8 +181,8 @@ namespace MCGalaxy.Games {
             data.BlocksLeft = infected ? 25 : 50;
             
             ResetInvisibility(p, data);
-            HUD.UpdateAllPrimary(this);
-            HUD.UpdateTertiary(p, infected);
+            UpdateAllStatus1();
+            UpdateStatus3(p, infected);
         }
         
         void ResetInvisibility(Player p, ZSData data) {
@@ -218,7 +217,6 @@ namespace MCGalaxy.Games {
                 ZSData data = Get(pl);
                 data.ResetState();
                 ResetInvisibility(pl, data);
-                HUD.Reset(pl);
             }
             
             EndCommon();
@@ -236,9 +234,9 @@ namespace MCGalaxy.Games {
         public override void PlayerJoinedGame(Player p) {
             ZSData data = Get(p); // usually this Get() performs the expensive DB stats read
             p.SetPrefix();
-            HUD.UpdatePrimary(this, p);
-            HUD.UpdateSecondary(this, p);
-            HUD.UpdateTertiary(p, data.Infected);
+            p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1());
+            p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2());
+            UpdateStatus3(p, data.Infected);
             
             if (RoundInProgress) {
                 Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
@@ -330,6 +328,48 @@ namespace MCGalaxy.Games {
             if (ZSConfig.IgnoredLevelList.CaselessContains(name)) return false;
             
             return ZSConfig.LevelList.Count == 0 || ZSConfig.LevelList.CaselessContains(name);
+        }
+        
+        void UpdateAllStatus1() {
+            MessageMap(CpeMessageType.Status1, FormatStatus1());
+        }
+
+        internal void UpdateAllStatus2() {
+            MessageMap(CpeMessageType.Status2, FormatStatus2());
+        }
+        
+        void UpdateStatus3(Player p, bool infected) {
+            string status = FormatStatus3(p, infected);
+            p.SendCpeMessage(CpeMessageType.Status3, status);
+        }       
+        
+        static string GetTimeLeft(int seconds) {
+            if (seconds < 0) return "";
+            if (seconds <= 10) return "10s left";
+            if (seconds <= 30) return "30s left";
+            if (seconds <= 60) return "1m left";
+            return ((seconds + 59) / 60) + "m left";
+        }
+        
+        string FormatStatus1() {
+            int left = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
+            string timespan = GetTimeLeft(left);
+            
+            string format = timespan.Length == 0 ? "&a{0} %Salive %S(map: {1})" :
+                "&a{0} %Salive %S({2}, map: {1})";         
+            return string.Format(format, Alive.Count, Map.MapName, timespan);
+        }
+        
+        string FormatStatus2() {
+            string pillar = "%SPillaring " + (Map.Config.Pillaring ? "&aYes" : "&cNo");
+            string type = "%S, Type is &a" + Map.Config.BuildType;
+            return pillar + type;
+        }
+
+        static string FormatStatus3(Player p, bool infected) {
+            string money = "&a" + p.money + " %S" + ServerConfig.Currency;
+            string state = ", you are " + (infected ? "&cdead" : "&aalive");
+            return money + state;
         }
     }
     

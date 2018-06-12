@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Games.ZS;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdMapSet : Command {
@@ -52,7 +51,7 @@ namespace MCGalaxy.Commands.Fun {
                 
                 p.level.Config.Pillaring = value;
                 Player.Message(p, "Set pillaring allowed to: " + value);
-                HUD.UpdateAllSecondary(Server.zombie);
+                Server.zombie.UpdateAllStatus2();
             } else if (args[0].CaselessEq("build") || args[0].CaselessEq("buildtype")) {
                 BuildType value = BuildType.Normal;
                 if (!CommandParser.GetEnum(p, args[1], "Build type", ref value)) return;
@@ -60,7 +59,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.level.Config.BuildType = value;
                 p.level.UpdateBlockPermissions();
                 Player.Message(p, "Set build type to: " + value);
-                HUD.UpdateAllSecondary(Server.zombie);
+                Server.zombie.UpdateAllStatus2();
             } else if (args[0].CaselessEq("minroundtime") || args[0].CaselessEq("minround")) {
                 int time = GetRoundTime(p, args[1]);
                 if (time == 0) return;

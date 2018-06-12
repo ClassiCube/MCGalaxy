@@ -25,7 +25,6 @@ using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Games.ZS;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
@@ -92,7 +91,7 @@ namespace MCGalaxy.Games {
         
         void HandleMoneyChanged(Player p) {
             if (p.level != Map) return;
-            HUD.UpdateTertiary(p, Get(p).Infected);
+            UpdateStatus3(p, Get(p).Infected);
         }
         
         void HandleEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst) {
@@ -155,7 +154,7 @@ namespace MCGalaxy.Games {
             p.SetPrefix(); // TODO: Kinda hacky, not sure if needed 
             
             if (prevLevel == Map && level != Map) {
-                HUD.Reset(p);
+                ResetHUD(p);
                 if (RoundInProgress) PlayerLeftGame(p);
             } else if (level != Map) { return; }
             PlayerJoinedGame(p);

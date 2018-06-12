@@ -147,6 +147,7 @@ namespace MCGalaxy.Games {
             foreach (Player pl in online) {
                 if (pl.level != Map) continue;
                 TabList.Update(pl, true);
+                ResetHUD(pl);
             }
             
             if (Map != null) Map.Message(GameName + " %Sgame ended");

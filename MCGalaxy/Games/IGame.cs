@@ -35,6 +35,12 @@ namespace MCGalaxy.Games {
         public abstract void End();
         public abstract void EndRound();
         
+        protected void ResetHUD(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status1, "");
+            p.SendCpeMessage(CpeMessageType.Status2, "");
+            p.SendCpeMessage(CpeMessageType.Status3, "");
+        }
+        
         public void MessageMap(CpeMessageType type, string message) {
             if (!Running) return;
             Player[] online = PlayerInfo.Online.Items;

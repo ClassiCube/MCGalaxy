@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Commands.World;
-using MCGalaxy.Games.ZS;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
@@ -91,9 +90,9 @@ namespace MCGalaxy.Games {
                 }
                 
                 // Update the round time left shown in the top right
-                string timeLeft = HUD.GetTimeLeft(seconds);
+                string timeLeft = GetTimeLeft(seconds);
                 if (lastTimeLeft != timeLeft) {
-                    HUD.UpdateAllPrimary(this);
+                    UpdateAllStatus1();
                     lastTimeLeft = timeLeft;
                 }
                 
@@ -244,7 +243,7 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             RoundStart = DateTime.MinValue;
             RoundEnd = DateTime.MinValue;
-            HUD.UpdateAllPrimary(this);
+            UpdateAllStatus1();
             
             if (!Running) return;
             Player[] alive = Alive.Items, dead = Infected.Items;
@@ -323,8 +322,8 @@ namespace MCGalaxy.Games {
                     pl.SetMoney(pl.money + 1);
                 }
                 
-                ZSGame.RespawnPlayer(pl);
-                HUD.UpdateTertiary(pl, data.Infected);
+                RespawnPlayer(pl);
+                UpdateStatus3(pl, data.Infected);
             }
         }
 
