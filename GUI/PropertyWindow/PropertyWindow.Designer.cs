@@ -47,6 +47,7 @@ namespace MCGalaxy.Gui
         {
             this.components = new System.ComponentModel.Container();
             this.pageChat = new System.Windows.Forms.TabPage();
+            this.chat_chkFilter = new System.Windows.Forms.CheckBox();
             this.chat_grpTab = new System.Windows.Forms.GroupBox();
             this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
@@ -227,7 +228,7 @@ namespace MCGalaxy.Gui
             this.lvl_lblMain = new System.Windows.Forms.Label();
             this.lvl_txtMain = new System.Windows.Forms.TextBox();
             this.adv_grp = new System.Windows.Forms.GroupBox();
-            this.adv_chkRestart = new System.Windows.Forms.CheckBox();
+            this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.adv_btnEditTexts = new System.Windows.Forms.Button();
             this.srv_grp = new System.Windows.Forms.GroupBox();
             this.srv_lblName = new System.Windows.Forms.Label();
@@ -375,7 +376,7 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
+            this.chkRestart = new System.Windows.Forms.CheckBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -466,7 +467,7 @@ namespace MCGalaxy.Gui
             // pageChat
             // 
             this.pageChat.BackColor = System.Drawing.SystemColors.Control;
-            this.pageChat.Controls.Add(this.chkProfanityFilter);
+            this.pageChat.Controls.Add(this.chat_chkFilter);
             this.pageChat.Controls.Add(this.chat_grpTab);
             this.pageChat.Controls.Add(this.chat_grpMessages);
             this.pageChat.Controls.Add(this.chat_grpOther);
@@ -477,6 +478,16 @@ namespace MCGalaxy.Gui
             this.pageChat.Size = new System.Drawing.Size(498, 521);
             this.pageChat.TabIndex = 10;
             this.pageChat.Text = "Chat";
+            // 
+            // chkProfanityFilter
+            // 
+            this.chat_chkFilter.AutoSize = true;
+            this.chat_chkFilter.Location = new System.Drawing.Point(80, 380);
+            this.chat_chkFilter.Name = "chat_chkFilter";
+            this.chat_chkFilter.Size = new System.Drawing.Size(96, 17);
+            this.chat_chkFilter.TabIndex = 31;
+            this.chat_chkFilter.Text = "Profanity Filter";
+            this.chat_chkFilter.UseVisualStyleBackColor = true;
             // 
             // chat_grpTab
             // 
@@ -1831,6 +1842,7 @@ namespace MCGalaxy.Gui
             // grpExtra
             // 
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpExtra.Controls.Add(this.chkRestart);
             this.grpExtra.Controls.Add(this.nudCooldownTime);
             this.grpExtra.Controls.Add(this.misc_lblReview);
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
@@ -2400,7 +2412,7 @@ namespace MCGalaxy.Gui
             // 
             this.adv_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.adv_grp.Controls.Add(this.adv_chkVerify);
-            this.adv_grp.Controls.Add(this.adv_chkRestart);
+            this.adv_grp.Controls.Add(this.adv_chkCPE);
             this.adv_grp.Controls.Add(this.adv_btnEditTexts);
             this.adv_grp.Location = new System.Drawing.Point(8, 271);
             this.adv_grp.Name = "adv_grp";
@@ -2409,15 +2421,16 @@ namespace MCGalaxy.Gui
             this.adv_grp.TabStop = false;
             this.adv_grp.Text = "Advanced Configuration";
             // 
-            // adv_chkRestart
+            // adv_chkCPE
             // 
-            this.adv_chkRestart.AutoSize = true;
-            this.adv_chkRestart.Location = new System.Drawing.Point(9, 43);
-            this.adv_chkRestart.Name = "adv_chkRestart";
-            this.adv_chkRestart.Size = new System.Drawing.Size(101, 17);
-            this.adv_chkRestart.TabIndex = 4;
-            this.adv_chkRestart.Text = "Restart on error";
-            this.adv_chkRestart.UseVisualStyleBackColor = true;
+            this.adv_chkCPE.AutoSize = true;
+            this.adv_chkCPE.Location = new System.Drawing.Point(9, 43);
+            this.adv_chkCPE.Name = "adv_chkCPE";
+            this.adv_chkCPE.Size = new System.Drawing.Size(123, 17);
+            this.adv_chkCPE.TabIndex = 4;
+            this.adv_chkCPE.Text = "Non-classic features";
+            this.toolTip.SetToolTip(this.adv_chkCPE, "Enables custom blocks, multiline chat, changing env settings, etc");
+            this.adv_chkCPE.UseVisualStyleBackColor = true;
             // 
             // adv_btnEditTexts
             // 
@@ -4146,15 +4159,15 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // chkProfanityFilter
+            // chkRestart
             // 
-            this.chkProfanityFilter.AutoSize = true;
-            this.chkProfanityFilter.Location = new System.Drawing.Point(80, 380);
-            this.chkProfanityFilter.Name = "chkProfanityFilter";
-            this.chkProfanityFilter.Size = new System.Drawing.Size(96, 17);
-            this.chkProfanityFilter.TabIndex = 31;
-            this.chkProfanityFilter.Text = "Profanity Filter";
-            this.chkProfanityFilter.UseVisualStyleBackColor = true;
+            this.chkRestart.AutoSize = true;
+            this.chkRestart.Location = new System.Drawing.Point(6, 66);
+            this.chkRestart.Name = "chkRestart";
+            this.chkRestart.Size = new System.Drawing.Size(101, 17);
+            this.chkRestart.TabIndex = 51;
+            this.chkRestart.Text = "Restart on error";
+            this.chkRestart.UseVisualStyleBackColor = true;
             // 
             // PropertyWindow
             // 
@@ -4298,6 +4311,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox chkRestart;
         private System.Windows.Forms.Label rank_lblCopy;
         private System.Windows.Forms.NumericUpDown rank_numCopy;
         private System.Windows.Forms.CheckBox rank_cbAfk;
@@ -4494,7 +4508,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox bak_txtLocation;
         private System.Windows.Forms.TextBox txtMoneys;
         private System.Windows.Forms.CheckBox hackrank_kick;
-        private System.Windows.Forms.CheckBox chkProfanityFilter;
+        private System.Windows.Forms.CheckBox chat_chkFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
         private System.Windows.Forms.CheckBox chkDeath;
         private System.Windows.Forms.CheckBox chk17Dollar;
@@ -4527,7 +4541,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button srv_btnPort;
         private System.Windows.Forms.ComboBox rank_cmbDefault;
         private System.Windows.Forms.Label rank_lblDefault;
-        private System.Windows.Forms.CheckBox adv_chkRestart;
+        private System.Windows.Forms.CheckBox adv_chkCPE;
         private System.Windows.Forms.CheckBox srv_chkPublic;
         private System.Windows.Forms.CheckBox lvl_chkAutoload;
         private System.Windows.Forms.CheckBox lvl_chkWorld;

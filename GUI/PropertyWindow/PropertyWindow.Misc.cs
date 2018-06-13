@@ -38,7 +38,7 @@ namespace MCGalaxy.Gui {
             chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
             txtMoneys.Text = ServerConfig.Currency;
             nudCooldownTime.Value = ServerConfig.ReviewCooldown;
-            chkProfanityFilter.Checked = ServerConfig.ProfanityFiltering; // TODO: not visible?
+            chkRestart.Checked = ServerConfig.restartOnError;
         }
         
         void ApplyMiscProps() {
@@ -59,9 +59,8 @@ namespace MCGalaxy.Gui {
             ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
             ServerConfig.Currency = txtMoneys.Text;
             ServerConfig.ReviewCooldown = (int)nudCooldownTime.Value;
-            ServerConfig.ProfanityFiltering = chkProfanityFilter.Checked;
+            ServerConfig.restartOnError = chkRestart.Checked; 
         }
-        
                 
         
         void buttonEco_Click(object sender, EventArgs e) {

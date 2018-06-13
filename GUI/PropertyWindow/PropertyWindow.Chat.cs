@@ -28,6 +28,7 @@ namespace MCGalaxy.Gui {
             chat_ParseColor(ServerConfig.HelpDescriptionColor, chat_btnDesc);
             
             chat_txtConsole.Text = ServerConfig.ConsoleName;
+            chat_chkFilter.Checked = ServerConfig.ProfanityFiltering;
             chat_cbTabRank.Checked = ServerConfig.TablistRankSorted;
             chat_cbTabLevel.Checked = !ServerConfig.TablistGlobal;
             chat_cbTabBots.Checked = ServerConfig.TablistBots;
@@ -48,6 +49,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.HelpDescriptionColor = Colors.Parse(chat_btnDesc.Text);
             
             ServerConfig.ConsoleName = chat_txtConsole.Text;
+            ServerConfig.ProfanityFiltering = chat_chkFilter.Checked;
             ServerConfig.TablistRankSorted = chat_cbTabRank.Checked;
             ServerConfig.TablistGlobal = !chat_cbTabLevel.Checked;
             ServerConfig.TablistBots = chat_cbTabBots.Checked;

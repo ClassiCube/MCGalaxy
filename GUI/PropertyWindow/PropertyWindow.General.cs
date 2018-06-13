@@ -39,8 +39,7 @@ namespace MCGalaxy.Gui {
             lvl_chkWorld.Checked = ServerConfig.ServerWideChat;
             
             adv_chkVerify.Checked = ServerConfig.VerifyNames;
-            adv_chkRestart.Checked = ServerConfig.restartOnError;
-            
+            adv_chkCPE.Checked = ServerConfig.EnableCPE;       
             chkUpdates.Checked = ServerConfig.CheckForUpdates;
         }
         
@@ -61,12 +60,10 @@ namespace MCGalaxy.Gui {
             ServerConfig.ServerWideChat = lvl_chkWorld.Checked;
             
             ServerConfig.VerifyNames = adv_chkVerify.Checked;
-            ServerConfig.restartOnError = adv_chkRestart.Checked;
-            
+            ServerConfig.EnableCPE = adv_chkCPE.Checked;            
             ServerConfig.CheckForUpdates = chkUpdates.Checked;
             //ServerConfig.reportBack = ;  //No setting for this?                
-        }
-        
+        }        
         
         
         void numPlayers_ValueChanged(object sender, EventArgs e) {
