@@ -123,15 +123,15 @@ namespace MCGalaxy {
             
             // Apply backwards compatibility
             if (old.viewPerm != -1)
-                CommandExtraPerms.Find("review", 1).MinRank = (LevelPermission)old.viewPerm;
+                CommandExtraPerms.Find("Review", 1).MinRank = (LevelPermission)old.viewPerm;
             if (old.nextPerm != -1)
-                CommandExtraPerms.Find("review", 2).MinRank = (LevelPermission)old.nextPerm;
+                CommandExtraPerms.Find("Review", 2).MinRank = (LevelPermission)old.nextPerm;
             if (old.clearPerm != -1)
-                CommandExtraPerms.Find("review", 3).MinRank = (LevelPermission)old.clearPerm;
+                CommandExtraPerms.Find("Review", 3).MinRank = (LevelPermission)old.clearPerm;
             if (old.opchatPerm != -1)
-                CommandExtraPerms.Find("opchat").MinRank    = (LevelPermission)old.opchatPerm;
+                CommandExtraPerms.Find("OpChat").MinRank    = (LevelPermission)old.opchatPerm;
             if (old.adminchatPerm != -1)
-                CommandExtraPerms.Find("adminchat").MinRank = (LevelPermission)old.adminchatPerm;
+                CommandExtraPerms.Find("AdminChat").MinRank = (LevelPermission)old.adminchatPerm;
             CommandExtraPerms.Save();
         }
         

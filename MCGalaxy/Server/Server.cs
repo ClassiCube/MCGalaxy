@@ -199,7 +199,7 @@ namespace MCGalaxy {
             SrvProperties.Load();
             Group.InitAll();
             CommandPerms.Load();
-            Command.InitAll();            
+            Command.InitAll();
             Block.SetBlocks();
             Awards.Load();
             Economy.Load();

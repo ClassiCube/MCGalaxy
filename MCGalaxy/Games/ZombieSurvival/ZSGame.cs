@@ -217,6 +217,7 @@ namespace MCGalaxy.Games {
                 ZSData data = Get(pl);
                 data.ResetState();
                 ResetInvisibility(pl, data);
+                SaveStats(pl);
             }
             
             EndCommon();

@@ -23,7 +23,7 @@ using System.Data.Common;
 namespace MCGalaxy.SQL {
 
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
-    public delegate void ReaderCallback(IDataReader reader);
+    public delegate bool ReaderCallback(IDataRecord record);
     
     /// <summary> Represents an SQL command or query, that takes named parameters/arguments. </summary>
     public abstract class ParameterisedQuery {
@@ -69,7 +69,7 @@ namespace MCGalaxy.SQL {
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public void ExecuteReader(string query, string connString, ReaderCallback callback) {
+        public void Iterate(string query, string connString, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (MultipleSchema)
@@ -78,7 +78,7 @@ namespace MCGalaxy.SQL {
                 using (IDbCommand cmd = CreateCommand(query, conn)) {
                     FillParams(cmd);
                     using (IDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) { callback(reader); }
+                        while (reader.Read() && callback(reader)) { }
                     }
                 }
                 conn.Close();

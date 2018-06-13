@@ -60,8 +60,8 @@ namespace MCGalaxy.SQL {
             return queryInstance;
         }       
                 
-        public override string FastGetDateTime(IDataReader reader, int col) {
-            DateTime date = reader.GetDateTime(col);
+        public override string FastGetDateTime(IDataRecord record, int col) {
+            DateTime date = record.GetDateTime(col);
             return date.ToString("yyyy-MM-dd HH:mm:ss");
         }
         

@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             mapName = table.Substring("Block".Length);
             
             try {
-                Database.ExecuteReader("SELECT * FROM `" + table + "`", DumpRow);
+                Database.Iterate("SELECT * FROM `" + table + "`", DumpRow);
                 WriteBuffer(true);
                 AppendCbdbFile();
                 SaveCbdbFile();
@@ -58,8 +58,8 @@ namespace MCGalaxy.DB {
             Database.Backend.DeleteTable(table);
         }
         
-        void DumpRow(IDataReader reader) {
-            if (errorOccurred) return;
+        bool DumpRow(IDataRecord record) {
+            if (errorOccurred) return false;
             
             try {
                 if (stream == null) {
@@ -76,10 +76,10 @@ namespace MCGalaxy.DB {
                     Logger.Log(LogType.SystemActivity, "Dumping BlockDB for " + mapName + progress);
                 }
                 
-                UpdateBlock(reader);
-                UpdateCoords(reader);
-                UpdatePlayerID(reader);
-                UpdateTimestamp(reader);
+                UpdateBlock(record);
+                UpdateCoords(record);
+                UpdatePlayerID(record);
+                UpdateTimestamp(record);
                 
                 buffer.Add(entry);
                 WriteBuffer(false);
@@ -87,6 +87,7 @@ namespace MCGalaxy.DB {
                 Logger.LogError(ex);
                 errorOccurred = true;
             }
+            return true;
         }
         
         void WriteBuffer(bool force) {
@@ -123,10 +124,10 @@ namespace MCGalaxy.DB {
         }
         
         
-        void UpdateBlock(IDataReader reader) {
+        void UpdateBlock(IDataRecord record) {
             entry.OldRaw = Block.Invalid;
-            entry.NewRaw = reader.GetByte(5);
-            byte blockFlags = reader.GetByte(6);
+            entry.NewRaw = record.GetByte(5);
+            byte blockFlags = record.GetByte(6);
             entry.Flags = BlockDBFlags.ManualPlace;
             
             if ((blockFlags & 1) != 0) { // deleted block
@@ -137,16 +138,16 @@ namespace MCGalaxy.DB {
             }
         }
         
-        void UpdateCoords(IDataReader reader) {
-            int x = reader.GetInt32(2);
-            int y = reader.GetInt32(3);
-            int z = reader.GetInt32(4);
+        void UpdateCoords(IDataRecord record) {
+            int x = record.GetInt32(2);
+            int y = record.GetInt32(3);
+            int z = record.GetInt32(4);
             entry.Index = x + dims.X * (z + dims.Z * y);
         }
         
-        void UpdatePlayerID(IDataReader reader) {
+        void UpdatePlayerID(IDataRecord record) {
             int id;
-            string user = reader.GetString(0);
+            string user = record.GetString(0);
             if (!nameCache.TryGetValue(user, out id)) {
                 int[] ids = NameConverter.FindIds(user);
                 if (ids.Length > 0) {
@@ -158,9 +159,9 @@ namespace MCGalaxy.DB {
             entry.PlayerID = id;
         }
         
-        void UpdateTimestamp(IDataReader reader) {
+        void UpdateTimestamp(IDataRecord record) {
             // date is in format yyyy-MM-dd hh:mm:ss
-            string date = Database.Backend.FastGetDateTime(reader, 1);
+            string date = Database.Backend.FastGetDateTime(record, 1);
             int year =  (date[0] - '0') * 1000 + (date[1] - '0') * 100 + (date[2] - '0') * 10 + (date[3] - '0');
             int month = (date[5] - '0') * 10   + (date[6] - '0');
             int day =   (date[8] - '0') * 10   + (date[9] - '0');

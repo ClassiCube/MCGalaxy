@@ -88,14 +88,6 @@ namespace MCGalaxy.Games {
             Blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
         }
 
-
-        static ColumnDesc[] createSyntax = new ColumnDesc[] {
-            new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
-            new ColumnDesc("Name", ColumnType.VarChar, 20),
-            new ColumnDesc("Points", ColumnType.UInt24),
-            new ColumnDesc("Captures", ColumnType.UInt24),
-            new ColumnDesc("tags", ColumnType.UInt24),
-        };
         
         protected override List<Player> GetPlayers() {
             List<Player> playing = new List<Player>();

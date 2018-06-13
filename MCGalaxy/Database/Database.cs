@@ -41,7 +41,7 @@ namespace MCGalaxy.SQL {
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
-        public static void ExecuteReader(string sql, ReaderCallback callback, params object[] args) {
+        public static void Iterate(string sql, ReaderCallback callback, params object[] args) {
             ParameterisedQuery query = Backend.CreateParameterised();
             DoDatabaseCall(query, sql, false, null, callback, args);
         }
@@ -79,7 +79,7 @@ namespace MCGalaxy.SQL {
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        query.ExecuteReader(sql, connString, callback);
+                        query.Iterate(sql, connString, callback);
                     } else if (results == null) {
                         query.Execute(sql, connString, createDB);
                     } else {

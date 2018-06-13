@@ -232,20 +232,21 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.ExecuteReader("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);
+            Database.Iterate("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);
         }
         
-        static void AddPlayerTimeSpent(IDataReader reader) {
+        static bool AddPlayerTimeSpent(IDataRecord record) {
             playerCount++;
             try {
-                int id = reader.GetInt32(0);
-                TimeSpan span = reader.GetString(1).ParseDBTime();
+                int id = record.GetInt32(0);
+                TimeSpan span = record.GetString(1).ParseDBTime();
                 
                 playerIds.Add(id);
                 playerSeconds.Add((long)span.TotalSeconds);
             } catch {
                 playerFailed++;
             }
+            return true;
         }
         
         static void UpgradePlayerTimeSpents() {          

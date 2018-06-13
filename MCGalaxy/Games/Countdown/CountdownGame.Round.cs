@@ -132,7 +132,7 @@ namespace MCGalaxy.Games {
                 
                 RemoveSquare(nextSquare);
                 if (!Running || !RoundInProgress) return;
-                MessageAllStatus1();
+                UpdateAllStatus1();
             }
         }
         
@@ -208,7 +208,7 @@ namespace MCGalaxy.Games {
                     Map.Message(players.Length + " players left!");
                     break;
             }
-            MessageAllStatus2();
+            UpdateAllStatus2();
         }
         
         public override void EndRound() { EndRound(null); }
