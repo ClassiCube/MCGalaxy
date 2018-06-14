@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     who.SetPrefix();
                 }
                 
-                PlayerData.Update(args[0], PlayerData.ColumnTitle, args[2].UnicodeToCp437());
+                PlayerDB.Update(args[0], PlayerData.ColumnTitle, args[2].UnicodeToCp437());
                 MessageDataChanged(p, args[0], args[1], args[2]);
             } else if (opt == "modified") {
                 SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 args[0] = who.name;
             }
             
-            PlayerData.Update(args[0], column, col);
+            PlayerDB.Update(args[0], column, col);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -141,7 +141,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
             
             if (who != null) setter(date);
-            PlayerData.Update(args[0], column, args[2]);
+            PlayerDB.Update(args[0], column, args[2]);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 setter(span);
             } else {
                 long secs = (long)span.TotalSeconds;
-                PlayerData.Update(args[0], column, secs.ToString());
+                PlayerDB.Update(args[0], column, secs.ToString());
             }
             MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
@@ -193,7 +193,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     packed |= ((long)value) << PlayerData.LowerBits;
                     dbValue = packed.ToString();
                 }
-                PlayerData.Update(args[0], column, dbValue);
+                PlayerDB.Update(args[0], column, dbValue);
             }
             MessageDataChanged(p, args[0], args[1], args[2]);
         }

@@ -17,35 +17,27 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
     
     /// <summary> Stores per-player persistent data. </summary>
     public static class PlayerDB {
         
-        public static string LoginPath(string name) {
-            return "text/login/" + name.ToLower() + ".txt";
-        }
-        
-        public static string LogoutPath(string name) {
-            return "text/logout/" + name.ToLower() + ".txt";
-        }
-        
-        public static string InfectPath(string name) {
-            return "text/infect/" + name.ToLower() + ".txt";
-        }
-
+        static string LoginPath(string name)  { return "text/login/" + name.ToLower() + ".txt"; }
+        static string LogoutPath(string name) { return "text/logout/" + name.ToLower() + ".txt"; }
         
         static char[] trimChars = new char[] {'='};
-        public static bool Load( Player p ) {
+        public static bool Load(Player p) {
             if (!File.Exists("players/" + p.name + "DB.txt")) return false;
             
-            string[] lines = File.ReadAllLines( "players/" + p.name + "DB.txt");
+            string[] lines = File.ReadAllLines("players/" + p.name + "DB.txt");
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 string[] parts = line.Split(trimChars, 2);
-                if (parts.Length < 2) continue;             
+                if (parts.Length < 2) continue;
                 string key = parts[0].Trim(), value = parts[1].Trim();
 
                 if (key.CaselessEq("nick"))
@@ -67,53 +59,89 @@ namespace MCGalaxy.DB {
                 Directory.CreateDirectory("text/login");
             
             string path = LoginPath(p.name);
-            if (File.Exists(path)) return File.ReadAllText(path); 
+            if (File.Exists(path)) return File.ReadAllText(path);
             // Unix is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
             return File.Exists(path) ? File.ReadAllText(path) : "connected";
         }
 
-        /// <summary> Retrieves the logout message set for the given player. </summary>
         public static string GetLogoutMessage(Player p) {
             if (p.name == null) return "disconnected";
             if (!Directory.Exists("text/logout"))
                 Directory.CreateDirectory("text/logout");
             
             string path = LogoutPath(p.name);
-            if (File.Exists(path)) return File.ReadAllText(path); 
+            if (File.Exists(path)) return File.ReadAllText(path);
             
             path = "text/logout/" + p.name + ".txt";
             return File.Exists(path) ? File.ReadAllText(path) : "disconnected";
         }
-
-        /// <summary> Retrieves the ZS infect messages list for the given player. </summary>
-        public static List<string> GetInfectMessages(Player p) {
-            if (p.name == null || !Directory.Exists("text/infect")) return null;
-            string path = InfectPath(p.name);
+        
+        static void SetMessage(string path, string msg) {
+            if (msg.Length > 0) {
+                File.WriteAllText(path, msg);
+            } else if (File.Exists(path)) {
+                File.Delete(path);
+            }
+        }
+        
+        public static void SetLoginMessage(string name, string msg) {
+            SetMessage(LoginPath(name), msg);
+        }
+        
+        public static void SetLogoutMessage(string name, string msg) {
+            SetMessage(LogoutPath(name), msg);
+        }
+        
+        
+        public static void Update(string name, string column, string value) {
+            Database.Backend.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
+        }
+        
+        public static string FindColor(Player p) {
+            string raw = Database.ReadString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
+            if (raw == null) return "";
+            return PlayerData.ParseCol(raw);
+        }
+        
+        
+        public static string MatchNames(Player p, string name) {
+            List<string> names = new List<string>();
+            MatchMulti("Players", "Name", names, Database.ReadList);
             
-            if (!File.Exists(path)) return null;
-            string[] lines = File.ReadAllLines(path);
-            return new List<string>(lines);
+            int matches;
+            return Matcher.Find(p, name, out matches, names,
+                                null, n => n, "players", 20);
         }
         
-        
-        /// <summary> Sets the login message for the given player. </summary>         
-        public static void SetLoginMessage(string name, string loginMsg) {
-            File.WriteAllText(LoginPath(name), loginMsg);
-        }
-
-        /// <summary> Sets the logout message for the given player. </summary>        
-        public static void SetLogoutMessage(string name, string logoutMsg) {
-            File.WriteAllText(LogoutPath(name), logoutMsg);
-        }
-        
-        public static void AppendInfectMessage(string name, string infectMsg) {
-            if (!Directory.Exists("text/infect"))
-                Directory.CreateDirectory("text/infect");
+        public static string[] MatchValues(Player p, string name, string columns) {
+            List<string[]> name_values = new List<string[]>();
+            MatchMulti("Players", columns, name_values, Database.ReadFields);
             
-            string path = InfectPath(name);
-            using (StreamWriter w = new StreamWriter(path, true))
-                w.WriteLine(infectMsg);
+            int matches;
+            return Matcher.Find(p, name, out matches, name_values,
+                                null, n => n[0], "players", 20);
+        }       
+                
+        static object ReadStats(IDataRecord record, object arg) {
+            PlayerData stats = PlayerData.Parse(record);
+            ((List<PlayerData>)arg).Add(stats); return arg;
+        }
+        
+        public static PlayerData Match(Player p, string name) {
+            List<PlayerData> stats = new List<PlayerData>();
+            MatchMulti("Players", "*", stats, Database.ReadList);
+            
+            int matches;
+            return Matcher.Find(p, name, out matches, stats,
+                                null, stat => stat.Name, "players", 20);
+        }
+        
+        static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
+            string suffix = Database.Backend.CaselessLikeSuffix;
+            Database.Backend.ReadRows("Players", columns, arg, callback,
+                                      "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
+                                      "%" + name.Replace("_", "#_") + "%");
         }
     }
 }

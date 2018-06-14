@@ -14,12 +14,12 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWhoNick : Command {        
+    public sealed class CmdWhoNick : Command {
         public override string name { get { return "WhoNick"; } }
         public override string shortcut { get { return "RealName"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -31,14 +31,14 @@ namespace MCGalaxy.Commands.Info {
             
             if (nick == null) return;
             Player.Message(p, "This player's real username is " + nick.name);
-        }      
-                
+        }
+        
         static Player FindNick(Player p, string nick) {
             nick = Colors.Strip(nick);
             Player[] players = PlayerInfo.Online.Items;
-            int matches = 0;
-            return Matcher.Find<Player>(p, nick, out matches, players, pl => Entities.CanSee(p, pl), 
-                                        pl => Colors.Strip(pl.DisplayName), "online player nicks");
+            int matches;
+            return Matcher.Find(p, nick, out matches, players, pl => Entities.CanSee(p, pl),
+                                pl => Colors.Strip(pl.DisplayName), "online player nicks");
         }
         
         public override void Help(Player p) {

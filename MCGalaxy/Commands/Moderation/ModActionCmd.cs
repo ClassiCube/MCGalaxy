@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (who == null) return;
 
             Entities.DespawnEntities(who, false);
-            string dbCol = PlayerData.FindDBColor(who);
+            string dbCol = PlayerDB.FindColor(who);
             if (dbCol.Length == 0) who.color = newRank.Color;
             
             who.group = newRank;
@@ -150,13 +150,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static string MatchName(Player p, ref string name) {
-            int matches = 0;
+            int matches;
             Player target = PlayerInfo.FindMatches(p, name, out matches);
             if (matches > 1) return null;
             if (matches == 1) { name = target.name; return name; }
             
             Player.Message(p, "Searching PlayerDB...");
-            return PlayerInfo.FindOfflineNameMatches(p, name);
+            return PlayerDB.MatchNames(p, name);
         }
         
         static string IsConfirmed(string reason) {

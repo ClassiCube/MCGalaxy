@@ -125,14 +125,8 @@ namespace MCGalaxy.DB {
             data.TotalDrawn    = cuboided & LowerBitsMask;
             data.TotalDeleted  = cuboided >> LowerBits;
             return data;
-        }
-        
+        }        
         internal static object Read(IDataRecord record, object arg) { return Parse(record); }
-        
-        internal static DateTime ParseDate(object value) {
-            if (value is DateTime) return (DateTime)value;
-            return DateTime.Parse(value.ToString());
-        }
         
         internal static long ParseLong(string value) {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : long.Parse(value);
@@ -142,7 +136,7 @@ namespace MCGalaxy.DB {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : int.Parse(value);
         }
         
-        static string ParseCol(string raw) {
+        internal static string ParseCol(string raw) {
             if (raw.Length == 0) return raw;
             
             // Try parse color name, then color code
@@ -162,16 +156,5 @@ namespace MCGalaxy.DB {
 
         public const int LowerBits = 38;
         public const long LowerBitsMask = (1L << LowerBits) - 1;
-        
-        
-        public static void Update(string name, string column, string value) {
-            Database.Backend.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
-        }
-        
-        public static string FindDBColor(Player p) {
-            string raw = Database.ReadString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
-            if (raw == null) return "";
-            return ParseCol(raw);
-        }
     }
 }

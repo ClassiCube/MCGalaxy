@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (p.Ignores.Names.CaselessRemove(action)) {
                 Player.Message(p, "&aNo longer ignoring {0}", action);
             } else {
-                int matches = 0;
+                int matches;
                 Player who = PlayerInfo.FindMatches(p, action, out matches);
                 if (who == null) {
                     if (matches == 0)

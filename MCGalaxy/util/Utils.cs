@@ -86,9 +86,7 @@ namespace MCGalaxy {
             List<string> lines = new List<string>();
             using (StreamReader r = new StreamReader(path)) {
                 string item;
-                while ((item = r.ReadLine()) != null) {
-                    lines.Add(item);
-                }
+                while ((item = r.ReadLine()) != null) { lines.Add(item); }
             }
             return lines;
         }

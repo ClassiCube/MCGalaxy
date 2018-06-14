@@ -58,11 +58,13 @@ namespace MCGalaxy.Eco {
         }
         
         public static string FindMatches(Player p, string name, out int money) {
-            return PlayerInfo.FindOfflineMoneyMatches(p, name, out money);
+            string[] match = PlayerDB.MatchValues(p, name, "Name,Money");
+            money = match == null ? 0    : int.Parse(match[1]);
+            return  match == null ? null : match[0];
         }
         
         public static void UpdateMoney(string name, int money) {
-            PlayerData.Update(name, PlayerData.ColumnMoney, money.ToString());
+            PlayerDB.Update(name, PlayerData.ColumnMoney, money.ToString());
         }
         
 

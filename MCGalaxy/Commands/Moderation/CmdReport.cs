@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReport : Command {
@@ -93,7 +94,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, 1)) return;
-            string target = PlayerInfo.FindOfflineNameMatches(p, args[1]);
+            string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
             if (!File.Exists("extra/reported/" + target + ".txt")) {
@@ -109,7 +110,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Player.Message(p, "You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, 1)) return;
-            string target = PlayerInfo.FindOfflineNameMatches(p, args[1]);
+            string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
             if (!File.Exists("extra/reported/" + target + ".txt")) {
@@ -142,7 +143,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 Player.Message(p, "You need to provide a reason for the report."); return;
             }
-            string target = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+            string target = PlayerDB.MatchNames(p, args[0]);
             if (target == null) return;
 
             List<string> reports = new List<string>();

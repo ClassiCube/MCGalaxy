@@ -30,74 +30,69 @@ namespace MCGalaxy {
 
         /// <summary> Finds partial matches of 'name' against the list of all awards. </summary>
         public static string FindAwards(Player p, string name) {
-            int matches = 0;
-            Awards.Award award = Find<Awards.Award>(p, name, out matches, Awards.AwardsList,
-                                                    null, a => a.Name, "awards");
+            int matches;
+            Awards.Award award = Find(p, name, out matches, Awards.AwardsList,
+                                      null, a => a.Name, "awards");
             return award == null ? null : award.Name;
         }
         
         /// <summary> Finds partial matches of 'color' against the list of colors. </summary>
         public static string FindColor(Player p, string color) {
-            int matches = 0;
-            ColorDesc desc = Find<ColorDesc>(p, color, out matches, Colors.List,
-                                             col => !col.Undefined, col => col.Name, "colors", 20);
+            int matches;
+            ColorDesc desc = Find(p, color, out matches, Colors.List,
+                                  col => !col.Undefined, col => col.Name, "colors", 20);
             return desc.Undefined ? null : "&" + desc.Code;
         }
         
         /// <summary> Finds partial matches of 'name' against the list of bots in same level as player. </summary>
         public static PlayerBot FindBots(Player p, string name) {
-            int matches = 0;
-            return Find<PlayerBot>(p, name, out matches, p.level.Bots.Items,
-                                   b => b.level == p.level, b => b.name, "bots");
+            int matches;
+            return Find(p, name, out matches, p.level.Bots.Items,
+                        null, b => b.name, "bots");
         }
         
         /// <summary> Find partial matches of 'name' against the list of loaded maps/levels. </summary>
         public static Level FindLevels(Player p, string name) {
-            int matches = 0;
-            return Find<Level>(p, name, out matches, LevelInfo.Loaded.Items,
-                               null, l => l.name, "loaded levels");
+            int matches;
+            return Find(p, name, out matches, LevelInfo.Loaded.Items,
+                        null, l => l.name, "loaded levels");
         }
 
         /// <summary> Find partial matches of 'name' against the list of all map files. </summary>
         public static string FindMaps(Player pl, string name) {
-            int matches = 0;
-            if (!Formatter.ValidName(pl, name, "level")) return null;
-            
-            string[] files = LevelInfo.AllMapFiles();
-            string map = Find<string>(pl, name, out matches, files,
-                                      null, l => Path.GetFileNameWithoutExtension(l), "levels", 10);
-            
-            if (map != null) map = Path.GetFileNameWithoutExtension(map);
-            return map;
+            if (!Formatter.ValidName(pl, name, "level")) return null;            
+            int matches;
+            return Find(pl, name, out matches, LevelInfo.AllMapNames(),
+                        null, l => l, "levels", 10);
         }
         
         /// <summary> Find partial matches of 'name' against the list of ranks. </summary>
         public static Group FindRanks(Player p, string name) {
             Group.MapName(ref name);
-            int matches = 0;
-            return Find<Group>(p, name, out matches, Group.GroupList,
-                               null, g => Colors.Strip(g.Name), "ranks");
+            int matches;
+            return Find(p, name, out matches, Group.GroupList,
+                        null, g => Colors.Strip(g.Name), "ranks");
         }
         
         /// <summary> Find partial matches of 'name' against a list of warps. </summary>
         public static Warp FindWarps(Player p, WarpList warps, string name) {
             string group = (warps == WarpList.Global) ? "warps" : "waypoints";
             int matches;
-            return Find<Warp>(p, name, out matches, warps.Items,
-                              null, wp => wp.Name, group);
+            return Find(p, name, out matches, warps.Items,
+                        null, wp => wp.Name, group);
         }
         
         /// <summary> Find partial matches of 'name' against the list of zones in a map. </summary>
         public static Zone FindZones(Player p, Level lvl, string name) {
-            int matches = 0;
-            return Find<Zone>(p, name, out matches, lvl.Zones.Items,
-                               null, z => z.Config.Name, "zones");
+            int matches;
+            return Find(p, name, out matches, lvl.Zones.Items,
+                        null, z => z.Config.Name, "zones");
         }
         
         
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
         /// <returns> If exactly one match, the matching item. </returns>
-        public static T Find<T>(Player p, string name, out int matches, IEnumerable items,
+        public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
                                 Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
             StringBuilder nameMatches = new StringBuilder();

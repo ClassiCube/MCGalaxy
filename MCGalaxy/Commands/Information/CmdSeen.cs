@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Info {
             }
 
             Player.Message(p, "Searching PlayerDB..");
-            PlayerData target = PlayerInfo.FindOfflineMatches(p, message);
+            PlayerData target = PlayerDB.Match(p, message);
             if (target == null) return;
             Show(p, target.Name, target.FirstLogin, target.LastLogin);
         }

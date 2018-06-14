@@ -190,7 +190,7 @@ namespace MCGalaxy {
                 plugin.Unload(false);
             }
             
-            zombie.LoadInfectMessages();
+            zombie.infectMessages = ZSConfig.LoadInfectMessages();
             Colors.LoadList();
             Alias.Load();
             BlockDefinition.LoadGlobal();

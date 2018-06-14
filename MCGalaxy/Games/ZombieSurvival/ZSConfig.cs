@@ -26,23 +26,14 @@ namespace MCGalaxy.Games {
     
     public static class ZSConfig {
         
-        /// <summary> How precise collision detection is between alive and dead players. (Where 1 block = 32 units) </summary>
         [ConfigInt("zombie-hitbox-precision", "Zombie", 32)]
         public static int HitboxPrecision = 32;
-        
-        /// <summary> The maximum distance a player is allowed to move between movement packets. </summary>
         [ConfigInt("zombie-maxmove-distance", "Zombie", 50)]
         public static int MaxMoveDistance = 50;
-        
-        /// <summary> Whether the server's main level should be set to the current level at the end of each round. </summary>
         [ConfigBool("zombie-survival-only-server", "Zombie", false)]
         public static bool SetMainLevel;
-        
-        /// <summary> Whether zombie survival should start upon server startup. </summary>
         [ConfigBool("zombie-on-server-start", "Zombie", false)]
         public static bool StartImmediately;
-        
-        /// <summary> Whether the current level name should be shown in the heartbeats sent. </summary>
         [ConfigBool("zombie-map-inheartbeat", "Zombie", false)]
         public static bool IncludeMapInHeartbeat;
 
@@ -116,6 +107,43 @@ namespace MCGalaxy.Games {
             if (!ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
                 Logger.Log(LogType.Warning, "\"{0}\" was not a recognised zombie survival property key.", key);
             }
+        }
+                
+        
+        static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
+            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
+            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
+            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
+            "{0} transplanted {1}'s living brain" };
+        
+        public static List<string> LoadInfectMessages() {
+        	List<string> msgs = new List<string>();
+            try {
+        		if (!File.Exists("text/infectmessages.txt")) {
+                    File.WriteAllLines("text/infectmessages.txt", defMessages);
+        		}
+                msgs = Utils.ReadAllLinesList("text/infectmessages.txt");
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+        	
+            if (msgs.Count == 0) msgs = new List<string>(defMessages);
+            return msgs;
+        }
+        
+        static string InfectPath(string name) { return "text/infect/" + name.ToLower() + ".txt"; }       
+        public static List<string> LoadPlayerInfectMessages(string name) {
+            string path = InfectPath(name);          
+            if (!File.Exists(path)) return null;
+            return Utils.ReadAllLinesList(path);
+        }
+        
+        public static void AppendPlayerInfectMessage(string name, string msg) {
+            if (!Directory.Exists("text/infect"))
+                Directory.CreateDirectory("text/infect");
+            
+            string path = InfectPath(name);
+            File.AppendAllText(path, msg + Environment.NewLine);
         }
     }
 }

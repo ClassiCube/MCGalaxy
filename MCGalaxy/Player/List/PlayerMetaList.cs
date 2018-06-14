@@ -61,7 +61,7 @@ namespace MCGalaxy {
         }
 
         public List<string> FindMatches(Player p, string name, string group) {
-            int matches = 0;
+            int matches;
             return Matcher.FindMulti<string>(p, name, out matches, AllLines(),
                                              null, GetName, group);
         }

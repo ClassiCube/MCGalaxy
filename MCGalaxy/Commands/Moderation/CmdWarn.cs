@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.DB;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {    
@@ -44,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void WarnOffline(Player p, string[] args, string reason) {
             Player.Message(p, "Searching PlayerDB..");
-            string offName = PlayerInfo.FindOfflineNameMatches(p, args[0]);
+            string offName = PlayerDB.MatchNames(p, args[0]);
             if (offName == null) return;
       
             ModAction action = new ModAction(offName, p, ModActionType.Warned, reason);

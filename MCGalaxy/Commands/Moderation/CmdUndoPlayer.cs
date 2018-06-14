@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Moderation {
             names = new string[count];
             
             for (int i = 0; i < names.Length; i++) {
-                names[i] = PlayerInfo.FindOfflineNameMatches(p, parts[i]);
+                names[i] = PlayerDB.MatchNames(p, parts[i]);
                 if (names[i] == null) return null;
                 
                 Group grp = PlayerInfo.GetGroup(names[i]);

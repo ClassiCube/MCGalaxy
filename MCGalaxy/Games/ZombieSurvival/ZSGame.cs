@@ -76,7 +76,7 @@ namespace MCGalaxy.Games {
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
-        List<string> infectMessages = new List<string>();
+        internal List<string> infectMessages = new List<string>();
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal static ZSData Get(Player p) {
@@ -97,7 +97,7 @@ namespace MCGalaxy.Games {
         }
         
         static void InitData(ZSData data, Player p) {
-            data.InfectMessages = PlayerDB.GetInfectMessages(p);
+            data.InfectMessages = ZSConfig.LoadPlayerInfectMessages(p.name);
             ZombieStats stats = LoadStats(p.name);
             data.MaxInfected = stats.MaxInfected;     data.TotalInfected = stats.TotalInfected;
             data.MaxRoundsSurvived = stats.MaxRounds; data.TotalRoundsSurvived = stats.TotalRounds;
@@ -304,26 +304,8 @@ namespace MCGalaxy.Games {
             else if (winStreak > 0)  prefix += "&6"  + winStreak + p.color;
         }
         
-        static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
-            "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
-            "{0} made some zombie babies with {1}", "{0} made {1} see the dark side", "{0} tweeted {1}",
-            "{0} made {1} open source", "{0} infected {1}", "{0} iDotted {1}", "{1} got nommed on",
-            "{0} transplanted {1}'s living brain" };
         
-        public void LoadInfectMessages() {
-            infectMessages.Clear();
-            try {
-                if (!File.Exists("text/infectmessages.txt"))
-                    File.WriteAllLines("text/infectmessages.txt", defMessages);
 
-                infectMessages = Utils.ReadAllLinesList("text/infectmessages.txt");
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
-            if (infectMessages.Count == 0)
-                infectMessages = new List<string>(defMessages);
-        }
-        
         public bool IsZombieMap(string name) {
             if (!Running) return false;
             if (ZSConfig.IgnoredLevelList.CaselessContains(name)) return false;

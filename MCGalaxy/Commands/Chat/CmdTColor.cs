@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             who.titlecolor = color;
             who.SetPrefix();
-            PlayerData.Update(who.name, PlayerData.ColumnTColor, color);
+            PlayerDB.Update(who.name, PlayerData.ColumnTColor, color);
         }
 
         public override void Help(Player p) {

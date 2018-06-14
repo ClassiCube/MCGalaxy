@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         
         public static Player FindMatches(Player pl, string name, bool onlyCanSee = true) {
-            int matches = 0; return FindMatches(pl, name, out matches, onlyCanSee);
+            int matches; return FindMatches(pl, name, out matches, onlyCanSee);
         }
         
         public static Player FindMatches(Player pl, string name,
@@ -54,20 +54,20 @@ namespace MCGalaxy {
             matches = 0;
             if (!Formatter.ValidName(pl, name, "player")) return null;
             
-            return Matcher.Find<Player>(pl, name, out matches, Online.Items,
-                                        p => Entities.CanSee(pl, p) || !onlyCanSee,
-                                        p => p.name, "online players");
+            return Matcher.Find(pl, name, out matches, Online.Items,
+                                p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                p => p.name, "online players");
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {
             if (!Formatter.ValidName(p, name, "player")) return null;
-            int matches = 0;
+            int matches;
             Player target = FindMatches(p, name, out matches);
             
             if (matches > 1) return null;
             if (target != null) return target.name;
             Player.Message(p, "Searching PlayerDB for \"{0}\"..", name);
-            return FindOfflineNameMatches(p, name);
+            return PlayerDB.MatchNames(p, name);
         }
         
         /// <summary> Finds the online player whose name caselessly exactly matches the given name. </summary>
@@ -100,50 +100,12 @@ namespace MCGalaxy {
             return Database.ReadString("Players", "IP", "WHERE Name=@0" + suffix, name);
         }
         
-        
-        static object ReadStats(IDataRecord record, object arg) {
-            PlayerData stats = PlayerData.Parse(record);
-            ((List<PlayerData>)arg).Add(stats); return arg;
-        }
-        
-        public static PlayerData FindOfflineMatches(Player p, string name) {
-            List<PlayerData> stats = new List<PlayerData>();
-            MatchMulti("Players", "*", stats, Database.ReadList);
-            
-            int matches = 0;
-            return Matcher.Find<PlayerData>(p, name, out matches, stats,
-                                            null, stat => stat.Name, "players", 20);
-        }
-        
-        public static string FindOfflineNameMatches(Player p, string name) {
-            List<string> names = new List<string>();
-            MatchMulti("Players", "Name", names, Database.ReadList);
-            
-            int matches = 0;
-            return Matcher.Find<string>(p, name, out matches, names,
-                                        null, n => n, "players", 20);
-        }
-        
-        static string[] MatchValues(Player p, string name, string columns) {
-            List<string[]> name_values = new List<string[]>();
-            MatchMulti("Players", columns, name_values, Database.ReadFields);
-            
-            int matches = 0;
-            return Matcher.Find<string[]>(p, name, out matches, name_values,
-                                          null, n => n[0], "players", 20);
-        }
-        
         public static string FindOfflineIPMatches(Player p, string name, out string ip) {
-            string[] match = MatchValues(p, name, "Name,IP");
+            string[] match = PlayerDB.MatchValues(p, name, "Name,IP");
             ip   = match == null ? null : match[1];
             return match == null ? null : match[0];
         }
         
-        public static string FindOfflineMoneyMatches(Player p, string name, out int money) {
-            string[] match = MatchValues(p, name, "Name,Money");
-            money = match == null ? 0    : int.Parse(match[1]);
-            return  match == null ? null : match[0];
-        }
         
         static object ReadAccounts(IDataRecord record, object arg) {
             List<string> names = (List<string>)arg;
@@ -167,13 +129,6 @@ namespace MCGalaxy {
                 if (!names.CaselessContains(p.name)) names.Add(p.name);
             }
             return names;
-        }
-
-        static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
-            string suffix = Database.Backend.CaselessLikeSuffix;
-            Database.Backend.ReadRows("Players", columns, arg, callback,
-                                      "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
-                                      "%" + name.Replace("_", "#_") + "%");
         }
     }
 }

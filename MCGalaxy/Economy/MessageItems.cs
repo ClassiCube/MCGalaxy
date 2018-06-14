@@ -36,15 +36,15 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-            string text = message.SplitSpaces(2)[1]; // keep spaces this way
-            if (text == PlayerDB.GetLoginMessage(p)) {
+            string msg = message.SplitSpaces(2)[1]; // keep spaces this way
+            if (msg == PlayerDB.GetLoginMessage(p)) {
                 Player.Message(p, "&cYou already have that login message."); return;
             }
-            if (text.Length > NetUtils.StringSize) {
+            if (msg.Length > NetUtils.StringSize) {
                 Player.Message(p, "&cLogin message must be 64 characters or less."); return;
             }
-            Command.Find("LoginMessage").Use(p, "-own " + text);
-            Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + text);
+            Command.Find("LoginMessage").Use(p, "-own " + msg);
+            Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + msg);
         }
     }
     
@@ -64,15 +64,15 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-            string text = message.SplitSpaces(2)[1]; // keep spaces this way         
-            if (text == PlayerDB.GetLogoutMessage(p)) {
+            string msg = message.SplitSpaces(2)[1]; // keep spaces this way         
+            if (msg == PlayerDB.GetLogoutMessage(p)) {
                 Player.Message(p, "&cYou already have that logout message."); return;
             }       
-            if (text.Length > NetUtils.StringSize) {
+            if (msg.Length > NetUtils.StringSize) {
                 Player.Message(p, "&cLogin message must be 64 characters or less."); return;
             }            
-            Command.Find("LogoutMessage").Use(p, "-own " + text);
-            Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + text);
+            Command.Find("LogoutMessage").Use(p, "-own " + msg);
+            Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + msg);
         }
     }
 }

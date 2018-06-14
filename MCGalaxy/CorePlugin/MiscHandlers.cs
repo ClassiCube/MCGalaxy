@@ -111,7 +111,7 @@ namespace MCGalaxy.Core {
                 if (p.group == null) p.group = Group.standard;
                 p.SetPrefix();
                 
-                string dbCol = PlayerData.FindDBColor(p);
+                string dbCol = PlayerDB.FindColor(p);
                 if (dbCol.Length == 0 && p.color != p.group.Color) {
                     p.color = p.group.Color;
                     Entities.GlobalRespawn(p);

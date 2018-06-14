@@ -15,7 +15,6 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System.IO;
 using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {
@@ -33,16 +32,14 @@ namespace MCGalaxy.Commands.Chatting {
             UsePlayer(p, message, "logout message");
         }
         
-        protected override void SetPlayerData(Player p, Player who, string logoutMsg) {
-            if (logoutMsg.Length == 0) {
-                string path = PlayerDB.LogoutPath(who.name);
-                if (File.Exists(path)) File.Delete(path);
+        protected override void SetPlayerData(Player p, Player who, string msg) {
+            PlayerDB.SetLogoutMessage(who.name, msg);
+            if (msg.Length == 0) {
                 Player.Message(p, "Logout message of {0} %Swas removed.",
                                who.ColoredName);
-            } else {
-                PlayerDB.SetLogoutMessage(who.name, logoutMsg);
+            } else {                
                 Player.Message(p, "Logout message of {0} %Swas changed to: {1}",
-                               who.ColoredName, logoutMsg);
+                               who.ColoredName, msg);
             }
         }
         

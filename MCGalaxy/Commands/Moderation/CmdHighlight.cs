@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Moderation {
                 delta = TimeSpan.FromMinutes(30);
             }
             
-            parts[0] = PlayerInfo.FindOfflineNameMatches(p, parts[0]);
+            parts[0] = PlayerDB.MatchNames(p, parts[0]);
             if (parts[0] == null) return;
             int[] ids = NameConverter.FindIds(parts[0]);
             

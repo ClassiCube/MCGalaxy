@@ -109,7 +109,7 @@ namespace MCGalaxy.Eco {
             if (data.InfectMessages == null) data.InfectMessages = new List<string>();
             data.InfectMessages.Add(text);
             
-            PlayerDB.AppendInfectMessage(p.name, text);
+            ZSConfig.AppendPlayerInfectMessage(p.name, text);
             Player.Message(p, "&aAdded infect message: &f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }

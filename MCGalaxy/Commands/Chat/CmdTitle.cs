@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             who.title = title;
             who.SetPrefix();
-            PlayerData.Update(who.name, PlayerData.ColumnTitle, title.UnicodeToCp437());
+            PlayerDB.Update(who.name, PlayerData.ColumnTitle, title.UnicodeToCp437());
         }
         
         public override void Help(Player p) {

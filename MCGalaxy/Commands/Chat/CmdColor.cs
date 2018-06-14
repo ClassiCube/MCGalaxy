@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             Entities.GlobalRespawn(who);
             who.SetPrefix();
-            PlayerData.Update(who.name, PlayerData.ColumnColor, color);
+            PlayerDB.Update(who.name, PlayerData.ColumnColor, color);
         }
         
         public override void Help(Player p) {
