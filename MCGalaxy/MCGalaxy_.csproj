@@ -157,7 +157,6 @@
     <Compile Include="Commands\building\CmdSphere.cs" />
     <Compile Include="Commands\building\CmdTransform.cs" />
     <Compile Include="Commands\building\CmdTriangle.cs" />
-    <Compile Include="Commands\building\CmdWrite2.cs" />
     <Compile Include="Commands\building\ReplaceCmds.cs" />
     <Compile Include="Commands\building\CmdRestartPhysics.cs" />
     <Compile Include="Commands\building\CmdSpheroid.cs" />

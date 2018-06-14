@@ -28,50 +28,53 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Backend;
         public static bool TableExists(string table) { return Backend.TableExists(table); }
         
-        static object IterateCount(IDataRecord record, object arg) { return record.GetInt32(0); }
+        static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
         public static int CountRows(string table, string modifier = "", params object[] args) {
-            return (int)Backend.IterateRows(table, "COUNT(*)", 0,
-                                            IterateCount, modifier, args);
+            return (int)Backend.ReadRows(table, "COUNT(*)", 0, ReadInt, modifier, args);
         }
         
-        static object IterateString(IDataRecord record, object arg) { return record.GetString(0); }        
-        public static string GetString(string table, string column,
+        static object ReadString(IDataRecord record, object arg) { return record.GetString(0); }
+        public static string ReadString(string table, string column,
                                        string modifier = "", params object[] args) {
-            return (string)Backend.IterateRows(table, column, null,
-                                               IterateString, modifier, args);
+            return (string)Backend.ReadRows(table, column, null, ReadString, modifier, args);
         }
         
-        
-        static object IterateList(IDataRecord record, object arg) {
+        internal static object ReadList(IDataRecord record, object arg) {
             ((List<string>)arg).Add(record.GetString(0)); return arg;
         }
         internal static List<string> GetStrings(string sql, params object[] args) {
             List<string> values = new List<string>();
-            Iterate(sql, values, IterateList, args);
+            Iterate(sql, values, ReadList, args);
             return values;
+        }
+        
+        internal static object ReadFields(IDataRecord record, object arg) {
+            string[] field = new string[record.FieldCount];
+            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }            
+            ((List<string[]>)arg).Add(field);
+            return arg;
+        }
+        
+        public static List<string[]> GetRows(string table, string columns,
+                                             string modifier = "", params object[] args) {
+            List<string[]> fields = new List<string[]>();
+            Backend.ReadRows(table, columns, fields, ReadFields, modifier, args);
+            return fields;
         }
         
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, params object[] args) {
-            Do(sql, false, null, null, null, args);
+            Do(sql, false, null, null, args);
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
         public static object Iterate(string sql, object arg, ReaderCallback callback, params object[] args) {
-            return Do(sql, false, arg, null, callback, args);
+            return Do(sql, false, arg, callback, args);
         }
 
-        /// <summary> Executes an SQL query, returning all read rows into a DataTable. </summary>
-        public static DataTable Fill(string sql, params object[] args) {
-           using (DataTable results = new DataTable("toReturn")) {
-                Do(sql, false, null, results, null, args);
-                return results;
-            }
-        }
-        
         internal static object Do(string sql, bool createDB, object arg,
-                         DataTable results, ReaderCallback callback, params object[] args) {
+                                  ReaderCallback callback, params object[] args) {
             ParameterisedQuery query;
             if (args == null || args.Length == 0) {
                 query = Backend.GetStaticParameterised();
@@ -87,10 +90,8 @@ namespace MCGalaxy.SQL {
                 try {
                     if (callback != null) {
                         arg = query.Iterate(sql, connString, arg, callback);
-                    } else if (results == null) {
-                        query.Execute(sql, connString, createDB);
                     } else {
-                        query.Fill(sql, connString, results);
+                        query.Execute(sql, connString, createDB);
                     }
                     
                     query.parameters = null;
@@ -106,18 +107,6 @@ namespace MCGalaxy.SQL {
             return arg;
         }
 
-        
-        volatile static string[] ids;
-        internal static string[] GetParamNames(int count) {
-            // Avoid allocation overhead from string concat every query by caching
-            string[] names = ids;
-            if (names == null || count > names.Length) {
-                names = new string[count];
-                for (int i = 0; i < names.Length; i++) { names[i] = "@" + i; }
-                ids = names;
-            }
-            return names;
-        }
         
         internal static string GetString(this IDataRecord record, string name) {
             return record.GetString(record.GetOrdinal(name));

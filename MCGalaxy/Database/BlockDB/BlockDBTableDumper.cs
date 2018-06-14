@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             mapName = table.Substring("Block".Length);
             
             try {
-                Database.Backend.IterateRows(table, "*", null, DumpRow);
+                Database.Backend.ReadRows(table, "*", null, DumpRow);
                 WriteBuffer(true);
                 AppendCbdbFile();
                 SaveCbdbFile();

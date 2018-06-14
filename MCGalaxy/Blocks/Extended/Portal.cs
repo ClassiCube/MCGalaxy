@@ -16,38 +16,20 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Blocks.Extended {
+    public class PortalExit { public string Map; public ushort X, Y, Z; }
+    
     public static class Portal {
-        
-        public class PortalExitData {
-            public string Map;
-            public int X, Y, Z;
-        }
-        
-        static object IteratePortalExit(IDataRecord record, object arg) {
-            PortalExitData data = new PortalExitData();
-            data.Map = record.GetString("ExitMap");
-            data.X   = record.GetInt32("ExitX");
-            data.Y   = record.GetInt32("ExitY");
-            data.Z   = record.GetInt32("ExitZ");
-            
-            data.Map = data.Map.Cp437ToUnicode();
-            return data;
-        }
-        
-        public static PortalExitData Get(string map, ushort x, ushort y, ushort z) {
-            object raw = Database.Backend.IterateRows("Portals" + map, "*", null, IteratePortalExit,
-			                                          "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-		    return (PortalExitData)raw;
-        }
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             if (!p.level.hasPortals) return false;
             
-            PortalExitData exit = Get(p.level.MapName, x, y, z);
+            PortalExit exit = Get(p.level.MapName, x, y, z);
             if (exit == null) return false;
             Orientation rot = p.Rot;
             
@@ -63,7 +45,7 @@ namespace MCGalaxy.Blocks.Extended {
                     changedMap = false;
                 }
                 
-                p.summonedMap = null;                
+                p.summonedMap = null;
                 if (!changedMap) { Player.Message(p, "Unable to use this portal, as this portal goes to that map."); return true; }
                 p.BlockUntilLoad(10);
             }
@@ -71,6 +53,57 @@ namespace MCGalaxy.Blocks.Extended {
             Position pos = Position.FromFeetBlockCoords(exit.X, exit.Y, exit.Z);
             p.SendPos(Entities.SelfID, pos, rot);
             return true;
+        }
+        
+        internal static object ReadCoords(IDataRecord record, object arg) {
+            Vec3U16 pos;
+            pos.X = (ushort)record.GetInt32(0);
+            pos.Y = (ushort)record.GetInt32(1);
+            pos.Z = (ushort)record.GetInt32(2);
+            
+            ((List<Vec3U16>)arg).Add(pos);
+            return arg;
+        }
+        
+        internal static List<Vec3U16> GetAllCoords(string map) {
+            List<Vec3U16> coords = new List<Vec3U16>();
+            Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
+            return coords;
+        }
+        
+        static PortalExit ParseExit(IDataRecord record) {
+            PortalExit data = new PortalExit();
+            data.Map = record.GetString(0).Cp437ToUnicode();
+            
+            data.X = (ushort)record.GetInt32(1);
+            data.Y = (ushort)record.GetInt32(2);
+            data.Z = (ushort)record.GetInt32(3);
+            return data;
+        }
+        
+        static object ReadAllExits(IDataRecord record, object arg) {
+            ((List<PortalExit>)arg).Add(ParseExit(record));
+            return arg;
+        }
+        
+        public static List<PortalExit> GetAll(string map) {
+            List<PortalExit> exits = new List<PortalExit>();
+            Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
+                                      exits, ReadAllExits);
+            return exits;
+        }
+        
+        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
+        public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
+            object raw = Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
+                                                   null, ReadExit,
+                                                   "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            return (PortalExit)raw;
+        }
+        
+        internal static void Delete(string map, ushort x, ushort y, ushort z) {
+            Database.Backend.DeleteRows("Portals" + map,
+                                        "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
         }
     }
 }

@@ -91,7 +91,7 @@ namespace MCGalaxy.Levels.IO {
         static void ParseZone(Level lvl, string raw) {
             string[] parts = raw.Split(comma);
             string[] header = parts[0].SplitSpaces();
-            Zone zone = new Zone(lvl);
+            Zone zone = new Zone();
             
             // fCraft uses Z for height
             zone.Config.Name = header[0];

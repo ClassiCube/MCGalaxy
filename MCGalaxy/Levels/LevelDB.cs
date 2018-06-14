@@ -41,73 +41,76 @@ namespace MCGalaxy {
             Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
-        internal static void LoadZones(Level level, string name) {
-            if (!Database.TableExists("Zone" + name)) return;
-            int id = 0;
-            bool changedPerbuild = false;
+        static object ListZones(IDataRecord record, object arg) {
+            Zone z = new Zone();
+            z.MinX = (ushort)record.GetInt32("SmallX");
+            z.MinY = (ushort)record.GetInt32("SmallY");
+            z.MinX = (ushort)record.GetInt32("SmallZ");
             
-            using (DataTable table = Database.Backend.GetRows("Zone" + name, "*")) {
-                foreach (DataRow row in table.Rows) {
-                    Zone z = new Zone(level);
-                    z.MinX = ushort.Parse(row["SmallX"].ToString());
-                    z.MinY = ushort.Parse(row["SmallY"].ToString());
-                    z.MinZ = ushort.Parse(row["SmallZ"].ToString());
-                    z.MaxX = ushort.Parse(row["BigX"].ToString());
-                    z.MaxY = ushort.Parse(row["BigY"].ToString());
-                    z.MaxZ = ushort.Parse(row["BigZ"].ToString());
-                    
-                    string owner = row["Owner"].ToString();
-                    if (owner.StartsWith("grp")) {
-                        Group grp = Group.Find(owner.Substring(3));
-                        if (grp != null) z.Access.Min = grp.Permission;
-                    } else if (z.CoversMap(level)) {
-                        level.BuildAccess.Whitelisted.Add(owner);
-                        changedPerbuild = true;
-                        continue;
-                    } else {
-                        z.Access.Whitelisted.Add(owner);
-                        z.Access.Min = LevelPermission.Admin;
-                    }
-                    
-                    z.Config.Name = "Zone" + id;
-                    id++;
-                    z.AddTo(level);
+            z.MaxX = (ushort)record.GetInt32("BigX");
+            z.MaxY = (ushort)record.GetInt32("BigY");
+            z.MaxX = (ushort)record.GetInt32("BigZ");
+            z.Config.Name = record.GetString("Owner");
+            
+            ((List<Zone>)arg).Add(z);
+            return arg;
+        }
+        
+        internal static void LoadZones(Level level, string map) {
+            if (!Database.TableExists("Zone" + map)) return;
+            
+            List<Zone> zones = new List<Zone>();
+            Database.Backend.ReadRows("Zone" + map, "*", zones, ListZones);
+            
+            bool changedPerbuild = false;
+            for (int i = 0; i < zones.Count; i++) {
+                Zone z = zones[i];
+                string owner = z.Config.Name;
+                
+                if (owner.StartsWith("grp")) {
+                    Group grp = Group.Find(owner.Substring(3));
+                    if (grp != null) z.Access.Min = grp.Permission;
+                } else if (z.CoversMap(level)) {
+                    level.BuildAccess.Whitelisted.Add(owner);
+                    changedPerbuild = true;
+                    continue;
+                } else {
+                    z.Access.Whitelisted.Add(owner);
+                    z.Access.Min = LevelPermission.Admin;
                 }
+                
+                z.Config.Name = "Zone" + i;
+                z.AddTo(level);
             }
             
             if (changedPerbuild) Level.SaveSettings(level);
             if (level.Zones.Count > 0 && !level.Save(true)) return;
-            Database.Backend.DeleteTable("Zone" + name);
-            Logger.Log(LogType.SystemActivity, "Upgraded zones for map " + name);
+            
+            Database.Backend.DeleteTable("Zone" + map);
+            Logger.Log(LogType.SystemActivity, "Upgraded zones for map " + map);
         }
         
-        internal static void LoadPortals(Level level, string name) {
-            level.hasPortals = Database.TableExists("Portals" + name);
+        internal static void LoadPortals(Level level, string map) {
+            level.hasPortals = Database.TableExists("Portals" + map);
             if (!level.hasPortals) return;
+            List<Vec3U16> coords = Portal.GetAllCoords(map);
             
-            using (DataTable table = Database.Backend.GetRows("Portals" + name, "*")) {
-                foreach (DataRow row in table.Rows) {
-                    ushort x = ushort.Parse(row["EntryX"].ToString());
-                    ushort y = ushort.Parse(row["EntryY"].ToString());
-                    ushort z = ushort.Parse(row["EntryZ"].ToString());
-                    
-                    BlockID block = level.GetBlock(x, y, z);
-                    if (level.Props[block].IsPortal) continue;
-                    
-                    Database.Backend.DeleteRows("Portals" + name, "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-                }
+            foreach (Vec3U16 p in coords) {
+                BlockID block = level.GetBlock(p.X, p.Y, p.Z);
+                if (level.Props[block].IsPortal) continue;
+                Portal.Delete(map, p.X, p.Y, p.Z);
             }
         }
         
-        internal static void LoadMessages(Level level, string name) {
-            level.hasMessageBlocks = Database.TableExists("Messages" + name);
-            if (!level.hasMessageBlocks) return;            
-            List<Vec3U16> coords = MessageBlock.GetAll(name);
+        internal static void LoadMessages(Level level, string map) {
+            level.hasMessageBlocks = Database.TableExists("Messages" + map);
+            if (!level.hasMessageBlocks) return;
+            List<Vec3U16> coords = MessageBlock.GetAllCoords(map);
             
             foreach (Vec3U16 p in coords) {
                 BlockID block = level.GetBlock(p.X, p.Y, p.Z);
                 if (level.Props[block].IsMessageBlock) continue;
-                MessageBlock.Delete(name, p.X, p.Y, p.Z);
+                MessageBlock.Delete(map, p.X, p.Y, p.Z);
             }
         }
         

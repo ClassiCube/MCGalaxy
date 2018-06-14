@@ -81,7 +81,7 @@ namespace MCGalaxy {
         public ZoneAccessController Access;
         public string ColoredName { get { return Config.Color + Config.Name; } }
         
-        public Zone(Level lvl) {
+        public Zone() {
             Config = new ZoneConfig();
             Access = new ZoneAccessController(Config);
         }

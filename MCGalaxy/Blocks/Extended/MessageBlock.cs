@@ -98,26 +98,15 @@ namespace MCGalaxy.Blocks.Extended {
             }
         }
 
-                
-        static object IterateAll(IDataRecord record, object arg) {
-            Vec3U16 pos;
-            pos.X = (ushort)record.GetInt32(0);
-            pos.Y = (ushort)record.GetInt32(1);
-            pos.Z = (ushort)record.GetInt32(2);
-            
-            ((List<Vec3U16>)arg).Add(pos);
-            return arg;
-        }
-        
-        internal static List<Vec3U16> GetAll(string map) {
+
+        internal static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
-            Database.Backend.IterateRows("Messages" + map, "X,Y,Z",
-                                         coords, IterateAll);
+            Database.Backend.ReadRows("Messages" + map, "X,Y,Z", coords, Portal.ReadCoords);
             return coords;
         }
         
         internal static string Get(string map, ushort x, ushort y, ushort z) {
-            string msg = Database.GetString("Messages" + map, "Message",
+            string msg = Database.ReadString("Messages" + map, "Message",
                                             "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             if (msg == null) return null;
 

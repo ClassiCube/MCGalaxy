@@ -47,6 +47,7 @@ namespace MCGalaxy.DB {
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TotalTime;
         
+        static object ReadID(IDataRecord record, object arg) { return record.GetInt32(0); }        
         internal static void Create(Player p) {
             p.prefix = "";
             p.color = p.group.Color;
@@ -58,14 +59,11 @@ namespace MCGalaxy.DB {
                                     "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
             
-            using (DataTable ids = Database.Backend.GetRows("Players",
-                                                            "ID", "WHERE Name = @0", p.name)) {
-                if (ids.Rows.Count > 0) {
-                    string id = ids.Rows[0]["ID"].ToString();
-                    p.DatabaseID = PlayerData.ParseInt(id);
-                } else {
-                    p.DatabaseID = NameConverter.InvalidNameID(p.name);
-                }
+            object id = Database.Backend.ReadRows("Players", "ID", null, ReadID, "WHERE Name=@0", p.name);
+            if (id != null) {
+                p.DatabaseID = (int)id;
+            } else {
+                p.DatabaseID = NameConverter.InvalidNameID(p.name);
             }
         }
         
@@ -91,10 +89,10 @@ namespace MCGalaxy.DB {
             p.TimesBeenKicked = data.Kicks;
         }
         
-        internal static object IteratePlayerData(IDataRecord record, object arg) {
-            PlayerData data = new PlayerData();
+        internal static PlayerData Parse(IDataRecord record) {
+        	PlayerData data = new PlayerData();
             data.Name = record.GetString("Name");
-            data.IP = record.GetString("IP");
+            data.IP   = record.GetString("IP");
             data.DatabaseID = record.GetInt32("ID");
             
             // Backwards compatibility with old format
@@ -128,6 +126,8 @@ namespace MCGalaxy.DB {
             data.TotalDeleted  = cuboided >> LowerBits;
             return data;
         }
+        
+        internal static object Read(IDataRecord record, object arg) { return Parse(record); }
         
         internal static DateTime ParseDate(object value) {
             if (value is DateTime) return (DateTime)value;
@@ -164,13 +164,12 @@ namespace MCGalaxy.DB {
         public const long LowerBitsMask = (1L << LowerBits) - 1;
         
         
-        static bool IterateFindCol(IDataRecord record, object arg) {
-            arg = record.GetString(0);
-            return true;
+        public static void Update(string name, string column, string value) {
+            Database.Backend.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
         }
         
         public static string FindDBColor(Player p) {
-            string raw = Database.GetString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
+            string raw = Database.ReadString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
             if (raw == null) return "";
             return ParseCol(raw);
         }

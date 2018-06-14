@@ -15,7 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.SQL;
+using MCGalaxy.DB;
+
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdTitle : EntityPropertyCmd {        
         public override string name { get { return "Title"; } }
@@ -44,7 +45,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             who.title = title;
             who.SetPrefix();
-            Database.Backend.UpdateRows("Players", "Title = @1", "WHERE Name = @0", who.name, title.UnicodeToCp437());
+            PlayerData.Update(who.name, PlayerData.ColumnTitle, title.UnicodeToCp437());
         }
         
         public override void Help(Player p) {

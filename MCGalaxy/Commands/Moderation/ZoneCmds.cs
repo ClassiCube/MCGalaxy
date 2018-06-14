@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             if (!LevelInfo.ValidateAction(p, args[0], "create zones in this level")) return;
             
-            Zone z = new Zone(p.level);
+            Zone z = new Zone();
             z.Config.Name = args[offset];
             if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, p.level)) return;
 

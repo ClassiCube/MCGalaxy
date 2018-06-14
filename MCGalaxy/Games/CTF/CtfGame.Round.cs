@@ -127,7 +127,7 @@ namespace MCGalaxy.Games {
                 // TODO: Move to MySQL save event
                 data.HasFlag = false;
                 Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
-                                            "WHERE Name = @0", p.name, data.Points, data.Captures, data.Tags);
+                                            "WHERE Name=@0", p.name, data.Points, data.Captures, data.Tags);
             }
         }
         

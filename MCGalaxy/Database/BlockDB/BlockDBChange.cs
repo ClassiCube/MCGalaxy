@@ -55,7 +55,7 @@ namespace MCGalaxy.DB {
         
         public static void OutputPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (!p.level.Props[block].IsPortal) return;
-            Portal.PortalExitData exit = Portal.Get(p.level.MapName, x, y, z);
+            PortalExit exit = Portal.Get(p.level.MapName, x, y, z);
             
             if (exit == null) return;
             Player.Message(p, "Portal destination: ({0}, {1}, {2}) in {3}",

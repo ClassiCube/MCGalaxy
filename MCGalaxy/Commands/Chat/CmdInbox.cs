@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool SuperUseable { get { return false; } }
 
         class MailEntry { public string Contents, Timestamp, From; }
-        static object IterateInbox(IDataRecord record, object arg) {
+        static object ReadInbox(IDataRecord record, object arg) {
             MailEntry e = new MailEntry();
             e.Contents  = record.GetString("Contents");
             e.Timestamp = record.GetString("TimeSent");
@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message) {
             List<MailEntry> entries = new List<MailEntry>();
-            Database.Backend.IterateRows("Inbox" + p.name, "*",
-                                         entries, IterateInbox, "ORDER BY TimeSent");
+            Database.Backend.ReadRows("Inbox" + p.name, "*",
+                                      entries, ReadInbox, "ORDER BY TimeSent");
             if (entries.Count == 0) {
                 Player.Message(p, "Your inbox is empty."); return;
             }
@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static void Output(Player p, MailEntry entry) {
-            TimeSpan delta = DateTime.Now - Convert.ToDateTime(entry.Timestamp);
+            TimeSpan delta = DateTime.Now - DateTime.Parse(entry.Timestamp);
             string sender = PlayerInfo.GetColoredName(p, entry.From);
             
             Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());

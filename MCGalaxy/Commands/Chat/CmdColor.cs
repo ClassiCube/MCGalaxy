@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Bots;
-using MCGalaxy.SQL;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Chatting {    
     public class CmdColor : EntityPropertyCmd {
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             Entities.GlobalRespawn(who);
             who.SetPrefix();
-            Database.Backend.UpdateRows("Players", "color = @1", "WHERE Name = @0", who.name, color);
+            PlayerData.Update(who.name, PlayerData.ColumnColor, color);
         }
         
         public override void Help(Player p) {

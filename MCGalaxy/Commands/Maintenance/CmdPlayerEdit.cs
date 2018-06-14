@@ -31,6 +31,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         delegate void DBSetter(string name, string column, string data);
+        const int type_norm = 0, type_lo = 1, type_hi = 2;
 
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
@@ -53,13 +54,13 @@ namespace MCGalaxy.Commands.Maintenance {
                         v => who.LastLogin = v);
             } else if (opt == "logins") {
                 SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
-                           v => who.TimesVisited = v, UpdateDB);
+                           v => who.TimesVisited = v, type_norm);
             } else if (opt == "deaths") {
                 SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
-                           v => who.TimesDied = v, UpdateDB);
+                           v => who.TimesDied = v, type_norm);
             } else if (opt == "money") {
                 SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
-                           v => who.money = v, UpdateDB);
+                           v => who.money = v, type_norm);
             } else if (opt == "title") {
                 if (args.Length < 3) {
                     Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
@@ -71,32 +72,36 @@ namespace MCGalaxy.Commands.Maintenance {
                     who.title = args[2];
                     who.SetPrefix();
                 }
-                UpdateDB(args[0], args[2], PlayerData.ColumnTitle);
+                
+                PlayerData.Update(args[0], PlayerData.ColumnTitle, args[2].UnicodeToCp437());
                 MessageDataChanged(p, args[0], args[1], args[2]);
             } else if (opt == "modified") {
                 SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
-                           v => who.TotalModified = v, UpdateDBLo);
+                           v => who.TotalModified = v, type_lo);
             } else if (opt == "drawn") {
                 SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
-                           v => who.TotalDrawn = v, UpdateDBLo);
+                           v => who.TotalDrawn = v, type_lo);
             } else if (opt == "placed") {
                 SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
-                           v => who.TotalPlaced = v, UpdateDBHi);
+                           v => who.TotalPlaced = v, type_hi);
             } else if (opt == "deleted") {
                 SetInteger(p, args, PlayerData.ColumnTotalCuboided, int.MaxValue, who,
-                           v => who.TotalDeleted = v, UpdateDBHi);            
+                           v => who.TotalDeleted = v, type_hi);
             } else if (opt == "totalkicked") {
                 SetInteger(p, args, PlayerData.ColumnKicked, 16777215, who,
-                           v => who.TimesBeenKicked = v, UpdateDB);
+                           v => who.TimesBeenKicked = v, type_norm);
             } else if (opt == "messages") {
                 SetInteger(p, args, PlayerData.ColumnMessages, 16777215, who,
-                           v => who.TotalMessagesSent = v, UpdateDB);
+                           v => who.TotalMessagesSent = v, type_norm);
             }  else if (opt == "timespent") {
-                SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, v => who.TotalTime = v);
+                SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, 
+                            v => who.TotalTime = v);
             } else if (opt == "color") {
-                SetColor(p, args, PlayerData.ColumnColor, who, v => who.color = (v.Length == 0 ? who.group.Color : v));
+                SetColor(p, args, PlayerData.ColumnColor, who, 
+                         v => who.color = (v.Length == 0 ? who.group.Color : v));
             } else if (opt == "titlecolor") {
-                SetColor(p, args, PlayerData.ColumnTColor, who, v => who.titlecolor = v);
+                SetColor(p, args, PlayerData.ColumnTColor, who, 
+                         v => who.titlecolor = v);
             } else {
                 Player.Message(p, "&cInvalid type");
                 MessageValidTypes(p);
@@ -117,7 +122,8 @@ namespace MCGalaxy.Commands.Maintenance {
                 who.SetPrefix();
                 args[0] = who.name;
             }
-            UpdateDB(args[0], col, column);
+            
+            PlayerData.Update(args[0], column, col);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -134,9 +140,8 @@ namespace MCGalaxy.Commands.Maintenance {
                 return;
             }
             
-            if (who != null)
-                setter(date);
-            UpdateDB(args[0], args[2], column);
+            if (who != null) setter(date);
+            PlayerData.Update(args[0], column, args[2]);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
@@ -154,13 +159,19 @@ namespace MCGalaxy.Commands.Maintenance {
                 setter(span);
             } else {
                 long secs = (long)span.TotalSeconds;
-                UpdateDB(args[0], secs.ToString(), column);
+                PlayerData.Update(args[0], column, secs.ToString());
             }
             MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
         
+        static object ReadLong(IDataRecord record, object arg) { return record.GetInt64(0); }
+        static long GetLong(string name, string column) {
+            return (long)Database.Backend.ReadRows("Players", column, null, ReadLong,
+                                                   "WHERE Name=@0", name);
+        }
+        
         static void SetInteger(Player p, string[] args, string column, int max, Player who,
-                               Action<int> setter, DBSetter dbSetter) {
+                               Action<int> setter, int type) {
             if (args.Length < 3) {
                 Player.Message(p, "You must specify a positive integer, which can be {0} at most.", max); return;
             }
@@ -171,35 +182,22 @@ namespace MCGalaxy.Commands.Maintenance {
             if (who != null) {
                 setter(value);
             } else {
-                dbSetter(args[0], args[2], column);
+                string dbValue = args[2];
+                // special case handling for packed forms of totalBlocks and totalCuboided
+                if (type == 1) {
+                    long packed = GetLong(args[0], column) & ~PlayerData.LowerBitsMask; // hi value only
+                    packed |= (uint)value;
+                    dbValue = packed.ToString();
+                } else if (type == 2) {
+                    long packed = GetLong(args[0], column) & PlayerData.LowerBitsMask; // lo value only
+                    packed |= ((long)value) << PlayerData.LowerBits;
+                    dbValue = packed.ToString();
+                }
+                PlayerData.Update(args[0], column, dbValue);
             }
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
-        
-        
-        static void UpdateDB(string name, string value, string column) {
-            Database.Backend.UpdateRows("Players", column + " = @1", 
-                                        "WHERE Name = @0", name, value.UnicodeToCp437());
-        }
-        
-        static object IterateSetLong(IDataRecord record, object arg) { return record.GetInt64(0); }
-        static long GetLong(string name, string column) {
-            return (long)Database.Backend.IterateRows("Players", column, null, IterateSetLong, 
-                                                      "WHERE Name = @0", name);
-        }
-        
-        // special case handling for packed forms of totalBlocks and totalCuboided
-        static void UpdateDBLo(string name, string value, string column) {
-            long packed = GetLong(name, column) & ~PlayerData.LowerBitsMask; // hi value only
-            packed |= long.Parse(value);
-            UpdateDB(name, packed.ToString(), column);
-        }
-        
-        static void UpdateDBHi(string name, string value, string column) {
-            long packed = GetLong(name, column) & PlayerData.LowerBitsMask; // lo value only
-            packed |= long.Parse(value) << PlayerData.LowerBits;
-            UpdateDB(name, packed.ToString(), column);
-        }
+
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
             name = PlayerInfo.GetColoredName(p, name);

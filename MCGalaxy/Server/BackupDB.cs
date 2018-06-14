@@ -38,8 +38,8 @@ namespace MCGalaxy {
             sql.WriteLine();
             sql.WriteLine();
 
-            List<string> sqlTables = Database.Backend.AllTables();
-            foreach (string name in sqlTables) {
+            List<string> tables = Database.Backend.AllTables();
+            foreach (string name in tables) {
                 if (lite && name.CaselessStarts("Block")) continue;
                 BackupTable(name, sql);
             }

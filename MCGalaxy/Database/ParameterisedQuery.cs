@@ -49,22 +49,6 @@ namespace MCGalaxy.SQL {
             }
         }
 
-        /// <summary> Excecutes an SQL query, returning all rows into a single DataTable. </summary>
-        public void Fill(string query, string connString, DataTable toReturn) {
-            using (IDbConnection conn = CreateConnection(connString)) {
-                conn.Open();
-                if (MultipleSchema)
-                    conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
-                
-                using (DbDataAdapter da = CreateDataAdapter(query, conn)) {
-                    FillParams(da.SelectCommand);
-                    da.Fill(toReturn);
-                    da.SelectCommand.Dispose();
-                }
-                conn.Close();
-            }
-        }
-
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public object Iterate(string query, string connString, object arg, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection(connString)) {
@@ -83,11 +67,12 @@ namespace MCGalaxy.SQL {
             return arg;
         }
         
+        
         void FillParams(IDbCommand cmd) {
             object[] args = parameters;
             if (args == null || args.Length == 0) return;
             
-            string[] names = Database.GetParamNames(args.Length);
+            string[] names = GetNames(args.Length);
             for (int i = 0; i < args.Length; i++) {
                 IDbDataParameter dbParam = CreateParameter();
                 dbParam.ParameterName = names[i];
@@ -95,5 +80,17 @@ namespace MCGalaxy.SQL {
                 cmd.Parameters.Add(dbParam);
             }
         }
+        
+        volatile static string[] ids;
+        internal static string[] GetNames(int count) {
+            // Avoid allocation overhead from string concat every query by caching
+            string[] names = ids;
+            if (names == null || count > names.Length) {
+                names = new string[count];
+                for (int i = 0; i < names.Length; i++) { names[i] = "@" + i; }
+                ids = names;
+            }
+            return names;
+        } 
     }
 }

@@ -126,7 +126,7 @@ namespace MCGalaxy.Commands.Building {
         
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
-            List<Vec3U16> coords = MessageBlock.GetAll(p.level.MapName);
+            List<Vec3U16> coords = MessageBlock.GetAllCoords(p.level.MapName);
             
             foreach (Vec3U16 pos in coords) {
                 if (p.showMBs) {
@@ -136,7 +136,8 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            Player.Message(p, "Now {0} %SMBs.", p.showMBs ? "showing &a" + coords.Count : "hiding");
+            Player.Message(p, "Now {0} %SMBs.", 
+                           p.showMBs ? "showing &a" + coords.Count : "hiding");
         }
         
         static string Format(BlockID block, Player p, BlockProps[] props) {

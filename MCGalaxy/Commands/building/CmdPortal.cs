@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.Blocks;
+using MCGalaxy.Blocks.Extended;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
@@ -108,29 +110,28 @@ namespace MCGalaxy.Commands.Building {
             p.ClearBlockchange();
             p.RevertBlock(x, y, z);
             PortalArgs args = (PortalArgs)p.blockchangeObject;
-            string dstMap = p.level.name.UnicodeToCp437();
+            string exitMap = p.level.name.UnicodeToCp437();
 
             foreach (PortalPos P in args.Entries) {
-                string lvlName = P.Map;
-                object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
+                string map = P.Map;
+                if (map == p.level.name) { p.SendBlockchange(P.x, P.y, P.z, args.Block); }
+                object locker = ThreadSafeCache.DBCache.GetLocker(map);
                 
                 lock (locker) {
-                    Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
-                    Level lvl = LevelInfo.FindExact(P.Map);
+                    Database.Backend.CreateTable("Portals" + map, LevelDB.createPortals);
+                    Level lvl = LevelInfo.FindExact(map);
                     if (lvl != null) lvl.hasPortals = true;
 
-                    int count = Database.CountRows("Portals" + lvlName,
+                    int count = Database.CountRows("Portals" + map,
                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z);                    
                     if (count == 0) {
-                        Database.Backend.AddRow("Portals" + lvlName, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-                                                P.x, P.y, P.z, x, y, z, dstMap);
+                        Database.Backend.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
+                                                P.x, P.y, P.z, x, y, z, exitMap);
                     } else {
-                        Database.Backend.UpdateRows("Portals" + lvlName, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, dstMap);
+                        Database.Backend.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
+                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, exitMap);
                     }
                 }
-                if (P.Map == p.level.name)
-                    p.SendBlockchange(P.x, P.y, P.z, args.Block);
             }
 
             Player.Message(p, "&3Exit %Sblock placed");
@@ -144,39 +145,32 @@ namespace MCGalaxy.Commands.Building {
         struct PortalPos { public ushort x, y, z; public string Map; }
 
         
-        void ShowPortals(Player p) {
+        static void ShowPortals(Player p) {
             p.showPortals = !p.showPortals;
-            int count = 0;
+            List<Vec3U16> coords = Portal.GetAllCoords(p.level.MapName);
             
-            if (p.level.hasPortals) {
-                using (DataTable table = Database.Backend.GetRows("Portals" + p.level.name, "*")) {
-                    count = table.Rows.Count;
-                    if (p.showPortals) { ShowPortals(p, table); } 
-                    else { HidePortals(p, table); }
+            foreach (Vec3U16 pos in coords) {
+                if (p.showPortals) {
+                    p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Green);
+                } else {
+                    p.RevertBlock(pos.X, pos.Y, pos.Z);
                 }
             }
-            Player.Message(p, "Now {0} %Sportals.", p.showPortals ? "showing &a" + count : "hiding");
-        }
-        
-        static void ShowPortals(Player p, DataTable table) {
-            foreach (DataRow row in table.Rows) {
-                if (row["ExitMap"].ToString() == p.level.name) {
-                    p.SendBlockchange(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]), Block.Red);
+            
+            List<PortalExit> exits = Portal.GetAll(p.level.MapName);
+            foreach (PortalExit exit in exits) {
+                if (exit.Map != p.level.MapName) continue;
+                
+                if (p.showPortals) {
+                    p.SendBlockchange(exit.X, exit.Y, exit.Z, Block.Red);
+                } else {
+                    p.RevertBlock(exit.X, exit.Y, exit.Z);
                 }
-                p.SendBlockchange(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]), Block.Green);
             }
+            
+            Player.Message(p, "Now {0} %Sportals.", 
+                           p.showPortals ? "showing &a" + coords.Count : "hiding");
         }
-        
-        static void HidePortals(Player p, DataTable table) {
-            foreach (DataRow row in table.Rows) {
-                if (row["ExitMap"].ToString() == p.level.name) {
-                    p.RevertBlock(U16(row["ExitX"]), U16(row["ExitY"]), U16(row["ExitZ"]));
-                }
-                p.RevertBlock(U16(row["EntryX"]), U16(row["EntryY"]), U16(row["EntryZ"]));
-            }
-        }
-        
-        static ushort U16(object x) { return Convert.ToUInt16(x); }
         
         
         static string Format(BlockID block, Player p, BlockProps[] props) {

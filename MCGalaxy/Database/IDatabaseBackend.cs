@@ -118,22 +118,11 @@ namespace MCGalaxy.SQL {
             Database.Execute(syntax);
         }
         
-        /// <summary> Retrieves rows for the given table. </summary>
-        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows,
-        /// return rows in a certain order, etc.</remarks>
-        public virtual DataTable GetRows(string table, string columns,
-                                         string modifier = "", params object[] args) {
-            ValidateTable(table);
-            string syntax = "SELECT " + columns + " FROM `" + table + "`";
-            if (modifier.Length > 0) syntax += " " + modifier;
-            return Database.Fill(syntax, args);
-        }
-        
         /// <summary> Iterates over read rows for the given table. </summary>
-        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows,
+        /// <remarks> modifier is optional SQL which can be used to read only certain rows,
         /// return rows in a certain order, etc.</remarks>
-        public virtual object IterateRows(string table, string columns, object arg,
-                                        ReaderCallback callback, string modifier = "", params object[] args) {
+        public virtual object ReadRows(string table, string columns, object arg,
+                                      ReaderCallback callback, string modifier = "", params object[] args) {
             ValidateTable(table);
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
             if (modifier.Length > 0) syntax += " " + modifier;
@@ -175,7 +164,7 @@ namespace MCGalaxy.SQL {
             sql.Append(" `").Append(table).Append("` ");
             sql.Append('(').Append(columns).Append(')');
             
-            string[] names = Database.GetParamNames(args.Length);
+            string[] names = ParameterisedQuery.GetNames(args.Length);
             sql.Append(" VALUES (");
             for (int i = 0; i < args.Length; i++) {
                 sql.Append(names[i]);

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
@@ -34,7 +35,7 @@ namespace MCGalaxy.Commands.Info {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
-            int maxResults = 0, offset = 0;       
+            int maxResults = 0, offset = 0;
             if (!CommandParser.GetInt(p, args[0], "Max results", ref maxResults, 1, 15)) return;
 
             TopStat stat = FindTopStat(args[1]);
@@ -46,17 +47,16 @@ namespace MCGalaxy.Commands.Info {
                 if (!CommandParser.GetInt(p, args[2], "Offset", ref offset, 0)) return;
             }
             
-            string strLimit = " LIMIT " + offset + "," + maxResults;
-            DataTable db = Database.Backend.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
-                                                    "ORDER BY" + stat.OrderBy + strLimit);
+            string limit = " LIMIT " + offset + "," + maxResults;
+            List<string[]> stats = Database.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
+                                                    "ORDER BY" + stat.OrderBy + limit);
             
             Player.Message(p, "&a{0}:", stat.Title());
-            for (int i = 0; i < db.Rows.Count; i++) {
-                string player = PlayerInfo.GetColoredName(p, db.Rows[i]["Name"].ToString());
-                string item = db.Rows[i][stat.Column].ToString();
-                Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), player, stat.Formatter(item));
+            for (int i = 0; i < stats.Count; i++) {
+            	string name  = PlayerInfo.GetColoredName(p, stats[i][0]);
+            	string value = stat.Formatter(stats[i][1]);
+            	Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), name, value);
             }
-            db.Dispose();
         }
         
         static TopStat FindTopStat(string input) {

@@ -152,7 +152,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void ParseZone(Level lvl, ref byte[] buffer, Stream gs) {
-            Zone z = new Zone(lvl);
+            Zone z = new Zone();
             z.MinX = Read_U16(buffer, gs); z.MaxX = Read_U16(buffer, gs);
             z.MinY = Read_U16(buffer, gs); z.MaxY = Read_U16(buffer, gs);
             z.MinZ = Read_U16(buffer, gs); z.MaxZ = Read_U16(buffer, gs);

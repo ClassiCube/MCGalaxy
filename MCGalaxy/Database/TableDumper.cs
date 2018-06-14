@@ -25,13 +25,13 @@ namespace MCGalaxy.SQL {
         bool gottenRows;
         string table, insertCols;
         internal StreamWriter sql;
-        Type[] rowTypes;
+        Type[] colTypes;
         
         public void DumpTable(StreamWriter sql, string table) {
             gottenRows = false;
             this.sql = sql;
             this.table = table;
-            Database.Backend.IterateRows(table, "*", null, DumpRow);
+            Database.Backend.ReadRows(table, "*", null, DumpRow);
             
             if (!gottenRows) {
                 sql.WriteLine("-- No data in table `{0}`!", table);
@@ -46,10 +46,10 @@ namespace MCGalaxy.SQL {
             sql.WriteLine();
 
             string[] colNames = new string[record.FieldCount];
-            rowTypes = new Type[record.FieldCount];
+            colTypes = new Type[record.FieldCount];
             for (int i = 0; i < record.FieldCount; i++) {
                 colNames[i] = record.GetName(i);
-                rowTypes[i] = record.GetFieldType(i);
+                colTypes[i] = record.GetFieldType(i);
             }
             insertCols = FormatInsertColumns(colNames, table);
             gottenRows = true;
@@ -60,22 +60,22 @@ namespace MCGalaxy.SQL {
             sql.WriteLine(insertCols);
 
             //The values themselves can be integers or strings, or null
-            for (int col = 0; col < rowTypes.Length; col++) {
+            for (int col = 0; col < colTypes.Length; col++) {
                 if (record.IsDBNull(col)) {
                     sql.Write("NULL");
-                } else if (rowTypes[col] == typeof(string)) {
+                } else if (colTypes[col] == typeof(string)) {
                     string value = record.GetString(col);
                     if (value.IndexOf('\'') >= 0) // escape '
                         value = value.Replace("'", "''");
                     sql.Write("'" + value + "'");
-                } else if (rowTypes[col] == typeof(DateTime)) {
+                } else if (colTypes[col] == typeof(DateTime)) {
                     string date = Database.Backend.FastGetDateTime(record, col);
                     sql.Write("'" + date + "'");
                 } else {
                     long value = record.GetInt64(col); // TODO: try to use GetInt32 where possible
                     sql.Write(value);
                 }
-                sql.Write((col < rowTypes.Length - 1 ? ", " : ");"));
+                sql.Write((col < colTypes.Length - 1 ? ", " : ");"));
             }
             
             sql.WriteLine();

@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Info {
                 }
             }
             
-            if (!foundAny) Player.Message(p, "No block change records found for this block.");            
+            if (!foundAny) Player.Message(p, "No block change records found for this block.");
             BlockID raw = Block.IsPhysicsType(block) ? block : Block.ToRaw(block);
             string blockName = Block.GetName(p, block);
             Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
@@ -73,37 +73,35 @@ namespace MCGalaxy.Commands.Info {
             Server.DoGC();
             return true;
         }
-        
+
         static void ListFromDatabase(Player p, ref bool foundAny, ushort x, ushort y, ushort z) {
             if (!Database.TableExists("Block" + p.level.name)) return;
-            using (DataTable Blocks = Database.Backend.GetRows("Block" + p.level.name, "*",
-                                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
-                BlockDBEntry entry = default(BlockDBEntry);
-                entry.OldRaw = Block.Invalid;
+            
+            List<string[]> entries = Database.GetRows("Block" + p.level.name, "Username,TimePerformed,Deleted,Type",
+                                                      "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            
+            if (entries.Count > 0) foundAny = true;
+            BlockDBEntry entry = default(BlockDBEntry);
+            entry.OldRaw = Block.Invalid;
+            
+            foreach (string[] row in entries) {
+                DateTime time = DateTime.Parse(row[1]);
+                TimeSpan delta = time - BlockDB.Epoch;
+                entry.TimeDelta = (int)delta.TotalSeconds;
+                entry.Flags = BlockDBFlags.ManualPlace;
                 
-                for (int i = 0; i < Blocks.Rows.Count; i++) {
-                    foundAny = true;
-                    DataRow row = Blocks.Rows[i];
-                    string name = row["Username"].ToString().Trim();
-                    
-                    DateTime time = PlayerData.ParseDate(row["TimePerformed"]);
-                    TimeSpan delta = time - BlockDB.Epoch;
-                    entry.TimeDelta = (int)delta.TotalSeconds;
-                    entry.Flags = BlockDBFlags.ManualPlace;
-                    
-                    byte flags = ParseFlags(row["Deleted"].ToString());
-                    if ((flags & 1) == 0) { // block was placed
-                        entry.NewRaw = byte.Parse(row["Type"].ToString());
-                        if ((flags & 2) != 0) entry.Flags |= BlockDBFlags.NewExtended;
-                    }
-                    BlockDBChange.Output(p, name, entry);
+                byte flags = ParseFlags(row[2]);
+                if ((flags & 1) == 0) { // block was placed
+                    entry.NewRaw = byte.Parse(row[3]);
+                    if ((flags & 2) != 0) entry.Flags |= BlockDBFlags.NewExtended;
                 }
+                BlockDBChange.Output(p, row[0], entry);
             }
         }
         
         static byte ParseFlags(string value) {
             // This used to be a 'deleted' boolean, so we need to make sure we account for that
-            if (value.CaselessEq("true")) return 1;
+            if (value.CaselessEq("true"))  return 1;
             if (value.CaselessEq("false")) return 0;
             return byte.Parse(value);
         }

@@ -212,7 +212,7 @@ namespace MCGalaxy.Tasks {
 
         
         internal static void UpgradeDBTimeSpent(SchedulerTask task) {
-            string time = Database.GetString("Players", "TimeSpent", "LIMIT 1");
+            string time = Database.ReadString("Players", "TimeSpent", "LIMIT 1");
             if (time == null) return; // no players at all in DB
             if (time.IndexOf(' ') == -1) return; // already upgraded
             
@@ -230,10 +230,10 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.Backend.IterateRows("Players", "ID,TimeSpent", null, IterateTimeSpent);
+            Database.Backend.ReadRows("Players", "ID,TimeSpent", null, ReadTimeSpent);
         }
         
-        static object IterateTimeSpent(IDataRecord record, object arg) {
+        static object ReadTimeSpent(IDataRecord record, object arg) {
             playerCount++;
             try {
                 int id = record.GetInt32(0);

@@ -84,46 +84,68 @@ namespace MCGalaxy {
         
         public static PlayerData FindData(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
-            object raw = Database.Backend.IterateRows("Players", "*",
-                                                      null, PlayerData.IteratePlayerData,
-                                                      "WHERE Name=@0" + suffix, name);
+            object raw = Database.Backend.ReadRows("Players", "*",
+                                                   null, PlayerData.Read,
+                                                   "WHERE Name=@0" + suffix, name);
             return (PlayerData)raw;
         }
 
         public static string FindName(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
-            return Database.GetString("Players", "Name", "WHERE Name=@0" + suffix, name);
+            return Database.ReadString("Players", "Name", "WHERE Name=@0" + suffix, name);
         }
         
         public static string FindIP(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
-            return Database.GetString("Players", "IP", "WHERE Name=@0" + suffix, name);
+            return Database.ReadString("Players", "IP", "WHERE Name=@0" + suffix, name);
         }
         
         
+        static object ReadStats(IDataRecord record, object arg) {
+            PlayerData stats = PlayerData.Parse(record);
+            ((List<PlayerData>)arg).Add(stats); return arg;
+        }
+        
         public static PlayerData FindOfflineMatches(Player p, string name) {
-            DataRow row = QueryMulti(p, name, "*");
-            return row == null ? null : PlayerData.Fill(row);
+            List<PlayerData> stats = new List<PlayerData>();
+            MatchMulti("Players", "*", stats, Database.ReadList);
+            
+            int matches = 0;
+            return Matcher.Find<PlayerData>(p, name, out matches, stats,
+                                            null, stat => stat.Name, "players", 20);
         }
         
         public static string FindOfflineNameMatches(Player p, string name) {
-            DataRow row = QueryMulti(p, name, "Name");
-            return row == null ? null : row["Name"].ToString();
+            List<string> names = new List<string>();
+            MatchMulti("Players", "Name", names, Database.ReadList);
+            
+            int matches = 0;
+            return Matcher.Find<string>(p, name, out matches, names,
+                                        null, n => n, "players", 20);
+        }
+        
+        static string[] MatchValues(Player p, string name, string columns) {
+            List<string[]> name_values = new List<string[]>();
+            MatchMulti("Players", columns, name_values, Database.ReadFields);
+            
+            int matches = 0;
+            return Matcher.Find<string[]>(p, name, out matches, name_values,
+                                          null, n => n[0], "players", 20);
         }
         
         public static string FindOfflineIPMatches(Player p, string name, out string ip) {
-            DataRow row = QueryMulti(p, name, "Name, IP");
-            ip = row == null ? null : row["IP"].ToString();
-            return row == null ? null : row["Name"].ToString();
+            string[] match = MatchValues(p, name, "Name,IP");
+            ip   = match == null ? null : match[1];
+            return match == null ? null : match[0];
         }
         
         public static string FindOfflineMoneyMatches(Player p, string name, out int money) {
-            DataRow row = QueryMulti(p, name, "Name, Money");
-            money = row == null ? 0 : PlayerData.ParseInt(row["Money"].ToString());
-            return row == null ? null : row["Name"].ToString();
+            string[] match = MatchValues(p, name, "Name,Money");
+            money = match == null ? 0    : int.Parse(match[1]);
+            return  match == null ? null : match[0];
         }
         
-        static object IterateAccounts(IDataRecord record, object arg) {
+        static object ReadAccounts(IDataRecord record, object arg) {
             List<string> names = (List<string>)arg;
             string name = record.GetString(0);
             
@@ -135,8 +157,7 @@ namespace MCGalaxy {
         /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
             List<string> names = new List<string>();
-            Database.Backend.IterateRows("Players", "Name", names, IterateAccounts, 
-                                         "WHERE IP=@0", ip);
+            Database.Backend.ReadRows("Players", "Name", names, ReadAccounts, "WHERE IP=@0", ip);
             
             // TODO: should we instead do save() when the player logs in
             // by checking online players we avoid a DB write though
@@ -148,16 +169,11 @@ namespace MCGalaxy {
             return names;
         }
 
-        
-        static DataRow QueryMulti(Player p, string name, string columns) {
+        static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
             string suffix = Database.Backend.CaselessLikeSuffix;
-            using (DataTable results = Database.Backend.GetRows("Players", columns,
-                                                                "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
-                                                                "%" + name.Replace("_", "#_") + "%")) {
-                int matches = 0;
-                return Matcher.Find<DataRow>(p, name, out matches, results.Rows,
-                                             r => true, r => r["Name"].ToString(), "players", 20);
-            }
+            Database.Backend.ReadRows("Players", columns, arg, callback,
+                                      "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
+                                      "%" + name.Replace("_", "#_") + "%");
         }
     }
 }

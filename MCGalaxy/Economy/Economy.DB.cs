@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
@@ -33,19 +34,25 @@ namespace MCGalaxy.Eco {
             new ColumnDesc("fine", ColumnType.VarChar, 255),
         };
         
+        static object ListOld(IDataRecord record, object arg) {
+            EcoStats stats = ParseStats(record);
+            stats.__unused = record.GetInt32("money");            
+            ((List<EcoStats>)arg).Add(stats);
+            return arg;
+        }
+        
         public static void LoadDatabase() {
             Database.Backend.CreateTable("Economy", createEconomy);
-            using (DataTable eco = Database.Backend.GetRows("Economy", "*"))
-                foreach (DataRow row in eco.Rows)
-            {
-                int money = PlayerData.ParseInt(row["money"].ToString());
-                if (money == 0) continue;
-                
-                EcoStats stats = default(EcoStats);
-                stats.Player = row["player"].ToString();
-                ParseRow(row, ref stats);
-                
-                UpdateMoney(stats.Player, money);
+            
+            // money used to be in the Economy table, move it back to the Players table
+            List<EcoStats> outdated = new List<EcoStats>();
+            Database.Backend.ReadRows("Economy", "*", outdated, ListOld, "WHERE money > 0");
+            
+            if (outdated.Count == 0) return;            
+            Logger.Log(LogType.SystemActivity, "Upgrading economy stats..");   
+            
+            foreach (EcoStats stats in outdated) {
+                UpdateMoney(stats.Player, stats.__unused);
                 UpdateStats(stats);
             }
         }
@@ -55,12 +62,12 @@ namespace MCGalaxy.Eco {
         }
         
         public static void UpdateMoney(string name, int money) {
-            Database.Backend.UpdateRows("Players", "Money = @1", "WHERE Name = @0", name, money);
+            PlayerData.Update(name, PlayerData.ColumnMoney, money.ToString());
         }
         
 
         public struct EcoStats {
-            public string Player, Purchase, Payment, Salary, Fine; public int TotalSpent;
+            public string Player, Purchase, Payment, Salary, Fine; public int TotalSpent, __unused;
         }
         
         public static void UpdateStats(EcoStats stats) {
@@ -69,30 +76,30 @@ namespace MCGalaxy.Eco {
                                              stats.Payment, stats.Salary, stats.Fine);
         }
         
-        static string ParseField(object raw) {
-            if (raw == null) return null;
-            string value = raw.ToString();
+        static EcoStats ParseStats(IDataRecord record) {
+            EcoStats stats;
+            stats.Player = record.GetString("player");
+            stats.Payment  = Parse(record.GetString("payment"));
+            stats.Purchase = Parse(record.GetString("purchase"));
+            stats.Salary   = Parse(record.GetString("salary"));
+            stats.Fine     = Parse(record.GetString("fine"));
             
-            if (value.Length == 0 || value.CaselessEq("NULL")) return null;           
-            return value.CaselessEq("%cNone") ? null : value;
+            stats.TotalSpent = record.GetInt32("total");
+            stats.__unused   = 0;
+            return stats;
         }
         
-        static void ParseRow(DataRow row, ref EcoStats stats) {
-            stats.Payment  = ParseField(row["payment"]);
-            stats.Purchase = ParseField(row["purchase"]);
-            stats.Salary   = ParseField(row["salary"]);
-            stats.Fine     = ParseField(row["fine"]);
-            stats.TotalSpent = PlayerData.ParseInt(row["total"].ToString());
+        static string Parse(string raw) {
+            if (raw == null || raw.Length == 0 || raw.CaselessEq("NULL")) return null;           
+            return raw.CaselessEq("%cNone") ? null : raw;
         }
-
+        
+        static object ReadStats(IDataRecord record, object arg) { return ParseStats(record); }
         public static EcoStats RetrieveStats(string name) {
             EcoStats stats = default(EcoStats);
             stats.Player   = name;
-            
-            using (DataTable eco = Database.Backend.GetRows("Economy", "*", "WHERE player=@0", name)) {
-                if (eco.Rows.Count > 0) ParseRow(eco.Rows[0], ref stats);
-            }
-            return stats;
+            return (EcoStats)Database.Backend.ReadRows("Economy", "*", stats, ReadStats, 
+                                                       "WHERE player=@0", name);
         }
     }
 }

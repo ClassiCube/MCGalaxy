@@ -45,7 +45,7 @@ namespace MCGalaxy.SQL {
         
         public override void CreateDatabase() {
             string syntax = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
-            Database.Do(syntax, true, null, null, null);
+            Database.Do(syntax, true, null, null);
         }
         
         public override BulkTransaction CreateBulk() {
@@ -135,18 +135,10 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        static object IterateFields(IDataRecord record, object arg) {
-            string[] field = new string[record.FieldCount];
-            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }
-            
-            ((List<string[]>)arg).Add(field);
-            return arg;
-        }
-        
         public override void PrintSchema(string table, TextWriter w) {
             w.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", table);
             List<string[]> fields = new List<string[]>();
-            Database.Iterate("DESCRIBE `" + table + "`", fields, IterateFields);
+            Database.Iterate("DESCRIBE `" + table + "`", fields, Database.ReadFields);
             
             string pri = "";
             for (int i = 0; i < fields.Count; i++) {
