@@ -30,7 +30,7 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
         
-        static string connFormat = "Data Source =" + Utils.FolderPath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";        
+        static string connFormat = "Data Source =" + Utils.FolderPath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
         public override string ConnectionString {
             get { return string.Format(connFormat, ServerConfig.DatabasePooling); }
         }
@@ -60,35 +60,36 @@ namespace MCGalaxy.SQL {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
         }
         
-        
         public override bool TableExists(string table) {
             ValidateTable(table);
-            using (DataTable results = GetRows("sqlite_master", "name",
-                                               "WHERE type='table' AND name=@0", table)) {
-                return results.Rows.Count > 0;
-            }
+            return Database.CountRows("sqlite_master",
+                                      "WHERE type='table' AND name=@0", table) > 0;
         }
         
         public override List<string> AllTables() {
-            using (DataTable results = GetRows("sqlite_master", "name", "WHERE type='table'")) {
-                List<string> tables = new List<string>(results.Rows.Count);
-                foreach (DataRow row in results.Rows) {
-                    if (row["name"].ToString().StartsWith("sqlite_")) continue;
-                    tables.Add(row["name"].ToString());
-                }
-                return tables;
+            const string syntax = "SELECT name from sqlite_master WHERE type='table'";
+        	List<string> tables = Database.GetStrings(syntax);
+        	
+            // exclude sqlite built-in database tables
+            for (int i = tables.Count - 1; i >= 0; i--) {
+                if (tables[i].StartsWith("sqlite_")) tables.RemoveAt(i);
             }
+            return tables;
+        }
+        
+        static object IterateColumnNames(IDataRecord record, object arg) {
+            List<string> columns = (List<string>)arg;
+            columns.Add(record.GetString("name"));
+            return arg;
         }
         
         public override List<string> ColumnNames(string table) {
             ValidateTable(table);
-            using (DataTable results = Database.Fill("PRAGMA table_info(`" + table + "`)")) {
-                List<string> columns = new List<string>(results.Rows.Count);
-                foreach (DataRow row in results.Rows) {
-                    columns.Add(row["name"].ToString());
-                }
-                return columns;
-            }
+            List<string> columns = new List<string>();
+            
+            Database.Iterate("PRAGMA table_info(`" + table + "`)",
+                             columns, IterateColumnNames);
+            return columns;
         }
         
         public override void RenameTable(string srcTable, string dstTable) {
@@ -105,7 +106,7 @@ namespace MCGalaxy.SQL {
         }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
-            string priKey = null;            
+            string priKey = null;
             for (int i = 0; i < columns.Length; i++) {
                 ColumnDesc col = columns[i];
                 sql.Append(col.Column).Append(' ');
@@ -135,21 +136,20 @@ namespace MCGalaxy.SQL {
         }
         
         public override void PrintSchema(string table, TextWriter w) {
-            const string syntax = "SELECT sql FROM sqlite_master WHERE tbl_name = @0 AND type = 'table'";
-            using (DataTable schema = Database.Fill(syntax + CaselessWhereSuffix, table)) {
-                foreach (DataRow row in schema.Rows) {
-                    string sql = row[0].ToString();
-                    sql = sql.Replace(" " + table, " `" + table + "`");
-                    sql = sql.Replace("CREATE TABLE `" + table + "`", "CREATE TABLE IF NOT EXISTS `" + table + "`");
-                    w.WriteLine(sql + ";");
-                }
+            const string syntax = "SELECT sql from sqlite_master WHERE tbl_name = @0 AND type = 'table'";
+            List<string> all = Database.GetStrings(syntax + CaselessWhereSuffix, table);
+            
+            for (int i = 0; i < all.Count; i++) {
+                string sql = all[i];
+                sql = sql.Replace(" " + table, " `" + table + "`");
+                sql = sql.Replace("CREATE TABLE `" + table + "`", "CREATE TABLE IF NOT EXISTS `" + table + "`");
+                w.WriteLine(sql + ";");
             }
         }
-                
+        
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
-                + col.Column + " " + col.FormatType();
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
             Database.Execute(syntax);
         }
         
@@ -160,9 +160,9 @@ namespace MCGalaxy.SQL {
     }
     
     
-     public sealed class SQLiteBulkTransaction : BulkTransaction {
+    public sealed class SQLiteBulkTransaction : BulkTransaction {
 
-        public SQLiteBulkTransaction(string connString) { 
+        public SQLiteBulkTransaction(string connString) {
             connection = new SQLiteConnection(connString);
             connection.Open();
             transaction = connection.BeginTransaction();
@@ -177,7 +177,7 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    public sealed class SQLiteParameterisedQuery : ParameterisedQuery {        
+    public sealed class SQLiteParameterisedQuery : ParameterisedQuery {
         protected override bool MultipleSchema { get { return false; } }
         
         protected override IDbConnection CreateConnection(string connString) {

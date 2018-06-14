@@ -55,7 +55,7 @@ namespace MCGalaxy.SQL {
         /// for sql queries with no parameters. </summary>
         protected internal abstract ParameterisedQuery GetStaticParameterised();
         
-        public abstract string FastGetDateTime(IDataRecord reader, int col);
+        public abstract string FastGetDateTime(IDataRecord record, int col);
         
         protected internal virtual void ParseCreate(ref string cmd) { }
         
@@ -127,6 +127,17 @@ namespace MCGalaxy.SQL {
             string syntax = "SELECT " + columns + " FROM `" + table + "`";
             if (modifier.Length > 0) syntax += " " + modifier;
             return Database.Fill(syntax, args);
+        }
+        
+        /// <summary> Iterates over read rows for the given table. </summary>
+        /// <remarks> modifier is optional SQL which can be used to retrieve only certain rows,
+        /// return rows in a certain order, etc.</remarks>
+        public virtual object IterateRows(string table, string columns, object arg,
+                                        ReaderCallback callback, string modifier = "", params object[] args) {
+            ValidateTable(table);
+            string syntax = "SELECT " + columns + " FROM `" + table + "`";
+            if (modifier.Length > 0) syntax += " " + modifier;
+            return Database.Iterate(syntax, arg, callback, args);
         }
         
         /// <summary> Updates rows for the given table. </summary>

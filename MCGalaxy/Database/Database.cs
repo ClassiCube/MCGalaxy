@@ -16,62 +16,69 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
 namespace MCGalaxy.SQL {
+    /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
+    public delegate object ReaderCallback(IDataRecord record, object arg);
+    
     public static class Database {
-        
         public static IDatabaseBackend Backend;
-        
-        /// <summary> Returns whether the given table exists in the database. </summary>
         public static bool TableExists(string table) { return Backend.TableExists(table); }
-
         
-        /// <summary> Executes an SQL command that does not return any results. </summary>
-        public static void Execute(string sql) {
-            ParameterisedQuery query = Backend.GetStaticParameterised();
-            Execute(query, sql, false, null);
+        static object IterateCount(IDataRecord record, object arg) { return record.GetInt32(0); }
+        public static int CountRows(string table, string modifier = "", params object[] args) {
+            return (int)Backend.IterateRows(table, "COUNT(*)", 0,
+                                            IterateCount, modifier, args);
         }
-
+        
+        static object IterateString(IDataRecord record, object arg) { return record.GetString(0); }        
+        public static string GetString(string table, string column,
+                                       string modifier = "", params object[] args) {
+            return (string)Backend.IterateRows(table, column, null,
+                                               IterateString, modifier, args);
+        }
+        
+        
+        static object IterateList(IDataRecord record, object arg) {
+            ((List<string>)arg).Add(record.GetString(0)); return arg;
+        }
+        internal static List<string> GetStrings(string sql, params object[] args) {
+            List<string> values = new List<string>();
+            Iterate(sql, values, IterateList, args);
+            return values;
+        }
+        
+        
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, params object[] args) {
-            ParameterisedQuery query = Backend.CreateParameterised();
-            Execute(query, sql, false, args);
+            Do(sql, false, null, null, null, args);
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
-        public static void Iterate(string sql, ReaderCallback callback, params object[] args) {
-            ParameterisedQuery query = Backend.CreateParameterised();
-            DoDatabaseCall(query, sql, false, null, callback, args);
+        public static object Iterate(string sql, object arg, ReaderCallback callback, params object[] args) {
+            return Do(sql, false, arg, null, callback, args);
         }
-        
+
         /// <summary> Executes an SQL query, returning all read rows into a DataTable. </summary>
-        public static DataTable Fill(string sql) {
-            ParameterisedQuery query = Backend.GetStaticParameterised();
-            return Fill(query, sql, null);
-        }
-
-        /// <summary> Executes an SQL query, returning all read rows into a DataTable. </summary>        
         public static DataTable Fill(string sql, params object[] args) {
-            ParameterisedQuery query = Backend.CreateParameterised();
-            return Fill(query, sql, args);
-        }
-
-
-        internal static void Execute(ParameterisedQuery query, string sql, bool createDB, params object[] args) {
-            DoDatabaseCall(query, sql, createDB, null, null, args);
-        }
-        
-        internal static DataTable Fill(ParameterisedQuery query, string sql, params object[] args) {
-            using (DataTable results = new DataTable("toReturn")) {
-                DoDatabaseCall(query, sql, false, results, null, args);
+           using (DataTable results = new DataTable("toReturn")) {
+                Do(sql, false, null, results, null, args);
                 return results;
             }
         }
         
-        static void DoDatabaseCall(ParameterisedQuery query, string sql, bool createDB, 
-                                   DataTable results, ReaderCallback callback, params object[] args) {
+        internal static object Do(string sql, bool createDB, object arg,
+                         DataTable results, ReaderCallback callback, params object[] args) {
+            ParameterisedQuery query;
+            if (args == null || args.Length == 0) {
+                query = Backend.GetStaticParameterised();
+            } else {
+                query = Backend.CreateParameterised();
+            }
+            
             query.parameters = args;
             string connString = Backend.ConnectionString;
             Exception e = null;
@@ -79,7 +86,7 @@ namespace MCGalaxy.SQL {
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        query.Iterate(sql, connString, callback);
+                        arg = query.Iterate(sql, connString, arg, callback);
                     } else if (results == null) {
                         query.Execute(sql, connString, createDB);
                     } else {
@@ -87,7 +94,7 @@ namespace MCGalaxy.SQL {
                     }
                     
                     query.parameters = null;
-                    return;
+                    return arg;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
@@ -96,6 +103,7 @@ namespace MCGalaxy.SQL {
             query.parameters = null;
             File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
             Logger.LogError(e);
+            return arg;
         }
 
         
@@ -109,6 +117,23 @@ namespace MCGalaxy.SQL {
                 ids = names;
             }
             return names;
+        }
+        
+        internal static string GetString(this IDataRecord record, string name) {
+            return record.GetString(record.GetOrdinal(name));
+        }
+        
+        internal static int GetInt32(this IDataRecord record, string name) {
+            return record.GetInt32(record.GetOrdinal(name));
+        }
+       
+        internal static long GetInt64(this IDataRecord record, string name) {
+            return record.GetInt64(record.GetOrdinal(name));
+        }
+        
+        internal static DateTime GetDateTime(this IDataRecord record, string name) {
+            string raw = Database.Backend.FastGetDateTime(record, record.GetOrdinal(name));
+            return DateTime.ParseExact(raw, "yyyy-MM-dd HH:mm:ss", null);
         }
     }
 }

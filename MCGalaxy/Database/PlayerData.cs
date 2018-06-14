@@ -23,8 +23,7 @@ namespace MCGalaxy.DB {
     
     /// <summary> Retrieves or sets player stats in the database. </summary>
     public class PlayerData {
-        
-        public const string DBTable = "Players";
+
         public const string ColumnDeaths = "totalDeaths";
         public const string ColumnLogins = "totalLogin";
         public const string ColumnMoney = "Money";
@@ -50,16 +49,16 @@ namespace MCGalaxy.DB {
         
         internal static void Create(Player p) {
             p.prefix = "";
-            p.color = p.group.Color;         
+            p.color = p.group.Color;
             p.FirstLogin = DateTime.Now;
             p.TimesVisited = 1;
             
-            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");            
-            Database.Backend.AddRow(DBTable, "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
+            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
             
-            using (DataTable ids = Database.Backend.GetRows(DBTable,
+            using (DataTable ids = Database.Backend.GetRows("Players",
                                                             "ID", "WHERE Name = @0", p.name)) {
                 if (ids.Rows.Count > 0) {
                     string id = ids.Rows[0]["ID"].ToString();
@@ -70,8 +69,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        internal static void Load(DataTable playerDb, Player p) {
-            PlayerData data = PlayerData.Fill(playerDb.Rows[0]);
+        internal static void Apply(PlayerData data, Player p) {
             p.TimesVisited = data.Logins + 1;
             p.TotalTime = data.TotalTime;
             p.DatabaseID = data.DatabaseID;
@@ -81,7 +79,7 @@ namespace MCGalaxy.DB {
             p.titlecolor = data.TitleColor;
             p.color = data.Color;
             if (p.color.Length == 0) p.color = p.group.Color;
-                       
+            
             p.TotalModified = data.TotalModified;
             p.TotalDrawn = data.TotalDrawn;
             p.TotalPlaced = data.TotalPlaced;
@@ -93,35 +91,37 @@ namespace MCGalaxy.DB {
             p.TimesBeenKicked = data.Kicks;
         }
         
-        public static PlayerData Fill(DataRow row) {
+        internal static object IteratePlayerData(IDataRecord record, object arg) {
             PlayerData data = new PlayerData();
-            data.Name = row["Name"].ToString().Trim();
-            data.IP = row["IP"].ToString().Trim();
-            data.DatabaseID = ParseInt(row["ID"].ToString());
+            data.Name = record.GetString("Name");
+            data.IP = record.GetString("IP");
+            data.DatabaseID = record.GetInt32("ID");
             
+            // Backwards compatibility with old format
+            string rawTime = record.GetString(ColumnTimeSpent);
             try {
-                long secs = PlayerData.ParseLong(row[ColumnTimeSpent].ToString());
+                long secs = long.Parse(rawTime);
                 data.TotalTime = TimeSpan.FromSeconds(secs);
             } catch {
-                data.TotalTime = row[ColumnTimeSpent].ToString().ParseDBTime();
+                data.TotalTime = rawTime.ParseDBTime();
             }
             
-            data.FirstLogin = ParseDate(row[ColumnFirstLogin]);
-            data.LastLogin  = ParseDate(row[ColumnLastLogin]);
+            data.FirstLogin = record.GetDateTime(ColumnFirstLogin);
+            data.LastLogin  = record.GetDateTime(ColumnLastLogin);
             
-            data.Title = row[ColumnTitle].ToString().Trim();
+            data.Title = record.GetString(ColumnTitle);
             data.Title = data.Title.Cp437ToUnicode();
-            data.TitleColor = ParseColor(row[ColumnTColor]);
-            data.Color = ParseColor(row[ColumnColor]);
+            data.TitleColor = ParseCol(record.GetString(ColumnTColor));
+            data.Color = ParseCol(record.GetString(ColumnColor));
             
-            data.Money    = ParseInt(row[ColumnMoney].ToString());
-            data.Deaths   = ParseInt(row[ColumnDeaths].ToString());
-            data.Logins   = ParseInt(row[ColumnLogins].ToString());
-            data.Kicks    = ParseInt(row[ColumnKicked].ToString());
-            data.Messages = ParseInt(row[ColumnMessages].ToString());
+            data.Money    = record.GetInt32(ColumnMoney);
+            data.Deaths   = record.GetInt32(ColumnDeaths);
+            data.Logins   = record.GetInt32(ColumnLogins);
+            data.Kicks    = record.GetInt32(ColumnKicked);
+            data.Messages = record.GetInt32(ColumnMessages);
             
-            long blocks   = ParseLong(row[ColumnTotalBlocks].ToString());
-            long cuboided = ParseLong(row[ColumnTotalCuboided].ToString());
+            long blocks   = record.GetInt64(ColumnTotalBlocks);
+            long cuboided = record.GetInt64(ColumnTotalCuboided);
             data.TotalModified = blocks & LowerBitsMask;
             data.TotalPlaced   = blocks >> LowerBits;
             data.TotalDrawn    = cuboided & LowerBitsMask;
@@ -142,14 +142,13 @@ namespace MCGalaxy.DB {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : int.Parse(value);
         }
         
-        static string ParseColor(object value) {
-            string col = value.ToString().Trim();
-            if (col.Length == 0) return col;
+        static string ParseCol(string raw) {
+            if (raw.Length == 0) return raw;
             
             // Try parse color name, then color code
-            string parsed = Colors.Parse(col);
-            if (parsed.Length > 0) return parsed;
-            return Colors.Name(col).Length == 0 ? "" : col;
+            string col = Colors.Parse(raw);
+            if (col.Length > 0) return col;
+            return Colors.Name(raw).Length == 0 ? "" : raw;
         }
         
         
@@ -165,15 +164,15 @@ namespace MCGalaxy.DB {
         public const long LowerBitsMask = (1L << LowerBits) - 1;
         
         
+        static bool IterateFindCol(IDataRecord record, object arg) {
+            arg = record.GetString(0);
+            return true;
+        }
+        
         public static string FindDBColor(Player p) {
-             using (DataTable colors = Database.Backend.GetRows(DBTable,
-                                                            "Color", "WHERE ID = @0", p.DatabaseID)) {
-                if (colors.Rows.Count > 0) {
-                    string col = ParseColor(colors.Rows[0]["Color"]);
-                    if (col.Length > 0) return col;
-                }
-                return "";
-            }
+            string raw = Database.GetString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
+            if (raw == null) return "";
+            return ParseCol(raw);
         }
     }
 }

@@ -138,14 +138,11 @@ namespace MCGalaxy {
                     SendMessage("&cPlease complete admin verification with %T/Pass [Password]!");
             }
             
-            try {
-                if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name) ) {
-                    using (DataTable table = Database.Backend.GetRows("Inbox" + name, "*")) {
-                        if (table.Rows.Count > 0)
-                            SendMessage("You have &a" + table.Rows.Count + " %Smessages in %T/Inbox");
-                    }
+            if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name)) {
+                int count = Database.CountRows("Inbox" + name);
+                if (count > 0) {
+                    SendMessage("You have &a" + count + " %Smessages in %T/Inbox");
                 }
-            } catch {
             }
             
             if (ServerConfig.PositionUpdateInterval > 1000)
@@ -216,16 +213,17 @@ namespace MCGalaxy {
         }
         
         void GetPlayerStats() {
-            DataTable data = Database.Backend.GetRows("Players", "*", "WHERE Name=@0", name);
-            if (data.Rows.Count == 0) {
+            object raw = Database.Backend.IterateRows("Players", "*",
+			                                          null, PlayerData.IteratePlayerData,
+			                                          "WHERE Name=@0", name);
+            if (raw == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK %Shas connected for the first time!");
                 SendMessage("Welcome " + ColoredName + "%S! This is your first visit.");
             } else {
-                PlayerData.Load(data, this);
+                PlayerData.Apply((PlayerData)raw, this);
                 SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
             }
-            data.Dispose();
             gotSQLData = true;
         }
         

@@ -103,23 +103,19 @@ namespace MCGalaxy.Commands.Building {
             args.Message = Colors.Escape(args.Message);
             args.Message = args.Message.UnicodeToCp437();
             
-            string lvlName = p.level.name;
-            object locker = ThreadSafeCache.DBCache.GetLocker(lvlName);
+            string map = p.level.name;
+            object locker = ThreadSafeCache.DBCache.GetLocker(map);
             
             lock (locker) {
-                Database.Backend.CreateTable("Messages" + lvlName, LevelDB.createMessages);
+                Database.Backend.CreateTable("Messages" + map, LevelDB.createMessages);
                 p.level.hasMessageBlocks = true;
                 
-                int count = 0;
-                using (DataTable Messages = Database.Backend.GetRows("Messages" + lvlName, "*",
-                                                                     "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z)) {
-                    count = Messages.Rows.Count;
-                }
-                
+                int count = Database.CountRows("Messages" + map,
+                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);                
                 if (count == 0) {
-                    Database.Backend.AddRow("Messages" + lvlName, "X, Y, Z, Message", x, y, z, args.Message);
+                    Database.Backend.AddRow("Messages" + map, "X, Y, Z, Message", x, y, z, args.Message);
                 } else {
-                    Database.Backend.UpdateRows("Messages" + lvlName, "Message=@3",
+                    Database.Backend.UpdateRows("Messages" + map, "Message=@3",
                                                 "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, args.Message);
                 }
             }
@@ -130,32 +126,18 @@ namespace MCGalaxy.Commands.Building {
         
         void ShowMessageBlocks(Player p) {
             p.showMBs = !p.showMBs;
-            int count = 0;
+            List<Vec3U16> coords = MessageBlock.GetAll(p.level.MapName);
             
-            if (p.level.hasMessageBlocks) {
-                using (DataTable table = Database.Backend.GetRows("Messages" + p.level.name, "*")) {
-                    count = table.Rows.Count;
-                    if (p.showMBs) { ShowMessageBlocks(p, table); }
-                    else { HideMessageBlocks(p, table); }
+            foreach (Vec3U16 pos in coords) {
+                if (p.showMBs) {
+                    p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Green);
+                } else {
+                    p.RevertBlock(pos.X, pos.Y, pos.Z);
                 }
             }
-            Player.Message(p, "Now {0} %SMBs.", p.showMBs ? "showing &a" + count : "hiding");
-        }
-        
-        static void ShowMessageBlocks(Player p, DataTable table) {
-            foreach (DataRow row in table.Rows) {
-                p.SendBlockchange(U16(row["X"]), U16(row["Y"]), U16(row["Z"]), Block.Green);
-            }
-        }
-        
-        static void HideMessageBlocks(Player p, DataTable table) {
-            foreach (DataRow row in table.Rows) {
-                p.RevertBlock(U16(row["X"]), U16(row["Y"]), U16(row["Z"]));
-            }
-        }
-        
-        static ushort U16(object x) { return Convert.ToUInt16(x); }
 
+            Player.Message(p, "Now {0} %SMBs.", p.showMBs ? "showing &a" + coords.Count : "hiding");
+        }
         
         static string Format(BlockID block, Player p, BlockProps[] props) {
             if (!props[block].IsMessageBlock) return null;

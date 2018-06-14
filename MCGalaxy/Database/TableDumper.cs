@@ -31,7 +31,7 @@ namespace MCGalaxy.SQL {
             gottenRows = false;
             this.sql = sql;
             this.table = table;
-            Database.Iterate("SELECT * FROM `" + table + "`", DumpRow);
+            Database.Backend.IterateRows(table, "*", null, DumpRow);
             
             if (!gottenRows) {
                 sql.WriteLine("-- No data in table `{0}`!", table);
@@ -55,7 +55,7 @@ namespace MCGalaxy.SQL {
             gottenRows = true;
         }
         
-        bool DumpRow(IDataRecord record) {
+        object DumpRow(IDataRecord record, object arg) {
             if (!gottenRows) MakeInsertFormat(record);
             sql.WriteLine(insertCols);
 
@@ -79,7 +79,7 @@ namespace MCGalaxy.SQL {
             }
             
             sql.WriteLine();
-            return true;
+            return arg;
         }
         
         static string FormatInsertColumns(string[] cols, string name) {

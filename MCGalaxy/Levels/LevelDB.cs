@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.Blocks.Extended;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
@@ -64,7 +66,7 @@ namespace MCGalaxy {
                         continue;
                     } else {
                         z.Access.Whitelisted.Add(owner);
-                        z.Access.Min = LevelPermission.Admin;                        
+                        z.Access.Min = LevelPermission.Admin;
                     }
                     
                     z.Config.Name = "Zone" + id;
@@ -99,19 +101,13 @@ namespace MCGalaxy {
         
         internal static void LoadMessages(Level level, string name) {
             level.hasMessageBlocks = Database.TableExists("Messages" + name);
-            if (!level.hasMessageBlocks) return;
+            if (!level.hasMessageBlocks) return;            
+            List<Vec3U16> coords = MessageBlock.GetAll(name);
             
-            using (DataTable table = Database.Backend.GetRows("Messages" + name, "*")) {
-                foreach (DataRow row in table.Rows) {
-                    ushort x = ushort.Parse(row["X"].ToString());
-                    ushort y = ushort.Parse(row["Y"].ToString());
-                    ushort z = ushort.Parse(row["Z"].ToString());
-                    
-                    BlockID block = level.GetBlock(x, y, z);
-                    if (level.Props[block].IsMessageBlock) continue;
-
-                    Database.Backend.DeleteRows("Messages" + name, "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-                }
+            foreach (Vec3U16 p in coords) {
+                BlockID block = level.GetBlock(p.X, p.Y, p.Z);
+                if (level.Props[block].IsMessageBlock) continue;
+                MessageBlock.Delete(name, p.X, p.Y, p.Z);
             }
         }
         

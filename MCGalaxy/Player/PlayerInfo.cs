@@ -12,7 +12,7 @@ BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +26,7 @@ namespace MCGalaxy {
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
         
-        public static Group GetGroup(string name) { 
+        public static Group GetGroup(string name) {
             Player target = FindExact(name);
             return target != null ? target.group : Group.GroupIn(name);
         }
@@ -34,10 +34,10 @@ namespace MCGalaxy {
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);
             // TODO: select color from database?
-            return target != null && Entities.CanSee(p, target) ? target.ColoredName 
+            return target != null && Entities.CanSee(p, target) ? target.ColoredName
                 : Group.GroupIn(name).Color + name.RemoveLastPlus();
         }
-                
+        
         public static int NonHiddenCount() {
             Player[] players = Online.Items;
             int count = 0;
@@ -49,7 +49,7 @@ namespace MCGalaxy {
             int matches = 0; return FindMatches(pl, name, out matches, onlyCanSee);
         }
         
-        public static Player FindMatches(Player pl, string name, 
+        public static Player FindMatches(Player pl, string name,
                                          out int matches, bool onlyCanSee = true) {
             matches = 0;
             if (!Formatter.ValidName(pl, name, "player")) return null;
@@ -65,7 +65,7 @@ namespace MCGalaxy {
             Player target = FindMatches(p, name, out matches);
             
             if (matches > 1) return null;
-            if (target != null) return target.name;        
+            if (target != null) return target.name;
             Player.Message(p, "Searching PlayerDB for \"{0}\"..", name);
             return FindOfflineNameMatches(p, name);
         }
@@ -80,36 +80,24 @@ namespace MCGalaxy {
             }
             return null;
         }
- 
         
-        /// <summary> Retrieves from the database the player data for the player 
-        /// whose name caselessly exactly matches the given name. </summary>
-        /// <returns> PlayerData instance if found, null if not. </returns>
+        
         public static PlayerData FindData(string name) {
-            using (DataTable results = Query(name, "*")) {
-                if (results.Rows.Count == 0) return null;
-                return PlayerData.Fill(results.Rows[0]);
-            }
-        }
-        
-        /// <summary> Retrieves from the database the actual name for the player 
-        /// whose name caselessly exactly matches the given name. </summary>
-        /// <returns> Correctly cased name if found, null if not. </returns>
-        public static string FindName(string name) {
-            using (DataTable playerDB = Query(name, "Name")) {
-                if (playerDB.Rows.Count == 0) return null;
-                return playerDB.Rows[0]["Name"].ToString().Trim();
-            }
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            object raw = Database.Backend.IterateRows("Players", "*",
+                                                      null, PlayerData.IteratePlayerData,
+                                                      "WHERE Name=@0" + suffix, name);
+            return (PlayerData)raw;
         }
 
-        /// <summary> Retrieves from the database the last IP address for the
-        /// player whose name caselessly exactly matches the given name. </summary>
-        /// <returns> Last IP address if found, null if not. </returns>
+        public static string FindName(string name) {
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            return Database.GetString("Players", "Name", "WHERE Name=@0" + suffix, name);
+        }
+        
         public static string FindIP(string name) {
-            using (DataTable results = Query(name, "IP")) {
-                if (results.Rows.Count == 0) return null;
-                return results.Rows[0]["IP"].ToString().Trim();
-            }
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            return Database.GetString("Players", "IP", "WHERE Name=@0" + suffix, name);
         }
         
         
@@ -135,39 +123,33 @@ namespace MCGalaxy {
             return row == null ? null : row["Name"].ToString();
         }
         
+        static object IterateAccounts(IDataRecord record, object arg) {
+            List<string> names = (List<string>)arg;
+            string name = record.GetString(0);
+            
+            if (!names.CaselessContains(name)) names.Add(name);
+            return arg;
+        }
+        
         /// <summary> Retrieves names of all players whose IP address matches the given IP address. </summary>
         /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
-            DataTable clones = Database.Backend.GetRows("Players", "Name", "WHERE IP=@0", ip);
-            List<string> accounts = new List<string>();
-            
-            foreach (DataRow row in clones.Rows) {
-                string name = row["Name"].ToString();
-                if (!accounts.CaselessContains(name))
-                    accounts.Add(name);
-            }
+            List<string> names = new List<string>();
+            Database.Backend.IterateRows("Players", "Name", names, IterateAccounts, 
+                                         "WHERE IP=@0", ip);
             
             // TODO: should we instead do save() when the player logs in
             // by checking online players we avoid a DB write though
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.ip != ip) continue;
-                if (!accounts.CaselessContains(p.name))
-                    accounts.Add(p.name);
+                if (!names.CaselessContains(p.name)) names.Add(p.name);
             }
-            
-            clones.Dispose();
-            return accounts;
+            return names;
         }
+
         
-        
-        internal static DataTable Query(string name, string columns) {
-            string suffix = Database.Backend.CaselessWhereSuffix;
-            return Database.Backend.GetRows("Players", columns,
-                                            "WHERE Name=@0" + suffix, name);
-        }
-        
-        internal static DataRow QueryMulti(Player p, string name, string columns) {
+        static DataRow QueryMulti(Player p, string name, string columns) {
             string suffix = Database.Backend.CaselessLikeSuffix;
             using (DataTable results = Database.Backend.GetRows("Players", columns,
                                                                 "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,

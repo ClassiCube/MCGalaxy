@@ -35,13 +35,14 @@ namespace MCGalaxy.Commands.Info {
         
         static PerformanceCounter allPCounter = null;
         static PerformanceCounter cpuPCounter = null;
-        
+
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }
             
+            int count = Database.CountRows("Players");
             Player.Message(p, "Server's name: &b{0}%S", ServerConfig.Name);
             Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
-                           GetPlayerCount(), PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
+                           count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
             Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
                            LevelInfo.Loaded.Count, ServerConfig.Currency);
             
@@ -59,13 +60,7 @@ namespace MCGalaxy.Commands.Info {
             
             if (HasExtraPerm(p, 1)) ShowServerStats(p);
         }
-        
-        static int GetPlayerCount() {
-            using (DataTable table = Database.Backend.GetRows("Players", "COUNT(id)")) {
-                return int.Parse(table.Rows[0]["COUNT(id)"].ToString());
-            }
-        }
-        
+
         void ShowServerStats(Player p) {
             Process proc = Process.GetCurrentProcess();
             if (allPCounter == null) {

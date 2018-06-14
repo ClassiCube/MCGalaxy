@@ -50,9 +50,7 @@ namespace MCGalaxy.Commands {
         
         static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
         
-        
-        /// <summary> Finds the nth extra permission for a given command. </summary>
-        /// <returns> null if the nth extra permission does not exist. </returns>
+
         public static CommandExtraPerms Find(string cmd, int num = 1) {
             foreach (CommandExtraPerms perms in list) {
                 if (perms.CmdName.CaselessEq(cmd) && perms.Number == num) return perms;
@@ -60,18 +58,13 @@ namespace MCGalaxy.Commands {
             return null;
         }
 
-        /// <summary> Returns the lowest rank that has the nth extra permission for a given command. </summary>
-        /// <returns> defPerm if the nth extra permission does not exist, otherwise the lowest rank. </returns>
         public static LevelPermission MinPerm(string cmd, LevelPermission defPerm, int num = 1) {
             CommandExtraPerms perms = Find(cmd, num);
             return perms == null ? defPerm : perms.MinRank;
         }
 
-        /// <summary> Returns the lowest rank that has the nth extra permission for a given command. </summary>
         public static LevelPermission MinPerm(string cmd, int num = 1) { return Find(cmd, num).MinRank; }
-        
-        /// <summary> Finds all extra permissions for a given command. </summary>
-        /// <remarks> list is empty when no extra permissions are found, not null. </remarks>
+
         public static List<CommandExtraPerms> FindAll(string cmd) {
             List<CommandExtraPerms> allPerms = new List<CommandExtraPerms>();
             foreach (CommandExtraPerms perms in list) {

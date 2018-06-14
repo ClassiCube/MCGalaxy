@@ -116,15 +116,11 @@ namespace MCGalaxy.Commands.Building {
                 
                 lock (locker) {
                     Database.Backend.CreateTable("Portals" + lvlName, LevelDB.createPortals);
-                    Level map = LevelInfo.FindExact(P.Map);
-                    if (map != null) map.hasPortals = true;
+                    Level lvl = LevelInfo.FindExact(P.Map);
+                    if (lvl != null) lvl.hasPortals = true;
 
-                    int count = 0;
-                    using (DataTable portals = Database.Backend.GetRows("Portals" + lvlName, "*",
-                                                                        "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z)) {
-                        count = portals.Rows.Count;
-                    }
-                    
+                    int count = Database.CountRows("Portals" + lvlName,
+                                                   "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z);                    
                     if (count == 0) {
                         Database.Backend.AddRow("Portals" + lvlName, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
                                                 P.x, P.y, P.z, x, y, z, dstMap);
@@ -158,7 +154,7 @@ namespace MCGalaxy.Commands.Building {
                     if (p.showPortals) { ShowPortals(p, table); } 
                     else { HidePortals(p, table); }
                 }
-            }            
+            }
             Player.Message(p, "Now {0} %Sportals.", p.showPortals ? "showing &a" + count : "hiding");
         }
         

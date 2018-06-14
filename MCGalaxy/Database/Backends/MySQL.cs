@@ -44,8 +44,8 @@ namespace MCGalaxy.SQL {
 
         
         public override void CreateDatabase() {
-            ParameterisedQuery query = GetStaticParameterised();
-            Database.Execute(query, "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`", true);
+            string syntax = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
+            Database.Do(syntax, true, null, null, null);
         }
         
         public override BulkTransaction CreateBulk() {
@@ -58,8 +58,8 @@ namespace MCGalaxy.SQL {
         
         protected internal override ParameterisedQuery GetStaticParameterised() {
             return queryInstance;
-        }       
-                
+        }
+        
         public override string FastGetDateTime(IDataRecord record, int col) {
             DateTime date = record.GetDateTime(col);
             return date.ToString("yyyy-MM-dd HH:mm:ss");
@@ -86,34 +86,21 @@ namespace MCGalaxy.SQL {
             cmd = cmd.Insert(cmd.LastIndexOf(")"), ", PRIMARY KEY (`" + name + "`)");
         }
         
-        
+
+        static object IterateExists(IDataRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
             ValidateTable(table);
-            const string syntax = "SELECT * FROM information_schema.tables WHERE table_name = @0 AND table_schema = @1";
-            using (DataTable results = Database.Fill(syntax, table, ServerConfig.MySQLDatabaseName)) {
-                return results.Rows.Count > 0;
-            }
+            return Database.Iterate("SHOW TABLES LIKE '" + table + "'",
+                                    null, IterateExists) != null;
         }
         
         public override List<string> AllTables() {
-            using (DataTable results = Database.Fill("SHOW TABLES")) {
-                List<string> tables = new List<string>(results.Rows.Count);
-                foreach (DataRow row in results.Rows) {
-                    tables.Add(row[0].ToString());
-                }
-                return tables;
-            }
+            return Database.GetStrings("SHOW TABLES");
         }
         
         public override List<string> ColumnNames(string table) {
             ValidateTable(table);
-            using (DataTable results = Database.Fill("DESCRIBE `" + table + "`")) {
-                List<string> columns = new List<string>(results.Rows.Count);
-                foreach (DataRow row in results.Rows) {
-                    columns.Add(row["Field"].ToString());
-                }
-                return columns;
-            }
+            return Database.GetStrings("DESCRIBE `" + table + "`");
         }
         
         public override void RenameTable(string srcTable, string dstTable) {
@@ -127,7 +114,7 @@ namespace MCGalaxy.SQL {
             ValidateTable(table);
             string syntax = "TRUNCATE TABLE `" + table + "`";
             Database.Execute(syntax);
-        }        
+        }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
             string priKey = null;
@@ -146,36 +133,41 @@ namespace MCGalaxy.SQL {
                 }
                 sql.AppendLine();
             }
-        }        
+        }
+        
+        static object IterateFields(IDataRecord record, object arg) {
+            string[] field = new string[record.FieldCount];
+            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }
+            
+            ((List<string[]>)arg).Add(field);
+            return arg;
+        }
         
         public override void PrintSchema(string table, TextWriter w) {
-            string pri = "";
             w.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", table);
+            List<string[]> fields = new List<string[]>();
+            Database.Iterate("DESCRIBE `" + table + "`", fields, IterateFields);
             
-            using (DataTable schema = Database.Fill("DESCRIBE `" + table + "`")) {
-                string[] data = new string[schema.Columns.Count];
-                foreach (DataRow row in schema.Rows) {
-                    for (int col = 0; col < schema.Columns.Count; col++) {
-                        data[col] = row[col].ToString();
-                    }
-                    
-                    if (data[3].CaselessEq("pri")) pri = data[0];
-                    string value = data[2].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
-                    if (data[4].Length > 0) value += " DEFAULT '" + data[4] + "'";
-                    if (data[5].Length > 0) value += " " + data[5];
+            string pri = "";
+            for (int i = 0; i < fields.Count; i++) {
+                string[] field = fields[i];
+                
+                if (field[3].CaselessEq("pri")) pri = field[0];
+                string value = field[2].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
+                if (field[4].Length > 0) value += " DEFAULT '" + field[4] + "'";
+                if (field[5].Length > 0) value += " " + field[5];
 
-                    string suffix = pri.Length == 0 && row == schema.Rows[schema.Rows.Count - 1] ? "" : ",";
-                    w.WriteLine("`{0}` {1} {2}{3}", row[0], row[1], value, suffix);
-                }
+                string suffix = pri.Length == 0 && (i == fields.Count - 1) ? "" : ",";
+                w.WriteLine("`{0}` {1} {2}{3}", field[0], field[1], value, suffix);
             }
             
             if (pri.Length > 0) w.Write("PRIMARY KEY (`{0}`)", pri);
             w.WriteLine(");");
         }
-                
+        
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " 
+            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN "
                 + col.Column + " " + col.FormatType();
             if (colAfter.Length > 0) syntax += " AFTER " + colAfter;
             Database.Execute(syntax);
@@ -227,5 +219,5 @@ namespace MCGalaxy.SQL {
         protected override IDbDataParameter CreateParameter() {
             return new MySqlParameter();
         }
-    }    
+    }
 }

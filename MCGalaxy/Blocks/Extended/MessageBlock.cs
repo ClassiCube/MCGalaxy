@@ -18,32 +18,23 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Blocks.Extended {
-    public static class MessageBlock {
+    public static class MessageBlock {		
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z, bool alwaysRepeat) {
             if (!p.level.hasMessageBlocks) return false;
             
-            try {
-                DataTable Messages = Database.Backend.GetRows("Messages" + p.level.name, "*",
-                                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
-                int last = Messages.Rows.Count - 1;
-                if (last == -1) { Messages.Dispose(); return false; }
+            string message = Get(p.level.MapName, x, y, z);
+            if (message == null) return false;
+            message = message.Replace("@p", p.name);
                 
-                string message = Messages.Rows[last]["Message"].ToString().Trim();
-                message = message.Replace("\\'", "\'");
-                message = message.Cp437ToUnicode();
-                message = message.Replace("@p", p.name);
-                
-                if (message != p.prevMsg || (alwaysRepeat || ServerConfig.RepeatMBs)) {
-                    Execute(p, message);
-                }
-                return true;
-            } catch {
-                return false;
+            if (message != p.prevMsg || (alwaysRepeat || ServerConfig.RepeatMBs)) {
+                Execute(p, message);
             }
+            return true;
         }
         
         public static void Execute(Player p, string message) {
@@ -75,13 +66,13 @@ namespace MCGalaxy.Blocks.Extended {
             Command.Search(ref cmdName, ref cmdArgs);
             
             Command cmd = Command.Find(cmdName);
-            if (cmd == null) return true;            
+            if (cmd == null) return true;
             bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
             
             if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) return true;
             Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name);
             return false;
-        }        
+        }
         
         static string[] sep = new string[] { " |/" };
         const StringSplitOptions opts = StringSplitOptions.RemoveEmptyEntries;
@@ -105,6 +96,39 @@ namespace MCGalaxy.Blocks.Extended {
             } else {
                 text = message; return empty;
             }
+        }
+
+                
+        static object IterateAll(IDataRecord record, object arg) {
+            Vec3U16 pos;
+            pos.X = (ushort)record.GetInt32(0);
+            pos.Y = (ushort)record.GetInt32(1);
+            pos.Z = (ushort)record.GetInt32(2);
+            
+            ((List<Vec3U16>)arg).Add(pos);
+            return arg;
+        }
+        
+        internal static List<Vec3U16> GetAll(string map) {
+            List<Vec3U16> coords = new List<Vec3U16>();
+            Database.Backend.IterateRows("Messages" + map, "X,Y,Z",
+                                         coords, IterateAll);
+            return coords;
+        }
+        
+        internal static string Get(string map, ushort x, ushort y, ushort z) {
+            string msg = Database.GetString("Messages" + map, "Message",
+                                            "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            if (msg == null) return null;
+
+            msg = msg.Trim().Replace("\\'", "\'");
+            msg = msg.Cp437ToUnicode();
+            return msg;
+        }
+        
+        internal static void Delete(string map, ushort x, ushort y, ushort z) {
+            Database.Backend.DeleteRows("Messages" + map, 
+                                        "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
         }
     }
 }

@@ -101,30 +101,26 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Additional1", ColumnType.Int32),
         };
         
+        static object IterateStats(IDataRecord record, object arg) {
+        	ZombieStats stats;
+        	stats.TotalRounds   = record.GetInt32("TotalRounds");
+            stats.MaxRounds     = record.GetInt32("MaxRounds");
+            stats.TotalInfected = record.GetInt32("TotalInfected");
+            stats.MaxInfected   = record.GetInt32("MaxInfected");
+        	return stats;
+        }
+        
         static ZombieStats LoadStats(string name) {
-            DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", name);
-            ZombieStats stats = default(ZombieStats);
-            
-            if (table.Rows.Count > 0) {
-                DataRow row = table.Rows[0];
-                stats.TotalRounds   = PlayerData.ParseInt(row["TotalRounds"].ToString());
-                stats.MaxRounds     = PlayerData.ParseInt(row["MaxRounds"].ToString());
-                stats.TotalInfected = PlayerData.ParseInt(row["TotalInfected"].ToString());
-                stats.MaxInfected   = PlayerData.ParseInt(row["MaxInfected"].ToString());
-            }
-            table.Dispose();
-            return stats;
+            ZombieStats stats = default(ZombieStats);            
+            return (ZombieStats)Database.Backend.IterateRows("ZombieStats", "*", stats,
+                                                             IterateStats, "WHERE Name=@0", name);
         }
         
         static void SaveStats(Player p) {
             ZSData data = TryGet(p);
             if (data == null || data.TotalRoundsSurvived == 0 && data.TotalInfected == 0) return;
             
-            int count = 0;
-            using (DataTable table = Database.Backend.GetRows("ZombieStats", "*", "WHERE Name=@0", p.name)) {
-                count = table.Rows.Count;
-            }
-
+            int count = Database.CountRows("ZombieStats", "WHERE Name=@0", p.name);
             if (count == 0) {
                 Database.Backend.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name",
                                         data.TotalRoundsSurvived, data.MaxRoundsSurvived,

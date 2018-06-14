@@ -22,41 +22,55 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Blocks.Extended {
     public static class Portal {
         
+        public class PortalExitData {
+            public string Map;
+            public int X, Y, Z;
+        }
+        
+        static object IteratePortalExit(IDataRecord record, object arg) {
+            PortalExitData data = new PortalExitData();
+            data.Map = record.GetString("ExitMap");
+            data.X   = record.GetInt32("ExitX");
+            data.Y   = record.GetInt32("ExitY");
+            data.Z   = record.GetInt32("ExitZ");
+            
+            data.Map = data.Map.Cp437ToUnicode();
+            return data;
+        }
+        
+        public static PortalExitData Get(string map, ushort x, ushort y, ushort z) {
+            object raw = Database.Backend.IterateRows("Portals" + map, "*", null, IteratePortalExit,
+			                                          "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+		    return (PortalExitData)raw;
+        }
+        
         public static bool Handle(Player p, ushort x, ushort y, ushort z) {
             if (!p.level.hasPortals) return false;
             
-            try {
-                DataTable Portals = Database.Backend.GetRows("Portals" + p.level.name, "*",
-                                                             "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-                int last = Portals.Rows.Count - 1;
-                if (last == -1) { Portals.Dispose(); return false; }
-                Orientation rot = p.Rot;
+            PortalExitData exit = Get(p.level.MapName, x, y, z);
+            if (exit == null) return false;
+            Orientation rot = p.Rot;
+            
+            if (p.level.name != exit.Map) {
+                Level curLevel = p.level;
+                p.summonedMap = exit.Map;
+                bool changedMap = false;
                 
-                DataRow row = Portals.Rows[last];
-                string map = row["ExitMap"].ToString();
-                map = map.Cp437ToUnicode();
-                
-                if (p.level.name != map) {
-                    Level curLevel = p.level;
-                    p.summonedMap = map;
-                    bool changedMap = PlayerActions.ChangeMap(p, map);
-                    p.summonedMap = null;
-                    
-                    if (!changedMap) { Player.Message(p, "Unable to use this portal, as this portal goes to that map."); return true; }
-                    p.BlockUntilLoad(10);
+                try {
+                    changedMap = PlayerActions.ChangeMap(p, exit.Map);
+                } catch (Exception ex) {
+                    Logger.LogError(ex);
+                    changedMap = false;
                 }
                 
-                x = ushort.Parse(row["ExitX"].ToString());
-                y = ushort.Parse(row["ExitY"].ToString());
-                z = ushort.Parse(row["ExitZ"].ToString());
-                
-                Position pos = Position.FromFeetBlockCoords(x, y, z);
-                p.SendPos(Entities.SelfID, pos, rot);
-                Portals.Dispose();
-                return true;
-            } catch {
-                return false;
+                p.summonedMap = null;                
+                if (!changedMap) { Player.Message(p, "Unable to use this portal, as this portal goes to that map."); return true; }
+                p.BlockUntilLoad(10);
             }
+
+            Position pos = Position.FromFeetBlockCoords(exit.X, exit.Y, exit.Z);
+            p.SendPos(Entities.SelfID, pos, rot);
+            return true;
         }
     }
 }

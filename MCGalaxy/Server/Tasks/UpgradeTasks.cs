@@ -212,10 +212,8 @@ namespace MCGalaxy.Tasks {
 
         
         internal static void UpgradeDBTimeSpent(SchedulerTask task) {
-            DataTable table = Database.Backend.GetRows(PlayerData.DBTable, "TimeSpent", "LIMIT 1");
-            if (table.Rows.Count == 0) return; // no players
-            
-            string time = table.Rows[0]["TimeSpent"].ToString();
+            string time = Database.GetString("Players", "TimeSpent", "LIMIT 1");
+            if (time == null) return; // no players at all in DB
             if (time.IndexOf(' ') == -1) return; // already upgraded
             
             Logger.Log(LogType.SystemActivity, "Upgrading TimeSpent column in database to new format..");
@@ -232,10 +230,10 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.Iterate("SELECT ID, TimeSpent FROM Players", AddPlayerTimeSpent);
+            Database.Backend.IterateRows("Players", "ID,TimeSpent", null, IterateTimeSpent);
         }
         
-        static bool AddPlayerTimeSpent(IDataRecord record) {
+        static object IterateTimeSpent(IDataRecord record, object arg) {
             playerCount++;
             try {
                 int id = record.GetInt32(0);
@@ -246,10 +244,10 @@ namespace MCGalaxy.Tasks {
             } catch {
                 playerFailed++;
             }
-            return true;
+            return arg;
         }
         
-        static void UpgradePlayerTimeSpents() {          
+        static void UpgradePlayerTimeSpents() {
             using (BulkTransaction bulk = Database.Backend.CreateBulk()) {
                 IDataParameter idParam = bulk.CreateParam("@0", DbType.Int32);
                 IDataParameter secsParam = bulk.CreateParam("@1", DbType.Int64);

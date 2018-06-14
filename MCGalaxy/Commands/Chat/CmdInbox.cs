@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MCGalaxy.SQL;
 
@@ -25,19 +26,27 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {          
-            if (!Database.TableExists("Inbox" + p.name)) {
+        class MailEntry { public string Contents, Timestamp, From; }
+        static object IterateInbox(IDataRecord record, object arg) {
+            MailEntry e = new MailEntry();
+            e.Contents  = record.GetString("Contents");
+            e.Timestamp = record.GetString("TimeSent");
+            e.From      = record.GetString("PlayerFrom");
+            
+            ((List<MailEntry>)arg).Add(e); return arg;
+        }
+        
+        public override void Use(Player p, string message) {
+            List<MailEntry> entries = new List<MailEntry>();
+            Database.Backend.IterateRows("Inbox" + p.name, "*",
+                                         entries, IterateInbox, "ORDER BY TimeSent");
+            if (entries.Count == 0) {
                 Player.Message(p, "Your inbox is empty."); return;
             }
 
             string[] args = message.SplitSpaces(2);
             if (message.Length == 0) {
-                using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
-                    if (Inbox.Rows.Count == 0) { Player.Message(p, "No messages found."); return; }
-                    foreach (DataRow row in Inbox.Rows) {
-                        OutputMessage(p, row);
-                    }
-                }
+                foreach (MailEntry entry in entries) { Output(p, entry); }
             } else if (IsDeleteCommand(args[0])) {
                 if (args.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
@@ -45,50 +54,44 @@ namespace MCGalaxy.Commands.Chatting {
                     Database.Backend.ClearTable("Inbox" + p.name);
                     Player.Message(p, "Deleted all messages.");
                 } else {
-                    DeleteMessageByID(p, args[1]);
+                    DeleteByID(p, args[1], entries);
                 }
             } else {
-                OutputMessageByID(p, message);
+                OutputByID(p, message, entries);
             }
         }
         
-        static void DeleteMessageByID(Player p, string value) {
-            int num = 0;
-            if (!CommandParser.GetInt(p, value, "Message number", ref num, 0)) return;
+        static void DeleteByID(Player p, string value, List<MailEntry> entries) {
+            int num = 1;
+            if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
             
-            using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
-                if (num >= Inbox.Rows.Count) {
-                    Player.Message(p, "Message #{0} does not exist.", num); return;
-                }
-
-                DataRow row = Inbox.Rows[num];
-                string time = Convert.ToDateTime(row["TimeSent"]).ToString("yyyy-MM-dd HH:mm:ss");
+            if (num > entries.Count) {
+                Player.Message(p, "Message #{0} does not exist.", num);
+            } else {
+                MailEntry entry = entries[num - 1];
                 Database.Backend.DeleteRows("Inbox" + p.name,
-                                            "WHERE PlayerFrom=@0 AND TimeSent=@1", row["PlayerFrom"], time);
-
+                                            "WHERE PlayerFrom=@0 AND TimeSent=@1", entry.From, entry.Timestamp);
                 Player.Message(p, "Deleted message #{0}", num);
             }
         }
         
-        static void OutputMessageByID(Player p, string value) {
-            int num = 0;
-            if (!CommandParser.GetInt(p, value, "Message number", ref num, 0)) return;
-
-            using (DataTable Inbox = Database.Backend.GetRows("Inbox" + p.name, "*", "ORDER BY TimeSent")) {
-                if (num >= Inbox.Rows.Count) {
-                    Player.Message(p, "Message #{0} does not exist.", num); return;
-                }
-                
-                OutputMessage(p, Inbox.Rows[num]);
+        static void OutputByID(Player p, string value, List<MailEntry> entries) {
+            int num = 1;
+            if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
+            
+            if (num > entries.Count) {
+                Player.Message(p, "Message #{0} does not exist.", num);
+            } else {
+                Output(p, entries[num - 1]);
             }
         }
         
-        static void OutputMessage(Player p, DataRow row) {
-            DateTime time = Convert.ToDateTime(row["TimeSent"]);
-            TimeSpan delta = DateTime.Now - time;
-            string sender = PlayerInfo.GetColoredName(p, row["PlayerFrom"].ToString());
+        static void Output(Player p, MailEntry entry) {
+            TimeSpan delta = DateTime.Now - Convert.ToDateTime(entry.Timestamp);
+            string sender = PlayerInfo.GetColoredName(p, entry.From);
+            
             Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());
-            Player.Message(p, row["Contents"].ToString());
+            Player.Message(p, entry.Contents);
         }
         
         public override void Help(Player p) {

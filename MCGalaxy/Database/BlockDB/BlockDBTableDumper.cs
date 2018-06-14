@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             mapName = table.Substring("Block".Length);
             
             try {
-                Database.Iterate("SELECT * FROM `" + table + "`", DumpRow);
+                Database.Backend.IterateRows(table, "*", null, DumpRow);
                 WriteBuffer(true);
                 AppendCbdbFile();
                 SaveCbdbFile();
@@ -58,8 +58,8 @@ namespace MCGalaxy.DB {
             Database.Backend.DeleteTable(table);
         }
         
-        bool DumpRow(IDataRecord record) {
-            if (errorOccurred) return false;
+        object DumpRow(IDataRecord record, object arg) {
+            if (errorOccurred) return arg;
             
             try {
                 if (stream == null) {
@@ -87,7 +87,7 @@ namespace MCGalaxy.DB {
                 Logger.LogError(ex);
                 errorOccurred = true;
             }
-            return true;
+            return arg;
         }
         
         void WriteBuffer(bool force) {

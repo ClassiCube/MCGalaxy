@@ -178,32 +178,27 @@ namespace MCGalaxy.Commands.Maintenance {
         
         
         static void UpdateDB(string name, string value, string column) {
-            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, value.UnicodeToCp437());
+            Database.Backend.UpdateRows("Players", column + " = @1", 
+                                        "WHERE Name = @0", name, value.UnicodeToCp437());
+        }
+        
+        static object IterateSetLong(IDataRecord record, object arg) { return record.GetInt64(0); }
+        static long GetLong(string name, string column) {
+            return (long)Database.Backend.IterateRows("Players", column, null, IterateSetLong, 
+                                                      "WHERE Name = @0", name);
         }
         
         // special case handling for packed forms of totalBlocks and totalCuboided
         static void UpdateDBLo(string name, string value, string column) {
-            long loValue = long.Parse(value);
-            // OR with existing high bits of value in DB
-            using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
-                if (results.Rows.Count > 0) {
-                    long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
-                    loValue |= (curValue & ~PlayerData.LowerBitsMask);
-                }
-            }
-            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, loValue);
+            long packed = GetLong(name, column) & ~PlayerData.LowerBitsMask; // hi value only
+            packed |= long.Parse(value);
+            UpdateDB(name, packed.ToString(), column);
         }
         
         static void UpdateDBHi(string name, string value, string column) {
-            long hiValue = long.Parse(value) << PlayerData.LowerBits;
-            // OR with existing low bits of value in DB
-            using (DataTable results = Database.Backend.GetRows("Players", column, "WHERE Name = @0", name)) {
-                if (results.Rows.Count > 0) {
-                    long curValue = PlayerData.ParseLong(results.Rows[0][column].ToString());
-                    hiValue |= (curValue & PlayerData.LowerBitsMask);
-                }
-            }
-            Database.Backend.UpdateRows("Players", column + " = @1", "WHERE Name = @0", name, hiValue);
+            long packed = GetLong(name, column) & PlayerData.LowerBitsMask; // lo value only
+            packed |= long.Parse(value) << PlayerData.LowerBits;
+            UpdateDB(name, packed.ToString(), column);
         }
         
         static void MessageDataChanged(Player p, string name, string type, string value) {

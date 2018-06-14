@@ -33,25 +33,25 @@ namespace MCGalaxy.DB {
             if (id > MaxPlayerID - invalid.Count)
                 return invalid[MaxPlayerID - id];
             
-            using (DataTable ids = Database.Backend.GetRows("Players", "Name", "WHERE ID=@0", id)) {
-                if (ids.Rows.Count == 0) return "ID#" + id;
-                return ids.Rows[0]["Name"].ToString();
-            }
+            string name = Database.GetString("Players", "Name", "WHERE ID=@0", id);
+            return name != null ? name : "ID#" + id;
+        }
+        
+        static object IterateFindIds(IDataRecord record, object arg) {
+            List<int> ids = (List<int>)arg;
+            ids.Add(record.GetInt32(0));
+            return arg;
         }
         
         public static int[] FindIds(string name) {
             List<string> invalid = Server.invalidIds.All();
             List<int> ids = new List<int>();
             
-            int index = invalid.CaselessIndexOf(name);
-            if (index >= 0) ids.Add(MaxPlayerID - index);
+            int i = invalid.CaselessIndexOf(name);
+            if (i >= 0) ids.Add(MaxPlayerID - i);
             
-            using (DataTable names = Database.Backend.GetRows("Players", "ID", "WHERE Name=@0", name)) {
-                foreach (DataRow row in names.Rows) {
-                    string raw = row["ID"].ToString();
-                    ids.Add(PlayerData.ParseInt(raw));
-                }
-            }
+            Database.Backend.IterateRows("Players", "ID", ids, IterateFindIds, 
+                                         "WHERE Name=@0", name);
             return ids.ToArray();
         }
         

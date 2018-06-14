@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player.Message(p, "Block \"{0}\" appears as &b{1}",
                            message, Block.GetName(p, Block.Convert(b)));
-            BlockPerms.List[b].MessageCannotUse(p, "use");         
+            BlockPerms.List[b].MessageCannotUse(p, "use");
             DescribePhysics(p, message, b);
             return true;
         }
