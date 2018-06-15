@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Info {
             }           
             if (who != null) who.hasreadrules = true;
 
-            string[] rules = rulesFile.GetText();            
+            string[] rules = rulesFile.GetText();
             Player.Message(who, "Server Rules:");
             Player.MessageLines(who, rules);
             

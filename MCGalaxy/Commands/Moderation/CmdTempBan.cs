@@ -35,10 +35,9 @@ namespace MCGalaxy.Commands.Moderation {
                                                  args[0], ref reason);
             if (target == null) return;
             
-            Group grp = PlayerInfo.GetGroup(target);
-            if (p != null && grp.Permission >= p.Rank) {
-                MessageTooHighRank(p, "temp ban", false); return;
-            }
+            Group group = ModActionCmd.CheckTarget(p, "temp ban", target);
+            if (group == null) return;
+            
             if (Server.tempBans.Contains(target)) {
                 Player.Message(p, "{0} %Sis already temp-banned.", PlayerInfo.GetColoredName(p, target));
                 return;
@@ -52,7 +51,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return;
 
             ModAction action = new ModAction(target, p, ModActionType.Ban, reason, span);
-            action.targetGroup = grp;
+            action.targetGroup = group;
             OnModActionEvent.Call(action);
         }
         

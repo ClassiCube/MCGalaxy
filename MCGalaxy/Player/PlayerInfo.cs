@@ -109,7 +109,7 @@ namespace MCGalaxy {
         
         static object ReadAccounts(IDataRecord record, object arg) {
             List<string> names = (List<string>)arg;
-            string name = record.GetString(0);
+            string name = record.GetText(0);
             
             if (!names.CaselessContains(name)) names.Add(name);
             return arg;

@@ -140,17 +140,19 @@ namespace MCGalaxy.SQL {
             List<string[]> fields = new List<string[]>();
             Database.Iterate("DESCRIBE `" + table + "`", fields, Database.ReadFields);
             
+            const int i_name = 0, i_type = 1, i_null = 2, i_key = 3, i_def = 4, i_extra = 5;
             string pri = "";
+            
             for (int i = 0; i < fields.Count; i++) {
-                string[] field = fields[i];
+                string[] field = fields[i];                
+                if (field[i_key].CaselessEq("pri")) pri = field[i_name];
                 
-                if (field[3].CaselessEq("pri")) pri = field[0];
-                string value = field[2].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
-                if (field[4].Length > 0) value += " DEFAULT '" + field[4] + "'";
-                if (field[5].Length > 0) value += " " + field[5];
+                string meta = field[i_null].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
+                if (field[i_def].Length > 0)   meta += " DEFAULT '" + field[i_def] + "'";
+                if (field[i_extra].Length > 0) meta += " " + field[i_extra];
 
                 string suffix = pri.Length == 0 && (i == fields.Count - 1) ? "" : ",";
-                w.WriteLine("`{0}` {1} {2}{3}", field[0], field[1], value, suffix);
+                w.WriteLine("`{0}` {1} {2}{3}", field[i_name], field[i_type], meta, suffix);
             }
             
             if (pri.Length > 0) w.Write("PRIMARY KEY (`{0}`)", pri);

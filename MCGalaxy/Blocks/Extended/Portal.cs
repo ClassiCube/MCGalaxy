@@ -73,7 +73,7 @@ namespace MCGalaxy.Blocks.Extended {
         
         static PortalExit ParseExit(IDataRecord record) {
             PortalExit data = new PortalExit();
-            data.Map = record.GetString(0).Cp437ToUnicode();
+            data.Map = record.GetText(0).Cp437ToUnicode();
             
             data.X = (ushort)record.GetInt32(1);
             data.Y = (ushort)record.GetInt32(2);

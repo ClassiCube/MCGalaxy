@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands.Moderation {
                 if (Server.muted.Contains(args[0])) Unmute(p, args[0], args);
                 return;
             }
-            if (p != null && p == who) { Player.Message(p, "You cannot mute or unmute yourself."); return; }
 
             if (who.muted) {
                 Unmute(p, who.name, args);
             } else {
-                if (p != null && who.Rank >= p.Rank) { MessageTooHighRank(p, "mute", false); return; }
+                Group group = ModActionCmd.CheckTarget(p, "mute", who.name);
+                if (group == null) return;
                 
                 TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
                 if (args.Length > 1) {
@@ -59,6 +59,8 @@ namespace MCGalaxy.Commands.Moderation {
             string reason = args.Length > 1 ? args[1] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
+            
+            if (p != null && p.name == name) { Player.Message(p, "You cannot unmute yourself."); return; }
             
             ModAction action = new ModAction(name, p, ModActionType.Unmuted, reason);
             OnModActionEvent.Call(action);

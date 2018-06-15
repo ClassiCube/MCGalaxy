@@ -64,7 +64,7 @@ namespace MCGalaxy {
             return false;
         }
         
-        protected static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
+        protected internal static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
             MessageTooHighRank(p, action, p.group, canAffectOwnRank);
         }
         

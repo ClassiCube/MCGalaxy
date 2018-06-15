@@ -30,9 +30,10 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces(3);
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;            
-            if (p != null && p == who) { Player.Message(p, "Cannot freeze yourself."); return; }
-            if (p != null && who.Rank >= p.Rank) { MessageTooHighRank(p, "freeze", false); return; }
+            if (who == null) return;
+            
+            Group group = ModActionCmd.CheckTarget(p, "freeze", who.name);
+            if (group == null) return;
             
             if (who.frozen) {
                 string reason = args.Length > 1 ? args[1] : "";

@@ -107,7 +107,7 @@ namespace MCGalaxy.DB {
         
         public static string MatchNames(Player p, string name) {
             List<string> names = new List<string>();
-            MatchMulti("Players", "Name", names, Database.ReadList);
+            MatchMulti(name, "Name", names, Database.ReadList);
             
             int matches;
             return Matcher.Find(p, name, out matches, names,
@@ -116,7 +116,7 @@ namespace MCGalaxy.DB {
         
         public static string[] MatchValues(Player p, string name, string columns) {
             List<string[]> name_values = new List<string[]>();
-            MatchMulti("Players", columns, name_values, Database.ReadFields);
+            MatchMulti(name, columns, name_values, Database.ReadFields);
             
             int matches;
             return Matcher.Find(p, name, out matches, name_values,
@@ -130,7 +130,7 @@ namespace MCGalaxy.DB {
         
         public static PlayerData Match(Player p, string name) {
             List<PlayerData> stats = new List<PlayerData>();
-            MatchMulti("Players", "*", stats, Database.ReadList);
+            MatchMulti(name, "*", stats, ReadStats);
             
             int matches;
             return Matcher.Find(p, name, out matches, stats,

@@ -33,14 +33,14 @@ namespace MCGalaxy.SQL {
             return (int)Backend.ReadRows(table, "COUNT(*)", 0, ReadInt, modifier, args);
         }
         
-        static object ReadString(IDataRecord record, object arg) { return record.GetString(0); }
+        static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
         public static string ReadString(string table, string column,
                                        string modifier = "", params object[] args) {
             return (string)Backend.ReadRows(table, column, null, ReadString, modifier, args);
         }
         
         internal static object ReadList(IDataRecord record, object arg) {
-            ((List<string>)arg).Add(record.GetString(0)); return arg;
+            ((List<string>)arg).Add(record.GetText(0)); return arg;
         }
         internal static List<string> GetStrings(string sql, params object[] args) {
             List<string> values = new List<string>();
@@ -50,7 +50,7 @@ namespace MCGalaxy.SQL {
         
         internal static object ReadFields(IDataRecord record, object arg) {
             string[] field = new string[record.FieldCount];
-            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }
+            for (int i = 0; i < field.Length; i++) { field[i] = record.GetText(i); }
             ((List<string[]>)arg).Add(field);
             return arg;
         }
@@ -107,20 +107,24 @@ namespace MCGalaxy.SQL {
             return arg;
         }
 
+ 
+        internal static string GetText(this IDataRecord record, int col) {
+            return record.IsDBNull(col) ? "" : record.GetString(col);
+        }
         
         internal static string GetText(this IDataRecord record, string name) {
-            int i = record.GetOrdinal(name);
-            return record.IsDBNull(i) ? "" : record.GetString(i);
+            int col = record.GetOrdinal(name);
+            return record.IsDBNull(col) ? "" : record.GetString(col);
         }
         
         internal static int GetInt(this IDataRecord record, string name) {
-            int i = record.GetOrdinal(name);
-            return record.IsDBNull(i) ? 0 : record.GetInt32(i);
+            int col = record.GetOrdinal(name);
+            return record.IsDBNull(col) ? 0 : record.GetInt32(col);
         }
        
         internal static long GetLong(this IDataRecord record, string name) {
-            int i = record.GetOrdinal(name);
-            return record.IsDBNull(i) ? 0 : record.GetInt64(i);
+            int col = record.GetOrdinal(name);
+            return record.IsDBNull(col) ? 0 : record.GetInt64(col);
         }
         
         internal static DateTime GetDateTime(this IDataRecord record, string name) {

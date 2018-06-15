@@ -38,23 +38,17 @@ namespace MCGalaxy.Commands.Moderation {
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             
-            Group group = PlayerInfo.GetGroup(target);
-            if (!CheckPerms(target, group, p)) return;
+            Group group = ModActionCmd.CheckTarget(p, "ban", target);
+            if (group == null) return;
+            
+            if (group.Permission == LevelPermission.Banned) {
+                Player.Message(p, "{0} %Sis already banned.", PlayerInfo.GetColoredName(p, target));
+                return;
+            }
 
             ModAction action = new ModAction(target, p, ModActionType.Ban, reason);
             action.targetGroup = group;
             OnModActionEvent.Call(action);
-        }
-        
-        static bool CheckPerms(string name, Group group, Player p) {
-            if (group.Permission == LevelPermission.Banned) {
-                Player.Message(p, "{0} %Sis already banned.", PlayerInfo.GetColoredName(p, name));
-                return false;
-            }
-            if (p != null && group.Permission >= p.Rank) {
-                MessageTooHighRank(p, "ban", false); return false;
-            }
-            return true;
         }
         
         public override void Help(Player p) {

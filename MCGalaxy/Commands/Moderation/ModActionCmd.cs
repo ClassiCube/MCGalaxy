@@ -31,6 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
         /// <summary> Expands @[rule number] to the actual rule with that number. </summary>
         public static string ExpandReason(Player p, string reason) {
             if (reason.Length == 0 || reason[0] != '@') return reason;
+            
             reason = reason.Substring(1);
             int num;
             if (!int.TryParse(reason, out num)) return "@" + reason;
@@ -124,6 +125,18 @@ namespace MCGalaxy.Commands.Moderation {
                                    Block.GetName(who, (BlockID)b));
                 }
             }
+        }
+        
+        internal static Group CheckTarget(Player p, string action, string target) {
+            if (p != null && target == p.name) { 
+                Player.Message(p, "You canot {0} yourself", action); return null; 
+            }
+            
+            Group group = PlayerInfo.GetGroup(target);
+            if (p != null && p.Rank <= group.Permission) {
+                Command.MessageTooHighRank(p, action, false); return null;
+            }
+            return group;
         }
         
         

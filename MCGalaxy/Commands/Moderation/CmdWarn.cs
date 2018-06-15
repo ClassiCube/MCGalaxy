@@ -27,28 +27,18 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            
+
             string reason = args.Length == 1 ? "you know why." : args[1];
+            string target = ModActionCmd.FindName(p, "warn", "Warn", "", args[0], ref reason);
+            if (target == null) return;
+            
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
-            
-            if (who == null) { WarnOffline(p, args, reason); return; }
-            if (who == p) { Player.Message(p, "you can't warn yourself"); return; }
-            if (p != null && p.Rank <= who.Rank) {
-                MessageTooHighRank(p, "warn", false); return;
-            }           
+
+            Group group = ModActionCmd.CheckTarget(p, "warn", target);
+            if (group == null) return;
                         
-            ModAction action = new ModAction(who.name, p, ModActionType.Warned, reason);
-            OnModActionEvent.Call(action);
-        }
-        
-        static void WarnOffline(Player p, string[] args, string reason) {
-            Player.Message(p, "Searching PlayerDB..");
-            string offName = PlayerDB.MatchNames(p, args[0]);
-            if (offName == null) return;
-      
-            ModAction action = new ModAction(offName, p, ModActionType.Warned, reason);
+            ModAction action = new ModAction(target, p, ModActionType.Warned, reason);
             OnModActionEvent.Call(action);
         }
         
