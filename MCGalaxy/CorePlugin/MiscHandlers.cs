@@ -46,7 +46,7 @@ namespace MCGalaxy.Core {
             p.showPortals = false;
             p.SetModel(p.Model, level); // in case had been using a level-only custom block for their model
             
-            if (!Hacks.CanUseFly(p, level) && p.isFlying) {
+            if (p.isFlying && !Hacks.CanUseFly(p, level)) {
                 Player.Message(p, "You cannot use %T/Fly %Son this map.");
                 p.isFlying = false;
             }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Core {
                 foreach (Zone zn in zones) { zn.Show(p); }
             }
 
-            if (!level.Config.Guns && p.aiming) {
+            if (p.aiming && !level.Config.Guns) {
                 p.aiming = false;
                 p.ClearBlockchange();
             }

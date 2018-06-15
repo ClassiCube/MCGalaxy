@@ -37,6 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                 OnPlayerActionEvent.Call(p, PlayerAction.Referee);
                 p.Game.Referee = true;
             }
+            p.SetPrefix();
             
             if (p.Supports(CpeExt.InstantMOTD)) {
                 p.SendMapMotd();

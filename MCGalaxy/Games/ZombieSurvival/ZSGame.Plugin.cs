@@ -139,7 +139,6 @@ namespace MCGalaxy.Games {
             
             Entities.GlobalSpawn(p, false, "");
             TabList.Update(p, true);
-            p.SetPrefix();
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
