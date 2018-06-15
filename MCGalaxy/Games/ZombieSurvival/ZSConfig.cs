@@ -117,16 +117,16 @@ namespace MCGalaxy.Games {
             "{0} transplanted {1}'s living brain" };
         
         public static List<string> LoadInfectMessages() {
-        	List<string> msgs = new List<string>();
+            List<string> msgs = new List<string>();
             try {
-        		if (!File.Exists("text/infectmessages.txt")) {
+                if (!File.Exists("text/infectmessages.txt")) {
                     File.WriteAllLines("text/infectmessages.txt", defMessages);
-        		}
+                }
                 msgs = Utils.ReadAllLinesList("text/infectmessages.txt");
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
-        	
+            
             if (msgs.Count == 0) msgs = new List<string>(defMessages);
             return msgs;
         }

@@ -237,7 +237,7 @@ namespace MCGalaxy.Tasks {
             playerCount++;
             try {
                 int id = record.GetInt32(0);
-                TimeSpan span = record.GetString(1).ParseDBTime();
+                TimeSpan span = record.GetString(1).ParseOldDBTimeSpent();
                 
                 playerIds.Add(id);
                 playerSeconds.Add((long)span.TotalSeconds);
@@ -256,7 +256,7 @@ namespace MCGalaxy.Tasks {
                     idParam.Value = playerIds[i];
                     secsParam.Value = playerSeconds[i];
                     
-                    using (IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent = @1 WHERE ID = @0")) {
+                    using (IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent=@1 WHERE ID=@0")) {
                         cmd.Parameters.Add(idParam);
                         cmd.Parameters.Add(secsParam);
                         cmd.ExecuteNonQuery();

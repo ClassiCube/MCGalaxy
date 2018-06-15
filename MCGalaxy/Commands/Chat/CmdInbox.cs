@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.Chatting {
         class MailEntry { public string Contents, Timestamp, From; }
         static object ReadInbox(IDataRecord record, object arg) {
             MailEntry e = new MailEntry();
-            e.Contents  = record.GetString("Contents");
-            e.Timestamp = record.GetString("TimeSent");
-            e.From      = record.GetString("PlayerFrom");
+            e.Contents  = record.GetText("Contents");
+            e.Timestamp = record.GetText("TimeSent");
+            e.From      = record.GetText("PlayerFrom");
             
             ((List<MailEntry>)arg).Add(e); return arg;
         }

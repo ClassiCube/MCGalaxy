@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Blocks.Extended {
-    public static class MessageBlock {		
+    public static class MessageBlock {
         
         public static bool Handle(Player p, ushort x, ushort y, ushort z, bool alwaysRepeat) {
             if (!p.level.hasMessageBlocks) return false;

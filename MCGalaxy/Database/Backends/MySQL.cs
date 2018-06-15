@@ -204,10 +204,6 @@ namespace MCGalaxy.SQL {
             return new MySqlCommand(query, (MySqlConnection)conn);
         }
         
-        protected override DbDataAdapter CreateDataAdapter(string query, IDbConnection conn) {
-            return new MySqlDataAdapter(query, (MySqlConnection)conn);
-        }
-        
         protected override IDbDataParameter CreateParameter() {
             return new MySqlParameter();
         }

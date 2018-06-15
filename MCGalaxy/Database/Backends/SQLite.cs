@@ -68,8 +68,8 @@ namespace MCGalaxy.SQL {
         
         public override List<string> AllTables() {
             const string syntax = "SELECT name from sqlite_master WHERE type='table'";
-        	List<string> tables = Database.GetStrings(syntax);
-        	
+            List<string> tables = Database.GetStrings(syntax);
+            
             // exclude sqlite built-in database tables
             for (int i = tables.Count - 1; i >= 0; i--) {
                 if (tables[i].StartsWith("sqlite_")) tables.RemoveAt(i);
@@ -79,7 +79,7 @@ namespace MCGalaxy.SQL {
         
         static object IterateColumnNames(IDataRecord record, object arg) {
             List<string> columns = (List<string>)arg;
-            columns.Add(record.GetString("name"));
+            columns.Add(record.GetText("name"));
             return arg;
         }
         
@@ -186,10 +186,6 @@ namespace MCGalaxy.SQL {
         
         protected override IDbCommand CreateCommand(string query, IDbConnection conn) {
             return new SQLiteCommand(query, (SQLiteConnection)conn);
-        }
-        
-        protected override DbDataAdapter CreateDataAdapter(string query, IDbConnection conn) {
-            return new SQLiteDataAdapter(query, (SQLiteConnection)conn);
         }
         
         protected override IDbDataParameter CreateParameter() {

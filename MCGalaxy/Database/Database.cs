@@ -50,7 +50,7 @@ namespace MCGalaxy.SQL {
         
         internal static object ReadFields(IDataRecord record, object arg) {
             string[] field = new string[record.FieldCount];
-            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }            
+            for (int i = 0; i < field.Length; i++) { field[i] = record.GetString(i); }
             ((List<string[]>)arg).Add(field);
             return arg;
         }
@@ -108,16 +108,19 @@ namespace MCGalaxy.SQL {
         }
 
         
-        internal static string GetString(this IDataRecord record, string name) {
-            return record.GetString(record.GetOrdinal(name));
+        internal static string GetText(this IDataRecord record, string name) {
+            int i = record.GetOrdinal(name);
+            return record.IsDBNull(i) ? "" : record.GetString(i);
         }
         
-        internal static int GetInt32(this IDataRecord record, string name) {
-            return record.GetInt32(record.GetOrdinal(name));
+        internal static int GetInt(this IDataRecord record, string name) {
+            int i = record.GetOrdinal(name);
+            return record.IsDBNull(i) ? 0 : record.GetInt32(i);
         }
        
-        internal static long GetInt64(this IDataRecord record, string name) {
-            return record.GetInt64(record.GetOrdinal(name));
+        internal static long GetLong(this IDataRecord record, string name) {
+            int i = record.GetOrdinal(name);
+            return record.IsDBNull(i) ? 0 : record.GetInt64(i);
         }
         
         internal static DateTime GetDateTime(this IDataRecord record, string name) {

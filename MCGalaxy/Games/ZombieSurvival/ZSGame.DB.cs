@@ -103,10 +103,10 @@ namespace MCGalaxy.Games {
         
         static object ReadStats(IDataRecord record, object arg) {
         	ZombieStats stats;
-        	stats.TotalRounds   = record.GetInt32("TotalRounds");
-            stats.MaxRounds     = record.GetInt32("MaxRounds");
-            stats.TotalInfected = record.GetInt32("TotalInfected");
-            stats.MaxInfected   = record.GetInt32("MaxInfected");
+        	stats.TotalRounds   = record.GetInt("TotalRounds");
+            stats.MaxRounds     = record.GetInt("MaxRounds");
+            stats.TotalInfected = record.GetInt("TotalInfected");
+            stats.MaxInfected   = record.GetInt("MaxInfected");
         	return stats;
         }
         

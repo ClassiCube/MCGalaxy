@@ -29,8 +29,7 @@ namespace MCGalaxy.SQL {
         protected abstract bool MultipleSchema { get; }
         
         protected abstract IDbConnection CreateConnection(string connString);        
-        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);        
-        protected abstract DbDataAdapter CreateDataAdapter(string query, IDbConnection conn);        
+        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);       
         protected abstract IDbDataParameter CreateParameter();
         
         

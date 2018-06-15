@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy {
     public static class DateExts {
         
-        public static TimeSpan ParseDBTime(this string value) {
+        public static TimeSpan ParseOldDBTimeSpent(this string value) {
             string[] parts = value.SplitSpaces();
             return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
                                 int.Parse(parts[2]), int.Parse(parts[3]));

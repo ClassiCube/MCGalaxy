@@ -43,14 +43,14 @@ namespace MCGalaxy {
 
         static object ListZones(IDataRecord record, object arg) {
             Zone z = new Zone();
-            z.MinX = (ushort)record.GetInt32("SmallX");
-            z.MinY = (ushort)record.GetInt32("SmallY");
-            z.MinX = (ushort)record.GetInt32("SmallZ");
+            z.MinX = (ushort)record.GetInt("SmallX");
+            z.MinY = (ushort)record.GetInt("SmallY");
+            z.MinX = (ushort)record.GetInt("SmallZ");
             
-            z.MaxX = (ushort)record.GetInt32("BigX");
-            z.MaxY = (ushort)record.GetInt32("BigY");
-            z.MaxX = (ushort)record.GetInt32("BigZ");
-            z.Config.Name = record.GetString("Owner");
+            z.MaxX = (ushort)record.GetInt("BigX");
+            z.MaxY = (ushort)record.GetInt("BigY");
+            z.MaxX = (ushort)record.GetInt("BigZ");
+            z.Config.Name = record.GetText("Owner");
             
             ((List<Zone>)arg).Add(z);
             return arg;

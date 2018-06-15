@@ -90,42 +90,42 @@ namespace MCGalaxy.DB {
         }
         
         internal static PlayerData Parse(IDataRecord record) {
-        	PlayerData data = new PlayerData();
-            data.Name = record.GetString("Name");
-            data.IP   = record.GetString("IP");
-            data.DatabaseID = record.GetInt32("ID");
+            PlayerData data = new PlayerData();
+            data.Name = record.GetText("Name");
+            data.IP   = record.GetText("IP");
+            data.DatabaseID = record.GetInt("ID");
             
             // Backwards compatibility with old format
-            string rawTime = record.GetString(ColumnTimeSpent);
+            string rawTime = record.GetText(ColumnTimeSpent);
             try {
                 long secs = long.Parse(rawTime);
                 data.TotalTime = TimeSpan.FromSeconds(secs);
             } catch {
-                data.TotalTime = rawTime.ParseDBTime();
+                data.TotalTime = rawTime.ParseOldDBTimeSpent();
             }
             
             data.FirstLogin = record.GetDateTime(ColumnFirstLogin);
             data.LastLogin  = record.GetDateTime(ColumnLastLogin);
             
-            data.Title = record.GetString(ColumnTitle);
+            data.Title = record.GetText(ColumnTitle);
             data.Title = data.Title.Cp437ToUnicode();
-            data.TitleColor = ParseCol(record.GetString(ColumnTColor));
-            data.Color = ParseCol(record.GetString(ColumnColor));
+            data.TitleColor = ParseCol(record.GetText(ColumnTColor));
+            data.Color = ParseCol(record.GetText(ColumnColor));
             
-            data.Money    = record.GetInt32(ColumnMoney);
-            data.Deaths   = record.GetInt32(ColumnDeaths);
-            data.Logins   = record.GetInt32(ColumnLogins);
-            data.Kicks    = record.GetInt32(ColumnKicked);
-            data.Messages = record.GetInt32(ColumnMessages);
+            data.Money    = record.GetInt(ColumnMoney);
+            data.Deaths   = record.GetInt(ColumnDeaths);
+            data.Logins   = record.GetInt(ColumnLogins);
+            data.Kicks    = record.GetInt(ColumnKicked);
+            data.Messages = record.GetInt(ColumnMessages);
             
-            long blocks   = record.GetInt64(ColumnTotalBlocks);
-            long cuboided = record.GetInt64(ColumnTotalCuboided);
+            long blocks   = record.GetLong(ColumnTotalBlocks);
+            long cuboided = record.GetLong(ColumnTotalCuboided);
             data.TotalModified = blocks & LowerBitsMask;
             data.TotalPlaced   = blocks >> LowerBits;
             data.TotalDrawn    = cuboided & LowerBitsMask;
             data.TotalDeleted  = cuboided >> LowerBits;
             return data;
-        }        
+        }
         internal static object Read(IDataRecord record, object arg) { return Parse(record); }
         
         internal static long ParseLong(string value) {

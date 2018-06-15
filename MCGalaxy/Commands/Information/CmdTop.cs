@@ -53,9 +53,9 @@ namespace MCGalaxy.Commands.Info {
             
             Player.Message(p, "&a{0}:", stat.Title());
             for (int i = 0; i < stats.Count; i++) {
-            	string name  = PlayerInfo.GetColoredName(p, stats[i][0]);
-            	string value = stat.Formatter(stats[i][1]);
-            	Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), name, value);
+                string name  = PlayerInfo.GetColoredName(p, stats[i][0]);
+                string value = stat.Formatter(stats[i][1]);
+                Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), name, value);
             }
         }
         

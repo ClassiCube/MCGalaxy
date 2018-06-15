@@ -36,7 +36,7 @@ namespace MCGalaxy.Eco {
         
         static object ListOld(IDataRecord record, object arg) {
             EcoStats stats = ParseStats(record);
-            stats.__unused = record.GetInt32("money");            
+            stats.__unused = record.GetInt("money");            
             ((List<EcoStats>)arg).Add(stats);
             return arg;
         }
@@ -80,13 +80,13 @@ namespace MCGalaxy.Eco {
         
         static EcoStats ParseStats(IDataRecord record) {
             EcoStats stats;
-            stats.Player = record.GetString("player");
-            stats.Payment  = Parse(record.GetString("payment"));
-            stats.Purchase = Parse(record.GetString("purchase"));
-            stats.Salary   = Parse(record.GetString("salary"));
-            stats.Fine     = Parse(record.GetString("fine"));
+            stats.Player = record.GetText("player");
+            stats.Payment  = Parse(record.GetText("payment"));
+            stats.Purchase = Parse(record.GetText("purchase"));
+            stats.Salary   = Parse(record.GetText("salary"));
+            stats.Fine     = Parse(record.GetText("fine"));
             
-            stats.TotalSpent = record.GetInt32("total");
+            stats.TotalSpent = record.GetInt("total");
             stats.__unused   = 0;
             return stats;
         }
