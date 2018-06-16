@@ -135,10 +135,10 @@ namespace MCGalaxy {
             const uint mask = PhysicsArgs.TypeMask;
             
             HandlePhysics[] handlers = physicsHandlers;
-            ExtraInfoHandler extraHandler = ExtraInfoPhysics.DoNormal;
+            ExtraInfoHandler extraHandler = ExtraInfoPhysics.normalHandler;
             if (physics == 5) {
                 handlers = physicsDoorsHandlers;
-                extraHandler = ExtraInfoPhysics.DoDoorsOnly;
+                extraHandler = ExtraInfoPhysics.doorsHandler;
             }
             
             PhysInfo C;

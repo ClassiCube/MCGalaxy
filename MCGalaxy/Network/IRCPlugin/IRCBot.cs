@@ -28,7 +28,7 @@ namespace MCGalaxy {
     
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot {
-        public const string ResetSignal = "\x0F\x03";
+        public const string ResetSignal = "\x03\x0F";
         internal Connection connection;
         internal string[] channels, opchannels;
         internal string nick, server;
