@@ -17,10 +17,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Moderation
-{
-    public sealed class CmdOHide : Command
-    {
+namespace MCGalaxy.Commands.Moderation {
+    public sealed class CmdOHide : Command {
         public override string name { get { return "OHide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -28,21 +26,19 @@ namespace MCGalaxy.Commands.Moderation
         public override void Use(Player p, string message) {
             if (message.Length == 0) { Help(p); return; }
             
-            string[] args = message.SplitSpaces();           
+            string[] args = message.SplitSpaces();
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             if (p != null && who.Rank >= p.Rank) {
                 MessageTooHighRank(p, "hide", false); return;
             }
             
-            if (args.Length >= 2 && args[1].CaselessEq("myrank")) {
-                who.oHideRank = p == null ? LevelPermission.Admin : p.Rank;
-                Command.Find("Hide").Use(who, "myrank");
-                Player.Message(p, "Used /hide myrank on " + who.ColoredName + "%S.");
-            } else {
-                Command.Find("Hide").Use(who, "");
-                Player.Message(p, "Used /hide on " + who.ColoredName + "%S.");
-            }
+            bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
+            if (own) { who.oHideRank = p == null ? LevelPermission.Admin : p.Rank; }
+            
+            Command.Find("Hide").Use(who, "");
+            Player.Message(p, "Hidden {0} %Sfrom players below {1} rank",
+                           who.ColoredName, own ? "your" : "their");
         }
 
         public override void Help(Player p) {

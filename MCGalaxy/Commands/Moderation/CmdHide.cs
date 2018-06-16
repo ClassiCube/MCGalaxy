@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System.IO;
 using MCGalaxy.DB;
 
@@ -30,15 +30,20 @@ namespace MCGalaxy.Commands.Moderation {
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("XHide", "silent") }; }
         }
+        
+        static void AnnounceOps(Player p, string msg) {
+        	LevelPermission hideRank = p.oHideRank == LevelPermission.Null ? p.Rank : p.oHideRank;
+            Chat.MessageFrom(ChatScope.AboveEqRank, p, msg, hideRank, null, true);
+        }
 
         public override void Use(Player p, string message) {
             if (message.Length > 0 && p.possess.Length > 0) {
                 Player.Message(p, "Stop your current possession first."); return;
             }
-            bool announceToOps = true;
+            bool silent = false;
             if (message.CaselessEq("silent")) {
                 if (!CheckExtraPerm(p, 1)) return;
-                announceToOps = false;
+                silent = true;
             }
             
             Command adminchat = Command.Find("AdminChat");
@@ -46,31 +51,24 @@ namespace MCGalaxy.Commands.Moderation {
             Entities.GlobalDespawn(p, false);
             
             p.hidden = !p.hidden;
-            //Possible to use /hide myrank, but it accomplishes the same as regular /hide if you use it on yourself.
-            if (message.CaselessEq("myrank")) {
-                p.otherRankHidden = !p.otherRankHidden;
-                p.hidden = p.otherRankHidden;
-            }
-
-            if (p.hidden) {                
-                if (announceToOps && !p.otherRankHidden) {
-                    Chat.MessageFromOps(p, "To Ops -λNICK%S- is now &finvisible%S.");
+            if (p.hidden) {
+                AnnounceOps(p, "To Ops -λNICK%S- is now &finvisible");
+                
+                if (!silent) {
+                    string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
+                    Chat.MessageFrom(p, leaveM, null, true);
                 }
                 
-                string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
-                Chat.MessageFrom(p, leaveM, null, true);
-                
-                if (announceToOps && !p.opchat) opchat.Use(p, "");
+                if (!p.opchat) opchat.Use(p, "");
                 Server.hidden.AddIfNotExists(p.name);
-            } else {                
-                p.otherRankHidden = false;
+            } else {
+                AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
                 p.oHideRank = LevelPermission.Null;
-                if (announceToOps) {
-                    Chat.MessageFromOps(p, "To Ops -λNICK%S- is now &fvisible%S.");
-                }
                 
-                string joinM = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);
-                Chat.MessageFrom(p, joinM, null, true);
+                if (!silent) {
+                    string joinM = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);
+                    Chat.MessageFrom(p, joinM, null, true);
+                }
                 
                 if (p.opchat) opchat.Use(p, "");
                 if (p.adminchat) adminchat.Use(p, "");
@@ -84,7 +82,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
-            Player.Message(p, "%T/Hide silent %H- Hides without sending a message to opchat");
+            Player.Message(p, "%T/Hide silent %H- Hides without showing join/leave message");
             Player.Message(p, "%HUse %T/OHide %Hto hide other players.");
         }
     }

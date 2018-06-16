@@ -100,7 +100,7 @@ namespace MCGalaxy {
             // hidden via /hide or /ohide
             // TODO: Just use Entities.CanSee
             if (target.hidden) {
-                if (target.otherRankHidden) return Rank >= target.oHideRank;
+                if (target.oHideRank != LevelPermission.Null) return Rank >= target.oHideRank;
                 return Rank >= target.Rank;
             }
             

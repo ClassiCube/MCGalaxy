@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
             return true;
         }
         
-        internal static bool CanSpeak(Player p, string cmd) {
+        public static bool CanSpeak(Player p, string cmd) {
             if (p == null) return true;
             
             if (p.muted) { 

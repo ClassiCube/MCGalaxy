@@ -61,7 +61,6 @@ namespace MCGalaxy {
         public string color;
         public Group group;
         public LevelPermission oHideRank = LevelPermission.Null;
-        public bool otherRankHidden;
         public bool hidden;
         public bool painting;
         public bool muted;
