@@ -28,8 +28,12 @@ namespace MCGalaxy.Commands.Chatting {
         const int i_text = 0, i_sent = 1, i_from = 2;
         
         public override void Use(Player p, string message) {
+            if (!Database.TableExists("Inbox" + p.name)) {
+                Player.Message(p, "Your inbox is empty."); return;
+            }
+            
             List<string[]> entries = Database.GetRows("Inbox" + p.name, "Contents,TimeSent,PlayerFrom", 
-        	                                          "ORDER BY TimeSent");
+                                                      "ORDER BY TimeSent");
             if (entries.Count == 0) {
                 Player.Message(p, "Your inbox is empty."); return;
             }

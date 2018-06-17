@@ -75,9 +75,7 @@ namespace MCGalaxy.Commands.Building {
                 return true;
             }
             
-            byte temp = 0;
-            if (!CommandParser.GetByte(p, arg, "Value", ref temp)) return false;
-            value = (byte)temp;
+            if (!CommandParser.GetByte(p, arg, "Value", ref value)) return false;
             
             switch (name) {
                 case "drop": type = PhysicsArgs.Drop; return true;
