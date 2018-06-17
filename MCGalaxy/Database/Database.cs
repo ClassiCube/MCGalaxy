@@ -27,6 +27,7 @@ namespace MCGalaxy.SQL {
     public static class Database {
         public static IDatabaseBackend Backend;
         public static bool TableExists(string table) { return Backend.TableExists(table); }
+        public const string DateFormat = "yyyy-MM-dd HH:mm:ss";
         
         static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
         public static int CountRows(string table, string modifier = "", params object[] args) {
@@ -129,7 +130,7 @@ namespace MCGalaxy.SQL {
         
         internal static DateTime GetDateTime(this IDataRecord record, string name) {
             string raw = record.GetStringValue(record.GetOrdinal(name));
-            return DateTime.ParseExact(raw, "yyyy-MM-dd HH:mm:ss", null);
+            return DateTime.ParseExact(raw, DateFormat, null);
         }
         
         internal static string GetStringValue(this IDataRecord record, int col) {
@@ -138,7 +139,7 @@ namespace MCGalaxy.SQL {
             
             if (type == typeof(string)) return record.GetString(col);
             if (type == typeof(DateTime)) {
-                return Database.Backend.FastGetDateTime(record, col);
+                return Database.Backend.RawGetDateTime(record, col);
             }
             return record.GetValue(col).ToString();
         }

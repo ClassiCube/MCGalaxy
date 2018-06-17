@@ -150,7 +150,7 @@ namespace MCGalaxy {
             long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
             Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
                                         "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8, Messages=@9", "WHERE Name=@10", 
-                                        ip, LastLogin.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        ip, LastLogin.ToString(Database.DateFormat),
                                         TimesVisited, TimesDied, money, blocks,
                                         cuboided, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
         }

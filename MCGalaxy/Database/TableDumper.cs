@@ -69,7 +69,7 @@ namespace MCGalaxy.SQL {
                         value = value.Replace("'", "''");
                     sql.Write("'" + value + "'");
                 } else if (colTypes[col] == typeof(DateTime)) {
-                    string date = Database.Backend.FastGetDateTime(record, col);
+                    string date = Database.Backend.RawGetDateTime(record, col);
                     sql.Write("'" + date + "'");
                 } else {
                     long value = record.GetInt64(col); // TODO: try to use GetInt32 where possible

@@ -56,7 +56,7 @@ namespace MCGalaxy.SQL {
             return queryInstance;
         }
         
-        public override string FastGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(IDataRecord record, int col) {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
         }
         

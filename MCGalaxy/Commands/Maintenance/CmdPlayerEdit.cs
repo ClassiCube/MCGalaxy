@@ -127,7 +127,6 @@ namespace MCGalaxy.Commands.Maintenance {
             MessageDataChanged(p, args[0], args[1], args[2]);
         }
         
-        const string dateFormat = "yyyy-MM-dd HH:mm:ss";
         static void SetDate(Player p, string[] args, string column, Player who, Action<DateTime> setter) {
             if (args.Length < 3) {
                 Player.Message(p, "Dates must be in the format: yyyy-mm-dd hh:mm:ss");
@@ -135,7 +134,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
             
             DateTime date;
-            if (!DateTime.TryParseExact(args[2], dateFormat, null, 0, out date)) {
+            if (!DateTime.TryParseExact(args[2], Database.DateFormat, null, 0, out date)) {
                 Player.Message(p, "Invalid date. (must be in format: yyyy-mm-dd hh:mm:ss");
                 return;
             }

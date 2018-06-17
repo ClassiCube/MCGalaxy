@@ -54,7 +54,7 @@ namespace MCGalaxy.DB {
             p.FirstLogin = DateTime.Now;
             p.TimesVisited = 1;
             
-            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string now = DateTime.Now.ToString(Database.DateFormat);
             Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                                     "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                                     p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
