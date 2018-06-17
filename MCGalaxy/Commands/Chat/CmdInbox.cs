@@ -25,28 +25,18 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
-
-        class MailEntry { public string Contents, Timestamp, From; }
-        static object ReadInbox(IDataRecord record, object arg) {
-            MailEntry e = new MailEntry();
-            e.Contents  = record.GetText("Contents");
-            e.Timestamp = record.GetText("TimeSent");
-            e.From      = record.GetText("PlayerFrom");
-            
-            ((List<MailEntry>)arg).Add(e); return arg;
-        }
+        const int i_text = 0, i_sent = 1, i_from = 2;
         
         public override void Use(Player p, string message) {
-            List<MailEntry> entries = new List<MailEntry>();
-            Database.Backend.ReadRows("Inbox" + p.name, "*",
-                                      entries, ReadInbox, "ORDER BY TimeSent");
+            List<string[]> entries = Database.GetRows("Inbox" + p.name, "Contents,TimeSent,PlayerFrom", 
+        	                                          "ORDER BY TimeSent");
             if (entries.Count == 0) {
                 Player.Message(p, "Your inbox is empty."); return;
             }
 
             string[] args = message.SplitSpaces(2);
             if (message.Length == 0) {
-                foreach (MailEntry entry in entries) { Output(p, entry); }
+                foreach (string[] entry in entries) { Output(p, entry); }
             } else if (IsDeleteCommand(args[0])) {
                 if (args.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
@@ -61,21 +51,21 @@ namespace MCGalaxy.Commands.Chatting {
             }
         }
         
-        static void DeleteByID(Player p, string value, List<MailEntry> entries) {
+        static void DeleteByID(Player p, string value, List<string[]> entries) {
             int num = 1;
             if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
             
             if (num > entries.Count) {
                 Player.Message(p, "Message #{0} does not exist.", num);
             } else {
-                MailEntry entry = entries[num - 1];
+                string[] entry = entries[num - 1];
                 Database.Backend.DeleteRows("Inbox" + p.name,
-                                            "WHERE PlayerFrom=@0 AND TimeSent=@1", entry.From, entry.Timestamp);
+                                            "WHERE PlayerFrom=@0 AND TimeSent=@1", entry[i_from], entry[i_sent]);
                 Player.Message(p, "Deleted message #{0}", num);
             }
         }
         
-        static void OutputByID(Player p, string value, List<MailEntry> entries) {
+        static void OutputByID(Player p, string value, List<string[]> entries) {
             int num = 1;
             if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
             
@@ -86,12 +76,12 @@ namespace MCGalaxy.Commands.Chatting {
             }
         }
         
-        static void Output(Player p, MailEntry entry) {
-            TimeSpan delta = DateTime.Now - DateTime.Parse(entry.Timestamp);
-            string sender = PlayerInfo.GetColoredName(p, entry.From);
+        static void Output(Player p, string[] entry) {
+            TimeSpan delta = DateTime.Now - DateTime.Parse(entry[i_sent]);
+            string sender = PlayerInfo.GetColoredName(p, entry[i_from]);
             
             Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());
-            Player.Message(p, entry.Contents);
+            Player.Message(p, entry[i_text]);
         }
         
         public override void Help(Player p) {

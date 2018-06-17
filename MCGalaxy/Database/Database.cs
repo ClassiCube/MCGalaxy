@@ -35,7 +35,7 @@ namespace MCGalaxy.SQL {
         
         static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
         public static string ReadString(string table, string column,
-                                       string modifier = "", params object[] args) {
+                                        string modifier = "", params object[] args) {
             return (string)Backend.ReadRows(table, column, null, ReadString, modifier, args);
         }
         
@@ -50,7 +50,7 @@ namespace MCGalaxy.SQL {
         
         internal static object ReadFields(IDataRecord record, object arg) {
             string[] field = new string[record.FieldCount];
-            for (int i = 0; i < field.Length; i++) { field[i] = record.GetText(i); }
+            for (int i = 0; i < field.Length; i++) { field[i] = record.GetStringValue(i); }
             ((List<string[]>)arg).Add(field);
             return arg;
         }
@@ -107,7 +107,7 @@ namespace MCGalaxy.SQL {
             return arg;
         }
 
- 
+        
         internal static string GetText(this IDataRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
@@ -121,15 +121,26 @@ namespace MCGalaxy.SQL {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt32(col);
         }
-       
+        
         internal static long GetLong(this IDataRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt64(col);
         }
         
         internal static DateTime GetDateTime(this IDataRecord record, string name) {
-            string raw = Database.Backend.FastGetDateTime(record, record.GetOrdinal(name));
+            string raw = record.GetStringValue(record.GetOrdinal(name));
             return DateTime.ParseExact(raw, "yyyy-MM-dd HH:mm:ss", null);
+        }
+        
+        internal static string GetStringValue(this IDataRecord record, int col) {
+            if (record.IsDBNull(col)) return "";
+            Type type = record.GetFieldType(col);
+            
+            if (type == typeof(string)) return record.GetString(col);
+            if (type == typeof(DateTime)) {
+                return Database.Backend.FastGetDateTime(record, col);
+            }
+            return record.GetValue(col).ToString();
         }
     }
 }

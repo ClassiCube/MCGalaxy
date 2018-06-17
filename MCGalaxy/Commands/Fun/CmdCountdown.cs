@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/CD set [width] [height] [length]");
-            Player.Message(p, "%HRe-generates the countdown map at given size (default is 32x32x32)");
+            Player.Message(p, "%HRe-generates the countdown map (default is 32x32x32)");
             Player.Message(p, "%T/CD start <speed> <mode> %H- starts countdown");
             Player.Message(p, "%H  speed can be: slow, normal, fast, extreme or ultimate");
             Player.Message(p, "%H  mode can be: normal or freeze");
