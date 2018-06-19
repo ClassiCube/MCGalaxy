@@ -135,7 +135,7 @@ namespace MCGalaxy {
         }
         
         public bool AutoUnload() {
-            return ServerConfig.AutoLoadMaps && Config.AutoUnload 
+            return ServerConfig.AutoLoadMaps && Config.AutoUnload
                 && !IsMuseum && !HasPlayers() && Unload(true);
         }
         

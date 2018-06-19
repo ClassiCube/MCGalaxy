@@ -27,32 +27,34 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
     public sealed partial class CTFGame : RoundsGame {
 
-        void HookEventHandlers() {
+        protected override void HookEventHandlers() {
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);
             
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
             OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.High);
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
+            
+            base.HookEventHandlers();
         }
         
-        void UnhookEventHandlers() {
+        protected override void UnhookEventHandlers() {
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerCommandEvent.Unregister(HandlePlayerCommand);
             
             OnBlockChangeEvent.Unregister(HandleBlockChange);
             OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
-            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
+            
+            base.UnhookEventHandlers();
         }
         
         

@@ -59,13 +59,22 @@ namespace MCGalaxy.Games {
         public CTFConfig Config = new CTFConfig();
         public CTFGame() { Picker = new CTFLevelPicker(); }
 
-        CtfData Get(Player p) {
-            object data;
-            if (!p.Extras.TryGet("MCG_CTF_DATA", out data)) {
-                data = new CtfData();
-                p.Extras.Put("MCG_CTF_DATA", data);
-            }
-            return (CtfData)data;
+        const string ctfExtrasKey = "MCG_CTF_DATA";
+        static CtfData Get(Player p) {
+            CtfData data = TryGet(p);
+            if (data != null) return data;
+            data = new CtfData();
+            
+            // TODO: Is this even thread-safe
+            CtfStats s = LoadStats(p.name);
+            data.Captures = s.Captures; data.Points = s.Points; data.Tags = s.Tags;
+            
+            p.Extras.Put(ctfExtrasKey, data);
+            return data;
+        }
+        
+        static CtfData TryGet(Player p) {
+            object data; p.Extras.TryGet(ctfExtrasKey, out data); return (CtfData)data;
         }
 
         protected override bool SetMap(string map) {
@@ -101,39 +110,17 @@ namespace MCGalaxy.Games {
             Player.Message(p, "{0} %Steam: {1} captures", Red.ColoredName,  Red.Captures);
         }
 
-        public override void Start(Player p, string map, int rounds) {
-            map = GetStartMap(map);
-            if (map == null) {
-                Player.Message(p, "No maps have been setup for CTF yet"); return;
-            }
-            if (!SetMap(map)) {
-                Player.Message(p, "Failed to load initial map!"); return;
-            }
-            
-            RoundsLeft = rounds;
+        protected override void StartGame() {
             Blue.RespawnFlag(Map);
             Red.RespawnFlag(Map);
             ResetTeams();
-            
-            Logger.Log(LogType.GameActivity, "[CTF] Running...");
-            Chat.MessageGlobal("A CTF game is starting! Type %T/CTF go %Sto join!");
-            Running = true;
+
             Database.Backend.CreateTable("CTF", createSyntax);
-            HookEventHandlers();
-            
-            Thread t = new Thread(RunGame);
-            t.Name = "MCG_CTFGame";
-            t.Start();
         }
         
-        public override void End() {
-            if (!Running) return;
-            Running = false;
-            UnhookEventHandlers();
-            
+        protected override void EndGame() {
             ResetTeams();
             ResetFlagsState();
-            EndCommon();
         }
         
         void ResetTeams() {

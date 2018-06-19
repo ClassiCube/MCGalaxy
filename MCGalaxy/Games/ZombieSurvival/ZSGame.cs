@@ -32,8 +32,7 @@ namespace MCGalaxy.Games {
         public BountyData(string origin, string target, int amount) {
             Origin = origin; Target = target; Amount = amount;
         }
-    }  
-    public struct ZombieStats { public int TotalRounds, MaxRounds, TotalInfected, MaxInfected; }
+    }
     
     internal sealed class ZSData {
         public int BlocksLeft = 50, BlocksStacked;
@@ -59,7 +58,7 @@ namespace MCGalaxy.Games {
         public void ResetState() {
             BlocksLeft = 50;
             CurrentInfected = 0;
-            Infected = false;           
+            Infected = false;
             InvisibilityPotions = 0;
             RevivesUsed = 0;
             TimeInfected = DateTime.MinValue;
@@ -68,7 +67,7 @@ namespace MCGalaxy.Games {
     
     public sealed partial class ZSGame : RoundsGame {
         public override string GameName { get { return "Zombie survival"; } }
-        public override bool TeleportAllowed { get { return !RoundInProgress; } }
+        protected override bool ChangeMainLevel { get { return ZSConfig.SetMainLevel; } }
         
         public ZSGame() { Picker = new ZSLevelPicker(); }
         public DateTime RoundEnd;
@@ -80,27 +79,22 @@ namespace MCGalaxy.Games {
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal static ZSData Get(Player p) {
-            object data;
-            if (!p.Extras.TryGet(zsExtrasKey, out data)) {
-                data = new ZSData();
-                // TODO: Is this even thread-safe
-                InitData((ZSData)data, p);
-                p.Extras.Put(zsExtrasKey, data);
-            }
-            return (ZSData)data;
+            ZSData data = TryGet(p);
+            if (data != null) return data;
+            data = new ZSData();
+            
+            // TODO: Is this even thread-safe
+            data.InfectMessages = ZSConfig.LoadPlayerInfectMessages(p.name);
+            ZombieStats s = LoadStats(p.name);
+            data.MaxInfected = s.MaxInfected;     data.TotalInfected = s.TotalInfected;
+            data.MaxRoundsSurvived = s.MaxRounds; data.TotalRoundsSurvived = s.TotalRounds;
+            
+            p.Extras.Put(zsExtrasKey, data);
+            return data;
         }
 
         internal static ZSData TryGet(Player p) {
-            object data;
-            bool success = p.Extras.TryGet(zsExtrasKey, out data);
-            return success ? (ZSData)data : null;
-        }
-        
-        static void InitData(ZSData data, Player p) {
-            data.InfectMessages = ZSConfig.LoadPlayerInfectMessages(p.name);
-            ZombieStats stats = LoadStats(p.name);
-            data.MaxInfected = stats.MaxInfected;     data.TotalInfected = stats.TotalInfected;
-            data.MaxRoundsSurvived = stats.MaxRounds; data.TotalRoundsSurvived = stats.TotalRounds;
+            object data; p.Extras.TryGet(zsExtrasKey, out data); return (ZSData)data;
         }
         
         protected override List<Player> GetPlayers() {
@@ -122,31 +116,12 @@ namespace MCGalaxy.Games {
         public override void Start(Player p, string map, int rounds) {
             // ZS starts on current map by default
             if (!Player.IsSuper(p) && map.Length == 0) map = p.level.name;
-            
-            map = GetStartMap(map);
-            if (map == null) {
-                Player.Message(p, "No maps have been setup for Zombie Survival yet"); return;
-            }
-            if (!SetMap(map)) {
-                Player.Message(p, "Failed to load initial map!"); return;
-            }
-            
-            Chat.MessageGlobal("A game of zombie survival is starting on: {0}", Map.ColoredName);
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level == Map) PlayerJoinedGame(pl);
-            }
-            
-            RoundsLeft = rounds;
+            base.Start(p, map, rounds);
+        }
+        
+        protected override void StartGame() { 
             HookStats();
-            
-            Running = true;
             Database.Backend.CreateTable("ZombieStats", createSyntax);
-            HookEventHandlers();
-            
-            Thread t = new Thread(RunGame);
-            t.Name = "MCG_ZSGame";
-            t.Start();
         }
 
         public void InfectPlayer(Player p, Player killer) {
@@ -193,35 +168,22 @@ namespace MCGalaxy.Games {
             Entities.GlobalSpawn(p, false);
         }
 
-        public override void End() {
-            if (!Running) return;
-            Running = false;
-            UnhookEventHandlers();
-            
-            RoundStart = DateTime.MinValue;
+        protected override void EndGame() {
             RoundEnd = DateTime.MinValue;
+            UnhookStats();
             
             Alive.Clear();
             Infected.Clear();
             Bounties.Clear();
             
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online) {
-                pl.Game.Referee = false;
-                pl.Game.RatedMap = false; 
-                pl.Game.PledgeSurvive = false;
-                
-                pl.SetPrefix();
-                if (pl.level == null || pl.level != Map) continue;
-                
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level != Map) continue;              
                 ZSData data = Get(pl);
+                
                 data.ResetState();
                 ResetInvisibility(pl, data);
-                SaveStats(pl);
             }
-            
-            EndCommon();
-            UnhookStats();
         }
         
         public BountyData FindBounty(string target) {
@@ -233,30 +195,8 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerJoinedGame(Player p) {
-            ZSData data = Get(p); // usually this Get() performs the expensive DB stats read
-            p.SetPrefix();
-            p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1());
-            p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2());
-            UpdateStatus3(p, data.Infected);
-            
-            if (RoundInProgress) {
-                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
-                data.BlocksLeft = 25;
-                InfectPlayer(p, null);
-            }
-
-            double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
-            if (startLeft >= 0) {
-                Player.Message(p, "&a{0}%Sseconds left until the round starts. &aRun!", (int)startLeft);
-            }
-            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes", 
-                           Map.Config.Likes, Map.Config.Dislikes);
-            Player.Message(p, "This map's win chance is &a{0}%S%", Map.WinChance);
-            
-            if (Map.Config.Authors.Length == 0) return;
-            string[] authors = Map.Config.Authors.Replace(" ", "").Split(',');
-            Player.Message(p, "It was created by {0}",
-                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+            bool announce = false;
+            HandleJoinedLevel(p, Map, Map, ref announce);
         }
 
         public override void PlayerLeftGame(Player p) {
@@ -302,8 +242,7 @@ namespace MCGalaxy.Games {
             else if (winStreak == 2) prefix += "&7*" + p.color;
             else if (winStreak == 3) prefix += "&6*" + p.color;
             else if (winStreak > 0)  prefix += "&6"  + winStreak + p.color;
-        }
-        
+        }        
         
 
         public bool IsZombieMap(string name) {
@@ -324,7 +263,7 @@ namespace MCGalaxy.Games {
         void UpdateStatus3(Player p, bool infected) {
             string status = FormatStatus3(p, infected);
             p.SendCpeMessage(CpeMessageType.Status3, status);
-        }       
+        }
         
         static string GetTimeLeft(int seconds) {
             if (seconds < 0) return "";
@@ -339,7 +278,7 @@ namespace MCGalaxy.Games {
             string timespan = GetTimeLeft(left);
             
             string format = timespan.Length == 0 ? "&a{0} %Salive %S(map: {1})" :
-                "&a{0} %Salive %S({2}, map: {1})";         
+                "&a{0} %Salive %S({2}, map: {1})";
             return string.Format(format, Alive.Count, Map.MapName, timespan);
         }
         

@@ -226,12 +226,6 @@ namespace MCGalaxy.Games {
                                         "&c" + pKiller.DisplayName + "%S",
                                         pAlive.ColoredName + "%S"));
         }
-        
-        protected override bool SetMap(string map) {
-            bool success = base.SetMap(map);
-            if (success && ZSConfig.SetMainLevel) Server.mainLevel = Map;
-            return success;
-        }
 
         internal static void RespawnPlayer(Player p) {
             Entities.GlobalRespawn(p, false);

@@ -86,34 +86,19 @@ namespace MCGalaxy.Games {
                 GenerateMap(p, 32, 32, 32);
             }
             
-            if (!SetMap(map)) {
-                Player.Message(p, "Failed to load initial map!"); return;
-            }
-            
+            base.Start(p, map, rounds);
+        }
+        
+        protected override void StartGame() {
             bulk.level = Map;
-            Chat.MessageGlobal("Countdown has been enabled!");
-            
-            RoundsLeft = rounds;
-            Running = true;
-            HookEventHandlers();
-            
-            Thread t = new Thread(RunGame);
-            t.Name = "MCG_CountdownGame";
-            t.Start();
         }
 
-        public override void End() {
-            if (!Running) return;
-            Running = false;
-            
+        protected override void EndGame() {
             if (RoundInProgress) EndRound(null);
-            UnhookEventHandlers();
-            
+
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
-
-            EndCommon();
         }
         
         public void GenerateMap(Player p, int width, int height, int length) {

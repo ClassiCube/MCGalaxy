@@ -49,6 +49,7 @@ namespace MCGalaxy.Commands.Info {
             Dictionary<int, string> names = new Dictionary<int, string>();
 
             Player.Message(p, "Retrieving block change records..");
+
             bool foundAny = false;
             ListFromDatabase(p, ref foundAny, x, y, z);
             using (IDisposable rLock = p.level.BlockDB.Locker.AccquireRead(30 * 1000)) {

@@ -17,7 +17,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using MCGalaxy.Blocks;
 using MCGalaxy.Events;
 using MCGalaxy.Events.EconomyEvents;
@@ -26,48 +25,43 @@ using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Network;
-using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     public sealed partial class ZSGame : RoundsGame {
 
-        void HookEventHandlers() {
+        protected override void HookEventHandlers() {
             OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
-            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
-            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
-            
+            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
-            OnSQLSaveEvent.Register(SaveStats, Priority.High);
+            
+            base.HookEventHandlers();
         }
         
-        void UnhookEventHandlers() {
+        protected override void UnhookEventHandlers() {
             OnEntitySpawnedEvent.Unregister(HandleEntitySpawned);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
             OnBlockChangeEvent.Unregister(HandleBlockChange);
-            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
-            OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
-            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
-            
+            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
-            OnSQLSaveEvent.Unregister(SaveStats);
+            
+            base.UnhookEventHandlers();
         }
 
         
@@ -107,7 +101,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandlePlayerConnect(Player p) {
-            if (ZSConfig.SetMainLevel) return;
+            if (ChangeMainLevel) return;
             Player.Message(p, "&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
         }
         
@@ -121,24 +115,6 @@ namespace MCGalaxy.Games {
             bool reverted = MovementCheck.DetectNoclip(p, next)
                 || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
             if (reverted) p.cancelmove = true;
-        }
-        
-        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (!(action == PlayerAction.Referee || action == PlayerAction.UnReferee)) return;
-            if (p.level != Map) return;
-            
-            if (action == PlayerAction.UnReferee) {
-                PlayerJoinedGame(p);
-                Command.Find("Spawn").Use(p, "");
-                p.Game.Referee = false;
-            } else {
-                PlayerLeftGame(p);
-                p.Game.Referee = true;
-                Entities.GlobalDespawn(p, false, false);
-            }
-            
-            Entities.GlobalSpawn(p, false, "");
-            TabList.Update(p, true);
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
@@ -156,7 +132,26 @@ namespace MCGalaxy.Games {
                 ResetHUD(p);
                 if (RoundInProgress) PlayerLeftGame(p);
             } else if (level != Map) { return; }
-            PlayerJoinedGame(p);
+            
+            ZSData data = Get(p);
+            p.SetPrefix();
+            p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1());
+            p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2());
+            UpdateStatus3(p, data.Infected);
+            
+            if (RoundInProgress) {
+                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
+                data.BlocksLeft = 25;
+                InfectPlayer(p, null);
+            }
+
+            double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
+            if (startLeft >= 0) {
+                Player.Message(p, "&a{0}%Sseconds left until the round starts. &aRun!", (int)startLeft);
+            }
+            
+            MessageMapInfo(p);
+            Player.Message(p, "This map's win chance is &a{0}%S%", Map.WinChance);
         }
         
         void HandleSendingHeartbeat(Heartbeat service, ref string name) {
@@ -200,22 +195,23 @@ namespace MCGalaxy.Games {
                 p.RevertBlock(x, y, z); p.cancelBlock = true; return;
             }
             
+            if (p.Game.Referee) return;
             ZSData data = Get(p);
+            
             // Check pillaring
-            if (placing && !Map.Config.Pillaring && !p.Game.Referee) {
+            if (placing && !Map.Config.Pillaring) {
                 if (NotPillaring(block, old)) {
                     data.BlocksStacked = 0;
                 } else if (CheckCoords(p, data, x, y, z)) {
                     data.BlocksStacked++;
                 } else {
                     data.BlocksStacked = 0;
-                }             
+                }
                 if (WarnPillaring(p, data, x, y, z)) { p.cancelBlock = true; return; }
             }
             data.LastX = x; data.LastY = y; data.LastZ = z;
             
             if (placing || (!placing && p.painting)) {
-                if (p.Game.Referee) return;
                 if (data.BlocksLeft <= 0) {
                     Player.Message(p, "You have no blocks left.");
                     p.RevertBlock(x, y, z); p.cancelBlock = true; return;

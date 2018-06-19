@@ -57,10 +57,10 @@ namespace MCGalaxy.Blocks.Physics {
             DoOther(lvl, ref C, ref args);
             return false;
         }
-    	
-    	// cache to avoid allocation each time accessed
-    	internal static ExtraInfoHandler doorsHandler = DoDoorsOnly;
-    	internal static ExtraInfoHandler normalHandler = DoNormal;
+        
+        // cache to avoid allocation each time accessed
+        internal static ExtraInfoHandler doorsHandler = DoDoorsOnly;
+        internal static ExtraInfoHandler normalHandler = DoNormal;
         
         static void ParseType(byte type, ref ExtraInfoArgs args, byte value) {
             switch (type) {

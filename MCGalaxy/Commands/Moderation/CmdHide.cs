@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void AnnounceOps(Player p, string msg) {
-        	LevelPermission hideRank = p.oHideRank == LevelPermission.Null ? p.Rank : p.oHideRank;
+            LevelPermission hideRank = p.oHideRank == LevelPermission.Null ? p.Rank : p.oHideRank;
             Chat.MessageFrom(ChatScope.AboveEqRank, p, msg, hideRank, null, true);
         }
 

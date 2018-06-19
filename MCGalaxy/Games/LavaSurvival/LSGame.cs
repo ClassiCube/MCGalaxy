@@ -60,40 +60,13 @@ namespace MCGalaxy.Games {
             return Map.getPlayers();
         }
         
-        public override void Start(Player p, string map, int rounds) {
-            map = GetStartMap(map);
-            if (map == null) {
-                Player.Message(p, "No maps have been setup for lava survival yet"); return;
-            }         
-            if (!HasMap(map)) {
-                Player.Message(p, "Given map has not been setup for lava survival"); return;
-            }
-            if (!SetMap(map)) {
-                Player.Message(p, "Failed to load initial map!"); return;
-            }
-            
-            RoundsLeft = rounds;
+        protected override void StartGame() {
             ResetPlayerDeaths();
-            
-            Running = true;
-            Logger.Log(LogType.GameActivity, "[Lava Survival] Game started.");
-            HookEventHandlers();
-            
-            Thread t = new Thread(RunGame);
-            t.Name = "MCG_LSGame";
-            t.Start();
         }
         
-        public override void End() {
-            if (!Running) return;
-            Running = false;
-            UnhookEventHandlers();
-            
+        protected override void EndGame() {
             Flooded = false;
             ResetPlayerDeaths();
-            Map.Unload(true, false);
-            
-            EndCommon();
         }
         
         public bool IsPlayerDead(Player p) {

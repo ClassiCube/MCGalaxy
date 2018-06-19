@@ -31,7 +31,7 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-                mainLevel = CmdLoad.LoadLevel(null, ServerConfig.MainLevel);                
+                mainLevel = CmdLoad.LoadLevel(null, ServerConfig.MainLevel);
                 if (mainLevel == null) GenerateMain();
                 
                 mainLevel.Config.AutoUnload = false;
@@ -135,11 +135,7 @@ namespace MCGalaxy {
         static void InitZombieSurvival() {
             if (!ZSConfig.StartImmediately) return;
             try {
-                Level oldMain = Server.mainLevel;
                 Server.zombie.Start(null, "", int.MaxValue);
-                // Did zombie survival change the main world?
-                if (oldMain != null && oldMain != Server.mainLevel)
-                    oldMain.Unload(true, false);
             } catch (Exception e) { Logger.LogError(e); }
         }
 

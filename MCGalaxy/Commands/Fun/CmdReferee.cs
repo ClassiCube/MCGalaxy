@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
@@ -53,7 +52,8 @@ namespace MCGalaxy.Commands.Fun {
         public override void Help(Player p) {
             Player.Message(p, "%T/Referee");
             Player.Message(p, "%HTurns referee mode on/off.");
-            Player.Message(p, "%H  Note that leaving referee mode sends you back to spawn.");
+            Player.Message(p, "%HReferee mode enables you to use hacks and TP in games");
+            Player.Message(p, "%H  Note that leaving referee mode sends you back to spawn");
         }
     }
 }

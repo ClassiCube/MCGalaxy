@@ -118,9 +118,9 @@ namespace MCGalaxy.Commands.Misc {
             }
             
             IGame game = target.level.CurrentGame();
-            if (!p.Game.Referee && game != null && !game.TeleportAllowed) {
-                Player.Message(p, "You can only teleport to players who are " +
-                               "playing a game when you are in referee mode."); return false;
+            if (!p.Game.Referee && game != null) {
+                Player.Message(p, "You can only teleport to players in " +
+                               "a game when you are in referee mode."); return false;
             }
             return true;
         }

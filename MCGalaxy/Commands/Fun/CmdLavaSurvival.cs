@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             Level.SaveSettings(lvl);
         }
-        
+
         void HandleSetupBlock(Player p, string[] args, LSGame game) {
             if (!game.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
             if (args.Length < 3) { SetupHelp(p, "block"); return; }

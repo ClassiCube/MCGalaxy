@@ -22,7 +22,7 @@ using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Games {
 
-    public abstract class RoundsGame : IGame {
+    public abstract partial class RoundsGame : IGame {
         public int RoundsLeft;
         public bool RoundInProgress;
         public DateTime RoundStart;
@@ -30,12 +30,41 @@ namespace MCGalaxy.Games {
         public LevelPicker Picker;
         
         public abstract void OutputStatus(Player p);
-        public abstract void Start(Player p, string map, int rounds);
         
         protected abstract void DoRound();
         protected abstract List<Player> GetPlayers();
+        protected virtual void SaveStats(Player pl) { }
+        protected virtual bool ChangeMainLevel { get { return false; } }
         
-        public void RunGame() {
+        protected abstract void StartGame();
+        public virtual void Start(Player p, string map, int rounds) {
+            map = GetStartMap(map);
+            if (map == null) {
+                Player.Message(p, "No maps have been setup for {0} yet", GameName); return;
+            }
+            if (!SetMap(map)) {
+                Player.Message(p, "Failed to load initial map!"); return;
+            }
+            
+            Chat.MessageGlobal("A game of {0} is starting on {1}%S!", GameName, Map.ColoredName);
+            Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
+            
+            StartGame();
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
+                if (pl.level == Map) PlayerJoinedGame(pl);
+            }
+            
+            RoundsLeft = rounds;
+            Running = true;
+            HookEventHandlers();
+            
+            Thread t = new Thread(RunGame);
+            t.Name = "MCG_" + GameName;
+            t.Start();
+        }
+        
+        void RunGame() {
             try {
                 while (Running && RoundsLeft > 0) {
                     RoundInProgress = false;
@@ -52,8 +81,29 @@ namespace MCGalaxy.Games {
             }
         }
         
+        protected virtual string GetStartMap(string forcedMap) {
+            if (forcedMap.Length > 0) return forcedMap;
+            List<string> maps = Picker.GetCandidateMaps();
+            
+            if (maps == null || maps.Count == 0) return null;
+            return LevelPicker.GetRandomMap(new Random(), maps);
+        }
+        
+        protected virtual bool SetMap(string map) {
+            Picker.QueuedMap = null;
+            Level next = LevelInfo.FindExact(map);
+            if (next == null) next = CmdLoad.LoadLevel(null, map);
+            if (next == null) return false;
+            
+            Map = next;
+            Map.SaveChanges = false;
+            
+            if (ChangeMainLevel) Server.SetMainLevel(Map);
+            return true;
+        }
+        
         protected void DoCountdown(string format, int delay, int minThreshold) {
-            const CpeMessageType type = CpeMessageType.Announcement;            
+            const CpeMessageType type = CpeMessageType.Announcement;
             for (int i = delay; i > 0 && Running; i--) {
                 if (i == 1) {
                     MessageMap(type, String.Format(format, i)
@@ -62,7 +112,7 @@ namespace MCGalaxy.Games {
                     MessageMap(type, String.Format(format, i));
                 }
                 Thread.Sleep(1000);
-            }           
+            }
             MessageMap(type, "");
         }
         
@@ -99,25 +149,6 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected string GetStartMap(string forcedMap) {
-            if (forcedMap.Length > 0) return forcedMap;
-            List<string> maps = Picker.GetCandidateMaps();
-            
-            if (maps == null || maps.Count == 0) return null;
-            return LevelPicker.GetRandomMap(new Random(), maps);
-        }
-        
-        protected virtual bool SetMap(string map) {
-            Picker.QueuedMap = null;
-            Level next = LevelInfo.FindExact(map);
-            if (next == null) next = CmdLoad.LoadLevel(null, map);
-            
-            if (next == null) return false;
-            Map = next;
-            Map.SaveChanges = false;
-            return true;
-        }
-        
         void TransferPlayers(string lastMap) {
             Random rnd = new Random();
             Player[] online = PlayerInfo.Online.Items;
@@ -139,41 +170,39 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected void EndCommon() {
+        protected abstract void EndGame();
+        public override void End() {
+            if (!Running) return;
+            Running = false;
+            
+            UnhookEventHandlers();
+            EndGame();
+            
+            RoundStart = DateTime.MinValue;
             RoundsLeft = 0;
             RoundInProgress = false;
             
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) {
                 if (pl.level != Map) continue;
+                pl.Game.RatedMap = false;
+                pl.Game.PledgeSurvive = false;
+                
                 TabList.Update(pl, true);
                 ResetHUD(pl);
+                pl.SetPrefix();
             }
+            
+            // in case players left game partway through
+            foreach (Player pl in players) { SaveStats(pl); }
             
             if (Map != null) Map.Message(GameName + " %Sgame ended");
             Logger.Log(LogType.GameActivity, "[{0}] Game ended", GameName);
+            if (Picker != null) Picker.Clear();
             
-            Picker.Clear();
             LastMap = "";
+            if (Map != null) Map.AutoUnload();
             Map = null;
-        }
-        
-        protected void HandleJoinedCommon(Player p, Level prevLevel, Level level, ref bool announce) {
-            if (prevLevel == Map && level != Map) {
-                if (Picker.Voting) Picker.ResetVoteMessage(p);
-            } else if (level == Map) {
-                if (Picker.Voting) Picker.SendVoteMessage(p);
-            }
-            
-            if (level != Map) return;
-            if (prevLevel == Map || LastMap.Length == 0 || prevLevel.name.CaselessEq(LastMap))
-                announce = false;
-        }
-        
-        protected void HandleLevelUnload(Level lvl) {
-            if (lvl != Map) return;
-            Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);
-            lvl.cancelunload = true;
         }
     }
 }

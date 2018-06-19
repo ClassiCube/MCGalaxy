@@ -112,23 +112,8 @@ namespace MCGalaxy.Games {
             Blue.Captures = 0;
             Red.Captures = 0;
             ResetFlagsState();
-            
-            Thread.Sleep(4000);
-            SaveDB();
+
             Map.Message("Starting next round!");
-        }
-        
-        void SaveDB() {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != Map) continue;
-                CtfData data = Get(p);
-                
-                // TODO: Move to MySQL save event
-                data.HasFlag = false;
-                Database.Backend.UpdateRows("CTF", "Points=@1, Captures=@2, tags=@3",
-                                            "WHERE Name=@0", p.name, data.Points, data.Captures, data.Tags);
-            }
         }
         
         

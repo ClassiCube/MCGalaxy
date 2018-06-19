@@ -25,12 +25,14 @@ namespace MCGalaxy.Games {
     
     public sealed partial class ZSGame : RoundsGame {
         
-        TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
-        OfflineStatPrinter offlineZSStats;
-        OnlineStatPrinter onlineZSStats;
-        ChatToken infectedToken, survivedToken;
+        struct ZombieStats { public int TotalRounds, MaxRounds, TotalInfected, MaxInfected; }
         
-        void HookStats() {
+        static TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
+        static OfflineStatPrinter offlineZSStats;
+        static OnlineStatPrinter onlineZSStats;
+        static ChatToken infectedToken, survivedToken;
+        
+        static void HookStats() {
             if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
             
             statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
@@ -60,7 +62,7 @@ namespace MCGalaxy.Games {
             TopStat.Stats.Add(statMaxSurvived);
         }
         
-        void UnhookStats() {
+        static void UnhookStats() {
             OfflineStat.Stats.Remove(offlineZSStats);
             OnlineStat.Stats.Remove(onlineZSStats);
             ChatTokens.Standard.Remove(infectedToken);
@@ -72,13 +74,13 @@ namespace MCGalaxy.Games {
             TopStat.Stats.Remove(statMaxSurvived);
         }
         
-        void PrintOnlineZSStats(Player p, Player who) {
+        static void PrintOnlineZSStats(Player p, Player who) {
             ZSData data = Get(who);
             PrintZSStats(p, data.TotalRoundsSurvived, data.TotalInfected,
                          data.MaxRoundsSurvived, data.MaxInfected);
         }
         
-        void PrintOfflineZSStats(Player p, PlayerData who) {
+        static void PrintOfflineZSStats(Player p, PlayerData who) {
             ZombieStats stats = LoadStats(who.Name);
             PrintZSStats(p, stats.TotalRounds, stats.TotalInfected,
                          stats.MaxRounds, stats.MaxInfected);
@@ -102,21 +104,21 @@ namespace MCGalaxy.Games {
         };
         
         static object ReadStats(IDataRecord record, object arg) {
-        	ZombieStats stats;
-        	stats.TotalRounds   = record.GetInt("TotalRounds");
+            ZombieStats stats;
+            stats.TotalRounds   = record.GetInt("TotalRounds");
             stats.MaxRounds     = record.GetInt("MaxRounds");
             stats.TotalInfected = record.GetInt("TotalInfected");
             stats.MaxInfected   = record.GetInt("MaxInfected");
-        	return stats;
+            return stats;
         }
         
         static ZombieStats LoadStats(string name) {
-            ZombieStats stats = default(ZombieStats);            
+            ZombieStats stats = default(ZombieStats);
             return (ZombieStats)Database.Backend.ReadRows("ZombieStats", "*", stats,
                                                           ReadStats, "WHERE Name=@0", name);
         }
         
-        static void SaveStats(Player p) {
+        protected override void SaveStats(Player p) {
             ZSData data = TryGet(p);
             if (data == null || data.TotalRoundsSurvived == 0 && data.TotalInfected == 0) return;
             

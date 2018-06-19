@@ -117,7 +117,6 @@ namespace MCGalaxy.Gui {
 
                 level.Config.MOTD = "Lava Survival: " + level.name.Capitalize();
                 level.Config.PhysicsOverload = 1000000;
-                level.Config.AutoUnload = false;
                 level.Config.LoadOnGoto = false;
                 Level.SaveSettings(level);
                 level.Unload(true);

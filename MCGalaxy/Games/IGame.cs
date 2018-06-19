@@ -25,7 +25,6 @@ namespace MCGalaxy.Games {
         public Level Map;
         public bool Running;
         public abstract string GameName { get; }
-        public virtual bool TeleportAllowed { get { return true; } }
 
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }
         public virtual void PlayerJoinedGame(Player p) { }

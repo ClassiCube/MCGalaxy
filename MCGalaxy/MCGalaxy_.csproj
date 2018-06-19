@@ -491,7 +491,7 @@
     <Compile Include="Games\Countdown\CountdownGame.Round.cs" />
     <Compile Include="Games\Countdown\CountdownMapGen.cs" />
     <Compile Include="Games\CTF\CtfConfig.cs" />
-    <Compile Include="Games\CTF\CTFGame.DB.cs" />
+    <Compile Include="Games\CTF\CtfGame.DB.cs" />
     <Compile Include="Games\CTF\CtfGame.Plugin.cs" />
     <Compile Include="Games\CTF\CtfGame.Round.cs" />
     <Compile Include="Games\GameProps.cs" />
@@ -503,6 +503,7 @@
     <Compile Include="Games\LevelPicker.cs" />
     <Compile Include="Games\MovementCheck.cs" />
     <Compile Include="Games\RoundsGame.cs" />
+    <Compile Include="Games\RoundsGame.Plugin.cs" />
     <Compile Include="Games\Team.cs" />
     <Compile Include="Games\TntWars\TntWars.cs" />
     <Compile Include="Games\TntWars\TntWarsConfig.cs" />

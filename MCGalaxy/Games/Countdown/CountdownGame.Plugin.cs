@@ -23,22 +23,23 @@ namespace MCGalaxy.Games {
     
     public sealed partial class CountdownGame : RoundsGame {
         
-        void HookEventHandlers() {
+         protected override void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
+            
+            base.HookEventHandlers();
         }
         
-        void UnhookEventHandlers() {
+        protected override void UnhookEventHandlers() {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
-            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
-        }
-        
+            
+            base.UnhookEventHandlers();
+        }       
         
         void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
             if (!RoundInProgress || !FreezeMode) return;

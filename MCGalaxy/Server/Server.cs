@@ -296,23 +296,26 @@ namespace MCGalaxy {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
         
-        /// <summary> Sets the main level of the server that new players spawn in. </summary>
-        /// <returns> true if main level was changed, false if not
-        /// (same map as current main, or given map doesn't exist).</returns>
         public static bool SetMainLevel(string mapName) {
             if (mapName.CaselessEq(ServerConfig.MainLevel)) return false;
-            Level oldMain = mainLevel;
             
             Level lvl = LevelInfo.FindExact(mapName);
             if (lvl == null)
                 lvl = CmdLoad.LoadLevel(null, mapName);
             if (lvl == null) return false;
             
-            oldMain.Config.AutoUnload = true;
+            SetMainLevel(lvl); return true;
+        }
+        
+        public static void SetMainLevel(Level lvl) {
+            Level oldMain = mainLevel;            
             mainLevel = lvl;
+            
             mainLevel.Config.AutoUnload = false;
-            ServerConfig.MainLevel = mapName;
-            return true;
+            ServerConfig.MainLevel = lvl.name;
+            
+            oldMain.Config.AutoUnload = true;
+            oldMain.AutoUnload();
         }
         
         public static void DoGC() {

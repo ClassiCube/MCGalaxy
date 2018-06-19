@@ -24,20 +24,20 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
 
-        void HookEventHandlers() {
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
-            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
-            
+        protected override void HookEventHandlers() {
+            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);           
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
+            
+            base.HookEventHandlers();
         }
         
-        void UnhookEventHandlers() {
-            OnLevelUnloadEvent.Unregister(HandleLevelUnload);
-            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
-            
+        protected override void UnhookEventHandlers() {
+            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
+            
+            base.UnhookEventHandlers();
         }
         
         void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {

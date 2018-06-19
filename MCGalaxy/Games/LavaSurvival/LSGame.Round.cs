@@ -94,8 +94,7 @@ namespace MCGalaxy.Games {
             
             if (data.fast) Player.Message(p, "The lava will be &cfast %Sthis round!");
             if (data.killer) Player.Message(p, "The " + block + " will &ckill you %Sthis round!");
-            if (data.destroy) Player.Message(p, "The " + block + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");
-            
+            if (data.destroy) Player.Message(p, "The " + block + " will &cdestroy plants " + (data.water ? "" : "and flammable blocks ") + "%Sthis round!");          
             
             if (!Flooded) Player.Message(p, FloodTimeLeftMessage());
             Player.Message(p, RoundTimeLeftMessage());
@@ -104,12 +103,14 @@ namespace MCGalaxy.Games {
         protected override bool SetMap(string map) {
             bool success = base.SetMap(map);
             if (!success) return false;
+            
             mapSettings = LoadMapSettings(map);
             data = GenerateMapData(mapSettings);
             
             Map.SetPhysics(data.destroy ? 2 : 1);
             Map.Config.PhysicsOverload = 1000000;
             Map.Config.LoadOnGoto = false;
+            
             Level.SaveSettings(Map);
             return true;
         }
