@@ -125,27 +125,30 @@ namespace MCGalaxy.Network {
             bot.Say("*" + p.DisplayName + " " + message, stealth);
         }
         
-        bool ToPublicChannel(ChatScope scope, object arg, ChatMessageFilter filter) {
-             return Chat.scopeFilters[(int)scope](ircGuest, arg) 
-                 && (filter == null || filter(ircGuest, arg));
+        void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
+            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
+            
+            if (scopeFilter(ircGuest, arg) && (filter == null || filter(ircGuest, arg))) {
+                bot.Say(msg, false);
+            } else {
+                // TODO: Check filters!!!!!
+                bot.Say(msg, true);
+            }
         }
 
         void HandleChatSys(ChatScope scope, string msg, object arg,
                            ref ChatMessageFilter filter, bool irc) {
-            if (!irc) return;
-            bot.Say(msg, !ToPublicChannel(scope, arg, filter));
+            if (irc) MessageToIRC(scope, msg, arg, filter);
         }
         
         void HandleChatFrom(ChatScope scope, Player source, string msg,
                             object arg, ref ChatMessageFilter filter, bool irc) {
-            if (!irc) return;
-            bot.Say(Unescape(source, msg), !ToPublicChannel(scope, arg, filter));
+            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
         }
         
         void HandleChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool irc) {
-            if (!irc) return;
-            bot.Say(Unescape(source, msg), !ToPublicChannel(scope, arg, filter));
+            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
         }
         
         void HandleShutdown(bool restarting, string message) {
@@ -344,7 +347,7 @@ namespace MCGalaxy.Network {
         
         void Listener_OnRegistered() {
             Logger.Log(LogType.IRCCActivity, "Connected to IRC!");
-            bot.reset = false;
+            bot.resetting = false;
             bot.retries = 0;
             
             Authenticate();
@@ -378,7 +381,7 @@ namespace MCGalaxy.Network {
         }
 
         void Listener_OnDisconnected() {
-            if (!bot.reset && bot.retries < 3) { bot.retries++; bot.Connect(); }
+            if (!bot.resetting && bot.retries < 3) { bot.retries++; bot.Connect(); }
         }
 
         void Listener_OnNick(UserInfo user, string newNick) {

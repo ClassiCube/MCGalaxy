@@ -268,7 +268,7 @@ namespace MCGalaxy {
                     lvl.SaveBlockDBChanges();
                 }
                 
-                if (Server.ServerSetupFinished && !ServerConfig.AutoLoadMaps) {
+                if (Server.SetupFinished && !ServerConfig.AutoLoadMaps) {
                     File.WriteAllText("text/autoload.txt", autoload);
                 }
             } catch (Exception ex) { Logger.LogError(ex); }

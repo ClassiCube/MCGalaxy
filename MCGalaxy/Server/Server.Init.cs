@@ -62,7 +62,7 @@ namespace MCGalaxy {
             hidden = PlayerList.Load("ranks/hidden.txt");
             vip = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
-            lockdown = PlayerList.Load("text/lockdown.txt");            
+            lockdown = PlayerList.Load("text/lockdown.txt");
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
             reach = PlayerExtList.Load("extra/reach.txt");
@@ -71,9 +71,9 @@ namespace MCGalaxy {
             modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
             muted = PlayerExtList.Load("ranks/muted.txt");
-            frozen = PlayerExtList.Load("ranks/frozen.txt");            
+            frozen = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
-            tempBans = PlayerExtList.Load(Paths.TempBansFile);            
+            tempBans = PlayerExtList.Load(Paths.TempBansFile);
             ModerationTasks.QueueTasks();
             
             if (ServerConfig.WhitelistedOnly)
@@ -129,7 +129,7 @@ namespace MCGalaxy {
                                  TimeSpan.FromMilliseconds(20));
 
             Logger.Log(LogType.SystemActivity, "Finished setting up server, finding classicube.net url..");
-            ServerSetupFinished = true;
+            SetupFinished = true;
         }
         
         static void InitZombieSurvival() {

@@ -32,8 +32,8 @@ namespace MCGalaxy {
         internal Connection connection;
         internal string[] channels, opchannels;
         internal string nick, server;
-        internal bool reset = false;
-        internal byte retries = 0;
+        internal bool resetting;
+        internal byte retries;
         IRCHandlers handlers;
         ConnectionArgs args;
         
@@ -78,7 +78,7 @@ namespace MCGalaxy {
         
         /// <summary> Disconnects this bot from IRC, then reconnects to IRC if IRC is enabled. </summary>
         public void Reset() {
-            reset = true;
+            resetting = true;
             retries = 0;
             Disconnect("IRC Bot resetting...");
             if (!ServerConfig.UseIRC) return;

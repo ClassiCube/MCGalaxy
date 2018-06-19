@@ -55,7 +55,7 @@ namespace MCGalaxy {
         PlayerChat,
         
         /// <summary> Chat from IRC. </summary>
-        IRCChat,      
+        IRCChat,
         
         /// <summary> Chat to all players in a particular chatroom, or across all chatrooms. </summary>
         ChatroomChat,

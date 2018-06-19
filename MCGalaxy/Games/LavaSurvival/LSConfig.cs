@@ -41,13 +41,11 @@ namespace MCGalaxy.Games {
             return data;
         }
 
-        bool needsSaveSettings;
         public void LoadSettings() {
             if (!File.Exists("properties/lavasurvival.properties")) { SaveSettings(); return; }
 
             try {
                 PropertiesFile.Read("properties/lavasurvival.properties", ProcessSettingsLine);
-                if (needsSaveSettings) SaveSettings();
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -57,15 +55,6 @@ namespace MCGalaxy.Games {
             switch (key.ToLower()) {
                 case "start-on-startup": StartOnStartup = bool.Parse(value); break;
                 case "lives": MaxLives = int.Parse(value); break;
-                    
-                case "setup-rank":
-                    LevelPermission setupRank = Group.ParsePermOrName(value, LevelPermission.Admin);
-                    UpdateExtraPerms(setupRank, 1);
-                    break;
-                case "control-rank":
-                    LevelPermission controlRank = Group.ParsePermOrName(value, LevelPermission.Operator);
-                    UpdateExtraPerms(controlRank, 2);
-                    break;
                 case "maps":
                     foreach (string name in value.Split(',')) {
                         string map = name.Trim();
@@ -75,13 +64,6 @@ namespace MCGalaxy.Games {
                     }
                     break;
             }
-        }
-        
-        void UpdateExtraPerms(LevelPermission perm, int num) {
-            CommandExtraPerms.Load();
-            CommandExtraPerms.Set("lavasurvival", perm, "temp desc", num);
-            CommandExtraPerms.Save();
-            needsSaveSettings = true;
         }
         
         public void SaveSettings() {

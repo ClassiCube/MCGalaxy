@@ -54,7 +54,7 @@ namespace MCGalaxy {
         public static INetworkListen Listener;
 
         //Other
-        public static bool ServerSetupFinished = false;
+        public static bool SetupFinished = false;
         public static CTFGame ctf = new CTFGame();
         
         public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;

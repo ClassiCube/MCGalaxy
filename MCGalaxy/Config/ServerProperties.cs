@@ -44,8 +44,6 @@ namespace MCGalaxy {
             old = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
-            if (old.saveZS)
-                ZSConfig.SaveSettings();
             ZSConfig.LoadSettings();
             
             Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
@@ -88,12 +86,7 @@ namespace MCGalaxy {
             }
             
             if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
-                // Backwards compatibility: ZS used to be part of server.properties
-                if (ConfigElement.Parse(Server.zombieConfig, key, value, null)) {
-                    perms.saveZS = true;
-                } else {
-                    Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
-                }
+                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
             }
         }
         
@@ -103,7 +96,6 @@ namespace MCGalaxy {
             public int viewPerm = -1, nextPerm = -1, clearPerm = -1, opchatPerm = -1, adminchatPerm = -1;
             public int mapGenLimit = -1, mapGenLimitAdmin = -1;
             public int afkKickMins = -1; public LevelPermission afkKickMax = LevelPermission.Banned;
-            public bool saveZS;
         }
         
         internal static void FixupOldPerms() {

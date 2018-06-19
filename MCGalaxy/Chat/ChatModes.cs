@@ -91,14 +91,13 @@ namespace MCGalaxy {
             if (who == null) return;
             if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
             
-            if (who.Ignores.All) {
-                DoFakePM(p, who, message);
-            } else if (who.Ignores.Names.CaselessContains(p.name)) {
-                DoFakePM(p, who, message);
-            } else {
-                DoPM(p, who, message);
-            }
+            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
+            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
             
+            if (!Chat.Ignoring(who, p)) {
+                Player.Message(who, "&9[>] {0}: &f{1}", p.ColoredName, message);
+            }
+
             p.CheckForMessageSpam();
         }
         
@@ -108,17 +107,6 @@ namespace MCGalaxy {
             Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", p.name, message);
             
             p.CheckForMessageSpam();
-        }
-        
-        static void DoFakePM(Player p, Player who, string message) {
-            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
-            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
-        }
-        
-        static void DoPM(Player p, Player who, string message) {
-            Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
-            Player.Message(p,     "[<] {0}: &f{1}", who.ColoredName, message);
-            Player.Message(who, "&9[>] {0}: &f{1}", p.ColoredName, message);
         }
     }
 }

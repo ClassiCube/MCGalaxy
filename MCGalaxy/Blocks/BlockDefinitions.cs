@@ -144,7 +144,6 @@ namespace MCGalaxy {
                 Logger.LogError(ex);
             }
             
-            Save(true, null);
             // As the BlockDefinition instances in levels will now be different
             // to the instances in GlobalDefs, we need to update them.
             if (oldDefs != null) UpdateLoadedLevels(oldDefs);
