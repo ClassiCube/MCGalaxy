@@ -104,7 +104,7 @@ namespace MCGalaxy.Games {
         }
         
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
-            int dist = ZSConfig.HitboxPrecision;
+            int dist = Config.HitboxPrecision;
             foreach (Player killer in deadList) {
                 ZSData killerData = Get(killer);
                 killerData.Infected = true;

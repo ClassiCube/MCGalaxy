@@ -63,8 +63,11 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, name);
             if (who == null) return;
             if (who == p) { Player.Message(p, "Cannot follow yourself."); return; }
-            if (who.Rank >= p.Rank) { MessageTooHighRank(p, "follow", false); return;}
-            if (who.following.Length > 0) { Player.Message(p, who.DisplayName + " is already following " + who.following); return; }
+            if (who.Rank >= p.Rank) { MessageTooHighRank(p, "follow", false); return; }
+            
+            if (who.following.Length > 0) { 
+                Player.Message(p, who.ColoredName+ " %Sis already following " + who.following); return; 
+            }
 
             if (!p.hidden) Command.Find("Hide").Use(p, "");
 

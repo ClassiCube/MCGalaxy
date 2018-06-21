@@ -67,7 +67,7 @@ namespace MCGalaxy.Games {
     
     public sealed partial class ZSGame : RoundsGame {
         public override string GameName { get { return "Zombie survival"; } }
-        protected override bool ChangeMainLevel { get { return ZSConfig.SetMainLevel; } }
+        protected override bool ChangeMainLevel { get { return Config.SetMainLevel; } }
         
         public ZSGame() { Picker = new ZSLevelPicker(); }
         public DateTime RoundEnd;
@@ -76,6 +76,7 @@ namespace MCGalaxy.Games {
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
         internal List<string> infectMessages = new List<string>();
+        public static ZSConfig Config = new ZSConfig();
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal static ZSData Get(Player p) {
@@ -245,11 +246,11 @@ namespace MCGalaxy.Games {
         }        
         
 
-        public bool IsZombieMap(string name) {
+        public bool HasMap(string name) {
             if (!Running) return false;
-            if (ZSConfig.IgnoredLevelList.CaselessContains(name)) return false;
+            if (Config.IgnoredLevelList.CaselessContains(name)) return false;
             
-            return ZSConfig.LevelList.Count == 0 || ZSConfig.LevelList.CaselessContains(name);
+            return Config.LevelList.Count == 0 || Config.LevelList.CaselessContains(name);
         }
         
         void UpdateAllStatus1() {
@@ -299,16 +300,16 @@ namespace MCGalaxy.Games {
         
         public override List<string> GetCandidateMaps() {
             List<string> maps = null;
-            bool useLevelList = ZSConfig.LevelList.Count > 0;
+            bool useLevelList = ZSGame.Config.LevelList.Count > 0;
             
             if (useLevelList) {
-                maps = new List<string>(ZSConfig.LevelList);
+                maps = new List<string>(ZSGame.Config.LevelList);
             } else {
                 string[] allMaps = LevelInfo.AllMapNames();
                 maps = new List<string>(allMaps);
             }
             
-            foreach (string ignore in ZSConfig.IgnoredLevelList) { maps.Remove(ignore); }
+            foreach (string ignore in ZSGame.Config.IgnoredLevelList) { maps.Remove(ignore); }
             if (maps.Count < 3) {
                 string group = useLevelList ? "in your level list " : "";
                 Logger.Log(LogType.Warning, "You must have more than 3 levels {0}to change levels in Zombie Survival", group);

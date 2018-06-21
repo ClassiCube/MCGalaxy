@@ -25,11 +25,8 @@ namespace MCGalaxy.Gui {
         System.Timers.Timer lavaUpdateTimer;
         TntWarsGame tw_selected;
 
-        void LoadLavaSettings() {
-        }
-
         void SaveLavaSettings() {
-            Server.lava.SaveSettings();
+            LSGame.Config.Save();
             SaveLavaMapSettings();
         }
 
@@ -70,7 +67,7 @@ namespace MCGalaxy.Gui {
                 if (noUseList) ls_lstNotUsed.Items.Clear();
 
                 if (useList) {
-                    ls_lstUsed.Items.AddRange(Server.lava.Maps.ToArray());
+                    ls_lstUsed.Items.AddRange(LSGame.Config.Maps.ToArray());
                     try { if (useIndex > -1) ls_lstUsed.SelectedIndex = useIndex; }
                     catch { }
                 }

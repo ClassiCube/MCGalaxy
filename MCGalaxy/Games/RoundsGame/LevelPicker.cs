@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 
 namespace MCGalaxy.Games {
@@ -28,7 +27,7 @@ namespace MCGalaxy.Games {
         public bool Voting;
 
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
-        internal int Votes1 = 0, Votes2 = 0, Votes3 = 0;
+        internal int Votes1, Votes2, Votes3;
         
         public void AddRecentMap(string map) {
             if (RecentMaps.Count >= 20)

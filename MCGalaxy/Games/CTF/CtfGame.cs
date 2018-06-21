@@ -144,6 +144,11 @@ namespace MCGalaxy.Games {
                 ResetPlayerFlag(p, data);
             }
         }
+        
+        public override void PlayerJoinedGame(Player p) {
+            bool announce = false;
+            HandleJoinedLevel(p, Map, Map, ref announce);
+        }
 
         public override void PlayerLeftGame(Player p) {
             CtfTeam team = TeamOf(p);

@@ -57,30 +57,30 @@ namespace MCGalaxy.Commands.Fun {
         
         static void SetHitbox(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
-                Player.Message(p, "Hitbox detection is currently &a" + ZSConfig.HitboxPrecision + " %Sunits apart.");
+                Player.Message(p, "Hitbox detection is currently &a" + ZSGame.Config.HitboxPrecision + " %Sunits apart.");
                 return;
             }
             
             int precision = 0;
             if (!CommandParser.GetInt(p, args[2], "Hitbox detection", ref precision, 0, 256)) return;
             
-            ZSConfig.HitboxPrecision = precision;
+            ZSGame.Config.HitboxPrecision = precision;
             Player.Message(p, "Hitbox detection set to &a" + precision + " %Sunits apart.");
-            ZSConfig.SaveSettings();
+            ZSGame.Config.Save();
         }
         
         static void SetMaxMove(Player p, ZSGame game, string[] args) {
             if (args.Length == 2) {
-                Player.Message(p, "Maxmium move distance is currently &a" + ZSConfig.MaxMoveDistance + " %Sunits apart.");
+                Player.Message(p, "Maxmium move distance is currently &a" + ZSGame.Config.MaxMoveDistance + " %Sunits apart.");
                 return;
             }
             
             int distance = 0;
             if (!CommandParser.GetInt(p, args[2], "Maxmimum move distance", ref distance, 0, 256)) return;
             
-            ZSConfig.MaxMoveDistance = distance;
+            ZSGame.Config.MaxMoveDistance = distance;
             Player.Message(p, "Maximum move distance set to &a" + distance + " %Sunits apart.");
-            ZSConfig.SaveSettings();
+            ZSGame.Config.Save();
         }
         
         public override void Help(Player p) {

@@ -133,14 +133,14 @@ namespace MCGalaxy {
         }
         
         static void InitZombieSurvival() {
-            if (!ZSConfig.StartImmediately) return;
+            if (!ZSGame.Config.StartImmediately) return;
             try {
                 Server.zombie.Start(null, "", int.MaxValue);
             } catch (Exception e) { Logger.LogError(e); }
         }
 
         static void InitLavaSurvival() {
-            if (!Server.lava.StartOnStartup) return;
+            if (!LSGame.Config.StartImmediately) return;
             try {
                 Server.lava.Start(null, "", int.MaxValue);
             } catch (Exception e) { Logger.LogError(e); }

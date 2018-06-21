@@ -244,7 +244,7 @@ namespace MCGalaxy {
         [ConfigString("Authors", "Game", "", true)]
         public string Authors = "";
         [ConfigBool("Pillaring", "Game", false)]
-        public bool Pillaring = !ZSConfig.NoPillaring;
+        public bool Pillaring = !ZSGame.Config.NoPillaring;
         
         [ConfigEnum("BuildType", "Game", BuildType.Normal, typeof(BuildType))]
         public BuildType BuildType = BuildType.Normal;

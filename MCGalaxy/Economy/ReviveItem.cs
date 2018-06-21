@@ -45,27 +45,27 @@ namespace MCGalaxy.Eco {
             }            
             
             DateTime end = Server.zombie.RoundEnd;
-            if (DateTime.UtcNow.AddSeconds(ZSConfig.ReviveNoTime) > end) {
-                Player.Message(p, ZSConfig.ReviveNoTimeMessage); return;
+            if (DateTime.UtcNow.AddSeconds(ZSGame.Config.ReviveNoTime) > end) {
+                Player.Message(p, ZSGame.Config.ReviveNoTimeMessage); return;
             }
             int count = Server.zombie.Infected.Count;
-            if (count < ZSConfig.ReviveFewZombies) {
-                Player.Message(p, ZSConfig.ReviveFewZombiesMessage); return;
+            if (count < ZSGame.Config.ReviveFewZombies) {
+                Player.Message(p, ZSGame.Config.ReviveFewZombiesMessage); return;
             }
-            if (data.RevivesUsed >= ZSConfig.ReviveTimes) {
+            if (data.RevivesUsed >= ZSGame.Config.ReviveTimes) {
                 Player.Message(p, "You cannot buy any more revive potions."); return;
             }
-            if (data.TimeInfected.AddSeconds(ZSConfig.ReviveTooSlow) < DateTime.UtcNow) {
+            if (data.TimeInfected.AddSeconds(ZSGame.Config.ReviveTooSlow) < DateTime.UtcNow) {
                 Player.Message(p, "&cYou can only revive within the first {0} seconds after you were infected.",
-                               ZSConfig.ReviveTooSlow); return;
+                               ZSGame.Config.ReviveTooSlow); return;
             }
             
             int chance = new Random().Next(1, 101);
-            if (chance <= ZSConfig.ReviveChance) {
+            if (chance <= ZSGame.Config.ReviveChance) {
                 Server.zombie.DisinfectPlayer(p);
-                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSConfig.ReviveSuccessMessage);
+                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveSuccessMessage);
             } else {
-                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSConfig.ReviveFailureMessage);
+                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
             data.RevivesUsed++;
@@ -74,8 +74,8 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
-            int time = ZSConfig.ReviveNoTime, expiry = ZSConfig.ReviveTooSlow;
-            int potions = ZSConfig.ReviveTimes;
+            int time = ZSGame.Config.ReviveNoTime, expiry = ZSGame.Config.ReviveTooSlow;
+            int potions = ZSGame.Config.ReviveTimes;
             Player.Message(p, "%T/Buy " + Name);
             OutputItemInfo(p);
             

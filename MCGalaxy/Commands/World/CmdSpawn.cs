@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                     
                     pos.X = 16 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32;
                     pos.Y = 32 + (blue ? game.BlueSpawn[1] : game.RedSpawn[1]) * 32;
-                    pos.Z = 16 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32;                    
+                    pos.Z = 16 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32;
                     yaw = (byte)(blue ? game.BlueSpawn[3] : game.RedSpawn[3]);
                     pitch = (byte)(blue ? game.BlueSpawn[4] : game.RedSpawn[4]);
                 }

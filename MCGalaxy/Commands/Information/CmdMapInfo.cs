@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
-            if (!Server.zombie.IsZombieMap(data.MapName)) return;
+            if (!Server.zombie.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.Replace(" ", "").Split(',');
             Player.Message(p, "Map authors: {0}",

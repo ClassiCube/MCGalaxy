@@ -72,10 +72,9 @@ namespace MCGalaxy {
             }
         }
         
-        internal static ConfigElement[] serverConfig, levelConfig, zombieConfig, zoneConfig;
+        internal static ConfigElement[] serverConfig, levelConfig, zoneConfig;
         public static void Start() {
             serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
-            zombieConfig = ConfigElement.GetAll(typeof(ZSConfig));
             levelConfig = ConfigElement.GetAll(typeof(LevelConfig));
             zoneConfig = ConfigElement.GetAll(typeof(ZoneConfig));
             

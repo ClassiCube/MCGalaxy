@@ -110,8 +110,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleSetupSettings(Player p, string[] args, LSGame game) {
-            Player.Message(p, "Maps: &b" + game.Maps.Join(", "));
-            Player.Message(p, "Start on server startup: " + (game.StartOnStartup ? "&aON" : "&cOFF"));
+            Player.Message(p, "Maps: &b" + LSGame.Config.Maps.Join(", "));
+            Player.Message(p, "Start on server startup: " + (LSGame.Config.StartImmediately ? "&aON" : "&cOFF"));
         }
         
         static bool ParseChance(Player p, string arg, string input, ref byte value) {

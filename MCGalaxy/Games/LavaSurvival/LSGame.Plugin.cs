@@ -25,7 +25,7 @@ namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
 
         protected override void HookEventHandlers() {
-            OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);           
+            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             
@@ -33,17 +33,19 @@ namespace MCGalaxy.Games {
         }
         
         protected override void UnhookEventHandlers() {
-            OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);            
+            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             
             base.UnhookEventHandlers();
         }
         
-        void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+        void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
-            if (Map != level || !RoundInProgress) return;
-            OutputStatus(p);
+            if (Map != level) return;
+            
+            MessageMapInfo(p);
+            if (RoundInProgress) OutputStatus(p);
         }
 
         void HandlePlayerConnect(Player p) {

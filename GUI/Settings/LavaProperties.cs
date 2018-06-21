@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public sealed class LavaProperties {
@@ -29,13 +30,15 @@ namespace MCGalaxy.Gui {
         public bool StartImmediately { get; set; }
         
         public void LoadFromServer() {
-            Lives = Server.lava.MaxLives;
-            StartImmediately = Server.lava.StartOnStartup;
+            LSConfig cfg = LSGame.Config;
+            Lives = cfg.MaxLives;
+            StartImmediately = cfg.StartImmediately;
         }
         
         public void ApplyToServer() {
-            Server.lava.MaxLives = Lives;
-            Server.lava.StartOnStartup = StartImmediately;
+            LSConfig cfg = LSGame.Config;
+            cfg.MaxLives = Lives;
+            cfg.StartImmediately = StartImmediately;
         }    
     }
 }

@@ -500,10 +500,10 @@
     <Compile Include="Games\LavaSurvival\LSGame.cs" />
     <Compile Include="Games\LavaSurvival\LSConfig.cs" />
     <Compile Include="Games\LavaSurvival\LSGame.Round.cs" />
-    <Compile Include="Games\LevelPicker.cs" />
     <Compile Include="Games\MovementCheck.cs" />
-    <Compile Include="Games\RoundsGame.cs" />
-    <Compile Include="Games\RoundsGame.Plugin.cs" />
+    <Compile Include="Games\RoundsGame\LevelPicker.cs" />
+    <Compile Include="Games\RoundsGame\RoundsGame.cs" />
+    <Compile Include="Games\RoundsGame\RoundsGame.Plugin.cs" />
     <Compile Include="Games\Team.cs" />
     <Compile Include="Games\TntWars\TntWars.cs" />
     <Compile Include="Games\TntWars\TntWarsConfig.cs" />
@@ -717,6 +717,7 @@
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Database\Stats" />
+    <Folder Include="Games\RoundsGame" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />
     <Folder Include="Network\Socket" />

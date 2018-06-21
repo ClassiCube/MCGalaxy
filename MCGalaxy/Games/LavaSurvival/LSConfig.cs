@@ -21,10 +21,48 @@ using System.Timers;
 using MCGalaxy.Commands;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using MCGalaxy.Config;
+using System.Collections.Generic;
 
 namespace MCGalaxy.Games {
+    
+    public sealed class LSConfig {        
+        [ConfigBool("start-on-startup", "Lava", false)]
+        public bool StartImmediately;        
+        [ConfigInt("lives", "Lava", 3, 0)]
+        public int MaxLives = 3;
+        [ConfigStringList("maps", "Lava")]
+        public List<string> Maps = new List<string>();
+        
+        static ConfigElement[] cfg;
+        const string propsFile = "properties/lavasurvival.properties";
+        
+        public void Save() {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
+            
+            using (StreamWriter w = new StreamWriter(propsFile)) {
+                ConfigElement.Serialise(cfg, " options", w, this);
+            }
+        }
+        
+        public void Load() {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
+            
+            if (!File.Exists(propsFile)) Save();
+            PropertiesFile.Read(propsFile, LSLineProcessor);
+        }
+        
+        void LSLineProcessor(string key, string value) {
+            if (!ConfigElement.Parse(cfg, key, value, this)) {
+                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised lava survival property key.", key);
+            }
+        }
+    }
+    
     public sealed partial class LSGame : RoundsGame {
 
+        public static LSConfig Config = new LSConfig();
+        
         public MapData GenerateMapData(MapSettings settings) {
             MapData data = new MapData(settings);
             data.killer  = rand.Next(1, 101) <= settings.killer;
@@ -39,40 +77,6 @@ namespace MCGalaxy.Games {
                              : (data.killer ? Block.Deadly_ActiveLava  : Block.Lava));
             data.block = block;
             return data;
-        }
-
-        public void LoadSettings() {
-            if (!File.Exists("properties/lavasurvival.properties")) { SaveSettings(); return; }
-
-            try {
-                PropertiesFile.Read("properties/lavasurvival.properties", ProcessSettingsLine);
-            } catch (Exception e) {
-                Logger.LogError(e);
-            }
-        }
-        
-        void ProcessSettingsLine(string key, string value) {
-            switch (key.ToLower()) {
-                case "start-on-startup": StartOnStartup = bool.Parse(value); break;
-                case "lives": MaxLives = int.Parse(value); break;
-                case "maps":
-                    foreach (string name in value.Split(',')) {
-                        string map = name.Trim();
-                        if (map.Length > 0 && !maps.CaselessContains(map)) {
-                            maps.Add(map);
-                        }
-                    }
-                    break;
-            }
-        }
-        
-        public void SaveSettings() {
-            using (StreamWriter w = new StreamWriter("properties/lavasurvival.properties")) {
-                w.WriteLine("#Lava Survival main properties");
-                w.WriteLine("start-on-startup = " + StartOnStartup);
-                w.WriteLine("lives = " + MaxLives);
-                w.WriteLine("maps = " + maps.Join());
-            }
         }
 
         public MapSettings LoadMapSettings(string name) {

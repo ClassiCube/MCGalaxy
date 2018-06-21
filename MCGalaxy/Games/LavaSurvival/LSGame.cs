@@ -25,27 +25,21 @@ namespace MCGalaxy.Games {
     }
     
     class LSLevelPicker : LevelPicker {
-        public List<string> maps;
-        public override List<string> GetCandidateMaps() { return new List<string>(maps); }
+        public override List<string> GetCandidateMaps() { 
+            return new List<string>(LSGame.Config.Maps); 
+        }
     }
     
     public sealed partial class LSGame : RoundsGame {
         const string propsDir = "properties/lavasurvival/";
-        List<string> maps;
         Random rand = new Random();
         MapData data;
         MapSettings mapSettings;
         
         public override string GameName { get { return "Lava survival"; } }
-        public bool Flooded, StartOnStartup;
-        public int MaxLives = 3;
+        public bool Flooded;
         
-        public LSGame() {
-            Picker = new LSLevelPicker();
-            maps = new List<string>();
-            ((LSLevelPicker)Picker).maps = maps;
-            LoadSettings();
-        }
+        public LSGame() { Picker = new LSLevelPicker(); }
         
         LSData Get(Player p) {
             object data;
@@ -70,7 +64,7 @@ namespace MCGalaxy.Games {
         }
         
         public bool IsPlayerDead(Player p) {
-            return MaxLives > 0 && Get(p).TimesDied >= MaxLives;
+            return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
         }
         
         void ResetPlayerDeaths() {
@@ -82,19 +76,17 @@ namespace MCGalaxy.Games {
 
         public void AddMap(string name) {
             if (!String.IsNullOrEmpty(name) && !HasMap(name)) {
-                maps.Add(name.ToLower());
-                SaveSettings();
+                Config.Maps.Add(name);
+                Config.Save();
             }
         }
         
         public void RemoveMap(string name) {
-            if (maps.CaselessRemove(name)) {
-                SaveSettings();
-            }
+            if (Config.Maps.CaselessRemove(name)) Config.Save();
         }
         
         public bool HasMap(string name) {
-            return maps.CaselessContains(name);
+            return Config.Maps.CaselessContains(name);
         }
 
         public bool InSafeZone(ushort x, ushort y, ushort z) {
@@ -102,8 +94,11 @@ namespace MCGalaxy.Games {
             return x >= mapSettings.safeZone[0].X && x <= mapSettings.safeZone[1].X && y >= mapSettings.safeZone[0].Y
                 && y <= mapSettings.safeZone[1].Y && z >= mapSettings.safeZone[0].Z && z <= mapSettings.safeZone[1].Z;
         }
-
-        public List<string> Maps { get { return new List<string>(maps); } }
+        
+        public override void PlayerJoinedGame(Player p) {
+            bool announce = false;
+            HandleJoinedLevel(p, Map, Map, ref announce);
+        }
         
         public override bool HandlesChatMessage(Player p, string message) {
             if (!Running || p.level != Map) return false;

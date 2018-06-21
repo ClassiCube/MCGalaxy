@@ -135,64 +135,66 @@ namespace MCGalaxy.Gui {
         public string FailureMessage { get; set; }
         
         public void LoadFromServer() {
-            IgnoredLevelsList = ZSConfig.IgnoredLevelList.Join(",");
-            LevelsList = ZSConfig.LevelList.Join(",");
+            ZSConfig cfg = ZSGame.Config;
+            IgnoredLevelsList = cfg.IgnoredLevelList.Join(",");
+            LevelsList = cfg.LevelList.Join(",");
             
-            Pillaring = !ZSConfig.NoPillaring;
-            SetMainLevel = ZSConfig.SetMainLevel;
-            StartImmediately = ZSConfig.StartImmediately;
+            Pillaring = !cfg.NoPillaring;
+            SetMainLevel = cfg.SetMainLevel;
+            StartImmediately = cfg.StartImmediately;
             
-            MaxMoveDistance = ZSConfig.MaxMoveDistance;
-            HitboxPrecision = ZSConfig.HitboxPrecision;
-            IncludeMapInHeartbeat = ZSConfig.IncludeMapInHeartbeat;
+            MaxMoveDistance = cfg.MaxMoveDistance;
+            HitboxPrecision = cfg.HitboxPrecision;
+            IncludeMapInHeartbeat = cfg.IncludeMapInHeartbeat;
             
-            Name = ZSConfig.ZombieName;
-            Model = ZSConfig.ZombieModel;
-            InvisibilityDuration = ZSConfig.InvisibilityDuration;
-            InvisibilityPotions = ZSConfig.InvisibilityPotions;
-            ZInvisibilityDuration = ZSConfig.ZombieInvisibilityDuration;
-            ZInvisibilityPotions = ZSConfig.ZombieInvisibilityPotions;
+            Name = cfg.ZombieName;
+            Model = cfg.ZombieModel;
+            InvisibilityDuration = cfg.InvisibilityDuration;
+            InvisibilityPotions = cfg.InvisibilityPotions;
+            ZInvisibilityDuration = cfg.ZombieInvisibilityDuration;
+            ZInvisibilityPotions = cfg.ZombieInvisibilityPotions;
             
-            Chance = ZSConfig.ReviveChance;
-            InsufficientTime = ZSConfig.ReviveNoTime;
-            InsufficientTimeMessage = ZSConfig.ReviveNoTimeMessage;
-            ExpiryTime = ZSConfig.ReviveTooSlow;
-            FailureMessage = ZSConfig.ReviveFailureMessage;
-            SuccessMessage = ZSConfig.ReviveSuccessMessage;
+            Chance = cfg.ReviveChance;
+            InsufficientTime = cfg.ReviveNoTime;
+            InsufficientTimeMessage = cfg.ReviveNoTimeMessage;
+            ExpiryTime = cfg.ReviveTooSlow;
+            FailureMessage = cfg.ReviveFailureMessage;
+            SuccessMessage = cfg.ReviveSuccessMessage;
         }
         
         public void ApplyToServer() {
+            ZSConfig cfg = ZSGame.Config;
             string list = IgnoredLevelsList.Replace(" ", "");
-            if (list.Length == 0) ZSConfig.IgnoredLevelList = new List<string>();
-            else ZSConfig.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
+            if (list.Length == 0) cfg.IgnoredLevelList = new List<string>();
+            else cfg.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
                 
             list = LevelsList.Replace(" ", "");
-            if (list.Length == 0) ZSConfig.LevelList = new List<string>();
-            else ZSConfig.LevelList = new List<string>(list.Replace(" ", "").Split(','));
+            if (list.Length == 0) cfg.LevelList = new List<string>();
+            else cfg.LevelList = new List<string>(list.Replace(" ", "").Split(','));
             
-            ZSConfig.NoPillaring = !Pillaring;
-            ZSConfig.SetMainLevel = SetMainLevel;
-            ZSConfig.StartImmediately = StartImmediately;
+            cfg.NoPillaring = !Pillaring;
+            cfg.SetMainLevel = SetMainLevel;
+            cfg.StartImmediately = StartImmediately;
             
-            ZSConfig.MaxMoveDistance = MaxMoveDistance;
-            ZSConfig.HitboxPrecision = HitboxPrecision;
-            ZSConfig.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
+            cfg.MaxMoveDistance = MaxMoveDistance;
+            cfg.HitboxPrecision = HitboxPrecision;
+            cfg.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
             
-            ZSConfig.ZombieName = Name.Trim();
-            ZSConfig.ZombieModel = Model.Trim();
-            if (ZSConfig.ZombieModel.Length == 0)
-                ZSConfig.ZombieModel = "zombie";
-            ZSConfig.InvisibilityDuration = InvisibilityDuration;
-            ZSConfig.InvisibilityPotions = InvisibilityPotions;
-            ZSConfig.ZombieInvisibilityDuration = ZInvisibilityDuration;
-            ZSConfig.ZombieInvisibilityPotions = ZInvisibilityPotions; 
+            cfg.ZombieName = Name.Trim();
+            cfg.ZombieModel = Model.Trim();
+            if (cfg.ZombieModel.Length == 0)
+                cfg.ZombieModel = "zombie";
+            cfg.InvisibilityDuration = InvisibilityDuration;
+            cfg.InvisibilityPotions = InvisibilityPotions;
+            cfg.ZombieInvisibilityDuration = ZInvisibilityDuration;
+            cfg.ZombieInvisibilityPotions = ZInvisibilityPotions; 
             
-            ZSConfig.ReviveChance = Chance;
-            ZSConfig.ReviveNoTime = InsufficientTime;
-            ZSConfig.ReviveNoTimeMessage = InsufficientTimeMessage;
-            ZSConfig.ReviveTooSlow = ExpiryTime;
-            ZSConfig.ReviveFailureMessage = FailureMessage;
-            ZSConfig.ReviveSuccessMessage = SuccessMessage;
+            cfg.ReviveChance = Chance;
+            cfg.ReviveNoTime = InsufficientTime;
+            cfg.ReviveNoTimeMessage = InsufficientTimeMessage;
+            cfg.ReviveTooSlow = ExpiryTime;
+            cfg.ReviveFailureMessage = FailureMessage;
+            cfg.ReviveSuccessMessage = SuccessMessage;
         }
     }
 }

@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
         }
 
         void KillPlayer(Player p) {
-            if (MaxLives <= 0) return;
+            if (Config.MaxLives <= 0) return;
             Get(p).TimesDied++;
             if (!IsPlayerDead(p)) return;
             

@@ -73,8 +73,8 @@ namespace MCGalaxy.Games {
                 tabGroup = "&2Referees";
             } else if (Get(p).Infected) {
                 tabGroup = "&cZombies";
-                if (ZSConfig.ZombieName.Length > 0 && !Get(dst).AkaMode) {
-                    tabName = "&c" + ZSConfig.ZombieName;
+                if (Config.ZombieName.Length > 0 && !Get(dst).AkaMode) {
+                    tabName = "&c" + Config.ZombieName;
                 } else {
                     tabName = "&c" + p.truename;
                 }
@@ -93,11 +93,11 @@ namespace MCGalaxy.Games {
             if (p == null || !Get(p).Infected) return;
 
             name = p.truename;
-            if (ZSConfig.ZombieName.Length > 0 && !Get(dst).AkaMode) {
-                name = ZSConfig.ZombieName; skin = name;
+            if (Config.ZombieName.Length > 0 && !Get(dst).AkaMode) {
+                name = Config.ZombieName; skin = name;
             }
             name = Colors.red + name;
-            model = p == dst ? p.Model : ZSConfig.ZombieModel;
+            model = p == dst ? p.Model : Config.ZombieModel;
         }
         
         void HandlePlayerConnect(Player p) {
@@ -113,7 +113,7 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p.level != Map) return;
             
             bool reverted = MovementCheck.DetectNoclip(p, next)
-                || MovementCheck.DetectSpeedhack(p, next, ZSConfig.MaxMoveDistance);
+                || MovementCheck.DetectSpeedhack(p, next, Config.MaxMoveDistance);
             if (reverted) p.cancelmove = true;
         }
         
@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandleSendingHeartbeat(Heartbeat service, ref string name) {
-            if (!ZSConfig.IncludeMapInHeartbeat || Map == null) return;
+            if (!Config.IncludeMapInHeartbeat || Map == null) return;
             name += " (map: " + Map.MapName + ")";
         }
         

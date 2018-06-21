@@ -44,7 +44,9 @@ namespace MCGalaxy {
             old = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
-            ZSConfig.LoadSettings();
+            
+            ZSGame.Config.Load();
+            LSGame.Config.Load();
             
             Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             #pragma warning disable 0618

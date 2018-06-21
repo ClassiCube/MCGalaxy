@@ -54,7 +54,6 @@ namespace MCGalaxy.Gui {
             }
 
             try {
-                LoadLavaSettings();
                 UpdateLavaMapList();
                 UpdateLavaControls();
             } catch (Exception ex) {
@@ -129,7 +128,7 @@ namespace MCGalaxy.Gui {
             SaveBlocks();
             try { SaveLavaSettings(); }
             catch { Logger.Log(LogType.Warning, "Error saving Lava Survival settings!"); }
-            try { ZSConfig.SaveSettings(); }
+            try { ZSGame.Config.Save(); }
             catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 
             SrvProperties.Load(); // loads when saving?
