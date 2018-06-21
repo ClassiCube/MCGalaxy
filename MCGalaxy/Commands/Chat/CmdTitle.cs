@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can change the title of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can change the title of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("XTitle", "-own") }; }

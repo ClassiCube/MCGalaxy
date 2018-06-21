@@ -28,8 +28,8 @@ namespace MCGalaxy.Commands {
         public string CmdName;
         public override string ItemName { get { return CmdName; } }
         
-        public CommandPerms(string cmd, LevelPermission minRank, List<LevelPermission> allowed, 
-                            List<LevelPermission> disallowed) : base(minRank, allowed, disallowed) {
+        public CommandPerms(string cmd, LevelPermission min, List<LevelPermission> allowed, 
+                            List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
             CmdName = cmd;
         }
         
@@ -56,9 +56,7 @@ namespace MCGalaxy.Commands {
 
         public static void Set(string cmd, LevelPermission min,
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            if (min > LevelPermission.Nobody) return;
-            CommandPerms perms = Find(cmd);
-            
+            CommandPerms perms = Find(cmd);            
             if (perms == null) {
                 perms = new CommandPerms(cmd, min, allowed, disallowed);
                 List.Add(perms);
@@ -69,10 +67,7 @@ namespace MCGalaxy.Commands {
         }
         
         public void MessageCannotUse(Player p) {
-            StringBuilder builder = new StringBuilder("Only ");
-            Describe(builder);
-            builder.Append(" can use %T/" + CmdName);
-            Player.Message(p, builder.ToString());
+            Player.Message(p, "Only {0} can use %T/", Describe(), CmdName);
         }
 
 
@@ -87,7 +82,7 @@ namespace MCGalaxy.Commands {
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.CmdPermsFile)) {
-                WriteHeader(w, "command", "CommandName", "gun");
+                WriteHeader(w, "each command", "CommandName", "gun");
 
                 foreach (CommandPerms perms in List) {
                     w.WriteLine(perms.Serialise());
@@ -117,14 +112,14 @@ namespace MCGalaxy.Commands {
             string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
-                //Name : Lowest : Disallow : Allow
+                // Format - Name : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
                 try {
                     LevelPermission min;
                     List<LevelPermission> allowed, disallowed;
                     
-                    Deserialise(args, out min, out allowed, out disallowed);
+                    Deserialise(args, 1, out min, out allowed, out disallowed);
                     Set(args[0], min, allowed, disallowed);                    
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;

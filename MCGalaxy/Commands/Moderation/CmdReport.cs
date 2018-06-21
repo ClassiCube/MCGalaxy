@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "Report"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can check, view and delete reports") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can check, view and delete reports") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("Reports", "list") }; }
@@ -151,11 +151,10 @@ namespace MCGalaxy.Commands.Moderation {
                 reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
             }
             
-            LevelPermission checkRank = CommandExtraPerms.Find(name, 1).MinRank;
-            string checkRankName = Group.GetColoredName(checkRank);
+            ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
             if (reports.Count >= 5) {
-                Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1}&c+ has reviewed these reports first!",
-                               PlayerInfo.GetColoredName(p, target), checkRankName);
+                Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1} &chas reviewed these reports first!",
+            	               PlayerInfo.GetColoredName(p, target), checkPerms.Describe());
                 return;
             }
             
@@ -165,11 +164,11 @@ namespace MCGalaxy.Commands.Moderation {
             
             reports.Add(reason + " - Reported by " + p.name + " at " + DateTime.Now);
             File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
-            Player.Message(p, "&aReport sent! It should be viewed when a {0}&a+ is online", checkRankName);
+            Player.Message(p, "&aReport sent! It should be viewed when a {0} &ais online", 
+                           checkPerms.Describe());
             
             string opsMsg = "λNICK %Smade a report, view it with %T/Report check " + target;
-            Chat.MessageFrom(ChatScope.AboveEqRank, p, opsMsg,
-                             checkRank, null, true);
+            Chat.MessageFrom(ChatScope.Perms, p, opsMsg, checkPerms, null, true);
         }
         
         public override void Help(Player p) {

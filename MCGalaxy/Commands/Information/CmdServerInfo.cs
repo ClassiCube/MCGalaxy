@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("Host"), new CommandAlias("ZAll") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can see server CPU and memory usage") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can see server CPU and memory usage") }; }
         }
         
         static PerformanceCounter allPCounter = null;

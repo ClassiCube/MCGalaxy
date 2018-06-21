@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new [] { new CommandAlias("BInfo"), new CommandAlias("WhoDid") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can see portal/MB data of a block") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can see portal/MB data of a block") }; }
         }
         
         public override void Use(Player p, string message) {

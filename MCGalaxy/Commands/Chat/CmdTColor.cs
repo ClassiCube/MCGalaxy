@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the title color of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the title color of others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }

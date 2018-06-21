@@ -53,14 +53,14 @@ namespace MCGalaxy {
         }
         
         protected bool HasExtraPerm(Player p, int num) {
-            return p == null || p.Rank >= CommandExtraPerms.MinPerm(name, num);
+            return p == null || CommandExtraPerms.Find(name, num).UsableBy(p.Rank);
         }
         
         protected bool CheckExtraPerm(Player p, int num) {
             if (HasExtraPerm(p, num)) return true;
             
             CommandExtraPerms perms = CommandExtraPerms.Find(name, num);
-            Formatter.MessageNeedMinPerm(p, perms.Description, perms.MinRank);
+            perms.MessageCannotUse(p);
             return false;
         }
         

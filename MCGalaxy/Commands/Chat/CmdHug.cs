@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands.Chatting {
     public class CmdHug : MessageCmd {
         public override string name { get { return "Hug"; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can death hug") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can death hug") }; }
         }
         
         public override void Use(Player p, string message) {

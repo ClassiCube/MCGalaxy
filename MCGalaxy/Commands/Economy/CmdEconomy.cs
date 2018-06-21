@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Eco {
         public override string shortcut { get { return "Eco"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can setup the economy") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can setup the economy") }; }
         }
         
         public override void Use(Player p, string message) {

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         public override string shortcut { get { return "u"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can undo physics") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can undo physics") }; }
         }
 
         public override void Use(Player p, string message) {

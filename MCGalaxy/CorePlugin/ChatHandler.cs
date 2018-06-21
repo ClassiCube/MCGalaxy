@@ -27,7 +27,7 @@ namespace MCGalaxy.Core {
             msg = msg.Replace("λFULL", source.name).Replace("λNICK", source.name);
             LogType logType = LogType.PlayerChat;
             
-            if (scope == ChatScope.AboveEqRank) {
+            if (scope == ChatScope.Perms) {
                logType = LogType.StaffChat;
             } else if (scope == ChatScope.Chatroom || scope == ChatScope.AllChatrooms) {
                 logType = LogType.ChatroomChat;

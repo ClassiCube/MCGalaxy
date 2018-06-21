@@ -19,7 +19,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can read adminchat messages") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can read adminchat messages") }; }
         }
 
         public override void Use(Player p, string message) {

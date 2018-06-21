@@ -21,7 +21,6 @@ using MCGalaxy.Gui.Popups;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
-        bool commandSupressEvents = true;
         ItemPermsHelper commandItems = new ItemPermsHelper();
         ComboBox[] commandExtraBoxes;
         Label[] commandExtraLabels;
@@ -56,7 +55,7 @@ namespace MCGalaxy.Gui {
                                  changed.Allowed, changed.Disallowed);
             }            
             foreach (CommandExtraPerms changed in commandExtraPermsChanged) {
-                CommandExtraPerms orig = CommandExtraPerms.Find(changed.CmdName, changed.Number);
+                CommandExtraPerms orig = CommandExtraPerms.Find(changed.CmdName, changed.Num);
                 orig.MinRank = changed.MinRank;
             }
             
@@ -141,12 +140,12 @@ namespace MCGalaxy.Gui {
             
             int height = 12;
             for (int i = 0; i < extraPermsList.Count; i++) {
-                CommandExtraPerms perms = LookupExtraPerms(extraPermsList[i].CmdName, extraPermsList[i].Number);
+                CommandExtraPerms perms = LookupExtraPerms(extraPermsList[i].CmdName, extraPermsList[i].Num);
                 if (perms == null) perms = extraPermsList[i];
                 
                 GuiPerms.SetDefaultIndex(commandExtraBoxes[i], perms.MinRank);
-                commandExtraBoxes[i].Visible = true;               
-                commandExtraLabels[i].Text = perms.Description;
+                commandExtraBoxes[i].Visible = true;
+                commandExtraLabels[i].Text = "+ " + perms.Desc;
                 commandExtraLabels[i].Visible = true;
                 height = commandExtraBoxes[i].Bottom + 12;
             }
@@ -156,18 +155,18 @@ namespace MCGalaxy.Gui {
         
         CommandExtraPerms LookupExtraPerms(string cmdName, int number) {
             return commandExtraPermsChanged.Find(
-                p => p.CmdName == cmdName && p.Number == number);
+                p => p.CmdName == cmdName && p.Num == number);
         }
         
         void cmd_cmbExtra_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox box = (ComboBox)sender;
-            if (commandSupressEvents) return;
+            if (commandItems.SupressEvents) return;
             int idx = box.SelectedIndex;
             if (idx == -1) return;
             
             int boxIdx = Array.IndexOf<ComboBox>(commandExtraBoxes, box);
             CommandExtraPerms orig = extraPermsList[boxIdx];
-            CommandExtraPerms copy = LookupExtraPerms(orig.CmdName, orig.Number);
+            CommandExtraPerms copy = LookupExtraPerms(orig.CmdName, orig.Num);
             
             if (copy == null) {
                 copy = orig.Copy();

@@ -27,8 +27,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the nick of others"),
-                    new CommandPerm(LevelPermission.Operator, "+ can change the nick of bots") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the nick of others"),
+                    new CommandPerm(LevelPermission.Operator, "can change the nick of bots") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("xnick", "-own") }; }

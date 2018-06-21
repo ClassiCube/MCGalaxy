@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Misc {
             get { return new[] { new CommandAlias("Fetch"), new CommandAlias("Bring"), new CommandAlias("BringAll", "all") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can summon all players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can summon all players") }; }
         }
 
         public override void Use(Player p, string message) {

@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can generate maps with advanced themes") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can generate maps with advanced themes") }; }
         }
 
         public override void Use(Player p, string message) {

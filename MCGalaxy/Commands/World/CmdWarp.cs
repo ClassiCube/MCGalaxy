@@ -27,9 +27,9 @@ namespace MCGalaxy.Commands.Misc {
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "+ can create warps"),
-                    new CommandPerm(LevelPermission.Operator, "+ can delete warps"),
-                    new CommandPerm(LevelPermission.Operator, "+ can move/edit warps"),
+                    new CommandPerm(LevelPermission.Operator, "can create warps"),
+                    new CommandPerm(LevelPermission.Operator, "can delete warps"),
+                    new CommandPerm(LevelPermission.Operator, "can move/edit warps"),
                 }; }
         }
         

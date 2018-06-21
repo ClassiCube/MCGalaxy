@@ -27,16 +27,16 @@ namespace MCGalaxy.Core {
         
         internal static void HandleModAction(ModAction action) {
             switch (action.Type) {
-                case ModActionType.Frozen: DoFreeze(action); break;
-                case ModActionType.Unfrozen: DoUnfreeze(action); break;
-                case ModActionType.Muted: DoMute(action); break;
-                case ModActionType.Unmuted: DoUnmute(action); break;
-                case ModActionType.Ban: DoBan(action); break;
-                case ModActionType.Unban: DoUnban(action); break;
-                case ModActionType.BanIP: DoBanIP(action); break;
-                case ModActionType.UnbanIP: DoUnbanIP(action); break;
-                case ModActionType.Warned: DoWarn(action); break;
-                case ModActionType.Rank: DoRank(action); break;
+                    case ModActionType.Frozen: DoFreeze(action); break;
+                    case ModActionType.Unfrozen: DoUnfreeze(action); break;
+                    case ModActionType.Muted: DoMute(action); break;
+                    case ModActionType.Unmuted: DoUnmute(action); break;
+                    case ModActionType.Ban: DoBan(action); break;
+                    case ModActionType.Unban: DoUnban(action); break;
+                    case ModActionType.BanIP: DoBanIP(action); break;
+                    case ModActionType.UnbanIP: DoUnbanIP(action); break;
+                    case ModActionType.Warned: DoWarn(action); break;
+                    case ModActionType.Rank: DoRank(action); break;
             }
         }
         
@@ -53,7 +53,7 @@ namespace MCGalaxy.Core {
             string suffix = "";
             if (e.Duration.Ticks != 0) suffix = " %Sfor " + e.Duration.Shorten();
             
-            Logger.Log(LogType.UserActivity, "{0} was {1} by {2}", 
+            Logger.Log(LogType.UserActivity, "{0} was {1} by {2}",
                        e.Target, action, e.ActorName + suffix);
         }
 
@@ -116,7 +116,7 @@ namespace MCGalaxy.Core {
                 Ban.DeleteBan(e.Target);
                 Ban.BanPlayer(e.Actor, e.Target, e.Reason, !e.Announce, e.TargetGroup.Name);
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
-                                
+                
                 if (who != null) {
                     string msg = e.Reason.Length == 0 ? ServerConfig.DefaultBanMessage : e.Reason;
                     who.Kick("Banned by " + e.ActorName + ": " + msg);
@@ -144,9 +144,15 @@ namespace MCGalaxy.Core {
         
         
         static void LogIPAction(ModAction e, string type) {
-            LevelPermission perm = CommandExtraPerms.MinPerm("WhoIs");
-            Chat.Message(ChatScope.BelowRank,   e.FormatMessage("An IP", type), perm, null, true);
-            Chat.Message(ChatScope.AboveEqRank, e.FormatMessage("An IP", type), perm, null, true);
+            ItemPerms perms = CommandExtraPerms.Find("WhoIs", 1);
+            Chat.Message(ChatScope.Global, e.FormatMessage("An IP", type), perms,
+                         FilterNotItemPerms, true);
+            Chat.Message(ChatScope.Global, e.FormatMessage(e.Target, type), perms,
+                         Chat.FilterPerms, true);
+        }
+        
+        static bool FilterNotItemPerms(Player pl, object arg) {
+            return !Chat.FilterPerms(pl, arg);
         }
         
         static void DoBanIP(ModAction e) {
@@ -157,7 +163,7 @@ namespace MCGalaxy.Core {
         }
         
         static void DoUnbanIP(ModAction e) {
-            LogIPAction(e, "&8IP unbanned");            
+            LogIPAction(e, "&8IP unbanned");
             Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.ActorName);
             Server.bannedIP.Remove(e.Target);
             Server.bannedIP.Save();
@@ -211,7 +217,7 @@ namespace MCGalaxy.Core {
             string assigner = e.Actor == null ? "(console)" : e.Actor.name;
             long time = DateTime.UtcNow.ToUnixTime();
 
-            string line = e.Target + " " + assigner + " " + time + " " + newRank.Name 
+            string line = e.Target + " " + assigner + " " + time + " " + newRank.Name
                 + " " + e.TargetGroup.Name + " " + e.Reason.Replace(" ", "%20");
             Server.RankInfo.Append(line);
         }

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
         protected override RoundsGame Game { get { return Server.ctf; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage CTF") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage CTF") }; }
         }
 
         // TODO: avoid code duplication with CTFLevelPicker

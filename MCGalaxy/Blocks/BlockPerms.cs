@@ -30,8 +30,8 @@ namespace MCGalaxy.Blocks {
         public BlockID ID;
         public override string ItemName { get { return ID.ToString(); } }
         
-        public BlockPerms(BlockID id, LevelPermission minRank, List<LevelPermission> allowed,
-                          List<LevelPermission> disallowed) : base(minRank, allowed, disallowed) {
+        public BlockPerms(BlockID id, LevelPermission min, List<LevelPermission> allowed,
+                          List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
             ID = id;
         }
         
@@ -61,13 +61,8 @@ namespace MCGalaxy.Blocks {
         }
         
         public void MessageCannotUse(Player p, string action) {
-            StringBuilder builder = new StringBuilder("Only ");
-            Describe(builder);
-            
-            string name = Block.GetName(p, ID);
-            builder.Append( " %Scan ").Append(action).Append(' ');
-            builder.Append(name).Append(".");
-            Player.Message(p, builder.ToString());
+            Player.Message(p, "Only {0} can {1} {2}", 
+                           Describe(), action, Block.GetName(p, ID));
         }
         
         
@@ -82,7 +77,7 @@ namespace MCGalaxy.Blocks {
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
-                WriteHeader(w, "block", "Block ID", "lava");
+                WriteHeader(w, "each block", "Block ID", "lava");
 
                 foreach (BlockPerms perms in List) {
                     if (Block.Undefined(perms.ID)) continue;
@@ -112,12 +107,12 @@ namespace MCGalaxy.Blocks {
             string[] args = new string[4];
             foreach (string line in lines) {
                 if (line.Length == 0 || line[0] == '#') continue;
-                // Format is - Name/ID : Lowest : Disallow : Allow
+                // Format - ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
                 BlockID block;
                 if (!BlockID.TryParse(args[0], out block)) {
-                    // backwards compatibility with older versions
+                    // Old format - Name : Lowest : Disallow : Allow
                     block = Block.Parse(null, args[0]);
                 }
                 if (block == Block.Invalid) continue;
@@ -126,7 +121,7 @@ namespace MCGalaxy.Blocks {
                     LevelPermission min;
                     List<LevelPermission> allowed, disallowed;
                     
-                    Deserialise(args, out min, out allowed, out disallowed);
+                    Deserialise(args, 1, out min, out allowed, out disallowed);
                     Set(block, min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the block " + line);

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Guest, " and below are patrolled") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Builder, "are not patrolled") }; }
         }
 
         public override void Use(Player p, string message) {
@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands.Moderation {
         
         List<Player> GetPatrolCandidates(Player p) {
             List<Player> candidates = new List<Player>();
-            LevelPermission perm = CommandExtraPerms.MinPerm(name);
+            ItemPerms except = CommandExtraPerms.Find(name, 1);
             Player[] players = PlayerInfo.Online.Items;
             DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
             
             foreach (Player target in players) {
-                if (target.Rank > perm || target == p || !Entities.CanSee(p, target)) continue;
-                if (target.LastPatrol > cutoff) continue;
+                if (except.UsableBy(target.Rank) || !Entities.CanSee(p, target)) continue;
+                if (target == p || target.LastPatrol > cutoff) continue;
                 candidates.Add(target);
             }
             return candidates;
@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Patrol");
-            LevelPermission perm = CommandExtraPerms.MinPerm(name);
-            Player.Message(p, "%HTeleports you to a random {0} %Hor lower", Group.GetColoredName(perm));
+            ItemPerms except = CommandExtraPerms.Find(name, 1);
+            Player.Message(p, "%HTeleports you to a random player. {0} %Hare not patrolled", except.Describe());
             Player.Message(p, "%HPlayers patrolled within the last 15 seconds are ignored");
         }
     }

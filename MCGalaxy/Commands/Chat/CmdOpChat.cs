@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can read opchat messages") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can read opchat messages") }; }
         }
 
         public override void Use(Player p, string message) {

@@ -70,20 +70,20 @@ namespace MCGalaxy {
         
         public static void MessageOps(Player p, string message) {
             if (!MessageCmd.CanSpeak(p, "OpChat")) return;
-            MessageStaff(p, message, Chat.OpchatPerm, "Ops");
+            MessageStaff(p, message, Chat.OpchatPerms, "Ops");
         }
 
         public static void MessageAdmins(Player p, string message) {
             if (!MessageCmd.CanSpeak(p, "AdminChat")) return;
-            MessageStaff(p, message, Chat.AdminchatPerm, "Admins");
+            MessageStaff(p, message, Chat.AdminchatPerms, "Admins");
         }
         
         public static void MessageStaff(Player p, string message,
-                                        LevelPermission perm, string group) {
+                                        ItemPerms perms, string group) {
             if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
             
             string chatMsg = "To " + group + " &f-λNICK&f- " + message;
-            Chat.MessageChat(ChatScope.AboveEqRank, p, chatMsg, perm, null, true);
+            Chat.MessageChat(ChatScope.Perms, p, chatMsg, perms, null, true);
         }
         
         static void HandleWhisper(Player p, string target, string message) {

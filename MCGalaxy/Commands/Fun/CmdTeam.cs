@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "+ can create teams") }; }
+            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can create teams") }; }
         }
         
         public override void Use(Player p, string message) {

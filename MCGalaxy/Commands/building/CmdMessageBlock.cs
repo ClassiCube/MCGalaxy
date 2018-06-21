@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Nobody, "+ can use moderation commands in MBs") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Nobody, "can use moderation commands in MBs") }; }
         }
 
         public override void Use(Player p, string message) {

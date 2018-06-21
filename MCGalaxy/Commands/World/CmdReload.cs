@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
                     new CommandAlias("WFlush"), new CommandAlias("WorldFlush") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can reload for all players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can reload for all players") }; }
         }
 
         public override void Use(Player p, string message) {

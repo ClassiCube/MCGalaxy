@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage TNT wars") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage TNT wars") }; }
         }
         bool NoTntZone = false;
 

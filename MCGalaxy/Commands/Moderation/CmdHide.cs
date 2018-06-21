@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can hide silently") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can hide silently") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("XHide", "silent") }; }
@@ -33,7 +33,8 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void AnnounceOps(Player p, string msg) {
             LevelPermission hideRank = p.oHideRank == LevelPermission.Null ? p.Rank : p.oHideRank;
-            Chat.MessageFrom(ChatScope.AboveEqRank, p, msg, hideRank, null, true);
+            ItemPerms perms = new ItemPerms(hideRank, null, null);
+            Chat.MessageFrom(ChatScope.Perms, p, msg, perms, null, true);
         }
 
         public override void Use(Player p, string message) {

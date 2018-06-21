@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Rules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Builder, "+ can send rules to other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Builder, "can send rules to other players") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Agree", "agree"), new CommandAlias("Disagree", "disagree") }; }

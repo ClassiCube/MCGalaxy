@@ -34,21 +34,25 @@ namespace MCGalaxy {
         
         /// <summary> Messages all players of a given rank </summary>
         Rank,
-        /// <summary> Messages all players of or above a given rank (e.g. /opchat) </summary>
-        AboveEqRank,
-        /// <summary> Messages all players below a given rank </summary>
-        BelowRank,
+        /// <summary> Messages all players who can use an ItemPerms argument. </summary>
+        Perms,
     }
     
     public delegate bool ChatMessageFilter(Player pl, object arg);
     public static class Chat {
         
-        public static LevelPermission OpchatPerm {
-            get { return CommandExtraPerms.MinPerm("OpChat", LevelPermission.Operator); }
+        public static ItemPerms OpchatPerms { 
+            get { 
+                ItemPerms perms = CommandExtraPerms.Find("OpChat", 1);
+                return perms != null ? perms : new ItemPerms(LevelPermission.Operator, null, null);
+            }
         }
         
-        public static LevelPermission AdminchatPerm {
-            get { return CommandExtraPerms.MinPerm("AdminChat", LevelPermission.Admin); }
+        public static ItemPerms AdminchatPerms {
+            get { 
+                ItemPerms perms = CommandExtraPerms.Find("AdminChat", 1);
+                return perms != null ? perms : new ItemPerms(LevelPermission.Admin, null, null);
+            }
         }
         
         public static string Format(string message, Player p, bool tokens = true, bool emotes = true) {
@@ -91,12 +95,11 @@ namespace MCGalaxy {
         public static bool FilterAllChatrooms(Player pl, object arg) { return pl.Chatroom != null; }
         
         public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
-        public static bool FilterAboveOrSameRank(Player pl, object arg) { return pl.Rank >= (LevelPermission)arg; }
-        public static bool FilterBelowRank(Player pl, object arg) { return pl.Rank < (LevelPermission)arg; }
-
+        public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl.Rank); }
+        
         public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
             FilterAll, FilterGlobal, FilterLevel, FilterChatroom, 
-            FilterAllChatrooms, FilterRank, FilterAboveOrSameRank, FilterBelowRank,
+            FilterAllChatrooms, FilterRank, FilterPerms,
         };
         
         public static ChatMessageFilter FilterVisible(Player source) {
@@ -107,7 +110,7 @@ namespace MCGalaxy {
         public static void MessageAll(string msg) { Message(ChatScope.All, msg, null, null); }
         public static void MessageGlobal(string msg) { Message(ChatScope.Global, msg, null, null); }
         public static void MessageOps(string msg) {
-            Message(ChatScope.AboveEqRank, msg, OpchatPerm, null);
+            Message(ChatScope.Perms, msg, OpchatPerms, null);
         }
         
         public static void MessageGlobal(string message, object a0) {
@@ -138,7 +141,7 @@ namespace MCGalaxy {
         }
         
         public static void MessageFromOps(Player source, string msg) { 
-            MessageFrom(ChatScope.AboveEqRank, source, msg, OpchatPerm, null);  
+            MessageFrom(ChatScope.Perms, source, msg, OpchatPerms, null);  
         }
         
         public static void MessageFrom(Player source, string msg,

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string shortcut { get { return "LS"; } }
         protected override RoundsGame Game { get { return Server.lava; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage lava survival") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage lava survival") }; }
         }
         
         protected override void HandleStatus(Player p, RoundsGame game) {

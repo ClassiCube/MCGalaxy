@@ -23,48 +23,32 @@ namespace MCGalaxy.Commands {
     
     /// <summary> Represents additional permissions required to perform a special action in a command. </summary>
     /// <remarks> For example, /color command has an extra permission for changing the color of other players. </remarks>
-    public class CommandExtraPerms {
+    public class CommandExtraPerms : ItemPerms {
 
-        /// <summary> Name of the command this extra permission is for. </summary>
-        public string CmdName;
+        public string CmdName, Desc = "";
+        public int Num;
+        public override string ItemName { get { return CmdName + ":" + Num; } }
         
-        /// <summary> Minimum rank required by a player to have this extra permission. </summary>
-        public LevelPermission MinRank;
-        
-        /// <summary> Describes the action that having this extra permission allows a player to perform. </summary>
-        public string Description = "";
-        
-        /// <summary> The number / identifier of this extra permission. </summary>
-        public int Number;
+        public CommandExtraPerms(string cmd, int num, string desc,
+                                 LevelPermission min, List<LevelPermission> allowed,
+                                 List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
+            CmdName = cmd; Num = num; Desc = desc;
+        }
         
         
-        /// <summary> Creates a copy of this instance. </summary>
         public CommandExtraPerms Copy() {
-            CommandExtraPerms perms = new CommandExtraPerms();
-            perms.CmdName = CmdName;
-            perms.MinRank = MinRank;
-            perms.Description = Description;
-            perms.Number = Number;
-            return perms;
+            CommandExtraPerms copy = new CommandExtraPerms(CmdName, Num, Desc, 0, null, null);
+            CopyTo(copy); return copy;
         }
         
         static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
-        
-
-        public static CommandExtraPerms Find(string cmd, int num = 1) {
+        public static CommandExtraPerms Find(string cmd, int num) {
             foreach (CommandExtraPerms perms in list) {
-                if (perms.CmdName.CaselessEq(cmd) && perms.Number == num) return perms;
+                if (perms.CmdName.CaselessEq(cmd) && perms.Num == num) return perms;
             }
             return null;
         }
-
-        public static LevelPermission MinPerm(string cmd, LevelPermission defPerm, int num = 1) {
-            CommandExtraPerms perms = Find(cmd, num);
-            return perms == null ? defPerm : perms.MinRank;
-        }
-
-        public static LevelPermission MinPerm(string cmd, int num = 1) { return Find(cmd, num).MinRank; }
-
+        
         public static List<CommandExtraPerms> FindAll(string cmd) {
             List<CommandExtraPerms> allPerms = new List<CommandExtraPerms>();
             foreach (CommandExtraPerms perms in list) {
@@ -75,19 +59,21 @@ namespace MCGalaxy.Commands {
         
 
         /// <summary> Sets the nth extra permission for a given command. </summary>
-        public static void Set(string cmd, LevelPermission perm, string desc, int num = 1) {
-            if (perm > LevelPermission.Nobody) return;
-            
-            // add or replace existing
+        public static void Set(string cmd, int num, string desc, LevelPermission min,
+                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             CommandExtraPerms perms = Find(cmd, num);
             if (perms == null) {
-                perms = new CommandExtraPerms(); list.Add(perms);
+                perms = new CommandExtraPerms(cmd, num, desc, min, allowed, disallowed);
+                list.Add(perms);
+            } else {
+                perms.CmdName = cmd; perms.Num = num;
+                if (!String.IsNullOrEmpty(desc)) perms.Desc = desc;
+                perms.Init(min, allowed, disallowed);
             }
-            
-            perms.CmdName = cmd;
-            perms.MinRank = perm;
-            perms.Description = desc;
-            perms.Number = num;
+        }
+        
+        public void MessageCannotUse(Player p) {
+            Player.Message(p, "Only {0} {1}", Describe(), Desc);
         }
         
 
@@ -108,15 +94,11 @@ namespace MCGalaxy.Commands {
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.CmdExtraPermsFile)) {
-                w.WriteLine("#   This file sets extra permissions used in some commands.");
-                w.WriteLine("#   Note descriptions cannot contain ':', and permissions cannot be above 120");
-                w.WriteLine("#");
-                w.WriteLine("#   LAYOUT: [commandname]:[additionalpermissionnumber]:[permissionlevel]:[description]");
-                w.WriteLine("#   e.g.  : countdown:2:80:Lowest rank that can setup countdown (download, start, restart, enable, disable, cancel)");
-                w.WriteLine("");
+                WriteHeader(w, "extra permissions in some commands",
+                            "CommandName:ExtraPermissionNumber", "countdown:1");
                 
                 foreach (CommandExtraPerms perms in list) {
-                    w.WriteLine(perms.CmdName + ":" + perms.Number + ":" + (int)perms.MinRank + ":" + perms.Description);
+                    w.WriteLine(perms.Serialise());
                 }
             }
         }
@@ -132,31 +114,48 @@ namespace MCGalaxy.Commands {
         }
         
         static void LoadCore() {
-            string[] args = new string[4];
+            string[] args = new string[5];
             using (StreamReader r = new StreamReader(Paths.CmdExtraPermsFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     if (line.Length == 0 || line[0] == '#' || line.IndexOf(':') == -1) continue;
+                    // Format - Name:Num : Lowest : Disallow : Allow
+                    line.Replace(" ", "").FixedSplit(args, ':');
                     
                     try {
-                        line.FixedSplit(args, ':');
-                        LoadExtraPerm(args);
+                        LevelPermission min;
+                        List<LevelPermission> allowed, disallowed;
+                        
+                        // Old format - Name:Num : Lowest : Description
+                        if (IsDescription(args[3])) {
+                            min = (LevelPermission)int.Parse(args[2]);
+                            allowed = null; disallowed = null;
+                        } else {
+                            Deserialise(args, 2, out min, out allowed, out disallowed);
+                        }
+                        
+                        Set(args[0], int.Parse(args[1]), "", min, allowed, disallowed);
                     } catch (Exception ex) {
-                        Logger.Log(LogType.Warning, "Loading an additional command permission failed!!");
+                        Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);
                         Logger.LogError(ex);
                     }
                 }
             }
         }
         
+        static bool IsDescription(string arg) {
+            foreach (char c in arg) {
+                if (c >= 'a' && c <= 'z') return true;
+            }
+            return false;
+        }
+        
         static void LoadExtraPerm(string[] args) {
             string cmdName = args[0];
-            int number = int.Parse(args[1]), minPerm = int.Parse(args[2]);
+            int num = int.Parse(args[1]), minPerm = int.Parse(args[2]);
             string desc = args[3] == null ? "" : args[3];
             
-            CommandExtraPerms existing = Find(cmdName, number);
-            if (existing != null) desc = existing.Description;
-            Set(cmdName, (LevelPermission)minPerm, desc, number);
+            Set(cmdName, num, "", (LevelPermission)minPerm, null, null);
         }
     }
 }

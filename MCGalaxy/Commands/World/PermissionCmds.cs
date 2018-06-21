@@ -112,21 +112,21 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("WorldBuild"), new CommandAlias("PerBuildMax", "-max") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max build rank restriction") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max build rank restriction") }; }
         }
         
         public override void Use(Player p, string message) { DoLevel(p, message, false); }    
         public override void Help(Player p) { ShowHelp(p, "build on", "build"); }
     }
     
-    public sealed class CmdPermissionVisit : PermissionCmd {       
+    public sealed class CmdPermissionVisit : PermissionCmd {
         public override string name { get { return "PerVisit"; } }
         public override string shortcut { get { return "WAccess"; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("WorldAccess"), new CommandAlias("PerVisitMax", "-max") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ bypasses max visit rank restriction") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max visit rank restriction") }; }
         }
 
         public override void Use(Player p, string message) { DoLevel(p, message, true); }        

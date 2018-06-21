@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Misc {
             get { return new CommandAlias[] { new CommandAlias("GodMode") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can toggle inviciblity of others") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can toggle invinciblity of others") }; }
         }
         
         public override void Use(Player p, string message) {

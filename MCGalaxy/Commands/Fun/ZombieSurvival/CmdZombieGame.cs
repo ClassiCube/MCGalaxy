@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandAlias("ZS"), new CommandAlias("ZombieSurvival") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage zombie survival") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage zombie survival") }; }
         }
         
         protected override void HandleStatus(Player p, RoundsGame game) {

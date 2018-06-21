@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("PlayerCLS"), new CommandAlias("GlobalCLS", "global"), new CommandAlias("gcls", "global") }; }
         }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Admin, "+ can clear chat for everyone") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can clear chat for everyone") }; }
         }
         
         public override void Use(Player p, string message) {        

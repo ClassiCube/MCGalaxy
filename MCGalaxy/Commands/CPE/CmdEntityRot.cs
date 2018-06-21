@@ -25,8 +25,8 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the rotation of others"),
-                    new CommandPerm(LevelPermission.Operator, "+ can change the rotation of bots") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the rotation of others"),
+                    new CommandPerm(LevelPermission.Operator, "can change the rotation of bots") }; }
         }
 
         public override void Use(Player p, string message) {

@@ -23,8 +23,8 @@ using System.Text;
 namespace MCGalaxy {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use an item. </summary>
-    public abstract class ItemPerms {
-        public abstract string ItemName { get; }
+    public class ItemPerms {
+        public virtual string ItemName { get { return ""; } }
         public LevelPermission MinRank;
         public List<LevelPermission> Allowed, Disallowed;
         
@@ -69,10 +69,16 @@ namespace MCGalaxy {
             }
         }
         
+        public string Describe() {
+            StringBuilder builder = new StringBuilder();
+            Describe(builder);
+            return builder.ToString();
+        }
+        
         
         protected static void WriteHeader(StreamWriter w, string type, string name, string example) {
             w.WriteLine("#Version 2");
-            w.WriteLine("#   This file list the ranks that can use each " + type);
+            w.WriteLine("#   This file list the ranks that can use " + type);
             w.WriteLine("#   Disallow and allow can be left empty");
             w.WriteLine("#   Works entirely on rank permission values, not rank names");
             w.WriteLine("#");
@@ -91,12 +97,12 @@ namespace MCGalaxy {
             return list.Join(p => ((int)p).ToString(), ",");
         }
         
-        protected static void Deserialise(string[] args, out LevelPermission min,
-                                          out List<LevelPermission> allowed,
+        protected static void Deserialise(string[] args, int idx, out LevelPermission min,
+                                          out List<LevelPermission> allowed, 
                                           out List<LevelPermission> disallowed) {
-            min = (LevelPermission)int.Parse(args[1]);
-            disallowed = ExpandPerms(args[2]);
-            allowed = ExpandPerms(args[3]);
+            min = (LevelPermission)int.Parse(args[idx]);
+            disallowed = ExpandPerms(args[idx + 1]);
+            allowed = ExpandPerms(args[idx + 2]);
         }
         
         static List<LevelPermission> ExpandPerms(string input) {

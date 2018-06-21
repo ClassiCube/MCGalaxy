@@ -123,9 +123,9 @@ namespace MCGalaxy {
             if (old.clearPerm != -1)
                 CommandExtraPerms.Find("Review", 3).MinRank = (LevelPermission)old.clearPerm;
             if (old.opchatPerm != -1)
-                CommandExtraPerms.Find("OpChat").MinRank    = (LevelPermission)old.opchatPerm;
+                Chat.OpchatPerms.MinRank    = (LevelPermission)old.opchatPerm;
             if (old.adminchatPerm != -1)
-                CommandExtraPerms.Find("AdminChat").MinRank = (LevelPermission)old.adminchatPerm;
+                Chat.AdminchatPerms.MinRank = (LevelPermission)old.adminchatPerm;
             CommandExtraPerms.Save();
         }
         

@@ -25,8 +25,8 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the model of others"),
-                    new CommandPerm(LevelPermission.Operator, "+ can change the model of bots") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the model of others"),
+                    new CommandPerm(LevelPermission.Operator, "can change the model of bots") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("XModel", "-own") }; }

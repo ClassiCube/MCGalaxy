@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Ping"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can see ping of all players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can see ping of all players") }; }
         }
         
         public override void Use(Player p, string message) {

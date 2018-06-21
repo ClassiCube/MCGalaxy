@@ -112,7 +112,8 @@ namespace MCGalaxy {
 
             hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
             if (hidden) SendMessage("&8Reminder: You are still hidden.");
-            if (Rank >= Chat.AdminchatPerm && ServerConfig.AdminsJoinSilently) {
+            
+            if (Chat.AdminchatPerms.UsableBy(Rank) && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
             }
             
@@ -249,11 +250,11 @@ namespace MCGalaxy {
             while (alts.CaselessRemove(p.name)) { }
             if (alts.Count == 0) return;
             
-            LevelPermission rank = Chat.OpchatPerm;
+            ItemPerms opchat = Chat.OpchatPerms;
             string altsMsg = "λNICK %Sis lately known as: " + alts.Join();
 
-            Chat.MessageFrom(p, altsMsg, 
-                                      (pl, obj) => Entities.CanSee(pl, p) && pl.Rank >= rank);
+            Chat.MessageFrom(p, altsMsg,
+                             (pl, obj) => Entities.CanSee(pl, p) && opchat.UsableBy(pl.Rank));
                          
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             altsMsg = altsMsg.Replace("λNICK", name);

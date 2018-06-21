@@ -22,8 +22,8 @@ namespace MCGalaxy.Commands.World {
         public override string name { get { return "Map"; } }
         public override string type { get { return CommandTypes.World; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can edit map options"),
-                    new CommandPerm(LevelPermission.Admin, "+ can set realm owners") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can edit map options"),
+                    new CommandPerm(LevelPermission.Admin, "can set realm owners") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ps", "{args} " + LevelOptions.Speed),

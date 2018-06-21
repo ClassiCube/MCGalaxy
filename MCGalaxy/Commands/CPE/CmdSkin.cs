@@ -24,8 +24,8 @@ namespace MCGalaxy.Commands.CPE {
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can change the skin of others"),
-                    new CommandPerm(LevelPermission.Operator, "+ can change the skin of bots") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the skin of others"),
+                    new CommandPerm(LevelPermission.Operator, "can change the skin of bots") }; }
         }
 
         public override void Use(Player p, string message) {

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
         protected override RoundsGame Game { get { return Server.Countdown; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "+ can manage countdown") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage countdown") }; }
         }
         
         public override void Use(Player p, string message) {

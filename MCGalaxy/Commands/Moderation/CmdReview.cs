@@ -28,9 +28,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "+ can see the review queue"),
-                    new CommandPerm(LevelPermission.Operator, "+ can teleport to next in review queue"),
-                    new CommandPerm(LevelPermission.Operator, "+ can clear the review queue"),
+                    new CommandPerm(LevelPermission.Operator, "can see the review queue"),
+                    new CommandPerm(LevelPermission.Operator, "can teleport to next in review queue"),
+                    new CommandPerm(LevelPermission.Operator, "can clear the review queue"),
                 }; }
         }
 
@@ -62,10 +62,11 @@ namespace MCGalaxy.Commands.Moderation {
             }
 
             bool opsOn = false;
-            Player[] players = PlayerInfo.Online.Items;
-            LevelPermission nextPerm = CommandExtraPerms.MinPerm(this.name, 2);
+            Player[] players = PlayerInfo.Online.Items;            
+            ItemPerms nextPerms = CommandExtraPerms.Find("Review", 2);
+            
             foreach (Player pl in players) {
-                if (pl.Rank >= nextPerm && Entities.CanSee(p, pl)) {
+                if (nextPerms.UsableBy(pl.Rank) && Entities.CanSee(p, pl)) {
                     opsOn = true; break;
                 }
             }
@@ -79,12 +80,12 @@ namespace MCGalaxy.Commands.Moderation {
                 "There are currently no staff online. Staff will be notified when they join the server.";
             Player.Message(p, msg);
             
-            Chat.MessageFrom(ChatScope.AboveEqRank, p, 
-                             "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerm, null, true);
+            Chat.MessageFrom(ChatScope.Perms, p, 
+                             "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerms, null, true);
             
             p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
         }
-        
+
         void HandleView(Player p) {
             if (!CheckExtraPerm(p, 1)) return;
 
