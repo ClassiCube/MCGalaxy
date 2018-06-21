@@ -325,6 +325,7 @@
     <Compile Include="Commands\Moderation\CmdWarn.cs" />
     <Compile Include="Commands\Moderation\CmdWhitelist.cs" />
     <Compile Include="Commands\Moderation\CmdXban.cs" />
+    <Compile Include="Commands\Moderation\ItemPermsCmd.cs" />
     <Compile Include="Commands\Moderation\ZoneCmds.cs" />
     <Compile Include="Commands\Moderation\ModActionCmd.cs" />
     <Compile Include="Commands\other\CmdAscend.cs" />
@@ -586,6 +587,7 @@
     <Compile Include="Network\Utils\PingList.cs" />
     <Compile Include="Player\Group\Group.cs" />
     <Compile Include="Player\Group\GroupProperties.cs" />
+    <Compile Include="Player\Group\ItemPerms.cs" />
     <Compile Include="Player\List\PlayerExtList.cs" />
     <Compile Include="Player\List\PlayerList.cs" />
     <Compile Include="Player\List\PlayerMetaList.cs" />

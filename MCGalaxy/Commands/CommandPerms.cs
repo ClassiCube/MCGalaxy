@@ -24,34 +24,18 @@ using MCGalaxy.Commands;
 namespace MCGalaxy.Commands {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a command. </summary>
-    public class CommandPerms {
+    public sealed class CommandPerms : ItemPerms {
         public string CmdName;
-        public LevelPermission MinRank;
-        public List<LevelPermission> Allowed;
-        public List<LevelPermission> Disallowed;
+        public override string ItemName { get { return CmdName; } }
         
         public CommandPerms(string cmd, LevelPermission minRank, List<LevelPermission> allowed, 
-                            List<LevelPermission> disallowed) {
-            Init(cmd, minRank, allowed, disallowed);
-        }
-        
-        void Init(string cmd, LevelPermission minRank, List<LevelPermission> allowed, 
-                  List<LevelPermission> disallowed) {
-            CmdName = cmd; MinRank = minRank;
-            if (allowed == null) allowed = new List<LevelPermission>();
-            if (disallowed == null) disallowed = new List<LevelPermission>();
-            Allowed = allowed;
-            Disallowed = disallowed;
+                            List<LevelPermission> disallowed) : base(minRank, allowed, disallowed) {
+            CmdName = cmd;
         }
         
         public CommandPerms Copy() {
-            List<LevelPermission> allowed = new List<LevelPermission>(Allowed);
-            List<LevelPermission> disallowed = new List<LevelPermission>(Disallowed);
-            return new CommandPerms(CmdName, MinRank, allowed, disallowed);
-        }
-        
-        public bool UsableBy(LevelPermission perm) {
-             return (perm >= MinRank || Allowed.Contains(perm)) && !Disallowed.Contains(perm);
+            CommandPerms copy = new CommandPerms(CmdName, 0, null, null);
+            CopyTo(copy); return copy;
         }
         
         public static List<CommandPerms> List = new List<CommandPerms>();
@@ -73,36 +57,20 @@ namespace MCGalaxy.Commands {
         public static void Set(string cmd, LevelPermission min,
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             if (min > LevelPermission.Nobody) return;
-            
-            // add or replace existing
             CommandPerms perms = Find(cmd);
+            
             if (perms == null) {
                 perms = new CommandPerms(cmd, min, allowed, disallowed);
                 List.Add(perms);
             } else {
-                perms.Init(cmd, min, allowed, disallowed);
+                perms.CmdName = cmd;
+                perms.Init(min, allowed, disallowed);
             }
         }
-        
-
-        public static string JoinPerms(List<LevelPermission> list) {
-            if (list == null || list.Count == 0) return "";
-            return list.Join(p => ((int)p).ToString(), ",");
-        }
- 
-        public static List<LevelPermission> ExpandPerms(string input) {
-            List<LevelPermission> perms = new List<LevelPermission>();
-            if (input == null || input.Length == 0) return perms;
-            
-            foreach (string perm in input.Split(',')) {
-                perms.Add((LevelPermission)int.Parse(perm));
-            }
-            return perms;
-        }        
         
         public void MessageCannotUse(Player p) {
             StringBuilder builder = new StringBuilder("Only ");
-            Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
+            Describe(builder);
             builder.Append(" can use %T/" + CmdName);
             Player.Message(p, builder.ToString());
         }
@@ -113,24 +81,16 @@ namespace MCGalaxy.Commands {
             try {
                 lock (saveLock) SaveCore();
             } catch (Exception e) {
-                Logger.Log(LogType.Warning, "SAVE FAILED! command.properties");
                 Logger.LogError(e);
             }
         }
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.CmdPermsFile)) {
-                w.WriteLine("#Version 2");
-                w.WriteLine("#   This file list the ranks that can use each command.");
-                w.WriteLine("#   Disallow and allow can be left empty.");
-                w.WriteLine("#   Works entirely on rank permission values, not rank names.");
-                w.WriteLine("#");
-                w.WriteLine("#   Layout: CommandName : LowestRank : Disallow : Allow");
-                w.WriteLine("#   gun : 60 : 80,67 : 40,41,55");
-                w.WriteLine("");
+                WriteHeader(w, "command", "CommandName", "gun");
 
                 foreach (CommandPerms perms in List) {
-                    w.WriteLine(perms.CmdName + " : " + (int)perms.MinRank + " : " + JoinPerms(perms.Disallowed) + " : " + JoinPerms(perms.Allowed));
+                    w.WriteLine(perms.Serialise());
                 }
             }
         }
@@ -161,12 +121,11 @@ namespace MCGalaxy.Commands {
                 line.Replace(" ", "").FixedSplit(args, ':');
                 
                 try {
-                    LevelPermission min = (LevelPermission)int.Parse(args[1]);
-                    string disallowRaw = args[2], allowRaw = args[3];
+                    LevelPermission min;
+                    List<LevelPermission> allowed, disallowed;
                     
-                    List<LevelPermission> allowed = ExpandPerms(allowRaw);
-                    List<LevelPermission> disallowed = ExpandPerms(disallowRaw);
-                    Set(args[0], min, allowed, disallowed);
+                    Deserialise(args, out min, out allowed, out disallowed);
+                    Set(args[0], min, allowed, disallowed);                    
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;
                 }

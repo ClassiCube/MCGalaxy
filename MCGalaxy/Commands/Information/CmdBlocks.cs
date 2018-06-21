@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         internal static string FormatBlockName(Player p, BlockID block) {
-            BlockPerms perms = BlockPerms.List[block];
+            BlockPerms perms = BlockPerms.Find(block);
             return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         

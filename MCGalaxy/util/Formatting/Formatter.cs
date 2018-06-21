@@ -24,24 +24,6 @@ using MCGalaxy.Commands;
 namespace MCGalaxy {
     public static class Formatter {
         
-        public static void PrintRanks(LevelPermission minRank, List<LevelPermission> allowed,
-                                      List<LevelPermission> disallowed, StringBuilder builder) {
-            builder.Append(Group.GetColoredName(minRank) + "%S+");
-            if (allowed != null && allowed.Count > 0) {
-                foreach (LevelPermission perm in allowed)
-                    builder.Append(", " + Group.GetColoredName(perm));
-                builder.Append("%S");
-            }
-            
-            if (disallowed != null && disallowed.Count > 0) {
-                builder.Append( " (except ");
-                foreach (LevelPermission perm in disallowed)
-                    builder.Append(Group.GetColoredName(perm) + ", ");
-                builder.Remove(builder.Length - 2, 2);
-                builder.Append("%S)");
-            }
-        }
-        
         public static void PrintCommandInfo(Player p, Command cmd) {
             CommandPerms perms = CommandPerms.Find(cmd.name);
             StringBuilder builder = new StringBuilder();
@@ -49,7 +31,7 @@ namespace MCGalaxy {
             if (perms == null) {
                 builder.Append(Group.GetColoredName(cmd.defaultRank) + "%S+");
             } else {
-                PrintRanks(perms.MinRank, perms.Allowed, perms.Disallowed, builder);
+                perms.Describe(builder);
             }
             Player.Message(p, builder.ToString());            
             PrintAliases(p, cmd);

@@ -81,6 +81,7 @@
       <DependentUpon>TokenSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="PropertyWindow\ItemPermsHelper.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Chat.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Commands.cs" />

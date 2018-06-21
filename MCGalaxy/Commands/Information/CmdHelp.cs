@@ -125,13 +125,14 @@ namespace MCGalaxy.Commands.Info {
         }
         
         bool ParseBlock(Player p, string message) {
-            BlockID b = Block.Parse(p, message);
-            if (b == Block.Invalid) return false;
+            BlockID block = Block.Parse(p, message);
+            if (block == Block.Invalid) return false;
             
             Player.Message(p, "Block \"{0}\" appears as &b{1}",
-                           message, Block.GetName(p, Block.Convert(b)));
-            BlockPerms.List[b].MessageCannotUse(p, "use");
-            DescribePhysics(p, message, b);
+                           message, Block.GetName(p, Block.Convert(block)));
+            BlockPerms.Find(block).MessageCannotUse(p, "use");
+            
+            DescribePhysics(p, message, block);
             return true;
         }
         

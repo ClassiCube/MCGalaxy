@@ -52,50 +52,6 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        
-        internal static void SetSpecificPerms(List<LevelPermission> perms, ComboBox[] boxes) {
-            ComboBox box = null;
-            for (int i = 0; i < boxes.Length; i++) {
-                box = boxes[i];
-                // Hide the non-visible specific permissions
-                box.Text = "";
-                box.Enabled = false;
-                box.Visible = false;
-                box.SelectedIndex = -1;
-                
-                // Show the non-visible specific permissions previously set
-                if (perms.Count > i) {
-                    box.Visible = true;
-                    box.Enabled = true;
-                    GuiPerms.SetDefaultIndex(box, perms[i]);
-                }
-            }
-            
-            // Show (add rank) for the last item
-            if (perms.Count >= boxes.Length) return;
-            SetAddRank(boxes[perms.Count]);
-        }
-        
-        internal static void SetAddRank(ComboBox box) {
-            box.Visible = true;
-            box.Enabled = true;
-            box.Text = "(add rank)";
-        }
-        
-        internal static void SetSpecific(ComboBox[] boxes, int boxIdx,
-                                         List<LevelPermission> perms, int idx) {
-            if (boxIdx < perms.Count) {
-                perms[boxIdx] = GuiPerms.RankPerms[idx];
-            } else {
-                perms.Add(GuiPerms.RankPerms[idx]);
-            }
-            
-            // Activate next box
-            if (boxIdx < boxes.Length - 1 && !boxes[boxIdx + 1].Visible) {
-                SetAddRank(boxes[boxIdx + 1]);
-            }
-        }
-        
         internal static void FillRanks(ComboBox[] boxes, bool removeRank = true) {
             for (int i = 0; i < boxes.Length; i++) {
                 boxes[i].Items.AddRange(RankNames);

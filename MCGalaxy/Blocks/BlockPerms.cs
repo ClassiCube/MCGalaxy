@@ -26,37 +26,33 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Blocks {
 
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a block. </summary>
-    public class BlockPerms {
+    public sealed class BlockPerms : ItemPerms {
         public BlockID ID;
-        public LevelPermission MinRank;
-        public List<LevelPermission> Allowed;
-        public List<LevelPermission> Disallowed;
+        public override string ItemName { get { return ID.ToString(); } }
         
-        public BlockPerms(BlockID id, LevelPermission minRank, List<LevelPermission> allowed, 
-                            List<LevelPermission> disallowed) {
-            Init(id, minRank, allowed, disallowed);
-        }
-        
-        void Init(BlockID id, LevelPermission minRank, List<LevelPermission> allowed, 
-                  List<LevelPermission> disallowed) {
-            ID = id; MinRank = minRank;
-            if (allowed == null) allowed = new List<LevelPermission>();
-            if (disallowed == null) disallowed = new List<LevelPermission>();
-            Allowed = allowed;
-            Disallowed = disallowed;
+        public BlockPerms(BlockID id, LevelPermission minRank, List<LevelPermission> allowed,
+                          List<LevelPermission> disallowed) : base(minRank, allowed, disallowed) {
+            ID = id;
         }
         
         public BlockPerms Copy() {
-            List<LevelPermission> allowed = new List<LevelPermission>(Allowed);
-            List<LevelPermission> disallowed = new List<LevelPermission>(Disallowed);
-            return new BlockPerms(ID, MinRank, allowed, disallowed);
-        }
-        
-        public bool UsableBy(LevelPermission perm) {
-             return (perm >= MinRank || Allowed.Contains(perm)) && !Disallowed.Contains(perm);
+            BlockPerms copy = new BlockPerms(ID, 0, null, null);
+            CopyTo(copy); return copy;
         }
         
         public static BlockPerms[] List = new BlockPerms[Block.ExtendedCount];
+
+        public static BlockPerms Find(BlockID b) { return List[b]; }
+        
+        public static void Set(BlockID b, LevelPermission min,
+                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
+            BlockPerms perms = List[b];
+            if (perms == null) {
+                List[b] = new BlockPerms(b, min, allowed, disallowed);
+            } else {
+                perms.Init(min, allowed, disallowed);
+            }
+        }
 
         
         public static void ResendAllBlockPermissions() {
@@ -66,7 +62,7 @@ namespace MCGalaxy.Blocks {
         
         public void MessageCannotUse(Player p, string action) {
             StringBuilder builder = new StringBuilder("Only ");
-            Formatter.PrintRanks(MinRank, Allowed, Disallowed, builder);
+            Describe(builder);
             
             string name = Block.GetName(p, ID);
             builder.Append( " %Scan ").Append(action).Append(' ');
@@ -86,21 +82,11 @@ namespace MCGalaxy.Blocks {
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
-                w.WriteLine("#Version 2");
-                w.WriteLine("#   This file list the ranks that can use each block");
-                w.WriteLine("#   Disallow and allow can be left empty.");
-                w.WriteLine("#   Works entirely on rank permission values, not rank names.");
-                w.WriteLine("#");
-                w.WriteLine("#   Layout: Block ID : MinRank : Disallow : Allow");
-                w.WriteLine("#   lava : 60 : 80,67 : 40,41,55");
-                w.WriteLine("");
+                WriteHeader(w, "block", "Block ID", "lava");
 
                 foreach (BlockPerms perms in List) {
                     if (Block.Undefined(perms.ID)) continue;
-                    
-                    string line = perms.ID + " : " + (int)perms.MinRank + " : "
-                        + CommandPerms.JoinPerms(perms.Disallowed) + " : " + CommandPerms.JoinPerms(perms.Allowed);
-                    w.WriteLine(line);
+                    w.WriteLine(perms.Serialise());
                 }
             }
         }
@@ -137,18 +123,17 @@ namespace MCGalaxy.Blocks {
                 if (block == Block.Invalid) continue;
 
                 try {
-                    LevelPermission min = (LevelPermission)int.Parse(args[1]);
-                    string disallowRaw = args[2], allowRaw = args[3];
+                    LevelPermission min;
+                    List<LevelPermission> allowed, disallowed;
                     
-                    List<LevelPermission> allowed = CommandPerms.ExpandPerms(allowRaw);
-                    List<LevelPermission> disallowed = CommandPerms.ExpandPerms(disallowRaw);
-                    List[block] = new BlockPerms(block, min, allowed, disallowed);
+                    Deserialise(args, out min, out allowed, out disallowed);
+                    Set(block, min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the block " + line);
                     continue;
                 }
             }
-        }       
+        }
         
         static void SetDefaultPerms() {
             for (BlockID block = 0; block < Block.ExtendedCount; block++) {
@@ -166,7 +151,8 @@ namespace MCGalaxy.Blocks {
                 } else {
                     min = DefaultPerm(block);
                 }
-                List[block] = new BlockPerms(block, min, null, null);
+                
+                Set(block, min, null, null);
             }
         }
         

@@ -24,11 +24,9 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
-
-        bool blockSupressEvents = true;
-        ComboBox[] blockAllowBoxes, blockDisallowBoxes;
         BlockID curBlock;
         List<BlockID> blockIDMap;
+        ItemPermsHelper blockItems = new ItemPermsHelper();
         
         // need to keep a list of changed block perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
@@ -53,6 +51,7 @@ namespace MCGalaxy.Gui {
                 blockIDMap.Add(block);
             }
             
+            blockItems.GetCurPerms = BlockGetOrAddPermsChanged;
             if (blk_list.SelectedIndex == -1) {
                 blk_list.SelectedIndex = 0;
             }
@@ -66,8 +65,9 @@ namespace MCGalaxy.Gui {
                 Block.Props[b] = blockPropsChanged[b];
             }
             
-            foreach (BlockPerms perms in blockPermsChanged) {
-                BlockPerms.List[perms.ID] = perms;
+            foreach (BlockPerms changed in blockPermsChanged) {
+                BlockPerms.Set(changed.ID, changed.MinRank, 
+            	               changed.Allowed, changed.Disallowed);
             }
             BlockPerms.ResendAllBlockPermissions();
             
@@ -87,10 +87,10 @@ namespace MCGalaxy.Gui {
         
         void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
             curBlock = blockIDMap[blk_list.SelectedIndex];
-            blockPermsOrig = BlockPerms.List[curBlock];
+            blockPermsOrig = BlockPerms.Find(curBlock);
             blockPerms = blockPermsChanged.Find(p => p.ID == curBlock);
             BlockInitSpecificArrays();
-            blockSupressEvents = true;
+            blockItems.SupressEvents = true;
             
             BlockProps props = blockPropsChanged[curBlock];
             blk_cbMsgBlock.Checked = props.IsMessageBlock;
@@ -106,61 +106,31 @@ namespace MCGalaxy.Gui {
             blk_cbWater.Checked = props.WaterKills;
             
             BlockPerms perms = blockPerms != null ? blockPerms : blockPermsOrig;
-            GuiPerms.SetDefaultIndex(blk_cmbMin, perms.MinRank);
-            GuiPerms.SetSpecificPerms(perms.Allowed, blockAllowBoxes);
-            GuiPerms.SetSpecificPerms(perms.Disallowed, blockDisallowBoxes);
-            blockSupressEvents = false;
+            blockItems.Update(perms);
         }
         
         void BlockInitSpecificArrays() {
-            if (blockAllowBoxes != null) return;
-            blockAllowBoxes = new ComboBox[] { blk_cmbAlw1, blk_cmbAlw2, blk_cmbAlw3 };
-            blockDisallowBoxes = new ComboBox[] { blk_cmbDis1, blk_cmbDis2, blk_cmbDis3 };
-            GuiPerms.FillRanks(blockAllowBoxes);
-            GuiPerms.FillRanks(blockDisallowBoxes);
+            if (blockItems.MinBox != null) return;
+            blockItems.MinBox = blk_cmbMin;
+            blockItems.AllowBoxes = new ComboBox[] { blk_cmbAlw1, blk_cmbAlw2, blk_cmbAlw3 };
+            blockItems.DisallowBoxes = new ComboBox[] { blk_cmbDis1, blk_cmbDis2, blk_cmbDis3 };
+            blockItems.FillInitial();
         }
         
-        void BlockGetOrAddPermsChanged() {
-            if (blockPerms != null) return;
+        ItemPerms BlockGetOrAddPermsChanged() {
+            if (blockPerms != null) return blockPerms;
             blockPerms = blockPermsOrig.Copy();
             blockPermsChanged.Add(blockPerms);
+            return blockPerms;
         }
         
         
         void blk_cmbMin_SelectedIndexChanged(object sender, EventArgs e) {
-            int idx = blk_cmbMin.SelectedIndex;
-            if (idx == -1 || blockSupressEvents) return;
-            BlockGetOrAddPermsChanged();
-            
-            blockPerms.MinRank = GuiPerms.RankPerms[idx];
+            blockItems.OnMinRankChanged((ComboBox)sender);
         }
         
         void blk_cmbSpecific_SelectedIndexChanged(object sender, EventArgs e) {
-            ComboBox box = (ComboBox)sender;
-            if (blockSupressEvents) return;
-            int idx = box.SelectedIndex;
-            if (idx == -1) return;
-            BlockGetOrAddPermsChanged();
-            
-            List<LevelPermission> perms = blockPerms.Allowed;
-            ComboBox[] boxes = blockAllowBoxes;
-            int boxIdx = Array.IndexOf<ComboBox>(boxes, box);
-            if (boxIdx == -1) {
-                perms = blockPerms.Disallowed;
-                boxes = blockDisallowBoxes;
-                boxIdx = Array.IndexOf<ComboBox>(boxes, box);
-            }
-            
-            if (idx == box.Items.Count - 1) {
-                if (boxIdx >= perms.Count) return;
-                perms.RemoveAt(boxIdx);
-                
-                blockSupressEvents = true;
-                GuiPerms.SetSpecificPerms(perms, boxes);
-                blockSupressEvents = false;
-            } else {
-                GuiPerms.SetSpecific(boxes, boxIdx, perms, idx);
-            }
+            blockItems.OnSpecificChanged((ComboBox)sender);
         }
 
         void blk_btnHelp_Click(object sender, EventArgs e) {
@@ -216,7 +186,7 @@ namespace MCGalaxy.Gui {
         
         void MarkBlockPropsChanged() {
             // don't mark props as changed when supressing events
-            int changed = blockSupressEvents ? 0 : 1;
+            int changed = blockItems.SupressEvents ? 0 : 1;
             blockPropsChanged[curBlock].ChangedScope = (byte)changed;
         }
     }
