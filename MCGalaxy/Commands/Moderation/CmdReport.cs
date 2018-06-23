@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.Moderation {
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
             if (reports.Count >= 5) {
                 Player.Message(p, "{0} &calready has 5 reports! Please wait until an {1} &chas reviewed these reports first!",
-            	               PlayerInfo.GetColoredName(p, target), checkPerms.Describe());
+                               PlayerInfo.GetColoredName(p, target), checkPerms.Describe());
                 return;
             }
             

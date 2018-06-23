@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Fun {
                 cfg.ZDivider = p.Pos.BlockZ;
                 Player.Message(p, "Set Z line divider to {0}.", cfg.ZDivider);
                 UpdateConfig(p, cfg);
-            }  else {
+            } else {
                 Help(p, "set");
             }
         }

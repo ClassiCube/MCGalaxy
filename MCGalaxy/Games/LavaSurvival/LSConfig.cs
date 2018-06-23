@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
             
             using (StreamWriter w = new StreamWriter(propsFile)) {
-                ConfigElement.Serialise(cfg, " options", w, this);
+                ConfigElement.Serialise(cfg, w, this);
             }
         }
         

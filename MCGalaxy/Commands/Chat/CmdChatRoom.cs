@@ -27,12 +27,9 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandPerm[] ExtraPerms {
             get { return new[] {
                     new CommandPerm(LevelPermission.AdvBuilder, "can create chatrooms"),
-                    new CommandPerm(LevelPermission.AdvBuilder, "can delete an empty chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "can delete a chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "can spy on a chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "can force a player to join a chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "can kick a player from a chatroom"),
-                    new CommandPerm(LevelPermission.Operator, "can send a global message to a chatroom (with no delay)"),
+                    new CommandPerm(LevelPermission.AdvBuilder, "can delete empty chatrooms"),
+                    new CommandPerm(LevelPermission.Operator, "can manage chatrooms"),
+                    new CommandPerm(LevelPermission.Operator, "can message all chatrooms without delay"),
                 }; }
         }
         
@@ -165,7 +162,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleSpy(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 4)) return;
+            if (!CheckExtraPerm(p, 3)) return;
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a chatroom name to spy on."); return;
             }
@@ -188,7 +185,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleForceJoin(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 5)) return;
+            if (!CheckExtraPerm(p, 3)) return;
             if (parts.Length <= 2) {
                 Player.Message(p, "You need to provide a player name, then a chatroom name."); return;
             }
@@ -215,7 +212,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         void HandleKick(Player p, string[] parts) {
-            if (!CheckExtraPerm(p, 6)) return;
+            if (!CheckExtraPerm(p, 3)) return;
             if (parts.Length <= 1) {
                 Player.Message(p, "You need to provide a player name.");
                 return;
@@ -236,7 +233,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         void HandleAll(Player p, string[] parts, string message) {
             message = parts.Length > 1 ? parts[1] : ""; // TODO: don't let you send empty message            
-            bool canSend = HasExtraPerm(p, 7) || p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow;
+            bool canSend = HasExtraPerm(p, 4) || p.lastchatroomglobal.AddSeconds(30) < DateTime.UtcNow;
             
             if (canSend) {
                 Logger.Log(LogType.ChatroomChat, "<GlobalChatRoom>{0}: {1}", p.name, message);
@@ -278,17 +275,16 @@ namespace MCGalaxy.Commands.Chatting {
             else if (HasExtraPerm(p, 2))
                 Player.Message(p, "/chatroom delete [room] - deletes a room only if all people have left");
             
-            if (HasExtraPerm(p, 4))
+            if (HasExtraPerm(p, 3)) {
                 Player.Message(p, "/chatroom spy [room] - spy on a chatroom");
-            if (HasExtraPerm(p, 5))
                 Player.Message(p, "/chatroom forcejoin [player] [room] - forces a player to join a room");
-            if (HasExtraPerm(p, 6))
                 Player.Message(p, "/chatroom kick [player] - kicks the player from their current room");
+            }
             
-            if (HasExtraPerm(p, 7))
-                Player.Message(p, "/chatroom all [message] - sends a global message to all rooms");
+            if (HasExtraPerm(p, 4))
+                Player.Message(p, "/chatroom all [message] - sends a message to all chatrooms");
             else
-                Player.Message(p, "/chatroom all [message] - sends a global message to all rooms " +
+                Player.Message(p, "/chatroom all [message] - sends a message to all chatrooms " +
                                "(limited to 1 every 30 seconds)");
         }
     }

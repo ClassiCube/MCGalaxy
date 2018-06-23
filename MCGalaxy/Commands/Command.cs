@@ -93,8 +93,8 @@ namespace MCGalaxy {
             CommandPerm[] extra = cmd.ExtraPerms;
             if (extra != null) {
                 for (int i = 0; i < extra.Length; i++) {
-            		CommandExtraPerms.Set(cmd.name, i + 1, extra[i].Description, 
-            		                      extra[i].Perm, null, null);
+                    CommandExtraPerms.Set(cmd.name, i + 1, extra[i].Description, 
+                                          extra[i].Perm, null, null);
                 }
             }
             

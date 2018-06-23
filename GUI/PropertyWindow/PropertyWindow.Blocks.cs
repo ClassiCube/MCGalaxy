@@ -30,7 +30,7 @@ namespace MCGalaxy.Gui {
         
         // need to keep a list of changed block perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
-        BlockPerms blockPermsOrig, blockPerms;
+        BlockPerms blockPermsOrig, blockPermsCopy;
         List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
         BlockProps[] blockPropsChanged = new BlockProps[Block.Props.Length];
         
@@ -88,7 +88,7 @@ namespace MCGalaxy.Gui {
         void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
             curBlock = blockIDMap[blk_list.SelectedIndex];
             blockPermsOrig = BlockPerms.Find(curBlock);
-            blockPerms = blockPermsChanged.Find(p => p.ID == curBlock);
+            blockPermsCopy = blockPermsChanged.Find(p => p.ID == curBlock);
             BlockInitSpecificArrays();
             blockItems.SupressEvents = true;
             
@@ -105,7 +105,7 @@ namespace MCGalaxy.Gui {
             blk_cbLava.Checked = props.LavaKills;
             blk_cbWater.Checked = props.WaterKills;
             
-            BlockPerms perms = blockPerms != null ? blockPerms : blockPermsOrig;
+            BlockPerms perms = blockPermsCopy != null ? blockPermsCopy : blockPermsOrig;
             blockItems.Update(perms);
         }
         
@@ -118,10 +118,10 @@ namespace MCGalaxy.Gui {
         }
         
         ItemPerms BlockGetOrAddPermsChanged() {
-            if (blockPerms != null) return blockPerms;
-            blockPerms = blockPermsOrig.Copy();
-            blockPermsChanged.Add(blockPerms);
-            return blockPerms;
+            if (blockPermsCopy != null) return blockPermsCopy;
+            blockPermsCopy = blockPermsOrig.Copy();
+            blockPermsChanged.Add(blockPermsCopy);
+            return blockPermsCopy;
         }
         
         

@@ -28,7 +28,7 @@ namespace MCGalaxy.Gui {
         
         // need to keep a list of changed command perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
-        CommandPerms commandPermsOrig, commandPerms;
+        CommandPerms commandPermsOrig, commandPermsCopy;
         List<CommandExtraPerms> extraPermsList;
         List<CommandPerms> commandPermsChanged = new List<CommandPerms>();
         List<CommandExtraPerms> commandExtraPermsChanged = new List<CommandExtraPerms>();
@@ -76,7 +76,7 @@ namespace MCGalaxy.Gui {
             if (cmd == null) return;
             
             commandPermsOrig = CommandPerms.Find(cmdName);
-            commandPerms = commandPermsChanged.Find(p => p.CmdName.CaselessEq(cmdName));
+            commandPermsCopy = commandPermsChanged.Find(p => p.CmdName.CaselessEq(cmdName));
             
             // fix for when command is added to server but doesn't have permissions defined
             if (commandPermsOrig == null) {
@@ -85,7 +85,7 @@ namespace MCGalaxy.Gui {
             
             commandItems.SupressEvents = true;
             CommandInitExtraPerms();
-            CommandPerms perms = commandPerms != null ? commandPerms : commandPermsOrig;
+            CommandPerms perms = commandPermsCopy != null ? commandPermsCopy : commandPermsOrig;
             commandItems.Update(perms);
         }
         
@@ -104,10 +104,10 @@ namespace MCGalaxy.Gui {
         }
         
         ItemPerms CommandGetOrAddPermsChanged() {
-            if (commandPerms != null) return commandPerms;
-            commandPerms = commandPermsOrig.Copy();
-            commandPermsChanged.Add(commandPerms);
-            return commandPerms;
+            if (commandPermsCopy != null) return commandPermsCopy;
+            commandPermsCopy = commandPermsOrig.Copy();
+            commandPermsChanged.Add(commandPermsCopy);
+            return commandPermsCopy;
         }
         
         

@@ -79,11 +79,10 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }       
-        internal static void Spawn(Player dst, Player p, Position pos,
-                                   Orientation rot, string possession = "") {
+        public static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }       
+        public static void Spawn(Player dst, Player p, Position pos,
+                                 Orientation rot, string possession = "") {
             byte id = p == dst ? Entities.SelfID : p.id;
-            
             string name = p.color + p.truename + possession;
             string skin = p.SkinName, model = p.Model;
             OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);

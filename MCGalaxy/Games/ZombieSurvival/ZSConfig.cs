@@ -97,7 +97,7 @@ namespace MCGalaxy.Games {
                 w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
                 w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
                 w.WriteLine();
-                ConfigElement.Serialise(cfg, " options", w, this);
+                ConfigElement.Serialise(cfg, w, this);
             }
         }
         

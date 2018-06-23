@@ -34,36 +34,30 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args.Length == 2) {
                 CommandPerms perms = CommandPerms.Find(cmd.name);
-                SetPerms(p, args, perms);
+                SetPerms(p, args, perms, "command");
             } else {
-                int idx = 0;
-                if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref idx)) return;
+                int num = 0;
+                if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref num)) return;
                 
-                CommandExtraPerms perms = CommandExtraPerms.Find(cmd.name, idx);
+                CommandExtraPerms perms = CommandExtraPerms.Find(cmd.name, num);
                 if (perms == null) {
                     Player.Message(p, "This command has no extra permission by that number."); return;
                 }
-                if (p != null && p.Rank < perms.MinRank) {
-                    Player.Message(p, "Your rank cannot modify this extra permission."); return;
-                }
-                
-                Group grp = GetGroup(p, args[1]);
-                if (grp == null) return;
-                
-                perms.MinRank = grp.Permission;
-                CommandExtraPerms.Save();
-                
-                string msg = "extra permission " + idx;
-                Announce(p, cmd.name + "%S's " + msg + " was set to " + grp.ColoredName);
-                return;
+                SetPerms(p, args, perms, "extra permission");
             }
         }
         
         protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
-            CommandPerms.Save();
-            CommandPerms.Load();
-            
-            Announce(p, perms.ItemName + msg);
+            if (perms is CommandPerms) {
+                CommandPerms.Save();
+                CommandPerms.Load();
+                Announce(p, perms.ItemName + msg);
+            } else {
+                CommandExtraPerms.Save();
+                CommandExtraPerms ex = (CommandExtraPerms)perms;
+                //Announce(p, cmd.name + "%S's extra permission " + idx + " was set to " + grp.ColoredName);
+                Announce(p, ex.CmdName + " extra permission #" + ex.Num + msg);
+            }
         }
         
         public override void Help(Player p) {

@@ -287,7 +287,7 @@ namespace MCGalaxy {
                     using (StreamWriter w = new StreamWriter(path)) {
                         w.WriteLine("#Level properties for " + mapName);
                         w.WriteLine("#Drown-time is in tenths of a second");
-                        ConfigElement.Serialise(Server.levelConfig, " settings", w, this);
+                        ConfigElement.Serialise(Server.levelConfig, w, this);
                     }
                 }
             } catch (Exception ex) {

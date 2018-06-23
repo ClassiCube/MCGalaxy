@@ -53,7 +53,6 @@ namespace MCGalaxy.DB {
         }
         
         
-        /// <summary> Retrieves the login message set for the given player. </summary>
         public static string GetLoginMessage(Player p) {
             if (!Directory.Exists("text/login"))
                 Directory.CreateDirectory("text/login");

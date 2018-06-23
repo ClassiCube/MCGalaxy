@@ -236,7 +236,7 @@ namespace MCGalaxy {
             w.WriteLine("#   bufferblocks                  = Should buffer blocks by default for maps?");
             w.WriteLine();
             
-            ConfigElement.Serialise(Server.serverConfig, " options", w, null);
+            ConfigElement.Serialise(Server.serverConfig, w, null);
         }
     }
 }

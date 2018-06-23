@@ -25,15 +25,10 @@ namespace MCGalaxy {
     public static class Formatter {
         
         public static void PrintCommandInfo(Player p, Command cmd) {
-            CommandPerms perms = CommandPerms.Find(cmd.name);
-            StringBuilder builder = new StringBuilder();
-            builder.Append("Usable by: ");
-            if (perms == null) {
-                builder.Append(Group.GetColoredName(cmd.defaultRank) + "%S+");
-            } else {
-                perms.Describe(builder);
-            }
-            Player.Message(p, builder.ToString());            
+            ItemPerms perms = CommandPerms.Find(cmd.name);
+            if (perms == null) perms = new ItemPerms(cmd.defaultRank, null, null);
+            
+            Player.Message(p, "Usable by: " + perms.Describe());
             PrintAliases(p, cmd);
             
             List<CommandExtraPerms> extraPerms = CommandExtraPerms.FindAll(cmd.name);

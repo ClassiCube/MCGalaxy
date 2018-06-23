@@ -63,7 +63,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Writes all config elements to the given stream, grouped by named sections. </summary>
-        public static void Serialise(ConfigElement[] elements, string suffix, StreamWriter dst, object instance) {
+        public static void Serialise(ConfigElement[] elements, StreamWriter dst, object instance) {
             Dictionary<string, List<ConfigElement>> sections = new Dictionary<string, List<ConfigElement>>();
             
             foreach (ConfigElement elem in elements) {
@@ -76,7 +76,7 @@ namespace MCGalaxy {
             }
             
             foreach (var kvp in sections) {
-                dst.WriteLine("# " + kvp.Key + suffix);
+                dst.WriteLine("# " + kvp.Key + " settings");
                 foreach (ConfigElement elem in kvp.Value) {
                     dst.WriteLine(elem.Format(instance));
                 }

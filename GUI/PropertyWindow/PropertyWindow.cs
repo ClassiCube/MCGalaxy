@@ -108,15 +108,6 @@ namespace MCGalaxy.Gui {
                 Logger.Log(LogType.Warning, "SAVE FAILED! properties/server.properties");
             }
         }
-        
-        Color GetColor(string name) {
-            string code = Colors.Parse(name);
-            if (code.Length == 0) return SystemColors.Control;
-            if (Colors.IsStandard(code[1])) return Color.FromName(name);
-            
-            ColorDesc col = Colors.Get(code[1]);
-            return Color.FromArgb(col.R, col.G, col.B);
-        }
 
         void btnSave_Click(object sender, EventArgs e) { SaveChanges(); Dispose(); }
         void btnApply_Click(object sender, EventArgs e) { SaveChanges(); }
