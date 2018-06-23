@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Commands.World {   
+namespace MCGalaxy.Commands.World {
     public sealed class CmdSave : Command {
         
         public override string name { get { return "Save"; } }
@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("all")) { SaveAll(); return; }
+            if (message.CaselessEq("all")) { SaveAll(p); return; }
             if (message.Length == 0) {
-                if (Player.IsSuper(p)) { SaveAll(); } 
+                if (Player.IsSuper(p)) { SaveAll(p); }
                 else { Save(p, p.level, ""); }
                 return;
             }
@@ -48,25 +48,32 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        static void SaveAll() {
+        static void SaveAll(Player p) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
-                try {
-                    if (lvl.SaveChanges) {
-                        lvl.Save();
-                    } else { 
-                        Logger.Log(LogType.SystemActivity, "Level \"{0}\" is running a game, skipping save.", lvl.name);
-                    }
-                } catch (Exception ex) {
-                    Logger.LogError(ex);
-                }
+                TrySave(p, lvl, false);
             }
             Chat.MessageGlobal("All levels have been saved.");
         }
         
+        static bool TrySave(Player p, Level lvl, bool force) {
+            if (!force && !lvl.Changed) return false;
+            
+            if (!lvl.SaveChanges) {
+                Player.Message(p, "Level {0} %Sis running a game, skipping save", lvl.ColoredName);
+                return false;
+            }
+            
+            bool saved = lvl.Save(force);
+            if (!saved) Player.Message(p, "Saving of level {0} %Swas cancelled", lvl.ColoredName);
+            return saved;
+        }
+        
         static void Save(Player p, Level lvl, string restoreName) {
-            lvl.Save(true);
-            Player.Message(p, "Level {0} %Ssaved.", lvl.ColoredName);
+            if (TrySave(p, lvl, true)) {
+                Player.Message(p, "Level {0} %Ssaved", lvl.ColoredName);
+            }
+            
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
             

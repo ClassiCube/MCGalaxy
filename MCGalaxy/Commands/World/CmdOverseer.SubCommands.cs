@@ -106,7 +106,6 @@ namespace MCGalaxy.Commands.World {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
                 Command.Find("Save").Use(p, "");
-                Player.Message(p, "Map has been saved.");
             } else if (cmd == "RESTORE") {
                 Command.Find("Restore").Use(p, value);
             } else if (cmd == "RESIZE") {
