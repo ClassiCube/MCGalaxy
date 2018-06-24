@@ -55,6 +55,10 @@ namespace MCGalaxy.Games {
         }
         
         public void UpdateMapConfig() {
+            cfg = new LSMapConfig();
+            cfg.SetDefaults(Map);
+            cfg.Load(Map.name);
+            
             killerMode  = rand.Next(1, 101) <= cfg.KillerChance;
             destroyMode = rand.Next(1, 101) <= cfg.DestroyChance;
             waterMode   = rand.Next(1, 101) <= cfg.WaterChance;

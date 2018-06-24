@@ -120,8 +120,11 @@ namespace MCGalaxy.Games {
             if (p.level != Map) return;
             CtfTeam team = TeamOf(p);
             
-            if (team != null) pos = team.SpawnPos;
-            if (team != null && respawning) DropFlag(p, team);
+            if (team == null) return;
+            if (respawning) DropFlag(p, team);
+            
+            Vec3U16 coords = team.SpawnPos;
+            pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);         
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {

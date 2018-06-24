@@ -20,43 +20,26 @@
 using System;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
     public sealed class CtfMapConfig {
-        
-        [ConfigInt("base.red.x", null, 0)]
-        public int RedFlagX;
-        [ConfigInt("base.red.y", null, 0)]
-        public int RedFlagY;
-        [ConfigInt("base.red.z", null, 0)]
-        public int RedFlagZ;
+
+        [ConfigVec3("base.red.pos", null)]
+        public Vec3U16 RedFlagPos;
         [ConfigBlock("base.red.block", null, Block.Air)]
         public BlockID RedFlagBlock;
+        [ConfigVec3("base.red.spawn", null)]
+        public Vec3U16 RedSpawn;
         
-        [ConfigInt("base.blue.x", null, 0)]
-        public int BlueFlagX;
-        [ConfigInt("base.blue.y", null, 0)]
-        public int BlueFlagY;
-        [ConfigInt("base.blue.z", null, 0)]
-        public int BlueFlagZ;
+        [ConfigVec3("base.blue.pos", null)]
+        public Vec3U16 BlueFlagPos;
         [ConfigBlock("base.blue.block", null, Block.Air)]
         public BlockID BlueFlagBlock;
-        
-        [ConfigInt("base.red.spawnx", null, 0)]
-        public int RedSpawnX;
-        [ConfigInt("base.red.spawny", null, 0)]
-        public int RedSpawnY;
-        [ConfigInt("base.red.spawnz", null, 0)]
-        public int RedSpawnZ;
-        
-        [ConfigInt("base.blue.spawnx", null, 0)]
-        public int BlueSpawnX;
-        [ConfigInt("base.blue.spawny", null, 0)]
-        public int BlueSpawnY;
-        [ConfigInt("base.blue.spawnz", null, 0)]
-        public int BlueSpawnZ;
+        [ConfigVec3("base.blue.spawn", null)]
+        public Vec3U16 BlueSpawn;
         
         [ConfigInt("map.line.z", null, 0)]
         public int ZDivider;
@@ -72,20 +55,16 @@ namespace MCGalaxy.Games {
         public int Capture_PointsLost;
         
         
-        /// <summary> Sets the default CTF config values for the given map. </summary>
-        public void SetDefaults(Level map) {
-            ZDivider = map.Length / 2;
-            RedFlagBlock = Block.Red;
+        public void SetDefaults(Level lvl) {
+            ZDivider = lvl.Length / 2;
+            RedFlagBlock  = Block.Red;
             BlueFlagBlock = Block.Blue;
-            int midX = map.Width / 2, maxZ = map.Length - 1;
+            ushort midX = (ushort)(lvl.Width / 2), maxZ = (ushort)(lvl.Length - 1);
             
-            RedFlagX = midX; RedSpawnX = midX * 32;
-            RedFlagY = 6;    RedSpawnY = 4 * 32 + Entities.CharacterHeight;
-            RedFlagZ = 0;    RedSpawnZ = 0 * 32;
-            
-            BlueFlagX = midX; BlueSpawnX = midX * 32;
-            BlueFlagY = 6;    BlueSpawnY = 4 * 32 + Entities.CharacterHeight;
-            BlueFlagZ = maxZ; BlueSpawnZ = maxZ * 32;
+            RedFlagPos  = new Vec3U16(midX, 6, 0);
+            RedSpawn    = new Vec3U16(midX, 4, 0);
+            BlueFlagPos = new Vec3U16(midX, 6, maxZ);
+            BlueSpawn   = new Vec3U16(midX, 4, maxZ);
             
             RoundPoints = 3;
             Tag_PointsGained = 5;

@@ -41,7 +41,6 @@ namespace MCGalaxy.Commands.Fun {
             
             if (p == null) { Player.Message(p, "/{0} setup can only be used in-game.", name); return; }
             if (args.Length < 2) { SetupHelp(p); return; }
-            if (game.Running) { Player.Message(p, "You cannot configure Lava Survival while a game is active."); return; }
             string group = args[1];
             
             LSGame ls = (LSGame)game;

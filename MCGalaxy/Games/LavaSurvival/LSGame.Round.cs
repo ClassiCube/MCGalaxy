@@ -104,10 +104,6 @@ namespace MCGalaxy.Games {
         protected override bool SetMap(string map) {
             bool success = base.SetMap(map);
             if (!success) return false;
-            
-            cfg = new LSMapConfig();
-            cfg.SetDefaults(Map);
-            cfg.Load(Map.name);
             UpdateMapConfig();
             
             Map.SetPhysics(destroyMode ? 2 : 1);

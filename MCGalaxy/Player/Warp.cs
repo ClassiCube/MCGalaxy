@@ -101,12 +101,12 @@ namespace MCGalaxy {
                     string[] parts = line.Split(':');
                     Warp warp = new Warp();
                     try {
-                        warp.Name = parts[0];
+                        warp.Name  = parts[0];
                         warp.Level = parts[1];
                         warp.Pos.X = int.Parse(parts[2]);
                         warp.Pos.Y = int.Parse(parts[3]);
                         warp.Pos.Z = int.Parse(parts[4]);
-                        warp.Yaw = byte.Parse(parts[5]);
+                        warp.Yaw   = byte.Parse(parts[5]);
                         warp.Pitch = byte.Parse(parts[6]);
                         Items.Add(warp);
                     } catch {

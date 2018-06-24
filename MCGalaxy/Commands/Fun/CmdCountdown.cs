@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             game.FreezeMode = mode == "freeze" || mode == "frozen";
-            game.SpeedType = speed;            
+            game.SpeedType = speed;
             game.Start(p, "countdown", int.MaxValue);
         }       
         

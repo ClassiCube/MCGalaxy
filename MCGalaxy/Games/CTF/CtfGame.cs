@@ -37,8 +37,7 @@ namespace MCGalaxy.Games {
         public string Name, Color;
         public string ColoredName { get { return Color + Name; } }
         public int Captures;
-        public Vec3U16 FlagPos;
-        public Position SpawnPos;
+        public Vec3U16 FlagPos, SpawnPos;
         public BlockID FlagBlock;
         public VolatileArray<Player> Members = new VolatileArray<Player>();
                 
@@ -83,12 +82,12 @@ namespace MCGalaxy.Games {
             CtfMapConfig cfg = Config;
             
             Red.FlagBlock = cfg.RedFlagBlock;
-            Red.FlagPos = new Vec3U16((ushort)cfg.RedFlagX, (ushort)cfg.RedFlagY, (ushort)cfg.RedFlagZ);
-            Red.SpawnPos = new Position(cfg.RedSpawnX, cfg.RedSpawnY, cfg.RedSpawnZ);
+            Red.FlagPos   = cfg.RedFlagPos;
+            Red.SpawnPos  = cfg.RedSpawn;
             
             Blue.FlagBlock = cfg.BlueFlagBlock;
-            Blue.FlagPos = new Vec3U16((ushort)cfg.BlueFlagX, (ushort)cfg.BlueFlagY, (ushort)cfg.BlueFlagZ);
-            Blue.SpawnPos = new Position(cfg.BlueSpawnX, cfg.BlueSpawnY, cfg.BlueSpawnZ);
+            Blue.FlagPos   = cfg.BlueFlagPos;
+            Blue.SpawnPos  = cfg.BlueSpawn;
         }
 
         

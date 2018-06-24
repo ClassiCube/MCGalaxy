@@ -51,11 +51,11 @@ namespace MCGalaxy.Commands.Fun {
             } else if (IsDeleteCommand(prop)) {
                 HandleRemove(p);
             } if (prop.CaselessEq("bluespawn")) {
-                cfg.BlueSpawnX = p.Pos.X; cfg.BlueSpawnY = p.Pos.Y; cfg.BlueSpawnZ = p.Pos.Z;
+                cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
                 Player.Message(p, "Set spawn of blue team to your position.");
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("redspawn")) {
-                cfg.RedSpawnX = p.Pos.X; cfg.RedSpawnY = p.Pos.Y; cfg.RedSpawnZ = p.Pos.Z;
+                cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
                 Player.Message(p, "Set spawn of red team to your position.");
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("blueflag")) {
@@ -100,11 +100,11 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             CtfMapConfig cfg = RetrieveConfig(p);
-            Vec3S32 P = marks[0];           
-            cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
+            Vec3U16 P = (Vec3U16)marks[0];
+            cfg.BlueFlagPos = P;
             Player.Message(p, "Set flag position of blue team to ({0})", P);
             
-            block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            block = p.level.GetBlock(P.X, P.Y, P.Z);
             if (block == Block.Air) block = Block.Blue;
             cfg.BlueFlagBlock = block;
             Player.Message(p, "Set flag block of blue team to {0}", Block.GetName(p, block));
@@ -115,11 +115,11 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             CtfMapConfig cfg = RetrieveConfig(p);
-            Vec3S32 P = marks[0];            
-            cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
+            Vec3U16 P = (Vec3U16)marks[0];         
+            cfg.RedFlagPos = P;
             Player.Message(p, "Set flag position of red team to ({0})", P);
             
-            block = p.level.GetBlock((ushort)P.X, (ushort)P.Y, (ushort)P.Z);
+            block = p.level.GetBlock(P.X, P.Y, P.Z);
             if (block == Block.Air) block = Block.Red;
             cfg.RedFlagBlock = block;
             Player.Message(p, "Set flag block of red team to {0}", Block.GetName(p, block));
