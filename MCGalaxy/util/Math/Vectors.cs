@@ -64,16 +64,8 @@ namespace MCGalaxy.Maths {
         public static bool operator != (Vec3U16 a, Vec3U16 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
-        
-        
-        public override string ToString() {
-            return X + ", " + Y + ", " + Z;
-        }
-        
-        public static Vec3U16 Parse(string input) {
-            string[] p = input.Replace(" ", "").Split(',');
-            return new Vec3U16(ushort.Parse(p[0]), ushort.Parse(p[1]), ushort.Parse(p[2]));
-        }
+                
+        public override string ToString() { return X + ", " + Y + ", " + Z; }
     }
     
     public struct Vec3S32 : IEquatable<Vec3S32> {        

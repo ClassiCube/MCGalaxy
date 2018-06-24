@@ -95,15 +95,20 @@ namespace MCGalaxy.Games {
         }
         
         
+        const string propsDir = "CTF/";
+        static string Path(string map) { return propsDir + map + ".config"; }
         static ConfigElement[] cfg;
+        
         public void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
-            ConfigElement.ParseFile(cfg, "CTF map", "CTF/" + map + ".config", this);
+            ConfigElement.ParseFile(cfg, "CTF map", Path(map), this);
         }
         
         public void Save(string map) {
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));           
-            ConfigElement.SerialiseSimple(cfg, "CTF/" + map + ".config", this);
+            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
+            
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
+            ConfigElement.SerialiseSimple(cfg, Path(map), this);
         }
     }
 }

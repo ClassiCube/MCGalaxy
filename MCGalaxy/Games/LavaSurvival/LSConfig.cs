@@ -49,147 +49,58 @@ namespace MCGalaxy.Games {
     }
     
     public sealed class LSMapConfig {
-        [ConfigInt("fast-chance", "Lava", 0, 0, 100)]
-        public int FastChance;       
-        [ConfigInt("killer-chance", "Lava", 100, 0, 100)]
+        [ConfigInt("fast-chance", null, 0, 0, 100)]
+        public int FastChance;
+        [ConfigInt("killer-chance", null, 100, 0, 100)]
         public int KillerChance = 100;
-        [ConfigInt("destroy-chance", "Lava", 0, 0, 100)]
+        [ConfigInt("destroy-chance", null, 0, 0, 100)]
         public int DestroyChance;
-        [ConfigInt("water-chance", "Lava", 0, 0, 100)]
+        [ConfigInt("water-chance", null, 0, 0, 100)]
         public int WaterChance;
-        [ConfigInt("layer-chance", "Lava", 0, 0, 100)]
+        [ConfigInt("layer-chance", null, 0, 0, 100)]
         public int LayerChance;
         
-        [ConfigInt("layer-height", "Lava", 0)]
-        public int LayerHeight;
-        [ConfigInt("layer-count", "Lava", 0)]
-        public int LayerCount;
+        [ConfigInt("layer-height", null, 3, 0)]
+        public int LayerHeight = 3;
+        [ConfigInt("layer-count", null, 10, 0)]
+        public int LayerCount = 10;
         
-        [ConfigReal("layer-interval", "Lava", 2, 0)]
-        public float LayerInterval = 2;
-        [ConfigReal("round-time", "Lava", 15, 0)]
+        [ConfigReal("layer-interval", null, 2, 0)]
+        public float LayerIntervalMins = 2;
+        [ConfigReal("round-time", null, 15, 0)]
         public float RoundTimeMins = 15;
-        [ConfigReal("flood-time", "Lava", 5, 0)]
+        [ConfigReal("flood-time", null, 5, 0)]
         public float FloodTimeMins = 5;
         
-        /*
-            public Vec3U16 FloodPos, LayerPos;
-            public Vec3U16[] safeZone = new Vec3U16[2];
-         */
-    }
-    
-    public sealed partial class LSGame : RoundsGame {
-
-        public static LSConfig Config = new LSConfig();
+        [ConfigVec3("block-flood", null)] public Vec3U16 FloodPos;
+        [ConfigVec3("block-layer", null)] public Vec3U16 LayerPos;
+        [ConfigVec3("safe-zone-min", null)] public Vec3U16 SafeZoneMin;
+        [ConfigVec3("safe-zone-max", null)] public Vec3U16 SafeZoneMax;
         
-        public MapData GenerateMapData(MapSettings settings) {
-            MapData data = new MapData(settings);
-            data.killer  = rand.Next(1, 101) <= settings.killer;
-            data.destroy = rand.Next(1, 101) <= settings.destroy;
-            data.water   = rand.Next(1, 101) <= settings.water;
-            data.layer   = rand.Next(1, 101) <= settings.layer;
-            data.fast    = rand.Next(1, 101) <= settings.fast && !data.water;
-            
-            BlockID block =
-                data.water   ? (data.killer ? Block.Deadly_ActiveWater : Block.Water)
-                : (data.fast ? (data.killer ? Block.Deadly_FastLava    : Block.FastLava)
-                   : (data.killer ? Block.Deadly_ActiveLava  : Block.Lava));
-            data.block = block;
-            return data;
+        
+        const string propsDir = "properties/lavasurvival/";
+        static string Path(string map) { return propsDir + map + ".properties"; }
+        static ConfigElement[] cfg;
+        
+        public void Load(string map) {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
+            ConfigElement.ParseFile(cfg, "Lava survival map", Path(map), this);
         }
-
-        public MapSettings LoadMapSettings(string name) {
-            MapSettings settings = new MapSettings();
-            settings.name = name;
-            
+        
+        public void Save(string map) {
             if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-            string path = propsDir + name + ".properties";
-            if (!File.Exists(path)) { SaveMapSettings(settings); return settings; }
-
-            try {
-                PropertiesFile.Read(path, ref settings, ProcessMapLine);
-            } catch (Exception e) {
-                Logger.LogError(e);
-            }
-            return settings;
-        }
-        
-        void ProcessMapLine(string key, string value, ref MapSettings map) {
-            switch (key.ToLower()) {
-                    case "fast-chance": map.fast = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                    case "killer-chance": map.killer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                    case "destroy-chance": map.destroy = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                    case "water-chance": map.water = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                    case "layer-chance": map.layer = (byte)Utils.Clamp(int.Parse(value), 0, 100); break;
-                    case "layer-height": map.LayerHeight = int.Parse(value); break;
-                    case "layer-count": map.LayerCount = int.Parse(value); break;
-                    case "layer-interval": map.layerInterval = double.Parse(value); break;
-                    case "round-time": map.roundTime = double.Parse(value); break;
-                    case "flood-time": map.floodTime = double.Parse(value); break;
-                    
-                case "block-flood":
-                    map.FloodPos = Vec3U16.Parse(value); break;
-                case "block-layer":
-                    map.LayerPos = Vec3U16.Parse(value); break;
-                case "safe-zone":
-                    string[] p = value.Split('-');
-                    map.safeZone = new Vec3U16[] { Vec3U16.Parse(p[0]), Vec3U16.Parse(p[1]) };
-                    break;
-            }
-        }
-        
-        public void SaveMapSettings(MapSettings settings) {
-            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-
-            using (StreamWriter w = new StreamWriter(propsDir + settings.name + ".properties")) {
-                w.WriteLine("#Lava Survival properties for " + settings.name);
-                w.WriteLine("fast-chance = " + settings.fast);
-                w.WriteLine("killer-chance = " + settings.killer);
-                w.WriteLine("destroy-chance = " + settings.destroy);
-                w.WriteLine("water-chance = " + settings.water);
-                w.WriteLine("layer-chance = " + settings.layer);
-                w.WriteLine("layer-height = " + settings.LayerHeight);
-                w.WriteLine("layer-count = " + settings.LayerCount);
-                w.WriteLine("layer-interval = " + settings.layerInterval);
-                w.WriteLine("round-time = " + settings.roundTime);
-                w.WriteLine("flood-time = " + settings.floodTime);
-                w.WriteLine("block-flood = " + settings.FloodPos);
-                w.WriteLine("block-layer = " + settings.LayerPos);
-                w.WriteLine("safe-zone = " + settings.safeZone[0] + " - " + settings.safeZone[1]);
-            }
-        }
-
-        // Internal classes
-        public class MapSettings {
-            public string name;
-            public byte fast, killer = 100, destroy, water, layer;
-            public int LayerHeight = 3, LayerCount = 10;
-            public double layerInterval = 2, roundTime = 15, floodTime = 5;
-            public Vec3U16 FloodPos, LayerPos;
-            public Vec3U16[] safeZone = new Vec3U16[2];
             
-            public void ApplyDefaults(Level lvl) {
-                FloodPos = new Vec3U16((ushort)(lvl.Width / 2), (ushort)(lvl.Height - 1), (ushort)(lvl.Length / 2));
-                LayerPos = new Vec3U16(0, (ushort)(lvl.Height / 2), 0);
-                ushort x = (ushort)(lvl.Width / 2), y = (ushort)(lvl.Height / 2), z = (ushort)(lvl.Length / 2);
-                safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), 
-                    new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
-            }
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
+            ConfigElement.SerialiseSimple(cfg, Path(map), this);
         }
-
-        public class MapData {
-            public bool fast, killer, destroy, water, layer;
-            public BlockID block;
-            public int currentLayer;
-            public int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
-
-            public MapData(MapSettings settings) {
-                block = Block.Lava;
-                currentLayer = 1;
-                roundTotalSecs = (int)(settings.roundTime * 60);
-                floodDelaySecs = (int)(settings.floodTime * 60);
-                layerIntervalSecs = (int)(settings.layerInterval * 60);
-            }
+        
+        public void SetDefaults(Level lvl) {
+            ushort x = (ushort)(lvl.Width / 2), y = (ushort)(lvl.Height / 2), z = (ushort)(lvl.Length / 2);
+            FloodPos = new Vec3U16(x, (ushort)(lvl.Height - 1), z);
+            LayerPos = new Vec3U16(0, y                       , 0);
+            
+            SafeZoneMin = new Vec3U16((ushort)(x - 3), y,               (ushort)(z - 3));
+            SafeZoneMax = new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3));
         }
     }
 }

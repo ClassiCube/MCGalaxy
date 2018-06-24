@@ -76,12 +76,6 @@ namespace MCGalaxy.Games {
         static CtfData TryGet(Player p) {
             object data; p.Extras.TryGet(ctfExtrasKey, out data); return (CtfData)data;
         }
-
-        protected override bool SetMap(string map) {
-            bool success = base.SetMap(map);
-            if (success) UpdateMapConfig();
-            return success;
-        }
         
         public void UpdateMapConfig() {
             Config.SetDefaults(Map);

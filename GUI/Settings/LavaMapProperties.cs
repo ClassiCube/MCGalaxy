@@ -22,45 +22,34 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public sealed class LavaMapProperties {
-        internal readonly LSGame.MapSettings m;
-        
-        public LavaMapProperties(LSGame.MapSettings m) {
-            this.m = m;
-        }
+        internal readonly LSMapConfig m;    
+        public LavaMapProperties(LSMapConfig m) { this.m = m; }
 
         [DisplayName("Fast lava chance")]
-        public byte FastLava { get { return m.fast; } set { m.fast = Clamp(value); } }
-        
+        public int FastLava { get { return m.FastChance; } set { m.FastChance = Chance(value); } }      
         [DisplayName("Killer liquids chance")]
-        public byte Killer { get { return m.killer; } set { m.killer = Clamp(value); } }
-
-        [DisplayName("Destroy blocks chance")]        
-        public byte Destroy { get { return m.destroy; } set { m.destroy = Clamp(value); } }
-
+        public int Killer { get { return m.KillerChance; } set { m.KillerChance = Chance(value); } }
+        [DisplayName("Destroy blocks chance")]
+        public int Destroy { get { return m.DestroyChance; } set { m.DestroyChance = Chance(value); } }
         [DisplayName("Water flood chance")]
-        public byte Water { get { return m.water; } set { m.water = Clamp(value); } }
-
+        public int Water { get { return m.WaterChance; } set { m.WaterChance = Chance(value); } }
         [DisplayName("Layer flood chance")]
-        public byte Layer { get { return m.layer; } set { m.layer = Clamp(value); } }
-        
+        public int Layer { get { return m.LayerChance; } set { m.LayerChance = Chance(value); } }       
 
         [DisplayName("Layer height")]
-        public int LayerHeight { get { return m.LayerHeight; } set { m.LayerHeight = ClampI(value); } }
-
+        public int LayerHeight { get { return m.LayerHeight; } set { m.LayerHeight = Value(value); } }
         [DisplayName("Layer count")]
-        public int LayerCount { get { return m.LayerCount; } set { m.LayerCount = ClampI(value); } }
+        public int LayerCount { get { return m.LayerCount; } set { m.LayerCount = Value(value); } }
 
         [DisplayName("Layer time (mins)")]
-        public double LayerTime { get { return m.layerInterval; } set { m.layerInterval = ClampD(value); } }
-        
+        public float LayerTime { get { return m.LayerIntervalMins; } set { m.LayerIntervalMins = Time(value); } }        
         [DisplayName("Round time (mins)")]
-        public double RoundTime { get { return m.roundTime; } set { m.roundTime = ClampD(value); } }
-        
+        public float RoundTime { get { return m.RoundTimeMins; } set { m.RoundTimeMins = Time(value); } }        
         [DisplayName("Flood time (mins)")]
-        public double FloodTime { get { return m.floodTime; } set { m.floodTime = ClampD(value); } }
+        public float FloodTime { get { return m.FloodTimeMins; } set { m.FloodTimeMins = Time(value); } }
         
-        static byte Clamp(byte value) { return Math.Min(value, (byte)100); }
-        static int ClampI(int value) { return Math.Max(0, Math.Min(value, 1000)); }
-        static double ClampD(double value) { return Math.Max(0, Math.Min(value, 10)); }
+        static int Chance(int value) { return Math.Max(0, Math.Min(value, 100)); }
+        static int Value(int value) { return Math.Max(0, Math.Min(value, 1000)); }
+        static float Time(double value) { return (float)Math.Max(0, Math.Min(value, 20)); }
     }
 }

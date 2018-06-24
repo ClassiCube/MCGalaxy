@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands.Fun {
         static void UpdateConfig(Player p, CtfMapConfig cfg) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             cfg.Save(p.level.name);
-            if (Server.ctf != null && p.level == Server.ctf.Map) Server.ctf.UpdateMapConfig();
+            if (p.level == Server.ctf.Map) Server.ctf.UpdateMapConfig();
         }
         
         public override void Help(Player p) {

@@ -100,16 +100,11 @@ namespace MCGalaxy.Gui {
                 if (LevelInfo.FindExact(name) == null) {
                     Command.Find("Load").Use(null, name);
                 }
+                
                 Level level = LevelInfo.FindExact(name);
                 if (level == null) return;
 
                 Server.lava.AddMap(name);
-
-                LSGame.MapSettings settings = Server.lava.LoadMapSettings(level.name);
-                settings.ApplyDefaults(level);
-                Server.lava.SaveMapSettings(settings);
-
-                level.Config.PhysicsOverload = 1000000;
                 level.Config.LoadOnGoto = false;
                 Level.SaveSettings(level);
                 
@@ -135,7 +130,6 @@ namespace MCGalaxy.Gui {
                 if (level == null) return;
 
                 Server.lava.RemoveMap(name);
-                level.Config.PhysicsOverload = 1500;
                 level.Config.AutoUnload = true;
                 level.Config.LoadOnGoto = true;
                 
@@ -147,6 +141,7 @@ namespace MCGalaxy.Gui {
             catch (Exception ex) { Logger.LogError(ex); }
         }
 
+        string lsCurMap;
         void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
             SaveLavaMapSettings();
             if (ls_lstUsed.SelectedIndex == -1) {
@@ -155,14 +150,15 @@ namespace MCGalaxy.Gui {
                 return;
             }
             
-            string name = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString();
-            ls_grpMapSettings.Text = "Map settings (" + name + ")";
+            lsCurMap = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString();
+            ls_grpMapSettings.Text = "Map settings (" + lsCurMap + ")";
             
             try {
-                LSGame.MapSettings m = Server.lava.LoadMapSettings(name);
-                pg_lavaMap.SelectedObject = new LavaMapProperties(m);
-            } catch (Exception ex) { 
-                Logger.LogError(ex); 
+            	LSMapConfig cfg = new LSMapConfig();
+                cfg.Load(lsCurMap);
+                pg_lavaMap.SelectedObject = new LavaMapProperties(cfg);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
                 pg_lavaMap.SelectedObject = null;
             }
         }
@@ -170,7 +166,7 @@ namespace MCGalaxy.Gui {
         void SaveLavaMapSettings() {
             if (pg_lavaMap.SelectedObject == null) return;
             LavaMapProperties props = (LavaMapProperties)pg_lavaMap.SelectedObject;
-            Server.lava.SaveMapSettings(props.m);
+            props.m.Save(lsCurMap);
         }
 
         public void LoadTNTWarsTab(object sender, EventArgs e) {

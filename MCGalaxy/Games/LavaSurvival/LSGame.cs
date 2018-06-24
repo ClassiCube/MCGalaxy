@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     internal sealed class LSData {
@@ -31,13 +32,16 @@ namespace MCGalaxy.Games {
     }
     
     public sealed partial class LSGame : RoundsGame {
-        const string propsDir = "properties/lavasurvival/";
         Random rand = new Random();
-        MapData data;
-        MapSettings mapSettings;
+        LSMapConfig cfg = new LSMapConfig();
+        public static LSConfig Config = new LSConfig();  
         
         public override string GameName { get { return "Lava survival"; } }
         public bool Flooded;
+        
+        bool fastMode, killerMode, destroyMode, waterMode, layerMode;
+        BlockID floodBlock;
+        int curLayer, roundTotalSecs, floodDelaySecs, layerIntervalSecs;
         
         public LSGame() { Picker = new LSLevelPicker(); }
         
@@ -48,6 +52,27 @@ namespace MCGalaxy.Games {
                 p.Extras.Put("MCG_LS_DATA", data);
             }
             return (LSData)data;
+        }
+        
+        public void UpdateMapConfig() {
+            killerMode  = rand.Next(1, 101) <= cfg.KillerChance;
+            destroyMode = rand.Next(1, 101) <= cfg.DestroyChance;
+            waterMode   = rand.Next(1, 101) <= cfg.WaterChance;
+            layerMode   = rand.Next(1, 101) <= cfg.LayerChance;
+            fastMode    = rand.Next(1, 101) <= cfg.FastChance && !waterMode;
+            
+            if (waterMode) {
+                floodBlock = killerMode ? Block.Deadly_ActiveWater : Block.Water;
+            } else if (fastMode) {
+                floodBlock = killerMode ? Block.Deadly_FastLava : Block.FastLava;
+            } else {
+                floodBlock = killerMode ? Block.Deadly_ActiveLava : Block.Lava;
+            }
+
+            curLayer = 1;
+            roundTotalSecs = (int)(cfg.RoundTimeMins * 60);
+            floodDelaySecs = (int)(cfg.FloodTimeMins * 60);
+            layerIntervalSecs = (int)(cfg.LayerIntervalMins * 60);
         }
                 
         protected override List<Player> GetPlayers() {
@@ -90,9 +115,8 @@ namespace MCGalaxy.Games {
         }
 
         public bool InSafeZone(ushort x, ushort y, ushort z) {
-            if (mapSettings == null) return false;
-            return x >= mapSettings.safeZone[0].X && x <= mapSettings.safeZone[1].X && y >= mapSettings.safeZone[0].Y
-                && y <= mapSettings.safeZone[1].Y && z >= mapSettings.safeZone[0].Z && z <= mapSettings.safeZone[1].Z;
+            return x >= cfg.SafeZoneMin.X && x <= cfg.SafeZoneMax.X && y >= cfg.SafeZoneMin.Y
+                && y <= cfg.SafeZoneMax.Y && z >= cfg.SafeZoneMin.Z && z <= cfg.SafeZoneMax.Z;
         }
         
         public override void PlayerJoinedGame(Player p) {

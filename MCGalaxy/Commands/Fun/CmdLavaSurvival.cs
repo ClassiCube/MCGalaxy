@@ -68,18 +68,11 @@ namespace MCGalaxy.Commands.Fun {
             
             if (game.HasMap(lvl.name)) {
                 game.RemoveMap(lvl.name);
-                lvl.Config.PhysicsOverload = 1500;
                 lvl.Config.AutoUnload = true;
                 lvl.Config.LoadOnGoto = true;
                 Player.Message(p, "Map {0} %Shas been removed.", lvl.ColoredName);
             } else {
                 game.AddMap(lvl.name);
-
-                LSGame.MapSettings settings = game.LoadMapSettings(lvl.name);
-                settings.ApplyDefaults(lvl);
-                game.SaveMapSettings(settings);
-
-                lvl.Config.PhysicsOverload = 1000000;
                 lvl.Config.LoadOnGoto = false;
                 Player.Message(p, "Map {0} %Shas been added.", lvl.ColoredName);
             }
@@ -111,70 +104,72 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Start on server startup: " + (LSGame.Config.StartImmediately ? "&aON" : "&cOFF"));
         }
         
-        static bool ParseChance(Player p, string arg, string input, ref byte value) {
-            if (!CommandParser.GetByte(p, "Chance", input, ref value, 0, 100)) return false;
+        static bool ParseChance(Player p, string arg, string input, ref int value) {
+            if (!CommandParser.GetInt(p, "Chance", input, ref value, 0, 100)) return false;
             Player.Message(p, "{0} chance: &b{1}%", arg, value);
             return true;
         }
         
-        static bool ParseTimespan(Player p, string arg, string input, ref double value) {
+        static bool ParseTimespan(Player p, string arg, string input, ref float value) {
             TimeSpan span = default(TimeSpan);
             if (!CommandParser.GetTimespan(p, input, ref span, "set " + arg + " to", "m")) return false;
             
-            value = span.TotalMinutes;
+            value = (float)span.TotalMinutes;
             Player.Message(p, "{0}: &b{1}", arg, span.Shorten(true));
             return true;
         }
         
         void HandleSetupMapSettings(Player p, string[] args, LSGame game) {
             if (!game.HasMap(p.level.name)) { Player.Message(p, "Add the map before configuring it."); return; }
-            LSGame.MapSettings settings = game.LoadMapSettings(p.level.name);
+            LSMapConfig cfg = RetrieveConfig(p);
+            
             if (args.Length < 4) {
-                Player.Message(p, "Fast lava chance: &b" + settings.fast + "%");
-                Player.Message(p, "Killer lava/water chance: &b" + settings.killer + "%");
-                Player.Message(p, "Destroy blocks chance: &b" + settings.destroy + "%");
-                Player.Message(p, "Water flood chance: &b" + settings.water + "%");
-                Player.Message(p, "Layer flood chance: &b" + settings.layer + "%");
-                Player.Message(p, "Layer height: &b" + settings.LayerHeight + " blocks");
-                Player.Message(p, "Layer count: &b" + settings.LayerCount);
-                Player.Message(p, "Layer time: &b" + settings.layerInterval + " minutes");
-                Player.Message(p, "Round time: &b" + settings.roundTime + " minutes");
-                Player.Message(p, "Flood time: &b" + settings.floodTime + " minutes");
-                Player.Message(p, "Flood position: &b" + settings.FloodPos);
-                Player.Message(p, "Layer position: &b" + settings.LayerPos);
-                Player.Message(p, "Safe zone: &b({0}) ({1})", settings.safeZone[0], settings.safeZone[1]);
+                Player.Message(p, "Fast lava chance: &b" + cfg.FastChance + "%");
+                Player.Message(p, "Killer lava/water chance: &b" + cfg.KillerChance + "%");
+                Player.Message(p, "Destroy blocks chance: &b" + cfg.DestroyChance + "%");
+                Player.Message(p, "Water flood chance: &b" + cfg.WaterChance + "%");
+                Player.Message(p, "Layer flood chance: &b" + cfg.LayerChance + "%");
+                Player.Message(p, "Layer height: &b" + cfg.LayerHeight + " blocks");
+                Player.Message(p, "Layer count: &b" + cfg.LayerCount);
+                Player.Message(p, "Layer time: &b" + cfg.LayerIntervalMins + " minutes");
+                Player.Message(p, "Round time: &b" + cfg.RoundTimeMins + " minutes");
+                Player.Message(p, "Flood time: &b" + cfg.RoundTimeMins + " minutes");
+                Player.Message(p, "Flood position: &b" + cfg.FloodPos);
+                Player.Message(p, "Layer position: &b" + cfg.LayerPos);
+                Player.Message(p, "Safe zone: &b({0}) ({1})", 
+                               cfg.SafeZoneMin, cfg.SafeZoneMax);
                 return;
             }
 
             string type = args[2], value = args[3];
             bool ok = false;
             if (type == "fast") {
-                ok = ParseChance(p, "Fast lava", value, ref settings.fast);
+                ok = ParseChance(p, "Fast lava", value, ref cfg.FastChance);
             } else if (type == "killer") {
-                ok = ParseChance(p, "Killer lava/water", value, ref settings.killer);
+                ok = ParseChance(p, "Killer lava/water", value, ref cfg.KillerChance);
             } else if (type == "destroy") {
-                ok = ParseChance(p, "Destroy blocks", value, ref settings.destroy);
+                ok = ParseChance(p, "Destroy blocks", value, ref cfg.DestroyChance);
             } else if (type == "water") {
-               ok = ParseChance(p, "Water flood", value, ref settings.water);
+               ok = ParseChance(p, "Water flood", value, ref cfg.WaterChance);
             } else if (type == "layer") {
-                ok = ParseChance(p, "Layer flood", value, ref settings.layer);
+                ok = ParseChance(p, "Layer flood", value, ref cfg.LayerChance);
             } else if (type == "layerheight") {
-                if (!CommandParser.GetInt(p, value, "Height", ref settings.LayerHeight, 0)) return;
-                Player.Message(p, "Layer height: &b" + settings.LayerHeight + " blocks");
+                if (!CommandParser.GetInt(p, value, "Height", ref cfg.LayerHeight, 0)) return;
+                Player.Message(p, "Layer height: &b" + cfg.LayerHeight + " blocks");
             } else if (type == "layercount") {
-                if (!CommandParser.GetInt(p, value, "Count", ref settings.LayerCount, 0)) return;
-                Player.Message(p, "Layer count: &b" + settings.LayerCount);
+                if (!CommandParser.GetInt(p, value, "Count", ref cfg.LayerCount, 0)) return;
+                Player.Message(p, "Layer count: &b" + cfg.LayerCount);
             } else if (type == "layertime") {
-                ok = ParseTimespan(p, "Layer time", value, ref settings.layerInterval);
+                ok = ParseTimespan(p, "Layer time", value, ref cfg.LayerIntervalMins);
             } else if (type == "roundtime") {
-                ok = ParseTimespan(p, "Round time", value, ref settings.roundTime);
+                ok = ParseTimespan(p, "Round time", value, ref cfg.RoundTimeMins);
             } else if (type == "floodtime") {
-                ok = ParseTimespan(p, "Flood time", value, ref settings.floodTime);
+                ok = ParseTimespan(p, "Flood time", value, ref cfg.FloodTimeMins);
             } else {
                 SetupHelp(p, "mapsettings");
             }
             
-            if (ok) game.SaveMapSettings(settings);
+            if (ok) UpdateConfig(p, cfg);
         }
 
         void SetupHelp(Player p, string mode = "") {
@@ -217,36 +212,44 @@ namespace MCGalaxy.Commands.Fun {
         
 
         bool SetFloodPos(Player p, Vec3S32[] m, object state, BlockID block) {
-            LSGame game = (LSGame)state;
-            LSGame.MapSettings settings = game.LoadMapSettings(p.level.name);
-            settings.FloodPos = (Vec3U16)m[0];
-            game.SaveMapSettings(settings);
+            LSMapConfig cfg = RetrieveConfig(p);
+            cfg.FloodPos = (Vec3U16)m[0];
+            UpdateConfig(p, cfg);
 
-            Player.Message(p, "Position set! &b({0})", m[0]);
+            Player.Message(p, "Flood position set to &b({0})", m[0]);
             return false;
         }
         
         bool SetFloodLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
-            LSGame game = (LSGame)state;
-            LSGame.MapSettings settings = game.LoadMapSettings(p.level.name);
-            settings.LayerPos = (Vec3U16)m[0];
-            game.SaveMapSettings(settings);
+            LSMapConfig cfg = RetrieveConfig(p);
+            cfg.LayerPos = (Vec3U16)m[0];
+            UpdateConfig(p, cfg);
 
-            Player.Message(p, "Position set! &b({0})", m[0]);
+            Player.Message(p, "Layer position set to &b({0})", m[0]);
             return false;
         }
         
         bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
-            Vec3S32 min = Vec3S32.Min(m[0], m[1]);
-            Vec3S32 max = Vec3S32.Max(m[0], m[1]);
-            LSGame game = (LSGame)state;
+            LSMapConfig cfg = RetrieveConfig(p);
+            cfg.SafeZoneMin = (Vec3U16)Vec3S32.Min(m[0], m[1]);
+            cfg.SafeZoneMax = (Vec3U16)Vec3S32.Max(m[0], m[1]);
+            UpdateConfig(p, cfg);
 
-            LSGame.MapSettings settings = game.LoadMapSettings(p.level.name);
-            settings.safeZone = new Vec3U16[] { (Vec3U16)min, (Vec3U16)max };
-            game.SaveMapSettings(settings);
-
-            Player.Message(p, "Safe zone set! &b({0}) ({1})", min, max);
+            Player.Message(p, "Safe zone set! &b({0}) ({1})", 
+                           cfg.SafeZoneMin, cfg.SafeZoneMax);
             return false;
+        }
+        
+        static LSMapConfig RetrieveConfig(Player p) {
+            LSMapConfig cfg = new LSMapConfig();
+            cfg.SetDefaults(p.level);
+            cfg.Load(p.level.name);
+            return cfg;
+        }
+        
+        static void UpdateConfig(Player p, LSMapConfig cfg) {
+            cfg.Save(p.level.name);
+            if (p.level == Server.lava.Map) Server.lava.UpdateMapConfig();
         }
         
         public override void Help(Player p) {
