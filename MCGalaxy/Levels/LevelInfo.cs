@@ -131,8 +131,9 @@ namespace MCGalaxy {
             
             string propsPath = PropsPath(map);
             LevelConfig cfg = new LevelConfig();
-            cfg.Reset(0);
-            LevelConfig.Load(propsPath, cfg); 
+            cfg.SetDefaults(0);
+            
+            cfg.Load(propsPath);
             return cfg;
         }
         

@@ -24,7 +24,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
-    public sealed class CTFConfig {
+    public sealed class CtfMapConfig {
         
         [ConfigInt("base.red.x", null, 0)]
         public int RedFlagX;
@@ -95,25 +95,15 @@ namespace MCGalaxy.Games {
         }
         
         
-        static ConfigElement[] elems;
-        public void Retrieve(string mapName) {
-            if (elems == null) elems = ConfigElement.GetAll(typeof(CTFConfig));
-            PropertiesFile.Read("CTF/" + mapName + ".config", LineProcessor);
+        static ConfigElement[] cfg;
+        public void Load(string map) {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
+            ConfigElement.ParseFile(cfg, "CTF map", "CTF/" + map + ".config", this);
         }
         
-        public void Save(string mapName) {
-            ConfigElement[] elements = elems;
-            using (StreamWriter w = new StreamWriter("CTF/" + mapName + ".config")) {
-                for (int i = 0; i < elements.Length; i++) {
-                    w.WriteLine(elements[i].Format(this));
-                }
-            }
-        }
-        
-        void LineProcessor(string key, string value) {
-            if (!ConfigElement.Parse(elems, key, value, this)) {
-                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised CTF config key.", key);
-            }
+        public void Save(string map) {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));           
+            ConfigElement.SerialiseSimple(cfg, "CTF/" + map + ".config", this);
         }
     }
 }

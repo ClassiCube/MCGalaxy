@@ -106,18 +106,14 @@ namespace MCGalaxy.Gui {
                 Server.lava.AddMap(name);
 
                 LSGame.MapSettings settings = Server.lava.LoadMapSettings(level.name);
-                settings.FloodPos = new Vec3U16((ushort)(level.Width / 2), (ushort)(level.Height - 1), (ushort)(level.Length / 2));
-                settings.LayerPos = new Vec3U16(0, (ushort)(level.Height / 2), 0);
-                ushort x = (ushort)(level.Width / 2), y = (ushort)(level.Height / 2), z = (ushort)(level.Length / 2);
-                settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
+                settings.ApplyDefaults(level);
                 Server.lava.SaveMapSettings(settings);
 
-                level.Config.MOTD = "Lava Survival: " + level.name.Capitalize();
                 level.Config.PhysicsOverload = 1000000;
                 level.Config.LoadOnGoto = false;
                 Level.SaveSettings(level);
+                
                 level.Unload(true);
-
                 UpdateLavaMapList();
             }
             catch (Exception ex) { Logger.LogError(ex); }
@@ -139,10 +135,10 @@ namespace MCGalaxy.Gui {
                 if (level == null) return;
 
                 Server.lava.RemoveMap(name);
-                level.Config.MOTD = "ignore";
                 level.Config.PhysicsOverload = 1500;
                 level.Config.AutoUnload = true;
                 level.Config.LoadOnGoto = true;
+                
                 Level.SaveSettings(level);
                 level.Unload(true);
 

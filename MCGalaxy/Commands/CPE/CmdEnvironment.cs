@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands.CPE {
         static void ResetEnv(Player p) {
             Level lvl = p.level;
             LevelConfig cfg = lvl.Config;
-            cfg.Reset(lvl.Height);
+            cfg.SetDefaults(lvl.Height);
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {

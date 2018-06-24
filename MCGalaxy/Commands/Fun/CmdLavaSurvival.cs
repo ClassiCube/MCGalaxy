@@ -76,10 +76,7 @@ namespace MCGalaxy.Commands.Fun {
                 game.AddMap(lvl.name);
 
                 LSGame.MapSettings settings = game.LoadMapSettings(lvl.name);
-                settings.FloodPos = new Vec3U16((ushort)(lvl.Width / 2), (ushort)(lvl.Height - 1), (ushort)(lvl.Length / 2));
-                settings.LayerPos = new Vec3U16(0, (ushort)(lvl.Height / 2), 0);
-                ushort x = (ushort)(lvl.Width / 2), y = (ushort)(lvl.Height / 2), z = (ushort)(lvl.Length / 2);
-                settings.safeZone = new Vec3U16[] { new Vec3U16((ushort)(x - 3), y, (ushort)(z - 3)), new Vec3U16((ushort)(x + 3), (ushort)(y + 4), (ushort)(z + 3)) };
+                settings.ApplyDefaults(lvl);
                 game.SaveMapSettings(settings);
 
                 lvl.Config.PhysicsOverload = 1000000;

@@ -108,7 +108,7 @@ namespace MCGalaxy {
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
         
-        public void Reset(int height) {
+        public void SetDefaults(int height) {
             Weather = 0;
             EdgeLevel = height / 2;
             SidesOffset = -2;
@@ -270,14 +270,8 @@ namespace MCGalaxy {
         }
         
         
-        public static bool Load(string path, LevelConfig config) {
-            return PropertiesFile.Read(path, ref config, LineProcessor);
-        }
-        
-        static void LineProcessor(string key, string value, ref LevelConfig config) {
-            if (!ConfigElement.Parse(Server.levelConfig, key, value, config)) {
-                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised level property key.", key);
-            }
+        public bool Load(string path) {
+            return ConfigElement.ParseFile(Server.levelConfig, "level", path, this);
         }
         
         public void Save(string path) {

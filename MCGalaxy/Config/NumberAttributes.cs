@@ -21,35 +21,28 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Config {
     
     public class ConfigIntAttribute : ConfigAttribute {
+        int defValue, minValue, maxValue;
         
-        /// <summary> Minimum integer allowed for a value. </summary>
-        public int MinValue;
-        
-        /// <summary> Maximum value integer allowed for a value. </summary>
-        public int MaxValue;
-        
-        public ConfigIntAttribute(string name, string section, int defValue,
+        public ConfigIntAttribute(string name, string section, int def,
                                   int min = int.MinValue, int max = int.MaxValue)
-            : base(name, section, defValue) {
-            MinValue = min; MaxValue = max;
-        }
+            : base(name, section) { defValue = def; minValue = min; maxValue = max; }
         
-        public override object Parse(string value) {
-            int integer;
-            if (!int.TryParse(value, out integer)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid integer, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
+        public override object Parse(string raw) {
+            int value;
+            if (!int.TryParse(raw, out value)) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid integer, using default of {1}", Name, defValue);
+                value = defValue;
             }
             
-            if (integer < MinValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small an integer, using {1}", Name, MinValue);
-                return MinValue;
+            if (value < minValue) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small an integer, using {1}", Name, minValue);
+                value = minValue;
             }
-            if (integer > MaxValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big an integer, using {1}", Name, MaxValue);
-                return MaxValue;
+            if (value > maxValue) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big an integer, using {1}", Name, maxValue);
+                value = maxValue;
             }
-            return integer;
+            return value;
         }
     }   
     
@@ -60,59 +53,51 @@ namespace MCGalaxy.Config {
             : base(name, section, defValue, -1, 1) {
         }
         
-        public override object Parse(string value) {
-            bool boolValue;
-            if (bool.TryParse(value, out boolValue)) {
-                return boolValue ? 1 : 0;
-            }
-            return base.Parse(value);
+        public override object Parse(string raw) {
+            bool value;
+            if (bool.TryParse(raw, out value)) { return value ? 1 : 0; }
+            return base.Parse(raw);
         }
     }
     
     public class ConfigBlockAttribute : ConfigIntAttribute {
         
-        public ConfigBlockAttribute(string name, string section, int defValue)
-            : base(name, section, defValue, 0, Block.ExtendedCount - 1) {
+        public ConfigBlockAttribute(string name, string section, int def)
+            : base(name, section, def, 0, Block.ExtendedCount - 1) {
         }
         
-        public override object Parse(string value) {
-            int intValue = (int)base.Parse(value);
+        public override object Parse(string raw) {
+            int value = (int)base.Parse(raw);
             
             // Can't directly unbox object to block ID - must unbox to int, then cast to block ID
-            if (intValue == Block.Invalid) return Block.Invalid;
-            return Block.MapOldRaw((BlockID)intValue);
+            if (value == Block.Invalid) return Block.Invalid;
+            return Block.MapOldRaw((BlockID)value);
         }
     }
     
-    public class ConfigRealAttribute : ConfigAttribute {
+    public class ConfigRealAttribute : ConfigAttribute {      
+        float defValue, minValue, maxValue;
         
-        /// <summary> Minimum real number allowed for a value. </summary>
-        public float MinValue;
+        public ConfigRealAttribute(string name, string section, float def, 
+                                   float min = float.NegativeInfinity, float max = float.PositiveInfinity)
+            : base(name, section) { defValue = def; minValue = min; maxValue = max; }
         
-        /// <summary> Maximum real number allowed for a value. </summary>
-        public float MaxValue;
-        
-        public ConfigRealAttribute(string name, string section, float defValue, float min, float max)
-            : base(name, section, defValue) {
-            MinValue = min; MaxValue = max;
-        }
-        
-        public override object Parse(string value) {
-            float real;
-            if (!Utils.TryParseDecimal(value, out real)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid number, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
+        public override object Parse(string raw) {
+            float value;
+            if (!Utils.TryParseDecimal(raw, out value)) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid number, using default of {1}", Name, defValue);
+                value = defValue;
             }
             
-            if (real < MinValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small a number, using {1}", Name, MinValue);
-                return MinValue;
+            if (value < minValue) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small a number, using {1}", Name, minValue);
+                value = minValue;
             }
-            if (real > MaxValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big a number, using {1}", Name, MaxValue);
-                return MaxValue;
+            if (value > maxValue) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big a number, using {1}", Name, maxValue);
+                value = maxValue;
             }
-            return real;
+            return value;
         }
     }
 }

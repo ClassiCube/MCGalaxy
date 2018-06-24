@@ -304,7 +304,7 @@ namespace MCGalaxy.Games {
                 if (reward == -1) {
                     pl.SendMessage("You may not hide inside a block! No " + ServerConfig.Currency + " for you."); reward = 0;
                 } else if (reward > 0) {
-                    pl.SendMessage(Colors.gold + "You gained " + reward + " " + ServerConfig.Currency);
+                    pl.SendMessage("&6You gained " + reward + " " + ServerConfig.Currency);
                 }
                 
                 pl.SetMoney(pl.money + reward);

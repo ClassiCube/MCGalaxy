@@ -19,25 +19,14 @@ using System;
 
 namespace MCGalaxy.Config {
 
-    public abstract class ConfigAttribute : Attribute {
+    public abstract class ConfigAttribute : Attribute {       
+        public string Name, Section;
         
-        /// <summary> Key used for writing/reading from the property file. </summary>
-        public string Name;
-        
-        /// <summary> Section/Group in the property file this config entry is part of. </summary>
-        public string Section;
-        
-        /// <summary> The default value used if validating the value read from the propery file fails. </summary>
-        public object DefaultValue;
-        
-        /// <summary> Returns either the parsed form of the given value, or some other value if validation fails. </summary>
         public abstract object Parse(string value);
-        
-        /// <summary> Converts the given value into its serialised string form. </summary>
         public virtual string Serialise(object value) { return value == null ? "" : value.ToString(); }
         
-        public ConfigAttribute(string name, string section, object defValue) {
-            Name = name; Section = section; DefaultValue = defValue;
+        public ConfigAttribute(string name, string section) {
+            Name = name; Section = section;
         }
     }
 }

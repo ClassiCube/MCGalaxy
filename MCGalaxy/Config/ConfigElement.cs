@@ -51,18 +51,19 @@ namespace MCGalaxy {
             return elems.ToArray();
         }
         
-        public static bool Parse(ConfigElement[] elements,
-                                 string key, string value, object instance) {
-            foreach (ConfigElement elem in elements) {
-                if (!elem.Attrib.Name.CaselessEq(key)) continue;
-                
-                elem.Field.SetValue(instance, elem.Attrib.Parse(value));
-                return true;
-            }
-            return false;
+        public static bool ParseFile(ConfigElement[] elements, string group, string path, object instance) {
+            return PropertiesFile.Read(path, (k, v) => Parse(elements, group, instance, k, v));
         }
         
-        /// <summary> Writes all config elements to the given stream, grouped by named sections. </summary>
+        public static void Parse(ConfigElement[] elems, string group, object instance, string k, string v) {
+            foreach (ConfigElement elem in elems) {
+                if (!elem.Attrib.Name.CaselessEq(k)) continue;
+                
+                elem.Field.SetValue(instance, elem.Attrib.Parse(v)); return;
+            }
+            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised {1} config key.", k, group);
+        }
+        
         public static void Serialise(ConfigElement[] elements, StreamWriter dst, object instance) {
             Dictionary<string, List<ConfigElement>> sections = new Dictionary<string, List<ConfigElement>>();
             
@@ -75,12 +76,22 @@ namespace MCGalaxy {
                 members.Add(elem);
             }
             
+            // group output by sections
             foreach (var kvp in sections) {
                 dst.WriteLine("# " + kvp.Key + " settings");
                 foreach (ConfigElement elem in kvp.Value) {
                     dst.WriteLine(elem.Format(instance));
                 }
                 dst.WriteLine();
+            }
+        }
+        
+        public static void SerialiseSimple(ConfigElement[] elements, string path, object instance) {
+            using (StreamWriter w = new StreamWriter(path)) {
+                w.WriteLine("#Settings file");
+                foreach (ConfigElement elem in elements) {
+                    w.WriteLine(elem.Format(instance));
+                }
             }
         }
     }

@@ -20,49 +20,51 @@ using System;
 namespace MCGalaxy.Config {
     
     public sealed class ConfigBoolAttribute : ConfigAttribute {
+        bool defValue;
         
-        public ConfigBoolAttribute(string name, string section, bool defValue)
-            : base(name, section, defValue) {
-        }
+        public ConfigBoolAttribute(string name, string section, bool def)
+            : base(name, section) { defValue = def; }
         
         public override object Parse(string value) {
             bool boolValue;
             if (!bool.TryParse(value, out boolValue)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid boolean, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid boolean, using default of {1}", Name, defValue);
+                return defValue;
             }
             return boolValue;
         }
     }
     
-    public sealed class ConfigPermAttribute : ConfigAttribute {
+    public sealed class ConfigPermAttribute : ConfigAttribute {       
+        LevelPermission defPerm;
         
-        public ConfigPermAttribute(string name, string section, LevelPermission defValue)
-            : base(name, section, defValue) {
-        }
+        public ConfigPermAttribute(string name, string section, LevelPermission def)
+            : base(name, section) { defPerm = def; }
         
-        public override object Parse(string value) {
+        public override object Parse(string raw) {
             sbyte permNum;
             LevelPermission perm;
-            if (!sbyte.TryParse(value, out permNum)) {
+            
+            if (!sbyte.TryParse(raw, out permNum)) {
                 // Try parse the permission as name for backwards compatibility
-                Group grp = Group.Find(value);
+                Group grp = Group.Find(raw);
                 if (grp == null) {
-                    Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, DefaultValue);
-                    return DefaultValue;
+                    Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, defPerm);
+                    perm = defPerm;
+                } else {
+                    perm = grp.Permission;
                 }
-                perm = grp.Permission;
             } else {
                 perm = (LevelPermission)permNum;
             }
             
             if (perm < LevelPermission.Banned) {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", Name);
-                return LevelPermission.Banned;
+                perm = LevelPermission.Banned;
             }
             if (perm > LevelPermission.Nobody) {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above nobody rank.", Name);
-                return LevelPermission.Nobody;
+                perm = LevelPermission.Nobody;
             }
             return perm;
         }
@@ -73,26 +75,23 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigEnumAttribute : ConfigAttribute {
+    public sealed class ConfigEnumAttribute : ConfigAttribute {      
+        object defValue;
+        Type enumType;
         
-        /// <summary> The type of members of this enumeration. </summary>
-        public Type EnumType;
+        public ConfigEnumAttribute(string name, string section, object def, Type type)
+            : base(name, section) { defValue = def; enumType = type; }
         
-        public ConfigEnumAttribute(string name, string section, object defValue, Type enumType)
-            : base(name, section, defValue) {
-            EnumType = enumType;
-        }
-        
-        public override object Parse(string value) {
-            object result;
+        public override object Parse(string raw) {
+            object value;
             try {
-                result = Enum.Parse(EnumType, value, true);
-                if (!Enum.IsDefined(EnumType, result)) throw new ArgumentException("value not member of enumeration");
+                value = Enum.Parse(enumType, raw, true);
+                if (!Enum.IsDefined(enumType, value)) throw new ArgumentException("value not member of enumeration");
             } catch {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid enum member, using default of {1}", Name, DefaultValue);
-                return DefaultValue;
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid enum member, using default of {1}", Name, defValue);
+                return defValue;
             }
-            return result;
+            return value;
         }
     }
 }

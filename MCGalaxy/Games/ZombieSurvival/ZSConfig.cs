@@ -74,12 +74,8 @@ namespace MCGalaxy.Games {
         [ConfigString("revive-failure", "Revive", "tried using a revive potion. &cIt was not very effective..")]
         public string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
         
-        /// <summary> List of levels that are randomly picked for zombie survival.
-        /// If this left blank, then all level files are picked from instead. </summary>
         [ConfigStringList("zombie-levels-list", "Zombie")]
-        public List<string> LevelList = new List<string>();
-        
-        /// <summary> List of levels that are never picked for zombie survival. </summary>
+        public List<string> LevelList = new List<string>();        
         [ConfigStringList("zombie-ignores-list", "Zombie")]
         public List<string> IgnoredLevelList = new List<string>();
         
@@ -103,15 +99,9 @@ namespace MCGalaxy.Games {
         
         public void Load() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(ZSConfig));
-            PropertiesFile.Read(propsFile, ZSLineProcessor);
+            ConfigElement.ParseFile(cfg, "Zombie survival", propsFile, this);
         }
-        
-        void ZSLineProcessor(string key, string value) {
-            if (!ConfigElement.Parse(cfg, key, value, this)) {
-                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised zombie survival property key.", key);
-            }
-        }
-                
+
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",

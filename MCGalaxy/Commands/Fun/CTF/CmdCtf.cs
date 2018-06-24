@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Fun {
         protected override void HandleStatus(Player p, RoundsGame game) { }
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
-            CTFConfig cfg = RetrieveConfig(p);
+            CtfMapConfig cfg = RetrieveConfig(p);
             
             string prop = args[1];
             if (prop.CaselessEq("add")) {
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
-            CTFConfig cfg = RetrieveConfig(p);
+            CtfMapConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];           
             cfg.BlueFlagX = P.X; cfg.BlueFlagY = P.Y; cfg.BlueFlagZ = P.Z;
             Player.Message(p, "Set flag position of blue team to ({0})", P);
@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
-            CTFConfig cfg = RetrieveConfig(p);
+            CtfMapConfig cfg = RetrieveConfig(p);
             Vec3S32 P = marks[0];            
             cfg.RedFlagX = P.X; cfg.RedFlagY = P.Y; cfg.RedFlagZ = P.Z;
             Player.Message(p, "Set flag position of red team to ({0})", P);
@@ -128,17 +128,17 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        static CTFConfig RetrieveConfig(Player p) {
-            CTFConfig cfg = new CTFConfig();
+        static CtfMapConfig RetrieveConfig(Player p) {
+            CtfMapConfig cfg = new CtfMapConfig();
             cfg.SetDefaults(p.level);
-            cfg.Retrieve(p.level.name);
+            cfg.Load(p.level.name);
             return cfg;
         }
         
-        static void UpdateConfig(Player p, CTFConfig cfg) {
+        static void UpdateConfig(Player p, CtfMapConfig cfg) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             cfg.Save(p.level.name);
-            if (Server.ctf != null && p.level == Server.ctf.Map) Server.ctf.UpdateConfig();
+            if (Server.ctf != null && p.level == Server.ctf.Map) Server.ctf.UpdateMapConfig();
         }
         
         public override void Help(Player p) {

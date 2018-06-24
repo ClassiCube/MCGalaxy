@@ -170,7 +170,7 @@ namespace MCGalaxy.Levels.IO {
                 if (key == null) continue;
                 
                 value = value.Trim();
-                ConfigElement.Parse(elems, key, value, z.Config);
+                ConfigElement.Parse(elems, "zone", z.Config, key, value);
             }
             z.AddTo(lvl);
         }

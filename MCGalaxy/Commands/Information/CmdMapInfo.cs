@@ -216,10 +216,10 @@ namespace MCGalaxy.Commands.Info {
 
                 path = LevelInfo.PropsPath(name);
                 LevelConfig cfg = new LevelConfig();
-                cfg.Reset(Height);
-                LevelConfig.Load(path, cfg);
-                Config = cfg;
+                cfg.SetDefaults(Height);
+                cfg.Load(path);
                 
+                Config = cfg;              
                 Visit = new LevelAccessController(cfg, name, true);
                 Build = new LevelAccessController(cfg, name, false);
             }

@@ -85,11 +85,8 @@ namespace MCGalaxy {
                     perms.afkKickMins = int.Parse(value); return;
                 case "afk-kick-perm":
                     perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder); return;
-            }
-            
-            if (!ConfigElement.Parse(Server.serverConfig, key, value, null)) {
-                Logger.Log(LogType.Warning, "\"{0}\" was not a recognised server property key.", key);
-            }
+            }            
+		    ConfigElement.Parse(Server.serverConfig, "server", null, key, value);
         }
         
         

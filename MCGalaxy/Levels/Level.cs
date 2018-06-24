@@ -60,7 +60,7 @@ namespace MCGalaxy {
             
             this.name = name; MapName = name.ToLower();
             BlockDB = new BlockDB(this);
-            Config.Reset(height);
+            Config.SetDefaults(height);
             
             blocks = new byte[Width * Height * Length];
             ChunksX = Utils.CeilDiv16(Width);
@@ -319,7 +319,7 @@ namespace MCGalaxy {
         public static void LoadMetadata(Level lvl) {
             try {
                 string propsPath = LevelInfo.PropsPath(lvl.MapName);
-                bool propsExisted = LevelConfig.Load(propsPath, lvl.Config);
+                bool propsExisted = lvl.Config.Load(propsPath);
                 
                 if (propsExisted) {
                     lvl.SetPhysics(lvl.Config.Physics);
@@ -329,7 +329,7 @@ namespace MCGalaxy {
                 
                 // Backwards compatibility for older levels which had .env files.
                 string envPath = "levels/level properties/" + lvl.MapName + ".env";
-                LevelConfig.Load(envPath, lvl.Config);
+                lvl.Config.Load(envPath);
             } catch (Exception e) {
                 Logger.LogError(e);
             }

@@ -56,7 +56,7 @@ namespace MCGalaxy.Games {
         
         public CtfTeam Red  = new CtfTeam("Red", Colors.red);
         public CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
-        public CTFConfig Config = new CTFConfig();
+        public CtfMapConfig Config = new CtfMapConfig();
         public CTFGame() { Picker = new CTFLevelPicker(); }
 
         const string ctfExtrasKey = "MCG_CTF_DATA";
@@ -79,14 +79,14 @@ namespace MCGalaxy.Games {
 
         protected override bool SetMap(string map) {
             bool success = base.SetMap(map);
-            if (success) UpdateConfig();
+            if (success) UpdateMapConfig();
             return success;
         }
         
-        public void UpdateConfig() {
+        public void UpdateMapConfig() {
             Config.SetDefaults(Map);
-            Config.Retrieve(Map.name);
-            CTFConfig cfg = Config;
+            Config.Load(Map.name);
+            CtfMapConfig cfg = Config;
             
             Red.FlagBlock = cfg.RedFlagBlock;
             Red.FlagPos = new Vec3U16((ushort)cfg.RedFlagX, (ushort)cfg.RedFlagY, (ushort)cfg.RedFlagZ);
