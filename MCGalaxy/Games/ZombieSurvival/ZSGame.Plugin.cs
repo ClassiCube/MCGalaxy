@@ -38,7 +38,6 @@ namespace MCGalaxy.Games {
             OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
-            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
@@ -55,7 +54,6 @@ namespace MCGalaxy.Games {
             OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
-            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
@@ -103,10 +101,6 @@ namespace MCGalaxy.Games {
         void HandlePlayerConnect(Player p) {
             if (ChangeMainLevel) return;
             Player.Message(p, "&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
-        }
-        
-        void HandlePlayerDisconnect(Player p, string reason) {
-            PlayerLeftGame(p);
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {

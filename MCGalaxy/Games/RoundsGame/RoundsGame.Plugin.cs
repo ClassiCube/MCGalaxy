@@ -27,12 +27,19 @@ namespace MCGalaxy.Games {
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnSQLSaveEvent.Register(SaveStats, Priority.High);
+            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
         }
         
         protected virtual void UnhookEventHandlers() {
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnSQLSaveEvent.Unregister(SaveStats);
+            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+        }
+		
+        protected virtual void HandlePlayerDisconnect(Player p, string reason) {
+		    if (p.level != Map) return;
+            PlayerLeftGame(p);
         }
         
         protected void HandleJoinedCommon(Player p, Level prevLevel, Level level, ref bool announce) {

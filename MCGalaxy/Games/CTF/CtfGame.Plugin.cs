@@ -30,10 +30,8 @@ namespace MCGalaxy.Games {
         protected override void HookEventHandlers() {
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
-            OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);
-            
+            OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);            
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
-            OnPlayerDisconnectEvent.Register(HandleDisconnect, Priority.High);
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
@@ -45,10 +43,8 @@ namespace MCGalaxy.Games {
         protected override void UnhookEventHandlers() {
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
-            OnPlayerCommandEvent.Unregister(HandlePlayerCommand);
-            
+            OnPlayerCommandEvent.Unregister(HandlePlayerCommand);           
             OnBlockChangeEvent.Unregister(HandleBlockChange);
-            OnPlayerDisconnectEvent.Unregister(HandleDisconnect);
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
@@ -109,11 +105,6 @@ namespace MCGalaxy.Games {
             if (pos == team.FlagPos && !Map.IsAirAt(x, y, z)) {
                 ReturnFlag(p, team);
             }
-        }
-        
-        void HandleDisconnect(Player p, string reason) {
-            if (p.level != Map) return;
-            PlayerLeftGame(p);
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {

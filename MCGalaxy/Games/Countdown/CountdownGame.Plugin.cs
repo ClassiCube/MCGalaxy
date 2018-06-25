@@ -25,7 +25,6 @@ namespace MCGalaxy.Games {
         
          protected override void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
-            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
             
@@ -34,7 +33,6 @@ namespace MCGalaxy.Games {
         
         protected override void UnhookEventHandlers() {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
-            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
             
@@ -55,11 +53,6 @@ namespace MCGalaxy.Games {
             p.Pos = next;
             p.SetYawPitch(yaw, pitch);
             p.cancelmove = true;
-        }
-        
-        void HandlePlayerDisconnect(Player p, string reason) {
-            if (!Players.Contains(p)) return;           
-            PlayerLeftGame(p);
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
