@@ -127,11 +127,7 @@ namespace MCGalaxy.Games {
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
             p.SetPrefix(); // TODO: Kinda hacky, not sure if needed 
-            
-            if (prevLevel == Map && level != Map) {
-                ResetHUD(p);
-                if (RoundInProgress) PlayerLeftGame(p);
-            } else if (level != Map) { return; }
+            if (level != Map) return;
             
             ZSData data = Get(p);
             p.SetPrefix();

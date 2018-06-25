@@ -70,7 +70,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
-            if (prevLevel == Map && level != Map) { PlayerLeftGame(p); }
+            HandleJoinedCommon(p, prevLevel, level, ref announce);
         }
     }
 }

@@ -42,8 +42,8 @@ namespace MCGalaxy.Games {
         
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
-            if (Map != level) return;
             
+            if (Map != level) return;            
             MessageMapInfo(p);
             if (RoundInProgress) OutputStatus(p);
         }

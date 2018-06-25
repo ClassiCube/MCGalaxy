@@ -120,7 +120,7 @@ namespace MCGalaxy.Games {
         
         protected override void SaveStats(Player p) {
             ZSData data = TryGet(p);
-            if (data == null || data.TotalRoundsSurvived == 0 && data.TotalInfected == 0) return;
+            if (data == null || (data.TotalRoundsSurvived == 0 && data.TotalInfected == 0)) return;
             
             int count = Database.CountRows("ZombieStats", "WHERE Name=@0", p.name);
             if (count == 0) {

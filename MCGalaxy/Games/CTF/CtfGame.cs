@@ -41,8 +41,7 @@ namespace MCGalaxy.Games {
         public BlockID FlagBlock;
         public VolatileArray<Player> Members = new VolatileArray<Player>();
                 
-        public CtfTeam(string name, string color) { Name = name; Color = color; }      
-        public bool Remove(Player p) { return Members.Remove(p); }
+        public CtfTeam(string name, string color) { Name = name; Color = color; }
         
         public void RespawnFlag(Level lvl) {
             Vec3U16 pos = FlagPos;
@@ -148,7 +147,7 @@ namespace MCGalaxy.Games {
             if (team == null) return;
             
             DropFlag(p, team);
-            team.Remove(p);
+            team.Members.Remove(p);
             Map.Message(team.Color + p.DisplayName + " %Sleft CTF");
         }
         

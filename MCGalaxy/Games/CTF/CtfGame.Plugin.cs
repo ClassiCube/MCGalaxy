@@ -143,10 +143,8 @@ namespace MCGalaxy.Games {
         
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
-            if (prevLevel == Map && level != Map) {
-                PlayerLeftGame(p);
-            } else if (level != Map) { return; }
             
+            if (level != Map) return;          
             MessageMapInfo(p);
             if (TeamOf(p) != null) return;
             
