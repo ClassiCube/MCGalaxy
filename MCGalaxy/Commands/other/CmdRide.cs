@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Misc {
             Player.Message(p, "Stand near a train to mount it");
             
             SchedulerTask task = new SchedulerTask(RideCallback, p, TimeSpan.Zero, true);
-            p.CriticalTasks.Add(task);            
+            p.CriticalTasks.Add(task);
         }
         
         static void RideCallback(SchedulerTask task) {

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Misc {
             }
             
             bool explode = false;
-            string killer = p == null ? "(console)" : p.ColoredName;            
+            string killer = p == null ? "(console)" : p.ColoredName;
             string deathMsg = GetDeathMessage(args, killer, ref explode);
             target.HandleDeath(Block.Stone, deathMsg, explode);
         }

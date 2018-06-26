@@ -156,6 +156,7 @@ namespace MCGalaxy.Games {
             team.Members.Add(p);
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             Player.Message(p, "You are now on the " + team.ColoredName + " team!");
+            TabList.Update(p, true);
         }
         
         bool OnOwnTeamSide(int z, CtfTeam team) {

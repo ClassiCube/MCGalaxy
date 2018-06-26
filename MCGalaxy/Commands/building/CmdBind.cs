@@ -36,28 +36,24 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "All bindings were unbound.");
                 return;
             }
+            
+            BlockID src;
+            if (!CommandParser.GetBlock(p, args[0], out src)) return;
+            if (Block.IsPhysicsType(src)) {
+                Player.Message(p, "Physics blocks cannot be bound to another block."); return; 
+            }
 
             if (args.Length == 2) {
-                BlockID src, dst;
-                if (!CommandParser.GetBlock(p, args[0], out src)) return;
+                BlockID dst;
                 if (!CommandParser.GetBlock(p, args[1], out dst)) return;
-                if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;              
-                if (Block.IsPhysicsType(src)) {
-                    Player.Message(p, "Physics blocks cannot be bound to another block."); return; 
-                }
+                if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;
                 
                 p.BlockBindings[src] = dst;
                 Player.Message(p, "{0} bound to {1}", Block.GetName(p, src), Block.GetName(p, dst));
             } else {
-                BlockID src;
-                if (!CommandParser.GetBlock(p, args[0], out src)) return;
-                if (Block.IsPhysicsType(src)) {
-                    Player.Message(p, "Physics blocks cannot be bound to another block."); return; 
-                }
-
                 if (p.BlockBindings[src] == src) { 
                     Player.Message(p, "{0} is not bound.", Block.GetName(p, src)); return;
-                }                
+                }
                 p.BlockBindings[src] = src; 
                 Player.Message(p, "Unbound {0}.", Block.GetName(p, src));
             }
