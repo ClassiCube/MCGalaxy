@@ -60,33 +60,29 @@ namespace MCGalaxy {
         }
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
-            switch (key.ToLower()) {
-                // Backwards compatibility: some command extra permissions used to be part of server.properties
-                case "review-enter-perm":
-                case "review-leave-perm":
-                    return;
-                case "review-view-perm":
-                    perms.viewPerm = int.Parse(value); return;
-                case "review-next-perm":
-                    perms.nextPerm = int.Parse(value); return;
-                case "review-clear-perm":
-                    perms.clearPerm = int.Parse(value); return;
-                case "opchat-perm":
-                    perms.opchatPerm = int.Parse(value); return;
-                case "adminchat-perm":
-                    perms.adminchatPerm = int.Parse(value); return;
-                    
-                // Backwards compatibility: map generation volume used to be part of server.properties
-                case "map-gen-limit-admin":
-                    perms.mapGenLimitAdmin = int.Parse(value); return;
-                case "map-gen-limit":
-                    perms.mapGenLimit = int.Parse(value); return;
-                case "afk-kick":
-                    perms.afkKickMins = int.Parse(value); return;
-                case "afk-kick-perm":
-                    perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder); return;
-            }            
-		    ConfigElement.Parse(Server.serverConfig, "server", null, key, value);
+            // Backwards compatibility: some command extra permissions used to be part of server.properties
+            // Backwards compatibility: map generation volume used to be part of server.properties
+            if (key.CaselessEq("review-view-perm")) {
+                perms.viewPerm = int.Parse(value);
+            } else if (key.CaselessEq("review-next-perm")) {
+                perms.nextPerm = int.Parse(value);
+            } else if (key.CaselessEq("review-clear-perm")) {
+                perms.clearPerm = int.Parse(value);
+            } else if (key.CaselessEq("opchat-perm")) {
+                perms.opchatPerm = int.Parse(value);
+            } else if (key.CaselessEq("adminchat-perm")) {
+                perms.adminchatPerm = int.Parse(value);
+            } else if (key.CaselessEq("map-gen-limit-admin")) {
+                perms.mapGenLimitAdmin = int.Parse(value);
+            } else if (key.CaselessEq("map-gen-limit")) {
+                perms.mapGenLimit = int.Parse(value);
+            } else if (key.CaselessEq("afk-kick")) {
+                perms.afkKickMins = int.Parse(value);
+            } else if (key.CaselessEq("afk-kick-perm")) {
+                perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder);
+            } else {
+                ConfigElement.Parse(Server.serverConfig, "server", null, key, value);
+            }
         }
         
         
@@ -104,7 +100,7 @@ namespace MCGalaxy {
             if (old.afkKickMins != -1) SetOldAfkKick();
             
             if (old.mapGenLimit != -1 || old.mapGenLimitAdmin != -1 || old.afkKickMins != -1) {
-                Group.SaveList(Group.GroupList);
+                Group.SaveAll(Group.GroupList);
             }
         }
         
@@ -147,7 +143,7 @@ namespace MCGalaxy {
                 grp.AfkKickMinutes = old.afkKickMins;
                 // 0 minutes had the special meaning of 'not AFK kicked'
                 grp.AfkKicked = old.afkKickMins > 0 && grp.Permission < old.afkKickMax;
-            }            
+            }
         }
         
         

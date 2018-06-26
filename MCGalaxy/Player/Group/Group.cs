@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
+using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 using BlockID = System.UInt16;
 
@@ -30,7 +31,7 @@ namespace MCGalaxy {
         public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
         public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
         public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
-        public static Group standard;
+        public static Group DefaultRank;
         public static List<Group> GroupList = new List<Group>();
         static bool reloading;
         
@@ -39,18 +40,31 @@ namespace MCGalaxy {
         public static bool cancelrank = false;
         
         public string Name;
-        public string Color;
-        public string ColoredName { get { return Color + Name; } }
+        [ConfigPerm("Permission", null, LevelPermission.Null)]
         public LevelPermission Permission = LevelPermission.Null;
+        [ConfigColor("Color", null, "&f")]
+        public string Color;
+        public string ColoredName { get { return Color + Name; } }      
+        
+        [ConfigInt("Limit", null, 0)]
         public int DrawLimit;
+        [ConfigInt("MaxUndo", null, 0)]
         public int MaxUndo;
+        [ConfigString("MOTD", null, "", true)]
         public string MOTD = "";
+        [ConfigInt("GenVolume", null, mapGenLimit)]
         public int GenVolume = mapGenLimit;
+        [ConfigInt("OSMaps", null, 3)]
         public int OverseerMaps = 3;
+        [ConfigBool("AfkKicked", null, true)]
         public bool AfkKicked = true;
+        [ConfigInt("AfkKickMinutes", null, 45)]
         public int AfkKickMinutes = 45;
-        public string Prefix = "";   
+        [ConfigString("Prefix", null, "", true)] 
+        public string Prefix = "";
+        [ConfigInt("CopySlots", null, 0)]
         public int CopySlots = 1;
+        [ConfigString("Filename", null, "", true, ".,_-+=")]
         internal string filename;
         
         public PlayerList Players;
@@ -124,7 +138,7 @@ namespace MCGalaxy {
             foreach (Group grp in GroupList) {
                 if (grp.Players.Contains(playerName)) return grp;
             }
-            return standard;
+            return DefaultRank;
         }
         
         public static string GetColoredName(LevelPermission perm) {
@@ -168,7 +182,7 @@ namespace MCGalaxy {
             OnGroupLoadedEvent.Call(grp);
         }
         
-        public static void InitAll() {
+        public static void LoadAll() {
             GroupList = new List<Group>();
             if (File.Exists(Paths.RankPropsFile)) {
                 GroupProperties.InitAll();
@@ -188,16 +202,16 @@ namespace MCGalaxy {
                 Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0'));
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
-            standard = Find(ServerConfig.DefaultRankName);
-            if (standard == null) standard = GuestRank;
+            DefaultRank = Find(ServerConfig.DefaultRankName);
+            if (DefaultRank == null) DefaultRank = GuestRank;
 
             OnGroupLoadEvent.Call();
             reloading = true;
-            SaveList(GroupList);
+            SaveAll(GroupList);
         }
 
         static readonly object saveLock = new object();
-        public static void SaveList(List<Group> givenList) {
+        public static void SaveAll(List<Group> givenList) {
             lock (saveLock) {
                 GroupProperties.SaveGroups(givenList);       
             }

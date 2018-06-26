@@ -24,7 +24,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     public abstract class AreaConfig {
-        [ConfigString("MOTD", "General", "ignore", true, null, 128)]
+        [ConfigString("MOTD", "General", "ignore", true)]
         public string MOTD = "ignore";
 
         // Permission settings
@@ -87,9 +87,9 @@ namespace MCGalaxy {
         /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBoolInt("ExpFog", "Env", 0)]
         public int ExpFog = -1;
-        [ConfigString("Texture", "Env", "", true, null, NetUtils.StringSize)]
+        [ConfigString("Texture", "Env", "", true)]
         public string Terrain = "";
-        [ConfigString("TexturePack", "Env", "", true, null, NetUtils.StringSize)]
+        [ConfigString("TexturePack", "Env", "", true)]
         public string TexturePack = "";
         
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>

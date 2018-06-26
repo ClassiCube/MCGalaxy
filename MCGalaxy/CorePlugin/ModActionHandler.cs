@@ -135,7 +135,7 @@ namespace MCGalaxy.Core {
             
             Ban.DeleteUnban(e.Target);
             Ban.UnbanPlayer(e.Actor, e.Target, e.Reason);
-            ModActionCmd.ChangeRank(e.Target, Group.BannedRank, Group.standard, who, false);
+            ModActionCmd.ChangeRank(e.Target, Group.BannedRank, Group.DefaultRank, who, false);
             
             string ip = PlayerInfo.FindIP(e.Target);
             if (ip != null && Server.bannedIP.Contains(ip))

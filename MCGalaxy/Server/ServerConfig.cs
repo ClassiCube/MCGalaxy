@@ -23,10 +23,9 @@ using MCGalaxy.Config;
 namespace MCGalaxy {
     public static class ServerConfig {
 
-        const string asciiChars = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
-        [ConfigString("server-name", "General", "[MCGalaxy] Default", false, asciiChars, 64)]
+        [ConfigString("server-name", "General", "[MCGalaxy] Default", false, " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")]
         public static string Name = "[MCGalaxy] Default";
-        [ConfigString("motd", "General", "Welcome", false, asciiChars, 128)]
+        [ConfigString("motd", "General", "Welcome", false)]
         public static string MOTD = "Welcome!";
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.")]
         public static string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
@@ -52,9 +51,9 @@ namespace MCGalaxy {
         public static string MainLevel = "main";
         [ConfigString("xjail-map-name", "Other", "(main)", false, "()._+")]
         public static string XJailLevel = "(main)";
-        [ConfigString("default-texture-url", "General", "", true, null, NetUtils.StringSize)]
+        [ConfigString("default-texture-url", "General", "", true)]
         public static string DefaultTerrain = "";
-        [ConfigString("default-texture-pack-url", "General", "", true, null, NetUtils.StringSize)]
+        [ConfigString("default-texture-pack-url", "General", "", true)]
         public static string DefaultTexture = "";
         
         [ConfigBool("report-back", "Error handling", true)]

@@ -108,14 +108,14 @@ namespace MCGalaxy.Core {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 p.group = Group.Find(p.group.Permission);
-                if (p.group == null) p.group = Group.standard;
-                p.SetPrefix();
-                
+                if (p.group == null) p.group = Group.DefaultRank;
                 string dbCol = PlayerDB.FindColor(p);
+
                 if (dbCol.Length == 0 && p.color != p.group.Color) {
                     p.color = p.group.Color;
                     Entities.GlobalRespawn(p);
                 }
+                p.SetPrefix();
             }
         }
     }

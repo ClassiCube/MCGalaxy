@@ -196,7 +196,7 @@ namespace MCGalaxy {
             ImagePalette.Load();
             
             SrvProperties.Load();
-            Group.InitAll();
+            Group.LoadAll();
             CommandPerms.Load();
             Command.InitAll();
             Block.SetBlocks();

@@ -105,9 +105,6 @@ namespace MCGalaxy.Games
             }
             //Map stuff
             lvl.SetPhysics(3);
-            lvl.BuildAccess.Min = Group.standard.Permission;
-            lvl.VisitAccess.Min = Group.standard.Permission;
-            lvl.Config.KillerBlocks = true;
             //Seting Up Some Player stuff
             {
                 foreach (player p in Players)

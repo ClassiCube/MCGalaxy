@@ -24,7 +24,7 @@ namespace MCGalaxy.Gui {
         bool rankSupressEvents = false;
         
         void LoadRankProps() {
-            GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.standard.Permission);
+            GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.DefaultRank.Permission);
             GuiPerms.SetDefaultIndex(rank_cmbOsMap, ServerConfig.OSPerbuildDefault);
             rank_cbTPHigher.Checked = ServerConfig.HigherRankTP;
             rank_cbSilentAdmins.Checked = ServerConfig.AdminsJoinSilently;
@@ -53,8 +53,8 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveRanks() {
-            Group.SaveList(copiedGroups);
-            Group.InitAll();
+            Group.SaveAll(copiedGroups);
+            Group.LoadAll();
             LoadRanks();
         }
         
@@ -150,7 +150,7 @@ namespace MCGalaxy.Gui {
                 if (PermissionFree(i)) { perm = i; break; }
             }
             
-            Group newGroup = Group.standard.CopyConfig();
+            Group newGroup = Group.DefaultRank.CopyConfig();
             newGroup.Permission = (LevelPermission)perm;
             newGroup.Name = "CHANGEME_" + perm;
             newGroup.Color = "&1";

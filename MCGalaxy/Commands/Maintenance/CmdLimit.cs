@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 default:
                     Help(p); return;
             }
-            Group.SaveList(Group.GroupList);
+            Group.SaveAll(Group.GroupList);
         }
         
         static void SetLimitPercent(Player p, ref float target, float value, bool hasValue) {
