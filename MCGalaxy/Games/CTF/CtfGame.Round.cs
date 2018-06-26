@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             if (Running) EndRound();
             if (Running) VoteAndMoveToNextMap();
         }
-				
+                
         protected override bool SetMap(string map) {
             bool success = base.SetMap(map);
             if (success) UpdateMapConfig();

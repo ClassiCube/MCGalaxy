@@ -34,10 +34,8 @@ namespace MCGalaxy.Scripting {
         public const string DllDir = "extra/commands/dll/";
         public const string ErrorPath = "logs/errors/compiler.log";
         
-        static readonly string divider = new string('-', 25);        
+        static readonly string divider = new string('-', 25);
         protected CodeDomProvider compiler;
-        protected CompilerParameters args = new CompilerParameters();
-        protected CompilerResults results;
         
         public abstract string Ext { get; }
         public abstract string ProviderName { get; }
@@ -94,7 +92,7 @@ namespace MCGalaxy.Scripting {
             args.OutputAssembly = dstPath;
             
             List<string> source = ReadSourceCode(srcPath, args);
-            results = CompileSource(source.Join(Environment.NewLine), args);
+            CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return true;
 
             sb = new StringBuilder();

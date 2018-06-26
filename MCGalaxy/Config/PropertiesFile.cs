@@ -38,9 +38,9 @@ namespace MCGalaxy {
                                    char separator = '=', bool trimValue = true) {
             if (!File.Exists(path)) return false;
             
-            using (StreamReader reader = new StreamReader(path)) {
+            using (StreamReader r = new StreamReader(path)) {
                 string line, key, value;
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = r.ReadLine()) != null) {
                     ParseLine(line, separator, out key, out value);
                     if (key == null) continue;
 

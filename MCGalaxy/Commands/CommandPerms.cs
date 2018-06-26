@@ -97,8 +97,9 @@ namespace MCGalaxy.Commands {
             }
 
             if (File.Exists(Paths.CmdPermsFile)) {
-                string[] lines = File.ReadAllLines(Paths.CmdPermsFile);
-                ProcessLines(lines);
+                using (StreamReader r = new StreamReader(Paths.CmdPermsFile)) {
+                    ProcessLines(r);
+                }
             } else {
                 Save();
             }
@@ -108,9 +109,11 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        static void ProcessLines(string[] lines) {
+        static void ProcessLines(StreamReader r) {
             string[] args = new string[4];
-            foreach (string line in lines) {
+            string line;
+            
+            while ((line = r.ReadLine()) != null) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 // Format - Name : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
@@ -120,7 +123,7 @@ namespace MCGalaxy.Commands {
                     List<LevelPermission> allowed, disallowed;
                     
                     Deserialise(args, 1, out min, out allowed, out disallowed);
-                    Set(args[0], min, allowed, disallowed);                    
+                    Set(args[0], min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;
                 }

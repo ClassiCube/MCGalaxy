@@ -22,12 +22,12 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes {
     
-    /// <summary> Contains helper methods for brushes that have blocks with 
+    /// <summary> Contains helper methods for brushes that have blocks with
     /// optional frequency counts (e.g. random and cloudy brushes) </summary>
     public static class FrequencyBrush {
         
         public static BlockID[] GetBlocks(BrushArgs args, out int[] count,
-                                           Predicate<string> argFilter, Predicate<string> argHandler) {
+                                          Predicate<string> argFilter, Predicate<string> argHandler) {
             string[] parts = args.Message.SplitSpaces();
             Player p = args.Player;
             BlockID[] blocks;
@@ -45,18 +45,14 @@ namespace MCGalaxy.Drawing.Brushes {
                     continue;
                 }
                 
-                BlockID block;
-                int sepIndex = parts[i].IndexOf('/');
-                string name = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                if (!CommandParser.GetBlockIfAllowed(p, name, out block, true)) return null;
+                int sepIndex = parts[i].IndexOf('/'); 
+                string arg = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
+                if (!CommandParser.GetBlockIfAllowed(p, arg, out blocks[j], true)) return null;
                 
-                blocks[j] = block;
-                if (sepIndex < 0) { j++; continue; }
-                
-                int chance = 0;
-                if (!CommandParser.GetInt(p, parts[i].Substring(sepIndex + 1), "Frequency", ref chance, 1, 10000)) return null;
-                
-                count[j] = chance;
+                if (sepIndex >= 0) {
+                    arg = parts[i].Substring(sepIndex + 1);
+                    if (!CommandParser.GetInt(p, arg, "Frequency", ref count[j], 1, 10000)) return null;
+                }
                 j++;
             }
             return blocks;
@@ -96,7 +92,7 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     public sealed class RandomBrushFactory : BrushFactory {
-        public override string Name { get { return "Random"; } }        
+        public override string Name { get { return "Random"; } }
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {

@@ -61,7 +61,7 @@ namespace MCGalaxy.Blocks {
         }
         
         public void MessageCannotUse(Player p, string action) {
-            Player.Message(p, "Only {0} can {1} {2}", 
+            Player.Message(p, "Only {0} can {1} {2}",
                            Describe(), action, Block.GetName(p, ID));
         }
         
@@ -92,8 +92,9 @@ namespace MCGalaxy.Blocks {
             
             // Custom permissions set by the user.
             if (File.Exists(Paths.BlockPermsFile)) {
-                string[] lines = File.ReadAllLines(Paths.BlockPermsFile);
-                ProcessLines(lines);
+                using (StreamReader r = new StreamReader(Paths.BlockPermsFile)) {
+                    ProcessLines(r);
+                }
             } else {
                 Save();
             }
@@ -103,9 +104,11 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        static void ProcessLines(string[] lines) {
+        static void ProcessLines(StreamReader r) {
             string[] args = new string[4];
-            foreach (string line in lines) {
+            string line;
+            
+            while ((line = r.ReadLine()) != null) {
                 if (line.Length == 0 || line[0] == '#') continue;
                 // Format - ID : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');

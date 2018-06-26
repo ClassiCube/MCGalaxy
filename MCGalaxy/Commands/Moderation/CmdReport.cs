@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             List<string> reports = new List<string>();
             if (File.Exists("extra/reported/" + target + ".txt")) {
-                reports = new List<string>(File.ReadAllLines("extra/reported/" + target + ".txt"));
+                reports = Utils.ReadAllLinesList("extra/reported/" + target + ".txt");
             }
             
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);

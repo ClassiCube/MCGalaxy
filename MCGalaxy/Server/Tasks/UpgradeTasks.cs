@@ -151,8 +151,8 @@ namespace MCGalaxy.Tasks {
             if (!File.Exists(Paths.TempRanksFile)) return;
 
             // Check if empty, or not old form
-            using (StreamReader reader = new StreamReader(Paths.TempRanksFile)) {
-                string line = reader.ReadLine();
+            using (StreamReader r = new StreamReader(Paths.TempRanksFile)) {
+                string line = r.ReadLine();
                 if (line == null) return;
                 string[] parts = line.SplitSpaces();
                 if (parts.Length < 9) return;

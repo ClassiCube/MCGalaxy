@@ -109,11 +109,11 @@ namespace MCGalaxy {
             }
         }
         
-        static string NextStatement(StreamReader reader, List<string> buffer) {
+        static string NextStatement(StreamReader r, List<string> buffer) {
             buffer.Clear();
             string line = null;
             
-            while ((line = reader.ReadLine()) != null) {
+            while ((line = r.ReadLine()) != null) {
                 if (line.StartsWith("--")) continue; // comment
                 line = line.Trim();
                 if (line.Length == 0) continue; // whitespace

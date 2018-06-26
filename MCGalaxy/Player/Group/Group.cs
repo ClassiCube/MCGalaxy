@@ -46,23 +46,23 @@ namespace MCGalaxy {
         public string Color;
         public string ColoredName { get { return Color + Name; } }      
         
-        [ConfigInt("Limit", null, 0)]
+        [ConfigInt("Limit", null, 0, 0)]
         public int DrawLimit;
-        [ConfigInt("MaxUndo", null, 0)]
+        [ConfigInt("MaxUndo", null, 0, 0)]
         public int MaxUndo;
         [ConfigString("MOTD", null, "", true)]
         public string MOTD = "";
         [ConfigInt("GenVolume", null, mapGenLimit)]
         public int GenVolume = mapGenLimit;
-        [ConfigInt("OSMaps", null, 3)]
+        [ConfigInt("OSMaps", null, 3, 0)]
         public int OverseerMaps = 3;
         [ConfigBool("AfkKicked", null, true)]
         public bool AfkKicked = true;
-        [ConfigInt("AfkKickMinutes", null, 45)]
+        [ConfigInt("AfkKickMinutes", null, 45, 0)]
         public int AfkKickMinutes = 45;
         [ConfigString("Prefix", null, "", true)] 
         public string Prefix = "";
-        [ConfigInt("CopySlots", null, 0)]
+        [ConfigInt("CopySlots", null, 0, 0)]
         public int CopySlots = 1;
         [ConfigString("Filename", null, "", true, ".,_-+=")]
         internal string filename;

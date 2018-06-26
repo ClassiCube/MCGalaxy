@@ -683,7 +683,10 @@ namespace MCGalaxy {
             
             byte bindIndex;
             if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
-                if (CmdArgsBindings[bindIndex] == null) { SendMessage("No command is bound to: /" + cmdName); return null; }
+                if (CmdArgsBindings[bindIndex] == null) { 
+                    SendMessage("No command is bound to: %T/" + cmdName); return null; 
+                }
+                
                 cmdName = CmdBindings[bindIndex];
                 cmdArgs = CmdArgsBindings[bindIndex] + " " + cmdArgs;
                 cmdArgs = cmdArgs.TrimEnd(' ');
@@ -695,7 +698,7 @@ namespace MCGalaxy {
             Command command = Command.Find(cmdName);
             if (command == null) {
                 if (Block.Parse(this, cmdName) != Block.Invalid) {
-                    cmdArgs = cmdName.ToLower(); cmdName = "mode";
+                    cmdArgs = cmdName; cmdName = "mode";
                     command = Command.Find("Mode");
                 } else {
                     Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmdName, cmdArgs);

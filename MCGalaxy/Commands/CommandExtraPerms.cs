@@ -109,36 +109,37 @@ namespace MCGalaxy.Commands {
             lock (ioLock) {
                 if (!File.Exists(Paths.CmdExtraPermsFile)) Save();
                 
-                LoadCore();
+                using (StreamReader r = new StreamReader(Paths.CmdExtraPermsFile)) {
+                    ProcessLines(r);
+                }
             }
         }
         
-        static void LoadCore() {
+        static void ProcessLines(StreamReader r) {
             string[] args = new string[5];
-            using (StreamReader r = new StreamReader(Paths.CmdExtraPermsFile)) {
-                string line;
-                while ((line = r.ReadLine()) != null) {
-                    if (line.Length == 0 || line[0] == '#' || line.IndexOf(':') == -1) continue;
-                    // Format - Name:Num : Lowest : Disallow : Allow
-                    line.Replace(" ", "").FixedSplit(args, ':');
+            string line;
+            
+            while ((line = r.ReadLine()) != null) {
+                if (line.Length == 0 || line[0] == '#' || line.IndexOf(':') == -1) continue;
+                // Format - Name:Num : Lowest : Disallow : Allow
+                line.Replace(" ", "").FixedSplit(args, ':');
+                
+                try {
+                    LevelPermission min;
+                    List<LevelPermission> allowed, disallowed;
                     
-                    try {
-                        LevelPermission min;
-                        List<LevelPermission> allowed, disallowed;
-                        
-                        // Old format - Name:Num : Lowest : Description
-                        if (IsDescription(args[3])) {
-                            min = (LevelPermission)int.Parse(args[2]);
-                            allowed = null; disallowed = null;
-                        } else {
-                            Deserialise(args, 2, out min, out allowed, out disallowed);
-                        }
-                        
-                        Set(args[0], int.Parse(args[1]), "", min, allowed, disallowed);
-                    } catch (Exception ex) {
-                        Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);
-                        Logger.LogError(ex);
+                    // Old format - Name:Num : Lowest : Description
+                    if (IsDescription(args[3])) {
+                        min = (LevelPermission)int.Parse(args[2]);
+                        allowed = null; disallowed = null;
+                    } else {
+                        Deserialise(args, 2, out min, out allowed, out disallowed);
                     }
+                    
+                    Set(args[0], int.Parse(args[1]), "", min, allowed, disallowed);
+                } catch (Exception ex) {
+                    Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);
+                    Logger.LogError(ex);
                 }
             }
         }

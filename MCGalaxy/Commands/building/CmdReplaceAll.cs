@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
         public override void Use(Player p, string message) {
-            BrushArgs args = new BrushArgs(p, message.ToLower(), Block.Air);
-            Brush brush = BrushFactory.Find("replace").Construct(args);
+            BrushArgs args = new BrushArgs(p, message, Block.Air);
+            Brush brush = BrushFactory.Find("Replace").Construct(args);
             if (brush == null) return;
             
             Vec3S32 max = new Vec3S32(p.level.Width - 1, p.level.Height - 1, p.level.Length - 1);
