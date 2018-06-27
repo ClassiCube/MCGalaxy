@@ -115,14 +115,6 @@ namespace MCGalaxy {
             return null;
         }
         
-        /// <summary> The currently active game running on this map,
-        /// or null if there is no game running. </summary>
-        public IGame CurrentGame() {
-            if (Server.zombie.Running && Server.zombie.Map == this) return Server.zombie;
-            if (Server.lava.Running && Server.lava.Map == this) return Server.lava;
-            return null;
-        }
-        
         public bool CanJoin(Player p) {
             if (p == null) return true;
             

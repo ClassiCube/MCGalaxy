@@ -58,6 +58,7 @@ namespace MCGalaxy.Games {
             RoundsLeft = rounds;
             Running = true;
             HookEventHandlers();
+            IGame.RunningGames.Add(this);
             
             Thread t = new Thread(RunGame);
             t.Name = "MCG_" + GameName;
@@ -79,6 +80,7 @@ namespace MCGalaxy.Games {
                 try { End(); }
                 catch (Exception ex2) { Logger.LogError(ex2); }
             }
+            IGame.RunningGames.Remove(this);
         }
         
         protected virtual string GetStartMap(string forcedMap) {
@@ -174,6 +176,7 @@ namespace MCGalaxy.Games {
         public override void End() {
             if (!Running) return;
             Running = false;
+            IGame.RunningGames.Remove(this);
             
             UnhookEventHandlers();
             EndGame();

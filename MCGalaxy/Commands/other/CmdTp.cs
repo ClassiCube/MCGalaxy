@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Misc {
                 MessageTooHighRank(p, "teleport to", true); return false;
             }
             
-            IGame game = target.level.CurrentGame();
+        	IGame game = IGame.GameOn(target.level);
             if (!p.Game.Referee && game != null) {
                 Player.Message(p, "You can only teleport to players in " +
                                "a game when you are in referee mode."); return false;

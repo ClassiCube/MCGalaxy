@@ -25,6 +25,17 @@ namespace MCGalaxy.Games {
         public Level Map;
         public bool Running;
         public abstract string GameName { get; }
+        
+        public static VolatileArray<IGame> RunningGames = new VolatileArray<IGame>(false);
+        public static IGame GameOn(Level lvl) {
+            if (lvl == null) return null;
+            IGame[] games = RunningGames.Items;
+            
+            foreach (IGame game in games) { 
+                if (game.Map == lvl) return game; 
+            }
+            return null;
+        }
 
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }
         public virtual void PlayerJoinedGame(Player p) { }

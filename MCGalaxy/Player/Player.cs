@@ -121,7 +121,7 @@ namespace MCGalaxy {
             Team team = Game.Team;
             prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
             
-            IGame game = level == null ? null : level.CurrentGame();
+            IGame game = IGame.GameOn(level);
             if (game != null) game.AdjustPrefix(this, ref prefix);
             
             bool isDev = Server.Devs.CaselessContains(truename);

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdWhere : Command {
@@ -27,7 +28,8 @@ namespace MCGalaxy.Commands.Info {
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (pl == null) return;
-            if (pl.level.CurrentGame() != null && !(p == null || p.Game.Referee)) {
+            
+            if (IGame.GameOn(pl.level) != null && !(p == null || p.Game.Referee)) {
                 Player.Message(p, "You can only use /where on people in games when you are in referee mode."); return;
             }
             

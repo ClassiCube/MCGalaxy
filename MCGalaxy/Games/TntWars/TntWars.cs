@@ -754,7 +754,7 @@ namespace MCGalaxy.Games
 
         }
 
-        public void SendPlayerCheckSetupErrors(Player p)
+        void SendPlayerCheckSetupErrors(Player p)
         {
             if (lvl == null)
             {

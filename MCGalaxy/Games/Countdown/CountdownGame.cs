@@ -26,17 +26,6 @@ using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
-    
-    public enum CountdownGameStatus {
-        /// <summary> Countdown is not running. </summary>
-        Disabled,
-        /// <summary> Countdown is running, but no round has begun yet. </summary>
-        Enabled,
-        /// <summary> Timer is counting down to start of round. </summary>
-        RoundCountdown,
-        /// <summary> Round is in progress. </summary>
-        RoundInProgress,
-    }
 
     class CountdownLevelPicker : LevelPicker {
         public override List<string> GetCandidateMaps() { return new List<string>() { "countdown" }; }
