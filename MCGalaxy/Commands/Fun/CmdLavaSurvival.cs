@@ -252,11 +252,11 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map.");
-            Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game.");
-            Player.Message(p, "%T/LS end %H- End the current round or vote.");
-            Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info.");
-            Player.Message(p, "%T/LS info %H- View current round info and time.");
+            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival, optionally on the given map");
+            Player.Message(p, "%T/LS stop %H- Stops the current Lava Survival game");
+            Player.Message(p, "%T/LS end %H- End the current round or vote");
+            Player.Message(p, "%T/LS setup %H- Setup lava survival, use it for more info");
+            Player.Message(p, "%T/LS info %H- View current round info and time");
             Player.Message(p, "%T/LS go %H- Join the fun!");
         }
     }

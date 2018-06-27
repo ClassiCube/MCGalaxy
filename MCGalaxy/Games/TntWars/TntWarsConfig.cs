@@ -23,23 +23,34 @@
 //-------|__________________________________|-------\\
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Config;
 
 namespace MCGalaxy.Games {
     public sealed class TntWarsConfig {
         
-        public bool InitialGracePeriod = true;        
+        [ConfigBool("grace-period", null, true)]
+        public bool InitialGracePeriod = true;
+        [ConfigInt("grace-time", null, 30)]
         public int GracePeriodSeconds = 30;
         
+        [ConfigInt("max-active-tnt", null, 1)]
         public int MaxPlayerActiveTnt = 1;
-        public bool BalanceTeams = true;
         
-        public int ScoreMaxFFA = 75;
-        public int ScoreMaxTDM = 150;
-        public int ScorePerKill = 10;
-        public int MultiKillBonus = 5; // Amount of extra points per player killed (if more than one) per TNT
-        public int AssistScore = 5;
+        [ConfigBool("team-balance", null, true)]
+        public bool BalanceTeams = true;
+        [ConfigBool("team-kill", null, false)]
         public bool TeamKills;
         
+        [ConfigInt("score-needed", null, 150)]
+        public int ScoreRequired = 150;
+        [ConfigInt("scores-per-kill", null, 10)]
+        public int ScorePerKill = 10;
+        [ConfigInt("score-assist", null, 5)]
+        public int AssistScore = 5;
+        [ConfigInt("score-multi-kill-bonus", null, 5)]
+        public int MultiKillBonus = 5; // Amount of extra points per player killed (if more than one) per TNT
+        
+        [ConfigBool("streaks", null, true)]
         public bool Streaks = true;
         public int StreakOneAmount = 3;
         public float StreakOneMultiplier = 1.25f;
@@ -49,31 +60,5 @@ namespace MCGalaxy.Games {
         public float StreakThreeMultiplier = 2f;
         
         public static TntWarsConfig Default = new TntWarsConfig();
-        
-        public TntWarsConfig Copy() {
-            TntWarsConfig copy = new TntWarsConfig();
-            copy.InitialGracePeriod = InitialGracePeriod;
-            copy.GracePeriodSeconds = GracePeriodSeconds;
-            
-            copy.MaxPlayerActiveTnt = MaxPlayerActiveTnt;
-            copy.BalanceTeams = BalanceTeams;
-            
-            copy.ScoreMaxFFA = ScoreMaxFFA;
-            copy.ScoreMaxTDM = ScoreMaxTDM;
-            copy.ScorePerKill = ScorePerKill;
-            copy.MultiKillBonus = MultiKillBonus;
-            copy.AssistScore = AssistScore;
-            copy.TeamKills = TeamKills;
-            
-            copy.Streaks = Streaks;
-            copy.StreakOneAmount = StreakOneAmount;
-            copy.StreakOneMultiplier = StreakOneMultiplier;
-            copy.StreakTwoAmount = StreakTwoAmount;
-            copy.StreakTwoMultiplier = StreakTwoMultiplier;
-            copy.StreakThreeAmount = StreakThreeAmount;
-            copy.StreakThreeMultiplier = StreakThreeMultiplier;
-            
-            return copy;
-        }
     }
 }

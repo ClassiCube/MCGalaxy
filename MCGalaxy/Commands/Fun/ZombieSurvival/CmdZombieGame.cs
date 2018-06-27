@@ -84,14 +84,14 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ZG start 0 %H- Runs Zombie Survival for infinite rounds.");
-            Player.Message(p, "%T/ZG start [x] %H- Runs Zombie Survival for [x] rounds.");
-            Player.Message(p, "%T/ZG end %H- Ends current round of Zombie Survival.");
-            Player.Message(p, "%T/ZG stop %H- Immediately stops Zombie Survival.");
+            Player.Message(p, "%T/ZG start 0 %H- Runs Zombie Survival for infinite rounds");
+            Player.Message(p, "%T/ZG start [x] %H- Runs Zombie Survival for [x] rounds");
+            Player.Message(p, "%T/ZG end %H- Ends current round of Zombie Survival");
+            Player.Message(p, "%T/ZG stop %H- Immediately stops Zombie Survival");
             Player.Message(p, "%T/ZG set [property] [value]");
             Player.Message(p, "%HSets a Zombie Survival game property, see %T/Help ZG set");
-            Player.Message(p, "%T/ZG status %H- Outputs current status of Zombie Survival.");
-            Player.Message(p, "%T/ZG go %H- Moves you to the current Zombie Survival map.");
+            Player.Message(p, "%T/ZG status %H- Outputs current status of Zombie Survival");
+            Player.Message(p, "%T/ZG go %H- Moves you to the current Zombie Survival map");
         }
         
         public override void Help(Player p, string message) {

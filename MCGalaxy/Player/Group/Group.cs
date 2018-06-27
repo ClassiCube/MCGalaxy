@@ -48,7 +48,7 @@ namespace MCGalaxy {
         
         [ConfigInt("Limit", null, 0, 0)]
         public int DrawLimit;
-        [ConfigInt("MaxUndo", null, 0, 0)]
+        [ConfigInt("MaxUndo", null, 0, -1)]
         public int MaxUndo;
         [ConfigString("MOTD", null, "", true)]
         public string MOTD = "";

@@ -76,9 +76,10 @@ namespace MCGalaxy.Games {
         }
         
         public void UpdateMapConfig() {
-            Config.SetDefaults(Map);
-            Config.Load(Map.name);
-            CtfMapConfig cfg = Config;
+            CtfMapConfig cfg = new CtfMapConfig();
+            cfg.SetDefaults(Map);
+            cfg.Load(Map.name);
+            Config = cfg;
             
             Red.FlagBlock = cfg.RedFlagBlock;
             Red.FlagPos   = cfg.RedFlagPos;

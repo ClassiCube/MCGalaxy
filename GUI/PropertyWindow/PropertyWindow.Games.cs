@@ -257,7 +257,7 @@ namespace MCGalaxy.Gui {
                 
                 TntWrsDiffCombo.SelectedIndex = TntWrsDiffCombo.FindString(tw_selected.Difficulty.ToString());
                 //scores
-                tw_numScoreLimit.Value = tw_selected.ScoreLimit;
+                tw_numScoreLimit.Value = tw_selected.Config.ScoreRequired;
                 tw_numScoreLimit.Enabled = true;
                 tw_numScorePerKill.Value = tw_selected.Config.ScorePerKill;
                 tw_numScorePerKill.Enabled = true;
@@ -437,25 +437,25 @@ namespace MCGalaxy.Gui {
             switch (TntWrsDiffCombo.Items[TntWrsDiffCombo.SelectedIndex].ToString()) {
                 case "Easy":
                     tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Easy;
-                    tw_selected.SendAllPlayersMessage("TNT Wars: Changed difficulty to easy!");
+                    tw_selected.MessageAll("TNT Wars: Changed difficulty to easy!");
                     tw_selected.Config.TeamKills = false;
                     break;
 
                 case "Normal":
                     tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Normal;
-                    tw_selected.SendAllPlayersMessage("TNT Wars: Changed difficulty to normal!");
+                    tw_selected.MessageAll("TNT Wars: Changed difficulty to normal!");
                     tw_selected.Config.TeamKills = false;
                     break;
 
                 case "Hard":
                     tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Hard;
-                    tw_selected.SendAllPlayersMessage("TNT Wars: Changed difficulty to hard!");
+                    tw_selected.MessageAll("TNT Wars: Changed difficulty to hard!");
                     tw_selected.Config.TeamKills = true;
                     break;
 
                 case "Extreme":
                     tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Extreme;
-                    tw_selected.SendAllPlayersMessage("TNT Wars: Changed difficulty to extreme!");
+                    tw_selected.MessageAll("TNT Wars: Changed difficulty to extreme!");
                     tw_selected.Config.TeamKills = true;
                     break;
             }
@@ -464,7 +464,7 @@ namespace MCGalaxy.Gui {
 
         void TntWrsScrLmtUpDwn_ValueChanged(object sender, EventArgs e) {
             if (tw_selected == null) return;
-            tw_selected.ScoreLimit = (int)tw_numScoreLimit.Value;
+            tw_selected.Config.ScoreRequired = (int)tw_numScoreLimit.Value;
             LoadTNTWarsTab(sender, e);
         }
 
@@ -498,8 +498,7 @@ namespace MCGalaxy.Gui {
             if (tw_cbMultiKills.Checked == false) {
                 tw_selected.Config.MultiKillBonus = 0;
                 tw_numMultiKills.Enabled = false;
-            }
-            else {
+            } else {
                 tw_selected.Config.MultiKillBonus = (int)tw_numMultiKills.Value;
                 tw_numMultiKills.Enabled = true;
             }
@@ -525,65 +524,17 @@ namespace MCGalaxy.Gui {
         }
 
         void TntWrsTmsChck_CheckedChanged(object sender, EventArgs e) {
-            switch (TntWrsTmsChck.Checked) {
-                case true:
-                    if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.FFA) {
-                        tw_selected.GameMode = TntWarsGame.TntWarsGameMode.TDM;
-                        foreach (TntWarsGame.player pl in tw_selected.Players) {
-                            {
-                                Player.Message(pl.p, "TNT Wars: Changed gamemode to Team Deathmatch");
-                                pl.Red = false;
-                                pl.Blue = false;
-                                if (tw_selected.BlueTeam() > tw_selected.RedTeam()) {
-                                    pl.Red = true;
-                                }
-                                else if (tw_selected.RedTeam() > tw_selected.BlueTeam()) {
-                                    pl.Blue = true;
-                                }
-                                else if (tw_selected.RedScore > tw_selected.BlueScore) {
-                                    pl.Blue = true;
-                                }
-                                else if (tw_selected.BlueScore > tw_selected.RedScore) {
-                                    pl.Red = true;
-                                }
-                                else {
-                                    pl.Red = true;
-                                }
-                            }
-                            {
-                                string mesg = pl.p.ColoredName + " %Sis now";
-                                if (pl.Red) {
-                                    mesg += " on the " + Colors.red + "red team";
-                                }
-                                if (pl.Blue) {
-                                    mesg += " on the " + Colors.blue + "blue team";
-                                }
-                                if (pl.spec) {
-                                    mesg += " (as a spectator)";
-                                }
-                                Chat.MessageGlobal(mesg);
-                            }
-                        }
-                        if (tw_selected.ScoreLimit == TntWarsConfig.Default.ScoreMaxFFA) {
-                            tw_selected.ScoreLimit = TntWarsConfig.Default.ScoreMaxTDM;
-                        }
-                    }
-                    break;
-
-                case false:
-                    if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.TDM) {
-                        tw_selected.GameMode = TntWarsGame.TntWarsGameMode.FFA;
-                        tw_selected.SendAllPlayersMessage("TNT Wars: Changed gamemode to Free For All");
-                        if (tw_selected.ScoreLimit == TntWarsConfig.Default.ScoreMaxTDM) {
-                            tw_selected.ScoreLimit = TntWarsConfig.Default.ScoreMaxFFA;
-                        }
-                        foreach (TntWarsGame.player pl in tw_selected.Players) {
-                            pl.p.color = pl.OldColor;
-                            pl.p.SetPrefix();
-                        }
-                    }
-                    break;
+            if (tw_selected == null) return;
+            if (TntWrsTmsChck.Checked) {
+                if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.FFA) {
+                    tw_selected.ModeTDM();
+                }
+            } else {
+                if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.TDM) {
+                    tw_selected.ModeFFA();
+                }
             }
+            LoadTNTWarsTab(sender, e);
         }
 
         void TntWrsBlnceTeamsChck_CheckedChanged(object sender, EventArgs e) {
@@ -622,7 +573,7 @@ namespace MCGalaxy.Gui {
                 pl.p.CurrentAmountOfTnt = 0;
             }
             tw_selected.GameStatus = TntWarsGame.TntWarsGameStatus.Finished;
-            tw_selected.SendAllPlayersMessage("TNT wars: Game has been stopped!");
+            tw_selected.MessageAll("TNT wars: Game has been stopped!");
             LoadTNTWarsTab(sender, e);
         }
 

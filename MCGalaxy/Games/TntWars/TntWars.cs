@@ -41,8 +41,6 @@ namespace MCGalaxy.Games
         public ushort[] BlueSpawn = null;
         
         public TntWarsConfig Config = new TntWarsConfig();
-        //scores/streaks
-        public int ScoreLimit = TntWarsConfig.Default.ScoreMaxTDM;
         public Thread Starter;
 
         public TntWarsGame(Level level)
@@ -90,7 +88,7 @@ namespace MCGalaxy.Games
                 BackupNumber = lvl.Backup(true);
                 if (BackupNumber <= 0)
                 {
-                    SendAllPlayersMessage(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
+                    MessageAll(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
                     Chat.MessageOps(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
                     GameStatus = TntWarsGameStatus.Finished;
                     return;
@@ -125,7 +123,7 @@ namespace MCGalaxy.Games
                 }
                 if (Config.InitialGracePeriod)
                 {
-                    SendAllPlayersMessage("TNT Wars: Disabled building during Grace Period!");
+                    MessageAll("TNT Wars: Disabled building during Grace Period!");
                 }
             }
             //Spawn them (And if needed, move them to the correct level!)
@@ -179,65 +177,65 @@ namespace MCGalaxy.Games
                             difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
                             " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
                             ", team killing is &3" + teamkillling + " %Sand you can place &3" + Config.MaxPlayerActiveTnt 
-                            + " %STNT at a time and there is a score limit of &3" + ScoreLimit + "%S!!");
-            if (GameMode == TntWarsGameMode.TDM) SendAllPlayersMessage("TNT Wars: Start your message with ':' to send it as a team chat!");
+                            + " %STNT at a time and there is a score limit of &3" + Config.ScoreRequired + "%S!!");
+            if (GameMode == TntWarsGameMode.TDM) MessageAll("TNT Wars: Start your message with ':' to send it as a team chat!");
             //GracePeriod
             if (Config.InitialGracePeriod) //Check This Grace Stuff
             {
                 GameStatus = TntWarsGameStatus.GracePeriod;
                 int GracePeriodSecsRemaining = Config.GracePeriodSeconds;
-                SendAllPlayersMessage("TNT Wars: Grace Period of &a" + GracePeriodSecsRemaining + " %Sseconds");
+                MessageAll("TNT Wars: Grace Period of &a" + GracePeriodSecsRemaining + " %Sseconds");
                 while (GracePeriodSecsRemaining > 0)
                 {
                     switch (GracePeriodSecsRemaining)
                     {
                         case 300:
-                            SendAllPlayersMessage("TNT Wars: &35 %Sminutes remaining!"); break;
+                            MessageAll("TNT Wars: &35 %Sminutes remaining!"); break;
                         case 240:
-                            SendAllPlayersMessage("TNT Wars: &34 %Sminutes remaining!"); break;
+                            MessageAll("TNT Wars: &34 %Sminutes remaining!"); break;
                         case 180:
-                            SendAllPlayersMessage("TNT Wars: &33 %Sminutes remaining!"); break;
+                            MessageAll("TNT Wars: &33 %Sminutes remaining!"); break;
                         case 120:
-                            SendAllPlayersMessage("TNT Wars: &32 %Sminutes remaining!"); break;
+                            MessageAll("TNT Wars: &32 %Sminutes remaining!"); break;
                         case 90:
-                            SendAllPlayersMessage("TNT Wars: &31 %Sminute and &330 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &31 %Sminute and &330 %Sseconds remaining!"); break;
                         case 60:
-                            SendAllPlayersMessage("TNT Wars: &31 %Sminute remaining!"); break;
+                            MessageAll("TNT Wars: &31 %Sminute remaining!"); break;
                         case 45:
-                            SendAllPlayersMessage("TNT Wars: &345 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &345 %Sseconds remaining!"); break;
                         case 30:
-                            SendAllPlayersMessage("TNT Wars: &330 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &330 %Sseconds remaining!"); break;
                         case 15:
-                            SendAllPlayersMessage("TNT Wars: &315 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &315 %Sseconds remaining!"); break;
                         case 10:
-                            SendAllPlayersMessage("TNT Wars: &310 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &310 %Sseconds remaining!"); break;
                         case 9:
-                            SendAllPlayersMessage("TNT Wars: &39 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &39 %Sseconds remaining!"); break;
                         case 8:
-                            SendAllPlayersMessage("TNT Wars: &38 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &38 %Sseconds remaining!"); break;
                         case 7:
-                            SendAllPlayersMessage("TNT Wars: &37 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &37 %Sseconds remaining!"); break;
                         case 6:
-                            SendAllPlayersMessage("TNT Wars: &36 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &36 %Sseconds remaining!"); break;
                         case 5:
-                            SendAllPlayersMessage("TNT Wars: &35 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &35 %Sseconds remaining!"); break;
                         case 4:
-                            SendAllPlayersMessage("TNT Wars: &34 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &34 %Sseconds remaining!"); break;
                         case 3:
-                            SendAllPlayersMessage("TNT Wars: &33 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &33 %Sseconds remaining!"); break;
                         case 2:
-                            SendAllPlayersMessage("TNT Wars: &32 %Sseconds remaining!"); break;
+                            MessageAll("TNT Wars: &32 %Sseconds remaining!"); break;
                         case 1:
-                            SendAllPlayersMessage("TNT Wars: &31 %Ssecond remaining!"); break;
+                            MessageAll("TNT Wars: &31 %Ssecond remaining!"); break;
                     }
                                 
                     Thread.Sleep(1000);
-                    GracePeriodSecsRemaining -= 1;
+                    GracePeriodSecsRemaining--;
                 }
-                SendAllPlayersMessage("TNT Wars: Grace Period is over!!!!!");
-                SendAllPlayersMessage("TNT Wars: You may now place " + Colors.red + "TNT");
+                MessageAll("TNT Wars: Grace Period is over!!!!!");
+                MessageAll("TNT Wars: You may now place " + Colors.red + "TNT");
             }
-            SendAllPlayersMessage("TNT Wars: " + Colors.white + "The Game Has Started!!!!!");
+            MessageAll("TNT Wars: " + Colors.white + "The Game Has Started!!!!!");
             GameStatus = TntWarsGameStatus.InProgress;
             foreach (player p in Players)
             {
@@ -248,7 +246,7 @@ namespace MCGalaxy.Games
             }
             if (Config.InitialGracePeriod)
             {
-                SendAllPlayersMessage("TNT Wars: You can now build!!");
+                MessageAll("TNT Wars: You can now build!!");
             }
             //MainLoop
             while (!Finished())
@@ -263,18 +261,18 @@ namespace MCGalaxy.Games
                 {
                     if (i < 3)
                     {
-                        SendAllPlayersScore(true, true);
+                        AnnounceScores(true, true);
                     }
                     if (i >= 3)
                     {
-                        SendAllPlayersScore(true, true, true);
+                        AnnounceScores(true, true, true);
                         i = 0;
                     }
                     i++;
                 }
                 else if (GameMode == TntWarsGameMode.FFA)
                 {
-                    SendAllPlayersScore(false, true, true);
+                    AnnounceScores(false, true, true);
                 }
             }
             END();
@@ -319,8 +317,8 @@ namespace MCGalaxy.Games
                     }
                 }
                 catch { }
-                SendAllPlayersMessage("TNT Wars: Top Scores:");
-                SendAllPlayersScore(false, false, true);
+                MessageAll("TNT Wars: Top Scores:");
+                AnnounceScores(false, false, true);
             }
             if (GameMode == TntWarsGameMode.FFA)
             {
@@ -334,39 +332,30 @@ namespace MCGalaxy.Games
                     }
                     else if (i == 1)
                     {
-                        SendAllPlayersMessage("&cTNT Wars %S2nd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
+                        MessageAll("&cTNT Wars %S2nd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
                     else if (i == 2)
                     {
-                        SendAllPlayersMessage("&cTNT Wars %S3rd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
+                        MessageAll("&cTNT Wars %S3rd Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
                     else
                     {
-                        SendAllPlayersMessage("&cTNT Wars %S" + count + "th Place: " + pl.p.ColoredName+ " %Swith a score of " + pl.p.color + pl.Score);
+                        MessageAll("&cTNT Wars %S" + count + "th Place: " + pl.p.ColoredName+ " %Swith a score of " + pl.p.color + pl.Score);
                     }
                     Thread.Sleep(750); //Maybe, not sure (was 500)
                 }
             }
             //Reset map
             Command.Find("Restore").Use(null, BackupNumber + " " + lvl.name);
-            if (lvl.Config.PhysicsOverload == 2501)
-            {
-                lvl.Config.PhysicsOverload = 1500;
-                Logger.Log(LogType.GameActivity, "TNT Wars: Set level physics overload back to 1500");
-            }
         }
 
-        public void SendAllPlayersMessage(string Message)
+        public void MessageAll(string Message)
         {
-            try
-            {
-                foreach (player p in Players)
-                {
+            try {
+                foreach (player p in Players) {
                     Player.Message(p.p, Message);
                 }
-            }
-            catch { };
-            Logger.Log(LogType.GameActivity, "[TNT Wars] [" + lvl.name + "] " + Message);
+            } catch { }
         }
 
         public void HandleKill(Player Killer, List<Player> Killed)
@@ -409,11 +398,11 @@ namespace MCGalaxy.Games
                 {
                     if (TeamKill(Killer, Died))
                     {
-                        SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName);
+                        MessageAll("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName);
                     }
                     else
                     {
-                        SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName);
+                        MessageAll("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName);
                         kills += 1;
                     }
                 }
@@ -422,11 +411,11 @@ namespace MCGalaxy.Games
                     {
                         if (TeamKill(Killer, Died))
                         {
-                            SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
+                            MessageAll("TNT Wars: " + Killer.ColoredName + " %Steam killed " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
                         }
                         else
                         {
-                            SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
+                            MessageAll("TNT Wars: " + Killer.ColoredName + " %Skilled " + Died.ColoredName + " %S(with help from " + Died.HarmedBy.ColoredName + ")");
                             kills += 1;
                         }
                     }
@@ -456,21 +445,21 @@ namespace MCGalaxy.Games
                 if (Killer.TntWarsKillStreak >= Config.StreakOneAmount && Killer.TntWarsKillStreak < Config.StreakTwoAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakOneAmount)
                 {
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakOneMultiplier + ")");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak);
+                    MessageAll("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak);
                     Killer.TntWarsScoreMultiplier = Config.StreakOneMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Config.StreakOneAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Config.StreakTwoAmount && Killer.TntWarsKillStreak < Config.StreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakTwoAmount)
                 {
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakTwoMultiplier + " and a bigger explosion!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has a bigger explosion for their TNT!");
+                    MessageAll("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has a bigger explosion for their TNT!");
                     Killer.TntWarsScoreMultiplier = Config.StreakTwoMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Config.StreakTwoAmount;
                 }
                 else if (Killer.TntWarsKillStreak >= Config.StreakThreeAmount && Killer.TNTWarsLastKillStreakAnnounced != Config.StreakThreeAmount)
                 {
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak + " (Multiplier of " + Config.StreakThreeMultiplier + " and you now have 1 extra health!)");
-                    SendAllPlayersMessage("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has 1 extra health!");
+                    MessageAll("TNT Wars: " + Killer.ColoredName + " %Shas a kill streak of " + Killer.TntWarsKillStreak + " and now has 1 extra health!");
                     Killer.TntWarsScoreMultiplier = Config.StreakThreeMultiplier;
                     Killer.TNTWarsLastKillStreakAnnounced = Config.StreakThreeAmount;
                     if (Difficulty == TntWarsDifficulty.Hard || Difficulty == TntWarsDifficulty.Extreme)
@@ -559,26 +548,24 @@ namespace MCGalaxy.Games
             return sorted;
         }
 
-        public void SendAllPlayersScore(bool TotalTeamScores = false, bool TheirTotalScore = false, bool TopScores = false)
+        public void AnnounceScores(bool TotalTeamScores = false, bool TheirTotalScore = false, bool TopScores = false)
         {
             try
             {
                 if (TotalTeamScores)
                 {
-                    SendAllPlayersMessage("TNT Wars Scores:");
-                    SendAllPlayersMessage(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (ScoreLimit - RedScore) + " needed)");
-                    SendAllPlayersMessage(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (ScoreLimit - BlueScore) + " needed)");
+                    MessageAll("TNT Wars Scores:");
+                    MessageAll(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (Config.ScoreRequired - RedScore) + " needed)");
+                    MessageAll(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (Config.ScoreRequired - BlueScore) + " needed)");
                     Thread.Sleep(1000);
                 }
                 if (TopScores)
-                {
+                {                   
+                    List<player> sorted = SortedByScore();
                     int count = System.Math.Min(PlayingPlayers(), 5);
-                    List<player> pls = SortedByScore();
                    
                     for (int i = 0; i < count; i++) {
-                        foreach (player p in Players) {
-                            Player.Message(p.p, "{0}: {1} - {2}", (i + 1), pls[i].p.name, pls[i].Score);
-                        }
+                    	MessageAll((i + 1) + ": " + sorted[i].p.name + " - " + sorted[i].Score);
                         Thread.Sleep(500); //Maybe, not sure (250??)
                     }
                     Thread.Sleep(1000);
@@ -588,7 +575,7 @@ namespace MCGalaxy.Games
                     foreach (player p in Players)
                     {
                         if (p.spec) continue;
-                        Player.Message(p.p, "TNT Wars: Your Score: " + Colors.white + p.Score);
+                        Player.Message(p.p, "TNT Wars: Your Score is &a" + p.Score);
                     }
                     Thread.Sleep(1000);
                 }
@@ -597,14 +584,14 @@ namespace MCGalaxy.Games
         }
 
         public bool Finished() {
-            if (GameMode == TntWarsGameMode.TDM && (RedScore >= ScoreLimit || BlueScore >= ScoreLimit))
+            if (GameMode == TntWarsGameMode.TDM && (RedScore >= Config.ScoreRequired || BlueScore >= Config.ScoreRequired))
                 return true;
             
             if (GameMode == TntWarsGameMode.FFA) {
                 try
                 {
                     foreach (player p in Players) {
-                        if (p.Score >= ScoreLimit) return true;
+                        if (p.Score >= Config.ScoreRequired) return true;
                     }
                 }
                 catch { }
@@ -741,6 +728,49 @@ namespace MCGalaxy.Games
             if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);
             return it;
+        }
+        
+        public void ModeTDM() {
+            GameMode = TntWarsGame.TntWarsGameMode.TDM;
+            MessageAll("TNT Wars: Changed gamemode to Team Deathmatch");
+            
+            foreach (TntWarsGame.player pl in Players) {
+                AutoAssignTeam(pl);
+                string msg = pl.p.ColoredName + " %Sis now";
+                
+                if (pl.Red)  msg += " on the " + Colors.red + "red team";
+                if (pl.Blue) msg += " on the " + Colors.blue + "blue team";
+                if (pl.spec) msg += " (as a spectator)";
+                
+                Chat.MessageGlobal(msg);
+            }
+        }
+        
+        public void ModeFFA() {
+            GameMode = TntWarsGame.TntWarsGameMode.FFA;
+            MessageAll("TNT Wars: Changed gamemode to Free For All");
+            
+            foreach (TntWarsGame.player pl in Players) {
+                pl.p.color = pl.OldColor;
+                pl.p.SetPrefix();
+            }
+        }
+        
+        public void AutoAssignTeam(player pl) {
+            pl.Red = false; pl.Blue = false;
+            int red = RedTeam(), blue = BlueTeam();
+            
+            if (blue > red) {
+                pl.Red = true;
+            } else if (red > blue) {
+                pl.Blue = true;
+            } else if (RedScore > BlueScore) {
+                pl.Blue = true;
+            } else if (BlueScore > RedScore) {
+                pl.Red = true;
+            } else {
+                pl.Red = true;
+            }
         }
     }
 }

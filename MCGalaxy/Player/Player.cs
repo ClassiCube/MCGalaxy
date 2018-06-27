@@ -275,7 +275,7 @@ namespace MCGalaxy {
                 TntWarsGame tntwarsgame = TntWarsGame.GameIn(this);
                 if ( tntwarsgame != null ) {
                     tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
-                    tntwarsgame.SendAllPlayersMessage("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
+                    tntwarsgame.MessageAll("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
                 }
 
                 Entities.DespawnEntities(this, false);

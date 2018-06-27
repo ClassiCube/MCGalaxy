@@ -26,56 +26,32 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
     
     public sealed class CtfMapConfig {
-
-        [ConfigVec3("base.red.pos", null)]
-        public Vec3U16 RedFlagPos;
-        [ConfigBlock("base.red.block", null, Block.Air)]
+        [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
+        [ConfigVec3("red-pos", null)] public Vec3U16 RedFlagPos;
+        [ConfigBlock("red-block", null, Block.Air)]
         public BlockID RedFlagBlock;
-        [ConfigVec3("base.red.spawn", null)]
-        public Vec3U16 RedSpawn;
         
-        [ConfigVec3("base.blue.pos", null)]
-        public Vec3U16 BlueFlagPos;
-        [ConfigBlock("base.blue.block", null, Block.Air)]
-        public BlockID BlueFlagBlock;
-        [ConfigVec3("base.blue.spawn", null)]
-        public Vec3U16 BlueSpawn;
+        [ConfigVec3("blue-spawn", null)] public Vec3U16 BlueSpawn;
+        [ConfigVec3("blue-pos", null)] public Vec3U16 BlueFlagPos;
+        [ConfigBlock("blue-block", null, Block.Air)]
+        public BlockID BlueFlagBlock;        
         
         [ConfigInt("map.line.z", null, 0)]
         public int ZDivider;
-        [ConfigInt("game.maxpoints", null, 0)]
-        public int RoundPoints;
-        [ConfigInt("game.tag.points-gain", null, 0)]
-        public int Tag_PointsGained;
-        [ConfigInt("game.tag.points-lose", null, 0)]
-        public int Tag_PointsLost;
-        [ConfigInt("game.capture.points-gain", null, 0)]
-        public int Capture_PointsGained;
-        [ConfigInt("game.capture.points-lose", null, 0)]
-        public int Capture_PointsLost;
+        [ConfigInt("game.maxpoints", null, 3)]
+        public int RoundPoints = 3;
+        [ConfigInt("game.tag.points-gain", null, 5)]
+        public int Tag_PointsGained = 5;
+        [ConfigInt("game.tag.points-lose", null, 5)]
+        public int Tag_PointsLost = 5;
+        [ConfigInt("game.capture.points-gain", null, 10)]
+        public int Capture_PointsGained = 10;
+        [ConfigInt("game.capture.points-lose", null, 10)]
+        public int Capture_PointsLost = 10;
+
         
-        
-        public void SetDefaults(Level lvl) {
-            ZDivider = lvl.Length / 2;
-            RedFlagBlock  = Block.Red;
-            BlueFlagBlock = Block.Blue;
-            ushort midX = (ushort)(lvl.Width / 2), maxZ = (ushort)(lvl.Length - 1);
-            
-            RedFlagPos  = new Vec3U16(midX, 6, 0);
-            RedSpawn    = new Vec3U16(midX, 4, 0);
-            BlueFlagPos = new Vec3U16(midX, 6, maxZ);
-            BlueSpawn   = new Vec3U16(midX, 4, maxZ);
-            
-            RoundPoints = 3;
-            Tag_PointsGained = 5;
-            Tag_PointsLost = 5;
-            Capture_PointsGained = 10;
-            Capture_PointsLost = 10;
-        }
-        
-        
-        const string propsDir = "CTF/";
-        static string Path(string map) { return propsDir + map + ".config"; }
+        const string propsDir = "properties/CTF/";
+        static string Path(string map) { return propsDir + map + ".properties"; }
         static ConfigElement[] cfg;
         
         public void Load(string map) {
@@ -88,6 +64,18 @@ namespace MCGalaxy.Games {
             
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
             ConfigElement.SerialiseSimple(cfg, Path(map), this);
+        }
+        
+        public void SetDefaults(Level lvl) {
+            ZDivider = lvl.Length / 2;
+            RedFlagBlock  = Block.Red;
+            BlueFlagBlock = Block.Blue;
+            ushort midX = (ushort)(lvl.Width / 2), maxZ = (ushort)(lvl.Length - 1);
+            
+            RedFlagPos  = new Vec3U16(midX, 6, 0);
+            RedSpawn    = new Vec3U16(midX, 4, 0);
+            BlueFlagPos = new Vec3U16(midX, 6, maxZ);
+            BlueSpawn   = new Vec3U16(midX, 4, maxZ);
         }
     }
 }

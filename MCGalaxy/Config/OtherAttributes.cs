@@ -96,7 +96,7 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigVec3Attribute : ConfigAttribute {        
+    public sealed class ConfigVec3Attribute : ConfigAttribute {
         public ConfigVec3Attribute(string name, string section) : base(name, section) { }
         
         public override object Parse(string raw) {
