@@ -77,14 +77,8 @@ namespace MCGalaxy.Games
         //Zones
         public List<Zone> NoTNTplacableZones = new List<Zone>();
         public List<Zone> NoBlockDeathZones = new List<Zone>();
-        public class Zone
-        {
-            public ushort bigX;
-            public ushort bigY;
-            public ushort bigZ;
-            public ushort smallX;
-            public ushort smallY;
-            public ushort smallZ;
+        public class Zone {
+            public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ;            
         }
 
         //During Game Main Methods
@@ -536,60 +530,15 @@ namespace MCGalaxy.Games
             return InZone(x, y, z, zones);
         }
         
-        bool InZone(ushort x, ushort y, ushort z, List<Zone> zones) {
+        public bool InZone(ushort x, ushort y, ushort z, List<Zone> zones) {
             foreach (Zone Zn in zones) {
-                if (x >= Zn.smallX && y >= Zn.smallY && z >= Zn.smallZ 
-                    && x <= Zn.bigX && y <= Zn.bigY && z <= Zn.bigZ) return true;
+                if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ 
+                    && x <= Zn.MaxX && y <= Zn.MaxY && z <= Zn.MaxZ) return true;
             }
             return false;
         }
-
-        public void DeleteZone(ushort x, ushort y, ushort z, bool NoTntZone, Player p = null)
-        {
-            try
-            {
-                Zone Z = new Zone();
-                if (NoTntZone)
-                {
-                    foreach (Zone Zn in NoTNTplacableZones)
-                    {
-                        if (Zn.smallX <= x && x <= Zn.bigX && Zn.smallY <= y && y <= Zn.bigY && Zn.smallZ <= z && z <= Zn.bigZ)
-                        {
-                            Z = Zn;
-                        }
-                    }
-                    NoTNTplacableZones.Remove(Z);
-                    if (p != null)
-                    {
-                        Player.Message(p, "TNT Wars: Zone Deleted!");
-                    }
-                    return;
-                }
-                else
-                {
-                    foreach (Zone Zn in NoBlockDeathZones)
-                    {
-                        if (Zn.smallX <= x && x <= Zn.bigX && Zn.smallY <= y && y <= Zn.bigY && Zn.smallZ <= z && z <= Zn.bigZ)
-                        {
-                            Z = Zn;
-                        }
-                    }
-                    NoBlockDeathZones.Remove(Z);
-                    if (p != null)
-                    {
-                        Player.Message(p, "TNT Wars: Zone Deleted!");
-                    }
-                    return;
-                }
-            }
-            catch
-            {
-                Player.Message(p, "TNT Wars Error: Zone not deleted!");
-            }
-
-        }
         
-        public bool TeamKill (Player p1, Player p2)
+        public bool TeamKill(Player p1, Player p2)
         {
             return TeamKill(FindPlayer(p1), FindPlayer(p2));
         }
