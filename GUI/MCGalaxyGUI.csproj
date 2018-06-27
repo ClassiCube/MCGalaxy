@@ -91,6 +91,7 @@
     <Compile Include="PropertyWindow\PropertyWindow.Designer.cs">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="PropertyWindow\PropertyWindow.Economy.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Games.cs">
       <SubType>Form</SubType>
     </Compile>

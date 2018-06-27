@@ -36,7 +36,6 @@ namespace MCGalaxy.Gui {
             chk17Dollar.Checked = ServerConfig.DollarNames;
             chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
             chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
-            txtMoneys.Text = ServerConfig.Currency;
             nudCooldownTime.Value = ServerConfig.ReviewCooldown;
             chkRestart.Checked = ServerConfig.restartOnError;
         }
@@ -57,14 +56,8 @@ namespace MCGalaxy.Gui {
             ServerConfig.DollarNames = chk17Dollar.Checked;
             ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
             ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
-            ServerConfig.Currency = txtMoneys.Text;
             ServerConfig.ReviewCooldown = (int)nudCooldownTime.Value;
             ServerConfig.restartOnError = chkRestart.Checked; 
-        }
-                
-        
-        void buttonEco_Click(object sender, EventArgs e) {
-            new Gui.Eco.EconomyWindow().ShowDialog();
         }
         
         void adv_btnEditTexts_Click(object sender, EventArgs e) {

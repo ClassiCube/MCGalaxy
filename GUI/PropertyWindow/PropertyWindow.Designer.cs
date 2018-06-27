@@ -118,6 +118,8 @@ namespace MCGalaxy.Gui
             this.rank_numUndo = new System.Windows.Forms.NumericUpDown();
             this.rank_numGen = new System.Windows.Forms.NumericUpDown();
             this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
+            this.adv_chkCPE = new System.Windows.Forms.CheckBox();
+            this.eco_cbItemRank = new System.Windows.Forms.ComboBox();
             this.rank_numAfk = new System.Windows.Forms.NumericUpDown();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
@@ -170,16 +172,13 @@ namespace MCGalaxy.Gui
             this.rank_list = new System.Windows.Forms.ListBox();
             this.label85 = new System.Windows.Forms.Label();
             this.pageMisc = new System.Windows.Forms.TabPage();
-            this.eco_grpEco = new System.Windows.Forms.GroupBox();
-            this.eco_btnEco = new System.Windows.Forms.Button();
             this.grpExtra = new System.Windows.Forms.GroupBox();
+            this.chkRestart = new System.Windows.Forms.CheckBox();
             this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.misc_lblReview = new System.Windows.Forms.Label();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
-            this.txtMoneys = new System.Windows.Forms.TextBox();
             this.chk17Dollar = new System.Windows.Forms.CheckBox();
             this.chkSmile = new System.Windows.Forms.CheckBox();
-            this.label34 = new System.Windows.Forms.Label();
             this.grpMessages = new System.Windows.Forms.GroupBox();
             this.hackrank_kick_time = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
@@ -228,7 +227,6 @@ namespace MCGalaxy.Gui
             this.lvl_lblMain = new System.Windows.Forms.Label();
             this.lvl_txtMain = new System.Windows.Forms.TextBox();
             this.adv_grp = new System.Windows.Forms.GroupBox();
-            this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.adv_btnEditTexts = new System.Windows.Forms.Button();
             this.srv_grp = new System.Windows.Forms.GroupBox();
             this.srv_lblName = new System.Windows.Forms.Label();
@@ -247,6 +245,28 @@ namespace MCGalaxy.Gui
             this.srv_lblGuests = new System.Windows.Forms.Label();
             this.srv_numGuests = new System.Windows.Forms.NumericUpDown();
             this.tabControl = new System.Windows.Forms.TabControl();
+            this.pageEco = new System.Windows.Forms.TabPage();
+            this.eco_gbLevel = new System.Windows.Forms.GroupBox();
+            this.eco_dgvMaps = new System.Windows.Forms.DataGridView();
+            this.eco_btnLvlDel = new System.Windows.Forms.Button();
+            this.eco_btnLvlAdd = new System.Windows.Forms.Button();
+            this.eco_cbLvlEnabled = new System.Windows.Forms.CheckBox();
+            this.eco_gbRank = new System.Windows.Forms.GroupBox();
+            this.eco_numRanks = new System.Windows.Forms.NumericUpDown();
+            this.eco_lblRanks = new System.Windows.Forms.Label();
+            this.eco_lbRanks = new System.Windows.Forms.ListBox();
+            this.eco_cbRank = new System.Windows.Forms.CheckBox();
+            this.eco_gbItem = new System.Windows.Forms.GroupBox();
+            this.eco_lblItemRank = new System.Windows.Forms.Label();
+            this.eco_numItemPrice = new System.Windows.Forms.NumericUpDown();
+            this.eco_lblItemPrice = new System.Windows.Forms.Label();
+            this.eco_cbItem = new System.Windows.Forms.CheckBox();
+            this.eco_gb = new System.Windows.Forms.GroupBox();
+            this.eco_cbCfg = new System.Windows.Forms.ComboBox();
+            this.eco_lblCfg = new System.Windows.Forms.Label();
+            this.eco_cbEnabled = new System.Windows.Forms.CheckBox();
+            this.eco_txtCurrency = new System.Windows.Forms.TextBox();
+            this.eco_lblCurrency = new System.Windows.Forms.Label();
             this.pageGames = new System.Windows.Forms.TabPage();
             this.tabGames = new System.Windows.Forms.TabControl();
             this.tabPage10 = new System.Windows.Forms.TabPage();
@@ -376,7 +396,12 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
-            this.chkRestart = new System.Windows.Forms.CheckBox();
+            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnX = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnY = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnZ = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -400,7 +425,6 @@ namespace MCGalaxy.Gui
             this.rank_grpGeneral.SuspendLayout();
             this.rank_grpMisc.SuspendLayout();
             this.pageMisc.SuspendLayout();
-            this.eco_grpEco.SuspendLayout();
             this.grpExtra.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
             this.grpMessages.SuspendLayout();
@@ -420,6 +444,14 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numGuests)).BeginInit();
             this.tabControl.SuspendLayout();
+            this.pageEco.SuspendLayout();
+            this.eco_gbLevel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_dgvMaps)).BeginInit();
+            this.eco_gbRank.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_numRanks)).BeginInit();
+            this.eco_gbItem.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_numItemPrice)).BeginInit();
+            this.eco_gb.SuspendLayout();
             this.pageGames.SuspendLayout();
             this.tabGames.SuspendLayout();
             this.tabPage10.SuspendLayout();
@@ -479,7 +511,7 @@ namespace MCGalaxy.Gui
             this.pageChat.TabIndex = 10;
             this.pageChat.Text = "Chat";
             // 
-            // chkProfanityFilter
+            // chat_chkFilter
             // 
             this.chat_chkFilter.AutoSize = true;
             this.chat_chkFilter.Location = new System.Drawing.Point(80, 380);
@@ -1253,6 +1285,28 @@ namespace MCGalaxy.Gui
                                     0});
             this.rank_numCopy.ValueChanged += new System.EventHandler(this.rank_numCopy_ValueChanged);
             // 
+            // adv_chkCPE
+            // 
+            this.adv_chkCPE.AutoSize = true;
+            this.adv_chkCPE.Location = new System.Drawing.Point(9, 43);
+            this.adv_chkCPE.Name = "adv_chkCPE";
+            this.adv_chkCPE.Size = new System.Drawing.Size(122, 17);
+            this.adv_chkCPE.TabIndex = 4;
+            this.adv_chkCPE.Text = "Non-classic features";
+            this.toolTip.SetToolTip(this.adv_chkCPE, "Enables custom blocks, multiline chat, changing env settings, etc");
+            this.adv_chkCPE.UseVisualStyleBackColor = true;
+            // 
+            // eco_cbItemRank
+            // 
+            this.eco_cbItemRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.eco_cbItemRank.FormattingEnabled = true;
+            this.eco_cbItemRank.Location = new System.Drawing.Point(368, 43);
+            this.eco_cbItemRank.Name = "eco_cbItemRank";
+            this.eco_cbItemRank.Size = new System.Drawing.Size(110, 21);
+            this.eco_cbItemRank.TabIndex = 23;
+            this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank that is required to use /pass before they can use commands.");
+            this.eco_cbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cbItemRank_SelectedIndexChanged);
+            // 
             // rank_numAfk
             // 
             this.rank_numAfk.Location = new System.Drawing.Point(113, 102);
@@ -1805,7 +1859,6 @@ namespace MCGalaxy.Gui
             // pageMisc
             // 
             this.pageMisc.BackColor = System.Drawing.SystemColors.Control;
-            this.pageMisc.Controls.Add(this.eco_grpEco);
             this.pageMisc.Controls.Add(this.grpExtra);
             this.pageMisc.Controls.Add(this.grpMessages);
             this.pageMisc.Controls.Add(this.grpPhysics);
@@ -1818,27 +1871,6 @@ namespace MCGalaxy.Gui
             this.pageMisc.TabIndex = 3;
             this.pageMisc.Text = "Misc";
             // 
-            // eco_grpEco
-            // 
-            this.eco_grpEco.Controls.Add(this.eco_btnEco);
-            this.eco_grpEco.Location = new System.Drawing.Point(352, 248);
-            this.eco_grpEco.Name = "eco_grpEco";
-            this.eco_grpEco.Size = new System.Drawing.Size(133, 144);
-            this.eco_grpEco.TabIndex = 44;
-            this.eco_grpEco.TabStop = false;
-            this.eco_grpEco.Text = "Economy";
-            // 
-            // eco_btnEco
-            // 
-            this.eco_btnEco.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.eco_btnEco.Location = new System.Drawing.Point(8, 17);
-            this.eco_btnEco.Name = "eco_btnEco";
-            this.eco_btnEco.Size = new System.Drawing.Size(119, 23);
-            this.eco_btnEco.TabIndex = 43;
-            this.eco_btnEco.Text = "Economy Settings";
-            this.eco_btnEco.UseVisualStyleBackColor = true;
-            this.eco_btnEco.Click += new System.EventHandler(this.buttonEco_Click);
-            // 
             // grpExtra
             // 
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -1848,20 +1880,28 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
             this.grpExtra.Controls.Add(this.chkDeath);
-            this.grpExtra.Controls.Add(this.txtMoneys);
             this.grpExtra.Controls.Add(this.chk17Dollar);
             this.grpExtra.Controls.Add(this.chkSmile);
-            this.grpExtra.Controls.Add(this.label34);
             this.grpExtra.Location = new System.Drawing.Point(10, 158);
             this.grpExtra.Name = "grpExtra";
-            this.grpExtra.Size = new System.Drawing.Size(332, 270);
+            this.grpExtra.Size = new System.Drawing.Size(332, 183);
             this.grpExtra.TabIndex = 40;
             this.grpExtra.TabStop = false;
             this.grpExtra.Text = "Extra";
             // 
+            // chkRestart
+            // 
+            this.chkRestart.AutoSize = true;
+            this.chkRestart.Location = new System.Drawing.Point(6, 66);
+            this.chkRestart.Name = "chkRestart";
+            this.chkRestart.Size = new System.Drawing.Size(101, 17);
+            this.chkRestart.TabIndex = 51;
+            this.chkRestart.Text = "Restart on error";
+            this.chkRestart.UseVisualStyleBackColor = true;
+            // 
             // nudCooldownTime
             // 
-            this.nudCooldownTime.Location = new System.Drawing.Point(143, 234);
+            this.nudCooldownTime.Location = new System.Drawing.Point(143, 157);
             this.nudCooldownTime.Maximum = new decimal(new int[] {
                                     86400,
                                     0,
@@ -1879,7 +1919,7 @@ namespace MCGalaxy.Gui
             // misc_lblReview
             // 
             this.misc_lblReview.AutoSize = true;
-            this.misc_lblReview.Location = new System.Drawing.Point(23, 238);
+            this.misc_lblReview.Location = new System.Drawing.Point(23, 159);
             this.misc_lblReview.Name = "misc_lblReview";
             this.misc_lblReview.Size = new System.Drawing.Size(115, 13);
             this.misc_lblReview.TabIndex = 49;
@@ -1894,13 +1934,6 @@ namespace MCGalaxy.Gui
             this.chkRepeatMessages.TabIndex = 29;
             this.chkRepeatMessages.Text = "Repeat message blocks";
             this.chkRepeatMessages.UseVisualStyleBackColor = true;
-            // 
-            // txtMoneys
-            // 
-            this.txtMoneys.Location = new System.Drawing.Point(143, 180);
-            this.txtMoneys.Name = "txtMoneys";
-            this.txtMoneys.Size = new System.Drawing.Size(172, 21);
-            this.txtMoneys.TabIndex = 1;
             // 
             // chk17Dollar
             // 
@@ -1921,15 +1954,6 @@ namespace MCGalaxy.Gui
             this.chkSmile.TabIndex = 19;
             this.chkSmile.Text = "Parse emotes";
             this.chkSmile.UseVisualStyleBackColor = true;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(63, 183);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(71, 13);
-            this.label34.TabIndex = 11;
-            this.label34.Text = "Money name:";
             // 
             // grpMessages
             // 
@@ -2421,17 +2445,6 @@ namespace MCGalaxy.Gui
             this.adv_grp.TabStop = false;
             this.adv_grp.Text = "Advanced Configuration";
             // 
-            // adv_chkCPE
-            // 
-            this.adv_chkCPE.AutoSize = true;
-            this.adv_chkCPE.Location = new System.Drawing.Point(9, 43);
-            this.adv_chkCPE.Name = "adv_chkCPE";
-            this.adv_chkCPE.Size = new System.Drawing.Size(123, 17);
-            this.adv_chkCPE.TabIndex = 4;
-            this.adv_chkCPE.Text = "Non-classic features";
-            this.toolTip.SetToolTip(this.adv_chkCPE, "Enables custom blocks, multiline chat, changing env settings, etc");
-            this.adv_chkCPE.UseVisualStyleBackColor = true;
-            // 
             // adv_btnEditTexts
             // 
             this.adv_btnEditTexts.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -2640,6 +2653,7 @@ namespace MCGalaxy.Gui
             this.tabControl.Controls.Add(this.pageServer);
             this.tabControl.Controls.Add(this.pageChat);
             this.tabControl.Controls.Add(this.pageIRC);
+            this.tabControl.Controls.Add(this.pageEco);
             this.tabControl.Controls.Add(this.pageMisc);
             this.tabControl.Controls.Add(this.pageGames);
             this.tabControl.Controls.Add(this.pageRanks);
@@ -2652,6 +2666,288 @@ namespace MCGalaxy.Gui
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(506, 547);
             this.tabControl.TabIndex = 1;
+            // 
+            // pageEco
+            // 
+            this.pageEco.Controls.Add(this.eco_gbLevel);
+            this.pageEco.Controls.Add(this.eco_gbRank);
+            this.pageEco.Controls.Add(this.eco_gbItem);
+            this.pageEco.Controls.Add(this.eco_gb);
+            this.pageEco.Location = new System.Drawing.Point(4, 22);
+            this.pageEco.Name = "pageEco";
+            this.pageEco.Size = new System.Drawing.Size(498, 521);
+            this.pageEco.TabIndex = 11;
+            this.pageEco.Text = "Eco";
+            this.pageEco.UseVisualStyleBackColor = true;
+            // 
+            // eco_gbLevel
+            // 
+            this.eco_gbLevel.Controls.Add(this.eco_dgvMaps);
+            this.eco_gbLevel.Controls.Add(this.eco_btnLvlDel);
+            this.eco_gbLevel.Controls.Add(this.eco_btnLvlAdd);
+            this.eco_gbLevel.Controls.Add(this.eco_cbLvlEnabled);
+            this.eco_gbLevel.Enabled = false;
+            this.eco_gbLevel.Location = new System.Drawing.Point(8, 304);
+            this.eco_gbLevel.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_gbLevel.Name = "eco_gbLevel";
+            this.eco_gbLevel.Padding = new System.Windows.Forms.Padding(2);
+            this.eco_gbLevel.Size = new System.Drawing.Size(484, 204);
+            this.eco_gbLevel.TabIndex = 44;
+            this.eco_gbLevel.TabStop = false;
+            this.eco_gbLevel.Text = "Level";
+            // 
+            // eco_dgvMaps
+            // 
+            this.eco_dgvMaps.AllowUserToAddRows = false;
+            this.eco_dgvMaps.AllowUserToDeleteRows = false;
+            this.eco_dgvMaps.AllowUserToResizeRows = false;
+            this.eco_dgvMaps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.eco_dgvMaps.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+                                    this.ColumnName,
+                                    this.ColumnPrice,
+                                    this.ColumnX,
+                                    this.ColumnY,
+                                    this.ColumnZ,
+                                    this.ColumnType});
+            this.eco_dgvMaps.Location = new System.Drawing.Point(4, 39);
+            this.eco_dgvMaps.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_dgvMaps.MultiSelect = false;
+            this.eco_dgvMaps.Name = "eco_dgvMaps";
+            this.eco_dgvMaps.RowHeadersVisible = false;
+            this.eco_dgvMaps.RowTemplate.Height = 24;
+            this.eco_dgvMaps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.eco_dgvMaps.Size = new System.Drawing.Size(476, 132);
+            this.eco_dgvMaps.TabIndex = 9;
+            this.eco_dgvMaps.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.eco_dgvMaps_CellClick);
+            this.eco_dgvMaps.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.eco_dgvMaps_CellValueChanged);
+            // 
+            // eco_btnLvlDel
+            // 
+            this.eco_btnLvlDel.Enabled = false;
+            this.eco_btnLvlDel.Location = new System.Drawing.Point(402, 175);
+            this.eco_btnLvlDel.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_btnLvlDel.Name = "eco_btnLvlDel";
+            this.eco_btnLvlDel.Size = new System.Drawing.Size(72, 23);
+            this.eco_btnLvlDel.TabIndex = 8;
+            this.eco_btnLvlDel.Text = "Remove";
+            this.eco_btnLvlDel.UseVisualStyleBackColor = true;
+            this.eco_btnLvlDel.Click += new System.EventHandler(this.eco_lvlDelete_Click);
+            // 
+            // eco_btnLvlAdd
+            // 
+            this.eco_btnLvlAdd.Location = new System.Drawing.Point(4, 176);
+            this.eco_btnLvlAdd.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_btnLvlAdd.Name = "eco_btnLvlAdd";
+            this.eco_btnLvlAdd.Size = new System.Drawing.Size(72, 23);
+            this.eco_btnLvlAdd.TabIndex = 7;
+            this.eco_btnLvlAdd.Text = "Add";
+            this.eco_btnLvlAdd.UseVisualStyleBackColor = true;
+            this.eco_btnLvlAdd.Click += new System.EventHandler(this.eco_lvlAdd_Click);
+            // 
+            // eco_cbLvlEnabled
+            // 
+            this.eco_cbLvlEnabled.AutoSize = true;
+            this.eco_cbLvlEnabled.Location = new System.Drawing.Point(4, 17);
+            this.eco_cbLvlEnabled.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_cbLvlEnabled.Name = "eco_cbLvlEnabled";
+            this.eco_cbLvlEnabled.Size = new System.Drawing.Size(64, 17);
+            this.eco_cbLvlEnabled.TabIndex = 6;
+            this.eco_cbLvlEnabled.Text = "Enabled";
+            this.eco_cbLvlEnabled.UseVisualStyleBackColor = true;
+            this.eco_cbLvlEnabled.CheckedChanged += new System.EventHandler(this.eco_lvlEnabled_CheckedChanged);
+            // 
+            // eco_gbRank
+            // 
+            this.eco_gbRank.Controls.Add(this.eco_numRanks);
+            this.eco_gbRank.Controls.Add(this.eco_lblRanks);
+            this.eco_gbRank.Controls.Add(this.eco_lbRanks);
+            this.eco_gbRank.Controls.Add(this.eco_cbRank);
+            this.eco_gbRank.Enabled = false;
+            this.eco_gbRank.Location = new System.Drawing.Point(8, 159);
+            this.eco_gbRank.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_gbRank.Name = "eco_gbRank";
+            this.eco_gbRank.Padding = new System.Windows.Forms.Padding(2);
+            this.eco_gbRank.Size = new System.Drawing.Size(484, 141);
+            this.eco_gbRank.TabIndex = 43;
+            this.eco_gbRank.TabStop = false;
+            this.eco_gbRank.Text = "Rank";
+            // 
+            // eco_numRanks
+            // 
+            this.eco_numRanks.Location = new System.Drawing.Point(4, 55);
+            this.eco_numRanks.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_numRanks.Maximum = new decimal(new int[] {
+                                    16777215,
+                                    0,
+                                    0,
+                                    0});
+            this.eco_numRanks.Name = "eco_numRanks";
+            this.eco_numRanks.Size = new System.Drawing.Size(78, 21);
+            this.eco_numRanks.TabIndex = 5;
+            this.eco_numRanks.Value = new decimal(new int[] {
+                                    1000,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // eco_lblRanks
+            // 
+            this.eco_lblRanks.AutoSize = true;
+            this.eco_lblRanks.Enabled = false;
+            this.eco_lblRanks.Location = new System.Drawing.Point(4, 39);
+            this.eco_lblRanks.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.eco_lblRanks.Name = "eco_lblRanks";
+            this.eco_lblRanks.Size = new System.Drawing.Size(31, 13);
+            this.eco_lblRanks.TabIndex = 5;
+            this.eco_lblRanks.Text = "Price";
+            // 
+            // eco_lbRanks
+            // 
+            this.eco_lbRanks.FormattingEnabled = true;
+            this.eco_lbRanks.Location = new System.Drawing.Point(86, 39);
+            this.eco_lbRanks.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_lbRanks.Name = "eco_lbRanks";
+            this.eco_lbRanks.Size = new System.Drawing.Size(96, 95);
+            this.eco_lbRanks.TabIndex = 8;
+            // 
+            // eco_cbRank
+            // 
+            this.eco_cbRank.AutoSize = true;
+            this.eco_cbRank.Location = new System.Drawing.Point(4, 17);
+            this.eco_cbRank.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_cbRank.Name = "eco_cbRank";
+            this.eco_cbRank.Size = new System.Drawing.Size(64, 17);
+            this.eco_cbRank.TabIndex = 5;
+            this.eco_cbRank.Text = "Enabled";
+            this.eco_cbRank.UseVisualStyleBackColor = true;
+            this.eco_cbRank.CheckedChanged += new System.EventHandler(this.eco_cbRank_CheckedChanged);
+            // 
+            // eco_gbItem
+            // 
+            this.eco_gbItem.Controls.Add(this.eco_lblItemRank);
+            this.eco_gbItem.Controls.Add(this.eco_cbItemRank);
+            this.eco_gbItem.Controls.Add(this.eco_numItemPrice);
+            this.eco_gbItem.Controls.Add(this.eco_lblItemPrice);
+            this.eco_gbItem.Controls.Add(this.eco_cbItem);
+            this.eco_gbItem.Enabled = false;
+            this.eco_gbItem.Location = new System.Drawing.Point(8, 85);
+            this.eco_gbItem.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_gbItem.Name = "eco_gbItem";
+            this.eco_gbItem.Padding = new System.Windows.Forms.Padding(2);
+            this.eco_gbItem.Size = new System.Drawing.Size(484, 70);
+            this.eco_gbItem.TabIndex = 42;
+            this.eco_gbItem.TabStop = false;
+            this.eco_gbItem.Text = "Titlecolor";
+            // 
+            // eco_lblItemRank
+            // 
+            this.eco_lblItemRank.AutoSize = true;
+            this.eco_lblItemRank.Location = new System.Drawing.Point(311, 46);
+            this.eco_lblItemRank.Name = "eco_lblItemRank";
+            this.eco_lblItemRank.Size = new System.Drawing.Size(51, 13);
+            this.eco_lblItemRank.TabIndex = 24;
+            this.eco_lblItemRank.Text = "Min rank:";
+            // 
+            // eco_numItemPrice
+            // 
+            this.eco_numItemPrice.Location = new System.Drawing.Point(76, 43);
+            this.eco_numItemPrice.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_numItemPrice.Maximum = new decimal(new int[] {
+                                    16777215,
+                                    0,
+                                    0,
+                                    0});
+            this.eco_numItemPrice.Name = "eco_numItemPrice";
+            this.eco_numItemPrice.Size = new System.Drawing.Size(78, 21);
+            this.eco_numItemPrice.TabIndex = 6;
+            this.eco_numItemPrice.Value = new decimal(new int[] {
+                                    100,
+                                    0,
+                                    0,
+                                    0});
+            this.eco_numItemPrice.ValueChanged += new System.EventHandler(this.eco_numItemPrice_ValueChanged);
+            // 
+            // eco_lblItemPrice
+            // 
+            this.eco_lblItemPrice.AutoSize = true;
+            this.eco_lblItemPrice.Location = new System.Drawing.Point(38, 45);
+            this.eco_lblItemPrice.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.eco_lblItemPrice.Name = "eco_lblItemPrice";
+            this.eco_lblItemPrice.Size = new System.Drawing.Size(34, 13);
+            this.eco_lblItemPrice.TabIndex = 6;
+            this.eco_lblItemPrice.Text = "Price:";
+            // 
+            // eco_cbItem
+            // 
+            this.eco_cbItem.AutoSize = true;
+            this.eco_cbItem.Location = new System.Drawing.Point(4, 17);
+            this.eco_cbItem.Margin = new System.Windows.Forms.Padding(2);
+            this.eco_cbItem.Name = "eco_cbItem";
+            this.eco_cbItem.Size = new System.Drawing.Size(64, 17);
+            this.eco_cbItem.TabIndex = 6;
+            this.eco_cbItem.Text = "Enabled";
+            this.eco_cbItem.UseVisualStyleBackColor = true;
+            this.eco_cbItem.CheckedChanged += new System.EventHandler(this.eco_cbItem_CheckedChanged);
+            // 
+            // eco_gb
+            // 
+            this.eco_gb.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.eco_gb.Controls.Add(this.eco_cbCfg);
+            this.eco_gb.Controls.Add(this.eco_lblCfg);
+            this.eco_gb.Controls.Add(this.eco_cbEnabled);
+            this.eco_gb.Controls.Add(this.eco_txtCurrency);
+            this.eco_gb.Controls.Add(this.eco_lblCurrency);
+            this.eco_gb.Location = new System.Drawing.Point(8, 3);
+            this.eco_gb.Name = "eco_gb";
+            this.eco_gb.Size = new System.Drawing.Size(484, 70);
+            this.eco_gb.TabIndex = 41;
+            this.eco_gb.TabStop = false;
+            this.eco_gb.Text = "Economy";
+            // 
+            // eco_cbCfg
+            // 
+            this.eco_cbCfg.FormattingEnabled = true;
+            this.eco_cbCfg.Location = new System.Drawing.Point(368, 42);
+            this.eco_cbCfg.Name = "eco_cbCfg";
+            this.eco_cbCfg.Size = new System.Drawing.Size(110, 21);
+            this.eco_cbCfg.TabIndex = 23;
+            this.eco_cbCfg.SelectedIndexChanged += new System.EventHandler(this.Eco_cbCfg_SelectedIndexChanged);
+            // 
+            // eco_lblCfg
+            // 
+            this.eco_lblCfg.AutoSize = true;
+            this.eco_lblCfg.Location = new System.Drawing.Point(286, 45);
+            this.eco_lblCfg.Name = "eco_lblCfg";
+            this.eco_lblCfg.Size = new System.Drawing.Size(79, 13);
+            this.eco_lblCfg.TabIndex = 22;
+            this.eco_lblCfg.Text = "Configure item:";
+            // 
+            // eco_cbEnabled
+            // 
+            this.eco_cbEnabled.AutoSize = true;
+            this.eco_cbEnabled.Location = new System.Drawing.Point(6, 20);
+            this.eco_cbEnabled.Name = "eco_cbEnabled";
+            this.eco_cbEnabled.Size = new System.Drawing.Size(64, 17);
+            this.eco_cbEnabled.TabIndex = 21;
+            this.eco_cbEnabled.Text = "Enabled";
+            this.eco_cbEnabled.UseVisualStyleBackColor = true;
+            this.eco_cbEnabled.CheckedChanged += new System.EventHandler(this.eco_cbEnabled_CheckedChanged);
+            // 
+            // eco_txtCurrency
+            // 
+            this.eco_txtCurrency.Location = new System.Drawing.Point(76, 42);
+            this.eco_txtCurrency.Name = "eco_txtCurrency";
+            this.eco_txtCurrency.Size = new System.Drawing.Size(118, 21);
+            this.eco_txtCurrency.TabIndex = 1;
+            // 
+            // eco_lblCurrency
+            // 
+            this.eco_lblCurrency.AutoSize = true;
+            this.eco_lblCurrency.Location = new System.Drawing.Point(18, 45);
+            this.eco_lblCurrency.Name = "eco_lblCurrency";
+            this.eco_lblCurrency.Size = new System.Drawing.Size(52, 13);
+            this.eco_lblCurrency.TabIndex = 11;
+            this.eco_lblCurrency.Text = "Currency:";
             // 
             // pageGames
             // 
@@ -4159,15 +4455,42 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
-            // chkRestart
+            // ColumnName
             // 
-            this.chkRestart.AutoSize = true;
-            this.chkRestart.Location = new System.Drawing.Point(6, 66);
-            this.chkRestart.Name = "chkRestart";
-            this.chkRestart.Size = new System.Drawing.Size(101, 17);
-            this.chkRestart.TabIndex = 51;
-            this.chkRestart.Text = "Restart on error";
-            this.chkRestart.UseVisualStyleBackColor = true;
+            this.ColumnName.HeaderText = "Name";
+            this.ColumnName.Name = "ColumnName";
+            this.ColumnName.Width = 140;
+            // 
+            // ColumnPrice
+            // 
+            this.ColumnPrice.HeaderText = "Price";
+            this.ColumnPrice.Name = "ColumnPrice";
+            this.ColumnPrice.Width = 60;
+            // 
+            // ColumnX
+            // 
+            this.ColumnX.HeaderText = "X";
+            this.ColumnX.Name = "ColumnX";
+            this.ColumnX.Width = 60;
+            // 
+            // ColumnY
+            // 
+            this.ColumnY.HeaderText = "Y";
+            this.ColumnY.Name = "ColumnY";
+            this.ColumnY.Width = 60;
+            // 
+            // ColumnZ
+            // 
+            this.ColumnZ.HeaderText = "Z";
+            this.ColumnZ.Name = "ColumnZ";
+            this.ColumnZ.Width = 60;
+            // 
+            // ColumnType
+            // 
+            this.ColumnType.HeaderText = "Type";
+            this.ColumnType.Name = "ColumnType";
+            this.ColumnType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColumnType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // PropertyWindow
             // 
@@ -4221,7 +4544,6 @@ namespace MCGalaxy.Gui
             this.rank_grpMisc.PerformLayout();
             this.pageMisc.ResumeLayout(false);
             this.pageMisc.PerformLayout();
-            this.eco_grpEco.ResumeLayout(false);
             this.grpExtra.ResumeLayout(false);
             this.grpExtra.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
@@ -4254,6 +4576,18 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPlayers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numGuests)).EndInit();
             this.tabControl.ResumeLayout(false);
+            this.pageEco.ResumeLayout(false);
+            this.eco_gbLevel.ResumeLayout(false);
+            this.eco_gbLevel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_dgvMaps)).EndInit();
+            this.eco_gbRank.ResumeLayout(false);
+            this.eco_gbRank.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_numRanks)).EndInit();
+            this.eco_gbItem.ResumeLayout(false);
+            this.eco_gbItem.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eco_numItemPrice)).EndInit();
+            this.eco_gb.ResumeLayout(false);
+            this.eco_gb.PerformLayout();
             this.pageGames.ResumeLayout(false);
             this.tabGames.ResumeLayout(false);
             this.tabPage10.ResumeLayout(false);
@@ -4311,6 +4645,36 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Label eco_lblItemRank;
+        private System.Windows.Forms.ComboBox eco_cbItemRank;
+        private System.Windows.Forms.Label eco_lblCfg;
+        private System.Windows.Forms.ComboBox eco_cbCfg;
+        private System.Windows.Forms.CheckBox eco_cbItem;
+        private System.Windows.Forms.Label eco_lblItemPrice;
+        private System.Windows.Forms.NumericUpDown eco_numItemPrice;
+        private System.Windows.Forms.GroupBox eco_gbItem;
+        private System.Windows.Forms.CheckBox eco_cbRank;
+        private System.Windows.Forms.ListBox eco_lbRanks;
+        private System.Windows.Forms.Label eco_lblRanks;
+        private System.Windows.Forms.NumericUpDown eco_numRanks;
+        private System.Windows.Forms.GroupBox eco_gbRank;
+        private System.Windows.Forms.CheckBox eco_cbLvlEnabled;
+        private System.Windows.Forms.Button eco_btnLvlAdd;
+        private System.Windows.Forms.Button eco_btnLvlDel;
+        private System.Windows.Forms.DataGridViewComboBoxColumn ColumnType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnZ;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnY;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnX;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPrice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
+        private System.Windows.Forms.DataGridView eco_dgvMaps;
+        private System.Windows.Forms.GroupBox eco_gbLevel;
+        private System.Windows.Forms.Label eco_lblCurrency;
+        private System.Windows.Forms.TextBox eco_txtCurrency;
+        private System.Windows.Forms.CheckBox eco_cbEnabled;
+        private System.Windows.Forms.GroupBox eco_gb;
+        private System.Windows.Forms.TabPage pageEco;
         private System.Windows.Forms.CheckBox chkRestart;
         private System.Windows.Forms.Label rank_lblCopy;
         private System.Windows.Forms.NumericUpDown rank_numCopy;
@@ -4506,7 +4870,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox afk_txtTimer;
         private System.Windows.Forms.NumericUpDown bak_numTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
-        private System.Windows.Forms.TextBox txtMoneys;
         private System.Windows.Forms.CheckBox hackrank_kick;
         private System.Windows.Forms.CheckBox chat_chkFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
@@ -4516,7 +4879,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chkSmile;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label afk_lblTimer;
         private System.Windows.Forms.Label bak_lblTime;
         private System.Windows.Forms.Label bak_lblLocation;
@@ -4652,8 +5014,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ListBox TntWrsMpsList;
         private System.Windows.Forms.Button TntWrsDiffSlctBt;
         private System.Windows.Forms.CheckBox tw_cbStreaks;
-        private System.Windows.Forms.Button eco_btnEco;
         private System.Windows.Forms.PropertyGrid propsZG;
-        private System.Windows.Forms.GroupBox eco_grpEco;
     }
 }

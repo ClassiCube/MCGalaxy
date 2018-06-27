@@ -138,8 +138,8 @@ namespace MCGalaxy {
             TntWarsGame game = TntWarsGame.Find(p.level);
             if (game == null) return;
             
-            if (game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished &&
-                game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+            if (game.GameStatus != TntWarsGame.TntWarsStatus.Finished &&
+                game.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                 p.canBuild = false;
                 Player.Message(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
             }

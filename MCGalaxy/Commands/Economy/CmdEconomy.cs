@@ -34,10 +34,7 @@ namespace MCGalaxy.Commands.Eco {
                 args[i] = raw[i];
             if (!CheckExtraPerm(p, 1)) return;
             
-            if (args[0].CaselessEq("apply")) {
-                Economy.Load();
-                Player.Message(p, "Reloaded economy items from disc.");
-            } else if (args[0].CaselessEq("enable")) {
+            if (args[0].CaselessEq("enable")) {
                 Player.Message(p, "Economy is now &aenabled");
                 Economy.Enabled = true; Economy.Save();
             } else if (args[0].CaselessEq("disable")) {
@@ -57,7 +54,6 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Eco apply %H- Reload changes made to 'economy.properties'.");
             Player.Message(p, "%T/Eco enable/disable %H- Enables/disables the economy system.");
             Player.Message(p, "%T/Eco help [item] %H- Outputs help for setting up that item.");
             Player.Message(p, "   %HAll items: %S" + Economy.Items.Join(item => item.Name));

@@ -50,12 +50,12 @@ namespace MCGalaxy.Eco {
             }
             
             switch (args[3]) {
-                    case "name": preset.name = args[4]; break;
-                    case "price": preset.price = int.Parse(args[4]); break;
-                    case "x": preset.x = args[4]; break;
-                    case "y": preset.y = args[4]; break;
-                    case "z": preset.z = args[4]; break;
-                    case "type": preset.type = args[4]; break;
+                case "name": preset.name = args[4]; break;
+                case "price": preset.price = int.Parse(args[4]); break;
+                case "x": preset.x = args[4]; break;
+                case "y": preset.y = args[4]; break;
+                case "z": preset.z = args[4]; break;
+                case "type": preset.type = args[4]; break;
             }
         }
         

@@ -8,13 +8,10 @@ using Microsoft.Win32;
 
 namespace MCGalaxy.Gui.Eco {
     public partial class EcoLevelWindow : Form {
-
-        EconomyWindow _eco;
         string _name, _x, _y, _z, _type, _origName;
         int _price;
 
-        public EcoLevelWindow(EconomyWindow eco, string name, int price, string x, string y, string z, string type) {
-            _eco = eco;
+        public EcoLevelWindow(string name, int price, string x, string y, string z, string type) {
             _name = name; _origName = name;
             _x = x; _y = y; _z = z;
             _price = price; _type = type;
@@ -70,8 +67,6 @@ namespace MCGalaxy.Gui.Eco {
             preset.type = cmbType.SelectedItem.ToString().ToLower();
             
             item.Presets.Add(preset);
-            _eco.UpdateLevels();
-            _eco.CheckLevelEnables();
             Close();
         }
 

@@ -239,15 +239,15 @@ namespace MCGalaxy.Gui {
                 //Load settings
                 //Top
                 SlctdTntWrsLvl.Text = tw_selected.lvl.name;
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) tw_txtStatus.Text = "Waiting For Players";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart) tw_txtStatus.Text = "Starting";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod) tw_txtStatus.Text = "Started";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) tw_txtStatus.Text = "In Progress";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) tw_txtStatus.Text = "Finished";
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) tw_txtStatus.Text = "Waiting For Players";
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart) tw_txtStatus.Text = "Starting";
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod) tw_txtStatus.Text = "Started";
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.InProgress) tw_txtStatus.Text = "In Progress";
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.Finished) tw_txtStatus.Text = "Finished";
                 tw_txtPlayers.Text = tw_selected.PlayingPlayers().ToString(CultureInfo.InvariantCulture);
                 
                 //Difficulty
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                     TntWrsDiffCombo.Enabled = true;
                     TntWrsDiffSlctBt.Enabled = true;
                 } else {
@@ -298,23 +298,23 @@ namespace MCGalaxy.Gui {
                 tw_cbTeamKills.Enabled = true;
                 //Status
                 switch (tw_selected.GameStatus) {
-                    case TntWarsGame.TntWarsGameStatus.WaitingForPlayers:
-                        if (tw_selected.CheckAllSetUp(null, false, false)) tw_btnStartGame.Enabled = true;
+                    case TntWarsGame.TntWarsStatus.WaitingForPlayers:
+                        if (tw_selected.CheckAllSetUp(null)) tw_btnStartGame.Enabled = true;
                         tw_btnEndGame.Enabled = false;
                         tw_btnResetGame.Enabled = false;
                         tw_btnDeleteGame.Enabled = true;
                         break;
 
-                    case TntWarsGame.TntWarsGameStatus.AboutToStart:
-                    case TntWarsGame.TntWarsGameStatus.GracePeriod:
-                    case TntWarsGame.TntWarsGameStatus.InProgress:
+                    case TntWarsGame.TntWarsStatus.AboutToStart:
+                    case TntWarsGame.TntWarsStatus.GracePeriod:
+                    case TntWarsGame.TntWarsStatus.InProgress:
                         tw_btnStartGame.Enabled = false;
                         tw_btnEndGame.Enabled = true;
                         tw_btnResetGame.Enabled = false;
                         tw_btnDeleteGame.Enabled = false;
                         break;
 
-                    case TntWarsGame.TntWarsGameStatus.Finished:
+                    case TntWarsGame.TntWarsStatus.Finished:
                         tw_btnStartGame.Enabled = false;
                         tw_btnEndGame.Enabled = false;
                         tw_btnResetGame.Enabled = true;
@@ -351,7 +351,7 @@ namespace MCGalaxy.Gui {
                 TntWrsDiffCombo.Items.Add("Extreme");
 
                 //Disable things because game is in progress
-                if (tw_selected.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                if (tw_selected.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                     //Difficulty
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
@@ -389,11 +389,11 @@ namespace MCGalaxy.Gui {
             if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
             
             msg += " - ";
-            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) msg += "(Waiting For Players)";
-            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart)      msg += "(Starting)";
-            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod)       msg += "(Started)";
-            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress)        msg += "(In Progress)";
-            if (game.GameStatus == TntWarsGame.TntWarsGameStatus.Finished)          msg += "(Finished)";
+            if (game.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) msg += "(Waiting For Players)";
+            if (game.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart)      msg += "(Starting)";
+            if (game.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod)       msg += "(Started)";
+            if (game.GameStatus == TntWarsGame.TntWarsStatus.InProgress)        msg += "(In Progress)";
+            if (game.GameStatus == TntWarsGame.TntWarsStatus.Finished)          msg += "(Finished)";
             
             return msg;
         }
@@ -572,14 +572,14 @@ namespace MCGalaxy.Gui {
                 pl.p.PlayingTntWars = false;
                 pl.p.CurrentAmountOfTnt = 0;
             }
-            tw_selected.GameStatus = TntWarsGame.TntWarsGameStatus.Finished;
+            tw_selected.GameStatus = TntWarsGame.TntWarsStatus.Finished;
             tw_selected.MessageAll("TNT wars: Game has been stopped!");
             LoadTNTWarsTab(sender, e);
         }
 
         void TntWrsRstGame_Click(object sender, EventArgs e) {
             if (tw_selected == null) return;
-            tw_selected.GameStatus = TntWarsGame.TntWarsGameStatus.WaitingForPlayers;
+            tw_selected.GameStatus = TntWarsGame.TntWarsStatus.WaitingForPlayers;
             Command.Find("Restore").Use(null, tw_selected.BackupNumber + tw_selected.lvl.name);
             tw_selected.RedScore = 0;
             tw_selected.BlueScore = 0;

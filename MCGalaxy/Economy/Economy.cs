@@ -63,7 +63,16 @@ namespace MCGalaxy.Eco {
             }
         }
 
+        static readonly object saveLock = new object();
         public static void Save() {
+            try {
+                lock (saveLock) SaveCore();
+            } catch (Exception e) {
+                Logger.LogError(e);
+            }
+        }
+        
+        static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.EconomyPropsFile, false)) {
                 w.WriteLine("enabled:" + Enabled);
                 foreach (Item item in Items) {

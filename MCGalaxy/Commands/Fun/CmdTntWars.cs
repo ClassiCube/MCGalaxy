@@ -40,26 +40,16 @@ namespace MCGalaxy.Commands.Fun {
 
             switch (text[0]) {
                 case "list":
-                case "levels":
-                case "l":
-                    DoLevels(p, text); break;
+                    DoLevels(p); break;
                 case "join":
                     DoJoin(p, text); break;
                 case "leave":
-                case "exit":
-                    DoLeave(p, text); break;
+                    DoLeave(p); break;
                 case "rules":
-                case "rule":
-                case "r":
-                    DoRules(p, text); break;
-                case "score":
+                    DoRules(p); break;
                 case "scores":
-                case "leaderboard":
-                case "board":
                     DoScores(p, text); return;
                 case "players":
-                case "player":
-                case "p":
                     DoPlayers(p, text); break;
                 case "health":
                 case "hp":
@@ -72,58 +62,39 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        void DoLevels(Player p, string[] text) {
+        void DoLevels(Player p) {
             if (TntWarsGame.GameList.Count <= 0) {
                 Player.Message(p, "There aren't any &cTNT Wars %Scurrently running!"); return;
             }
             
             Player.Message(p, "Currently running &cTNT Wars %S:");
-            foreach (TntWarsGame T in TntWarsGame.GameList) {
-                string msg = "";
-                if (T.GameMode == TntWarsGame.TntWarsGameMode.FFA) msg += "FFA on ";
-                if (T.GameMode == TntWarsGame.TntWarsGameMode.TDM) msg += "TDM on ";
-                msg += T.lvl.name + " ";
-                if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Easy) msg += "(Easy)";
-                if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Normal) msg += "(Normal)";
-                if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Hard) msg += "(Hard)";
-                if (T.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
-                msg += " ";
-                if (T.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) msg += "(Waiting For Players)";
-                if (T.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart) msg += "(Starting)";
-                if (T.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod) msg += "(Started)";
-                if (T.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) msg += "(In Progress)";
-                if (T.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) msg += "(Finished)";
+            foreach (TntWarsGame it in TntWarsGame.GameList) {
+                string msg = it.GameMode + " at " + it.Difficulty + " difficulty on " + it.lvl.name + " ";
+                
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) msg += "(Waiting For Players)";
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart) msg += "(Starting)";
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod) msg += "(Started)";
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.InProgress) msg += "(In Progress)";
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.Finished) msg += "(Finished)";
                 Player.Message(p, msg);
             }
         }
         
         void DoJoin(Player p, string[] text) {
-            TntWarsGame game = TntWarsGame.GameIn(p);
-            if (p.PlayingTntWars || (game != null && game.Players.Contains(game.FindPlayer(p)))) {
+            TntWarsGame it = TntWarsGame.GameIn(p);
+            if (p.PlayingTntWars || (it != null && it.FindPlayer(p) != null)) {
                 Player.Message(p, "TNT Wars Error: You have already joined a game!"); return;
             }
             
-            TntWarsGame it;
-            if (text[1] == "red" || text[1] == "r" || text[1] == "blue" || text[1] == "b" || text[1] == "auto" || text[1] == "a" || text[1].Length == 0) {
-                it = TntWarsGame.Find(p.level);
-                if (it == null) {
-                    Player.Message(p, "TNT Wars Error: There isn't a game on your current level!"); return;
-                }
-            } else {
-                Level lvl = Matcher.FindLevels(p, text[1]);
-                if (lvl == null) return;
-
-                it = TntWarsGame.Find(lvl);
-                if (it == null) {
-                    Player.Message(p, "TNT Wars Error: There isn't a game on that level!"); return;
-                }
-                text[1] = text[2]; //so the switch later on still works
+            it = TntWarsGame.Find(p.level);
+            if (it == null) {
+                Player.Message(p, "TNT Wars Error: There isn't a game on your current level!"); return;
             }
             
             TntWarsGame.player pl = new TntWarsGame.player(p);
-            if (it.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart ||
-                it.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod ||
-                it.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) {
+            if (it.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart ||
+                it.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod ||
+                it.GameStatus == TntWarsGame.TntWarsStatus.InProgress) {
                 pl.spec = true;
             }
             
@@ -131,14 +102,12 @@ namespace MCGalaxy.Commands.Fun {
                 int red = it.RedTeam(), blue = it.BlueTeam();
                 switch (text[1]) {
                     case "red":
-                    case "r":
                         if (it.Config.BalanceTeams && red > blue) {
                             Player.Message(p, "TNT Wars Error: Red has too many players!"); return;
                         }
                         pl.Red = true; break;
 
                     case "blue":
-                    case "b":
                         if (it.Config.BalanceTeams && blue > red) {
                             Player.Message(p, "TNT Wars Error: Blue has too many players!"); return;
                         }
@@ -154,16 +123,16 @@ namespace MCGalaxy.Commands.Fun {
             it.Players.Add(pl);
             TntWarsGame.SetTitlesAndColor(pl);
             p.CurrentTntGameNumber = it.GameNumber;
-            string msg = p.ColoredName + " %Sjoined TNT Wars on '" + it.lvl.name + "'";
+            string msg = p.ColoredName + " %Sjoined TNT Wars on " + it.lvl.ColoredName;
             
-            if (pl.Red)  msg += " on the " + Colors.red + "red team";
-            if (pl.Blue) msg += " on the " + Colors.blue + "blue team";
+            if (pl.Red)  msg += " %Son the " + Colors.red + "red team";
+            if (pl.Blue) msg += " %Son the " + Colors.blue + "blue team";
             if (pl.spec) msg += " %S(as a spectator)";
             
             Chat.MessageGlobal(msg);
         }
         
-        void DoLeave(Player p, string[] text) {
+        void DoLeave(Player p) {
             p.canBuild = true;
             TntWarsGame game = TntWarsGame.GameIn(p);
             game.Players.Remove(game.FindPlayer(p));
@@ -172,7 +141,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "TNT Wars: You left the game");
         }
         
-        void DoRules(Player p, string[] text) {
+        void DoRules(Player p) {
             Player.Message(p, "TNT Wars Rules:");
             Player.Message(p, "The aim of the game is to blow up people using TNT!");
             Player.Message(p, "To place tnt simply place a TNT block and after a short delay it shall explode!");
@@ -182,7 +151,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void DoScores(Player p, string[] text) {
             TntWarsGame it = TntWarsGame.GameIn(p);
-            if (it.GameStatus != TntWarsGame.TntWarsGameStatus.InProgress) {
+            if (it.GameStatus != TntWarsGame.TntWarsStatus.InProgress) {
                 Player.Message(p, "TNT Wars Error: Can't display scores - game not in progress!");
                 return;
             }
@@ -230,7 +199,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void DoHealth(Player p, string[] text) {
-            if (TntWarsGame.GameIn(p).GameStatus == TntWarsGame.TntWarsGameStatus.InProgress) {
+            if (TntWarsGame.GameIn(p).GameStatus == TntWarsGame.TntWarsStatus.InProgress) {
                 Player.Message(p, "TNT Wars: You have " + p.TntWarsHealth + " health left");
             } else {
                 Player.Message(p, "TNT Wars Error: Can't display health - game not in progress!");
@@ -246,8 +215,8 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             if (it != null) {
-                if (it.GameStatus == TntWarsGame.TntWarsGameStatus.InProgress || it.GameStatus == TntWarsGame.TntWarsGameStatus.GracePeriod
-                    || it.GameStatus == TntWarsGame.TntWarsGameStatus.AboutToStart) {
+                if (it.GameStatus == TntWarsGame.TntWarsStatus.InProgress || it.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod
+                    || it.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart) {
                     if (text[1] != "stop" && text[1] != "s" && text[1] != "" && text[1] != "status" &&
                         text[1] != "ready" && text[1] != "check" && text[1] != "info" && text[1] != "r" && text[1] != "c") {
                         Player.Message(p, "TNT Wars Error: Cannot edit current game because it is currently running!"); return;
@@ -274,7 +243,7 @@ namespace MCGalaxy.Commands.Fun {
 
                 case "delete":
                 case "remove":
-                    if (it.GameStatus != TntWarsGame.TntWarsGameStatus.Finished && it.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                    if (it.GameStatus != TntWarsGame.TntWarsStatus.Finished && it.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                         Player.Message(p, "Please stop the game first!"); return;
                     }
                     
@@ -291,11 +260,11 @@ namespace MCGalaxy.Commands.Fun {
                     //break;
 
                 case "reset":
-                    if (it.GameStatus != TntWarsGame.TntWarsGameStatus.Finished) {
+                    if (it.GameStatus != TntWarsGame.TntWarsStatus.Finished) {
                         Player.Message(p, "TNT Wars Error: The game has to have finished to be reset!"); return;
                     }
                     
-                    it.GameStatus = TntWarsGame.TntWarsGameStatus.WaitingForPlayers;
+                    it.GameStatus = TntWarsGame.TntWarsStatus.WaitingForPlayers;
                     Command.Find("Restore").Use(null, it.BackupNumber + it.lvl.name);
                     it.RedScore = 0;
                     it.BlueScore = 0;
@@ -318,7 +287,7 @@ namespace MCGalaxy.Commands.Fun {
                     break;
 
                 case "start":
-                    if (it.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                    if (it.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                         if (it.CheckAllSetUp(p, true)) {
                             if (it.PlayingPlayers() >= 2) {
                                 Thread t = new Thread(it.Start);
@@ -328,7 +297,7 @@ namespace MCGalaxy.Commands.Fun {
                                 Player.Message(p, "TNT Wars Error: Not Enough Players (2 or more needed)");
                             }
                         }
-                    } else if (it.GameStatus == TntWarsGame.TntWarsGameStatus.Finished) {
+                    } else if (it.GameStatus == TntWarsGame.TntWarsStatus.Finished) {
                         Player.Message(p, "TNT Wars Error: Please use '/tntwars setup reset' to reset the game before starting!");
                     } else {
                         Player.Message(p, "TNT Wars Error: Game already in progress!!");
@@ -336,7 +305,7 @@ namespace MCGalaxy.Commands.Fun {
                     return;
 
                 case "stop":
-                    if (it.GameStatus == TntWarsGame.TntWarsGameStatus.Finished || it.GameStatus == TntWarsGame.TntWarsGameStatus.WaitingForPlayers) {
+                    if (it.GameStatus == TntWarsGame.TntWarsStatus.Finished || it.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) {
                         Player.Message(p, "TNT Wars Error: Game already ended / not started!"); return;
                     }
                     
@@ -345,7 +314,7 @@ namespace MCGalaxy.Commands.Fun {
                         pl.p.PlayingTntWars = false;
                         pl.p.CurrentAmountOfTnt = 0;
                     }
-                    it.GameStatus = TntWarsGame.TntWarsGameStatus.Finished;
+                    it.GameStatus = TntWarsGame.TntWarsStatus.Finished;
                     it.MessageAll("TNT Wars: Game has been stopped!");
                     break;
 
@@ -376,7 +345,7 @@ namespace MCGalaxy.Commands.Fun {
                     it.BlueSpawn = null;
                     it.NoTNTplacableZones.Clear();
                     it.NoBlockDeathZones.Clear();
-                    it.CheckAllSetUp(p);
+                    it.CheckAllSetUp(p, true);
                     break;
 
                 case "tntatatime":
@@ -422,7 +391,6 @@ namespace MCGalaxy.Commands.Fun {
                             Player.Message(p, "TNT Wars Error: Gamemode is already Free For All!"); return;
                         }
                     }
-                    it.CheckAllSetUp(p);
                     break;
 
                 case "difficulty":
@@ -445,7 +413,6 @@ namespace MCGalaxy.Commands.Fun {
                         case "4":
                             SetDifficulty(it, TntWarsGame.TntWarsDifficulty.Extreme, true, "extreme", p); break;
                     }
-                    it.CheckAllSetUp(p);
                     break;
 
                 case "score":
@@ -585,7 +552,6 @@ namespace MCGalaxy.Commands.Fun {
                                    GetBool(cfg.Streaks), GetBool(cfg.MultiKillBonus != 0));
                     Player.Message(p, "Assists: {0} %S(at {1} points)",
                                    GetBool(cfg.AssistScore > 0), cfg.AssistScore);
-                    it.CheckAllSetUp(p);
                     break;
             }
         }
@@ -708,11 +674,11 @@ namespace MCGalaxy.Commands.Fun {
         
         
         public override void Help(Player p) {
-            Player.Message(p, "/tw list {l} - Lists all running games");
-            Player.Message(p, "/tw join <team/level> - join a game on <level> or on <team>(red/blue)");
+            Player.Message(p, "/tw list - Lists all running games");
+            Player.Message(p, "/tw join <team> - join a game on <team>(red/blue)");
             Player.Message(p, "/tw leave - leave the current game");
-            Player.Message(p, "/tw scores <top/team/me> - view the top score/team scores/your scores");
-            Player.Message(p, "/tw players {p} - view the current players in your game");
+            Player.Message(p, "/tw scores <top/team/me> - view the top scores/team scores/your score");
+            Player.Message(p, "/tw players - view the current players in your game");
             Player.Message(p, "/tw health {hp} - view your currrent amount of health left");
             Player.Message(p, "/tw rules - read the rules");
             

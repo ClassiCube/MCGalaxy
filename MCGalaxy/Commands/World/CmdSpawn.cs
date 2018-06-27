@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.World {
             
             if (p.PlayingTntWars) {
                 TntWarsGame game = TntWarsGame.GameIn(p);
-                if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsGameStatus.WaitingForPlayers
-                    && game.GameStatus != TntWarsGame.TntWarsGameStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
+                if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers
+                    && game.GameStatus != TntWarsGame.TntWarsStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
                     bool blue = game.FindPlayer(p).Blue;
                     
                     pos.X = 16 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32;

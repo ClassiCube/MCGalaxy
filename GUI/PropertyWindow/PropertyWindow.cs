@@ -18,6 +18,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
+using MCGalaxy.Eco;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
@@ -84,6 +85,7 @@ namespace MCGalaxy.Gui {
             LoadGeneralProps();
             LoadChatProps();
             LoadIrcSqlProps();
+            LoadEcoProps();
             LoadMiscProps();
             LoadRankProps();
             LoadSecurityProps();
@@ -95,6 +97,7 @@ namespace MCGalaxy.Gui {
                 ApplyGeneralProps();
                 ApplyChatProps();
                 ApplyIrcSqlProps();
+                ApplyEcoProps();
                 ApplyMiscProps();
                 ApplyRankProps();
                 ApplySecurityProps();
@@ -103,7 +106,8 @@ namespace MCGalaxy.Gui {
                 
                 SrvProperties.Save();
                 CommandExtraPerms.Save();
-            } catch( Exception ex ) {
+                Economy.Save();
+            } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "SAVE FAILED! properties/server.properties");
             }

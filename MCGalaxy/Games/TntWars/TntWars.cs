@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 ///////--|----------------------------------|--\\\\\\\
 //////---|  TNT WARS - Coded by edh649      |---\\\\\\
 /////----|                                  |----\\\\\
@@ -31,9 +31,8 @@ namespace MCGalaxy.Games
         //Vars
         public static List<TntWarsGame> GameList = new List<TntWarsGame>();
         public Level lvl;
-        public TntWarsGameStatus GameStatus = TntWarsGameStatus.WaitingForPlayers;
+        public TntWarsStatus GameStatus = TntWarsStatus.WaitingForPlayers;
         public int BackupNumber;
-        public bool AllSetUp = false;
         public TntWarsGameMode GameMode = TntWarsGameMode.TDM;
         public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
         public int GameNumber;
@@ -76,13 +75,13 @@ namespace MCGalaxy.Games
         public List<Zone> NoTNTplacableZones = new List<Zone>();
         public List<Zone> NoBlockDeathZones = new List<Zone>();
         public class Zone {
-            public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ;            
+            public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ;
         }
 
         //During Game Main Methods
         public void Start()
         {
-            GameStatus = TntWarsGameStatus.AboutToStart;
+            GameStatus = TntWarsStatus.AboutToStart;
             //Checking Backups & physics etc.
             {
                 BackupNumber = lvl.Backup(true);
@@ -90,7 +89,7 @@ namespace MCGalaxy.Games
                 {
                     MessageAll(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
                     Chat.MessageOps(Colors.red + "Backing up Level for TNT Wars failed, Stopping game");
-                    GameStatus = TntWarsGameStatus.Finished;
+                    GameStatus = TntWarsStatus.Finished;
                     return;
                 }
                 Logger.Log(LogType.SystemActivity, "Backed up {0} ({1}) for TNT Wars", lvl.name, BackupNumber);
@@ -174,15 +173,15 @@ namespace MCGalaxy.Games
             string teamkillling = "Disabled";
             if (Config.TeamKills) teamkillling = "Enabled";
             Chat.MessageGlobal("&cTNT Wars %Son " + lvl.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
-                            difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime + 
-                            " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" + 
-                            ", team killing is &3" + teamkillling + " %Sand you can place &3" + Config.MaxPlayerActiveTnt 
-                            + " %STNT at a time and there is a score limit of &3" + Config.ScoreRequired + "%S!!");
+                               difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime +
+                               " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" +
+                               ", team killing is &3" + teamkillling + " %Sand you can place &3" + Config.MaxPlayerActiveTnt
+                               + " %STNT at a time and there is a score limit of &3" + Config.ScoreRequired + "%S!!");
             if (GameMode == TntWarsGameMode.TDM) MessageAll("TNT Wars: Start your message with ':' to send it as a team chat!");
             //GracePeriod
             if (Config.InitialGracePeriod) //Check This Grace Stuff
             {
-                GameStatus = TntWarsGameStatus.GracePeriod;
+                GameStatus = TntWarsStatus.GracePeriod;
                 int GracePeriodSecsRemaining = Config.GracePeriodSeconds;
                 MessageAll("TNT Wars: Grace Period of &a" + GracePeriodSecsRemaining + " %Sseconds");
                 while (GracePeriodSecsRemaining > 0)
@@ -228,7 +227,7 @@ namespace MCGalaxy.Games
                         case 1:
                             MessageAll("TNT Wars: &31 %Ssecond remaining!"); break;
                     }
-                                
+                    
                     Thread.Sleep(1000);
                     GracePeriodSecsRemaining--;
                 }
@@ -236,7 +235,7 @@ namespace MCGalaxy.Games
                 MessageAll("TNT Wars: You may now place " + Colors.red + "TNT");
             }
             MessageAll("TNT Wars: " + Colors.white + "The Game Has Started!!!!!");
-            GameStatus = TntWarsGameStatus.InProgress;
+            GameStatus = TntWarsStatus.InProgress;
             foreach (player p in Players)
             {
                 if (!p.spec)
@@ -279,7 +278,7 @@ namespace MCGalaxy.Games
         }
         public void END()
         {
-            GameStatus = TntWarsGameStatus.Finished;
+            GameStatus = TntWarsStatus.Finished;
             //let them build and spawn them and change playingtntwars to false
             foreach (player p in Players)
             {
@@ -326,7 +325,7 @@ namespace MCGalaxy.Games
                 List<player> pls = SortedByScore();
                 for (int i = 0; i < count; i++) {
                     player pl = pls[i];
-                    if (i == 0) 
+                    if (i == 0)
                     {
                         Chat.MessageGlobal("&cTNT Wars %S1st Place: " + pl.p.ColoredName + " %Swith a score of " + pl.p.color + pl.Score);
                     }
@@ -515,13 +514,13 @@ namespace MCGalaxy.Games
         }
 
         public bool InZone(ushort x, ushort y, ushort z, bool CheckForPlacingTnt) {
-            List<Zone> zones = CheckForPlacingTnt ? NoTNTplacableZones : NoBlockDeathZones; 
+            List<Zone> zones = CheckForPlacingTnt ? NoTNTplacableZones : NoBlockDeathZones;
             return InZone(x, y, z, zones);
         }
         
         public bool InZone(ushort x, ushort y, ushort z, List<Zone> zones) {
             foreach (Zone Zn in zones) {
-                if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ 
+                if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ
                     && x <= Zn.MaxX && y <= Zn.MaxY && z <= Zn.MaxZ) return true;
             }
             return false;
@@ -560,12 +559,12 @@ namespace MCGalaxy.Games
                     Thread.Sleep(1000);
                 }
                 if (TopScores)
-                {                   
+                {
                     List<player> sorted = SortedByScore();
                     int count = System.Math.Min(PlayingPlayers(), 5);
-                   
+                    
                     for (int i = 0; i < count; i++) {
-                    	MessageAll((i + 1) + ": " + sorted[i].p.name + " - " + sorted[i].Score);
+                        MessageAll((i + 1) + ": " + sorted[i].p.name + " - " + sorted[i].Score);
                         Thread.Sleep(500); //Maybe, not sure (250??)
                     }
                     Thread.Sleep(1000);
@@ -597,11 +596,11 @@ namespace MCGalaxy.Games
                 catch { }
             }
             if (PlayingPlayers() <= 1) return true;
-            return GameStatus == TntWarsGameStatus.Finished;
+            return GameStatus == TntWarsStatus.Finished;
         }
 
         //enums
-        public enum TntWarsGameStatus {
+        public enum TntWarsStatus {
             WaitingForPlayers = 0,
             AboutToStart = 1,
             GracePeriod = 2,
@@ -669,37 +668,24 @@ namespace MCGalaxy.Games
             catch { }
         }
 
-        public bool CheckAllSetUp(Player p, bool ReturnErrors = false, bool TellPlayerOnSuccess = true)
-        {
-            if (lvl != null && GameStatus == 0)
-            {
+        public bool CheckAllSetUp(Player p, bool ReturnErrors = false) {
+            if (lvl != null && GameStatus == 0) {
                 TntWarsGame existing = Find(lvl);
-                if (existing != null && existing != this)
-                {
+                if (existing != null && existing != this) {
                     if (ReturnErrors) Player.Message(p, "There is already a TNT Wars game on that map");
-                    AllSetUp = false;
                     return false;
                 }
-                if (TellPlayerOnSuccess) Player.Message(p, "TNT Wars setup is done!");
-                AllSetUp = true;
                 return true;
             }
-            if (ReturnErrors) SendPlayerCheckSetupErrors(p);
-            AllSetUp = false;
+            
+            if (ReturnErrors) {
+                if (lvl == null) {
+                    Player.Message(p, "TNT Wars Error: No Level Selected");
+                } else if (GameStatus != 0) {
+                    Player.Message(p, "Game is already in progress");
+                }
+            }
             return false;
-
-        }
-
-        void SendPlayerCheckSetupErrors(Player p)
-        {
-            if (lvl == null)
-            {
-                Player.Message(p, "TNT Wars Error: No Level Selected");
-            }
-            else if (GameStatus != 0)
-            {
-                Player.Message(p, "Game is already in progress");
-            }
         }
 
         public static TntWarsGame Find(Level level) {

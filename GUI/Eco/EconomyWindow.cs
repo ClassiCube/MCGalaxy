@@ -159,7 +159,7 @@ namespace MCGalaxy.Gui.Eco {
         }
 
         void lvl_btnAdd_Click(object sender, EventArgs e) {
-            new EcoLevelWindow(this, "", 1000, "64", "64", "64", "flat").ShowDialog();
+            new EcoLevelWindow("", 1000, "64", "64", "64", "flat").ShowDialog();
         }
 
         void lvl_btnEdit_Click(object sender, EventArgs e) {
@@ -170,7 +170,7 @@ namespace MCGalaxy.Gui.Eco {
             string y    = row.Cells[3].Value.ToString();
             string z    = row.Cells[4].Value.ToString();
             string type = row.Cells[5].Value.ToString();
-            new EcoLevelWindow(this, name, price, x, y, z, type).ShowDialog();
+            new EcoLevelWindow(name, price, x, y, z, type).ShowDialog();
         }
 
         void lvl_btnRemove_Click(object sender, EventArgs e) {
