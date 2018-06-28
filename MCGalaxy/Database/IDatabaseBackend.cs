@@ -74,9 +74,6 @@ namespace MCGalaxy.SQL {
         /// <summary> Renames the source table to the given name. </summary>
         public abstract void RenameTable(string srcTable, string dstTable);
         
-        /// <summary> Removes all entries from the given table. </summary>
-        public abstract void ClearTable(string table);
-        
         /// <summary> Creates a new table in the database (unless it already exists). </summary>
         public virtual void CreateTable(string table, ColumnDesc[] columns) {
             ValidateTable(table);
@@ -84,7 +81,7 @@ namespace MCGalaxy.SQL {
             sql.AppendLine("CREATE TABLE if not exists `" + table + "` (");
             CreateTableColumns(sql, columns);
             sql.AppendLine(");");
-            Database.Execute(sql.ToString());
+            Database.Execute(sql.ToString(), null);
         }
         
         protected abstract void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns);
@@ -92,8 +89,8 @@ namespace MCGalaxy.SQL {
         /// <summary> Completely removes the given table. </summary>
         public virtual void DeleteTable(string table) {
             ValidateTable(table);
-            string syntax = "DROP TABLE `" + table + "`";
-            Database.Execute(syntax);
+            string sql = "DROP TABLE `" + table + "`";
+            Database.Execute(sql, null);
         }
         
         /// <summary> Prints/dumps the table schema of the given table. </summary>
@@ -114,8 +111,8 @@ namespace MCGalaxy.SQL {
         public virtual void CopyAllRows(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
-            string syntax = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
-            Database.Execute(syntax);
+            string sql = "INSERT INTO `" + dstTable + "` SELECT * FROM `" + srcTable + "`";
+            Database.Execute(sql, null);
         }
         
         /// <summary> Iterates over read rows for the given table. </summary>
@@ -124,9 +121,9 @@ namespace MCGalaxy.SQL {
         public virtual object ReadRows(string table, string columns, object arg,
                                       ReaderCallback callback, string modifier = "", params object[] args) {
             ValidateTable(table);
-            string syntax = "SELECT " + columns + " FROM `" + table + "`";
-            if (modifier.Length > 0) syntax += " " + modifier;
-            return Database.Iterate(syntax, arg, callback, args);
+            string sql = "SELECT " + columns + " FROM `" + table + "`";
+            if (modifier.Length > 0) sql += " " + modifier;
+            return Database.Iterate(sql, arg, callback, args);
         }
         
         /// <summary> Updates rows for the given table. </summary>
@@ -134,18 +131,18 @@ namespace MCGalaxy.SQL {
         public virtual void UpdateRows(string table, string columns,
                                        string modifier = "", params object[] args) {
             ValidateTable(table);
-            string syntax = "UPDATE `" + table + "` SET " + columns;
-            if (modifier.Length > 0) syntax += " " + modifier;
-            Database.Execute(syntax, args);
+            string sql = "UPDATE `" + table + "` SET " + columns;
+            if (modifier.Length > 0) sql += " " + modifier;
+            Database.Execute(sql, args);
         }
         
         /// <summary> Deletes rows for the given table. </summary>
         /// <remarks> modifier is optional SQL which can be used to delete only certain rows.</remarks>
         public virtual void DeleteRows(string table, string modifier = "", params object[] args) {
             ValidateTable(table);
-            string syntax = "DELETE FROM `" + table + "`";
-            if (modifier.Length > 0) syntax += " " + modifier;
-            Database.Execute(syntax, args);
+            string sql = "DELETE FROM `" + table + "`";
+            if (modifier.Length > 0) sql += " " + modifier;
+            Database.Execute(sql, args);
         }
 
         /// <summary> Adds a row to the given table. </summary>

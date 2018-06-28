@@ -262,7 +262,6 @@ namespace MCGalaxy.Tasks {
                         cmd.ExecuteNonQuery();
                     }
                 }
-                
                 bulk.Commit();
             }
         }

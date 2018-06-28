@@ -129,13 +129,13 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SetDate(Player p, string[] args, string column, Player who, Action<DateTime> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Dates must be in the format: yyyy-mm-dd hh:mm:ss");
+                Player.Message(p, "Dates must be in the format: " + Database.DateFormat);
                 return;
             }
             
             DateTime date;
             if (!DateTime.TryParseExact(args[2], Database.DateFormat, null, 0, out date)) {
-                Player.Message(p, "Invalid date. (must be in format: yyyy-mm-dd hh:mm:ss");
+                Player.Message(p, "Invalid date. It must be in format: " + Database.DateFormat);
                 return;
             }
             

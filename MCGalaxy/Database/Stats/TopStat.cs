@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
     
@@ -112,7 +113,7 @@ namespace MCGalaxy.DB {
         }
         
         public static string FormatDate(string input) {
-            DateTime time = DateTime.Parse(input);
+            DateTime time = DateTime.ParseExact(input, Database.DateFormat, null);
             TimeSpan delta = DateTime.Now - time;
             return string.Format("{0:H:mm} on {0:d} ({1} ago)", time, delta.Shorten());
         }

@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Info {
             entry.OldRaw = Block.Invalid;
             
             foreach (string[] row in entries) {
-                DateTime time = DateTime.Parse(row[1]);
+                DateTime time = DateTime.ParseExact(row[1], Database.DateFormat, null);
                 TimeSpan delta = time - BlockDB.Epoch;
                 entry.TimeDelta = (int)delta.TotalSeconds;
                 entry.Flags = BlockDBFlags.ManualPlace;

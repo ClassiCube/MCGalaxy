@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (args.Length == 1) {
                     Player.Message(p, "You need to provide either \"all\" or a number."); return;
                 } else if (args[1].CaselessEq("all")) {
-                    Database.Backend.ClearTable("Inbox" + p.name);
+                    Database.Backend.DeleteRows("Inbox" + p.name);
                     Player.Message(p, "Deleted all messages.");
                 } else {
                     DeleteByID(p, args[1], entries);
@@ -81,7 +81,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static void Output(Player p, string[] entry) {
-            TimeSpan delta = DateTime.Now - DateTime.Parse(entry[i_sent]);
+            DateTime time = DateTime.ParseExact(entry[i_sent], Database.DateFormat, null);
+            TimeSpan delta = DateTime.Now - time;
             string sender = PlayerInfo.GetColoredName(p, entry[i_from]);
             
             Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());

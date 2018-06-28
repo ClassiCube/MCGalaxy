@@ -44,8 +44,8 @@ namespace MCGalaxy.SQL {
 
         
         public override void CreateDatabase() {
-            string syntax = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
-            Database.Do(syntax, true, null, null);
+            string sql = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
+            Database.Do(sql, true, null, null);
         }
         
         public override BulkTransaction CreateBulk() {
@@ -106,14 +106,8 @@ namespace MCGalaxy.SQL {
         public override void RenameTable(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
-            string syntax = "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
-            Database.Execute(syntax);
-        }
-        
-        public override void ClearTable(string table) {
-            ValidateTable(table);
-            string syntax = "TRUNCATE TABLE `" + table + "`";
-            Database.Execute(syntax);
+            string sql = "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
+            Database.Execute(sql, null);
         }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
@@ -161,10 +155,9 @@ namespace MCGalaxy.SQL {
         
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN "
-                + col.Column + " " + col.FormatType();
-            if (colAfter.Length > 0) syntax += " AFTER " + colAfter;
-            Database.Execute(syntax);
+            string sql = "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
+            if (colAfter.Length > 0) sql += " AFTER " + colAfter;
+            Database.Execute(sql, null);
         }
         
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {

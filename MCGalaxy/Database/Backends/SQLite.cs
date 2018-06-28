@@ -67,8 +67,8 @@ namespace MCGalaxy.SQL {
         }
         
         public override List<string> AllTables() {
-            const string syntax = "SELECT name from sqlite_master WHERE type='table'";
-            List<string> tables = Database.GetStrings(syntax);
+            const string sql = "SELECT name from sqlite_master WHERE type='table'";
+            List<string> tables = Database.GetStrings(sql);
             
             // exclude sqlite built-in database tables
             for (int i = tables.Count - 1; i >= 0; i--) {
@@ -88,21 +88,15 @@ namespace MCGalaxy.SQL {
             List<string> columns = new List<string>();
             
             Database.Iterate("PRAGMA table_info(`" + table + "`)",
-                             columns, IterateColumnNames);
+                             columns, IterateColumnNames, null);
             return columns;
         }
         
         public override void RenameTable(string srcTable, string dstTable) {
             ValidateTable(srcTable);
             ValidateTable(dstTable);
-            string syntax = "ALTER TABLE `" + srcTable + "` RENAME TO `" + dstTable + "`";
-            Database.Execute(syntax);
-        }
-        
-        public override void ClearTable(string table) {
-            ValidateTable(table);
-            string syntax = "DELETE FROM `" + table + "`";
-            Database.Execute(syntax);
+            string sql = "ALTER TABLE `" + srcTable + "` RENAME TO `" + dstTable + "`";
+            Database.Execute(sql, null);
         }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
@@ -136,12 +130,11 @@ namespace MCGalaxy.SQL {
         }
         
         public override void PrintSchema(string table, TextWriter w) {
-            const string syntax = "SELECT sql from sqlite_master WHERE tbl_name = @0 AND type = 'table'";
-            List<string> all = Database.GetStrings(syntax + CaselessWhereSuffix, table);
+            string sql = "SELECT sql from sqlite_master WHERE tbl_name = @0 AND type = 'table'";
+            List<string> all = Database.GetStrings(sql + CaselessWhereSuffix, table);
             
             for (int i = 0; i < all.Count; i++) {
-                string sql = all[i];
-                sql = sql.Replace(" " + table, " `" + table + "`");
+                sql = all[i].Replace(" " + table, " `" + table + "`");
                 sql = sql.Replace("CREATE TABLE `" + table + "`", "CREATE TABLE IF NOT EXISTS `" + table + "`");
                 w.WriteLine(sql + ";");
             }
@@ -149,8 +142,8 @@ namespace MCGalaxy.SQL {
         
         public override void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateTable(table);
-            string syntax = "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
-            Database.Execute(syntax);
+            string sql = "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
+            Database.Execute(sql, null);
         }
         
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {
