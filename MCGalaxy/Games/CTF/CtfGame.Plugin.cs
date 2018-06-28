@@ -66,11 +66,9 @@ namespace MCGalaxy.Games {
             
             CtfTeam team = TeamOf(p);
             if (team == null) return;
-            Player[] members = team.Members.Items;
-            
-            foreach (Player pl in members) {
-                Player.Message(pl, "({0}) {1}: &f{2}", team.Name, p.ColoredName, message);
-            }
+
+            Chat.MessageChat(ChatScope.Level, p, "(" + team.Name + ") λNICK: &f" + message,
+                             Map, (pl, arg) => TeamOf(pl) == team);
             p.cancelchat = true;
         }
         

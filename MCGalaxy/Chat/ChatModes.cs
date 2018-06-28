@@ -22,25 +22,30 @@ namespace MCGalaxy {
         public static bool Handle(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
-                DoConsolePM(p, text);
+                DoPM(p, ConsolePlayer.Instance, text);
                 return true;
             }
             
             if (text[0] == '@' || p.whisper) {
                 if (text[0] == '@') text = text.Remove(0, 1).Trim();
                 
-                if (p.whisperTo.Length == 0) {
+                string target = p.whisperTo;
+                if (target.Length == 0) {
                     int sepIndex = text.IndexOf(' ');
                     if (sepIndex != -1) {
-                        string target = text.Substring(0, sepIndex);
+                        target = text.Substring(0, sepIndex);
                         text = text.Substring(sepIndex + 1);
-                        HandleWhisper(p, target, text);
                     } else {
                         Player.Message(p, "No message entered");
+                        return true;
                     }
-                } else {
-                    HandleWhisper(p, p.whisperTo, text);
                 }
+
+                Player who = PlayerInfo.FindMatches(p, target);
+                if (who == null) return true;
+                if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return true; }
+                
+                DoPM(p, who, text);
                 return true;
             }
             
@@ -86,27 +91,14 @@ namespace MCGalaxy {
             Chat.MessageChat(ChatScope.Perms, p, chatMsg, perms, null, true);
         }
         
-        static void HandleWhisper(Player p, string target, string message) {
-            Player who = PlayerInfo.FindMatches(p, target);
-            if (who == null) return;
-            if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return; }
-            
+        static void DoPM(Player p, Player who, string message) {
+            if (message.Length == 0) { Player.Message(p, "No message entered"); return; }
             Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
-            Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
             
-            if (!Chat.Ignoring(who, p)) {
-                Player.Message(who, "&9[>] {0}: &f{1}", p.ColoredName, message);
+            if (p != ConsolePlayer.Instance) {
+                Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
             }
-
-            p.CheckForMessageSpam();
-        }
-        
-        static void DoConsolePM(Player p, string message) {
-            if (message.Length < 1) { Player.Message(p, "No message entered"); return; }
-            Player.Message(p, "[<] Console: &f" + message);
-            Logger.Log(LogType.PrivateChat, "{0} @(console): {1}", p.name, message);
-            
-            p.CheckForMessageSpam();
+            Chat.MessageChat(ChatScope.PM, p, "&9[>] λNICK: &f" + message, who, null);
         }
     }
 }

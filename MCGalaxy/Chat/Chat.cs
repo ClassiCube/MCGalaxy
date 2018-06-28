@@ -36,6 +36,8 @@ namespace MCGalaxy {
         Rank,
         /// <summary> Messages all players who can use an ItemPerms argument. </summary>
         Perms,
+        /// <summary> Message to a specific player </summary>
+        PM,
     }
     
     public delegate bool ChatMessageFilter(Player pl, object arg);
@@ -96,10 +98,11 @@ namespace MCGalaxy {
         
         public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
         public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl.Rank); }
+        public static bool FilterPM(Player pl, object arg) { return pl == arg; }
         
         public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
             FilterAll, FilterGlobal, FilterLevel, FilterChatroom, 
-            FilterAllChatrooms, FilterRank, FilterPerms,
+            FilterAllChatrooms, FilterRank, FilterPerms, FilterPM,
         };
         
         public static ChatMessageFilter FilterVisible(Player source) {
@@ -184,7 +187,7 @@ namespace MCGalaxy {
         public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
-            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];           
             if (source == null) source = ConsolePlayer.Instance;
             
             OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
@@ -194,6 +197,9 @@ namespace MCGalaxy {
                 if (pl != source) {
                     if (!scopeFilter(pl, arg)) continue;
                     if (filter != null && !filter(pl, arg)) continue;
+                } else {
+                	// don't send PM back to self
+                	if (scope == ChatScope.PM) { continue; }
                 }
                 
                 Player.Message(pl, UnescapeMessage(pl, source, msg));

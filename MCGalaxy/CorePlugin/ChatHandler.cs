@@ -35,7 +35,7 @@ namespace MCGalaxy.Core {
                 logType = LogType.RankChat;
             }
             
-            Logger.Log(logType, msg);
+            if (scope != ChatScope.PM) Logger.Log(logType, msg);
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
             
