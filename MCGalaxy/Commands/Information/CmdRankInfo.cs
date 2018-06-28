@@ -27,22 +27,28 @@ namespace MCGalaxy.Commands.Info {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
-            if (CheckSuper(p, message, "player name")) return;
-            if (message.Length == 0) message = p.name;
+        public override void Use(Player p, string name) {
+            if (CheckSuper(p, name, "player name")) return;
+            if (name.Length == 0) name = p.name;
             
-            List<string> rankings = Server.RankInfo.FindMatches(p, message, "rankings");
-            if (rankings == null) return;
+            name = PlayerInfo.FindMatchesPreferOnline(p, name);
+            if (name == null) return;
             
-            string target = PlayerMetaList.GetName(rankings[0]);
-            Player.Message(p, "  Rankings for {0}:", PlayerInfo.GetColoredName(p, target));
+            List<string> rankings = Server.RankInfo.FindAllExact(name);
+            string target = PlayerInfo.GetColoredName(p, name);
+            
+            if (rankings.Count == 0) {
+                Player.Message(p, "{0} %Shas no rankings.", target); return;
+            } else {
+                Player.Message(p, "  Rankings for {0}:", target);
+            }
             
             foreach (string line in rankings) {
                 string[] args = line.SplitSpaces();
                 TimeSpan delta;
                 string oldRank, newRank;
                 int offset;
-                              
+                
                 if (args.Length <= 6) {
                     delta = DateTime.UtcNow - long.Parse(args[2]).FromUnixTime();
                     newRank = args[3]; oldRank = args[4]; 

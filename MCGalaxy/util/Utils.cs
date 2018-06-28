@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace MCGalaxy { 
     public static class Utils {
@@ -84,9 +85,9 @@ namespace MCGalaxy {
                 
         public static List<string> ReadAllLinesList(string path) {
             List<string> lines = new List<string>();
-            using (StreamReader r = new StreamReader(path)) {
-                string item;
-                while ((item = r.ReadLine()) != null) { lines.Add(item); }
+            using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
+                string line;
+                while ((line = r.ReadLine()) != null) { lines.Add(line); }
             }
             return lines;
         }

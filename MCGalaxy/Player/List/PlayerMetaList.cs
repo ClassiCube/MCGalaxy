@@ -45,42 +45,18 @@ namespace MCGalaxy {
             }
         }
         
-        
-        /// <summary> Finds all lines which caselessly start with the given name. </summary>
-        public IEnumerable<string> Find(string name) {
-            if (!File.Exists(file)) yield break;
+        public List<string> FindAllExact(string name) {
+            List<string> entries = new List<string>();
+            if (!File.Exists(file)) return entries;
             name += " ";
             
             using (StreamReader r = new StreamReader(file)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
-                    if (line.CaselessStarts(name)) yield return line;
+                    if (line.CaselessStarts(name)) entries.Add(line);
                 }
             }
-            yield break;
-        }
-
-        public List<string> FindMatches(Player p, string name, string group) {
-            int matches;
-            return Matcher.FindMulti<string>(p, name, out matches, AllLines(),
-                                             null, GetName, group);
-        }
-        
-        IEnumerable<string> AllLines() {
-            if (!File.Exists(file)) yield break;
-            
-            using (StreamReader r = new StreamReader(file)) {
-                string line;
-                while ((line = r.ReadLine()) != null) {
-                    yield return line;
-                }
-            }
-            yield break;
-        }
-        
-        public static string GetName(string line) {
-            int index = line.IndexOf(' ');
-            return index == -1 ? line : line.Substring(0, index);
+            return entries;
         }
     }
 }

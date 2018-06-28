@@ -35,16 +35,13 @@ namespace MCGalaxy.Commands.Moderation {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
             
-            List<string> notes = new List<string>();
-            foreach (string note in Server.Notes.Find(name)) {
-                notes.Add(note);
-            }
-            
+            List<string> notes = Server.Notes.FindAllExact(name);
             string target = PlayerInfo.GetColoredName(p, name);
+            
             if (notes.Count == 0) {
                 Player.Message(p, "{0} %Shas no notes.", target); return;
             } else {
-                Player.Message(p, "  Notes for {0}:",  target);
+                Player.Message(p, "  Notes for {0}:", target);
             }
             
             foreach (string line in notes) {
