@@ -31,7 +31,7 @@ namespace MCGalaxy.SQL {
         
         public ColumnDesc(string col, ColumnType type)
             : this(col, type, 0, false, false, false) { }        
-        public ColumnDesc(string col, ColumnType type, ushort maxLen = 0)
+        public ColumnDesc(string col, ColumnType type, ushort maxLen)
             : this(col, type, maxLen, false, false, false) { }
         
         public ColumnDesc(string col, ColumnType type, ushort maxLen = 0,

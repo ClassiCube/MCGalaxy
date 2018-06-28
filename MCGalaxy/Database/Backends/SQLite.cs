@@ -161,8 +161,8 @@ namespace MCGalaxy.SQL {
             transaction = connection.BeginTransaction();
         }
         
-        public override IDbCommand CreateCommand(string query) {
-            return new SQLiteCommand(query, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
+        public override IDbCommand CreateCommand(string sql) {
+            return new SQLiteCommand(sql, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
         }
         
         public override IDataParameter CreateParam(string paramName, DbType type) {
@@ -177,8 +177,8 @@ namespace MCGalaxy.SQL {
             return new SQLiteConnection(connString);
         }
         
-        protected override IDbCommand CreateCommand(string query, IDbConnection conn) {
-            return new SQLiteCommand(query, (SQLiteConnection)conn);
+        protected override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+            return new SQLiteCommand(sql, (SQLiteConnection)conn);
         }
         
         protected override IDbDataParameter CreateParameter() {

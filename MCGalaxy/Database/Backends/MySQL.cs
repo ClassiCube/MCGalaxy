@@ -177,8 +177,8 @@ namespace MCGalaxy.SQL {
             transaction = connection.BeginTransaction();
         }
 
-        public override IDbCommand CreateCommand(string query) {
-            return new MySqlCommand(query, (MySqlConnection)connection, (MySqlTransaction)transaction);
+        public override IDbCommand CreateCommand(string sql) {
+            return new MySqlCommand(sql, (MySqlConnection)connection, (MySqlTransaction)transaction);
         }
         
         public override IDataParameter CreateParam(string paramName, DbType type) {
@@ -195,8 +195,8 @@ namespace MCGalaxy.SQL {
             return new MySqlConnection(connString);
         }
         
-        protected override IDbCommand CreateCommand(string query, IDbConnection conn) {
-            return new MySqlCommand(query, (MySqlConnection)conn);
+        protected override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+            return new MySqlCommand(sql, (MySqlConnection)conn);
         }
         
         protected override IDbDataParameter CreateParameter() {

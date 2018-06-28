@@ -22,13 +22,10 @@ namespace MCGalaxy.SQL {
     
     public abstract class BulkTransaction : IDisposable {
         protected IDbConnection connection;
-        protected IDbTransaction transaction;
-        
+        protected IDbTransaction transaction;        
 
-        public abstract IDbCommand CreateCommand(string query);
-        
-        public abstract IDataParameter CreateParam(string paramName, DbType type);
-        
+        public abstract IDbCommand CreateCommand(string sql);       
+        public abstract IDataParameter CreateParam(string paramName, DbType type);        
 
         public void Commit() {
             try {
@@ -58,14 +55,14 @@ namespace MCGalaxy.SQL {
             connection = null;
         }
         
-        public bool Execute(string query) {
+        public bool Execute(string sql) {
             try {
-                using (IDbCommand cmd = CreateCommand(query)) {
+                using (IDbCommand cmd = CreateCommand(sql)) {
                     cmd.ExecuteNonQuery();
                     return true;
                 }
             } catch (Exception e) {
-                System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + query + "\r\n");
+                System.IO.File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
                 Logger.LogError(e);
                 return false;
             }

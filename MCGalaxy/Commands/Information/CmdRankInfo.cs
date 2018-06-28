@@ -39,28 +39,28 @@ namespace MCGalaxy.Commands.Info {
             
             foreach (string line in rankings) {
                 string[] args = line.SplitSpaces();
-                int offset;
                 TimeSpan delta;
+                string oldRank, newRank;
+                int offset;
                               
                 if (args.Length <= 6) {
                     delta = DateTime.UtcNow - long.Parse(args[2]).FromUnixTime();
-                    offset = 3;
+                    newRank = args[3]; oldRank = args[4]; 
+                    offset = 5;
                 } else {
                     // Backwards compatibility with old format
                     int min = int.Parse(args[2]), hour = int.Parse(args[3]);
                     int day = int.Parse(args[4]), month = int.Parse(args[5]), year = int.Parse(args[6]);
+                    
                     delta = DateTime.Now - new DateTime(year, month, day, hour, min, 0);
-                    offset = 7;
+                    newRank = args[7]; oldRank = args[8]; 
+                    offset = 9;
                 }
-                
-                string newRank = Group.GetColoredName(args[offset]);
-                string oldRank = Group.GetColoredName(args[offset + 1]);
-                
-                offset += 2;
                 string reason = args.Length <= offset ? "(no reason given)" : args[offset].Replace("%20", " ");
                
                 Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
-                               oldRank, newRank, delta.Shorten(true, false));
+                               Group.GetColoredName(oldRank), Group.GetColoredName(newRank), 
+                               delta.Shorten(true, false));
                 Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", 
                                PlayerInfo.GetColoredName(p, args[1]), reason);
             }

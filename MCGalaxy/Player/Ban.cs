@@ -72,14 +72,14 @@ namespace MCGalaxy {
         }
         
         static void AddBanEntry(string pl, string who, string reason, string stealth, string oldrank) {
-            string datetime = DateTime.UtcNow.ToUnixTime().ToString();
-            string data = pl + " " + who + " " + reason + " " + stealth + " " + datetime + " " + oldrank;
+            string time = DateTime.UtcNow.ToUnixTime().ToString();
+            string data = pl + " " + who + " " + reason + " " + stealth + " " + time + " " + oldrank;
             bans.Append(data);
         }
         
         static void AddUnbanEntry(string pl, string who, string reason) {
-            string datetime = DateTime.UtcNow.ToUnixTime().ToString();
-            string data = pl + " " + who + " " + reason + " " + datetime;
+            string time = DateTime.UtcNow.ToUnixTime().ToString();
+            string data = pl + " " + who + " " + reason + " " + time;
             unbans.Append(data);
         }
         
@@ -135,36 +135,32 @@ namespace MCGalaxy {
             return new DateTime(year, month, day, hour, minute, 0).ToUniversalTime();
         }
         
-        
-        /// <summary> Deletes the ban information about the user. </summary>
+
         public static bool DeleteBan(string name) { return DeleteInfo(name, bans); }
-        
-        /// <summary> Deletes the unban information about the user. </summary>
         public static bool DeleteUnban(string name) { return DeleteInfo(name, unbans); }
         
         static bool DeleteInfo(string name, PlayerMetaList list) {
             name = name.ToLower();
-            bool success = false;
+            bool found = false;
             StringBuilder sb = new StringBuilder();
             
             foreach (string line in File.ReadAllLines(list.file)) {
                 string[] parts = line.SplitSpaces();
-                if (parts.Length <= 1 || parts[1] != name)
+                if (parts.Length > 1 && parts[1] == name) {
+                    found = true;
+                } else {
                     sb.AppendLine(line);
-                else
-                    success = true;
+                }
             }
-            File.WriteAllText(list.file, sb.ToString());
-            return success;
+            
+            if (found) File.WriteAllText(list.file, sb.ToString());
+            return found;
         }
         
         
-        /// <summary> Change the ban reason for the given user. </summary>
         public static bool ChangeBanReason(string who, string reason) {
             return ChangeReason(who, reason, bans);
         }
-        
-        /// <summary> Change the unban reason for the given user. </summary>
         public static bool ChangeUnbanReason(string who, string reason) {
             return ChangeReason(who, reason, unbans);
         }
@@ -172,22 +168,22 @@ namespace MCGalaxy {
         static bool ChangeReason(string who, string reason, PlayerMetaList list) {
             who = who.ToLower();
             reason = reason.Replace(" ", "%20");
-            bool success = false;
+            bool found = false;
             StringBuilder sb = new StringBuilder();
             
             foreach (string line in File.ReadAllLines(list.file)) {
                 string[] parts = line.SplitSpaces();
                 if (parts.Length > 2 && parts[1] == who) {
-                    success = true;
+                    found = true;
+                    parts[2] = reason;
                     sb.AppendLine(String.Join(" ", parts));
                 } else {
                     sb.AppendLine(line);
                 }
             }
             
-            if (success)
-                File.WriteAllText(list.file, sb.ToString());
-            return success;
+            if (found) File.WriteAllText(list.file, sb.ToString());
+            return found;
         }
     }
 }

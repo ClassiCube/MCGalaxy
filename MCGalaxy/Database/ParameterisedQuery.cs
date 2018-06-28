@@ -27,18 +27,18 @@ namespace MCGalaxy.SQL {
         protected abstract bool MultipleSchema { get; }
         
         protected abstract IDbConnection CreateConnection(string connString);        
-        protected abstract IDbCommand CreateCommand(string query, IDbConnection conn);       
+        protected abstract IDbCommand CreateCommand(string sql, IDbConnection conn);       
         protected abstract IDbDataParameter CreateParameter();
         
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
-        public void Execute(string query, string connString, bool createDB = false) {
+        public void Execute(string sql, string connString, bool createDB = false) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
                     conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(query, conn)) {
+                using (IDbCommand cmd = CreateCommand(sql, conn)) {
                     FillParams(cmd);
                     cmd.ExecuteNonQuery();
                 }
@@ -47,13 +47,13 @@ namespace MCGalaxy.SQL {
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public object Iterate(string query, string connString, object arg, ReaderCallback callback) {
+        public object Iterate(string sql, string connString, object arg, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection(connString)) {
                 conn.Open();
                 if (MultipleSchema)
                     conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(query, conn)) {
+                using (IDbCommand cmd = CreateCommand(sql, conn)) {
                     FillParams(cmd);
                     using (IDataReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { arg = callback(reader, arg); }

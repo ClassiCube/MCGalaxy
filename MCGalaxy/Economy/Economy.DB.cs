@@ -27,7 +27,7 @@ namespace MCGalaxy.Eco {
         static ColumnDesc[] createEconomy = new ColumnDesc[] {
             new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
             new ColumnDesc("money", ColumnType.Int32),
-            new ColumnDesc("total", ColumnType.Integer),
+            new ColumnDesc("total", ColumnType.Int32),
             new ColumnDesc("purchase", ColumnType.VarChar, 255),
             new ColumnDesc("payment", ColumnType.VarChar, 255),
             new ColumnDesc("salary", ColumnType.VarChar, 255),
