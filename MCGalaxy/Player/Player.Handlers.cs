@@ -376,7 +376,7 @@ namespace MCGalaxy {
             
             for (EnvProp i = 0; i < EnvProp.Max; i++) {
                 int value = level.Config.GetEnvProp(i);
-                if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {          
+                if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
                     }

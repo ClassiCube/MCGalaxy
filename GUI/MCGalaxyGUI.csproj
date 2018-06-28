@@ -109,18 +109,6 @@
     <Compile Include="ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Eco\EcoLevelWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Eco\EcoLevelWindow.Designer.cs">
-      <DependentUpon>EcoLevelWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Eco\EconomyWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Eco\EconomyWindow.Designer.cs">
-      <DependentUpon>EconomyWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
     <Compile Include="UPnP.cs" />
     <Compile Include="Window\Window.cs">
@@ -133,9 +121,6 @@
     <Compile Include="Window\Window.Main.cs" />
     <Compile Include="Window\Window.Map.cs" />
     <Compile Include="Window\Window.Players.cs" />
-    <EmbeddedResource Include="Eco\EconomyWindow.resx">
-      <DependentUpon>EconomyWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Popups\EditText.resx">
       <DependentUpon>EditText.Designer.cs</DependentUpon>
     </EmbeddedResource>
