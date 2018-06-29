@@ -34,34 +34,25 @@ namespace fNbt {
     /// <summary> A tag containing a single byte. </summary>
     public sealed class NbtByte : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Byte; } }
+        public byte Value;
 
-        public byte Value { get; set; }
-
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadByte();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadByte();
         }
     }
 
     /// <summary> A tag containing an array of bytes. </summary>
     public sealed class NbtByteArray : NbtTag {
-        static readonly byte[] ZeroArray = new byte[0];
+        static readonly byte[] empty = new byte[0];
         public override NbtTagType TagType { get { return NbtTagType.ByteArray; } }
+        public byte[] Value = empty;
 
-        public byte[] Value {
-            get { return bytes; }
-            set {
-                if (value == null) throw new ArgumentNullException("value");
-                bytes = value;
-            }
-        }
-        byte[] bytes = ZeroArray;
-
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            int length = readStream.ReadInt32();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            int length = reader.ReadInt32();
             if (length < 0)
-                throw new NbtFormatException("Negative length given in TAG_Byte_Array");
+                throw new InvalidDataException("Negative length given in TAG_Byte_Array");
 
-            Value = readStream.ReadBytes(length);
+            Value = reader.ReadBytes(length);
             if (Value.Length < length) throw new EndOfStreamException();
         }
     }
@@ -72,95 +63,75 @@ namespace fNbt {
         readonly Dictionary<string, NbtTag> tags = new Dictionary<string, NbtTag>();
 
         public NbtCompound() {}
-        public NbtCompound(string tagName) {
-            Name = tagName;
-        }
+        public NbtCompound(string tagName) { Name = tagName; }
         
         public override NbtTag this[string tagName] {
             get {
-                if (tagName == null) throw new ArgumentNullException("tagName");
                 NbtTag result;
                 if (tags.TryGetValue(tagName, out result)) return result;
                 return null;
             }
         }
 
-        public bool Contains(string tagName) {
-            if (tagName == null) throw new ArgumentNullException("tagName");
-            return tags.ContainsKey(tagName);
-        }
+        public bool Contains(string tagName) { return tags.ContainsKey(tagName); }
 
-        /// <summary> Gets a collection containing all tag names in this NbtCompound. </summary>
-        public IEnumerable<string> Names { get { return tags.Keys; } }
-
-        /// <summary> Gets a collection containing all tags in this NbtCompound. </summary>
-        public IEnumerable<NbtTag> Tags { get { return tags.Values; } }
-
-        internal override void ReadTag(NbtBinaryReader readStream) {
+        internal override void ReadTag(NbtBinaryReader reader) {
             while (true) {
-                NbtTagType nextTag = readStream.ReadTagType();
+                NbtTagType nextTag = reader.ReadTagType();
                 if (nextTag == NbtTagType.End) return;
                 NbtTag newTag = Construct(nextTag);
                 
-                newTag.Name = readStream.ReadString();
-                newTag.ReadTag(readStream);
+                newTag.Name = reader.ReadString();
+                newTag.ReadTag(reader);
                 tags.Add(newTag.Name, newTag);
             }
         }
 
         public IEnumerator<NbtTag> GetEnumerator() { return tags.Values.GetEnumerator(); }
-
         IEnumerator IEnumerable.GetEnumerator() { return tags.Values.GetEnumerator(); }
     }
 
-    /// <summary> A tag containing a double-precision floating point number. </summary>
     public sealed class NbtDouble : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Double; } }
-        public double Value { get; set; }
+        public double Value;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadDouble();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadDouble();
         }
     }
 
-    /// <summary> A tag containing a single-precision floating point number. </summary>
     public sealed class NbtFloat : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Float; } }
-        public float Value { get; set; }
+        public float Value;
         
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadSingle();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadSingle();
         }
     }
 
     /// <summary> A tag containing a single signed 32-bit integer. </summary>
     public sealed class NbtInt : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Int; } }
-        public int Value { get; set; }
+        public int Value;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadInt32();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadInt32();
         }
     }
 
     /// <summary> A tag containing an array of signed 32-bit integers. </summary>
     public sealed class NbtIntArray : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.IntArray; } }
-        public int[] Value { get; set; }
+        public int[] Value;
 
-        public int this[int tagIndex] {
-            get { return Value[tagIndex]; }
-            set { Value[tagIndex] = value; }
-        }
-
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            int length = readStream.ReadInt32();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            int length = reader.ReadInt32();
             if (length < 0)
-                throw new NbtFormatException("Negative length given in TAG_Int_Array");
+                throw new InvalidDataException("Negative length given in TAG_Int_Array");
 
             Value = new int[length];
             for (int i = 0; i < length; i++)
-                Value[i] = readStream.ReadInt32();
+                Value[i] = reader.ReadInt32();
         }
     }
 
@@ -168,17 +139,17 @@ namespace fNbt {
     public sealed class NbtList : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.List; } }
         public readonly List<NbtTag> Tags = new List<NbtTag>();
-        public NbtTagType ListType { get; set; }
+        public NbtTagType ListType;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            ListType = readStream.ReadTagType();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            ListType = reader.ReadTagType();
 
-            int length = readStream.ReadInt32();
-            if (length < 0) throw new NbtFormatException("Negative list size given.");
+            int length = reader.ReadInt32();
+            if (length < 0) throw new InvalidDataException("Negative list size given");
 
             for (int i = 0; i < length; i++) {
                 NbtTag newTag = NbtTag.Construct(ListType);
-                newTag.ReadTag(readStream);
+                newTag.ReadTag(reader);
                 Tags.Add(newTag);
             }
         }
@@ -187,39 +158,39 @@ namespace fNbt {
     /// <summary> A tag containing a single signed 64-bit integer. </summary>
     public sealed class NbtLong : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Long; } }
-        public long Value { get; set; }
+        public long Value;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadInt64();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadInt64();
         }
     }
 
     /// <summary> A tag containing a single signed 16-bit integer. </summary>
     public sealed class NbtShort : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.Short; } }
-        public short Value { get; set; }
+        public short Value;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadInt16();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadInt16();
         }
     }
 
     /// <summary> A tag containing a single string. String is stored in UTF-8 encoding. </summary>
     public sealed class NbtString : NbtTag {
         public override NbtTagType TagType { get { return NbtTagType.String; } }
-        public string Value { get; set; }
+        public string Value;
 
-        internal override void ReadTag(NbtBinaryReader readStream) {
-            Value = readStream.ReadString();
+        internal override void ReadTag(NbtBinaryReader reader) {
+            Value = reader.ReadString();
         }
     }
 
     /// <summary> Base class for different kinds of named binary tags. </summary>
     public abstract class NbtTag {
         public abstract NbtTagType TagType { get; }
-        public string Name { get; set; }
+        public string Name;
 
-        internal abstract void ReadTag(NbtBinaryReader readStream);
+        internal abstract void ReadTag(NbtBinaryReader reader);
 
         public virtual NbtTag this[string tagName] {
             get { throw new InvalidOperationException("String indexers only work on NbtCompound tags."); }
@@ -300,7 +271,8 @@ namespace fNbt {
     internal sealed class NbtBinaryReader : BinaryReader {
         readonly byte[] buffer = new byte[sizeof(double)];
         readonly bool swapNeeded;
-        readonly byte[] stringConversionBuffer = new byte[64];
+        // avoid allocation for small strings (which is majority of them)
+        readonly byte[] strBuffer = new byte[64];
 
         public NbtBinaryReader(Stream input, bool bigEndian) : base(input) {
             swapNeeded = (BitConverter.IsLittleEndian == bigEndian);
@@ -356,24 +328,21 @@ namespace fNbt {
         public override string ReadString() {
             short length = ReadInt16();
             if (length < 0) {
-                throw new NbtFormatException("Negative string length given!");
+                throw new InvalidDataException("Negative string length given");
             }
-            if (length < stringConversionBuffer.Length) {
-                int stringBytesRead = 0;
-                while (stringBytesRead < length) {
-                    int bytesReadThisTime = BaseStream.Read(stringConversionBuffer, stringBytesRead, length);
-                    if (bytesReadThisTime == 0) {
-                        throw new EndOfStreamException();
-                    }
-                    stringBytesRead += bytesReadThisTime;
+            
+            if (length < strBuffer.Length) {
+                int offset = 0;
+                while (offset < length) {
+                    int read = BaseStream.Read(strBuffer, offset, length - offset);
+                    if (read == 0) throw new EndOfStreamException();
+                    offset += read;
                 }
-                return Encoding.UTF8.GetString(stringConversionBuffer, 0, length);
+                return Encoding.UTF8.GetString(strBuffer, 0, length);
             } else {
-                byte[] stringData = ReadBytes(length);
-                if (stringData.Length < length) {
-                    throw new EndOfStreamException();
-                }
-                return Encoding.UTF8.GetString(stringData);
+                byte[] data = ReadBytes(length);
+                if (data.Length < length) throw new EndOfStreamException();
+                return Encoding.UTF8.GetString(data);
             }
         }
 
@@ -405,8 +374,7 @@ namespace fNbt {
 
     /// <summary> Represents a complete NBT file. </summary>
     public sealed class NbtFile {
-
-        public NbtCompound RootTag { get; set; }
+        public NbtCompound RootTag;
         public NbtFile() { RootTag = new NbtCompound(""); }
 
         public void LoadFromStream(Stream stream) {
@@ -430,7 +398,6 @@ namespace fNbt {
         }
     }
 
-    /// <summary> Exception thrown when a format violation is detected while parsing or serializing an NBT file. </summary>
     public sealed class NbtFormatException : Exception {
         internal NbtFormatException(string message) : base(message) {}
     }

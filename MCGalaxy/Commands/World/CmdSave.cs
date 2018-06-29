@@ -70,9 +70,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void Save(Player p, Level lvl, string restoreName) {
-            if (TrySave(p, lvl, true)) {
-                Player.Message(p, "Level {0} %Ssaved", lvl.ColoredName);
-            }
+            if (!TrySave(p, lvl, true)) return;
+            Player.Message(p, "Level {0} %Ssaved", lvl.ColoredName);
             
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
