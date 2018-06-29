@@ -143,16 +143,16 @@ namespace MCGalaxy {
             if (save && SaveChanges && Changed) Save(false, true);
             if (save && SaveChanges) SaveBlockDBChanges();
             
-            if (TntWarsGame.Find(this) != null) {
-                foreach (TntWarsGame.player pl in TntWarsGame.Find(this).Players) {
+            if (TntWarsGame1.Find(this) != null) {
+                foreach (TntWarsGame1.player pl in TntWarsGame1.Find(this).Players) {
                     pl.p.CurrentTntGameNumber = -1;
                     Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
                     pl.p.PlayingTntWars = false;
                     pl.p.canBuild = true;
-                    TntWarsGame.SetTitlesAndColor(pl, true);
+                    TntWarsGame1.SetTitlesAndColor(pl, true);
                 }
                 Logger.Log(LogType.GameActivity, "TNT Wars: Game deleted on " + name);
-                TntWarsGame.GameList.Remove(TntWarsGame.Find(this));
+                TntWarsGame1.GameList.Remove(TntWarsGame1.Find(this));
 
             }
             MovePlayersToMain();

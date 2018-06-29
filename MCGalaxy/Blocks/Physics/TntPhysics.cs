@@ -65,13 +65,13 @@ namespace MCGalaxy.Blocks.Physics {
             
             if (p != null && p.PlayingTntWars) {
                 int power = 2, threshold = 3;
-                TntWarsGame game = TntWarsGame.GameIn(p);
+                TntWarsGame1 game = TntWarsGame1.GameIn(p);
                 switch (game.Difficulty) {
-                    case TntWarsGame.TntWarsDifficulty.Easy:
+                    case TntWarsDifficulty.Easy:
                         threshold = 7; break;
-                    case TntWarsGame.TntWarsDifficulty.Normal:
+                    case TntWarsDifficulty.Normal:
                         threshold = 5; break;
-                    case TntWarsGame.TntWarsDifficulty.Extreme:
+                    case TntWarsDifficulty.Extreme:
                         power = 3; break;
                 }
                 
@@ -117,7 +117,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         public static void MakeExplosion(Level lvl, ushort x, ushort y, ushort z, int size,
-                                         bool force = false, TntWarsGame game = null) {
+                                         bool force = false, TntWarsGame1 game = null) {
             Random rand = new Random();
             if ((lvl.physics < 2 || lvl.physics == 5) && !force) return;
             
@@ -133,7 +133,7 @@ namespace MCGalaxy.Blocks.Physics {
         }
         
         static void Explode(Level lvl, ushort x, ushort y, ushort z,
-                            int size, Random rand, int prob, TntWarsGame game) {
+                            int size, Random rand, int prob, TntWarsGame1 game) {
             for (int xx = (x - size); xx <= (x + size ); ++xx)
                 for (int yy = (y - size); yy <= (y + size); ++yy)
                     for (int zz = (z - size); zz <= (z + size); ++zz)

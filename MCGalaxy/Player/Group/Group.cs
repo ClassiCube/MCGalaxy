@@ -114,8 +114,8 @@ namespace MCGalaxy {
             copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps;
             copy.AfkKicked = AfkKicked; copy.AfkKickMinutes = AfkKickMinutes;
             copy.Prefix = Prefix; copy.CopySlots = CopySlots; copy.filename = filename;
-            return copy;            
-        }        
+            return copy;
+        }
         
         
         public static Group Find(string name) {
@@ -144,19 +144,19 @@ namespace MCGalaxy {
         public static string GetColoredName(LevelPermission perm) {
             Group grp = Find(perm);
             if (grp != null) return grp.ColoredName;
-            return Colors.white + ((int)perm);
+            return "&f" + ((int)perm);
         }
         
         public static string GetColoredName(string rankName) {
             Group grp = Find(rankName);
             if (grp != null) return grp.ColoredName;
-            return Colors.white + rankName;
+            return "&f" + rankName;
         }
         
         public static string GetColor(LevelPermission perm) {
             Group grp = Find(perm);
             if (grp != null) return grp.Color;
-            return Colors.white;
+            return "&f";
         }
         
         public static LevelPermission ParsePermOrName(string value, LevelPermission defPerm) {

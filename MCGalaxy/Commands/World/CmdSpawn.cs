@@ -36,20 +36,6 @@ namespace MCGalaxy.Commands.World {
             byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
             
-            if (p.PlayingTntWars) {
-                TntWarsGame game = TntWarsGame.GameIn(p);
-                if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM && game.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers
-                    && game.GameStatus != TntWarsGame.TntWarsStatus.Finished && game.RedSpawn != null && game.BlueSpawn != null) {
-                    bool blue = game.FindPlayer(p).Blue;
-                    
-                    pos.X = 16 + (blue ? game.BlueSpawn[0] : game.RedSpawn[0]) * 32;
-                    pos.Y = 32 + (blue ? game.BlueSpawn[1] : game.RedSpawn[1]) * 32;
-                    pos.Z = 16 + (blue ? game.BlueSpawn[2] : game.RedSpawn[2]) * 32;
-                    yaw = (byte)(blue ? game.BlueSpawn[3] : game.RedSpawn[3]);
-                    pitch = (byte)(blue ? game.BlueSpawn[4] : game.RedSpawn[4]);
-                }
-            }
-            
             p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
         }
         

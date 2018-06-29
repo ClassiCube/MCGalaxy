@@ -1304,7 +1304,7 @@ namespace MCGalaxy.Gui
             this.eco_cbItemRank.Name = "eco_cbItemRank";
             this.eco_cbItemRank.Size = new System.Drawing.Size(110, 21);
             this.eco_cbItemRank.TabIndex = 23;
-            this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank that is required to use /pass before they can use commands.");
+            this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank a player must have to purchase this item.");
             this.eco_cbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cbItemRank_SelectedIndexChanged);
             // 
             // rank_numAfk

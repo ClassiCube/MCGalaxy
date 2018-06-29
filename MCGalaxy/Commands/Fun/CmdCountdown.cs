@@ -58,11 +58,7 @@ namespace MCGalaxy.Commands.Fun {
                 game.PlayerJoinedGame(p);
             }
         }
-        
-        protected override void HandleStatus(Player p, RoundsGame game) {
-            game.OutputStatus(p);
-        }
-        
+
         static string FormatPlayer(Player pl, CountdownGame game) {
             string suffix = game.Remaining.Contains(pl) ? " &a[IN]" : " &c[OUT]";
             return pl.ColoredName + suffix;
@@ -114,11 +110,11 @@ namespace MCGalaxy.Commands.Fun {
         public override void Help(Player p) {
             Player.Message(p, "%T/CD set [width] [height] [length]");
             Player.Message(p, "%HRe-generates the countdown map (default is 32x32x32)");
-            Player.Message(p, "%T/CD start <speed> <mode> %H- starts countdown");
+            Player.Message(p, "%T/CD start <speed> <mode> %H- Starts Countdown");
             Player.Message(p, "%H  speed can be: slow, normal, fast, extreme or ultimate");
             Player.Message(p, "%H  mode can be: normal or freeze");
-            Player.Message(p, "%T/CD stop %H- stops countdown"); 
-            Player.Message(p, "%T/CD end %H- force ends current round of countdown");
+            Player.Message(p, "%T/CD stop %H- Stops Countdown"); 
+            Player.Message(p, "%T/CD end %H- Ends current round of Countdown");
             Player.Message(p, "%T/CD join %H- joins the game");
             Player.Message(p, "%T/CD status %H- lists players currently playing");
             Player.Message(p, "%T/CD rules %H- view the rules of countdown");

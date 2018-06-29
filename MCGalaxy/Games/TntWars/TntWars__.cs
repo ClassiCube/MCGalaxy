@@ -26,10 +26,10 @@ using System.Threading;
 
 namespace MCGalaxy.Games
 {
-    public sealed class TntWarsGame
+    public sealed class TntWarsGame1
     {
         //Vars
-        public static List<TntWarsGame> GameList = new List<TntWarsGame>();
+        public static List<TntWarsGame1> GameList = new List<TntWarsGame1>();
         public Level lvl;
         public TntWarsStatus GameStatus = TntWarsStatus.WaitingForPlayers;
         public int BackupNumber;
@@ -42,30 +42,21 @@ namespace MCGalaxy.Games
         public TntWarsConfig Config = new TntWarsConfig();
         public Thread Starter;
 
-        public TntWarsGame(Level level)
-        {
+        public TntWarsGame1(Level level) {
             Starter = new Thread(Start);
             lvl = level;
         }
 
         //Player/Team stuff
         public List<player> Players = new List<player>();
-        public class player
-        {
+        public class player {
             public Player p;
-            public bool Red = false;
-            public bool Blue = false;
-            public bool spec = false;
+            public bool Red, Blue, spec;
             public int Score = 0;
-            public string OldColor;
-            public string OldTitle;
-            public string OldTitleColor;
-            public player(Player pl)
-            {
-                p = pl;
-                OldColor = pl.color;
-                OldTitle = pl.title;
-                OldTitleColor = pl.titlecolor;
+            public string OrigCol;
+            
+            public player(Player pl) {
+                p = pl; OrigCol = pl.color;
             }
         }
         public int RedScore = 0;
@@ -234,7 +225,7 @@ namespace MCGalaxy.Games
                 MessageAll("TNT Wars: Grace Period is over!!!!!");
                 MessageAll("TNT Wars: You may now place " + Colors.red + "TNT");
             }
-            MessageAll("TNT Wars: " + Colors.white + "The Game Has Started!!!!!");
+            MessageAll("TNT Wars: &fThe Game Has Started!!!!!");
             GameStatus = TntWarsStatus.InProgress;
             foreach (player p in Players)
             {
@@ -542,7 +533,7 @@ namespace MCGalaxy.Games
         }
         
         public List<player> SortedByScore() {
-            List<TntWarsGame.player> sorted = new List<TntWarsGame.player>(Players);
+            List<TntWarsGame1.player> sorted = new List<TntWarsGame1.player>(Players);
             sorted.Sort((a, b) => b.Score.CompareTo(a.Score));
             return sorted;
         }
@@ -554,8 +545,8 @@ namespace MCGalaxy.Games
                 if (TotalTeamScores)
                 {
                     MessageAll("TNT Wars Scores:");
-                    MessageAll(Colors.red + "RED: " + Colors.white + RedScore + " " + Colors.red + "(" + (Config.ScoreRequired - RedScore) + " needed)");
-                    MessageAll(Colors.blue + "BLUE: " + Colors.white + BlueScore + " " + Colors.red + "(" + (Config.ScoreRequired - BlueScore) + " needed)");
+                    MessageAll(Colors.red + "RED: &f" + RedScore + " " + Colors.red + "(" + (Config.ScoreRequired - RedScore) + " needed)");
+                    MessageAll(Colors.blue + "BLUE: &f" + BlueScore + " " + Colors.red + "(" + (Config.ScoreRequired - BlueScore) + " needed)");
                     Thread.Sleep(1000);
                 }
                 if (TopScores)
@@ -608,18 +599,6 @@ namespace MCGalaxy.Games
             Finished = 4
         }
 
-        public enum TntWarsGameMode {
-            FFA = 0,
-            TDM = 1
-        }
-
-        public enum TntWarsDifficulty {
-            Easy = 0,       //2 Hits to die, Tnt has long delay
-            Normal = 1,     //2 Hits to die, Tnt has normal delay
-            Hard = 2,       //1 Hit to die, Tnt has short delay
-            Extreme = 3     //1 Hit to die, Tnt has short delay and BIG exlosion
-        }
-
         //Other stuff
         public int RedTeam() {
             int count = 0;
@@ -645,32 +624,22 @@ namespace MCGalaxy.Games
             return count;
         }
 
-        public static void SetTitlesAndColor(player p, bool reset = false)
-        {
-            try
-            {
-                if (reset)
-                {
-                    p.p.title = p.OldTitle;
-                    p.p.color = p.OldTitleColor;
-                    p.p.color = p.OldColor;
+        public static void SetTitlesAndColor(player p, bool reset = false) {
+            try {
+                if (reset) {
+                    p.p.color = p.OrigCol;
                     p.p.SetPrefix();
-                }
-                else
-                {
-                    p.p.title = "TNT Wars";
-                    p.p.titlecolor = Colors.white;
+                } else {
                     if (p.Red) p.p.color = Colors.red;
                     if (p.Blue) p.p.color = Colors.blue;
                     p.p.SetPrefix();
                 }
-            }
-            catch { }
+            } catch { }
         }
 
         public bool CheckAllSetUp(Player p, bool ReturnErrors = false) {
             if (lvl != null && GameStatus == 0) {
-                TntWarsGame existing = Find(lvl);
+                TntWarsGame1 existing = Find(lvl);
                 if (existing != null && existing != this) {
                     if (ReturnErrors) Player.Message(p, "There is already a TNT Wars game on that map");
                     return false;
@@ -688,15 +657,15 @@ namespace MCGalaxy.Games
             return false;
         }
 
-        public static TntWarsGame Find(Level level) {
-            foreach (TntWarsGame g in GameList) {
+        public static TntWarsGame1 Find(Level level) {
+            foreach (TntWarsGame1 g in GameList) {
                 if (g.lvl == level) return g;
             }
             return null;
         }
 
-        public static TntWarsGame FindFromGameNumber(int num) {
-            foreach (TntWarsGame g in GameList) {
+        public static TntWarsGame1 FindFromGameNumber(int num) {
+            foreach (TntWarsGame1 g in GameList) {
                 if (g.GameNumber == num) return g;
             }
             return null;
@@ -709,18 +678,18 @@ namespace MCGalaxy.Games
             return null;
         }
 
-        public static TntWarsGame GameIn(Player p) {
-            TntWarsGame it = TntWarsGame.Find(p.level);
+        public static TntWarsGame1 GameIn(Player p) {
+            TntWarsGame1 it = TntWarsGame1.Find(p.level);
             if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);
             return it;
         }
         
         public void ModeTDM() {
-            GameMode = TntWarsGame.TntWarsGameMode.TDM;
+            GameMode = TntWarsGameMode.TDM;
             MessageAll("TNT Wars: Changed gamemode to Team Deathmatch");
             
-            foreach (TntWarsGame.player pl in Players) {
+            foreach (TntWarsGame1.player pl in Players) {
                 AutoAssignTeam(pl);
                 string msg = pl.p.ColoredName + " %Sis now";
                 
@@ -733,11 +702,11 @@ namespace MCGalaxy.Games
         }
         
         public void ModeFFA() {
-            GameMode = TntWarsGame.TntWarsGameMode.FFA;
+            GameMode = TntWarsGameMode.FFA;
             MessageAll("TNT Wars: Changed gamemode to Free For All");
             
-            foreach (TntWarsGame.player pl in Players) {
-                pl.p.color = pl.OldColor;
+            foreach (TntWarsGame1.player pl in Players) {
+                pl.p.color = pl.OrigCol;
                 pl.p.SetPrefix();
             }
         }

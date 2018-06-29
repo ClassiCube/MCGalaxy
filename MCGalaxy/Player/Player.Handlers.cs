@@ -501,22 +501,6 @@ namespace MCGalaxy {
             if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
 
             if (ChatModes.Handle(this, text)) return;
-
-            if (text[0] == ':' && PlayingTntWars) {
-                string newtext = text.Remove(0, 1).Trim();
-                TntWarsGame it = TntWarsGame.GameIn(this);
-                if ( it.GameMode == TntWarsGame.TntWarsGameMode.TDM ) {
-                    TntWarsGame.player pl = it.FindPlayer(this);
-                    foreach ( TntWarsGame.player p in it.Players ) {
-                        if ( pl.Red && p.Red ) SendMessage(p.p, "To Team " + Colors.red + "-" + color + name + Colors.red + "- %S" + newtext);
-                        if ( pl.Blue && p.Blue ) SendMessage(p.p, "To Team " + Colors.blue + "-" + color + name + Colors.blue + "- %S" + newtext);
-                    }
-                    
-                    Logger.Log(LogType.GameActivity, "[TNT Wars] [TeamChat (" + ( pl.Red ? "Red" : "Blue" ) + ") " + name + " " + newtext);
-                    return;
-                }
-            }
-
             text = HandleJoker(text);
 
             OnPlayerChatEvent.Call(this, text);

@@ -176,7 +176,7 @@ namespace MCGalaxy {
             if (!(block == Block.TNT || block == Block.TNT_Big || block == Block.TNT_Nuke || block == Block.TNT_Small))
                 return true;
             
-            TntWarsGame game = TntWarsGame.GameIn(p);
+            TntWarsGame1 game = TntWarsGame1.GameIn(p);
             if (game.InZone(x, y, z, true))
                 return false;
             

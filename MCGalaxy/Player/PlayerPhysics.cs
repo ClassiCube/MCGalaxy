@@ -67,7 +67,7 @@ namespace MCGalaxy.Blocks.Physics {
             {
                 BlockID block = GetSurvivalBlock(p, x, min.Y, z);
                 byte collide = p.level.CollideType(block);
-                allGas = allGas && collide == CollideType.WalkThrough;                
+                allGas = allGas && collide == CollideType.WalkThrough;
                 if (!CollideType.IsSolid(collide)) continue;
                 
                 int fallHeight = p.startFallY - bb.Min.Y;

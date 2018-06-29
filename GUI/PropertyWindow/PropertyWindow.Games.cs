@@ -23,7 +23,7 @@ using MCGalaxy.Maths;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         System.Timers.Timer lavaUpdateTimer;
-        TntWarsGame tw_selected;
+        TntWarsGame1 tw_selected;
 
         void SaveLavaSettings() {
             LSGame.Config.Save();
@@ -222,7 +222,7 @@ namespace MCGalaxy.Gui {
                 
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    TntWarsGame game = TntWarsGame.Find(lvl);
+                    TntWarsGame1 game = TntWarsGame1.Find(lvl);
                     if (game == null) {
                         TntWrsMpsList.Items.Add(lvl.name);
                     } else {
@@ -239,15 +239,15 @@ namespace MCGalaxy.Gui {
                 //Load settings
                 //Top
                 SlctdTntWrsLvl.Text = tw_selected.lvl.name;
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) tw_txtStatus.Text = "Waiting For Players";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart) tw_txtStatus.Text = "Starting";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod) tw_txtStatus.Text = "Started";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.InProgress) tw_txtStatus.Text = "In Progress";
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.Finished) tw_txtStatus.Text = "Finished";
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.WaitingForPlayers) tw_txtStatus.Text = "Waiting For Players";
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.AboutToStart) tw_txtStatus.Text = "Starting";
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.GracePeriod) tw_txtStatus.Text = "Started";
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.InProgress) tw_txtStatus.Text = "In Progress";
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.Finished) tw_txtStatus.Text = "Finished";
                 tw_txtPlayers.Text = tw_selected.PlayingPlayers().ToString(CultureInfo.InvariantCulture);
                 
                 //Difficulty
-                if (tw_selected.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) {
+                if (tw_selected.GameStatus == TntWarsGame1.TntWarsStatus.WaitingForPlayers) {
                     TntWrsDiffCombo.Enabled = true;
                     TntWrsDiffSlctBt.Enabled = true;
                 } else {
@@ -290,7 +290,7 @@ namespace MCGalaxy.Gui {
                 TntWrsGraceTimeChck.Value = tw_selected.Config.GracePeriodSeconds;
                 TntWrsGraceTimeChck.Enabled = tw_selected.Config.InitialGracePeriod;
                 //Teams
-                TntWrsTmsChck.Checked = tw_selected.GameMode == TntWarsGame.TntWarsGameMode.TDM;
+                TntWrsTmsChck.Checked = tw_selected.GameMode == TntWarsGameMode.TDM;
                 TntWrsTmsChck.Enabled = true;
                 tw_cbBalanceTeams.Checked = tw_selected.Config.BalanceTeams;
                 tw_cbBalanceTeams.Enabled = true;
@@ -298,23 +298,23 @@ namespace MCGalaxy.Gui {
                 tw_cbTeamKills.Enabled = true;
                 //Status
                 switch (tw_selected.GameStatus) {
-                    case TntWarsGame.TntWarsStatus.WaitingForPlayers:
+                    case TntWarsGame1.TntWarsStatus.WaitingForPlayers:
                         if (tw_selected.CheckAllSetUp(null)) tw_btnStartGame.Enabled = true;
                         tw_btnEndGame.Enabled = false;
                         tw_btnResetGame.Enabled = false;
                         tw_btnDeleteGame.Enabled = true;
                         break;
 
-                    case TntWarsGame.TntWarsStatus.AboutToStart:
-                    case TntWarsGame.TntWarsStatus.GracePeriod:
-                    case TntWarsGame.TntWarsStatus.InProgress:
+                    case TntWarsGame1.TntWarsStatus.AboutToStart:
+                    case TntWarsGame1.TntWarsStatus.GracePeriod:
+                    case TntWarsGame1.TntWarsStatus.InProgress:
                         tw_btnStartGame.Enabled = false;
                         tw_btnEndGame.Enabled = true;
                         tw_btnResetGame.Enabled = false;
                         tw_btnDeleteGame.Enabled = false;
                         break;
 
-                    case TntWarsGame.TntWarsStatus.Finished:
+                    case TntWarsGame1.TntWarsStatus.Finished:
                         tw_btnStartGame.Enabled = false;
                         tw_btnEndGame.Enabled = false;
                         tw_btnResetGame.Enabled = true;
@@ -334,7 +334,7 @@ namespace MCGalaxy.Gui {
                 
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    TntWarsGame game = TntWarsGame.Find(lvl);
+                    TntWarsGame1 game = TntWarsGame1.Find(lvl);
                     if (game == null) {
                         TntWrsMpsList.Items.Add(lvl.name);
                     } else {
@@ -351,7 +351,7 @@ namespace MCGalaxy.Gui {
                 TntWrsDiffCombo.Items.Add("Extreme");
 
                 //Disable things because game is in progress
-                if (tw_selected.GameStatus != TntWarsGame.TntWarsStatus.WaitingForPlayers) {
+                if (tw_selected.GameStatus != TntWarsGame1.TntWarsStatus.WaitingForPlayers) {
                     //Difficulty
                     TntWrsDiffCombo.Enabled = false;
                     TntWrsDiffSlctBt.Enabled = false;
@@ -375,25 +375,25 @@ namespace MCGalaxy.Gui {
             }
         }
         
-        string DescribeTNTWars(Level lvl, TntWarsGame game) {
+        string DescribeTNTWars(Level lvl, TntWarsGame1 game) {
             string msg = lvl.name;
 
             msg += " - ";
-            if (game.GameMode == TntWarsGame.TntWarsGameMode.FFA) msg += "FFA";
-            if (game.GameMode == TntWarsGame.TntWarsGameMode.TDM) msg += "TDM";
+            if (game.GameMode == TntWarsGameMode.FFA) msg += "FFA";
+            if (game.GameMode == TntWarsGameMode.TDM) msg += "TDM";
             
             msg += " - ";            
-            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Easy)    msg += "(Easy)";
-            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Normal)  msg += "(Normal)";
-            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Hard)    msg += "(Hard)";
-            if (game.Difficulty == TntWarsGame.TntWarsDifficulty.Extreme) msg += "(Extreme)";
+            if (game.Difficulty == TntWarsDifficulty.Easy)    msg += "(Easy)";
+            if (game.Difficulty == TntWarsDifficulty.Normal)  msg += "(Normal)";
+            if (game.Difficulty == TntWarsDifficulty.Hard)    msg += "(Hard)";
+            if (game.Difficulty == TntWarsDifficulty.Extreme) msg += "(Extreme)";
             
             msg += " - ";
-            if (game.GameStatus == TntWarsGame.TntWarsStatus.WaitingForPlayers) msg += "(Waiting For Players)";
-            if (game.GameStatus == TntWarsGame.TntWarsStatus.AboutToStart)      msg += "(Starting)";
-            if (game.GameStatus == TntWarsGame.TntWarsStatus.GracePeriod)       msg += "(Started)";
-            if (game.GameStatus == TntWarsGame.TntWarsStatus.InProgress)        msg += "(In Progress)";
-            if (game.GameStatus == TntWarsGame.TntWarsStatus.Finished)          msg += "(Finished)";
+            if (game.GameStatus == TntWarsGame1.TntWarsStatus.WaitingForPlayers) msg += "(Waiting For Players)";
+            if (game.GameStatus == TntWarsGame1.TntWarsStatus.AboutToStart)      msg += "(Starting)";
+            if (game.GameStatus == TntWarsGame1.TntWarsStatus.GracePeriod)       msg += "(Started)";
+            if (game.GameStatus == TntWarsGame1.TntWarsStatus.InProgress)        msg += "(In Progress)";
+            if (game.GameStatus == TntWarsGame1.TntWarsStatus.Finished)          msg += "(Finished)";
             
             return msg;
         }
@@ -410,7 +410,7 @@ namespace MCGalaxy.Gui {
                     return;
                 }
                 string[] split = slctd.Split(new string[] { " - " }, StringSplitOptions.None);
-                tw_selected = TntWarsGame.Find(LevelInfo.FindExact(split[0]));
+                tw_selected = TntWarsGame1.Find(LevelInfo.FindExact(split[0]));
                 LoadTNTWarsTab(sender, e);
             }
             catch { }
@@ -421,13 +421,13 @@ namespace MCGalaxy.Gui {
         }
 
         void TntWrsCrtNwTntWrsBt_Click(object sender, EventArgs e) {
-            TntWarsGame it = null;
+            TntWarsGame1 it = null;
             try {
-                it = new TntWarsGame(LevelInfo.FindExact(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
+                it = new TntWarsGame1(LevelInfo.FindExact(TntWrsMpsList.Items[TntWrsMpsList.SelectedIndex].ToString()));
             }
             catch { }
             if (it == null) return;
-            TntWarsGame.GameList.Add(it);
+            TntWarsGame1.GameList.Add(it);
             tw_selected = it;
             LoadTNTWarsTab(sender, e);
         }
@@ -436,25 +436,25 @@ namespace MCGalaxy.Gui {
             if (tw_selected == null) return;
             switch (TntWrsDiffCombo.Items[TntWrsDiffCombo.SelectedIndex].ToString()) {
                 case "Easy":
-                    tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Easy;
+                    tw_selected.Difficulty = TntWarsDifficulty.Easy;
                     tw_selected.MessageAll("TNT Wars: Changed difficulty to easy!");
                     tw_selected.Config.TeamKills = false;
                     break;
 
                 case "Normal":
-                    tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Normal;
+                    tw_selected.Difficulty = TntWarsDifficulty.Normal;
                     tw_selected.MessageAll("TNT Wars: Changed difficulty to normal!");
                     tw_selected.Config.TeamKills = false;
                     break;
 
                 case "Hard":
-                    tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Hard;
+                    tw_selected.Difficulty = TntWarsDifficulty.Hard;
                     tw_selected.MessageAll("TNT Wars: Changed difficulty to hard!");
                     tw_selected.Config.TeamKills = true;
                     break;
 
                 case "Extreme":
-                    tw_selected.Difficulty = TntWarsGame.TntWarsDifficulty.Extreme;
+                    tw_selected.Difficulty = TntWarsDifficulty.Extreme;
                     tw_selected.MessageAll("TNT Wars: Changed difficulty to extreme!");
                     tw_selected.Config.TeamKills = true;
                     break;
@@ -526,11 +526,11 @@ namespace MCGalaxy.Gui {
         void TntWrsTmsChck_CheckedChanged(object sender, EventArgs e) {
             if (tw_selected == null) return;
             if (TntWrsTmsChck.Checked) {
-                if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.FFA) {
+                if (tw_selected.GameMode == TntWarsGameMode.FFA) {
                     tw_selected.ModeTDM();
                 }
             } else {
-                if (tw_selected.GameMode == TntWarsGame.TntWarsGameMode.TDM) {
+                if (tw_selected.GameMode == TntWarsGameMode.TDM) {
                     tw_selected.ModeFFA();
                 }
             }
@@ -567,23 +567,23 @@ namespace MCGalaxy.Gui {
 
         void TntWrsEndGame_Click(object sender, EventArgs e) {
             if (tw_selected == null) return;
-            foreach (TntWarsGame.player pl in tw_selected.Players) {
+            foreach (TntWarsGame1.player pl in tw_selected.Players) {
                 pl.p.canBuild = true;
                 pl.p.PlayingTntWars = false;
                 pl.p.CurrentAmountOfTnt = 0;
             }
-            tw_selected.GameStatus = TntWarsGame.TntWarsStatus.Finished;
+            tw_selected.GameStatus = TntWarsGame1.TntWarsStatus.Finished;
             tw_selected.MessageAll("TNT wars: Game has been stopped!");
             LoadTNTWarsTab(sender, e);
         }
 
         void TntWrsRstGame_Click(object sender, EventArgs e) {
             if (tw_selected == null) return;
-            tw_selected.GameStatus = TntWarsGame.TntWarsStatus.WaitingForPlayers;
+            tw_selected.GameStatus = TntWarsGame1.TntWarsStatus.WaitingForPlayers;
             Command.Find("Restore").Use(null, tw_selected.BackupNumber + tw_selected.lvl.name);
             tw_selected.RedScore = 0;
             tw_selected.BlueScore = 0;
-            foreach (TntWarsGame.player pl in tw_selected.Players) {
+            foreach (TntWarsGame1.player pl in tw_selected.Players) {
                 pl.Score = 0;
                 pl.spec = false;
                 pl.p.TntWarsKillStreak = 0;
@@ -602,14 +602,14 @@ namespace MCGalaxy.Gui {
 
         void TntWrsDltGame_Click(object sender, EventArgs e) {
             if (tw_selected == null) return;
-            foreach (TntWarsGame.player pl in tw_selected.Players) {
+            foreach (TntWarsGame1.player pl in tw_selected.Players) {
                 pl.p.CurrentTntGameNumber = -1;
                 Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
                 pl.p.PlayingTntWars = false;
                 pl.p.canBuild = true;
-                TntWarsGame.SetTitlesAndColor(pl, true);
+                TntWarsGame1.SetTitlesAndColor(pl, true);
             }
-            TntWarsGame.GameList.Remove(tw_selected);
+            TntWarsGame1.GameList.Remove(tw_selected);
             tw_selected = null;
             LoadTNTWarsTab(sender, e);
         }

@@ -26,34 +26,34 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {   
+namespace MCGalaxy.Games {
     internal sealed class CtfData {
         public int Captures, Tags, Points;
         public bool HasFlag, TagCooldown, TeamChatting;
         public Vec3S32 LastHeadPos;
     }
-    
-    public sealed class CtfTeam {
-        public string Name, Color;
-        public string ColoredName { get { return Color + Name; } }
-        public int Captures;
-        public Vec3U16 FlagPos, SpawnPos;
-        public BlockID FlagBlock;
-        public VolatileArray<Player> Members = new VolatileArray<Player>();
-                
-        public CtfTeam(string name, string color) { Name = name; Color = color; }
-        
-        public void RespawnFlag(Level lvl) {
-            Vec3U16 pos = FlagPos;
-            lvl.Blockchange(pos.X, pos.Y, pos.Z, FlagBlock);
-        }
-    }
 
     public sealed partial class CTFGame : RoundsGame {
         public override string GameName { get { return "CTF"; } }
         
-        public CtfTeam Red  = new CtfTeam("Red", Colors.red);
-        public CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
+        sealed class CtfTeam {
+            public string Name, Color;
+            public string ColoredName { get { return Color + Name; } }
+            public int Captures;
+            public Vec3U16 FlagPos, SpawnPos;
+            public BlockID FlagBlock;
+            public VolatileArray<Player> Members = new VolatileArray<Player>();
+            
+            public CtfTeam(string name, string color) { Name = name; Color = color; }
+            
+            public void RespawnFlag(Level lvl) {
+                Vec3U16 pos = FlagPos;
+                lvl.Blockchange(pos.X, pos.Y, pos.Z, FlagBlock);
+            }
+        }
+        
+        CtfTeam Red  = new CtfTeam("Red", Colors.red);
+        CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
         public CtfMapConfig Config = new CtfMapConfig();
         public CTFGame() { Picker = new CTFLevelPicker(); }
 
@@ -98,6 +98,7 @@ namespace MCGalaxy.Games {
             return playing;
         }
         
+        // TODO: Actually make this show something
         public override void OutputStatus(Player p) {
             Player.Message(p, "{0} %Steam: {1} captures", Blue.ColoredName, Blue.Captures);
             Player.Message(p, "{0} %Steam: {1} captures", Red.ColoredName,  Red.Captures);
@@ -130,7 +131,7 @@ namespace MCGalaxy.Games {
             
             foreach (Player p in players) {
                 if (p.level != Map) continue;
-                CtfData data = Get(p); 
+                CtfData data = Get(p);
                 
                 if (!data.HasFlag) continue;
                 data.HasFlag = false;
@@ -167,13 +168,13 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public CtfTeam TeamOf(Player p) {
+        CtfTeam TeamOf(Player p) {
             if (Red.Members.Contains(p)) return Red;
             if (Blue.Members.Contains(p)) return Blue;
             return null;
         }
         
-        public CtfTeam Opposing(CtfTeam team) {
+        CtfTeam Opposing(CtfTeam team) {
             return team == Red ? Blue : Red;
         }
     }
@@ -182,8 +183,8 @@ namespace MCGalaxy.Games {
         
         public override List<string> GetCandidateMaps() {
             List<string> maps = null;
-            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");           
-            if (File.Exists("CTF/maps.config")) {                
+            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
+            if (File.Exists("CTF/maps.config")) {
                 string[] lines = File.ReadAllLines("CTF/maps.config");
                 maps = new List<string>(lines);
             }

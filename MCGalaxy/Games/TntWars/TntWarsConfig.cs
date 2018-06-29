@@ -21,9 +21,8 @@
 ////-----|  Note: Double click on // to see |-----\\\\
 ///------|        them in the sidebar!!     |------\\\
 //-------|__________________________________|-------\\
-using System.Collections.Generic;
-using System.Threading;
 using MCGalaxy.Config;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
     public sealed class TntWarsConfig {
@@ -59,6 +58,7 @@ namespace MCGalaxy.Games {
         public int StreakThreeAmount = 7;
         public float StreakThreeMultiplier = 2f;
         
-        public static TntWarsConfig Default = new TntWarsConfig();
+        [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
+        [ConfigVec3("blue-spawn", null)] public Vec3U16 BlueSpawn;
     }
 }

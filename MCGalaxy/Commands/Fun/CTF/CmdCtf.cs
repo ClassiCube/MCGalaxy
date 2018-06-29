@@ -39,24 +39,24 @@ namespace MCGalaxy.Commands.Fun {
             return new List<string>(lines);
         }
         
-        // TODO: Actually make this show something
-        protected override void HandleStatus(Player p, RoundsGame game) { }
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
+            
+            if (args.Length < 2) { Help(p, "set"); return; }
+            string prop = args[1];
             CtfMapConfig cfg = RetrieveConfig(p);
             
-            string prop = args[1];
             if (prop.CaselessEq("add")) {
-                HandleAdd(p);
+                HandleAdd(p, p.level);
             } else if (IsDeleteCommand(prop)) {
-                HandleRemove(p);
+                HandleRemove(p, p.level);
             } if (prop.CaselessEq("bluespawn")) {
                 cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                Player.Message(p, "Set spawn of blue team to your position.");
+                Player.Message(p, "Set spawn of blue team to &b" + cfg.BlueSpawn);
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("redspawn")) {
                 cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                Player.Message(p, "Set spawn of red team to your position.");
+                Player.Message(p, "Set spawn of red team to &b" + cfg.RedSpawn);
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("blueflag")) {
                 Player.Message(p, "Place or delete a block to set blue team's flag.");
@@ -73,27 +73,27 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
 
-        static void HandleAdd(Player p) {
+        static void HandleAdd(Player p, Level lvl) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
-            if (maps.CaselessContains(p.level.name)) {
-                Player.Message(p, "{0} %Sis already in the list of CTF maps.", p.level.ColoredName);
+            if (maps.CaselessContains(lvl.name)) {
+                Player.Message(p, "{0} %Sis already in the list of CTF maps", lvl.ColoredName);
             } else {
-                Player.Message(p, "Added {0} %Sto the list of CTF maps.", p.level.ColoredName);
+                Player.Message(p, "Added {0} %Sto the list of CTF maps", lvl.ColoredName);
                 maps.Add(p.level.name);
                 File.WriteAllLines("CTF/maps.config", maps.ToArray());
             }
         }
         
-        static void HandleRemove(Player p) {
+        static void HandleRemove(Player p, Level lvl) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             List<string> maps = GetCtfMaps();
             
-            if (!maps.CaselessRemove(p.level.name)) {
-                Player.Message(p, "{0} %Swas not in the list of CTF maps.", p.level.ColoredName);
+            if (!maps.CaselessRemove(lvl.name)) {
+                Player.Message(p, "{0} %Swas not in the list of CTF maps", lvl.ColoredName);
             } else {
-                Player.Message(p, "Removed {0} %Sfrom the list of CTF maps.", p.level.ColoredName);
+                Player.Message(p, "Removed {0} %Sfrom the list of CTF maps", lvl.ColoredName);
                 File.WriteAllLines("CTF/maps.config", maps.ToArray());
             }
         }
@@ -141,14 +141,6 @@ namespace MCGalaxy.Commands.Fun {
             if (p.level == Server.ctf.Map) Server.ctf.UpdateMapConfig();
         }
         
-        public override void Help(Player p) {
-            Player.Message(p, "%T/CTF start/stop %H- Starts/stops the CTF game");
-            Player.Message(p, "%T/CTF set add/remove %H- Adds/removes current map from CTF map list");
-            Player.Message(p, "%T/CTF set [property]");
-            Player.Message(p, "%HSets a CTF game property, see %T/Help CTF set");
-            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");
-        }
-        
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
                 Player.Message(p, "%T/CTF set redspawn/bluespawn");
@@ -162,6 +154,16 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 Help(p);
             }
+        }
+                
+        public override void Help(Player p) {
+            Player.Message(p, "%T/CTF start <map> %H- Starts CTF game");
+            Player.Message(p, "%T/CTF stop %H- Stops CTF game");
+            Player.Message(p, "%T/CTF end %H- Ends current round of CTF");
+            Player.Message(p, "%T/CTF set add/remove %H- Adds/removes current map from map list");
+            Player.Message(p, "%T/CTF set [property] %H- Sets a property. See %T/Help CTF set");
+            Player.Message(p, "%T/CTF status %H- View stats of both teams");
+            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");
         }
     }
 }

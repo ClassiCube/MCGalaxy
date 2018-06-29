@@ -67,8 +67,9 @@ namespace MCGalaxy.Games {
             CtfTeam team = TeamOf(p);
             if (team == null) return;
 
-            Chat.MessageChat(ChatScope.Level, p, "(" + team.Name + ") λNICK: &f" + message,
-                             Map, (pl, arg) => TeamOf(pl) == team);
+            string prefix = team.Color + " - to " + team.Name;
+            Chat.MessageChat(ChatScope.Level, p, prefix + " - λNICK: &f" + message,
+                             Map, (pl, arg) => pl.Game.Referee || TeamOf(pl) == team);
             p.cancelchat = true;
         }
         
@@ -113,7 +114,7 @@ namespace MCGalaxy.Games {
             if (respawning) DropFlag(p, team);
             
             Vec3U16 coords = team.SpawnPos;
-            pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);         
+            pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);
         }
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
@@ -133,7 +134,7 @@ namespace MCGalaxy.Games {
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
             
-            if (level != Map) return;          
+            if (level != Map) return;
             MessageMapInfo(p);
             if (TeamOf(p) != null) return;
             

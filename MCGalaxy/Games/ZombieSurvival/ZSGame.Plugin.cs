@@ -156,10 +156,10 @@ namespace MCGalaxy.Games {
                 message = message.Substring(1);
                 
                 if (Get(p).Infected) {
-                    Chat.MessageChat(ChatScope.Level, p, "λNICK &cto zombies%S: " + message,
+                    Chat.MessageChat(ChatScope.Level, p, "&c- to zombies - λNICK: &f" + message,
                                     Map, (pl, arg) => pl.Game.Referee || Get(pl).Infected);
                 } else {
-                    Chat.MessageChat(ChatScope.Level, p, "λNICK &ato humans%S: " + message,
+                    Chat.MessageChat(ChatScope.Level, p, "&a- to humans - λNICK: &f" + message,
                                     Map, (pl, arg) => pl.Game.Referee || !Get(pl).Infected);
                 }
                 p.cancelchat = true;

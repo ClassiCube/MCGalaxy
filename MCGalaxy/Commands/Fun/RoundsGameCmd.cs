@@ -56,15 +56,9 @@ namespace MCGalaxy.Commands.Fun {
         protected virtual void HandleStart(Player p, RoundsGame game, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             if (game.Running) { Player.Message(p, "{0} is already running", game.GameName); return; }
-            
-            int rounds = int.MaxValue;
-            if (args.Length > 1) {
-                if (!CommandParser.GetInt(p, args[1], "Rounds", ref rounds, 0)) return;
-                if (rounds == 0) rounds = int.MaxValue;
-            }
-            
-            string map = args.Length > 2 ? args[2] : "";
-            game.Start(p, map, rounds);
+
+            string map = args.Length > 1 ? args[1] : "";
+            game.Start(p, map, int.MaxValue);
         }
         
         protected void HandleEnd(Player p, RoundsGame game) {
@@ -87,9 +81,16 @@ namespace MCGalaxy.Commands.Fun {
                 Chat.MessageGlobal(game.GameName + " has ended! We hope you had fun!");
             }
         }
+
+        protected void HandleStatus(Player p, RoundsGame game) {
+            if (!game.Running) {
+                Player.Message(p, "{0} is not running", game.GameName);
+            } else {
+                Player.Message(p, "Running on map: " + game.Map.ColoredName);
+                game.OutputStatus(p);
+            }
+        }
         
-        // TODO: Make common base method
-        protected abstract void HandleStatus(Player p, RoundsGame game);
         protected abstract void HandleSet(Player p, RoundsGame game, string[] args);
     }
 }

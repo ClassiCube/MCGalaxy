@@ -272,7 +272,7 @@ namespace MCGalaxy {
                     return;
                 }
 
-                TntWarsGame tntwarsgame = TntWarsGame.GameIn(this);
+                TntWarsGame1 tntwarsgame = TntWarsGame1.GameIn(this);
                 if ( tntwarsgame != null ) {
                     tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
                     tntwarsgame.MessageAll("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
@@ -361,13 +361,13 @@ namespace MCGalaxy {
             CurrentAmountOfTnt++;
             int delay = 0;
 
-            switch (TntWarsGame.GameIn(this).Difficulty) {
-                case TntWarsGame.TntWarsDifficulty.Easy:
+            switch (TntWarsGame1.GameIn(this).Difficulty) {
+                case TntWarsDifficulty.Easy:
                     delay = 3250; break;
-                case TntWarsGame.TntWarsDifficulty.Normal:
+                case TntWarsDifficulty.Normal:
                     delay = 2250; break;
-                case TntWarsGame.TntWarsDifficulty.Hard:
-                case TntWarsGame.TntWarsDifficulty.Extreme:
+                case TntWarsDifficulty.Hard:
+                case TntWarsDifficulty.Extreme:
                     delay = 1250; break;
             }
             Server.MainScheduler.QueueOnce(AllowMoreTntTask, null, 
