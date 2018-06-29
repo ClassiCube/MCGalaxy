@@ -35,9 +35,8 @@ namespace MCGalaxy.Commands.World {
             CmdPhysics.SetPhysics(p.level, 0);
             
             Command cmd = Command.Find("ReplaceAll");
-            string args = message.CaselessEq("all") ?
-                "lavafall waterfall lava_fast active_lava active_water " +
-                "active_hot_lava active_cold_water fast_hot_lava magma geyser" : message;
+            string args = !message.CaselessEq("all") ? message : 
+                "8 10 lavafall waterfall lava_fast active_hot_lava active_cold_water fast_hot_lava magma geyser";
             cmd.Use(p, args + " air");
 
             CmdPhysics.SetPhysics(p.level, phys);
