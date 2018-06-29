@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "CountDown"; } }
         public override string shortcut { get { return "CD"; } }
         protected override RoundsGame Game { get { return Server.Countdown; } }
-        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage countdown") }; }
         }

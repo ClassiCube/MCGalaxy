@@ -22,6 +22,7 @@ namespace MCGalaxy.Commands.Fun {
     public abstract class RoundsGameCmd : Command {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
+        public override bool SuperUseable { get { return false; } }
         protected abstract RoundsGame Game { get; }
         
         public override void Use(Player p, string message) {

@@ -26,9 +26,9 @@ namespace MCGalaxy.Games {
     public sealed class ZSConfig {
         
         [ConfigInt("zombie-hitbox-precision", "Zombie", 32)]
-        public int HitboxPrecision = 32;
+        public int HitboxDist = 32;
         [ConfigInt("zombie-maxmove-distance", "Zombie", 50)]
-        public int MaxMoveDistance = 50;
+        public int MaxMoveDist = 50;
         [ConfigBool("zombie-survival-only-server", "Zombie", false)]
         public bool SetMainLevel;
         [ConfigBool("zombie-on-server-start", "Zombie", false)]

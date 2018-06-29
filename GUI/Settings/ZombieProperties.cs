@@ -143,8 +143,8 @@ namespace MCGalaxy.Gui {
             SetMainLevel = cfg.SetMainLevel;
             StartImmediately = cfg.StartImmediately;
             
-            MaxMoveDistance = cfg.MaxMoveDistance;
-            HitboxPrecision = cfg.HitboxPrecision;
+            MaxMoveDistance = cfg.MaxMoveDist;
+            HitboxPrecision = cfg.HitboxDist;
             IncludeMapInHeartbeat = cfg.IncludeMapInHeartbeat;
             
             Name = cfg.ZombieName;
@@ -176,8 +176,8 @@ namespace MCGalaxy.Gui {
             cfg.SetMainLevel = SetMainLevel;
             cfg.StartImmediately = StartImmediately;
             
-            cfg.MaxMoveDistance = MaxMoveDistance;
-            cfg.HitboxPrecision = HitboxPrecision;
+            cfg.MaxMoveDist = MaxMoveDistance;
+            cfg.HitboxDist = HitboxPrecision;
             cfg.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
             
             cfg.ZombieName = Name.Trim();

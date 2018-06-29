@@ -107,7 +107,7 @@ namespace MCGalaxy.Games {
             if (!RoundInProgress || p.level != Map) return;
             
             bool reverted = MovementCheck.DetectNoclip(p, next)
-                || MovementCheck.DetectSpeedhack(p, next, Config.MaxMoveDistance);
+                || MovementCheck.DetectSpeedhack(p, next, Config.MaxMoveDist);
             if (reverted) p.cancelmove = true;
         }
         

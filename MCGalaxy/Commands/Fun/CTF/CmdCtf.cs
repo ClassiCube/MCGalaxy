@@ -27,7 +27,6 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "CTF"; } }
         public override string shortcut { get { return "CTFSetup"; } }
         protected override RoundsGame Game { get { return Server.ctf; } }
-        public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage CTF") }; }
         }
