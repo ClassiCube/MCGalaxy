@@ -50,11 +50,11 @@ namespace MCGalaxy.Commands {
         }
         
         public static List<CommandExtraPerms> FindAll(string cmd) {
-            List<CommandExtraPerms> allPerms = new List<CommandExtraPerms>();
+            List<CommandExtraPerms> all = new List<CommandExtraPerms>();
             foreach (CommandExtraPerms perms in list) {
-                if (perms.CmdName.CaselessEq(cmd)) allPerms.Add(perms);
+                if (perms.CmdName.CaselessEq(cmd) && perms.Desc.Length > 0) all.Add(perms);
             }
-            return allPerms;
+            return all;
         }
         
 
