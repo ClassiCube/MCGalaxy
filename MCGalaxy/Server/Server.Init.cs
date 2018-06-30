@@ -117,12 +117,24 @@ namespace MCGalaxy {
                                  TimeSpan.FromMilliseconds(ServerConfig.PositionUpdateInterval));
         }
         
+        static void InitGame(RoundsGame game) {
+            if (!game.GetConfig().StartImmediately) return;
+            try {
+                game.Start(null, "", int.MaxValue);
+            } catch (Exception ex) { 
+                Logger.LogError("Error auto-starting " + game.GameName, ex); 
+            }
+        }
+        
         static void InitRest(SchedulerTask task) {
             IRC = new IRCBot();
             if (ServerConfig.UseIRC) IRC.Connect();
              
-            InitZombieSurvival();
-            InitLavaSurvival();
+            InitGame(Server.Countdown);
+            InitGame(Server.zombie);
+            InitGame(Server.lava);
+            InitGame(Server.ctf);
+            
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));
             Critical.QueueRepeat(ServerTasks.TickPlayers, null,
@@ -130,24 +142,6 @@ namespace MCGalaxy {
 
             Logger.Log(LogType.SystemActivity, "Finished setting up server, finding classicube.net url..");
             SetupFinished = true;
-        }
-        
-        static void InitZombieSurvival() {
-            if (!ZSGame.Config.StartImmediately) return;
-            try {
-                Server.zombie.Start(null, "", int.MaxValue);
-            } catch (Exception ex) { 
-                Logger.LogError("Error auto-starting Zombie Survival", ex); 
-            }
-        }
-
-        static void InitLavaSurvival() {
-            if (!LSGame.Config.StartImmediately) return;
-            try {
-                Server.lava.Start(null, "", int.MaxValue);
-            } catch (Exception ex) { 
-                Logger.LogError("Error auto-starting Lava Survival", ex); 
-            }
         }
     }
 }

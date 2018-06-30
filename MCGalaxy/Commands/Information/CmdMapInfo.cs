@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Info {
             }
             if (String.IsNullOrEmpty(realmOwner)) return;
             
-            string[] owners = realmOwner.Replace(" ", "").Split(',');
+            string[] owners = realmOwner.SplitComma();
             Player.Message(p, "  This map is a personal realm of {0}",
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Info {
         void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
             if (!Server.zombie.HasMap(data.MapName)) return;
             
-            string[] authors = cfg.Authors.Replace(" ", "").Split(',');
+            string[] authors = cfg.Authors.SplitComma();
             Player.Message(p, "Map authors: {0}",
                            authors.Join(n => PlayerInfo.GetColoredName(p, n)));
             int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;

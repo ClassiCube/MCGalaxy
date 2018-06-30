@@ -34,7 +34,10 @@ namespace MCGalaxy.Games {
     }
 
     public sealed partial class CTFGame : RoundsGame {
+        CTFMapConfig cfg = new CTFMapConfig();
+        public static CTFConfig Config = new CTFConfig();
         public override string GameName { get { return "CTF"; } }
+        public override RoundsGameConfig GetConfig() { return Config; }
         
         sealed class CtfTeam {
             public string Name, Color;
@@ -54,8 +57,7 @@ namespace MCGalaxy.Games {
         
         CtfTeam Red  = new CtfTeam("Red", Colors.red);
         CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
-        public CtfMapConfig Config = new CtfMapConfig();
-        public CTFGame() { Picker = new CTFLevelPicker(); }
+        public CTFGame() { Picker = new LevelPicker(); }
 
         const string ctfExtrasKey = "MCG_CTF_DATA";
         static CtfData Get(Player p) {
@@ -76,10 +78,10 @@ namespace MCGalaxy.Games {
         }
         
         public void UpdateMapConfig() {
-            CtfMapConfig cfg = new CtfMapConfig();
+            CTFMapConfig cfg = new CTFMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);
-            Config = cfg;
+            this.cfg = cfg;
             
             Red.FlagBlock = cfg.RedFlagBlock;
             Red.FlagPos   = cfg.RedFlagPos;
@@ -147,10 +149,9 @@ namespace MCGalaxy.Games {
         public override void PlayerLeftGame(Player p) {
             CtfTeam team = TeamOf(p);
             if (team == null) return;
-            
-            DropFlag(p, team);
             team.Members.Remove(p);
-            Map.Message(team.Color + p.DisplayName + " %Sleft CTF");
+            
+            DropFlag(p, team);          
         }
         
         void JoinTeam(Player p, CtfTeam team) {
@@ -162,7 +163,7 @@ namespace MCGalaxy.Games {
         }
         
         bool OnOwnTeamSide(int z, CtfTeam team) {
-            int baseZ = team.FlagPos.Z, zline = Config.ZDivider;
+            int baseZ = team.FlagPos.Z, zline = cfg.ZDivider;
             if (baseZ < zline && z < zline) return true;
             if (baseZ > zline && z > zline) return true;
             return false;
@@ -176,24 +177,6 @@ namespace MCGalaxy.Games {
         
         CtfTeam Opposing(CtfTeam team) {
             return team == Red ? Blue : Red;
-        }
-    }
-    
-    internal class CTFLevelPicker : LevelPicker {
-        
-        public override List<string> GetCandidateMaps() {
-            List<string> maps = null;
-            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            if (File.Exists("CTF/maps.config")) {
-                string[] lines = File.ReadAllLines("CTF/maps.config");
-                maps = new List<string>(lines);
-            }
-            
-            if (maps == null || maps.Count == 0) {
-                Logger.Log(LogType.Warning, "You must have at least 1 level configured to play CTF");
-                return null;
-            }
-            return maps;
         }
     }
 }

@@ -25,25 +25,17 @@ namespace MCGalaxy.Games {
         public int TimesDied;
     }
     
-    class LSLevelPicker : LevelPicker {
-        public override List<string> GetCandidateMaps() { 
-            return new List<string>(LSGame.Config.Maps); 
-        }
-    }
-    
     public sealed partial class LSGame : RoundsGame {
-        Random rand = new Random();
         LSMapConfig cfg = new LSMapConfig();
-        public static LSConfig Config = new LSConfig();  
-        
+        public static LSConfig Config = new LSConfig();
         public override string GameName { get { return "Lava survival"; } }
-        public bool Flooded;
+        public override RoundsGameConfig GetConfig() { return Config; }
         
-        bool fastMode, killerMode, destroyMode, waterMode, layerMode;
+        bool flooded, fastMode, killerMode, destroyMode, waterMode, layerMode;
         BlockID floodBlock;
         int curLayer, roundTotalSecs, floodDelaySecs, layerIntervalSecs;
         
-        public LSGame() { Picker = new LSLevelPicker(); }
+        public LSGame() { Picker = new LevelPicker(); }
         
         LSData Get(Player p) {
             object data;
@@ -55,15 +47,17 @@ namespace MCGalaxy.Games {
         }
         
         public void UpdateMapConfig() {
-            cfg = new LSMapConfig();
+            LSMapConfig cfg = new LSMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);
+            this.cfg = cfg;            
+            Random rnd = new Random();
             
-            killerMode  = rand.Next(1, 101) <= cfg.KillerChance;
-            destroyMode = rand.Next(1, 101) <= cfg.DestroyChance;
-            waterMode   = rand.Next(1, 101) <= cfg.WaterChance;
-            layerMode   = rand.Next(1, 101) <= cfg.LayerChance;
-            fastMode    = rand.Next(1, 101) <= cfg.FastChance && !waterMode;
+            killerMode  = rnd.Next(1, 101) <= cfg.KillerChance;
+            destroyMode = rnd.Next(1, 101) <= cfg.DestroyChance;
+            waterMode   = rnd.Next(1, 101) <= cfg.WaterChance;
+            layerMode   = rnd.Next(1, 101) <= cfg.LayerChance;
+            fastMode    = rnd.Next(1, 101) <= cfg.FastChance && !waterMode;
             
             if (waterMode) {
                 floodBlock = killerMode ? Block.Deadly_ActiveWater : Block.Water;
@@ -88,7 +82,7 @@ namespace MCGalaxy.Games {
         }
         
         protected override void EndGame() {
-            Flooded = false;
+            flooded = false;
             ResetPlayerDeaths();
         }
         

@@ -116,26 +116,14 @@ namespace MCGalaxy.Gui {
 
         void lsRemoveMap_Click(object sender, EventArgs e) {
             try {
-                Server.lava.End(); // Doing this so we don't break something...
-                UpdateLavaControls();
-
-                string name;
-                try { name = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString(); }
+                string map;
+                try { map = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString(); }
                 catch { return; }
 
-                if (LevelInfo.FindExact(name) == null) {
-                    Command.Find("Load").Use(null, name);
-                }
-                Level level = LevelInfo.FindExact(name);
-                if (level == null) return;
-
-                Server.lava.RemoveMap(name);
-                level.Config.AutoUnload = true;
-                level.Config.LoadOnGoto = true;
+                Level lvl;
+                LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
+                RoundsGameConfig.AddMap(null, map, lvlCfg, Server.lava);
                 
-                Level.SaveSettings(level);
-                level.Unload(true);
-
                 UpdateLavaMapList();
             }
             catch (Exception ex) { Logger.LogError(ex); }

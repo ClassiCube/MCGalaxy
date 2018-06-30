@@ -31,17 +31,9 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage lava survival") }; }
         }
 
-        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
-            
-            if (args.Length < 2) { Help(p, "set"); return; }
+        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
-            
-            if (prop.CaselessEq("add")) {
-                HandleAdd(p, p.level);
-            } else if (IsDeleteCommand(prop)) {
-                HandleRemove(p, p.level);
-            } else if (prop.CaselessEq("spawn")) {
+            if (prop.CaselessEq("spawn")) {
                 HandleSetSpawn(p, args);
             } else if (prop.CaselessEq("block")) {
                 HandleSetBlock(p, args);
@@ -49,33 +41,6 @@ namespace MCGalaxy.Commands.Fun {
                 HandleSetOther(p, args);
             } else {
                 Help(p, "set");
-            }
-        }
-        
-        static void HandleAdd(Player p, Level lvl) {
-            List<string> maps = LSGame.Config.Maps;
-            if (maps.CaselessContains(lvl.name)) {
-                Player.Message(p, "{0} %Sis already in the list of Lava survival maps", lvl.ColoredName);
-            } else {
-                Player.Message(p, "Added {0} %Sto the list of Lava survival maps", lvl.ColoredName);
-                maps.Add(lvl.name);
-                lvl.Config.LoadOnGoto = false;
-                
-                LSGame.Config.Save();
-                Level.SaveSettings(lvl);
-            }
-        }
-        
-        static void HandleRemove(Player p, Level lvl) {
-            if (!LSGame.Config.Maps.CaselessRemove(lvl.name)) {
-                Player.Message(p, "{0} %Swas not in the list of Lava survival maps", lvl.ColoredName);
-            } else {
-                Player.Message(p, "Removed {0} %Sfrom the list of Lava survival maps", lvl.ColoredName);
-                lvl.Config.AutoUnload = true;
-                lvl.Config.LoadOnGoto = true;
-                
-                LSGame.Config.Save();
-                Level.SaveSettings(lvl);
             }
         }
 

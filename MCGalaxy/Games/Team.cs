@@ -124,7 +124,7 @@ namespace MCGalaxy.Games {
                 case "owner":
                     tmp.Owner = value; break;
                 case "members":
-                    tmp.Members = new List<string>(value.Split(',')); break;
+                    tmp.Members = new List<string>(value.SplitComma()); break;
             }
         }
     }

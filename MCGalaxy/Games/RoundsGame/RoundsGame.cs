@@ -21,7 +21,7 @@ using System.Threading;
 using MCGalaxy.Commands.World;
 
 namespace MCGalaxy.Games {
-
+    
     public abstract partial class RoundsGame : IGame {
         public int RoundsLeft;
         public bool RoundInProgress;
@@ -30,15 +30,15 @@ namespace MCGalaxy.Games {
         public LevelPicker Picker;
         
         public abstract void OutputStatus(Player p);
+        public abstract RoundsGameConfig GetConfig();
         
         protected abstract void DoRound();
         protected abstract List<Player> GetPlayers();
         protected virtual void SaveStats(Player pl) { }
-        protected virtual bool ChangeMainLevel { get { return false; } }
         
         protected abstract void StartGame();
         public virtual void Start(Player p, string map, int rounds) {
-            map = GetStartMap(map);
+            map = GetStartMap(this, map);
             if (map == null) {
                 Player.Message(p, "No maps have been setup for {0} yet", GameName); return;
             }
@@ -83,9 +83,9 @@ namespace MCGalaxy.Games {
             IGame.RunningGames.Remove(this);
         }
         
-        protected virtual string GetStartMap(string forcedMap) {
+        protected virtual string GetStartMap(RoundsGame game, string forcedMap) {
             if (forcedMap.Length > 0) return forcedMap;
-            List<string> maps = Picker.GetCandidateMaps();
+            List<string> maps = Picker.GetCandidateMaps(game);
             
             if (maps == null || maps.Count == 0) return null;
             return LevelPicker.GetRandomMap(new Random(), maps);
@@ -100,7 +100,7 @@ namespace MCGalaxy.Games {
             Map = next;
             Map.SaveChanges = false;
             
-            if (ChangeMainLevel) Server.SetMainLevel(Map);
+            if (GetConfig().SetMainLevel) Server.SetMainLevel(Map);
             return true;
         }
         

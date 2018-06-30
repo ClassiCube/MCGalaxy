@@ -18,23 +18,34 @@
 using System;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
 
     public abstract partial class RoundsGame : IGame {
         
         protected virtual void HookEventHandlers() {
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
-            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);  
+            OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
             OnSQLSaveEvent.Register(SaveStats, Priority.High);
+            
+            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
         }
         
         protected virtual void UnhookEventHandlers() {
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
-            OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             OnSQLSaveEvent.Unregister(SaveStats);
+            
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);            
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+        }
+        
+        protected virtual void HandleSendingHeartbeat(Heartbeat service, ref string name) {
+            if (Map == null || !GetConfig().MapInHeartbeat) return;
+            name += " (map: " + Map.MapName + ")";
         }
         
         protected virtual void HandlePlayerDisconnect(Player p, string reason) {
@@ -59,9 +70,9 @@ namespace MCGalaxy.Games {
         protected void MessageMapInfo(Player p) {
             Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes",
                            Map.Config.Likes, Map.Config.Dislikes);
+            string[] authors = Map.Config.Authors.SplitComma();
+            if (authors.Length == 0) return;
             
-            if (Map.Config.Authors.Length == 0) return;
-            string[] authors = Map.Config.Authors.Replace(" ", "").Split(',');
             Player.Message(p, "It was created by {0}",
                            authors.Join(n => PlayerInfo.GetColoredName(p, n)));
         }

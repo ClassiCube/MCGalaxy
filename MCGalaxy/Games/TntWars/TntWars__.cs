@@ -39,7 +39,7 @@ namespace MCGalaxy.Games
         public ushort[] RedSpawn = null;
         public ushort[] BlueSpawn = null;
         
-        public TntWarsConfig Config = new TntWarsConfig();
+        public TntWarsMapConfig Config = new TntWarsMapConfig();
         public Thread Starter;
 
         public TntWarsGame1(Level level) {

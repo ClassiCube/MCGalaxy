@@ -47,6 +47,8 @@ namespace MCGalaxy {
             
             ZSGame.Config.Load();
             LSGame.Config.Load();
+            CTFGame.Config.Load();
+            CountdownGame.Config.Load();
             
             Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             #pragma warning disable 0618

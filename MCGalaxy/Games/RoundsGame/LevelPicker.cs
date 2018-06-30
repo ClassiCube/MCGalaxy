@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 namespace MCGalaxy.Games {
-    public abstract class LevelPicker {
+    public class LevelPicker {
         public string QueuedMap;
         public List<string> RecentMaps = new List<string>();
         public int VoteTime = 20;
@@ -40,11 +40,11 @@ namespace MCGalaxy.Games {
             RecentMaps.Clear();
         }
         
-        public string ChooseNextLevel(IGame game) {
+        public string ChooseNextLevel(RoundsGame game) {
             if (QueuedMap != null) return QueuedMap;
             
             try {
-                List<string> maps = GetCandidateMaps();
+                List<string> maps = GetCandidateMaps(game);
                 if (maps == null) return null;
                 
                 RemoveRecentLevels(maps);
@@ -139,12 +139,20 @@ namespace MCGalaxy.Games {
             return map;
         }
         
-        /// <summary> Returns a list of maps that can be used for a round of this game. </summary>
-        /// <returns> null if not enough levels are available, otherwise the list of levels. </returns>
-        public abstract List<string> GetCandidateMaps();
+        public virtual List<string> GetCandidateMaps(RoundsGame game) {
+            List<string> maps = new List<string>(game.GetConfig().Maps);
+            // TODO: Should this instead be
+            // if (maps.Count < 3) {
+            //     Logger.Log(LogType.Warning, "You must have more than 3 maps to change levels in " + game.GameName);
+            
+            if (maps.Count == 0) {
+                Logger.Log(LogType.Warning, "You must have at least 1 level configured to play " + game.GameName);
+                return null;
+            }
+            return maps;
+        }
         
-        /// <summary> Sends the formatted vote message to the player (using bottom right if supported) </summary>
-        public void SendVoteMessage(Player p) {
+       public void SendVoteMessage(Player p) {
             const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
             string line2 = "&a" + Candidate1 + "&e, &b" + Candidate2 + "&e, &c" + Candidate3;
             

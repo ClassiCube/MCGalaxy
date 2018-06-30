@@ -25,7 +25,13 @@ using MCGalaxy.Config;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
-    public sealed class TntWarsConfig {
+    public sealed class TntWarsConfig : RoundsGameConfig {
+        public override bool AllowAutoload { get { return false; } }
+        protected override string GameName { get { return "TNT Wars"; } }
+        protected override string PropsPath { get { return "properties/tntwars.properties"; } }
+    }
+    
+    public sealed class TntWarsMapConfig {
         
         [ConfigBool("grace-period", null, true)]
         public bool InitialGracePeriod = true;

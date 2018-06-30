@@ -20,7 +20,7 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdZombieGame : RoundsGameCmd {
+    public sealed class CmdZombieSurvival : RoundsGameCmd {
         public override string name { get { return "ZombieSurvival"; } }
         public override string shortcut { get { return "ZS"; } }
         protected override RoundsGame Game { get { return Server.zombie; } }
@@ -31,15 +31,11 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage zombie survival") }; }
         }
         
-        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (args.Length < 2) { Help(p, "set"); return; }
-            
+        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
             ZSConfig cfg = ZSGame.Config;
             string prop = args[1];
             LevelConfig lCfg = p.level.Config;
             
-            if (args.Length < 3) { Help(p, "set"); return; }            
             if (prop.CaselessEq("map")) {
                 Player.Message(p, "Pillaring allowed: &b" + lCfg.Pillaring);
                 Player.Message(p, "Build type: &b" + lCfg.BuildType);
@@ -47,6 +43,7 @@ namespace MCGalaxy.Commands.Fun {
                                lCfg.MinRoundTime.Shorten(true), lCfg.MaxRoundTime.Shorten(true));
                 return;
             }
+            if (args.Length < 3) { Help(p, "set"); return; }  
             
             if (prop.CaselessEq("hitbox")) {
                 if (!CommandParser.GetReal(p, args[2], "Hitbox detection", ref cfg.HitboxDist, 0, 4)) return;
@@ -115,7 +112,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/ZS start <map> %H- Starts Zombie Survival");
             Player.Message(p, "%T/ZS stop %H- Stops Zombie Survival");
             Player.Message(p, "%T/ZS end %H- Ends current round of Zombie Survival");
-            Player.Message(p, "%T/ZS set [property] %H- Sets a property. See %T/Help ZG set");
+            Player.Message(p, "%T/ZS set [property] %H- Sets a property. See %T/Help ZS set");
             Player.Message(p, "%T/ZS status %H- Outputs current status of Zombie Survival");
             Player.Message(p, "%T/ZS go %H- Moves you to the current Zombie Survival map");
         }

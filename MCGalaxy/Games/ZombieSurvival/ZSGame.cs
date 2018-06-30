@@ -66,17 +66,17 @@ namespace MCGalaxy.Games {
     }
     
     public sealed partial class ZSGame : RoundsGame {
-        public override string GameName { get { return "Zombie survival"; } }
-        protected override bool ChangeMainLevel { get { return Config.SetMainLevel; } }
+        public static ZSConfig Config = new ZSConfig();
+        public override string GameName { get { return "Zombie Survival"; } }
+        public override RoundsGameConfig GetConfig() { return Config; }
         
-        public ZSGame() { Picker = new ZSLevelPicker(); }
+        public ZSGame() { Picker = new LevelPicker(); }
         public DateTime RoundEnd;
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
         public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
         internal List<string> infectMessages = new List<string>();
-        public static ZSConfig Config = new ZSConfig();
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal static ZSData Get(Player p) {
@@ -207,11 +207,12 @@ namespace MCGalaxy.Games {
             RemoveAssociatedBounties(p);
             
             if (!Running || !RoundInProgress || Infected.Count > 0) return;
-            Random random = new Random();
+            Random rnd = new Random();
             Player[] alive = Alive.Items;
             if (alive.Length == 0) return;
             
-            Player zombie = alive[random.Next(alive.Length)];
+            // Auto continue infection
+            Player zombie = alive[rnd.Next(alive.Length)];
             Map.Message("&c" + zombie.DisplayName + " %Scontinued the infection!");
             InfectPlayer(zombie, null);
         }
@@ -247,10 +248,7 @@ namespace MCGalaxy.Games {
         
 
         public bool HasMap(string name) {
-            if (!Running) return false;
-            if (Config.IgnoredLevelList.CaselessContains(name)) return false;
-            
-            return Config.LevelList.Count == 0 || Config.LevelList.CaselessContains(name);
+            return Running && Config.Maps.CaselessContains(name);
         }
         
         void UpdateAllStatus1() {
@@ -293,29 +291,6 @@ namespace MCGalaxy.Games {
             string money = "&a" + p.money + " %S" + ServerConfig.Currency;
             string state = ", you are " + (infected ? "&cdead" : "&aalive");
             return money + state;
-        }
-    }
-    
-    internal class ZSLevelPicker : LevelPicker {
-        
-        public override List<string> GetCandidateMaps() {
-            List<string> maps = null;
-            bool useLevelList = ZSGame.Config.LevelList.Count > 0;
-            
-            if (useLevelList) {
-                maps = new List<string>(ZSGame.Config.LevelList);
-            } else {
-                string[] allMaps = LevelInfo.AllMapNames();
-                maps = new List<string>(allMaps);
-            }
-            
-            foreach (string ignore in ZSGame.Config.IgnoredLevelList) { maps.Remove(ignore); }
-            if (maps.Count < 3) {
-                string group = useLevelList ? "in your level list " : "";
-                Logger.Log(LogType.Warning, "You must have more than 3 levels {0}to change levels in Zombie Survival", group);
-                return null;
-            }
-            return maps;
         }
     }
 }

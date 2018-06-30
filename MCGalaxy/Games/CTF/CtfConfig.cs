@@ -25,7 +25,13 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
-    public sealed class CtfMapConfig {
+    public sealed class CTFConfig : RoundsGameConfig {
+        public override bool AllowAutoload { get { return false; } }
+        protected override string GameName { get { return "CTF"; } }
+        protected override string PropsPath { get { return "properties/ctf.properties"; } }
+    }
+    
+    public sealed class CTFMapConfig {
         [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
         [ConfigVec3("red-pos", null)] public Vec3U16 RedFlagPos;
         [ConfigBlock("red-block", null, Block.Air)]
@@ -55,14 +61,14 @@ namespace MCGalaxy.Games {
         static ConfigElement[] cfg;
         
         public void Load(string map) {
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CTFMapConfig));
             ConfigElement.ParseFile(cfg, "CTF map", Path(map), this);
         }
         
         public void Save(string map) {
             if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
             
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CtfMapConfig));
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(CTFMapConfig));
             ConfigElement.SerialiseSimple(cfg, Path(map), this);
         }
         

@@ -129,8 +129,8 @@ namespace MCGalaxy {
         }
         
         void UpdateState() {
-            channels = GetChannels(ServerConfig.IRCChannels);
-            opchannels = GetChannels(ServerConfig.IRCOpChannels);
+            channels = ServerConfig.IRCChannels.SplitComma();
+            opchannels = ServerConfig.IRCOpChannels.SplitComma();
             nick = ServerConfig.IRCNick.Replace(" ", "");
             server = ServerConfig.IRCServer;
             
@@ -139,12 +139,6 @@ namespace MCGalaxy {
             args.Port = ServerConfig.IRCPort;
             bool usePass = ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0;
             args.ServerPassword = usePass ? ServerConfig.IRCPassword : "*";
-        }
-        
-        static string[] GetChannels(string names) {
-            names = names.Trim().Replace(" ", "");
-            if (names.Length == 0) return new string[0];
-            return names.Split(',');
         }
         
         void SetDefaultBannedCommands() {

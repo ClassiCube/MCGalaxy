@@ -502,6 +502,7 @@
     <Compile Include="Games\LavaSurvival\LSGame.Round.cs" />
     <Compile Include="Games\MovementCheck.cs" />
     <Compile Include="Games\RoundsGame\LevelPicker.cs" />
+    <Compile Include="Games\RoundsGame\RoundsGameConfig.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.Plugin.cs" />
     <Compile Include="Games\Team.cs" />

@@ -84,10 +84,7 @@ namespace MCGalaxy.Config {
             : base(name, section) { }
         
         public override object Parse(string value) {
-            if (value.Length == 0) return new List<string>();
-            
-            string[] split = value.Replace(" ", "").Split(',');
-            return new List<string>(split);
+            return new List<string>(value.SplitComma());
         }
         
         public override string Serialise(object value) {

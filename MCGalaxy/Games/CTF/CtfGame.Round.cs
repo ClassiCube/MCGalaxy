@@ -31,7 +31,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             RoundInProgress = true;
-            while (Blue.Captures < Config.RoundPoints && Red.Captures < Config.RoundPoints) {
+            while (Blue.Captures < cfg.RoundPoints && Red.Captures < cfg.RoundPoints) {
                 if (!Running) return;
                 if (!RoundInProgress) break;
                 Tick();
@@ -73,8 +73,8 @@ namespace MCGalaxy.Games {
                     Thread.Sleep(300); // TODO: get rid of this
                     
                     if (otherData.HasFlag) DropFlag(p, opposing);
-                    data.Points += Config.Tag_PointsGained;
-                    otherData.Points -= Config.Tag_PointsLost;
+                    data.Points += cfg.Tag_PointsGained;
+                    otherData.Points -= cfg.Tag_PointsLost;
                     data.Tags++;
                     otherData.TagCooldown = false;
                 }
@@ -145,7 +145,7 @@ namespace MCGalaxy.Games {
                 data.HasFlag = false;
                 ResetPlayerFlag(p, data);
                 
-                data.Points += Config.Capture_PointsGained;
+                data.Points += cfg.Capture_PointsGained;
                 data.Captures++;
                 team.Captures++;
                 
@@ -165,7 +165,7 @@ namespace MCGalaxy.Games {
             ResetPlayerFlag(p, data);
             
             Map.Message(team.Color + p.DisplayName + " DROPPED THE FLAG!");
-            data.Points -= Config.Capture_PointsLost;
+            data.Points -= cfg.Capture_PointsLost;
             
             CtfTeam opposing = Opposing(team);
             opposing.RespawnFlag(Map);

@@ -186,9 +186,7 @@ namespace MCGalaxy {
         }
 
         public static void SaveSettings(Level lvl) {
-            if (lvl.IsMuseum) return; // museums do not save properties            
-            string path = LevelInfo.PropsPath(lvl.MapName);
-            lvl.Config.Save(path);
+            if (!lvl.IsMuseum) lvl.Config.SaveFor(lvl.MapName);
         }
 
         // Returns true if ListCheck does not already have an check in the position.

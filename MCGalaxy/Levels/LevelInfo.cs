@@ -161,9 +161,9 @@ namespace MCGalaxy {
         public static bool IsRealmOwner(string name, string map) {
             Level lvl = null;
             LevelConfig cfg = GetConfig(map, out lvl); 
-            string[] owners = cfg.RealmOwner.Replace(" ", "").Split(',');
             
-            if (owners.Length > 0 && owners[0].Length > 0) {
+            string[] owners = cfg.RealmOwner.SplitComma();
+            if (owners.Length > 0) {
                 foreach (string owner in owners) {
                     if (owner.CaselessEq(name)) return true;
                 }

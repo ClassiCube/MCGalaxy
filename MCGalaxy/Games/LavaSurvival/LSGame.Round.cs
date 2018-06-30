@@ -30,13 +30,13 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
-            int secs = 0;
+            int secs = 0, layerSecs = 0;
             while (RoundInProgress && secs < roundTotalSecs) {
-                if (!Running) return;                
-                if ((secs % 60) == 0 && !Flooded) { Map.Message(FloodTimeLeftMessage()); }
+                if (!Running) return;
+                if ((secs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
                 
                 if (secs >= floodDelaySecs) {
-                    if (layerMode && (secs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
+                    if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
                         Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " +curLayer + " flooding.");
                         ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
                         Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
@@ -46,6 +46,7 @@ namespace MCGalaxy.Games {
                         Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
                         Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
                     }
+                    layerSecs++;
                 }
                 
                 secs++; Thread.Sleep(1000);
@@ -58,7 +59,7 @@ namespace MCGalaxy.Games {
         public override void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
-            Flooded = false;
+            flooded = false;
             
             Map.SetPhysics(5);
             Map.Message("The round has ended!");
@@ -90,7 +91,7 @@ namespace MCGalaxy.Games {
             if (killerMode) Player.Message(p, "The " + block + " will &ckill you %Sthis round!");
             if (destroyMode) Player.Message(p, "The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");
             
-            if (!Flooded) Player.Message(p, FloodTimeLeftMessage());
+            if (!flooded) Player.Message(p, FloodTimeLeftMessage());
             Player.Message(p, RoundTimeLeftMessage());
         }
 

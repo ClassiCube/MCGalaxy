@@ -274,18 +274,18 @@ namespace MCGalaxy {
             return ConfigElement.ParseFile(Server.levelConfig, "level", path, this);
         }
         
-        public void Save(string path) {
+        public void SaveFor(string map) { Save(LevelInfo.PropsPath(map), map); }
+        public void Save(string path, string map) {
             try {
-                string mapName = Path.GetFileNameWithoutExtension(path);
                 lock (saveLock) {
                     using (StreamWriter w = new StreamWriter(path)) {
-                        w.WriteLine("#Level properties for " + mapName);
+        				w.WriteLine("#Level properties for " + map);
                         w.WriteLine("#Drown-time is in tenths of a second");
                         ConfigElement.Serialise(Server.levelConfig, w, this);
                     }
                 }
             } catch (Exception ex) {
-                Logger.LogError("Error saving level properties to " + path, ex);
+                Logger.LogError("Error saving level properties for " + map, ex);
             }
         }
     }

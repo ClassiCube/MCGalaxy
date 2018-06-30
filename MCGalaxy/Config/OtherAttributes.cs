@@ -102,7 +102,7 @@ namespace MCGalaxy.Config {
         public override object Parse(string raw) {
             Vec3U16 value;
             try {
-                string[] p = raw.Replace(" ", "").Split(',');
+                string[] p = raw.SplitComma();
                 value = new Vec3U16(ushort.Parse(p[0]), ushort.Parse(p[1]), ushort.Parse(p[2]));
             } catch {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid vec3, using default", Name);

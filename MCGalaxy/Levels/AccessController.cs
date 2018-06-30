@@ -264,7 +264,7 @@ namespace MCGalaxy {
         }
         
         void Update(Level lvl) {
-            cfg.Save(LevelInfo.PropsPath(lvlName));
+            cfg.SaveFor(lvlName);
             if (lvl == null) return;
             if (IsVisit && lvl == Server.mainLevel) return;
             Player[] players = PlayerInfo.Online.Items;

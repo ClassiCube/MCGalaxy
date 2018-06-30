@@ -51,7 +51,6 @@ namespace MCGalaxy.Games {
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
             OnBlockChangeEvent.Unregister(HandleBlockChange);
-            OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
@@ -99,7 +98,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandlePlayerConnect(Player p) {
-            if (ChangeMainLevel) return;
+            if (GetConfig().SetMainLevel) return;
             Player.Message(p, "&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
         }
         
@@ -142,11 +141,6 @@ namespace MCGalaxy.Games {
             
             MessageMapInfo(p);
             Player.Message(p, "This map's win chance is &a{0}%S%", Map.WinChance);
-        }
-        
-        void HandleSendingHeartbeat(Heartbeat service, ref string name) {
-            if (!Config.IncludeMapInHeartbeat || Map == null) return;
-            name += " (map: " + Map.MapName + ")";
         }
         
         void HandlePlayerChat(Player p, string message) {

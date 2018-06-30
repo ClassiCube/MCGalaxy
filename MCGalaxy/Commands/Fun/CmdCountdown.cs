@@ -64,9 +64,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
-            if (args.Length < 4) { Help(p); return; }
-            
+            if (args.Length < 4) { Help(p); return; }           
             if (game_.Running) {
                 Player.Message(p, "You must stop Countdown before replacing the map."); return;
             }
@@ -79,10 +77,10 @@ namespace MCGalaxy.Commands.Fun {
             
             CountdownGame game = (CountdownGame)game_;
             game.GenerateMap(p, x, y, z);
-        }
+        }        
+        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) { }
         
         protected override void HandleStart(Player p, RoundsGame game_, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
             if (game_.Running) { Player.Message(p, "{0} is already running", game_.GameName); return; }
             
             CountdownGame game = (CountdownGame)game_;

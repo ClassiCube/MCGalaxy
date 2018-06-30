@@ -23,20 +23,13 @@ using MCGalaxy.Games;
 namespace MCGalaxy.Gui {
     public sealed class ZombieProperties {
         
-        [Description("Comma separated list of levels that are never chosen for zombie survival. (e.g. main,spawn)")]
+        [Description("Comma separated list of levels to use for zombie survival. (e.g. map1,map2,map3)")]
         [Category("Levels settings")]
-        [DisplayName("Ignored level list")]
-        public string IgnoredLevelsList { get; set; }
-        
-        [Description("Comma separated list of levels to use for zombie survival. (e.g. map1,map2,map3) " +
-                     "If this is left blank, then all levels are used.")]
-        [Category("Levels settings")]
-        [DisplayName("Levels list")]
-        public string LevelsList { get; set; }
-        
+        [DisplayName("Maps")]
+        public string Maps { get; set; }       
         
         [Description("Whether players are allowed to pillar in zombie survival. " +
-                     "Note this can be overriden for specific maps using /mset.")]
+                     "Note this can be overriden for specific maps using /ZS set.")]
         [Category("General settings")]
         [DisplayName("Pillaring allowed")]
         public bool Pillaring { get; set; }
@@ -134,8 +127,7 @@ namespace MCGalaxy.Gui {
         
         public void LoadFromServer() {
             ZSConfig cfg = ZSGame.Config;
-            IgnoredLevelsList = cfg.IgnoredLevelList.Join(",");
-            LevelsList = cfg.LevelList.Join(",");
+            Maps = cfg.Maps.Join(",");
             
             Pillaring = !cfg.NoPillaring;
             SetMainLevel = cfg.SetMainLevel;
@@ -143,7 +135,7 @@ namespace MCGalaxy.Gui {
             
             MaxMoveDistance = cfg.MaxMoveDist;
             HitboxPrecision = cfg.HitboxDist;
-            IncludeMapInHeartbeat = cfg.IncludeMapInHeartbeat;
+            IncludeMapInHeartbeat = cfg.MapInHeartbeat;
             
             Name = cfg.ZombieName;
             Model = cfg.ZombieModel;
@@ -162,13 +154,7 @@ namespace MCGalaxy.Gui {
         
         public void ApplyToServer() {
             ZSConfig cfg = ZSGame.Config;
-            string list = IgnoredLevelsList.Replace(" ", "");
-            if (list.Length == 0) cfg.IgnoredLevelList = new List<string>();
-            else cfg.IgnoredLevelList = new List<string>(list.Replace(" ", "").Split(','));
-                
-            list = LevelsList.Replace(" ", "");
-            if (list.Length == 0) cfg.LevelList = new List<string>();
-            else cfg.LevelList = new List<string>(list.Replace(" ", "").Split(','));
+            cfg.Maps = new List<string>(Maps.SplitComma());
             
             cfg.NoPillaring = !Pillaring;
             cfg.SetMainLevel = SetMainLevel;
@@ -176,7 +162,7 @@ namespace MCGalaxy.Gui {
             
             cfg.MaxMoveDist = MaxMoveDistance;
             cfg.HitboxDist = HitboxPrecision;
-            cfg.IncludeMapInHeartbeat = IncludeMapInHeartbeat;
+            cfg.MapInHeartbeat = IncludeMapInHeartbeat;
             
             cfg.ZombieName = Name.Trim();
             cfg.ZombieModel = Model.Trim();

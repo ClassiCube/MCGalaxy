@@ -145,7 +145,7 @@ namespace MCGalaxy.Levels.IO {
                 try {
                     ParseZone(lvl, ref buffer, gs);
                 } catch (Exception ex) {
-            	    Logger.LogError("Error importing zone #" + i + " from MCSharp map", ex);
+                    Logger.LogError("Error importing zone #" + i + " from MCSharp map", ex);
                 }
             }
         }

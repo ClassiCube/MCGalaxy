@@ -23,19 +23,12 @@ using MCGalaxy.Config;
 
 namespace MCGalaxy.Games {
     
-    public sealed class ZSConfig {
+    public sealed class ZSConfig : RoundsGameConfig {
         
         [ConfigReal("zombie-hitbox-distance", "Zombie", 1f)]
         public float HitboxDist = 1f;
         [ConfigReal("zombie-max-move-distance", "Zombie", 1.5625f)]
         public float MaxMoveDist = 1.5625f;
-        
-        [ConfigBool("zombie-survival-only-server", "Zombie", false)]
-        public bool SetMainLevel;
-        [ConfigBool("zombie-on-server-start", "Zombie", false)]
-        public bool StartImmediately;
-        [ConfigBool("zombie-map-inheartbeat", "Zombie", false)]
-        public bool IncludeMapInHeartbeat;
 
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public bool NoPillaring = true;
@@ -55,54 +48,55 @@ namespace MCGalaxy.Games {
         
         [ConfigString("revive-notime-msg", "Revive",
                       "It's too late. The humans do not have enough time left to make more revive potions.")]
-        public string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";        
+        public string ReviveNoTimeMessage = "It's too late. The humans do not have enough time left to produce more revive potions.";
         [ConfigInt("revive-no-time", "Revive", 120, 0)]
         public int ReviveNoTime = 120;
         
         [ConfigString("revive-fewzombies-msg", "Revive",
                       "There aren't enough zombies for it to be worthwhile to produce revive potions.")]
-        public string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";        
+        public string ReviveFewZombiesMessage = "There aren't enough zombies for it to be worthwhile to produce revive potions.";
         [ConfigInt("revive-fewzombies", "Revive", 3, 0)]
-        public int ReviveFewZombies = 3;       
+        public int ReviveFewZombies = 3;
         [ConfigInt("revive-tooslow", "Revive", 60, 0)]
-        public int ReviveTooSlow = 60;      
+        public int ReviveTooSlow = 60;
         [ConfigInt("revive-chance", "Revive", 80, 0, 100)]
-        public int ReviveChance = 80;        
+        public int ReviveChance = 80;
         [ConfigInt("revive-times", "Revive", 1, 0)]
-        public int ReviveTimes = 1;       
+        public int ReviveTimes = 1;
         [ConfigString("revive-success", "Revive", "used a revive potion. &aIt was super effective!")]
         public string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
         [ConfigString("revive-failure", "Revive", "tried using a revive potion. &cIt was not very effective..")]
         public string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
         
-        [ConfigStringList("zombie-levels-list", "Zombie")]
-        public List<string> LevelList = new List<string>();        
-        [ConfigStringList("zombie-ignores-list", "Zombie")]
-        public List<string> IgnoredLevelList = new List<string>();
-        
         static ConfigElement[] cfg;
-        const string propsFile = "properties/zombiesurvival.properties";
+        public override bool AllowAutoload { get { return true; } }
+        protected override string GameName { get { return "Zombie Survival"; } }
+        protected override string PropsPath { get { return "properties/zombiesurvival.properties"; } }
         
-        public void Save() {
+        public override void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(ZSConfig));
             
-            using (StreamWriter w = new StreamWriter(propsFile)) {
-                w.WriteLine("#   zombie-on-server-start        = Starts Zombie Survival when server is started.");
+            using (StreamWriter w = new StreamWriter(PropsPath)) {
                 w.WriteLine("#   no-pillaring-during-zombie    = Disables pillaring while Zombie Survival is activated.");
                 w.WriteLine("#   zombie-name-while-infected    = Sets the zombies name while actived if there is a value.");
-                w.WriteLine("#   zombie-survival-only-server   = EXPERIMENTAL! Makes the server only for Zombie Survival (etc. changes main level)");
-                w.WriteLine("#   use-level-list                = Only gets levels for changing levels in Zombie Survival from zombie-level-list.");
-                w.WriteLine("#   zombie-level-list             = List of levels for changing levels (Must be comma seperated, no spaces. Must have changing levels and use level list enabled.)");
                 w.WriteLine();
                 ConfigElement.Serialise(cfg, w, this);
             }
         }
         
-        public void Load() {
+        public override void Load() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(ZSConfig));
-            ConfigElement.ParseFile(cfg, "Zombie survival", propsFile, this);
+            PropertiesFile.Read(PropsPath, ProcessConfigLine);
         }
-
+        
+        void ProcessConfigLine(string key, string value) {
+            // backwards compatibility
+            if (key.CaselessEq("zombie-levels-list")) {
+                Maps = new List<string>(value.SplitComma());
+            } else {
+                ConfigElement.Parse(cfg, GameName, this, key, value);
+            }
+        }
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
@@ -125,9 +119,9 @@ namespace MCGalaxy.Games {
             return msgs;
         }
         
-        static string InfectPath(string name) { return "text/infect/" + name.ToLower() + ".txt"; }       
+        static string InfectPath(string name) { return "text/infect/" + name.ToLower() + ".txt"; }
         public static List<string> LoadPlayerInfectMessages(string name) {
-            string path = InfectPath(name);          
+            string path = InfectPath(name);
             if (!File.Exists(path)) return null;
             return Utils.ReadAllLinesList(path);
         }

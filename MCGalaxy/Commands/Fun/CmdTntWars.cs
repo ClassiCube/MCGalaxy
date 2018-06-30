@@ -537,7 +537,7 @@ namespace MCGalaxy.Commands.Fun {
 
                 default:
                     Player.Message(p, "Gamemode: &a{0} %Sat difficulty &a{1}", it.GameMode, it.Difficulty);
-                    TntWarsConfig cfg = it.Config;
+                    TntWarsMapConfig cfg = it.Config;
                     
                     Player.Message(p, "TNT per player at a time: &a{0}",
                                    cfg.MaxPlayerActiveTnt == 0 ? "unlimited" : cfg.MaxPlayerActiveTnt.ToString());

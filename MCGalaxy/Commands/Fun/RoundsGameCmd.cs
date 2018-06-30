@@ -32,15 +32,17 @@ namespace MCGalaxy.Commands.Fun {
             } else if (IsInfoCommand(message)) {
                 HandleStatus(p, game);
             } else if (message.CaselessEq("start") || message.CaselessStarts("start ")) {
-                string[] args = message.SplitSpaces();
-                HandleStart(p, game, args);
+                if (!CheckExtraPerm(p, 1)) return;
+                HandleStart(p, game, message.SplitSpaces());
             } else if (message.CaselessEq("end")) {
+                if (!CheckExtraPerm(p, 1)) return;
                 HandleEnd(p, game);
             } else if (message.CaselessEq("stop")) {
+                if (!CheckExtraPerm(p, 1)) return;
                 HandleStop(p, game);
             } else if (message.CaselessStarts("set ") || message.CaselessStarts("setup ")) {
-                string[] args = message.SplitSpaces();
-                HandleSet(p, game, args);
+                if (!CheckExtraPerm(p, 1)) return;
+                HandleSet(p, game, message.SplitSpaces());
             } else {
                 Help(p);
             }
@@ -55,7 +57,6 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected virtual void HandleStart(Player p, RoundsGame game, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
             if (game.Running) { Player.Message(p, "{0} is already running", game.GameName); return; }
 
             string map = args.Length > 1 ? args[1] : "";
@@ -63,8 +64,6 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected void HandleEnd(Player p, RoundsGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
-            
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
@@ -73,8 +72,6 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected void HandleStop(Player p, RoundsGame game) {
-            if (!CheckExtraPerm(p, 1)) return;
-            
             if (!game.Running) {
                 Player.Message(p, "{0} is not running", game.GameName);
             } else {
@@ -92,6 +89,19 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected abstract void HandleSet(Player p, RoundsGame game, string[] args);
+        protected virtual void HandleSet(Player p, RoundsGame game, string[] args) {
+            if (args.Length < 2) { Help(p, "set"); return; }
+            string prop = args[1];
+            
+            if (prop.CaselessEq("add")) {
+                RoundsGameConfig.AddMap(p, p.level.name, p.level.Config, game);
+            } else if (IsDeleteCommand(prop)) {
+                RoundsGameConfig.RemoveMap(p, p.level.name, p.level.Config, game);
+            } else {
+                HandleSetCore(p, game, args);
+            }
+        }
+        
+        protected abstract void HandleSetCore(Player p, RoundsGame game, string[] args);
     }
 }

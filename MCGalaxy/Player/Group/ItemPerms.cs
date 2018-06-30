@@ -109,7 +109,7 @@ namespace MCGalaxy {
             if (input == null || input.Length == 0) return null;
             
             List<LevelPermission> perms = new List<LevelPermission>();
-            foreach (string perm in input.Split(',')) {
+            foreach (string perm in input.SplitComma()) {
                 perms.Add((LevelPermission)int.Parse(perm));
             }
             return perms;

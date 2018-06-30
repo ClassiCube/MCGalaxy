@@ -28,21 +28,30 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
 
     class CountdownLevelPicker : LevelPicker {
-        public override List<string> GetCandidateMaps() { return new List<string>() { "countdown" }; }
+        public override List<string> GetCandidateMaps(RoundsGame game) { 
+            return new List<string>() { "countdown" }; 
+        }
     }
     
-    public sealed partial class CountdownGame : RoundsGame {        
+    public sealed class CountdownConfig : RoundsGameConfig {
+        public override bool AllowAutoload { get { return true; } }
+        protected override string GameName { get { return "Countdown"; } }
+        protected override string PropsPath { get { return "properties/countdown.properties"; } }
+    }
+    
+    public sealed partial class CountdownGame : RoundsGame {
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
-        public override string GameName { get { return "Countdown"; } }
+        
+        public static CountdownConfig Config = new CountdownConfig();
+        public override string GameName { get { return "Countfown"; } }
+        public override RoundsGameConfig GetConfig() { return Config; }
         
         public bool FreezeMode;
         public int Interval;
         public string SpeedType;
         
-        public CountdownGame() {
-            Picker = new CountdownLevelPicker();
-        }
+        public CountdownGame() { Picker = new CountdownLevelPicker(); }
         
         protected override List<Player> GetPlayers() {
             List<Player> playing = new List<Player>();

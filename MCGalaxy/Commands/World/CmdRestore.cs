@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.World {
                     DoRestore(lvl, args[0]);
                 } catch (Exception ex) { 
                     Logger.LogError("Error restoring map", ex); 
-            	}
+                }
             } else { 
                 Player.Message(p, "Backup " + args[0] + " does not exist."); 
             }

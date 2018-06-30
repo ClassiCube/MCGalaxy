@@ -33,10 +33,6 @@ using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
-
-    class TntWarsLevelPicker : LevelPicker {
-        public override List<string> GetCandidateMaps() { return new List<string>() { }; }
-    }
     
     public enum TntWarsGameMode { FFA, TDM };
     public enum TntWarsDifficulty {
@@ -46,8 +42,17 @@ namespace MCGalaxy.Games {
         Extreme, //1 Hit to die, Tnt has short delay and BIG exlosion
     }
     
+    internal sealed class TntWarsData {
+        public int Score;
+        public string OrigCol;
+    }
+    
     public sealed partial class TntWarsGame : RoundsGame {
-        public override string GameName { get { return "TNT wars"; } }
+        TntWarsMapConfig cfg = new TntWarsMapConfig();
+        public static TntWarsConfig Config = new TntWarsConfig();
+        public override string GameName { get { return "TNT Wars"; } }
+        public override RoundsGameConfig GetConfig() { return Config; }
+        
         public TntWarsGameMode GameMode = TntWarsGameMode.TDM;
         public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
         
@@ -64,8 +69,23 @@ namespace MCGalaxy.Games {
         TntWarsTeam Red  = new TntWarsTeam("Red", Colors.red);
         TntWarsTeam Blue = new TntWarsTeam("Blue", Colors.blue);
         
-        public TntWarsGame() {
-            Picker = new TntWarsLevelPicker();
+        public TntWarsGame() { Picker = new LevelPicker(); }
+        
+        const string twExtrasKey = "MCG_TW_DATA";
+        static TntWarsData Get(Player p) {
+            TntWarsData data = TryGet(p);
+            if (data != null) return data;
+            data = new TntWarsData();
+            
+            // TODO: Is this even thread-safe
+            data.OrigCol = p.color;
+            
+            p.Extras.Put(twExtrasKey, data);
+            return data;
+        }
+        
+        static TntWarsData TryGet(Player p) {
+            object data; p.Extras.TryGet(twExtrasKey, out data); return (TntWarsData)data;
         }
         
         protected override List<Player> GetPlayers() {
@@ -102,15 +122,18 @@ namespace MCGalaxy.Games {
         
         public override void PlayerLeftGame(Player p) {
             TntWarsTeam team = TeamOf(p);
-            if (team == null) return;
-
+            if (team == null) return;            
             team.Members.Remove(p);
-            Map.Message(team.Color + p.DisplayName + " %Sleft TNT wars");
+            
+            TntWarsData data = TryGet(p);
+            if (data != null) p.color = data.OrigCol;
         }
         
         void JoinTeam(Player p, TntWarsTeam team) {
             team.Members.Add(p);
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
+            
+            p.color = team.Color;
             Player.Message(p, "You are now on the " + team.ColoredName + " team!");
             TabList.Update(p, true);
         }

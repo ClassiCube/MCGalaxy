@@ -30,13 +30,13 @@ namespace MCGalaxy {
     
     public static class Extensions {
         
-        static char[] trimChars = new char[] {' '};
+        static char[] space = new char[] { ' ' };
         public static string[] SplitSpaces(this string value) {
-            return value.Split(trimChars);
+            return value.Split(space);
         }
         
         public static string[] SplitSpaces(this string value, int maxParts) {
-            return value.Split(trimChars, maxParts);
+            return value.Split(space, maxParts);
         }
         
         public static string Splice(this string value, int startCount, int endCount) {

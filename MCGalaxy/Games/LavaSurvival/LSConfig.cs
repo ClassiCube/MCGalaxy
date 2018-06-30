@@ -26,26 +26,13 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Games {
     
-    public sealed class LSConfig {
-        [ConfigBool("start-on-startup", null, false)]
-        public bool StartImmediately;
+    public sealed class LSConfig : RoundsGameConfig {
         [ConfigInt("lives", null, 3, 0)]
         public int MaxLives = 3;
-        [ConfigStringList("maps", null)]
-        public List<string> Maps = new List<string>();
         
-        static ConfigElement[] cfg;
-        const string propsFile = "properties/lavasurvival.properties";
-        
-        public void Save() {
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
-            ConfigElement.SerialiseSimple(cfg, propsFile, this);
-        }
-        
-        public void Load() {
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
-            ConfigElement.ParseFile(cfg, "Lava survival", propsFile, this);
-        }
+        public override bool AllowAutoload { get { return false; } }
+        protected override string GameName { get { return "Lava Survival"; } }
+        protected override string PropsPath { get { return "properties/lavasurvival.properties"; } }
     }
     
     public sealed class LSMapConfig {
