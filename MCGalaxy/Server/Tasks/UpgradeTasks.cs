@@ -26,34 +26,7 @@ using Newtonsoft.Json;
 
 namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
-        
-        internal static void UpgradeOldBlacklist(SchedulerTask task) {
-            if (!Directory.Exists("levels/blacklists")) return;
-            string[] files = Directory.GetFiles("levels/blacklists");
-            for (int i = 0; i < files.Length; i++) {
-                string[] blacklist = File.ReadAllLines(files[i]);
-                List<string> names = new List<string>();
-                
-                // Lines are in the format: day.month.year name+
-                foreach (string entry in blacklist) {
-                    string[] parts = entry.SplitSpaces();
-                    string name = parts[parts.Length - 1];
-                    name = name.Substring(0, name.Length - 1);
-                    names.Add(name);
-                }
-                
-                if (names.Count > 0) {
-                    string lvlName = Path.GetFileNameWithoutExtension(files[i]);
-                    string propsPath = LevelInfo.PropsPath(lvlName);
-                    using (StreamWriter w = new StreamWriter(propsPath, true)) {
-                        w.WriteLine("VisitBlacklist = " + names.Join());
-                    }
-                }
-                File.Delete(files[i]);
-            }
-            Directory.Delete("levels/blacklists");
-        }
-        
+
         internal static void UpgradeOldAgreed() {
             // agreed.txt format used to be names separated by spaces, we need to fix that up.
             if (!File.Exists("ranks/agreed.txt")) return;
@@ -112,37 +85,18 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        static void Combine(string envFile) {
-            string name = Path.GetFileNameWithoutExtension(envFile);
-            string propsPath = LevelInfo.PropsPath(name);
+        static void Combine(string envPath) {
+            string map = Path.GetFileNameWithoutExtension(envPath);
+            string propsPath = LevelInfo.PropsPath(map);
             
             List<string> lines = new List<string>();
-            if (File.Exists(propsPath)) {
-                lines = Utils.ReadAllLinesList(propsPath);
-            }
+            if (File.Exists(propsPath)) lines = Utils.ReadAllLinesList(propsPath);
             
-            using (StreamReader r = new StreamReader(envFile)) {
-                string line = null;
-                while ((line = r.ReadLine()) != null)
-                    lines.Add(line);
-            }
+            List<string> envLines = Utils.ReadAllLinesList(envPath);
+            lines.AddRange(envLines);
             
             File.WriteAllLines(propsPath, lines.ToArray());
-            File.Delete(envFile);
-        }
-        
-        internal static void UpgradeOldLockdown(SchedulerTask task) {
-            if (!Directory.Exists("text/lockdown/map")) return;
-            
-            string[] files = Directory.GetFiles("text/lockdown/map");
-            for (int i = 0; i < files.Length; i++) {
-                File.Delete(files[i]);
-                string level = Path.GetFileName(files[i]);
-                Server.lockdown.AddIfNotExists(level);
-            }
-            
-            Server.lockdown.Save();
-            Directory.Delete("text/lockdown/map");
+            File.Delete(envPath);
         }
         
         internal static void UpgradeOldTempranks(SchedulerTask task) {

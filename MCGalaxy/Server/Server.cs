@@ -111,13 +111,11 @@ namespace MCGalaxy {
             Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.LoadAll();
-            Background.QueueOnce(UpgradeTasks.UpgradeOldBlacklist);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
             Background.QueueOnce(LoadPlayerLists);
-            Background.QueueOnce(UpgradeTasks.UpgradeOldLockdown);
             Background.QueueOnce(UpgradeTasks.UpgradeBots);
             
             Background.QueueOnce(SetupSocket);
