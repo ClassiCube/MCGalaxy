@@ -91,7 +91,7 @@ namespace MCGalaxy {
 
         /// <summary> Loads the list of warps from the file located at Filename. </summary>
         public void Load() {
-            if (!File.Exists(Filename)) return;          
+            if (!File.Exists(Filename)) return;
             using (StreamReader r = new StreamReader(Filename)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
@@ -109,8 +109,8 @@ namespace MCGalaxy {
                         warp.Yaw   = byte.Parse(parts[5]);
                         warp.Pitch = byte.Parse(parts[6]);
                         Items.Add(warp);
-                    } catch {
-                        Logger.Log(LogType.Warning, "Failed loading a warp from " + Filename);
+                    } catch (Exception ex) { 
+                        Logger.LogError("Error loading warp from " + Filename, ex); 
                     }
                 }
             }

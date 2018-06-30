@@ -109,7 +109,7 @@ namespace MCGalaxy.DB {
         
         public static string FormatTimespan(string input) {
             long value = PlayerData.ParseLong(input);
-            return TimeSpan.FromSeconds(value).Shorten(true, true);
+            return TimeSpan.FromSeconds(value).Shorten(true);
         }
         
         public static string FormatDate(string input) {

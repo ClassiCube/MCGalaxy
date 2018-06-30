@@ -55,9 +55,8 @@ namespace MCGalaxy {
                     Logger.Log(LogType.SystemActivity, plugin.welcome);
                 }
                 return true;
-            } catch (Exception e) {
-                Logger.LogError(e);
-                Logger.Log(LogType.Warning, "The plugin {0} failed to load!", name);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading plugin " + name, ex);
                 if (!String.IsNullOrEmpty(creator)) Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
                 return false;
             }
@@ -69,8 +68,7 @@ namespace MCGalaxy {
                 p.Unload(shutdown);
                 Logger.Log(LogType.SystemActivity, p.name + " was unloaded.");
             } catch (Exception ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "An error occurred while unloading a plugin.");
+                Logger.LogError("Error unloading plugin " + p.name, ex);
                 success = false;
             }
             

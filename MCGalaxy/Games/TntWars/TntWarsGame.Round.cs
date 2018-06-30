@@ -36,7 +36,7 @@ namespace MCGalaxy.Games {
     public sealed partial class TntWarsGame : RoundsGame {
         
         protected override void DoRound() {
-        	// TODO: Implement this
+            // TODO: Implement this
         }
         
         public override void EndRound() {

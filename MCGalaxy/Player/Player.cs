@@ -84,8 +84,9 @@ namespace MCGalaxy {
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
                 Socket.ReceiveNextAsync();
                 pending.Add(this);
-            } catch ( Exception e ) {
-                Leave("Login failed!"); Logger.LogError(e);
+            } catch (Exception ex) {
+                Leave("Login failed!"); 
+                Logger.LogError("Error logging in", ex);
             }
         }
         
@@ -272,12 +273,6 @@ namespace MCGalaxy {
                     return;
                 }
 
-                TntWarsGame1 tntwarsgame = TntWarsGame1.GameIn(this);
-                if ( tntwarsgame != null ) {
-                    tntwarsgame.Players.Remove(tntwarsgame.FindPlayer(this));
-                    tntwarsgame.MessageAll("TNT Wars: " + ColoredName + " %Shas left TNT Wars!");
-                }
-
                 Entities.DespawnEntities(this, false);
                 ShowDisconnectInChat(chatMsg, isKick);
                 save();
@@ -288,7 +283,7 @@ namespace MCGalaxy {
                 level.AutoUnload();
                 Dispose();
             } catch (Exception e) { 
-                Logger.LogError(e); 
+                Logger.LogError("Error disconnecting player", e); 
             } finally {
                 CloseSocket();
             }

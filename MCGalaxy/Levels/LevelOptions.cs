@@ -33,19 +33,21 @@ namespace MCGalaxy {
     
     public static class LevelOptions {        
         public delegate void OptionSetter(Player p, Level lvl, string value);
-        public const string MOTD = "motd", RealmOwner = "RealmOwner", TreeType = "TreeType", Speed = "PhysicSpeed";
+        public const string MOTD = "motd", RealmOwner = "RealmOwner", TreeType = "TreeType", Speed = "Speed";
         public const string Overload = "Overload", Fall = "Fall", Drown = "Drown", Finite = "Finite", AI = "AI";
         public const string Edge = "Edge", Grass = "Grass", Death = "Death", Killer = "Killer", Unload = "Unload";
         public const string Goto = "LoadOnGoto", Decay = "LeafDecay", Flow = "RandomFlow", Trees = "GrowTrees";
         public const string Chat = "Chat", Guns = "Guns", Buildable = "Buildable", Deletable = "Deletable";
-        public const string LoadDelay = "LoadDelay", Drawing = "Drawing";
+        public const string LoadDelay = "LoadDelay", Drawing = "Drawing", Authors = "Authors";
         
         public static List<LevelOption> Options = new List<LevelOption>() {
              new LevelOption(MOTD,       SetMotd,  "%HSets the motd for this map. (leave blank to use default motd)"),
              new LevelOption(RealmOwner, SetOwner, "%HSets the players allowed to use /realm on this map."),
              new LevelOption(TreeType,   SetTree,  "%HSets the type of trees saplings grow into."),
-             new LevelOption(Speed,      SetSpeed, "%HSets the delay (in milliseconds) between physics ticks."),
-             new LevelOption(Overload, SetOverload, "%HSets how hard (high values) or easy (low values) it is to kill physics."),
+             new LevelOption(Speed,      SetSpeed, "%HSets the delay (in milliseconds) between physics ticks. " +
+                             "E.g. a delay of 250 milliseconds means 4 ticks per second."),
+             new LevelOption(Overload, SetOverload, "%HSets how long (in milliseconds) a physics tick can run over before physics shuts off. " +
+                             "E.g a speed of 250 and overload of 500 means physics shuts off if a physics tick takes over 750 milliseconds."),
              new LevelOption(Fall,   SetFall,   "%HSets how many blocks you can fall before dying."),
              new LevelOption(Drown,  SetDrown,  "%HSets how long you can stay underwater (in tenths of a second) before drowning."),
              new LevelOption(Finite, SetFinite, "%HWhether all liquids are finite."),
@@ -64,8 +66,9 @@ namespace MCGalaxy {
              new LevelOption(Buildable, SetBuildable, "%HWhether any blocks can be placed by players."),
              new LevelOption(Deletable, SetDeletable, "%HWhether any blocks can be deleted by players."),
              new LevelOption(Drawing,   SetDrawing,   "%HWhether drawing commands (e.g /z) can be used on this map."),
-             new LevelOption(LoadDelay, SetLoadDelay, 
-                "%HSets the delay before the end of the map is sent. Only useful for forcing players to see the map's MOTD at the loading screen."),
+             new LevelOption(LoadDelay, SetLoadDelay, "%HSets the delay before the end of the map is sent. " +
+                             "Only useful for forcing players to see the map's MOTD at the loading screen."),
+             new LevelOption(Authors, SetAuthors, "%HSets authors of map. Only shown when running games"),
         };
 
         public static LevelOption Find(string opt) {
@@ -192,6 +195,11 @@ namespace MCGalaxy {
                 pl.aiming = false;
                 pl.ClearBlockchange();
             }
+        }
+        
+        static void SetAuthors(Player p, Level lvl, string value) {
+            lvl.Config.Authors = value.Replace(" ", "%S, ");
+            Player.Message(p, "Map authors set to: &b" + lvl.Config.Authors);
         }
         
         static void TogglePerms(Player p, Level lvl, ref bool target, string name) {

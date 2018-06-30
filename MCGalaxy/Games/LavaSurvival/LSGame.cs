@@ -74,9 +74,9 @@ namespace MCGalaxy.Games {
             }
 
             curLayer = 1;
-            roundTotalSecs = (int)(cfg.RoundTimeMins * 60);
-            floodDelaySecs = (int)(cfg.FloodTimeMins * 60);
-            layerIntervalSecs = (int)(cfg.LayerIntervalMins * 60);
+            roundTotalSecs = (int)cfg.RoundTime.TotalSeconds;
+            floodDelaySecs = (int)cfg.FloodTime.TotalSeconds;
+            layerIntervalSecs = (int)cfg.LayerInterval.TotalSeconds;
         }
                 
         protected override List<Player> GetPlayers() {

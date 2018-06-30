@@ -249,10 +249,10 @@ namespace MCGalaxy {
         [ConfigEnum("BuildType", "Game", BuildType.Normal, typeof(BuildType))]
         public BuildType BuildType = BuildType.Normal;
         
-        [ConfigInt("MinRoundTime", "Game", 4)]
-        public int MinRoundTime = 4;
-        [ConfigInt("MaxRoundTime", "Game", 7)]
-        public int MaxRoundTime = 7;
+        [ConfigTimespan("MinRoundTime", "Game", 4)]
+        public TimeSpan MinRoundTime = TimeSpan.FromMinutes(4);
+        [ConfigTimespan("MaxRoundTime", "Game", 7)]
+        public TimeSpan MaxRoundTime = TimeSpan.FromMinutes(7);
         [ConfigBool("DrawingAllowed", "Game", true)]
         public bool Drawing = true;
         [ConfigInt("RoundsPlayed", "Game", 0)]
@@ -285,8 +285,7 @@ namespace MCGalaxy {
                     }
                 }
             } catch (Exception ex) {
-                Logger.Log(LogType.Warning, "Failed to save level properties!");
-                Logger.LogError(ex);
+                Logger.LogError("Error saving level properties to " + path, ex);
             }
         }
     }

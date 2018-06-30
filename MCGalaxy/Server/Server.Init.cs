@@ -36,8 +36,8 @@ namespace MCGalaxy {
                 
                 mainLevel.Config.AutoUnload = false;
                 LevelInfo.Add(mainLevel);
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading main level", ex);
             }
         }
         
@@ -54,7 +54,7 @@ namespace MCGalaxy {
                 UpgradeTasks.UpgradeOldAgreed();
                 agreed = PlayerList.Load("ranks/agreed.txt");
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error upgrading agreed list", ex);
             }
             
             bannedIP = PlayerList.Load("ranks/banned-ip.txt");
@@ -105,8 +105,8 @@ namespace MCGalaxy {
         static void InitHeartbeat(SchedulerTask task) {
             try {
                 Heartbeat.InitHeartbeats();
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error initialising heartbeat", ex);
             }
         }
         
@@ -136,14 +136,18 @@ namespace MCGalaxy {
             if (!ZSGame.Config.StartImmediately) return;
             try {
                 Server.zombie.Start(null, "", int.MaxValue);
-            } catch (Exception e) { Logger.LogError(e); }
+            } catch (Exception ex) { 
+                Logger.LogError("Error auto-starting Zombie Survival", ex); 
+            }
         }
 
         static void InitLavaSurvival() {
             if (!LSGame.Config.StartImmediately) return;
             try {
                 Server.lava.Start(null, "", int.MaxValue);
-            } catch (Exception e) { Logger.LogError(e); }
+            } catch (Exception ex) { 
+                Logger.LogError("Error auto-starting Lava Survival", ex); 
+            }
         }
     }
 }

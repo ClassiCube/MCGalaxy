@@ -55,8 +55,8 @@ namespace MCGalaxy {
                 } else if (NewerVersionDetected != null) {
                     NewerVersionDetected(null, EventArgs.Empty);
                 }
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error checking for updates", ex);
             }
             
             client.Dispose();
@@ -77,7 +77,7 @@ namespace MCGalaxy {
 
                 Level[] levels = LevelInfo.Loaded.Items;
                 foreach (Level lvl in levels) {
-                    if (!lvl.SaveChanges) continue;                    
+                    if (!lvl.SaveChanges) continue;
                     lvl.Save();
                     lvl.SaveBlockDBChanges();
                 }
@@ -93,8 +93,8 @@ namespace MCGalaxy {
                     Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + parent);
                 }
                 Server.Stop(false, "Updating server.");
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error performing update", ex);
             }
         }
         

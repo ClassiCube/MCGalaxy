@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
                     new CommandPerm(LevelPermission.Admin, "can set realm owners") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ps", "{args} " + LevelOptions.Speed),
+            get { return new[] { new CommandAlias("ps", LevelOptions.Speed),
                     new CommandAlias("AllowGuns", "{args} " + LevelOptions.Guns) }; }
         }
 

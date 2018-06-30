@@ -224,7 +224,6 @@
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
-    <Compile Include="Commands\Fun\CmdMapSet.cs" />
     <Compile Include="Commands\Fun\CmdMissile.cs" />
     <Compile Include="Commands\Fun\CmdReferee.cs" />
     <Compile Include="Commands\Fun\CmdSlap.cs" />
@@ -247,7 +246,7 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdLastLevels.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdQueue.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdShowQueue.cs" />
-    <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieGame.cs" />
+    <Compile Include="Commands\Fun\ZombieSurvival\CmdZombieSurvival.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
     <Compile Include="Commands\Information\CmdBanInfo.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />

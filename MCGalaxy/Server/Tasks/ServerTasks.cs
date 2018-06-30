@@ -46,8 +46,8 @@ namespace MCGalaxy.Tasks {
             for (int i = 0; i < players.Length; i++) {
                 try {
                     TickPlayer(players[i]);
-                } catch (Exception e) {
-                    Logger.LogError(e);
+                } catch (Exception ex) {
+                    Logger.LogError("Error ticking players", ex);
                 }
             }
         }
@@ -129,8 +129,8 @@ namespace MCGalaxy.Tasks {
                 try {
                     if (!lvl.SaveChanges) continue;
                     lvl.SaveBlockDBChanges();
-                } catch (Exception e) {
-                    Logger.LogError(e);
+                } catch (Exception ex) {
+                    Logger.LogError("Error saving BlockDB for " + lvl.MapName, ex);
                 }
             }
         }
@@ -153,8 +153,7 @@ namespace MCGalaxy.Tasks {
                         }
                     }
                 } catch (Exception ex) {
-                    Logger.Log(LogType.Warning, "Backup for {0} has caused an error.", lvl.name);
-                    Logger.LogError(ex);
+                    Logger.LogError("Error auto-backing up " + lvl.MapName, ex);
                 }
             }
 
@@ -165,8 +164,8 @@ namespace MCGalaxy.Tasks {
             Player[] players = PlayerInfo.Online.Items;
             try {
                 foreach (Player p in players) p.save();
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error auto-saving players", ex);
             }
             
             players = PlayerInfo.Online.Items;

@@ -109,6 +109,11 @@ namespace MCGalaxy {
         }
         
         
+        public static void LogError(string action, Exception ex) {
+            Log(LogType.Warning, action);
+            LogError(ex);
+        }
+        
         public static void LogError(Exception ex) {
             StringBuilder sb = new StringBuilder();
             while (ex != null) {

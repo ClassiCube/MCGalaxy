@@ -37,7 +37,6 @@ namespace MCGalaxy {
                 File.Create(file).Dispose();
         }
 
-        /// <summary> Adds the given line to the end of the file. </summary>
         public void Append(string data) {
             lock (locker) {
                 using (StreamWriter w = new StreamWriter(file, true))

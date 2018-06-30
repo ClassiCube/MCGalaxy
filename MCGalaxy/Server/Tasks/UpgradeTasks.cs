@@ -84,12 +84,11 @@ namespace MCGalaxy.Tasks {
                     try {
                         File.Move(file, newFile);
                     } catch (Exception ex) {
-                        Logger.Log(LogType.Warning, "Error while trying to move .lvl.prev file");
-                        Logger.LogError(ex);
+                        Logger.LogError("Error while trying to move .lvl.prev file", ex);
                     }
                 }
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error moving .lvl.prev files", ex);
             }
         }
         
@@ -104,13 +103,12 @@ namespace MCGalaxy.Tasks {
                     try {
                         Combine(envFile);
                     } catch (Exception ex) {
-                        Logger.Log(LogType.Warning, "Error while trying to combine .env and .properties file");
-                        Logger.LogError(ex);
+                        Logger.LogError("Error combining .env and .properties file", ex);
                     }
                 }
                 Logger.Log(LogType.SystemActivity, "Finished combining .env and .properties files.");
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error combining .env and .properties files", ex);
             }
         }
         

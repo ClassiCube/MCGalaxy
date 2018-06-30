@@ -100,7 +100,8 @@ namespace MCGalaxy.Commands.Building {
             try {
                 DoDrawImageCore(p, m, dArgs);
             } catch (Exception ex) {
-                Logger.LogError(ex); // Do not want it taking down the whole server if error occurs
+                Logger.LogError("Error drawing image", ex); 
+                // Do not want it taking down the whole server if error occurs
             }
         }
         

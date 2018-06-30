@@ -155,8 +155,7 @@ namespace MCGalaxy {
                         SaveProps(w);
                 }
             } catch (Exception ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "SAVE FAILED! " + Paths.ServerPropsFile);
+                Logger.LogError("Error saving " + Paths.ServerPropsFile, ex);
             }
         }
         

@@ -50,8 +50,7 @@ namespace MCGalaxy {
                     }
                 }
             } catch (IOException ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to load ignore list for: " + p.name);
+                Logger.LogError("Error loading ignores for " + p.name, ex);
             }
             
             bool special = All || IRC || Titles || Nicks || EightBall || DrawOutput || WorldChanges;
@@ -81,8 +80,7 @@ namespace MCGalaxy {
                     foreach (string name in Names) { w.WriteLine(name); }
                 }
             } catch (IOException ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to save ignored list for player: " + p.name);
+                Logger.LogError("Error saving ignores for " + p.name, ex);
             }
         }
         

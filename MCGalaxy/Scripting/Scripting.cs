@@ -164,17 +164,17 @@ namespace MCGalaxy.Scripting {
                 
                 if (commands.Count == 0) return "No commands in dll file";
                 foreach (Command cmd in commands) { Command.Register(cmd); }
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading commands from " + path, ex);
                 
                 string file = Path.GetFileName(path);
-                if (e is FileNotFoundException) {
+                if (ex is FileNotFoundException) {
                     return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
-                } else if (e is BadImageFormatException) {
+                } else if (ex is BadImageFormatException) {
                     return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
-                } else if (e is PathTooLongException) {
+                } else if (ex is PathTooLongException) {
                     return "Class name is too long.";
-                } else if (e is FileLoadException) {
+                } else if (ex is FileLoadException) {
                     return file + " or one of its dependencies could not be loaded. Details in the error log.";
                 }
                 return "An unknown error occured. Details in the error log.";

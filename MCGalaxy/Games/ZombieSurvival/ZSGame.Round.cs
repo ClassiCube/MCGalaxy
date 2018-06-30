@@ -45,11 +45,15 @@ namespace MCGalaxy.Games {
         }
         
         void StartRound(List<Player> players) {
-            Random random = new Random();
-            int roundMins = random.Next(Map.Config.MinRoundTime, Map.Config.MaxRoundTime);
-            string suffix = roundMins == 1 ? " %Sminute!" : " %Sminutes!";
-            Map.Message("This round will last for &a" + roundMins + suffix);
-            RoundEnd = DateTime.UtcNow.AddMinutes(roundMins);
+            Random rnd = new Random();
+            int min = (int)Map.Config.MinRoundTime.TotalSeconds;
+            int max = (int)Map.Config.MaxRoundTime.TotalSeconds;
+            if (min > max) { int tmp = min; min = max; max = tmp; }
+            
+            int duration = rnd.Next(min, max);
+            string suffix = duration == 1 ? " %Sminute!" : " %Sminutes!";
+            Map.Message("This round will last for &a" + duration + suffix);
+            RoundEnd = DateTime.UtcNow.AddMinutes(duration);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
@@ -60,7 +64,7 @@ namespace MCGalaxy.Games {
 
             Player first = null;
             do {
-                first = QueuedZombie != null ? PlayerInfo.FindExact(QueuedZombie) : players[random.Next(players.Count)];
+                first = QueuedZombie != null ? PlayerInfo.FindExact(QueuedZombie) : players[rnd.Next(players.Count)];
                 QueuedZombie = null;
             } while (first == null || first.level != Map);
             
@@ -104,7 +108,7 @@ namespace MCGalaxy.Games {
         }
         
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
-            int dist = Config.HitboxDist;
+            int dist = (int)(Config.HitboxDist * 32);
             foreach (Player killer in deadList) {
                 ZSData killerData = Get(killer);
                 killerData.Infected = true;

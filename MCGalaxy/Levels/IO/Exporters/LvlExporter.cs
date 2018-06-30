@@ -91,7 +91,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
-            lock (lvl.physStepLock) {
+            lock (lvl.physTickLock) {
                 // Count the number of physics checks with extra info
                 int used = 0, count = lvl.ListCheck.Count;
                 Check[] checks = lvl.ListCheck.Items;

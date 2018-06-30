@@ -103,8 +103,7 @@ namespace MCGalaxy {
                     using (Stream src = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
                         CopyStream(src, part.GetStream());
                 } catch (Exception ex) {
-                    Logger.Log(LogType.Warning, "Failed to save file: " + file);
-                    Logger.LogError(ex);
+                    Logger.LogError("Failed to backup file: " + file, ex);
                 }
             }
         }

@@ -25,10 +25,11 @@ namespace MCGalaxy.Games {
     
     public sealed class ZSConfig {
         
-        [ConfigInt("zombie-hitbox-precision", "Zombie", 32)]
-        public int HitboxDist = 32;
-        [ConfigInt("zombie-maxmove-distance", "Zombie", 50)]
-        public int MaxMoveDist = 50;
+        [ConfigReal("zombie-hitbox-distance", "Zombie", 1f)]
+        public float HitboxDist = 1f;
+        [ConfigReal("zombie-max-move-distance", "Zombie", 1.5625f)]
+        public float MaxMoveDist = 1.5625f;
+        
         [ConfigBool("zombie-survival-only-server", "Zombie", false)]
         public bool SetMainLevel;
         [ConfigBool("zombie-on-server-start", "Zombie", false)]
@@ -117,7 +118,7 @@ namespace MCGalaxy.Games {
                 }
                 msgs = Utils.ReadAllLinesList("text/infectmessages.txt");
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error loading infect messages list", ex);
             }
             
             if (msgs.Count == 0) msgs = new List<string>(defMessages);

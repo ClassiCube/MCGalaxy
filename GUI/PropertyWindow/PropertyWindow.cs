@@ -50,16 +50,14 @@ namespace MCGalaxy.Gui {
                 LoadCommands();
                 LoadBlocks();
             } catch (Exception ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to load commands and blocks!");
+                Logger.LogError("Error loading commands and blocks", ex);
             }
 
             try {
                 UpdateLavaMapList();
                 UpdateLavaControls();
             } catch (Exception ex) {
-                Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to load Lava Survival settings!");
+                Logger.LogError("Error loading lava durvival settings!", ex);
             }
 
             try {

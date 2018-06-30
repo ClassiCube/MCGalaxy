@@ -102,7 +102,7 @@ namespace MCGalaxy.Tasks {
             try {
                 task.Callback(task);
             } catch (Exception ex) {
-                MCGalaxy.Logger.LogError(ex);
+                Logger.LogError(ex);
             }
             
             if (task.Repeating) {

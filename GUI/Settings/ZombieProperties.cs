@@ -53,17 +53,15 @@ namespace MCGalaxy.Gui {
         public bool StartImmediately { get; set; }    
         
         
-        [Description("Max distance players are allowed to move between packets (for speedhack detection). " +
-                     "32 units equals one block.")]
+        [Description("Max distance players are allowed to move between packets. (for speedhack detection)")]
         [Category("Other settings")]
         [DisplayName("Max move distance")]
-        public int MaxMoveDistance { get; set; }
+        public float MaxMoveDistance { get; set; }
         
-        [Description("Distance between players before they are considered to have 'collided'. (for infecting). " +
-                     "32 units equals one block.")]
+        [Description("Distance between players before they are considered to have 'collided'. (for infecting)")]
         [Category("Other settings")]
         [DisplayName("Hitbox precision")]
-        public int HitboxPrecision { get; set; }
+        public float HitboxPrecision { get; set; }
         
         [Description("Whether the current map's name is included when a hearbeat is sent. " +
                      "This means it shows up in the server list as: \"Server name (current map name)\"")]

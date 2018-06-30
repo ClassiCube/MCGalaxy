@@ -35,8 +35,7 @@ namespace MCGalaxy.Network {
                 IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
                 EnsureIPv4Url(addresses);
             } catch (Exception ex) {
-                Logger.Log(LogType.Warning, "Error while trying to retrieve DNS information for classicube.net");
-                Logger.LogError(ex);
+                Logger.LogError("Error retrieving DNS information for classicube.net", ex);
             }
         }
         

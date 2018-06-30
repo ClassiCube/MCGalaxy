@@ -83,9 +83,10 @@ namespace MCGalaxy {
                     string json = File.ReadAllText(path);
                     defs = JsonConvert.DeserializeObject<BlockDefinition[]>(json);
                 }
-            } catch (Exception ex) {
-                Logger.LogError(ex);
+            } catch (Exception ex) { 
+                Logger.LogError("Error Loading block defs from " + path, ex); 
             }
+            
             if (defs == null) return new BlockDefinition[Block.ExtendedCount];
             
             for (int i = 0; i < defs.Length; i++) {
@@ -140,8 +141,8 @@ namespace MCGalaxy {
                 if (File.Exists(GlobalPath)) {
                     File.Copy(GlobalPath, GlobalBackupPath, true);
                 }
-            } catch (Exception ex) {
-                Logger.LogError(ex);
+            } catch (Exception ex) { 
+                Logger.LogError("Error backing up global block defs", ex); 
             }
             
             // As the BlockDefinition instances in levels will now be different

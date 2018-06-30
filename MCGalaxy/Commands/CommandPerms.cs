@@ -75,8 +75,8 @@ namespace MCGalaxy.Commands {
         public static void Save() {
             try {
                 lock (saveLock) SaveCore();
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) { 
+                Logger.LogError("Error saving " + Paths.CmdPermsFile, ex); 
             }
         }
         

@@ -36,9 +36,9 @@ namespace MCGalaxy.Games {
             OnSQLSaveEvent.Unregister(SaveStats);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
         }
-		
+        
         protected virtual void HandlePlayerDisconnect(Player p, string reason) {
-		    if (p.level != Map) return;
+            if (p.level != Map) return;
             PlayerLeftGame(p);
         }
         

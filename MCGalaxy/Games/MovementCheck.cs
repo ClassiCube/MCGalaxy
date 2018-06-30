@@ -36,12 +36,13 @@ namespace MCGalaxy.Games {
             return false;
         }
         
-        public static bool DetectSpeedhack(Player p, Position newPos, int maxMove) {
+        public static bool DetectSpeedhack(Player p, Position newPos, float moveDist) {
             if (p.Game.Referee || Hacks.CanUseHacks(p, p.level)) return false;
             int dx = Math.Abs(p.Pos.X - newPos.X), dz = Math.Abs(p.Pos.Z - newPos.Z);
-            bool speedhacking = dx >= maxMove || dz >= maxMove;
-            if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, 1))
-                return false;
+            
+            int maxMove = (int)(moveDist * 32);
+            bool speedhacking = dx >= maxMove || dz >= maxMove;         
+            if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, 1)) return false;
             
             Warn(ref p.Game.LastSpeedhackWarn, p, "speedhack");
             p.SendPos(Entities.SelfID, p.Pos, p.Rot);

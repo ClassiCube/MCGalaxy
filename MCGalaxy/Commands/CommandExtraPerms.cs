@@ -85,8 +85,7 @@ namespace MCGalaxy.Commands {
                 try {
                     SaveCore();
                 } catch (Exception ex) {
-                    Logger.Log(LogType.Warning, "Saving {0} failed.", Paths.CmdExtraPermsFile);
-                    Logger.LogError(ex);
+                    Logger.LogError("Error saving " + Paths.CmdExtraPermsFile, ex);
                 }
             }
         }

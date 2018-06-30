@@ -67,8 +67,7 @@ namespace MCGalaxy.Bots {
             try {
                 File.WriteAllText(path, json);
             } catch (Exception ex) {
-                Logger.Log(LogType.Warning, "Failed to save bots file");
-                Logger.LogError(ex);
+                Logger.LogError("Error saving bots to " + path, ex);
             }            
         }
         
@@ -76,8 +75,8 @@ namespace MCGalaxy.Bots {
             if (String.IsNullOrEmpty(props.AI)) return;
             try {
                 ScriptFile.Parse(null, bot, "bots/" + props.AI);
-            } catch (Exception ex)  {
-                Logger.LogError(ex);
+            } catch (Exception ex) { 
+                Logger.LogError("Error loading bot AI " + props.AI, ex); 
             }
             
             bot.cur = props.CurInstruction;

@@ -198,8 +198,8 @@ namespace MCGalaxy {
                     if (!scopeFilter(pl, arg)) continue;
                     if (filter != null && !filter(pl, arg)) continue;
                 } else {
-                	// don't send PM back to self
-                	if (scope == ChatScope.PM) { continue; }
+                    // don't send PM back to self
+                    if (scope == ChatScope.PM) { continue; }
                 }
                 
                 Player.Message(pl, UnescapeMessage(pl, source, msg));

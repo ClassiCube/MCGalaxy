@@ -22,7 +22,6 @@ using System.Threading;
 namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
 
-        int announceSecs, roundSecs, floodSecs, layerSecs;
         protected override void DoRound() {
             if (!Running) return;
 
@@ -31,54 +30,48 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
-            while (RoundInProgress && roundSecs < roundTotalSecs) {
-                if (!Running) return;
-                if ((announceSecs % 60) == 0 && !Flooded) {
-                    Map.Message(FloodTimeLeftMessage());
-                }
-                if (floodSecs >= floodDelaySecs) DoFlood();
+            int secs = 0;
+            while (RoundInProgress && secs < roundTotalSecs) {
+                if (!Running) return;                
+                if ((secs % 60) == 0 && !Flooded) { Map.Message(FloodTimeLeftMessage()); }
                 
-                announceSecs++; roundSecs++; floodSecs++;
-                Thread.Sleep(1000);
+                if (secs >= floodDelaySecs) {
+                    if (layerMode && (secs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
+                        Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " +curLayer + " flooding.");
+                        ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
+                        Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
+                        curLayer++;
+                    } else if (!layerMode && secs == floodDelaySecs) {
+                        Map.Message("&4Look out, here comes the flood!");
+                        Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
+                        Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
+                    }
+                }
+                
+                secs++; Thread.Sleep(1000);
             }
             
             if (Running) EndRound();
             if (Running) VoteAndMoveToNextMap();
         }
-        
-        void DoFlood() {
-            if (layerMode && (layerSecs % layerIntervalSecs) == 0) {
-                if (curLayer <= cfg.LayerCount) {
-                    Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " +curLayer + " flooding.");
-                    ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
-                    Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
-                    curLayer++;
-                }
-            } else if (!layerMode && floodSecs == floodDelaySecs) {
-                Map.Message("&4Look out, here comes the flood!");
-                Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
-                Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
-            }
-        }
 
         public override void EndRound() {
             if (!RoundInProgress) return;
             RoundInProgress = false;
-            announceSecs = 0; roundSecs = 0; floodSecs = 0; layerSecs = 0;
-            
             Flooded = false;
+            
             Map.SetPhysics(5);
             Map.Message("The round has ended!");
         }
 
         internal string FloodTimeLeftMessage() {
-            double mins = Math.Ceiling((RoundStart.AddMinutes(cfg.FloodTimeMins) - DateTime.UtcNow).TotalMinutes);
-            return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the flood.";
+            TimeSpan left = RoundStart.Add(cfg.FloodTime) - DateTime.UtcNow;
+            return "&3" + left.Shorten(true) + " %Suntil the flood.";
         }
         
         internal string RoundTimeLeftMessage() {
-            double mins = Math.Ceiling((RoundStart.AddMinutes(cfg.RoundTimeMins) - DateTime.UtcNow).TotalMinutes);
-            return "&3" + mins + " minute" + (mins == 1 ? "" : "s") + " %Suntil the round ends.";
+            TimeSpan left = RoundStart.Add(cfg.RoundTime) - DateTime.UtcNow;
+            return "&3" + left.Shorten(true) + " %Suntil the round ends.";
         }
 
         public override void OutputStatus(Player p) {
@@ -95,7 +88,7 @@ namespace MCGalaxy.Games {
             
             if (fastMode) Player.Message(p, "The lava will be &cfast %Sthis round!");
             if (killerMode) Player.Message(p, "The " + block + " will &ckill you %Sthis round!");
-            if (destroyMode) Player.Message(p, "The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");          
+            if (destroyMode) Player.Message(p, "The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");
             
             if (!Flooded) Player.Message(p, FloodTimeLeftMessage());
             Player.Message(p, RoundTimeLeftMessage());

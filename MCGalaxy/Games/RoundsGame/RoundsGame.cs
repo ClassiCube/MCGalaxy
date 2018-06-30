@@ -74,7 +74,7 @@ namespace MCGalaxy.Games {
                 }
                 End();
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error in game " + GameName, ex);
                 Chat.MessageGlobal("&c" + GameName + " disabled due to an error.");
                 
                 try { End(); }

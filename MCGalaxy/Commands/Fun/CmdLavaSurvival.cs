@@ -81,16 +81,13 @@ namespace MCGalaxy.Commands.Fun {
 
         static bool ParseChance(Player p, string arg, string[] args, ref int value) {
             if (!CommandParser.GetInt(p, args[3], "Chance", ref value, 0, 100)) return false;
-            Player.Message(p, "{0} chance: &b{1}%", arg, value);
+            Player.Message(p, "Set {0} chance to &b{1}%", arg, value);
             return true;
         }
         
-        static bool ParseTimespan(Player p, string arg, string[] args, ref float value) {
-            TimeSpan span = default(TimeSpan);
+        static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan span) {
             if (!CommandParser.GetTimespan(p, args[3], ref span, "set " + arg + " to", "m")) return false;
-            
-            value = (float)span.TotalMinutes;
-            Player.Message(p, "{0}: &b{1}", arg, span.Shorten(true));
+            Player.Message(p, "Set {0} to &b{1}", arg, span.Shorten(true));
             return true;
         }
         
@@ -122,12 +119,12 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("height")) {
                 ok = CommandParser.GetInt(p, args[3], "Height", ref cfg.LayerHeight, 0);
-                if (ok) Player.Message(p, "Layer height: &b" + cfg.LayerHeight + " blocks");
+                if (ok) Player.Message(p, "Set layer height to &b" + cfg.LayerHeight + " blocks");
             } else if (prop.CaselessEq("count")) {
                 ok = CommandParser.GetInt(p, args[3], "Count", ref cfg.LayerCount, 0);
-                if (ok) Player.Message(p, "Layer count: &b" + cfg.LayerCount);
+                if (ok) Player.Message(p, "Set layer count to &b" + cfg.LayerCount);
             } else if (prop.CaselessEq("chance")) {
-                ok = ParseChance(p, "Layer flood", args, ref cfg.LayerChance);
+                ok = ParseChance(p, "layer flood", args, ref cfg.LayerChance);
             } else {
                 Help(p, "spawn");
             }
@@ -168,13 +165,13 @@ namespace MCGalaxy.Commands.Fun {
             bool ok = false;
             
             if (prop.CaselessEq("fast")) {
-                ok = ParseChance(p, "Fast lava", args, ref cfg.FastChance);
+                ok = ParseChance(p, "fast lava", args, ref cfg.FastChance);
             } else if (prop.CaselessEq("killer")) {
-                ok = ParseChance(p, "Killer lava/water", args, ref cfg.KillerChance);
+                ok = ParseChance(p, "killer lava/water", args, ref cfg.KillerChance);
             } else if (prop.CaselessEq("destroy")) {
-                ok = ParseChance(p, "Destroy blocks", args, ref cfg.DestroyChance);
+                ok = ParseChance(p, "destroy blocks", args, ref cfg.DestroyChance);
             } else if (prop.CaselessEq("water")) {
-                ok = ParseChance(p, "Water flood", args, ref cfg.WaterChance);
+                ok = ParseChance(p, "water flood", args, ref cfg.WaterChance);
             } else {
                 Help(p, "block");
             }
@@ -185,9 +182,9 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetOther(Player p, string[] args) {
             LSMapConfig cfg = RetrieveConfig(p);
             if (args.Length < 3) {
-                Player.Message(p, "Layer time: &b" + cfg.LayerIntervalMins + " minutes");
-                Player.Message(p, "Round time: &b" + cfg.RoundTimeMins + " minutes");
-                Player.Message(p, "Flood time: &b" + cfg.RoundTimeMins + " minutes");
+                Player.Message(p, "Layer time: &b" + cfg.LayerInterval.Shorten(true));
+                Player.Message(p, "Round time: &b" + cfg.RoundTime.Shorten(true));
+                Player.Message(p, "Flood time: &b" + cfg.FloodTime.Shorten(true));
                 Player.Message(p, "Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
                 return;
             }
@@ -203,11 +200,11 @@ namespace MCGalaxy.Commands.Fun {
             bool ok = false;
             
             if (prop.CaselessEq("layer")) {
-                ok = ParseTimespan(p, "Layer time", args, ref cfg.LayerIntervalMins);
+                ok = ParseTimespan(p, "layer time", args, ref cfg.LayerInterval);
             } else if (prop.CaselessEq("round")) {
-                ok = ParseTimespan(p, "Round time", args, ref cfg.RoundTimeMins);
+                ok = ParseTimespan(p, "round time", args, ref cfg.RoundTime);
             } else if (prop.CaselessEq("flood")) {
-                ok = ParseTimespan(p, "Flood time", args, ref cfg.FloodTimeMins);
+                ok = ParseTimespan(p, "flood time", args, ref cfg.FloodTime);
             } else {
                 Help(p, "other");
             }
@@ -241,7 +238,7 @@ namespace MCGalaxy.Commands.Fun {
             if (message.CaselessEq("set")) {
                 Player.Message(p, "%T/Help LS spawn %H- Views help for lava spawn settings");
                 Player.Message(p, "%T/Help LS block %H- Views help for lava block settings");
-                Player.Message(p, "%T/Help LS other %H- Views help other settings");
+                Player.Message(p, "%T/Help LS other %H- Views help for other settings");
             } else if (message.CaselessEq("spawn")) {
                 Player.Message(p, "%T/LS set spawn %H- View lava spawns and layer info");
                 Player.Message(p, "%T/LS set spawn flood %H- Set position lava floods from");

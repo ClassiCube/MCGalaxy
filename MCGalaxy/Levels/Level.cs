@@ -143,38 +143,30 @@ namespace MCGalaxy {
             if (save && SaveChanges && Changed) Save(false, true);
             if (save && SaveChanges) SaveBlockDBChanges();
             
-            if (TntWarsGame1.Find(this) != null) {
-                foreach (TntWarsGame1.player pl in TntWarsGame1.Find(this).Players) {
-                    pl.p.CurrentTntGameNumber = -1;
-                    Player.Message(pl.p, "TNT Wars: The TNT Wars game you are currently playing has been deleted!");
-                    pl.p.PlayingTntWars = false;
-                    pl.p.canBuild = true;
-                    TntWarsGame1.SetTitlesAndColor(pl, true);
-                }
-                Logger.Log(LogType.GameActivity, "TNT Wars: Game deleted on " + name);
-                TntWarsGame1.GameList.Remove(TntWarsGame1.Find(this));
-
-            }
             MovePlayersToMain();
             LevelInfo.Remove(this);
-
+            
             try {
                 if (!unloadedBots) {
                     unloadedBots = true;
                     BotsFile.Save(this);
                     PlayerBot.RemoveLoadedBots(this, false);
                 }
+            } catch (Exception ex) { 
+                Logger.LogError("Error saving bots", ex);
+            }
 
+            try {
                 physThread.Abort();
                 physThread.Join();
             } catch {
-            } finally {
-                Dispose();
-                Server.DoGC();
-
-                if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
-                Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             }
+            
+            Dispose();
+            Server.DoGC();
+
+            if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
+            Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             return true;
         }
 
@@ -303,7 +295,7 @@ namespace MCGalaxy {
                 OnLevelLoadedEvent.Call(lvl);
                 return lvl;
             } catch (Exception ex) {
-                Logger.LogError(ex);
+                Logger.LogError("Error loading map from " + path, ex);
                 return null;
             }
         }

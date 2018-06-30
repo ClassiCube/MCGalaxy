@@ -62,30 +62,18 @@ namespace MCGalaxy {
             connection.Sender.PrivateMessage(user, message);
         }
         
-        /// <summary> Sends an IRC message to the given channel. </summary>
         public void Message(string channel, string message) {
             if (!Enabled) return;
             message = ConvertMessage(message);
             connection.Sender.PublicMessage(channel, message);
         }
 
-        /// <summary> Attempts to join the given IRC channel. </summary>        
         public void Join(string channel) {
             if (String.IsNullOrEmpty(channel)) return;
             connection.Sender.Join(channel);
         }
+
         
-        
-        /// <summary> Disconnects this bot from IRC, then reconnects to IRC if IRC is enabled. </summary>
-        public void Reset() {
-            resetting = true;
-            retries = 0;
-            Disconnect("IRC Bot resetting...");
-            if (!ServerConfig.UseIRC) return;
-            Connect();
-        }
-        
-        /// <summary> Connects this bot to IRC, if IRC is enabled. </summary>
         public void Connect() {
             if (!ServerConfig.UseIRC || Connected || Server.shuttingDown) return;
             InitConnectionState();
@@ -103,7 +91,6 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Disconnects this bot from IRC. </summary>
         public void Disconnect(string reason) {
             if (!Connected) return;
             handlers.Unhook();
@@ -112,9 +99,15 @@ namespace MCGalaxy {
             Logger.Log(LogType.IRCCActivity, "Disconnected from IRC!");
         }
         
-        /// <summary> Returns whether this bot is connected to IRC. </summary>
-        public bool Connected { get { return connection != null && connection.Connected; } }
+        public void Reset() {
+            resetting = true;
+            retries = 0;
+            Disconnect("IRC Bot resetting...");
+            if (ServerConfig.UseIRC) Connect();
+        }
         
+        /// <summary> Returns whether this bot is connected to IRC. </summary>
+        public bool Connected { get { return connection != null && connection.Connected; } }        
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
         public bool Enabled { get { return ServerConfig.UseIRC && connection != null && connection.Connected; } }
         

@@ -44,9 +44,8 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (!LevelInfo.ValidateAction(p, lvl, "pause physics on this level")) return;
-            bool enabled = lvl.physPause;
-            lvl.PhysicsEnabled = enabled;
-            lvl.physPause = !lvl.physPause;
+            bool enabled = lvl.PhysicsPaused;
+            lvl.PhysicsPaused = !lvl.PhysicsPaused;
             
             if (enabled) {
                 Chat.MessageGlobal("Physics on {0} %Swere re-enabled.", lvl.ColoredName);
@@ -62,7 +61,7 @@ namespace MCGalaxy.Commands.World {
             Level lvl = LevelInfo.FindExact(lvlName);
             if (lvl == null) return;
             
-            lvl.PhysicsEnabled = true;
+            lvl.PhysicsPaused = false;
             Chat.MessageGlobal("Physics on {0} %Swere re-enabled.", lvl.ColoredName);
         }
         

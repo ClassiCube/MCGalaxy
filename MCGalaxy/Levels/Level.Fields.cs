@@ -100,10 +100,10 @@ namespace MCGalaxy {
         internal SparseBitSet listCheckExists, listUpdateExists;
         
         public Random physRandom = new Random();
-        public bool physPause;
-        public Thread physThread;
+        public bool PhysicsPaused;
+        Thread physThread;
         readonly object physThreadLock = new object();
-        internal readonly object physStepLock = new object();
+        internal readonly object physTickLock = new object();
         bool physThreadStarted = false;
         
         public List<C4Data> C4list = new List<C4Data>();

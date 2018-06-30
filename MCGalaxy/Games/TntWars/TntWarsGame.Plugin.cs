@@ -60,8 +60,8 @@ namespace MCGalaxy.Games {
                              Map, (pl, arg) => pl.Game.Referee || TeamOf(pl) == team);
             p.cancelchat = true;
         }
-		
-		void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
+        
+        void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (p.level != Map) return;
             TntWarsTeam team = TeamOf(p);           
             if (team == null || GameMode != TntWarsGameMode.TDM) return;

@@ -137,7 +137,7 @@ namespace MCGalaxy.Games {
 
             double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
             if (startLeft >= 0) {
-                Player.Message(p, "&a{0}%Sseconds left until the round starts. &aRun!", (int)startLeft);
+                Player.Message(p, "&a{0} %Sseconds left until the round starts. &aRun!", (int)startLeft);
             }
             
             MessageMapInfo(p);

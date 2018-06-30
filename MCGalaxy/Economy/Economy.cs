@@ -68,7 +68,7 @@ namespace MCGalaxy.Eco {
             try {
                 lock (saveLock) SaveCore();
             } catch (Exception e) {
-                Logger.LogError(e);
+                Logger.LogError("Error loading " + Paths.EconomyPropsFile, e);
             }
         }
         

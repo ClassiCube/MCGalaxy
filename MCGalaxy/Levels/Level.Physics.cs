@@ -53,59 +53,52 @@ namespace MCGalaxy {
                 
                 physThread = new Thread(PhysicsLoop);
                 physThread.Name = "MCG_Physics_" + name;
-                PhysicsEnabled = true;
                 physThread.Start();
                 physThreadStarted = true;
             }
         }
 
-        /// <summary> Gets or sets a value indicating whether physics are enabled. </summary>
-        public bool PhysicsEnabled;
-
         void PhysicsLoop() {
             int wait = Config.PhysicsSpeed;
             while (true) {
-                if (!PhysicsEnabled) { Thread.Sleep(500); continue; }
+                if (PhysicsPaused) { Thread.Sleep(500); continue; }
 
                 try {
                     if (wait > 0) Thread.Sleep(wait);
-                    if (physics == 0 || ListCheck.Count == 0)
-                    {
+                    if (physics == 0) { lastCheck = 0; break; }
+                    
+                    // No block calculations in this tick
+                    if (ListCheck.Count == 0) {
                         lastCheck = 0;
                         wait = Config.PhysicsSpeed;
-                        if (physics == 0) break;
                         continue;
                     }
 
-                    DateTime start = DateTime.UtcNow;
-                    if (physics > 0) {
-                        try {
-                            lock (physStepLock)
-                                CalcPhysics();
-                        } catch (Exception ex) {
-                            Logger.Log(LogType.Warning, "Level physics error");
-                            Logger.LogError(ex);
-                        }
+                    DateTime tickStart = DateTime.UtcNow;
+                    try {
+                        lock (physTickLock) PhysicsTick();
+                    } catch (Exception ex) {
+                        Logger.LogError("Error in physics tick", ex);
                     }
 
-                    TimeSpan delta = DateTime.UtcNow - start;
-                    wait = Config.PhysicsSpeed - (int)delta.TotalMilliseconds;
+                    // Measure how long this physics tick took to execute
+                    TimeSpan elapsed = DateTime.UtcNow - tickStart;
+                    wait = Config.PhysicsSpeed - (int)elapsed.TotalMilliseconds;
 
+                    // Check if tick took too long to execute (server is falling behind)
                     if (wait < (int)(-Config.PhysicsOverload * 0.75f)) {
                         if (wait < -Config.PhysicsOverload) {
                             if (!ServerConfig.PhysicsRestart) SetPhysics(0);
                             ClearPhysics();
-
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
+                            
                             Logger.Log(LogType.Warning, "Physics shutdown on " + name);
                             OnPhysicsStateChangedEvent.Call(this, PhysicsState.Stopped);
                             wait = Config.PhysicsSpeed;
                         } else {
                             Player[] online = PlayerInfo.Online.Items;
-                            foreach (Player p in online) {
-                                if (p.level != this) continue;
-                                Player.Message(p, "Physics warning!");
-                            }
+                            Message("Physics warning!");
+                            
                             Logger.Log(LogType.Warning, "Physics warning on " + name);
                             OnPhysicsStateChangedEvent.Call(this, PhysicsState.Warning);
                         }
@@ -130,7 +123,7 @@ namespace MCGalaxy {
             return default(PhysicsArgs);
         }
 
-        public void CalcPhysics() {
+        void PhysicsTick() {
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
             

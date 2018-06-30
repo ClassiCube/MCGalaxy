@@ -70,8 +70,8 @@ namespace MCGalaxy.Blocks {
         public static void Save() {
             try {
                 lock (saveLock) SaveCore();
-            } catch (Exception e) {
-                Logger.LogError(e);
+            } catch (Exception ex) { 
+                Logger.LogError("Error saving block perms", ex); 
             }
         }
         

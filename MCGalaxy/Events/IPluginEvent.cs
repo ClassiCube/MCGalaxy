@@ -92,8 +92,7 @@ namespace MCGalaxy.Events {
         
         protected static void LogHandlerException(Exception ex, IEvent<IMethod> handler) {
             string msg = MethodFormat("Method {0} errored when calling {1} event", handler.method);
-            Logger.Log(LogType.Warning, msg);
-            Logger.LogError(ex);
+            Logger.LogError(msg, ex);
         }
         
         static string MethodFormat(string format, IMethod method) {

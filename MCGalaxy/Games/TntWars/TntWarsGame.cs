@@ -105,7 +105,7 @@ namespace MCGalaxy.Games {
             if (team == null) return;
 
             team.Members.Remove(p);
-            Map.Message(team.Color + p.DisplayName + " %Sleft CTF");
+            Map.Message(team.Color + p.DisplayName + " %Sleft TNT wars");
         }
         
         void JoinTeam(Player p, TntWarsTeam team) {

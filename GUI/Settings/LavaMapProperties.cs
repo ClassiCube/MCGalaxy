@@ -22,11 +22,11 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public sealed class LavaMapProperties {
-        internal readonly LSMapConfig m;    
+        internal readonly LSMapConfig m;
         public LavaMapProperties(LSMapConfig m) { this.m = m; }
 
         [DisplayName("Fast lava chance")]
-        public int FastLava { get { return m.FastChance; } set { m.FastChance = Chance(value); } }      
+        public int FastLava { get { return m.FastChance; } set { m.FastChance = Chance(value); } }
         [DisplayName("Killer liquids chance")]
         public int Killer { get { return m.KillerChance; } set { m.KillerChance = Chance(value); } }
         [DisplayName("Destroy blocks chance")]
@@ -34,7 +34,7 @@ namespace MCGalaxy.Gui {
         [DisplayName("Water flood chance")]
         public int Water { get { return m.WaterChance; } set { m.WaterChance = Chance(value); } }
         [DisplayName("Layer flood chance")]
-        public int Layer { get { return m.LayerChance; } set { m.LayerChance = Chance(value); } }       
+        public int Layer { get { return m.LayerChance; } set { m.LayerChance = Chance(value); } }
 
         [DisplayName("Layer height")]
         public int LayerHeight { get { return m.LayerHeight; } set { m.LayerHeight = Value(value); } }
@@ -42,14 +42,16 @@ namespace MCGalaxy.Gui {
         public int LayerCount { get { return m.LayerCount; } set { m.LayerCount = Value(value); } }
 
         [DisplayName("Layer time (mins)")]
-        public float LayerTime { get { return m.LayerIntervalMins; } set { m.LayerIntervalMins = Time(value); } }        
+        public double LayerTime { get { return m.LayerInterval.TotalMinutes; } set { m.LayerInterval = Time(value); } }
         [DisplayName("Round time (mins)")]
-        public float RoundTime { get { return m.RoundTimeMins; } set { m.RoundTimeMins = Time(value); } }        
+        public double RoundTime { get { return m.RoundTime.TotalMinutes; } set { m.RoundTime = Time(value); } }
         [DisplayName("Flood time (mins)")]
-        public float FloodTime { get { return m.FloodTimeMins; } set { m.FloodTimeMins = Time(value); } }
+        public double FloodTime { get { return m.FloodTime.TotalMinutes; } set { m.FloodTime = Time(value); } }
         
         static int Chance(int value) { return Math.Max(0, Math.Min(value, 100)); }
         static int Value(int value) { return Math.Max(0, Math.Min(value, 1000)); }
-        static float Time(double value) { return (float)Math.Max(0, Math.Min(value, 20)); }
+        static TimeSpan Time(double value) {
+            return TimeSpan.FromMinutes(Math.Max(0, Math.Min(value, 20)));
+        }
     }
 }

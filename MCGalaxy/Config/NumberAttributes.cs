@@ -75,7 +75,7 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigRealAttribute : ConfigAttribute {      
+    public class ConfigRealAttribute : ConfigAttribute {
         float defValue, minValue, maxValue;
         
         public ConfigRealAttribute(string name, string section, float def, 
@@ -98,6 +98,21 @@ namespace MCGalaxy.Config {
                 value = maxValue;
             }
             return value;
+        }
+    }
+    
+    public class ConfigTimespanAttribute : ConfigRealAttribute {
+        public ConfigTimespanAttribute(string name, string section, float def) 
+            : base(name, section, def, 0) { }
+        
+        public override object Parse(string raw) {
+            float value = (float)base.Parse(raw);
+            return TimeSpan.FromMinutes(value);
+        }
+        
+        public override string Serialise(object value) {
+            TimeSpan span = (TimeSpan)value;
+            return span.TotalMinutes.ToString();
         }
     }
 }
