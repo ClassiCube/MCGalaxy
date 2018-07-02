@@ -78,11 +78,11 @@ namespace MCGalaxy {
         }
         
         static void ImportBulk(StreamReader reader) {
-            BulkTransaction helper = null;
+            SqlTransaction bulk = null;
             List<string> buffer = new List<string>();
             
             try {
-                helper = Database.Backend.CreateBulk();
+                bulk = new SqlTransaction();
                 while (!reader.EndOfStream) {
                     string cmd = NextStatement(reader, buffer);
                     if (cmd == null || cmd.Length == 0) continue;
@@ -95,17 +95,17 @@ namespace MCGalaxy {
                     }
                     
                     //Run the command in the transaction.
-                    if (helper.Execute(cmd)) continue;
+                    if (bulk.Execute(cmd, null)) continue;
 
                     // Something went wrong.. commit what we've imported so far.
                     // We need to recreate connection otherwise every helper.Execute fails
-                    helper.Commit();
-                    helper.Dispose();
-                    helper = Database.Backend.CreateBulk();
+                    bulk.Commit();
+                    bulk.Dispose();
+                    bulk = new SqlTransaction();
                 }
-                helper.Commit();
+                bulk.Commit();
             } finally {
-                if (helper != null) helper.Dispose();
+                if (bulk != null) bulk.Dispose();
             }
         }
         

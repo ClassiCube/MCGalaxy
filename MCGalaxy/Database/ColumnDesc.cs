@@ -53,13 +53,13 @@ namespace MCGalaxy.SQL {
         static string[] colTypes = new string[] {
             "TINYINT UNSIGNED", "SMALLINT UNSIGNED", "MEDIUMINT UNSIGNED", 
             "INT UNSIGNED", "BIGINT UNSIGNED", "TINYINT", "SMALLINT", 
-            "MEDIUMINT", "INT", "BIGINT", "INTEGER", "BOOL", "DATETIME",
+            "MEDIUMINT", "INT", "BIGINT", "INTEGER", "DATETIME",
         };
     }
     
     public enum ColumnType {
         UInt8, UInt16, UInt24, UInt32, UInt64,
         Int8, Int16, Int24, Int32, Int64,
-        Integer, Bool, DateTime, Char, VarChar
+        Integer, DateTime, Char, VarChar
     }
 }

@@ -30,13 +30,6 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage CTF") }; }
         }
-
-        // TODO: avoid code duplication with CTFLevelPicker
-        static List<string> GetCtfMaps() {
-            if (!File.Exists("CTF/maps.config")) return new List<string>();
-            string[] lines = File.ReadAllLines("CTF/maps.config");
-            return new List<string>(lines);
-        }
         
         protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
@@ -62,31 +55,6 @@ namespace MCGalaxy.Commands.Fun {
                 UpdateConfig(p, cfg);
             } else {
                 Help(p, "set");
-            }
-        }
-
-        static void HandleAdd(Player p, Level lvl) {
-            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            List<string> maps = GetCtfMaps();
-            
-            if (maps.CaselessContains(lvl.name)) {
-                Player.Message(p, "{0} %Sis already in the list of CTF maps", lvl.ColoredName);
-            } else {
-                Player.Message(p, "Added {0} %Sto the list of CTF maps", lvl.ColoredName);
-                maps.Add(p.level.name);
-                File.WriteAllLines("CTF/maps.config", maps.ToArray());
-            }
-        }
-        
-        static void HandleRemove(Player p, Level lvl) {
-            if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
-            List<string> maps = GetCtfMaps();
-            
-            if (!maps.CaselessRemove(lvl.name)) {
-                Player.Message(p, "{0} %Swas not in the list of CTF maps", lvl.ColoredName);
-            } else {
-                Player.Message(p, "Removed {0} %Sfrom the list of CTF maps", lvl.ColoredName);
-                File.WriteAllLines("CTF/maps.config", maps.ToArray());
             }
         }
         

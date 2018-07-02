@@ -26,34 +26,23 @@ namespace MCGalaxy.SQL {
     /// <summary> Simple abstraction for a database management system. </summary>
     public abstract class IDatabaseBackend {
         
-        /// <summary> Describes the arguments for a database connection
-        /// (such as database name or file location) </summary>
-        public abstract string ConnectionString { get; }
-        
         /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
-        public abstract bool EnforcesTextLength { get; }
+        public abstract bool EnforcesTextLength { get; }        
+        /// <summary> Whether this backend supports multiple database schemas. </summary>
+        public abstract bool MultipleSchema { get; }
+        
+        internal abstract IDbConnection CreateConnection();
+        internal abstract IDbCommand CreateCommand(string sql, IDbConnection conn);
+        internal abstract IDbDataParameter CreateParameter();
         
         /// <summary> Suffix required after a WHERE clause for caseless string comparison. </summary>
         public string CaselessWhereSuffix { get; protected set; }
-
         /// <summary> Suffix required after a LIKE clause for caseless string comparison. </summary>        
         public string CaselessLikeSuffix { get; protected set; }
 
         
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
-        
-        /// <summary> Returns a new BulkTransaction instance, which can be used to execute
-        /// many sql statements as one single transaction. </summary>
-        public abstract BulkTransaction CreateBulk();
-        
-        /// <summary> Returns a new ParameterisedQuery instance, which executes sql statements
-        /// and manages binding of parameters for sql queries. </summary>
-        public abstract ParameterisedQuery CreateParameterised();
-        
-        /// <summary> Returns the shared static ParamterisedQuery instance, that is only used
-        /// for sql queries with no parameters. </summary>
-        protected internal abstract ParameterisedQuery GetStaticParameterised();
         
         public abstract string RawGetDateTime(IDataRecord record, int col);
         
@@ -161,7 +150,7 @@ namespace MCGalaxy.SQL {
             sql.Append(" `").Append(table).Append("` ");
             sql.Append('(').Append(columns).Append(')');
             
-            string[] names = ParameterisedQuery.GetNames(args.Length);
+            string[] names = SqlQuery.GetNames(args.Length);
             sql.Append(" VALUES (");
             for (int i = 0; i < args.Length; i++) {
                 sql.Append(names[i]);

@@ -49,13 +49,12 @@ namespace MCGalaxy {
         }
         
         static void LoadPlayerLists(SchedulerTask task) {
-            agreed = new PlayerList("ranks/agreed.txt");
             try {
                 UpgradeTasks.UpgradeOldAgreed();
-                agreed = PlayerList.Load("ranks/agreed.txt");
             } catch (Exception ex) {
                 Logger.LogError("Error upgrading agreed list", ex);
             }
+            agreed = PlayerList.Load("ranks/agreed.txt");
             
             bannedIP = PlayerList.Load("ranks/banned-ip.txt");
             ircControllers = PlayerList.Load("ranks/IRC_Controllers.txt");

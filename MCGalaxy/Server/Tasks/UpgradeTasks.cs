@@ -178,7 +178,6 @@ namespace MCGalaxy.Tasks {
         static List<long> playerSeconds;
         static int playerCount, playerFailed = 0;
         
-        
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
@@ -200,19 +199,10 @@ namespace MCGalaxy.Tasks {
         }
         
         static void UpgradePlayerTimeSpents() {
-            using (BulkTransaction bulk = Database.Backend.CreateBulk()) {
-                IDataParameter idParam = bulk.CreateParam("@0", DbType.Int32);
-                IDataParameter secsParam = bulk.CreateParam("@1", DbType.Int64);
-                
+            using (SqlTransaction bulk = new SqlTransaction()) {
                 for (int i = 0; i < playerIds.Count; i++) {
-                    idParam.Value = playerIds[i];
-                    secsParam.Value = playerSeconds[i];
-                    
-                    using (IDbCommand cmd = bulk.CreateCommand("UPDATE Players SET TimeSpent=@1 WHERE ID=@0")) {
-                        cmd.Parameters.Add(idParam);
-                        cmd.Parameters.Add(secsParam);
-                        cmd.ExecuteNonQuery();
-                    }
+                    bulk.Execute("UPDATE Players SET TimeSpent=@1 WHERE ID=@0", 
+                                 playerIds[i], playerSeconds[i]);
                 }
                 bulk.Commit();
             }

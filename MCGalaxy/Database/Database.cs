@@ -76,33 +76,21 @@ namespace MCGalaxy.SQL {
 
         internal static object Do(string sql, bool createDB, object arg,
                                   ReaderCallback callback, params object[] args) {
-            ParameterisedQuery query;
-            if (args == null || args.Length == 0) {
-                query = Backend.GetStaticParameterised();
-            } else {
-                query = Backend.CreateParameterised();
-            }
-            
-            query.parameters = args;
-            string connString = Backend.ConnectionString;
-            Exception e = null;
-            
+            Exception e = null;         
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        arg = query.Iterate(sql, connString, arg, callback);
+                        arg = SqlQuery.Iterate(sql, args, arg, callback);
                     } else {
-                        query.Execute(sql, connString, createDB);
+                        SqlQuery.Execute(sql, args, createDB);
                     }
                     
-                    query.parameters = null;
                     return arg;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
             }
             
-            query.parameters = null;
             File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
             Logger.LogError(e);
             return arg;

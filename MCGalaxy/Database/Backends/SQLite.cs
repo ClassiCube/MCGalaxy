@@ -26,35 +26,31 @@ using System.Text;
 namespace MCGalaxy.SQL {
 
     public sealed class SQLiteBackend : IDatabaseBackend {
-
         public static IDatabaseBackend Instance = new SQLiteBackend();
-        static ParameterisedQuery queryInstance = new SQLiteParameterisedQuery();
-        
-        static string connFormat = "Data Source =" + Utils.FolderPath + "/MCGalaxy.db; Version =3; Pooling ={0}; Max Pool Size =300;";
-        public override string ConnectionString {
-            get { return string.Format(connFormat, ServerConfig.DatabasePooling); }
-        }
-        public override bool EnforcesTextLength { get { return false; } }
-        
         public SQLiteBackend() {
             CaselessWhereSuffix = " COLLATE NOCASE";
             CaselessLikeSuffix = " COLLATE NOCASE";
         }
         
+        public override bool EnforcesTextLength { get { return false; } }
+        public override bool MultipleSchema { get { return false; } }
+        
+        internal override IDbConnection CreateConnection() {
+            const string format = "Data Source={0}/MCGalaxy.db;Version=3;Pooling={1};Max Pool Size=300;";
+            string str = string.Format(format, Utils.FolderPath, ServerConfig.DatabasePooling);
+            return new SQLiteConnection(str);
+        }
+        
+        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+            return new SQLiteCommand(sql, (SQLiteConnection)conn);
+        }
+        
+        internal override IDbDataParameter CreateParameter() {
+            return new SQLiteParameter();
+        }
+        
         
         public override void CreateDatabase() { }
-        
-        public override BulkTransaction CreateBulk() {
-            return new SQLiteBulkTransaction(ConnectionString);
-        }
-        
-        public override ParameterisedQuery CreateParameterised() {
-            return new SQLiteParameterisedQuery();
-        }
-        
-        protected internal override ParameterisedQuery GetStaticParameterised() {
-            return queryInstance;
-        }
         
         public override string RawGetDateTime(IDataRecord record, int col) {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
@@ -104,12 +100,7 @@ namespace MCGalaxy.SQL {
             for (int i = 0; i < columns.Length; i++) {
                 ColumnDesc col = columns[i];
                 sql.Append(col.Column).Append(' ');
-                
-                if (col.Type == ColumnType.Bool) {
-                    sql.Append("TINYINT");
-                } else {
-                    sql.Append(col.FormatType());
-                }
+                sql.Append(col.FormatType());
                 
                 // When the primary key isn't autoincrement, we use the same form as mysql
                 // Otherwise we have to use sqlite's 'PRIMARY KEY AUTO_INCREMENT' form
@@ -149,40 +140,6 @@ namespace MCGalaxy.SQL {
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {
             ValidateTable(table);
             DoInsert("INSERT OR REPLACE INTO", table, columns, args);
-        }
-    }
-    
-    
-    public sealed class SQLiteBulkTransaction : BulkTransaction {
-
-        public SQLiteBulkTransaction(string connString) {
-            connection = new SQLiteConnection(connString);
-            connection.Open();
-            transaction = connection.BeginTransaction();
-        }
-        
-        public override IDbCommand CreateCommand(string sql) {
-            return new SQLiteCommand(sql, (SQLiteConnection)connection, (SQLiteTransaction)transaction);
-        }
-        
-        public override IDataParameter CreateParam(string paramName, DbType type) {
-            return new SQLiteParameter(paramName, type);
-        }
-    }
-    
-    public sealed class SQLiteParameterisedQuery : ParameterisedQuery {
-        protected override bool MultipleSchema { get { return false; } }
-        
-        protected override IDbConnection CreateConnection(string connString) {
-            return new SQLiteConnection(connString);
-        }
-        
-        protected override IDbCommand CreateCommand(string sql, IDbConnection conn) {
-            return new SQLiteCommand(sql, (SQLiteConnection)conn);
-        }
-        
-        protected override IDbDataParameter CreateParameter() {
-            return new SQLiteParameter();
         }
     }
 }

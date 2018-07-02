@@ -408,7 +408,7 @@
     <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
-    <Compile Include="Database\ParameterisedQuery.cs" />
+    <Compile Include="Database\SqlQuery.cs" />
     <Compile Include="Database\PlayerData.cs" />
     <Compile Include="Database\Stats\OfflineStat.cs" />
     <Compile Include="Database\Stats\OnlineStat.cs" />
@@ -612,7 +612,7 @@
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
-    <Compile Include="Database\BulkTransaction.cs" />
+    <Compile Include="Database\SqlTransaction.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />

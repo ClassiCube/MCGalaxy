@@ -20,12 +20,18 @@ using System.Data;
 
 namespace MCGalaxy.SQL {
     
-    public abstract class BulkTransaction : IDisposable {
-        protected IDbConnection connection;
-        protected IDbTransaction transaction;        
-
-        public abstract IDbCommand CreateCommand(string sql);       
-        public abstract IDataParameter CreateParam(string paramName, DbType type);        
+    public sealed class SqlTransaction : IDisposable {
+        internal IDbConnection conn;
+        internal IDbTransaction transaction;
+        
+        public SqlTransaction() {
+            IDatabaseBackend db = Database.Backend;
+            conn = db.CreateConnection();
+            conn.Open();
+            
+            if (db.MultipleSchema) conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
+            transaction = conn.BeginTransaction();
+        }
 
         public void Commit() {
             try {
@@ -34,7 +40,7 @@ namespace MCGalaxy.SQL {
                 Logger.LogError(ex);
                 Rollback();
             } finally {
-                connection.Close();
+                conn.Close();
             }
         }
         
@@ -50,14 +56,17 @@ namespace MCGalaxy.SQL {
         
         public void Dispose() {
             transaction.Dispose();
-            connection.Dispose();
+            conn.Dispose();
             transaction = null;
-            connection = null;
+            conn = null;
         }
         
-        public bool Execute(string sql) {
+        public bool Execute(string sql, params object[] args) {
+            IDatabaseBackend db = Database.Backend;
             try {
-                using (IDbCommand cmd = CreateCommand(sql)) {
+                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                    cmd.Transaction = transaction;
+                    SqlQuery.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;
                 }

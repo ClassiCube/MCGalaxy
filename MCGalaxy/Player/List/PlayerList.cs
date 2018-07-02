@@ -31,7 +31,6 @@ namespace MCGalaxy {
         readonly object saveLocker = new object();
         
         public PlayerList() { }
-        public PlayerList(string path) { Path = path; }
         
         /// <summary> Returns a copy of all names in the list. </summary>
         public List<string> All() {
@@ -82,22 +81,21 @@ namespace MCGalaxy {
         
         void SaveEntries(StreamWriter w) {
             lock (locker) {
-                foreach (string p in names)
-                    w.WriteLine(p);
+                foreach (string p in names) w.WriteLine(p);
             }
         }
         
-        public static PlayerList Load(string file) {
-            PlayerList list = new PlayerList(file);
-            list.Path = file;
+        public static PlayerList Load(string path) {
+            PlayerList list = new PlayerList();
+            list.Path = path;
             
-            if (!File.Exists(list.Path)) {
-                File.Create(list.Path).Close();
-                Logger.Log(LogType.SystemActivity, "CREATED NEW: " + list.Path);
+            if (!File.Exists(path)) {
+                File.Create(path).Close();
+                Logger.Log(LogType.SystemActivity, "CREATED NEW: " + path);
                 return list;
             }
             
-            using (StreamReader r = new StreamReader(list.Path, Encoding.UTF8)) {
+            using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
                 string line = null;
                 while ((line = r.ReadLine()) != null) {
                     list.names.Add(line);

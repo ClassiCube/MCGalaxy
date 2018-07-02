@@ -20,26 +20,19 @@ using System.Data;
 
 namespace MCGalaxy.SQL {
     
-    /// <summary> Represents an SQL command or query, that takes named parameters/arguments. </summary>
-    public abstract class ParameterisedQuery {
-        
-        internal object[] parameters;
-        protected abstract bool MultipleSchema { get; }
-        
-        protected abstract IDbConnection CreateConnection(string connString);        
-        protected abstract IDbCommand CreateCommand(string sql, IDbConnection conn);       
-        protected abstract IDbDataParameter CreateParameter();
-        
-        
+    /// <summary> Executes an SQL command or query, that takes named parameters/arguments. </summary>
+    public static class SqlQuery {
+
         /// <summary> Executes an SQL command that does not return any results. </summary>
-        public void Execute(string sql, string connString, bool createDB = false) {
-            using (IDbConnection conn = CreateConnection(connString)) {
+        public static void Execute(string sql, object[] parameters, bool createDB) {
+        	IDatabaseBackend db = Database.Backend;
+        	using (IDbConnection conn = db.CreateConnection()) {
                 conn.Open();
-                if (!createDB && MultipleSchema)
+                if (!createDB && db.MultipleSchema)
                     conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(sql, conn)) {
-                    FillParams(cmd);
+                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                    FillParams(cmd, parameters);
                     cmd.ExecuteNonQuery();
                 }
                 conn.Close();
@@ -47,14 +40,15 @@ namespace MCGalaxy.SQL {
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public object Iterate(string sql, string connString, object arg, ReaderCallback callback) {
-            using (IDbConnection conn = CreateConnection(connString)) {
+        public static object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
+        	IDatabaseBackend db = Database.Backend;
+            using (IDbConnection conn = db.CreateConnection()) {
                 conn.Open();
-                if (MultipleSchema)
+                if (db.MultipleSchema)
                     conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(sql, conn)) {
-                    FillParams(cmd);
+                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                    FillParams(cmd, parameters);
                     using (IDataReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { arg = callback(reader, arg); }
                     }
@@ -65,16 +59,16 @@ namespace MCGalaxy.SQL {
         }
         
         
-        void FillParams(IDbCommand cmd) {
-            object[] args = parameters;
-            if (args == null || args.Length == 0) return;
+        internal static void FillParams(IDbCommand cmd, object[] parameters) {
+            if (parameters == null || parameters.Length == 0) return;
+            IDatabaseBackend db = Database.Backend;
             
-            string[] names = GetNames(args.Length);
-            for (int i = 0; i < args.Length; i++) {
-                IDbDataParameter dbParam = CreateParameter();
-                dbParam.ParameterName = names[i];
-                dbParam.Value = args[i];
-                cmd.Parameters.Add(dbParam);
+            string[] names = GetNames(parameters.Length);
+            for (int i = 0; i < parameters.Length; i++) {
+                IDbDataParameter arg = db.CreateParameter();
+                arg.ParameterName = names[i];
+                arg.Value = parameters[i];
+                cmd.Parameters.Add(arg);
             }
         }
         

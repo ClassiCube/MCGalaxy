@@ -26,38 +26,34 @@ using MySql.Data.MySqlClient;
 namespace MCGalaxy.SQL {
 
     public sealed class MySQLBackend : IDatabaseBackend {
-
         public static IDatabaseBackend Instance = new MySQLBackend();
-        static ParameterisedQuery queryInstance = new MySQLParameterisedQuery();
-        
-        static string connFormat = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
-        public override string ConnectionString {
-            get { return string.Format(connFormat, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
-                                       ServerConfig.MySQLUsername, ServerConfig.MySQLPassword, ServerConfig.DatabasePooling); }
-        }
-        public override bool EnforcesTextLength { get { return true; } }
-
         public MySQLBackend() {
             CaselessWhereSuffix = " COLLATE utf8_general_ci";
             CaselessLikeSuffix = "";
+        }
+        
+        public override bool EnforcesTextLength { get { return true; } }
+        public override bool MultipleSchema { get { return true; } }     
+        
+        internal override IDbConnection CreateConnection() {
+            const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
+            string str = string.Format(format, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
+                                       ServerConfig.MySQLUsername, ServerConfig.MySQLPassword, ServerConfig.DatabasePooling);
+            return new MySqlConnection(str);
+        }
+        
+        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+            return new MySqlCommand(sql, (MySqlConnection)conn);
+        }
+        
+        internal override IDbDataParameter CreateParameter() {
+            return new MySqlParameter();
         }
 
         
         public override void CreateDatabase() {
             string sql = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
             Database.Do(sql, true, null, null);
-        }
-        
-        public override BulkTransaction CreateBulk() {
-            return new MySQLBulkTransaction(ConnectionString);
-        }
-        
-        public override ParameterisedQuery CreateParameterised() {
-            return new MySQLParameterisedQuery();
-        }
-        
-        protected internal override ParameterisedQuery GetStaticParameterised() {
-            return queryInstance;
         }
         
         public override string RawGetDateTime(IDataRecord record, int col) {
@@ -138,7 +134,7 @@ namespace MCGalaxy.SQL {
             string pri = "";
             
             for (int i = 0; i < fields.Count; i++) {
-                string[] field = fields[i];                
+                string[] field = fields[i];
                 if (field[i_key].CaselessEq("pri")) pri = field[i_name];
                 
                 string meta = field[i_null].CaselessEq("no") ? "NOT NULL" : "DEFAULT NULL";
@@ -163,44 +159,6 @@ namespace MCGalaxy.SQL {
         public override void AddOrReplaceRow(string table, string columns, params object[] args) {
             ValidateTable(table);
             DoInsert("REPLACE INTO", table, columns, args);
-        }
-    }
-    
-    
-    public sealed class MySQLBulkTransaction : BulkTransaction {
-
-        public MySQLBulkTransaction(string connString) {
-            connection = new MySqlConnection(connString);
-            connection.Open();
-            connection.ChangeDatabase(ServerConfig.MySQLDatabaseName);
-
-            transaction = connection.BeginTransaction();
-        }
-
-        public override IDbCommand CreateCommand(string sql) {
-            return new MySqlCommand(sql, (MySqlConnection)connection, (MySqlTransaction)transaction);
-        }
-        
-        public override IDataParameter CreateParam(string paramName, DbType type) {
-            MySqlParameter arg = new MySqlParameter(paramName, null);
-            arg.DbType = type;
-            return arg;
-        }
-    }
-
-    public sealed class MySQLParameterisedQuery : ParameterisedQuery {
-        protected override bool MultipleSchema { get { return true; } }
-        
-        protected override IDbConnection CreateConnection(string connString) {
-            return new MySqlConnection(connString);
-        }
-        
-        protected override IDbCommand CreateCommand(string sql, IDbConnection conn) {
-            return new MySqlCommand(sql, (MySqlConnection)conn);
-        }
-        
-        protected override IDbDataParameter CreateParameter() {
-            return new MySqlParameter();
         }
     }
 }
