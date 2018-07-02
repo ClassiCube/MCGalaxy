@@ -47,7 +47,10 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string Name { get { return "Cloudy"; } }
         
         public unsafe override void Configure(DrawOp op, Player p) {
-            Player.Message(p, "Calculating noise distribution...");
+            if (!p.Ignores.DrawOutput) {
+                Player.Message(p, "Calculating noise distribution...");
+            }
+            
             // Initalise our noise histogram
             const int accuracy = 10000;
             int* values = stackalloc int[accuracy];
@@ -95,8 +98,11 @@ namespace MCGalaxy.Drawing.Brushes {
                 }
                 sum += values[i] / (float)volume;
             }
-            thresholds[blocks.Length - 1] = 1;            
-            Player.Message(p, "Finished calculating, now drawing.");
+            thresholds[blocks.Length - 1] = 1;
+            
+            if (!p.Ignores.DrawOutput) {
+                Player.Message(p, "Finished calculating, now drawing.");
+            }
         }
         
         int next;

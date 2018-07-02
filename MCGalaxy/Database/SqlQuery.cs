@@ -25,8 +25,8 @@ namespace MCGalaxy.SQL {
 
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, object[] parameters, bool createDB) {
-        	IDatabaseBackend db = Database.Backend;
-        	using (IDbConnection conn = db.CreateConnection()) {
+            IDatabaseBackend db = Database.Backend;
+            using (IDbConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (!createDB && db.MultipleSchema)
                     conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
@@ -41,7 +41,7 @@ namespace MCGalaxy.SQL {
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public static object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
-        	IDatabaseBackend db = Database.Backend;
+            IDatabaseBackend db = Database.Backend;
             using (IDbConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (db.MultipleSchema)
