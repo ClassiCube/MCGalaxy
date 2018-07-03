@@ -159,38 +159,22 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        const string Names = "Air Stone Grass Dirt Cobblestone Wood Sapling Bedrock Water StillWater Lava" +
-            " StillLava Sand Gravel GoldOre IronOre CoalOre Log Leaves Sponge Glass Red Orange Yellow Lime Green" +
-            " Teal Aqua Cyan Blue Indigo Violet Magenta Pink Black Gray White Dandelion Rose BrownMushroom RedMushroom" +
-            " Gold Iron DoubleSlab Slab Brick TNT Bookshelf MossyRocks Obsidian CobblestoneSlab Rope Sandstone" +
-            " Snow Fire LightPink ForestGreen Brown DeepBlue Turquoise Ice CeramicTile Magma Pillar Crate StoneBrick";
+        const string RawNames = "Air_Stone_Grass_Dirt_Cobblestone_Wood_Sapling_Bedrock_Water_Still water_Lava" +
+            "_Still lava_Sand_Gravel_Gold ore_Iron ore_Coal ore_Log_Leaves_Sponge_Glass_Red_Orange_Yellow_Lime_Green" +
+            "_Teal_Aqua_Cyan_Blue_Indigo_Violet_Magenta_Pink_Black_Gray_White_Dandelion_Rose_Brown mushroom_Red mushroom" +
+            "_Gold_Iron_Double slab_Slab_Brick_TNT_Bookshelf_Mossy rocks_Obsidian_Cobblestone slab_Rope_Sandstone" +
+            "_Snow_Fire_Light pink_Forest green_Brown_Deep blue_Turquoise_Ice_Ceramic tile_Magma_Pillar_Crate_Stone brick";    
         
         static string Name(BlockID block) {
             // Find start and end of this particular block name
             int start = 0;
             for (int i = 0; i < block; i++)
-                start = Names.IndexOf(' ', start) + 1;
-            int end = Names.IndexOf(' ', start);
-            if (end == -1) end = Names.Length;
+                start = RawNames.IndexOf('_', start) + 1;
             
-            StringBuilder buffer = new StringBuilder();
-            SplitUppercase(buffer, start, end);
-            return buffer.ToString();
-        }
-        
-        static void SplitUppercase(StringBuilder buffer, int start, int end) {
-            for (int i = start; i < end; i++) {
-                char c = Names[i];
-                bool upper = Char.IsUpper(c) && i > start;
-                bool nextLower = i < end - 1 && !Char.IsUpper(Names[i + 1]);
-                
-                if (upper && nextLower) {
-                    buffer.Append(' ');
-                    buffer.Append(Char.ToLower(c));
-                } else {
-                    buffer.Append(c);
-                }
-            }
+            int end = RawNames.IndexOf('_', start);
+            if (end == -1) end = RawNames.Length;
+            
+            return RawNames.Substring(start, end - start);
         }
         
         
