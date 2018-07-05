@@ -52,22 +52,11 @@ namespace MCGalaxy.Gui {
             }
 
             LoadGameProps();
-            try {
-                lavaUpdateTimer = new System.Timers.Timer(10000) { AutoReset = true };
-                lavaUpdateTimer.Elapsed += delegate {
-                    UpdateLavaControls();
-                };
-                lavaUpdateTimer.Start();
-            } catch {
-                Logger.Log(LogType.Warning, "Failed to start lava control update timer!");
-            }
         }
 
         void PropertyWindow_Unload(object sender, EventArgs e) {
             OnMapsChangedEvent.Unregister(HandleMapsChanged);
             OnStateChangedEvent.Unregister(HandleStateChanged);
-            
-            lavaUpdateTimer.Dispose();
             Window.hasPropsForm = false;
             tw_selected = null;
         }

@@ -22,7 +22,6 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
-        System.Timers.Timer lavaUpdateTimer;
         TntWarsGame1 tw_selected;
         TWMapConfig twCfg;
         GamesHelper lsHelper;
