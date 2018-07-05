@@ -32,7 +32,8 @@ namespace MCGalaxy.Gui {
             
             irc_cbTitles.Checked = ServerConfig.IRCShowPlayerTitles;
             irc_cbWorldChanges.Checked = ServerConfig.IRCShowWorldChanges;
-            irc_cbAFK.Checked = ServerConfig.IRCShowAFK;                 
+            irc_cbAFK.Checked = ServerConfig.IRCShowAFK;
+            ToggleIrcSettings(ServerConfig.UseIRC);            
 
             irc_cbRank.Items.AddRange(GuiPerms.RankNames);            
             GuiPerms.SetDefaultIndex(irc_cbRank, ServerConfig.IRCControllerRank);

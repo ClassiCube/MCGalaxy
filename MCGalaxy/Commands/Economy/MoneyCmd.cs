@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Eco;
+using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
     public abstract class MoneyCmd : Command {

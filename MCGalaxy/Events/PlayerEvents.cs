@@ -20,6 +20,9 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
     public enum PlayerAction { Me, Referee, UnReferee };
+    public enum MouseButton { Left, Right, Middle }  
+    public enum MouseAction { Pressed, Released }
+    public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
     
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player chats on the server. </summary>

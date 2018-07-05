@@ -120,6 +120,9 @@ namespace MCGalaxy.Gui
             this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.eco_cbItemRank = new System.Windows.Forms.ComboBox();
+            this.ls_cbMain = new System.Windows.Forms.CheckBox();
+            this.ls_cbStart = new System.Windows.Forms.CheckBox();
+            this.ls_numMax = new System.Windows.Forms.NumericUpDown();
             this.rank_numAfk = new System.Windows.Forms.NumericUpDown();
             this.sec_cbLogNotes = new System.Windows.Forms.CheckBox();
             this.sec_cbChatAuto = new System.Windows.Forms.CheckBox();
@@ -277,13 +280,14 @@ namespace MCGalaxy.Gui
             this.tabGames = new System.Windows.Forms.TabControl();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
-            this.ls_btnEndRound = new System.Windows.Forms.Button();
-            this.ls_btnStopGame = new System.Windows.Forms.Button();
-            this.ls_btnStartGame = new System.Windows.Forms.Button();
+            this.ls_btnEnd = new System.Windows.Forms.Button();
+            this.ls_btnStop = new System.Windows.Forms.Button();
+            this.ls_btnStart = new System.Windows.Forms.Button();
             this.ls_grpMapSettings = new System.Windows.Forms.GroupBox();
             this.pg_lavaMap = new System.Windows.Forms.PropertyGrid();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
-            this.pg_lava = new System.Windows.Forms.PropertyGrid();
+            this.ls_lblMax = new System.Windows.Forms.Label();
+            this.ls_cbMap = new System.Windows.Forms.CheckBox();
             this.ls_grpMaps = new System.Windows.Forms.GroupBox();
             this.ls_lblNotUsed = new System.Windows.Forms.Label();
             this.ls_lblUsed = new System.Windows.Forms.Label();
@@ -415,6 +419,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numAfk)).BeginInit();
             this.pageBlocks.SuspendLayout();
             this.blk_grpPhysics.SuspendLayout();
@@ -1306,6 +1311,44 @@ namespace MCGalaxy.Gui
             this.eco_cbItemRank.TabIndex = 23;
             this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank a player must have to purchase this item.");
             this.eco_cbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cbItemRank_SelectedIndexChanged);
+            // 
+            // ls_cbMain
+            // 
+            this.ls_cbMain.AutoSize = true;
+            this.ls_cbMain.Location = new System.Drawing.Point(11, 66);
+            this.ls_cbMain.Name = "ls_cbMain";
+            this.ls_cbMain.Size = new System.Drawing.Size(112, 17);
+            this.ls_cbMain.TabIndex = 24;
+            this.ls_cbMain.Text = "Change main level";
+            this.ls_cbMain.UseVisualStyleBackColor = true;
+            // 
+            // ls_cbStart
+            // 
+            this.ls_cbStart.AutoSize = true;
+            this.ls_cbStart.Location = new System.Drawing.Point(11, 20);
+            this.ls_cbStart.Name = "ls_cbStart";
+            this.ls_cbStart.Size = new System.Drawing.Size(139, 17);
+            this.ls_cbStart.TabIndex = 22;
+            this.ls_cbStart.Text = "Start when server starts";
+            this.ls_cbStart.UseVisualStyleBackColor = true;
+            // 
+            // ls_numMax
+            // 
+            this.ls_numMax.Location = new System.Drawing.Point(71, 89);
+            this.ls_numMax.Maximum = new decimal(new int[] {
+                                    1000000,
+                                    0,
+                                    0,
+                                    0});
+            this.ls_numMax.Name = "ls_numMax";
+            this.ls_numMax.Size = new System.Drawing.Size(52, 21);
+            this.ls_numMax.TabIndex = 25;
+            this.toolTip.SetToolTip(this.ls_numMax, "How often should backups be taken, in seconds.\nDefault = 300");
+            this.ls_numMax.Value = new decimal(new int[] {
+                                    300,
+                                    0,
+                                    0,
+                                    0});
             // 
             // rank_numAfk
             // 
@@ -3020,52 +3063,49 @@ namespace MCGalaxy.Gui
             // 
             // groupBox23
             // 
-            this.groupBox23.Controls.Add(this.ls_btnEndRound);
-            this.groupBox23.Controls.Add(this.ls_btnStopGame);
-            this.groupBox23.Controls.Add(this.ls_btnStartGame);
-            this.groupBox23.Location = new System.Drawing.Point(53, 397);
+            this.groupBox23.Controls.Add(this.ls_btnEnd);
+            this.groupBox23.Controls.Add(this.ls_btnStop);
+            this.groupBox23.Controls.Add(this.ls_btnStart);
+            this.groupBox23.Location = new System.Drawing.Point(106, 432);
             this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(370, 51);
+            this.groupBox23.Size = new System.Drawing.Size(279, 51);
             this.groupBox23.TabIndex = 4;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Controls";
             // 
-            // ls_btnEndRound
+            // ls_btnEnd
             // 
-            this.ls_btnEndRound.Location = new System.Drawing.Point(190, 20);
-            this.ls_btnEndRound.Name = "ls_btnEndRound";
-            this.ls_btnEndRound.Size = new System.Drawing.Size(80, 23);
-            this.ls_btnEndRound.TabIndex = 2;
-            this.ls_btnEndRound.Text = "End Round";
-            this.ls_btnEndRound.UseVisualStyleBackColor = true;
-            this.ls_btnEndRound.Click += new System.EventHandler(this.lsBtnEndRound_Click);
+            this.ls_btnEnd.Location = new System.Drawing.Point(190, 20);
+            this.ls_btnEnd.Name = "ls_btnEnd";
+            this.ls_btnEnd.Size = new System.Drawing.Size(80, 23);
+            this.ls_btnEnd.TabIndex = 2;
+            this.ls_btnEnd.Text = "End Round";
+            this.ls_btnEnd.UseVisualStyleBackColor = true;
             // 
-            // ls_btnStopGame
+            // ls_btnStop
             // 
-            this.ls_btnStopGame.Location = new System.Drawing.Point(100, 20);
-            this.ls_btnStopGame.Name = "ls_btnStopGame";
-            this.ls_btnStopGame.Size = new System.Drawing.Size(80, 23);
-            this.ls_btnStopGame.TabIndex = 1;
-            this.ls_btnStopGame.Text = "Stop Game";
-            this.ls_btnStopGame.UseVisualStyleBackColor = true;
-            this.ls_btnStopGame.Click += new System.EventHandler(this.lsBtnStopGame_Click);
+            this.ls_btnStop.Location = new System.Drawing.Point(100, 20);
+            this.ls_btnStop.Name = "ls_btnStop";
+            this.ls_btnStop.Size = new System.Drawing.Size(80, 23);
+            this.ls_btnStop.TabIndex = 1;
+            this.ls_btnStop.Text = "Stop Game";
+            this.ls_btnStop.UseVisualStyleBackColor = true;
             // 
-            // ls_btnStartGame
+            // ls_btnStart
             // 
-            this.ls_btnStartGame.Location = new System.Drawing.Point(10, 20);
-            this.ls_btnStartGame.Name = "ls_btnStartGame";
-            this.ls_btnStartGame.Size = new System.Drawing.Size(80, 23);
-            this.ls_btnStartGame.TabIndex = 0;
-            this.ls_btnStartGame.Text = "Start Game";
-            this.ls_btnStartGame.UseVisualStyleBackColor = true;
-            this.ls_btnStartGame.Click += new System.EventHandler(this.lsBtnStartGame_Click);
+            this.ls_btnStart.Location = new System.Drawing.Point(10, 20);
+            this.ls_btnStart.Name = "ls_btnStart";
+            this.ls_btnStart.Size = new System.Drawing.Size(80, 23);
+            this.ls_btnStart.TabIndex = 0;
+            this.ls_btnStart.Text = "Start Game";
+            this.ls_btnStart.UseVisualStyleBackColor = true;
             // 
             // ls_grpMapSettings
             // 
             this.ls_grpMapSettings.Controls.Add(this.pg_lavaMap);
-            this.ls_grpMapSettings.Location = new System.Drawing.Point(193, 174);
+            this.ls_grpMapSettings.Location = new System.Drawing.Point(182, 131);
             this.ls_grpMapSettings.Name = "ls_grpMapSettings";
-            this.ls_grpMapSettings.Size = new System.Drawing.Size(285, 219);
+            this.ls_grpMapSettings.Size = new System.Drawing.Size(296, 287);
             this.ls_grpMapSettings.TabIndex = 3;
             this.ls_grpMapSettings.TabStop = false;
             this.ls_grpMapSettings.Text = "Map Settings";
@@ -3075,28 +3115,42 @@ namespace MCGalaxy.Gui
             this.pg_lavaMap.HelpVisible = false;
             this.pg_lavaMap.Location = new System.Drawing.Point(6, 20);
             this.pg_lavaMap.Name = "pg_lavaMap";
-            this.pg_lavaMap.Size = new System.Drawing.Size(273, 191);
+            this.pg_lavaMap.Size = new System.Drawing.Size(284, 260);
             this.pg_lavaMap.TabIndex = 7;
             this.pg_lavaMap.ToolbarVisible = false;
             // 
             // groupBox21
             // 
-            this.groupBox21.Controls.Add(this.pg_lava);
-            this.groupBox21.Location = new System.Drawing.Point(193, 6);
+            this.groupBox21.Controls.Add(this.ls_lblMax);
+            this.groupBox21.Controls.Add(this.ls_numMax);
+            this.groupBox21.Controls.Add(this.ls_cbMain);
+            this.groupBox21.Controls.Add(this.ls_cbMap);
+            this.groupBox21.Controls.Add(this.ls_cbStart);
+            this.groupBox21.Location = new System.Drawing.Point(182, 6);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(285, 162);
+            this.groupBox21.Size = new System.Drawing.Size(296, 119);
             this.groupBox21.TabIndex = 2;
             this.groupBox21.TabStop = false;
             this.groupBox21.Text = "Settings";
             // 
-            // pg_lava
+            // ls_lblMax
             // 
-            this.pg_lava.HelpVisible = false;
-            this.pg_lava.Location = new System.Drawing.Point(6, 17);
-            this.pg_lava.Name = "pg_lava";
-            this.pg_lava.Size = new System.Drawing.Size(273, 139);
-            this.pg_lava.TabIndex = 0;
-            this.pg_lava.ToolbarVisible = false;
+            this.ls_lblMax.AutoSize = true;
+            this.ls_lblMax.Location = new System.Drawing.Point(11, 91);
+            this.ls_lblMax.Name = "ls_lblMax";
+            this.ls_lblMax.Size = new System.Drawing.Size(54, 13);
+            this.ls_lblMax.TabIndex = 26;
+            this.ls_lblMax.Text = "Max lives:";
+            // 
+            // ls_cbMap
+            // 
+            this.ls_cbMap.AutoSize = true;
+            this.ls_cbMap.Location = new System.Drawing.Point(11, 43);
+            this.ls_cbMap.Name = "ls_cbMap";
+            this.ls_cbMap.Size = new System.Drawing.Size(136, 17);
+            this.ls_cbMap.TabIndex = 23;
+            this.ls_cbMap.Text = "Map name in server list";
+            this.ls_cbMap.UseVisualStyleBackColor = true;
             // 
             // ls_grpMaps
             // 
@@ -3108,7 +3162,7 @@ namespace MCGalaxy.Gui
             this.ls_grpMaps.Controls.Add(this.ls_lstUsed);
             this.ls_grpMaps.Location = new System.Drawing.Point(6, 6);
             this.ls_grpMaps.Name = "ls_grpMaps";
-            this.ls_grpMaps.Size = new System.Drawing.Size(181, 387);
+            this.ls_grpMaps.Size = new System.Drawing.Size(170, 412);
             this.ls_grpMaps.TabIndex = 1;
             this.ls_grpMaps.TabStop = false;
             this.ls_grpMaps.Text = "Maps";
@@ -3139,24 +3193,22 @@ namespace MCGalaxy.Gui
             this.ls_btnAdd.TabIndex = 4;
             this.ls_btnAdd.Text = "<< Add";
             this.ls_btnAdd.UseVisualStyleBackColor = true;
-            this.ls_btnAdd.Click += new System.EventHandler(this.lsAddMap_Click);
             // 
             // ls_btnRemove
             // 
-            this.ls_btnRemove.Location = new System.Drawing.Point(100, 188);
+            this.ls_btnRemove.Location = new System.Drawing.Point(89, 188);
             this.ls_btnRemove.Name = "ls_btnRemove";
             this.ls_btnRemove.Size = new System.Drawing.Size(75, 23);
             this.ls_btnRemove.TabIndex = 3;
             this.ls_btnRemove.Text = "Remove >>";
             this.ls_btnRemove.UseVisualStyleBackColor = true;
-            this.ls_btnRemove.Click += new System.EventHandler(this.lsRemoveMap_Click);
             // 
             // ls_lstNotUsed
             // 
             this.ls_lstNotUsed.FormattingEnabled = true;
             this.ls_lstNotUsed.Location = new System.Drawing.Point(6, 219);
             this.ls_lstNotUsed.Name = "ls_lstNotUsed";
-            this.ls_lstNotUsed.Size = new System.Drawing.Size(169, 160);
+            this.ls_lstNotUsed.Size = new System.Drawing.Size(158, 186);
             this.ls_lstNotUsed.TabIndex = 2;
             // 
             // ls_lstUsed
@@ -3164,7 +3216,7 @@ namespace MCGalaxy.Gui
             this.ls_lstUsed.FormattingEnabled = true;
             this.ls_lstUsed.Location = new System.Drawing.Point(6, 33);
             this.ls_lstUsed.Name = "ls_lstUsed";
-            this.ls_lstUsed.Size = new System.Drawing.Size(169, 147);
+            this.ls_lstUsed.Size = new System.Drawing.Size(158, 147);
             this.ls_lstUsed.TabIndex = 0;
             this.ls_lstUsed.SelectedIndexChanged += new System.EventHandler(this.lsMapUse_SelectedIndexChanged);
             // 
@@ -4523,6 +4575,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numAfk)).EndInit();
             this.pageBlocks.ResumeLayout(false);
             this.blk_grpPhysics.ResumeLayout(false);
@@ -4589,6 +4642,7 @@ namespace MCGalaxy.Gui
             this.groupBox23.ResumeLayout(false);
             this.ls_grpMapSettings.ResumeLayout(false);
             this.groupBox21.ResumeLayout(false);
+            this.groupBox21.PerformLayout();
             this.ls_grpMaps.ResumeLayout(false);
             this.ls_grpMaps.PerformLayout();
             this.tabTntWars.ResumeLayout(false);
@@ -4640,6 +4694,11 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox ls_cbMain;
+        private System.Windows.Forms.NumericUpDown ls_numMax;
+        private System.Windows.Forms.Label ls_lblMax;
+        private System.Windows.Forms.CheckBox ls_cbStart;
+        private System.Windows.Forms.CheckBox ls_cbMap;
         private System.Windows.Forms.DataGridViewTextBoxColumn eco_colRankPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn eco_colRankName;
         private System.Windows.Forms.DataGridView eco_dgvRanks;
@@ -4747,7 +4806,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.ComboBox rank_cmbOsMap;
         private System.Windows.Forms.Label rank_lblOsMap;
         private System.Windows.Forms.PropertyGrid pg_lavaMap;
-        private System.Windows.Forms.PropertyGrid pg_lava;
         private System.Windows.Forms.TextBox rank_txtPrefix;
         private System.Windows.Forms.Label rank_lblPrefix;
         private System.Windows.Forms.Label srv_lblOwner;
@@ -4956,9 +5014,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox groupBox21;
         private System.Windows.Forms.GroupBox ls_grpMapSettings;
         private System.Windows.Forms.GroupBox groupBox23;
-        private System.Windows.Forms.Button ls_btnEndRound;
-        private System.Windows.Forms.Button ls_btnStopGame;
-        private System.Windows.Forms.Button ls_btnStartGame;
+        private System.Windows.Forms.Button ls_btnEnd;
+        private System.Windows.Forms.Button ls_btnStop;
+        private System.Windows.Forms.Button ls_btnStart;
         private System.Windows.Forms.TextBox sql_txtPort;
         private System.Windows.Forms.Label sql_lblPort;
         private System.Windows.Forms.GroupBox srv_grpUpdate;

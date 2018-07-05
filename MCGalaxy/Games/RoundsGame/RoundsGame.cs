@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Events.GameEvents;
 
 namespace MCGalaxy.Games {
     
@@ -56,9 +57,10 @@ namespace MCGalaxy.Games {
             }
             
             RoundsLeft = rounds;
-            Running = true;
-            HookEventHandlers();
+            Running = true;            
             IGame.RunningGames.Add(this);
+            OnStateChangedEvent.Call(this);
+            HookEventHandlers();
             
             Thread t = new Thread(RunGame);
             t.Name = "MCG_" + GameName;
@@ -177,9 +179,10 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             Running = false;
             IGame.RunningGames.Remove(this);
-            
+
             UnhookEventHandlers();
             EndGame();
+            OnStateChangedEvent.Call(this);
             
             RoundStart = DateTime.MinValue;
             RoundsLeft = 0;

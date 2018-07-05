@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Globalization;
 using System.IO;
@@ -25,96 +25,52 @@ namespace MCGalaxy.Gui {
         System.Timers.Timer lavaUpdateTimer;
         TntWarsGame1 tw_selected;
         TWMapConfig twCfg;
+        GamesHelper lsHelper;
+        
+        void LoadGameProps() {
+            string[] allMaps = LevelInfo.AllMapNames();
+            
+            lsHelper = new GamesHelper(
+                LSGame.Instance, ls_cbStart, ls_cbMap, ls_cbMain,
+                ls_btnStart, ls_btnStop, ls_btnEnd,
+                ls_btnAdd, ls_btnRemove, ls_lstUsed, ls_lstNotUsed);
+            ls_numMax.Value = LSGame.Config.MaxLives;
+            lsHelper.Load(allMaps);
+        }
 
-        void SaveLavaSettings() {
-            LSGame.Config.Save();
-            SaveLavaMapSettings();
+        void SaveGameProps() {
+            try {
+                LSGame.Config.MaxLives = (int)ls_numMax.Value;
+                lsHelper.Save();
+                SaveLavaMapSettings();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving Lava Survival settings", ex);
+            }
         }
 
         void UpdateLavaControls() {
-            ls_btnStartGame.Enabled = !LSGame.Instance.Running;
-            ls_btnStopGame.Enabled = LSGame.Instance.Running;
-            ls_btnEndRound.Enabled = LSGame.Instance.RoundInProgress;
+            lsHelper.UpdateButtons();
         }
-
-        void lsBtnStartGame_Click(object sender, EventArgs e) {
-            if (!LSGame.Instance.Running) LSGame.Instance.Start(null, "", int.MaxValue);
-            UpdateLavaControls();
+        
+        GamesHelper GetGameHelper(IGame game) {
+            // TODO: Find a better way of doing this
+            if (game == LSGame.Instance) return lsHelper;
+            return null;
         }
-
-        void lsBtnStopGame_Click(object sender, EventArgs e) {
-            if (LSGame.Instance.Running) LSGame.Instance.End();
-            UpdateLavaControls();
+        
+        void HandleMapsChanged(RoundsGame game) {
+            GamesHelper helper = GetGameHelper(game);
+            if (helper == null) return;
+            RunOnUI_Async(() => helper.UpdateMaps());
         }
-
-        void lsBtnEndRound_Click(object sender, EventArgs e) {
-            if (LSGame.Instance.RoundInProgress) LSGame.Instance.EndRound();
-            UpdateLavaControls();
+        
+        void HandleStateChanged(IGame game) {
+            GamesHelper helper = GetGameHelper(game);
+            if (helper == null) return;
+            RunOnUI_Async(() => helper.UpdateButtons());
         }
-
-        void UpdateLavaMapList(bool useList = true, bool noUseList = true) {
-            if (!useList && !noUseList) return;
-            try {
-                if (this.InvokeRequired) {
-                    this.Invoke(new MethodInvoker(delegate { try { UpdateLavaMapList(useList, noUseList); } catch { } }));
-                    return;
-                }
-
-                int useIndex = ls_lstUsed.SelectedIndex, noUseIndex = ls_lstNotUsed.SelectedIndex;
-                if (useList) ls_lstUsed.Items.Clear();
-                if (noUseList) ls_lstNotUsed.Items.Clear();
-
-                if (useList) {
-                    ls_lstUsed.Items.AddRange(LSGame.Config.Maps.ToArray());
-                    try { if (useIndex > -1) ls_lstUsed.SelectedIndex = useIndex; }
-                    catch { }
-                }
-                if (noUseList) {
-                    string[] allMaps = LevelInfo.AllMapNames();
-                    foreach (string map in allMaps) {
-                        try {
-                            if (map.ToLower() != Server.mainLevel.name && !LSGame.Instance.HasMap(map))
-                                ls_lstNotUsed.Items.Add(map);
-                        }
-                        catch (NullReferenceException) { }
-                    }
-                    try { if (noUseIndex > -1) ls_lstNotUsed.SelectedIndex = noUseIndex; }
-                    catch { }
-                }
-            }
-            catch (ObjectDisposedException) { }  //Y U BE ANNOYING 
-            catch (Exception ex) { Logger.LogError(ex); }
-        }
-
-        void lsAddMap_Click(object sender, EventArgs e) {
-            try {
-                string map;
-                try { map = ls_lstNotUsed.Items[ls_lstNotUsed.SelectedIndex].ToString(); }
-                catch { return; }
-
-                Level lvl;
-                LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
-                RoundsGameConfig.AddMap(null, map, lvlCfg, LSGame.Instance);
-                
-                UpdateLavaMapList();
-            }
-            catch (Exception ex) { Logger.LogError(ex); }
-        }
-
-        void lsRemoveMap_Click(object sender, EventArgs e) {
-            try {
-                string map;
-                try { map = ls_lstUsed.Items[ls_lstUsed.SelectedIndex].ToString(); }
-                catch { return; }
-
-                Level lvl;
-                LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
-                RoundsGameConfig.RemoveMap(null, map, lvlCfg, LSGame.Instance);
-                
-                UpdateLavaMapList();
-            }
-            catch (Exception ex) { Logger.LogError(ex); }
-        }
+        
+        public void RunOnUI_Async(Action act) { BeginInvoke(act); }
 
         string lsCurMap;
         void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
@@ -363,7 +319,7 @@ namespace MCGalaxy.Gui {
             if (game.GameMode == TntWarsGameMode.FFA) msg += "FFA";
             if (game.GameMode == TntWarsGameMode.TDM) msg += "TDM";
             
-            msg += " - ";            
+            msg += " - ";
             if (game.Difficulty == TntWarsDifficulty.Easy)    msg += "(Easy)";
             if (game.Difficulty == TntWarsDifficulty.Normal)  msg += "(Normal)";
             if (game.Difficulty == TntWarsDifficulty.Hard)    msg += "(Hard)";
@@ -414,7 +370,7 @@ namespace MCGalaxy.Gui {
         }
 
         void TntWrsDiffSlctBt_Click(object sender, EventArgs e) {
-            TWGame game = TWGame.Instance;            
+            TWGame game = TWGame.Instance;
             int diff = TntWrsDiffCombo.SelectedIndex;
             
             if (diff >= 0) game.SetDifficulty((TntWarsDifficulty)diff);

@@ -114,7 +114,7 @@ namespace MCGalaxy.Gui {
         }
         
         void Map_UpdateUnloadedList() {
-            object selected = map_lbUnloaded.SelectedItem;            
+            object selected = map_lbUnloaded.SelectedItem;
             map_lbUnloaded.Items.Clear();
             
             string[] allMaps = LevelInfo.AllMapNames();
@@ -123,15 +123,11 @@ namespace MCGalaxy.Gui {
                     map_lbUnloaded.Items.Add(map);
             }
             
-            int index = -1;
-            if (selected != null) {
-                index = map_lbUnloaded.Items.IndexOf(selected);
-            }
-            map_lbUnloaded.SelectedIndex = index;
+            Map_Reselect(map_lbUnloaded, selected);
         }
         
         void Map_UpdateLoadedList() {
-            object selected = map_lbLoaded.SelectedItem;           
+            object selected = map_lbLoaded.SelectedItem;
             map_lbLoaded.Items.Clear();
             
             Level[] loaded = LevelInfo.Loaded.Items;
@@ -139,12 +135,14 @@ namespace MCGalaxy.Gui {
                 map_lbLoaded.Items.Add(lvl.name);
             }
             
-            int index = -1;
-            if (selected != null) {
-                index = map_lbLoaded.Items.IndexOf(selected);                
-            }            
-            map_lbLoaded.SelectedIndex = index;
+            Map_Reselect(map_lbLoaded, selected);
             Map_UpdateSelected(null, null);
+        }
+        
+        void Map_Reselect(ListBox box, object selected) {
+            int i = -1;
+            if (selected != null) i = box.Items.IndexOf(selected);
+            box.SelectedIndex = i;
         }
     }
 }

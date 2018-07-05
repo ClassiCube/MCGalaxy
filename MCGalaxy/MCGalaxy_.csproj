@@ -464,7 +464,6 @@
     <Compile Include="Drawing\Transform\Transform.cs" />
     <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\Economy.DB.cs" />
-    <Compile Include="Economy\EcoTransaction.cs" />
     <Compile Include="Economy\ReviveItem.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
     <Compile Include="Economy\Economy.cs" />
@@ -479,11 +478,11 @@
     <Compile Include="Entity\TabList.cs" />
     <Compile Include="Events\EconomyEvents.cs" />
     <Compile Include="Events\EntityEvents.cs" />
+    <Compile Include="Events\GameEvents.cs" />
     <Compile Include="Events\GroupEvents.cs" />
     <Compile Include="Events\IPluginEvent.cs" />
     <Compile Include="Events\LevelEvents.cs" />
     <Compile Include="Events\ModActionEvent.cs" />
-    <Compile Include="Events\PlayerClick.cs" />
     <Compile Include="Events\PlayerEvents.cs" />
     <Compile Include="Events\ServerEvents.cs" />
     <Compile Include="Games\Countdown\CountdownGame.cs" />

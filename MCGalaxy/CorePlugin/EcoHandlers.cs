@@ -17,6 +17,7 @@
  */
 using System;
 using System.Globalization;
+using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Eco;
 using MCGalaxy.SQL;
 

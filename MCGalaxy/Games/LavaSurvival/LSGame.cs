@@ -97,10 +97,6 @@ namespace MCGalaxy.Games {
                 if (p.level == Map) Get(p).TimesDied = 0;
             }
         }
-        
-        public bool HasMap(string name) {
-            return Config.Maps.CaselessContains(name);
-        }
 
         public bool InSafeZone(ushort x, ushort y, ushort z) {
             return x >= cfg.SafeZoneMin.X && x <= cfg.SafeZoneMax.X && y >= cfg.SafeZoneMin.Y

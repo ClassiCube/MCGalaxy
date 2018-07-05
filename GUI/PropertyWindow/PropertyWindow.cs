@@ -19,24 +19,22 @@ using System.Windows.Forms;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
+using MCGalaxy.Events.GameEvents;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         ZombieProperties zsSettings = new ZombieProperties();
-        LavaProperties lsSettings = new LavaProperties();
 
         public PropertyWindow() {
             InitializeComponent();
-            lsSettings.LoadFromServer();
             zsSettings.LoadFromServer();
             propsZG.SelectedObject = zsSettings;
-            pg_lava.SelectedObject = lsSettings;
         }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
-            ToggleIrcSettings(ServerConfig.UseIRC);
-
+            OnMapsChangedEvent.Register(HandleMapsChanged, Priority.Low);
+            OnStateChangedEvent.Register(HandleStateChanged, Priority.Low);
             GuiPerms.UpdateRankNames();
             rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);
             rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
@@ -53,18 +51,11 @@ namespace MCGalaxy.Gui {
                 Logger.LogError("Error loading commands and blocks", ex);
             }
 
-            try {
-                UpdateLavaMapList();
-                UpdateLavaControls();
-            } catch (Exception ex) {
-                Logger.LogError("Error loading lava durvival settings!", ex);
-            }
-
+            LoadGameProps();
             try {
                 lavaUpdateTimer = new System.Timers.Timer(10000) { AutoReset = true };
                 lavaUpdateTimer.Elapsed += delegate {
                     UpdateLavaControls();
-                    UpdateLavaMapList(false);
                 };
                 lavaUpdateTimer.Start();
             } catch {
@@ -73,6 +64,9 @@ namespace MCGalaxy.Gui {
         }
 
         void PropertyWindow_Unload(object sender, EventArgs e) {
+            OnMapsChangedEvent.Unregister(HandleMapsChanged);
+            OnStateChangedEvent.Unregister(HandleStateChanged);
+            
             lavaUpdateTimer.Dispose();
             Window.hasPropsForm = false;
             tw_selected = null;
@@ -100,10 +94,8 @@ namespace MCGalaxy.Gui {
                 ApplyRankProps();
                 ApplySecurityProps();
                 zsSettings.ApplyToServer();
-                lsSettings.ApplyToServer();
                 
                 SrvProperties.Save();
-                CommandExtraPerms.Save();
                 Economy.Save();
             } catch (Exception ex) {
                 Logger.LogError(ex);
@@ -119,8 +111,8 @@ namespace MCGalaxy.Gui {
             SaveRanks();
             SaveCommands();
             SaveBlocks();
-            try { SaveLavaSettings(); }
-            catch { Logger.Log(LogType.Warning, "Error saving Lava Survival settings!"); }
+            SaveGameProps();
+            
             try { ZSGame.Config.Save(); }
             catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 

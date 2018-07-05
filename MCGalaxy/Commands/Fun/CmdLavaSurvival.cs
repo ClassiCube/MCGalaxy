@@ -207,6 +207,7 @@ namespace MCGalaxy.Commands.Fun {
             } else if (message.CaselessEq("spawn")) {
                 Player.Message(p, "%T/LS set spawn %H- View lava spawns and layer info");
                 Player.Message(p, "%T/LS set spawn flood %H- Set position lava floods from");
+                // TODO: /ls set layer instead
                 Player.Message(p, "%T/LS set spawn layer %H- Set start position layers flood from");
                 Player.Message(p, "%T/LS set spawn height [height] %H- Sets height of each layer");
                 Player.Message(p, "%T/LS set spawn count [count] %H- Sets number of layers to flood");

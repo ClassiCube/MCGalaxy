@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Config;
+using MCGalaxy.Events.GameEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
@@ -64,6 +65,7 @@ namespace MCGalaxy.Games {
                 
                 cfg.Save();
                 lvlCfg.SaveFor(map);
+                OnMapsChangedEvent.Call(game);
             }
         }
         
@@ -80,6 +82,7 @@ namespace MCGalaxy.Games {
                 
                 cfg.Save();
                 lvlCfg.SaveFor(map);
+                OnMapsChangedEvent.Call(game);
             }
         }
     }

@@ -81,6 +81,7 @@
       <DependentUpon>TokenSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="PropertyWindow\GamesHelper.cs" />
     <Compile Include="PropertyWindow\ItemPermsHelper.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Blocks.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Chat.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="PropertyWindow\PropertyWindow.Security.cs" />
     <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
-    <Compile Include="Settings\LavaProperties.cs" />
     <Compile Include="Settings\PlayerProperties.cs" />
     <Compile Include="Settings\TypeConverters.cs" />
     <Compile Include="Settings\ZombieProperties.cs" />
