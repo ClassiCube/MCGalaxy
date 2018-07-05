@@ -55,7 +55,6 @@ namespace MCGalaxy {
 
         //Other
         public static bool SetupFinished = false;
-        public static CTFGame ctf = new CTFGame();
         
         public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;
         public static PlayerList ignored, hidden, agreed, vip, noEmotes, lockdown;
@@ -82,15 +81,9 @@ namespace MCGalaxy {
 
         // Extra storage for custom commands
         public static ExtrasCollection Extras = new ExtrasCollection();
-
-        // Games
-        public static ZSGame zombie;
         
         public static int YesVotes = 0, NoVotes = 0;
         public static bool voting = false;
-
-        public static LSGame lava;
-        public static CountdownGame Countdown;
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");

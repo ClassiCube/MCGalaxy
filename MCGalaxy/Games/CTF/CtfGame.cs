@@ -57,6 +57,8 @@ namespace MCGalaxy.Games {
         
         CtfTeam Red  = new CtfTeam("Red", Colors.red);
         CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
+        
+        public static CTFGame Instance = new CTFGame();
         public CTFGame() { Picker = new LevelPicker(); }
 
         const string ctfExtrasKey = "MCG_CTF_DATA";

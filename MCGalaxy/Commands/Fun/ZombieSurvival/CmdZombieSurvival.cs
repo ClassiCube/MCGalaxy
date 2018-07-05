@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdZombieSurvival : RoundsGameCmd {
         public override string name { get { return "ZombieSurvival"; } }
         public override string shortcut { get { return "ZS"; } }
-        protected override RoundsGame Game { get { return Server.zombie; } }
+        protected override RoundsGame Game { get { return ZSGame.Instance; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ZG"), new CommandAlias("RoundTime", "set round") }; }
         }
@@ -59,13 +59,13 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetBool(p, args[1], ref lCfg.Pillaring)) return;
                 
                 Player.Message(p, "Set pillaring allowed to &b" + lCfg.Pillaring);
-                Server.zombie.UpdateAllStatus2();
+                ZSGame.Instance.UpdateAllStatus2();
             } else if (prop.CaselessEq("build")) {
                 if (!CommandParser.GetEnum(p, args[1], "Build type", ref lCfg.BuildType)) return;
                 p.level.UpdateBlockPermissions();
                 
                 Player.Message(p, "Set build type to &b" + lCfg.BuildType);
-                Server.zombie.UpdateAllStatus2();
+                ZSGame.Instance.UpdateAllStatus2();
             } else if (prop.CaselessEq("minround")) {
                 if (!ParseTimespan(p, "min round time", args, ref lCfg.MinRoundTime)) return;
             } else if (prop.CaselessEq("maxround")) {

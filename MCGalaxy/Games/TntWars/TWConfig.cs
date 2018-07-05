@@ -21,17 +21,23 @@
 ////-----|  Note: Double click on // to see |-----\\\\
 ///------|        them in the sidebar!!     |------\\\
 //-------|__________________________________|-------\\
+using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
-    public sealed class TntWarsConfig : RoundsGameConfig {
+    public sealed class TWConfig : RoundsGameConfig {
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "TNT Wars"; } }
         protected override string PropsPath { get { return "properties/tntwars.properties"; } }
+        
+        [ConfigEnum("Mode", null, TntWarsGameMode.TDM, typeof(TntWarsGameMode))]
+        public TntWarsGameMode Mode = TntWarsGameMode.TDM;
+        [ConfigEnum("Difficulty", null, TntWarsDifficulty.Normal, typeof(TntWarsDifficulty))]
+        public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
     }
     
-    public sealed class TntWarsMapConfig {
+    public sealed class TWMapConfig {
         
         [ConfigBool("grace-period", null, true)]
         public bool InitialGracePeriod = true;
@@ -64,7 +70,32 @@ namespace MCGalaxy.Games {
         public int StreakThreeAmount = 7;
         public float StreakThreeMultiplier = 2f;
         
-        [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
+        [ConfigVec3("red-spawn", null)]  public Vec3U16 RedSpawn;
         [ConfigVec3("blue-spawn", null)] public Vec3U16 BlueSpawn;
+        
+        const string propsDir = "properties/tntwars/";
+        static string Path(string map) { return propsDir + map + ".properties"; }
+        static ConfigElement[] cfg;
+        
+        public void Load(string map) {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(TWMapConfig));
+            ConfigElement.ParseFile(cfg, "TNT wars map", Path(map), this);
+        }
+        
+        public void Save(string map) {
+            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
+            
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(TWMapConfig));
+            ConfigElement.SerialiseSimple(cfg, Path(map), this);
+        }
+        
+        public void SetDefaults(Level lvl) {
+            ushort midX = (ushort)(lvl.Width / 2);
+            ushort midY = (ushort)(lvl.Height / 2);
+            ushort maxZ = (ushort)(lvl.Length - 1);
+            
+            RedSpawn  = new Vec3U16(midX, midY, 0);
+            BlueSpawn = new Vec3U16(midX, midY, maxZ);
+        }
     }
 }

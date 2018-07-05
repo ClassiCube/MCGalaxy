@@ -35,6 +35,7 @@ namespace MCGalaxy.Games {
         BlockID floodBlock;
         int curLayer, roundTotalSecs, floodDelaySecs, layerIntervalSecs;
         
+        public static LSGame Instance = new LSGame();
         public LSGame() { Picker = new LevelPicker(); }
         
         LSData Get(Player p) {
@@ -95,17 +96,6 @@ namespace MCGalaxy.Games {
             foreach (Player p in players) {
                 if (p.level == Map) Get(p).TimesDied = 0;
             }
-        }
-
-        public void AddMap(string name) {
-            if (!String.IsNullOrEmpty(name) && !HasMap(name)) {
-                Config.Maps.Add(name);
-                Config.Save();
-            }
-        }
-        
-        public void RemoveMap(string name) {
-            if (Config.Maps.CaselessRemove(name)) Config.Save();
         }
         
         public bool HasMap(string name) {

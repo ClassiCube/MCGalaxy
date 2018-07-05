@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
          public override void Use(Player p, string message) {
-            Player[] alive = Server.zombie.Alive.Items;
+            Player[] alive = ZSGame.Instance.Alive.Items;
             if (alive.Length == 0) { Player.Message(p, "No one is alive."); return; }
             
             Player.Message(p, "Players who are &2alive %Sare:");

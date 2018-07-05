@@ -34,7 +34,7 @@ namespace MCGalaxy.Eco {
             if (p.money < Price) {
                 Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy a " + Name + "."); return;
             }
-            if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
+            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 Player.Message(p, "You can only buy an revive potion " +
                                    "when a round of zombie survival is in progress."); return;
             }
@@ -44,11 +44,11 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "You are already a human."); return;
             }            
             
-            DateTime end = Server.zombie.RoundEnd;
+            DateTime end = ZSGame.Instance.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(ZSGame.Config.ReviveNoTime) > end) {
                 Player.Message(p, ZSGame.Config.ReviveNoTimeMessage); return;
             }
-            int count = Server.zombie.Infected.Count;
+            int count = ZSGame.Instance.Infected.Count;
             if (count < ZSGame.Config.ReviveFewZombies) {
                 Player.Message(p, ZSGame.Config.ReviveFewZombiesMessage); return;
             }
@@ -62,10 +62,10 @@ namespace MCGalaxy.Eco {
             
             int chance = new Random().Next(1, 101);
             if (chance <= ZSGame.Config.ReviveChance) {
-                Server.zombie.DisinfectPlayer(p);
-                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveSuccessMessage);
+                ZSGame.Instance.DisinfectPlayer(p);
+                ZSGame.Instance.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveSuccessMessage);
             } else {
-                Server.zombie.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveFailureMessage);
+                ZSGame.Instance.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveFailureMessage);
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
             data.RevivesUsed++;

@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You do not have enough " + ServerConfig.Currency + " to place such a large bountry."); return;
             }
             
-            BountyData old = Server.zombie.FindBounty(who.name);
+            BountyData old = ZSGame.Instance.FindBounty(who.name);
             if (old != null && old.Amount >= amount) {
                 Player.Message(p, "There is already a larger active bounty for " + who.ColoredName); return;
             }
@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 msg = string.Format("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
                                     who.ColoredName, amount, ServerConfig.Currency, old.Amount);
-                Server.zombie.Bounties.Remove(old);
+                ZSGame.Instance.Bounties.Remove(old);
             }
-            Server.zombie.Map.Message(msg);
+            ZSGame.Instance.Map.Message(msg);
             
-            Server.zombie.Bounties.Add(new BountyData(p.name, who.name, amount));
+            ZSGame.Instance.Bounties.Add(new BountyData(p.name, who.name, amount));
             p.SetMoney(p.money - amount);
         }
         

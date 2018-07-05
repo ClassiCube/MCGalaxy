@@ -119,7 +119,6 @@ namespace MCGalaxy {
             p.SetYawPitch(yaw, pitch);
             
             Entities.SpawnEntities(p, pos, rot);
-            CheckGamesJoin(p, prevLevel);
             OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);
             if (!announce || !ServerConfig.ShowWorldChanges) return; 
             
@@ -131,19 +130,6 @@ namespace MCGalaxy {
         
         static ChatMessageFilter FilterGoto(Player source) {
             return (pl, obj) => Entities.CanSee(pl, source) && !pl.Ignores.WorldChanges;
-        }
-        
-        static void CheckGamesJoin(Player p, Level oldLvl) {
-            if (p.inTNTwarsMap) p.canBuild = true;
-            TntWarsGame1 game = TntWarsGame1.Find(p.level);
-            if (game == null) return;
-            
-            if (game.GameStatus != TntWarsGame1.TntWarsStatus.Finished &&
-                game.GameStatus != TntWarsGame1.TntWarsStatus.WaitingForPlayers) {
-                p.canBuild = false;
-                Player.Message(p, "TNT Wars: Disabled your building because you are in a TNT Wars map!");
-            }
-            p.inTNTwarsMap = true;
         }
     }
 }

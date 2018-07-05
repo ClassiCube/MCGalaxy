@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdLavaSurvival : RoundsGameCmd {
         public override string name { get { return "LavaSurvival"; } }
         public override string shortcut { get { return "LS"; } }
-        protected override RoundsGame Game { get { return Server.lava; } }
+        protected override RoundsGame Game { get { return LSGame.Instance; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage lava survival") }; }
         }
@@ -196,7 +196,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static void UpdateConfig(Player p, LSMapConfig cfg) {
             cfg.Save(p.level.name);
-            if (p.level == Server.lava.Map) Server.lava.UpdateMapConfig();
+            if (p.level == LSGame.Instance.Map) LSGame.Instance.UpdateMapConfig();
         }
         
         public override void Help(Player p, string message) {

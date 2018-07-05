@@ -50,6 +50,7 @@ namespace MCGalaxy.Games {
             ConfigElement.ParseFile(cfg, GameName, PropsPath, this);
         }
         
+        
         public static void AddMap(Player p, string map, LevelConfig lvlCfg, RoundsGame game) {
             RoundsGameConfig cfg = game.GetConfig();
             string coloredName = lvlCfg.Color + map;

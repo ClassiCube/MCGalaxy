@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCTF : RoundsGameCmd {
         public override string name { get { return "CTF"; } }
         public override string shortcut { get { return "CTFSetup"; } }
-        protected override RoundsGame Game { get { return Server.ctf; } }
+        protected override RoundsGame Game { get { return CTFGame.Instance; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage CTF") }; }
         }
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Fun {
         static void UpdateConfig(Player p, CTFMapConfig cfg) {
             if (!Directory.Exists("CTF")) Directory.CreateDirectory("CTF");
             cfg.Save(p.level.name);
-            if (p.level == Server.ctf.Map) Server.ctf.UpdateMapConfig();
+            if (p.level == CTFGame.Instance.Map) CTFGame.Instance.UpdateMapConfig();
         }
         
         public override void Help(Player p, string message) {

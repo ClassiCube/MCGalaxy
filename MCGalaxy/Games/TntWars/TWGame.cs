@@ -36,25 +36,26 @@ namespace MCGalaxy.Games {
     
     public enum TntWarsGameMode { FFA, TDM };
     public enum TntWarsDifficulty {
-        Easy,    //2 Hits to die, Tnt has long delay
-        Normal,  //2 Hits to die, Tnt has normal delay
-        Hard,    //1 Hit to die, Tnt has short delay
-        Extreme, //1 Hit to die, Tnt has short delay and BIG exlosion
+        Easy,    // 2 Hits to die, Tnt has long delay
+        Normal,  // 2 Hits to die, Tnt has normal delay
+        Hard,    // 1 Hit to die, Tnt has short delay
+        Extreme, // 1 Hit to die, Tnt has short delay and BIG exlosion
     }
     
     internal sealed class TntWarsData {
-        public int Score;
+        public int Score, Health = 2, KillStreak;
+        public float ScoreMultiplier = 1f;
+        public int LastKillStreakAnnounced;
+        public string HarmedBy; // For Assists
         public string OrigCol;
     }
     
-    public sealed partial class TntWarsGame : RoundsGame {
-        TntWarsMapConfig cfg = new TntWarsMapConfig();
-        public static TntWarsConfig Config = new TntWarsConfig();
+    public sealed partial class TWGame : RoundsGame {
+        TWMapConfig cfg = new TWMapConfig();
+        public static TWConfig Config = new TWConfig();
         public override string GameName { get { return "TNT Wars"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
-        
-        public TntWarsGameMode GameMode = TntWarsGameMode.TDM;
-        public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
+        VolatileArray<Player> allPlayers = new VolatileArray<Player>(false);
         
         sealed class TntWarsTeam {
             public string Name, Color;
@@ -68,8 +69,11 @@ namespace MCGalaxy.Games {
         
         TntWarsTeam Red  = new TntWarsTeam("Red", Colors.red);
         TntWarsTeam Blue = new TntWarsTeam("Blue", Colors.blue);
+        public List<TntWarsGame1.Zone> NoTNTplacableZones = new List<TntWarsGame1.Zone>();
+        public List<TntWarsGame1.Zone> NoBlockDeathZones = new List<TntWarsGame1.Zone>();
         
-        public TntWarsGame() { Picker = new LevelPicker(); }
+        public static TWGame Instance = new TWGame();
+        public TWGame() { Picker = new LevelPicker(); }
         
         const string twExtrasKey = "MCG_TW_DATA";
         static TntWarsData Get(Player p) {
@@ -88,6 +92,13 @@ namespace MCGalaxy.Games {
             object data; p.Extras.TryGet(twExtrasKey, out data); return (TntWarsData)data;
         }
         
+        public void UpdateMapConfig() {
+            TWMapConfig cfg = new TWMapConfig();
+            cfg.SetDefaults(Map);
+            cfg.Load(Map.name);
+            this.cfg = cfg;
+        }
+        
         protected override List<Player> GetPlayers() {
             List<Player> playing = new List<Player>();
             playing.AddRange(Red.Members.Items);
@@ -96,7 +107,14 @@ namespace MCGalaxy.Games {
         }
         
         public override void OutputStatus(Player p) {
-            // TODO: Implement this
+            if (Config.Mode == TntWarsGameMode.TDM) {
+                Player.Message(p, "{0} team score: &f{1}/{2} points",
+                               Red.ColoredName, Red.Score, cfg.ScoreRequired);
+                Player.Message(p, "{0} team score: &f{1}/{2} points",
+                               Blue.ColoredName, Blue.Score, cfg.ScoreRequired);
+            }
+            Player.Message(p, "Your score: &f{0}/{1} %Spoints, health: &f{2} %SHP",
+                           Get(p).Score, cfg.ScoreRequired, Get(p).Health);
         }
 
         protected override void StartGame() {
@@ -121,12 +139,20 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerLeftGame(Player p) {
+            allPlayers.Remove(p);
             TntWarsTeam team = TeamOf(p);
-            if (team == null) return;            
+                    
+            if (team == null) return;
             team.Members.Remove(p);
-            
+            RestoreColor(p);
+        }
+        
+        void RestoreColor(Player p) {
             TntWarsData data = TryGet(p);
-            if (data != null) p.color = data.OrigCol;
+            if (data == null) return;
+            
+            p.color = data.OrigCol;
+            p.SetPrefix();
         }
         
         void JoinTeam(Player p, TntWarsTeam team) {
@@ -142,6 +168,72 @@ namespace MCGalaxy.Games {
             if (Red.Members.Contains(p)) return Red;
             if (Blue.Members.Contains(p)) return Blue;
             return null;
+        }
+        
+        
+        public void ModeTDM() {
+            Config.Mode = TntWarsGameMode.TDM;
+            MessageMap(CpeMessageType.Announcement,
+                       "&4Gamemode changed to &fTeam Deathmatch");
+            Player[] players = allPlayers.Items;
+            
+            foreach (Player pl in players) {         
+                string msg = pl.ColoredName + " %Sis now on the ";
+                AutoAssignTeam(pl);
+                
+                // assigning team changed colour of player
+                msg += TeamOf(pl).ColoredName + " team";
+                Map.Message(msg);
+            }
+            Config.Save();
+        }
+        
+        public void ModeFFA() {
+            Config.Mode = TntWarsGameMode.FFA;
+            MessageMap(CpeMessageType.Announcement,
+                       "&4Gamemode changed to &fFree For All");           
+            ResetTeams();
+            
+            Player[] players = allPlayers.Items;
+            foreach (Player pl in players) {
+                RestoreColor(pl);
+            }
+            Config.Save();
+        }
+        
+        public void SetDifficulty(TntWarsDifficulty diff) {
+            Config.Difficulty = diff;
+            MessageMap(CpeMessageType.Announcement,
+                       "&4Difficulty changed to &f" + diff);
+            
+            bool teamKill = diff >= TntWarsDifficulty.Hard;
+            if (cfg.TeamKills == teamKill) return;
+            
+            cfg.TeamKills = teamKill;
+            cfg.Save(Map.name);
+        }
+        
+        public bool InZone(ushort x, ushort y, ushort z, List<TntWarsGame1.Zone> zones) {
+            foreach (TntWarsGame1.Zone Zn in zones) {
+                if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ
+                    && x <= Zn.MaxX && y <= Zn.MaxY && z <= Zn.MaxZ) return true;
+            }
+            return false;
+        }
+        
+        void AutoAssignTeam(Player p) {
+            if (Blue.Members.Count > Red.Members.Count) {
+                JoinTeam(p, Red);
+            } else if (Red.Members.Count > Blue.Members.Count) {
+                JoinTeam(p, Blue);
+            } else if (Red.Score > Blue.Score) {
+                JoinTeam(p, Blue);
+            } else if (Blue.Score > Red.Score) {
+                JoinTeam(p, Blue);
+            } else {
+                bool red = new Random().Next(2) == 0;
+                JoinTeam(p, red ? Red : Blue);
+            }
         }
     }
 }

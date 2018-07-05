@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdCountdown : RoundsGameCmd {
         public override string name { get { return "CountDown"; } }
         public override string shortcut { get { return "CD"; } }
-        protected override RoundsGame Game { get { return Server.Countdown; } }
+        protected override RoundsGame Game { get { return CountdownGame.Instance; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage countdown") }; }
         }
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Fun {
             if (message.CaselessEq("rules")) {
                 HandleRules(p);
             } else if (message.CaselessEq("join")) {
-                HandleJoin(p, Server.Countdown);
+                HandleJoin(p, CountdownGame.Instance);
             } else {
                 base.Use(p, message);
             }

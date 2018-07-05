@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Bots {
                 if (lvl == null) return;
             }
             
-            PlayerBot[] bots = lvl.Bots.Items;            
+            PlayerBot[] bots = lvl.Bots.Items;
             string cmd = (lvl == p.level) ? "bots" : "bots " + lvl.name;
             string modifier = args.Length > offset ? args[offset] : "";
 

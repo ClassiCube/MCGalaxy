@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message) {
-            Player[] infected = Server.zombie.Infected.Items;
+            Player[] infected = ZSGame.Instance.Infected.Items;
             if (infected.Length == 0) { Player.Message(p, "No one is infected"); return; }
             
             Player.Message(p, "Players who are &cinfected %Sare:");

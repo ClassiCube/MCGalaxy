@@ -39,7 +39,7 @@ namespace MCGalaxy.Games
         public ushort[] RedSpawn = null;
         public ushort[] BlueSpawn = null;
         
-        public TntWarsMapConfig Config = new TntWarsMapConfig();
+        public TWMapConfig Config = new TWMapConfig();
         public Thread Starter;
 
         public TntWarsGame1(Level level) {
@@ -351,29 +351,29 @@ namespace MCGalaxy.Games
         public void HandleKill(Player Killer, List<Player> Killed)
         {
             List<Player> Dead = new List<Player>();
-            int HealthDamage = 1;
+            int damage = 1;
             int kills = 0;
-            int minusfromscore = 0;
+            int penalty = 0;
             if (Difficulty == TntWarsDifficulty.Hard || Difficulty == TntWarsDifficulty.Extreme) {
-                HealthDamage = 2;
+                damage = 2;
             }
             
             foreach (Player Kld in Killed) {
                 if (FindPlayer(Kld).spec) continue;
                 if (!Config.TeamKills && TeamKill(Killer, Kld)) continue;
                 
-                if (Kld.TntWarsHealth - HealthDamage <= 0)
+                if (Kld.TntWarsHealth - damage <= 0)
                 {
                     Kld.TntWarsHealth = 0;
                     Dead.Add(Kld);
                     if (Config.TeamKills && TeamKill(Killer, Kld))
                     {
-                        minusfromscore += Config.ScorePerKill;
+                        penalty += Config.ScorePerKill;
                     }
                 }
                 else
                 {
-                    Kld.TntWarsHealth -= HealthDamage;
+                    Kld.TntWarsHealth -= damage;
                     Kld.HarmedBy = Killer;
                     Player.Message(Killer, "TNT Wars: You harmed " + Kld.ColoredName);
                     Player.Message(Kld, "TNT Wars: You were harmed by " + Killer.ColoredName);
@@ -427,7 +427,7 @@ namespace MCGalaxy.Games
                 Died.TntWarsHealth = 2;
             }
             //Scoring
-            int AddToScore = 0;
+            int points = 0;
             //streaks
             Killer.TntWarsKillStreak += kills;
             if (kills >= 1 && Config.Streaks)
@@ -466,42 +466,30 @@ namespace MCGalaxy.Games
                     Player.Message(Killer, "TNT Wars: Kill streak of " + Killer.TntWarsKillStreak);
                 }
             }
-            AddToScore += kills * Config.ScorePerKill;
-            //multikill
-            if (kills > 1)
-            {
-                AddToScore += kills * Config.MultiKillBonus;
+            
+            points += kills * Config.ScorePerKill;
+            if (kills > 1) points += kills * Config.MultiKillBonus;
+
+            if (points > 0) {
+                points = (int)(points * Killer.TntWarsScoreMultiplier);
+                ChangeScore(Killer, points);
+                Player.Message(Killer, "TNT Wars: + " + points + " point(s) for " + kills + " kills");
             }
-            //Add to score
-            if (AddToScore > 0)
-            {
-                ChangeScore(Killer, AddToScore, Killer.TntWarsScoreMultiplier);
-                Player.Message(Killer, "TNT Wars: + " + ((int)(AddToScore * Killer.TntWarsScoreMultiplier)) + " point(s) for " + kills + " kills");
-            }
-            if (minusfromscore != 0)
-            {
-                ChangeScore(Killer, - minusfromscore);
-                Player.Message(Killer, "TNT Wars: - " + minusfromscore + " point(s) for team kill(s)!");
+            if (penalty > 0) {
+                ChangeScore(Killer, -penalty);
+                Player.Message(Killer, "TNT Wars: - " + penalty + " point(s) for team kill(s)!");
             }
         }
 
-        public void ChangeScore(Player p, int Amount, float multiplier = 1f)
-        {
-            ChangeScore(FindPlayer(p), Amount, multiplier);
+        public void ChangeScore(Player p, int Amount) {
+            ChangeScore(FindPlayer(p), Amount);
         }
 
-        public void ChangeScore(player p, int Amount, float multiplier = 1f)
-        {
-            p.Score += (int)(Amount * multiplier);
+        public void ChangeScore(player p, int Amount) {
+            p.Score += Amount;
             if (GameMode != TntWarsGameMode.TDM) return;
-            if (p.Red)
-            {
-                RedScore += (int)(Amount * multiplier);
-            }
-            if (p.Blue)
-            {
-                BlueScore += (int)(Amount * multiplier);
-            }
+            if (p.Red) RedScore += Amount;
+            if (p.Blue) BlueScore += Amount;
         }
 
         public bool InZone(ushort x, ushort y, ushort z, bool CheckForPlacingTnt) {
@@ -517,13 +505,11 @@ namespace MCGalaxy.Games
             return false;
         }
         
-        public bool TeamKill(Player p1, Player p2)
-        {
+        public bool TeamKill(Player p1, Player p2) {
             return TeamKill(FindPlayer(p1), FindPlayer(p2));
         }
 
-        public bool TeamKill(player p1, player p2)
-        {
+        public bool TeamKill(player p1, player p2) {
             if (GameMode == TntWarsGameMode.TDM)
             {
                 if (p1.Red && p2.Red) return true;
@@ -538,10 +524,8 @@ namespace MCGalaxy.Games
             return sorted;
         }
 
-        public void AnnounceScores(bool TotalTeamScores = false, bool TheirTotalScore = false, bool TopScores = false)
-        {
-            try
-            {
+        public void AnnounceScores(bool TotalTeamScores = false, bool TheirTotalScore = false, bool TopScores = false) {
+            try {
                 if (TotalTeamScores)
                 {
                     MessageAll("TNT Wars Scores:");
@@ -637,26 +621,6 @@ namespace MCGalaxy.Games
             } catch { }
         }
 
-        public bool CheckAllSetUp(Player p, bool ReturnErrors = false) {
-            if (lvl != null && GameStatus == 0) {
-                TntWarsGame1 existing = Find(lvl);
-                if (existing != null && existing != this) {
-                    if (ReturnErrors) Player.Message(p, "There is already a TNT Wars game on that map");
-                    return false;
-                }
-                return true;
-            }
-            
-            if (ReturnErrors) {
-                if (lvl == null) {
-                    Player.Message(p, "TNT Wars Error: No Level Selected");
-                } else if (GameStatus != 0) {
-                    Player.Message(p, "Game is already in progress");
-                }
-            }
-            return false;
-        }
-
         public static TntWarsGame1 Find(Level level) {
             foreach (TntWarsGame1 g in GameList) {
                 if (g.lvl == level) return g;
@@ -683,32 +647,6 @@ namespace MCGalaxy.Games
             if (it != null) return it;
             it = FindFromGameNumber(p.CurrentTntGameNumber);
             return it;
-        }
-        
-        public void ModeTDM() {
-            GameMode = TntWarsGameMode.TDM;
-            MessageAll("TNT Wars: Changed gamemode to Team Deathmatch");
-            
-            foreach (TntWarsGame1.player pl in Players) {
-                AutoAssignTeam(pl);
-                string msg = pl.p.ColoredName + " %Sis now";
-                
-                if (pl.Red)  msg += " on the " + Colors.red + "red team";
-                if (pl.Blue) msg += " on the " + Colors.blue + "blue team";
-                if (pl.spec) msg += " (as a spectator)";
-                
-                Chat.MessageGlobal(msg);
-            }
-        }
-        
-        public void ModeFFA() {
-            GameMode = TntWarsGameMode.FFA;
-            MessageAll("TNT Wars: Changed gamemode to Free For All");
-            
-            foreach (TntWarsGame1.player pl in Players) {
-                pl.p.color = pl.OrigCol;
-                pl.p.SetPrefix();
-            }
         }
         
         public void AutoAssignTeam(player pl) {

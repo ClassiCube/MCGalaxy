@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands.Fun {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
-            if (!Server.zombie.RoundInProgress || ZSGame.Get(who).Infected) {
+            if (!ZSGame.Instance.RoundInProgress || ZSGame.Get(who).Infected) {
                 Player.Message(p, "Cannot infect player");
             } else if (!who.Game.Referee) {
-                Server.zombie.InfectPlayer(who, p);
+                ZSGame.Instance.InfectPlayer(who, p);
                 Chat.MessageFrom(who, "λNICK %Swas infected.");
             }
         }

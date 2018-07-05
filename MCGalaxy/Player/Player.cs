@@ -105,7 +105,7 @@ namespace MCGalaxy {
                 return Rank >= target.Rank;
             }
             
-            if (!Server.zombie.Running || Game.Referee) return true;
+            if (!ZSGame.Instance.Running || Game.Referee) return true;
             ZSData data = ZSGame.TryGet(target);
             return data == null || !(target.Game.Referee || data.Invisible);
         }        

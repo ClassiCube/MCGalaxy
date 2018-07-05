@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
+using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
 
@@ -122,7 +123,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
-            if (!Server.zombie.HasMap(data.MapName)) return;
+            if (!ZSGame.Instance.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.SplitComma();
             Player.Message(p, "Map authors: {0}",

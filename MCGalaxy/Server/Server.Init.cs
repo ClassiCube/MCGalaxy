@@ -129,10 +129,10 @@ namespace MCGalaxy {
             IRC = new IRCBot();
             if (ServerConfig.UseIRC) IRC.Connect();
              
-            InitGame(Server.Countdown);
-            InitGame(Server.zombie);
-            InitGame(Server.lava);
-            InitGame(Server.ctf);
+            InitGame(CountdownGame.Instance);
+            InitGame(ZSGame.Instance);
+            InitGame(LSGame.Instance);
+            InitGame(CTFGame.Instance);
             
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));

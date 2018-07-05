@@ -103,8 +103,6 @@ namespace MCGalaxy.Games {
             Map.SetPhysics(destroyMode ? 2 : 1);
             Map.Config.PhysicsOverload = 1000000;
             Map.Config.LoadOnGoto = false;
-            
-            Level.SaveSettings(Map);
             return true;
         }
 

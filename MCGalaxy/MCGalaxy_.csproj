@@ -506,11 +506,11 @@
     <Compile Include="Games\RoundsGame\RoundsGame.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.Plugin.cs" />
     <Compile Include="Games\Team.cs" />
-    <Compile Include="Games\TntWars\TntWarsGame.Plugin.cs" />
-    <Compile Include="Games\TntWars\TntWarsGame.Round.cs" />
+    <Compile Include="Games\TntWars\TWGame.Plugin.cs" />
+    <Compile Include="Games\TntWars\TWGame.Round.cs" />
     <Compile Include="Games\TntWars\TntWars__.cs" />
-    <Compile Include="Games\TntWars\TntWarsGame.cs" />
-    <Compile Include="Games\TntWars\TntWarsConfig.cs" />
+    <Compile Include="Games\TntWars\TWGame.cs" />
+    <Compile Include="Games\TntWars\TWConfig.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.DB.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.Round.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.cs" />

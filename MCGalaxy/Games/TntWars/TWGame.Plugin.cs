@@ -28,7 +28,7 @@ using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class TntWarsGame : RoundsGame {
+    public sealed partial class TWGame : RoundsGame {
         
          protected override void HookEventHandlers() {
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
             if (p.level != Map || message.Length == 0 || message[0] != ':') return;
             
             TntWarsTeam team = TeamOf(p);
-            if (team == null || GameMode != TntWarsGameMode.TDM) return;
+            if (team == null || Config.Mode != TntWarsGameMode.TDM) return;
             message = message.Substring(1);
             
             // "To Team &c-" + ColoredNamw + "&c- %S" + message);
@@ -63,8 +63,8 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (p.level != Map) return;
-            TntWarsTeam team = TeamOf(p);           
-            if (team == null || GameMode != TntWarsGameMode.TDM) return;
+            TntWarsTeam team = TeamOf(p);
+            if (team == null || Config.Mode != TntWarsGameMode.TDM) return;
             
             Vec3U16 coords = team.SpawnPos;
             pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);
@@ -75,20 +75,10 @@ namespace MCGalaxy.Games {
             
             if (level != Map) return;
             MessageMapInfo(p);
-            if (TeamOf(p) != null) return;
+            allPlayers.Add(p);
             
-            if (Blue.Members.Count > Red.Members.Count) {
-                JoinTeam(p, Red);
-            } else if (Red.Members.Count > Blue.Members.Count) {
-                JoinTeam(p, Blue);
-            } else if (Red.Score > Blue.Score) {
-                JoinTeam(p, Blue);
-            } else if (Blue.Score > Red.Score) {
-                JoinTeam(p, Blue);
-            } else {
-                bool red = new Random().Next(2) == 0;
-                JoinTeam(p, red ? Red : Blue);
-            }
+            if (TeamOf(p) != null) return;            
+            AutoAssignTeam(p);
         }
     }
 }

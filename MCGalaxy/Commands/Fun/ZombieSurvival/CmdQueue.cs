@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdQueue : Command {
         public override string name { get { return "Queue"; } }
@@ -34,17 +36,17 @@ namespace MCGalaxy.Commands.Fun {
                 if (who == null) return;
                 
                 Player.Message(p, value + " was queued.");
-                Server.zombie.QueuedZombie = who.name;
-                if (Server.zombie.Map != null)
-                    Server.zombie.Map.Message(who.ColoredName + " %Swas queued as the next zombie.");
+                ZSGame.Instance.QueuedZombie = who.name;
+                if (ZSGame.Instance.Map != null)
+                    ZSGame.Instance.Map.Message(who.ColoredName + " %Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
                 string map = Matcher.FindMaps(p, value);
                 if (map == null) return;
                 
                 Player.Message(p, map + " was queued.");
-                Server.zombie.Picker.QueuedMap = map.ToLower();
-                if (Server.zombie.Map != null)
-                    Server.zombie.Map.Message(map + " was queued as the next map.");
+                ZSGame.Instance.Picker.QueuedMap = map.ToLower();
+                if (ZSGame.Instance.Map != null)
+                    ZSGame.Instance.Map.Message(map + " was queued as the next map.");
             } else {
                 Help(p);
             }

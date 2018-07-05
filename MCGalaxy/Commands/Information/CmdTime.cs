@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message) {
             Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
-            if (!Server.zombie.Running) return;
+            if (!ZSGame.Instance.Running) return;
             
-            TimeSpan delta = Server.zombie.RoundEnd - DateTime.UtcNow;
+            TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
             if (delta.TotalSeconds > 0) {
                 Player.Message(p, "&a{0} %Suntil the round ends.", delta.Shorten(true));
             } else {
-                delta = Server.zombie.RoundStart - DateTime.UtcNow;
+                delta = ZSGame.Instance.RoundStart - DateTime.UtcNow;
                 if (delta.TotalSeconds > 0)
                     Player.Message(p, "&a{0} %Suntil the round starts.", delta.Shorten(true));
             }

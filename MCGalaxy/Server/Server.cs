@@ -99,9 +99,6 @@ namespace MCGalaxy {
             MoveSqliteDll();
             MoveOutdatedFiles();
 
-            lava = new LSGame();
-            zombie = new ZSGame();
-            Countdown = new CountdownGame();
             LoadAllSettings();
             SrvProperties.GenerateSalt();
 
@@ -187,7 +184,7 @@ namespace MCGalaxy {
                 plugin.Unload(false);
             }
             
-            zombie.infectMessages = ZSConfig.LoadInfectMessages();
+            ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
             Colors.LoadList();
             Alias.Load();
             BlockDefinition.LoadGlobal();

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {
@@ -149,7 +150,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (Server.lava.Running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
                 return true;
 
             switch (block) {
@@ -261,7 +262,7 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (Server.lava.Running && Server.lava.Map == lvl && Server.lava.InSafeZone(x, y, z))
+            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
                 return true;
             
             switch (block) {

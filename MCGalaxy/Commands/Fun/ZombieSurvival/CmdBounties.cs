@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
         public override void Use(Player p, string message) {
-            BountyData[] bounties = Server.zombie.Bounties.Items;
+            BountyData[] bounties = ZSGame.Instance.Bounties.Items;
             if (bounties.Length == 0) {
                 Player.Message(p, "There are no active bounties."); return;
             }

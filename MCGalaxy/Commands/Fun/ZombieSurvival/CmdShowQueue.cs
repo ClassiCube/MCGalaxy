@@ -17,6 +17,7 @@
 */
 using System;
 using System.IO;
+using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdShowQueue : Command {      
@@ -26,8 +27,8 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message) {
-            ShowQueued(p, Server.zombie.Picker.QueuedMap, "level");
-            ShowQueued(p, Server.zombie.QueuedZombie, "zombie");
+            ShowQueued(p, ZSGame.Instance.Picker.QueuedMap, "level");
+            ShowQueued(p, ZSGame.Instance.QueuedZombie, "zombie");
         }
         
         void ShowQueued(Player p, string queued, string type) {

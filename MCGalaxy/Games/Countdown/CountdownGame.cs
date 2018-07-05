@@ -51,6 +51,7 @@ namespace MCGalaxy.Games {
         public int Interval;
         public string SpeedType;
         
+        public static CountdownGame Instance = new CountdownGame();
         public CountdownGame() { Picker = new CountdownLevelPicker(); }
         
         protected override List<Player> GetPlayers() {

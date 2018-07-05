@@ -33,10 +33,17 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
-    public sealed partial class TntWarsGame : RoundsGame {
+    public sealed partial class TWGame : RoundsGame {
         
         protected override void DoRound() {
             // TODO: Implement this
+        }
+		
+		protected override bool SetMap(string map) {
+            bool success = base.SetMap(map);
+            if (!success) return false;
+            UpdateMapConfig();
+            return true;
         }
         
         public override void EndRound() {

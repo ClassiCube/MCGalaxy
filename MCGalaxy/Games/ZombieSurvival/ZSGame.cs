@@ -70,7 +70,9 @@ namespace MCGalaxy.Games {
         public override string GameName { get { return "Zombie Survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
+        public static ZSGame Instance = new ZSGame();
         public ZSGame() { Picker = new LevelPicker(); }
+        
         public DateTime RoundEnd;
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();

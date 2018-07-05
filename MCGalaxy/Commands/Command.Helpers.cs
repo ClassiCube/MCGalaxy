@@ -19,6 +19,7 @@ using System;
 using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
+using MCGalaxy.Games;
 
 namespace MCGalaxy {
     
@@ -30,9 +31,9 @@ namespace MCGalaxy {
             if (enable == CommandEnable.Economy && !Economy.Enabled)
                 return "economy is disabled.";
             
-            if (enable == bothFlags && !(Server.zombie.Running || Server.lava.Running))
+            if (enable == bothFlags && !(ZSGame.Instance.Running || LSGame.Instance.Running))
                 return "neither zombie nor lava survival is running.";
-            if (enable == CommandEnable.Zombie && !Server.zombie.Running)
+            if (enable == CommandEnable.Zombie && !ZSGame.Instance.Running)
                 return "zombie survival is not running.";
             if (enable == CommandEnable.Lava)
                 return "lava survival is not running.";

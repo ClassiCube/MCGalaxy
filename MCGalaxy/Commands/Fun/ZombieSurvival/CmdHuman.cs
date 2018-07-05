@@ -38,17 +38,17 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "You need to have at least 5 &3" + ServerConfig.Currency + 
                                    " %Sto pledge that you will not be infected."); return;
             }
-            if (!Server.zombie.RoundInProgress) {
+            if (!ZSGame.Instance.RoundInProgress) {
                 Player.Message(p, "Can only use %T/human %Swhen a round is in progress."); return;
             }
             
-            TimeSpan delta = Server.zombie.RoundEnd - DateTime.UtcNow;
+            TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
             if (delta < TimeSpan.FromMinutes(3)) {
                 Player.Message(p, "Cannot use %T/human %Sin last three minutes of a round."); return;
             }
             
             p.Game.PledgeSurvive = true;
-            Server.zombie.Map
+            ZSGame.Instance.Map
                 .Message(p.ColoredName + " %Spledges that they will not succumb to the infection!");
         }
         

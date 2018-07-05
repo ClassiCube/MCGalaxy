@@ -65,7 +65,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "QueueLevel"; } }
         
         protected override void DoPurchase(Player p, string message, string[] args) {
-            if (Server.zombie.Picker.QueuedMap != null) {
+            if (ZSGame.Instance.Picker.QueuedMap != null) {
                 Player.Message(p, "Someone else has already queued a level."); return;
             }
             string map = Matcher.FindMaps(p, args[1]);
@@ -133,7 +133,7 @@ namespace MCGalaxy.Eco {
             if (p.money < Price) {
                 Player.Message(p, "&cYou don't have enough &3{1} &cto buy a {0}.", Name, ServerConfig.Currency); return;
             }
-            if (!Server.zombie.Running || !Server.zombie.RoundInProgress) {
+            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 Player.Message(p, "You can only buy an invisiblity potion " +
                                "when a round of zombie survival is in progress."); return;
             }
@@ -151,7 +151,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
             }
             
-            DateTime end = Server.zombie.RoundEnd;
+            DateTime end = ZSGame.Instance.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(60) > end) {
                 Player.Message(p, "You cannot buy an invisibility potion " +
                                "during the last minute of a round."); return;
@@ -163,7 +163,7 @@ namespace MCGalaxy.Eco {
             int left = MaxPotions - data.InvisibilityPotions;
             
             Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
-            Server.zombie.Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
+            ZSGame.Instance.Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
         }

@@ -83,13 +83,14 @@ namespace MCGalaxy.Games {
                 // Do round end.
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) {
-                    SendLevelRaw("", true);
+                    MessageMap(CpeMessageType.Announcement, "");
                     EndRound();
                     return;
                 }
                 if (seconds <= 5 && seconds != lastCountdown) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
-                    SendLevelRaw("&4Ending in &f" + seconds + suffix, true);
+                    MessageMap(CpeMessageType.Announcement, 
+                               "&4Ending in &f" + seconds + suffix);
                     lastCountdown = seconds;
                 }
                 
@@ -144,17 +145,6 @@ namespace MCGalaxy.Games {
                         Thread.Sleep(50);
                     }
                 }
-            }
-        }
-        
-        void SendLevelRaw(string message, bool announce = false) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != Map) continue;
-                CpeMessageType type = announce && p.Supports(CpeExt.MessageTypes)
-                    ? CpeMessageType.Announcement : CpeMessageType.Normal;
-                
-                p.Send(Packet.Message(message, type, p.hasCP437));
             }
         }
         

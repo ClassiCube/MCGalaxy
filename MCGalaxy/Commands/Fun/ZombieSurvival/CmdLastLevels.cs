@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
          public override void Use(Player p, string message) {
-            List<string> recent = Server.zombie.Picker.RecentMaps;
+            List<string> recent = ZSGame.Instance.Picker.RecentMaps;
             if (recent.Count == 0) {
                 Player.Message(p, "No maps have been used yet.");
             } else {

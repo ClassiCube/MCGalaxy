@@ -62,7 +62,7 @@ namespace MCGalaxy {
                 RevertBlock(x, y, z); return;
             }
 
-            if ( Server.lava.Running && Server.lava.Map == level && Server.lava.IsPlayerDead(this) ) {
+            if ( LSGame.Instance.Running && LSGame.Instance.Map == level && LSGame.Instance.IsPlayerDead(this) ) {
                 SendMessage("You are out of the round, and cannot build.");
                 RevertBlock(x, y, z); return;
             }
@@ -491,8 +491,8 @@ namespace MCGalaxy {
                     CheckVote(text, this, "n", "no", ref Server.NoVotes)) return;
             }
 
-            if (Server.lava.HandlesChatMessage(this, text)) return;
-            if (Server.zombie.HandlesChatMessage(this, text)) return;
+            if (LSGame.Instance.HandlesChatMessage(this, text)) return;
+            if (ZSGame.Instance.HandlesChatMessage(this, text)) return;
             
             // Put this after vote collection so that people can vote even when chat is moderated
             if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
