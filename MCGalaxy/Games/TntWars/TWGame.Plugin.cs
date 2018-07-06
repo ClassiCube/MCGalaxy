@@ -239,10 +239,10 @@ namespace MCGalaxy.Games {
                     suffix = " %S(with help from " + assistant.ColoredName + ")";
                     
                     if (TeamKill(assistant, pl)) {
-                        Player.Message(assistant, "TNT Wars: - " + cfg.AssistScore + " point(s) for team kill assist!");
+                        Player.Message(assistant, "TNT Wars: - " + cfg.AssistScore + " points for team kill assist!");
                         ChangeScore(assistant, -cfg.AssistScore);
                     } else {
-                        Player.Message(assistant, "TNT Wars: + " + cfg.AssistScore + " point(s) for assist!");
+                        Player.Message(assistant, "TNT Wars: + " + cfg.AssistScore + " points for assist!");
                         ChangeScore(assistant, cfg.AssistScore);
                     }
                 }

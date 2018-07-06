@@ -59,9 +59,10 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (scope == "global" || scope == "globalzip") {
+                ServerConfig.DefaultTerrain = "";
+                ServerConfig.DefaultTexture = "";
+                    
                 if (url.Length == 0) {
-                    ServerConfig.DefaultTerrain = "";
-                    ServerConfig.DefaultTexture = "";
                     Player.Message(p, "Reset server textures to default");
                 } else if (url.CaselessEnds(".png")) {
                     ServerConfig.DefaultTerrain = url;
@@ -72,11 +73,11 @@ namespace MCGalaxy.Commands.CPE {
                 }
                 UpdateGlobal(p);
             } else if (scope == "level" || scope == "levelzip") {
-                if (!LevelInfo.ValidateAction(p, p.level, "set texture of this level")) return;
+                if (!LevelInfo.ValidateAction(p, p.level, "set texture of this level")) return;               
+                p.level.Config.Terrain = "";
+                p.level.Config.TexturePack = "";
                 
-                if (url.Length == 0) {
-                    p.level.Config.Terrain = "";
-                    p.level.Config.TexturePack = "";
+                if (url.Length == 0) {                    
                     Player.Message(p, "Reset level textures to server default");
                 } else if (url.CaselessEnds(".png")) {
                     p.level.Config.Terrain = url;
