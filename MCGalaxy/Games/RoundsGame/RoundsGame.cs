@@ -195,7 +195,7 @@ namespace MCGalaxy.Games {
                 pl.Game.PledgeSurvive = false;
                 
                 TabList.Update(pl, true);
-                ResetHUD(pl);
+                ResetStatus(pl);
                 pl.SetPrefix();
             }
             
@@ -209,6 +209,6 @@ namespace MCGalaxy.Games {
             LastMap = "";
             if (Map != null) Map.AutoUnload();
             Map = null;
-        }
+        } 
     }
 }

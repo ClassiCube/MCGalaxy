@@ -56,10 +56,13 @@ namespace MCGalaxy.Games {
         protected void HandleJoinedCommon(Player p, Level prevLevel, Level level, ref bool announce) {
             if (prevLevel == Map && level != Map) {
                 if (Picker.Voting) Picker.ResetVoteMessage(p);
-                ResetHUD(p);
+                ResetStatus(p);
                 PlayerLeftGame(p);
             } else if (level == Map) {
                 if (Picker.Voting) Picker.SendVoteMessage(p);
+                p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1(p));
+                p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2(p));
+                p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
             }
             
             if (level != Map) return;

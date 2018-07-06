@@ -58,7 +58,7 @@ namespace MCGalaxy.Games {
             if (p.level != Map || message.Length == 0 || message[0] != ':') return;
             
             TWTeam team = TeamOf(p);
-            if (team == null || Config.Mode != TntWarsGameMode.TDM) return;
+            if (team == null || Config.Mode != TWGameMode.TDM) return;
             message = message.Substring(1);
             
             // "To Team &c-" + ColoredName + "&c- %S" + message);
@@ -80,7 +80,7 @@ namespace MCGalaxy.Games {
             }
             
             TWTeam team = TeamOf(p);
-            if (team == null || Config.Mode != TntWarsGameMode.TDM) return;
+            if (team == null || Config.Mode != TWGameMode.TDM) return;
             
             Vec3U16 coords = team.SpawnPos;
             pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);
@@ -133,8 +133,8 @@ namespace MCGalaxy.Games {
                 int delay = 1250;
                 
                 switch (Config.Difficulty) {
-                        case TntWarsDifficulty.Easy: delay = 3250; break;
-                        case TntWarsDifficulty.Normal: delay = 2250; break;
+                        case TWDifficulty.Easy: delay = 3250; break;
+                        case TWDifficulty.Normal: delay = 2250; break;
                 }
 
                 AddTntCheck(Map.PosToInt(x, y, z), p);
@@ -167,9 +167,9 @@ namespace MCGalaxy.Games {
             
             int power = 2, threshold = 3;
             switch (Config.Difficulty) {
-                    case TntWarsDifficulty.Easy: threshold = 7; break;
-                    case TntWarsDifficulty.Normal: threshold = 5; break;
-                    case TntWarsDifficulty.Extreme: power = 3; break;
+                    case TWDifficulty.Easy: threshold = 7; break;
+                    case TWDifficulty.Normal: threshold = 5; break;
+                    case TWDifficulty.Extreme: power = 3; break;
             }
             
             if ((C.Data.Data >> 4) < threshold) {
@@ -209,9 +209,9 @@ namespace MCGalaxy.Games {
         void KillPlayers(Player killer, TWData data, List<Player> inRange) {
             List<Player> killed = new List<Player>();
             int damage = 1, kills = 0, penalty = 0;
-            TntWarsDifficulty diff = Config.Difficulty;
+            TWDifficulty diff = Config.Difficulty;
             
-            if (diff == TntWarsDifficulty.Hard || diff == TntWarsDifficulty.Extreme) {
+            if (diff == TWDifficulty.Hard || diff == TWDifficulty.Extreme) {
                 damage = 2;
             }
             
@@ -284,7 +284,7 @@ namespace MCGalaxy.Games {
                     data.ScoreMultiplier = cfg.StreakThreeMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakThreeAmount;
                     
-                    if (diff == TntWarsDifficulty.Hard || diff == TntWarsDifficulty.Extreme) {
+                    if (diff == TWDifficulty.Hard || diff == TWDifficulty.Extreme) {
                         data.Health += 2;
                     } else {
                         data.Health += 1;

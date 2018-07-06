@@ -175,19 +175,12 @@ namespace MCGalaxy.Games {
             UpdatePlayersLeft();
         }
         
-        void MessageAllStatus() {
-            UpdateAllStatus1();
-            UpdateAllStatus2();
+        protected override string FormatStatus1(Player p) {
+            return RoundInProgress ? squaresLeft.Count + " squares left" : "";
         }
         
-        void UpdateAllStatus1() {
-            string msg = RoundInProgress ? squaresLeft.Count + " squares left" : "";
-            MessageMap(CpeMessageType.Status1, msg);
-        }
-        
-        void UpdateAllStatus2() {
-            string msg = RoundInProgress ? Remaining.Count + " players left" : "";
-            MessageMap(CpeMessageType.Status2, msg);
+        protected override string FormatStatus2(Player p) {
+            return RoundInProgress ? Remaining.Count + " players left" : "";
         }
     }
 }

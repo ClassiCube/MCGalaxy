@@ -59,13 +59,13 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetBool(p, args[1], ref lCfg.Pillaring)) return;
                 
                 Player.Message(p, "Set pillaring allowed to &b" + lCfg.Pillaring);
-                ZSGame.Instance.UpdateAllStatus2();
+                game.UpdateAllStatus2();
             } else if (prop.CaselessEq("build")) {
                 if (!CommandParser.GetEnum(p, args[1], "Build type", ref lCfg.BuildType)) return;
                 p.level.UpdateBlockPermissions();
                 
                 Player.Message(p, "Set build type to &b" + lCfg.BuildType);
-                ZSGame.Instance.UpdateAllStatus2();
+                game.UpdateAllStatus2();
             } else if (prop.CaselessEq("minround")) {
                 if (!ParseTimespan(p, "min round time", args, ref lCfg.MinRoundTime)) return;
             } else if (prop.CaselessEq("maxround")) {

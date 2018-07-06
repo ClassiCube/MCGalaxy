@@ -34,8 +34,8 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
     
-    public enum TntWarsGameMode { FFA, TDM };
-    public enum TntWarsDifficulty {
+    public enum TWGameMode { FFA, TDM };
+    public enum TWDifficulty {
         Easy,    // 2 Hits to die, Tnt has long delay
         Normal,  // 2 Hits to die, Tnt has normal delay
         Hard,    // 1 Hit to die, Tnt has short delay
@@ -50,8 +50,8 @@ namespace MCGalaxy.Games {
         public Player HarmedBy; // For Assists
         public string OrigCol;
         
-        public void Reset(TntWarsDifficulty diff) {
-            bool easyish = diff == TntWarsDifficulty.Easy || diff == TntWarsDifficulty.Normal;
+        public void Reset(TWDifficulty diff) {
+            bool easyish = diff == TWDifficulty.Easy || diff == TWDifficulty.Normal;
             Score = 0;
             Health = easyish ? 2 : 1;
             KillStreak = 0;
@@ -122,7 +122,7 @@ namespace MCGalaxy.Games {
         }
         
         public override void OutputStatus(Player p) {
-            if (Config.Mode == TntWarsGameMode.TDM) {
+            if (Config.Mode == TWGameMode.TDM) {
                 Player.Message(p, "{0} team score: &f{1}/{2} points",
                                Red.ColoredName, Red.Score, cfg.ScoreRequired);
                 Player.Message(p, "{0} team score: &f{1}/{2} points",
@@ -189,7 +189,7 @@ namespace MCGalaxy.Games {
         
         
         public void ModeTDM() {
-            Config.Mode = TntWarsGameMode.TDM;
+            Config.Mode = TWGameMode.TDM;
             MessageMap(CpeMessageType.Announcement,
                        "&4Gamemode changed to &fTeam Deathmatch");
             Player[] players = allPlayers.Items;
@@ -206,7 +206,7 @@ namespace MCGalaxy.Games {
         }
         
         public void ModeFFA() {
-            Config.Mode = TntWarsGameMode.FFA;
+            Config.Mode = TWGameMode.FFA;
             MessageMap(CpeMessageType.Announcement,
                        "&4Gamemode changed to &fFree For All");
             ResetTeams();
@@ -218,13 +218,13 @@ namespace MCGalaxy.Games {
             Config.Save();
         }
         
-        public void SetDifficulty(TntWarsDifficulty diff) {
+        public void SetDifficulty(TWDifficulty diff) {
             Config.Difficulty = diff;
             MessageMap(CpeMessageType.Announcement,
                        "&4Difficulty changed to &f" + diff);
             Config.Save();
             
-            bool teamKill = diff >= TntWarsDifficulty.Hard;
+            bool teamKill = diff >= TWDifficulty.Hard;
             if (cfg.TeamKills == teamKill) return;
             
             cfg.TeamKills = teamKill;
@@ -284,14 +284,14 @@ namespace MCGalaxy.Games {
         
         public void ChangeScore(Player p, int amount) {
             Get(p).Score += amount;
-            if (Config.Mode != TntWarsGameMode.TDM) return;
+            if (Config.Mode != TWGameMode.TDM) return;
             
             TWTeam team = TeamOf(p);
             if (team != null) team.Score += amount;
         }
         
         public bool TeamKill(Player p1, Player p2) {
-            return Config.Mode == TntWarsGameMode.TDM && TeamOf(p1) == TeamOf(p2);
+            return Config.Mode == TWGameMode.TDM && TeamOf(p1) == TeamOf(p2);
         }
     }
 }

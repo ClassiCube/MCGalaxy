@@ -45,7 +45,8 @@ namespace MCGalaxy.Games {
         public abstract void End();
         public abstract void EndRound();
         
-        protected void ResetHUD(Player p) {
+        
+        protected void ResetStatus(Player p) {
             p.SendCpeMessage(CpeMessageType.Status1, "");
             p.SendCpeMessage(CpeMessageType.Status2, "");
             p.SendCpeMessage(CpeMessageType.Status3, "");
@@ -58,6 +59,31 @@ namespace MCGalaxy.Games {
             foreach (Player p in online) {
                 if (p.level != Map) continue;
                 p.SendCpeMessage(type, message);
+            }
+        }
+        
+        protected virtual string FormatStatus1(Player p) { return ""; }
+        protected virtual string FormatStatus2(Player p) { return ""; }
+        protected virtual string FormatStatus3(Player p) { return ""; }
+                
+        public void UpdateAllStatus1() { UpdateAllStatus(CpeMessageType.Status1); }      
+        public void UpdateAllStatus2() { UpdateAllStatus(CpeMessageType.Status2); }      
+        public void UpdateAllStatus3() { UpdateAllStatus(CpeMessageType.Status3); }
+        
+        public void UpdateAllStatus() {
+            UpdateAllStatus1();
+            UpdateAllStatus2();
+            UpdateAllStatus3();
+        }
+        
+        void UpdateAllStatus(CpeMessageType status) {
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player p in online) {                
+                if (p.level != Map) continue;
+                
+                string msg = status == CpeMessageType.Status1 ? FormatStatus1(p) :
+                    (status == CpeMessageType.Status2 ? FormatStatus2(p) : FormatStatus3(p));
+                p.SendCpeMessage(CpeMessageType.Status1, msg);
             }
         }
     }

@@ -31,10 +31,10 @@ namespace MCGalaxy.Games {
         protected override string GameName { get { return "TNT Wars"; } }
         protected override string PropsPath { get { return "properties/tntwars.properties"; } }
         
-        [ConfigEnum("Mode", null, TntWarsGameMode.TDM, typeof(TntWarsGameMode))]
-        public TntWarsGameMode Mode = TntWarsGameMode.TDM;
-        [ConfigEnum("Difficulty", null, TntWarsDifficulty.Normal, typeof(TntWarsDifficulty))]
-        public TntWarsDifficulty Difficulty = TntWarsDifficulty.Normal;
+        [ConfigEnum("Mode", null, TWGameMode.TDM, typeof(TWGameMode))]
+        public TWGameMode Mode = TWGameMode.TDM;
+        [ConfigEnum("Difficulty", null, TWDifficulty.Normal, typeof(TWDifficulty))]
+        public TWDifficulty Difficulty = TWDifficulty.Normal;
     }
     
     public sealed class TWMapConfig {

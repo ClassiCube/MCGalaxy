@@ -56,28 +56,28 @@ namespace MCGalaxy.Games {
             //Announcing Etc.
             // TODO: tidy up
             string Gamemode = "Free For All";
-            if (Config.Mode == TntWarsGameMode.TDM) Gamemode = "Team Deathmatch";
+            if (Config.Mode == TWGameMode.TDM) Gamemode = "Team Deathmatch";
             string difficulty = "Normal";
             string HitsToDie = "2";
             string explosiontime = "medium";
             string explosionsize = "normal";
             switch (Config.Difficulty)
             {
-                case TntWarsDifficulty.Easy:
+                case TWDifficulty.Easy:
                     difficulty = "Easy";
                     explosiontime = "long";
                     break;
 
-                case TntWarsDifficulty.Normal:
+                case TWDifficulty.Normal:
                     difficulty = "Normal";
                     break;
 
-                case TntWarsDifficulty.Hard:
+                case TWDifficulty.Hard:
                     HitsToDie = "1";
                     difficulty = "Hard";
                     break;
 
-                case TntWarsDifficulty.Extreme:
+                case TWDifficulty.Extreme:
                     HitsToDie = "1";
                     explosiontime = "short";
                     explosionsize = "big";
@@ -93,7 +93,7 @@ namespace MCGalaxy.Games {
                                ", team killing is &3" + teamkillling + " %Sand you can place &3" + cfg.MaxPlayerActiveTnt
                                + " %STNT at a time and there is a score limit of &3" + cfg.ScoreRequired + "%S!!");
             
-            if (Config.Mode == TntWarsGameMode.TDM) {
+            if (Config.Mode == TWGameMode.TDM) {
                 Map.Message("Start your message with ':' to send it to team only!");
             }
 
@@ -103,7 +103,7 @@ namespace MCGalaxy.Games {
             
             bool won = false;
             while (Running && !won) {
-                if (Config.Mode == TntWarsGameMode.TDM) {
+                if (Config.Mode == TWGameMode.TDM) {
                     won = Red.Score >= cfg.ScoreRequired || Blue.Score >= cfg.ScoreRequired;
                 } else {
                     all = allPlayers.Items;
@@ -163,7 +163,7 @@ namespace MCGalaxy.Games {
                 PlayerActions.Respawn(p);
             }
             
-            if (Config.Mode == TntWarsGameMode.TDM) {
+            if (Config.Mode == TWGameMode.TDM) {
                 if (Red.Score > Blue.Score) {
                     int amount = Red.Score - Blue.Score;
                     Map.Message(Red.ColoredName + " %Swon &cTNT Wars %Sby &f" + amount + " %Spoints!");

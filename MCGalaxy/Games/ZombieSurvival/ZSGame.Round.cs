@@ -311,7 +311,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 RespawnPlayer(pl);
-                UpdateStatus3(pl, data.Infected);
+                pl.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(pl));
             }
         }
 

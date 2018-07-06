@@ -160,7 +160,7 @@ namespace MCGalaxy.Games {
             
             ResetInvisibility(p, data);
             UpdateAllStatus1();
-            UpdateStatus3(p, infected);
+            p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
         }
         
         void ResetInvisibility(Player p, ZSData data) {
@@ -253,19 +253,6 @@ namespace MCGalaxy.Games {
             return Running && Config.Maps.CaselessContains(name);
         }
         
-        void UpdateAllStatus1() {
-            MessageMap(CpeMessageType.Status1, FormatStatus1());
-        }
-
-        internal void UpdateAllStatus2() {
-            MessageMap(CpeMessageType.Status2, FormatStatus2());
-        }
-        
-        void UpdateStatus3(Player p, bool infected) {
-            string status = FormatStatus3(p, infected);
-            p.SendCpeMessage(CpeMessageType.Status3, status);
-        }
-        
         static string GetTimeLeft(int seconds) {
             if (seconds < 0) return "";
             if (seconds <= 10) return "10s left";
@@ -274,7 +261,7 @@ namespace MCGalaxy.Games {
             return ((seconds + 59) / 60) + "m left";
         }
         
-        string FormatStatus1() {
+        protected override string FormatStatus1(Player p) {
             int left = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
             string timespan = GetTimeLeft(left);
             
@@ -283,15 +270,15 @@ namespace MCGalaxy.Games {
             return string.Format(format, Alive.Count, Map.MapName, timespan);
         }
         
-        string FormatStatus2() {
+        protected override string FormatStatus2(Player p) {
             string pillar = "%SPillaring " + (Map.Config.Pillaring ? "&aYes" : "&cNo");
             string type = "%S, Type is &a" + Map.Config.BuildType;
             return pillar + type;
         }
 
-        static string FormatStatus3(Player p, bool infected) {
+        protected override string FormatStatus3(Player p) {
             string money = "&a" + p.money + " %S" + ServerConfig.Currency;
-            string state = ", you are " + (infected ? "&cdead" : "&aalive");
+            string state = ", you are " + (Get(p).Infected ? "&cdead" : "&aalive");
             return money + state;
         }
     }

@@ -82,7 +82,7 @@ namespace MCGalaxy.Games {
         
         void HandleMoneyChanged(Player p) {
             if (p.level != Map) return;
-            UpdateStatus3(p, Get(p).Infected);
+            p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
         }
         
         void HandleEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst) {
@@ -124,9 +124,6 @@ namespace MCGalaxy.Games {
             
             ZSData data = Get(p);
             p.SetPrefix();
-            p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1());
-            p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2());
-            UpdateStatus3(p, data.Infected);
             
             if (RoundInProgress) {
                 Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");

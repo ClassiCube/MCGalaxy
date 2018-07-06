@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Fun {
 
             string prop = args[1], value = args[2];
             if (prop.CaselessEq("spawn")) {
-                if (gameCfg.Mode == TntWarsGameMode.FFA) {
+                if (gameCfg.Mode == TWGameMode.FFA) {
                     Player.Message(p, "&cCannot set spawns in Free For All mode"); return;
                 }
                 
@@ -105,14 +105,14 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "TNT Wars: Grace period is now {0} seconds", value);
             } else if (prop.CaselessEq("gamemode")) {
                 if (value.CaselessEq("tdm")) {
-                    if (gameCfg.Mode == TntWarsGameMode.FFA) {
+                    if (gameCfg.Mode == TWGameMode.FFA) {
                         if (p.level != game.Map) { Player.Message(p, "Changed gamemode to Team Deathmatch"); }
                         game.ModeTDM();
                     } else {
                         Player.Message(p, "&cGamemode is already Team Deathmatch"); return;
                     }
                 } else if (value.CaselessEq("ffa")) {
-                    if (gameCfg.Mode == TntWarsGameMode.TDM) {
+                    if (gameCfg.Mode == TWGameMode.TDM) {
                         if (p.level != game.Map) { Player.Message(p, "Changed gamemode to Free For All"); }
                         game.ModeFFA();
                     } else {
@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Fun {
                     Help(p, "other"); return;
                 }
             } else if (prop.CaselessEq("difficulty")) {
-                TntWarsDifficulty diff = TntWarsDifficulty.Easy;
+                TWDifficulty diff = TWDifficulty.Easy;
                 if (!CommandParser.GetEnum(p, value, "Difficulty", ref diff)) return;
                 SetDifficulty(game, diff, p);
             } else if (prop.CaselessEq("score")) {
@@ -290,7 +290,7 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        static void SetDifficulty(TWGame game, TntWarsDifficulty diff, Player p) {
+        static void SetDifficulty(TWGame game, TWDifficulty diff, Player p) {
             if (p.level != game.Map)
                 Player.Message(p, "TNT Wars: Changed difficulty to {0}", diff);
             game.SetDifficulty(diff);
