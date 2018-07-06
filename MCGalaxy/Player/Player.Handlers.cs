@@ -448,15 +448,10 @@ namespace MCGalaxy {
                 }
             }
             
-            if (PlayingTntWars) {
-                TntWarsKillStreak = 0;
-                TntWarsScoreMultiplier = 1.0f;
-            } else {
-                Command.Find("Spawn").Use(this, "");
-                TimesDied++;
-                // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
-                if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
-            }
+            PlayerActions.Respawn(this);
+            TimesDied++;
+            // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
+            if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
 
             if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
                 Chat.MessageFromLevel(this, "λNICK %Shas died &3" + TimesDied + " times");

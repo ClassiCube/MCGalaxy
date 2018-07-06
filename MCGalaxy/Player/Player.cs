@@ -351,27 +351,6 @@ namespace MCGalaxy {
             money = amount;
             OnMoneyChangedEvent.Call(this);
         }
-
-        public void TntAtATime() {
-            CurrentAmountOfTnt++;
-            int delay = 0;
-
-            switch (TntWarsGame1.GameIn(this).Difficulty) {
-                case TntWarsDifficulty.Easy:
-                    delay = 3250; break;
-                case TntWarsDifficulty.Normal:
-                    delay = 2250; break;
-                case TntWarsDifficulty.Hard:
-                case TntWarsDifficulty.Extreme:
-                    delay = 1250; break;
-            }
-            Server.MainScheduler.QueueOnce(AllowMoreTntTask, null, 
-                                           TimeSpan.FromMilliseconds(delay));
-        }
-        
-        void AllowMoreTntTask(SchedulerTask task) {
-            CurrentAmountOfTnt--;
-        }
         
         internal static bool CheckVote(string msg, Player p, string a, string b, ref int totalVotes) {
             if (!(msg.CaselessEq(a) || msg.CaselessEq(b))) return false;

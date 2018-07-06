@@ -88,7 +88,7 @@ namespace MCGalaxy.Games {
             if (p.level != Map) return;
             
             if (action == PlayerAction.UnReferee) {
-                Command.Find("Spawn").Use(p, "");
+                PlayerActions.Respawn(p);
                 PlayerJoinedGame(p);               
                 p.Game.Referee = false;
             } else {

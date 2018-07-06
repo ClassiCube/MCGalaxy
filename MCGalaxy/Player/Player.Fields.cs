@@ -142,17 +142,6 @@ namespace MCGalaxy {
         /// <summary> Temp unique ID for this session only. </summary>
         public int SessionID;
 
-        //Tnt Wars
-        public bool PlayingTntWars;
-        public int CurrentAmountOfTnt;
-        public int CurrentTntGameNumber; //For keeping track of which game is which
-        public int TntWarsHealth = 2;
-        public int TntWarsKillStreak;
-        public float TntWarsScoreMultiplier = 1f;
-        public int TNTWarsLastKillStreakAnnounced;
-        public bool inTNTwarsMap;
-        public Player HarmedBy = null; //For Assists
-
         public List<CopyState> CopySlots = new List<CopyState>();
         public int CurrentCopySlot;
         public CopyState CurrentCopy { 

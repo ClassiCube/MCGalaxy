@@ -51,19 +51,17 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleScores(Player p) {
-            TntWarsGame1 it = TntWarsGame1.GameIn(p);
-            if (it.GameStatus != TntWarsGame1.TntWarsStatus.InProgress) {
-                Player.Message(p, "TNT Wars Error: Can't display scores - game not in progress!");
-                return;
+           TWGame game = (TWGame)Game;
+            if (!game.RoundInProgress) {
+                Player.Message(p, "Round is not in progress!"); return;
             }
             
-            List<TntWarsGame1.player> top = it.SortedByScore();
-            int count = Math.Min(it.PlayingPlayers(), 5);
+            PlayerAndScore[] top = game.SortedByScore();
+            int count = Math.Min(top.Length, 5);
             
             Player.Message(p, "Top {0} scores:", count);
             for (int i = 0; i < count; i++) {
-                Player.Message(p, "{0}) {1} - {2} points", (i + 1), top[i].p.name, top[i].Score);
-                Thread.Sleep(500); //Maybe, not sure (250??)
+                Player.Message(p, game.FormatTopScore(top, i));
             }
         }
         
@@ -82,38 +80,12 @@ namespace MCGalaxy.Commands.Fun {
             
             TWMapConfig cfg = RetrieveConfig(p);
             TWConfig gameCfg = TWGame.Config;
-            
-            /*
-                case "reset":
-                    it.GameStatus = TntWarsGame1.TntWarsStatus.WaitingForPlayers;
-                    Command.Find("Restore").Use(null, it.BackupNumber + it.lvl.name);
-                    it.RedScore = 0;
-                    it.BlueScore = 0;
-                    
-                    foreach (TntWarsGame1.player pl in it.Players) {
-                        pl.Score = 0;
-                        pl.spec = false;
-                        pl.p.TntWarsKillStreak = 0;
-                        pl.p.TNTWarsLastKillStreakAnnounced = 0;
-                        pl.p.CurrentAmountOfTnt = 0;
-                        pl.p.CurrentTntGameNumber = it.GameNumber;
-                        pl.p.PlayingTntWars = false;
-                        pl.p.canBuild = true;
-                        pl.p.TntWarsHealth = 2;
-                        pl.p.TntWarsScoreMultiplier = 1f;
-                        pl.p.inTNTwarsMap = true;
-                        pl.p.HarmedBy = null;
-                        TntWarsGame1.SetTitlesAndColor(pl, true);
-                    }
-                    Player.Message(p, "TNT Wars: Reset TNT Wars");
-                    break;
-             */
 
             switch (text[0]) {
                 case "spawn":
                     if (gameCfg.Mode == TntWarsGameMode.FFA) { 
-            		    Player.Message(p, "&cCannot set spawns in Free For All mode"); return; 
-            		}
+                        Player.Message(p, "&cCannot set spawns in Free For All mode"); return; 
+                    }
                     switch (text[2])
                     {
                         case "red":
@@ -177,7 +149,7 @@ namespace MCGalaxy.Commands.Fun {
                     {
                         case "easy":
                         case "1":
-                    	    SetDifficulty(game, TntWarsDifficulty.Easy, p); break;
+                            SetDifficulty(game, TntWarsDifficulty.Easy, p); break;
 
                         case "normal":
                         case "2":
@@ -293,7 +265,7 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleZone(Player p, TWGame game, bool noTntZone, string[] text) {
             string msg = noTntZone ? "no TNT" : "no blocks deleted on explosions";
-            List<TntWarsGame1.Zone> zones = noTntZone ? game.NoTNTplacableZones : game.NoBlockDeathZones;
+            List<TWGame.TWZone> zones = noTntZone ? game.tntFreeZones : game.tntImmuneZones;
             
             if (IsCreateCommand(text[3])) {
                 Player.Message(p, "TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
@@ -314,7 +286,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool AddZoneCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             Vec3U16 p1 = (Vec3U16)marks[0], p2 = (Vec3U16)marks[1];
-            TntWarsGame1.Zone zn = new TntWarsGame1.Zone();
+            TWGame.TWZone zn = new TWGame.TWZone();
             
             zn.MinX = Math.Min(p1.X, p2.X);
             zn.MinY = Math.Min(p1.Y, p2.Y);
@@ -323,7 +295,7 @@ namespace MCGalaxy.Commands.Fun {
             zn.MaxY = Math.Max(p1.Y, p2.Y);
             zn.MaxZ = Math.Max(p1.Z, p2.Z);
 
-            List<TntWarsGame1.Zone> zones = (List<TntWarsGame1.Zone>)state;
+            List<TWGame.TWZone> zones = (List<TWGame.TWZone>)state;
             zones.Add(zn);
             Player.Message(p, "TNT Wars: Zone added!");
             return false;
@@ -331,9 +303,9 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool DeleteZoneCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
-            List<TntWarsGame1.Zone> zones = (List<TntWarsGame1.Zone>)state;
+            List<TWGame.TWZone> zones = (List<TWGame.TWZone>)state;
             
-            foreach (TntWarsGame1.Zone zn in zones) {
+            foreach (TWGame.TWZone zn in zones) {
                 if (x >= zn.MinX && x <= zn.MaxX && y >= zn.MinY && y <= zn.MaxY && z >= zn.MinZ && z <= zn.MaxZ) {
                     zones.Remove(zn);
                     Player.Message(p, "TNT Wars: Zone deleted!");
@@ -348,15 +320,15 @@ namespace MCGalaxy.Commands.Fun {
         static bool CheckZoneCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             ushort x = (ushort)marks[0].X, y = (ushort)marks[0].Y, z = (ushort)marks[0].Z;
             
-            List<TntWarsGame1.Zone> zones = (List<TntWarsGame1.Zone>)state;
+            List<TWGame.TWZone> zones = (List<TWGame.TWZone>)state;
             TWGame game = TWGame.Instance;
-            if (zones == game.NoTNTplacableZones) {
+            if (zones == game.tntFreeZones) {
                 if (game.InZone(x, y, z, zones)) {
                     Player.Message(p, "TNT Wars: You are currently in a no TNT zone!");
                 } else {
                     Player.Message(p, "TNT Wars: You are not currently in a no TNT zone!");
                 }
-            } else if (zones == game.NoBlockDeathZones) {
+            } else if (zones == game.tntImmuneZones) {
                 if (game.InZone(x, y, z, zones)) {
                     Player.Message(p, "TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destroy blocks)!");
                 } else {

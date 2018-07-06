@@ -101,7 +101,6 @@
     <Compile Include="PropertyWindow\PropertyWindow.Misc.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Ranks.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Security.cs" />
-    <Compile Include="Settings\LavaMapProperties.cs" />
     <Compile Include="Settings\LevelProperties.cs" />
     <Compile Include="Settings\PlayerProperties.cs" />
     <Compile Include="Settings\TypeConverters.cs" />
@@ -121,9 +120,6 @@
     <Compile Include="Window\Window.Main.cs" />
     <Compile Include="Window\Window.Map.cs" />
     <Compile Include="Window\Window.Players.cs" />
-    <EmbeddedResource Include="Popups\EditText.resx">
-      <DependentUpon>EditText.Designer.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Popups\PortTools.resx">
       <DependentUpon>PortTools.cs</DependentUpon>
     </EmbeddedResource>

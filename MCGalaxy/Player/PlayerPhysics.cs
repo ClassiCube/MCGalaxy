@@ -48,8 +48,7 @@ namespace MCGalaxy.Blocks.Physics {
                 }
                 
                 // Some blocks will cause death of players
-                if (!p.level.Props[block].KillerBlock) continue;               
-                if (block == Block.TNT_Explosion && p.PlayingTntWars) continue; // TODO: hardcoded behaviour is icky
+                if (!p.level.Props[block].KillerBlock) continue;
                 if (block == Block.Train && p.trainInvincible) continue;
                 if (p.level.Config.KillerBlocks) p.HandleDeath(block);
             }

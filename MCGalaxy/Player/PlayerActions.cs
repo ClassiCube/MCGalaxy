@@ -131,5 +131,19 @@ namespace MCGalaxy {
         static ChatMessageFilter FilterGoto(Player source) {
             return (pl, obj) => Entities.CanSee(pl, source) && !pl.Ignores.WorldChanges;
         }
+        
+        public static void Respawn(Player p) {
+            bool cpSpawn = p.useCheckpointSpawn;
+            Position pos;
+            
+            pos.X = 16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32;
+            pos.Y = 32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32;
+            pos.Z = 16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32;
+            byte yaw   = cpSpawn ? p.checkpointRotX : p.level.rotx;
+            byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
+            OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
+            
+            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+        }
     }
 }

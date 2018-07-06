@@ -31,7 +31,7 @@ namespace MCGalaxy.Events.EconomyEvents {
     }
     
     public sealed class EcoTransaction {        
-    	public Player SourcePlayer;
+        public Player SourcePlayer;
         public string SourceName, SourceFormatted;
         public string TargetName, TargetFormatted;
         

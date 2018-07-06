@@ -378,8 +378,8 @@ namespace MCGalaxy {
             return false;
         }
 
-        public void MakeExplosion(ushort x, ushort y, ushort z, int size, bool force = false, TntWarsGame1 CheckForExplosionZone = null) {
-            TntPhysics.MakeExplosion(this, x, y, z, size, force, CheckForExplosionZone);
+        public void MakeExplosion(ushort x, ushort y, ushort z, int size, bool force = false) {
+            TntPhysics.MakeExplosion(this, x, y, z, size, force, null);
         }
     }
     

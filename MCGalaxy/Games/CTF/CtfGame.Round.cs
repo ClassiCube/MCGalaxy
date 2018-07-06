@@ -69,7 +69,7 @@ namespace MCGalaxy.Games {
 
                     otherData.TagCooldown = true;
                     Player.Message(other, p.ColoredName + " %Stagged you!");
-                    Command.Find("Spawn").Use(other, "");
+                    PlayerActions.Respawn(other);
                     Thread.Sleep(300); // TODO: get rid of this
                     
                     if (otherData.HasFlag) DropFlag(p, opposing);

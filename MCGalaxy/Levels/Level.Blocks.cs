@@ -171,25 +171,6 @@ namespace MCGalaxy {
             if (chunk == null) return;
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
-
-        bool CheckTNTWarsChange(Player p, ushort x, ushort y, ushort z, ref BlockID block) {
-            if (!(block == Block.TNT || block == Block.TNT_Big || block == Block.TNT_Nuke || block == Block.TNT_Small))
-                return true;
-            
-            TntWarsGame1 game = TntWarsGame1.GameIn(p);
-            if (game.InZone(x, y, z, true))
-                return false;
-            
-            if (p.CurrentAmountOfTnt == game.Config.MaxPlayerActiveTnt) {
-                Player.Message(p, "TNT Wars: Maximum amount of TNT placed"); return false;
-            }
-            if (p.CurrentAmountOfTnt > game.Config.MaxPlayerActiveTnt) {
-                Player.Message(p, "TNT Wars: You have passed the maximum amount of TNT that can be placed!"); return false;
-            }
-            p.TntAtATime();
-            block = Block.TNT_Small;
-            return true;
-        }
         
         bool CheckRank(Player p) {
             if (p.lastAccessStatus <= DateTime.UtcNow) {
@@ -210,7 +191,6 @@ namespace MCGalaxy {
         
         public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
             if (!p.group.Blocks[old] && !Block.AllowBreak(old) && !BuildIn(old)) return false;
-            if (p.PlayingTntWars && !CheckTNTWarsChange(p, x, y, z, ref block)) return false;
             Zone[] zones = Zones.Items;
             if (zones.Length == 0) return CheckRank(p);
             
@@ -295,7 +275,6 @@ namespace MCGalaxy {
                 }
 
                 errorLocation = "Adding physics";
-                if (p.PlayingTntWars && block == Block.TNT_Small) AddTntCheck(PosToInt(x, y, z), p);
                 if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
                 Changed = true;
@@ -309,15 +288,6 @@ namespace MCGalaxy {
                            p.name, ColoredName, errorLocation);
                 return 0;
             }
-        }
-        
-        void AddTntCheck(int b, Player p) {
-            PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.Custom;
-            args.Value1 = (byte)p.SessionID;
-            args.Value2 = (byte)(p.SessionID >> 8);
-            args.Data = (byte)(p.SessionID >> 16);
-            AddCheck(b, false, args);
         }
         
         public void Blockchange(int b, BlockID block, bool overRide = false,

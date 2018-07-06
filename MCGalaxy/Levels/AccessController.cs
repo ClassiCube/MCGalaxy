@@ -169,7 +169,7 @@ namespace MCGalaxy {
             if (removedFromOpposite) {
                 msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
             } else {
-                msg += " %Swas " + Type + " (whitelist ? " whitelisted" : " blacklisted");
+                msg += " %Swas " + Type + (whitelist ? " whitelisted" : " blacklisted");
             }
             ApplyChanges(p, lvl, msg);
         }

@@ -26,17 +26,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) { Help(p); return; }
-            bool cpSpawn = p.useCheckpointSpawn;
-            Position pos;
-            
-            pos.X = 16 + (cpSpawn ? p.checkpointX : p.level.spawnx) * 32;
-            pos.Y = 32 + (cpSpawn ? p.checkpointY : p.level.spawny) * 32;
-            pos.Z = 16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32;
-            byte yaw   = cpSpawn ? p.checkpointRotX : p.level.rotx;
-            byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
-            OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
-            
-            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+            PlayerActions.Respawn(p);
         }
         
         public override void Help(Player p) {

@@ -221,11 +221,11 @@ namespace MCGalaxy.Games {
             
             if (winner != null) {
                 winner.SendMessage("Congratulations, you won this round of countdown!");
-                Command.Find("Spawn").Use(winner, "");
+                PlayerActions.Respawn(winner);
             } else {
                 Player[] players = Players.Items;
                 foreach (Player pl in players) {
-                    Command.Find("Spawn").Use(pl, "");
+                    PlayerActions.Respawn(pl);
                 }
                 Map.Message("Current round was force ended!");
             }

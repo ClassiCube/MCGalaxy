@@ -31,6 +31,8 @@ namespace MCGalaxy.Gui {
             zsSettings.LoadFromServer();
             propsZG.SelectedObject = zsSettings;
         }
+        
+        public void RunOnUI_Async(Action act) { BeginInvoke(act); }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
             OnMapsChangedEvent.Register(HandleMapsChanged, Priority.Low);
@@ -58,7 +60,6 @@ namespace MCGalaxy.Gui {
             OnMapsChangedEvent.Unregister(HandleMapsChanged);
             OnStateChangedEvent.Unregister(HandleStateChanged);
             Window.hasPropsForm = false;
-            tw_selected = null;
         }
 
         void LoadProperties() {
