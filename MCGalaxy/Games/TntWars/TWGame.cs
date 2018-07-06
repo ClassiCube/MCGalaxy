@@ -108,7 +108,10 @@ namespace MCGalaxy.Games {
             TWMapConfig cfg = new TWMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);
+            
             this.cfg = cfg;
+            Red.SpawnPos = cfg.RedSpawn;
+            Blue.SpawnPos = cfg.BlueSpawn;
         }
         
         protected override List<Player> GetPlayers() {
@@ -219,6 +222,7 @@ namespace MCGalaxy.Games {
             Config.Difficulty = diff;
             MessageMap(CpeMessageType.Announcement,
                        "&4Difficulty changed to &f" + diff);
+            Config.Save();
             
             bool teamKill = diff >= TntWarsDifficulty.Hard;
             if (cfg.TeamKills == teamKill) return;
