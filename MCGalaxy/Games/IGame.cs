@@ -31,8 +31,8 @@ namespace MCGalaxy.Games {
             if (lvl == null) return null;
             IGame[] games = RunningGames.Items;
             
-            foreach (IGame game in games) { 
-                if (game.Map == lvl) return game; 
+            foreach (IGame game in games) {
+                if (game.Map == lvl) return game;
             }
             return null;
         }
@@ -65,9 +65,9 @@ namespace MCGalaxy.Games {
         protected virtual string FormatStatus1(Player p) { return ""; }
         protected virtual string FormatStatus2(Player p) { return ""; }
         protected virtual string FormatStatus3(Player p) { return ""; }
-                
-        public void UpdateAllStatus1() { UpdateAllStatus(CpeMessageType.Status1); }      
-        public void UpdateAllStatus2() { UpdateAllStatus(CpeMessageType.Status2); }      
+        
+        public void UpdateAllStatus1() { UpdateAllStatus(CpeMessageType.Status1); }
+        public void UpdateAllStatus2() { UpdateAllStatus(CpeMessageType.Status2); }
         public void UpdateAllStatus3() { UpdateAllStatus(CpeMessageType.Status3); }
         
         public void UpdateAllStatus() {
@@ -78,13 +78,25 @@ namespace MCGalaxy.Games {
         
         void UpdateAllStatus(CpeMessageType status) {
             Player[] online = PlayerInfo.Online.Items;
-            foreach (Player p in online) {                
+            foreach (Player p in online) {
                 if (p.level != Map) continue;
                 
                 string msg = status == CpeMessageType.Status1 ? FormatStatus1(p) :
                     (status == CpeMessageType.Status2 ? FormatStatus2(p) : FormatStatus3(p));
-                p.SendCpeMessage(CpeMessageType.Status1, msg);
+                p.SendCpeMessage(status, msg);
             }
+        }
+        
+        protected void UpdateStatus1(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1(p));
+        }
+        
+        protected void UpdateStatus2(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2(p));
+        }
+        
+        protected void UpdateStatus3(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
         }
     }
 }

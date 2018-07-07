@@ -112,6 +112,10 @@ namespace MCGalaxy.Games {
             this.cfg = cfg;
             Red.SpawnPos = cfg.RedSpawn;
             Blue.SpawnPos = cfg.BlueSpawn;
+            
+            if (!Running) return;
+            UpdateAllStatus1();
+            UpdateAllStatus2();
         }
         
         protected override List<Player> GetPlayers() {
@@ -283,14 +287,31 @@ namespace MCGalaxy.Games {
         
         public void ChangeScore(Player p, int amount) {
             Get(p).Score += amount;
-            if (Config.Mode != TWGameMode.TDM) return;
+            UpdateStatus2(p);
             
+            if (Config.Mode != TWGameMode.TDM) return;      
             TWTeam team = TeamOf(p);
-            if (team != null) team.Score += amount;
+            if (team == null) return;
+            
+            team.Score += amount;
+            UpdateAllStatus1();
         }
         
         public bool TeamKill(Player p1, Player p2) {
             return Config.Mode == TWGameMode.TDM && TeamOf(p1) == TeamOf(p2);
+        }
+        
+        protected override string FormatStatus1(Player p) {
+            if (Config.Mode != TWGameMode.TDM) return "";
+        	
+            return Red.ColoredName + ": &f" + Red.Score + "/" + cfg.ScoreRequired + ", "
+                + Blue.ColoredName + ": &f" + Blue.Score + "/" + cfg.ScoreRequired;
+        }
+        
+        protected override string FormatStatus2(Player p) {
+            TWData data = Get(p);
+            return "&aHealth: &f" + data.Health + " HP, &eScore: &f" 
+                + data.Score + "/" + cfg.ScoreRequired + " points";
         }
     }
 }

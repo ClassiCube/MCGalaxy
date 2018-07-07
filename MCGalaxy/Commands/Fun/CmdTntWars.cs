@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Fun {
             } else if (prop.CaselessEq("tnt")) {
                 int amount = 1;
                 if (!CommandParser.GetInt(p, value, "TNT at a time", ref amount, 0)) return;
-                cfg.MaxPlayerActiveTnt = amount;
+                cfg.MaxActiveTnt = amount;
                 
                 Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
                                amount == 0 ? "unlimited" : value);
@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "Gamemode: &a{0} %Sat difficulty &a{1}",
                            gameCfg.Mode, gameCfg.Difficulty);
             Player.Message(p, "TNT per player at a time: &a{0}",
-                           cfg.MaxPlayerActiveTnt == 0 ? "unlimited" : cfg.MaxPlayerActiveTnt.ToString());
+                           cfg.MaxActiveTnt == 0 ? "unlimited" : cfg.MaxActiveTnt.ToString());
             Player.Message(p, "Grace period: {0} %S(for {1} seconds)",
                            GetBool(cfg.InitialGracePeriod), cfg.GracePeriodSeconds);
             Player.Message(p, "Team balancing: {0}%S, Team killing: {1}",

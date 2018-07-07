@@ -201,6 +201,7 @@ namespace MCGalaxy.Games {
                 if (pl.level != Map) continue;
                 pl.Game.RatedMap = false;
                 pl.Game.PledgeSurvive = false;
+                PlayerLeftGame(pl);
                 
                 TabList.Update(pl, true);
                 ResetStatus(pl);

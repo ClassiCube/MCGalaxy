@@ -115,12 +115,12 @@ namespace MCGalaxy.Games {
             if (InZone(x, y, z, tntFreeZones)) {
                 Player.Message(p, "TNT cannot be placed in this area"); return false;
             }
-            if (data.TNTCounter == 0) return false;
+            if (cfg.MaxActiveTnt == 0) return true;
             
-            if (data.TNTCounter == cfg.MaxPlayerActiveTnt) {
+            if (data.TNTCounter == cfg.MaxActiveTnt) {
                 Player.Message(p, "TNT Wars: Maximum amount of TNT placed"); return false;
             }
-            if (data.TNTCounter > cfg.MaxPlayerActiveTnt) {
+            if (data.TNTCounter > cfg.MaxActiveTnt) {
                 Player.Message(p, "TNT Wars: You are past the maximum amount of TNT that can be placed!"); return false;
             }
             return true;

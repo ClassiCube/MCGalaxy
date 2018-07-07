@@ -60,9 +60,7 @@ namespace MCGalaxy.Games {
                 PlayerLeftGame(p);
             } else if (level == Map) {
                 if (Picker.Voting) Picker.SendVoteMessage(p);
-                p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1(p));
-                p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2(p));
-                p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
+                UpdateStatus1(p); UpdateStatus2(p); UpdateStatus3(p);
             }
             
             if (level != Map) return;

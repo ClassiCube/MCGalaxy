@@ -45,7 +45,7 @@ namespace MCGalaxy.Games {
         public int GracePeriodSeconds = 30;
         
         [ConfigInt("max-active-tnt", null, 1)]
-        public int MaxPlayerActiveTnt = 1;
+        public int MaxActiveTnt = 1;
         
         [ConfigBool("team-balance", null, true)]
         public bool BalanceTeams = true;

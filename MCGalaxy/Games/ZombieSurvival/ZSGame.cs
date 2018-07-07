@@ -160,7 +160,7 @@ namespace MCGalaxy.Games {
             
             ResetInvisibility(p, data);
             UpdateAllStatus1();
-            p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
+            UpdateStatus3(p);
         }
         
         void ResetInvisibility(Player p, ZSData data) {

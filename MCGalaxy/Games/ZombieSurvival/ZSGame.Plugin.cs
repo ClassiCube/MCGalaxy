@@ -35,7 +35,6 @@ namespace MCGalaxy.Games {
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
-            OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
@@ -82,7 +81,7 @@ namespace MCGalaxy.Games {
         
         void HandleMoneyChanged(Player p) {
             if (p.level != Map) return;
-            p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
+            UpdateStatus3(p);
         }
         
         void HandleEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst) {

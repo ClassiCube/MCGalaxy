@@ -53,6 +53,10 @@ namespace MCGalaxy.Games {
                 PlayerActions.Respawn(p);
             }
             
+            Red.Score = 0; Blue.Score = 0;
+            UpdateAllStatus1();
+            UpdateAllStatus2();
+            
             //Announcing Etc.
             // TODO: tidy up
             string Gamemode = "Free For All";
@@ -90,7 +94,7 @@ namespace MCGalaxy.Games {
             Chat.MessageGlobal("&cTNT Wars %Son " + Map.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
                                difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime +
                                " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" +
-                               ", team killing is &3" + teamkillling + " %Sand you can place &3" + cfg.MaxPlayerActiveTnt
+                               ", team killing is &3" + teamkillling + " %Sand you can place &3" + cfg.MaxActiveTnt
                                + " %STNT at a time and there is a score limit of &3" + cfg.ScoreRequired + "%S!!");
             
             if (Config.Mode == TWGameMode.TDM) {

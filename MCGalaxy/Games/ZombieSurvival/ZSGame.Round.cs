@@ -308,7 +308,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 RespawnPlayer(pl);
-                pl.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(pl));
+                UpdateStatus3(pl);
             }
         }
 
