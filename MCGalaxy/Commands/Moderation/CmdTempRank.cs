@@ -94,12 +94,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Info(Player p, string target) {
-            string line = Server.tempRanks.FindData(target);
-            if (line == null) {
+            string data = Server.tempRanks.FindData(target);
+            if (data == null) {
                 Player.Message(p, "{0}&c has not been assigned a temp rank.",
                                PlayerInfo.GetColoredName(p, target));
             } else {
-                PrintTempRankInfo(p, line);
+                PrintTempRankInfo(p, target, data);
             }
         }
         
@@ -110,25 +110,26 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 Player.Message(p, "&ePlayers with a temporary rank assigned:");
                 foreach (string line in lines) {
-                    PrintTempRankInfo(p, line);
+                    string[] bits = line.SplitSpaces(2);
+                    PrintTempRankInfo(p, bits[0], bits[1]);
                 }
             }
         }
         
-        static void PrintTempRankInfo(Player p, string line) {
-            string[] args = line.SplitSpaces();
+        static void PrintTempRankInfo(Player p, string name, string data) {
+            string[] args = data.SplitSpaces();
             if (args.Length < 4) return;
             
-            string assigner = args[1];
-            DateTime assigned = long.Parse(args[2]).FromUnixTime();
-            DateTime expiry   = long.Parse(args[3]).FromUnixTime();
-            string oldRank    = Group.GetColoredName(args[4]);
-            string tempRank   = Group.GetColoredName(args[5]);
+            string assigner = args[0];
+            DateTime assigned = long.Parse(args[1]).FromUnixTime();
+            DateTime expiry   = long.Parse(args[2]).FromUnixTime();
+            string oldRank    = Group.GetColoredName(args[3]);
+            string tempRank   = Group.GetColoredName(args[4]);
             
             TimeSpan assignDelta = DateTime.UtcNow - assigned;
             TimeSpan expireDelta = expiry - DateTime.UtcNow;
             Player.Message(p, "Temp rank information for {0}:",
-                           PlayerInfo.GetColoredName(p, args[0]));
+                           PlayerInfo.GetColoredName(p, name));
             Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
                            oldRank, tempRank, assigner,
                            assignDelta.Shorten(), expireDelta.Shorten());
