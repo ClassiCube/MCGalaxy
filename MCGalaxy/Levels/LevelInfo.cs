@@ -139,7 +139,7 @@ namespace MCGalaxy {
         
         internal static bool ValidateAction(Player p, string map, string action) {
             if (p == null) return true;           
-            Level lvl; LevelConfig cfg = GetConfig(map, out lvl);            
+            Level lvl; LevelConfig cfg = GetConfig(map, out lvl);
             if (lvl != null) return ValidateAction(p, lvl, action);
             
             LevelAccessController visit = new LevelAccessController(cfg, map, true);

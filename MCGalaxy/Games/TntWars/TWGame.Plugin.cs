@@ -300,11 +300,11 @@ namespace MCGalaxy.Games {
             if (points > 0) {
                 points = (int)(points * data.ScoreMultiplier);
                 ChangeScore(killer, points);
-                Player.Message(killer, "TNT Wars: + " + points + " point(s) for " + kills + " kills");
+                Player.Message(killer, "TNT Wars: + " + points + " points for " + kills + " kills");
             }
             if (penalty > 0) {
                 ChangeScore(killer, -penalty);
-                Player.Message(killer, "TNT Wars: - " + penalty + " point(s) for team kill(s)!");
+                Player.Message(killer, "TNT Wars: - " + penalty + " points for team killing!");
             }
         }
     }

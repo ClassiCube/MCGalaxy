@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.UpdateModel(bot, model);
             
             Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         protected override void SetPlayerData(Player p, Player who, string model) {
@@ -77,7 +77,13 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string ParseModel(Player dst, Entity entity, string model, out bool changedAxisScale) {
-            if (model.Length == 0) model = "humanoid";
+            // Reset entity's model
+            if (model.Length == 0) {
+                changedAxisScale = true;
+                entity.ScaleX = 0; entity.ScaleY = 0; entity.ScaleZ = 0;
+                return "humanoid";
+            }
+            
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
             changedAxisScale = false;

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.CPE {
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         protected override void SetPlayerData(Player p, Player who, string skin) {

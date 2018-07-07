@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Bots {
         static void UpdateBot(Player p, PlayerBot bot, string msg) {
             Player.Message(p, bot.ColoredName + "%S" + msg);
             Logger.Log(LogType.UserActivity, bot.name + msg);
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         public override void Help(Player p) {

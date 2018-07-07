@@ -224,52 +224,53 @@ namespace MCGalaxy {
         }
         
         static void SetDefaultAliases() {
+            Dictionary<string, byte> aliases = Aliases;
             // Add old MCGalaxy names
-            Aliases["purple"] = Indigo; Aliases["blueviolet"] = Blue;
-            Aliases["adminium"] = Bedrock; Aliases["bookcase"] = Bookshelf;
-            Aliases["plant"] = Sapling; Aliases["mossy_cobblestone"] = MossyRocks;
-            Aliases["springgreen"] = Teal; Aliases["greenyellow"] = Lime;
-            Aliases["red_flower"] = Rose; Aliases["yellow_flower"] = Dandelion;
-            Aliases["stair"] = Slab; Aliases["double_stair"] = DoubleSlab;
+            aliases["purple"] = Indigo; aliases["blueviolet"] = Blue;
+            aliases["adminium"] = Bedrock; aliases["bookcase"] = Bookshelf;
+            aliases["plant"] = Sapling; aliases["mossy_cobblestone"] = MossyRocks;
+            aliases["springgreen"] = Teal; aliases["greenyellow"] = Lime;
+            aliases["red_flower"] = Rose; aliases["yellow_flower"] = Dandelion;
+            aliases["stair"] = Slab; aliases["double_stair"] = DoubleSlab;
             // Add other aliases
-            Aliases["planks"] = Wood; Aliases["tree"] = Log;
-            Aliases["stairs"] = Slab; Aliases["slab"] = Slab;
-            Aliases["doubleslab"] = DoubleSlab; Aliases["slabfull"] = DoubleSlab;
-            Aliases["solid"] = Bedrock; Aliases["admintite"] = Bedrock;
-            Aliases["blackrock"] = Bedrock; Aliases["activewater"] = Water;
-            Aliases["activelava"] = Lava; Aliases["fhl"] = Deadly_FastLava;
-            Aliases["water_door"] = Door_Water; Aliases["lava_door"] = Door_Lava;
-            Aliases["acw"] = Deadly_ActiveWater; Aliases["ahl"] = Deadly_ActiveLava;
+            aliases["planks"] = Wood; aliases["tree"] = Log;
+            aliases["stairs"] = Slab; aliases["slab"] = Slab;
+            aliases["doubleslab"] = DoubleSlab; aliases["slabfull"] = DoubleSlab;
+            aliases["solid"] = Bedrock; aliases["admintite"] = Bedrock;
+            aliases["blackrock"] = Bedrock; aliases["activewater"] = Water;
+            aliases["activelava"] = Lava; aliases["fhl"] = Deadly_FastLava;
+            aliases["water_door"] = Door_Water; aliases["lava_door"] = Door_Lava;
+            aliases["acw"] = Deadly_ActiveWater; aliases["ahl"] = Deadly_ActiveLava;
             
-            Aliases["door_tree"] = Door_Log; Aliases["door2"] = Door_Obsidian;
-            Aliases["door3"] = Door_Glass; Aliases["door4"] = Door_Stone;
-            Aliases["door5"] = Door_Leaves; Aliases["door6"] = Door_Sand;
-            Aliases["door7"] = Door_Wood; Aliases["door8"] = Door_Green;
-            Aliases["door9"] = Door_TNT; Aliases["door10"] = Door_Slab;
-            Aliases["door11"] = Door_Iron; Aliases["door12"] = Door_Dirt;
-            Aliases["door13"] = Door_Grass; Aliases["door14"] = Door_Blue;
-            Aliases["door15"] = Door_Bookshelf; Aliases["door16"] = Door_Gold;
-            Aliases["door17"] = Door_Cobblestone; Aliases["door18"] = Door_Red;
+            aliases["door_tree"] = Door_Log; aliases["door2"] = Door_Obsidian;
+            aliases["door3"] = Door_Glass; aliases["door4"] = Door_Stone;
+            aliases["door5"] = Door_Leaves; aliases["door6"] = Door_Sand;
+            aliases["door7"] = Door_Wood; aliases["door8"] = Door_Green;
+            aliases["door9"] = Door_TNT; aliases["door10"] = Door_Slab;
+            aliases["door11"] = Door_Iron; aliases["door12"] = Door_Dirt;
+            aliases["door13"] = Door_Grass; aliases["door14"] = Door_Blue;
+            aliases["door15"] = Door_Bookshelf; aliases["door16"] = Door_Gold;
+            aliases["door17"] = Door_Cobblestone; aliases["door18"] = Door_Red;
             
-            Aliases["tdoor_tree"] = tDoor_Log; Aliases["tdoor2"] = tDoor_Obsidian;
-            Aliases["tdoor3"] = tDoor_Glass; Aliases["tdoor4"] = tDoor_Stone;
-            Aliases["tdoor5"] = tDoor_Leaves; Aliases["tdoor6"] = tDoor_Sand;
-            Aliases["tdoor7"] = tDoor_Wood; Aliases["tdoor8"] = tDoor_Green;
-            Aliases["tdoor9"] = tDoor_TNT; Aliases["tdoor10"] = tDoor_Slab;
-            Aliases["tair_switch"] = tDoor_Air; Aliases["tdoor11"] = tDoor_Air;
-            Aliases["tdoor12"] = tDoor_Water; Aliases["tdoor13"] = tDoor_Lava;
+            aliases["tdoor_tree"] = tDoor_Log; aliases["tdoor2"] = tDoor_Obsidian;
+            aliases["tdoor3"] = tDoor_Glass; aliases["tdoor4"] = tDoor_Stone;
+            aliases["tdoor5"] = tDoor_Leaves; aliases["tdoor6"] = tDoor_Sand;
+            aliases["tdoor7"] = tDoor_Wood; aliases["tdoor8"] = tDoor_Green;
+            aliases["tdoor9"] = tDoor_TNT; aliases["tdoor10"] = tDoor_Slab;
+            aliases["tair_switch"] = tDoor_Air; aliases["tdoor11"] = tDoor_Air;
+            aliases["tdoor12"] = tDoor_Water; aliases["tdoor13"] = tDoor_Lava;
             
-            Aliases["odoor_tree"] = oDoor_Log; Aliases["odoor2"] = oDoor_Obsidian;
-            Aliases["odoor3"] = oDoor_Glass; Aliases["odoor4"] = oDoor_Stone;
-            Aliases["odoor5"] = oDoor_Leaves; Aliases["odoor6"] = oDoor_Sand;
-            Aliases["odoor7"] = oDoor_Wood; Aliases["odoor8"] = oDoor_Green;
-            Aliases["odoor9"] = oDoor_TNT; Aliases["odoor10"] = oDoor_Slab;
-            Aliases["odoor11"] = oDoor_Lava; Aliases["odoor12"] = oDoor_Water;
+            aliases["odoor_tree"] = oDoor_Log; aliases["odoor2"] = oDoor_Obsidian;
+            aliases["odoor3"] = oDoor_Glass; aliases["odoor4"] = oDoor_Stone;
+            aliases["odoor5"] = oDoor_Leaves; aliases["odoor6"] = oDoor_Sand;
+            aliases["odoor7"] = oDoor_Wood; aliases["odoor8"] = oDoor_Green;
+            aliases["odoor9"] = oDoor_TNT; aliases["odoor10"] = oDoor_Slab;
+            aliases["odoor11"] = oDoor_Lava; aliases["odoor12"] = oDoor_Water;
             
-            Aliases["steps"] = Slab; Aliases["double_steps"] = DoubleSlab;
-            Aliases["step"] = Slab; Aliases["double_step"] = DoubleSlab;
-            Aliases["grey"] = Gray; Aliases["door_darkgray"] = Door_Black;
-            Aliases["door_lightgray"] = Door_Gray;
+            aliases["steps"] = Slab; aliases["double_steps"] = DoubleSlab;
+            aliases["step"] = Slab; aliases["double_step"] = DoubleSlab;
+            aliases["grey"] = Gray; aliases["door_darkgray"] = Door_Black;
+            aliases["door_lightgray"] = Door_Gray;
         }
     }
 }

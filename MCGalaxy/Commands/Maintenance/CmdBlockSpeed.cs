@@ -74,8 +74,12 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SendEstimation(Player p) {
             int updates = BlockQueue.UpdatesPerTick, time = BlockQueue.Interval, count = PlayerInfo.Online.Count;
-            Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", updates, time, updates * (1000 / time));
-            Player.Message(p, "Using ~{0}KB/s times {1} player(s) = ~{2}KB/s", (updates * (1000 / time) * 8) / 1000, count, count * ((updates * (1000 / time) * 8) / 1000));
+            int blocksPerSec = updates * (1000 / time);
+            
+            Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", 
+                           updates, time, blocksPerSec);
+            Player.Message(p, "Using ~{0}KB/s times {1} players = ~{2}KB/s", 
+                           (blocksPerSec * 8) / 1000, count, (count * blocksPerSec * 8) / 1000);
         }
         
         public override void Help(Player p) {

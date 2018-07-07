@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Bots {
                 Player.Message(p, "Set text shown when bot {0} %Sis clicked on to {1}", bot.ColoredName, text);
                 bot.ClickedOnText = text;
             }
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         void SetDeathMessage(Player p, string botName, string text) {
@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.Bots {
                 Player.Message(p, "Set message shown when bot {0} %Skills someone to {1}", bot.ColoredName, text);
                 bot.DeathMessage = text;
             }
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         void RenameBot(Player p, string botName, string newName) {
@@ -149,7 +149,7 @@ namespace MCGalaxy.Commands.Bots {
             }
             
             bot.name = newName;
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         void CopyBot(Player p, string botName, string newName) {

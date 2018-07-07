@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetBotData(Player p, PlayerBot bot, string args) {
             if (!ParseArgs(p, args, bot)) return;
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         protected override void SetPlayerData(Player p, Player who, string args) {

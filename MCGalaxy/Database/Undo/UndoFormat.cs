@@ -111,10 +111,10 @@ namespace MCGalaxy.Undo {
 
         /// <summary> Whether the format has finished retrieving undo data,
         /// due to finding an entry before the start range. </summary>
-        public bool Stop;        
+        public bool Stop;
 
         /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;      
+        internal readonly DateTime Start;
 
         /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
         internal readonly DateTime End;

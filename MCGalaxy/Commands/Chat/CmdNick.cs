@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {
             if (nick.Length == 0) {
                 bot.DisplayName = bot.name;
-                bot.level.Message("Bot " + bot.ColoredName + " %Sreverted to their original name.");
+                p.level.Message("Bot " + bot.ColoredName + " %Sreverted to their original name.");
             } else {
                 string nameTag = nick.CaselessEq("empty") ? "" : nick;
                 if (nick.Length > 62) { Player.Message(p, "Name must be 62 or fewer letters."); return; }
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
-            BotsFile.Save(bot.level);
+            BotsFile.Save(p.level);
         }
         
         protected override void SetPlayerData(Player p, Player who, string nick) {

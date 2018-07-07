@@ -44,7 +44,7 @@ namespace MCGalaxy {
         public LevelPermission Permission = LevelPermission.Null;
         [ConfigColor("Color", null, "&f")]
         public string Color;
-        public string ColoredName { get { return Color + Name; } }      
+        public string ColoredName { get { return Color + Name; } }
         
         [ConfigInt("Limit", null, 0, 0)]
         public int DrawLimit;
