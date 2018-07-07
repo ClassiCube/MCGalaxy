@@ -51,9 +51,6 @@ namespace MCGalaxy.Games {
                 
                 secs++; Thread.Sleep(1000);
             }
-            
-            if (Running) EndRound();
-            if (Running) VoteAndMoveToNextMap();
         }
 
         public override void EndRound() {

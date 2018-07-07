@@ -25,17 +25,13 @@ namespace MCGalaxy.Gui {
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context) { return true; }
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) { return true; }
         
-        static List<string> GetColorsList() {
+        public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
             List<string> colors = new List<string>();
             for (int i = 0; i < Colors.List.Length; i++) {
                 if (Colors.List[i].Undefined) continue;
                 colors.Add(Colors.List[i].Name);
             }
-            return colors;
-        }
-        
-        public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
-            return new StandardValuesCollection(GetColorsList());
+            return new StandardValuesCollection(colors);
         }
     }
     

@@ -237,7 +237,7 @@ namespace MCGalaxy.Gui {
             if (eco_dgvMaps.SelectedRows.Count == 0) {
                 Popup.Warning("No available presets to remove");
             } else {
-                DataGridViewRow row = eco_dgvMaps.SelectedRows[0];                
+                DataGridViewRow row = eco_dgvMaps.SelectedRows[0];
                 eco_dgvMaps.Rows.Remove(row);
                 eco_dgvMaps_Apply();
             }

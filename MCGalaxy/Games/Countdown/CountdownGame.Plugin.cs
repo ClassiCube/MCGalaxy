@@ -58,8 +58,7 @@ namespace MCGalaxy.Games {
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (!respawning || !Remaining.Contains(p)) return;
             Map.Message(p.ColoredName + " %Sis out of countdown!");
-            Remaining.Remove(p);
-            UpdatePlayersLeft();
+            OnPlayerDied(p);
         }
         
         void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {

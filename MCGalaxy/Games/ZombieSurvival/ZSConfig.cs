@@ -63,10 +63,6 @@ namespace MCGalaxy.Games {
         public int ReviveChance = 80;
         [ConfigInt("revive-times", "Revive", 1, 0)]
         public int ReviveTimes = 1;
-        [ConfigString("revive-success", "Revive", "used a revive potion. &aIt was super effective!")]
-        public string ReviveSuccessMessage = "used a revive potion. &aIt was super effective!";
-        [ConfigString("revive-failure", "Revive", "tried using a revive potion. &cIt was not very effective..")]
-        public string ReviveFailureMessage = "tried using a revive potion. &cIt was not very effective..";
         
         static ConfigElement[] cfg;
         public override bool AllowAutoload { get { return true; } }

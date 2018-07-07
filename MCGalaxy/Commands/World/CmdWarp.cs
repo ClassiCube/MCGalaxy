@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Use(Player p, string message) {
-            UseCore(p, message, WarpList.Global, "Warp", true);
+            UseCore(p, message, WarpList.Global, "Warp");
         }
         
         static string FormatWarp(Warp warp) {
@@ -42,11 +42,11 @@ namespace MCGalaxy.Commands.Misc {
             return warp.Name + " - (" + pos.X + ", " + pos.Y + ", " + pos.Z + ") on " + warp.Level;
         }
         
-        protected void UseCore(Player p, string message, WarpList warps, 
-                               string group, bool checkExtraPerms) {
+        protected void UseCore(Player p, string message, WarpList warps, string group) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
             if (cmd.Length == 0) { Help(p); return; }
+            bool checkExtraPerms = warps == WarpList.Global;
             
             if (cmd.CaselessEq("list")) {
                 string modifier = args.Length > 1 ? args[1] : "";

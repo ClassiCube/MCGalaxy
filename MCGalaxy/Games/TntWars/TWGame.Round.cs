@@ -113,9 +113,6 @@ namespace MCGalaxy.Games {
                 }
                 Thread.Sleep(1000);
             }
-            
-            if (Running) EndRound();
-            if (Running) VoteAndMoveToNextMap();
         }
         
         void GracePeriod() {

@@ -115,16 +115,6 @@ namespace MCGalaxy.Gui {
         [DisplayName("Expiry time")]
         public int ExpiryTime { get; set; }
         
-        [Description("Message shown when a player uses /buy revive, and it actually disinfects them.")]
-        [Category("Revive settings")]
-        [DisplayName("Success message")]
-        public string SuccessMessage { get; set; }
-        
-        [Description("Message shown when a player uses /buy revive, but does not disinfect them.")]
-        [Category("Revive settings")]
-        [DisplayName("Failure message")]
-        public string FailureMessage { get; set; }
-        
         public void LoadFromServer() {
             ZSConfig cfg = ZSGame.Config;
             Maps = cfg.Maps.Join(",");
@@ -148,8 +138,6 @@ namespace MCGalaxy.Gui {
             InsufficientTime = cfg.ReviveNoTime;
             InsufficientTimeMessage = cfg.ReviveNoTimeMessage;
             ExpiryTime = cfg.ReviveTooSlow;
-            FailureMessage = cfg.ReviveFailureMessage;
-            SuccessMessage = cfg.ReviveSuccessMessage;
         }
         
         public void ApplyToServer() {
@@ -177,8 +165,6 @@ namespace MCGalaxy.Gui {
             cfg.ReviveNoTime = InsufficientTime;
             cfg.ReviveNoTimeMessage = InsufficientTimeMessage;
             cfg.ReviveTooSlow = ExpiryTime;
-            cfg.ReviveFailureMessage = FailureMessage;
-            cfg.ReviveSuccessMessage = SuccessMessage;
         }
     }
 }

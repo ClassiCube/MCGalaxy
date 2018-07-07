@@ -93,8 +93,6 @@ namespace MCGalaxy.Games {
         }
 
         protected override void EndGame() {
-            if (RoundInProgress) EndRound(null);
-
             Players.Clear();
             Remaining.Clear();
             squaresLeft.Clear();
@@ -169,10 +167,8 @@ namespace MCGalaxy.Games {
         }
         
         public override void PlayerLeftGame(Player p) {
-            Player.Message(p, "You've left countdown.");
             Players.Remove(p);
-            Remaining.Remove(p);
-            UpdatePlayersLeft();
+            OnPlayerDied(p);
         }
         
         protected override string FormatStatus1(Player p) {

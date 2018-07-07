@@ -37,11 +37,9 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             RoundInProgress = true;
             StartRound(players);
+            
             if (!Running) return;
             DoCoreGame();
-            
-            if (Running) EndRound();
-            if (Running) VoteAndMoveToNextMap();
         }
         
         void StartRound(List<Player> players) {
@@ -80,13 +78,12 @@ namespace MCGalaxy.Games {
             
             while (alive.Length > 0 && Running && RoundInProgress) {
                 Player[] infected = Infected.Items;
-                // Do round end.
+                // Round ended with some players still alive
                 int seconds = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
                 if (seconds <= 0) {
-                    MessageMap(CpeMessageType.Announcement, "");
-                    EndRound();
-                    return;
+                    MessageMap(CpeMessageType.Announcement, ""); return;
                 }
+                
                 if (seconds <= 5 && seconds != lastCountdown) {
                     string suffix = seconds == 1 ? " &4second" : " &4seconds";
                     MessageMap(CpeMessageType.Announcement, 

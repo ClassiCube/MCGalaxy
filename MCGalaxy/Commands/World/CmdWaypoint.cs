@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Misc {
         public override CommandPerm[] ExtraPerms { get { return null; } }
                 
         public override void Use(Player p, string message) {
-            UseCore(p, message, p.Waypoints, "Waypoint", false);
+            UseCore(p, message, p.Waypoints, "Waypoint");
         }
 
         public override void Help(Player p) {

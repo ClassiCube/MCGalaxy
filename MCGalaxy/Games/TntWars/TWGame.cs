@@ -137,7 +137,6 @@ namespace MCGalaxy.Games {
         }
         
         protected override void EndGame() {
-            if (RoundInProgress) EndRound();
             RestoreBuildPerms();
             ResetTeams();
         }

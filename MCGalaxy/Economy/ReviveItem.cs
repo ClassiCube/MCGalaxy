@@ -63,9 +63,9 @@ namespace MCGalaxy.Eco {
             int chance = new Random().Next(1, 101);
             if (chance <= ZSGame.Config.ReviveChance) {
                 ZSGame.Instance.DisinfectPlayer(p);
-                ZSGame.Instance.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveSuccessMessage);
+                ZSGame.Instance.Map.Message(p.ColoredName + " %Sused a revive potion. &aIt was super effective!");
             } else {
-                ZSGame.Instance.Map.Message(p.ColoredName + " %S" + ZSGame.Config.ReviveFailureMessage);
+                ZSGame.Instance.Map.Message(p.ColoredName + " %Stried using a revive potion. &cIt was not very effective..");
             }
             Economy.MakePurchase(p, Price, "%3Revive:");
             data.RevivesUsed++;

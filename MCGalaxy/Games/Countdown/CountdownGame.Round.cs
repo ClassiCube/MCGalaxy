@@ -53,6 +53,9 @@ namespace MCGalaxy.Games {
             RemoveSquares();
         }
         
+        // TODO: Multi round countdown on multiple maps
+        protected override void VoteAndMoveToNextMap() { }
+        
         void BeginRound() {
             string modeSuffix = FreezeMode ? " in freeze mode" : "";
             Map.Message("Starting " + SpeedType + " speed Countdown" + modeSuffix);
@@ -191,8 +194,8 @@ namespace MCGalaxy.Games {
             }
         }
 
-        void UpdatePlayersLeft() {
-            if (!RoundInProgress) return;
+        void OnPlayerDied(Player p) {
+            if (!Remaining.Remove(p) || !RoundInProgress) return;
             Player[] players = Remaining.Items;
             
             switch (players.Length) {
@@ -227,7 +230,6 @@ namespace MCGalaxy.Games {
                 foreach (Player pl in players) {
                     PlayerActions.Respawn(pl);
                 }
-                Map.Message("Current round was force ended!");
             }
         }
     }

@@ -72,7 +72,10 @@ namespace MCGalaxy.Games {
                 while (Running && RoundsLeft > 0) {
                     RoundInProgress = false;
                     if (RoundsLeft != int.MaxValue) RoundsLeft--;
+                    
                     DoRound();
+                    if (Running) EndRound();
+                    if (Running) VoteAndMoveToNextMap();
                 }
                 End();
             } catch (Exception ex) {
@@ -134,7 +137,7 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected void VoteAndMoveToNextMap() {
+        protected virtual void VoteAndMoveToNextMap() {
             Picker.AddRecentMap(Map.MapName);
             if (RoundsLeft == 0) return;
             string map = Picker.ChooseNextLevel(this);
@@ -179,8 +182,13 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             Running = false;
             IGame.RunningGames.Remove(this);
-
             UnhookEventHandlers();
+            
+            if (RoundInProgress) {
+                EndRound();
+                RoundInProgress = false;
+            }
+            
             EndGame();
             OnStateChangedEvent.Call(this);
             

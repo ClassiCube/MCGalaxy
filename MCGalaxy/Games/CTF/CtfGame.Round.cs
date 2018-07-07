@@ -37,9 +37,6 @@ namespace MCGalaxy.Games {
                 Tick();
                 Thread.Sleep(300);
             }
-            
-            if (Running) EndRound();
-            if (Running) VoteAndMoveToNextMap();
         }
                 
         protected override bool SetMap(string map) {
