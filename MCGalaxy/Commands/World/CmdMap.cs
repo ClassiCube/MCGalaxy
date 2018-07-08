@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
             string optName = null, value = null;
             
             if (IsMapOption(args)) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level"); return; }
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "level name"); return; }
                 lvl = p.level;
                 
                 optName = args[0];

@@ -32,9 +32,10 @@ namespace MCGalaxy.Network {
         
         readonly IRCBot bot;
         readonly Player ircGuest = new Player("IRC");
+        readonly Player ircOp = new Player("IRC");
         
-        public IRCHandlers(IRCBot bot) { 
-            this.bot = bot; 
+        public IRCHandlers(IRCBot bot) {
+            this.bot = bot;
             ircGuest.group = Group.GuestRank;
         }
         
@@ -131,8 +132,12 @@ namespace MCGalaxy.Network {
             if (scopeFilter(ircGuest, arg) && (filter == null || filter(ircGuest, arg))) {
                 bot.Say(msg, false);
             } else {
-                // TODO: Check filters!!!!!
-                bot.Say(msg, true);
+                ircOp.group = Group.Find(ServerConfig.IRCControllerRank);
+                if (ircOp.group == null) ircOp.group = Group.NobodyRank;
+                
+                if (scopeFilter(ircOp, arg) && (filter == null || filter(ircOp, arg))) {
+                    bot.Say(msg, true);
+                }
             }
         }
 
@@ -291,6 +296,7 @@ namespace MCGalaxy.Network {
                 cmd.Use(p, cmdArgs);
             } catch (Exception ex) {
                 Player.Message(p, "CMD Error: " + ex);
+                Logger.LogError(ex);
             }
             return true;
         }

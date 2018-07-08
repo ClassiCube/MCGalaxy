@@ -23,11 +23,11 @@ using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public abstract class WeaponCmd : Command {
-        
+    public abstract class WeaponCmd : Command {       
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
+        public override bool SuperUseable { get { return false; } }
         protected abstract string Weapon { get; }
         
         public override void Use(Player p, string message) {

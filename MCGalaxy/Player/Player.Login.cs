@@ -44,6 +44,7 @@ namespace MCGalaxy {
             if (cancelconnecting) { cancelconnecting = false; return; }
             
             hasCpe = buffer[offset + 130] == 0x42 && ServerConfig.EnableCPE;
+            level = Server.mainLevel;
             Loading = true;
             if (disconnected) return;
             

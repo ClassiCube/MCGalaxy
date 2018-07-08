@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Bots {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message) { 
-            Level lvl = p == null ? null : p.level;
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             string[] args = message.SplitSpaces(2);
             int ignored, offset = 0;
             

@@ -36,12 +36,10 @@ namespace MCGalaxy.Commands.World {
                 lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;
             } else {
-                if (p != null && p.level != null) {
-                    lvl = p.level;
-                } else {
-                    Player.Message(p, "You must provide a level name when using /restore from console.");
-                    return;
+                if (Player.IsSuper(p)) {
+                    SuperRequiresArgs(p, "level name"); return;
                 }
+                lvl = p.level;
             }
 
             if (!LevelInfo.ValidateAction(p, lvl, "restore a backup of this level")) return;
@@ -98,9 +96,9 @@ namespace MCGalaxy.Commands.World {
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Restore %H- lists all backups for the current map");
-            Player.Message(p, "%T/Restore [number] [name]");
+            Player.Message(p, "%T/Restore [number] <map>");
             Player.Message(p, "%HRestores a previous backup for the given map.");
-            Player.Message(p, "%H  If [name] is not given, your current map is used.");
+            Player.Message(p, "%H  If <map> is not given, your current map is used.");
         }
     }
 }

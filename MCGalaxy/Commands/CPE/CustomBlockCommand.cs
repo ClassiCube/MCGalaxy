@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.CPE {
                     return;
                 }
             } else {
-                target = GetFreeBlock(global, p == null ? null : p.level);
+                target = GetFreeBlock(global, Player.IsSuper(p) ? null : p.level);
                 if (target == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd +" remove a custom block first.");
@@ -251,7 +251,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             RemoveBlockProps(global, block, p);
-            BlockDefinition.Remove(def, defs, p == null ? null : p.level);
+            BlockDefinition.Remove(def, defs, Player.IsSuper(p) ? null : p.level);
             
             string scope = global ? "global" : "level";
             Player.Message(p, "Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
@@ -382,7 +382,7 @@ namespace MCGalaxy.Commands.CPE {
             string value = parts[3], blockName = def.Name;
             float fTemp;
             bool temp = false, changedFallback = false;
-            Level level = p == null ? null : p.level;
+            Level level = Player.IsSuper(p) ? null : p.level;
             
             string arg = MapPropertyName(parts[2].ToLower());
             switch (arg) {
@@ -515,7 +515,7 @@ namespace MCGalaxy.Commands.CPE {
             
             // in case the list is modified before we finish the command.
             if (old != null) {
-                block = GetFreeBlock(global, p == null ? null : p.level);
+                block = GetFreeBlock(global, Player.IsSuper(p) ? null : p.level);
                 if (block == Block.Invalid) {
                     Player.Message(p, "There are no custom block ids left, " +
                                    "you must " + cmd + " remove a custom block first.");
@@ -531,7 +531,7 @@ namespace MCGalaxy.Commands.CPE {
             Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
             block = def.GetBlock();
-            BlockDefinition.Add(def, defs, p == null ? null : p.level);
+            BlockDefinition.Add(def, defs, Player.IsSuper(p) ? null : p.level);
             UpdateBlockProps(global, p, block, props);
             return true;
         }

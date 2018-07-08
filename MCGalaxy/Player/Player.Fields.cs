@@ -181,7 +181,7 @@ namespace MCGalaxy {
         public DateTime lastCmdTime;
         public sbyte c4circuitNumber = -1;
 
-        public Level level = Server.mainLevel;
+        public Level level;
         public bool Loading = true; //True if player is loading a map.
         internal int UsingGoto = 0, GeneratingMap = 0, LoadingMuseum = 0, UsingDelay = 0;
         public Vec3U16 lastClick = Vec3U16.Zero;

@@ -83,7 +83,7 @@ namespace MCGalaxy {
 
         public static bool FilterAll(Player pl, object arg) { return true; }
         public static bool FilterGlobal(Player pl, object arg) {
-            return pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null;
+            return pl.SuperUser || (pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null);
         }
         
         public static bool FilterLevel(Player pl, object arg) {

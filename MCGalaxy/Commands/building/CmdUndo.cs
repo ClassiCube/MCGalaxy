@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Building {
         internal static TimeSpan GetDelta(Player p, string name, string[] parts, int offset) {
             TimeSpan delta = TimeSpan.Zero;
             string timespan = parts.Length > offset ? parts[parts.Length - 1] : "30m";
-            bool canAll = p == null || p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;            
+            bool canAll = p == null || p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;
             
             if (timespan.CaselessEq("all")) {
                 return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.MaxUndo);

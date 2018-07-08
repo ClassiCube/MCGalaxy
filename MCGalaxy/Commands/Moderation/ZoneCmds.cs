@@ -27,6 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "Zone"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
+        public override bool SuperUseable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ZRemove", "del"), new CommandAlias("ZDelete", "del"),
@@ -181,6 +182,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "ZoneTest"; } }
         public override string shortcut { get { return "ZTest"; } }
         public override string type { get { return CommandTypes.Moderation; } }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message) {
             Player.Message(p, "Place or delete a block where you would like to check for zones.");
@@ -216,6 +218,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "ZoneList"; } }
         public override string shortcut { get { return "Zones"; } }
         public override string type { get { return CommandTypes.Moderation; } }
+        public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message) {
@@ -239,6 +242,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "ZMark"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("zm") }; }
         }

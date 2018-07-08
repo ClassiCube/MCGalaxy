@@ -22,6 +22,7 @@ namespace MCGalaxy.Commands.Misc {
     public sealed class CmdTpA : Command {        
         public override string name { get { return "TPA"; } }
         public override string type { get { return CommandTypes.Other; } }
+        public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("TPAccept", "accept"), new CommandAlias("TPDeny", "deny") }; }
         }

@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
-                if (p.level == null || p.level != Map || p.Game.Referee) continue;
+                if (p.level != Map || p.Game.Referee) continue;
                 Alive.Add(p);
             }
             Infected.Clear();

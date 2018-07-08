@@ -131,7 +131,7 @@ namespace MCGalaxy {
         static string TokenPlaytime(Player p) { return p.TotalTime.Shorten(); }
         static string TokenFirst(Player p) { return p.FirstLogin.ToString(); }
         static string TokenVisits(Player p) { return p.TimesVisited.ToString(); }
-        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }        
+        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }
         static string TokenIP(Player p) { return p.ip; }
         static string TokenModel(Player p) { return p.Model; }
         static string TokenSkin(Player p) { return p.SkinName; }

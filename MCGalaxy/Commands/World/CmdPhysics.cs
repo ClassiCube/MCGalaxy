@@ -30,17 +30,18 @@ namespace MCGalaxy.Commands.World {
             if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             
             string[] args = message.SplitSpaces();
-            Level level = p != null ? p.level : Server.mainLevel;
-            int state = 0, stateIndex = args.Length == 1 ? 0 : 1;            
-            if (!CommandParser.GetInt(p, args[stateIndex], "Physics state", ref state, 0, 5)) return;
+            Level lvl = Player.IsSuper(p) ? Server.mainLevel : p.level;
+            
+            int state = 0, stateI = args.Length == 1 ? 0 : 1;            
+            if (!CommandParser.GetInt(p, args[stateI], "Physics state", ref state, 0, 5)) return;
             
             if (args.Length == 2) {
-                level = Matcher.FindLevels(p, args[0]);
-                if (level == null) return;
+                lvl = Matcher.FindLevels(p, args[0]);
+                if (lvl == null) return;
             }
             
-            if (!LevelInfo.ValidateAction(p, level, "set physics of this level")) return;
-            SetPhysics(level, state);
+            if (!LevelInfo.ValidateAction(p, lvl, "set physics of this level")) return;
+            SetPhysics(lvl, state);
         }
         
         internal static string[] states = new string[] { "&cOFF", "&aNormal", "&aAdvanced", 

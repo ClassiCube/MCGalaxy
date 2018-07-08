@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message) {
             if (message.Length == 0) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "name"); return; }
+                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
                 message = p.name;
             }
             

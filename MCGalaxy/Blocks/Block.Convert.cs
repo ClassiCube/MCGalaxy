@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         
         public static BlockID Parse(Player p, string input) {
-            BlockDefinition[] defs = p == null ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition[] defs = Player.IsSuper(p) ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockID block;
             // raw ID is treated specially, before names
             if (BlockID.TryParse(input, out block)) {

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Maintenance {
             string[] args = message.SplitSpaces();
             if (args.Length == 1 && Player.IsSuper(p)) { SuperRequiresArgs(p, "map name"); return; }
             
-            Level lvl = p == null ? null : p.level;
+            Level lvl = Player.IsSuper(p) ? null : p.level;
             if (args.Length > 1) {
                 lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;
