@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Misc {
             if (message.Length == 0) { Help(p); return; }
             
             if (p.hackrank) {
-                Player.Message(p, "&cYou have already hacked a rank!"); return;
+                Player.Message(p, "%WYou have already hacked a rank!"); return;
             }
             
             Group grp = Matcher.FindRanks(p, message);

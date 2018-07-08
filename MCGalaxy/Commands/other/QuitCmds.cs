@@ -79,7 +79,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message) {
             if (message.Length > 0) {
-                Player.Message(p, "&cIncorrect syntax. Abuse detected.");
+                Player.Message(p, "%WIncorrect syntax. Abuse detected.");
                 Thread.Sleep(3000);
             }
             

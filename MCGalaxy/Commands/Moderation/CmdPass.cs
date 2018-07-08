@@ -49,12 +49,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void VerifyPassword(Player p, string message) {
-            if (!p.adminpen) { Player.Message(p, "You are &calready verified."); return; }
+            if (!p.adminpen) { Player.Message(p, "%WYou are already verified."); return; }
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
 
-            if (message.IndexOf(' ') >= 0) { Player.Message(p, "Your password must be &cone %Sword!"); return; }
+            if (message.IndexOf(' ') >= 0) { Player.Message(p, "Your password must be %Wone %Sword!"); return; }
             if (!PasswordHasher.Exists(p.name)) {
-                Player.Message(p, "You have not &cset a password, %Suse &a/setpass [Password] &cto set one!"); return;
+                Player.Message(p, "You have not %Wset a password, %Suse %T/SetPass [Password] %Wto set one!"); return;
             }
 
             if (PasswordHasher.MatchesPass(p.name, message)) {
@@ -62,15 +62,15 @@ namespace MCGalaxy.Commands.Moderation {
                 p.adminpen = false;
             } else {
                 p.passtries++;
-                Player.Message(p, "&cWrong Password. %SRemember your password is &ccase sensitive.");
+                Player.Message(p, "%WWrong Password. %SRemember your password is %Wcase sensitive.");
                 Player.Message(p, "Forgot your password? %SContact the owner so they can reset it.");
             }
         }
         
         void SetPassword(Player p, string message) {
             if (p.adminpen && PasswordHasher.Exists(p.name)) {
-                Player.Message(p, "&cYou already have a password set. %SYou &ccannot change %Sit unless &cyou verify it with &a/pass [Password]. " +
-                               "%SIf you have &cforgotten %Syour password, contact &c" + ServerConfig.OwnerName + " %Sand they can &creset it!");
+                Player.Message(p, "%WcYou already have a password set. %SYou %Wcannot change %Sit unless %Wyou verify it with &a/pass [Password]. " +
+                               "%SIf you have %Wforgotten %Syour password, contact %W" + ServerConfig.OwnerName + " %Sand they can %Wreset it!");
                 return;
             }
             if (message.IndexOf(' ') >= 0) { Player.Message(p, "Your password must be one word!"); return; }
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (p != null && p.adminpen) {
-                Player.Message(p, "&cYou must first verify with %T/Pass [Password]"); return;
+                Player.Message(p, "%WYou must first verify with %T/Pass [Password]"); return;
             }
             
             string owner = ServerConfig.OwnerName;
@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player.Message(p, "%T/Pass reset [Player] %H- Resets the password for that player");
             Player.Message(p, "%H Note: Can only be used by console and the server owner.");            
             Player.Message(p, "%T/Pass set [Password] %H- Sets your password to [password]");
-            Player.Message(p, "%H Note: &cDo NOT set this as your Minecraft password!");
+            Player.Message(p, "%H Note: %WDo NOT set this as your Minecraft password!");
             Player.Message(p, "%T/Pass [Password]");
             Player.Message(p, "%HIf you are an admin, use this command to verify your login.");
             Player.Message(p, "%H You will need to be verified to be able to use commands.");

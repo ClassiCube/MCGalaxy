@@ -185,6 +185,7 @@ namespace MCGalaxy {
             if (col == 'H') { col = ServerConfig.HelpDescriptionColor[1]; return true; }
             if (col == 'T') { col = ServerConfig.HelpSyntaxColor[1]; return true; }
             if (col == 'I') { col = ServerConfig.IRCColor[1]; return true; }
+            if (col == 'W') { col = ServerConfig.WarningErrorColor[1]; return true; }
             return IsDefined(col);
         }       
         

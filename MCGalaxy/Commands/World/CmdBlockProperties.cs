@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
             Player pScope = scope == Block.Props ? null : p;
             BlockID block = Block.Parse(pScope, args[1]);
             if (block == Block.Invalid) {
-                Player.Message(p, "&cThere is no block \"{0}\".", args[1]); return;
+                Player.Message(p, "%WThere is no block \"{0}\".", args[1]); return;
             }
             
             string prop = args[2].ToLower();
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.World {
                 return p.level.Props;
             }
             
-            Player.Message(p, "&cScope must be: core/global, or level");
+            Player.Message(p, "%WScope must be: core/global, or level");
             return null;
         }
 
@@ -240,7 +240,7 @@ namespace MCGalaxy.Commands.World {
                 Player.Message(p, "%HSets the block that this block is changed into, when no longer exposed to sunlight");
                 Player.Message(p, "%HLeave block blank to remove this behaviour.");
             }  else {
-                Player.Message(p, "&cUnrecognised property \"{0}\"", message);
+                Player.Message(p, "%WUnrecognised property \"{0}\"", message);
             }
         }
     }

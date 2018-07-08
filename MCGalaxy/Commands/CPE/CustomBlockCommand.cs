@@ -541,11 +541,11 @@ namespace MCGalaxy.Commands.CPE {
             if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
             if (block >= Block.Extended) {
-                Player.Message(p, "&cCustom blocks cannot be used as fallback blocks.");
+                Player.Message(p, "%WCustom blocks cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             if (Block.IsPhysicsType(block)) {
-                Player.Message(p, "&cPhysics block cannot be used as fallback blocks.");
+                Player.Message(p, "%WPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             return (BlockRaw)block;
@@ -572,13 +572,13 @@ namespace MCGalaxy.Commands.CPE {
         
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            Player.Message(p, "%WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
             Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "&cThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            Player.Message(p, "%WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
             Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         

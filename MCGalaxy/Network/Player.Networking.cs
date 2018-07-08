@@ -235,7 +235,7 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);
-                SendMessage("There was an error sending the map data, you have been sent to the main level.");
+                SendMessage("%WThere was an error sending the map, you have been sent to the main level.");
                 Logger.LogError(ex);
             } finally {
                 Server.DoGC();

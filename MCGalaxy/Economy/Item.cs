@@ -115,7 +115,7 @@ namespace MCGalaxy.Eco {
             // Must always provide an argument.
             if (args.Length < 2) { OnStoreCommand(p); return; }
             if (p.money < Price) {
-                Player.Message(p, "&cYou don't have enough &3{1} &cto buy a {0}.", Name, ServerConfig.Currency); return;
+                Player.Message(p, "%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             DoPurchase(p, message, args);
         }

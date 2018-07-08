@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.World {
             try {
                 LevelActions.CopyLevel(src, dst);
             } catch (IOException) {
-                Player.Message(p, "Level &c" + dst + " %Salready exists!"); return;
+                Player.Message(p, "Level %W" + dst + " %Salready exists!"); return;
             }
             
             Level ignored;

@@ -39,7 +39,7 @@ namespace MCGalaxy.Eco {
             if (args.Length >= 2 && !CommandParser.GetInt(p, args[1], group, ref count, 0, 10)) return;
             
             if (p.money < Price * count) {
-                Player.Message(p, "&cYou don't have enough &3{2} &cto buy {1} {0}.",
+                Player.Message(p, "%WYou don't have enough &3{2} %Wto buy {1} {0}.",
                                Name, count * 10, ServerConfig.Currency); return;
             }
             
@@ -131,7 +131,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "&cYou don't have enough &3{1} &cto buy a {0}.", Name, ServerConfig.Currency); return;
+                Player.Message(p, "%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 Player.Message(p, "You can only buy an invisiblity potion " +
@@ -174,7 +174,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%T/Buy " + Name);
             OutputItemInfo(p);
             
-            Player.Message(p, "Makes you invisibile to {0} - &cyou can still {1}",
+            Player.Message(p, "Makes you invisible to {0} - %Wyou can still {1}",
                            ForHumans ? "zombies" : "humans",
                            ForHumans ? "be infected" : "infect humans");
             Player.Message(p, "Lasts for " + Duration + " seconds before you reappear.");

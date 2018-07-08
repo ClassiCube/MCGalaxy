@@ -46,8 +46,8 @@ namespace MCGalaxy.Generator {
                 return true;
             } catch (Exception ex) {
                 Logger.LogError("Error downloading image", ex);
-                Player.Message(p, "&cFailed to download the image from the given url.");
-                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
+                Player.Message(p, "%WFailed to download the image from the given url.");
+                Player.Message(p, "%WThe url may need to end with its extension (such as .jpg).");
                 return false;
             }
         }
@@ -64,8 +64,8 @@ namespace MCGalaxy.Generator {
                 Logger.LogError("Error reading bitmap", ex);
                 if (bmp != null) bmp.Dispose();
                 
-                Player.Message(p, "&cThere was an error reading the downloaded image.");
-                Player.Message(p, "&cThe url may need to end with its extension (such as .jpg).");
+                Player.Message(p, "%WThere was an error reading the downloaded image.");
+                Player.Message(p, "%WThe url may need to end with its extension (such as .jpg).");
                 return null;
             }
         }

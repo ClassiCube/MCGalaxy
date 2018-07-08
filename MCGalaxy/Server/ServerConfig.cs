@@ -213,6 +213,8 @@ namespace MCGalaxy {
         public static string HelpSyntaxColor = "&a";
         [ConfigColor("help-desc-color", "Colors", "&e")]
         public static string HelpDescriptionColor = "&e";
+        [ConfigColor("warning-error-color", "Colors", "&c")]
+        public static string WarningErrorColor = "&c";
         
         [ConfigBool("cheapmessage", "Other", true)]
         public static bool ShowInvincibleMessage = true;        

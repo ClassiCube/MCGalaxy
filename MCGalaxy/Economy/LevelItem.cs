@@ -76,27 +76,23 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length < 3) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
-            if (preset == null) { Player.Message(p, "&cThat isn't a level preset"); return; }
+            if (preset == null) { Player.Message(p, "%WThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
-                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy that map"); return;
+                Player.Message(p, "%Wdon't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
             }
             string name = p.name + "_" + args[2];
             
-            try {
-                Command.Find("NewLvl").Use(null, name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
-                Player.Message(p, "&aCreating level: '&f" + name + "&a' . . .");
+            Command.Find("NewLvl").Use(null, name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
+            Player.Message(p, "&aCreating level: '&f" + name + "&a' . . .");
                 
-                CmdLoad.LoadLevel(null, name);
-                Level level = LevelInfo.FindExact(name);
-                CmdOverseer.SetPerms(p, level);
-                Level.SaveSettings(level);
-                PlayerActions.ChangeMap(p, name);
+            CmdLoad.LoadLevel(null, name);
+            Level level = LevelInfo.FindExact(name);
+            CmdOverseer.SetPerms(p, level);
+            Level.SaveSettings(level);
+            PlayerActions.ChangeMap(p, name);
 
-                Player.Message(p, "&aSuccessfully created your map: '&f" + name + "&a'");
-            } catch {
-                Player.Message(p, "&cSomething went wrong, Money untouched"); return;
-            }
+            Player.Message(p, "&aSuccessfully created your map: '&f" + name + "&a'");
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
@@ -116,14 +112,14 @@ namespace MCGalaxy.Eco {
         }
         
         void AddPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset != null) { Player.Message(p, "&cThat preset level already exists"); return; }
+            if (preset != null) { Player.Message(p, "%WThat preset level already exists"); return; }
             
             preset = new LevelPreset();
             preset.name = args[2];
             if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
                 preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
             } else {
-                Player.Message(p, "&cDimension must be a power of 2"); return;
+                Player.Message(p, "%WDimension must be a power of 2"); return;
             }
             
             if (!MapGen.IsRecognisedTheme(args[6])) {
@@ -141,19 +137,19 @@ namespace MCGalaxy.Eco {
         }
         
         void RemovePreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { Player.Message(p, "&cThat preset level doesn't exist"); return; }
+            if (preset == null) { Player.Message(p, "%WThat preset level doesn't exist"); return; }
             Presets.Remove(preset);
             Player.Message(p, "&aSuccessfully removed preset: &f" + preset.name);
         }
         
         void EditPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { Player.Message(p, "&cThat preset level doesn't exist"); return; }
+            if (preset == null) { Player.Message(p, "%WThat preset level doesn't exist"); return; }
             
             if (args[3] == "name" || args[3] == "title") {
                 preset.name = args[4];
                 Player.Message(p, "&aSuccessfully changed preset name to &f" + preset.name);
             } else if (args[3] == "x" || args[3] == "y" || args[3] == "z") {
-                if (!OkayAxis(args[4])) { Player.Message(p, "&cDimension was wrong, it must be a power of 2"); return; }
+                if (!OkayAxis(args[4])) { Player.Message(p, "%WDimension was wrong, it must be a power of 2"); return; }
 
                 if (args[3] == "x") preset.x = args[4];
                 if (args[3] == "y") preset.y = args[4];

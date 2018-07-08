@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Scripting {
             }
             
             string error = IScripting.Load(path);
-            if (error != null) { Player.Message(p, error); return; }
+            if (error != null) { Player.Message(p, "%W" + error); return; }
             Player.Message(p, "Command was successfully loaded.");
         }
 

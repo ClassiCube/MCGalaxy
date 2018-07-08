@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands.World {
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
-                Player.Message(p, "New level dimensions are smaller than the current dimensions, &cyou will lose blocks%S.");
+                Player.Message(p, "New level dimensions are smaller than the current dimensions, %Wyou will lose blocks%S.");
                 return false;
             }
             
             Level newLvl = ResizeLevel(lvl, x, y, z);
-            if (newLvl == null) { Player.Message(p, "&cError resizing map."); return false; }
+            if (newLvl == null) { Player.Message(p, "%WError resizing map."); return false; }
             LevelActions.Replace(lvl, newLvl);
             return true;
         }

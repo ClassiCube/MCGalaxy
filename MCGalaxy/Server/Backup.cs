@@ -142,7 +142,7 @@ namespace MCGalaxy {
             
             // To make life easier, we reload settings now, to maker it less likely to need restart
             Command.Find("Server").Use(null, "reload"); // Reload, as console
-            Player.Message(p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is reccommended, though not required.");
+            Player.Message(p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is recommended, though not required.");
         }
         
         static void ExtractItem(ZipPackagePart item, ref int errors) {

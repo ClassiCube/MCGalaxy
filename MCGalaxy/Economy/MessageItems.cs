@@ -38,10 +38,10 @@ namespace MCGalaxy.Eco {
             
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way
             if (msg == PlayerDB.GetLoginMessage(p)) {
-                Player.Message(p, "&cYou already have that login message."); return;
+                Player.Message(p, "%WYou already have that login message."); return;
             }
             if (msg.Length > NetUtils.StringSize) {
-                Player.Message(p, "&cLogin message must be 64 characters or less."); return;
+                Player.Message(p, "%WLogin message must be 64 characters or less."); return;
             }
             Command.Find("LoginMessage").Use(p, "-own " + msg);
             Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + msg);
@@ -66,10 +66,10 @@ namespace MCGalaxy.Eco {
             
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way         
             if (msg == PlayerDB.GetLogoutMessage(p)) {
-                Player.Message(p, "&cYou already have that logout message."); return;
+                Player.Message(p, "%WYou already have that logout message."); return;
             }       
             if (msg.Length > NetUtils.StringSize) {
-                Player.Message(p, "&cLogin message must be 64 characters or less."); return;
+                Player.Message(p, "%WLogin message must be 64 characters or less."); return;
             }            
             Command.Find("LogoutMessage").Use(p, "-own " + msg);
             Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + msg);

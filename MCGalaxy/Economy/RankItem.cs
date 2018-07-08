@@ -81,15 +81,15 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length >= 2) {
-                Player.Message(p, "&cYou cannot provide a rank name, use &a/buy rank &cto buy the NEXT rank."); return;
+                Player.Message(p, "%WYou cannot provide a rank name, use %T/Buy rank %Wto buy the NEXT rank."); return;
             }
             
             RankEntry nextRank = NextRank(p);
             if (nextRank == null) {
-                Player.Message(p, "&cYou are already at or past the max buyable rank"); return;
+                Player.Message(p, "%WYou are already at or past the max buyable rank"); return;
             }           
             if (p.money < nextRank.Price) {
-                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy the next rank"); return;
+                Player.Message(p, "%WYou don't have enough &3" + ServerConfig.Currency + " %Wto buy the next rank"); return;
             }
             
             string rankName = Group.Find(nextRank.Perm).Name; // TODO: What if null reference happens here
@@ -102,7 +102,7 @@ namespace MCGalaxy.Eco {
             if (args[1].CaselessEq("price")) {
                 Group grp = Matcher.FindRanks(p, args[2]);
                 if (grp == null) return;
-                if (p != null && p.Rank < grp.Permission) { Player.Message(p, "&cCannot set price of a rank higher than yours."); return; }
+                if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%WCannot set price of a rank higher than yours."); return; }
                 
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
@@ -111,12 +111,12 @@ namespace MCGalaxy.Eco {
             } else if (Command.IsDeleteCommand(args[1])) {
                 Group grp = Matcher.FindRanks(p, args[2]);
                 if (grp == null) return;
-                if (p != null && p.Rank < grp.Permission) { Player.Message(p, "&cCannot remove a rank higher than yours."); return; }
+                if (p != null && p.Rank < grp.Permission) { Player.Message(p, "%WCannot remove a rank higher than yours."); return; }
                 
                 if (Remove(grp.Permission)) {
                     Player.Message(p, "&aMade rank {0} &ano longer buyable", grp.ColoredName);
                 } else {
-                    Player.Message(p, "&cThat rank was not buyable to begin with.");
+                    Player.Message(p, "%WThat rank was not buyable to begin with.");
                 }
             } else {
                 OnSetupCommandHelp(p);
@@ -134,7 +134,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreOverview(Player p) {
             RankEntry next = NextRank(p);
             if (next == null) {
-                Player.Message(p, "&6Rankup %S- &cno further ranks to buy.");
+                Player.Message(p, "&6Rankup %S- %Wno further ranks to buy.");
             } else {
                 Player.Message(p, "&6Rankup to {0} %S- &a{1} %S{2}",
                                Group.GetColoredName(next.Perm), next.Price, ServerConfig.Currency);
@@ -144,12 +144,12 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             Player.Message(p, "%T/Buy rankup");
             if (Ranks.Count == 0) {
-                Player.Message(p, "&cNo ranks have been setup be buyable. See %T/eco help rank"); return;
+                Player.Message(p, "%WNo ranks have been setup be buyable. See %T/eco help rank"); return;
             }
             
             LevelPermission maxRank = Ranks[Ranks.Count - 1].Perm;
             Player.Message(p, "&fThe highest buyable rank is: {0}", Group.GetColoredName(maxRank));
-            Player.Message(p, "&cYou can only buy ranks one at a time, in sequential order.");
+            Player.Message(p, "%WYou can only buy ranks one at a time, in sequential order.");
             
             foreach (RankEntry rank in Ranks) {
                 Player.Message(p, "&6{0} %S- &a{1} %S{2}",

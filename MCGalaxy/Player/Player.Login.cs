@@ -128,15 +128,15 @@ namespace MCGalaxy {
             }
 
             if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
-                SendMessage("&9You must read the &c/Rules&9 and &c/Agree&9 to them before you can build and use commands!");
+                SendMessage("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
                 agreed = false;
             }
 
             if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
-                    SendMessage("&cPlease set your admin verification password with %T/SetPass [Password]!");
+                    SendMessage("%WPlease set your admin verification password with %T/SetPass [Password]!");
                 else
-                    SendMessage("&cPlease complete admin verification with %T/Pass [Password]!");
+                    SendMessage("%Wcomplete admin verification with %T/Pass [Password]!");
             }
             
             if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name)) {
@@ -231,12 +231,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageFrom(this, "λNICK &cis still muted from previously.");
+                Chat.MessageFrom(this, "λNICK %Wis still muted from previously.");
             }
             
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageFrom(this, "λNICK &cis still frozen from previously.");
+                Chat.MessageFrom(this, "λNICK %Wis still frozen from previously.");
             }
         }
         

@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
             }  else if (op == "cubed") {
                 Player.Message(p, "&aResult&f: Cube of {0} = {1}", n1, n1 * n1 * n1);
             } else {
-                Player.Message(p, "&cOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
+                Player.Message(p, "%WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
             }
         }
         

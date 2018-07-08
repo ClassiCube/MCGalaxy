@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             List<Player> candidates = GetPatrolCandidates(p);
             if (candidates.Count == 0) {
-                Player.Message(p, "&cNo players to patrol.");
+                Player.Message(p, "%WNo players to patrol.");
             } else {
                 Player target = candidates[new Random().Next(candidates.Count)];
                 target.LastPatrol = DateTime.UtcNow;

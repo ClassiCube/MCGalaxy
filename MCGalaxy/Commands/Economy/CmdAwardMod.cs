@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Eco {
             if (IsCreateCommand(args[0])) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
-                    Player.Message(p, "&cUse a : to separate the award name from its description."); 
+                    Player.Message(p, "%WUse a : to separate the award name from its description."); 
                     Help(p); return;
                 }
 

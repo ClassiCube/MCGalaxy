@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands.Building {
             float ratio = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
             resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
             
-            Player.Message(p, "&cImage is too large ({0}x{1}), resizing to ({2}x{3})",
+            Player.Message(p, "%WImage is too large ({0}x{1}), resizing to ({2}x{3})",
                            width, height, resizedWidth, resizedHeight);
             width = resizedWidth; height = resizedHeight;
         }

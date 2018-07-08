@@ -57,10 +57,10 @@ namespace MCGalaxy.Commands.Eco {
 
         static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
             if (receiver + amount > 16777215) { 
-                Player.Message(p, "&cPlayers cannot have over &f16777215 &3" + ServerConfig.Currency); return false; 
+                Player.Message(p, "%WPlayers cannot have over &f16777215 &3" + ServerConfig.Currency); return false; 
             }
             if (payer < amount) { 
-                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency); return false; 
+                Player.Message(p, "%WYou don't have enough &3" + ServerConfig.Currency); return false; 
             }
             return true;
         }

@@ -80,7 +80,7 @@ namespace MCGalaxy.Games {
                 End();
             } catch (Exception ex) {
                 Logger.LogError("Error in game " + GameName, ex);
-                Chat.MessageGlobal("&c" + GameName + " disabled due to an error.");
+                Chat.MessageGlobal("%W" + GameName + " disabled due to an error.");
                 
                 try { End(); }
                 catch (Exception ex2) { Logger.LogError(ex2); }
@@ -133,7 +133,7 @@ namespace MCGalaxy.Games {
                 
                 List<Player> players = GetPlayers();
                 if (players.Count >= 2) return players;
-                Map.Message("&cNeed 2 or more non-ref players to start a round.");
+                Map.Message("%WNeed 2 or more non-ref players to start a round.");
             }
         }
         
@@ -148,7 +148,7 @@ namespace MCGalaxy.Games {
             LastMap = Map.MapName;
             
             if (!SetMap(map)) {
-                Map.Message("&cFailed to change map to " + map);
+                Map.Message("%WFailed to change map to " + map);
                 Map.Message("Continuing " + GameName + " on the same map");
             } else {
                 TransferPlayers(LastMap);

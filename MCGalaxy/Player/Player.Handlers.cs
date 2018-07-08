@@ -58,7 +58,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (ServerConfig.verifyadmins && adminpen) {
-                SendMessage("&cYou must first verify with %T/Pass [Password]");
+                SendMessage("%WYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -524,7 +524,7 @@ namespace MCGalaxy {
             }
 
             if (text.CaselessContains("^detail.user=")) {
-                SendMessage("&cYou cannot use WoM detail strings in a chat message.");
+                SendMessage("%WYou cannot use WoM detail strings in a chat message.");
                 return true;
             }
 
@@ -631,7 +631,7 @@ namespace MCGalaxy {
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Logger.LogError(e); SendMessage("Command failed.");
+                Logger.LogError(e); SendMessage("%WCommand failed.");
             }
         }
         
@@ -644,7 +644,7 @@ namespace MCGalaxy {
                 SendMessage("You cannot use any commands while jailed."); return false;
             }
             if (ServerConfig.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
-                SendMessage("&cYou must verify first with %T/Pass [Password]"); return false;
+                SendMessage("%WYou must verify first with %T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
@@ -722,7 +722,7 @@ namespace MCGalaxy {
                 command.Use(this, message);
             } catch (Exception e) {
                 Logger.LogError(e);
-                Player.Message(this, "An error occured when using the command!");
+                Player.Message(this, "%WAn error occured when using the command!");
                 Player.Message(this, e.GetType() + ": " + e.Message);
                 return false;
             }

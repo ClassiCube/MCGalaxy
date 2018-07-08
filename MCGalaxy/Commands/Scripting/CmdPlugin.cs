@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Load(name, false)) {
                     Player.Message(p, "Plugin loaded successfully.");
                 } else {
-                    Player.Message(p, "Error loading plugin. See error logs for more information.");
+                    Player.Message(p, "%WError loading plugin. See error logs for more information.");
                 }
             } else {
                 Player.Message(p, "File &9{0} %Snot found.", path);
@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Unload(plugin, false)) {
                     Player.Message(p, "Plugin unloaded successfully.");
                 } else {
-                    Player.Message(p, "Error unloading plugin. See error logs for more information.");
+                    Player.Message(p, "%WError unloading plugin. See error logs for more information.");
                 }
             } else {
                 Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));

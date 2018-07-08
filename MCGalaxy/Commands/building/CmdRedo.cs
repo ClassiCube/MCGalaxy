@@ -48,13 +48,13 @@ namespace MCGalaxy.Commands.Building {
                 Player.Message(p, "Redo performed.");
                 return;
             }          
-            Player.Message(p, "No %T/Undo %Sor %T/Undo [seconds] %Scalls were " +
+            Player.Message(p, "No %T/Undo %Sor %T/Undo [timespan] %Scalls were " +
                                "found in the last 200 draw operations.");
         }
 
         public override void Help(Player p) {
             Player.Message(p, "%T/Redo");
-            Player.Message(p, "%HRedoes the last %T/Undo %Hor %T/Undo [seconds] %Hyou performed.");
+            Player.Message(p, "%HRedoes last %T/Undo %Hor %T/Undo [timespan] %Hyou performed");
         }
     }
 }

@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
                 Player.Message(p, "You have no draw operations to undo.");
-                Player.Message(p, "Try using %T/Undo [seconds] %Sinstead.");
+                Player.Message(p, "Try using %T/Undo [timespan] %Sinstead.");
                 return;
             }
             
@@ -69,14 +69,14 @@ namespace MCGalaxy.Commands.Building {
             }
             
             Player.Message(p, "Unable to undo any draw operations, as all of the " +
-                               "past 50 draw operations are %T/Undo %Sor %T/Undo [seconds].");
-            Player.Message(p, "Try using %T/Undo [seconds] %Sinstead.");
+                               "past 50 draw operations are %T/Undo %Sor %T/Undo [timespan]");
+            Player.Message(p, "Try using %T/Undo [timespan] %Sinstead");
         }
         
         void UndoPhysics(Player p, TimeSpan delta) {
             if (!CheckExtraPerm(p, 1)) return;
             if (p != null && !p.group.CanExecute("Physics")) {
-                Player.Message(p, "You can only undo physics if you can use %T/Physics."); return;
+                Player.Message(p, "%WYou can only undo physics if you can use %T/Physics"); return;
             }
             
             CmdPhysics.SetPhysics(p.level, 0);
@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.Building {
             Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
             if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
                 Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
-            Player.Message(p, "%T/Undo physics [seconds] %H- Undoes physics on current map");
+            Player.Message(p, "%T/Undo physics [timespan] %H- Undoes physics on current map");
         }
     }
 }

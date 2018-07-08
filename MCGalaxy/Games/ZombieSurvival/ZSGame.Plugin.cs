@@ -232,12 +232,12 @@ namespace MCGalaxy.Games {
                 }
                 
                 string action = data.PillarFined ? "kicked" : "fined 10 " + ServerConfig.Currency;
-                Player.Message(p, "You are pillaring! &cStop before you are " + action + "!");
+                Player.Message(p, "You are pillaring! %WStop before you are " + action + "!");
             } else if (data.BlocksStacked == 4) {
                 if (!data.PillarFined) {
                     Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
                     Command.Find("Take").Use(null, p.name + " 10 Auto fine for pillaring");
-                    Player.Message(p, "  &cThe next time you pillar, you will be &4kicked&c.");
+                    Player.Message(p, "  %WThe next time you pillar, you will be &4kicked!");
                 } else {
                     ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);

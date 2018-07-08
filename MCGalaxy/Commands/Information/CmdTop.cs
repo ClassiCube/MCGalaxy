@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
 
             TopStat stat = FindTopStat(args[1]);
             if (stat == null) {
-                Player.Message(p, "&cUnrecognised type \"{0}\".", args[1]); return;
+                Player.Message(p, "%WUnrecognised type \"{0}\".", args[1]); return;
             }
             
             if (args.Length > 2) {

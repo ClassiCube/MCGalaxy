@@ -36,10 +36,10 @@ namespace MCGalaxy.Eco {
             
             string title = message.SplitSpaces(2)[1]; // keep spaces this way
             if (title == p.title) {
-                Player.Message(p, "&cYou already have that title."); return;
+                Player.Message(p, "%WYou already have that title."); return;
             }
             if (title.Length >= 20) {
-                Player.Message(p, "&cTitles must be under 20 characters."); return;
+                Player.Message(p, "%WTitles must be under 20 characters."); return;
             }
             
             Command.Find("Title").Use(p, "-own " + title);
@@ -64,10 +64,10 @@ namespace MCGalaxy.Eco {
             
             string nick = message.SplitSpaces(2)[1]; // keep spaces this way
             if (nick == p.DisplayName) {
-                Player.Message(p, "&cYou already have that nickname."); return;
+                Player.Message(p, "%WYou already have that nickname."); return;
             }
             if (nick.Length >= 30) {
-                Player.Message(p, "&cNicknames must be under 30 characters."); return;
+                Player.Message(p, "%WNicknames must be under 30 characters."); return;
             }
             
             Command.Find("Nick").Use(p, "-own " + nick);
@@ -89,7 +89,7 @@ namespace MCGalaxy.Eco {
             string colName = Colors.Name(color);
             
             if (color == p.titlecolor) {
-                Player.Message(p, "&cYou already have a " + color + colName + "&c titlecolor"); return;
+                Player.Message(p, "%WYour title color is already " + color + colName); return;
             }
             
             Command.Find("TColor").Use(p, "-own " + colName);
@@ -111,7 +111,7 @@ namespace MCGalaxy.Eco {
             string colName = Colors.Name(color);
             
             if (color == p.color) {
-                Player.Message(p, "&cYou already have a " + color + colName + "&c color"); return;
+                Player.Message(p, "%WYour color is already " + color + colName); return;
             }
             
             Command.Find("Color").Use(p, "-own " + colName);

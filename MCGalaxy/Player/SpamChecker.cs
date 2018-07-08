@@ -45,7 +45,7 @@ namespace MCGalaxy {
                 return false;
 
             TimeSpan oldestDelta = DateTime.UtcNow - blockLog[0];
-            Chat.MessageFromOps(p, "λNICK &cwas kicked for suspected griefing.");
+            Chat.MessageFromOps(p, "λNICK %Wwas kicked for suspected griefing.");
 
             Logger.Log(LogType.SuspiciousActivity, 
                        "{0} was kicked for block spam ({1} blocks in {2} seconds)",

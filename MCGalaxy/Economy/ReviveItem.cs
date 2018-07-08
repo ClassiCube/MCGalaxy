@@ -32,7 +32,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "&cYou don't have enough &3" + ServerConfig.Currency + "&c to buy a " + Name + "."); return;
+                Player.Message(p, "%WYou don't have enough &3" + ServerConfig.Currency + "%W to buy a " + Name + "."); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 Player.Message(p, "You can only buy an revive potion " +
@@ -56,7 +56,7 @@ namespace MCGalaxy.Eco {
                 Player.Message(p, "You cannot buy any more revive potions."); return;
             }
             if (data.TimeInfected.AddSeconds(ZSGame.Config.ReviveTooSlow) < DateTime.UtcNow) {
-                Player.Message(p, "&cYou can only revive within the first {0} seconds after you were infected.",
+                Player.Message(p, "%WYou can only revive within the first {0} seconds after you were infected.",
                                ZSGame.Config.ReviveTooSlow); return;
             }
             
@@ -79,7 +79,7 @@ namespace MCGalaxy.Eco {
             Player.Message(p, "%T/Buy " + Name);
             OutputItemInfo(p);
             
-            Player.Message(p, "Lets you rejoin the humans - &cnot guaranteed to always work");
+            Player.Message(p, "Lets you rejoin the humans - %Wnot guaranteed to always work");
             Player.Message(p, "  Cannot be used in the last &a" + time + " %Sseconds of a round.");
             Player.Message(p, "  Can only be used within &a" + expiry + " %Sseconds after being infected.");
             Player.Message(p, "  Can only buy &a" + potions + " %Srevive potions per round.");

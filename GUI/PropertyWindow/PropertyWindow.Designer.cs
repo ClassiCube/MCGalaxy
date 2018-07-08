@@ -47,7 +47,6 @@ namespace MCGalaxy.Gui
         {
             this.components = new System.ComponentModel.Container();
             this.pageChat = new System.Windows.Forms.TabPage();
-            this.chat_chkFilter = new System.Windows.Forms.CheckBox();
             this.chat_grpTab = new System.Windows.Forms.GroupBox();
             this.chat_cbTabRank = new System.Windows.Forms.CheckBox();
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
@@ -64,9 +63,12 @@ namespace MCGalaxy.Gui
             this.chat_lblDemote = new System.Windows.Forms.Label();
             this.chat_txtDemote = new System.Windows.Forms.TextBox();
             this.chat_grpOther = new System.Windows.Forms.GroupBox();
+            this.chat_chkFilter = new System.Windows.Forms.CheckBox();
             this.chat_lblConsole = new System.Windows.Forms.Label();
             this.chat_txtConsole = new System.Windows.Forms.TextBox();
             this.chat_grpColors = new System.Windows.Forms.GroupBox();
+            this.chat_lblWarn = new System.Windows.Forms.Label();
+            this.chat_btnWarn = new System.Windows.Forms.Button();
             this.chat_lblDefault = new System.Windows.Forms.Label();
             this.chat_btnDefault = new System.Windows.Forms.Button();
             this.chat_lblIRC = new System.Windows.Forms.Label();
@@ -547,7 +549,6 @@ namespace MCGalaxy.Gui
             // pageChat
             // 
             this.pageChat.BackColor = System.Drawing.SystemColors.Control;
-            this.pageChat.Controls.Add(this.chat_chkFilter);
             this.pageChat.Controls.Add(this.chat_grpTab);
             this.pageChat.Controls.Add(this.chat_grpMessages);
             this.pageChat.Controls.Add(this.chat_grpOther);
@@ -559,22 +560,12 @@ namespace MCGalaxy.Gui
             this.pageChat.TabIndex = 10;
             this.pageChat.Text = "Chat";
             // 
-            // chat_chkFilter
-            // 
-            this.chat_chkFilter.AutoSize = true;
-            this.chat_chkFilter.Location = new System.Drawing.Point(80, 380);
-            this.chat_chkFilter.Name = "chat_chkFilter";
-            this.chat_chkFilter.Size = new System.Drawing.Size(96, 17);
-            this.chat_chkFilter.TabIndex = 31;
-            this.chat_chkFilter.Text = "Profanity Filter";
-            this.chat_chkFilter.UseVisualStyleBackColor = true;
-            // 
             // chat_grpTab
             // 
             this.chat_grpTab.Controls.Add(this.chat_cbTabRank);
             this.chat_grpTab.Controls.Add(this.chat_cbTabLevel);
             this.chat_grpTab.Controls.Add(this.chat_cbTabBots);
-            this.chat_grpTab.Location = new System.Drawing.Point(235, 59);
+            this.chat_grpTab.Location = new System.Drawing.Point(235, 88);
             this.chat_grpTab.Name = "chat_grpTab";
             this.chat_grpTab.Size = new System.Drawing.Size(256, 92);
             this.chat_grpTab.TabIndex = 3;
@@ -623,7 +614,7 @@ namespace MCGalaxy.Gui
             this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
             this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
             this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
-            this.chat_grpMessages.Location = new System.Drawing.Point(8, 157);
+            this.chat_grpMessages.Location = new System.Drawing.Point(8, 186);
             this.chat_grpMessages.Name = "chat_grpMessages";
             this.chat_grpMessages.Size = new System.Drawing.Size(483, 180);
             this.chat_grpMessages.TabIndex = 2;
@@ -718,14 +709,25 @@ namespace MCGalaxy.Gui
             // 
             // chat_grpOther
             // 
+            this.chat_grpOther.Controls.Add(this.chat_chkFilter);
             this.chat_grpOther.Controls.Add(this.chat_lblConsole);
             this.chat_grpOther.Controls.Add(this.chat_txtConsole);
             this.chat_grpOther.Location = new System.Drawing.Point(235, 6);
             this.chat_grpOther.Name = "chat_grpOther";
-            this.chat_grpOther.Size = new System.Drawing.Size(256, 47);
+            this.chat_grpOther.Size = new System.Drawing.Size(256, 76);
             this.chat_grpOther.TabIndex = 1;
             this.chat_grpOther.TabStop = false;
             this.chat_grpOther.Text = "Other";
+            // 
+            // chat_chkFilter
+            // 
+            this.chat_chkFilter.AutoSize = true;
+            this.chat_chkFilter.Location = new System.Drawing.Point(6, 49);
+            this.chat_chkFilter.Name = "chat_chkFilter";
+            this.chat_chkFilter.Size = new System.Drawing.Size(96, 17);
+            this.chat_chkFilter.TabIndex = 31;
+            this.chat_chkFilter.Text = "Profanity Filter";
+            this.chat_chkFilter.UseVisualStyleBackColor = true;
             // 
             // chat_lblConsole
             // 
@@ -738,13 +740,15 @@ namespace MCGalaxy.Gui
             // 
             // chat_txtConsole
             // 
-            this.chat_txtConsole.Location = new System.Drawing.Point(105, 17);
+            this.chat_txtConsole.Location = new System.Drawing.Point(89, 17);
             this.chat_txtConsole.Name = "chat_txtConsole";
-            this.chat_txtConsole.Size = new System.Drawing.Size(145, 21);
+            this.chat_txtConsole.Size = new System.Drawing.Size(161, 21);
             this.chat_txtConsole.TabIndex = 3;
             // 
             // chat_grpColors
             // 
+            this.chat_grpColors.Controls.Add(this.chat_lblWarn);
+            this.chat_grpColors.Controls.Add(this.chat_btnWarn);
             this.chat_grpColors.Controls.Add(this.chat_lblDefault);
             this.chat_grpColors.Controls.Add(this.chat_btnDefault);
             this.chat_grpColors.Controls.Add(this.chat_lblIRC);
@@ -755,10 +759,28 @@ namespace MCGalaxy.Gui
             this.chat_grpColors.Controls.Add(this.chat_btnDesc);
             this.chat_grpColors.Location = new System.Drawing.Point(8, 6);
             this.chat_grpColors.Name = "chat_grpColors";
-            this.chat_grpColors.Size = new System.Drawing.Size(221, 145);
+            this.chat_grpColors.Size = new System.Drawing.Size(221, 174);
             this.chat_grpColors.TabIndex = 0;
             this.chat_grpColors.TabStop = false;
             this.chat_grpColors.Text = "Colors";
+            // 
+            // chat_lblWarn
+            // 
+            this.chat_lblWarn.AutoSize = true;
+            this.chat_lblWarn.Location = new System.Drawing.Point(20, 141);
+            this.chat_lblWarn.Name = "chat_lblWarn";
+            this.chat_lblWarn.Size = new System.Drawing.Size(88, 13);
+            this.chat_lblWarn.TabIndex = 35;
+            this.chat_lblWarn.Text = "Warnings/errors:";
+            // 
+            // chat_btnWarn
+            // 
+            this.chat_btnWarn.Location = new System.Drawing.Point(113, 136);
+            this.chat_btnWarn.Name = "chat_btnWarn";
+            this.chat_btnWarn.Size = new System.Drawing.Size(95, 23);
+            this.chat_btnWarn.TabIndex = 34;
+            this.toolTip.SetToolTip(this.chat_btnWarn, "The color of warning/error messages produced by commands");
+            this.chat_btnWarn.Click += new System.EventHandler(this.chat_btnWarn_Click);
             // 
             // chat_lblDefault
             // 
@@ -4893,7 +4915,6 @@ namespace MCGalaxy.Gui
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.pageChat.ResumeLayout(false);
-            this.pageChat.PerformLayout();
             this.chat_grpTab.ResumeLayout(false);
             this.chat_grpTab.PerformLayout();
             this.chat_grpMessages.ResumeLayout(false);
@@ -5047,6 +5068,8 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Button chat_btnWarn;
+        private System.Windows.Forms.Label chat_lblWarn;
         private System.Windows.Forms.Label tw_lblMode;
         private System.Windows.Forms.ComboBox tw_cmbDiff;
         private System.Windows.Forms.ComboBox tw_cmbMode;

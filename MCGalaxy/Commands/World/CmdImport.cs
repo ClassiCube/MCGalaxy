@@ -41,12 +41,12 @@ namespace MCGalaxy.Commands.World {
             }
 
             string formats = IMapImporter.Formats.Join(imp => imp.Extension);
-            Player.Message(p, "&cNo {0} file with that name was found in /extra/import folder.", formats);
+            Player.Message(p, "%WNo {0} file with that name was found in /extra/import folder.", formats);
         }
         
         void Import(Player p, string path, string name, IMapImporter importer) {
             if (LevelInfo.MapExists(name)) {
-                Player.Message(p, "&cMap {0} already exists. Try renaming the file to something else before importing.", name);
+                Player.Message(p, "%WMap {0} already exists. Try renaming the file to something else before importing.", name);
                 return;
             }
             try {

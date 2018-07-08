@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Eco {
         
         static bool ReachedMax(Player p, int current, int amount) {
             if (current + amount > 16777215) {
-                Player.Message(p, "&cPlayers cannot have over &316,777,215 &3" + ServerConfig.Currency); return true;
+                Player.Message(p, "%WPlayers cannot have over &316,777,215 &3" + ServerConfig.Currency); return true;
             }
             return false;
         }

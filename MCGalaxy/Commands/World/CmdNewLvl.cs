@@ -89,12 +89,12 @@ namespace MCGalaxy.Commands.World {
         
         internal static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
             if (!CommandParser.GetUShort(p, input, type, ref len)) return false;
-            if (len == 0) { Player.Message(p, "&c{0} cannot be 0.", type); return false; }
-            if (len > 16384) { Player.Message(p, "&c{0} must be 16384 or less.", type); return false; }
+            if (len == 0) { Player.Message(p, "%W{0} cannot be 0.", type); return false; }
+            if (len > 16384) { Player.Message(p, "%W{0} must be 16384 or less.", type); return false; }
             
             if ((len % 16) != 0) {
-                Player.Message(p, "&cMap {0} of {1} blocks is not divisible by 16!", type, len);
-                Player.Message(p, "&cAs such, you may see rendering artifacts on some clients.");
+                Player.Message(p, "%WMap {0} of {1} blocks is not divisible by 16!", type, len);
+                Player.Message(p, "%WAs such, you may see rendering artifacts on some clients.");
             }
             return true;
         }

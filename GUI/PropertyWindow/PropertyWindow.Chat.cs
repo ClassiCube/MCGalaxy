@@ -26,6 +26,7 @@ namespace MCGalaxy.Gui {
             chat_ParseColor(ServerConfig.IRCColor, chat_btnIRC);
             chat_ParseColor(ServerConfig.HelpSyntaxColor, chat_btnSyntax);
             chat_ParseColor(ServerConfig.HelpDescriptionColor, chat_btnDesc);
+            chat_ParseColor(ServerConfig.WarningErrorColor, chat_btnWarn);
             
             chat_txtConsole.Text = ServerConfig.ConsoleName;
             chat_chkFilter.Checked = ServerConfig.ProfanityFiltering;
@@ -47,6 +48,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.IRCColor = Colors.Parse(chat_btnIRC.Text);
             ServerConfig.HelpSyntaxColor = Colors.Parse(chat_btnSyntax.Text);
             ServerConfig.HelpDescriptionColor = Colors.Parse(chat_btnDesc.Text);
+            ServerConfig.WarningErrorColor = Colors.Parse(chat_btnWarn.Text);
             
             ServerConfig.ConsoleName = chat_txtConsole.Text;
             ServerConfig.ProfanityFiltering = chat_chkFilter.Checked;
@@ -81,6 +83,10 @@ namespace MCGalaxy.Gui {
 
         void chat_btnDesc_Click(object sender, EventArgs e) {
             chat_ShowColorDialog(chat_btnDesc, "Help description color");
+        }
+		
+		void chat_btnWarn_Click(object sender, EventArgs e) {
+            chat_ShowColorDialog(chat_btnWarn, "Warning / error color");
         }
         
         

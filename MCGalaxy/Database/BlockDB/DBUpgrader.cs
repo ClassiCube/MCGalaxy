@@ -84,7 +84,7 @@ namespace MCGalaxy.DB {
                 try {
                     dumper.DumpTable(table);
                 } catch (Exception ex) {
-                    Logger.LogError(ex);
+                    Logger.LogError("Error dumping BlockDB table " + table, ex);
                 }
             }
         }

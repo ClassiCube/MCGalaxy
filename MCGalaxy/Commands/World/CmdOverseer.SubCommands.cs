@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands.World {
                 if (opt == null) {
                     Player.MessageLines(p, mapHelp);
                 } else if (DisallowedMapOption(opt.Name)) {
-                    Player.Message(p, "&cYou cannot change that map option via /os map."); return;
+                    Player.Message(p, "%WYou cannot change that map option via /os map."); return;
                 } else {
                     opt.SetFunc(p, p.level, value);
                     Level.SaveSettings(p.level);

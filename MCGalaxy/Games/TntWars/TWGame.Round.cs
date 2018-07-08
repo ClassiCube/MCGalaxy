@@ -39,7 +39,7 @@ namespace MCGalaxy.Games {
         protected override void DoRound() {
             backupNum = Map.Backup(true);
             if (backupNum <= 0) {
-                Map.Message("&cBacking up Level for TNT Wars failed, stopping game");
+                Map.Message("%WBacking up Level for TNT Wars failed, stopping game");
                 EndGame();
                 return;
             }

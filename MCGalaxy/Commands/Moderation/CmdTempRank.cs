@@ -53,11 +53,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CommandParser.GetTimespan(p, args[2], ref duration, "temp rank for", "h")) return;
 
             if (Server.tempRanks.Contains(target)) {
-                Player.Message(p, "&cThe player already has a temporary rank assigned!"); return;
+                Player.Message(p, "%WThe player already has a temporary rank assigned!"); return;
             }
             
             if (p != null && p.name.CaselessEq(target)) {
-                Player.Message(p, "&cYou cannot assign yourself a temporary rank."); return;
+                Player.Message(p, "%WYou cannot assign yourself a temporary rank."); return;
             }
             
             Group curRank = PlayerInfo.GetGroup(target);
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void Delete(Player p, string target) {
             string line = Server.tempRanks.FindData(target);
             if (line == null) {
-                Player.Message(p, "{0}&c has not been assigned a temp rank.",
+                Player.Message(p, "{0} %Whas not been assigned a temp rank.",
                                PlayerInfo.GetColoredName(p, target));
                 return;
             }
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void Info(Player p, string target) {
             string data = Server.tempRanks.FindData(target);
             if (data == null) {
-                Player.Message(p, "{0}&c has not been assigned a temp rank.",
+                Player.Message(p, "{0} %Whas not been assigned a temp rank.",
                                PlayerInfo.GetColoredName(p, target));
             } else {
                 PrintTempRankInfo(p, target, data);
@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void List(Player p) {
             List<string> lines = Server.tempRanks.AllLines();
             if (lines.Count == 0) {
-                Player.Message(p, "&cThere are no players with a temporary rank assigned.");
+                Player.Message(p, "%WThere are no players with a temporary rank assigned.");
             } else {
                 Player.Message(p, "&ePlayers with a temporary rank assigned:");
                 foreach (string line in lines) {

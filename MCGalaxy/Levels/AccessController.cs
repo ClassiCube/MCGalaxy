@@ -277,7 +277,7 @@ namespace MCGalaxy {
                 if (!IsVisit) {
                     p.AllowBuild = allowed;
                 } else if (!allowed) {                    
-                    Player.Message(p, "&cNo longer allowed to visit %S{0}", ColoredName);
+                    Player.Message(p, "%WNo longer allowed to visit %S{0}", ColoredName);
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }
