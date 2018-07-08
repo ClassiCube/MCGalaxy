@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Moderation {
             int pos = 1;
             foreach (string name in Server.reviewlist) {
                 Group grp = PlayerInfo.GetGroup(name);
-                Player.Message(p, "&a" + pos + ". &f" + name + "&a - Current Rank: " + grp.ColoredName);
+                Player.Message(p, "&a" + pos + ". &f" + name + " &a- Current Rank: " + grp.ColoredName);
                 pos++;
             }
         }

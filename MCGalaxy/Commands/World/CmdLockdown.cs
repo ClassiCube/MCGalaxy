@@ -29,19 +29,23 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("WLock"), new CommandAlias("WUnlock") }; }
         }
         
-        public override void Use(Player p, string message) {
-            if (message.Length == 0) { Help(p); return; }
-            if (!Formatter.ValidName(p, message, "level")) return;
+        public override void Use(Player p, string map) {
+            if (map.Length == 0) { Help(p); return; }
+            if (!Formatter.ValidName(p, map, "level")) return;
             
-            bool unlocking = Server.lockdown.Contains(message);
-            Chat.MessageGlobal("The map {0} has been {1}locked", message, unlocking ? "un" : "");
+            map = Matcher.FindMaps(p, map);
+            if (map == null) return;
+            
+            bool unlocking = Server.lockdown.Contains(map);
+            string action = unlocking ? "unlocked" : "locked";
+            Chat.MessageGlobal("Map " + map + " was " + action);
             
             if (unlocking) {
-                Server.lockdown.Remove(message);
-                Chat.MessageFromOps(p, "Map unlocked by: λNICK");
+                Server.lockdown.Remove(map);
+                Chat.MessageFromOps(p, "Map " + map + " unlocked by: λNICK");
             } else {
-                Server.lockdown.AddIfNotExists(message);
-                Chat.MessageFromOps(p, "Map locked by: λNICK");
+                Server.lockdown.AddIfNotExists(map);
+                Chat.MessageFromOps(p, "Map " + map + " locked by: λNICK");
             }
             Server.lockdown.Save();
         }

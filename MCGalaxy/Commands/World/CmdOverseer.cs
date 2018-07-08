@@ -144,8 +144,8 @@ namespace MCGalaxy.Commands.World {
         };
         
         static string[] gotoHelp = new string[] {
-            "%T/os goto %H- Teleports you to your first map.",
-            "%T/os goto [num] %H- Teleports you to your nth map.",
+            "%T/os go %H- Teleports you to your first map.",
+            "%T/os go [num] %H- Teleports you to your nth map.",
         };
 
         static string[] kickHelp = new string[] {
