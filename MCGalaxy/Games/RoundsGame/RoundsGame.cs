@@ -32,6 +32,7 @@ namespace MCGalaxy.Games {
         
         public abstract void OutputStatus(Player p);
         public abstract RoundsGameConfig GetConfig();
+        public abstract void UpdateMapConfig();
         
         protected abstract void DoRound();
         protected abstract List<Player> GetPlayers();
@@ -106,6 +107,7 @@ namespace MCGalaxy.Games {
             Map.SaveChanges = false;
             
             if (GetConfig().SetMainLevel) Server.SetMainLevel(Map);
+            UpdateMapConfig();
             return true;
         }
         

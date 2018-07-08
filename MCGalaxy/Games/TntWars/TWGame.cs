@@ -104,7 +104,7 @@ namespace MCGalaxy.Games {
             object data; p.Extras.TryGet(twExtrasKey, out data); return (TWData)data;
         }
         
-        public void UpdateMapConfig() {
+        public override void UpdateMapConfig() {
             TWMapConfig cfg = new TWMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);
@@ -143,6 +143,10 @@ namespace MCGalaxy.Games {
         protected override void EndGame() {
             RestoreBuildPerms();
             ResetTeams();
+            
+            // Reset block handlers
+            Map.UpdateBlockHandlers();
+            Map.UpdateBlockProps();
         }
         
         void ResetTeams() {

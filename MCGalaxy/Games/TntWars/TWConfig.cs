@@ -40,9 +40,9 @@ namespace MCGalaxy.Games {
     public sealed class TWMapConfig {
         
         [ConfigBool("grace-period", null, true)]
-        public bool InitialGracePeriod = true;
+        public bool GracePeriod = true;
         [ConfigInt("grace-time", null, 30)]
-        public int GracePeriodSeconds = 30;
+        public int GracePeriodTime = 30;
         
         [ConfigInt("max-active-tnt", null, 1)]
         public int MaxActiveTnt = 1;

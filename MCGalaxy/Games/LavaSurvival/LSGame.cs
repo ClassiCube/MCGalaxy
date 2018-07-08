@@ -47,7 +47,7 @@ namespace MCGalaxy.Games {
             return (LSData)data;
         }
         
-        public void UpdateMapConfig() {
+        public override void UpdateMapConfig() {
             LSMapConfig cfg = new LSMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);

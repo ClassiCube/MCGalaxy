@@ -38,12 +38,6 @@ namespace MCGalaxy.Games {
                 Thread.Sleep(300);
             }
         }
-                
-        protected override bool SetMap(string map) {
-            bool success = base.SetMap(map);
-            if (success) UpdateMapConfig();
-            return success;
-        }
         
         void Tick() {
             Player[] online = PlayerInfo.Online.Items;

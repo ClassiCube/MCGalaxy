@@ -79,7 +79,7 @@ namespace MCGalaxy.Games {
             object data; p.Extras.TryGet(ctfExtrasKey, out data); return (CtfData)data;
         }
         
-        public void UpdateMapConfig() {
+        public override void UpdateMapConfig() {
             CTFMapConfig cfg = new CTFMapConfig();
             cfg.SetDefaults(Map);
             cfg.Load(Map.name);

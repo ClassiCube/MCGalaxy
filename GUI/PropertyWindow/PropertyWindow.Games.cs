@@ -24,47 +24,15 @@ namespace MCGalaxy.Gui {
         
         void LoadGameProps() {
             string[] allMaps = LevelInfo.AllMapNames();
-            
-            ctfHelper = new GamesHelper(
-                CTFGame.Instance, ctf_cbStart, ctf_cbMap, ctf_cbMain,
-                ctf_btnStart, ctf_btnStop, ctf_btnEnd,
-                ctf_btnAdd, ctf_btnRemove, ctf_lstUsed, ctf_lstNotUsed);
-            ctfHelper.Load(allMaps);
-            
-            lsHelper = new GamesHelper(
-                LSGame.Instance, ls_cbStart, ls_cbMap, ls_cbMain,
-                ls_btnStart, ls_btnStop, ls_btnEnd,
-                ls_btnAdd, ls_btnRemove, ls_lstUsed, ls_lstNotUsed);
-            ls_numMax.Value = LSGame.Config.MaxLives;
-            lsHelper.Load(allMaps);
-            
-            twHelper = new GamesHelper(
-                TWGame.Instance, tw_cbStart, tw_cbMap, tw_cbMain,
-                tw_btnStart, tw_btnStop, tw_btnEnd,
-                tw_btnAdd, tw_btnRemove, tw_lstUsed, tw_lstNotUsed);
-            twHelper.Load(allMaps);
+            LoadCTFSettings(allMaps);
+            LoadLSSettings(allMaps);
+            LoadTWSettings(allMaps);
         }
 
         void SaveGameProps() {
-        	try {
-                ctfHelper.Save();
-            } catch (Exception ex) {
-                Logger.LogError("Error saving CTF settings", ex);
-            }
-        	
-        	try {
-                LSGame.Config.MaxLives = (int)ls_numMax.Value;
-                lsHelper.Save();
-                SaveLSMapSettings();
-            } catch (Exception ex) {
-                Logger.LogError("Error saving Lava Survival settings", ex);
-            }
-        	
-        	try {
-                twHelper.Save();
-            } catch (Exception ex) {
-                Logger.LogError("Error saving TNT wars settings", ex);
-            }
+            SaveCTFSettings();
+            SaveLSSettings();
+            SaveTWSettings();
         }
         
         GamesHelper GetGameHelper(IGame game) {
@@ -87,7 +55,47 @@ namespace MCGalaxy.Gui {
             RunOnUI_Async(() => helper.UpdateButtons());
         }
         
+        
+        void LoadCTFSettings(string[] allMaps) {
+            ctfHelper = new GamesHelper(
+                CTFGame.Instance, ctf_cbStart, ctf_cbMap, ctf_cbMain,
+                ctf_btnStart, ctf_btnStop, ctf_btnEnd,
+                ctf_btnAdd, ctf_btnRemove, ctf_lstUsed, ctf_lstNotUsed);
+            ctfHelper.Load(allMaps);
+        }
+        
+        void SaveCTFSettings() {
+            try {
+                ctfHelper.Save();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving CTF settings", ex);
+            }
+        }
+        
 
+        void LoadLSSettings(string[] allMaps) {
+             lsHelper = new GamesHelper(
+                LSGame.Instance, ls_cbStart, ls_cbMap, ls_cbMain,
+                ls_btnStart, ls_btnStop, ls_btnEnd,
+                ls_btnAdd, ls_btnRemove, ls_lstUsed, ls_lstNotUsed);            
+            lsHelper.Load(allMaps);
+            
+            LSConfig cfg = LSGame.Config;
+            ls_numMax.Value = cfg.MaxLives;
+        }
+        
+        void SaveLSSettings() {
+            try {
+                LSConfig cfg = LSGame.Config;
+                cfg.MaxLives = (int)ls_numMax.Value;
+                
+                lsHelper.Save();
+                SaveLSMapSettings();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving Lava Survival settings", ex);
+            }
+        }
+        
         string lsCurMap;
         LSMapConfig lsCurCfg;
         void lsMapUse_SelectedIndexChanged(object sender, EventArgs e) {
@@ -131,11 +139,41 @@ namespace MCGalaxy.Gui {
             
             lsCurCfg.LayerChance = (int)ls_numLayer.Value;
             lsCurCfg.LayerCount  = (int)ls_numCount.Value;
-            lsCurCfg.LayerHeight = (int)ls_numHeight.Value;
-            
+            lsCurCfg.LayerHeight = (int)ls_numHeight.Value;         
             lsCurCfg.Save(lsCurMap);
+            
+            LSGame game = LSGame.Instance;
+            if (game.Running && game.Map.name == lsCurMap) {
+                game.UpdateMapConfig();
+            }
         }
         
+        
+        void LoadTWSettings(string[] allMaps) {
+             twHelper = new GamesHelper(
+                TWGame.Instance, tw_cbStart, tw_cbMap, tw_cbMain,
+                tw_btnStart, tw_btnStop, tw_btnEnd,
+                tw_btnAdd, tw_btnRemove, tw_lstUsed, tw_lstNotUsed);
+            twHelper.Load(allMaps);
+            
+            TWConfig cfg = TWGame.Config;
+            tw_cmbDiff.SelectedIndex = (int)cfg.Difficulty;
+            tw_cmbMode.SelectedIndex = (int)cfg.Mode;
+        }
+        
+        void SaveTWSettings() {
+            try {
+                TWConfig cfg = TWGame.Config;
+                if (tw_cmbDiff.SelectedIndex >= 0) 
+                    cfg.Difficulty = (TWDifficulty)tw_cmbDiff.SelectedIndex;
+                if (tw_cmbMode.SelectedIndex >= 0)
+                    cfg.Mode = (TWGameMode)tw_cmbMode.SelectedIndex;
+                twHelper.Save();
+                SaveTWMapSettings();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving TNT wars settings", ex);
+            }
+        }
         
         string twCurMap;
         TWMapConfig twCurCfg;
@@ -160,24 +198,49 @@ namespace MCGalaxy.Gui {
                 twCurCfg = null;
             }
             
-            if (twCurCfg == null) return;           
+            if (twCurCfg == null) return;
+            tw_numScoreLimit.Value = twCurCfg.ScoreRequired;
+            tw_numScorePerKill.Value = twCurCfg.ScorePerKill;
+            tw_numScoreAssists.Value = twCurCfg.AssistScore;
+            tw_numMultiKills.Value = twCurCfg.MultiKillBonus;
+            tw_cbStreaks.Checked = twCurCfg.Streaks;
+            
+            tw_cbGrace.Checked = twCurCfg.GracePeriod;
+            tw_numGrace.Value = twCurCfg.GracePeriodTime;
+            tw_cbBalance.Checked = twCurCfg.BalanceTeams;
+            tw_cbKills.Checked = twCurCfg.TeamKills;
         }
         
         void SaveTWMapSettings() {
             if (twCurCfg == null) return;
+            twCurCfg.ScoreRequired = (int)tw_numScoreLimit.Value;
+            twCurCfg.ScorePerKill = (int)tw_numScorePerKill.Value;
+            twCurCfg.AssistScore = (int)tw_numScoreAssists.Value;
+            twCurCfg.MultiKillBonus = (int)tw_numMultiKills.Value;
+            twCurCfg.Streaks = tw_cbStreaks.Checked;
+            
+            twCurCfg.GracePeriod = tw_cbGrace.Checked;
+            twCurCfg.GracePeriodTime = (int)tw_numGrace.Value;
+            twCurCfg.BalanceTeams = tw_cbBalance.Checked;
+            twCurCfg.TeamKills = tw_cbKills.Checked;
             twCurCfg.Save(twCurMap);
+            
+            TWGame game = TWGame.Instance;
+            if (game.Running && game.Map.name == twCurMap) {
+                game.UpdateMapConfig();
+            }
         }       
 
-        void Tw_btnAboutClick(object sender, EventArgs e) {
-        	string msg = "Difficulty:";
+        void tw_btnAbout_Click(object sender, EventArgs e) {
+            string msg = "Difficulty:";
             msg += Environment.NewLine;
             msg += "Easy (2 Hits to die, TNT has long delay)";
             msg += Environment.NewLine;
             msg += "Normal (2 Hits to die, TNT has normal delay)";
             msg += Environment.NewLine;
-            msg += "Hard (1 Hit to die, TNT has short delay and team kills are on)";
+            msg += "Hard (1 Hit to die, TNT has short delay and team kills on)";
             msg += Environment.NewLine;
-            msg += "Extreme (1 Hit to die, TNT has short delay, big explosion and team kills are on)";
+            msg += "Extreme (1 Hit to die, TNT has short delay, big explosion and team kills on)";
             
             Popup.Message(msg, "Difficulty");
         }

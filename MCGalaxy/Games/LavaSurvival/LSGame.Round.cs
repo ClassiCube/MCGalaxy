@@ -93,13 +93,10 @@ namespace MCGalaxy.Games {
         }
 
         protected override bool SetMap(string map) {
-            bool success = base.SetMap(map);
-            if (!success) return false;
-            UpdateMapConfig();
+            if (!base.SetMap(map)) return false;
             
             Map.SetPhysics(destroyMode ? 2 : 1);
             Map.Config.PhysicsOverload = 1000000;
-            Map.Config.LoadOnGoto = false;
             return true;
         }
 

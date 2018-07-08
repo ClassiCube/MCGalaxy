@@ -45,7 +45,7 @@ namespace MCGalaxy.Games {
             }
             
             Logger.Log(LogType.SystemActivity, "Backed up {0} ({1}) for TNT Wars", Map.name, backupNum);
-            Map.SetPhysics(3);
+            
             
             Player[] all = allPlayers.Items;
             foreach (Player p in all) {
@@ -120,8 +120,8 @@ namespace MCGalaxy.Games {
         }
         
         void GracePeriod() {
-            if (!cfg.InitialGracePeriod) return;
-            int duration = cfg.GracePeriodSeconds;
+            if (!cfg.GracePeriod) return;
+            int duration = cfg.GracePeriodTime;
             
             Map.Message("Grace period of &a" + duration + " %Sseconds");
             Map.Message("Building is disabled during this time!");
@@ -139,15 +139,13 @@ namespace MCGalaxy.Games {
         }
         
         protected override bool SetMap(string map) {
-            bool success = base.SetMap(map);
-            if (!success) return false;
+            if (!base.SetMap(map)) return false;
             
-            UpdateMapConfig();
             buildable = Map.Config.Buildable;
             deletable = Map.Config.Deletable;
+            Map.SetPhysics(3);
             
-            // TODO: reset on game end
-            // TODO: handle when these are externally changed
+            // TODO: handle when these are externally changed (event)
             Map.placeHandlers[Block.TNT] = HandleTNTPlace;
             Map.physicsHandlers[Block.TNT] = HandleTNTPhysics;
             Map.Props[Block.TNT_Explosion].KillerBlock = false;

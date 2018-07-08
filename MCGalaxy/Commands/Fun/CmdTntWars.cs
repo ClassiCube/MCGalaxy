@@ -96,11 +96,11 @@ namespace MCGalaxy.Commands.Fun {
                 Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
                                amount == 0 ? "unlimited" : value);
             } else if (prop.CaselessEq("graceperiod")) {
-                SetBool(p, ref cfg.InitialGracePeriod, value, "Grace period");
+                SetBool(p, ref cfg.GracePeriod, value, "Grace period");
             } else if (prop.CaselessEq("gracetime")) {
                 int time = 1;
                 if (!CommandParser.GetInt(p, value, "Grace time", ref time, 10, 300)) return;
-                cfg.GracePeriodSeconds = time;
+                cfg.GracePeriodTime = time;
                 
                 Player.Message(p, "TNT Wars: Grace period is now {0} seconds", value);
             } else if (prop.CaselessEq("gamemode")) {
@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "TNT per player at a time: &a{0}",
                            cfg.MaxActiveTnt == 0 ? "unlimited" : cfg.MaxActiveTnt.ToString());
             Player.Message(p, "Grace period: {0} %S(for {1} seconds)",
-                           GetBool(cfg.InitialGracePeriod), cfg.GracePeriodSeconds);
+                           GetBool(cfg.GracePeriod), cfg.GracePeriodTime);
             Player.Message(p, "Team balancing: {0}%S, Team killing: {1}",
                            GetBool(cfg.BalanceTeams), GetBool(cfg.TeamKills));
             Player.Message(p, "Score: &a{0} %Spoints needed to win, &a{1} %Spoints per kill",

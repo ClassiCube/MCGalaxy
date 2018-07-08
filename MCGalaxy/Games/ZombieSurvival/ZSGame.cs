@@ -100,6 +100,9 @@ namespace MCGalaxy.Games {
             object data; p.Extras.TryGet(zsExtrasKey, out data); return (ZSData)data;
         }
         
+        // TODO: Move ZS map config to per-game properties
+        public override void UpdateMapConfig() { }
+        
         protected override List<Player> GetPlayers() {
             Player[] players = PlayerInfo.Online.Items;
             List<Player> playing = new List<Player>();

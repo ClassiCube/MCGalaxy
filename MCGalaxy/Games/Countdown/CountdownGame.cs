@@ -54,6 +54,8 @@ namespace MCGalaxy.Games {
         public static CountdownGame Instance = new CountdownGame();
         public CountdownGame() { Picker = new CountdownLevelPicker(); }
         
+        public override void UpdateMapConfig() { }
+        
         protected override List<Player> GetPlayers() {
             List<Player> playing = new List<Player>();
             playing.AddRange(Players.Items);

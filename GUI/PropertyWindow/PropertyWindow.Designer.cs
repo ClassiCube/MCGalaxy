@@ -341,14 +341,12 @@ namespace MCGalaxy.Gui
             this.tw_cbKills = new System.Windows.Forms.CheckBox();
             this.tw_cbBalance = new System.Windows.Forms.CheckBox();
             this.tw_grpGrace = new System.Windows.Forms.GroupBox();
-            this.tw_lblTime = new System.Windows.Forms.Label();
-            this.tw_numTime = new System.Windows.Forms.NumericUpDown();
+            this.tw_lblGrace = new System.Windows.Forms.Label();
+            this.tw_numGrace = new System.Windows.Forms.NumericUpDown();
             this.tw_cbGrace = new System.Windows.Forms.CheckBox();
             this.tw_grpScores = new System.Windows.Forms.GroupBox();
             this.tw_cbStreaks = new System.Windows.Forms.CheckBox();
-            this.tw_cbMultiKills = new System.Windows.Forms.CheckBox();
             this.tw_numMultiKills = new System.Windows.Forms.NumericUpDown();
-            this.tw_cbScoreAssists = new System.Windows.Forms.CheckBox();
             this.tw_numScoreAssists = new System.Windows.Forms.NumericUpDown();
             this.tw_lblScorePerKill = new System.Windows.Forms.Label();
             this.tw_numScorePerKill = new System.Windows.Forms.NumericUpDown();
@@ -438,6 +436,8 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnSecs = new System.Windows.Forms.Label();
+            this.tw_lblAssist = new System.Windows.Forms.Label();
+            this.tw_lblMulti = new System.Windows.Forms.Label();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -516,7 +516,7 @@ namespace MCGalaxy.Gui
             this.tw_grpMapSettings.SuspendLayout();
             this.tw_grpTeams.SuspendLayout();
             this.tw_grpGrace.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tw_numTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tw_numGrace)).BeginInit();
             this.tw_grpScores.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tw_numMultiKills)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tw_numScoreAssists)).BeginInit();
@@ -3705,9 +3705,9 @@ namespace MCGalaxy.Gui
             // 
             this.tw_grpTeams.Controls.Add(this.tw_cbKills);
             this.tw_grpTeams.Controls.Add(this.tw_cbBalance);
-            this.tw_grpTeams.Location = new System.Drawing.Point(172, 159);
+            this.tw_grpTeams.Location = new System.Drawing.Point(172, 125);
             this.tw_grpTeams.Name = "tw_grpTeams";
-            this.tw_grpTeams.Size = new System.Drawing.Size(105, 73);
+            this.tw_grpTeams.Size = new System.Drawing.Size(118, 73);
             this.tw_grpTeams.TabIndex = 8;
             this.tw_grpTeams.TabStop = false;
             this.tw_grpTeams.Text = "Teams:";
@@ -3717,9 +3717,9 @@ namespace MCGalaxy.Gui
             this.tw_cbKills.AutoSize = true;
             this.tw_cbKills.Location = new System.Drawing.Point(6, 43);
             this.tw_cbKills.Name = "tw_cbKills";
-            this.tw_cbKills.Size = new System.Drawing.Size(73, 17);
+            this.tw_cbKills.Size = new System.Drawing.Size(81, 17);
             this.tw_cbKills.TabIndex = 2;
-            this.tw_cbKills.Text = "Team Kills";
+            this.tw_cbKills.Text = "Team killing";
             this.tw_cbKills.UseVisualStyleBackColor = true;
             // 
             // tw_cbBalance
@@ -3731,47 +3731,42 @@ namespace MCGalaxy.Gui
             this.tw_cbBalance.Name = "tw_cbBalance";
             this.tw_cbBalance.Size = new System.Drawing.Size(96, 17);
             this.tw_cbBalance.TabIndex = 1;
-            this.tw_cbBalance.Text = "Balance Teams";
+            this.tw_cbBalance.Text = "Balance teams";
             this.tw_cbBalance.UseVisualStyleBackColor = true;
             // 
             // tw_grpGrace
             // 
-            this.tw_grpGrace.Controls.Add(this.tw_lblTime);
-            this.tw_grpGrace.Controls.Add(this.tw_numTime);
+            this.tw_grpGrace.Controls.Add(this.tw_lblGrace);
+            this.tw_grpGrace.Controls.Add(this.tw_numGrace);
             this.tw_grpGrace.Controls.Add(this.tw_cbGrace);
-            this.tw_grpGrace.Location = new System.Drawing.Point(14, 159);
+            this.tw_grpGrace.Location = new System.Drawing.Point(6, 125);
             this.tw_grpGrace.Name = "tw_grpGrace";
-            this.tw_grpGrace.Size = new System.Drawing.Size(152, 73);
+            this.tw_grpGrace.Size = new System.Drawing.Size(160, 73);
             this.tw_grpGrace.TabIndex = 7;
             this.tw_grpGrace.TabStop = false;
             this.tw_grpGrace.Text = "Grace Period";
             // 
-            // tw_lblTime
+            // tw_lblGrace
             // 
-            this.tw_lblTime.AutoSize = true;
-            this.tw_lblTime.Location = new System.Drawing.Point(3, 45);
-            this.tw_lblTime.Name = "tw_lblTime";
-            this.tw_lblTime.Size = new System.Drawing.Size(80, 13);
-            this.tw_lblTime.TabIndex = 2;
-            this.tw_lblTime.Text = "Time (Seconds):";
+            this.tw_lblGrace.AutoSize = true;
+            this.tw_lblGrace.Location = new System.Drawing.Point(23, 44);
+            this.tw_lblGrace.Name = "tw_lblGrace";
+            this.tw_lblGrace.Size = new System.Drawing.Size(80, 13);
+            this.tw_lblGrace.TabIndex = 2;
+            this.tw_lblGrace.Text = "Time (seconds):";
             // 
-            // tw_numTime
+            // tw_numGrace
             // 
-            this.tw_numTime.Location = new System.Drawing.Point(89, 43);
-            this.tw_numTime.Maximum = new decimal(new int[] {
+            this.tw_numGrace.Location = new System.Drawing.Point(107, 41);
+            this.tw_numGrace.Maximum = new decimal(new int[] {
                                     300,
                                     0,
                                     0,
                                     0});
-            this.tw_numTime.Minimum = new decimal(new int[] {
-                                    10,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numTime.Name = "tw_numTime";
-            this.tw_numTime.Size = new System.Drawing.Size(57, 21);
-            this.tw_numTime.TabIndex = 1;
-            this.tw_numTime.Value = new decimal(new int[] {
+            this.tw_numGrace.Name = "tw_numGrace";
+            this.tw_numGrace.Size = new System.Drawing.Size(42, 21);
+            this.tw_numGrace.TabIndex = 1;
+            this.tw_numGrace.Value = new decimal(new int[] {
                                     30,
                                     0,
                                     0,
@@ -3784,25 +3779,25 @@ namespace MCGalaxy.Gui
             this.tw_cbGrace.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tw_cbGrace.Location = new System.Drawing.Point(6, 20);
             this.tw_cbGrace.Name = "tw_cbGrace";
-            this.tw_cbGrace.Size = new System.Drawing.Size(87, 17);
+            this.tw_cbGrace.Size = new System.Drawing.Size(64, 17);
             this.tw_cbGrace.TabIndex = 0;
-            this.tw_cbGrace.Text = "Grace Period";
+            this.tw_cbGrace.Text = "Enabled";
             this.tw_cbGrace.UseVisualStyleBackColor = true;
             // 
             // tw_grpScores
             // 
+            this.tw_grpScores.Controls.Add(this.tw_lblMulti);
+            this.tw_grpScores.Controls.Add(this.tw_lblAssist);
             this.tw_grpScores.Controls.Add(this.tw_cbStreaks);
-            this.tw_grpScores.Controls.Add(this.tw_cbMultiKills);
             this.tw_grpScores.Controls.Add(this.tw_numMultiKills);
-            this.tw_grpScores.Controls.Add(this.tw_cbScoreAssists);
             this.tw_grpScores.Controls.Add(this.tw_numScoreAssists);
             this.tw_grpScores.Controls.Add(this.tw_lblScorePerKill);
             this.tw_grpScores.Controls.Add(this.tw_numScorePerKill);
             this.tw_grpScores.Controls.Add(this.tw_lblScoreLimit);
             this.tw_grpScores.Controls.Add(this.tw_numScoreLimit);
-            this.tw_grpScores.Location = new System.Drawing.Point(11, 20);
+            this.tw_grpScores.Location = new System.Drawing.Point(6, 20);
             this.tw_grpScores.Name = "tw_grpScores";
-            this.tw_grpScores.Size = new System.Drawing.Size(184, 133);
+            this.tw_grpScores.Size = new System.Drawing.Size(284, 99);
             this.tw_grpScores.TabIndex = 6;
             this.tw_grpScores.TabStop = false;
             this.tw_grpScores.Text = "Scores";
@@ -3812,35 +3807,18 @@ namespace MCGalaxy.Gui
             this.tw_cbStreaks.AutoSize = true;
             this.tw_cbStreaks.Checked = true;
             this.tw_cbStreaks.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tw_cbStreaks.Location = new System.Drawing.Point(9, 29);
+            this.tw_cbStreaks.Location = new System.Drawing.Point(11, 72);
             this.tw_cbStreaks.Name = "tw_cbStreaks";
             this.tw_cbStreaks.Size = new System.Drawing.Size(61, 17);
             this.tw_cbStreaks.TabIndex = 0;
             this.tw_cbStreaks.Text = "Streaks";
             this.tw_cbStreaks.UseVisualStyleBackColor = true;
             // 
-            // tw_cbMultiKills
-            // 
-            this.tw_cbMultiKills.AutoSize = true;
-            this.tw_cbMultiKills.Checked = true;
-            this.tw_cbMultiKills.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tw_cbMultiKills.Location = new System.Drawing.Point(11, 102);
-            this.tw_cbMultiKills.Name = "tw_cbMultiKills";
-            this.tw_cbMultiKills.Size = new System.Drawing.Size(122, 17);
-            this.tw_cbMultiKills.TabIndex = 8;
-            this.tw_cbMultiKills.Text = "MultiKills (Score Per:";
-            this.tw_cbMultiKills.UseVisualStyleBackColor = true;
-            // 
             // tw_numMultiKills
             // 
-            this.tw_numMultiKills.Location = new System.Drawing.Point(140, 101);
+            this.tw_numMultiKills.Location = new System.Drawing.Point(240, 44);
             this.tw_numMultiKills.Maximum = new decimal(new int[] {
-                                    10000,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numMultiKills.Minimum = new decimal(new int[] {
-                                    1,
+                                    100000,
                                     0,
                                     0,
                                     0});
@@ -3853,28 +3831,11 @@ namespace MCGalaxy.Gui
                                     0,
                                     0});
             // 
-            // tw_cbScoreAssists
-            // 
-            this.tw_cbScoreAssists.AutoSize = true;
-            this.tw_cbScoreAssists.Checked = true;
-            this.tw_cbScoreAssists.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tw_cbScoreAssists.Location = new System.Drawing.Point(23, 75);
-            this.tw_cbScoreAssists.Name = "tw_cbScoreAssists";
-            this.tw_cbScoreAssists.Size = new System.Drawing.Size(111, 17);
-            this.tw_cbScoreAssists.TabIndex = 6;
-            this.tw_cbScoreAssists.Text = "Assists (Score Per:";
-            this.tw_cbScoreAssists.UseVisualStyleBackColor = true;
-            // 
             // tw_numScoreAssists
             // 
-            this.tw_numScoreAssists.Location = new System.Drawing.Point(140, 74);
+            this.tw_numScoreAssists.Location = new System.Drawing.Point(240, 17);
             this.tw_numScoreAssists.Maximum = new decimal(new int[] {
-                                    10000,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numScoreAssists.Minimum = new decimal(new int[] {
-                                    1,
+                                    100000,
                                     0,
                                     0,
                                     0});
@@ -3890,27 +3851,22 @@ namespace MCGalaxy.Gui
             // tw_lblScorePerKill
             // 
             this.tw_lblScorePerKill.AutoSize = true;
-            this.tw_lblScorePerKill.Location = new System.Drawing.Point(63, 49);
+            this.tw_lblScorePerKill.Location = new System.Drawing.Point(9, 46);
             this.tw_lblScorePerKill.Name = "tw_lblScorePerKill";
-            this.tw_lblScorePerKill.Size = new System.Drawing.Size(71, 13);
+            this.tw_lblScorePerKill.Size = new System.Drawing.Size(70, 13);
             this.tw_lblScorePerKill.TabIndex = 3;
-            this.tw_lblScorePerKill.Text = "Score Per Kill:";
+            this.tw_lblScorePerKill.Text = "Score per kill:";
             // 
             // tw_numScorePerKill
             // 
-            this.tw_numScorePerKill.Location = new System.Drawing.Point(140, 47);
+            this.tw_numScorePerKill.Location = new System.Drawing.Point(82, 44);
             this.tw_numScorePerKill.Maximum = new decimal(new int[] {
-                                    10000,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numScorePerKill.Minimum = new decimal(new int[] {
-                                    1,
+                                    100000,
                                     0,
                                     0,
                                     0});
             this.tw_numScorePerKill.Name = "tw_numScorePerKill";
-            this.tw_numScorePerKill.Size = new System.Drawing.Size(38, 21);
+            this.tw_numScorePerKill.Size = new System.Drawing.Size(50, 21);
             this.tw_numScorePerKill.TabIndex = 2;
             this.tw_numScorePerKill.Value = new decimal(new int[] {
                                     10,
@@ -3921,27 +3877,22 @@ namespace MCGalaxy.Gui
             // tw_lblScoreLimit
             // 
             this.tw_lblScoreLimit.AutoSize = true;
-            this.tw_lblScoreLimit.Location = new System.Drawing.Point(72, 22);
+            this.tw_lblScoreLimit.Location = new System.Drawing.Point(5, 19);
             this.tw_lblScoreLimit.Name = "tw_lblScoreLimit";
-            this.tw_lblScoreLimit.Size = new System.Drawing.Size(62, 13);
+            this.tw_lblScoreLimit.Size = new System.Drawing.Size(74, 13);
             this.tw_lblScoreLimit.TabIndex = 1;
-            this.tw_lblScoreLimit.Text = "Score Limit:";
+            this.tw_lblScoreLimit.Text = "Score needed:";
             // 
             // tw_numScoreLimit
             // 
-            this.tw_numScoreLimit.Location = new System.Drawing.Point(140, 20);
+            this.tw_numScoreLimit.Location = new System.Drawing.Point(82, 17);
             this.tw_numScoreLimit.Maximum = new decimal(new int[] {
-                                    10000000,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numScoreLimit.Minimum = new decimal(new int[] {
-                                    10,
+                                    100000,
                                     0,
                                     0,
                                     0});
             this.tw_numScoreLimit.Name = "tw_numScoreLimit";
-            this.tw_numScoreLimit.Size = new System.Drawing.Size(38, 21);
+            this.tw_numScoreLimit.Size = new System.Drawing.Size(50, 21);
             this.tw_numScoreLimit.TabIndex = 0;
             this.tw_numScoreLimit.Value = new decimal(new int[] {
                                     150,
@@ -3974,14 +3925,14 @@ namespace MCGalaxy.Gui
             this.tw_btnAbout.TabIndex = 30;
             this.tw_btnAbout.Text = "About Difficulties";
             this.tw_btnAbout.UseVisualStyleBackColor = true;
-            this.tw_btnAbout.Click += new System.EventHandler(this.Tw_btnAboutClick);
+            this.tw_btnAbout.Click += new System.EventHandler(this.tw_btnAbout_Click);
             // 
             // tw_cmbMode
             // 
             this.tw_cmbMode.FormattingEnabled = true;
             this.tw_cmbMode.Items.AddRange(new object[] {
-                                    "TDM",
-                                    "FFA"});
+                                    "FFA",
+                                    "TDM"});
             this.tw_cmbMode.Location = new System.Drawing.Point(74, 116);
             this.tw_cmbMode.Name = "tw_cmbMode";
             this.tw_cmbMode.Size = new System.Drawing.Size(76, 21);
@@ -4896,6 +4847,24 @@ namespace MCGalaxy.Gui
             this.sec_lblBlocksOnSecs.TabIndex = 33;
             this.sec_lblBlocksOnSecs.Text = "secs";
             // 
+            // tw_lblAssist
+            // 
+            this.tw_lblAssist.AutoSize = true;
+            this.tw_lblAssist.Location = new System.Drawing.Point(168, 20);
+            this.tw_lblAssist.Name = "tw_lblAssist";
+            this.tw_lblAssist.Size = new System.Drawing.Size(69, 13);
+            this.tw_lblAssist.TabIndex = 9;
+            this.tw_lblAssist.Text = "Assist bonus:";
+            // 
+            // tw_lblMulti
+            // 
+            this.tw_lblMulti.AutoSize = true;
+            this.tw_lblMulti.Location = new System.Drawing.Point(157, 47);
+            this.tw_lblMulti.Name = "tw_lblMulti";
+            this.tw_lblMulti.Size = new System.Drawing.Size(79, 13);
+            this.tw_lblMulti.TabIndex = 10;
+            this.tw_lblMulti.Text = "Multikill bonus:";
+            // 
             // PropertyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5028,7 +4997,7 @@ namespace MCGalaxy.Gui
             this.tw_grpTeams.PerformLayout();
             this.tw_grpGrace.ResumeLayout(false);
             this.tw_grpGrace.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tw_numTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tw_numGrace)).EndInit();
             this.tw_grpScores.ResumeLayout(false);
             this.tw_grpScores.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tw_numMultiKills)).EndInit();
@@ -5068,6 +5037,8 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label tw_lblAssist;
+        private System.Windows.Forms.Label tw_lblMulti;
         private System.Windows.Forms.Button chat_btnWarn;
         private System.Windows.Forms.Label chat_lblWarn;
         private System.Windows.Forms.Label tw_lblMode;
@@ -5456,17 +5427,15 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label rank_lblMOTD;
         private System.Windows.Forms.TextBox rank_txtMOTD;
         private System.Windows.Forms.GroupBox tw_grpScores;
-        private System.Windows.Forms.CheckBox tw_cbScoreAssists;
         private System.Windows.Forms.NumericUpDown tw_numScoreAssists;
         private System.Windows.Forms.Label tw_lblScorePerKill;
         private System.Windows.Forms.NumericUpDown tw_numScorePerKill;
         private System.Windows.Forms.Label tw_lblScoreLimit;
         private System.Windows.Forms.NumericUpDown tw_numScoreLimit;
-        private System.Windows.Forms.CheckBox tw_cbMultiKills;
         private System.Windows.Forms.NumericUpDown tw_numMultiKills;
         private System.Windows.Forms.GroupBox tw_grpGrace;
-        private System.Windows.Forms.Label tw_lblTime;
-        private System.Windows.Forms.NumericUpDown tw_numTime;
+        private System.Windows.Forms.Label tw_lblGrace;
+        private System.Windows.Forms.NumericUpDown tw_numGrace;
         private System.Windows.Forms.GroupBox tw_grpTeams;
         private System.Windows.Forms.CheckBox tw_cbKills;
         private System.Windows.Forms.CheckBox tw_cbBalance;
