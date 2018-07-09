@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage zombie survival") }; }
         }
         
-        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             ZSConfig cfg = ZSGame.Config;
             string prop = args[1];
             LevelConfig lCfg = p.level.Config;
@@ -112,6 +112,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/ZS start <map> %H- Starts Zombie Survival");
             Player.Message(p, "%T/ZS stop %H- Stops Zombie Survival");
             Player.Message(p, "%T/ZS end %H- Ends current round of Zombie Survival");
+            Player.Message(p, "%T/ZS add/remove %H- Adds/removes current map from map list");
             Player.Message(p, "%T/ZS set [property] %H- Sets a property. See %T/Help ZS set");
             Player.Message(p, "%T/ZS status %H- Outputs current status of Zombie Survival");
             Player.Message(p, "%T/ZS go %H- Moves you to the current Zombie Survival map");

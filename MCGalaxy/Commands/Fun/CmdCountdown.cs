@@ -32,20 +32,11 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("rules")) {
-                HandleRules(p);
-            } else if (message.CaselessEq("join")) {
+            if (message.CaselessEq("join")) {
                 HandleJoin(p, CountdownGame.Instance);
             } else {
                 base.Use(p, message);
             }
-        }
-        
-        void HandleRules(Player p) {
-            Player.Message(p, "The aim of the game is to stay alive the longest.");
-            Player.Message(p, "Don't fall in the lava!");
-            Player.Message(p, "Blocks on the ground will disapear randomly, first going yellow, then orange, then red and finally disappearing.");
-            Player.Message(p, "The last person alive wins!");
         }
         
         void HandleJoin(Player p, CountdownGame game) {
@@ -78,7 +69,6 @@ namespace MCGalaxy.Commands.Fun {
             CountdownGame game = (CountdownGame)game_;
             game.GenerateMap(p, x, y, z);
         }        
-        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) { }
         
         protected override void HandleStart(Player p, RoundsGame game_, string[] args) {
             if (game_.Running) { Player.Message(p, "{0} is already running", game_.GameName); return; }
@@ -114,7 +104,6 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/CD end %H- Ends current round of Countdown");
             Player.Message(p, "%T/CD join %H- joins the game");
             Player.Message(p, "%T/CD status %H- lists players currently playing");
-            Player.Message(p, "%T/CD rules %H- view the rules of countdown");
         }
     }
 }

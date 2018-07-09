@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage CTF") }; }
         }
         
-        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
             CTFMapConfig cfg = RetrieveConfig(p);
             
@@ -119,7 +119,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/CTF start <map> %H- Starts CTF game");
             Player.Message(p, "%T/CTF stop %H- Stops CTF game");
             Player.Message(p, "%T/CTF end %H- Ends current round of CTF");
-            Player.Message(p, "%T/CTF set add/remove %H- Adds/removes current map from map list");
+            Player.Message(p, "%T/CTF add/remove %H- Adds/removes current map from map list");
             Player.Message(p, "%T/CTF set [property] %H- Sets a property. See %T/Help CTF set");
             Player.Message(p, "%T/CTF status %H- View stats of both teams");
             Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");

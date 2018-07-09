@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage lava survival") }; }
         }
 
-        protected override void HandleSetCore(Player p, RoundsGame game, string[] args) {
+        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
             if (prop.CaselessEq("spawn")) {
                 HandleSetSpawn(p, args);
@@ -239,7 +239,7 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival");
             Player.Message(p, "%T/LS stop %H- Stops Lava Survival");
             Player.Message(p, "%T/LS end %H- Ends current round of Lava Survival");
-            Player.Message(p, "%T/LS set add/remove %H- Adds/removes current map from map list");
+            Player.Message(p, "%T/LS add/remove %H- Adds/removes current map from map list");
             Player.Message(p, "%T/LS set [property] %H- Sets a property. See %T/Help LS set");
             Player.Message(p, "%T/LS status %H- View current round info and time");
             Player.Message(p, "%T/LS go %H- Moves you to the current Lava Survival map");

@@ -44,7 +44,7 @@ namespace MCGalaxy.Games {
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
         
         public static CountdownConfig Config = new CountdownConfig();
-        public override string GameName { get { return "Countfown"; } }
+        public override string GameName { get { return "Countdown"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
         public bool FreezeMode;

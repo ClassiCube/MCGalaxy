@@ -32,22 +32,11 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         public override void Use(Player p, string message) {
-            if (message.CaselessEq("rules")) {
-                HandleRules(p);
-            } else if (message.CaselessEq("scores")) {
+            if (message.CaselessEq("scores")) {
                 HandleScores(p);
             } else {
                 base.Use(p, message);
             }
-        }
-
-        
-        void HandleRules(Player p) {
-            Player.Message(p, "TNT Wars Rules:");
-            Player.Message(p, "The aim of the game is to blow up people using TNT!");
-            Player.Message(p, "To place tnt simply place a TNT block and after a short delay it shall explode!");
-            Player.Message(p, "During the game the amount of TNT placable at one time may be limited!");
-            Player.Message(p, "You are not allowed to use hacks of any sort during the game!");
         }
         
         void HandleScores(Player p) {
@@ -65,7 +54,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected override void HandleSetCore(Player p, RoundsGame game_, string[] args) {
+        protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
             TWGame game = (TWGame)game_;
             TWMapConfig cfg = RetrieveConfig(p);
             TWConfig gameCfg = TWGame.Config;
@@ -353,11 +342,10 @@ namespace MCGalaxy.Commands.Fun {
             Player.Message(p, "%T/TW start <map> %H- Starts TNT wars");
             Player.Message(p, "%T/TW stop %H- Stops TNT wars");
             Player.Message(p, "%T/TW end %H- Ends current round of TNT wars");
-            Player.Message(p, "%T/TW set add/remove %H- Adds/removes current map from map list");
+            Player.Message(p, "%T/TW add/remove %H- Adds/removes current map from map list");
             Player.Message(p, "%T/TW set [property] %H- Sets a property. See %T/Help TW set");
             Player.Message(p, "%T/TW status %H- View your current score and health");
             Player.Message(p, "%T/TW go %H- Moves you to the current TNT wars map");
-            Player.Message(p, "%T/TW rules %H- view the rules of TNT wars");
             Player.Message(p, "%T/TW scores %H- lists players with highest scores");
         }
     }
