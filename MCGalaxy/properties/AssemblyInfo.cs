@@ -21,5 +21,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MCGalaxy")]
 [assembly: AssemblyDescription("ClassiCube Server Software")]
 [assembly: AssemblyProduct("MCGalaxy")]
-[assembly: AssemblyCopyright("Copyright © 2015-2017")]
+[assembly: AssemblyCopyright("Copyright © 2015-2018")]
 [assembly: AssemblyVersion(MCGalaxy.Server.InternalVersion)]

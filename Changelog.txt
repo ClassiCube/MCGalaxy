@@ -1,3 +1,78 @@
+v 1.9.0.6
+Improved: Majorly improve games in GUI, game setup commands
+Improved: TNT wars majorly improved
+Improved: Backups also save associated file with map (bots/blockdefs/env)
+Improved: Pressing Ctrl+C in CLI should still try to cleanly shutdown
+Added: option in server.properties to disable world change messages
+Added: /bot copy
+Added: Option for /rainbow for whether air is replaced over too
+Added: /line connected mode
+Added: Corpse model to /help model models list
+Added: Allow setting yaw and pitch in /tp
+Added: Extra command permissions support disallow/allow ranks now
+Added: /ignore worldchanges
+Added: Option to disable CPE
+Added: Allow configuring warning/error colour
+Fixed: blockprops file not being moved/copied/deleted
+Fixed: /static fill 2d not recalculating direction each time
+Fixed: gb/lb copyall should keep inventory order
+Fixed: 'lately known as' showing to players on maps with map-only chat
+Fixed: rashing on some versions of mono
+Fixed: /xmodel with per-axis model scale
+Fixed: Can't set multiple blocks to hidden
+Fixed: Fix very rare case where bots spawned appear at wrong position
+Fixed: Incorrect message for /zedit and /perbuild on another map
+Fixed: Changing map options in UI not saving
+Fixed: Changing map not updating players list in GUI
+Fixed: /ignore with no args ignoring yourself
+Fixed: Teams list not being cleared before reloading list
+Fixed: Main level corruption when multiple errors are thrown at once
+Fixed: Placing air in map with deletable off but buildable on showing message
+Fixed: Avoid errors when shutting down on mono
+Fixed: Crash when you click 'load map' in GUI but haven't selected a map
+Fixed: Cloudy brush noise messages showing even when /ignore drawoutput
+Fixed: /banedit actually works
+Fixed: /ref title not always being set or reset properly
+Fixed: /ccols list always showing all default colours
+Fixed: /unflood all not working with renamed active water/lava
+Fixed: linkscript bot AI instruction not working at all
+Improved: Allow del/delete/remove to all be used interchangably
+Improved: Restrict /pay from MBs
+Improved: Perform inventory sorting server side
+Improved: Make UI popups consistent
+Improved: countdown shouldn't reset build perms every time map is loaded
+Improved: Show order in lb/gb info
+Improved: Few more commands can be used in museums, minor tidy-up in UI
+Improved: Redesign Rank item - now just explicitly set buyable ranks
+Improved: Doing /server reload reloads announcements list
+Improved: Log error when an error occurs importing zone in .lvl map
+Improved: Can just do /whitelist for /whitelist list
+Improved: You can resize /img now
+Improved: Empty theme should have initial edge level of 1
+Improved: /rankinfo matches against all player names
+Improved: Now /write works with brushes
+Improved: Make command aliases more flexible
+Improved: Change default OS map height to 128
+Improved: /lb info works still, on a block even if only a /gb
+Improved: Switch to ID 0 for hidden inventory order
+Improved: Can now use draw commands in zones less restrictive than map
+Improved: Move /mapset drawingallowed to /map drawing
+Improved: Now /rankinfo stores time in UTC timestamp
+Improved: More consistent permission denied messages for modcommands
+Improved: /hide silent shows no message at al
+Improved: Don't save global blocks list on server start
+Improved: Make chatroom have less extra permissions
+Improved: Show message when level isn't actually saved when using /save
+Improved: Don't allow TPing to people or using /where when playing games
+Improved: Total messages written now works
+Improved: Changing zip url should reset png url, and vice versa
+Improved: /model without args resets per-axis scale too
+Improved: Lockdown autocompletes maps
+Removed: Fail /votekick command
+Removed: Original midnight preset, rename midnight2 to midnight
+Removed: Move .binvox into separate plugin
+Removed: Drop support for ancient server/lockdown/map and level/blacklist
+
 v 1.9.0.5
 Added: Allow configuring heartbeat URL
 Added: rope/lader collide type 7
