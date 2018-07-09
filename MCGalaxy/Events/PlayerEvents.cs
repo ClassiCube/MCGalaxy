@@ -19,7 +19,7 @@ using System;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
-    public enum PlayerAction { Me, Referee, UnReferee };
+    public enum PlayerAction { Me, Referee, UnReferee, AFK, UnAFK };
     public enum MouseButton { Left, Right, Middle }  
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }

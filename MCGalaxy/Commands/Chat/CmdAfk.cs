@@ -42,6 +42,7 @@ namespace MCGalaxy.Commands.Chatting {
                     p.CheckForMessageSpam();
                 }
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
+                OnPlayerActionEvent.Call(p, PlayerAction.AFK, null, cantSend);
             } else {
                 if (cantSend) {
                     Player.Message(p, "You are no longer marked as being AFK.");
@@ -49,6 +50,7 @@ namespace MCGalaxy.Commands.Chatting {
                     ShowMessage(p, "-λNICK%S- is no longer AFK");
                     p.CheckForMessageSpam();
                 }
+            	OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, null, cantSend);
             }
         }
         
