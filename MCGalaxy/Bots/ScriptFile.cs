@@ -22,16 +22,18 @@ using MCGalaxy.Commands;
 namespace MCGalaxy.Bots {
     public static class ScriptFile {
         
-        public static bool Parse(Player p, PlayerBot bot, string file) {
-            if (!File.Exists(file)) {
+        public static bool Parse(Player p, PlayerBot bot, string ai) {
+            string path = "bots/" + ai;
+            if (!File.Exists(path)) {
                 Player.Message(p, "Could not find specified AI."); return false;
             }
 
-            string[] instructions = File.ReadAllLines(file);
+            string[] instructions = File.ReadAllLines(path);
             if (instructions.Length == 0) {
                 Player.Message(p, "No instructions in the AI."); return false;
             }
 
+            bot.AIName = ai;
             bot.Instructions.Clear();
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 

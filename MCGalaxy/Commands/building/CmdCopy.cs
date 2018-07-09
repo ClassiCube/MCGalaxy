@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Building {
                 } else if (opt.CaselessEq("air")) {
                     cArgs.air = true;
                 } else if (opt.Length > 0) {
-                    Help(p);
+                    Help(p); return;
                 }
             }
 

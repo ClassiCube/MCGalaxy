@@ -62,8 +62,7 @@ namespace MCGalaxy.Commands.Bots {
                 return;
             }
             
-            if (!ScriptFile.Parse(p, bot, "bots/" + ai)) return;
-            bot.AIName = ai;
+            if (!ScriptFile.Parse(p, bot, ai)) return;
             UpdateBot(p, bot, "'s AI was set to " + ai);
         }
         

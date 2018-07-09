@@ -184,7 +184,7 @@ namespace MCGalaxy.Games {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != Map) continue;              
+                if (pl.level != Map) continue;
                 ZSData data = Get(pl);
                 
                 data.ResetState();

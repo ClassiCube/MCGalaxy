@@ -74,7 +74,7 @@ namespace MCGalaxy.Bots {
         internal static void LoadAi(BotProperties props, PlayerBot bot) {
             if (String.IsNullOrEmpty(props.AI)) return;
             try {
-                ScriptFile.Parse(null, bot, "bots/" + props.AI);
+                ScriptFile.Parse(null, bot, props.AI);
             } catch (Exception ex) { 
                 Logger.LogError("Error loading bot AI " + props.AI, ex); 
             }

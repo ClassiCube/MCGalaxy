@@ -293,7 +293,7 @@ namespace MCGalaxy.Games {
             Get(p).Score += amount;
             UpdateStatus2(p);
             
-            if (Config.Mode != TWGameMode.TDM) return;      
+            if (Config.Mode != TWGameMode.TDM) return;
             TWTeam team = TeamOf(p);
             if (team == null) return;
             
@@ -301,7 +301,7 @@ namespace MCGalaxy.Games {
             UpdateAllStatus1();
         }
         
-        public bool TeamKill(Player p1, Player p2) {
+        bool TeamKill(Player p1, Player p2) {
             return Config.Mode == TWGameMode.TDM && TeamOf(p1) == TeamOf(p2);
         }
         

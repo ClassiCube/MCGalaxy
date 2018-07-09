@@ -26,22 +26,18 @@ namespace MCGalaxy.Commands.CPE {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message) {
-            if (message.Length == 0) { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }           
+            float dist = 0;
+            if (!CommandParser.GetReal(p, message, "Distance", ref dist, 0, 1024)) return;
             
-            float dist;
-            if (!Utils.TryParseDecimal(message, out dist)) {
-                Player.Message(p, "\"{0}\" is not a valid decimal.", message); return;
-            }
-            int packedDist = (int)(dist * 32);
-            if (packedDist < 0) packedDist = 160;
-            
+            int packedDist = (int)(dist * 32);            
             if (packedDist > short.MaxValue) {
                 Player.Message(p, "\"{0}\", is too long a reach distance. Max is 1023 blocks.", message);
             } else if (!p.Supports(CpeExt.ClickDistance)) {
                 Player.Message(p, "Your client doesn't support changing your reach distance.");
             } else {        
                 p.Send(Packet.ClickDistance((short)packedDist));
-                p.ReachDistance = packedDist / 32f;
+                p.ReachDistance = dist;
                 Player.Message(p, "Set your reach distance to {0} blocks.", dist);
                 Server.reach.AddOrReplace(p.name, packedDist.ToString());
                 Server.reach.Save();

@@ -55,9 +55,9 @@ namespace MCGalaxy.Bots {
         public LinkScriptInstruction() { Name = "linkscript"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            string script = (string)data.Metadata;
-            if (File.Exists("bots/" + script)) {
-                Command.Find("BotSet").Use(null, bot.name + " " + script);
+            string ai = (string)data.Metadata;
+            if (File.Exists("bots/" + ai)) {
+                ScriptFile.Parse(null, bot, ai);
                 return true;
             }
             bot.NextInstruction(); return true;

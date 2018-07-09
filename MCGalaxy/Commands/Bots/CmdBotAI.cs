@@ -114,11 +114,11 @@ namespace MCGalaxy.Commands.Bots{
         }
         
         void HandleReverse(Player p, string ai) {
-            string[] instructions = File.ReadAllLines("bots/" + ai);
+            string[] lines = File.ReadAllLines("bots/" + ai);
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                for (int i = instructions.Length - 1; i > 0; i--) {
-                    if (instructions[i].Length > 0 && instructions[i][0] != '#') {
-                        w.WriteLine(instructions[i]);
+                for (int i = lines.Length - 1; i > 0; i--) {
+                    if (lines[i].Length > 0 && lines[i][0] != '#') {
+                        w.WriteLine(lines[i]);
                     }
                 }
             }
