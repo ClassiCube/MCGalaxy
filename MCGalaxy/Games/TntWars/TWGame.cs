@@ -154,6 +154,11 @@ namespace MCGalaxy.Games {
             Red.Members.Clear();
             Blue.Score = 0;
             Red.Score = 0;
+            
+            Player[] players = allPlayers.Items;
+            foreach (Player pl in players) {
+                RestoreColor(pl);
+            }
         }
         
         public override void PlayerJoinedGame(Player p) {
@@ -184,6 +189,8 @@ namespace MCGalaxy.Games {
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             
             p.color = team.Color;
+            p.SetPrefix();
+            
             Player.Message(p, "You are now on the " + team.ColoredName + " team!");
             TabList.Update(p, true);
         }
@@ -217,11 +224,6 @@ namespace MCGalaxy.Games {
             MessageMap(CpeMessageType.Announcement,
                        "&4Gamemode changed to &fFree For All");
             ResetTeams();
-            
-            Player[] players = allPlayers.Items;
-            foreach (Player pl in players) {
-                RestoreColor(pl);
-            }
             Config.Save();
         }
         

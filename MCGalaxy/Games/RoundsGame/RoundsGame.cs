@@ -51,17 +51,18 @@ namespace MCGalaxy.Games {
             Chat.MessageGlobal("A game of {0} is starting on {1}%S!", GameName, Map.ColoredName);
             Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
             
-            StartGame();
+            StartGame();            
+            RoundsLeft = rounds;
+            Running = true;
+            
+            IGame.RunningGames.Add(this);
+            OnStateChangedEvent.Call(this);
+            HookEventHandlers();
+            
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level == Map) PlayerJoinedGame(pl);
             }
-            
-            RoundsLeft = rounds;
-            Running = true;            
-            IGame.RunningGames.Add(this);
-            OnStateChangedEvent.Call(this);
-            HookEventHandlers();
             
             Thread t = new Thread(RunGame);
             t.Name = "MCG_" + GameName;

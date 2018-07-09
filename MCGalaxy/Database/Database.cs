@@ -76,7 +76,7 @@ namespace MCGalaxy.SQL {
 
         internal static object Do(string sql, bool createDB, object arg,
                                   ReaderCallback callback, params object[] args) {
-            Exception e = null;         
+            Exception e = null;
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
