@@ -96,7 +96,7 @@ namespace MCGalaxy {
                 if (motdOnly) {
                     pl.SendMapMotd();
                 } else {
-                    LevelActions.ReloadMap(p, pl, false);
+                    LevelActions.ReloadFor(p, pl, false);
                 }
             }
         }

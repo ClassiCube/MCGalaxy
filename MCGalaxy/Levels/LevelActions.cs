@@ -165,7 +165,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level != old) continue;
                 pl.level = lvl;
-                ReloadMap(null, pl, false);
+                ReloadFor(null, pl, false);
             }
             
             old.Unload(true, false);
@@ -201,21 +201,29 @@ namespace MCGalaxy {
         }
 
         
-        public static void ReloadMap(Player p, Player who, bool announce) {
-            who.Loading = true;
-            Entities.DespawnEntities(who);
-            who.SendMap(who.level);
-            Entities.SpawnEntities(who);
-            who.Loading = false;
+        public static void ReloadAll(Level lvl, Player src, bool announce) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                if (p.level != lvl) continue;
+                LevelActions.ReloadFor(src, p, true);
+            }
+        }
+        
+        public static void ReloadFor(Player src, Player p, bool announce) {
+            p.Loading = true;
+            Entities.DespawnEntities(p);
+            p.SendMap(p.level);
+            Entities.SpawnEntities(p);
+            p.Loading = false;
             if (!announce) return;
             
-            if (p == null || !Entities.CanSee(who, p)) {
-                who.SendMessage("&bMap reloaded");
+            if (src == null || !Entities.CanSee(p, src)) {
+                p.SendMessage("&bMap reloaded");
             } else {
-                who.SendMessage("&bMap reloaded by " + p.ColoredName);
+                p.SendMessage("&bMap reloaded by " + src.ColoredName);
             }
-            if (Entities.CanSee(p, who)) {
-                Player.Message(p, "&4Finished reloading for " + who.ColoredName);
+            if (Entities.CanSee(src, p)) {
+                Player.Message(src, "&4Finished reloading for " + p.ColoredName);
             }
         }
         

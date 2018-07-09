@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
             if (parts[0].CaselessEq("all")) {
                 if (!ReloadAll(p, parts)) return;
             } else {
-                LevelActions.ReloadMap(p, p, true);
+                LevelActions.ReloadFor(p, p, true);
             }
             Server.DoGC();
         }
@@ -55,11 +55,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (!CheckExtraPerm(p, 1)) return false;
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player who in players) {
-                if (who.level == lvl)
-                    LevelActions.ReloadMap(p, who, true);
-            }
+            LevelActions.ReloadAll(lvl, p, true);
             return true;
         }
         

@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
             Chat.MessageGlobal("A game of {0} is starting on {1}%S!", GameName, Map.ColoredName);
             Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
             
-            StartGame();            
+            StartGame();
             RoundsLeft = rounds;
             Running = true;
             
@@ -143,23 +143,43 @@ namespace MCGalaxy.Games {
         protected virtual void VoteAndMoveToNextMap() {
             Picker.AddRecentMap(Map.MapName);
             if (RoundsLeft == 0) return;
+            
             string map = Picker.ChooseNextLevel(this);
-            if (map == null) return;
+            if (map == null) { ContinueOnSameMap(); return; }
             
             Map.Message("The next map has been chosen - &c" + map.ToLower());
-            Map.Message("Please wait while you are transfered.");
-            LastMap = Map.MapName;
+            Map.Message("Please wait while you are transfered.");            
+            Level lastMap = Map; LastMap = Map.MapName;
             
             if (!SetMap(map)) {
                 Map.Message("%WFailed to change map to " + map);
-                Map.Message("Continuing " + GameName + " on the same map");
+                ContinueOnSameMap();
             } else {
-                TransferPlayers(LastMap);
-                Command.Find("Unload").Use(null, LastMap);
+                TransferPlayers(lastMap);
+                lastMap.Unload();
             }
         }
         
-        void TransferPlayers(string lastMap) {
+        void ContinueOnSameMap() {
+            Map.Message("Continuing " + GameName + " on the same map");
+            Level old = Level.Load(Map.MapName);
+            
+            if (old == null) {
+                Map.Message("%WCannot reset changes to map"); return;
+            }
+            if (old.Width != Map.Width || old.Height != Map.Height || old.Length != Map.Length) {
+                Map.Message("%WCannot reset changes to map"); return;
+            }
+            
+            // Try to reset changes made to this map, if possible
+            // TODO: do this in a nicer way
+            Map.blocks = old.blocks;
+            Map.CustomBlocks = old.CustomBlocks;
+            LevelActions.ReloadAll(Map, null, false);
+            Map.Message("Reset map to latest backup");
+        }
+        
+        void TransferPlayers(Level lastMap) {
             Random rnd = new Random();
             Player[] online = PlayerInfo.Online.Items;
             List<Player> transfers = new List<Player>(online.Length);
@@ -167,7 +187,7 @@ namespace MCGalaxy.Games {
             foreach (Player pl in online) {
                 pl.Game.RatedMap = false;
                 pl.Game.PledgeSurvive = false;
-                if (pl.level != Map && pl.level.name.CaselessEq(lastMap)) { transfers.Add(pl); }
+                if (pl.level != Map && pl.level == lastMap) transfers.Add(pl);
             }
             
             while (transfers.Count > 0) {
@@ -221,6 +241,6 @@ namespace MCGalaxy.Games {
             LastMap = "";
             if (Map != null) Map.AutoUnload();
             Map = null;
-        } 
+        }
     }
 }

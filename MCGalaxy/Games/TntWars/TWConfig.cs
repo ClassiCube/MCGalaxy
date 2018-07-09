@@ -91,7 +91,7 @@ namespace MCGalaxy.Games {
         
         public void SetDefaults(Level lvl) {
             ushort midX = (ushort)(lvl.Width / 2);
-            ushort midY = (ushort)(lvl.Height / 2);
+            ushort midY = (ushort)(lvl.Height / 2 + 1);
             ushort maxZ = (ushort)(lvl.Length - 1);
             
             RedSpawn  = new Vec3U16(midX, midY, 0);

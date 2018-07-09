@@ -152,7 +152,7 @@ namespace MCGalaxy.Drawing.Ops {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level.name.CaselessEq(lvl.name))
-                    LevelActions.ReloadMap(p, pl, true);
+                    LevelActions.ReloadFor(p, pl, true);
             }
             Server.DoGC();
         }

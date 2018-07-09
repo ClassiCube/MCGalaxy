@@ -35,18 +35,7 @@ namespace MCGalaxy.Games {
     
     public sealed partial class TWGame : RoundsGame {
         
-        int backupNum;
         protected override void DoRound() {
-            backupNum = Map.Backup(true);
-            if (backupNum <= 0) {
-                Map.Message("%WBacking up Level for TNT Wars failed, stopping game");
-                EndGame();
-                return;
-            }
-            
-            Logger.Log(LogType.SystemActivity, "Backed up {0} ({1}) for TNT Wars", Map.name, backupNum);
-            
-            
             Player[] all = allPlayers.Items;
             foreach (Player p in all) {
                 Get(p).Reset(Config.Difficulty);
@@ -185,9 +174,6 @@ namespace MCGalaxy.Games {
             foreach (Player p in all) {
                 Player.Message(p, "TNT Wars: You scored &f" + Get(p).Score + " points");
             }
-            
-            // TODO: does this even work right
-            Command.Find("Restore").Use(null, backupNum + " " + Map.name);
         }
         
         bool buildable = true, deletable = true;
