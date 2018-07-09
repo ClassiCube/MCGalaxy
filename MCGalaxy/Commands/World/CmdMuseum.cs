@@ -72,7 +72,7 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p) {
             Player.Message(p, "%T/Museum [map] [restore]");
-            Player.Message(p, "%HAllows you to access a restore of the map entered. Works on unloaded maps");
+            Player.Message(p, "%HAllows you to access a restored version of the map stored on the server. Works on unloaded maps");
         }
     }
 }
