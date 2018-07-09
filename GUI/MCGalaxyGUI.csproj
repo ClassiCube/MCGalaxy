@@ -51,8 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CLI\CLIProgram.cs">
-      <Link>CLIProgram.cs</Link>
+    <Compile Include="..\CLI\CLI.cs">
+      <Link>CLI.cs</Link>
     </Compile>
     <Compile Include="Descriptors.cs" />
     <Compile Include="GuiPerms.cs" />

@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
             bool useConsole = DetectConsole();
             
             if (useConsole) {
-                CLIProgram.RunCLI();
+                CLI.RunCLI();
             } else {
                 RunGUI();
             }
@@ -106,11 +106,11 @@ namespace MCGalaxy.Gui {
         }
         
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
-            CLIProgram.LogAndRestart((Exception)e.ExceptionObject);
+            CLI.LogAndRestart((Exception)e.ExceptionObject);
         }
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
-            CLIProgram.LogAndRestart(e.Exception);
+            CLI.LogAndRestart(e.Exception);
         }
     }
 }

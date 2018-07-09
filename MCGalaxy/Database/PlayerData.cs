@@ -47,7 +47,7 @@ namespace MCGalaxy.DB {
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TotalTime;
         
-        static object ReadID(IDataRecord record, object arg) { return record.GetInt32(0); }        
+        static object ReadID(IDataRecord record, object arg) { return record.GetInt32(0); }
         internal static void Create(Player p) {
             p.prefix = "";
             p.color = p.group.Color;
@@ -104,8 +104,8 @@ namespace MCGalaxy.DB {
                 data.TotalTime = rawTime.ParseOldDBTimeSpent();
             }
             
-            data.FirstLogin = record.GetDateTime(ColumnFirstLogin);
-            data.LastLogin  = record.GetDateTime(ColumnLastLogin);
+            data.FirstLogin = ParseDateTime(record, ColumnFirstLogin);
+            data.LastLogin  = ParseDateTime(record, ColumnLastLogin);
             
             data.Title = record.GetText(ColumnTitle);
             data.Title = data.Title.Cp437ToUnicode();
@@ -143,6 +143,22 @@ namespace MCGalaxy.DB {
             string col = Colors.Parse(raw);
             if (col.Length > 0) return col;
             return Colors.Name(raw).Length == 0 ? "" : raw;
+        }
+        
+        static DateTime ParseDateTime(IDataRecord record, string name) {
+            int i = record.GetOrdinal(name);
+            // dates are a major pain
+            try {
+                string raw = record.GetStringValue(i);
+                return DateTime.ParseExact(raw, Database.DateFormat, null);
+            } catch {
+                try {
+                    return record.GetDateTime(i);
+                } catch (Exception ex) {
+                    Logger.LogError("Error parsing date", ex);
+                    return DateTime.MinValue;
+                }
+            }
         }
         
         

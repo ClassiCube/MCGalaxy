@@ -116,11 +116,6 @@ namespace MCGalaxy.SQL {
             return record.IsDBNull(col) ? 0 : record.GetInt64(col);
         }
         
-        internal static DateTime GetDateTime(this IDataRecord record, string name) {
-            string raw = record.GetStringValue(record.GetOrdinal(name));
-            return DateTime.ParseExact(raw, DateFormat, null);
-        }
-        
         internal static string GetStringValue(this IDataRecord record, int col) {
             if (record.IsDBNull(col)) return "";
             Type type = record.GetFieldType(col);

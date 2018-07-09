@@ -22,16 +22,10 @@ using System.Threading;
 using MCGalaxy.UI;
 
 namespace MCGalaxy.Cli {
-    public static class CLIProgram {
-        
-        #if CLI
-        [STAThread]
-        public static void Main(string[] args) {
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            RunCLI();
-        }
-        #endif
+    public static class CLI {
 
+        // This is a different class to Program.cs, because the GUI project also
+        // references this file, and we can't have duplicate Main methods
         public static void RunCLI() {
             if (!File.Exists("MCGalaxy_.dll")) {
                 Console.WriteLine("Cannot start server as MCGalaxy_.dll is missing");
