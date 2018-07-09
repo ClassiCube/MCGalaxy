@@ -120,6 +120,7 @@ namespace MCGalaxy.Gui {
         }
         
         public void UpdateUsedMaps() {
+            lbUsed.SelectedIndex = -1;
             object selected = lbUsed.SelectedItem;
             lbUsed.Items.Clear();
             
@@ -132,6 +133,7 @@ namespace MCGalaxy.Gui {
         }
         
         public void UpdateNotUsedMaps(string[] allMaps) {
+            lbNotUsed.SelectedIndex = -1;
             object selected = lbNotUsed.SelectedItem;
             lbNotUsed.Items.Clear();
             

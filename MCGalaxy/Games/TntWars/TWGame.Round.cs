@@ -115,7 +115,7 @@ namespace MCGalaxy.Games {
                         if (Get(p).Score >= cfg.ScoreRequired) won = true;
                     }
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(250);
             }
         }
         
