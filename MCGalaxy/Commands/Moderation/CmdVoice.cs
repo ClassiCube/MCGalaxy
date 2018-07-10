@@ -16,33 +16,31 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdVoice : Command {        
+    public sealed class CmdVoice : Command2 {        
         public override string name { get { return "Voice"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
-            if (message.Length == 0 && p == null) { Help(p); return; }
+        public override void Use(Player p, string message, CommandData data) {
+            if (message.Length == 0 && p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (p != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "voice", true); return;
-            }
+            if (!CheckRank(p, who, "voice", true)) return;
             
             if (who.voice) {
-                Player.Message(p, "Removing voice status from " + who.ColoredName);
-                Player.Message(who, "Your voice status has been revoked.");
+                p.Message("Removing voice status from " + who.ColoredName);
+                who.Message("Your voice status has been revoked.");
             } else {
-                Player.Message(p, "Giving voice status to " + who.ColoredName);
-                Player.Message(who, "You have received voice status.");
+                p.Message("Giving voice status to " + who.ColoredName);
+                who.Message("You have received voice status.");
             }
             who.voice = !who.voice;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Voice [name]");
-            Player.Message(p, "%HToggles voice status on or off for the given player.");
-            Player.Message(p, "%HIf no name is given, toggles your own voice status.");
+            p.Message("%T/Voice [name]");
+            p.Message("%HToggles voice status on or off for the given player.");
+            p.Message("%HIf no name is given, toggles your own voice status.");
         }
     }
 }

@@ -17,7 +17,7 @@
  */
 
 namespace MCGalaxy.Commands {
-    public abstract class EntityPropertyCmd : Command {
+    public abstract class EntityPropertyCmd : Command2 {
         
         protected void UseBotOrPlayer(Player p, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
@@ -39,9 +39,7 @@ namespace MCGalaxy.Commands {
             } else {
                 if (p != who && !CheckExtraPerm(p, 1)) return;
                 
-                if (p != null && who.Rank > p.Rank) {
-                    MessageTooHighRank(p, "change the " + type + " of", true); return;
-                }
+                if (!CheckRank(p, who, "change the " + type + " of", true)) return;
                 SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
             }
         }
@@ -54,16 +52,14 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
-            if (p != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "change the " + type + " of", true); return;
-            }
+            if (!CheckRank(p, who, "change the " + type + " of", true)) return;
             if (p != who && !CheckExtraPerm(p, 1)) return;
             SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
         }
         
         bool CheckOwn(Player p, string[] args, string type) {
             if (args[0].CaselessEq("-own")) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, type); return false; }
+                if (p.IsSuper) { SuperRequiresArgs(p, type); return false; }
                 args[0] = p.name;
             }
             return true;

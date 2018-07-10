@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) { ToggleAfk(p, message); }
+        public override void Use(Player p, string message, CommandData data) { ToggleAfk(p, message); }
         internal static void ToggleAfk(Player p, string message) {
             if (p.joker) message = "";
             p.AutoAfk = false;
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
             bool cantSend = p.muted || (Server.chatmod && !p.voice);
             if (p.IsAfk) {
                 if (cantSend) {
-                    Player.Message(p, "You are now marked as being AFK.");
+                    p.Message("You are now marked as being AFK.");
                 } else {
                     ShowMessage(p, "-λNICK%S- is AFK " + message);
                     p.CheckForMessageSpam();
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Chatting {
                 OnPlayerActionEvent.Call(p, PlayerAction.AFK, null, cantSend);
             } else {
                 if (cantSend) {
-                    Player.Message(p, "You are no longer marked as being AFK.");
+                    p.Message("You are no longer marked as being AFK.");
                 } else {
                     ShowMessage(p, "-λNICK%S- is no longer AFK");
                     p.CheckForMessageSpam();
@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/AFK <reason>");
-            Player.Message(p, "%HMarks yourself as AFK. Use again to mark yourself as back");
+            p.Message("%T/AFK <reason>");
+            p.Message("%HMarks yourself as AFK. Use again to mark yourself as back");
         }
     }
 }

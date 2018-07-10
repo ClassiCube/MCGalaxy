@@ -47,8 +47,8 @@ namespace MCGalaxy.Generator {
         
         /// <summary> Outputs list of all map generator themes to the given player. </summary>
         public static void PrintThemes(Player p) {
-            Player.Message(p, "Simple themes: " + simpleGens.Keys.Join(", "));
-            Player.Message(p, "Advanced themes: " + advGens.Keys.Join(", "));
+            p.Message("Simple themes: " + simpleGens.Keys.Join(", "));
+            p.Message("Advanced themes: " + advGens.Keys.Join(", "));
         }
         
         /// <summary> Retrieves the list of theme names of simple map generators. </summary>

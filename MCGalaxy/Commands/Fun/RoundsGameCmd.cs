@@ -19,13 +19,13 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
-    public abstract class RoundsGameCmd : Command {
+    public abstract class RoundsGameCmd : Command2 {
         public override string type { get { return CommandTypes.Games; } }
         public override bool museumUsable { get { return false; } }
         public override bool SuperUseable { get { return false; } }
         protected abstract RoundsGame Game { get; }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             RoundsGame game = Game;
             if (message.CaselessEq("go")) {
                 HandleGo(p, game); return;
@@ -53,14 +53,14 @@ namespace MCGalaxy.Commands.Fun {
 
         protected void HandleGo(Player p, RoundsGame game) {
             if (!game.Running) {
-                Player.Message(p, "{0} is not running", game.GameName);
+                p.Message("{0} is not running", game.GameName);
             } else {
                 PlayerActions.ChangeMap(p, game.Map);
             }
         }
         
         protected virtual void HandleStart(Player p, RoundsGame game, string[] args) {
-            if (game.Running) { Player.Message(p, "{0} is already running", game.GameName); return; }
+            if (game.Running) { p.Message("{0} is already running", game.GameName); return; }
 
             string map = args.Length > 1 ? args[1] : "";
             game.Start(p, map, int.MaxValue);
@@ -70,13 +70,13 @@ namespace MCGalaxy.Commands.Fun {
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
-                Player.Message(p, "No round is currently in progress");
+                p.Message("No round is currently in progress");
             }
         }
         
         protected void HandleStop(Player p, RoundsGame game) {
             if (!game.Running) {
-                Player.Message(p, "{0} is not running", game.GameName);
+                p.Message("{0} is not running", game.GameName);
             } else {
                 game.End();
                 Chat.MessageGlobal(game.GameName + " has ended! We hope you had fun!");
@@ -85,9 +85,9 @@ namespace MCGalaxy.Commands.Fun {
 
         protected void HandleStatus(Player p, RoundsGame game) {
             if (!game.Running) {
-                Player.Message(p, "{0} is not running", game.GameName);
+                p.Message("{0} is not running", game.GameName);
             } else {
-                Player.Message(p, "Running on map: " + game.Map.ColoredName);
+                p.Message("Running on map: " + game.Map.ColoredName);
                 game.OutputStatus(p);
             }
         }

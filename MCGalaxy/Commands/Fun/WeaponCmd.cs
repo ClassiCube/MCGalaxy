@@ -23,22 +23,22 @@ using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public abstract class WeaponCmd : Command {       
+    public abstract class WeaponCmd : Command2 {       
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         protected abstract string Weapon { get; }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!p.level.Config.Guns) {
-                Player.Message(p, Weapon + "s cannot be used on this map!"); return;
+                p.Message(Weapon + "s cannot be used on this map!"); return;
             }
 
             if (p.aiming && message.Length == 0) {
                 p.aiming = false;
                 p.ClearBlockchange();
-                Player.Message(p, "Disabled " + Weapon.ToLower() );
+                p.Message("Disabled " + Weapon.ToLower() );
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Fun {
             p.ClearBlockchange();
             p.Blockchange += PlacedMark;
 
-            Player.Message(p, Weapon + " mode engaged, fire at will");
+            p.Message(Weapon + " mode engaged, fire at will");
             if (p.aiming) return;
 
             p.aiming = true;

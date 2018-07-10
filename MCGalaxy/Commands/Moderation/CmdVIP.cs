@@ -18,12 +18,12 @@
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdVIP : Command {
+    public sealed class CmdVIP : Command2 {
         public override string name { get { return "VIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             
@@ -47,14 +47,14 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             if (Server.vip.Contains(name)) {
-                Player.Message(p, PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
+                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
             } else {
                 Server.vip.Add(name);
                 Server.vip.Save(false);
-                Player.Message(p, PlayerInfo.GetColoredName(p, name) + " %Sis now a VIP.");
+                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis now a VIP.");
                 
                 Player vip = PlayerInfo.FindExact(name);
-                if (vip != null) Player.Message(vip, "You are now a VIP!");
+                if (vip != null) vip.Message("You are now a VIP!");
             }
         }
         
@@ -63,14 +63,14 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             if (!Server.vip.Contains(name)) {
-                Player.Message(p, PlayerInfo.GetColoredName(p, name) + " %Sis not a VIP.");
+                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis not a VIP.");
             } else {
                 Server.vip.Remove(name);
                 Server.vip.Save(false);
-                Player.Message(p, PlayerInfo.GetColoredName(p, name) + " %Sis no longer a VIP.");
+                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis no longer a VIP.");
                 
                 Player vip = PlayerInfo.FindExact(name);
-                if (vip != null) Player.Message(vip, "You are no longer a VIP!");
+                if (vip != null) vip.Message("You are no longer a VIP!");
             }
         }
         
@@ -79,9 +79,9 @@ namespace MCGalaxy.Commands.Moderation {
             string modifier = args.Length > 1 ? args[1] : "";
             
             if (list.Count == 0) {
-                Player.Message(p, "There are no VIPs.");
+                p.Message("There are no VIPs.");
             } else {
-                Player.Message(p, "VIPs:");
+                p.Message("VIPs:");
                 MultiPageOutput.Output(p, list, 
                                        (name) => PlayerInfo.GetColoredName(p, name),
                                        "VIP list", "players", modifier, false);
@@ -89,11 +89,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/VIP add/remove [player]");
-            Player.Message(p, "%HAdds or removes [player] from the VIP list.");
-            Player.Message(p, "%T/VIP list");
-            Player.Message(p, "%HLists all players who are on the VIP list.");
-            Player.Message(p, "%H  VIPs can join regardless of the player limit.");
+            p.Message("%T/VIP add/remove [player]");
+            p.Message("%HAdds or removes [player] from the VIP list.");
+            p.Message("%T/VIP list");
+            p.Message("%HLists all players who are on the VIP list.");
+            p.Message("%H  VIPs can join regardless of the player limit.");
         }
     }
 }

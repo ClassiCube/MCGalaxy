@@ -46,13 +46,13 @@ namespace MCGalaxy.Commands.Fun {
 
         static bool ParseChance(Player p, string arg, string[] args, ref int value) {
             if (!CommandParser.GetInt(p, args[3], "Chance", ref value, 0, 100)) return false;
-            Player.Message(p, "Set {0} chance to &b{1}%", arg, value);
+            p.Message("Set {0} chance to &b{1}%", arg, value);
             return true;
         }
         
         static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan span) {
             if (!CommandParser.GetTimespan(p, args[3], ref span, "set " + arg + " to", "m")) return false;
-            Player.Message(p, "Set {0} to &b{1}", arg, span.Shorten(true));
+            p.Message("Set {0} to &b{1}", arg, span.Shorten(true));
             return true;
         }
         
@@ -60,21 +60,21 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetSpawn(Player p, string[] args) {
             LSMapConfig cfg = RetrieveConfig(p);
             if (args.Length < 3) {
-                Player.Message(p, "Flood position: &b" + cfg.FloodPos);
-                Player.Message(p, "Layer position: &b" + cfg.LayerPos);
-                Player.Message(p, "Layer flood chance: &b" + cfg.LayerChance + "%");
-                Player.Message(p, "  &b{0} %Slayers, each &b{1} %Sblocks tall",
+                p.Message("Flood position: &b" + cfg.FloodPos);
+                p.Message("Layer position: &b" + cfg.LayerPos);
+                p.Message("Layer flood chance: &b" + cfg.LayerChance + "%");
+                p.Message("  &b{0} %Slayers, each &b{1} %Sblocks tall",
                                cfg.LayerCount, cfg.LayerHeight);
                 return;
             }
             
             string prop = args[2];
             if (prop.CaselessEq("flood")) {
-                Player.Message(p, "Place or destroy the block you want to be the total flood block spawn point.");
+                p.Message("Place or destroy the block you want to be the total flood block spawn point.");
                 p.MakeSelection(1, cfg, SetFloodPos);
                 return;
             } else if (prop.CaselessEq("layer")) {
-                Player.Message(p, "Place or destroy the block you want to be the layer flood base spawn point.");
+                p.Message("Place or destroy the block you want to be the layer flood base spawn point.");
                 p.MakeSelection(1, cfg, SetLayerPos);
                 return;
             }
@@ -84,10 +84,10 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("height")) {
                 ok = CommandParser.GetInt(p, args[3], "Height", ref cfg.LayerHeight, 0);
-                if (ok) Player.Message(p, "Set layer height to &b" + cfg.LayerHeight + " blocks");
+                if (ok) p.Message("Set layer height to &b" + cfg.LayerHeight + " blocks");
             } else if (prop.CaselessEq("count")) {
                 ok = CommandParser.GetInt(p, args[3], "Count", ref cfg.LayerCount, 0);
-                if (ok) Player.Message(p, "Set layer count to &b" + cfg.LayerCount);
+                if (ok) p.Message("Set layer count to &b" + cfg.LayerCount);
             } else if (prop.CaselessEq("chance")) {
                 ok = ParseChance(p, "layer flood", args, ref cfg.LayerChance);
             } else {
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Fun {
             cfg.FloodPos = (Vec3U16)m[0];
             UpdateConfig(p, cfg);
 
-            Player.Message(p, "Flood position set to &b({0})", m[0]);
+            p.Message("Flood position set to &b({0})", m[0]);
             return false;
         }
         
@@ -111,17 +111,17 @@ namespace MCGalaxy.Commands.Fun {
             cfg.LayerPos = (Vec3U16)m[0];
             UpdateConfig(p, cfg);
 
-            Player.Message(p, "Layer position set to &b({0})", m[0]);
+            p.Message("Layer position set to &b({0})", m[0]);
             return false;
         }
         
         void HandleSetBlock(Player p, string[] args) {
             LSMapConfig cfg = RetrieveConfig(p);
             if (args.Length < 3) {
-                Player.Message(p, "Fast lava chance: &b" + cfg.FastChance + "%");
-                Player.Message(p, "Killer lava/water chance: &b" + cfg.KillerChance + "%");
-                Player.Message(p, "Destroy blocks chance: &b" + cfg.DestroyChance + "%");
-                Player.Message(p, "Water flood chance: &b" + cfg.WaterChance + "%");
+                p.Message("Fast lava chance: &b" + cfg.FastChance + "%");
+                p.Message("Killer lava/water chance: &b" + cfg.KillerChance + "%");
+                p.Message("Destroy blocks chance: &b" + cfg.DestroyChance + "%");
+                p.Message("Water flood chance: &b" + cfg.WaterChance + "%");
                 return;
             }
             
@@ -147,16 +147,16 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetOther(Player p, string[] args) {
             LSMapConfig cfg = RetrieveConfig(p);
             if (args.Length < 3) {
-                Player.Message(p, "Layer time: &b" + cfg.LayerInterval.Shorten(true));
-                Player.Message(p, "Round time: &b" + cfg.RoundTime.Shorten(true));
-                Player.Message(p, "Flood time: &b" + cfg.FloodTime.Shorten(true));
-                Player.Message(p, "Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
+                p.Message("Layer time: &b" + cfg.LayerInterval.Shorten(true));
+                p.Message("Round time: &b" + cfg.RoundTime.Shorten(true));
+                p.Message("Flood time: &b" + cfg.FloodTime.Shorten(true));
+                p.Message("Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
                 return;
             }
             
             string prop = args[2];
             if (prop.CaselessEq("safe")) {
-                Player.Message(p, "Place or break two blocks to determine the edges.");
+                p.Message("Place or break two blocks to determine the edges.");
                 p.MakeSelection(2, cfg, SetSafeZone);
                 return;
             }
@@ -183,7 +183,7 @@ namespace MCGalaxy.Commands.Fun {
             cfg.SafeZoneMax = (Vec3U16)Vec3S32.Max(m[0], m[1]);
             UpdateConfig(p, cfg);
 
-            Player.Message(p, "Safe zone set! &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
+            p.Message("Safe zone set! &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
             return false;
         }
         
@@ -201,48 +201,48 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                Player.Message(p, "%T/Help LS spawn %H- Views help for lava spawn settings");
-                Player.Message(p, "%T/Help LS block %H- Views help for lava block settings");
-                Player.Message(p, "%T/Help LS other %H- Views help for other settings");
+                p.Message("%T/Help LS spawn %H- Views help for lava spawn settings");
+                p.Message("%T/Help LS block %H- Views help for lava block settings");
+                p.Message("%T/Help LS other %H- Views help for other settings");
             } else if (message.CaselessEq("spawn")) {
-                Player.Message(p, "%T/LS set spawn %H- View lava spawns and layer info");
-                Player.Message(p, "%T/LS set spawn flood %H- Set position lava floods from");
+                p.Message("%T/LS set spawn %H- View lava spawns and layer info");
+                p.Message("%T/LS set spawn flood %H- Set position lava floods from");
                 // TODO: /ls set layer instead
-                Player.Message(p, "%T/LS set spawn layer %H- Set start position layers flood from");
-                Player.Message(p, "%T/LS set spawn height [height] %H- Sets height of each layer");
-                Player.Message(p, "%T/LS set spawn count [count] %H- Sets number of layers to flood");
-                Player.Message(p, "%T/LS set spawn layer [chance] %H- Sets chance of layer flooding");
+                p.Message("%T/LS set spawn layer %H- Set start position layers flood from");
+                p.Message("%T/LS set spawn height [height] %H- Sets height of each layer");
+                p.Message("%T/LS set spawn count [count] %H- Sets number of layers to flood");
+                p.Message("%T/LS set spawn layer [chance] %H- Sets chance of layer flooding");
             } else if (message.CaselessEq("block")) {
-                Player.Message(p, "%T/LS set block %H- View lava block type settings");
-                Player.Message(p, "%T/LS set block fast [chance] %H- Sets chance of fast lava");
-                Player.Message(p, "%T/LS set block water [chance]");
-                Player.Message(p, "%HSets chance of water instead of lava flood");
-                Player.Message(p, "%T/LS set block killer [chance]");
-                Player.Message(p, "%HSets chance of killer lava/water");
-                Player.Message(p, "%T/LS set block destroy [chance]");
-                Player.Message(p, "%HSets chance of the lava/water destroying blocks");
+                p.Message("%T/LS set block %H- View lava block type settings");
+                p.Message("%T/LS set block fast [chance] %H- Sets chance of fast lava");
+                p.Message("%T/LS set block water [chance]");
+                p.Message("%HSets chance of water instead of lava flood");
+                p.Message("%T/LS set block killer [chance]");
+                p.Message("%HSets chance of killer lava/water");
+                p.Message("%T/LS set block destroy [chance]");
+                p.Message("%HSets chance of the lava/water destroying blocks");
             } else if (message.CaselessEq("other")) {
-                Player.Message(p, "%T/LS set other %H- View times and safe zone location");
-                Player.Message(p, "%T/LS set other safe %H- Sets safe area that can't be flooded");
-                Player.Message(p, "%T/LS set other layer [timespan]");
-                Player.Message(p, "%HSet interval between layer floods");
-                Player.Message(p, "%T/LS set other flood [timespan]");
-                Player.Message(p, "%HSet how long until the map is flooded");
-                Player.Message(p, "%T/LS set other round [timespan]");
-                Player.Message(p, "%HSets how long until the round ends");
+                p.Message("%T/LS set other %H- View times and safe zone location");
+                p.Message("%T/LS set other safe %H- Sets safe area that can't be flooded");
+                p.Message("%T/LS set other layer [timespan]");
+                p.Message("%HSet interval between layer floods");
+                p.Message("%T/LS set other flood [timespan]");
+                p.Message("%HSet how long until the map is flooded");
+                p.Message("%T/LS set other round [timespan]");
+                p.Message("%HSets how long until the round ends");
             } else {
                 base.Help(p, message);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/LS start <map> %H- Starts Lava Survival");
-            Player.Message(p, "%T/LS stop %H- Stops Lava Survival");
-            Player.Message(p, "%T/LS end %H- Ends current round of Lava Survival");
-            Player.Message(p, "%T/LS add/remove %H- Adds/removes current map from map list");
-            Player.Message(p, "%T/LS set [property] %H- Sets a property. See %T/Help LS set");
-            Player.Message(p, "%T/LS status %H- View current round info and time");
-            Player.Message(p, "%T/LS go %H- Moves you to the current Lava Survival map");
+            p.Message("%T/LS start <map> %H- Starts Lava Survival");
+            p.Message("%T/LS stop %H- Stops Lava Survival");
+            p.Message("%T/LS end %H- Ends current round of Lava Survival");
+            p.Message("%T/LS add/remove %H- Adds/removes current map from map list");
+            p.Message("%T/LS set [property] %H- Sets a property. See %T/Help LS set");
+            p.Message("%T/LS status %H- View current round info and time");
+            p.Message("%T/LS go %H- Moves you to the current Lava Survival map");
         }
     }
 }

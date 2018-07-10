@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public abstract class DrawCmd : Command {
+    public abstract class DrawCmd : Command2 {
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual string PlaceMessage { get { return "Place or break two blocks to determine the edges."; } }
         protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush";
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             message = message.ToLower();
             string[] parts = message.SplitSpaces();
             
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             BrushArgs bArgs = new BrushArgs(p, dArgs.BrushArgs, dArgs.Block);
             if (!factory.Validate(bArgs)) return;
             
-            Player.Message(p, PlaceMessage);
+            p.Message(PlaceMessage);
             p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for %S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         

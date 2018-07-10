@@ -19,22 +19,22 @@ using System;
 using System.Threading;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdDelay : Command {
+    public sealed class CmdDelay : Command2 {
         public override string name { get { return "Delay"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TimeSpan duration = TimeSpan.Zero;
             if (!CommandParser.GetTimespan(p, message, ref duration, "wait for", "ms")) return;
             
             if (duration.TotalSeconds > 60) {
-                Player.Message(p, "Can only wait for a minute at most."); return;
+                p.Message("Can only wait for a minute at most."); return;
             }
             
             if (Interlocked.CompareExchange(ref p.UsingDelay, 1, 0) == 1) {
-                Player.Message(p, "You are already using /delay."); return;
+                p.Message("You are already using /delay."); return;
             }
             
             try {
@@ -45,10 +45,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Delay [timespan]");
-            Player.Message(p, "%HWaits for a certain amount of time.");
-            Player.Message(p, "%HMain use is to run a command after a certain delay in a %T/MB");
-            Player.Message(p, "%H  e.g. %T/MB air /Delay 1000ms |/Help Me %Hruns %T/Help Me " +
+            p.Message("%T/Delay [timespan]");
+            p.Message("%HWaits for a certain amount of time.");
+            p.Message("%HMain use is to run a command after a certain delay in a %T/MB");
+            p.Message("%H  e.g. %T/MB air /Delay 1000ms |/Help Me %Hruns %T/Help Me " +
                            "%H1000 milliseconds (1 second) after the MB is clicked");
         }
     }

@@ -104,8 +104,8 @@ namespace MCGalaxy.Games {
         
         // TODO: Actually make this show something
         public override void OutputStatus(Player p) {
-            Player.Message(p, "{0} %Steam: {1} captures", Blue.ColoredName, Blue.Captures);
-            Player.Message(p, "{0} %Steam: {1} captures", Red.ColoredName,  Red.Captures);
+            p.Message("{0} %Steam: {1} captures", Blue.ColoredName, Blue.Captures);
+            p.Message("{0} %Steam: {1} captures", Red.ColoredName,  Red.Captures);
         }
 
         protected override void StartGame() {
@@ -160,7 +160,7 @@ namespace MCGalaxy.Games {
             Get(p).HasFlag = false;
             team.Members.Add(p);
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
-            Player.Message(p, "You are now on the " + team.ColoredName + " team!");
+            p.Message("You are now on the " + team.ColoredName + " team!");
             TabList.Update(p, true);
         }
         

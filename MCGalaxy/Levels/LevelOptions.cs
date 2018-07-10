@@ -103,26 +103,26 @@ namespace MCGalaxy {
         
         static void SetOwner(Player p, Level lvl, string value) {
             lvl.Config.RealmOwner = value.Replace(' ', ',');
-            if (value.Length == 0) Player.Message(p, "Removed realm owner for this level.");
-            else Player.Message(p, "Set realm owner/owners of this level to {0}.", value);
+            if (value.Length == 0) p.Message("Removed realm owner for this level.");
+            else p.Message("Set realm owner/owners of this level to {0}.", value);
         }
         
         static void SetTree(Player p, Level lvl, string value) {
             if (value.Length == 0) {
-                Player.Message(p, "Reset tree type to default.");
+                p.Message("Reset tree type to default.");
                 lvl.Config.TreeType = "fern";
                 return;
             }
             
             Tree tree = Tree.Find(value);
             if (tree == null) {
-                Player.Message(p, "Tree type {0} not found.", value);
-                Player.Message(p, "Tree types: {0}", Tree.TreeTypes.Join(t => t.Key));
+                p.Message("Tree type {0} not found.", value);
+                p.Message("Tree types: {0}", Tree.TreeTypes.Join(t => t.Key));
                 return;
             }
             
             lvl.Config.TreeType = value.ToLower();
-            Player.Message(p, "Set tree type that saplings grow into to {0}.", value);
+            p.Message("Set tree type that saplings grow into to {0}.", value);
         }
         
         static void SetFinite(Player p, Level l, string v) { Toggle(p, l, ref l.Config.FiniteLiquids, "Finite mode"); }
@@ -161,8 +161,8 @@ namespace MCGalaxy {
             int raw = 0;
             if (!CommandParser.GetInt(p, value, "Physics overload", ref raw, 500)) return;
             
-            if (p != null && p.Rank < LevelPermission.Admin && raw > 2500) {
-                Player.Message(p, "Only SuperOPs may set physics overload higher than 2500"); return;
+            if (p.Rank < LevelPermission.Admin && raw > 2500) {
+                p.Message("Only SuperOPs may set physics overload higher than 2500"); return;
             }
             SetInt(l, raw, ref l.Config.PhysicsOverload, "Physics overload");
         }
@@ -199,7 +199,7 @@ namespace MCGalaxy {
         
         static void SetAuthors(Player p, Level lvl, string value) {
             lvl.Config.Authors = value.Replace(" ", "%S, ");
-            Player.Message(p, "Map authors set to: &b" + lvl.Config.Authors);
+            p.Message("Map authors set to: &b" + lvl.Config.Authors);
         }
         
         static void TogglePerms(Player p, Level lvl, ref bool target, string name) {
@@ -211,11 +211,9 @@ namespace MCGalaxy {
             target = !target;
             bool display = not ? !target : target;
             string targetStr = display ? "&aON" : "&cOFF";
-            lvl.Message(name + ": " + targetStr);
             
-            if (p != null && p.level != lvl) {
-                Player.Message(p, name + ": " + targetStr);
-            }
+            lvl.Message(name + ": " + targetStr);          
+            if (p.level != lvl) p.Message(name + ": " + targetStr);
         }
     }
 }

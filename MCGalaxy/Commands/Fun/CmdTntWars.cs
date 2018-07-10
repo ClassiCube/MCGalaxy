@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage TNT wars") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("scores")) {
                 HandleScores(p);
             } else {
@@ -42,15 +42,15 @@ namespace MCGalaxy.Commands.Fun {
         void HandleScores(Player p) {
             TWGame game = (TWGame)Game;
             if (!game.RoundInProgress) {
-                Player.Message(p, "Round is not in progress!"); return;
+                p.Message("Round is not in progress!"); return;
             }
             
             PlayerAndScore[] top = game.SortedByScore();
             int count = Math.Min(top.Length, 5);
             
-            Player.Message(p, "Top {0} scores:", count);
+            p.Message("Top {0} scores:", count);
             for (int i = 0; i < count; i++) {
-                Player.Message(p, game.FormatTopScore(top, i));
+                p.Message(game.FormatTopScore(top, i));
             }
         }
         
@@ -65,15 +65,15 @@ namespace MCGalaxy.Commands.Fun {
             string prop = args[1], value = args[2];
             if (prop.CaselessEq("spawn")) {
                 if (gameCfg.Mode == TWGameMode.FFA) {
-                    Player.Message(p, "%WCannot set spawns in Free For All mode"); return;
+                    p.Message("%WCannot set spawns in Free For All mode"); return;
                 }
                 
                 if (value.CaselessEq("red")) {
                     cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    Player.Message(p, "TNT Wars: Set &cRed %Sspawn");
+                    p.Message("TNT Wars: Set &cRed %Sspawn");
                 } else if (value.CaselessEq("blue")) {
                     cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    Player.Message(p, "TNT Wars: Set &9Blue %Sspawn");
+                    p.Message("TNT Wars: Set &9Blue %Sspawn");
                 } else {
                     Help(p, "team"); return;
                 }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "TNT at a time", ref amount, 0)) return;
                 cfg.MaxActiveTnt = amount;
                 
-                Player.Message(p, "TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
+                p.Message("TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
                                amount == 0 ? "unlimited" : value);
             } else if (prop.CaselessEq("graceperiod")) {
                 SetBool(p, ref cfg.GracePeriod, value, "Grace period");
@@ -91,21 +91,21 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "Grace time", ref time, 10, 300)) return;
                 cfg.GracePeriodTime = time;
                 
-                Player.Message(p, "TNT Wars: Grace period is now {0} seconds", value);
+                p.Message("TNT Wars: Grace period is now {0} seconds", value);
             } else if (prop.CaselessEq("gamemode")) {
                 if (value.CaselessEq("tdm")) {
                     if (gameCfg.Mode == TWGameMode.FFA) {
-                        if (p.level != game.Map) { Player.Message(p, "Changed gamemode to Team Deathmatch"); }
+                        if (p.level != game.Map) { p.Message("Changed gamemode to Team Deathmatch"); }
                         game.ModeTDM();
                     } else {
-                        Player.Message(p, "&cGamemode is already Team Deathmatch"); return;
+                        p.Message("&cGamemode is already Team Deathmatch"); return;
                     }
                 } else if (value.CaselessEq("ffa")) {
                     if (gameCfg.Mode == TWGameMode.TDM) {
-                        if (p.level != game.Map) { Player.Message(p, "Changed gamemode to Free For All"); }
+                        if (p.level != game.Map) { p.Message("Changed gamemode to Free For All"); }
                         game.ModeFFA();
                     } else {
-                        Player.Message(p, "&cGamemode is already Free For All"); return;
+                        p.Message("&cGamemode is already Free For All"); return;
                     }
                 } else {
                     Help(p, "other"); return;
@@ -138,19 +138,19 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         static void OutputStatus(Player p, TWConfig gameCfg, TWMapConfig cfg) {
-            Player.Message(p, "Gamemode: &a{0} %Sat difficulty &a{1}",
+            p.Message("Gamemode: &a{0} %Sat difficulty &a{1}",
                            gameCfg.Mode, gameCfg.Difficulty);
-            Player.Message(p, "TNT per player at a time: &a{0}",
+            p.Message("TNT per player at a time: &a{0}",
                            cfg.MaxActiveTnt == 0 ? "unlimited" : cfg.MaxActiveTnt.ToString());
-            Player.Message(p, "Grace period: {0} %S(for {1} seconds)",
+            p.Message("Grace period: {0} %S(for {1} seconds)",
                            GetBool(cfg.GracePeriod), cfg.GracePeriodTime);
-            Player.Message(p, "Team balancing: {0}%S, Team killing: {1}",
+            p.Message("Team balancing: {0}%S, Team killing: {1}",
                            GetBool(cfg.BalanceTeams), GetBool(cfg.TeamKills));
-            Player.Message(p, "Score: &a{0} %Spoints needed to win, &a{1} %Spoints per kill",
+            p.Message("Score: &a{0} %Spoints needed to win, &a{1} %Spoints per kill",
                            cfg.ScoreRequired, cfg.ScorePerKill);
-            Player.Message(p, "Streaks: {0}%S, Multikill bonus: {1}",
+            p.Message("Streaks: {0}%S, Multikill bonus: {1}",
                            GetBool(cfg.Streaks), GetBool(cfg.MultiKillBonus != 0));
-            Player.Message(p, "Assists: {0} %S(at {1} points)",
+            p.Message("Assists: {0} %S(at {1} points)",
                            GetBool(cfg.AssistScore > 0), cfg.AssistScore);
         }
         
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "Points", ref score, 0)) return false;
                 cfg.ScoreRequired = score;
                 
-                Player.Message(p, "TNT Wars: Score required to win is now &a{0} %Spoints!", score);
+                p.Message("TNT Wars: Score required to win is now &a{0} %Spoints!", score);
             } else if (opt.CaselessEq("streaks")) {
                 SetBool(p, ref cfg.Streaks, value, "Streaks");
             } else if (opt.CaselessEq("multi")) {
@@ -172,25 +172,25 @@ namespace MCGalaxy.Commands.Fun {
                 cfg.MultiKillBonus = multi;
                 
                 if (multi == 0) {
-                    Player.Message(p, "Multikill bonus is now &cdisabled");
+                    p.Message("Multikill bonus is now &cdisabled");
                 } else {
-                    Player.Message(p, "Scores per extra kill is now &a{0} %Spoints", multi);
+                    p.Message("Scores per extra kill is now &a{0} %Spoints", multi);
                 }
             } else if (opt.CaselessEq("kill")) {
                 int kill = 1;
                 if (!CommandParser.GetInt(p, value, "Points", ref kill, 0)) return false;
                 cfg.ScorePerKill = kill;
                 
-                Player.Message(p, "Score per kill is now &a{0} %Spoints", kill);
+                p.Message("Score per kill is now &a{0} %Spoints", kill);
             } else if (opt.CaselessEq("assist")) {
                 int assist = 1;
                 if (!CommandParser.GetInt(p, value, "Points", ref assist, 0)) return false;
                 cfg.AssistScore = assist;
                 
                 if (assist == 0) {
-                    Player.Message(p, "Scores per assist is now &cdisabled");
+                    p.Message("Scores per assist is now &cdisabled");
                 } else {
-                    Player.Message(p, "TScore per assist is now &a{0} %Spoints", assist);
+                    p.Message("TScore per assist is now &a{0} %Spoints", assist);
                 }
             } else {
                 return false;
@@ -204,18 +204,18 @@ namespace MCGalaxy.Commands.Fun {
             string opt = args[3];
             
             if (IsCreateCommand(opt)) {
-                Player.Message(p, "TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
+                p.Message("TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
                 p.MakeSelection(2, zones, AddZoneCallback);
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length > 4 && args[4].CaselessEq("all")) {
-                    Player.Message(p, "TNT Wars: Place a block to delete the zone for {0}!", msg);
+                    p.Message("TNT Wars: Place a block to delete the zone for {0}!", msg);
                     p.MakeSelection(1, zones, DeleteZoneCallback);
                 } else {
                     zones.Clear();
-                    Player.Message(p, "TNT Wars: Deleted all zones for {0}!", msg);
+                    p.Message("TNT Wars: Deleted all zones for {0}!", msg);
                 }
             } else if (opt.CaselessEq("check")) {
-                Player.Message(p, "TNT Wars: Place a block to check for {0}!", msg);
+                p.Message("TNT Wars: Place a block to check for {0}!", msg);
                 p.MakeSelection(1, zones, CheckZoneCallback);
             } else {
                 return false;
@@ -236,7 +236,7 @@ namespace MCGalaxy.Commands.Fun {
 
             List<TWGame.TWZone> zones = (List<TWGame.TWZone>)state;
             zones.Add(zn);
-            Player.Message(p, "TNT Wars: Zone added!");
+            p.Message("TNT Wars: Zone added!");
             return false;
         }
         
@@ -249,12 +249,12 @@ namespace MCGalaxy.Commands.Fun {
                 TWGame.TWZone zn = zones[i];
                 if (x >= zn.MinX && x <= zn.MaxX && y >= zn.MinY && y <= zn.MaxY && z >= zn.MinZ && z <= zn.MaxZ) {
                     zones.RemoveAt(i);
-                    Player.Message(p, "TNT Wars: Zone deleted!");
+                    p.Message("TNT Wars: Zone deleted!");
                     any = true;
                 }
             }
             
-            if (!any) Player.Message(p, "TNT Wars Error: You weren't in any zone");
+            if (!any) p.Message("TNT Wars Error: You weren't in any zone");
             return false;
         }
         
@@ -265,15 +265,15 @@ namespace MCGalaxy.Commands.Fun {
             TWGame game = TWGame.Instance;
             if (zones == game.tntFreeZones) {
                 if (game.InZone(x, y, z, zones)) {
-                    Player.Message(p, "TNT Wars: You are currently in a no TNT zone!");
+                    p.Message("TNT Wars: You are currently in a no TNT zone!");
                 } else {
-                    Player.Message(p, "TNT Wars: You are not currently in a no TNT zone!");
+                    p.Message("TNT Wars: You are not currently in a no TNT zone!");
                 }
             } else if (zones == game.tntImmuneZones) {
                 if (game.InZone(x, y, z, zones)) {
-                    Player.Message(p, "TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destroy blocks)!");
+                    p.Message("TNT Wars: You are currently in a no TNT block explosion zone (explosions won't destroy blocks)!");
                 } else {
-                    Player.Message(p, "TNT Wars: You are currently in a TNT block explosion zone (explosions will destroy blocks)!");
+                    p.Message("TNT Wars: You are currently in a TNT block explosion zone (explosions will destroy blocks)!");
                 }
             }
             return false;
@@ -281,13 +281,13 @@ namespace MCGalaxy.Commands.Fun {
         
         static void SetDifficulty(TWGame game, TWDifficulty diff, Player p) {
             if (p.level != game.Map)
-                Player.Message(p, "TNT Wars: Changed difficulty to {0}", diff);
+                p.Message("TNT Wars: Changed difficulty to {0}", diff);
             game.SetDifficulty(diff);
         }
         
         static void SetBool(Player p, ref bool target, string opt, string name) {
             if (!CommandParser.GetBool(p, opt, ref target)) return;
-            Player.Message(p, "TNT Wars: {0} is now {1}", name, GetBool(target));
+            p.Message("TNT Wars: {0} is now {1}", name, GetBool(target));
         }
         
         static TWMapConfig RetrieveConfig(Player p) {
@@ -305,48 +305,48 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                Player.Message(p, "%T/Help TW team %H- Views help for team settings");
-                Player.Message(p, "%T/Help TW score %H- Views help for score settings");
-                Player.Message(p, "%T/Help TW zone %H- Views help for zone settings");
-                Player.Message(p, "%T/Help TW other %H- Views help for other settings");
-                Player.Message(p, "%T/TW set status %H- view status of settings");
+                p.Message("%T/Help TW team %H- Views help for team settings");
+                p.Message("%T/Help TW score %H- Views help for score settings");
+                p.Message("%T/Help TW zone %H- Views help for zone settings");
+                p.Message("%T/Help TW other %H- Views help for other settings");
+                p.Message("%T/TW set status %H- view status of settings");
             } else if (message.CaselessEq("team")) {
-                Player.Message(p, "%T/TW set spawn [red/blue] %H- set the spawns for red/blue team");
-                Player.Message(p, "%T/TW set balanceteams [on/off] %H- enable/disable balancing teams");
-                Player.Message(p, "%T/TW set teamkill [on/off] %H- enable/disable teamkills");
+                p.Message("%T/TW set spawn [red/blue] %H- set the spawns for red/blue team");
+                p.Message("%T/TW set balanceteams [on/off] %H- enable/disable balancing teams");
+                p.Message("%T/TW set teamkill [on/off] %H- enable/disable teamkills");
             } else if (message.CaselessEq("score")) {
-                Player.Message(p, "%T/TW set score required [points] %H- Sets score required to win the round");
-                Player.Message(p, "%T/TW set score streaks [on/off] %H- enable/disable kill streaks");
-                Player.Message(p, "%T/TW set score multi [points] %H- set the score bonus per multikill");
-                Player.Message(p, "%T/TW set score kill [points] %H- set the score per kill");
-                Player.Message(p, "%T/TW set score assist [points] %H- set the score per assist");
+                p.Message("%T/TW set score required [points] %H- Sets score required to win the round");
+                p.Message("%T/TW set score streaks [on/off] %H- enable/disable kill streaks");
+                p.Message("%T/TW set score multi [points] %H- set the score bonus per multikill");
+                p.Message("%T/TW set score kill [points] %H- set the score per kill");
+                p.Message("%T/TW set score assist [points] %H- set the score per assist");
             } else if (message.CaselessEq("zone")) {
                 // TODO: improve this massively
-                Player.Message(p, "%T/TW set zone notnt/nodestroy add %H- Creates a new zone");
-                Player.Message(p, "%T/TW set zone notnt/nodestroy delete %H- Deletes all zones affecting a block");
-                Player.Message(p, "%T/TW set zone notnt/nodestroy delete all %H- Deletes all zones");
-                Player.Message(p, "%T/TW set zone notnt/nodestroy check %H- Lists zones affecting a block");
-                Player.Message(p, "(No TNT zones or zones where explosions do not delete blocks");
+                p.Message("%T/TW set zone notnt/nodestroy add %H- Creates a new zone");
+                p.Message("%T/TW set zone notnt/nodestroy delete %H- Deletes all zones affecting a block");
+                p.Message("%T/TW set zone notnt/nodestroy delete all %H- Deletes all zones");
+                p.Message("%T/TW set zone notnt/nodestroy check %H- Lists zones affecting a block");
+                p.Message("(No TNT zones or zones where explosions do not delete blocks");
             } else if (message.CaselessEq("other")) {
-                Player.Message(p, "%T/TW set tnt [amount] %H- sets the amount of tnt per player at a time");
-                Player.Message(p, "%T/TW set graceperiod [on/off] %H- enable/disable the grace period");
-                Player.Message(p, "%T/TW set gracetime [amount] %H- set the grace period time (in seconds)");
-                Player.Message(p, "%T/TW set gamemode [tdm/ffa] %H- set team or free for all gamemode");
-                Player.Message(p, "%T/TW set difficulty [easy/normal/hard/extreme] %H- set difficulty");
+                p.Message("%T/TW set tnt [amount] %H- sets the amount of tnt per player at a time");
+                p.Message("%T/TW set graceperiod [on/off] %H- enable/disable the grace period");
+                p.Message("%T/TW set gracetime [amount] %H- set the grace period time (in seconds)");
+                p.Message("%T/TW set gamemode [tdm/ffa] %H- set team or free for all gamemode");
+                p.Message("%T/TW set difficulty [easy/normal/hard/extreme] %H- set difficulty");
             } else {
                 base.Help(p, message);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/TW start <map> %H- Starts TNT wars");
-            Player.Message(p, "%T/TW stop %H- Stops TNT wars");
-            Player.Message(p, "%T/TW end %H- Ends current round of TNT wars");
-            Player.Message(p, "%T/TW add/remove %H- Adds/removes current map from map list");
-            Player.Message(p, "%T/TW set [property] %H- Sets a property. See %T/Help TW set");
-            Player.Message(p, "%T/TW status %H- View your current score and health");
-            Player.Message(p, "%T/TW go %H- Moves you to the current TNT wars map");
-            Player.Message(p, "%T/TW scores %H- lists players with highest scores");
+            p.Message("%T/TW start <map> %H- Starts TNT wars");
+            p.Message("%T/TW stop %H- Stops TNT wars");
+            p.Message("%T/TW end %H- Ends current round of TNT wars");
+            p.Message("%T/TW add/remove %H- Adds/removes current map from map list");
+            p.Message("%T/TW set [property] %H- Sets a property. See %T/Help TW set");
+            p.Message("%T/TW status %H- View your current score and health");
+            p.Message("%T/TW go %H- Moves you to the current TNT wars map");
+            p.Message("%T/TW scores %H- lists players with highest scores");
         }
     }
 }

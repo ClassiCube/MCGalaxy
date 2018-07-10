@@ -62,10 +62,10 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Tree [type] <brush args> %H- Draws a tree.");
-            Player.Message(p, "%T/Tree [type] [size/height] <brush args>");
-            Player.Message(p, "%H  Types: &f{0}", Tree.TreeTypes.Join(t => t.Key));
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Tree [type] <brush args> %H- Draws a tree.");
+            p.Message("%T/Tree [type] [size/height] <brush args>");
+            p.Message("%H  Types: &f{0}", Tree.TreeTypes.Join(t => t.Key));
+            p.Message(BrushHelpLine);
         }
     }
 }

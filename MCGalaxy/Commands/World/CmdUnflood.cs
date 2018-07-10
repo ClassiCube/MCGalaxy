@@ -19,14 +19,14 @@ using System;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdUnflood : Command {
+    public sealed class CmdUnflood : Command2 {
         public override string name { get { return "Unflood"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             BlockID block;
             if (!message.CaselessEq("all") && !CommandParser.GetBlock(p, message, out block)) return;
@@ -44,9 +44,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Unflood [liquid]");
-            Player.Message(p, "%HUnfloods the map you are currently in of [liquid].");
-            Player.Message(p, "%H  If [liquid] is \"all\", unfloods the map of all liquids.");
+            p.Message("%T/Unflood [liquid]");
+            p.Message("%HUnfloods the map you are currently in of [liquid].");
+            p.Message("%H  If [liquid] is \"all\", unfloods the map of all liquids.");
         }
     }
 }

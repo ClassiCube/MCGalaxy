@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdEconomy : Command {
+    public sealed class CmdEconomy : Command2 {
         public override string name { get { return "Economy"; } }
         public override string shortcut { get { return "Eco"; } }
         public override string type { get { return CommandTypes.Economy; } }
@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Eco {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can setup the economy") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] raw = message.SplitSpaces();
             string[] args = new string[] { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)
@@ -35,10 +35,10 @@ namespace MCGalaxy.Commands.Eco {
             if (!CheckExtraPerm(p, 1)) return;
             
             if (args[0].CaselessEq("enable")) {
-                Player.Message(p, "Economy is now &aenabled");
+                p.Message("Economy is now &aenabled");
                 Economy.Enabled = true; Economy.Save();
             } else if (args[0].CaselessEq("disable")) {
-                Player.Message(p, "Economy is now &cdisabled");
+                p.Message("Economy is now &cdisabled");
                 Economy.Enabled = false; Economy.Save();
             } else {
                 Item item = Economy.GetItem(args[0]);
@@ -54,15 +54,15 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Eco enable/disable %H- Enables/disables the economy system.");
-            Player.Message(p, "%T/Eco help [item] %H- Outputs help for setting up that item.");
-            Player.Message(p, "   %HAll items: %S" + Economy.Items.Join(item => item.Name));
+            p.Message("%T/Eco enable/disable %H- Enables/disables the economy system.");
+            p.Message("%T/Eco help [item] %H- Outputs help for setting up that item.");
+            p.Message("   %HAll items: %S" + Economy.Items.Join(item => item.Name));
         }
         
         public override void Help(Player p, string message) {
             Item item = Economy.GetItem(message);
             if (item == null) {
-                Player.Message(p, "No item has that name, see %T/Eco help %Sfor a list of items.");
+                p.Message("No item has that name, see %T/Eco help %Sfor a list of items.");
             } else {
                 item.OnSetupCommandHelp(p);
             }

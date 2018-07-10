@@ -42,16 +42,16 @@ namespace MCGalaxy.Commands.Building {
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
             if (m[0].Y == m[1].Y) return;
-            Player.Message(dArgs.Player, "The two corners of the pyramid must be on the same level");
+            dArgs.Player.Message("The two corners of the pyramid must be on the same level");
             m = null;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Pyramid <brush args>");
-            Player.Message(p, "%HDraws a square pyramid, using two points for the base.");
-            Player.Message(p, "%T/Pyramid [mode] <brush args>");
-            Player.Message(p, "%HModes: &fsolid/hollow/reverse");
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Pyramid <brush args>");
+            p.Message("%HDraws a square pyramid, using two points for the base.");
+            p.Message("%T/Pyramid [mode] <brush args>");
+            p.Message("%HModes: &fsolid/hollow/reverse");
+            p.Message(BrushHelpLine);
         }
     }
 }

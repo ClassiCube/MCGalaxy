@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdBlockSet : ItemPermsCmd {
         public override string name { get { return "BlockSet"; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
             
@@ -48,13 +48,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BlockSet [block] [rank]");
-            Player.Message(p, "%HSets lowest rank that can modify/use [block] to [rank]");
-            Player.Message(p, "%T/BlockSet [block] +[rank]");
-            Player.Message(p, "%HAllows a specific rank to modify/use [block]");
-            Player.Message(p, "%T/BlockSet [block] -[rank]");
-            Player.Message(p, "%HPrevents a specific rank from modifying/using [block]");
-            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
+            p.Message("%T/BlockSet [block] [rank]");
+            p.Message("%HSets lowest rank that can modify/use [block] to [rank]");
+            p.Message("%T/BlockSet [block] +[rank]");
+            p.Message("%HAllows a specific rank to modify/use [block]");
+            p.Message("%T/BlockSet [block] -[rank]");
+            p.Message("%HPrevents a specific rank from modifying/using [block]");
+            p.Message("%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

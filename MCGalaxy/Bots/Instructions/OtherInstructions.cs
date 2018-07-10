@@ -57,7 +57,7 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             string ai = (string)data.Metadata;
             if (File.Exists("bots/" + ai)) {
-                ScriptFile.Parse(null, bot, ai);
+                ScriptFile.Parse(Player.Console, bot, ai);
                 return true;
             }
             bot.NextInstruction(); return true;
@@ -72,7 +72,7 @@ namespace MCGalaxy.Bots {
         public override void Output(Player p, string[] args, StreamWriter w) {
             string script = args.Length > 3 ? args[3] : "";
             if (script.Length == 0) {
-                Player.Message(p, "LinkScript requires a script name as a parameter");
+                p.Message("LinkScript requires a script name as a parameter");
             } else {
                 w.WriteLine(Name + " " + script);
             }

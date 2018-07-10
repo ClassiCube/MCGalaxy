@@ -20,14 +20,14 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace MCGalaxy.Commands.Info { 
-    public sealed class CmdRankInfo : Command {        
+    public sealed class CmdRankInfo : Command2 {        
         public override string name { get { return "RankInfo"; } }
         public override string shortcut { get { return "ri"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string name) {
+        public override void Use(Player p, string name, CommandData data) {
             if (CheckSuper(p, name, "player name")) return;
             if (name.Length == 0) name = p.name;
             
@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands.Info {
             string target = PlayerInfo.GetColoredName(p, name);
             
             if (rankings.Count == 0) {
-                Player.Message(p, "{0} %Shas no rankings.", target); return;
+                p.Message("{0} %Shas no rankings.", target); return;
             } else {
-                Player.Message(p, "  Rankings for {0}:", target);
+                p.Message("  Rankings for {0}:", target);
             }
             
             foreach (string line in rankings) {
@@ -64,17 +64,17 @@ namespace MCGalaxy.Commands.Info {
                 }
                 string reason = args.Length <= offset ? "(no reason given)" : args[offset].Replace("%20", " ");
                
-                Player.Message(p, "&aFrom {0} &ato {1} &a{2} ago", 
+                p.Message("&aFrom {0} &ato {1} &a{2} ago", 
                                Group.GetColoredName(oldRank), Group.GetColoredName(newRank), 
                                delta.Shorten(true, false));
-                Player.Message(p, "&aBy %S{0}&a, reason: %S{1}", 
+                p.Message("&aBy %S{0}&a, reason: %S{1}", 
                                PlayerInfo.GetColoredName(p, args[1]), reason);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/RankInfo [player]");
-            Player.Message(p, "%HReturns details about that person's rankings.");
+            p.Message("%T/RankInfo [player]");
+            p.Message("%HReturns details about that person's rankings.");
         }
     }
 }

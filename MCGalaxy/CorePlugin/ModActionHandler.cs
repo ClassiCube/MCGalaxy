@@ -54,7 +54,7 @@ namespace MCGalaxy.Core {
             if (e.Duration.Ticks != 0) suffix = " %Sfor " + e.Duration.Shorten();
             
             Logger.Log(LogType.UserActivity, "{0} was {1} by {2}",
-                       e.Target, action, e.ActorName + suffix);
+                       e.Target, action, e.Actor.name + suffix);
         }
 
         
@@ -105,7 +105,7 @@ namespace MCGalaxy.Core {
             LogAction(e, who, "&8banned");
             
             if (e.Duration.Ticks != 0) {
-                string banner = e.Actor == null ? "(console)" : e.Actor.truename;
+                string banner = e.Actor.truename;
                 DateTime end = DateTime.UtcNow.Add(e.Duration);
                 Server.tempBans.AddOrReplace(e.Target, Ban.PackTempBanData(e.Reason, banner, end));
                 Server.tempBans.Save();
@@ -119,7 +119,7 @@ namespace MCGalaxy.Core {
                 
                 if (who != null) {
                     string msg = e.Reason.Length == 0 ? ServerConfig.DefaultBanMessage : e.Reason;
-                    who.Kick("Banned by " + e.ActorName + ": " + msg);
+                    who.Kick("Banned by " + e.Actor.ColoredName + ": " + msg);
                 }
             }
         }
@@ -138,8 +138,9 @@ namespace MCGalaxy.Core {
             ModActionCmd.ChangeRank(e.Target, Group.BannedRank, Group.DefaultRank, who, false);
             
             string ip = PlayerInfo.FindIP(e.Target);
-            if (ip != null && Server.bannedIP.Contains(ip))
-                Player.Message(e.Actor, "NOTE: Their IP is still banned.");
+            if (ip != null && Server.bannedIP.Contains(ip)) {
+                e.Actor.Message("NOTE: Their IP is still banned.");
+            }
         }
         
         
@@ -157,14 +158,14 @@ namespace MCGalaxy.Core {
         
         static void DoBanIP(ModAction e) {
             LogIPAction(e, "&8IP banned");
-            Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.ActorName);
+            Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.Actor.name);
             Server.bannedIP.Add(e.Target);
             Server.bannedIP.Save();
         }
         
         static void DoUnbanIP(ModAction e) {
             LogIPAction(e, "&8IP unbanned");
-            Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.ActorName);
+            Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.Actor.name);
             Server.bannedIP.Remove(e.Target);
             Server.bannedIP.Save();
         }
@@ -175,19 +176,19 @@ namespace MCGalaxy.Core {
             if (who != null) {
                 LogAction(e, who, "&ewarned");
                 if (who.warn == 0) {
-                    Player.Message(who, "Do it again twice and you will get kicked!");
+                    who.Message("Do it again twice and you will get kicked!");
                 } else if (who.warn == 1) {
-                    Player.Message(who, "Do it one more time and you will get kicked!");
+                    who.Message("Do it one more time and you will get kicked!");
                 } else if (who.warn == 2) {
-                    Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, e.ActorName);
-                    string chatMsg = "by " + e.ActorName + "%S: " + e.Reason;
-                    string kickMsg = "Kicked by " + e.ActorName + ": &f" + e.Reason;
+                    Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, e.Actor.ColoredName);
+                    string chatMsg = "by " + e.Actor.ColoredName + "%S: " + e.Reason;
+                    string kickMsg = "Kicked by " + e.Actor.ColoredName + ": &f" + e.Reason;
                     who.Kick(chatMsg, kickMsg);
                 }
                 who.warn++;
             } else {
                 if (!ServerConfig.LogNotes) {
-                    Player.Message(e.Actor, "Notes logging must be enabled to warn offline players."); return;
+                    e.Actor.Message("Notes logging must be enabled to warn offline players."); return;
                 }
                 LogAction(e, who, "&ewarned");
             }
@@ -214,7 +215,7 @@ namespace MCGalaxy.Core {
         }
         
         static void WriteRankInfo(ModAction e, Group newRank) {
-            string assigner = e.Actor == null ? "(console)" : e.Actor.name;
+            string assigner = e.Actor.name;
             long time = DateTime.UtcNow.ToUnixTime();
 
             string line = e.Target + " " + assigner + " " + time + " " + newRank.Name
@@ -245,7 +246,7 @@ namespace MCGalaxy.Core {
             }
             
             long expiry = expiryTime.ToUnixTime();
-            string assigner = e.Actor == null ? "(console)" : e.Actor.name;
+            string assigner = e.Actor.name;
             return assigner + " " + assign + " " + expiry;
         }
     }

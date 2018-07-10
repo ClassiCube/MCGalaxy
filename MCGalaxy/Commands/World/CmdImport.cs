@@ -20,12 +20,12 @@ using System.IO;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdImport : Command {
+    public sealed class CmdImport : Command2 {
         public override string name { get { return "Import"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             
@@ -41,12 +41,12 @@ namespace MCGalaxy.Commands.World {
             }
 
             string formats = IMapImporter.Formats.Join(imp => imp.Extension);
-            Player.Message(p, "%WNo {0} file with that name was found in /extra/import folder.", formats);
+            p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
         }
         
         void Import(Player p, string path, string name, IMapImporter importer) {
             if (LevelInfo.MapExists(name)) {
-                Player.Message(p, "%WMap {0} already exists. Try renaming the file to something else before importing.", name);
+                p.Message("%WMap {0} already exists. Try renaming the file to something else before importing.", name);
                 return;
             }
             try {
@@ -59,18 +59,18 @@ namespace MCGalaxy.Commands.World {
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error importing map", ex);
-                Player.Message(p, "The map conversion failed."); 
+                p.Message("The map conversion failed."); 
                 return;
             }
-            Player.Message(p, "Converted map!");
+            p.Message("Converted map!");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Import [name]");
-            Player.Message(p, "%HImports a map file with that name.");
-            Player.Message(p, "%HSupported formats: %S{0}",
+            p.Message("%T/Import [name]");
+            p.Message("%HImports a map file with that name.");
+            p.Message("%HSupported formats: %S{0}",
                            IMapImporter.Formats.Join(imp => imp.Extension));
-            Player.Message(p, "  %HNote: Only loads maps from the /extra/import/ folder");
+            p.Message("  %HNote: Only loads maps from the /extra/import/ folder");
         }
     }
 }

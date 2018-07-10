@@ -114,7 +114,7 @@ namespace MCGalaxy {
             
             if (matches == 1) return match;
             if (matches == 0) {
-                Player.Message(p, "No " + group + " match \"" + name + "\".");
+                p.Message("No " + group + " match \"" + name + "\".");
             } else {
                 OutputMulti(p, name, nameMatches, matches, group, limit);
             }
@@ -169,7 +169,7 @@ namespace MCGalaxy {
             
             if (matches == 1) return matchItems;
             if (matches == 0) {
-                Player.Message(p, "No " + group + " found for \"" + name + "\".");
+                p.Message("No " + group + " found for \"" + name + "\".");
             } else {
                 OutputMulti(p, name, nameMatches, matches, "players", limit);
             }
@@ -181,8 +181,8 @@ namespace MCGalaxy {
             string count = matches > limit ? limit + "+ " : matches + " ";
             string names = nameMatches.ToString(0, nameMatches.Length - 2);
             
-            Player.Message(p, count + group + " match \"" + name + "\":");
-            Player.Message(p, names);
+            p.Message(count + group + " match \"" + name + "\":");
+            p.Message(names);
         }
     }
 }

@@ -19,12 +19,12 @@ using System;
 using System.IO;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdView : Command {        
+    public sealed class CmdView : Command2 {        
         public override string name { get { return "View"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!Directory.Exists("extra/text/")) 
                 Directory.CreateDirectory("extra/text");
             
@@ -33,26 +33,26 @@ namespace MCGalaxy.Commands.Info {
                 string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
 
                 if (all.Length == 0) {
-                    Player.Message(p, "No files are viewable by you");
+                    p.Message("No files are viewable by you");
                 } else {
-                    Player.Message(p, "Available files:");
-                    Player.Message(p, all);
+                    p.Message("Available files:");
+                    p.Message(all);
                 }
             } else {
                 message = Path.GetFileName(message);
                 
                 if (File.Exists("extra/text/" + message + ".txt")) {
                     string[] lines = File.ReadAllLines("extra/text/" + message + ".txt");
-                    Player.MessageLines(p, lines);
+                    p.MessageLines(lines);
                 } else {
-                    Player.Message(p, "File specified doesn't exist");
+                    p.Message("File specified doesn't exist");
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/view %H- Lists all files you can view");
-            Player.Message(p, "%T/view [file] %H- Views [file]'s contents");
+            p.Message("%T/view %H- Lists all files you can view");
+            p.Message("%T/view [file] %H- Views [file]'s contents");
         }
     }
 }

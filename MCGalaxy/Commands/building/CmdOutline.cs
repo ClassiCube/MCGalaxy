@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             if (dArgs.Message.Length == 0) {
-                Player.Message(dArgs.Player, "Block name is required."); return null;
+                dArgs.Player.Message("Block name is required."); return null;
             }
             
             BlockID target;
@@ -60,11 +60,11 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Outline [block] <brush args>");
-            Player.Message(p, "%HOutlines [block] with output of your current brush.");
-            Player.Message(p, "%T/Outline [block] [mode] <brush args>");
-            Player.Message(p, "%HModes: &fall/up/layer/down (default all)");
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Outline [block] <brush args>");
+            p.Message("%HOutlines [block] with output of your current brush.");
+            p.Message("%T/Outline [block] [mode] <brush args>");
+            p.Message("%HModes: &fall/up/layer/down (default all)");
+            p.Message(BrushHelpLine);
         }
     }
 }

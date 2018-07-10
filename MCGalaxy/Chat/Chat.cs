@@ -83,7 +83,7 @@ namespace MCGalaxy {
 
         public static bool FilterAll(Player pl, object arg) { return true; }
         public static bool FilterGlobal(Player pl, object arg) {
-            return pl.SuperUser || (pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null);
+            return pl.IsSuper || (pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null);
         }
         
         public static bool FilterLevel(Player pl, object arg) {
@@ -132,9 +132,8 @@ namespace MCGalaxy {
             OnChatSysEvent.Call(scope, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
-                if (filter != null && !filter(pl, arg)) continue;
-                
-                Player.Message(pl, msg);
+                if (filter != null && !filter(pl, arg)) continue;               
+                pl.Message(msg);
             }
         }
         
@@ -161,7 +160,7 @@ namespace MCGalaxy {
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
-            if (source == null) source = ConsolePlayer.Instance;
+            if (source == null) source = Player.Console;
             
             OnChatFromEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
@@ -169,7 +168,7 @@ namespace MCGalaxy {
                 if (filter != null && !filter(pl, arg)) continue;
                 
                 if (Ignoring(pl, source)) continue;
-                Player.Message(pl, UnescapeMessage(pl, source, msg));
+                pl.Message(UnescapeMessage(pl, source, msg));
             }
         }
         
@@ -188,7 +187,7 @@ namespace MCGalaxy {
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];           
-            if (source == null) source = ConsolePlayer.Instance;
+            if (source == null) source = Player.Console;
             
             OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
@@ -202,7 +201,7 @@ namespace MCGalaxy {
                     if (scope == ChatScope.PM) { continue; }
                 }
                 
-                Player.Message(pl, UnescapeMessage(pl, source, msg));
+                pl.Message(UnescapeMessage(pl, source, msg));
             }
             source.CheckForMessageSpam();
         }

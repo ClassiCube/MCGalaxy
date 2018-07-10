@@ -20,7 +20,7 @@ using MCGalaxy.Eco;
 using MCGalaxy.Events.EconomyEvents;
 
 namespace MCGalaxy.Commands.Eco {
-    public abstract class MoneyCmd : Command {
+    public abstract class MoneyCmd : Command2 {
         public override string type { get { return CommandTypes.Economy; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
 
@@ -32,15 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             
             data.TargetName = args[0];
             data.Reason = args.Length > 2 ? args[2] : null;
-            data.SourcePlayer = p;
-            
-            if (p == null) {
-                data.SourceName = "(console)";
-                data.SourceFormatted = "(console)";
-            } else {
-                data.SourceName = p.name;
-                data.SourceFormatted = p.ColoredName;
-            }
+            data.Source = p;
 
             all = all && args[1].CaselessEq("all");
             return all || CommandParser.GetInt(p, args[1], "Amount", ref data.Amount, 1);

@@ -98,7 +98,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerConnect(Player p) {
             if (GetConfig().SetMainLevel) return;
-            Player.Message(p, "&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
+            p.Message("&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
@@ -125,18 +125,18 @@ namespace MCGalaxy.Games {
             p.SetPrefix();
             
             if (RoundInProgress) {
-                Player.Message(p, "You joined in the middle of a round. &cYou are now infected!");
+                p.Message("You joined in the middle of a round. &cYou are now infected!");
                 data.BlocksLeft = 25;
                 InfectPlayer(p, null);
             }
 
             double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
             if (startLeft >= 0) {
-                Player.Message(p, "&a{0} %Sseconds left until the round starts. &aRun!", (int)startLeft);
+                p.Message("&a{0} %Sseconds left until the round starts. &aRun!", (int)startLeft);
             }
             
             MessageMapInfo(p);
-            Player.Message(p, "This map's win chance is &a{0}%S%", Map.WinChance);
+            p.Message("This map's win chance is &a{0}%S%", Map.WinChance);
         }
         
         void HandlePlayerChat(Player p, string message) {
@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
                 p.cancelchat = true;
             } else if (message[0] == '`') {
                 if (p.Game.Team == null) {
-                    Player.Message(p, "You are not on a team, so cannot send a team message.");
+                    p.Message("You are not on a team, so cannot send a team message.");
                 } else {
                     p.Game.Team.Message(p, message.Substring(1));
                 }
@@ -193,13 +193,13 @@ namespace MCGalaxy.Games {
             
             if (placing || (!placing && p.painting)) {
                 if (data.BlocksLeft <= 0) {
-                    Player.Message(p, "You have no blocks left.");
+                    p.Message("You have no blocks left.");
                     p.RevertBlock(x, y, z); p.cancelBlock = true; return;
                 }
 
                 data.BlocksLeft--;
                 if ((data.BlocksLeft % 10) == 0 || data.BlocksLeft <= 10) {
-                    Player.Message(p, "Blocks Left: &4" + data.BlocksLeft);
+                    p.Message("Blocks Left: &4" + data.BlocksLeft);
                 }
             }
         }       
@@ -232,12 +232,12 @@ namespace MCGalaxy.Games {
                 }
                 
                 string action = data.PillarFined ? "kicked" : "fined 10 " + ServerConfig.Currency;
-                Player.Message(p, "You are pillaring! %WStop before you are " + action + "!");
+                p.Message("You are pillaring! %WStop before you are " + action + "!");
             } else if (data.BlocksStacked == 4) {
                 if (!data.PillarFined) {
                     Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
-                    Command.Find("Take").Use(null, p.name + " 10 Auto fine for pillaring");
-                    Player.Message(p, "  %WThe next time you pillar, you will be &4kicked!");
+                    Command.Find("Take").Use(Player.Console, p.name + " 10 Auto fine for pillaring");
+                    p.Message("  %WThe next time you pillar, you will be &4kicked!");
                 } else {
                     ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);

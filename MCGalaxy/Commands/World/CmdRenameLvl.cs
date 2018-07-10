@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdRenameLvl : Command {
+    public sealed class CmdRenameLvl : Command2 {
         public override string name { get { return "RenameLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.World {
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             
@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.World {
             string newName = args[1].ToLower();
             if (!Formatter.ValidName(p, newName, "level")) return;
             
-            if (LevelInfo.MapExists(newName)) { Player.Message(p, "Level already exists."); return; }
-            if (lvl == Server.mainLevel) { Player.Message(p, "Cannot rename the main level."); return; }
+            if (LevelInfo.MapExists(newName)) { p.Message("Level already exists."); return; }
+            if (lvl == Server.mainLevel) { p.Message("Cannot rename the main level."); return; }
             if (!LevelInfo.ValidateAction(p, lvl, "rename this level")) return;
             
             List<Player> players = lvl.getPlayers();
@@ -53,9 +53,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/RenameLvl [level] [new name]");
-            Player.Message(p, "%HRenames [level] to [new name]");
-            Player.Message(p, "%HNote: Portals going to [level] will no longer work.");
+            p.Message("%T/RenameLvl [level] [new name]");
+            p.Message("%HRenames [level] to [new name]");
+            p.Message("%HNote: Portals going to [level] will no longer work.");
         }
     }
 }

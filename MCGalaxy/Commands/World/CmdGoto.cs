@@ -21,7 +21,7 @@ using System.IO;
 using MCGalaxy.Commands.Info;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdGoto : Command {
+    public sealed class CmdGoto : Command2 {
         public override string name { get { return "Goto"; } }
         public override string shortcut { get { return "g"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
         }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             
             if (message.CaselessStarts("-random")) {
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                     List<string> maps = CmdSearch.FilterList(files, args[1],
                                                              mapFile => Path.GetFileNameWithoutExtension(mapFile));
                     if (maps.Count == 0) {
-                        Player.Message(p, "No maps found containing \"{0}\"", args[1]);
+                        p.Message("No maps found containing \"{0}\"", args[1]);
                         return;
                     }
                     map = maps[new Random().Next(maps.Count)];
@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Goto [map name]");
-            Player.Message(p, "%HTeleports yourself to a different level.");
-            Player.Message(p, "%T/Goto -random");
-            Player.Message(p, "%HTeleports yourself to a random level.");
+            p.Message("%T/Goto [map name]");
+            p.Message("%HTeleports yourself to a different level.");
+            p.Message("%T/Goto -random");
+            p.Message("%HTeleports yourself to a random level.");
         }
     }
 }

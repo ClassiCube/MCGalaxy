@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.CPE {
             get { return new[] { new CommandAlias("XModel", "-own") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.IndexOf(' ') == -1) {
                 message = "-own " + message;
                 message = message.TrimEnd();
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.CPE {
             model = ParseModel(p, bot, model, out changedAxisScale);
             Entities.UpdateModel(bot, model);
             
-            Player.Message(p, "You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
+            p.Message("You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
             BotsFile.Save(p.level);
         }
         
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.CPE {
             if (p != who) {
                 Chat.MessageFrom(who, "λNICK %Shad their model change to a &c" + model);
             } else {
-                Player.Message(who, "Changed your own model to a &c" + model);
+                who.Message("Changed your own model to a &c" + model);
             }
             
             if (!model.CaselessEq("humanoid")) {
@@ -108,23 +108,23 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Model [name] [model] %H- Sets the model of that player.");
-            Player.Message(p, "%T/Model bot [name] [model] %H- Sets the model of that bot.");
-            Player.Message(p, "%HType %T/Help Model models %Hfor a list of models.");
-            Player.Message(p, "%HType %T/Help Model scale %Hfor how to scale a model.");
+            p.Message("%T/Model [name] [model] %H- Sets the model of that player.");
+            p.Message("%T/Model bot [name] [model] %H- Sets the model of that bot.");
+            p.Message("%HType %T/Help Model models %Hfor a list of models.");
+            p.Message("%HType %T/Help Model scale %Hfor how to scale a model.");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("models")) {
-                Player.Message(p, "%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
-                Player.Message(p, "%HTo set a block model, use a block ID for the model name.");
-                Player.Message(p, "%HType %T/Help Model scale %Hfor how to scale a model.");
+                p.Message("%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
+                p.Message("%HTo set a block model, use a block ID for the model name.");
+                p.Message("%HType %T/Help Model scale %Hfor how to scale a model.");
             } else if (message.CaselessEq("scale")) {
-                Player.Message(p, "%HFor a scaled model, put \"|[scale]\" after the model name.");
-                Player.Message(p, "%H  e.g. pig|0.5, chibi|3");
-                Player.Message(p, "%HUse X/Y/Z [scale] for [model] to set scale on one axis.");
-                Player.Message(p, "%H  e.g. to set twice as tall, use 'Y 2' for [model]");
-                Player.Message(p, "%H  Use a [scale] of 0 to reset");
+                p.Message("%HFor a scaled model, put \"|[scale]\" after the model name.");
+                p.Message("%H  e.g. pig|0.5, chibi|3");
+                p.Message("%HUse X/Y/Z [scale] for [model] to set scale on one axis.");
+                p.Message("%H  e.g. to set twice as tall, use 'Y 2' for [model]");
+                p.Message("%H  Use a [scale] of 0 to reset");
             } else {
                 Help(p);
             }

@@ -21,13 +21,13 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdCenter : Command {
+    public sealed class CmdCenter : Command2 {
         public override string name { get { return "Center"; } }
         public override string shortcut { get { return "Centre"; } }
         public override string type { get { return CommandTypes.Building; } }
         
-        public override void Use(Player p, string message) {
-            Player.Message(p, "Place or break two blocks to determine the edges.");
+        public override void Use(Player p, string message, CommandData data) {
+            p.Message("Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for %SCenter", null, DoCentre);
         }
         
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Building {
                 if ((lenX & 1) == 1 && (lenZ & 1) == 1) Place(p, x + 1, y + 1, z + 1);
             }
             
-            Player.Message(p, "Gold blocks were placed at ({0}, {1}, {2}).", x, y, z);
+            p.Message("Gold blocks were placed at ({0}, {1}, {2}).", x, y, z);
             return false;
         }
         
@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Center");
-            Player.Message(p, "%HPlaces gold blocks at the center of your selection");
+            p.Message("%T/Center");
+            p.Message("%HPlaces gold blocks at the center of your selection");
         }
     }
 }

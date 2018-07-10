@@ -22,7 +22,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
     
-    public sealed class CmdReplaceAll : Command {
+    public sealed class CmdReplaceAll : Command2 {
         public override string name { get { return "ReplaceAll"; } }
         public override string shortcut { get { return "ra"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Building {
         public override bool SuperUseable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             BrushArgs args = new BrushArgs(p, message, Block.Air);
             Brush brush = BrushFactory.Find("Replace").Construct(args);
             if (brush == null) return;
@@ -43,15 +43,15 @@ namespace MCGalaxy.Commands.Building {
             measure.Perform(marks, brush, null);
             
             if (measure.Total > p.group.DrawLimit) {
-                Player.Message(p, "You tried to replace " + measure.Total + " blocks.");
-                Player.Message(p, "You cannot draw more than " + p.group.DrawLimit + ".");
+                p.Message("You tried to replace " + measure.Total + " blocks.");
+                p.Message("You cannot draw more than " + p.group.DrawLimit + ".");
                 return;
             }
             
             DrawOp op = new CuboidDrawOp();
             op.AffectedByTransform = false;
             if (!DrawOpPerformer.Do(op, brush, p, marks, false)) return;
-            Player.Message(p, "&4/replaceall finished!");
+            p.Message("&4/replaceall finished!");
         }
         
         
@@ -73,10 +73,10 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/ReplaceAll [block] [block2].. [new]");
-            Player.Message(p, "%HReplaces [block] with [new] for the entire map.");
-            Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
-            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
+            p.Message("%T/ReplaceAll [block] [block2].. [new]");
+            p.Message("%HReplaces [block] with [new] for the entire map.");
+            p.Message("%H  If more than one [block] is given, they are all replaced.");
+            p.Message("%H  If only [block] is given, replaces with your held block.");
         }
     }
 }

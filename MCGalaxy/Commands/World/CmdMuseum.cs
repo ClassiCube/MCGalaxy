@@ -21,16 +21,16 @@ using System.Threading;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdMuseum : Command {
+    public sealed class CmdMuseum : Command2 {
         public override string name { get { return "Museum"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) : LevelInfo.BackupFilePath(args[0], args[1]);
             if (!File.Exists(path)) {
-                Player.Message(p, "Level or backup could not be found."); return;
+                p.Message("Level or backup could not be found."); return;
             }
             
             string name = null;
@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (p.level.name.CaselessEq(name)) {
-                Player.Message(p, "You are already in this museum."); return;
+                p.Message("You are already in this museum."); return;
             }
             if (Interlocked.CompareExchange(ref p.LoadingMuseum, 1, 0) == 1) {
-                Player.Message(p, "You are already loading a museum level."); return;
+                p.Message("You are already loading a museum level."); return;
             }
             
             try {
@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Museum [map] [restore]");
-            Player.Message(p, "%HAllows you to access a restore of the map entered. Works on unloaded maps");
+            p.Message("%T/Museum [map] [restore]");
+            p.Message("%HAllows you to access a restore of the map entered. Works on unloaded maps");
         }
     }
 }

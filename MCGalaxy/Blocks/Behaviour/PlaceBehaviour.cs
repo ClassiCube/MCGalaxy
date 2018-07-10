@@ -68,7 +68,7 @@ namespace MCGalaxy.Blocks {
             // Use red wool to detonate c4
             BlockID held = p.BlockBindings[p.RawHeldBlock];
             if (held == Block.Red) {
-                Player.Message(p, "Placed detonator block, delete it to detonate.");
+                p.Message("Placed detonator block, delete it to detonate.");
                 C4Det(p, Block.C4Detonator, x, y, z); return;
             }
             
@@ -78,7 +78,7 @@ namespace MCGalaxy.Blocks {
                 p.c4circuitNumber = num;
                 
                 string detonatorName = Block.GetName(p, Block.Red);
-                Player.Message(p, "Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
+                p.Message("Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
                                detonatorName);
             }
             

@@ -24,34 +24,34 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "Take"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }     
 
-        public override void Use(Player p, string message) {
-            EcoTransaction data;
+        public override void Use(Player p, string message, CommandData data) {
+            EcoTransaction trans;
             bool all = true;
-            if (!ParseArgs(p, message, ref all, "take", out data)) return;
+            if (!ParseArgs(p, message, ref all, "take", out trans)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
+            Player who = PlayerInfo.FindMatches(p, trans.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "%WYou can't take &3" + ServerConfig.Currency + "%W from yourself"); return; }
+            if (p == who) { p.Message("%WYou can't take &3" + ServerConfig.Currency + "%W from yourself"); return; }
             
             int money = 0;
             if (who == null) {
-                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
-                if (data.TargetName == null) return;
+                trans.TargetName = Economy.FindMatches(p, trans.TargetName, out money);
+                if (trans.TargetName == null) return;
                 
-                Take(ref money, all, data);
-                Economy.UpdateMoney(data.TargetName, money);
+                Take(ref money, all, trans);
+                Economy.UpdateMoney(trans.TargetName, money);
             } else {
-                data.TargetName = who.name;
+                trans.TargetName = who.name;
                 money = who.money;
                 
-                Take(ref money, all, data);
+                Take(ref money, all, trans);
                 who.SetMoney(money);
             }
             
-            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
-            data.Type = EcoTransactionType.Take;
-            OnEcoTransactionEvent.Call(data);
+            trans.TargetFormatted = PlayerInfo.GetColoredName(p, trans.TargetName);
+            trans.Type = EcoTransactionType.Take;
+            OnEcoTransactionEvent.Call(trans);
         }
         
         static void Take(ref int money, bool all, EcoTransaction data) {
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p){
-            Player.Message(p, "%T/Take [player] [amount] <reason>");
-            Player.Message(p, "%HTakes [amount] of &3" + ServerConfig.Currency + " %Sfrom [player]");
-            Player.Message(p, "%T/Take [player] all <reason>");
-            Player.Message(p, "%HTakes all the &3" + ServerConfig.Currency + " %Sfrom [player]");
+            p.Message("%T/Take [player] [amount] <reason>");
+            p.Message("%HTakes [amount] of &3" + ServerConfig.Currency + " %Sfrom [player]");
+            p.Message("%T/Take [player] all <reason>");
+            p.Message("%HTakes all the &3" + ServerConfig.Currency + " %Sfrom [player]");
         }
     }
 }

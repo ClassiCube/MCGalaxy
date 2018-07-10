@@ -27,7 +27,7 @@ namespace MCGalaxy.UI {
             if (text != null) text = text.Trim();
             if (String.IsNullOrEmpty(text)) return;
             
-            Player p = ConsolePlayer.Instance;
+            Player p = Player.Console;
             if (ChatModes.Handle(p, text)) return;
             
             Chat.MessageChat(ChatScope.Global, p, "λFULL: &f" + text, null, null, true);
@@ -76,7 +76,7 @@ namespace MCGalaxy.UI {
             Thread thread = new Thread(
                 () => {
                     try {
-                        cmd.Use(null, args);
+                        cmd.Use(Player.Console, args);
                         if (args.Length == 0) {
                             Logger.Log(LogType.CommandUsage, "(console) used /" + cmd.name);
                         } else {

@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdMain : Command {      
+    public sealed class CmdMain : Command2 {      
         public override string name { get { return "Main"; } }
         public override string shortcut { get { return "h"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -27,10 +27,10 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("WMain"), new CommandAlias("WorldMain") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
-                if (Player.IsSuper(p)) {
-                    Player.Message(p, "Main level is {0}", Server.mainLevel.ColoredName);
+                if (p.IsSuper) {
+                    p.Message("Main level is {0}", Server.mainLevel.ColoredName);
                 } else if (p.level == Server.mainLevel) {
                     PlayerActions.Respawn(p);
                 } else {
@@ -47,15 +47,15 @@ namespace MCGalaxy.Commands.World {
                 
                 Server.SetMainLevel(map);
                 SrvProperties.Save();
-                Player.Message(p, "Set main level to {0}", Server.mainLevel.ColoredName);
+                p.Message("Set main level to {0}", Server.mainLevel.ColoredName);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Main");
-            Player.Message(p, "%HSends you to the main level.");
-            Player.Message(p, "%T/Main [map]");
-            Player.Message(p, "%HSets the main level to that map.");
+            p.Message("%T/Main");
+            p.Message("%HSends you to the main level.");
+            p.Message("%T/Main [map]");
+            p.Message("%HSets the main level to that map.");
         }
     }
 }

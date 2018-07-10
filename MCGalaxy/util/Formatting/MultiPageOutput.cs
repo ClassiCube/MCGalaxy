@@ -33,12 +33,12 @@ namespace MCGalaxy {
             if (modifier.Length == 0) {
                 OutputPage(p, items, formatter, cmd, type, 1, lines);
                 if (total <= perPage) return;
-                Player.Message(p, "To see all {0}, use %T/{1} all", type, cmd);
+                p.Message("To see all {0}, use %T/{1} all", type, cmd);
             } else if (modifier.CaselessEq("all")) {
                 OutputItems(p, items, 0, items.Count, lines, formatter);
-                Player.Message(p, "Showing {0} 1-{1} (out of {1})", type, items.Count);
+                p.Message("Showing {0} 1-{1} (out of {1})", type, items.Count);
             } else if (!int.TryParse(modifier, out page)) {
-                Player.Message(p, "Input must be either \"all\" or an integer.");
+                p.Message("Input must be either \"all\" or an integer.");
             } else {
                 OutputPage(p, items, formatter, cmd, type, page, lines);
             }
@@ -52,12 +52,12 @@ namespace MCGalaxy {
             OutputItems(p, items, start, end, lines, formatter);
             
             if (items.Count == 0) {
-                Player.Message(p, "Showing {0} 0-0 (out of 0)", type);
+                p.Message("Showing {0} 0-0 (out of 0)", type);
             } else if (end < items.Count) {
-                Player.Message(p, "Showing {0} {1}-{2} (out of {3}) Next: %T/{4} {5}",
+                p.Message("Showing {0} {1}-{2} (out of {3}) Next: %T/{4} {5}",
                                type, start + 1, end, items.Count, cmd, start + 1 + perPage);
             } else {
-                Player.Message(p, "Showing {0} {1}-{2} (out of {3})",
+                p.Message("Showing {0} {1}-{2} (out of {3})",
                                type, start + 1, end, items.Count);
             }
         }
@@ -67,10 +67,10 @@ namespace MCGalaxy {
                                    StringFormatter<T> formatter) {
             if (lines) {
                 for (int i = start; i < end; i++)
-                    Player.Message(p, formatter(items[i]));
+                    p.Message(formatter(items[i]));
             } else {
                 IEnumerable<string> output = Subset(items, start, end, formatter);
-                Player.Message(p, output.Join());
+                p.Message(output.Join());
             }
         }
         

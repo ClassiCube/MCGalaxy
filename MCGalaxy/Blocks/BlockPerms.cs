@@ -61,7 +61,7 @@ namespace MCGalaxy.Blocks {
         }
         
         public void MessageCannotUse(Player p, string action) {
-            Player.Message(p, "Only {0} can {1} {2}",
+            p.Message("Only {0} can {1} {2}",
                            Describe(), action, Block.GetName(p, ID));
         }
         
@@ -116,7 +116,7 @@ namespace MCGalaxy.Blocks {
                 BlockID block;
                 if (!BlockID.TryParse(args[0], out block)) {
                     // Old format - Name : Lowest : Disallow : Allow
-                    block = Block.Parse(null, args[0]);
+                    block = Block.Parse(Player.Console, args[0]);
                 }
                 if (block == Block.Invalid) continue;
 

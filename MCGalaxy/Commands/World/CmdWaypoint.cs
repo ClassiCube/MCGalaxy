@@ -24,17 +24,17 @@ namespace MCGalaxy.Commands.Misc {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override CommandPerm[] ExtraPerms { get { return null; } }
                 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             UseCore(p, message, p.Waypoints, "Waypoint");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%HWaypoints are warps only usable by you.");
-            Player.Message(p, "%T/Waypoint create [name] %H- Create a new waypoint");
-            Player.Message(p, "%T/Waypoint update [name] %H- Update a waypoint");
-            Player.Message(p, "%T/Waypoint remove [name] %H- Remove a waypoint");
-            Player.Message(p, "%T/Waypoint list %H- Shows a list of waypoints");
-            Player.Message(p, "%T/Waypoint [name] %H- Goto a waypoint");
+            p.Message("%HWaypoints are warps only usable by you.");
+            p.Message("%T/Waypoint create [name] %H- Create a new waypoint");
+            p.Message("%T/Waypoint update [name] %H- Update a waypoint");
+            p.Message("%T/Waypoint remove [name] %H- Remove a waypoint");
+            p.Message("%T/Waypoint list %H- Shows a list of waypoints");
+            p.Message("%T/Waypoint [name] %H- Goto a waypoint");
         }
     }
 }

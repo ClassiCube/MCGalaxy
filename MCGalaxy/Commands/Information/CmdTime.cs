@@ -19,30 +19,30 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdTime : Command {
+    public sealed class CmdTime : Command2 {
         public override string name { get { return "Time"; } }
         public override string shortcut { get { return "ti"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
-            Player.Message(p, "Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
+        public override void Use(Player p, string message, CommandData data) {
+            p.Message("Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
             if (!ZSGame.Instance.Running) return;
             
             TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
             if (delta.TotalSeconds > 0) {
-                Player.Message(p, "&a{0} %Suntil the round ends.", delta.Shorten(true));
+                p.Message("&a{0} %Suntil the round ends.", delta.Shorten(true));
             } else {
                 delta = ZSGame.Instance.RoundStart - DateTime.UtcNow;
                 if (delta.TotalSeconds > 0)
-                    Player.Message(p, "&a{0} %Suntil the round starts.", delta.Shorten(true));
+                    p.Message("&a{0} %Suntil the round starts.", delta.Shorten(true));
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Time");
-            Player.Message(p, "%HShows the server time.");
-            Player.Message(p, "%HIf zombie survival is running, shows time left until round end or start.");
+            p.Message("%T/Time");
+            p.Message("%HShows the server time.");
+            p.Message("%HIf zombie survival is running, shows time left until round end or start.");
         }
     }
 }

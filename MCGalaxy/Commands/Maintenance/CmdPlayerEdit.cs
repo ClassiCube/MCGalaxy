@@ -21,7 +21,7 @@ using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdPlayerEdit : Command {
+    public sealed class CmdPlayerEdit : Command2 {
         public override string name { get { return "PlayerEdit"; } }
         public override string shortcut { get { return "pe"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Maintenance {
         delegate void DBSetter(string name, string column, string data);
         const int type_norm = 0, type_lo = 1, type_hi = 2;
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             args[0] = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (args[0] == null) return;
             Player who = PlayerInfo.FindExact(args[0]);
             if (args.Length == 1) {
-                Player.Message(p, "%WYou must specify a type to modify.");
+                p.Message("%WYou must specify a type to modify.");
                 MessageValidTypes(p); return;
             }
             
@@ -63,9 +63,9 @@ namespace MCGalaxy.Commands.Maintenance {
                            v => who.money = v, type_norm);
             } else if (opt == "title") {
                 if (args.Length < 3) {
-                    Player.Message(p, "Title can be up to 20 characters. Use \"null\" to remove the title"); return;
+                    p.Message("Title can be up to 20 characters. Use \"null\" to remove the title"); return;
                 }
-                if (args[2].Length >= 20) { Player.Message(p, "Title must be under 20 characters"); return; }
+                if (args[2].Length >= 20) { p.Message("Title must be under 20 characters"); return; }
                 if (args[2] == "null") args[2] = "";
                 
                 if (who != null) {
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 SetColor(p, args, PlayerData.ColumnTColor, who, 
                          v => who.titlecolor = v);
             } else {
-                Player.Message(p, "%WInvalid type");
+                p.Message("%WInvalid type");
                 MessageValidTypes(p);
             }
         }
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SetColor(Player p, string[] args, string column, Player who, Action<string> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Color format: color name, or \"null\" to reset to default color."); return;
+                p.Message("Color format: color name, or \"null\" to reset to default color."); return;
             }
             
             string col = args[2] == "null" ? "" : Matcher.FindColor(p, args[2]);
@@ -129,13 +129,13 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SetDate(Player p, string[] args, string column, Player who, Action<DateTime> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Dates must be in the format: " + Database.DateFormat);
+                p.Message("Dates must be in the format: " + Database.DateFormat);
                 return;
             }
             
             DateTime date;
             if (!DateTime.TryParseExact(args[2], Database.DateFormat, null, 0, out date)) {
-                Player.Message(p, "Invalid date. It must be in format: " + Database.DateFormat);
+                p.Message("Invalid date. It must be in format: " + Database.DateFormat);
                 return;
             }
             
@@ -146,8 +146,8 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SetTimespan(Player p, string[] args, string column, Player who, Action<TimeSpan> setter) {
             if (args.Length < 3) {
-                Player.Message(p, "Timespan must be in the format: <number><quantifier>..");
-                Player.Message(p, CommandParser.TimespanHelp, "set time spent to");
+                p.Message("Timespan must be in the format: <number><quantifier>..");
+                p.Message(CommandParser.TimespanHelp, "set time spent to");
                 return;
             }
             
@@ -172,7 +172,7 @@ namespace MCGalaxy.Commands.Maintenance {
         static void SetInteger(Player p, string[] args, string column, int max, Player who,
                                Action<int> setter, int type) {
             if (args.Length < 3) {
-                Player.Message(p, "You must specify a positive integer, which can be {0} at most.", max); return;
+                p.Message("You must specify a positive integer, which can be {0} at most.", max); return;
             }
             
             int value = 0;
@@ -201,22 +201,22 @@ namespace MCGalaxy.Commands.Maintenance {
         static void MessageDataChanged(Player p, string name, string type, string value) {
             name = PlayerInfo.GetColoredName(p, name);
             if (value.Length == 0) {
-                Player.Message(p, "The {1} data for &b{0} %Shas been reset.", name, type);
+                p.Message("The {1} data for &b{0} %Shas been reset.", name, type);
             } else {
-                Player.Message(p, "The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
+                p.Message("The {1} data for &b{0} %Shas been updated to &a{2}%S.", name, type, value);
             }
         }
 
         static void MessageValidTypes(Player p) {
-            Player.Message(p, "%HValid types: %SFirstLogin, LastLogin, Logins, Title, Deaths, Money, " +
+            p.Message("%HValid types: %SFirstLogin, LastLogin, Logins, Title, Deaths, Money, " +
                            "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/PlayerEdit [username] [type] <value>");
-            Player.Message(p, "%HEdits an online or offline player's information. Use with caution!");
+            p.Message("%T/PlayerEdit [username] [type] <value>");
+            p.Message("%HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
-            Player.Message(p, "%HTo see value format for a specific type, leave <value> blank.");
+            p.Message("%HTo see value format for a specific type, leave <value> blank.");
         }
     }
 }

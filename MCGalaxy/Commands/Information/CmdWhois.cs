@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWhois : Command {
+    public sealed class CmdWhois : Command2 {
         public override string name { get { return "WhoIs"; } }
         public override string shortcut { get { return "WhoWas"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new CommandAlias[] { new CommandAlias("Info"), new CommandAlias("i") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) message = p.name;
             int matches;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Info {
             
             if (matches == 0) {
                 if (!Formatter.ValidName(p, message, "player")) return;
-                Player.Message(p, "Searching database for the player..");
+                p.Message("Searching database for the player..");
                 PlayerData target = PlayerDB.Match(p, message);
                 if (target == null) return;
                 
@@ -54,9 +54,9 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/WhoIs [name]");
-            Player.Message(p, "%HDisplays information about that player.");
-            Player.Message(p, "%HNote: Works for both online and offline players.");
+            p.Message("%T/WhoIs [name]");
+            p.Message("%HDisplays information about that player.");
+            p.Message("%HNote: Works for both online and offline players.");
         }
     }
 }

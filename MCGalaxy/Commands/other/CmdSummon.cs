@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdSummon : Command {
+    public sealed class CmdSummon : Command2 {
         public override string name { get { return "Summon"; } }
         public override string shortcut { get { return "s"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Misc {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can summon all players") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }            
             if (message.CaselessEq("all")) {
                 if (CheckExtraPerm(p, 1)) SummonAll(p);
@@ -60,13 +60,11 @@ namespace MCGalaxy.Commands.Misc {
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (p.Rank < who.Rank) {
-                MessageTooHighRank(p, "summon", true); return;
-            }
+            if (!CheckRank(p, who, "summon", true)) return;
             
             if (p.level != who.level) {
                 if (!CheckVisitPerm(p, who, confirmed)) return;
-                Player.Message(p, who.ColoredName + " %Sis in a different level, moving them..");
+                p.Message(who.ColoredName + " %Sis in a different level, moving them..");
                 
                 who.summonedMap = p.level.name;
                 PlayerActions.ChangeMap(who, p.level);
@@ -89,27 +87,27 @@ namespace MCGalaxy.Commands.Misc {
             if (result == AccessResult.BelowMinRank && confirmed) return true;
             
             if (result == AccessResult.Blacklisted) {
-                Player.Message(p, "{0} %Sis blacklisted from visiting this map.", who.ColoredName);
+                p.Message("{0} %Sis blacklisted from visiting this map.", who.ColoredName);
                 return false;
             } else if (result == AccessResult.BelowMinRank) {
-                Player.Message(p, "Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
+                p.Message("Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.VisitAccess.Min),
                                who.ColoredName, who.group.ColoredName);
             } else if (result == AccessResult.AboveMaxRank) {
-                Player.Message(p, "Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
+                p.Message("Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
                                Group.GetColoredName(p.level.VisitAccess.Max),
                                who.ColoredName, who.group.ColoredName);
             }
             
-            Player.Message(p, "If you still want to summon them, type %T/Summon {0} confirm", who.name);
+            p.Message("If you still want to summon them, type %T/Summon {0} confirm", who.name);
             return false;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Summon [player]");
-            Player.Message(p, "%HSummons [player] to your position.");
-            Player.Message(p, "%T/Summon all");
-            Player.Message(p, "%HSummons all players in your map");
+            p.Message("%T/Summon [player]");
+            p.Message("%HSummons [player] to your position.");
+            p.Message("%T/Summon all");
+            p.Message("%HSummons all players in your map");
         }
     }
 }

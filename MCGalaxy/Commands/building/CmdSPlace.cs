@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdSPlace : Command {
+    public sealed class CmdSPlace : Command2 {
         public override string name { get { return "SPlace"; } }
         public override string shortcut { get { return "set"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             ushort distance = 0, interval = 0;
             if (message.Length == 0) { Help(p); return; }
             
@@ -38,22 +38,22 @@ namespace MCGalaxy.Commands.Building {
             if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval)) return;
 
             if (distance < 1) {
-                Player.Message(p, "Enter a distance greater than 0."); return;
+                p.Message("Enter a distance greater than 0."); return;
             }
             if (interval >= distance) {
-                Player.Message(p, "The Interval cannot be greater than the distance."); return;
+                p.Message("The Interval cannot be greater than the distance."); return;
             }
 
             DrawArgs dArgs = new DrawArgs();
             dArgs.distance = distance; dArgs.interval = interval;
-            Player.Message(p, "Place or break two blocks to determine direction.");
+            p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, dArgs, DoSPlace);
         }
         
         bool DoSPlace(Player p, Vec3S32[] m, object state, BlockID block) {
             DrawArgs dArgs = (DrawArgs)state;
             ushort distance = dArgs.distance, interval = dArgs.interval;
-            if (m[0] == m[1]) { Player.Message(p, "No direction was selected"); return false; }
+            if (m[0] == m[1]) { p.Message("No direction was selected"); return false; }
             
             int dirX = 0, dirY = 0, dirZ = 0;
             int dx = Math.Abs(m[1].X - m[0].X), dy = Math.Abs(m[1].Y - m[0].Y), dz = Math.Abs(m[1].Z - m[0].Z);
@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "Placed {1} blocks {0} apart.",
+                p.Message("Placed {1} blocks {0} apart.",
                                interval > 0 ? interval : distance, Block.GetName(p, held));
             }
             return true;
@@ -95,9 +95,9 @@ namespace MCGalaxy.Commands.Building {
         class DrawArgs { public ushort distance, interval; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/SPlace [distance] <interval>");
-            Player.Message(p, "%HMeasures a set [distance] and places your held block at each end.");
-            Player.Message(p, "%HOptionally place a block at set <interval> between them.");
+            p.Message("%T/SPlace [distance] <interval>");
+            p.Message("%HMeasures a set [distance] and places your held block at each end.");
+            p.Message("%HOptionally place a block at set <interval> between them.");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MCGalaxy {
         public static bool Handle(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
-                DoPM(p, ConsolePlayer.Instance, text);
+                DoPM(p, Player.Console, text);
                 return true;
             }
             
@@ -36,14 +36,14 @@ namespace MCGalaxy {
                         target = text.Substring(0, sepIndex);
                         text = text.Substring(sepIndex + 1);
                     } else {
-                        Player.Message(p, "No message entered");
+                        p.Message("No message entered");
                         return true;
                     }
                 }
 
                 Player who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return true;
-                if (who == p) { Player.Message(p, "Trying to talk to yourself, huh?"); return true; }
+                if (who == p) { p.Message("Trying to talk to yourself, huh?"); return true; }
                 
                 DoPM(p, who, text);
                 return true;
@@ -60,14 +60,14 @@ namespace MCGalaxy {
                     MessageOps(p, text.Substring(2));
                     return true;
                 } else {
-                    Player.Message(p, "%HIf you meant to send this to opchat, use %T##" + text.Substring(1));
+                    p.Message("%HIf you meant to send this to opchat, use %T##" + text.Substring(1));
                 }
             } else if (text[0] == '+') {
                 if (text.Length > 1 && text[1] == '+') {
                     MessageAdmins(p, text.Substring(2));
                     return true;
                 } else {
-                    Player.Message(p, "%HIf you meant to send this to adminchat, use %T++" + text.Substring(1));
+                    p.Message("%HIf you meant to send this to adminchat, use %T++" + text.Substring(1));
                 }
             }
             return false;
@@ -85,18 +85,18 @@ namespace MCGalaxy {
         
         public static void MessageStaff(Player p, string message,
                                         ItemPerms perms, string group) {
-            if (message.Length == 0) { Player.Message(p, "No message to send."); return; }
+            if (message.Length == 0) { p.Message("No message to send."); return; }
             
             string chatMsg = "To " + group + " &f-λNICK&f- " + message;
             Chat.MessageChat(ChatScope.Perms, p, chatMsg, perms, null, true);
         }
         
         static void DoPM(Player p, Player who, string message) {
-            if (message.Length == 0) { Player.Message(p, "No message entered"); return; }
+            if (message.Length == 0) { p.Message("No message entered"); return; }
             Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, who.name, message);
             
-            if (p != ConsolePlayer.Instance) {
-                Player.Message(p, "[<] {0}: &f{1}", who.ColoredName, message);
+            if (!p.IsConsole) {
+                p.Message("[<] {0}: &f{1}", who.ColoredName, message);
             }
             Chat.MessageChat(ChatScope.PM, p, "&9[>] λNICK: &f" + message, who, null);
         }

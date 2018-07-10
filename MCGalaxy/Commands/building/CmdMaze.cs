@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands.Building {
         protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "Normal"; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Maze");
-            Player.Message(p, "%HGenerates a random maze between two points.");
+            p.Message("%T/Maze");
+            p.Message("%HGenerates a random maze between two points.");
         }
     }
 }

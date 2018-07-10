@@ -19,7 +19,7 @@ using System.Text;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdTempRank : Command {
+    public sealed class CmdTempRank : Command2 {
         public override string name { get { return "TempRank"; } }
         public override string shortcut { get { return "tr"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("dtr", "delete"), new CommandAlias("trl", "list") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(4);
             if (args.Length >= 3) {
                 Assign(p, args);
@@ -53,11 +53,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CommandParser.GetTimespan(p, args[2], ref duration, "temp rank for", "h")) return;
 
             if (Server.tempRanks.Contains(target)) {
-                Player.Message(p, "%WThe player already has a temporary rank assigned!"); return;
+                p.Message("%WThe player already has a temporary rank assigned!"); return;
             }
             
-            if (p != null && p.name.CaselessEq(target)) {
-                Player.Message(p, "%WYou cannot assign yourself a temporary rank."); return;
+            if (p.name.CaselessEq(target)) {
+                p.Message("%WYou cannot assign yourself a temporary rank."); return;
             }
             
             Group curRank = PlayerInfo.GetGroup(target);
@@ -70,11 +70,11 @@ namespace MCGalaxy.Commands.Moderation {
             OnModActionEvent.Call(action);
         }
         
-        static void Delete(Player p, string target) {
+        internal static void Delete(Player p, string target) {
             string line = Server.tempRanks.FindData(target);
             if (line == null) {
-                Player.Message(p, "{0} %Whas not been assigned a temp rank.",
-                               PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Whas not been assigned a temp rank.",
+            	          PlayerInfo.GetColoredName(p, target));
                 return;
             }
             
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void Info(Player p, string target) {
             string data = Server.tempRanks.FindData(target);
             if (data == null) {
-                Player.Message(p, "{0} %Whas not been assigned a temp rank.",
+                p.Message("{0} %Whas not been assigned a temp rank.",
                                PlayerInfo.GetColoredName(p, target));
             } else {
                 PrintTempRankInfo(p, target, data);
@@ -106,9 +106,9 @@ namespace MCGalaxy.Commands.Moderation {
         static void List(Player p) {
             List<string> lines = Server.tempRanks.AllLines();
             if (lines.Count == 0) {
-                Player.Message(p, "%WThere are no players with a temporary rank assigned.");
+                p.Message("%WThere are no players with a temporary rank assigned.");
             } else {
-                Player.Message(p, "&ePlayers with a temporary rank assigned:");
+                p.Message("&ePlayers with a temporary rank assigned:");
                 foreach (string line in lines) {
                     string[] bits = line.SplitSpaces(2);
                     PrintTempRankInfo(p, bits[0], bits[1]);
@@ -128,20 +128,20 @@ namespace MCGalaxy.Commands.Moderation {
             
             TimeSpan assignDelta = DateTime.UtcNow - assigned;
             TimeSpan expireDelta = expiry - DateTime.UtcNow;
-            Player.Message(p, "Temp rank information for {0}:",
+            p.Message("Temp rank information for {0}:",
                            PlayerInfo.GetColoredName(p, name));
-            Player.Message(p, "  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
+            p.Message("  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
                            oldRank, tempRank, assigner,
                            assignDelta.Shorten(), expireDelta.Shorten());
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/TempRank [player] [rank] [timespan] <reason>");
-            Player.Message(p, "%HSets a temporary rank for the specified player.");
-            Player.Message(p, "%T/TempRank info [player]");
-            Player.Message(p, "%HLists information about the temp rank for the given player.");
-            Player.Message(p, "%T/TempRank delete [player] %H- Removes player's temp rank.");
-            Player.Message(p, "%T/TempRank list %H- Lists all current temp ranks.");
+            p.Message("%T/TempRank [player] [rank] [timespan] <reason>");
+            p.Message("%HSets a temporary rank for the specified player.");
+            p.Message("%T/TempRank info [player]");
+            p.Message("%HLists information about the temp rank for the given player.");
+            p.Message("%T/TempRank delete [player] %H- Removes player's temp rank.");
+            p.Message("%T/TempRank list %H- Lists all current temp ranks.");
         }
     }
 }

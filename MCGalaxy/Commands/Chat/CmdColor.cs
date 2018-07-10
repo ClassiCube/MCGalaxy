@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Colour"), new CommandAlias("XColor", "-own") }; }
         }        
-        public override void Use(Player p, string message) { UseBotOrPlayer(p, message, "color"); }
+        public override void Use(Player p, string message, CommandData data) { UseBotOrPlayer(p, message, "color"); }
 
         protected override void SetBotData(Player p, PlayerBot bot, string colName) {
             if (!LevelInfo.ValidateAction(p, p.level, "change color of that bot")) return;
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Chatting {
             string color = colName.Length == 0 ? "&1" : Matcher.FindColor(p, colName);
             if (color == null) return;
             
-            Player.Message(p, "You changed the color of bot " + bot.ColoredName + 
+            p.Message("You changed the color of bot " + bot.ColoredName + 
                            " %Sto " + color + Colors.Name(color));
             bot.color = color;
             
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
-                if (color == who.color) { Player.Message(p, "λNICK %Salready has that color."); return; }
+                if (color == who.color) { p.Message("λNICK %Salready has that color."); return; }
                 
                 Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
                 who.color = color;
@@ -67,12 +67,12 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Color [player] [color]");
-            Player.Message(p, "%HSets the nick color of that player");
-            Player.Message(p, "%H  If [color] is not given, reverts to player's rank color.");
-            Player.Message(p, "%H/Color bot [bot] [color]");
-            Player.Message(p, "%TSets the name color of that bot.");
-            Player.Message(p, "%HTo see a list of all colors, use /Help colors.");
+            p.Message("%T/Color [player] [color]");
+            p.Message("%HSets the nick color of that player");
+            p.Message("%H  If [color] is not given, reverts to player's rank color.");
+            p.Message("%H/Color bot [bot] [color]");
+            p.Message("%TSets the name color of that bot.");
+            p.Message("%HTo see a list of all colors, use /Help colors.");
         }
     }
 }

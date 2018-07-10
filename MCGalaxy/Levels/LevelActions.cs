@@ -165,7 +165,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level != old) continue;
                 pl.level = lvl;
-                ReloadFor(null, pl, false);
+                ReloadFor(Player.Console, pl, false);
             }
             
             old.Unload(true, false);
@@ -223,7 +223,7 @@ namespace MCGalaxy {
                 p.SendMessage("&bMap reloaded by " + src.ColoredName);
             }
             if (Entities.CanSee(src, p)) {
-                Player.Message(src, "&4Finished reloading for " + p.ColoredName);
+                src.Message("&4Finished reloading for " + p.ColoredName);
             }
         }
         

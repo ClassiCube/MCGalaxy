@@ -16,18 +16,18 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdSetspawn : Command {
+    public sealed class CmdSetspawn : Command2 {
         public override string name { get { return "SetSpawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!LevelInfo.ValidateAction(p, p.level, "set spawn of this level")) return;
             
             if (message.Length == 0) {
-                Player.Message(p, "Spawn location set to your current location.");
+                p.Message("Spawn location set to your current location.");
                 p.level.spawnx = (ushort)p.Pos.BlockX;
                 p.level.spawny = (ushort)p.Pos.BlockY;
                 p.level.spawnz = (ushort)p.Pos.BlockZ;
@@ -39,19 +39,19 @@ namespace MCGalaxy.Commands.World {
             
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (who.level != p.level) { Player.Message(p, "{0} %Sis on a different map.", who.ColoredName); return; }
-            if (p != who && who.Rank >= p.Rank) { MessageTooHighRank(p, "set spawn of", false); return; }
+            if (who.level != p.level) { p.Message("{0} %Sis on a different map.", who.ColoredName); return; }
+            if (!CheckRank(p, who, "set spawn of", false)) return;
             
-            Player.Message(p, "Set spawn location of {0} %Sto your current location.", who.ColoredName);
+            p.Message("Set spawn location of {0} %Sto your current location.", who.ColoredName);
             who.Pos = p.Pos; who.Rot = p.Rot;
             Entities.Spawn(who, who);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/SetSpawn");
-            Player.Message(p, "%HSets the spawn location of the map to your current location.");
-            Player.Message(p, "%T/SetSpawn [player]");
-            Player.Message(p, "%HSets the spawn location of that player");
+            p.Message("%T/SetSpawn");
+            p.Message("%HSets the spawn location of the map to your current location.");
+            p.Message("%T/SetSpawn [player]");
+            p.Message("%HSets the spawn location of that player");
         }
     }
 }

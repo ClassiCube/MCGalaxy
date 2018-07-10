@@ -82,41 +82,29 @@ namespace MCGalaxy {
         
         public void Send(byte[] buffer, bool sync = false) { Socket.Send(buffer, sync); }
         
-        public static void MessageLines(Player p, IEnumerable<string> lines) {
-            foreach (string line in lines)
-                SendMessage(p, line);
+        public void MessageLines(IEnumerable<string> lines) {
+            foreach (string line in lines) { Message(line); }
         }
         
         public static void Message(Player p, string message) {
-            SendMessage(p, message);
+            if (p == null) p = Player.Console;
+            p.Message(0, message);
         }
         
-        public static void Message(Player p, string message, object a0) {
-            SendMessage(p, string.Format(message, a0));
-        }
-        
-        public static void Message(Player p, string message, object a0, object a1) {
-            SendMessage(p, string.Format(message, a0, a1));
-        }
-        
-        public static void Message(Player p, string message, object a0, object a1, object a2) {
-            SendMessage(p, string.Format(message, a0, a1, a2));
-        }
-        
-        public static void Message(Player p, string message, params object[] args) {
-            SendMessage(p, string.Format(message, args));
-        }
-
         public static void SendMessage(Player p, string message) {
-            if (p == null) {
-                Logger.Log(LogType.ConsoleMessage, message);
-            } else {
-                p.SendMessage(0, message);
-            }
+            Message(p, message);
         }
         
-        public void SendMessage(string message) { SendMessage(0, message); }       
-        public virtual void SendMessage(byte id, string message) {
+        public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
+        public void Message(string message, object a0, object a1) { Message(string.Format(message, a0, a1)); }       
+        public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
+        public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
+        
+        public void SendMessage(string message) { Message(0, message); } 
+        public void SendMessage(byte id, string message) { Message(id, message); }
+        public void Message(string message) { Message(0, message); }
+        
+        public virtual void Message(byte id, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
                 message = ServerConfig.DefaultColor + message;
@@ -191,8 +179,7 @@ namespace MCGalaxy {
             AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             ZoneIn = null;
             SendMapMotd();
-            AccessResult access = level.BuildAccess.Check(this);
-            AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
+            AllowBuild = level.BuildAccess.CheckAllowed(this);
             
             try {
                 int volume = level.blocks.Length;

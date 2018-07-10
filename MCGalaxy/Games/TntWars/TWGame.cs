@@ -127,12 +127,12 @@ namespace MCGalaxy.Games {
         
         public override void OutputStatus(Player p) {
             if (Config.Mode == TWGameMode.TDM) {
-                Player.Message(p, "{0} team score: &f{1}/{2} points",
+                p.Message("{0} team score: &f{1}/{2} points",
                                Red.ColoredName, Red.Score, cfg.ScoreRequired);
-                Player.Message(p, "{0} team score: &f{1}/{2} points",
+                p.Message("{0} team score: &f{1}/{2} points",
                                Blue.ColoredName, Blue.Score, cfg.ScoreRequired);
             }
-            Player.Message(p, "Your score: &f{0}/{1} %Spoints, health: &f{2} %SHP",
+            p.Message("Your score: &f{0}/{1} %Spoints, health: &f{2} %SHP",
                            Get(p).Score, cfg.ScoreRequired, Get(p).Health);
         }
 
@@ -191,7 +191,7 @@ namespace MCGalaxy.Games {
             p.color = team.Color;
             p.SetPrefix();
             
-            Player.Message(p, "You are now on the " + team.ColoredName + " team!");
+            p.Message("You are now on the " + team.ColoredName + " team!");
             TabList.Update(p, true);
         }
         

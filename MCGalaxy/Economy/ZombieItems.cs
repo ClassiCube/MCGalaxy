@@ -39,7 +39,7 @@ namespace MCGalaxy.Eco {
             if (args.Length >= 2 && !CommandParser.GetInt(p, args[1], group, ref count, 0, 10)) return;
             
             if (p.money < Price * count) {
-                Player.Message(p, "%WYou don't have enough &3{2} %Wto buy {1} {0}.",
+                p.Message("%WYou don't have enough &3{2} %Wto buy {1} {0}.",
                                Name, count * 10, ServerConfig.Currency); return;
             }
             
@@ -49,9 +49,9 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/Buy 10blocks [num]");
-            Player.Message(p, "%HCosts &a{0} * [num] %H{1}", Price, ServerConfig.Currency);
-            Player.Message(p, "Increases the blocks you are able to place by 10 * [num].");
+            p.Message("%T/Buy 10blocks [num]");
+            p.Message("%HCosts &a{0} * [num] %H{1}", Price, ServerConfig.Currency);
+            p.Message("Increases the blocks you are able to place by 10 * [num].");
         }
     }
     
@@ -66,7 +66,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (ZSGame.Instance.Picker.QueuedMap != null) {
-                Player.Message(p, "Someone else has already queued a level."); return;
+                p.Message("Someone else has already queued a level."); return;
             }
             string map = Matcher.FindMaps(p, args[1]);
             if (map == null) return;
@@ -76,9 +76,9 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/Buy {0} [map]", Name);
+            p.Message("%T/Buy {0} [map]", Name);
             OutputItemInfo(p);
-            Player.Message(p, "The map used for the next round of " +
+            p.Message("The map used for the next round of " +
                            "zombie survival will be the given map.");
         }
     }
@@ -97,11 +97,11 @@ namespace MCGalaxy.Eco {
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
                 if (!CheckEscape(text, i, ref hasAToken)) {
-                    Player.Message(p, "You can only use {0} and {1} for tokens in infect messages."); return;
+                    p.Message("You can only use {0} and {1} for tokens in infect messages."); return;
                 }
             }
             if (!hasAToken) {
-                Player.Message(p, "You need to include a \"{0}\" (placeholder for zombie player) " +
+                p.Message("You need to include a \"{0}\" (placeholder for zombie player) " +
                                "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
@@ -110,7 +110,7 @@ namespace MCGalaxy.Eco {
             data.InfectMessages.Add(text);
             
             ZSConfig.AppendPlayerInfectMessage(p.name, text);
-            Player.Message(p, "&aAdded infect message: &f" + text);
+            p.Message("&aAdded infect message: &f" + text);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
         }
         
@@ -131,29 +131,29 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                Player.Message(p, "%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
+                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
-                Player.Message(p, "You can only buy an invisiblity potion " +
+                p.Message("You can only buy an invisiblity potion " +
                                "when a round of zombie survival is in progress."); return;
             }
             
             ZSData data = ZSGame.Get(p);
             
-            if (data.Invisible) { Player.Message(p, "You are already invisible."); return; }
+            if (data.Invisible) { p.Message("You are already invisible."); return; }
             if (data.InvisibilityPotions >= MaxPotions) {
-                Player.Message(p, "You cannot buy any more invisibility potions this round."); return;
+                p.Message("You cannot buy any more invisibility potions this round."); return;
             }
             if (ForHumans && data.Infected) {
-                Player.Message(p, "Use %T/Buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
+                p.Message("Use %T/Buy zinvisibility %Sfor buying invisibility when you are a zombie."); return;
             }
             if (!ForHumans && !data.Infected) {
-                Player.Message(p, "Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
+                p.Message("Use %T/Buy invisibility %Sfor buying invisibility when you are a human."); return;
             }
             
             DateTime end = ZSGame.Instance.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(60) > end) {
-                Player.Message(p, "You cannot buy an invisibility potion " +
+                p.Message("You cannot buy an invisibility potion " +
                                "during the last minute of a round."); return;
             }
             
@@ -162,7 +162,7 @@ namespace MCGalaxy.Eco {
             data.InvisibilityPotions++;
             int left = MaxPotions - data.InvisibilityPotions;
             
-            Player.Message(p, "Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
+            p.Message("Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", Duration, left);
             ZSGame.Instance.Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false, false);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + Duration);
@@ -171,13 +171,13 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/Buy " + Name);
+            p.Message("%T/Buy " + Name);
             OutputItemInfo(p);
             
-            Player.Message(p, "Makes you invisible to {0} - %Wyou can still {1}",
+            p.Message("Makes you invisible to {0} - %Wyou can still {1}",
                            ForHumans ? "zombies" : "humans",
                            ForHumans ? "be infected" : "infect humans");
-            Player.Message(p, "Lasts for " + Duration + " seconds before you reappear.");
+            p.Message("Lasts for " + Duration + " seconds before you reappear.");
         }
     }
     

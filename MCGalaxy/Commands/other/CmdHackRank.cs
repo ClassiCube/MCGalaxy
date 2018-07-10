@@ -23,16 +23,16 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
     
-    public sealed class CmdHackRank : Command {
+    public sealed class CmdHackRank : Command2 {
         public override string name { get { return "HackRank"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             
             if (p.hackrank) {
-                Player.Message(p, "%WYou have already hacked a rank!"); return;
+                p.Message("%WYou have already hacked a rank!"); return;
             }
             
             Group grp = Matcher.FindRanks(p, message);
@@ -67,8 +67,8 @@ namespace MCGalaxy.Commands.Misc {
         class HackRankArgs { public string name; public Group newRank; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/HackRank [rank] %H- Hacks a rank");
-            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
+            p.Message("%T/HackRank [rank] %H- Hacks a rank");
+            p.Message("%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

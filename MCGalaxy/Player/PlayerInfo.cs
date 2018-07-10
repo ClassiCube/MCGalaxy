@@ -66,7 +66,7 @@ namespace MCGalaxy {
             
             if (matches > 1) return null;
             if (target != null) return target.name;
-            Player.Message(p, "Searching PlayerDB for \"{0}\"..", name);
+            p.Message("Searching PlayerDB for \"{0}\"..", name);
             return PlayerDB.MatchNames(p, name);
         }
         

@@ -70,7 +70,7 @@ namespace MCGalaxy.Gui {
         }
         
         void StartGame_Click(object sender, EventArgs e) {
-            if (!game.Running) game.Start(null, "", int.MaxValue);
+            if (!game.Running) game.Start(Player.Console, "", int.MaxValue);
             UpdateButtons();
         }
 
@@ -93,7 +93,7 @@ namespace MCGalaxy.Gui {
 
                 Level lvl;
                 LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
-                RoundsGameConfig.AddMap(null, map, lvlCfg, game);
+                RoundsGameConfig.AddMap(Player.Console, map, lvlCfg, game);
             } catch (Exception ex) { 
                 Logger.LogError("Error adding map to game", ex); 
             }
@@ -107,7 +107,7 @@ namespace MCGalaxy.Gui {
 
                 Level lvl;
                 LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
-                RoundsGameConfig.RemoveMap(null, map, lvlCfg, game);
+                RoundsGameConfig.RemoveMap(Player.Console, map, lvlCfg, game);
             } catch (Exception ex) { 
                 Logger.LogError("Error removing map from game", ex); 
             }

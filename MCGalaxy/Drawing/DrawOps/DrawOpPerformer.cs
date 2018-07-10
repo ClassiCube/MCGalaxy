@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static Level Setup(DrawOp op, Player p, Vec3S32[] marks) {
             op.SetMarks(marks);
-            Level lvl = p == null ? null : p.level;
+            Level lvl = p.level;
             op.SetLevel(lvl);
             op.Player = p;
             return lvl;
@@ -50,9 +50,8 @@ namespace MCGalaxy.Drawing.Ops {
         static bool CannotBuildIn(Player p, Level lvl) {
             Zone[] zones = lvl.Zones.Items;
             for (int i = 0; i < zones.Length; i++) {
-                AccessResult access = zones[i].Access.Check(p);
                 // player could potentially modify blocks in this particular zone
-                if (access == AccessResult.Whitelisted || access == AccessResult.Allowed) return false;
+                if (zones[i].Access.CheckAllowed(p)) return false;
             }            
             return !lvl.BuildAccess.CheckDetailed(p);
         }
@@ -61,25 +60,25 @@ namespace MCGalaxy.Drawing.Ops {
                               Vec3S32[] marks, bool checkLimit = true) {
             Level lvl = Setup(op, p, marks);
             if (lvl != null && !lvl.Config.Drawing) {
-                Player.Message(p, "Drawing commands are turned off on this map.");
+                p.Message("Drawing commands are turned off on this map.");
                 return false;
             }
             if (lvl != null && CannotBuildIn(p, lvl)) return false;
             
             long affected = op.BlocksAffected(lvl, marks);
-            if (p != null && op.AffectedByTransform)
+            if (op.AffectedByTransform)
                 p.Transform.GetBlocksAffected(ref affected);
             if (checkLimit && !op.CanDraw(marks, p, affected)) return false;
             
             if (brush != null && affected != -1) {
                 const string format = "{0}({1}): affecting up to {2} blocks";
-                if (p == null || !p.Ignores.DrawOutput) {
-                    Player.Message(p, format, op.Name, brush.Name, affected);
+                if (!p.Ignores.DrawOutput) {
+                    p.Message(format, op.Name, brush.Name, affected);
                 }
             } else if (affected != -1) {
                 const string format = "{0}: affecting up to {1} blocks";
-                if (p == null || !p.Ignores.DrawOutput) {
-                    Player.Message(p, format, op.Name, affected);
+                if (!p.Ignores.DrawOutput) {
+                    p.Message(format, op.Name, affected);
                 }
             }
             
@@ -182,7 +181,7 @@ namespace MCGalaxy.Drawing.Ops {
                 if (old == Block.custom_block) old = (BlockID)(Block.Extended | lvl.FastGetExtTile(b.X, b.Y, b.Z));
                 #endif
                 
-                if (old == Block.Invalid) return;                
+                if (old == Block.Invalid) return;
                 // Check to make sure the block is actually different and that we can change it
                 if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
@@ -209,8 +208,8 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == reloadThreshold) {
-                    if (p == null || !p.Ignores.DrawOutput) {
-                        Player.Message(p, "Changed over {0} blocks, preparing to reload map..", reloadThreshold);
+                    if (!p.Ignores.DrawOutput) {
+                        p.Message("Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
 
                     lock (lvl.queueLock)

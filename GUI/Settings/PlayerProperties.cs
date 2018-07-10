@@ -117,7 +117,7 @@ namespace MCGalaxy.Gui {
 
             try {
                 string cmdArgs = args.Length == 0 ? p.name : p.name + " " + args;
-                Command.Find(cmd).Use(null, cmdArgs);
+                Command.Find(cmd).Use(Player.Console, cmdArgs);
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }

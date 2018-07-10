@@ -32,7 +32,7 @@ namespace MCGalaxy {
         
         static bool ChangeMap(Player p, Level lvl, string name) {
             if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
-                Player.Message(p, "Cannot use /goto, already joining a map."); return false;
+                p.Message("Cannot use /goto, already joining a map."); return false;
             }
             Level oldLevel = p.level;
             bool didJoin = false;
@@ -64,7 +64,7 @@ namespace MCGalaxy {
             } else {
                 lvl = Matcher.FindLevels(p, name);
                 if (lvl == null) {
-                    Player.Message(p, "There is no level \"{0}\" loaded. Did you mean..", name);
+                    p.Message("There is no level \"{0}\" loaded. Did you mean..", name);
                     Command.Find("Search").Use(p, "levels " + name);
                     return false;
                 }
@@ -78,7 +78,7 @@ namespace MCGalaxy {
             cfg.Load(propsPath);
             
             if (!cfg.LoadOnGoto) {
-                Player.Message(p, "Level \"{0}\" cannot be loaded using %T/Goto.", name);
+                p.Message("Level \"{0}\" cannot be loaded using %T/Goto.", name);
                 return false;
             }
             
@@ -90,12 +90,12 @@ namespace MCGalaxy {
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) return GotoLevel(p, lvl);
 
-            Player.Message(p, "Level \"{0}\" failed to be auto-loaded.", name);
+            p.Message("Level \"{0}\" failed to be auto-loaded.", name);
             return false;
         }
         
         static bool GotoLevel(Player p, Level lvl) {
-            if (p.level == lvl) { Player.Message(p, "You are already in {0}%S.", lvl.ColoredName); return false; }
+            if (p.level == lvl) { p.Message("You are already in {0}%S.", lvl.ColoredName); return false; }
             if (!lvl.CanJoin(p)) return false;
 
             p.Loading = true;

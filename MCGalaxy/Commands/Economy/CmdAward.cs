@@ -18,12 +18,12 @@
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdAward : Command {      
+    public sealed class CmdAward : Command2 {      
         public override string name { get { return "Award"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             bool take = false;
             if (message.CaselessStarts("give ")) {
                 message = message.Substring(5);
@@ -36,35 +36,35 @@ namespace MCGalaxy.Commands.Eco {
             string plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (plName == null) return;
             string award = Matcher.FindAwards(p, args[1]);
-            if (award == null) { Player.Message(p, "Use %T/Awards %Sfor a list of awards"); return; }
+            if (award == null) { p.Message("Use %T/Awards %Sfor a list of awards"); return; }
 
             string displayName = PlayerInfo.GetColoredName(p, plName);
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
                     Chat.MessageGlobal("{0} %Swas awarded: &b{1}", displayName, award);
                     Awards.SavePlayers();
-                } else if (p != null && plName.CaselessEq(p.name)) {
-                    Player.Message(p, "You already have that award.");
+                } else if (plName.CaselessEq(p.name)) {
+                    p.Message("You already have that award.");
                 } else {
-                    Player.Message(p, "{0} %Salready has that award.", displayName);
+                    p.Message("{0} %Salready has that award.", displayName);
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
                     Chat.MessageGlobal("{0} %Shad their &b{1} %Saward removed", displayName, award);
                     Awards.SavePlayers();
-                } else if (p != null && plName.CaselessEq(p.name)) {
-                    Player.Message(p, "You did not have that award to begin with.");
+                } else if (plName.CaselessEq(p.name)) {
+                    p.Message("You did not have that award to begin with.");
                 } else {
-                    Player.Message(p, "{0} %Sdid not have that award to begin with.", displayName);
+                    p.Message("{0} %Sdid not have that award to begin with.", displayName);
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Award give/take [player] [award]");
-            Player.Message(p, "%HGives/takes [award] award to/from [player]");
-            Player.Message(p, "%T/Award [player] [award]");
-            Player.Message(p, "%HShorthand for %T/Award give [player] [award]");
+            p.Message("%T/Award give/take [player] [award]");
+            p.Message("%HGives/takes [award] award to/from [player]");
+            p.Message("%T/Award [player] [award]");
+            p.Message("%HShorthand for %T/Award give [player] [award]");
         }
     }
 }

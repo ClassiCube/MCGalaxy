@@ -17,12 +17,12 @@
  */
 
 namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdTexture : Command {
+    public sealed class CmdTexture : Command2 {
         public override string name { get { return "Texture"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             string scope = args[0].ToLower();
@@ -31,13 +31,13 @@ namespace MCGalaxy.Commands.CPE {
             
             if (args.Length == 1) {
                 if (scope == "level")
-                    Player.Message(p, "Level terrain: "   + GetPath(p.level.Config.Terrain));
+                    p.Message("Level terrain: "   + GetPath(p.level.Config.Terrain));
                 else if (scope == "levelzip")
-                    Player.Message(p, "Level tex pack: "  + GetPath(p.level.Config.TexturePack));
+                    p.Message("Level tex pack: "  + GetPath(p.level.Config.TexturePack));
                 else if (scope == "global")
-                    Player.Message(p, "Global terrain: "  + GetPath(ServerConfig.DefaultTerrain));
+                    p.Message("Global terrain: "  + GetPath(ServerConfig.DefaultTerrain));
                 else if (scope == "globalzip")
-                    Player.Message(p, "Global tex pack: " + GetPath(ServerConfig.DefaultTexture));
+                    p.Message("Global tex pack: " + GetPath(ServerConfig.DefaultTexture));
                 else
                     Help(p);
                 return;
@@ -47,15 +47,15 @@ namespace MCGalaxy.Commands.CPE {
             if (url.CaselessEq("normal") || url.CaselessEq("reset")) {
                 url = "";
             } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
-                Player.Message(p, "Please use http:// or https:// in front of your URL"); return;
+                p.Message("Please use http:// or https:// in front of your URL"); return;
             }
             FilterURL(ref url);
             
             if (url.Length > NetUtils.StringSize) {
-                Player.Message(p, "The URL must be " + NetUtils.StringSize + " characters or less."); return;
+                p.Message("The URL must be " + NetUtils.StringSize + " characters or less."); return;
             }
             if (url.Length > 0 && !(url.EndsWith(".png") || url.EndsWith(".zip"))) {
-                Player.Message(p, "URL must end in .png (for terrain) or .zip (for texture pack)"); return;
+                p.Message("URL must end in .png (for terrain) or .zip (for texture pack)"); return;
             }
 
             if (scope == "global" || scope == "globalzip") {
@@ -63,13 +63,13 @@ namespace MCGalaxy.Commands.CPE {
                 ServerConfig.DefaultTexture = "";
                     
                 if (url.Length == 0) {
-                    Player.Message(p, "Reset server textures to default");
+                    p.Message("Reset server textures to default");
                 } else if (url.CaselessEnds(".png")) {
                     ServerConfig.DefaultTerrain = url;
-                    Player.Message(p, "Set server's default terrain to " + url);
+                    p.Message("Set server's default terrain to " + url);
                 } else if (url.CaselessEnds(".zip")) {
                     ServerConfig.DefaultTexture = url;
-                    Player.Message(p, "Set server's default texture pack to " + url);
+                    p.Message("Set server's default texture pack to " + url);
                 }
                 UpdateGlobal(p);
             } else if (scope == "level" || scope == "levelzip") {
@@ -78,13 +78,13 @@ namespace MCGalaxy.Commands.CPE {
                 p.level.Config.TexturePack = "";
                 
                 if (url.Length == 0) {                    
-                    Player.Message(p, "Reset level textures to server default");
+                    p.Message("Reset level textures to server default");
                 } else if (url.CaselessEnds(".png")) {
                     p.level.Config.Terrain = url;
-                    Player.Message(p, "Set level's terrain to " + url);
+                    p.Message("Set level's terrain to " + url);
                 } else if (url.CaselessEnds(".zip")) {
                     p.level.Config.TexturePack = url;
-                    Player.Message(p, "Set level's texture pack to " + url);
+                    p.Message("Set level's texture pack to " + url);
                 }
                 UpdateLevel(p);
             } else {
@@ -123,11 +123,11 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Texture global/level [url]");
-            Player.Message(p, "%HChanges server default or current level's texture.");
-            Player.Message(p, "%H[url] must end with .png (terrain) or .zip (texture pack)");
-            Player.Message(p, "%HUsing 'reset' for [url] will reset the texture to default");
-            Player.Message(p, "%H  Note: zip texture packs are not supported by all clients");
+            p.Message("%T/Texture global/level [url]");
+            p.Message("%HChanges server default or current level's texture.");
+            p.Message("%H[url] must end with .png (terrain) or .zip (texture pack)");
+            p.Message("%HUsing 'reset' for [url] will reset the texture to default");
+            p.Message("%H  Note: zip texture packs are not supported by all clients");
         }
     }
 }

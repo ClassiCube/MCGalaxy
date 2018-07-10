@@ -84,12 +84,10 @@ namespace MCGalaxy.Drawing.Ops {
         public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
-            if (p != null && affected > p.group.DrawLimit) {
-                Player.Message(p, "You tried to draw " + affected + " blocks.");
-                Player.Message(p, "You cannot draw more than " + p.group.DrawLimit + ".");
-                return false;
-            }
-            return true;
+            if (affected <= p.group.DrawLimit) return true;
+            p.Message("You tried to draw " + affected + " blocks.");
+            p.Message("You cannot draw more than " + p.group.DrawLimit + ".");
+            return false;
         }
         
         public virtual void SetMarks(Vec3S32[] marks) {

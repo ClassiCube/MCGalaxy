@@ -279,7 +279,7 @@ namespace MCGalaxy.Network {
         bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.Find(cmdName);
             Player p = new IRCPlayer(channel, user.Nick, bot);
-            if (cmd == null) { Player.Message(p, "Unknown command!"); return false; }
+            if (cmd == null) { p.Message("Unknown command!"); return false; }
 
             string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
@@ -290,12 +290,12 @@ namespace MCGalaxy.Network {
                     return false;
                 }
                 if (!cmd.SuperUseable) {
-                    Player.Message(p, cmd.name + " can only be used in-game.");
+                    p.Message(cmd.name + " can only be used in-game.");
                     return false;
                 }
                 cmd.Use(p, cmdArgs);
             } catch (Exception ex) {
-                Player.Message(p, "CMD Error: " + ex);
+                p.Message("CMD Error: " + ex);
                 Logger.LogError(ex);
             }
             return true;
@@ -339,9 +339,10 @@ namespace MCGalaxy.Network {
                 if (ircNick != null) {
                     DatabaseID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
                 }
+                SuperName = "IRC";
             }
             
-            public override void SendMessage(byte id, string message) {
+            public override void Message(byte id, string message) {
                 message = IRCBot.ConvertMessage(message);
                 if (IRCChannel != null) {
                     Bot.Message(IRCChannel, message);

@@ -16,12 +16,12 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdLowlag : Command {
+    public sealed class CmdLowlag : Command2 {
         public override string name { get { return "LowLag"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 && ServerConfig.PositionUpdateInterval > 1000) {
                 ServerConfig.PositionUpdateInterval = 100;
                 Chat.MessageAll("&dLow lag %Sturned &cOFF %S- positions update every &b100 %Sms.");
@@ -39,9 +39,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/LowLag [interval in milliseconds]");
-            Player.Message(p, "%HSets the interval between sending of position packets.");
-            Player.Message(p, "%HIf no interval is given, then 2000 ms is used if the current interval" + 
+            p.Message("%T/LowLag [interval in milliseconds]");
+            p.Message("%HSets the interval between sending of position packets.");
+            p.Message("%HIf no interval is given, then 2000 ms is used if the current interval" + 
                                " is less than 1000 ms, otherwise 200 ms is used for the interval.");
         }
     }

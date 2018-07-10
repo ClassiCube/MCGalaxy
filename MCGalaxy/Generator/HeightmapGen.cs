@@ -33,21 +33,20 @@ namespace MCGalaxy.Generator {
             
             Uri uri;
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
-                Player.Message(p, "{0} is not a valid URL.", url); return false;
+                p.Message("{0} is not a valid URL.", url); return false;
             }
             
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
-                    Player.Message(p, "Downloading file from: &f" + url);
-                    string user = p == null ? "(console)" : p.name;
-                    client.DownloadFile(uri, dir + "tempImage_" + user + ".bmp");
+                    p.Message("Downloading file from: &f" + url);
+                    client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
                 }
-                Player.Message(p, "Finished downloading image.");
+                p.Message("Finished downloading image.");
                 return true;
             } catch (Exception ex) {
                 Logger.LogError("Error downloading image", ex);
-                Player.Message(p, "%WFailed to download the image from the given url.");
-                Player.Message(p, "%WThe url may need to end with its extension (such as .jpg).");
+                p.Message("%WFailed to download the image from the given url.");
+                p.Message("%WThe url may need to end with its extension (such as .jpg).");
                 return false;
             }
         }
@@ -64,8 +63,8 @@ namespace MCGalaxy.Generator {
                 Logger.LogError("Error reading bitmap", ex);
                 if (bmp != null) bmp.Dispose();
                 
-                Player.Message(p, "%WThere was an error reading the downloaded image.");
-                Player.Message(p, "%WThe url may need to end with its extension (such as .jpg).");
+                p.Message("%WThere was an error reading the downloaded image.");
+                p.Message("%WThe url may need to end with its extension (such as .jpg).");
                 return null;
             }
         }
@@ -73,18 +72,17 @@ namespace MCGalaxy.Generator {
         public static bool Generate(MapGenArgs args) {
             Player p = args.Player;
             Level lvl = args.Level;
-            if (args.Args.Length == 0) { Player.Message(p, "You need to provide a url for the image."); return false; }
+            if (args.Args.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
             
-            if (!DownloadImage(args.Args, "extra/heightmap/", p )) return false;
-            string user = p == null ? "(console)" : p.name;
-            Bitmap bmp = ReadBitmap("tempImage_" + user, "extra/heightmap/", p);
+            if (!DownloadImage(args.Args, "extra/heightmap/", p)) return false;
+            Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
             if (bmp == null) return false;
             
             int index = 0, oneY = lvl.Width * lvl.Length;
             using (bmp) {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
-                    Player.Message(p, "The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
-                    Player.Message(p, "The width and length of the new level must match that size.");
+                    p.Message("The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
+                    p.Message("The width and length of the new level must match that size.");
                     return false;
                 }
                 

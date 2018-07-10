@@ -145,7 +145,7 @@ namespace MCGalaxy {
             LevelAccessController visit = new LevelAccessController(cfg, map, true);
             LevelAccessController build = new LevelAccessController(cfg, map, false);
             if (!visit.CheckDetailed(p) || !build.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot {0}.", action); return false;
+                p.Message("Hence, you cannot {0}.", action); return false;
             }
             return true;
         }
@@ -153,7 +153,7 @@ namespace MCGalaxy {
         internal static bool ValidateAction(Player p, Level lvl, string action) {
             if (p == null) return true;
             if (!lvl.VisitAccess.CheckDetailed(p) || !lvl.BuildAccess.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot {0}.", action); return false;
+                p.Message("Hence, you cannot {0}.", action); return false;
             }
             return true;
         }

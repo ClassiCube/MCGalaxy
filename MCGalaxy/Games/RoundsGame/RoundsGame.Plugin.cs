@@ -69,12 +69,12 @@ namespace MCGalaxy.Games {
         }
         
         protected void MessageMapInfo(Player p) {
-            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes",
+            p.Message("This map has &a{0} likes %Sand &c{1} dislikes",
                            Map.Config.Likes, Map.Config.Dislikes);
             string[] authors = Map.Config.Authors.SplitComma();
             if (authors.Length == 0) return;
             
-            Player.Message(p, "It was created by {0}",
+            p.Message("It was created by {0}",
                            authors.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         

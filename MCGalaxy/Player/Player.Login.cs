@@ -167,7 +167,7 @@ namespace MCGalaxy {
             try {
                 welcomeFile.EnsureExists();
                 string[] welcome = welcomeFile.GetText();
-                Player.MessageLines(this, welcome);
+                MessageLines(welcome);
             } catch (Exception ex) {
                 Logger.LogError("Error loading welcome text", ex);
             }

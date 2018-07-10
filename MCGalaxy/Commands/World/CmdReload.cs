@@ -17,7 +17,7 @@
  */
 using System;
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdReload : Command {
+    public sealed class CmdReload : Command2 {
         public override string name { get { return "Reload"; } }
         public override string shortcut { get { return "Reveal"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can reload for all players") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "player or level name")) return;
             if (message.Length == 0) message = p.name;
             string[] parts = message.SplitSpaces();
@@ -44,13 +44,11 @@ namespace MCGalaxy.Commands.World {
         }
         
         bool ReloadAll(Player p, string[] parts) {
-            Level lvl = null;
+            Level lvl = p.level;
             if (parts.Length == 2) {
                 lvl = Matcher.FindLevels(p, parts[1]);
                 if (lvl == null) return false;
-            } else if (!Player.IsSuper(p)) {
-                lvl = p.level;
-            } else {
+            } else if (p.IsSuper) {
                 SuperRequiresArgs(name + " all", p, "level name"); return false;
             }
             
@@ -60,9 +58,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Reload %H- Reloads the map you are in, just for you.");
-            Player.Message(p, "%T/Reload all %H- Reloads for all players in map you are in.");
-            Player.Message(p, "%T/Reload all [map] %H- Reloads for all players in [map]");
+            p.Message("%T/Reload %H- Reloads the map you are in, just for you.");
+            p.Message("%T/Reload all %H- Reloads for all players in map you are in.");
+            p.Message("%T/Reload all [map] %H- Reloads for all players in [map]");
         }
     }
 }

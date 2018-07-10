@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 using BlockID = System.UInt16;
@@ -208,6 +209,18 @@ namespace MCGalaxy {
             OnGroupLoadEvent.Call();
             reloading = true;
             SaveAll(GroupList);
+            
+            Player.Console.group = NobodyRank;
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) {
+                p.group = Group.Find(p.group.Permission);
+                if (p.group == null) p.group = DefaultRank;
+                if (PlayerDB.FindColor(p).Length > 0 || p.color == p.group.Color) continue;
+                
+                p.color = p.group.Color;
+                Entities.GlobalRespawn(p);
+                p.SetPrefix();
+            }
         }
 
         static readonly object saveLock = new object();

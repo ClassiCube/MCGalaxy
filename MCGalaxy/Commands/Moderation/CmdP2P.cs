@@ -19,31 +19,30 @@
  */
 namespace MCGalaxy.Commands.Moderation {
     
-    public sealed class CmdP2P : Command {     
+    public sealed class CmdP2P : Command2 {     
         public override string name { get { return "P2P"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
-            if (args.Length == 1) { Player.Message(p, "You did not specify the target player."); return; }
+            if (args.Length == 1) { p.Message("You did not specify the target player."); return; }
             Player source = PlayerInfo.FindMatches(p, args[0]);
             Player target = PlayerInfo.FindMatches(p, args[1]);
             
             if (source == null || target == null) return;
-            if (p.Rank < source.Rank) {
-                MessageTooHighRank(p, "teleport", true); return;
-            }
-            Player.Message(p, "Attempting to teleport " + source.name + " to " + target.name + ".");
+            if (!CheckRank(p, source, "teleport", true)) return;
+            
+            p.Message("Attempting to teleport " + source.name + " to " + target.name + ".");
             Command.Find("TP").Use(source, target.name);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/P2P [source] [target]");
-            Player.Message(p, "%HTeleports the source player to the target player.");
+            p.Message("%T/P2P [source] [target]");
+            p.Message("%HTeleports the source player to the target player.");
         }
     }
 }

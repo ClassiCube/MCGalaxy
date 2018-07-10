@@ -19,7 +19,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdTp : Command {
+    public sealed class CmdTp : Command2 {
         public override string name { get { return "TP"; } }
         public override string shortcut { get { return "Move"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         const string precisePrefix = "-precise ";
-        public override void Use(Player p, string message) {           
+        public override void Use(Player p, string message, CommandData data) {           
             if (message.Length == 0) { Help(p); return; }
             
             bool preciseTP = message.CaselessStarts(precisePrefix);        
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Misc {
 
             if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
             if (target != null && target.Loading) {
-                Player.Message(p, "Waiting for " + target.ColoredName + " %Sto spawn..");
+                p.Message("Waiting for " + target.ColoredName + " %Sto spawn..");
                 target.BlockUntilLoad(10);
             }
             
@@ -110,31 +110,30 @@ namespace MCGalaxy.Commands.Misc {
         
         static bool CheckPlayer(Player p, Player target) {
             if (target.level.IsMuseum) {
-                Player.Message(p, target.ColoredName + " %Sis in a museum."); return false;
+                p.Message(target.ColoredName + " %Sis in a museum."); return false;
             }
             
-            if (!ServerConfig.HigherRankTP && p.Rank < target.Rank) {
-                MessageTooHighRank(p, "teleport to", true); return false;
-            }
+        	if (!ServerConfig.HigherRankTP 
+        	    && !CheckRank(p, target, "teleport to", true)) return false;
             
             IGame game = IGame.GameOn(target.level);
             if (!p.Game.Referee && game != null) {
-                Player.Message(p, "You can only teleport to players in " +
+                p.Message("You can only teleport to players in " +
                                "a game when you are in referee mode."); return false;
             }
             return true;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%HUse ~ before a coordinate to move relative to current position");
-            Player.Message(p, "%T/TP [x y z] <yaw> <pitch>");
-            Player.Message(p, "%HTeleports yourself to the given block coordinates.");
-            Player.Message(p, "%T/TP -precise [x y z] <yaw> <pitch>");
-            Player.Message(p, "%HTeleports using precise units. (32 units = 1 block)");
-            Player.Message(p, "%T/TP [player]");
-            Player.Message(p, "%HTeleports yourself to that player.");
-            Player.Message(p, "%T/TP bot [name]");
-            Player.Message(p, "%HTeleports yourself to that bot.");
+            p.Message("%HUse ~ before a coordinate to move relative to current position");
+            p.Message("%T/TP [x y z] <yaw> <pitch>");
+            p.Message("%HTeleports yourself to the given block coordinates.");
+            p.Message("%T/TP -precise [x y z] <yaw> <pitch>");
+            p.Message("%HTeleports using precise units. (32 units = 1 block)");
+            p.Message("%T/TP [player]");
+            p.Message("%HTeleports yourself to that player.");
+            p.Message("%T/TP bot [name]");
+            p.Message("%HTeleports yourself to that bot.");
         }
     }
 }

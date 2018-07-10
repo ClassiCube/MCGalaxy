@@ -142,9 +142,9 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Missile [at end]");
-            Player.Message(p, "%HAllows you to fire missiles at people. Differs from %T/gun %Hin that the missile is guided.");
-            Player.Message(p, "%HAvailable [at end] types: %Sexplode, destroy, tp");
+            p.Message("%T/Missile [at end]");
+            p.Message("%HAllows you to fire missiles at people. Differs from %T/gun %Hin that the missile is guided.");
+            p.Message("%HAvailable [at end] types: %Sexplode, destroy, tp");
         }
     }
 }

@@ -19,13 +19,13 @@
 using System;
 namespace MCGalaxy.Commands.Moderation {
     
-    public sealed class CmdPossess : Command {
+    public sealed class CmdPossess : Command2 {
         public override string name { get { return "Possess"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
 
@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands.Moderation {
                 Player who = PlayerInfo.FindExact(p.possess);
                 if (who == null) {
                     p.possess = "";
-                    Player.Message(p, "Possession disabled."); return;
+                    p.Message("Possession disabled."); return;
                 }
                 if (who == p) {
-                    Player.Message(p, "Cannot possess yourself!"); return;
+                    p.Message("Cannot possess yourself!"); return;
                 }
                 who.following = "";
                 who.canBuild = true;
@@ -49,19 +49,17 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 p.invincible = false;
                 Command.Find("Hide").Use(p, "");
-                Player.Message(p, "Stopped possessing " + who.ColoredName + "%S.");
+                p.Message("Stopped possessing " + who.ColoredName + "%S.");
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (who.Rank >= p.Rank) {
-                    MessageTooHighRank(p, "possess", false); return;
-                }
+                if (!CheckRank(p, who, "teleport", false)) return;
                 
                 if (who.possess.Length > 0) {
-                    Player.Message(p, "That player is currently possessing someone!"); return;
+                    p.Message("That player is currently possessing someone!"); return;
                 }
                 if (who.following.Length > 0) {
-                    Player.Message(p, "That player is either following someone or already possessed."); return;
+                    p.Message("That player is either following someone or already possessed."); return;
                 }                
                 if (p.possess.Length > 0) {
                     Player prev = PlayerInfo.FindExact(p.possess);
@@ -83,14 +81,14 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Entities.Despawn(p, who);
                 who.canBuild = false;
-                Player.Message(p, "Successfully possessed {0}%S.", who.ColoredName);
+                p.Message("Successfully possessed {0}%S.", who.ColoredName);
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "/possess [player] <skin as #> - DEMONIC POSSESSION HUE HUE");
-            Player.Message(p, "Using # after player name makes possessed keep their custom skin during possession.");
-            Player.Message(p, "Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
+            p.Message("/possess [player] <skin as #> - DEMONIC POSSESSION HUE HUE");
+            p.Message("Using # after player name makes possessed keep their custom skin during possession.");
+            p.Message("Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
         }
     }
 }

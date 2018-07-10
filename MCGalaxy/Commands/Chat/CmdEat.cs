@@ -24,13 +24,13 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Eat"; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (DateTime.UtcNow < p.NextEat) {
-                Player.Message(p, "You're still full - you need to wait at least " +
+                p.Message("You're still full - you need to wait at least " +
                                    "10 seconds between snacks."); return;
             }
             if (Economy.Enabled && p.money < 1) {
-                Player.Message(p, "You need to have at least 1 &3" + ServerConfig.Currency + 
+                p.Message("You need to have at least 1 &3" + ServerConfig.Currency + 
                                    " %Sto purchase a snack."); return;
             }            
 
@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
      
         public override void Help(Player p) {
-            Player.Message(p, "%T/Eat %H- Eats a random snack.");
-            Player.Message(p, "%HIf economy is enabled, costs 1 &3" + ServerConfig.Currency);
+            p.Message("%T/Eat %H- Eats a random snack.");
+            p.Message("%HIf economy is enabled, costs 1 &3" + ServerConfig.Currency);
         }
     }
 }

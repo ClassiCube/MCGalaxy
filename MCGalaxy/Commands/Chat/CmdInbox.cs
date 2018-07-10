@@ -21,21 +21,21 @@ using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdInbox : Command {
+    public sealed class CmdInbox : Command2 {
         public override string name { get { return "Inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
         const int i_text = 0, i_sent = 1, i_from = 2;
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!Database.TableExists("Inbox" + p.name)) {
-                Player.Message(p, "Your inbox is empty."); return;
+                p.Message("Your inbox is empty."); return;
             }
             
             List<string[]> entries = Database.GetRows("Inbox" + p.name, "Contents,TimeSent,PlayerFrom", 
                                                       "ORDER BY TimeSent");
             if (entries.Count == 0) {
-                Player.Message(p, "Your inbox is empty."); return;
+                p.Message("Your inbox is empty."); return;
             }
 
             string[] args = message.SplitSpaces(2);
@@ -43,10 +43,10 @@ namespace MCGalaxy.Commands.Chatting {
                 foreach (string[] entry in entries) { Output(p, entry); }
             } else if (IsDeleteCommand(args[0])) {
                 if (args.Length == 1) {
-                    Player.Message(p, "You need to provide either \"all\" or a number."); return;
+                    p.Message("You need to provide either \"all\" or a number."); return;
                 } else if (args[1].CaselessEq("all")) {
                     Database.Backend.DeleteRows("Inbox" + p.name);
-                    Player.Message(p, "Deleted all messages.");
+                    p.Message("Deleted all messages.");
                 } else {
                     DeleteByID(p, args[1], entries);
                 }
@@ -60,12 +60,12 @@ namespace MCGalaxy.Commands.Chatting {
             if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
             
             if (num > entries.Count) {
-                Player.Message(p, "Message #{0} does not exist.", num);
+                p.Message("Message #{0} does not exist.", num);
             } else {
                 string[] entry = entries[num - 1];
                 Database.Backend.DeleteRows("Inbox" + p.name,
                                             "WHERE PlayerFrom=@0 AND TimeSent=@1", entry[i_from], entry[i_sent]);
-                Player.Message(p, "Deleted message #{0}", num);
+                p.Message("Deleted message #{0}", num);
             }
         }
         
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!CommandParser.GetInt(p, value, "Message number", ref num, 1)) return;
             
             if (num > entries.Count) {
-                Player.Message(p, "Message #{0} does not exist.", num);
+                p.Message("Message #{0} does not exist.", num);
             } else {
                 Output(p, entries[num - 1]);
             }
@@ -85,18 +85,18 @@ namespace MCGalaxy.Commands.Chatting {
             TimeSpan delta = DateTime.Now - time;
             string sender = PlayerInfo.GetColoredName(p, entry[i_from]);
             
-            Player.Message(p, "From {0} &a{1} ago:", sender, delta.Shorten());
-            Player.Message(p, entry[i_text]);
+            p.Message("From {0} &a{1} ago:", sender, delta.Shorten());
+            p.Message(entry[i_text]);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Inbox");
-            Player.Message(p, "%HDisplays all your messages.");
-            Player.Message(p, "%T/Inbox [num]");
-            Player.Message(p, "%HDisplays the message at [num]");
-            Player.Message(p, "%T/Inbox del [num]/all");
-            Player.Message(p, "%HDeletes the message at [num], deletes all messages if \"all\"");
-            Player.Message(p, "  %HUse %T/Send %Hto reply to a message");
+            p.Message("%T/Inbox");
+            p.Message("%HDisplays all your messages.");
+            p.Message("%T/Inbox [num]");
+            p.Message("%HDisplays the message at [num]");
+            p.Message("%T/Inbox del [num]/all");
+            p.Message("%HDeletes the message at [num], deletes all messages if \"all\"");
+            p.Message("  %HUse %T/Send %Hto reply to a message");
         }
     }
 }

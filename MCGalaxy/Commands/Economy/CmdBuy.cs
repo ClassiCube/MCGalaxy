@@ -19,32 +19,32 @@ using System;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdBuy : Command {
+    public sealed class CmdBuy : Command2 {
         public override string name { get { return "Buy"; } }
         public override string shortcut { get { return "Purchase"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] parts = message.SplitSpaces();
             Item item = Economy.GetItem(parts[0]);
             if (item == null) { Help(p); return; }
 
             if (!item.Enabled) {
-                Player.Message(p, "%WThe {0} item is not currently buyable.", item.Name); return;
+                p.Message("%WThe {0} item is not currently buyable.", item.Name); return;
             }
-            if (p.Rank < item.PurchaseRank) {
+            if (data.Rank < item.PurchaseRank) {
                 Formatter.MessageNeedMinPerm(p, "+ can purchase a " + item.Name, item.PurchaseRank); return;
             }
             item.OnBuyCommand(p, message, parts);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Buy [item] [value] <map name>");
-            Player.Message(p, "%Hmap name is only used for %T/Buy map%H.");
-            Player.Message(p, "%HUse %T/Store [item] %Hto see more information for an item.");
-            Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
+            p.Message("%T/Buy [item] [value] <map name>");
+            p.Message("%Hmap name is only used for %T/Buy map%H.");
+            p.Message("%HUse %T/Store [item] %Hto see more information for an item.");
+            p.Message("%H  Available items: %S" + Economy.EnabledItemNames());
         }
     }
 }

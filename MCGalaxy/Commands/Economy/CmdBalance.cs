@@ -19,13 +19,13 @@ using System;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco { 
-    public sealed class CmdBalance : Command {        
+    public sealed class CmdBalance : Command2 {        
         public override string name { get { return "Balance"; } }
         public override string shortcut { get { return "Money"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "player name")) return;
             if (!Formatter.ValidName(p, message, "player")) return;
             int matches = 1;
@@ -42,11 +42,11 @@ namespace MCGalaxy.Commands.Eco {
             }
 
             string targetName = PlayerInfo.GetColoredName(p, target);
-            Player.Message(p, "Economy stats for {0}%S:", targetName);
-            Player.Message(p, " Current balance: &f{0} &3{1}", money, ServerConfig.Currency);
+            p.Message("Economy stats for {0}%S:", targetName);
+            p.Message(" Current balance: &f{0} &3{1}", money, ServerConfig.Currency);
             
             Economy.EcoStats ecos = Economy.RetrieveStats(target);
-            Player.Message(p, " Total spent: &f" + ecos.TotalSpent + " &3" + ServerConfig.Currency);
+            p.Message(" Total spent: &f" + ecos.TotalSpent + " &3" + ServerConfig.Currency);
             Output(p, ecos.Purchase, "purchase");
             Output(p, ecos.Payment, "payment");
             Output(p, ecos.Salary, "receipt");
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Eco {
             if (!AdjustRelative(ref value, " on %f")) {
                 AdjustRelative(ref value, " - Date: %f"); // old date format for purchases
             }
-            Player.Message(p, " Last {0}: {1}", type, value);
+            p.Message(" Last {0}: {1}", type, value);
         }
         
         static bool AdjustRelative(ref string value, string dateStart) {
@@ -87,10 +87,10 @@ namespace MCGalaxy.Commands.Eco {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Balance [player]");
-            Player.Message(p, "%HShows how much &3" + ServerConfig.Currency + " %H[player] has, " +
+            p.Message("%T/Balance [player]");
+            p.Message("%HShows how much &3" + ServerConfig.Currency + " %H[player] has, " +
                            "plus their most recent transactions.");
-            Player.Message(p, "%HIf [player] is not given, shows your own balance.");
+            p.Message("%HIf [player] is not given, shows your own balance.");
         }
     }
 }

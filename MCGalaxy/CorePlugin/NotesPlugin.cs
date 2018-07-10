@@ -49,14 +49,14 @@ namespace MCGalaxy.Core {
             }
         }
         
-        static void AddNote(ModAction action, string type) {
+        static void AddNote(ModAction e, string type) {
              if (!ServerConfig.LogNotes) return;
-             string src = action.Actor == null ? "(console)" : action.Actor.name;
+             string src = e.Actor.name;
              
              string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
-             string data = action.Target + " " + type + " " + src + " " + time;
-             if (action.Reason.Length > 0) {
-                 data += " " + action.Reason.Replace(" ", "%20");
+             string data = e.Target + " " + type + " " + src + " " + time;
+             if (e.Reason.Length > 0) {
+                 data += " " + e.Reason.Replace(" ", "%20");
              }
              Server.Notes.Append(data);
         }

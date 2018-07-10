@@ -19,13 +19,13 @@ using MCGalaxy.Events;
 using System;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdFreeze : Command {
+    public sealed class CmdFreeze : Command2 {
         public override string name { get { return "Freeze"; } }
         public override string shortcut { get { return "fz"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             
@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Freeze [name] [timespan] <reason>");
-            Player.Message(p, "%HPrevents [name] from moving for [timespan], or until manually unfrozen.");
-            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("%T/Freeze [name] [timespan] <reason>");
+            p.Message("%HPrevents [name] from moving for [timespan], or until manually unfrozen.");
+            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

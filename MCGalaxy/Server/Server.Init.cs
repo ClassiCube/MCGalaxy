@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using MCGalaxy.Commands.World;
+using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Network;
@@ -31,7 +32,7 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-                mainLevel = CmdLoad.LoadLevel(null, ServerConfig.MainLevel);
+                mainLevel = CmdLoad.LoadLevel(Player.Console, ServerConfig.MainLevel);
                 if (mainLevel == null) GenerateMain();
                 
                 mainLevel.Config.AutoUnload = false;
@@ -54,7 +55,10 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Logger.LogError("Error upgrading agreed list", ex);
             }
+			
             agreed = PlayerList.Load("ranks/agreed.txt");
+            invalidIds = PlayerList.Load("extra/invalidids.txt");
+            Player.Console.DatabaseID = NameConverter.InvalidNameID("(console)");
             
             bannedIP = PlayerList.Load("ranks/banned-ip.txt");
             ircControllers = PlayerList.Load("ranks/IRC_Controllers.txt");
@@ -65,7 +69,6 @@ namespace MCGalaxy {
             models = PlayerExtList.Load("extra/models.txt");
             skins = PlayerExtList.Load("extra/skins.txt");
             reach = PlayerExtList.Load("extra/reach.txt");
-            invalidIds = PlayerList.Load("extra/invalidids.txt");
             rotations = PlayerExtList.Load("extra/rotations.txt");
             modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
@@ -73,7 +76,7 @@ namespace MCGalaxy {
             frozen = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans = PlayerExtList.Load(Paths.TempBansFile);
-            ModerationTasks.QueueTasks();
+            ModerationTasks.QueueTasks();                     
             
             if (ServerConfig.WhitelistedOnly)
                 whiteList = PlayerList.Load("ranks/whitelist.txt");
@@ -84,8 +87,8 @@ namespace MCGalaxy {
             List<string> maps = AutoloadMaps.AllNames();
             
             foreach (string map in maps) {
-                if (map.CaselessEq(mainLevel.name)) continue;
-                CmdLoad.LoadLevel(null, map);
+                if (map.CaselessEq(ServerConfig.MainLevel)) continue;
+                CmdLoad.LoadLevel(Player.Console, map);
             }
         }
         
@@ -119,7 +122,7 @@ namespace MCGalaxy {
         static void InitGame(RoundsGame game) {
             if (!game.GetConfig().StartImmediately) return;
             try {
-                game.Start(null, "", int.MaxValue);
+                game.Start(Player.Console, "", int.MaxValue);
             } catch (Exception ex) { 
                 Logger.LogError("Error auto-starting " + game.GameName, ex); 
             }

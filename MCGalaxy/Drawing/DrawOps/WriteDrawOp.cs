@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         void DrawLetter(Player p, char c, Brush brush, DrawOpOutput output) {
             if ((int)c >= 256 || letters[c] == 0) {
-                if (c != ' ') Player.Message(p, "\"{0}\" is not currently supported, replacing with space.", c);
+                if (c != ' ') p.Message("\"{0}\" is not currently supported, replacing with space.", c);
                 pos += dir * (4 * Scale);
             } else {
                 ulong flags = letters[c]; int shift = 56;

@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands {
                 result = false; return true;
             }
             
-            Player.Message(p, "\"{0}\" is not a valid boolean.", input);
-            Player.Message(p, "Value must be either 1/yes/on or 0/no/off");
+            p.Message("\"{0}\" is not a valid boolean.", input);
+            p.Message("Value must be either 1/yes/on or 0/no/off");
             return false;
         }
         
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
             }
             
             string[] names = Enum.GetNames(typeof(TEnum));
-            Player.Message(p, argName + " must be one of the following: " + names.Join());
+            p.Message(argName + " must be one of the following: " + names.Join());
             return false;
         }
         
@@ -63,10 +63,10 @@ namespace MCGalaxy.Commands {
                 span = input.ParseShort(defUnit);
                 return true;
             } catch (OverflowException) {
-                Player.Message(p, "Timespan given is too big.");
+                p.Message("Timespan given is too big.");
             } catch (FormatException ex) {
-                Player.Message(p, "{0} is not a valid quantifier.", ex.Message);
-                Player.Message(p, TimespanHelp, action);
+                p.Message("{0} is not a valid quantifier.", ex.Message);
+                p.Message(TimespanHelp, action);
             }
             return false;
         }
@@ -78,17 +78,17 @@ namespace MCGalaxy.Commands {
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
             if (!int.TryParse(input, out value)) {
-                Player.Message(p, "\"{0}\" is not a valid integer.", input); return false;
+                p.Message("\"{0}\" is not a valid integer.", input); return false;
             }
             
             if (value < min || value > max) {
                 // Try to provide more helpful range messages
                 if (max == int.MaxValue) {
-                    Player.Message(p, "{0} must be {1} or greater", argName, min);
+                    p.Message("{0} must be {1} or greater", argName, min);
                 } else if (min == int.MinValue) {
-                    Player.Message(p, "{0} must be {1} or less", argName, max);
+                    p.Message("{0} must be {1} or less", argName, max);
                 } else {
-                    Player.Message(p, "{0} must be between {1} and {2}", argName, min, max);
+                    p.Message("{0} must be between {1} and {2}", argName, min, max);
                 }
                 return false;
             }
@@ -101,11 +101,11 @@ namespace MCGalaxy.Commands {
                                    float min, float max) {
             float value;
             if (!Utils.TryParseDecimal(input, out value)) {
-                Player.Message(p, "\"{0}\" is not a valid number.", input); return false;
+                p.Message("\"{0}\" is not a valid number.", input); return false;
             }
             
             if (value < min || value > max) {
-                Player.Message(p, "{0} must be between {1} and {2}", argName, 
+                p.Message("{0} must be between {1} and {2}", argName, 
                                min.ToString("F4"), max.ToString("F4"));
                 return false;
             }
@@ -136,7 +136,7 @@ namespace MCGalaxy.Commands {
         public static bool GetHex(Player p, string input, ref ColorDesc col) {
             ColorDesc tmp;
             if (!Colors.TryParseHex(input, out tmp)) {
-                Player.Message(p, "\"#{0}\" is not a valid HEX color.", input); return false;
+                p.Message("\"#{0}\" is not a valid HEX color.", input); return false;
             }
             col = tmp; return true;
         }
@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands {
             }
             
             block = Block.Parse(p, input);
-            if (block == Block.Invalid) Player.Message(p, "&cThere is no block \"{0}\".", input);
+            if (block == Block.Invalid) p.Message("&cThere is no block \"{0}\".", input);
             return block != Block.Invalid;
         }
 
@@ -185,8 +185,7 @@ namespace MCGalaxy.Commands {
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
         public static bool IsBlockAllowed(Player p, string action, BlockID block) {
-            if (p == null || p.group.Blocks[block]) return true;
-            
+            if (p.group.Blocks[block]) return true;            
             BlockPerms.Find(block).MessageCannotUse(p, action);
             return false;
         }

@@ -18,15 +18,15 @@
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBots : Command {
+    public sealed class CmdBots : Command2 {
         public override string name { get { return "Bots"; } }
         public override string shortcut { get { return "BotList"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
-        public override void Use(Player p, string message) { 
-            Level lvl = Player.IsSuper(p) ? null : p.level;
+        public override void Use(Player p, string message, CommandData data) { 
+            Level lvl = p.IsSuper ? null : p.level;
             string[] args = message.SplitSpaces(2);
             int ignored, offset = 0;
             
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Bots {
             string cmd = (lvl == p.level) ? "bots" : "bots " + lvl.name;
             string modifier = args.Length > offset ? args[offset] : "";
 
-            Player.Message(p, "Bots in " + lvl.ColoredName + ":");
+            p.Message("Bots in " + lvl.ColoredName + ":");
             MultiPageOutput.Output(p, bots, FormatBot, cmd, "Bots", modifier, false);
         }
         
@@ -55,10 +55,10 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Bots");
-            Player.Message(p, "%HShows a list of bots on your level, and their AIs and levels");
-            Player.Message(p, "%T/Bots [level]");
-            Player.Message(p, "%HShows bots on the given level");
+            p.Message("%T/Bots");
+            p.Message("%HShows a list of bots on your level, and their AIs and levels");
+            p.Message("%T/Bots [level]");
+            p.Message("%HShows bots on the given level");
         }
     }
 }

@@ -67,7 +67,7 @@ namespace MCGalaxy.Drawing.Ops {
             Source = null;
             if (Filename == "tempImage_" + Player.name)
                 File.Delete("extra/images/tempImage_" + Player.name + ".bmp");
-            Player.Message(Player, "Finished printing image using {0} palette.", Palette.Name);
+            Player.Message("Finished printing image using {0} palette.", Palette.Name);
         }
         
         void CalcLayerColors() {

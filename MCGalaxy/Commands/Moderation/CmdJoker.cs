@@ -19,12 +19,12 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Commands.Chatting;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdJoker : Command {       
+    public sealed class CmdJoker : Command2 {       
         public override string name { get { return "Joker"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             bool stealth = false;
             if (message[0] == '#') {
@@ -35,9 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (p != null && who.Rank > p.Rank) { 
-                MessageTooHighRank(p, "joker", true); return;
-            }
+            if (!CheckRank(p, who, "joker", true)) return;
             if (!MessageCmd.CanSpeak(p, name)) return;
 
             if (!who.joker) {
@@ -57,10 +55,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Joker [player]");
-            Player.Message(p, "%HMakes that player become a joker!");
-            Player.Message(p, "%T/Joker #[player]");
-            Player.Message(p, "%HMakes that player silently become a joker!");
+            p.Message("%T/Joker [player]");
+            p.Message("%HMakes that player become a joker!");
+            p.Message("%T/Joker #[player]");
+            p.Message("%HMakes that player silently become a joker!");
         }
     }
 }

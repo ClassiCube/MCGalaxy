@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdPatrol : Command {
+    public sealed class CmdPatrol : Command2 {
         public override string name { get { return "Patrol"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
@@ -31,17 +31,17 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandPerm(LevelPermission.Builder, "are not patrolled") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
 
             List<Player> candidates = GetPatrolCandidates(p);
             if (candidates.Count == 0) {
-                Player.Message(p, "%WNo players to patrol.");
+                p.Message("%WNo players to patrol.");
             } else {
                 Player target = candidates[new Random().Next(candidates.Count)];
                 target.LastPatrol = DateTime.UtcNow;
                 Command.Find("TP").Use(p, target.name);
-                Player.Message(p, "Now visiting " + target.ColoredName + "%S.");
+                p.Message("Now visiting " + target.ColoredName + "%S.");
             }
         }
         
@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Patrol");
+            p.Message("%T/Patrol");
             ItemPerms except = CommandExtraPerms.Find(name, 1);
-            Player.Message(p, "%HTeleports you to a random player. {0} %Hare not patrolled", except.Describe());
-            Player.Message(p, "%HPlayers patrolled within the last 15 seconds are ignored");
+            p.Message("%HTeleports you to a random player. {0} %Hare not patrolled", except.Describe());
+            p.Message("%HPlayers patrolled within the last 15 seconds are ignored");
         }
     }
 }

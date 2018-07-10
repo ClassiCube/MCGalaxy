@@ -28,16 +28,16 @@ namespace MCGalaxy {
             ItemPerms perms = CommandPerms.Find(cmd.name);
             if (perms == null) perms = new ItemPerms(cmd.defaultRank, null, null);
             
-            Player.Message(p, "Usable by: " + perms.Describe());
+            p.Message("Usable by: " + perms.Describe());
             PrintAliases(p, cmd);
             
             List<CommandExtraPerms> extraPerms = CommandExtraPerms.FindAll(cmd.name);
             if (cmd.ExtraPerms == null) extraPerms.Clear();
             if (extraPerms.Count == 0) return;
             
-            Player.Message(p, "%TExtra permissions:");
+            p.Message("%TExtra permissions:");
             foreach (CommandExtraPerms extra in extraPerms) {
-                Player.Message(p, "{0}) {1} {2}", extra.Num, extra.Describe(), extra.Desc);
+                p.Message("{0}) {1} {2}", extra.Num, extra.Describe(), extra.Desc);
             }
         }
         
@@ -50,7 +50,7 @@ namespace MCGalaxy {
             FindAliases(Alias.aliases, cmd, dst);
             
             if (dst.Length == "Shortcuts: %T".Length) return;
-            Player.Message(p, dst.ToString(0, dst.Length - 2));
+            p.Message(dst.ToString(0, dst.Length - 2));
         }
         
         static void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
@@ -70,12 +70,12 @@ namespace MCGalaxy {
         }
         
         public static void MessageNeedMinPerm(Player p, string action, LevelPermission perm) {
-            Player.Message(p, "Only {0}%S{1}", Group.GetColoredName(perm), action);
+            p.Message("Only {0}%S{1}", Group.GetColoredName(perm), action);
         }
         
         public static bool ValidName(Player p, string name, string type) {
             if (Player.ValidName(name)) return true;
-            Player.Message(p, "\"{0}\" is not a valid {1} name.", name, type);
+            p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
         }
     }

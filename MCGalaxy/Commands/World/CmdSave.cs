@@ -18,7 +18,7 @@
 using System;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdSave : Command {
+    public sealed class CmdSave : Command2 {
         
         public override string name { get { return "Save"; } }
         public override string type { get { return CommandTypes.World; } }
@@ -28,10 +28,10 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("MapSave"), new CommandAlias("WSave"), new CommandAlias("WorldSave") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("all")) { SaveAll(p); return; }
             if (message.Length == 0) {
-                if (Player.IsSuper(p)) { SaveAll(p); }
+                if (p.IsSuper) { SaveAll(p); }
                 else { Save(p, p.level, ""); }
                 return;
             }
@@ -60,18 +60,18 @@ namespace MCGalaxy.Commands.World {
             if (!force && !lvl.Changed) return false;
             
             if (!lvl.SaveChanges) {
-                Player.Message(p, "Level {0} %Sis running a game, skipping save", lvl.ColoredName);
+                p.Message("Level {0} %Sis running a game, skipping save", lvl.ColoredName);
                 return false;
             }
             
             bool saved = lvl.Save(force);
-            if (!saved) Player.Message(p, "Saving of level {0} %Swas cancelled", lvl.ColoredName);
+            if (!saved) p.Message("Saving of level {0} %Swas cancelled", lvl.ColoredName);
             return saved;
         }
         
         static void Save(Player p, Level lvl, string restoreName) {
             if (!TrySave(p, lvl, true)) return;
-            Player.Message(p, "Level {0} %Ssaved", lvl.ColoredName);
+            p.Message("Level {0} %Ssaved", lvl.ColoredName);
             
             int num = lvl.Backup(true, restoreName);
             if (num == -1) return;
@@ -86,10 +86,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Save %H- Saves the level you are currently in");
-            Player.Message(p, "%T/Save all %H- Saves all loaded levels.");
-            Player.Message(p, "%T/Save [map] %H- Saves the specified map.");
-            Player.Message(p, "%T/Save [map] [name] %H- Backups the map with a given restore name");
+            p.Message("%T/Save %H- Saves the level you are currently in");
+            p.Message("%T/Save all %H- Saves all loaded levels.");
+            p.Message("%T/Save [map] %H- Saves the specified map.");
+            p.Message("%T/Save [map] [name] %H- Backups the map with a given restore name");
         }
     }
 }

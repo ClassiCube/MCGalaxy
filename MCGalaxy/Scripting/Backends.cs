@@ -63,13 +63,13 @@ namespace MCGalaxy
 \t\t// p is the player object for the player executing the command. message is everything after the command invocation itself.
 \t\tpublic override void Use(Player p, string message)
 \t\t{{
-\t\t\tPlayer.Message(p, ""Hello World!"");
+\t\t\tp.Message(""Hello World!"");
 \t\t}}
 
 \t\t// This one controls what happens when you use /Help [commandname].
 \t\tpublic override void Help(Player p)
 \t\t{{
-\t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."");
+\t\t\tp.Message(""/{1} - Does stuff. Example command."");
 \t\t}}
 \t}}
 }}";
@@ -139,12 +139,12 @@ Namespace MCGalaxy
 ' This is where the magic happens, naturally.
 ' p is the player object for the player executing the command.  message is everything after the command invocation itself. 
 \t\tPublic Overrides Sub Use(p As Player, message As String)
-\t\t\tPlayer.Message(p, ""Hello World!"")
+\t\t\tp.Message(""Hello World!"")
 \t\tEnd Sub
 
 ' This one controls what happens when you use /Help [commandname].
 \t\tPublic Overrides Sub Help(p As Player)
-\t\t\tPlayer.Message(p, ""/{1} - Does stuff. Example command."")
+\t\t\tp.Message(""/{1} - Does stuff. Example command."")
 
 \t\tEnd Sub
 \tEnd Class

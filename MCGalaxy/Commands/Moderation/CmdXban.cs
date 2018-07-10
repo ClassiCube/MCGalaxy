@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {   
-    public sealed class CmdXban : Command {       
+    public sealed class CmdXban : Command2 {       
         public override string name { get { return "XBan"; } }
         public override string shortcut { get { return "BanX"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new [] { new CommandAlias("UBan", "-noip") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             bool banIP = true;
             if (message.CaselessStarts("-noip ")) {
                 message = message.Substring("-noip ".Length);
@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/XBan [name] [message]");
-            Player.Message(p, "%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
-            Player.Message(p, "%T/UBan [name] [message]");
-            Player.Message(p, "%HSame as %T/XBan%H, but does not ban the IP.");
+            p.Message("%T/XBan [name] [message]");
+            p.Message("%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
+            p.Message("%T/UBan [name] [message]");
+            p.Message("%HSame as %T/XBan%H, but does not ban the IP.");
         }
     }
 }

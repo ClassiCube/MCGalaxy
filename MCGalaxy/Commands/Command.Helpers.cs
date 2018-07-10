@@ -41,7 +41,7 @@ namespace MCGalaxy {
         }
         
         protected bool CheckSuper(Player p, string message, string type) {
-            if (message.Length > 0 || !Player.IsSuper(p)) return false;
+            if (message.Length > 0 || !p.IsSuper) return false;
             SuperRequiresArgs(name, p, type);
             return true;
         }
@@ -49,12 +49,11 @@ namespace MCGalaxy {
         protected void SuperRequiresArgs(Player p, string type) { SuperRequiresArgs(name, p, type); }
         
         protected internal static void SuperRequiresArgs(string cmd, Player p, string type) {
-            string src = p == null ? "console" : "IRC";
-            Player.Message(p, "When using /{0} from {2}, you must provide a {1}.", cmd, type, src);
+            p.Message("When using /{0} from {2}, you must provide a {1}.", cmd, type, p.SuperName);
         }
         
         protected bool HasExtraPerm(Player p, int num) {
-            return p == null || CommandExtraPerms.Find(name, num).UsableBy(p.Rank);
+            return CommandExtraPerms.Find(name, num).UsableBy(p.Rank);
         }
         
         protected bool CheckExtraPerm(Player p, int num) {
@@ -65,15 +64,19 @@ namespace MCGalaxy {
             return false;
         }
         
-        protected internal static void MessageTooHighRank(Player p, string action, bool canAffectOwnRank) {
-            MessageTooHighRank(p, action, p.group, canAffectOwnRank);
+        protected internal static bool CheckRank(Player p, Player who, string action, bool canAffectOwnRank) {
+            return p == who || CheckRank(p, who.Rank, action, canAffectOwnRank);
         }
         
-        protected static void MessageTooHighRank(Player p, string action, Group grp, bool canAffectGroup) {
-            if (canAffectGroup)
-                Player.Message(p, "Can only {0} players ranked {1} %Sor below", action, grp.ColoredName);
+        protected internal static bool CheckRank(Player p, LevelPermission rank, string action, bool canAffectOwnRank) {
+            if (canAffectOwnRank && rank <= p.Rank) return true;
+            if (!canAffectOwnRank && rank < p.Rank) return true;
+            
+            if (canAffectOwnRank)
+                p.Message("Can only {0} players ranked {1} %Sor below", action, p.group.ColoredName);
             else
-                Player.Message(p, "Can only {0} players ranked below {1}", action, grp.ColoredName);
+                p.Message("Can only {0} players ranked below {1}", action, p.group.ColoredName);
+            return false;
         }
         
         protected internal static bool IsCreateCommand(string str) {

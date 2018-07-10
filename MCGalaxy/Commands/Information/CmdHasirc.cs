@@ -16,26 +16,26 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdHasirc : Command {
+    public sealed class CmdHasirc : Command2 {
         public override string name { get { return "HasIRC"; } }
         public override string shortcut { get { return "IRC"; } }
         public override string type { get { return CommandTypes.Information; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
 
             if (ServerConfig.UseIRC) {
-                Player.Message(p, "IRC is &aEnabled%S.");
-                Player.Message(p, "Location: " + ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels);
+                p.Message("IRC is &aEnabled%S.");
+                p.Message("Location: " + ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels);
             } else {
-                Player.Message(p, "IRC is &cDisabled%S.");
+                p.Message("IRC is &cDisabled%S.");
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/HasIRC");
-            Player.Message(p, "%HOutputs whether the server has IRC enabled or not.");
-            Player.Message(p, "%HIf IRC is enabled, server and channel are also displayed.");
+            p.Message("%T/HasIRC");
+            p.Message("%HOutputs whether the server has IRC enabled or not.");
+            p.Message("%HIf IRC is enabled, server and channel are also displayed.");
         }
     }
 }

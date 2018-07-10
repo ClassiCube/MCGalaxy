@@ -21,13 +21,13 @@ using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdEnvironment : Command {
+    public sealed class CmdEnvironment : Command2 {
         public override string name { get { return "Environment"; } }
         public override string shortcut { get { return "Env"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("preset")) {
                 SendPresetsMessage(p); return;
             }
@@ -192,28 +192,28 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         static void SendPresetsMessage(Player p) {
-            Player.Message(p, "%T/Env preset [type] %H- Uses an env preset on your current map");
-            Player.Message(p, "Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+            p.Message("%T/Env preset [type] %H- Uses an env preset on your current map");
+            p.Message("Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
             if (!Directory.Exists("presets")) return;
             
             string[] files = Directory.GetFiles("presets", "*.env");
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
-            if (all.Length > 0) Player.Message(p, "Custom preset types: " + all);
+            if (all.Length > 0) p.Message("Custom preset types: " + all);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Environment [variable] [value]");
-            Player.Message(p, "%HSee %T/Help env variables %Hfor list of variables");
-            Player.Message(p, "%HUsing 'normal' for [value] will reset the variable");
-            Player.Message(p, "%T/Environment normal %H- resets all variables");
+            p.Message("%T/Environment [variable] [value]");
+            p.Message("%HSee %T/Help env variables %Hfor list of variables");
+            p.Message("%HUsing 'normal' for [value] will reset the variable");
+            p.Message("%T/Environment normal %H- resets all variables");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("variable") || message.CaselessEq("variables")) {
-                Player.Message(p, "%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
-                Player.Message(p, "%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
-                Player.Message(p, "%H   weatherspeed, weatherfade, expfog, sidesoffset,");
-                Player.Message(p, "%H   skyboxhorspeed, skyboxverspeed");
+                p.Message("%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
+                p.Message("%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
+                p.Message("%H   weatherspeed, weatherfade, expfog, sidesoffset,");
+                p.Message("%H   skyboxhorspeed, skyboxverspeed");
             } else {
                 base.Help(p, message);
             }

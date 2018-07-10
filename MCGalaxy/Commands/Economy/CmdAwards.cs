@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdAwards : Command {        
+    public sealed class CmdAwards : Command2 {        
         public override string name { get { return "Awards"; } }
         public override string type { get { return CommandTypes.Economy; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
             string plName = "", modifier = args[args.Length - 1];
@@ -44,10 +44,10 @@ namespace MCGalaxy.Commands.Eco {
             List<Awards.Award> awards = GetAwards(plName);
             if (awards.Count == 0) {
                 if (plName.Length > 0) {
-                    Player.Message(p, "{0} %Shas no awards.", 
+                    p.Message("{0} %Shas no awards.", 
                                    PlayerInfo.GetColoredName(p, plName));
                 } else {
-                    Player.Message(p, "This server has no awards yet.");
+                    p.Message("This server has no awards yet.");
                 }
                 return;
             }
@@ -80,8 +80,8 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Awards %H- Lists all awards the server has");
-            Player.Message(p, "%T/Awards [player] %H- Lists awards that player has");
+            p.Message("%T/Awards %H- Lists all awards the server has");
+            p.Message("%T/Awards [player] %H- Lists awards that player has");
         }
     }
 }

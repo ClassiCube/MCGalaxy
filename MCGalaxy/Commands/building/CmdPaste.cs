@@ -23,7 +23,7 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPaste : Command {
+    public sealed class CmdPaste : Command2 {
         public override string name { get { return "Paste"; } }
         public override string shortcut { get { return "v"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -34,16 +34,16 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("PasteNot", "not"), new CommandAlias("pn", "not") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (p.CurrentCopy == null) { 
-                Player.Message(p, "You haven't copied anything yet"); return; 
+                p.Message("You haven't copied anything yet"); return; 
             }
             
             BrushArgs args = new BrushArgs(p, message, Block.Air);
             Brush brush = BrushFactory.Find("paste").Construct(args);
             if (brush == null) return;
             
-            Player.Message(p, "Place a block in the corner of where you want to paste.");
+            p.Message("Place a block in the corner of where you want to paste.");
             p.MakeSelection(1, "Selecting location for %SPaste", brush, DoPaste);
         }
 
@@ -58,10 +58,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Paste %H- Pastes the stored copy.");
-            Player.Message(p, "%T/Paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
-            Player.Message(p, "%T/Paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
-            Player.Message(p, "&4BEWARE: %SThe blocks will always be pasted in a set direction");
+            p.Message("%T/Paste %H- Pastes the stored copy.");
+            p.Message("%T/Paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
+            p.Message("%T/Paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
+            p.Message("&4BEWARE: %SThe blocks will always be pasted in a set direction");
         }
     }
 }

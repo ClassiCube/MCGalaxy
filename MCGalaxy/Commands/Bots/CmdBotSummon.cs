@@ -18,14 +18,14 @@
 using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBotSummon : Command {
+    public sealed class CmdBotSummon : Command2 {
         public override string name { get { return "BotSummon"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             if (!LevelInfo.ValidateAction(p, p.level, "summon that bot")) return;
             
@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BotSummon [name]");
-            Player.Message(p, "%HSummons a bot to your position.");
+            p.Message("%T/BotSummon [name]");
+            p.Message("%HSummons a bot to your position.");
         }
     }
 }

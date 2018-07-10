@@ -18,18 +18,18 @@
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdInfect : Command {        
+    public sealed class CmdInfect : Command2 {        
         public override string name { get { return "Infect"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }      
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
             if (!ZSGame.Instance.RoundInProgress || ZSGame.Get(who).Infected) {
-                Player.Message(p, "Cannot infect player");
+                p.Message("Cannot infect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.InfectPlayer(who, p);
                 Chat.MessageFrom(who, "λNICK %Swas infected.");
@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Infect [name]");
-            Player.Message(p, "%HTurns [name] into a zombie");
+            p.Message("%T/Infect [name]");
+            p.Message("%HTurns [name] into a zombie");
         }
     }
 }

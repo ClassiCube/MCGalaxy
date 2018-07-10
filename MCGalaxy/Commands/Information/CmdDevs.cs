@@ -16,21 +16,21 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdDevs : Command {
+    public sealed class CmdDevs : Command2 {
         public override string name { get { return "Devs"; } }
         public override string shortcut { get { return "Dev"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
-            Player.Message(p, "&9{1} devs: %S{0}", Server.Devs.Join(), Server.SoftwareName);
-            Player.Message(p, "&2{1} mods: %S{0}", Server.Mods.Join(), Server.SoftwareName);
+            p.Message("&9{1} devs: %S{0}", Server.Devs.Join(), Server.SoftwareName);
+            p.Message("&2{1} mods: %S{0}", Server.Mods.Join(), Server.SoftwareName);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Devs");
-            Player.Message(p, "%HDisplays the {0} team (Developers and moderators).", Server.SoftwareName);
+            p.Message("%T/Devs");
+            p.Message("%HDisplays the {0} team (Developers and moderators).", Server.SoftwareName);
         }
     }
 }

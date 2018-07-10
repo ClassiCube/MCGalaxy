@@ -68,14 +68,14 @@ namespace MCGalaxy.Commands.Building {
             
             if (op.UsesHeight) {
                 if (args.Length < 3) {
-                    Player.Message(p, "You need to provide the radius and the height for the {0}.", args[0]);
+                    p.Message("You need to provide the radius and the height for the {0}.", args[0]);
                 } else {
                     success = CommandParser.GetInt(p, args[1], "radius", ref meta.radius, 0, 2000)
                         && CommandParser.GetInt(p, args[2], "height", ref meta.height, 0, 2000);
                 }
             } else {
                 if (args.Length < 2) {
-                    Player.Message(p, "You need to provide the radius for the {0}.", args[0]);
+                    p.Message("You need to provide the radius for the {0}.", args[0]);
                 } else {
                     success = CommandParser.GetInt(p, args[1], "radius", ref meta.radius, 0, 2000);
                 }
@@ -112,14 +112,14 @@ namespace MCGalaxy.Commands.Building {
         class AdvDrawMeta { public int radius, height; }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Draw [object] [baseradius] [height] <brush args>");
-            Player.Message(p, "%T/Draw [object] [radius] <brush args>");
-            Player.Message(p, "%HDraws an object at the specified point.");
-            Player.Message(p, "   %HObjects: &fcone/hcone/icone/hicone");
-            Player.Message(p, "     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
-            Player.Message(p, "   %HObjects with only radius: &fsphere/hsphere");
-            Player.Message(p, "   %HNote 'h' means hollow, 'i' means inverse");
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Draw [object] [baseradius] [height] <brush args>");
+            p.Message("%T/Draw [object] [radius] <brush args>");
+            p.Message("%HDraws an object at the specified point.");
+            p.Message("   %HObjects: &fcone/hcone/icone/hicone");
+            p.Message("     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
+            p.Message("   %HObjects with only radius: &fsphere/hsphere");
+            p.Message("   %HNote 'h' means hollow, 'i' means inverse");
+            p.Message(BrushHelpLine);
         }
     }
 }

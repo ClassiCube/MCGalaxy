@@ -29,13 +29,13 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("XTitle", "-own") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
             UsePlayer(p, message, "title");
         }
         
         protected override void SetPlayerData(Player p, Player who, string title) {
-            if (title.Length >= 20) { Player.Message(p, "Title must be under 20 letters."); return; }
+            if (title.Length >= 20) { p.Message("Title must be under 20 letters."); return; }
 
             if (title.Length == 0) {
                 Chat.MessageFrom(who, "λNICK %Shad their title removed");
@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Title [player] [title]");
-            Player.Message(p, "%HSets the title of [player]");
-            Player.Message(p, "%H  If [title] is not given, removes [player]'s title.");
+            p.Message("%T/Title [player] [title]");
+            p.Message("%HSets the title of [player]");
+            p.Message("%H  If [title] is not given, removes [player]'s title.");
         }
     }
 }

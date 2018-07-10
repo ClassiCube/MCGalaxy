@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the login message of others") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
             UsePlayer(p, message, "login message");
         }
@@ -35,17 +35,17 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetPlayerData(Player p, Player who, string msg) {
             PlayerDB.SetLoginMessage(who.name, msg);
             if (msg.Length == 0) {
-                Player.Message(p, "Login message of {0} %Swas removed.",
+                p.Message("Login message of {0} %Swas removed.",
                                who.ColoredName);
             } else {
-                Player.Message(p, "Login message of {0} %Swas changed to: {1}",
+                p.Message("Login message of {0} %Swas changed to: {1}",
                                who.ColoredName, msg);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/LoginMessage [player] [message]");
-            Player.Message(p, "%HSets the login message shown for that player.");
+            p.Message("%T/LoginMessage [player] [message]");
+            p.Message("%HSets the login message shown for that player.");
         }
     }
 }

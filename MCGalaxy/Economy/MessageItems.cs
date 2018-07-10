@@ -32,16 +32,16 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.Find("LoginMessage").Use(p, "-own");
-                Player.Message(p, "&aYour login message was removed for free.");
+                p.Message("&aYour login message was removed for free.");
                 return;
             }
             
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way
             if (msg == PlayerDB.GetLoginMessage(p)) {
-                Player.Message(p, "%WYou already have that login message."); return;
+                p.Message("%WYou already have that login message."); return;
             }
             if (msg.Length > NetUtils.StringSize) {
-                Player.Message(p, "%WLogin message must be 64 characters or less."); return;
+                p.Message("%WLogin message must be 64 characters or less."); return;
             }
             Command.Find("LoginMessage").Use(p, "-own " + msg);
             Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + msg);
@@ -60,16 +60,16 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.Find("LogoutMessage").Use(p, "-own");
-                Player.Message(p, "&aYour logout message was removed for free.");
+                p.Message("&aYour logout message was removed for free.");
                 return;
             }
             
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way         
             if (msg == PlayerDB.GetLogoutMessage(p)) {
-                Player.Message(p, "%WYou already have that logout message."); return;
+                p.Message("%WYou already have that logout message."); return;
             }       
             if (msg.Length > NetUtils.StringSize) {
-                Player.Message(p, "%WLogin message must be 64 characters or less."); return;
+                p.Message("%WLogin message must be 64 characters or less."); return;
             }            
             Command.Find("LogoutMessage").Use(p, "-own " + msg);
             Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + msg);

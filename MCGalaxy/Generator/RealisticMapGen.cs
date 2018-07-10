@@ -89,7 +89,7 @@ namespace MCGalaxy.Generator {
                 Logger.Log(LogType.SystemActivity, "Total time was {0} seconds.", (DateTime.UtcNow - start).TotalSeconds);
             } catch (Exception e) {
                 Logger.LogError(e);
-                Player.Message(args.Player, "Generation failed.");
+                args.Player.Message("Generation failed.");
                 return false;
             }
             return true;

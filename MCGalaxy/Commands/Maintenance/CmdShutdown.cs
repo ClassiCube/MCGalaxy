@@ -23,16 +23,16 @@ using System.Threading;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdShutdown : Command {
+    public sealed class CmdShutdown : Command2 {
         public override string name { get { return "Shutdown"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         static SchedulerTask shutdownTask;
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("abort") || message.CaselessEq("cancel")) {
                 if (shutdownTask == null) {
-                    Player.Message(p, "No server shutdown is in progress."); return;
+                    p.Message("No server shutdown is in progress."); return;
                 }
                 
                 Log("Shutdown aborted.");
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 shutdownTask = null;
             } else {
                 if (shutdownTask != null) {
-                    Player.Message(p, "Server is already shutting down, use " +
+                    p.Message("Server is already shutting down, use " +
                                    "%T/Shutdown abort %Sto abort the shutdown."); return;
                 }
                 
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     reason = args[0]; secTime = 10;
                 }
                 
-                if (secTime <= 0) { Player.Message(p, "Countdown time must be greater than zero"); return; } 
+                if (secTime <= 0) { p.Message("Countdown time must be greater than zero"); return; } 
                 DoShutdown(secTime, reason);
             }
         }
@@ -96,10 +96,10 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Shutdown [delay] <reason>");
-            Player.Message(p, "%HShuts the server down after [delay] seconds.");
-            Player.Message(p, "%T/Shutdown abort");
-            Player.Message(p, "%HAborts the current server shutdown.");
+            p.Message("%T/Shutdown [delay] <reason>");
+            p.Message("%HShuts the server down after [delay] seconds.");
+            p.Message("%T/Shutdown abort");
+            p.Message("%HAborts the current server shutdown.");
         }
     }
 }

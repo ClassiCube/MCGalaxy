@@ -20,7 +20,7 @@ using System.IO;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdPlugin : Command {
+    public sealed class CmdPlugin : Command2 {
         public override string name { get { return "Plugin"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Scripting {
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("list")) {
-                Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));
+                p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
                 return;
             }
             
@@ -61,12 +61,12 @@ namespace MCGalaxy.Commands.Scripting {
             
             if (File.Exists(srcPath)) {
                 if (engine.Compile(srcPath, dstPath)) {
-                    Player.Message(p, "Plugin compiled successfully.");
+                    p.Message("Plugin compiled successfully.");
                 } else {
-                    Player.Message(p, "Compilation error. See " + IScripting.ErrorPath + " for more information.");
+                    p.Message("Compilation error. See " + IScripting.ErrorPath + " for more information.");
                 }
             } else {
-                Player.Message(p, "File &9{0} %Snot found.", srcPath);
+                p.Message("File &9{0} %Snot found.", srcPath);
             }
         }
         
@@ -74,12 +74,12 @@ namespace MCGalaxy.Commands.Scripting {
             string path = IScripting.PluginPath(name);
             if (File.Exists(path)) {
                 if (Plugin.Load(name, false)) {
-                    Player.Message(p, "Plugin loaded successfully.");
+                    p.Message("Plugin loaded successfully.");
                 } else {
-                    Player.Message(p, "%WError loading plugin. See error logs for more information.");
+                    p.Message("%WError loading plugin. See error logs for more information.");
                 }
             } else {
-                Player.Message(p, "File &9{0} %Snot found.", path);
+                p.Message("File &9{0} %Snot found.", path);
             }
         }
         
@@ -90,24 +90,24 @@ namespace MCGalaxy.Commands.Scripting {
             if (plugin == null) return;
             
             if (Plugin.core.Contains(plugin)) {
-                Player.Message(p, plugin.name + " is a core plugin and cannot be unloaded.");
+                p.Message(plugin.name + " is a core plugin and cannot be unloaded.");
                 return;
             }
             
             if (plugin != null) {
                 if (Plugin.Unload(plugin, false)) {
-                    Player.Message(p, "Plugin unloaded successfully.");
+                    p.Message("Plugin unloaded successfully.");
                 } else {
-                    Player.Message(p, "%WError unloading plugin. See error logs for more information.");
+                    p.Message("%WError unloading plugin. See error logs for more information.");
                 }
             } else {
-                Player.Message(p, "Loaded plugins: " + Plugin.all.Join(pl => pl.name));
+                p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
             }
         }
         
         static void CreatePlugin(Player p, string name) {
-            Player.Message(p, "Creating a plugin example source");
-            string creator = p == null ? ServerConfig.Name : p.name;
+            p.Message("Creating a plugin example source");
+            string creator = p.IsSuper ? ServerConfig.Name : p.name;
             string syntax = pluginSrc.Replace(@"\t", "\t");
             syntax = string.Format(syntax, name, creator, Server.VersionString);
             File.WriteAllText("plugins/" + name + ".cs", syntax);
@@ -146,16 +146,16 @@ namespace MCGalaxy
 }}";
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Plugin create [name]");
-            Player.Message(p, "%HCreate a example .cs plugin file");
-            Player.Message(p, "%T/Plugin compile [name]");
-            Player.Message(p, "%HCompiles a .cs plugin file");
-            Player.Message(p, "%T/Plugin load [filename]");
-            Player.Message(p, "%HLoad a plugin from your plugins folder");
-            Player.Message(p, "%T/Plugin unload [name]");
-            Player.Message(p, "%HUnloads a currently loaded plugin");
-            Player.Message(p, "%T/Plugin list");
-            Player.Message(p, "%HLists all loaded plugins");
+            p.Message("%T/Plugin create [name]");
+            p.Message("%HCreate a example .cs plugin file");
+            p.Message("%T/Plugin compile [name]");
+            p.Message("%HCompiles a .cs plugin file");
+            p.Message("%T/Plugin load [filename]");
+            p.Message("%HLoad a plugin from your plugins folder");
+            p.Message("%T/Plugin unload [name]");
+            p.Message("%HUnloads a currently loaded plugin");
+            p.Message("%T/Plugin list");
+            p.Message("%HLists all loaded plugins");
         }
     }
 }

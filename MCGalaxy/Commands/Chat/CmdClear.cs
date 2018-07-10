@@ -18,7 +18,7 @@
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdClear : Command {
+    public sealed class CmdClear : Command2 {
         public override string name { get { return "Clear"; } }
         public override string shortcut { get { return "cls"; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -30,10 +30,10 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "can clear chat for everyone") }; }
         }
         
-        public override void Use(Player p, string message) {        
+        public override void Use(Player p, string message, CommandData data) {        
             if (!message.CaselessEq("global")) {
                 ClearChat(p);
-                Player.Message(p, "&4Chat cleared.");
+                p.Message("&4Chat cleared.");
             } else {
                 if (!CheckExtraPerm(p, 1)) return;
                 
@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Clear %H- Clears your chat.");
-            Player.Message(p, "%T/Clear global %H- Clears chat of all users.");
+            p.Message("%T/Clear %H- Clears your chat.");
+            p.Message("%T/Clear global %H- Clears chat of all users.");
         }
     }
 }

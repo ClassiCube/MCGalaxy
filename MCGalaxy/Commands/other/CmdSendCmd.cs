@@ -19,35 +19,32 @@
  */
 namespace MCGalaxy.Commands.Misc {
     
-    public sealed class CmdSendCmd : Command {        
+    public sealed class CmdSendCmd : Command2 {        
         public override string name { get { return "SendCmd"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
         
-        public override void Use(Player p, string message) {
-            string[] parts = message.SplitSpaces(3);
-            Player target = PlayerInfo.FindMatches(p, parts[0]);
-            if (target == null) return;        
-            if (p != null && p.Rank < target.Rank) {
-                MessageTooHighRank(p, "send commands for", true); return;
-            }
-            if (parts.Length == 1) {
-                Player.Message(p, "No command name given."); return;
-            }
+        public override void Use(Player p, string message, CommandData data) {
+            string[] args = message.SplitSpaces(3);
+            Player target = PlayerInfo.FindMatches(p, args[0]);
+            if (target == null) return;
             
-            string cmdName = parts[1], cmdArgs = parts.Length > 2 ? parts[2] : "";
+            if (!CheckRank(p, target, "send commands for", true)) return;
+            if (args.Length == 1) { p.Message("No command name given."); return; }
+            
+            string cmdName = args[1], cmdArgs = args.Length > 2 ? args[2] : "";
             Command.Search(ref cmdName, ref cmdArgs);
             
             Command cmd = Command.Find(cmdName);
             if (cmd == null) {
-                Player.Message(p, "Unknown command \"" + cmdName + "\"."); return;
+                p.Message("Unknown command \"" + cmdName + "\"."); return;
             }
             cmd.Use(target, cmdArgs);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/SendCmd [player] [command] <arguments>");
-            Player.Message(p, "%HMake another user use a command. (e.g %T/SendCmd bob tp bob2%H)");
+            p.Message("%T/SendCmd [player] [command] <arguments>");
+            p.Message("%HMake another user use a command. (e.g %T/SendCmd bob tp bob2%H)");
         }
     }
 }

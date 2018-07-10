@@ -27,7 +27,7 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdImageprint : Command {
+    public sealed class CmdImageprint : Command2 {
         public override string name { get { return "ImagePrint"; } }
         public override string shortcut { get { return "Img"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                     new CommandAlias("DrawImage"), new CommandAlias("PrintImage") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!Directory.Exists("extra/images/"))
                 Directory.CreateDirectory("extra/images/");
             if (message.Length == 0) { Help(p); return; }
@@ -53,12 +53,12 @@ namespace MCGalaxy.Commands.Building {
             if (parts.Length > 1) {
                 dArgs.Pal = ImagePalette.Find(parts[1]);
                 if (dArgs.Pal == null) {
-                    Player.Message(p, "Palette {0} not found.", parts[1]); return;
+                    p.Message("Palette {0} not found.", parts[1]); return;
                 }
                 
                 if (dArgs.Pal.Entries == null || dArgs.Pal.Entries.Length == 0) {
-                    Player.Message(p, "Palette {0} does not have any entries", dArgs.Pal.Name);
-                    Player.Message(p, "Use %T/Palette %Sto add entries to it"); return;
+                    p.Message("Palette {0} does not have any entries", dArgs.Pal.Name);
+                    p.Message("Use %T/Palette %Sto add entries to it"); return;
                 }
             }
             
@@ -81,14 +81,14 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (!File.Exists("extra/images/" + dArgs.Name + ".bmp")) {
-                Player.Message(p, "The URL entered was invalid!"); return;
+                p.Message("The URL entered was invalid!"); return;
             }
-            Player.Message(p, "Place or break two blocks to determine direction.");
+            p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {
-            if (m[0].X == m[1].X && m[0].Z == m[1].Z) { Player.Message(p, "No direction was selected"); return false; }
+            if (m[0].X == m[1].X && m[0].Z == m[1].Z) { p.Message("No direction was selected"); return false; }
 
             Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));
             thread.Name = "MCG_ImagePrint";
@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands.Building {
             float ratio = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
             resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
             
-            Player.Message(p, "%WImage is too large ({0}x{1}), resizing to ({2}x{3})",
+            p.Message("%WImage is too large ({0}x{1}), resizing to ({2}x{3})",
                            width, height, resizedWidth, resizedHeight);
             width = resizedWidth; height = resizedHeight;
         }
@@ -171,11 +171,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ImagePrint [file/url] [palette] <mode> <width height>");
-            Player.Message(p, "%HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
-            Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
-            Player.Message(p, "%HModes: &fVertical, Vertical2Layer, Horizontal");
-            Player.Message(p, "%H  <width height> optionally resize the printed image");
+            p.Message("%T/ImagePrint [file/url] [palette] <mode> <width height>");
+            p.Message("%HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
+            p.Message("%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
+            p.Message("%HModes: &fVertical, Vertical2Layer, Horizontal");
+            p.Message("%H  <width height> optionally resize the printed image");
         }
 
         class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public string Name; public int Width, Height; }

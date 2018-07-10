@@ -16,24 +16,24 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdEmote : Command {
+    public sealed class CmdEmote : Command2 {
         public override string name { get { return "Emote"; } }
         public override string shortcut { get { return "<3"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             p.parseEmotes = !p.parseEmotes;
             bool addToList = p.parseEmotes != ServerConfig.ParseEmotes;
             if (!addToList) Server.noEmotes.Remove(p.name);
             else Server.noEmotes.AddIfNotExists(p.name);
             Server.noEmotes.Save();
-            Player.Message(p, "Emote parsing is {0}.", p.parseEmotes ? "enabled" : "disabled");
+            p.Message("Emote parsing is {0}.", p.parseEmotes ? "enabled" : "disabled");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Emote");
-            Player.Message(p, "%HEnables or disables emoticon parsing");
+            p.Message("%T/Emote");
+            p.Message("%HEnables or disables emoticon parsing");
         }
     }
 }

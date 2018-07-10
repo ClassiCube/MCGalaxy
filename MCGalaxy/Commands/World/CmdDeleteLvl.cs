@@ -20,7 +20,7 @@ using System.IO;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdDeleteLvl : Command {
+    public sealed class CmdDeleteLvl : Command2 {
         public override string name { get { return "DeleteLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -29,24 +29,24 @@ namespace MCGalaxy.Commands.World {
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             string map = Matcher.FindMaps(p, message);
             if (map == null) return;
 
-            if (map.CaselessEq(ServerConfig.MainLevel)) { Player.Message(p, "Cannot delete the main level."); return; }
+            if (map.CaselessEq(ServerConfig.MainLevel)) { p.Message("Cannot delete the main level."); return; }
             if (!LevelInfo.ValidateAction(p, map, "delete this level")) return;
             
-            Player.Message(p, "Created backup.");
+            p.Message("Created backup.");
             if (LevelActions.Delete(map)) return;
-            Player.Message(p, LevelActions.DeleteFailedMessage);
+            p.Message(LevelActions.DeleteFailedMessage);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/DeleteLvl [map]");
-            Player.Message(p, "%HCompletely deletes [map] (portals, MBs, everything)");
-            Player.Message(p, "%HA backup of the map will be placed in the levels/deleted folder");
+            p.Message("%T/DeleteLvl [map]");
+            p.Message("%HCompletely deletes [map] (portals, MBs, everything)");
+            p.Message("%HA backup of the map will be placed in the levels/deleted folder");
         }
     }
 }

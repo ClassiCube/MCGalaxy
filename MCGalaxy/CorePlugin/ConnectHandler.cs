@@ -43,7 +43,7 @@ namespace MCGalaxy.Core {
             if (count == 0) return;
             
             string suffix = count == 1 ? " player is " : " players are ";
-            Player.Message(p, count + suffix + "waiting for a review. Type %T/Review view");
+            p.Message(count + suffix + "waiting for a review. Type %T/Review view");
         }
         
         static void LoadReach(Player p) {

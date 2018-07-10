@@ -20,13 +20,13 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdReferee : Command {
+    public sealed class CmdReferee : Command2 {
         public override string name { get { return "Ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (p.Game.Referee) {
                 Chat.MessageFrom(p, "λNICK %Sis no longer a referee");
                 OnPlayerActionEvent.Call(p, PlayerAction.UnReferee);
@@ -50,10 +50,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Referee");
-            Player.Message(p, "%HTurns referee mode on/off.");
-            Player.Message(p, "%HReferee mode enables you to use hacks and TP in games");
-            Player.Message(p, "%H  Note that leaving referee mode sends you back to spawn");
+            p.Message("%T/Referee");
+            p.Message("%HTurns referee mode on/off.");
+            p.Message("%HReferee mode enables you to use hacks and TP in games");
+            p.Message("%H  Note that leaving referee mode sends you back to spawn");
         }
     }
 }

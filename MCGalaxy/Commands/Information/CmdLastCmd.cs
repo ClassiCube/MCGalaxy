@@ -18,13 +18,13 @@
 using System;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdLastCmd : Command {
+    public sealed class CmdLastCmd : Command2 {
         public override string name { get { return "LastCmd"; } }
         public override string shortcut { get { return "Last"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
@@ -40,20 +40,20 @@ namespace MCGalaxy.Commands.Info {
         
         static void ShowLastCommand(Player p, Player who) {
             if (who.lastCMD.Length == 0) {
-                Player.Message(p, "{0} %Shas not used any commands yet.", 
+                p.Message("{0} %Shas not used any commands yet.", 
                                who.ColoredName);
             } else {
                 TimeSpan delta = DateTime.UtcNow - who.lastCmdTime;
-                Player.Message(p, "{0} %Slast used \"{1}\" {2} ago", 
+                p.Message("{0} %Slast used \"{1}\" {2} ago", 
                                who.ColoredName, who.lastCMD, delta.Shorten(true));
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Last [user]");
-            Player.Message(p, "%H Shows last command used by [user]");
-            Player.Message(p, "%T/Last");
-            Player.Message(p, "%HShows last commands for all users (SPAMMY)");
+            p.Message("%T/Last [user]");
+            p.Message("%H Shows last command used by [user]");
+            p.Message("%T/Last");
+            p.Message("%HShows last commands for all users (SPAMMY)");
         }
     }
 }

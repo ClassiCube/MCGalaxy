@@ -115,13 +115,13 @@ namespace MCGalaxy.Games {
         }
         
         public override void OutputStatus(Player p) {
-            Player.Message(p, "{0} out of {1} players are alive",
+            p.Message("{0} out of {1} players are alive",
                            Alive.Count, Alive.Count + Infected.Count);
         }
         
         public override void Start(Player p, string map, int rounds) {
             // ZS starts on current map by default
-            if (!Player.IsSuper(p) && map.Length == 0) map = p.level.name;
+            if (!p.IsSuper && map.Length == 0) map = p.level.name;
             base.Start(p, map, rounds);
         }
         
@@ -131,7 +131,7 @@ namespace MCGalaxy.Games {
         }
 
         public void InfectPlayer(Player p, Player killer) {
-            if (!RoundInProgress || p == null) return;
+            if (!RoundInProgress) return;
             Infected.Add(p);
             Alive.Remove(p);
             
@@ -148,7 +148,7 @@ namespace MCGalaxy.Games {
         }
 
         public void DisinfectPlayer(Player p) {
-            if (!RoundInProgress || p == null) return;
+            if (!RoundInProgress) return;
             Infected.Remove(p);
             Alive.Add(p);
             

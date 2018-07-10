@@ -46,7 +46,7 @@ namespace MCGalaxy.Blocks.Extended {
                 }
                 
                 p.summonedMap = null;
-                if (!changedMap) { Player.Message(p, "Unable to use this portal, as this portal goes to that map."); return true; }
+                if (!changedMap) { p.Message("Unable to use this portal, as this portal goes to that map."); return true; }
                 p.BlockUntilLoad(10);
             }
 

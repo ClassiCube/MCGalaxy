@@ -58,7 +58,7 @@ namespace MCGalaxy {
             if (reason.Length == 0) reason = ServerConfig.DefaultBanMessage;
             reason = reason.Replace(" ", "%20");
             
-            string player = banner == null ? "(console)" : banner.truename;
+            string player = banner.truename;
             AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), oldrank);
         }
         
@@ -67,7 +67,7 @@ namespace MCGalaxy {
             if (reason.Length == 0) reason = "(none given)";
             reason = reason.Replace(" ", "%20");
             
-            string player = unbanner == null ? "(console)" : unbanner.truename;
+            string player = unbanner.truename;
             AddUnbanEntry(player, target.ToLower(), reason);
         }
         

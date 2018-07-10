@@ -16,26 +16,26 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdBanEdit : Command {
+    public sealed class CmdBanEdit : Command2 {
         public override string name { get { return "BanEdit"; } }
         public override string shortcut { get { return "be"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
 
             if (!Ban.ChangeBanReason(args[0], args[1])) {
-                Player.Message(p, "That player isn't banned.");
+                p.Message("That player isn't banned.");
             } else {
-                Player.Message(p, "Set ban reason for &0{0} %Sto: &2{1}", args[0], args[1]);
+                p.Message("Set ban reason for &0{0} %Sto: &2{1}", args[0], args[1]);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BanEdit [username] [reason]");
-            Player.Message(p, "%HEdits reason of ban for the user.");
+            p.Message("%T/BanEdit [username] [reason]");
+            p.Message("%HEdits reason of ban for the user.");
         }
     }
 }

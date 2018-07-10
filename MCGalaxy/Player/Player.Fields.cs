@@ -75,7 +75,10 @@ namespace MCGalaxy {
         public DateTime NextReviewTime, NextEat, NextTeamInvite;
         public float ReachDistance = 5;
         public bool hackrank;
-        public bool SuperUser;
+              
+        public string SuperName;
+        public bool IsSuper;
+        public bool IsConsole { get { return this == Player.Console; } }
         
         public virtual string FullName { get { return color + prefix + DisplayName; } }  
         public string ColoredName { get { return color + DisplayName; } }
@@ -211,9 +214,6 @@ namespace MCGalaxy {
         public bool loggedIn;
         public bool verifiedName;
         bool gotSQLData;
-        
-        /// <summary> Returns whether the given player is console or IRC. </summary>
-        public static bool IsSuper(Player p) { return p == null || p.SuperUser; }
         
         
         public bool cancelcommand, cancelchat, cancelmove, cancelBlock, cancelmysql;

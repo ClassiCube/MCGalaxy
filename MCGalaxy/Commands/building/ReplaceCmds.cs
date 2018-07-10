@@ -32,10 +32,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Replace [block] [block2].. [new]");
-            Player.Message(p, "%HReplaces [block] with [new] between two points.");
-            Player.Message(p, "%H  If more than one [block] is given, they are all replaced.");
-            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
+            p.Message("%T/Replace [block] [block2].. [new]");
+            p.Message("%HReplaces [block] with [new] between two points.");
+            p.Message("%H  If more than one [block] is given, they are all replaced.");
+            p.Message("%H  If only [block] is given, replaces with your held block.");
         }
     }
     
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ReplaceNot [block] [block2].. [new]");
-            Player.Message(p, "%HReplaces everything but [block] with [new] between two points.");
-            Player.Message(p, "%H  If more than one [block] is given, they are all skipped.");
-            Player.Message(p, "%H  If only [block] is given, replaces with your held block.");
+            p.Message("%T/ReplaceNot [block] [block2].. [new]");
+            p.Message("%HReplaces everything but [block] with [new] between two points.");
+            p.Message("%H  If more than one [block] is given, they are all skipped.");
+            p.Message("%H  If only [block] is given, replaces with your held block.");
         }
     }
 }

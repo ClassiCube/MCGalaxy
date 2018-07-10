@@ -16,30 +16,30 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdWhisper : Command {
+    public sealed class CmdWhisper : Command2 {
         public override string name { get { return "Whisper"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 p.whisper = !p.whisper; p.whisperTo = "";
-                if (p.whisper) Player.Message(p, "All messages sent will now auto-whisper");
-                else Player.Message(p, "Whisper chat turned off");
+                if (p.whisper) p.Message("All messages sent will now auto-whisper");
+                else p.Message("Whisper chat turned off");
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) { p.whisperTo = ""; p.whisper = false; return; }
 
                 p.whisper = true;
                 p.whisperTo = who.name;
-                Player.Message(p, "Auto-whisper enabled. All messages will now be sent to " + who.ColoredName + ".");
+                p.Message("Auto-whisper enabled. All messages will now be sent to " + who.ColoredName + ".");
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Whisper [name]");
-            Player.Message(p, "%HMakes all messages act like whispers");
+            p.Message("%T/Whisper [name]");
+            p.Message("%HMakes all messages act like whispers");
         }
     }
 }

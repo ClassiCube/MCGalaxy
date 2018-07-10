@@ -22,7 +22,7 @@ using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.Moderation;
 
 namespace MCGalaxy.Commands.World {
-    public sealed partial class CmdOverseer : Command {
+    public sealed partial class CmdOverseer : Command2 {
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {
             string args = ("level " + arg1 + " " + arg2).Trim();
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
             
             Predicate<Player> selector = pl => pl.level == lvl;
             if (CmdEnvironment.Handle(p, selector, type, arg, lvl.Config, lvl.ColoredName)) return;
-            Player.MessageLines(p, envHelp);
+            p.MessageLines(envHelp);
         }
 
         static void HandleGoto(Player p, string map, string ignored) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.World {
                 map = FirstMapName(p);
             } else {
                 if (!byte.TryParse(map, out mapNum)) {
-                    Player.MessageLines(p, gotoHelp);
+                    p.MessageLines(gotoHelp);
                     return;
                 }
                 map = p.name.ToLower() + map;
@@ -62,14 +62,14 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleKick(Player p, string name, string ignored) {
-            if (name.Length == 0) { Player.Message(p, "You must specify a player to kick."); return; }
+            if (name.Length == 0) { p.Message("You must specify a player to kick."); return; }
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
             
             if (pl.level == p.level) {
                 PlayerActions.ChangeMap(pl, Server.mainLevel);
             } else {
-                Player.Message(p, "Player is not on your level!");
+                p.Message("Player is not on your level!");
             }
         }
         
@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.World {
             cmd = cmd.ToUpper();
             bool mapOnly = !(cmd == "ADD" || cmd.Length == 0);
             if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
-                Player.Message(p, "You may only perform that action on your own map."); return;
+                p.Message("You may only perform that action on your own map."); return;
             }
             
             if (IsCreateCommand(cmd)) {
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.World {
                 if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {
                     CmdPhysics.SetPhysics(p.level, int.Parse(value));
                 } else {
-                    Player.Message(p, "Accepted numbers are: 0, 1, 2, 3, 4 or 5");
+                    p.Message("Accepted numbers are: 0, 1, 2, 3, 4 or 5");
                 }
             } else if (IsDeleteCommand(cmd)) {
                 DeleteMap(p, value);
@@ -114,31 +114,31 @@ namespace MCGalaxy.Commands.World {
                 if (args.Length < 4) { Command.Find("ResizeLvl").Help(p); return; }
 
                 if (CmdResizeLvl.DoResize(p, args)) return;
-                Player.Message(p, "Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
+                p.Message("Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
                 AccessController access = p.level.VisitAccess;
                 if (!access.Whitelisted.CaselessContains(p.name)) {
-                    access.Whitelist(null, p.level, p.name);
+                    access.Whitelist(Player.Console, p.level, p.name);
                 }
                 
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) access.SetMin(null, p.level, grp);
+                if (grp != null) access.SetMin(Player.Console, p.level, grp);
             } else if (cmd == "PERBUILD") {
                 string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
                 Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) p.level.BuildAccess.SetMin(null, p.level, grp);
+                if (grp != null) p.level.BuildAccess.SetMin(Player.Console, p.level, grp);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) value = "normal";
                 Command.Find("Texture").Use(p, "levelzip " + value);
             } else {
                 LevelOption opt = LevelOptions.Find(cmd);
                 if (opt == null) {
-                    Player.MessageLines(p, mapHelp);
+                    p.MessageLines(mapHelp);
                 } else if (DisallowedMapOption(opt.Name)) {
-                    Player.Message(p, "%WYou cannot change that map option via /os map."); return;
+                    p.Message("%WYou cannot change that map option via /os map."); return;
                 } else {
                     opt.SetFunc(p, p.level, value);
                     Level.SaveSettings(p.level);
@@ -152,7 +152,7 @@ namespace MCGalaxy.Commands.World {
         
         static void AddMap(Player p, string value) {
             if (p.group.OverseerMaps == 0) {
-                Player.Message(p, "Your rank is not allowed to create any /os maps."); return;
+                p.Message("Your rank is not allowed to create any /os maps."); return;
             }
             string level = NextLevel(p);
             if (level == null) return;
@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands.World {
             
             if (SetPerms(p, lvl)) {
                 Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
-                Player.Message(p, "Use %T/os zone add [name] %Sto allow " +
+                p.Message("Use %T/os zone add [name] %Sto allow " +
                                "players ranked below " + grp.ColoredName + " %Sto build in the map.");
             }
             
@@ -184,28 +184,28 @@ namespace MCGalaxy.Commands.World {
         
         internal static bool SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
-            lvl.BuildAccess.Whitelist(null, lvl, p.name);
-            lvl.VisitAccess.Whitelist(null, lvl, p.name);
+            lvl.BuildAccess.Whitelist(Player.Console, lvl, p.name);
+            lvl.VisitAccess.Whitelist(Player.Console, lvl, p.name);
 
             Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
             if (grp == null) return false;
             
-            lvl.BuildAccess.SetMin(null, lvl, grp);
+            lvl.BuildAccess.SetMin(Player.Console, lvl, grp);
             return true;
         }
         
         static void DeleteMap(Player p, string value) {
             if (value.Length > 0) {
-                Player.Message(p, "To delete your current map, type %T/os map delete");
+                p.Message("To delete your current map, type %T/os map delete");
                 return;
             }
             
             string map = p.level.name;
-            Player.Message(p, "Created backup.");
+            p.Message("Created backup.");
             if (LevelActions.Delete(map)) {
-                Player.Message(p, "Map " + map + " was removed.");
+                p.Message("Map " + map + " was removed.");
             } else {
-                Player.Message(p, LevelActions.DeleteFailedMessage);
+                p.Message(LevelActions.DeleteFailedMessage);
             }
         }
 
@@ -224,31 +224,31 @@ namespace MCGalaxy.Commands.World {
             if (cmd == "LIST") {
                 Command.Find("ZoneList").Use(p, "");
             } else if (cmd == "ADD") {
-                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
             } else if (IsDeleteCommand(cmd)) {
-                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
                 DeleteBuildPlayer(p, name);
             } else if (cmd == "BLOCK") {
-                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
                 name = PlayerInfo.FindMatchesPreferOnline(p, name);
                 if (name == null) return;
                 
-                if (name.CaselessEq(p.name)) { Player.Message(p, "You can't blacklist yourself"); return; }
+                if (name.CaselessEq(p.name)) { p.Message("You can't blacklist yourself"); return; }
                 RemoveVisitPlayer(p, name);
             } else if (cmd == "UNBLOCK") {
-                if (name.Length == 0) { Player.Message(p, "You need to provide a player name."); return; }
+                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
                 if (!Formatter.ValidName(p, name, "player")) return;
                 AddVisitPlayer(p, name);
             } else if (cmd == "BLACKLIST") {
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
                 if (blacklist.Count > 0) {
-                    Player.Message(p, "Blacklisted players: " + blacklist.Join());
+                    p.Message("Blacklisted players: " + blacklist.Join());
                 } else {
-                    Player.Message(p, "There are no blacklisted players on this map.");
+                    p.Message("There are no blacklisted players on this map.");
                 }
             } else {
-                Player.MessageLines(p, zoneHelp);
+                p.MessageLines(zoneHelp);
             }
         }
         
@@ -258,7 +258,7 @@ namespace MCGalaxy.Commands.World {
             string name = ModActionCmd.FindName(p, "zone", "os zone add", "", args[0], ref reason);
             if (name == null) return;
             
-            Player.Message(p, "Added zone for &b" + name);
+            p.Message("Added zone for &b" + name);
             LevelAccessController access = p.level.BuildAccess;
             if (access.Blacklisted.CaselessRemove(name)) {
                 access.OnListChanged(p, p.level, name, true, true);
@@ -276,14 +276,14 @@ namespace MCGalaxy.Commands.World {
             if (access.Whitelisted.CaselessRemove(name)) {
                 access.OnListChanged(p, p.level, name, false, true);
             } else {
-                Player.Message(p, name + " was not whitelisted.");
+                p.Message(name + " was not whitelisted.");
             }
         }
         
         static void AddVisitPlayer(Player p, string name) {
             List<string> blacklist = p.level.VisitAccess.Blacklisted;
             if (!blacklist.CaselessContains(name)) {
-                Player.Message(p, name + " is not blacklisted."); return;
+                p.Message(name + " is not blacklisted."); return;
             }
             blacklist.CaselessRemove(name);
             p.level.VisitAccess.OnListChanged(p, p.level, name, true, true);
@@ -292,7 +292,7 @@ namespace MCGalaxy.Commands.World {
         static void RemoveVisitPlayer(Player p, string name) {
             List<string> blacklist = p.level.VisitAccess.Blacklisted;
             if (blacklist.CaselessContains(name)) {
-                Player.Message(p, name + " is already blacklisted."); return;
+                p.Message(name + " is already blacklisted."); return;
             }
             blacklist.Add(name);
             p.level.VisitAccess.OnListChanged(p, p.level, name, false, false);
@@ -300,7 +300,7 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleZones(Player p, string cmd, string args) {
             if (args.Length == 0) {
-                Player.Message(p, "Arguments required. See %T/Help zone");
+                p.Message("Arguments required. See %T/Help zone");
             } else {
                 Command.Find("Zone").Use(p, cmd + " " + args);
             }

@@ -19,7 +19,7 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdCmdSet : ItemPermsCmd {
         public override string name { get { return "CmdSet"; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             
@@ -27,9 +27,9 @@ namespace MCGalaxy.Commands.Moderation {
             Command.Search(ref cmdName, ref cmdArgs);
             Command cmd = Command.Find(cmdName);
             
-            if (cmd == null) { Player.Message(p, "Could not find command entered"); return; }
-            if (p != null && !p.group.CanExecute(cmd)) {
-                Player.Message(p, "Your rank cannot use this command."); return;
+            if (cmd == null) { p.Message("Could not find command entered"); return; }
+            if (!p.group.CanExecute(cmd)) {
+                p.Message("Your rank cannot use this command."); return;
             }
             
             if (args.Length == 2) {
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 CommandExtraPerms perms = CommandExtraPerms.Find(cmd.name, num);
                 if (perms == null) {
-                    Player.Message(p, "This command has no extra permission by that number."); return;
+                    p.Message("This command has no extra permission by that number."); return;
                 }
                 SetPerms(p, args, perms, "extra permission");
             }
@@ -61,15 +61,15 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/CmdSet [cmd] [rank]");
-            Player.Message(p, "%HSets lowest rank that can use [cmd] to [rank]");
-            Player.Message(p, "%T/CmdSet [cmd] +[rank]");
-            Player.Message(p, "%HAllows a specific rank to use [cmd]");
-            Player.Message(p, "%T/CmdSet [cmd] -[rank]");
-            Player.Message(p, "%HPrevents a specific rank from using [cmd]");
-            Player.Message(p, "%T/CmdSet [cmd] [rank] [extra permission number]");
-            Player.Message(p, "%HSet the lowest rank that has that extra permission for [cmd]");
-            Player.Message(p, "%HTo see available ranks, type %T/ViewRanks");
+            p.Message("%T/CmdSet [cmd] [rank]");
+            p.Message("%HSets lowest rank that can use [cmd] to [rank]");
+            p.Message("%T/CmdSet [cmd] +[rank]");
+            p.Message("%HAllows a specific rank to use [cmd]");
+            p.Message("%T/CmdSet [cmd] -[rank]");
+            p.Message("%HPrevents a specific rank from using [cmd]");
+            p.Message("%T/CmdSet [cmd] [rank] [extra permission number]");
+            p.Message("%HSet the lowest rank that has that extra permission for [cmd]");
+            p.Message("%HTo see available ranks, type %T/ViewRanks");
         }
     }
 }

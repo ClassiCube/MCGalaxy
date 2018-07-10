@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Fun {
             LevelConfig lCfg = p.level.Config;
             
             if (prop.CaselessEq("map")) {
-                Player.Message(p, "Pillaring allowed: &b" + lCfg.Pillaring);
-                Player.Message(p, "Build type: &b" + lCfg.BuildType);
-                Player.Message(p, "Round time: Min &b{0}, %S Max &b{1}",
+                p.Message("Pillaring allowed: &b" + lCfg.Pillaring);
+                p.Message("Build type: &b" + lCfg.BuildType);
+                p.Message("Round time: Min &b{0}, %S Max &b{1}",
                                lCfg.MinRoundTime.Shorten(true), lCfg.MaxRoundTime.Shorten(true));
                 return;
             }
@@ -47,24 +47,24 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("hitbox")) {
                 if (!CommandParser.GetReal(p, args[2], "Hitbox detection", ref cfg.HitboxDist, 0, 4)) return;
-                Player.Message(p, "Set hitbox detection to &a" + cfg.HitboxDist + " %Sblocks apart");
+                p.Message("Set hitbox detection to &a" + cfg.HitboxDist + " %Sblocks apart");
                 
                 cfg.Save(); return;
             } else if (prop.CaselessEq("maxmove")) {
                 if (!CommandParser.GetReal(p, args[2], "Max move distance", ref cfg.MaxMoveDist, 0, 4)) return;
-                Player.Message(p, "Set max move distance to &a" + cfg.MaxMoveDist + " %Sblocks apart");
+                p.Message("Set max move distance to &a" + cfg.MaxMoveDist + " %Sblocks apart");
                 
                 cfg.Save(); return;
             } else if (prop.CaselessEq("pillaring")) {
                 if (!CommandParser.GetBool(p, args[1], ref lCfg.Pillaring)) return;
                 
-                Player.Message(p, "Set pillaring allowed to &b" + lCfg.Pillaring);
+                p.Message("Set pillaring allowed to &b" + lCfg.Pillaring);
                 game.UpdateAllStatus2();
             } else if (prop.CaselessEq("build")) {
                 if (!CommandParser.GetEnum(p, args[1], "Build type", ref lCfg.BuildType)) return;
                 p.level.UpdateBlockPermissions();
                 
-                Player.Message(p, "Set build type to &b" + lCfg.BuildType);
+                p.Message("Set build type to &b" + lCfg.BuildType);
                 game.UpdateAllStatus2();
             } else if (prop.CaselessEq("minround")) {
                 if (!ParseTimespan(p, "min round time", args, ref lCfg.MinRoundTime)) return;
@@ -81,41 +81,41 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan span) {
             if (!CommandParser.GetTimespan(p, args[2], ref span, "set " + arg + " to", "m")) return false;
-            Player.Message(p, "Set {0} to &b{1}", arg, span.Shorten(true));
+            p.Message("Set {0} to &b{1}", arg, span.Shorten(true));
             return true;
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                Player.Message(p, "%T/Help ZS game %H- Views help for game settings");
-                Player.Message(p, "%T/Help ZS map %H- Views help for per-map settings");
+                p.Message("%T/Help ZS game %H- Views help for game settings");
+                p.Message("%T/Help ZS map %H- Views help for per-map settings");
             } else if (message.CaselessEq("game")) {
-                Player.Message(p, "%T/ZS set hitbox [distance]");
-                Player.Message(p, "%HSets furthest apart players can be before they are considered touching.");
-                Player.Message(p, "%T/ZS set maxmove [distance]");
-                Player.Message(p, "%HSets largest distance players can move in a tick" +
+                p.Message("%T/ZS set hitbox [distance]");
+                p.Message("%HSets furthest apart players can be before they are considered touching.");
+                p.Message("%T/ZS set maxmove [distance]");
+                p.Message("%HSets largest distance players can move in a tick" +
                                "before they are considered speedhacking.");
             } else if (message.CaselessEq("map")) {
-                Player.Message(p, "%T/ZS set map %H-Views map settings");
-                Player.Message(p, "%T/ZS set pillaring [yes/no]");
-                Player.Message(p, "%HSets whether players are allowed to pillar");
-                Player.Message(p, "%T/ZS set build [normal/modifyonly/nomodify]");
-                Player.Message(p, "%HSets build type of the map");
-                Player.Message(p, "%T/ZS set minround/maxround [timespan]");
-                Player.Message(p, "%HSets duration for which a round can last");
+                p.Message("%T/ZS set map %H-Views map settings");
+                p.Message("%T/ZS set pillaring [yes/no]");
+                p.Message("%HSets whether players are allowed to pillar");
+                p.Message("%T/ZS set build [normal/modifyonly/nomodify]");
+                p.Message("%HSets build type of the map");
+                p.Message("%T/ZS set minround/maxround [timespan]");
+                p.Message("%HSets duration for which a round can last");
             } else {
                 base.Help(p, message);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ZS start <map> %H- Starts Zombie Survival");
-            Player.Message(p, "%T/ZS stop %H- Stops Zombie Survival");
-            Player.Message(p, "%T/ZS end %H- Ends current round of Zombie Survival");
-            Player.Message(p, "%T/ZS add/remove %H- Adds/removes current map from map list");
-            Player.Message(p, "%T/ZS set [property] %H- Sets a property. See %T/Help ZS set");
-            Player.Message(p, "%T/ZS status %H- Outputs current status of Zombie Survival");
-            Player.Message(p, "%T/ZS go %H- Moves you to the current Zombie Survival map");
+            p.Message("%T/ZS start <map> %H- Starts Zombie Survival");
+            p.Message("%T/ZS stop %H- Stops Zombie Survival");
+            p.Message("%T/ZS end %H- Ends current round of Zombie Survival");
+            p.Message("%T/ZS add/remove %H- Adds/removes current map from map list");
+            p.Message("%T/ZS set [property] %H- Sets a property. See %T/Help ZS set");
+            p.Message("%T/ZS status %H- Outputs current status of Zombie Survival");
+            p.Message("%T/ZS go %H- Moves you to the current Zombie Survival map");
         }
     }
 }

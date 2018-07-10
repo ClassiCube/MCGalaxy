@@ -18,12 +18,12 @@
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdOpRules : Command {
+    public sealed class CmdOpRules : Command2 {
         public override string name { get { return "OpRules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TextFile oprulesFile = TextFile.Files["OpRules"];
             oprulesFile.EnsureExists();
 
@@ -31,19 +31,17 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length > 0) {
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (p != null && p.Rank < who.Rank) {
-                    MessageTooHighRank(p, "send oprules to", false); return;
-                }
+                if (!CheckRank(p, who, "send oprules to", false)) return;
             }
 
             string[] oprules = oprulesFile.GetText();
-            Player.Message(who, "Server OPRules:");
-            Player.MessageLines(who, oprules);
+            who.Message("Server OPRules:");
+            who.MessageLines(oprules);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/OpRules [player]");
-            Player.Message(p, "%HDisplays server oprules to a player");
+            p.Message("%T/OpRules [player]");
+            p.Message("%HDisplays server oprules to a player");
         }
     }
 }

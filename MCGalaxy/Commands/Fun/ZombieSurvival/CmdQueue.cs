@@ -19,14 +19,14 @@ using System.IO;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdQueue : Command {
+    public sealed class CmdQueue : Command2 {
         public override string name { get { return "Queue"; } }
         public override string shortcut { get { return "qz"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
             string value = args[1];
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player who = PlayerInfo.FindMatches(p, value);
                 if (who == null) return;
                 
-                Player.Message(p, value + " was queued.");
+                p.Message(value + " was queued.");
                 ZSGame.Instance.QueuedZombie = who.name;
                 if (ZSGame.Instance.Map != null)
                     ZSGame.Instance.Map.Message(who.ColoredName + " %Swas queued as the next zombie.");
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Fun {
                 string map = Matcher.FindMaps(p, value);
                 if (map == null) return;
                 
-                Player.Message(p, map + " was queued.");
+                p.Message(map + " was queued.");
                 ZSGame.Instance.Picker.QueuedMap = map.ToLower();
                 if (ZSGame.Instance.Map != null)
                     ZSGame.Instance.Map.Message(map + " was queued as the next map.");
@@ -53,10 +53,10 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Queue zombie [name]");
-            Player.Message(p, "%HNext round [name] will be infected/start zombie");
-            Player.Message(p, "%T/Queue level [map]");
-            Player.Message(p, "%HNext round [map] will be the level used");
+            p.Message("%T/Queue zombie [name]");
+            p.Message("%HNext round [name] will be infected/start zombie");
+            p.Message("%T/Queue level [map]");
+            p.Message("%HNext round [map] will be the level used");
         }
     }
 }

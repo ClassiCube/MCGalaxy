@@ -19,7 +19,7 @@ using System.IO;
 using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdHide : Command {
+    public sealed class CmdHide : Command2 {
         public override string name { get { return "Hide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -37,9 +37,9 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageFrom(ChatScope.Perms, p, msg, perms, null, true);
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0 && p.possess.Length > 0) {
-                Player.Message(p, "Stop your current possession first."); return;
+                p.Message("Stop your current possession first."); return;
             }
             bool silent = false;
             if (message.CaselessEq("silent")) {
@@ -82,9 +82,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
-            Player.Message(p, "%T/Hide silent %H- Hides without showing join/leave message");
-            Player.Message(p, "%HUse %T/OHide %Hto hide other players.");
+            p.Message("%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
+            p.Message("%T/Hide silent %H- Hides without showing join/leave message");
+            p.Message("%HUse %T/OHide %Hto hide other players.");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace MCGalaxy {
         public static void SetWeather(Player p, string input, string area, ref int target) {
             byte value;
             if (IsResetString(input)) {
-                Player.Message(p, "Reset weather for {0} %Sto 0 (Sun)", area);
+                p.Message("Reset weather for {0} %Sto 0 (Sun)", area);
                 value = 0;
             } else {
                 if (byte.TryParse(input, out value)) {
@@ -42,10 +42,10 @@ namespace MCGalaxy {
                 }
                 
                 if (value > 2) {
-                    Player.Message(p, "Weather can be either sun, rain, or snow."); return;
+                    p.Message("Weather can be either sun, rain, or snow."); return;
                 }
                 string type = value == 0 ? "%SSun" : (value == 1 ? "&1Rain" : "&fSnow");
-                Player.Message(p, "Set weather for {0} %Sto {1} ({2}%S)", area, value, type);
+                p.Message("Set weather for {0} %Sto {1} ({2}%S)", area, value, type);
             }
             target = value;
         }
@@ -53,25 +53,25 @@ namespace MCGalaxy {
         public static void SetBlock(Player p, string input, string area,
                                     string variable, byte defValue, ref BlockID target) {
             if (IsResetString(input)) {
-                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} %Sto normal", variable, area);
                 target = defValue;
             } else {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, input, out block)) return;
                 if (Block.IsPhysicsType(block)) {
-                    Player.Message(p, "Cannot use physics block ids for /env."); return;
+                    p.Message("Cannot use physics block ids for /env."); return;
                 }
                 
                 string name = Block.GetName(p, block);
                 target = block;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, area, name);
+                p.Message("Set {0} for {1} %Sto {2}", variable, area, name);
             }
         }
         
         public static void SetShort(Player p, string input, string area,
                                     string variable, int defValue, ref int target) {
             if (IsResetString(input)) {
-                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} %Sto normal", variable, area);
                 target = (short)defValue;
             } else {
                 int value = 0;
@@ -79,34 +79,34 @@ namespace MCGalaxy {
                                           short.MinValue, short.MaxValue)) return;
                 
                 target = (short)value;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, area, value);
+                p.Message("Set {0} for {1} %Sto {2}", variable, area, value);
             }
         }
         
         public static void SetFloat(Player p, string input, string area, int scale, string variable,
                                     int defValue, ref int target, int min, int max) {
             if (IsResetString(input)) {
-                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} %Sto normal", variable, area);
                 target = defValue;
             } else {
                 float value = 0, minF = (float)min / scale, maxF = (float)max / scale;
                 if (!CommandParser.GetReal(p, input, variable, ref value, minF, maxF)) return;
 
                 target = (int)(value * scale);
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable, area, value.ToString("F4"));
+                p.Message("Set {0} for {1} %Sto {2}", variable, area, value.ToString("F4"));
             }
         }
         
         public static void SetColor(Player p, string input, string area,
                                     string variable, ref string target) {
             if (IsResetString(input)) {
-                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} %Sto normal", variable, area);
                 target = "";
             } else {
                 ColorDesc rgb = default(ColorDesc);
                 if (!CommandParser.GetHex(p, input, ref rgb)) return;
                 
-                Player.Message(p, "Set {0} for {1} %Sto #{2}", variable, area, input);
+                p.Message("Set {0} for {1} %Sto #{2}", variable, area, input);
                 target = Utils.Hex(rgb.R, rgb.G, rgb.B);
             }
         }
@@ -114,14 +114,14 @@ namespace MCGalaxy {
         public static void SetBool(Player p, string value, string area,
                                    string variable, int defValue, ref int target) {
             if (IsResetString(value)) {
-                Player.Message(p, "Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} %Sto normal", variable, area);
                 target = defValue;
             } else {
                 bool enabled = false;
                 if (!CommandParser.GetBool(p, value, ref enabled)) return;
                 
                 target = enabled ? 1 : 0;
-                Player.Message(p, "Set {0} for {1} %Sto {2}", variable,
+                p.Message("Set {0} for {1} %Sto {2}", variable,
                                area, enabled ? "&aON" : "&cOFF");
             }
         }

@@ -33,7 +33,7 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public override Transform Construct(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (args.Length < 3 || args.Length > 4) { Player.MessageLines(p, Help); return null; }
+            if (args.Length < 3 || args.Length > 4) { p.MessageLines(Help); return null; }
             float angleX, angleY, angleZ;
             RotateTransform rotater = new RotateTransform();
             
@@ -44,7 +44,7 @@ namespace MCGalaxy.Drawing.Transforms {
 
             if (args.Length == 3) return rotater; // no centre argument
             if (!args[args.Length - 1].CaselessEq("centre")) {
-                Player.Message(p, "The mode must be either \"centre\", or not given."); return null;
+                p.Message("The mode must be either \"centre\", or not given."); return null;
             }
             rotater.CentreOrigin = true;
             return rotater;
@@ -52,10 +52,10 @@ namespace MCGalaxy.Drawing.Transforms {
         
         static bool ParseAngle(Player p, string input, out float angle) {
             if (!Utils.TryParseDecimal(input, out angle)) {
-                Player.MessageLines(p, HelpString); return false;
+                p.MessageLines(HelpString); return false;
             }            
             if (angle < -360 || angle > 360) { 
-                Player.Message(p, "Angle must be between -360 and 360."); return false; 
+                p.Message("Angle must be between -360 and 360."); return false; 
             }
             return true;
         }

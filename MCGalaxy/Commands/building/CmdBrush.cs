@@ -20,7 +20,7 @@ using MCGalaxy;
 using MCGalaxy.Drawing.Brushes;
 
 namespace MCGalaxy.Commands.Building {  
-    public sealed class CmdBrush : Command {
+    public sealed class CmdBrush : Command2 {
         public override string name { get { return "Brush"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.Building {
             get { return new CommandAlias[] { new CommandAlias("Brushes", "list") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
-                Player.Message(p, "Your current brush is: " + p.BrushName); return;
+                p.Message("Your current brush is: " + p.BrushName); return;
             }
             string[] args = message.SplitSpaces(2);
             BrushFactory brush = BrushFactory.Find(args[0]);
@@ -39,36 +39,36 @@ namespace MCGalaxy.Commands.Building {
             if (args[0].CaselessEq("list")) {
                 List(p);
             } else if (brush == null) {
-                Player.Message(p, "No brush found with name \"{0}\".", args[0]);
+                p.Message("No brush found with name \"{0}\".", args[0]);
                 List(p);
             } else {
-                Player.Message(p, "Set your brush to: " + brush.Name);
+                p.Message("Set your brush to: " + brush.Name);
                 p.BrushName = brush.Name;
                 p.DefaultBrushArgs = args.Length > 1 ? args[1] : "";
             }
         }
         
         internal static void List(Player p) {
-            Player.Message(p, "%HAvailable brushes: &f" + BrushFactory.Brushes.Join(b => b.Name));
+            p.Message("%HAvailable brushes: &f" + BrushFactory.Brushes.Join(b => b.Name));
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Brush [name] <default brush args>");
-            Player.Message(p, "%HSets your current brush to the brush with that name.");
-            Player.Message(p, "%T/Help Brush [name]");
-            Player.Message(p, "%HOutputs the help for the brush with that name.");
+            p.Message("%T/Brush [name] <default brush args>");
+            p.Message("%HSets your current brush to the brush with that name.");
+            p.Message("%T/Help Brush [name]");
+            p.Message("%HOutputs the help for the brush with that name.");
             List(p);
-            Player.Message(p, "%H- If \"skip\" is used for a block name, " +
+            p.Message("%H- If \"skip\" is used for a block name, " +
                            "existing blocks in the map will not be replaced by this block.");
         }
 
         public override void Help(Player p, string message) {
             BrushFactory brush = BrushFactory.Find(message);
             if (brush == null) {
-                Player.Message(p, "No brush found with name \"{0}\".", message);
+                p.Message("No brush found with name \"{0}\".", message);
                 List(p);
             } else {
-                Player.MessageLines(p, brush.Help);
+                p.MessageLines(brush.Help);
             }
         }
     }

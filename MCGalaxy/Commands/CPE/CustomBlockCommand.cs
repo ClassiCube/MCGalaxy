@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "ids":
                     ListHandler(p, parts, global, cmd); break;
                 case "abort":
-                    Player.Message(p, "Aborted the custom block creation process.");
+                    p.Message("Aborted the custom block creation process.");
                     SetBD(p, global, null); break;
                 case "edit":
                     EditHandler(p, parts, global, cmd); break;
@@ -82,14 +82,14 @@ namespace MCGalaxy.Commands.CPE {
                 BlockDefinition old = defs[target];
                 
                 if (ExistsInScope(old, target, global)) {
-                    Player.Message(p, "There is already a custom block with the id " + id +
+                    p.Message("There is already a custom block with the id " + id +
                                    ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
                     return;
                 }
             } else {
-                target = GetFreeBlock(global, Player.IsSuper(p) ? null : p.level);
+                target = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (target == Block.Invalid) {
-                    Player.Message(p, "There are no custom block ids left, " +
+                    p.Message("There are no custom block ids left, " +
                                    "you must " + cmd +" remove a custom block first.");
                     return;
                 }
@@ -100,10 +100,10 @@ namespace MCGalaxy.Commands.CPE {
             def.Version2 = true;
             def.SetBlock(target);
             
-            Player.Message(p, "Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
-            Player.Message(p, "  Use %T{0} revert %Sto go back a step", cmd);
-            Player.Message(p, "  Use %T{0} [input] %Sto provide input", cmd);
-            Player.Message(p, "&f----------------------------------------------------------");
+            p.Message("Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
+            p.Message("  Use %T{0} revert %Sto go back a step", cmd);
+            p.Message("  Use %T{0} [input] %Sto provide input", cmd);
+            p.Message("&f----------------------------------------------------------");
             
             SetStep(p, global, 2);
             SendStepHelp(p, global);
@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.CPE {
             LevelConfig cfg = LevelInfo.GetConfig(map, out lvl); 
             AccessController visit = new LevelAccessController(cfg, map, true);
             if (!visit.CheckDetailed(p)) {
-                Player.Message(p, "Hence, you cannot copy custom blocks from that level"); return;
+                p.Message("Hence, you cannot copy custom blocks from that level"); return;
             }
             
             int copied = 0;
@@ -131,11 +131,11 @@ namespace MCGalaxy.Commands.CPE {
                 copied++;
                 
                 string scope = global ? "global" : "level";
-                Player.Message(p, "Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
+                p.Message("Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
             }
             
             string prefix = copied > 0 ? copied.ToString() : "No";
-            Player.Message(p, "{0} custom blocks were copied from level {1}", 
+            p.Message("{0} custom blocks were copied from level {1}", 
                            prefix, cfg.Color + map);
         }
         
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!DoCopy(p, global, cmd, false, srcDef, src, dst)) return;
             
             string scope = global ? "global" : "level";
-            Player.Message(p, "Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope,
+            p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope,
                            Block.ToRaw(src), Block.ToRaw(dst));
         }
 
@@ -183,40 +183,40 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = defs[block];
             if (def == null) { MessageNoBlock(p, block, global, cmd); return; }
             
-            Player.Message(p, "About {0} ({1})", def.Name, Block.ToRaw(block));
-            Player.Message(p, "  Draw type: {0}, Blocks light: {1}, collide type: {2}",
+            p.Message("About {0} ({1})", def.Name, Block.ToRaw(block));
+            p.Message("  Draw type: {0}, Blocks light: {1}, collide type: {2}",
                            def.BlockDraw, def.BlocksLight, def.CollideType);
-            Player.Message(p, "  Fallback ID: {0}, Sound: {1}, Speed: {2}",
+            p.Message("  Fallback ID: {0}, Sound: {1}, Speed: {2}",
                            def.FallBack, def.WalkSound, def.Speed.ToString("F2"));
             
             if (def.FogDensity == 0) {
-                Player.Message(p, "  Block does not use fog");
+                p.Message("  Block does not use fog");
             } else {
-                Player.Message(p, "  Fog density: {0}, color: {1}",
+                p.Message("  Fog density: {0}, color: {1}",
                                def.FogDensity, Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
             bool tinted = (def.FogR != 0 || def.FogG != 0 || def.FogB != 0) && def.Name.IndexOf('#') >= 0;
             if (tinted) {
-                Player.Message(p, "  Tint color: {0}", Utils.Hex(def.FogR, def.FogG, def.FogB));
+                p.Message("  Tint color: {0}", Utils.Hex(def.FogR, def.FogG, def.FogB));
             }
             
             if (def.Shape == 0) {
-                Player.Message(p, "  Block is a sprite");
-                Player.Message(p, "  Texture ID: {0}", def.SideTex);
+                p.Message("  Block is a sprite");
+                p.Message("  Texture ID: {0}", def.SideTex);
             } else {
-                Player.Message(p, "  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
+                p.Message("  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
                                def.MinX, def.MinZ, def.MinY, def.MaxX, def.MaxZ, def.MaxY);
-                Player.Message(p, "  Texture IDs (left: {0}, right: {1}, front: {2}, back: {3}, top: {4}, bottom: {5})",
+                p.Message("  Texture IDs (left: {0}, right: {1}, front: {2}, back: {3}, top: {4}, bottom: {5})",
                                def.LeftTex, def.RightTex, def.FrontTex, def.BackTex, def.TopTex, def.BottomTex);
             }
             
             if (def.InventoryOrder < 0) {
-                Player.Message(p, "  Order: None");
+                p.Message("  Order: None");
             } else if (def.InventoryOrder == 0) {
-                Player.Message(p, "  Order: Hidden from inventory");
+                p.Message("  Order: Hidden from inventory");
             } else {
-                Player.Message(p, "  Order: " + def.InventoryOrder);
+                p.Message("  Order: " + def.InventoryOrder);
             }
         }
         
@@ -251,10 +251,10 @@ namespace MCGalaxy.Commands.CPE {
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             RemoveBlockProps(global, block, p);
-            BlockDefinition.Remove(def, defs, Player.IsSuper(p) ? null : p.level);
+            BlockDefinition.Remove(def, defs, p.IsSuper ? null : p.level);
             
             string scope = global ? "global" : "level";
-            Player.Message(p, "Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
+            p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
             BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
             if (!global && globalDef != null)
@@ -355,7 +355,7 @@ namespace MCGalaxy.Commands.CPE {
         static void EditHandler(Player p, string[] parts, bool global, string cmd) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1) {
-                    Player.Message(p, "Valid properties: " + helpSections.Keys.Join());
+                    p.Message("Valid properties: " + helpSections.Keys.Join());
                 } else if (parts.Length == 3) {
                     Help(p, cmd, "edit " + parts[2]);
                 } else {
@@ -382,7 +382,7 @@ namespace MCGalaxy.Commands.CPE {
             string value = parts[3], blockName = def.Name;
             float fTemp;
             bool temp = false, changedFallback = false;
-            Level level = Player.IsSuper(p) ? null : p.level;
+            Level level = p.IsSuper ? null : p.level;
             
             string arg = MapPropertyName(parts[2].ToLower());
             switch (arg) {
@@ -484,7 +484,7 @@ namespace MCGalaxy.Commands.CPE {
                     if (order != def.BlockID && order != 0) {
                         for (int i = 0; i < defs.Length; i++) {
                             if (defs[i] == null || defs[i].InventoryOrder != order) continue;
-                            Player.Message(p, "Block {0} already had order {1}", defs[i].Name, order);
+                            p.Message("Block {0} already had order {1}", defs[i].Name, order);
                             return;
                         }
                     }
@@ -492,14 +492,14 @@ namespace MCGalaxy.Commands.CPE {
                     def.InventoryOrder = order == def.BlockID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, level);
                     BlockDefinition.Save(global, level);
-                    Player.Message(p, "Set inventory order for {0} to {1}", blockName,
+                    p.Message("Set inventory order for {0} to {1}", blockName,
                                    order == def.BlockID ? "default" : order.ToString());
                     return;
                 default:
-                    Player.Message(p, "Unrecognised property: " + arg); return;
+                    p.Message("Unrecognised property: " + arg); return;
             }
             
-            Player.Message(p, "Set {0} for {1} to {2}", arg, blockName, value);
+            p.Message("Set {0} for {1} to {2}", arg, blockName, value);
             BlockDefinition.Add(def, defs, level);
             if (changedFallback) {
                 BlockDefinition.UpdateFallback(global, def.GetBlock(), level);
@@ -515,12 +515,12 @@ namespace MCGalaxy.Commands.CPE {
             
             // in case the list is modified before we finish the command.
             if (old != null) {
-                block = GetFreeBlock(global, Player.IsSuper(p) ? null : p.level);
+                block = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (block == Block.Invalid) {
-                    Player.Message(p, "There are no custom block ids left, " +
+                    p.Message("There are no custom block ids left, " +
                                    "you must " + cmd + " remove a custom block first.");
                     if (!global) {
-                        Player.Message(p, "You may also manually specify the same existing id of a global custom block.");
+                        p.Message("You may also manually specify the same existing id of a global custom block.");
                     }
                     return false;
                 }
@@ -528,10 +528,10 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             string scope = global ? "global" : "level";
-            Player.Message(p, "Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
+            p.Message("Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
             
             block = def.GetBlock();
-            BlockDefinition.Add(def, defs, Player.IsSuper(p) ? null : p.level);
+            BlockDefinition.Add(def, defs, p.IsSuper ? null : p.level);
             UpdateBlockProps(global, p, block, props);
             return true;
         }
@@ -541,11 +541,11 @@ namespace MCGalaxy.Commands.CPE {
             if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
             if (block >= Block.Extended) {
-                Player.Message(p, "%WCustom blocks cannot be used as fallback blocks.");
+                p.Message("%WCustom blocks cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             if (Block.IsPhysicsType(block)) {
-                Player.Message(p, "%WPhysics block cannot be used as fallback blocks.");
+                p.Message("%WPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             return (BlockRaw)block;
@@ -572,14 +572,14 @@ namespace MCGalaxy.Commands.CPE {
         
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "%WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("%WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            p.Message("Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            Player.Message(p, "%WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            Player.Message(p, "Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("%WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            p.Message("Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target, string help) {
@@ -642,26 +642,16 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         
-        static BlockDefinition consoleBD;
-        static int consoleStep;
-        
-        static BlockDefinition GetBD(Player p, bool global) {
-            return p == null ? consoleBD : (global ? p.gbBlock : p.lbBlock);
-        }
-        
-        static int GetStep(Player p, bool global) {
-            return p == null ? consoleStep : (global ? p.gbStep : p.lbStep);
-        }
+        static BlockDefinition GetBD(Player p, bool global) { return global ? p.gbBlock : p.lbBlock; }        
+        static int GetStep(Player p, bool global) { return global ? p.gbStep : p.lbStep; }
         
         static void SetBD(Player p, bool global, BlockDefinition bd) {
-            if (p == null) consoleBD = bd;
-            else if (global) p.gbBlock = bd;
+            if (global) p.gbBlock = bd;
             else p.lbBlock = bd;
         }
         
         static void SetStep(Player p, bool global, int step) {
-            if (p == null) consoleStep = step;
-            else if (global) p.gbStep = step;
+            if (global) p.gbStep = step;
             else p.lbStep = step;
         }
         
@@ -679,14 +669,14 @@ namespace MCGalaxy.Commands.CPE {
                 help[0] = help[0].Replace("top texture", "texture");
             
             for (int i = 0; i < help.Length; i++)
-                Player.Message(p, help[i]);
-            Player.Message(p, "&f--------------------------");
+                p.Message(help[i]);
+            p.Message("&f--------------------------");
         }
         
         static void SendEditHelp(Player p, string section) {
             string[] help = helpSections[section];
             for (int i = 0; i < help.Length; i++)
-                Player.Message(p, help[i].Replace("Type", "Use"));
+                p.Message(help[i].Replace("Type", "Use"));
         }
         
         static string MapPropertyName(string prop) {
@@ -762,14 +752,14 @@ namespace MCGalaxy.Commands.CPE {
         
         
         internal static void Help(Player p, string cmd) {
-            Player.Message(p, "%T{0} add [id] %H- begins creating a new custom block", cmd);
-            Player.Message(p, "%T{0} copyall [map] %H- clones all custom blocks in [map]", cmd);            
-            Player.Message(p, "%T{0} copy [id] [new id] %H- clones an existing custom block", cmd);
-            Player.Message(p, "%T{0} edit [id] [property] [value] %H- edits that custom block", cmd);
-            Player.Message(p, "%T{0} list <offset> %H- lists all custom blocks", cmd);
-            Player.Message(p, "%T{0} remove [id] %H- removes that custom block", cmd);
-            Player.Message(p, "%T{0} info [id] %H- shows info about that custom block", cmd);
-            Player.Message(p, "%HTo see the list of editable properties, type {0} edit", cmd);
+            p.Message("%T{0} add [id] %H- begins creating a new custom block", cmd);
+            p.Message("%T{0} copyall [map] %H- clones all custom blocks in [map]", cmd);            
+            p.Message("%T{0} copy [id] [new id] %H- clones an existing custom block", cmd);
+            p.Message("%T{0} edit [id] [property] [value] %H- edits that custom block", cmd);
+            p.Message("%T{0} list <offset> %H- lists all custom blocks", cmd);
+            p.Message("%T{0} remove [id] %H- removes that custom block", cmd);
+            p.Message("%T{0} info [id] %H- shows info about that custom block", cmd);
+            p.Message("%HTo see the list of editable properties, type {0} edit", cmd);
         }
         
         internal static void Help(Player p, string cmd, string args) {
@@ -778,20 +768,20 @@ namespace MCGalaxy.Commands.CPE {
             prop = MapPropertyName(prop.ToLower());
 
             if (!helpSections.ContainsKey(prop)) {
-                Player.Message(p, "Valid properties: " + helpSections.Keys.Join());
+                p.Message("Valid properties: " + helpSections.Keys.Join());
             } else {
                 SendEditHelp(p, prop);
             }
         }
     }
     
-    public sealed class CmdGlobalBlock : Command {
+    public sealed class CmdGlobalBlock : Command2 {
         public override string name { get { return "GlobalBlock"; } }
         public override string shortcut { get { return "gb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             CustomBlockCommand.Execute(p, message, true, "/gb");
         }
         
@@ -804,14 +794,14 @@ namespace MCGalaxy.Commands.CPE {
         }
     }
     
-    public sealed class CmdLevelBlock : Command {
+    public sealed class CmdLevelBlock : Command2 {
         public override string name { get { return "LevelBlock"; } }
         public override string shortcut { get { return "lb"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             CustomBlockCommand.Execute(p, message, false, "/lb");
         }
         

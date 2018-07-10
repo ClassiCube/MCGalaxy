@@ -18,32 +18,32 @@
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {   
-    public sealed class CmdAwardMod : Command {        
+    public sealed class CmdAwardMod : Command2 {        
         public override string name { get { return "AwardMod"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         static char[] awardArgs = new char[] { ':' };
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 
             if (IsCreateCommand(args[0])) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
-                    Player.Message(p, "%WUse a : to separate the award name from its description."); 
+                    p.Message("%WUse a : to separate the award name from its description."); 
                     Help(p); return;
                 }
 
                 if (!Awards.Add(args[0], args[1])) {
-                    Player.Message(p, "This award already exists."); return;
+                    p.Message("This award already exists."); return;
                 } else {
                     Chat.MessageGlobal("Award added: &6{0} : {1}", args[0], args[1]);
                     Awards.SaveAwards();
                 }
             } else if (IsDeleteCommand(args[0])) {
                 if (!Awards.Remove(args[1])) {
-                    Player.Message(p, "This award does not exist."); return;
+                    p.Message("This award does not exist."); return;
                 } else {
                     Chat.MessageGlobal("Award removed: &6{0}", args[1]);
                     Awards.SaveAwards();
@@ -54,9 +54,9 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/AwardMod add/del [award name] : [description]");
-            Player.Message(p, "%HAdds or deletes a reward with the name [award name]");
-            Player.Message(p, "%H  e.g. %T/AwardMod add Bomb voyage : Blow up a lot of TNT");
+            p.Message("%T/AwardMod add/del [award name] : [description]");
+            p.Message("%HAdds or deletes a reward with the name [award name]");
+            p.Message("%H  e.g. %T/AwardMod add Bomb voyage : Blow up a lot of TNT");
         }
     }
 }

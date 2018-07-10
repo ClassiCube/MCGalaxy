@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdOpChat : Command {
+    public sealed class CmdOpChat : Command2 {
         public override string name { get { return "OpChat"; } }
         public override string shortcut { get { return "Op"; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -25,19 +25,19 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can read opchat messages") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { ChatModes.MessageOps(p, message); return; }
             
             p.opchat = !p.opchat;
-            if (p.opchat) Player.Message(p, "All messages will now be sent to OPs only");
-            else Player.Message(p, "OP chat turned off");
+            if (p.opchat) p.Message("All messages will now be sent to OPs only");
+            else p.Message("OP chat turned off");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/OpChat [message]");
-            Player.Message(p, "%HSends a message to online OPs");
-            Player.Message(p, "%T/OpChat");
-            Player.Message(p, "%HMakes all messages sent go to OPs by default");
+            p.Message("%T/OpChat [message]");
+            p.Message("%HSends a message to online OPs");
+            p.Message("%T/OpChat");
+            p.Message("%HMakes all messages sent go to OPs by default");
         }
     }
 }

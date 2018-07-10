@@ -31,15 +31,15 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.Find("Title").Use(p, "-own");
-                Player.Message(p, "&aYour title was removed for free."); return;
+                p.Message("&aYour title was removed for free."); return;
             }
             
             string title = message.SplitSpaces(2)[1]; // keep spaces this way
             if (title == p.title) {
-                Player.Message(p, "%WYou already have that title."); return;
+                p.Message("%WYou already have that title."); return;
             }
             if (title.Length >= 20) {
-                Player.Message(p, "%WTitles must be under 20 characters."); return;
+                p.Message("%WTitles must be under 20 characters."); return;
             }
             
             Command.Find("Title").Use(p, "-own " + title);
@@ -59,15 +59,15 @@ namespace MCGalaxy.Eco {
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 Command.Find("Nick").Use(p, "-own");
-                Player.Message(p, "&aYour nickname was removed for free."); return;
+                p.Message("&aYour nickname was removed for free."); return;
             }
             
             string nick = message.SplitSpaces(2)[1]; // keep spaces this way
             if (nick == p.DisplayName) {
-                Player.Message(p, "%WYou already have that nickname."); return;
+                p.Message("%WYou already have that nickname."); return;
             }
             if (nick.Length >= 30) {
-                Player.Message(p, "%WNicknames must be under 30 characters."); return;
+                p.Message("%WNicknames must be under 30 characters."); return;
             }
             
             Command.Find("Nick").Use(p, "-own " + nick);
@@ -89,7 +89,7 @@ namespace MCGalaxy.Eco {
             string colName = Colors.Name(color);
             
             if (color == p.titlecolor) {
-                Player.Message(p, "%WYour title color is already " + color + colName); return;
+                p.Message("%WYour title color is already " + color + colName); return;
             }
             
             Command.Find("TColor").Use(p, "-own " + colName);
@@ -111,7 +111,7 @@ namespace MCGalaxy.Eco {
             string colName = Colors.Name(color);
             
             if (color == p.color) {
-                Player.Message(p, "%WYour color is already " + color + colName); return;
+                p.Message("%WYour color is already " + color + colName); return;
             }
             
             Command.Find("Color").Use(p, "-own " + colName);

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
-    public sealed partial class CmdOverseer : Command {
+    public sealed partial class CmdOverseer : Command2 {
         public override string name { get { return "Overseer"; } }
         public override string shortcut { get { return "os"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("Realm"), new CommandAlias("MyRealm") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             string cmd = args[0];
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
             
             bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
             if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
-                Player.Message(p, "You may only perform that action on your own map."); return;
+                p.Message("You may only perform that action on your own map."); return;
             }
             
             if (cmd.CaselessEq("Spawn"))           cmd = "SetSpawn";
@@ -55,17 +55,17 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p, string message) {
             foreach (SubCommand subCmd in subCommands) {
                 if (!subCmd.Group.CaselessEq(message)) continue;
-                Player.MessageLines(p, subCmd.Help);
+                p.MessageLines(subCmd.Help);
                 return;
             }
-            Player.Message(p, "Unrecognised command \"{0}\".", message);
+            p.Message("Unrecognised command \"{0}\".", message);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/os [command] [args]");
-            Player.Message(p, "%HAllows you to modify and manage your personal realms.");
-            Player.Message(p, "%HCommands: %S{0}", subCommands.Join(grp => grp.Group));
-            Player.Message(p, "%HType %T/Help os [command] %Hfor more details");
+            p.Message("%T/os [command] [args]");
+            p.Message("%HAllows you to modify and manage your personal realms.");
+            p.Message("%HCommands: %S{0}", subCommands.Join(grp => grp.Group));
+            p.Message("%HType %T/Help os [command] %Hfor more details");
         }
         
         
@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.World {
                     return p.name.ToLower() + i;
                 }
                 
-                Player.Message(p, "You have reached the limit for your overseer maps."); return null;
+                p.Message("You have reached the limit for your overseer maps."); return null;
             }
             return level;
         }

@@ -81,15 +81,15 @@ namespace MCGalaxy.Games {
             //    Map.ChatLevelOps("There will be another layer every " + mapSettings.layerInterval + " minutes.");
             //}
             
-            if (waterMode) Player.Message(p, "The map will be flooded with &9water %Sthis round!");
-            if (layerMode) Player.Message(p, "The " + block + " will &aflood in layers %Sthis round!");
+            if (waterMode) p.Message("The map will be flooded with &9water %Sthis round!");
+            if (layerMode) p.Message("The " + block + " will &aflood in layers %Sthis round!");
             
-            if (fastMode) Player.Message(p, "The lava will be &cfast %Sthis round!");
-            if (killerMode) Player.Message(p, "The " + block + " will &ckill you %Sthis round!");
-            if (destroyMode) Player.Message(p, "The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");
+            if (fastMode) p.Message("The lava will be &cfast %Sthis round!");
+            if (killerMode) p.Message("The " + block + " will &ckill you %Sthis round!");
+            if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");
             
-            if (!flooded) Player.Message(p, FloodTimeLeftMessage());
-            Player.Message(p, RoundTimeLeftMessage());
+            if (!flooded) p.Message(FloodTimeLeftMessage());
+            p.Message(RoundTimeLeftMessage());
         }
 
         protected override bool SetMap(string map) {
@@ -105,15 +105,8 @@ namespace MCGalaxy.Games {
             Get(p).TimesDied++;
             if (!IsPlayerDead(p)) return;
             
-            Player[] online = PlayerInfo.Online.Items;
-            foreach (Player pl in online) {
-                if (pl != p && pl.level == Map) {
-                    Player.Message(pl, p.ColoredName + " &4ran out of lives, and is out of the round!");
-                }
-            }
-            
-            Player.Message(p, "&4You ran out of lives, and are out of the round!");
-            Player.Message(p, "&4You can still watch, but you cannot build.");
+            Chat.MessageFromLevel(p, "λNICK &4ran out of lives, and is out of the round!");
+            p.Message("&4You can still watch, but you cannot build.");
         }
     }
 }

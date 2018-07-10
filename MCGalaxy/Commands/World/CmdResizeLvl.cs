@@ -20,7 +20,7 @@ using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdResizeLvl : Command {
+    public sealed class CmdResizeLvl : Command2 {
         public override string name { get { return "ResizeLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -29,12 +29,12 @@ namespace MCGalaxy.Commands.World {
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length < 4) { Help(p); return; }
             
             if (DoResize(p, args)) return;
-            Player.Message(p, "Type %T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
+            p.Message("Type %T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
                            args[0], args[1], args[2], args[3]);
         }
         
@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands.World {
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
-                Player.Message(p, "New level dimensions are smaller than the current dimensions, %Wyou will lose blocks%S.");
+                p.Message("New level dimensions are smaller than the current dimensions, %Wyou will lose blocks%S.");
                 return false;
             }
             
             Level newLvl = ResizeLevel(lvl, x, y, z);
-            if (newLvl == null) { Player.Message(p, "%WError resizing map."); return false; }
+            if (newLvl == null) { p.Message("%WError resizing map."); return false; }
             LevelActions.Replace(lvl, newLvl);
             return true;
         }
@@ -108,8 +108,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ResizeLvl [level] [width] [height] [length]");
-            Player.Message(p, "%HResizes the given level.");
+            p.Message("%T/ResizeLvl [level] [width] [height] [length]");
+            p.Message("%HResizes the given level.");
         }
     }
 }

@@ -20,7 +20,7 @@ using System.IO;
 using MCGalaxy.Events.LevelEvents;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdLoad : Command {
+    public sealed class CmdLoad : Command2 {
         public override string name { get { return "Load"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("MapLoad"), new CommandAlias("WLoad") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
@@ -46,12 +46,12 @@ namespace MCGalaxy.Commands.World {
         
         static Level LoadLevelCore(Player p, string name, bool autoLoaded) {
             if (!LevelInfo.MapExists(name)) {
-                Player.Message(p, "Level \"{0}\" does not exist", name); return null;
+                p.Message("Level \"{0}\" does not exist", name); return null;
             }
             
             Level existing = LevelInfo.FindExact(name);
             if (existing != null) {
-                Player.Message(p, "Level {0} %Sis already loaded.", existing.ColoredName); return null;
+                p.Message("Level {0} %Sis already loaded.", existing.ColoredName); return null;
             }
             
             Level lvl = ReadLevel(p, name);
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.World {
 
             existing = LevelInfo.FindExact(name);
             if (existing != null) {
-                Player.Message(p, "Level {0} %Sis already loaded.", existing.ColoredName); return null;
+                p.Message("Level {0} %Sis already loaded.", existing.ColoredName); return null;
             }
 
             LevelInfo.Loaded.Add(lvl);
@@ -76,14 +76,14 @@ namespace MCGalaxy.Commands.World {
             Level level = Level.Load(name);
             if (level != null) return level;
             if (!File.Exists(LevelInfo.MapPath(name) + ".backup")) {
-                Player.Message(p, "Backup of {0} does not exist.", name); return null;
+                p.Message("Backup of {0} does not exist.", name); return null;
             }
             
             Logger.Log(LogType.Warning, "Attempting to load backup map for " + name);
             level = Level.Load(name, LevelInfo.MapPath(name) + ".backup");
             if (level != null) return level;
             
-            Player.Message(p, "Loading backup failed.");
+            p.Message("Loading backup failed.");
             string backupPath = LevelInfo.BackupBasePath(name);
             
             if (Directory.Exists(backupPath)) {
@@ -93,16 +93,16 @@ namespace MCGalaxy.Commands.World {
                 string path = LevelInfo.BackupFilePath(name, latest.ToString());
                 level = Level.Load(name, path);
                 if (level == null)
-                    Player.Message(p, "Loading latest backup failed as well.");
+                    p.Message("Loading latest backup failed as well.");
             } else {
-                Player.Message(p, "Latest backup of {0} does not exist.", name);
+                p.Message("Latest backup of {0} does not exist.", name);
             }
             return level;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Load [level]");
-            Player.Message(p, "%HLoads a level.");
+            p.Message("%T/Load [level]");
+            p.Message("%HLoads a level.");
         }
     }
 }

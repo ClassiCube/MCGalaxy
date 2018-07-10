@@ -56,7 +56,7 @@ namespace MCGalaxy {
         
         public bool CheckChatSpam() {
             Player.lastMSG = p.name;
-            if (!ServerConfig.ChatSpamCheck || Player.IsSuper(p)) return false;
+            if (!ServerConfig.ChatSpamCheck || p.IsSuper) return false;
             
             lock (chatLock) {
                 if (chatLog.AddSpamEntry(ServerConfig.ChatSpamCount, ServerConfig.ChatSpamInterval)) 
@@ -70,13 +70,13 @@ namespace MCGalaxy {
         }
         
         public bool CheckCommandSpam() {
-            if (!ServerConfig.CmdSpamCheck || Player.IsSuper(p)) return false;
+            if (!ServerConfig.CmdSpamCheck || p.IsSuper) return false;
             
             lock (cmdLock) {
                 if (cmdLog.AddSpamEntry(ServerConfig.CmdSpamCount, ServerConfig.CmdSpamInterval)) 
                     return false;
                 
-                Player.Message(p, "You have been blocked from using commands for " +
+                p.Message("You have been blocked from using commands for " +
                               ServerConfig.CmdSpamBlockTime + " seconds due to spamming");
                 p.cmdUnblocked = DateTime.UtcNow.AddSeconds(ServerConfig.CmdSpamBlockTime);
                 return true;

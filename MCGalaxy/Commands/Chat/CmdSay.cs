@@ -16,13 +16,13 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Chatting {  
-    public sealed class CmdSay : Command {        
+    public sealed class CmdSay : Command2 {        
         public override string name { get { return "Say"; } }
         public override string shortcut { get { return "Broadcast"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
 
             message = Colors.Escape(message);
@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Say [message]");
-            Player.Message(p, "%HBroadcasts a global message to everyone in the server.");
+            p.Message("%T/Say [message]");
+            p.Message("%HBroadcasts a global message to everyone in the server.");
         }
     }
 }

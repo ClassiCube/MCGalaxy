@@ -44,12 +44,6 @@ namespace MCGalaxy.Events {
         /// <summary> Player performing the action (e.g. person who is banning). </summary>
         public Player Actor;
         
-        /// <summary> Gets the colored name of the actor. (Not nickname) </summary>
-        public string ActorName {
-            get { return Actor == null ? "(console)" : Actor.ColoredName; }
-        }
-        
-
         /// <summary> Type of this action. </summary>
         public ModActionType Type;
         
@@ -70,7 +64,7 @@ namespace MCGalaxy.Events {
             if (Duration.Ticks != 0) suffix += " for " + Duration.Shorten();
             
             suffix += "." + ReasonSuffixed;
-            return target + " %Swas " + action + " %Sby " + ActorName + suffix;
+            return target + " %Swas " + action + " %Sby " + Actor.ColoredName + suffix;
         }
         
         

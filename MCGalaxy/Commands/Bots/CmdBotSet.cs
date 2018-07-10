@@ -20,7 +20,7 @@ using System.IO;
 using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBotSet : Command {
+    public sealed class CmdBotSet : Command2 {
         public override string name { get { return "BotSet"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Bots {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can set bots to be killer") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             PlayerBot bot = Matcher.FindBots(p, args[0]);
@@ -67,16 +67,16 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         static void UpdateBot(Player p, PlayerBot bot, string msg) {
-            Player.Message(p, bot.ColoredName + "%S" + msg);
+            p.Message(bot.ColoredName + "%S" + msg);
             Logger.Log(LogType.UserActivity, bot.name + msg);
             BotsFile.Save(p.level);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BotSet [bot] <AI script>");
-            Player.Message(p, "%HMakes [bot] do the instructions in <AI script>");
-            Player.Message(p, "%H  Special AI scripts: Kill and Hunt");
-            Player.Message(p, "%HIf <AI script> is not given, turns off the bot's AI.");
+            p.Message("%T/BotSet [bot] <AI script>");
+            p.Message("%HMakes [bot] do the instructions in <AI script>");
+            p.Message("%H  Special AI scripts: Kill and Hunt");
+            p.Message("%HIf <AI script> is not given, turns off the bot's AI.");
         }
     }
 }

@@ -155,7 +155,7 @@ namespace MCGalaxy.Games {
                 
                 DateTime end = data.InvisibilityEnd;
                 if (now >= end) {
-                    Player.Message(p, "&cYou are &bvisible &cagain");
+                    p.Message("&cYou are &bvisible &cagain");
                     ResetInvisibility(p, data);
                     continue;
                 }
@@ -168,7 +168,7 @@ namespace MCGalaxy.Games {
                 if (p.Supports(CpeExt.MessageTypes)) {
                     p.SendCpeMessage(CpeMessageType.BottomRight2, msg);
                 } else {
-                    Player.Message(p, msg);
+                    p.Message(msg);
                 }
             }
         }
@@ -179,7 +179,7 @@ namespace MCGalaxy.Games {
             Map.Message("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
-                Player.Message(p, "As this was an automatic infection, you have not lost any &3" + ServerConfig.Currency);
+                p.Message("As this was an automatic infection, you have not lost any &3" + ServerConfig.Currency);
             } else {
                 p.SetMoney(Math.Max(p.money - 2, 0));
             }
@@ -195,7 +195,7 @@ namespace MCGalaxy.Games {
                 Map.Message("Bounty on " + p.ColoredName + " %Sis no longer active");
                 if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
-                Player.Message(pKiller, "Cannot collect the bounty, as the player who set it is offline.");
+                pKiller.Message("Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 Map.Message("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
                               bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName);
@@ -270,7 +270,7 @@ namespace MCGalaxy.Games {
 
         void IncreaseAliveStats(Player p) {
             if (p.Game.PledgeSurvive) {
-                Player.Message(p, "You received &a5 &3" + ServerConfig.Currency +
+                p.Message("You received &a5 &3" + ServerConfig.Currency +
                                " %Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }

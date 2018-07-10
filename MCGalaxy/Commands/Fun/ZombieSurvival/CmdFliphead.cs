@@ -16,20 +16,20 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdFlipHead : Command {    
+    public sealed class CmdFlipHead : Command2 {    
         public override string name { get { return "FlipHead"; } }
         public override string shortcut { get { return "fh"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             p.flipHead = !p.flipHead;
-            if (p.flipHead) Player.Message(p, "Your head was broken!");
-            else Player.Message(p, "Your head was healed!");
+            if (p.flipHead) p.Message("Your head was broken!");
+            else p.Message("Your head was healed!");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "/fliphead - Does as it says on the tin (only works while infected)");
+            p.Message("/fliphead - Does as it says on the tin (only works while infected)");
         }
     }
 }

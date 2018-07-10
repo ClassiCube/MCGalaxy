@@ -69,7 +69,7 @@ namespace MCGalaxy.Drawing.Brushes {
             } else if (opt == 's') {
                 if (!CommandParser.GetInt(p, arg, "Seed", ref args.Seed)) return false;
             } else {
-                Player.Message(p, "\"{0}\" was not a valid argument name.", opt);
+                p.Message("\"{0}\" was not a valid argument name.", opt);
                 return false;
             }
             return true;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Drawing.Brushes {
         static bool ParseDecimal(Player p, string arg, ref float target, float baseValue) {
             float temp;
             if (!Utils.TryParseDecimal(arg, out temp)) {
-                Player.Message(p, "\"{0}\" was not a valid decimal.", arg); return false;
+                p.Message("\"{0}\" was not a valid decimal.", arg); return false;
             }
             
             target = temp * baseValue;

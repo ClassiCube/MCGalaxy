@@ -20,7 +20,7 @@ using MCGalaxy;
 using MCGalaxy.Drawing.Transforms;
 
 namespace MCGalaxy.Commands.Building {  
-    public sealed class CmdTransform : Command {
+    public sealed class CmdTransform : Command2 {
         public override string name { get { return "Transform"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandAlias("Transforms", "list"), new CommandAlias("Scale", "scale") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
-                Player.Message(p, "Your current transform is: " + p.Transform.Name); return;
+                p.Message("Your current transform is: " + p.Transform.Name); return;
             }
             string[] args = message.SplitSpaces(2);
             TransformFactory transform = TransformFactory.Find(args[0]);
@@ -39,10 +39,10 @@ namespace MCGalaxy.Commands.Building {
             if (args[0].CaselessEq("list")) {
                 List(p);
             } else if (transform == null) {
-                Player.Message(p, "No transform found with name \"{0}\".", args[0]);
+                p.Message("No transform found with name \"{0}\".", args[0]);
                 List(p);
             } else {
-                Player.Message(p, "Set your transform to: " + transform.Name);
+                p.Message("Set your transform to: " + transform.Name);
                 Transform instance = transform.Construct(p, args.Length == 1 ? "" : args[1]);
                 if (instance == null) return;
                 p.Transform = instance;
@@ -50,24 +50,24 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void List(Player p) {
-            Player.Message(p, "%HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
+            p.Message("%HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Transform [name] <transform args>");
-            Player.Message(p, "%HSets your current transform to the transform with that name.");
-            Player.Message(p, "%T/Help Transform [name]");
-            Player.Message(p, "%HOutputs the help for the transform with that name.");
+            p.Message("%T/Transform [name] <transform args>");
+            p.Message("%HSets your current transform to the transform with that name.");
+            p.Message("%T/Help Transform [name]");
+            p.Message("%HOutputs the help for the transform with that name.");
             List(p);
         }
         
         public override void Help(Player p, string message) {
             TransformFactory transform = TransformFactory.Find(message);
             if (transform == null) {
-                Player.Message(p, "No transform found with name \"{0}\".", message);
+                p.Message("No transform found with name \"{0}\".", message);
                 List(p);
             } else {
-                Player.MessageLines(p, transform.Help);
+                p.MessageLines(transform.Help);
             }
         }
     }

@@ -33,12 +33,12 @@ namespace MCGalaxy.DB {
             name = PlayerInfo.GetColoredName(p, name);
             
             if (newBlock == Block.Air) {
-                Player.Message(p, "{0} ago {1} &4deleted %S{2}{3}",
+                p.Message("{0} ago {1} &4deleted %S{2}{3}",
                                delta.Shorten(true, false), name,
                                Block.GetName(p, oldBlock),
                                FormatReason(e.Flags));
             } else {
-                Player.Message(p, "{0} ago {1} &3placed %S{2}{3}",
+                p.Message("{0} ago {1} &3placed %S{2}{3}",
                                delta.Shorten(true, false), name,
                                Block.GetName(p, newBlock),
                                FormatReason(e.Flags));
@@ -50,7 +50,7 @@ namespace MCGalaxy.DB {
             string message = MessageBlock.Get(p.level.MapName, x, y, z);
             
             if (message == null) return;
-            Player.Message(p, "Message Block contents: {0}", message);
+            p.Message("Message Block contents: {0}", message);
         }
         
         public static void OutputPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
@@ -58,7 +58,7 @@ namespace MCGalaxy.DB {
             PortalExit exit = Portal.Get(p.level.MapName, x, y, z);
             
             if (exit == null) return;
-            Player.Message(p, "Portal destination: ({0}, {1}, {2}) in {3}",
+            p.Message("Portal destination: ({0}, {1}, {2}) in {3}",
                            exit.X, exit.Y, exit.Z, exit.Map);
         }
         

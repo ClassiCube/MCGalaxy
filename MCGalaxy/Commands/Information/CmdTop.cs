@@ -22,7 +22,7 @@ using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdTop : Command {
+    public sealed class CmdTop : Command2 {
         public override string name { get { return "Top"; } }
         public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
                     new CommandAlias("Top10", "10"), }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
 
             TopStat stat = FindTopStat(args[1]);
             if (stat == null) {
-                Player.Message(p, "%WUnrecognised type \"{0}\".", args[1]); return;
+                p.Message("%WUnrecognised type \"{0}\".", args[1]); return;
             }
             
             if (args.Length > 2) {
@@ -51,11 +51,11 @@ namespace MCGalaxy.Commands.Info {
             List<string[]> stats = Database.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
                                                     "ORDER BY" + stat.OrderBy + limit);
             
-            Player.Message(p, "&a{0}:", stat.Title());
+            p.Message("&a{0}:", stat.Title());
             for (int i = 0; i < stats.Count; i++) {
                 string name  = PlayerInfo.GetColoredName(p, stats[i][0]);
                 string value = stat.Formatter(stats[i][1]);
-                Player.Message(p, "{0}) {1} %S- {2}", offset + (i + 1), name, value);
+                p.Message("{0}) {1} %S- {2}", offset + (i + 1), name, value);
             }
         }
         
@@ -74,10 +74,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Top [max results] [stat] <offset>");
-            Player.Message(p, "%HPrints a list of players who have the " +
+            p.Message("%T/Top [max results] [stat] <offset>");
+            p.Message("%HPrints a list of players who have the " +
                            "most/top of a particular stat. Available stats:");
-            Player.Message(p, "&f" + TopStat.Stats.Join(stat => stat.Identifier));
+            p.Message("&f" + TopStat.Stats.Join(stat => stat.Identifier));
         }
     }
 }

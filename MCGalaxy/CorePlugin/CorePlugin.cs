@@ -43,8 +43,6 @@ namespace MCGalaxy.Core {
             
             OnEcoTransactionEvent.Register(EcoHandlers.HandleEcoTransaction, Priority.Critical);
             OnModActionEvent.Register(ModActionHandler.HandleModAction, Priority.Critical);
-            OnGroupLoadEvent.Register(MiscHandlers.HandleGroupLoad, Priority.Critical);
-            
             clearTask = Server.Background.QueueRepeat(IPThrottler.CleanupTask, null, 
                                                       TimeSpan.FromMinutes(10));
         }
@@ -60,9 +58,7 @@ namespace MCGalaxy.Core {
             OnPlayerClickEvent.Unregister(MiscHandlers.HandlePlayerClick);
             
             OnEcoTransactionEvent.Unregister(EcoHandlers.HandleEcoTransaction);
-            OnModActionEvent.Unregister(ModActionHandler.HandleModAction);
-            OnGroupLoadEvent.Unregister(MiscHandlers.HandleGroupLoad);
-            
+            OnModActionEvent.Unregister(ModActionHandler.HandleModAction);            
             Server.Background.Cancel(clearTask);
         }
     }

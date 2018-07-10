@@ -43,7 +43,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override bool CanDraw(Vec3S32[] marks, Player p, long affected) {
             if (affected > p.group.DrawLimit) {
-                Player.Message(p, "You rank can only fill up to {0} blocks. " +
+                p.Message("You rank can only fill up to {0} blocks. " +
                                "This fill would affect more than {0} blocks.", p.group.DrawLimit);
                 return false;
             }

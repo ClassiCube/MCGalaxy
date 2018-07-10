@@ -21,15 +21,15 @@ using MCGalaxy.Commands.Fun;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Misc {
-    public class CmdAscend : Command {
+    public class CmdAscend : Command2 {
         public override string name { get { return "Ascend"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseHacks(p, p.level)) {
-                Player.Message(p, "You cannot use %T/Ascend %Son this map."); return;
+                p.Message("You cannot use %T/Ascend %Son this map."); return;
             }
             int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
             if (y < 0) y = 0;
@@ -40,9 +40,9 @@ namespace MCGalaxy.Commands.Misc {
             }
             
             if (freeY == -1) {
-                Player.Message(p, "No free spaces found above you.");
+                p.Message("No free spaces found above you.");
             } else {
-                Player.Message(p, "Teleported you up.");
+                p.Message("Teleported you up.");
                 Position pos = Position.FromFeet(p.Pos.X, freeY * 32, p.Pos.Z);
                 p.SendPos(Entities.SelfID, pos, p.Rot);
             }
@@ -64,9 +64,9 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
-            Player.Message(p, "%T/Ascend");
-            Player.Message(p, "%HTeleports you to the first free space above you.");
-            Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
+            p.Message("%T/Ascend");
+            p.Message("%HTeleports you to the first free space above you.");
+            p.Message("%H  Cannot be used on maps which have -hax in their motd. " +
                            "(unless you are {0}%H+ and the motd has +ophax)", name);
         }
     }

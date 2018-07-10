@@ -51,18 +51,18 @@ namespace MCGalaxy.Eco {
         internal void Setup(Player p, string[] args) {
             switch (args[1].ToLower()) {
                 case "enable":
-                    Player.Message(p, "&aThe {0} item is now enabled.", Name);
+                    p.Message("&aThe {0} item is now enabled.", Name);
                     Enabled = true; break;
                 case "disable":
-                    Player.Message(p, "&aThe {0} item is now disabled.", Name);
+                    p.Message("&aThe {0} item is now disabled.", Name);
                     Enabled = false; break;
                 case "purchaserank":
-                    if (args.Length == 2) { Player.Message(p, "You need to provide a rank name."); return; }
+                    if (args.Length == 2) { p.Message("You need to provide a rank name."); return; }
                     Group grp = Matcher.FindRanks(p, args[2]);
                     if (grp == null) return;
                     
                     PurchaseRank = grp.Permission;
-                    Player.Message(p, "Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
+                    p.Message("Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
                     break;
                 default:
                     OnSetupCommand(p, args); break;
@@ -77,10 +77,10 @@ namespace MCGalaxy.Eco {
         
         /// <summary> Called when the player does /eco help [item name] </summary>
         protected internal virtual void OnSetupCommandHelp(Player p) {
-            Player.Message(p, "%T/Eco {0} enable/disable", Name.ToLower());
-            Player.Message(p, "%HEnables/disables purchasing this item.");
-            Player.Message(p, "%T/Eco {0} purchaserank [rank]", Name.ToLower());
-            Player.Message(p, "%HSets the lowest rank which can purchase this item.");
+            p.Message("%T/Eco {0} enable/disable", Name.ToLower());
+            p.Message("%HEnables/disables purchasing this item.");
+            p.Message("%T/Eco {0} purchaserank [rank]", Name.ToLower());
+            p.Message("%HSets the lowest rank which can purchase this item.");
         }
 
         /// <summary> Called when the player does /store </summary>
@@ -115,7 +115,7 @@ namespace MCGalaxy.Eco {
             // Must always provide an argument.
             if (args.Length < 2) { OnStoreCommand(p); return; }
             if (p.money < Price) {
-                Player.Message(p, "%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
+                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
             }
             DoPurchase(p, message, args);
         }
@@ -127,35 +127,35 @@ namespace MCGalaxy.Eco {
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[2], "Price", ref cost)) return;
                 
-                Player.Message(p, "Changed price of {0} item to &f{1} &3{2}", Name, cost, ServerConfig.Currency);
+                p.Message("Changed price of {0} item to &f{1} &3{2}", Name, cost, ServerConfig.Currency);
                 Price = cost;
             } else {
-                Player.Message(p, "Supported actions: enable, disable, price [cost]");
+                p.Message("Supported actions: enable, disable, price [cost]");
             }
         }
         
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
-            Player.Message(p, "%T/Eco {0} price [amount]", Name.ToLower());
-            Player.Message(p, "%HSets how many &3{0} %Hthis item costs.", ServerConfig.Currency);
+            p.Message("%T/Eco {0} price [amount]", Name.ToLower());
+            p.Message("%HSets how many &3{0} %Hthis item costs.", ServerConfig.Currency);
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            if (p == null || p.Rank >= PurchaseRank) {
-                Player.Message(p, "&6{0} %S- &a{1} %S{2}", Name, Price, ServerConfig.Currency);
+            if (p.Rank >= PurchaseRank) {
+                p.Message("&6{0} %S- &a{1} %S{2}", Name, Price, ServerConfig.Currency);
             } else {
                 string grpName = Group.GetColoredName(PurchaseRank);
-                Player.Message(p, "&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, ServerConfig.Currency, grpName);
+                p.Message("&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, ServerConfig.Currency, grpName);
             }
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "%T/Buy {0} [value]", Name);
+            p.Message("%T/Buy {0} [value]", Name);
             OutputItemInfo(p);
         }
         
         protected void OutputItemInfo(Player p) {
-            Player.Message(p, "%HCosts &a{0} {1} %Heach time the item is bought.", Price, ServerConfig.Currency);
+            p.Message("%HCosts &a{0} {1} %Heach time the item is bought.", Price, ServerConfig.Currency);
             List<string> shortcuts = new List<string>();
             foreach (Alias a in Alias.aliases) {
                 if (!a.Target.CaselessEq("buy") || a.Format == null) continue;
@@ -172,7 +172,7 @@ namespace MCGalaxy.Eco {
             }
             
             if (shortcuts.Count == 0) return;
-            Player.Message(p, "Shortcuts: %T{0}", shortcuts.Join());
+            p.Message("Shortcuts: %T{0}", shortcuts.Join());
         }
     }
 }

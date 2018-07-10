@@ -18,39 +18,39 @@
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdPing : Command {
+    public sealed class CmdPing : Command2 {
         public override string name { get { return "Ping"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can see ping of all players") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!message.CaselessEq("all")) {
-                if (Player.IsSuper(p)) { Player.Message(p, "Super users cannot measure their own ping."); return; }
+                if (p.IsSuper) { p.Message("Super users cannot measure their own ping."); return; }
                 
                 if (!p.hasTwoWayPing) {
-                    Player.Message(p, "Your client does not support measuring ping. You may need to update it.");
+                    p.Message("Your client does not support measuring ping. You may need to update it.");
                 } else {
-                     Player.Message(p, p.Ping.Format());
+                     p.Message(p.Ping.Format());
                 }
             } else {
                 if (!CheckExtraPerm(p, 1)) return;            
                 Player[] players = PlayerInfo.Online.Items;
-                Player.Message(p, "Ping/latency list for online players:");
+                p.Message("Ping/latency list for online players:");
                 
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(p, pl)) continue;
                     if (pl.Ping.AveragePingMilliseconds() == 0) continue;
-                    Player.Message(p, pl.ColoredName + " %S- " + pl.Ping.Format());
+                    p.Message(pl.ColoredName + " %S- " + pl.Ping.Format());
                 }
             }
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Ping %H- Outputs details about your ping to the server.");
-            Player.Message(p, "%T/Ping all %H- Outputs ping details for all players.");
-            Player.Message(p, "&cNOTE: %HNot all clients support measuring ping.");
+            p.Message("%T/Ping %H- Outputs details about your ping to the server.");
+            p.Message("%T/Ping all %H- Outputs ping details for all players.");
+            p.Message("&cNOTE: %HNot all clients support measuring ping.");
         }
     }
 }

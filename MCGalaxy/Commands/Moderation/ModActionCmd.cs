@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
             string rule;
             if (sections.TryGetValue(num, out rule)) return rule;
             
-            Player.Message(p, "No rule has number \"{0}\". Current rule numbers are: {1}",
+            p.Message("No rule has number \"{0}\". Current rule numbers are: {1}",
                            num, sections.Keys.Join(n => n.ToString()));
             return null;
         }
@@ -97,8 +97,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (dbCol.Length == 0) who.color = newRank.Color;
             
             who.group = newRank;
-            AccessResult access = who.level.BuildAccess.Check(who);
-            who.AllowBuild = access == AccessResult.Whitelisted || access == AccessResult.Allowed;
+            who.AllowBuild = who.level.BuildAccess.CheckAllowed(who);
             
             who.SetPrefix();
             who.Send(Packet.UserType(who));
@@ -111,8 +110,8 @@ namespace MCGalaxy.Commands.Moderation {
             BlockID block = who.ModeBlock;
             if (block != Block.Air && !CommandParser.IsBlockAllowed(who, "place", block)) {
                 who.ModeBlock = Block.Air;
-                Player.Message(who, "   Hence, &b{0} %Smode was turned &cOFF",
-                               Block.GetName(who, block));
+                who.Message("   Hence, &b{0} %Smode was turned &cOFF",
+                            Block.GetName(who, block));
             }
             
             for (int b = 0; b < who.BlockBindings.Length; b++) {
@@ -121,21 +120,20 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {
                     who.BlockBindings[b] = (BlockID)b;
-                    Player.Message(who, "   Hence, binding for &b{0} %Swas unbound",
-                                   Block.GetName(who, (BlockID)b));
+                    who.Message("   Hence, binding for &b{0} %Swas unbound",
+                                Block.GetName(who, (BlockID)b));
                 }
             }
         }
         
         internal static Group CheckTarget(Player p, string action, string target) {
-            if (p != null && target == p.name) { 
-                Player.Message(p, "You canot {0} yourself", action); return null; 
+            if (target == p.name) { 
+                p.Message("You cannot {0} yourself", action); return null; 
             }
             
             Group group = PlayerInfo.GetGroup(target);
-            if (p != null && p.Rank <= group.Permission) {
-                Command.MessageTooHighRank(p, action, false); return null;
-            }
+            if (p.IsConsole) return group;
+            if (!Command.CheckRank(p, group.Permission, action, false)) return null;
             return group;
         }
         
@@ -152,12 +150,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (match != null) {
                 if (match.RemoveLastPlus().CaselessEq(name.RemoveLastPlus())) return match;
                 // Not an exact match, may be wanting to ban a non-existent account
-                Player.Message(p, "1 player matches \"{0}\": {1}", name, match);
+                p.Message("1 player matches \"{0}\": {1}", name, match);
             }
 
             if (confirmed != null) return name;
             string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
-            Player.Message(p, "If you still want to {0} \"{1}\", use %T/{3} {1}{4}{2} confirm",
+            p.Message("If you still want to {0} \"{1}\", use %T/{3} {1}{4}{2} confirm",
                            action, name, msgReason, cmd, cmdSuffix);
             return null;
         }
@@ -168,7 +166,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (matches > 1) return null;
             if (matches == 1) { name = target.name; return name; }
             
-            Player.Message(p, "Searching PlayerDB...");
+            p.Message("Searching PlayerDB...");
             return PlayerDB.MatchNames(p, name);
         }
         
@@ -194,7 +192,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (PlayerInfo.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
-                Player.Message(p, "Note: \"{0}\" is an IP, but also an account name. "
+                p.Message("Note: \"{0}\" is an IP, but also an account name. "
                                + "If you meant to {1} the account, use %T/{2} @{0}",
                                message, action, cmd);
                 return message;
@@ -204,7 +202,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who != null) return who.ip;
             
-            Player.Message(p, "Searching PlayerDB..");
+            p.Message("Searching PlayerDB..");
             string databaseIP;
             PlayerInfo.FindOfflineIPMatches(p, message, out databaseIP);
             return databaseIP;

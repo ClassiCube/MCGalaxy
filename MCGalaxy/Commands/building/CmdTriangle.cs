@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new TriangleDrawOp(); }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Triangle <brush args>");
-            Player.Message(p, "%HDraws a triangle between three points.");
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Triangle <brush args>");
+            p.Message("%HDraws a triangle between three points.");
+            p.Message(BrushHelpLine);
         }
     }
 }

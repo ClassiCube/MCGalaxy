@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdIRCBot : Command {
+    public sealed class CmdIRCBot : Command2 {
         public override string name { get { return "IRCBot"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
@@ -24,12 +24,12 @@ namespace MCGalaxy.Commands.Maintenance {
             get { return new[] { new CommandAlias("ResetBot", "reset"), new CommandAlias("ResetIRC", "reset") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("reset") || message.CaselessEq("reconnect")) {
-                if (!ServerConfig.UseIRC) { Player.Message(p, "The server does not have IRC enabled."); }
+                if (!ServerConfig.UseIRC) { p.Message("The server does not have IRC enabled."); }
                 Server.IRC.Reset();
             } else if (message.CaselessEq("connect")) {
-                if (!ServerConfig.UseIRC) { Player.Message(p, "The server does not have IRC enabled."); }
+                if (!ServerConfig.UseIRC) { p.Message("The server does not have IRC enabled."); }
                 Server.IRC.Connect();
             } else if (message.CaselessEq("disconnect")) {
                 Server.IRC.Disconnect("Disconnecting IRC bot");
@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/IRCBot connect");
-            Player.Message(p, "%HCauses the IRC bot to connect to IRC.");
-            Player.Message(p, "%T/IRCBot disconnect");
-            Player.Message(p, "%HCauses the IRC bot to disconnect from IRC.");
-            Player.Message(p, "%T/IRCBot reset");
-            Player.Message(p, "%HCauses the IRC bot to disconnect then reconnect.");
+            p.Message("%T/IRCBot connect");
+            p.Message("%HCauses the IRC bot to connect to IRC.");
+            p.Message("%T/IRCBot disconnect");
+            p.Message("%HCauses the IRC bot to disconnect from IRC.");
+            p.Message("%T/IRCBot reset");
+            p.Message("%HCauses the IRC bot to disconnect then reconnect.");
         }
     }
 }

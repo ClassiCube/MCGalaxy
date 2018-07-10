@@ -48,7 +48,7 @@ namespace MCGalaxy.Core {
             p.SetModel(p.Model, level); // in case had been using a level-only custom block for their model
             
             if (p.isFlying && !Hacks.CanUseFly(p, level)) {
-                Player.Message(p, "You cannot use %T/Fly %Son this map.");
+                p.Message("You cannot use %T/Fly %Son this map.");
                 p.isFlying = false;
             }
 
@@ -68,7 +68,7 @@ namespace MCGalaxy.Core {
                 p.ClearBlockchange();
             }
             if (!level.Config.UseBlockDB) {
-                Player.Message(p, "BlockDB is disabled here, %Wyou will not be able to /undo or /redo");
+                p.Message("BlockDB is disabled here, %Wyou will not be able to /undo or /redo");
             }
         }
         
@@ -102,22 +102,6 @@ namespace MCGalaxy.Core {
                 return true;
             }
             return false;
-        }
-        
-        // Update rank colors and rank prefixes for online players
-        internal static void HandleGroupLoad() {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                p.group = Group.Find(p.group.Permission);
-                if (p.group == null) p.group = Group.DefaultRank;
-                string dbCol = PlayerDB.FindColor(p);
-
-                if (dbCol.Length == 0 && p.color != p.group.Color) {
-                    p.color = p.group.Color;
-                    Entities.GlobalRespawn(p);
-                }
-                p.SetPrefix();
-            }
-        }
+        }       
     }
 }

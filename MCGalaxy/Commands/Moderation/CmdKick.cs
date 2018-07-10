@@ -19,22 +19,19 @@ using System;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdKick : Command {
+    public sealed class CmdKick : Command2 {
         public override string name { get { return "Kick"; } }
         public override string shortcut { get { return "k"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            
-            string kickMsg = null, reason = null;
-            if (p == null) kickMsg = "by (console)";
-            else kickMsg = "by " + p.truename;
+            string kickMsg = "by " + p.truename, reason = null;
             
             if (args.Length > 1) {
                 reason = ModActionCmd.ExpandReason(p, args[1]);
@@ -42,8 +39,8 @@ namespace MCGalaxy.Commands.Moderation {
                 kickMsg += "&f: " + reason; 
             }
 
-            if (p != null && p == who) { Player.Message(p, "You cannot kick yourself."); return; }
-            if (p != null && who.Rank >= p.Rank) {
+            if (p == who) { p.Message("You cannot kick yourself."); return; }
+            if (who.Rank >= data.Rank) {
                 Chat.MessageFrom(p, "λNICK %Stried to kick " + who.ColoredName + " %Sbut failed.");
                 return;
             }
@@ -54,9 +51,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Kick [player] <reason>");
-            Player.Message(p, "%HKicks a player.");
-            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("%T/Kick [player] <reason>");
+            p.Message("%HKicks a player.");
+            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

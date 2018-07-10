@@ -18,22 +18,22 @@
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdAlive : Command {
+    public sealed class CmdAlive : Command2 {
         public override string name { get { return "Alive"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
-         public override void Use(Player p, string message) {
+         public override void Use(Player p, string message, CommandData data) {
             Player[] alive = ZSGame.Instance.Alive.Items;
-            if (alive.Length == 0) { Player.Message(p, "No one is alive."); return; }
+            if (alive.Length == 0) { p.Message("No one is alive."); return; }
             
-            Player.Message(p, "Players who are &2alive %Sare:");
-            Player.Message(p, alive.Join(pl => pl.ColoredName));
+            p.Message("Players who are &2alive %Sare:");
+            p.Message(alive.Join(pl => pl.ColoredName));
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Alive");
-            Player.Message(p, "%HShows who is alive/a human");
+            p.Message("%T/Alive");
+            p.Message("%HShows who is alive/a human");
         }
     }
 }

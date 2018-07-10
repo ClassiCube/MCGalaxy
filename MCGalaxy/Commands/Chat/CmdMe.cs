@@ -25,9 +25,9 @@ namespace MCGalaxy.Commands.Chatting {
         public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
-            if (message.Length == 0) { Player.Message(p, "You"); return; }
-            if (p.joker) { Player.Message(p, "Cannot use /me while jokered."); return; }
+        public override void Use(Player p, string message, CommandData data) {
+            if (message.Length == 0) { p.Message("You"); return; }
+            if (p.joker) { p.Message("Cannot use /me while jokered."); return; }
             
             string msg = p.color + "*" + Colors.Strip(p.DisplayName) + " " + message;
             if (TryMessage(p, msg))
@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "What do you need help with, m'boy?! Are you stuck down a well?!");
+            p.Message("What do you need help with, m'boy?! Are you stuck down a well?!");
         }
     }
 }

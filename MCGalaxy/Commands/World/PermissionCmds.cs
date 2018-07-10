@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
-    public abstract class PermissionCmd : Command {
+    public abstract class PermissionCmd : Command2 {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.World {
             
             string[] args = message.SplitSpaces();
             if (message.Length == 0 || args.Length > 2) { Help(p); return; }
-            if (args.Length == 1 && Player.IsSuper(p)) {
+            if (args.Length == 1 && p.IsSuper) {
                 Command.SuperRequiresArgs(name, p, "level"); return;
             }
             
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.World {
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
             if (name.Length == 0) {
-                Player.Message(p, "You must provide a player name to {0}.", mode); 
+                p.Message("You must provide a player name to {0}.", mode); 
                 return false;
             }
             
@@ -81,8 +81,8 @@ namespace MCGalaxy.Commands.World {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return false;
             
-            if (p != null && name.CaselessEq(p.name)) {
-                Player.Message(p, "You cannot {0} yourself.", mode); return false;
+            if (name.CaselessEq(p.name)) {
+                p.Message("You cannot {0} yourself.", mode); return false;
             }
             
             if (include) {
@@ -94,14 +94,14 @@ namespace MCGalaxy.Commands.World {
         }      
 
         protected void ShowHelp(Player p, string action, string action2) {
-            Player.Message(p, "%T/{0} [map] [rank]", name);
-            Player.Message(p, "%HSets the lowest rank able to {0} the given map.", action);
-            Player.Message(p, "%T/{0} -max [map] [Rank]", name);
-            Player.Message(p, "%HSets the highest rank able to {0} the given map.", action);
-            Player.Message(p, "%T/{0} [map] +[name]", name);
-            Player.Message(p, "%HAllows [name] to {0}, even if their rank cannot.", action2);
-            Player.Message(p, "%T/{0} [map] -[name]", name);
-            Player.Message(p, "%HPrevents [name] from {0}ing, even if their rank can.", action2);
+            p.Message("%T/{0} [map] [rank]", name);
+            p.Message("%HSets the lowest rank able to {0} the given map.", action);
+            p.Message("%T/{0} -max [map] [Rank]", name);
+            p.Message("%HSets the highest rank able to {0} the given map.", action);
+            p.Message("%T/{0} [map] +[name]", name);
+            p.Message("%HAllows [name] to {0}, even if their rank cannot.", action2);
+            p.Message("%T/{0} [map] -[name]", name);
+            p.Message("%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
     
@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max build rank restriction") }; }
         }
         
-        public override void Use(Player p, string message) { DoLevel(p, message, false); }    
+        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, false); }    
         public override void Help(Player p) { ShowHelp(p, "build on", "build"); }
     }
     
@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max visit rank restriction") }; }
         }
 
-        public override void Use(Player p, string message) { DoLevel(p, message, true); }        
+        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, true); }        
         public override void Help(Player p) { ShowHelp(p, "visit", "visit"); }
     }    
 }

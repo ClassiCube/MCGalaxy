@@ -146,6 +146,28 @@ namespace MCGalaxy {
         }
     }
     
+    public enum CommandContext : byte {
+        Normal, Static, SendCmd,        
+        MessageBlock_1 = 161,
+        MessageBlock_64 = 224,
+    }
+    
+    public struct CommandData {
+        public LevelPermission Rank;
+        public CommandContext Context;
+    }
+    
+    public abstract class Command2 : Command {
+        
+        public override void Use(Player p, string message) {
+            if (p == null) p = Player.Console;
+            CommandData data = default(CommandData); data.Rank = p.Rank;
+            Use(p, message, data);
+        }
+        
+        public abstract void Use(Player p, string message, CommandData data);
+    }
+    
     // Kept around for backwards compatibility
     public sealed class CommandList {
         [Obsolete("Use Command.Register() instead")]

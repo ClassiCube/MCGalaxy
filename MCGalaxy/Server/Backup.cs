@@ -55,7 +55,7 @@ namespace MCGalaxy {
                 if (db) SaveDatabase(package);
                 Logger.Log(LogType.SystemActivity, "Compressed all data!");
             }
-            Player.Message(p, "Backup of (" + (files ? "everything" + (db ? "" : " but database") : "database") + ") complete!");
+            p.Message("Backup of (" + (files ? "everything" + (db ? "" : " but database") : "database") + ") complete!");
             Logger.Log(LogType.SystemActivity, "Server backed up!");
         }
 
@@ -141,8 +141,8 @@ namespace MCGalaxy {
             }
             
             // To make life easier, we reload settings now, to maker it less likely to need restart
-            Command.Find("Server").Use(null, "reload"); // Reload, as console
-            Player.Message(p, "Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is recommended, though not required.");
+            Command.Find("Server").Use(Player.Console, "reload"); // Reload, as console
+            p.Message("Server restored" + (errors > 0 ? " with errors.  May be a partial restore" : "") + ".  Restart is recommended, though not required.");
         }
         
         static void ExtractItem(ZipPackagePart item, ref int errors) {

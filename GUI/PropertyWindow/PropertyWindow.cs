@@ -123,9 +123,10 @@ namespace MCGalaxy.Gui {
             
             public ConsoleHelpPlayer() : base("(console)") {
                 group = Group.NobodyRank;
+                SuperName = "Console";
             }
             
-            public override void SendMessage(byte id, string message) {
+            public override void Message(byte id, string message) {
                 HelpOutput += message + "\r\n";
             }
         }

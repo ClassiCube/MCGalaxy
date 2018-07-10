@@ -172,7 +172,7 @@ namespace MCGalaxy.Games {
             }
             
             foreach (Player p in all) {
-                Player.Message(p, "TNT Wars: You scored &f" + Get(p).Score + " points");
+                p.Message("TNT Wars: You scored &f" + Get(p).Score + " points");
             }
         }
         

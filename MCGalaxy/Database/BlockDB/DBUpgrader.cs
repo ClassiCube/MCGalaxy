@@ -50,7 +50,7 @@ namespace MCGalaxy.DB {
         
         public static void Unlock() {
             OnPlayerStartConnectingEvent.Unregister(ConnectingHandler);
-            Player.MessageLines(null, CompactMessages);
+            Player.Console.MessageLines(CompactMessages);
             Logger.Log(LogType.SystemActivity, "&aUpgrade finished!");
             Upgrading = false;
         }

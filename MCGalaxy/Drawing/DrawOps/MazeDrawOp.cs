@@ -47,11 +47,11 @@ namespace MCGalaxy.Drawing.Ops {
             length -= 2;
             
             if (width <= 0 || length <= 0) {
-                Player.Message(Player, "The corners of the maze need to be further apart."); return;
+                Player.Message("The corners of the maze need to be further apart."); return;
             }            
-            Player.Message(Player, "Generating maze... this could take a while");
+            Player.Message("Generating maze... this could take a while");
             GenerateMaze();
-            Player.Message(Player, "Generated maze, now drawing.");
+            Player.Message("Generated maze, now drawing.");
             
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             ushort y = min.Y;
@@ -77,7 +77,7 @@ namespace MCGalaxy.Drawing.Ops {
             QuadZ(min.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);
             QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);
             
-            Player.Message(Player, "Maze painted. Build the entrance and exit yourself");
+            Player.Message("Maze painted. Build the entrance and exit yourself");
             randomizer = 0;
         }
         

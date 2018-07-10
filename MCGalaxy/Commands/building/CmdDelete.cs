@@ -16,24 +16,24 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDelete : Command {        
+    public sealed class CmdDelete : Command2 {        
         public override string name { get { return "Delete"; } }
         public override string shortcut { get { return "d"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message)  {
+        public override void Use(Player p, string message, CommandData data)  {
             if (message.Length > 0) { Help(p); return; }
 
             p.deleteMode = !p.deleteMode;
-            Player.Message(p, "Delete mode: &a" + p.deleteMode);
+            p.Message("Delete mode: &a" + p.deleteMode);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Delete");
-            Player.Message(p, "%HDeletes any block you click");
-            Player.Message(p, "%H\"any block\" meaning Door_Air, Portals, MBs, etc");
+            p.Message("%T/Delete");
+            p.Message("%HDeletes any block you click");
+            p.Message("%H\"any block\" meaning Door_Air, Portals, MBs, etc");
         }
     }
 }

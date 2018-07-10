@@ -21,18 +21,18 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDrill : Command {
+    public sealed class CmdDrill : Command2 {
         public override string name { get { return "Drill"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             ushort dist = 20;
             if (message.Length > 0 && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             
-            Player.Message(p, "Destroy the block you wish to drill.");
+            p.Message("Destroy the block you wish to drill.");
             p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);
         }
         
@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands.Building {
             int dist = (ushort)state, numBlocks = (3 * 3) * dist;
             
             if (numBlocks > p.group.DrawLimit) {
-                Player.Message(p, "You tried to drill " + numBlocks + " blocks.");
-                Player.Message(p, "You cannot drill more than " + p.group.DrawLimit + ".");
+                p.Message("You tried to drill " + numBlocks + " blocks.");
+                p.Message("You cannot drill more than " + p.group.DrawLimit + ".");
                 return false;
             }
 
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            Player.Message(p, "Drilled " + numBlocks + " blocks.");
+            p.Message("Drilled " + numBlocks + " blocks.");
             return true;
         }
         
@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Drill [distance]");
-            Player.Message(p, "%HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+            p.Message("%T/Drill [distance]");
+            p.Message("%HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
     }
 }

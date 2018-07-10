@@ -21,13 +21,13 @@ using MCGalaxy.Drawing;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPalette : Command {
+    public sealed class CmdPalette : Command2 {
         public override string name { get { return "Palette"; } }
         public override string shortcut { get { return "ImgPalette"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(5);
             if (message.Length == 0) { Help(p); return; }
             
@@ -52,10 +52,10 @@ namespace MCGalaxy.Commands.Building {
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette != null) {
-                Player.Message(p, "Palette {0} already exists.", args[1]);
+                p.Message("Palette {0} already exists.", args[1]);
             } else {
                 ImagePalette.Add(args[1]);
-                Player.Message(p, "Created palette {0}", args[1]);
+                p.Message("Created palette {0}", args[1]);
             }
         }
         
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands.Building {
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette == null) {
-                Player.Message(p, "Palette {0} does not exist.", args[1]);
+                p.Message("Palette {0} does not exist.", args[1]);
             } else {
                 ImagePalette.Remove(palette);
-                Player.Message(p, "Removed palette {0}", args[1]);
+                p.Message("Removed palette {0}", args[1]);
             }
         }
         
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Building {
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette == null) {
-                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+                p.Message("Palette {0} does not exist.", args[1]); return;
             }
             
             BlockID block;
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Building {
             newEntries.Add(entry);
             palette.Entries = newEntries.ToArray();
             palette.Save();
-            Player.Message(p, "Added block to entries of palette {0}", palette.Name);
+            p.Message("Added block to entries of palette {0}", palette.Name);
         }
         
         void HandleRemove(Player p, string[] args) {
@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.Building {
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette == null) {
-                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+                p.Message("Palette {0} does not exist.", args[1]); return;
             }
             
             BlockID block;
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Building {
         static void RemoveEntry(Player p, ImagePalette palette, BlockID block) {
             PaletteEntry[] entries = palette.Entries;
             if (entries == null) {
-                Player.Message(p, "Block not found in entries of palette {0}", palette.Name);
+                p.Message("Block not found in entries of palette {0}", palette.Name);
             }
             
             List<PaletteEntry> newEntries = new List<PaletteEntry>();
@@ -126,12 +126,12 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (newEntries.Count == entries.Length) {
-                Player.Message(p, "Block not found in entries of palette {0}", palette.Name); return;
+                p.Message("Block not found in entries of palette {0}", palette.Name); return;
             }
             
             palette.Entries = newEntries.ToArray();
             palette.Save();
-            Player.Message(p, "Removed block from entries of palette {0}", palette.Name);
+            p.Message("Removed block from entries of palette {0}", palette.Name);
         }
         
         void HandleEntries(Player p, string[] args) {
@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Building {
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette == null) {
-                Player.Message(p, "Palette {0} does not exist.", args[1]); return;
+                p.Message("Palette {0} does not exist.", args[1]); return;
             }
             
             string modifer = args.Length > 2 ? args[2] : "";
@@ -152,15 +152,15 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Palette create/delete [name]");
-            Player.Message(p, "%HCreates or deletes a palette for %T/ImagePrint");
-            Player.Message(p, "%T/Palette add [name] [block] [hex color]");
-            Player.Message(p, "%HAdds a block to a palette's entries.");
-            Player.Message(p, "%T/Palette remove [name] [block]");
-            Player.Message(p, "%HRemoves a block from a palette's entries.");
-            Player.Message(p, "%T/Palette entries [name]");
-            Player.Message(p, "%HLists the entries of that palette.");
-            Player.Message(p, "%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
+            p.Message("%T/Palette create/delete [name]");
+            p.Message("%HCreates or deletes a palette for %T/ImagePrint");
+            p.Message("%T/Palette add [name] [block] [hex color]");
+            p.Message("%HAdds a block to a palette's entries.");
+            p.Message("%T/Palette remove [name] [block]");
+            p.Message("%HRemoves a block from a palette's entries.");
+            p.Message("%T/Palette entries [name]");
+            p.Message("%HLists the entries of that palette.");
+            p.Message("%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
         }
     }
 }

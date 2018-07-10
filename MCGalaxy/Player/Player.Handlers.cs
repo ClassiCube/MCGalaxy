@@ -561,11 +561,11 @@ namespace MCGalaxy {
             // Typing / repeats last command executed
             if (text == "/") {
                 if (lastCMD.Length == 0) {
-                    Player.Message(this, "Cannot repeat command - no commands used yet.");
+                    Message("Cannot repeat command - no commands used yet.");
                     return true;
                 }
                 text = lastCMD;
-                Player.Message(this, "Repeating %T/" + lastCMD);
+                Message("Repeating %T/" + lastCMD);
             } else if (text[0] == '/' || text[0] == '!') {
                 text = text.Remove(0, 1);
             } else {
@@ -722,8 +722,8 @@ namespace MCGalaxy {
                 command.Use(this, message);
             } catch (Exception e) {
                 Logger.LogError(e);
-                Player.Message(this, "%WAn error occured when using the command!");
-                Player.Message(this, e.GetType() + ": " + e.Message);
+                Message("%WAn error occured when using the command!");
+                Message(e.GetType() + ": " + e.Message);
                 return false;
             }
             if (spamChecker != null && spamChecker.CheckCommandSpam()) return false;

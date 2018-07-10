@@ -19,33 +19,33 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWhere : Command {
+    public sealed class CmdWhere : Command2 {
         public override string name { get { return "Where"; } }
         public override string type { get { return CommandTypes.Information; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) message = p.name;
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
             if (pl == null) return;
             
-            if (IGame.GameOn(pl.level) != null && !(p == null || p.Game.Referee)) {
-                Player.Message(p, "You can only use /where on people in games when you are in referee mode."); return;
+            if (IGame.GameOn(pl.level) != null && !(p.IsSuper || p.Game.Referee)) {
+                p.Message("You can only use /where on people in games when you are in referee mode."); return;
             }
             
             int x = pl.Pos.X, y = pl.Pos.Y - Entities.CharacterHeight, z = pl.Pos.Z;
-            Player.Message(p, "{0} %Sis on {1}", pl.ColoredName, pl.level.ColoredName);
-            Player.Message(p, "   X: &b{0:F5} %SY: &b{1:F5} %SZ: &b{2:F5}",
+            p.Message("{0} %Sis on {1}", pl.ColoredName, pl.level.ColoredName);
+            p.Message("   X: &b{0:F5} %SY: &b{1:F5} %SZ: &b{2:F5}",
                            x / 32.0, y / 32.0, z / 32.0);
             
-            Player.Message(p, "   Yaw: &b{0} %Sdegrees, Pitch: &b{1} %Sdegrees",
+            p.Message("   Yaw: &b{0} %Sdegrees, Pitch: &b{1} %Sdegrees",
                            Orientation.PackedToDegrees(p.Rot.RotY),
                            Orientation.PackedToDegrees(p.Rot.HeadX));
         }      
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Where [name]");
-            Player.Message(p, "%HDisplays level, position, and orienatation of that player.");
+            p.Message("%T/Where [name]");
+            p.Message("%HDisplays level, position, and orienatation of that player.");
         }
     }
 }

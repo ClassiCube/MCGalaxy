@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdTeam : Command {        
+    public sealed class CmdTeam : Command2 {        
         public override string name { get { return "Team"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override bool SuperUseable { get { return false; } }
@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can create teams") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 
@@ -45,24 +45,24 @@ namespace MCGalaxy.Commands.Fun {
             
             Team team = p.Game.Team;
             if (team == null) {
-                Player.Message(p, "You need to be in a team first to send a team message."); return;
+                p.Message("You need to be in a team first to send a team message."); return;
             }
             team.Message(p, message);
         }
 
         void HandleOwner(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (team == null) { Player.Message(p, "You need to be in a team first."); return; }
+            if (team == null) { p.Message("You need to be in a team first."); return; }
             
             if (args.Length == 1) {
-                Player.Message(p, "The current owner of the team is: " + team.Owner); return;
+                p.Message("The current owner of the team is: " + team.Owner); return;
             }
             
             Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;
             
             if (!p.name.CaselessEq(team.Owner)) {
-                Player.Message(p, "Only the team owner can set a new team owner."); return;
+                p.Message("Only the team owner can set a new team owner."); return;
             }
             team.Owner = who.name;
             team.Action(p, "set the team owner to " + who.ColoredName);
@@ -71,12 +71,12 @@ namespace MCGalaxy.Commands.Fun {
 
         void HandleKick(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (team == null) { Player.Message(p, "You need to be in a team first."); return; }
+            if (team == null) { p.Message("You need to be in a team first."); return; }
             if (args.Length == 1) {
-                Player.Message(p, "You need to provide the name of the player to kick."); return;
+                p.Message("You need to provide the name of the player to kick."); return;
             }
             if (!p.name.CaselessEq(team.Owner)) {
-                Player.Message(p, "Only the team owner can kick players from the team."); return;
+                p.Message("Only the team owner can kick players from the team."); return;
             }
             
             if (team.Remove(args[1])) {
@@ -90,15 +90,15 @@ namespace MCGalaxy.Commands.Fun {
                 team.DeleteIfEmpty();
                 Team.SaveList();
             } else {
-                Player.Message(p, "The given player was not found. You need to use their full account name.");
+                p.Message("The given player was not found. You need to use their full account name.");
             }
         }
         
         void HandleColor(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (team == null) { Player.Message(p, "You need to be in a team first."); return; }
+            if (team == null) { p.Message("You need to be in a team first."); return; }
             if (args.Length == 1) {
-                Player.Message(p, "You need to provide the new color."); return;
+                p.Message("You need to provide the new color."); return;
             }
             
             string color = Matcher.FindColor(p, args[1]);
@@ -113,14 +113,14 @@ namespace MCGalaxy.Commands.Fun {
         void HandleCreate(Player p, string[] args) {
             if (!CheckExtraPerm(p, 1)) return;
             Team team = p.Game.Team;
-            if (team != null) { Player.Message(p, "You need to leave your current team before you can create one."); return; }
+            if (team != null) { p.Message("You need to leave your current team before you can create one."); return; }
             if (args.Length == 1) {
-                Player.Message(p, "You need to provide the name of the new team."); return;
+                p.Message("You need to provide the name of the new team."); return;
             }
             team = Team.Find(args[1]);
-            if (team != null) { Player.Message(p, "There is already an existing team with that name."); return; }
+            if (team != null) { p.Message("There is already an existing team with that name."); return; }
             if (args[1].Length > 8) {
-                Player.Message(p, "Team names must be 8 characters or less."); return;
+                p.Message("Team names must be 8 characters or less."); return;
             }
             
             team = new Team(args[1], p.name);
@@ -133,11 +133,11 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleJoin(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (p.Game.TeamInvite == null) { Player.Message(p, "You do not currently have any invitation to join a team."); return; }
-            if (team != null) { Player.Message(p, "You need to leave your current team before you can join another one."); return; }
+            if (p.Game.TeamInvite == null) { p.Message("You do not currently have any invitation to join a team."); return; }
+            if (team != null) { p.Message("You need to leave your current team before you can join another one."); return; }
             
             team = Team.Find(p.Game.TeamInvite);
-            if (team == null) { Player.Message(p, "The team you were invited to no longer exists."); return; }
+            if (team == null) { p.Message("The team you were invited to no longer exists."); return; }
             team.Members.Add(p.name);
             team.Action(p, "joined the team.");
             p.Game.Team = team;
@@ -148,9 +148,9 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleInvite(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (team == null) { Player.Message(p, "You need to be in a team first to invite players."); return; }
+            if (team == null) { p.Message("You need to be in a team first to invite players."); return; }
             if (args.Length == 1) {
-                Player.Message(p, "You need to provide the name of the person to invite."); return;
+                p.Message("You need to provide the name of the person to invite."); return;
             }
             Player who = PlayerInfo.FindMatches(p, args[1]);
             if (who == null) return;            
@@ -158,20 +158,20 @@ namespace MCGalaxy.Commands.Fun {
             DateTime cooldown = p.NextTeamInvite;
             DateTime now = DateTime.UtcNow;
             if (now < cooldown) {
-                Player.Message(p, "You can invite a player to join your team in another {0} seconds",
+                p.Message("You can invite a player to join your team in another {0} seconds",
                                (int)(cooldown - now).TotalSeconds);
                 return;
             }
             p.NextTeamInvite = now.AddSeconds(5);
             
-            Player.Message(p, "Invited " + who.ColoredName + " %Sto join your team.");
-            Player.Message(who, p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
+            p.Message("Invited " + who.ColoredName + " %Sto join your team.");
+            who.Message(p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
             who.Game.TeamInvite = team.Name;
         }
         
         void HandleLeave(Player p, string[] args) {
             Team team = p.Game.Team;
-            if (team == null) { Player.Message(p, "You need to be in a team first to leave one."); return; }
+            if (team == null) { p.Message("You need to be in a team first to leave one."); return; }
             
             // handle '/team leave me alone', for example
             if (args.Length > 1) {
@@ -190,13 +190,13 @@ namespace MCGalaxy.Commands.Fun {
         void HandleMembers(Player p, string[] args) {
             Team team = p.Game.Team;
             if (args.Length == 1) {
-                if (team == null) { Player.Message(p, "You are not in a team, so must provide a team name."); return; }
+                if (team == null) { p.Message("You are not in a team, so must provide a team name."); return; }
             } else {
                 team = Team.Find(args[1]);
-                if (team == null) { Player.Message(p, "No team found with the name \"" + args[1] + "\"."); return; }
+                if (team == null) { p.Message("No team found with the name \"" + args[1] + "\"."); return; }
             }
-            Player.Message(p, "Team owner: " + team.Owner);
-            Player.Message(p, "Members: " + team.Members.Join());
+            p.Message("Team owner: " + team.Owner);
+            p.Message("Members: " + team.Members.Join());
         }
         
         void HandleList(Player p, string[] args) {
@@ -206,16 +206,16 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Team owner [name] %H- Sets the player who has owner privileges for the team.");
-            Player.Message(p, "%T/Team kick [name] %H- Removes that player from the team you are in.");
-            Player.Message(p, "%T/Team color [color] %H- Sets the color of the team name shown in chat.");
-            Player.Message(p, "%T/Team create %H- Creates a new team.");
-            Player.Message(p, "%T/Team join %H- Joins the team you last received an invite to.");
-            Player.Message(p, "%T/Team invite [name] %H- Invites that player to join your team.");
-            Player.Message(p, "%T/Team leave %H- Removes you from the team you are in.");
-            Player.Message(p, "%T/Team members [name] %H- Lists the players within that team.");
-            Player.Message(p, "%T/Team list %H- Lists all teams.");
-            Player.Message(p, "%HAnything else is sent as a message to all members of the team.");
+            p.Message("%T/Team owner [name] %H- Sets the player who has owner privileges for the team.");
+            p.Message("%T/Team kick [name] %H- Removes that player from the team you are in.");
+            p.Message("%T/Team color [color] %H- Sets the color of the team name shown in chat.");
+            p.Message("%T/Team create %H- Creates a new team.");
+            p.Message("%T/Team join %H- Joins the team you last received an invite to.");
+            p.Message("%T/Team invite [name] %H- Invites that player to join your team.");
+            p.Message("%T/Team leave %H- Removes you from the team you are in.");
+            p.Message("%T/Team members [name] %H- Lists the players within that team.");
+            p.Message("%T/Team list %H- Lists all teams.");
+            p.Message("%HAnything else is sent as a message to all members of the team.");
         }
     }
 }

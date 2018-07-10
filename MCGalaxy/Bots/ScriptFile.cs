@@ -25,12 +25,12 @@ namespace MCGalaxy.Bots {
         public static bool Parse(Player p, PlayerBot bot, string ai) {
             string path = "bots/" + ai;
             if (!File.Exists(path)) {
-                Player.Message(p, "Could not find specified AI."); return false;
+                p.Message("Could not find specified AI."); return false;
             }
 
             string[] instructions = File.ReadAllLines(path);
             if (instructions.Length == 0) {
-                Player.Message(p, "No instructions in the AI."); return false;
+                p.Message("No instructions in the AI."); return false;
             }
 
             bot.AIName = ai;
@@ -49,7 +49,7 @@ namespace MCGalaxy.Bots {
                     data.Name = args[0];
                     bot.Instructions.Add(data);
                 } catch {
-                    Player.Message(p, "AI file corrupt."); return false;
+                    p.Message("AI file corrupt."); return false;
                 }
             }
             return true;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Bots {
 
                 BotInstruction ins = BotInstruction.Find(action);
                 if (ins == null) {
-                    Player.Message(p, "Could not find instruction \"" + action + "\""); return null;
+                    p.Message("Could not find instruction \"" + action + "\""); return null;
                 }
                 
                 CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Bots {
                 try {
                     ins.Output(p, args, w);
                 } catch {
-                    Player.Message(p, "Invalid arguments given for instruction " + ins.Name);
+                    p.Message("Invalid arguments given for instruction " + ins.Name);
                     return null;
                 }
                 return ins.Name;

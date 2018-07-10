@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.CPE {
                     new CommandPerm(LevelPermission.Operator, "can change the skin of bots") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.IndexOf(' ') == -1) {
                 message = "-own " + message;
                 message = message.TrimEnd();
@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.CPE {
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {
             skin = GetSkin(skin, bot.name);
             bot.SkinName = skin;
-            Player.Message(p, "You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
+            p.Message("You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.CPE {
             if (p != who) {
                 Chat.MessageFrom(who,"λNICK %Shad their skin changed to &c" + skin);
             } else {
-                Player.Message(who, "Changed your own skin to &c" + skin);
+                who.Message("Changed your own skin to &c" + skin);
             }
             
             if (skin == who.truename) {
@@ -75,13 +75,13 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Skin [name] [skin] %H- Sets the skin of that player.");
-            Player.Message(p, "%T/Skin bot [name] [skin] %H- Sets the skin of that bot.");
-            Player.Message(p, "%H[skin] can be:");
-            Player.Message(p, "%H - a ClassiCube player's name (e.g Hetal)");
-            Player.Message(p, "%H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
-            Player.Message(p, "%H - a direct url to a skin");
-            Player.Message(p, "%HDirect url skins also apply to non human models (e.g pig)");
+            p.Message("%T/Skin [name] [skin] %H- Sets the skin of that player.");
+            p.Message("%T/Skin bot [name] [skin] %H- Sets the skin of that bot.");
+            p.Message("%H[skin] can be:");
+            p.Message("%H - a ClassiCube player's name (e.g Hetal)");
+            p.Message("%H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
+            p.Message("%H - a direct url to a skin");
+            p.Message("%HDirect url skins also apply to non human models (e.g pig)");
         }
     }
 }

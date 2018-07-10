@@ -19,24 +19,24 @@ using System;
 
 namespace MCGalaxy.Commands.Fun {
 
-    public class CmdMapLike : Command {
+    public class CmdMapLike : Command2 {
         public override string name { get { return "MapLike"; } }
         public override string shortcut { get { return "Like"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) { RateMap(p, true); }
+        public override void Use(Player p, string message, CommandData data) { RateMap(p, true); }
         
         protected bool RateMap(Player p, bool like) {
             string prefix = like ? "" : "dis";
             
             if (p.Game.RatedMap) {
                 prefix = p.Game.LikedMap ? "" : "dis";
-                Player.Message(p, "You have already {0}liked this map.", prefix); return false; 
+                p.Message("You have already {0}liked this map.", prefix); return false; 
             }
             if (CheckIsAuthor(p)) {
-                Player.Message(p, "Cannot {0}like this map as you are an author of it.", prefix); return false;
+                p.Message("Cannot {0}like this map as you are an author of it.", prefix); return false;
             }
             
             if (like) p.level.Config.Likes++;
@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Fun {
             Level.SaveSettings(p.level);
             
             prefix = like ? "&a" : "&cdis";
-            Player.Message(p, "You have {0}liked %Sthis map.", prefix);
+            p.Message("You have {0}liked %Sthis map.", prefix);
             return true;
         }
         
@@ -59,19 +59,19 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/MapLike");
-            Player.Message(p, "%HIncrements the number of times this map has been liked.");
+            p.Message("%T/MapLike");
+            p.Message("%HIncrements the number of times this map has been liked.");
         }
     }
     
     public sealed class CmdMapDislike : CmdMapLike {
         public override string name { get { return "MapDislike"; } }
         public override string shortcut { get { return "Dislike"; } }        
-        public override void Use(Player p, string message) { RateMap(p, false); }
+        public override void Use(Player p, string message, CommandData data) { RateMap(p, false); }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/MapDislike");
-            Player.Message(p, "%HIncrements the number of times this map has been disliked.");
+            p.Message("%T/MapDislike");
+            p.Message("%HIncrements the number of times this map has been disliked.");
         }
     }
 }

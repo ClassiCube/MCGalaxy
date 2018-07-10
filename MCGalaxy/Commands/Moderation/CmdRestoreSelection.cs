@@ -24,22 +24,22 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdRestoreSelection : Command {        
+    public sealed class CmdRestoreSelection : Command2 {        
         public override string name { get { return "RS"; } }
         public override string shortcut { get { return "RestoreSelection"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidName(p, name, "level")) return;
             
             if (LevelInfo.ExistsBackup(p.level.name, message)) {
-                Player.Message(p, "Select two corners for restore.");
+                p.Message("Select two corners for restore.");
                 p.MakeSelection(2, "Selecting region for %SRestore", message, DoRestore);
             } else {
-                Player.Message(p, "Backup " + message + " does not exist.");
+                p.Message("Backup " + message + " does not exist.");
             }
         }
         
@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/RestoreSelection [backup name]");
-            Player.Message(p, "%HRestores a previous backup of the current selection");
+            p.Message("%T/RestoreSelection [backup name]");
+            p.Message("%HRestores a previous backup of the current selection");
         }
     }
 }

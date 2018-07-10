@@ -16,24 +16,24 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPaint : Command {
+    public sealed class CmdPaint : Command2 {
         public override string name { get { return "Paint"; } }
         public override string shortcut { get { return "p"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
             p.painting = !p.painting;
             
             string type = p.painting ? "&aON" : "&cOFF";
-            Player.Message(p, "Painting mode: " + type + "%S.");
+            p.Message("Painting mode: " + type + "%S.");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Paint");
-            Player.Message(p, "%HTurns painting mode on/off.");
-            Player.Message(p, "%HWhen paint mode is on, any block you delete is replaced by the block you are holding.");
+            p.Message("%T/Paint");
+            p.Message("%HTurns painting mode on/off.");
+            p.Message("%HWhen paint mode is on, any block you delete is replaced by the block you are holding.");
         }
     }
 }

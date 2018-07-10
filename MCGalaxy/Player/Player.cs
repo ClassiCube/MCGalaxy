@@ -36,19 +36,18 @@ namespace MCGalaxy {
         public string username { get; set; }
     }
     
-    public sealed class ConsolePlayer : Player {
+    sealed class ConsolePlayer : Player {
         public ConsolePlayer() : base("(console)") {
             group = Group.NobodyRank;
-            DatabaseID = NameConverter.InvalidNameID("(console)");
             color = "%S";
+            SuperName = "Console";
         }
-        public static Player Instance = new ConsolePlayer();
         
         public override string FullName {
             get { return "Console [&a" + ServerConfig.ConsoleName + "%S]"; }
         }
         
-        public override void SendMessage(byte id, string message) {
+        public override void Message(byte id, string message) {
             Logger.Log(LogType.ConsoleMessage, message);
         }
     }
@@ -56,6 +55,7 @@ namespace MCGalaxy {
     public partial class Player : Entity, IDisposable {
 
         static int sessionCounter;
+        public static Player Console = new ConsolePlayer();
 
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
@@ -64,7 +64,7 @@ namespace MCGalaxy {
             truename = playername;
             DisplayName = playername;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            SuperUser = true;
+            IsSuper = true;
         }
 
         internal Player() {
@@ -358,10 +358,10 @@ namespace MCGalaxy {
             if (!(msg.CaselessEq(a) || msg.CaselessEq(b))) return false;
             
             if (p.voted) {
-                Player.Message(p, "&cYou have already voted!");
+                p.Message("&cYou have already voted!");
             } else {
                 totalVotes++;
-                Player.Message(p, "&aThanks for voting!");
+                p.Message("&aThanks for voting!");
                 p.voted = true;
             }
             return true;

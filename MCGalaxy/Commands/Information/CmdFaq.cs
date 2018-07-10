@@ -18,24 +18,24 @@
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdFaq : Command {        
+    public sealed class CmdFaq : Command2 {        
         public override string name { get { return "FAQ"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TextFile faqFile = TextFile.Files["FAQ"];
             faqFile.EnsureExists();
             
             string[] faq = faqFile.GetText();
-            Player.Message(p, "&cFAQ&f:");
+            p.Message("&cFAQ&f:");
             foreach (string line in faq)
-                Player.Message(p, "&f" + line);
+                p.Message("&f" + line);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/FAQ");
-            Player.Message(p, "%HDisplays frequently asked questions");
+            p.Message("%T/FAQ");
+            p.Message("%HDisplays frequently asked questions");
         }
     }
 }

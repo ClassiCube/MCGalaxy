@@ -18,13 +18,13 @@
 using System;
 
 namespace MCGalaxy.Commands.Maintenance { 
-    public sealed class CmdBlockSpeed : Command {        
+    public sealed class CmdBlockSpeed : Command2 {        
         public override string name { get { return "BlockSpeed"; } }
         public override string shortcut { get { return "bs"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string text) {
+        public override void Use(Player p, string text, CommandData data) {
             if (text.Length == 0) { SendEstimation(p); return; }            
             string[] args = text.SplitSpaces();
             string cmd = args[0].ToLower();
@@ -43,12 +43,12 @@ namespace MCGalaxy.Commands.Maintenance {
                 if (!CommandParser.GetInt(p, args[1], "Blocks per interval", ref value, 0)) return;
                 
                 BlockQueue.UpdatesPerTick = value;
-                Player.Message(p, "Blocks per interval is now {0}.", BlockQueue.UpdatesPerTick);
+                p.Message("Blocks per interval is now {0}.", BlockQueue.UpdatesPerTick);
             } else if (cmd == "ts") {
                 if (!CommandParser.GetInt(p, args[1], "Block interval", ref value, 50)) return;
                 
                 BlockQueue.Interval = value;
-                Player.Message(p, "Block interval is now {0}.", BlockQueue.Interval);
+                p.Message("Block interval is now {0}.", BlockQueue.Interval);
             } else if (cmd == "net") {
                 if (!CommandParser.GetInt(p, args[1], "value", ref value, 2, 1000)) return;
                 
@@ -76,17 +76,17 @@ namespace MCGalaxy.Commands.Maintenance {
             int updates = BlockQueue.UpdatesPerTick, time = BlockQueue.Interval, count = PlayerInfo.Online.Count;
             int blocksPerSec = updates * (1000 / time);
             
-            Player.Message(p, "{0} blocks every {1} milliseconds = {2} blocks per second.", 
+            p.Message("{0} blocks every {1} milliseconds = {2} blocks per second.", 
                            updates, time, blocksPerSec);
-            Player.Message(p, "Using ~{0}KB/s times {1} players = ~{2}KB/s", 
+            p.Message("Using ~{0}KB/s times {1} players = ~{2}KB/s", 
                            (blocksPerSec * 8) / 1000, count, (count * blocksPerSec * 8) / 1000);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BlockSpeed [option] [value].");
-            Player.Message(p, "%HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), clear");
-            Player.Message(p, "%T/BlockSpeed net [2,4,8,12,16,20,24]");
-            Player.Message(p, "%HPresets, divide by 8 and times by 1000 to get blocks per second.");
+            p.Message("%T/BlockSpeed [option] [value].");
+            p.Message("%HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), clear");
+            p.Message("%T/BlockSpeed net [2,4,8,12,16,20,24]");
+            p.Message("%HPresets, divide by 8 and times by 1000 to get blocks per second.");
         }
     }
 }

@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui {
                 BlockID block = (BlockID)b;
                 if (!Block.ExistsGlobal(block)) continue;
                 
-                string name = Block.GetName(null, block);
+                string name = Block.GetName(Player.Console, block);
                 blk_list.Items.Add(name);
                 blockIDMap.Add(block);
             }

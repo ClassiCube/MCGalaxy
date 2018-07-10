@@ -66,9 +66,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvl.name);
             
             lvl.Message(msg);           
-            if (p != null && p.level != lvl) {
-                Player.Message(p, "{0} %Son {1}", msg, lvl.ColoredName);
-            }
+            if (p.level != lvl) p.Message("{0} %Son {1}", msg, lvl.ColoredName);
         }
     }
     

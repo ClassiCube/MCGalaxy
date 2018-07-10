@@ -20,13 +20,13 @@ using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdBlockProperties : Command {
+    public sealed class CmdBlockProperties : Command2 {
         public override string name { get { return "BlockProperties"; } }
         public override string shortcut { get { return "BlockProps"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(4);
             if (args.Length < 3) { Help(p); return; }
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
             Player pScope = scope == Block.Props ? null : p;
             BlockID block = Block.Parse(pScope, args[1]);
             if (block == Block.Invalid) {
-                Player.Message(p, "%WThere is no block \"{0}\".", args[1]); return;
+                p.Message("%WThere is no block \"{0}\".", args[1]); return;
             }
             
             string prop = args[2].ToLower();
@@ -48,17 +48,15 @@ namespace MCGalaxy.Commands.World {
             if (scope.CaselessEq("core") || scope.CaselessEq("global")) return Block.Props;
 
             if (scope.CaselessEq("level")) {
-                if (Player.IsSuper(p)) {
-                    string src = p == null ? "console" : "IRC";
-                    Player.Message(p, "Cannot use level scope from {0}.",  src);
-                    return null;
+                if (p.IsSuper) {
+                    p.Message("Cannot use level scope from {0}.", p.SuperName); return null;
                 }
                 
                 if (!LevelInfo.ValidateAction(p, p.level, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             
-            Player.Message(p, "%WScope must be: core/global, or level");
+            p.Message("%WScope must be: core/global, or level");
             return null;
         }
 
@@ -109,7 +107,7 @@ namespace MCGalaxy.Commands.World {
             on = !on;
             
             string blockName = BlockName(scope, p, block);
-            Player.Message(p, "Block {0} is {1}: {2}", blockName, type, on ? "&aYes" : "&cNo");
+            p.Message("Block {0} is {1}: {2}", blockName, type, on ? "&aYes" : "&cNo");
             OnPropsChanged(scope, p, block);
         }
         
@@ -119,7 +117,7 @@ namespace MCGalaxy.Commands.World {
             scope[block].AnimalAI = ai;
             
             string blockName = BlockName(scope, p, block);
-            Player.Message(p, "Animal AI for {0} set to: {1}", blockName, ai);
+            p.Message("Animal AI for {0} set to: {1}", blockName, ai);
             OnPropsChanged(scope, p, block);
         }
         
@@ -128,9 +126,9 @@ namespace MCGalaxy.Commands.World {
             
             string blockName = BlockName(scope, p, block);
             if (msg == null) {
-                Player.Message(p, "Death message for {0} removed.", blockName);
+                p.Message("Death message for {0} removed.", blockName);
             } else {
-                Player.Message(p, "Death message for {0} set to: {1}", blockName, msg);
+                p.Message("Death message for {0} set to: {1}", blockName, msg);
             }
             OnPropsChanged(scope, p, block);
         }
@@ -146,9 +144,9 @@ namespace MCGalaxy.Commands.World {
             
             string blockName = BlockName(scope, p, block);
             if (stackBlock == Block.Air) {
-                Player.Message(p, "Removed stack block for {0}", blockName);
+                p.Message("Removed stack block for {0}", blockName);
             } else {
-                Player.Message(p, "Stack block for {0} set to: {1}",
+                p.Message("Stack block for {0} set to: {1}",
                                blockName, BlockName(scope, p, stackBlock));
             }
             OnPropsChanged(scope, p, block);
@@ -159,14 +157,14 @@ namespace MCGalaxy.Commands.World {
             string blockName = BlockName(scope, p, block);
             if (msg == null) {
                 target = Block.Invalid;
-                Player.Message(p, "{1} for {0} removed.", blockName, type);
+                p.Message("{1} for {0} removed.", blockName, type);
             } else {
                 BlockID other;
                 if (!CommandParser.GetBlock(p, msg, out other)) return;
-                if (other == block) { Player.Message(p, "ID of {0} must be different.", type); return; }
+                if (other == block) { p.Message("ID of {0} must be different.", type); return; }
                 
                 target = other;
-                Player.Message(p, "{2} for {0} set to: {1}", blockName, BlockName(scope, p, other), type);
+                p.Message("{2} for {0} set to: {1}", blockName, BlockName(scope, p, other), type);
             }
             OnPropsChanged(scope, p, block);
         }
@@ -184,63 +182,63 @@ namespace MCGalaxy.Commands.World {
         }
         
         static string BlockName(BlockProps[] scope, Player p, BlockID block) {
-            return scope == Block.Props ? Block.GetName(null, block) : Block.GetName(p, block);
+            return scope == Block.Props ? Block.GetName(Player.Console, block) : Block.GetName(p, block);
         }
         
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BlockProps [scope] [id/name] [property] <value>");
-            Player.Message(p, "%HSets various properties for blocks.");
-            Player.Message(p, "%H[scope] can be: %Score, global, level");
+            p.Message("%T/BlockProps [scope] [id/name] [property] <value>");
+            p.Message("%HSets various properties for blocks.");
+            p.Message("%H[scope] can be: %Score, global, level");
             
-            Player.Message(p, "%Hproperties: %Sportal, messageblock, rails, waterkills, lavakills, door, tdoor, " +
+            p.Message("%Hproperties: %Sportal, messageblock, rails, waterkills, lavakills, door, tdoor, " +
                            "killer, deathmessage, animalai, stackblock, opblock, odoor, drownable, grass, dirt");
-            Player.Message(p, "%HType %T/Help BlockProps [property] %Hfor more details");
+            p.Message("%HType %T/Help BlockProps [property] %Hfor more details");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("portal")) {
-                Player.Message(p, "%HToggles whether the block is a %T/Portal");
+                p.Message("%HToggles whether the block is a %T/Portal");
             } else if (message.CaselessEq("messageblock")) {
-                Player.Message(p, "%HToggles whether the block is a %T/MessageBlock");
+                p.Message("%HToggles whether the block is a %T/MessageBlock");
             } else if (message.CaselessEq("rails")) {
-                Player.Message(p, "%HToggles whether %Strain %Hblocks can run over this block");
+                p.Message("%HToggles whether %Strain %Hblocks can run over this block");
             } else if (message.CaselessEq("waterkills")) {
-                Player.Message(p, "%HToggles whether flooding water kills this block");
+                p.Message("%HToggles whether flooding water kills this block");
             } else if (message.CaselessEq("lavakills")) {
-                Player.Message(p, "%HToggles whether flooding lava kills this block");
+                p.Message("%HToggles whether flooding lava kills this block");
             } else if (message.CaselessEq("door")) {
-                Player.Message(p, "%HToggles whether this block is a Door block");
+                p.Message("%HToggles whether this block is a Door block");
             } else if (message.CaselessEq("tdoor")) {
-                Player.Message(p, "%HToggles whether this block is a TDoor block");
+                p.Message("%HToggles whether this block is a TDoor block");
             } else if (message.CaselessEq("killer")) {
-                Player.Message(p, "%HToggles whether this block kills players who collide with it");
+                p.Message("%HToggles whether this block kills players who collide with it");
             } else if (message.CaselessEq("deathmessage")) {
-                Player.Message(p, "%HSets or removes the death message for this block");
-                Player.Message(p, "%H  Note: %S@p %His a placeholder for the player's name");
+                p.Message("%HSets or removes the death message for this block");
+                p.Message("%H  Note: %S@p %His a placeholder for the player's name");
             } else if (message.CaselessEq("animalai")) {
-                Player.Message(p, "%HSets the flying or swimming animal AI for this block.");
+                p.Message("%HSets the flying or swimming animal AI for this block.");
                 string[] aiNames = Enum.GetNames(typeof(AnimalAI));
-                Player.Message(p, "%H  Types: &f{0}", aiNames.Join());
+                p.Message("%H  Types: &f{0}", aiNames.Join());
             } else if (message.CaselessEq("stackblock")) {
-                Player.Message(p, "%HSets the block this block is converted into, when placed on top of " +
+                p.Message("%HSets the block this block is converted into, when placed on top of " +
                                "another of the same block. (e.g. placing two slabs on each other becomes a double slab)");
             } else if (message.CaselessEq("opblock")) {
-                Player.Message(p, "%HMarks the block as being on OP block. OP blocks can't be blown up by explosions, " +
+                p.Message("%HMarks the block as being on OP block. OP blocks can't be blown up by explosions, " +
                                "and can't be replaced in games when build type is ModifyOnly.");
             } else if (message.CaselessEq("odoor")) {
-                Player.Message(p, "%HSets the block that this block is changed into, when activated by a neighbouring door.");
+                p.Message("%HSets the block that this block is changed into, when activated by a neighbouring door.");
             } else if (message.CaselessEq("drownable")) {
-                Player.Message(p, "%HSets whether this block can drown players.");
-                Player.Message(p, "%T/Map death %Hmust be enabled for players to drown.");
+                p.Message("%HSets whether this block can drown players.");
+                p.Message("%T/Map death %Hmust be enabled for players to drown.");
             } else if (message.CaselessEq("grass")) {
-                Player.Message(p, "%HSets the block that this block is changed into, when exposed to sunlight");
-                Player.Message(p, "%HLeave block blank to remove this behaviour.");
+                p.Message("%HSets the block that this block is changed into, when exposed to sunlight");
+                p.Message("%HLeave block blank to remove this behaviour.");
             } else if (message.CaselessEq("dirt")) {
-                Player.Message(p, "%HSets the block that this block is changed into, when no longer exposed to sunlight");
-                Player.Message(p, "%HLeave block blank to remove this behaviour.");
+                p.Message("%HSets the block that this block is changed into, when no longer exposed to sunlight");
+                p.Message("%HLeave block blank to remove this behaviour.");
             }  else {
-                Player.Message(p, "%WUnrecognised property \"{0}\"", message);
+                p.Message("%WUnrecognised property \"{0}\"", message);
             }
         }
     }

@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Chatting {  
-    public abstract class MessageCmd : Command {
+    public abstract class MessageCmd : Command2 {
         public override string type { get { return CommandTypes.Chat; } }
         
         protected bool TryMessageAction(Player p, string name, string msg, bool messageWho) {
@@ -28,9 +28,8 @@ namespace MCGalaxy.Commands.Chatting {
             if (!TryMessage(p, msg.Replace("λTARGET", reciever))) return false;
 
             if (messageWho && p != target && !Chat.Ignoring(target, p)) {
-                string giver = (p == null) ? "(console)" : p.ColoredName;
-                msg = msg.Replace("λNICK", giver);
-                Player.Message(target, msg.Replace("λTARGET", "you"));
+                msg = msg.Replace("λNICK", p.ColoredName);
+                target.Message(msg.Replace("λTARGET", "you"));
             }
             return true;
         }
@@ -44,13 +43,13 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public static bool CanSpeak(Player p, string cmd) {
-            if (p == null) return true;
+            if (p.IsConsole) return true;
             
             if (p.muted) { 
-                Player.Message(p, "Cannot use %T/{0} %Swhile muted.", cmd); return false; 
+                p.Message("Cannot use %T/{0} %Swhile muted.", cmd); return false; 
             }
             if (Server.chatmod && !p.voice) { 
-                Player.Message(p, "Cannot use %T/{0} %Swhile chat moderation is on without %T/Voice%S.", cmd); return false; 
+                p.Message("Cannot use %T/{0} %Swhile chat moderation is on without %T/Voice%S.", cmd); return false; 
             }
             return true;
         }
@@ -59,13 +58,13 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdHigh5 : MessageCmd {
         public override string name { get { return "High5"; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TryMessageAction(p, message, "λNICK %Sjust highfived λTARGET", true);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/High5 [player]");
-            Player.Message(p, "%HHigh five someone! :D");
+            p.Message("%T/High5 [player]");
+            p.Message("%HHigh five someone! :D");
         }
     }
 }

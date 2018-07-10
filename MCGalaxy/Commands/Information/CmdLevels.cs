@@ -18,35 +18,30 @@
 using System;
 
 namespace MCGalaxy.Commands.Info {   
-    public sealed class CmdLevels : Command {       
+    public sealed class CmdLevels : Command2 {       
         public override string name { get { return "Levels"; } }
         public override string shortcut { get { return "Maps"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            Player.Message(p, "Loaded maps [physics level] (&c[no] %Sif not visitable): ");
+            p.Message("Loaded maps [physics level] (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
                                    "Levels", "maps", message, false);
-            Player.Message(p, "Use %T/Worlds %Sfor all levels.");
+            p.Message("Use %T/Worlds %Sfor all levels.");
         }
         
         static string FormatMap(Player p, Level lvl) {            
-            bool canVisit = Player.IsSuper(p);
-            if (!canVisit) {
-                AccessResult access = lvl.VisitAccess.Check(p);
-                canVisit = access == AccessResult.Allowed || access == AccessResult.Whitelisted;
-            }
-            
+            bool canVisit = p.IsSuper || lvl.VisitAccess.CheckAllowed(p);
             string physics = " [" +  lvl.physics + "]";
             string visit = canVisit ? "" : " &c[no]";
             return lvl.ColoredName + physics + visit;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Levels");
-            Player.Message(p, "%HLists all loaded levels and their physics levels.");
+            p.Message("%T/Levels");
+            p.Message("%HLists all loaded levels and their physics levels.");
         }
     }
 }

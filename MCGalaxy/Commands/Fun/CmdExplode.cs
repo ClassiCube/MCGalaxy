@@ -21,13 +21,13 @@ using System;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdExplode : Command {
+    public sealed class CmdExplode : Command2 {
         public override string name { get { return "Explode"; } }
         public override string shortcut { get { return "ex"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Fun {
                 y = (ushort)who.Pos.BlockY;
                 z = (ushort)who.Pos.BlockZ;
                 if (DoExplode(p, who.level, x, y, z))
-                    Player.Message(p, who.ColoredName + " %Shas been exploded!");
+                    p.Message(who.ColoredName + " %Shas been exploded!");
             } else if (args.Length == 3) {
                 if (!CommandParser.GetUShort(p, args[0], "X", ref x)) return;
                 if (!CommandParser.GetUShort(p, args[1], "Y", ref y)) return;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Fun {
 
                 if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
                 if (DoExplode(p, p.level, x, y, z))
-                    Player.Message(p, "An explosion was made at {0}, {1}, {2}).", x, y, z);
+                    p.Message("An explosion was made at {0}, {1}, {2}).", x, y, z);
             } else {
                 Help(p);
             }
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool DoExplode(Player p, Level lvl, ushort x, ushort y, ushort z) {
             if (lvl.physics < 3 || lvl.physics == 5) {
-                Player.Message(p, "The physics on this level are not sufficient for exploding!"); return false;
+                p.Message("The physics on this level are not sufficient for exploding!"); return false;
             }
             
             BlockID old = lvl.GetBlock(x, y, z);
@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Explode %H- Satisfying all your exploding needs :)");
-            Player.Message(p, "%T/Explode me %H- Explodes at your location");
-            Player.Message(p, "%T/Explode [Player] %H- Explode the specified player");
-            Player.Message(p, "%T/Explode [x y z] %H- Explode at the specified co-ordinates");
+            p.Message("%T/Explode %H- Satisfying all your exploding needs :)");
+            p.Message("%T/Explode me %H- Explodes at your location");
+            p.Message("%T/Explode [Player] %H- Explode the specified player");
+            p.Message("%T/Explode [x y z] %H- Explode at the specified co-ordinates");
         }
     }
 }

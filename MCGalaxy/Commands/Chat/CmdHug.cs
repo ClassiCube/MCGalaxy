@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can death hug") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             string hugType = null;
@@ -41,17 +41,15 @@ namespace MCGalaxy.Commands.Chatting {
                 Player target = PlayerInfo.FindMatches(p, args[0]);
                 if (target == null) return;
             
-                if (p != null && target.Rank > p.Rank) {
-                    MessageTooHighRank(p, "&cdeath-hug%S", true); return;
-                }
+                if (!CheckRank(p, target, "&cdeath-hug%S", true)) return;
                 target.HandleDeath(Block.Stone, "@p %Sdied from a &cdeadly hug.");
             } 
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Hug [player] <type>");
-            Player.Message(p, "%HValid types are: &floving, friendly, creepy and deadly.");
-            Player.Message(p, "%HSpecifying no type or a non-existent type results in a normal hug.");
+            p.Message("%T/Hug [player] <type>");
+            p.Message("%HValid types are: &floving, friendly, creepy and deadly.");
+            p.Message("%HSpecifying no type or a non-existent type results in a normal hug.");
         }
     }
 }

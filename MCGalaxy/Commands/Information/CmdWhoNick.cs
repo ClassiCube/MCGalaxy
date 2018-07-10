@@ -19,18 +19,18 @@ using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWhoNick : Command {
+    public sealed class CmdWhoNick : Command2 {
         public override string name { get { return "WhoNick"; } }
         public override string shortcut { get { return "RealName"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             Player nick = FindNick(p, message);
             
             if (nick == null) return;
-            Player.Message(p, "This player's real username is " + nick.name);
+            p.Message("This player's real username is " + nick.name);
         }
         
         static Player FindNick(Player p, string nick) {
@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/WhoNick [nickname]");
-            Player.Message(p, "%HDisplays the player's real username");
+            p.Message("%T/WhoNick [nickname]");
+            p.Message("%HDisplays the player's real username");
         }
     }
 }

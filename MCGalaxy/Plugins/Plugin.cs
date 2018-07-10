@@ -62,7 +62,7 @@ namespace MCGalaxy {
     public abstract class Plugin_Simple : Plugin {
 
         public override void Help(Player p) {
-            Player.Message(p, "No help is available for this plugin.");
+            p.Message("No help is available for this plugin.");
         }
         
         public override string website { get { return "http://www.example.org"; } }

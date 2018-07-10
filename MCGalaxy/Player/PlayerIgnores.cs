@@ -55,7 +55,7 @@ namespace MCGalaxy {
             
             bool special = All || IRC || Titles || Nicks || EightBall || DrawOutput || WorldChanges;
             if (special || Names.Count > 0 || IRCNicks.Count > 0) {
-                Player.Message(p, "&cType &a/ignore list &cto see who you are still ignoring");
+                p.Message("&cType &a/ignore list &cto see who you are still ignoring");
             }
         }
         
@@ -86,23 +86,23 @@ namespace MCGalaxy {
         
         public void Output(Player p) {
             if (Names.Count > 0) {
-                Player.Message(p, "&cCurrently ignoring the following players:");
-                Player.Message(p, Names.Join(n => PlayerInfo.GetColoredName(p, n)));
+                p.Message("&cCurrently ignoring the following players:");
+                p.Message(Names.Join(n => PlayerInfo.GetColoredName(p, n)));
             }
             if (IRCNicks.Count > 0) {
-                Player.Message(p, "&cCurrently ignoring the following IRC nicks:");
-                Player.Message(p, IRCNicks.Join());
+                p.Message("&cCurrently ignoring the following IRC nicks:");
+                p.Message(IRCNicks.Join());
             }
             
-            if (All) Player.Message(p, "&cIgnoring all chat");
-            if (IRC) Player.Message(p, "&cIgnoring IRC chat");
+            if (All) p.Message("&cIgnoring all chat");
+            if (IRC) p.Message("&cIgnoring IRC chat");
             
-            if (Titles) Player.Message(p, "&cPlayer titles do not show before names in chat");
-            if (Nicks) Player.Message(p, "&cCustom player nicks do not show in chat");
+            if (Titles) p.Message("&cPlayer titles do not show before names in chat");
+            if (Nicks) p.Message("&cCustom player nicks do not show in chat");
             
-            if (EightBall) Player.Message(p, "&cIgnoring %T/8ball");            
-            if (DrawOutput) Player.Message(p, "&cIgnoring draw command output");           
-            if (WorldChanges) Player.Message(p, "&cIgnoring world change messages");
+            if (EightBall) p.Message("&cIgnoring %T/8ball");            
+            if (DrawOutput) p.Message("&cIgnoring draw command output");           
+            if (WorldChanges) p.Message("&cIgnoring world change messages");
         }
     }
 }

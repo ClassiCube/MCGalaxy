@@ -37,21 +37,21 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("bluespawn")) {
                 cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                Player.Message(p, "Set spawn of blue team to &b" + cfg.BlueSpawn);
+                p.Message("Set spawn of blue team to &b" + cfg.BlueSpawn);
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("redspawn")) {
                 cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                Player.Message(p, "Set spawn of red team to &b" + cfg.RedSpawn);
+                p.Message("Set spawn of red team to &b" + cfg.RedSpawn);
                 UpdateConfig(p, cfg);
             } else if (prop.CaselessEq("blueflag")) {
-                Player.Message(p, "Place or delete a block to set blue team's flag.");
+                p.Message("Place or delete a block to set blue team's flag.");
                 p.MakeSelection(1, null, BlueFlagCallback);
             } else if (prop.CaselessEq("redflag")) {
-                Player.Message(p, "Place or delete a block to set red team's flag.");
+                p.Message("Place or delete a block to set red team's flag.");
                 p.MakeSelection(1, null, RedFlagCallback);
             } else if (prop.CaselessEq("divider")) {
                 cfg.ZDivider = p.Pos.BlockZ;
-                Player.Message(p, "Set Z line divider to {0}.", cfg.ZDivider);
+                p.Message("Set Z line divider to {0}.", cfg.ZDivider);
                 UpdateConfig(p, cfg);
             } else {
                 Help(p, "set");
@@ -62,12 +62,12 @@ namespace MCGalaxy.Commands.Fun {
             CTFMapConfig cfg = RetrieveConfig(p);
             Vec3U16 P = (Vec3U16)marks[0];
             cfg.BlueFlagPos = P;
-            Player.Message(p, "Set flag position of blue team to ({0})", P);
+            p.Message("Set flag position of blue team to ({0})", P);
             
             block = p.level.GetBlock(P.X, P.Y, P.Z);
             if (block == Block.Air) block = Block.Blue;
             cfg.BlueFlagBlock = block;
-            Player.Message(p, "Set flag block of blue team to {0}", Block.GetName(p, block));
+            p.Message("Set flag block of blue team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);
             return false;
@@ -77,12 +77,12 @@ namespace MCGalaxy.Commands.Fun {
             CTFMapConfig cfg = RetrieveConfig(p);
             Vec3U16 P = (Vec3U16)marks[0];         
             cfg.RedFlagPos = P;
-            Player.Message(p, "Set flag position of red team to ({0})", P);
+            p.Message("Set flag position of red team to ({0})", P);
             
             block = p.level.GetBlock(P.X, P.Y, P.Z);
             if (block == Block.Air) block = Block.Red;
             cfg.RedFlagBlock = block;
-            Player.Message(p, "Set flag block of red team to {0}", Block.GetName(p, block));
+            p.Message("Set flag block of red team to {0}", Block.GetName(p, block));
             
             UpdateConfig(p, cfg);
             return false;
@@ -102,13 +102,13 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                Player.Message(p, "%T/CTF set redspawn/bluespawn");
-                Player.Message(p, "%HSets spawn of red/blue team to your position.");
-                Player.Message(p, "%T/CTF set redflag/blueflag");
-                Player.Message(p, "%HSets flag position and block of red/blue team to the next block you place or delete.");
-                Player.Message(p, "%T/CTF set divider");
-                Player.Message(p, "%HSets the divider line to your current Z position.");
-                Player.Message(p, "   %HRed team tags blue team when the Z position is less than the divider, " +
+                p.Message("%T/CTF set redspawn/bluespawn");
+                p.Message("%HSets spawn of red/blue team to your position.");
+                p.Message("%T/CTF set redflag/blueflag");
+                p.Message("%HSets flag position and block of red/blue team to the next block you place or delete.");
+                p.Message("%T/CTF set divider");
+                p.Message("%HSets the divider line to your current Z position.");
+                p.Message("   %HRed team tags blue team when the Z position is less than the divider, " +
                                "blue teams tags when Z position is more.");
             } else {
                 Help(p);
@@ -116,13 +116,13 @@ namespace MCGalaxy.Commands.Fun {
         }
                 
         public override void Help(Player p) {
-            Player.Message(p, "%T/CTF start <map> %H- Starts CTF game");
-            Player.Message(p, "%T/CTF stop %H- Stops CTF game");
-            Player.Message(p, "%T/CTF end %H- Ends current round of CTF");
-            Player.Message(p, "%T/CTF add/remove %H- Adds/removes current map from map list");
-            Player.Message(p, "%T/CTF set [property] %H- Sets a property. See %T/Help CTF set");
-            Player.Message(p, "%T/CTF status %H- View stats of both teams");
-            Player.Message(p, "%T/CTF go %H- Moves you to the current CTF map");
+            p.Message("%T/CTF start <map> %H- Starts CTF game");
+            p.Message("%T/CTF stop %H- Stops CTF game");
+            p.Message("%T/CTF end %H- Ends current round of CTF");
+            p.Message("%T/CTF add/remove %H- Adds/removes current map from map list");
+            p.Message("%T/CTF set [property] %H- Sets a property. See %T/Help CTF set");
+            p.Message("%T/CTF status %H- View stats of both teams");
+            p.Message("%T/CTF go %H- Moves you to the current CTF map");
         }
     }
 }

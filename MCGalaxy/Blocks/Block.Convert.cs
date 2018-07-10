@@ -35,7 +35,7 @@ namespace MCGalaxy {
             if (IsPhysicsType(block)) return coreNames[block];
             
             BlockDefinition def;
-            if (!Player.IsSuper(p)) {
+            if (!p.IsSuper) {
                 def = p.level.GetBlockDef(block);
             } else {
                 def = BlockDefinition.GlobalDefs[block];
@@ -46,7 +46,7 @@ namespace MCGalaxy {
         }
         
         public static BlockID Parse(Player p, string input) {
-            BlockDefinition[] defs = Player.IsSuper(p) ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition[] defs = p.IsSuper ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockID block;
             // raw ID is treated specially, before names
             if (BlockID.TryParse(input, out block)) {

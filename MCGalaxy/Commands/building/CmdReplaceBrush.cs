@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             
             string replaceCmd = ReplaceNot ? "ReplaceNot" : "Replace";
             if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("Brush")) {
-                Player.Message(p, "You cannot use /brush and/or /" + replaceCmd + 
+                p.Message("You cannot use /brush and/or /" + replaceCmd + 
                                    ", so therefore cannot use this command."); return null;
             }
             
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building {
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {
-                Player.Message(p, "No brush found with name \"{0}\".", args[1]);
+                p.Message("No brush found with name \"{0}\".", args[1]);
                 CmdBrush.List(p);
                 return null;
             }
@@ -62,10 +62,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ReplaceBrush [block] [brush name] <brush args>");
-            Player.Message(p, "%HReplaces all blocks of the given type, " +
+            p.Message("%T/ReplaceBrush [block] [brush name] <brush args>");
+            p.Message("%HReplaces all blocks of the given type, " +
                                "in the specified area with the output of the given brush.");
-            Player.Message(p, BrushHelpLine);
+            p.Message(BrushHelpLine);
         }
     }
     
@@ -76,10 +76,10 @@ namespace MCGalaxy.Commands.Building {
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ReplaceNotBrush [block] [brush name] <brush args>");
-            Player.Message(p, "%HReplaces all blocks (except for the given block), " +
+            p.Message("%T/ReplaceNotBrush [block] [brush name] <brush args>");
+            p.Message("%HReplaces all blocks (except for the given block), " +
                                "in the specified area with the output of the given brush.");
-            Player.Message(p, BrushHelpLine);
+            p.Message(BrushHelpLine);
         }
     }
 }

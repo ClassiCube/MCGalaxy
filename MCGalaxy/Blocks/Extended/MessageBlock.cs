@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks.Extended {
         public static void Execute(Player p, string message) {
             string text;
             List<string> cmds = GetParts(message, out text);
-            if (text != null) Player.Message(p, text);
+            if (text != null) p.Message(text);
             
             if (cmds.Count == 1) {
                 string[] parts = cmds[0].SplitSpaces(2);
@@ -70,7 +70,7 @@ namespace MCGalaxy.Blocks.Extended {
             bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
             
             if (p.group.CanExecute(cmd) && (allCmds || mbUseable)) return true;
-            Player.Message(p, "You cannot use %T/{0} %Sin a messageblock.", cmd.name);
+            p.Message("You cannot use %T/{0} %Sin a messageblock.", cmd.name);
             return false;
         }
         

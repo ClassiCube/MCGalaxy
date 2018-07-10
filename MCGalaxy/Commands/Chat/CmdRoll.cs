@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands.Chatting {
     public sealed class CmdRoll : MessageCmd {
         public override string name { get { return "Roll"; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             int min = 1, max = 6;            
             if (message.Length > 0 && !CommandParser.GetInt(p, message, "Min", ref min)) return;
@@ -35,8 +35,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Roll [min] [max]");
-            Player.Message(p, "%HRolls a random number between [min] and [max].");
+            p.Message("%T/Roll [min] [max]");
+            p.Message("%HRolls a random number between [min] and [max].");
         }
     }
 }

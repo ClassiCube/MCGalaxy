@@ -21,15 +21,15 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWorlds : Command {
+    public sealed class CmdWorlds : Command2 {
         public override string name { get { return "Worlds"; } }
         public override string shortcut { get { return "Unloaded"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] files = LevelInfo.AllMapFiles();
-            Player.Message(p, "Maps (&c[no] %Sif not visitable): ");
+            p.Message("Maps (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, files, (file) => FormatMap(p, file),
                                    "Worlds", "maps", message, false);
         }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Info {
             LevelPermission maxPerm = visitP;
             if (maxPerm < buildP) maxPerm = buildP;
             
-            string visit = loadOnGoto && (p == null || p.Rank >= visitP) ? "" : " &c[no]";
+            string visit = loadOnGoto && p.Rank >= visitP ? "" : " &c[no]";
             return Group.GetColor(maxPerm) + map + visit;
         }
         
@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands.Info {
         struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Worlds");
-            Player.Message(p, "%HLists maps/levels, and their accessible state.");
+            p.Message("%T/Worlds");
+            p.Message("%HLists maps/levels, and their accessible state.");
         }
     }
 }

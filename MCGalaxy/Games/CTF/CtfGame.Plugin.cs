@@ -78,9 +78,9 @@ namespace MCGalaxy.Games {
             CtfData data = Get(p);
             
             if (data.TeamChatting) {
-                Player.Message(p, "You are no longer chatting with your team!");
+                p.Message("You are no longer chatting with your team!");
             } else {
-                Player.Message(p, "You are now chatting with your team!");
+                p.Message("You are now chatting with your team!");
             }
             
             data.TeamChatting = !data.TeamChatting;
@@ -92,7 +92,7 @@ namespace MCGalaxy.Games {
             CtfTeam team = TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
-                Player.Message(p, "You are not on a team!");
+                p.Message("You are not on a team!");
                 p.cancelBlock = true;
                 return;
             }

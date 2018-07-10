@@ -19,14 +19,14 @@ using System;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdPause : Command {
+    public sealed class CmdPause : Command2 {
         public override string name { get { return "Pause"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             int seconds = 30;
-            Level lvl = Player.IsSuper(p) ? Server.mainLevel : p.level;
+            Level lvl = p.IsSuper ? Server.mainLevel : p.level;
             
             if (message.Length > 0) {
                 string[] parts = message.SplitSpaces();
@@ -67,10 +67,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Pause [map] [seconds]");
-            Player.Message(p, "%HPauses physics on the given map for the specified number of seconds.");
-            Player.Message(p, "%H  If [map] is not given, pauses physics on the current map.");
-            Player.Message(p, "%H  If [seconds] is not given, pauses physics for 30 seconds.");
+            p.Message("%T/Pause [map] [seconds]");
+            p.Message("%HPauses physics on the given map for the specified number of seconds.");
+            p.Message("%H  If [map] is not given, pauses physics on the current map.");
+            p.Message("%H  If [seconds] is not given, pauses physics for 30 seconds.");
         }
     }
 }

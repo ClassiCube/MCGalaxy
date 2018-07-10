@@ -116,12 +116,12 @@ namespace MCGalaxy {
         }
         
         public bool CanJoin(Player p) {
-            if (p == null) return true;
+            if (p.IsConsole) return true;
             
             bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
             if (!VisitAccess.CheckDetailed(p, ignorePerms)) return false;
             if (Server.lockdown.Contains(name)) {
-                Player.Message(p, "The level " + name + " is locked."); return false;
+                p.Message("The level " + name + " is locked."); return false;
             }
             return true;
         }
@@ -174,7 +174,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == this) {
-                    Player.Message(p, "You were moved to the main level as " + ColoredName + " %Swas unloaded.");
+                    p.Message("You were moved to the main level as " + ColoredName + " %Swas unloaded.");
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }

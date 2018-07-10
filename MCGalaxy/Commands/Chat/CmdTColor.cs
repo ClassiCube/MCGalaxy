@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
         }
-        public override void Use(Player p, string message) { UsePlayer(p, message, "title color"); }
+        public override void Use(Player p, string message, CommandData data) { UsePlayer(p, message, "title color"); }
         
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else  {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
-                if (color == who.titlecolor) { Player.Message(p, who.ColoredName + " %Salready has that title color."); return; }
+                if (color == who.titlecolor) { p.Message(who.ColoredName + " %Salready has that title color."); return; }
                 
                 Chat.MessageFrom(who, "λNICK %Shad their title color changed to " + color + Colors.Name(color));
             }
@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/TColor [player] [color]");
-            Player.Message(p, "%HSets the title color of [player]");
-            Player.Message(p, "%H  If [color] is not given, title color is removed.");
-            Player.Message(p, "%HTo see a list of all colors, use %T/Help colors.");
+            p.Message("%T/TColor [player] [color]");
+            p.Message("%HSets the title color of [player]");
+            p.Message("%H  If [color] is not given, title color is removed.");
+            p.Message("%HTo see a list of all colors, use %T/Help colors.");
         }
     }
 }

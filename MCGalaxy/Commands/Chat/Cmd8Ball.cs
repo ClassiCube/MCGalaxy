@@ -21,7 +21,7 @@ using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class Cmd8Ball : Command {
+    public sealed class Cmd8Ball : Command2 {
         public override string name { get { return "8ball"; } }
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
@@ -30,13 +30,13 @@ namespace MCGalaxy.Commands.Chatting {
         static DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);
         
-        public override void Use(Player p, string question) {
+        public override void Use(Player p, string question, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
             if (question.Length == 0) { Help(p); return; }
             
             TimeSpan delta = nextUse - DateTime.UtcNow;
             if (delta.TotalSeconds > 0) {
-                Player.Message(p, "The 8-ball is still recharging, wait another {0} seconds.",
+                p.Message("The 8-ball is still recharging, wait another {0} seconds.",
                                (int)Math.Ceiling(delta.TotalSeconds));
                 return;
             }
@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands.Chatting {
         
         static bool Filter8Ball(Player p, object arg) { return !p.Ignores.EightBall; }
         public override void Help(Player p) {
-            Player.Message(p, "%T/8ball [yes or no question]");
-            Player.Message(p, "%HGet an answer from the all-knowing 8-Ball!");
+            p.Message("%T/8ball [yes or no question]");
+            p.Message("%HGet an answer from the all-knowing 8-Ball!");
         }
     }
 }

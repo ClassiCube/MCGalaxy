@@ -20,12 +20,12 @@ using System.IO;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdMute : Command {
+    public sealed class CmdMute : Command2 {
         public override string name { get { return "Mute"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             
@@ -58,19 +58,18 @@ namespace MCGalaxy.Commands.Moderation {
         static void Unmute(Player p, string name, string[] args) {
             string reason = args.Length > 1 ? args[1] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
-            if (reason == null) return;
-            
-            if (p != null && p.name == name) { Player.Message(p, "You cannot unmute yourself."); return; }
+            if (reason == null) return;            
+            if (p.name == name) { p.Message("You cannot unmute yourself."); return; }
             
             ModAction action = new ModAction(name, p, ModActionType.Unmuted, reason);
             OnModActionEvent.Call(action);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Mute [player] <timespan> <reason>");
-            Player.Message(p, "%HMutes player for <timespan>, or unmutes that player.");
-            Player.Message(p, "%H If <timespan> is not given, mutes for auto spam mute timespan");
-            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("%T/Mute [player] <timespan> <reason>");
+            p.Message("%HMutes player for <timespan>, or unmutes that player.");
+            p.Message("%H If <timespan> is not given, mutes for auto spam mute timespan");
+            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

@@ -64,15 +64,15 @@ namespace MCGalaxy.Games {
         
         public override void OutputStatus(Player p) {
             Player[] players = Players.Items;            
-            Player.Message(p, "Players in countdown:");
+            p.Message("Players in countdown:");
             
             if (RoundInProgress) {               
-                Player.Message(p, players.Join(pl => FormatPlayer(pl)));
+                p.Message(players.Join(pl => FormatPlayer(pl)));
             } else {
-                Player.Message(p, players.Join(pl => pl.ColoredName));
+                p.Message(players.Join(pl => pl.ColoredName));
             }
             
-            Player.Message(p, squaresLeft.Count + " squares left");
+            p.Message(squaresLeft.Count + " squares left");
         }
         
         string FormatPlayer(Player pl) {
@@ -83,7 +83,7 @@ namespace MCGalaxy.Games {
         public override void Start(Player p, string map, int rounds) {
             map = "countdown";
             if (!LevelInfo.MapExists(map)) {
-                Player.Message(p, "Countdown level not found, generating..");
+                p.Message("Countdown level not found, generating..");
                 GenerateMap(p, 32, 32, 32);
             }
             
@@ -110,7 +110,7 @@ namespace MCGalaxy.Games {
             Map = lvl;
             
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
-            Player.Message(p, format, width, height, length);
+            p.Message(format, width, height, length);
             PlayerActions.ChangeMap(p, "countdown");
             
             Position pos = Position.FromFeetBlockCoords(8, 23, 17);
@@ -160,11 +160,11 @@ namespace MCGalaxy.Games {
         public override void PlayerJoinedGame(Player p) {
             if (!Players.Contains(p)) {
                 Players.Add(p);
-                Player.Message(p, "You've joined countdown!");
+                p.Message("You've joined countdown!");
                 Chat.MessageFrom(p, "λNICK %Sjoined countdown!");
                 if (p.level != Map) PlayerActions.ChangeMap(p, "countdown");
             } else {
-                Player.Message(p, "You've already joined countdown. To leave, go to another map.");
+                p.Message("You've already joined countdown. To leave, go to another map.");
             }
         }
         

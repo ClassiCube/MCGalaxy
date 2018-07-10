@@ -19,12 +19,12 @@ using MCGalaxy.DB;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {    
-    public sealed class CmdWarn : Command {        
+    public sealed class CmdWarn : Command2 {        
         public override string name { get { return "Warn"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
 
@@ -43,9 +43,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Warn [player] <reason>");
-            Player.Message(p, "%HWarns a player. Players are kicked after 3 warnings.");
-            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("%T/Warn [player] <reason>");
+            p.Message("%HWarns a player. Players are kicked after 3 warnings.");
+            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

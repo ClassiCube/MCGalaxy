@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         public unsafe override void Configure(DrawOp op, Player p) {
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "Calculating noise distribution...");
+                p.Message("Calculating noise distribution...");
             }
             
             // Initalise our noise histogram
@@ -101,7 +101,7 @@ namespace MCGalaxy.Drawing.Brushes {
             thresholds[blocks.Length - 1] = 1;
             
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "Finished calculating, now drawing.");
+                p.Message("Finished calculating, now drawing.");
             }
         }
         

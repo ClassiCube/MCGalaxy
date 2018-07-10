@@ -20,15 +20,15 @@ using System.Net;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Moderation {
-    public class CmdLocation : Command {
+    public class CmdLocation : Command2 {
         public override string name { get { return "Location"; } }
         public override string shortcut { get { return "lo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
-                if (Player.IsSuper(p)) { SuperRequiresArgs(p, "player name"); return; }
+                if (p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
                 message = p.name;
             }
             
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             string target = message;
             
             if (match == null) {
-                Player.Message(p, "Searching PlayerDB for \"{0}\"..", message);
+                p.Message("Searching PlayerDB for \"{0}\"..", message);
                 target = PlayerInfo.FindOfflineIPMatches(p, message, out ip);
                 if (target == null) return;
             } else {
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (HttpUtil.IsPrivateIP(ip)) {
-                Player.Message(p, "%WPlayer has an internal IP, cannot trace"); return;
+                p.Message("%WPlayer has an internal IP, cannot trace"); return;
             }
 
             string country = null;
@@ -53,12 +53,12 @@ namespace MCGalaxy.Commands.Moderation {
                 country = client.DownloadString("http://ipinfo.io/" + ip + "/country");
                 country = country.Replace("\n", "");
             }
-            Player.Message(p, "The IP of {0} %Shas been traced to: &b" + country, PlayerInfo.GetColoredName(p, target));
+            p.Message("The IP of {0} %Shas been traced to: &b" + country, PlayerInfo.GetColoredName(p, target));
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Location [name]");
-            Player.Message(p, "%HTracks down the country of the IP associated with [name].");
+            p.Message("%T/Location [name]");
+            p.Message("%HTracks down the country of the IP associated with [name].");
         }
     }
 }

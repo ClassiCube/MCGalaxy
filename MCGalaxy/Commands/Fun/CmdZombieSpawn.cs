@@ -179,12 +179,12 @@ using System.Threading;
         // This one controls what happens when you use /help [commandname].
         public override void Help(Player p)
         {
-            Player.Message(p, "/zombiespawn <flag> <x> <y> <z> - Spawns waves of zombies.");
-            Player.Message(p, "<flag> - 'r' for random or 'd' for diameter");
-            Player.Message(p, "<x> - the number of waves");
-            Player.Message(p, "<y> - the length of the waves in seconds");
-            Player.Message(p, "<z> - the number of zombies spawned/diameter of spawn");
-            Player.Message(p, "/zombiespawn x - Destroys all zombies.");
+            p.Message("/zombiespawn <flag> <x> <y> <z> - Spawns waves of zombies.");
+            p.Message("<flag> - 'r' for random or 'd' for diameter");
+            p.Message("<x> - the number of waves");
+            p.Message("<y> - the length of the waves in seconds");
+            p.Message("<z> - the number of zombies spawned/diameter of spawn");
+            p.Message("/zombiespawn x - Destroys all zombies.");
         }
 
         public struct CatchPos

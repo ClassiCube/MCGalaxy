@@ -16,24 +16,24 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdTrust : Command {
+    public sealed class CmdTrust : Command2 {
         public override string name { get { return "Trust"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.IndexOf(' ') != -1) { Help(p); return; }
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
             who.ignoreGrief = !who.ignoreGrief;
-            Player.Message(p, who.ColoredName + "%S's trust status: " + who.ignoreGrief);
-            Player.Message(who, "Your trust status was changed to: " + who.ignoreGrief);
+            p.Message(who.ColoredName + "%S's trust status: " + who.ignoreGrief);
+            who.Message("Your trust status was changed to: " + who.ignoreGrief);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Trust [name]");
-            Player.Message(p, "%HTurns off the anti-grief for [name]");
+            p.Message("%T/Trust [name]");
+            p.Message("%HTurns off the anti-grief for [name]");
         }
     }
 }

@@ -20,13 +20,13 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdMeasure : Command {      
+    public sealed class CmdMeasure : Command2 {      
         public override string name { get { return "Measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             BlockID[] toCount = null;
             if (message.Length > 0) {
                 string[] args = message.SplitSpaces();
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
             
-            Player.Message(p, "Place or break two blocks to determine the edges.");
+            p.Message("Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for %SMeasure", toCount, DoMeasure);
         }
         
@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands.Building {
 
             int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
             int volume = width * height * length;
-            Player.Message(p, "Measuring from &a({0}) %Sto &a({1})", min, max);
-            Player.Message(p, "  &b{0} %Swide, &b{1} %Shigh, &b{2} %Slong, {3} blocks",
+            p.Message("Measuring from &a({0}) %Sto &a({1})", min, max);
+            p.Message("  &b{0} %Swide, &b{1} %Shigh, &b{2} %Slong, {3} blocks",
                            width, height, length, volume);
             
             string title = "Block types: ";
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string blocks = toCount.Join(bl => Block.GetName(p, bl) + FormatCount(counts[bl], volume));
-            Player.Message(p, title +  blocks);
+            p.Message(title +  blocks);
             return true;
         }
         
@@ -94,10 +94,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Measure <block1> <block2>..");
-            Player.Message(p, "%HMeasures all the blocks between two points");
-            Player.Message(p, "%HShows information such as dimensions, most frequent blocks");
-            Player.Message(p, "%H  <blocks> optionally indicates which blocks to only count");
+            p.Message("%T/Measure <block1> <block2>..");
+            p.Message("%HMeasures all the blocks between two points");
+            p.Message("%HShows information such as dimensions, most frequent blocks");
+            p.Message("%H  <blocks> optionally indicates which blocks to only count");
         }
     }
 }

@@ -24,50 +24,50 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "Pay"; } }
         public override bool MessageBlockRestricted { get { return true; } }
         
-        public override void Use(Player p, string message) {
-            EcoTransaction data;
+        public override void Use(Player p, string message, CommandData data) {
+            EcoTransaction trans;
             bool all = false;
-            if (!ParseArgs(p, message, ref all, "pay", out data)) return;
+            if (!ParseArgs(p, message, ref all, "pay", out trans)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
+            Player who = PlayerInfo.FindMatches(p, trans.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "You cannot pay yourself &3" + ServerConfig.Currency); return; }
-            int money, srcMoney = Player.IsSuper(p) ? int.MaxValue : p.money;
+            if (p == who) { p.Message("You cannot pay yourself &3" + ServerConfig.Currency); return; }
+            int money, srcMoney = p.IsSuper ? int.MaxValue : p.money;
             
             if (who == null) {
-                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
-                if (data.TargetName == null) return;
+                trans.TargetName = Economy.FindMatches(p, trans.TargetName, out money);
+                if (trans.TargetName == null) return;
                 
-                if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
-                money += data.Amount;
-                Economy.UpdateMoney(data.TargetName, money);
+                if (!IsLegalPayment(p, srcMoney, money, trans.Amount)) return;
+                money += trans.Amount;
+                Economy.UpdateMoney(trans.TargetName, money);
             } else {
-                data.TargetName = who.name; 
+                trans.TargetName = who.name; 
                 money = who.money;
                 
-                if (!IsLegalPayment(p, srcMoney, money, data.Amount)) return;
-                who.SetMoney(who.money + data.Amount);
+                if (!IsLegalPayment(p, srcMoney, money, trans.Amount)) return;
+                who.SetMoney(who.money + trans.Amount);
             }
             
-            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
-            data.Type = EcoTransactionType.Payment;
-            OnEcoTransactionEvent.Call(data);
+            trans.TargetFormatted = PlayerInfo.GetColoredName(p, trans.TargetName);
+            trans.Type = EcoTransactionType.Payment;
+            OnEcoTransactionEvent.Call(trans);
         }
 
         static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
             if (receiver + amount > 16777215) { 
-                Player.Message(p, "%WPlayers cannot have over &f16777215 &3" + ServerConfig.Currency); return false; 
+                p.Message("%WPlayers cannot have over &f16777215 &3" + ServerConfig.Currency); return false; 
             }
             if (payer < amount) { 
-                Player.Message(p, "%WYou don't have enough &3" + ServerConfig.Currency); return false; 
+                p.Message("%WYou don't have enough &3" + ServerConfig.Currency); return false; 
             }
             return true;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Pay [player] [amount] <reason>");
-            Player.Message(p, "%HPays [amount] &3{0} %Hto [player]", ServerConfig.Currency);
+            p.Message("%T/Pay [player] [amount] <reason>");
+            p.Message("%HPays [amount] &3{0} %Hto [player]", ServerConfig.Currency);
         }
     }
 }

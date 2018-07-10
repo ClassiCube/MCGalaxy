@@ -21,7 +21,7 @@ using System.IO;
 using MCGalaxy.Bots;
 
 namespace MCGalaxy.Commands.Bots{
-    public sealed class CmdBotAI : Command {
+    public sealed class CmdBotAI : Command2 {
         public override string name { get { return "BotAI"; } }
         public override string shortcut { get { return "bai"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Bots{
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
             if (cmd.CaselessEq("list")) {
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Bots{
             string ai = args[1].ToLower();
 
             if (!Formatter.ValidName(p, ai, "bot AI")) return;
-            if (ai == "hunt" || ai == "kill") { Player.Message(p, "Reserved for special AI."); return; }
+            if (ai == "hunt" || ai == "kill") { p.Message("Reserved for special AI."); return; }
 
             if (IsCreateCommand(cmd)) {
                 HandleAdd(p, ai, args);
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Bots{
             if (!Directory.Exists("bots/deleted"))
                 Directory.CreateDirectory("bots/deleted");
             if (!File.Exists("bots/" + ai)) {
-                Player.Message(p, "Could not find specified bot AI."); return;
+                p.Message("Could not find specified bot AI."); return;
             }
             
             for (int attempt = 0; attempt < 10; attempt++) {
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Bots{
             } else {
                 File.Move("bots/" + ai, "bots/deleted/" + ai + attempt);
             }
-            Player.Message(p, "Deleted bot AI &b" + ai);
+            p.Message("Deleted bot AI &b" + ai);
         }
         
         static void DeleteLast(Player p, string ai) {
@@ -90,12 +90,12 @@ namespace MCGalaxy.Commands.Bots{
             if (lines.Count > 0) lines.RemoveAt(lines.Count - 1);
 
             File.WriteAllLines("bots/" + ai, lines.ToArray());
-            Player.Message(p, "Deleted last instruction from bot AI &b" + ai);
+            p.Message("Deleted last instruction from bot AI &b" + ai);
         }
 
         void HandleAdd(Player p, string ai, string[] args) {
             if (!File.Exists("bots/" + ai)) {
-                Player.Message(p, "Created new bot AI: &b" + ai);
+                p.Message("Created new bot AI: &b" + ai);
                 using (StreamWriter w = new StreamWriter("bots/" + ai)) {
                     // For backwards compatibility
                     w.WriteLine("#Version 2");
@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Bots{
             } else {
                 string instruction = ScriptFile.Append(p, ai, action, args);
                 if (instruction != null) {
-                    Player.Message(p, "Appended " + instruction + " instruction to bot AI &b" + ai);
+                    p.Message("Appended " + instruction + " instruction to bot AI &b" + ai);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace MCGalaxy.Commands.Bots{
                     }
                 }
             }
-            Player.Message(p, "Appended all instructions in reverse order to bot AI &b" + ai);
+            p.Message("Appended all instructions in reverse order to bot AI &b" + ai);
         }
         
         void HandleList(Player p, string modifier) {
@@ -136,34 +136,34 @@ namespace MCGalaxy.Commands.Bots{
         
         void HandleInfo(Player p, string ai) {
             if (!File.Exists("bots/" + ai)) {
-                Player.Message(p, "There is no bot AI with that name."); return;
+                p.Message("There is no bot AI with that name."); return;
             }
             string[] lines = File.ReadAllLines("bots/" + ai);
             foreach (string l in lines) {
                 if (l.Length == 0 || l[0] == '#') continue;
-                Player.Message(p, l);
+                p.Message(l);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BotAI del [name] %H- deletes that AI");
-            Player.Message(p, "%T/BotAI del [name] last%H- deletes last instruction of that AI");
-            Player.Message(p, "%T/BotAI info [name] %H- prints list of instructions that AI has");
-            Player.Message(p, "%T/BotAI list %H- lists all current AIs");
-            Player.Message(p, "%T/BotAI add [name] [instruction] <args>");
+            p.Message("%T/BotAI del [name] %H- deletes that AI");
+            p.Message("%T/BotAI del [name] last%H- deletes last instruction of that AI");
+            p.Message("%T/BotAI info [name] %H- prints list of instructions that AI has");
+            p.Message("%T/BotAI list %H- lists all current AIs");
+            p.Message("%T/BotAI add [name] [instruction] <args>");
             
-            Player.Message(p, "%HInstructions: %S{0}, reverse",
+            p.Message("%HInstructions: %S{0}, reverse",
                            BotInstruction.Instructions.Join(ins => ins.Name));
-            Player.Message(p, "%HTo see detailed help, type %T/Help BotAI [instruction]");
+            p.Message("%HTo see detailed help, type %T/Help BotAI [instruction]");
         }
         
         public override void Help(Player p, string message) {
             BotInstruction ins = BotInstruction.Find(message);
             if (ins == null) {
-                Player.Message(p, "%HInstructions: %S{0}, reverse",
+                p.Message("%HInstructions: %S{0}, reverse",
                                BotInstruction.Instructions.Join(ins2 => ins2.Name));
             } else {
-                Player.MessageLines(p, ins.Help);
+                p.MessageLines(ins.Help);
             }
         }
     }

@@ -21,22 +21,22 @@ using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdFly : Command {
+    public sealed class CmdFly : Command2 {
         public override string name { get { return "Fly"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseFly(p, p.level)) {
-                Player.Message(p, "You cannot use %T/Fly %Son this map.");
+                p.Message("You cannot use %T/Fly %Son this map.");
                 p.isFlying = false; return;
             }
             
             p.isFlying = !p.isFlying;
             if (!p.isFlying) return;
             
-            Player.Message(p, "You are now flying. &cJump!");
+            p.Message("You are now flying. &cJump!");
             
             FlyState state = new FlyState();
             state.player = p;
@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Misc {
             foreach (Vec3U16 pos in state.lastGlass) {
                 p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Air);
             }            
-            Player.Message(p, "Stopped flying");
+            p.Message("Stopped flying");
             task.Repeating = false;
         }
 
@@ -99,10 +99,10 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
-            Player.Message(p, "%T/Fly");
-            Player.Message(p, "%HCreates a glass platform underneath you that moves with you.");
-            Player.Message(p, "%H  May not work if you have high latency.");
-            Player.Message(p, "%H  Cannot be used on maps which have -hax in their motd. " +
+            p.Message("%T/Fly");
+            p.Message("%HCreates a glass platform underneath you that moves with you.");
+            p.Message("%H  May not work if you have high latency.");
+            p.Message("%H  Cannot be used on maps which have -hax in their motd. " +
                            "(unless you are {0}%H+ and the motd has +ophax)", name);
         }
     }

@@ -18,12 +18,12 @@
 using System;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdBanInfo : Command {
+    public sealed class CmdBanInfo : Command2 {
         public override string name { get { return "BanInfo"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) message = p.name;
             
@@ -56,21 +56,21 @@ namespace MCGalaxy.Commands.Info {
                 string grpName = Group.GetColoredName(prevRank);
                 msg += " %S(Former rank: " + grpName + "%S)";
             }
-            Player.Message(p, msg);
+            p.Message(msg);
             
             if (tempExpiry >= DateTime.UtcNow) {
                 TimeSpan delta = tempExpiry - DateTime.UtcNow;
-                Player.Message(p, "Temp-banned %S by {1} %Sfor another {0}",
+                p.Message("Temp-banned %S by {1} %Sfor another {0}",
                                delta.Shorten(), GetName(p, tempBanner));
                 if (tempReason.Length > 0) {
-                    Player.Message(p, "Reason: {0}",tempReason);
+                    p.Message("Reason: {0}",tempReason);
                 }
             }
             
             if (banner != null) {
                 DisplayDetails(p, banner, reason, time, permaBanned ? "Banned" : "Last banned");
             } else {
-                Player.Message(p, "No previous bans recorded for {0}%S.", colName);
+                p.Message("No previous bans recorded for {0}%S.", colName);
             }            
             Ban.GetUnbanData(plName, out banner, out reason, out time);
             DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
@@ -80,9 +80,9 @@ namespace MCGalaxy.Commands.Info {
             if (banner == null) return;
             
             TimeSpan delta = DateTime.UtcNow - time;
-            Player.Message(p, "{0} {1} ago by {2}",
+            p.Message("{0} {1} ago by {2}",
                            type, delta.Shorten(), GetName(p, banner));
-            Player.Message(p, "Reason: {0}", reason);
+            p.Message("Reason: {0}", reason);
         }
         
         static string GetName(Player p, string user) {
@@ -92,8 +92,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/BanInfo [player]");
-            Player.Message(p, "%HOutputs information about current and/or previous ban/unban for that player.");
+            p.Message("%T/BanInfo [player]");
+            p.Message("%HOutputs information about current and/or previous ban/unban for that player.");
         }
     }
 }

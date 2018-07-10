@@ -18,33 +18,31 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdOHide : Command {
+    public sealed class CmdOHide : Command2 {
         public override string name { get { return "OHide"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces();
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (p != null && who.Rank >= p.Rank) {
-                MessageTooHighRank(p, "hide", false); return;
-            }
+            if (!CheckRank(p, who, "hide", false)) return;
             
             bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
-            if (own) { who.oHideRank = p == null ? LevelPermission.Admin : p.Rank; }
+            if (own) who.oHideRank = data.Rank;
             
             Command.Find("Hide").Use(who, "");
-            Player.Message(p, "Hidden {0} %Sfrom players below {1} rank",
+            p.Message("Hidden {0} %Sfrom players below {1} rank",
                            who.ColoredName, own ? "your" : "their");
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/OHide [player] %H- Hides/unhides the player specified.");
-            Player.Message(p, "%T/OHide [player] myrank %H- Hides/unhides the player specified to players below your rank.");
-            Player.Message(p, "%HOnly works on players of lower rank.");
+            p.Message("%T/OHide [player] %H- Hides/unhides the player specified.");
+            p.Message("%T/OHide [player] myrank %H- Hides/unhides the player specified to players below your rank.");
+            p.Message("%HOnly works on players of lower rank.");
         }
     }
 }

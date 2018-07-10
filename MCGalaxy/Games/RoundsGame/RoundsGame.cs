@@ -42,10 +42,10 @@ namespace MCGalaxy.Games {
         public virtual void Start(Player p, string map, int rounds) {
             map = GetStartMap(this, map);
             if (map == null) {
-                Player.Message(p, "No maps have been setup for {0} yet", GameName); return;
+                p.Message("No maps have been setup for {0} yet", GameName); return;
             }
             if (!SetMap(map)) {
-                Player.Message(p, "Failed to load initial map!"); return;
+                p.Message("Failed to load initial map!"); return;
             }
             
             Chat.MessageGlobal("A game of {0} is starting on {1}%S!", GameName, Map.ColoredName);
@@ -101,7 +101,7 @@ namespace MCGalaxy.Games {
         protected virtual bool SetMap(string map) {
             Picker.QueuedMap = null;
             Level next = LevelInfo.FindExact(map);
-            if (next == null) next = CmdLoad.LoadLevel(null, map);
+            if (next == null) next = CmdLoad.LoadLevel(Player.Console, map);
             if (next == null) return false;
             
             Map = next;

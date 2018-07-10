@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
                     CtfData otherData = Get(other);
 
                     otherData.TagCooldown = true;
-                    Player.Message(other, p.ColoredName + " %Stagged you!");
+                    other.Message(p.ColoredName + " %Stagged you!");
                     PlayerActions.Respawn(other);
                     Thread.Sleep(300); // TODO: get rid of this
                     
@@ -143,7 +143,7 @@ namespace MCGalaxy.Games {
                 CtfTeam opposing = Opposing(team);
                 opposing.RespawnFlag(Map);
             } else {
-                Player.Message(p, "You cannot take your own flag!");
+                p.Message("You cannot take your own flag!");
             }
         }
 

@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdRules : Command {
+    public sealed class CmdRules : Command2 {
         public override string name { get { return "Rules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandPerm[] ExtraPerms {
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("Agree", "agree"), new CommandAlias("Disagree", "disagree") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TextFile rulesFile = TextFile.Files["Rules"];
             rulesFile.EnsureExists();
             
@@ -45,49 +45,48 @@ namespace MCGalaxy.Commands.Info {
             if (who != null) who.hasreadrules = true;
 
             string[] rules = rulesFile.GetText();
-            Player.Message(who, "Server Rules:");
-            Player.MessageLines(who, rules);
+            who.Message("Server Rules:");
+            who.MessageLines(rules);
             
             if (who != null && p != who) {
-                Player.Message(p, "Sent the rules to {0}%S.", who.ColoredName);
-                string sender = p == null ? "(console)" : p.ColoredName;
-                Player.Message(who, sender + " %Ssent you the rules.");
+                p.Message("Sent the rules to {0}%S.", who.ColoredName);
+                who.Message(p.ColoredName + " %Ssent you the rules.");
             }
         }
         
         void Agree(Player p) {
-            if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can agree to the rules."); return; }
-            if (!ServerConfig.AgreeToRulesOnEntry) { Player.Message(p, "agree-to-rules-on-entry is not enabled."); return; }            
-            if (!p.hasreadrules) { Player.Message(p, "&9You must read %T/Rules &9before agreeing."); return; }
-            if (Server.agreed.Contains(p.name)) { Player.Message(p, "You have already agreed to the rules."); return; }
+            if (p.IsSuper) { p.Message("Only in-game players can agree to the rules."); return; }
+            if (!ServerConfig.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }            
+            if (!p.hasreadrules) { p.Message("&9You must read %T/Rules &9before agreeing."); return; }
+            if (Server.agreed.Contains(p.name)) { p.Message("You have already agreed to the rules."); return; }
             
             p.agreed = true;
-            Player.Message(p, "Thank you for agreeing to follow the rules. You may now build and use commands!");
+            p.Message("Thank you for agreeing to follow the rules. You may now build and use commands!");
             Server.agreed.Add(p.name);
             Server.agreed.Save(false);
         }
         
         void Disagree(Player p) {
-            if (Player.IsSuper(p)) { Player.Message(p, "Only in-game players can disagree with the rules."); return; }
-            if (!ServerConfig.AgreeToRulesOnEntry) { Player.Message(p, "agree-to-rules-on-entry is not enabled."); return; }
+            if (p.IsSuper) { p.Message("Only in-game players can disagree with the rules."); return; }
+            if (!ServerConfig.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }
             
             if (p.Rank > LevelPermission.Guest) {
-                Player.Message(p, "Your awesomeness prevents you from using this command"); return;
+                p.Message("Your awesomeness prevents you from using this command"); return;
             }
             p.Leave("If you don't agree with the rules, consider playing elsewhere.");
         }
 
         public override void Help(Player p) {
             if (HasExtraPerm(p, 1)) {
-                Player.Message(p, "%T/Rules <player>");
-                Player.Message(p, "%HDisplays server rules to <player>.");
-                Player.Message(p, "%HIf <player> is not given, the rules are displayed to you.");
+                p.Message("%T/Rules <player>");
+                p.Message("%HDisplays server rules to <player>.");
+                p.Message("%HIf <player> is not given, the rules are displayed to you.");
             } else {
-                Player.Message(p, "%T/Rules");
-                Player.Message(p, "%HDisplays the server rules.");
+                p.Message("%T/Rules");
+                p.Message("%HDisplays the server rules.");
             }
-            Player.Message(p, "%T/Rules agree %H- Agrees to the server's rules");
-            Player.Message(p, "%T/Rules disagree %H- Disagrees with the server's rules");
+            p.Message("%T/Rules agree %H- Agrees to the server's rules");
+            p.Message("%T/Rules disagree %H- Disagrees with the server's rules");
         }
     }
 }

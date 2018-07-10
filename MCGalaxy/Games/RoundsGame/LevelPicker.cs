@@ -160,8 +160,8 @@ namespace MCGalaxy.Games {
                 p.SendCpeMessage(CpeMessageType.BottomRight3, line1);
                 p.SendCpeMessage(CpeMessageType.BottomRight2, line2);
             } else {
-                Player.Message(p, line1);
-                Player.Message(p, line2);
+                p.Message(line1);
+                p.Message(line2);
             }
         }
         

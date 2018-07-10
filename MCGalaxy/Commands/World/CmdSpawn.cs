@@ -19,19 +19,19 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdSpawn : Command {
+    public sealed class CmdSpawn : Command2 {
         public override string name { get { return "Spawn"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
             PlayerActions.Respawn(p);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Spawn");
-            Player.Message(p, "%HTeleports you to the spawn location of the level.");
+            p.Message("%T/Spawn");
+            p.Message("%HTeleports you to the spawn location of the level.");
         }
     }
 }

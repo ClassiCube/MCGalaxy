@@ -19,28 +19,28 @@ using System.Collections.Generic;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdBounties : Command {       
+    public sealed class CmdBounties : Command2 {       
         public override string name { get { return "Bounties"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             BountyData[] bounties = ZSGame.Instance.Bounties.Items;
             if (bounties.Length == 0) {
-                Player.Message(p, "There are no active bounties."); return;
+                p.Message("There are no active bounties."); return;
             }
             
             foreach (BountyData bounty in bounties) {
                 Player pl = PlayerInfo.FindExact(bounty.Target);
                 if (pl == null) continue;
-                Player.Message(p, "Bounty for {0} %Sis &a{1} %S{2}.", 
+                p.Message("Bounty for {0} %Sis &a{1} %S{2}.", 
                                pl.ColoredName, bounty.Amount, ServerConfig.Currency);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Bounties");
-            Player.Message(p, "%HOutputs a list of all active bounties on players.");
+            p.Message("%T/Bounties");
+            p.Message("%HOutputs a list of all active bounties on players.");
         }
     }
 }

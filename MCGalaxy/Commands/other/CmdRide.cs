@@ -20,17 +20,17 @@ using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdRide : Command {
+    public sealed class CmdRide : Command2 {
         public override string name { get { return "Ride"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             p.onTrain = !p.onTrain;
             if (!p.onTrain) return;
             
             p.trainInvincible = true;
-            Player.Message(p, "Stand near a train to mount it");
+            p.Message("Stand near a train to mount it");
             
             SchedulerTask task = new SchedulerTask(RideCallback, p, TimeSpan.Zero, true);
             p.CriticalTasks.Add(task);
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Misc {
             Player p = (Player)task.State;
             if (!p.onTrain) {
                 p.trainGrab = false;
-                Player.Message(p, "Dismounted");
+                p.Message("Dismounted");
                 
                 Server.MainScheduler.QueueOnce(TrainInvincibleCallback, p, 
                                                TimeSpan.FromSeconds(1));
@@ -80,8 +80,8 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Ride");
-            Player.Message(p, "%HRides a nearby train.");
+            p.Message("%T/Ride");
+            p.Message("%HRides a nearby train.");
         }
     }
 }

@@ -24,7 +24,7 @@ using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdAbout : Command {
+    public sealed class CmdAbout : Command2 {
         public override string name { get { return "About"; } }
         public override string shortcut { get { return "b"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can see portal/MB data of a block") }; }
         }
         
-        public override void Use(Player p, string message) {
-            Player.Message(p, "Break/build a block to display information.");
+        public override void Use(Player p, string message, CommandData data) {
+            p.Message("Break/build a block to display information.");
             p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
         }
 
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Info {
             p.RevertBlock(x, y, z);
             Dictionary<int, string> names = new Dictionary<int, string>();
 
-            Player.Message(p, "Retrieving block change records..");
+            p.Message("Retrieving block change records..");
 
             bool foundAny = false;
             ListFromDatabase(p, ref foundAny, x, y, z);
@@ -57,15 +57,15 @@ namespace MCGalaxy.Commands.Info {
                     p.level.BlockDB.FindChangesAt(x, y, z,
                                                   entry => OutputEntry(p, ref foundAny, names, entry));
                 } else {
-                    Player.Message(p, "%WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
+                    p.Message("%WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
                     return false;
                 }
             }
             
-            if (!foundAny) Player.Message(p, "No block change records found for this block.");
+            if (!foundAny) p.Message("No block change records found for this block.");
             BlockID raw = Block.IsPhysicsType(block) ? block : Block.ToRaw(block);
             string blockName = Block.GetName(p, block);
-            Player.Message(p, "Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
+            p.Message("Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
             
             if (HasExtraPerm(p, 1)) {
                 BlockDBChange.OutputMessageBlock(p, block, x, y, z);
@@ -119,8 +119,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/About");
-            Player.Message(p, "%HOutputs the change/edit history for a block.");
+            p.Message("%T/About");
+            p.Message("%HOutputs the change/edit history for a block.");
         }
     }
 }

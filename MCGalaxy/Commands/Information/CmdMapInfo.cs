@@ -26,7 +26,7 @@ using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdMapInfo : Command {
+    public sealed class CmdMapInfo : Command2 {
         public override string name { get { return "MapInfo"; } }
         public override string shortcut { get { return "mi"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -35,22 +35,22 @@ namespace MCGalaxy.Commands.Info {
             get { return new[] { new CommandAlias("WInfo"), new CommandAlias("WorldInfo") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             bool env = args[0].CaselessEq("env");
             string map = env ? (args.Length > 1 ? args[1] : "") : args[0];
 
             Level lvl = map.Length == 0 ? p.level : null;
-            MapInfoData data = new MapInfoData();
+            MapInfoData mapData = new MapInfoData();
             
             if (lvl == null) {
-                if (!GetFromMap(p, data, map)) return;
+                if (!GetFromMap(p, mapData, map)) return;
             } else {
-                data.FromOnlineLevel(lvl);
+                mapData.FromOnlineLevel(lvl);
             }
             
-            if (env) ShowEnv(p, data, data.Config);
-            else ShowNormal(p, data, data.Config);
+            if (env) ShowEnv(p, mapData, mapData.Config);
+            else ShowNormal(p, mapData, mapData.Config);
         }
         
         bool GetFromMap(Player p, MapInfoData data, string map) {
@@ -67,11 +67,11 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowNormal(Player p, MapInfoData data, LevelConfig cfg) {
-            Player.Message(p, "&bAbout {0}%S: Width={1} Height={2} Length={3}", 
+            p.Message("&bAbout {0}%S: Width={1} Height={2} Length={3}", 
                            cfg.Color + data.Name, data.Width, data.Height, data.Length);
             
             string physicsState = CmdPhysics.states[cfg.Physics];
-            Player.Message(p, "  Physics are {0}%S, gun usage is {1}",
+            p.Message("  Physics are {0}%S, gun usage is {1}",
                            physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
 
             DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.MapName));
@@ -82,22 +82,22 @@ namespace MCGalaxy.Commands.Info {
                 int latest = LevelInfo.LatestBackup(data.MapName);
                 DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupFilePath(data.MapName, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
-                Player.Message(p, "  Created {2} ago, last backup ({1} ago): &a{0}",
+                p.Message("  Created {2} ago, last backup ({1} ago): &a{0}",
                                latest, backupDelta.Shorten(), createDelta.Shorten());
             } else {
-                Player.Message(p, "  Created {0} ago, no backups yet", createDelta.Shorten());
+                p.Message("  Created {0} ago, no backups yet", createDelta.Shorten());
             }
             
             if (data.BlockDBEntries != -1) {
-                Player.Message(p, "  BlockDB (Used for /b) is {0} %Swith {1} entries",
+                p.Message("  BlockDB (Used for /b) is {0} %Swith {1} entries",
                                cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             } else {
-                Player.Message(p, "  BlockDB (Used for /b) is {0}",
+                p.Message("  BlockDB (Used for /b) is {0}",
                                cfg.UseBlockDB ? "&aEnabled" : "&cDisabled");
             }
             
             ShowPermissions(p, data, cfg);
-            Player.Message(p, "Use %T/mi env {0} %Sto see environment settings.", data.MapName);
+            p.Message("Use %T/mi env {0} %Sto see environment settings.", data.MapName);
             ShowZombieSurvival(p, data, cfg);
         }
         
@@ -112,26 +112,26 @@ namespace MCGalaxy.Commands.Info {
             if (String.IsNullOrEmpty(realmOwner)) return;
             
             string[] owners = realmOwner.SplitComma();
-            Player.Message(p, "  This map is a personal realm of {0}",
+            p.Message("  This map is a personal realm of {0}",
                            owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         
         static void PrintRanks(Player p, AccessController access, string initial) {
             StringBuilder perms = new StringBuilder(initial);
             access.Describe(p, perms);
-            Player.Message(p, perms.ToString());
+            p.Message(perms.ToString());
         }
         
         void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
             if (!ZSGame.Instance.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.SplitComma();
-            Player.Message(p, "Map authors: {0}",
+            p.Message("Map authors: {0}",
                            authors.Join(n => PlayerInfo.GetColoredName(p, n)));
             int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
-            Player.Message(p, "&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
+            p.Message("&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
                            cfg.RoundsPlayed, winChance);
-            Player.Message(p, "This map has &a{0} likes %Sand &c{1} dislikes",
+            p.Message("This map has &a{0} likes %Sand &c{1} dislikes",
                            cfg.Likes, cfg.Dislikes);
         }
         
@@ -157,33 +157,33 @@ namespace MCGalaxy.Commands.Info {
         void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
             string url = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
             if (url.Length > 0) {
-                Player.Message(p, "Terrain: &b" + url);
+                p.Message("Terrain: &b" + url);
             } else {
-                Player.Message(p, "No custom terrain set for this map.");
+                p.Message("No custom terrain set for this map.");
             }
             
             url = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
             if (url.Length > 0) {
-                Player.Message(p, "Texture pack: &b" + url);
+                p.Message("Texture pack: &b" + url);
             } else {
-                Player.Message(p, "No custom texture pack set for this map.");
+                p.Message("No custom texture pack set for this map.");
             }
             
             const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
-            Player.Message(p, format, Color(cfg.FogColor), Color(cfg.SkyColor), 
+            p.Message(format, Color(cfg.FogColor), Color(cfg.SkyColor), 
                            Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));
             
-            Player.Message(p, "Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
+            p.Message("Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
                            cfg.EdgeLevel, cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
-            Player.Message(p, "Edge Block: &b{0}%S, Horizon Block: &b{1}", 
+            p.Message("Edge Block: &b{0}%S, Horizon Block: &b{1}", 
                            Block.GetName(p, cfg.EdgeBlock), Block.GetName(p, cfg.HorizonBlock));
-            Player.Message(p, "Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
+            p.Message("Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
                            (cfg.CloudsSpeed / 256f).ToString("F2"),
                            (cfg.WeatherSpeed / 256f).ToString("F2"));
-            Player.Message(p, "Weather fade rate: &b{0}%%S, Exponential fog: {1}",
+            p.Message("Weather fade rate: &b{0}%%S, Exponential fog: {1}",
                            (cfg.WeatherFade / 128f).ToString("F2"),
                            cfg.ExpFog > 0 ? "&aON" : "&cOFF");
-            Player.Message(p, "Skybox rotations: Horizontal &b{0}%S, Vertical &b{1}",
+            p.Message("Skybox rotations: Horizontal &b{0}%S, Vertical &b{1}",
                            SkyboxSpeed(cfg.SkyboxHorSpeed), SkyboxSpeed(cfg.SkyboxVerSpeed));
         }
         
@@ -231,10 +231,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "%T/MapInfo [map]");
-            Player.Message(p, "%HDisplay details of [map]");
-            Player.Message(p, "%T/MapInfo env [map]");
-            Player.Message(p, "%HDisplay environment details of [map]");
+            p.Message("%T/MapInfo [map]");
+            p.Message("%HDisplay details of [map]");
+            p.Message("%T/MapInfo env [map]");
+            p.Message("%HDisplay environment details of [map]");
         }
     }
 }

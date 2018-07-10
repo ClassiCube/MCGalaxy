@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             Player p = dArgs.Player;
             if (!p.group.CanExecute("Write")) {
-                Player.Message(p, "You must be able to use %T/Write %Sto use %T/WriteText."); return null;
+                p.Message("You must be able to use %T/Write %Sto use %T/WriteText."); return null;
             }
             
             string[] args = dArgs.Message.SplitSpaces(3);
@@ -50,31 +50,31 @@ namespace MCGalaxy.Commands.Building {
        
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
             if (m[0].X != m[1].X || m[0].Z != m[1].Z) return; 
-            Player.Message(dArgs.Player, "No direction was selected");
+            dArgs.Player.Message("No direction was selected");
             m = null;
         }
         
         protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushArgs = ""; }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/WriteText [scale] [spacing] [message]");
-            Player.Message(p, "%HWrites the given message in blocks.");
-            Player.Message(p, "%Hspacing specifies the number of blocks between each letter.");
+            p.Message("%T/WriteText [scale] [spacing] [message]");
+            p.Message("%HWrites the given message in blocks.");
+            p.Message("%Hspacing specifies the number of blocks between each letter.");
         }
     }
     
     public sealed class CmdWrite : CmdWriteText {       
         public override string name { get { return "Write"; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             base.Use(p, "1 1 " + message);
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Write [message]");
-            Player.Message(p, "%HWrites [message] in blocks");
-            Player.Message(p, "%HNote that this has been deprecated by %T/WriteText.");
+            p.Message("%T/Write [message]");
+            p.Message("%HWrites [message] in blocks");
+            p.Message("%HNote that this has been deprecated by %T/WriteText.");
         }
     }
 }

@@ -23,19 +23,18 @@ using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info { 
-    public sealed class CmdOpStats : Command {
+    public sealed class CmdOpStats : Command2 {
         public override string name { get { return "OpStats"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string end = DateTime.Now.ToString(Database.DateFormat);
             string start = "thismonth", name = null;
             string[] args = message.SplitSpaces();
             
             if (message.Length == 0 || ValidTimespan(message.ToLower())) {
-                if (p == null) { Help(p); return; }
-                
+                if (p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
                 name = p.name;
                 if (message.Length > 0) start = message.ToLower();
             } else {
@@ -61,7 +60,7 @@ namespace MCGalaxy.Commands.Info {
                 Help(p); return;
             }
 
-            Player.Message(p, "OpStats for {0} %Ssince {1}",
+            p.Message("OpStats for {0} %Ssince {1}",
                            PlayerInfo.GetColoredName(p, name), start);
             
             int reviews = Count(start, end, name, "review", "LIKE 'next'");
@@ -82,11 +81,11 @@ namespace MCGalaxy.Commands.Info {
             int xbans = Count(start, end, name, "xban");
             int tempbans = Count(start, end, name, "tempban");
 
-            Player.Message(p, "  &a{0}%S bans, &a{1}%S IP-bans, &a{2}%S tempbans",
+            p.Message("  &a{0}%S bans, &a{1}%S IP-bans, &a{2}%S tempbans",
                            bans + kickbans + xbans, ipbans + xbans, tempbans);
-            Player.Message(p, "  &a{0}%S mutes, &a{1}%S warns, &a{2}%S freezes, &a{3}%S kicks",
+            p.Message("  &a{0}%S mutes, &a{1}%S warns, &a{2}%S freezes, &a{3}%S kicks",
                            mutes, warns, freezes, kicks + kickbans + xbans);
-            Player.Message(p, "  &a{0}%S reviews, &a{1}%S ranks (&a{2}%S promotes, &a{3}%S demotes)",
+            p.Message("  &a{0}%S reviews, &a{1}%S ranks (&a{2}%S promotes, &a{3}%S demotes)",
                            reviews, ranks + promotesOld + demotesOld,
                            promotes + promotesOld, demotes + demotesOld);
         }
@@ -101,8 +100,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
-            Player.Message(p, "%HDisplays information about operator command usage.");
+            p.Message("%T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
+            p.Message("%HDisplays information about operator command usage.");
         }
     }
 }

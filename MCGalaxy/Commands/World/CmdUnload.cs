@@ -16,17 +16,17 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdUnload : Command {
+    public sealed class CmdUnload : Command2 {
         public override string name { get { return "Unload"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "level name")) return;
             
             if (message.Length == 0) {
                 if (!p.level.Unload()) {
-                    Player.Message(p, "You cannot unload this level.");
+                    p.Message("You cannot unload this level.");
                 }
             } else if (message.CaselessEq("empty")) {
                 Level[] loaded = LevelInfo.Loaded.Items;
@@ -40,16 +40,16 @@ namespace MCGalaxy.Commands.World {
                 if (level == null) return;
                 
                 if (!level.Unload()) {
-                    Player.Message(p, "You cannot unload this level.");
+                    p.Message("You cannot unload this level.");
                 }
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Unload [map name]");
-            Player.Message(p, "%HUnloads the given map.");
-            Player.Message(p, "%H  If map name is \"empty\", unloads all maps with no players in them.");
-            Player.Message(p, "%H  If no map name is given, unloads the current map."); 
+            p.Message("%T/Unload [map name]");
+            p.Message("%HUnloads the given map.");
+            p.Message("%H  If map name is \"empty\", unloads all maps with no players in them.");
+            p.Message("%H  If no map name is given, unloads the current map."); 
         }
     }
 }

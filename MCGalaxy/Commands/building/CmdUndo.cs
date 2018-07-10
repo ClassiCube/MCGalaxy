@@ -23,7 +23,7 @@ using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Building {
-    public class CmdUndo : Command {
+    public class CmdUndo : Command2 {
         public override string name { get { return "Undo"; } }
         public override string shortcut { get { return "u"; } }
         public override string type { get { return CommandTypes.Building; } }
@@ -31,14 +31,14 @@ namespace MCGalaxy.Commands.Building {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can undo physics") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { UndoLastDrawOp(p); return; }
             string[] parts = message.SplitSpaces();
             bool undoPhysics = parts[0].CaselessEq("physics");
             
             TimeSpan delta = GetDelta(p, p.name, parts, undoPhysics ? 1 : 0);
             if (delta == TimeSpan.MinValue || (!undoPhysics && parts.Length > 1)) {
-                Player.Message(p, "If you are trying to undo another player, use %T/UndoPlayer");
+                p.Message("If you are trying to undo another player, use %T/UndoPlayer");
                 return;
             }
             
@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Building {
         void UndoLastDrawOp(Player p) {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
-                Player.Message(p, "You have no draw operations to undo.");
-                Player.Message(p, "Try using %T/Undo [timespan] %Sinstead.");
+                p.Message("You have no draw operations to undo.");
+                p.Message("Try using %T/Undo [timespan] %Sinstead.");
                 return;
             }
             
@@ -64,19 +64,19 @@ namespace MCGalaxy.Commands.Building {
                 
                 op.Start = entry.Start; op.End = entry.End;
                 DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal } );
-                Player.Message(p, "Undo performed.");
+                p.Message("Undo performed.");
                 return;
             }
             
-            Player.Message(p, "Unable to undo any draw operations, as all of the " +
+            p.Message("Unable to undo any draw operations, as all of the " +
                                "past 50 draw operations are %T/Undo %Sor %T/Undo [timespan]");
-            Player.Message(p, "Try using %T/Undo [timespan] %Sinstead");
+            p.Message("Try using %T/Undo [timespan] %Sinstead");
         }
         
         void UndoPhysics(Player p, TimeSpan delta) {
             if (!CheckExtraPerm(p, 1)) return;
-            if (p != null && !p.group.CanExecute("Physics")) {
-                Player.Message(p, "%WYou can only undo physics if you can use %T/Physics"); return;
+            if (!p.group.CanExecute("Physics")) {
+                p.Message("%WYou can only undo physics if you can use %T/Physics"); return;
             }
             
             CmdPhysics.SetPhysics(p.level, 0);
@@ -96,11 +96,11 @@ namespace MCGalaxy.Commands.Building {
             
             DrawOpPerformer.Do(op, null, p, new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal });
             if (op.found) {
-                Player.Message(p, "Undid your changes for the past &b{0}", delta.Shorten(true));
+                p.Message("Undid your changes for the past &b{0}", delta.Shorten(true));
                 Logger.Log(LogType.UserActivity, "{0} undid their own actions for the past {1}", 
                            p.name, delta.Shorten(true));
             } else {
-                Player.Message(p, "No changes found by you in the past &b{0}", delta.Shorten(true));
+                p.Message("No changes found by you in the past &b{0}", delta.Shorten(true));
             }
         }
         
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Building {
         internal static TimeSpan GetDelta(Player p, string name, string[] parts, int offset) {
             TimeSpan delta = TimeSpan.Zero;
             string timespan = parts.Length > offset ? parts[parts.Length - 1] : "30m";
-            bool canAll = p == null || p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;
+            bool canAll = p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;
             
             if (timespan.CaselessEq("all")) {
                 return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.MaxUndo);
@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands.Building {
             if (delta.TotalSeconds == 0) 
                 delta = TimeSpan.FromMinutes(90);
             if (!canAll && delta.TotalSeconds > p.group.MaxUndo) {
-                Player.Message(p, "{0}%Ss may only undo up to {1} seconds.",
+                p.Message("{0}%Ss may only undo up to {1} seconds.",
                                p.group.ColoredName, p.group.MaxUndo);
                 return TimeSpan.FromSeconds(p.group.MaxUndo);
             }
@@ -128,12 +128,12 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Undo %H- Undoes your last draw operation");
-            Player.Message(p, "%T/Undo [timespan]");
-            Player.Message(p, "%HUndoes your blockchanges in the past [timespan]");
-            if (p == null || p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
-                Player.Message(p, "%H  if <timespan> is all, &cundoes for 68 years");
-            Player.Message(p, "%T/Undo physics [timespan] %H- Undoes physics on current map");
+            p.Message("%T/Undo %H- Undoes your last draw operation");
+            p.Message("%T/Undo [timespan]");
+            p.Message("%HUndoes your blockchanges in the past [timespan]");
+            if (p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
+                p.Message("%H  if <timespan> is all, &cundoes for 68 years");
+            p.Message("%T/Undo physics [timespan] %H- Undoes physics on current map");
         }
     }
 }

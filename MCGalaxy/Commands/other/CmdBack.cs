@@ -16,14 +16,14 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Misc {
-    public sealed class CmdBack : Command {
+    public sealed class CmdBack : Command2 {
         public override string name { get { return "Back"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (p.PreTeleportMap == null) {
-                Player.Message(p, "You have not teleported anywhere yet"); return;
+                p.Message("You have not teleported anywhere yet"); return;
             }
             
             if (!p.level.name.CaselessEq(p.PreTeleportMap))
@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Back");
-            Player.Message(p, "%HTakes you back to the position you were in before teleportation");
+            p.Message("%T/Back");
+            p.Message("%HTakes you back to the position you were in before teleportation");
         }
     }
 }

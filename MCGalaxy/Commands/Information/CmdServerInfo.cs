@@ -21,7 +21,7 @@ using System.Diagnostics;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdServerInfo : Command {
+    public sealed class CmdServerInfo : Command2 {
         public override string name { get { return "ServerInfo"; } }
         public override string shortcut { get { return "SInfo"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -36,27 +36,27 @@ namespace MCGalaxy.Commands.Info {
         static PerformanceCounter allPCounter = null;
         static PerformanceCounter cpuPCounter = null;
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
             
             int count = Database.CountRows("Players");
-            Player.Message(p, "Server's name: &b{0}%S", ServerConfig.Name);
-            Player.Message(p, "&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
+            p.Message("Server's name: &b{0}%S", ServerConfig.Name);
+            p.Message("&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
                            count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
-            Player.Message(p, "&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
+            p.Message("&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
                            LevelInfo.Loaded.Count, ServerConfig.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
-            Player.Message(p, "Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
+            p.Message("Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
                            up.Shorten(true), Server.SoftwareName, Server.VersionString);
 
-            Player.Message(p, "Player positions are updated every &b"
+            p.Message("Player positions are updated every &b"
                            + ServerConfig.PositionUpdateInterval + " %Smilliseconds.");
             string owner = ServerConfig.OwnerName;
             if (!owner.CaselessEq("Notch"))
-                Player.Message(p, "Owner is &3{0}. %SConsole state: &3{1}", owner, ServerConfig.ConsoleName);
+                p.Message("Owner is &3{0}. %SConsole state: &3{1}", owner, ServerConfig.ConsoleName);
             else
-                Player.Message(p, "Console state: &3{0}", ServerConfig.ConsoleName);
+                p.Message("Console state: &3{0}", ServerConfig.ConsoleName);
             
             if (HasExtraPerm(p, 1)) ShowServerStats(p);
         }
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Info {
         void ShowServerStats(Player p) {
             Process proc = Process.GetCurrentProcess();
             if (allPCounter == null) {
-                Player.Message(p, "Starting performance counters...one second");
+                p.Message("Starting performance counters...one second");
                 allPCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
                 allPCounter.BeginInit();
                 allPCounter.NextValue();
@@ -79,13 +79,13 @@ namespace MCGalaxy.Commands.Info {
             int threads = proc.Threads.Count;
             int mem = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
             double cpu = cpuPCounter.NextValue(), all = allPCounter.NextValue();
-            Player.Message(p, "&a{0}% %SCPU usage, &a{1}% %Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
-            Player.Message(p, "&a{0} %Sthreads, using &a{1} %Smegabytes of memory", threads, mem);
+            p.Message("&a{0}% %SCPU usage, &a{1}% %Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
+            p.Message("&a{0} %Sthreads, using &a{1} %Smegabytes of memory", threads, mem);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/ServerInfo");
-            Player.Message(p, "%HDisplays the server information.");
+            p.Message("%T/ServerInfo");
+            p.Message("%HDisplays the server information.");
         }
     }
 }

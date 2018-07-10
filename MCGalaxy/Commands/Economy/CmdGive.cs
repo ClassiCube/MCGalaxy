@@ -25,47 +25,47 @@ namespace MCGalaxy.Commands.Eco {
         public override string shortcut { get { return "Gib"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
-            EcoTransaction data;
+        public override void Use(Player p, string message, CommandData data) {
+            EcoTransaction trans;
             bool all = false;
-            if (!ParseArgs(p, message, ref all, "give", out data)) return;
+            if (!ParseArgs(p, message, ref all, "give", out trans)) return;
             
             int matches = 1;
-            Player who = PlayerInfo.FindMatches(p, data.TargetName, out matches);
+            Player who = PlayerInfo.FindMatches(p, trans.TargetName, out matches);
             if (matches > 1) return;
-            if (p != null && p == who) { Player.Message(p, "You cannot give yourself &3" + ServerConfig.Currency); return; }
+            if (p == who) { p.Message("You cannot give yourself &3" + ServerConfig.Currency); return; }
             int money = 0;
             
             if (who == null) {
-                data.TargetName = Economy.FindMatches(p, data.TargetName, out money);
-                if (data.TargetName == null) return;
+                trans.TargetName = Economy.FindMatches(p, trans.TargetName, out money);
+                if (trans.TargetName == null) return;
                 
-                if (ReachedMax(p, money, data.Amount)) return;
-                money += data.Amount;
-                Economy.UpdateMoney(data.TargetName, money);
+                if (ReachedMax(p, money, trans.Amount)) return;
+                money += trans.Amount;
+                Economy.UpdateMoney(trans.TargetName, money);
             } else {
-                data.TargetName = who.name; 
+                trans.TargetName = who.name; 
                 money = who.money;
                 
-                if (ReachedMax(p, money, data.Amount)) return;
-                who.SetMoney(who.money + data.Amount);
+                if (ReachedMax(p, money, trans.Amount)) return;
+                who.SetMoney(who.money + trans.Amount);
             }
             
-            data.TargetFormatted = PlayerInfo.GetColoredName(p, data.TargetName);
-            data.Type = EcoTransactionType.Give;
-            OnEcoTransactionEvent.Call(data);
+            trans.TargetFormatted = PlayerInfo.GetColoredName(p, trans.TargetName);
+            trans.Type = EcoTransactionType.Give;
+            OnEcoTransactionEvent.Call(trans);
         }
         
         static bool ReachedMax(Player p, int current, int amount) {
             if (current + amount > 16777215) {
-                Player.Message(p, "%WPlayers cannot have over &316,777,215 &3" + ServerConfig.Currency); return true;
+                p.Message("%WPlayers cannot have over &316,777,215 &3" + ServerConfig.Currency); return true;
             }
             return false;
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Give [player] [amount] <reason>");
-            Player.Message(p, "%HGives [player] [amount] &3" + ServerConfig.Currency);
+            p.Message("%T/Give [player] [amount] <reason>");
+            p.Message("%HGives [player] [amount] &3" + ServerConfig.Currency);
         }
     }
 }

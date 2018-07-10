@@ -18,24 +18,24 @@
 using System;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdCalculate : Command {
+    public sealed class CmdCalculate : Command2 {
         public override string name { get { return "Calculate"; } }
         public override string shortcut { get { return "Calc"; } }
         public override string type { get { return CommandTypes.Building; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
             float n1, n2; string op = args[1];
             if (!Utils.TryParseDecimal(args[0], out n1)) {
-                Player.Message(p, "\"{0}\" is not a valid number.", args[0]); return;
+                p.Message("\"{0}\" is not a valid number.", args[0]); return;
             }
 
             if (op == "+" || op == "-" || op == "*" || op == "/" || op == "^") {
                 if (args.Length == 2) { Help(p); return; }
                 if (!Utils.TryParseDecimal(args[2], out n2)) {
-                    Player.Message(p, "\"{0}\" is not a valid number.", args[2]); return;
+                    p.Message("\"{0}\" is not a valid number.", args[2]); return;
                 }
                 
                 float result = 0;
@@ -45,24 +45,24 @@ namespace MCGalaxy.Commands.Building {
                 if (op == "/") { result = n1 / n2; }
                 if (op == "^") { result = (float)Math.Pow(n1, n2); }
                 
-                Player.Message(p, "&aResult&f: {0} {1} {2} = {3}", n1, op, n2, result);
+                p.Message("&aResult&f: {0} {1} {2} = {3}", n1, op, n2, result);
             } else if (op == "sqrt") {
                 double sqrt = Math.Sqrt(n1);
-                Player.Message(p, "&aResult&f: Square Root of {0} = {1}", n1, sqrt);
+                p.Message("&aResult&f: Square Root of {0} = {1}", n1, sqrt);
             } else if (op == "square") {
-                Player.Message(p, "&aResult&f: Square of {0} = {1}", n1, n1 * n1);
+                p.Message("&aResult&f: Square of {0} = {1}", n1, n1 * n1);
             }  else if (op == "cubed") {
-                Player.Message(p, "&aResult&f: Cube of {0} = {1}", n1, n1 * n1 * n1);
+                p.Message("&aResult&f: Cube of {0} = {1}", n1, n1 * n1 * n1);
             } else {
-                Player.Message(p, "%WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
+                p.Message("%WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Calculate [num1] [operation] [num2]");
-            Player.Message(p, "%H[operation] can be +, -, /, or *");
-            Player.Message(p, "%T/Calculate [num1] [operation]");
-            Player.Message(p, "%H[operation] can be sqrt, square, or cubed");
+            p.Message("%T/Calculate [num1] [operation] [num2]");
+            p.Message("%H[operation] can be +, -, /, or *");
+            p.Message("%T/Calculate [num1] [operation]");
+            p.Message("%H[operation] can be sqrt, square, or cubed");
         }
     }
 }

@@ -19,7 +19,7 @@ using System.IO;
 using System.Threading;
 namespace MCGalaxy.Commands.World {
     
-    public sealed class CmdLockdown : Command {
+    public sealed class CmdLockdown : Command2 {
         public override string name { get { return "Lockdown"; } }
         public override string shortcut { get { return "ld"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandAlias("WLock"), new CommandAlias("WUnlock") }; }
         }
         
-        public override void Use(Player p, string map) {
+        public override void Use(Player p, string map, CommandData data) {
             if (map.Length == 0) { Help(p); return; }
             if (!Formatter.ValidName(p, map, "level")) return;
             
@@ -51,9 +51,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Lockdown [map]");
-            Player.Message(p, "%HPrevents new players from joining that map.");
-            Player.Message(p, "%HUsing /lockdown again will unlock that map");
+            p.Message("%T/Lockdown [map]");
+            p.Message("%HPrevents new players from joining that map.");
+            p.Message("%HUsing /lockdown again will unlock that map");
         }
     }
 }

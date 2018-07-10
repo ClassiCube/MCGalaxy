@@ -20,12 +20,12 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPlace : Command {
+    public sealed class CmdPlace : Command2 {
         public override string name { get { return "Place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             BlockID block = p.GetHeldBlock();
             Vec3S32 P = p.Pos.BlockCoords;
             P.Y = (p.Pos.Y - 32) / 32;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, block);
             string blockName = Block.GetName(p, block);
             if (!p.Ignores.DrawOutput) {
-                Player.Message(p, "{1} block was placed at ({0}).", P, blockName);
+                p.Message("{1} block was placed at ({0}).", P, blockName);
             }
         }
         
@@ -66,11 +66,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Place <block>");
-            Player.Message(p, "%HPlaces block at your feet.");
-            Player.Message(p, "%T/Place <block> [x y z]");
-            Player.Message(p, "%HPlaces block at [x y z]");
-            Player.Message(p, "%HUse ~ before a coord to place relative to current position");
+            p.Message("%T/Place <block>");
+            p.Message("%HPlaces block at your feet.");
+            p.Message("%T/Place <block> [x y z]");
+            p.Message("%HPlaces block at [x y z]");
+            p.Message("%HUse ~ before a coord to place relative to current position");
         }
     }
 }

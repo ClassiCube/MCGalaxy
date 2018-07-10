@@ -76,23 +76,24 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length < 3) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
-            if (preset == null) { Player.Message(p, "%WThat isn't a level preset"); return; }
+            if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
-                Player.Message(p, "%Wdon't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
+                p.Message("%Wdon't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
             }
             string name = p.name + "_" + args[2];
             
-            Command.Find("NewLvl").Use(null, name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
-            Player.Message(p, "&aCreating level: '&f" + name + "&a' . . .");
+            p.Message("&aCreating level: '&f" + name + "&a' . . .");
+            Command.Find("NewLvl").Use(Player.Console, 
+                                       name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);           
                 
-            CmdLoad.LoadLevel(null, name);
+            CmdLoad.LoadLevel(Player.Console, name);
             Level level = LevelInfo.FindExact(name);
             CmdOverseer.SetPerms(p, level);
             Level.SaveSettings(level);
             PlayerActions.ChangeMap(p, name);
 
-            Player.Message(p, "&aSuccessfully created your map: '&f" + name + "&a'");
+            p.Message("&aSuccessfully created your map: '&f" + name + "&a'");
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
@@ -112,14 +113,14 @@ namespace MCGalaxy.Eco {
         }
         
         void AddPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset != null) { Player.Message(p, "%WThat preset level already exists"); return; }
+            if (preset != null) { p.Message("%WThat preset level already exists"); return; }
             
             preset = new LevelPreset();
             preset.name = args[2];
             if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
                 preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
             } else {
-                Player.Message(p, "%WDimension must be a power of 2"); return;
+                p.Message("%WDimension must be a power of 2"); return;
             }
             
             if (!MapGen.IsRecognisedTheme(args[6])) {
@@ -129,68 +130,68 @@ namespace MCGalaxy.Eco {
             if (!CommandParser.GetInt(p, args[7], "Price", ref preset.price, 0)) return;
 
             Presets.Add(preset);
-            Player.Message(p, "&aSuccessfully added the following map preset:");
-            Player.Message(p, "Name: &f" + preset.name);
-            Player.Message(p, "x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
-            Player.Message(p, "Map Type: &f" + preset.type);
-            Player.Message(p, "Map Price: &f" + preset.price + " &3" + ServerConfig.Currency);
+            p.Message("&aSuccessfully added the following map preset:");
+            p.Message("Name: &f" + preset.name);
+            p.Message("x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
+            p.Message("Map Type: &f" + preset.type);
+            p.Message("Map Price: &f" + preset.price + " &3" + ServerConfig.Currency);
         }
         
         void RemovePreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { Player.Message(p, "%WThat preset level doesn't exist"); return; }
+            if (preset == null) { p.Message("%WThat preset level doesn't exist"); return; }
             Presets.Remove(preset);
-            Player.Message(p, "&aSuccessfully removed preset: &f" + preset.name);
+            p.Message("&aSuccessfully removed preset: &f" + preset.name);
         }
         
         void EditPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { Player.Message(p, "%WThat preset level doesn't exist"); return; }
+            if (preset == null) { p.Message("%WThat preset level doesn't exist"); return; }
             
             if (args[3] == "name" || args[3] == "title") {
                 preset.name = args[4];
-                Player.Message(p, "&aSuccessfully changed preset name to &f" + preset.name);
+                p.Message("&aSuccessfully changed preset name to &f" + preset.name);
             } else if (args[3] == "x" || args[3] == "y" || args[3] == "z") {
-                if (!OkayAxis(args[4])) { Player.Message(p, "%WDimension was wrong, it must be a power of 2"); return; }
+                if (!OkayAxis(args[4])) { p.Message("%WDimension was wrong, it must be a power of 2"); return; }
 
                 if (args[3] == "x") preset.x = args[4];
                 if (args[3] == "y") preset.y = args[4];
                 if (args[3] == "z") preset.z = args[4];
-                Player.Message(p, "&aSuccessfully changed preset {0} size to &f{1}", args[3], args[4]);
+                p.Message("&aSuccessfully changed preset {0} size to &f{1}", args[3], args[4]);
             } else if (args[3] == "type" || args[3] == "theme") {
                 if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
                 
                 preset.type = args[4].ToLower();
-                Player.Message(p, "&aSuccessfully changed preset type to &f" + preset.type);
+                p.Message("&aSuccessfully changed preset type to &f" + preset.type);
             } else if (args[3] == "price") {
                 int newPrice = 0;
                 if (!CommandParser.GetInt(p, args[4], "Price", ref newPrice, 0)) return;
                 
                 preset.price = newPrice;
-                Player.Message(p, "&aSuccessfully changed preset price to &f" + preset.price + " &3" + ServerConfig.Currency);
+                p.Message("&aSuccessfully changed preset price to &f" + preset.price + " &3" + ServerConfig.Currency);
             } else {
-                Player.Message(p, "Supported properties to edit: name, title, x, y, z, type, price");
+                p.Message("Supported properties to edit: name, title, x, y, z, type, price");
             }
         }
         
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
-            Player.Message(p, "%T/Eco level add [name] [x] [y] [z] [type] [price]");
-            Player.Message(p, "%T/Eco level remove [name]");
-            Player.Message(p, "%T/Eco level edit [name] [name/x/y/z/type/price] [value]");
-            Player.Message(p, "%HAdds, removes, or edits a level preset.");
+            p.Message("%T/Eco level add [name] [x] [y] [z] [type] [price]");
+            p.Message("%T/Eco level remove [name]");
+            p.Message("%T/Eco level edit [name] [name/x/y/z/type/price] [value]");
+            p.Message("%HAdds, removes, or edits a level preset.");
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            Player.Message(p, "&6Maps %S- see %T/Store maps");
+            p.Message("&6Maps %S- see %T/Store maps");
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            Player.Message(p, "&aAvailable maps to buy:");
+            p.Message("&aAvailable maps to buy:");
             if (Presets.Count == 0) {
-                Player.Message(p, "&6-None-"); return;
+                p.Message("&6-None-"); return;
             }
             
             foreach (LevelPreset preset in Presets) {
-                Player.Message(p, "&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
+                p.Message("&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
                                preset.name, preset.x, preset.y, preset.z,
                                preset.type, preset.price, ServerConfig.Currency);
             }

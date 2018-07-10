@@ -18,22 +18,22 @@
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdNews : Command {
+    public sealed class CmdNews : Command2 {
         public override string name { get { return "News"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             TextFile newsText = TextFile.Files["News"];
             newsText.EnsureExists();
             
             string[] lines = newsText.GetText();
-            Player.MessageLines(p, lines);
+            p.MessageLines(lines);
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/News");
-            Player.Message(p, "%HShows server news.");
+            p.Message("%T/News");
+            p.Message("%HShows server news.");
         }
     }
 }

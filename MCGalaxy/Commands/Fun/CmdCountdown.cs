@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Fun {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage countdown") }; }
         }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("join")) {
                 HandleJoin(p, CountdownGame.Instance);
             } else {
@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleJoin(Player p, CountdownGame game) {
             if (!game.Running) {
-                Player.Message(p, "Cannot join as countdown is not running.");
+                p.Message("Cannot join as countdown is not running.");
             } else if (game.RoundInProgress) {
-                Player.Message(p, "Cannot join when a round is in progress. Wait until next round.");
+                p.Message("Cannot join when a round is in progress. Wait until next round.");
             } else {
                 game.PlayerJoinedGame(p);
             }
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Fun {
         protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
             if (args.Length < 4) { Help(p); return; }           
             if (game_.Running) {
-                Player.Message(p, "You must stop Countdown before replacing the map."); return;
+                p.Message("You must stop Countdown before replacing the map."); return;
             }
             
             ushort x = 0, y = 0, z = 0;
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Fun {
         }        
         
         protected override void HandleStart(Player p, RoundsGame game_, string[] args) {
-            if (game_.Running) { Player.Message(p, "{0} is already running", game_.GameName); return; }
+            if (game_.Running) { p.Message("{0} is already running", game_.GameName); return; }
             
             CountdownGame game = (CountdownGame)game_;
             string speed = args.Length > 1 ? args[1] : "";
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "ultimate": game.Interval = 150; break;
                 
                 default:
-                    Player.Message(p, "No speed specified, playing at 'normal' speed.");
+                    p.Message("No speed specified, playing at 'normal' speed.");
                     game.Interval = 650; speed = "normal"; break;
             }
             
@@ -95,15 +95,15 @@ namespace MCGalaxy.Commands.Fun {
         }       
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/CD set [width] [height] [length]");
-            Player.Message(p, "%HRe-generates the countdown map (default is 32x32x32)");
-            Player.Message(p, "%T/CD start <speed> <mode> %H- Starts Countdown");
-            Player.Message(p, "%H  speed can be: slow, normal, fast, extreme or ultimate");
-            Player.Message(p, "%H  mode can be: normal or freeze");
-            Player.Message(p, "%T/CD stop %H- Stops Countdown"); 
-            Player.Message(p, "%T/CD end %H- Ends current round of Countdown");
-            Player.Message(p, "%T/CD join %H- joins the game");
-            Player.Message(p, "%T/CD status %H- lists players currently playing");
+            p.Message("%T/CD set [width] [height] [length]");
+            p.Message("%HRe-generates the countdown map (default is 32x32x32)");
+            p.Message("%T/CD start <speed> <mode> %H- Starts Countdown");
+            p.Message("%H  speed can be: slow, normal, fast, extreme or ultimate");
+            p.Message("%H  mode can be: normal or freeze");
+            p.Message("%T/CD stop %H- Stops Countdown"); 
+            p.Message("%T/CD end %H- Ends current round of Countdown");
+            p.Message("%T/CD join %H- joins the game");
+            p.Message("%T/CD status %H- lists players currently playing");
         }
     }
 }

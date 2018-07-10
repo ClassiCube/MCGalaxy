@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Spheroid <brush args>");
-            Player.Message(p, "%HDraws a spheroid between two points.");
-            Player.Message(p, "%T/Spheroid [mode] <brush args>");
-            Player.Message(p, "%HModes: &fsolid/hollow/vertical(a vertical tube)");    
-            Player.Message(p, BrushHelpLine);
+            p.Message("%T/Spheroid <brush args>");
+            p.Message("%HDraws a spheroid between two points.");
+            p.Message("%T/Spheroid [mode] <brush args>");
+            p.Message("%HModes: &fsolid/hollow/vertical(a vertical tube)");    
+            p.Message(BrushHelpLine);
         }
     }
 }

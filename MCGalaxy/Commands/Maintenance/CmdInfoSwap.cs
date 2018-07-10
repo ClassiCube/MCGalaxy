@@ -20,51 +20,44 @@ using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdInfoSwap : Command {       
+    public sealed class CmdInfoSwap : Command2 {       
         public override string name { get { return "InfoSwap"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
 
-        public override void Use(Player p, string text) {
+        public override void Use(Player p, string text, CommandData data) {
             string[] args = text.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
-            if (!Formatter.ValidName(p, args[0], "player")) return;
-            if (!Formatter.ValidName(p, args[1], "player")) return;
             
-            if (PlayerInfo.FindExact(args[0]) != null) {
-                Player.Message(p, "\"{0}\" must be offline to use %T/InfoSwap", args[0]); return;
-            }
-            if (PlayerInfo.FindExact(args[1]) != null) {
-                Player.Message(p, "\"{0}\" must be offline to use %T/InfoSwap", args[1]); return;
-            }
-            
-            string src = PlayerInfo.FindName(args[0]);
-            if (src == null) {
-                Player.Message(p, "\"{0}\" was not found in the database.", args[0]); return;
-            }
-            string dst = PlayerInfo.FindName(args[1]);
-            if (dst == null) {
-                Player.Message(p, "\"{0}\" was not found in the database.", args[1]); return;
-            }
+            string src = GetName(p, args[0]), dst = GetName(p, args[1]);
+            if (src == null || dst == null) return;
 
-            Group srcGroup = Group.GroupIn(src);
-            Group dstGroup = Group.GroupIn(dst);
-            if (p != null && srcGroup.Permission >= p.Rank) {
-                Player.Message(p, "Cannot %T/InfoSwap %Sfor a player ranked equal or higher to yours."); return;
-            }
-            if (p != null && dstGroup.Permission >= p.Rank) {
-                Player.Message(p, "Cannot %T/InfoSwap %Sfor a player ranked equal or higher to yours."); return;
-            }
+            Group srcGroup = Group.GroupIn(src), dstGroup = Group.GroupIn(dst);
+            if (!CheckRank(p, srcGroup.Permission, "%T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, dstGroup.Permission, "%T/InfoSwap%S", false)) return;
                         
             SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);
             
-            Player.Message(p, "Successfully infoswapped {0} %Sand {1}",
-                           PlayerInfo.GetColoredName(p, src),
-                           PlayerInfo.GetColoredName(p, dst));
+            p.Message("Successfully infoswapped {0} %Sand {1}",
+                      PlayerInfo.GetColoredName(p, src),
+                      PlayerInfo.GetColoredName(p, dst));
         }
         
-        void SwapStats(string src, string dst) {
+        static string GetName(Player p, string name) {
+            if (!Formatter.ValidName(p, name, "player")) return null;
+            if (PlayerInfo.FindExact(name) != null) {
+                p.Message("\"{0}\" must be offline to use %T/InfoSwap", name); return null;
+            }
+            
+            name = PlayerInfo.FindName(name);
+            if (name == null) {
+                p.Message("\"{0}\" was not found in the database.", name); return null;
+            }
+            return name;
+        }
+        
+        static void SwapStats(string src, string dst) {
             int tmpNum = new Random().Next(0, 10000000);
             string tmpName = "-tmp" + tmpNum + "-";
             
@@ -73,7 +66,7 @@ namespace MCGalaxy.Commands.Maintenance {
             Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", tmpName, src); // PLAYERS[tmp] = src
         }
         
-        void SwapGroups(string src, string dst, Group srcGroup, Group dstGroup) {
+        static void SwapGroups(string src, string dst, Group srcGroup, Group dstGroup) {
             srcGroup.Players.Remove(src);
             srcGroup.Players.Add(dst);
             srcGroup.Players.Save();
@@ -84,9 +77,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/InfoSwap [source] [other]");
-            Player.Message(p, "%HSwaps all the player's info from [source] to [other].");
-            Player.Message(p, "%HNote that both players must be offline for this to work.");
+            p.Message("%T/InfoSwap [source] [other]");
+            p.Message("%HSwaps all the player's info from [source] to [other].");
+            p.Message("%HNote that both players must be offline for this to work.");
         }
     }
 }

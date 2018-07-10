@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.World {
-    public sealed class CmdPhysics : Command {
+    public sealed class CmdPhysics : Command2 {
         public override string name { get { return "Physics"; } }
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
@@ -25,12 +25,12 @@ namespace MCGalaxy.Commands.World {
             get { return new CommandAlias[] { new CommandAlias("KillPhysics", "kill") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { ShowPhysics(p); return; }
             if (message.CaselessEq("kill")) { KillPhysics(p); return; }
             
             string[] args = message.SplitSpaces();
-            Level lvl = Player.IsSuper(p) ? Server.mainLevel : p.level;
+            Level lvl = p.IsSuper ? Server.mainLevel : p.level;
             
             int state = 0, stateI = args.Length == 1 ? 0 : 1;            
             if (!CommandParser.GetInt(p, args[stateI], "Physics state", ref state, 0, 5)) return;
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.World {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 if (lvl.physics == 0) continue;
-                Player.Message(p, "{0} %Shas physics at &b{1}%S. &cChecks: {2}; Updates: {3}", 
+                p.Message("{0} %Shas physics at &b{1}%S. &cChecks: {2}; Updates: {3}", 
                                lvl.ColoredName, lvl.physics, lvl.lastCheck, lvl.lastUpdate);
             }
         }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.World {
                 if (lvl.physics == 0) continue;
                 SetPhysics(lvl, 0);
             }
-            Player.Message(p, "Physics killed on all levels.");
+            p.Message("Physics killed on all levels.");
         }
         
         internal static void SetPhysics(Level lvl, int state) {
@@ -78,11 +78,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            Player.Message(p, "%T/Physics [map] [0/1/2/3/4/5]");
-            Player.Message(p, "%HSets the physics state for the given map.");
-            Player.Message(p, "%H  If no map name is given, uses the current map.");
-            Player.Message(p, "%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
-            Player.Message(p, "%T/Physics kill %H- Sets physics to 0 on all loaded levels.");
+            p.Message("%T/Physics [map] [0/1/2/3/4/5]");
+            p.Message("%HSets the physics state for the given map.");
+            p.Message("%H  If no map name is given, uses the current map.");
+            p.Message("%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
+            p.Message("%T/Physics kill %H- Sets physics to 0 on all loaded levels.");
         }
     }
 }

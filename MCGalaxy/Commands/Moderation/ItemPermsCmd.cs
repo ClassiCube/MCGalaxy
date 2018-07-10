@@ -18,14 +18,14 @@
 using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.Moderation {
-    public abstract class ItemPermsCmd : Command {
+    public abstract class ItemPermsCmd : Command2 {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
         protected void SetPerms(Player p, string[] args, ItemPerms perms, string type) {
             string grpName = args[1];          
-            if (p != null && !perms.UsableBy(p.Rank)) {
-                Player.Message(p, "You rank cannot use this {0}.", type); return;
+            if (!perms.UsableBy(p.Rank)) {
+                p.Message("You rank cannot use this {0}.", type); return;
             }
             
             if (grpName[0] == '+') {
@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Moderation {
                 Group grp = GetGroup(p, grpName.Substring(1));
                 if (grp == null) return;
 
-                if (p != null && p.Rank == grp.Permission) {
-                    Player.Message(p, "You cannot disallow your own rank from using a {0}.", type); return;
+                if (p.Rank == grp.Permission) {
+                    p.Message("You cannot disallow your own rank from using a {0}.", type); return;
                 }
                 
                 Disallow(perms, grp.Permission);
@@ -77,15 +77,15 @@ namespace MCGalaxy.Commands.Moderation {
             Group grp = Matcher.FindRanks(p, grpName);
             if (grp == null) return null;
             
-            if (p != null && grp.Permission > p.Rank) {
-                Player.Message(p, "Cannot set permissions to a rank higher than yours."); return null;
+            if (grp.Permission > p.Rank) {
+                p.Message("Cannot set permissions to a rank higher than yours."); return null;
             }
             return grp;
         }
         
         protected static void Announce(Player p, string msg) {
             Chat.MessageAll("&d" + msg);
-            if (Player.IsSuper(p)) Player.Message(p, msg);
+            if (p.IsSuper) p.Message(msg);
         }
     }
 }

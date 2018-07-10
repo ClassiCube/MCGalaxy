@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands {
         }
         
         public void MessageCannotUse(Player p) {
-            Player.Message(p, "Only {0} {1}", Describe(), Desc);
+            p.Message("Only {0} {1}", Describe(), Desc);
         }
         
 

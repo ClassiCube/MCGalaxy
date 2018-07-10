@@ -18,12 +18,12 @@
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdUnban : Command {
+    public sealed class CmdUnban : Command2 {
         public override string name { get { return "Unban"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             
@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Unban [player] <reason>");
-            Player.Message(p, "%HUnbans a player. This includes temporary bans.");
-            Player.Message(p, "%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("%T/Unban [player] <reason>");
+            p.Message("%HUnbans a player. This includes temporary bans.");
+            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

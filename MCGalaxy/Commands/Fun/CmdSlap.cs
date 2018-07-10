@@ -19,12 +19,12 @@ using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdSlap : Command {
+    public sealed class CmdSlap : Command2 {
         public override string name { get { return "Slap"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             int matches;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
@@ -33,40 +33,36 @@ namespace MCGalaxy.Commands.Fun {
             if (who == null) {
                 Level lvl = Matcher.FindLevels(p, message);
                 if (lvl == null) {
-                    Player.Message(p, "Could not find player or map specified"); return;
+                    p.Message("Could not find player or map specified"); return;
                 }
                 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (pl.level == lvl && pl.Rank < p.Rank)
-                        DoSlap(p, pl);
+                    if (pl.level == lvl && pl.Rank < data.Rank) DoSlap(p, pl);
                 }
                 return;
             }
-            if (p != null && who.Rank > p.Rank) {
-                MessageTooHighRank(p, "slap", true); return;
-            }
+            
+            if (!CheckRank(p, who, "slap", true)) return;
             DoSlap(p, who);
         }
         
         void DoSlap(Player p, Player who) {
             int x = who.Pos.BlockX, y = who.Pos.BlockY, z = who.Pos.BlockZ;
-            if (y < 0) y = 0;
-            
+            if (y < 0) y = 0;            
             Position pos = who.Pos;
-            string src = p == null ? "(console)" : p.ColoredName;
             
             if (who.level.IsValidPos(x, y, z)) {
                 pos.Y = FindYAbove(who.level, (ushort)x, (ushort)y, (ushort)z);
                 if (pos.Y != -1) {
-                    Chat.MessageFromLevel(who, "λNICK %Swas slapped into the roof by " + src);
+                    Chat.MessageFromLevel(who, "λNICK %Swas slapped into the roof by " + p.ColoredName);
                     who.SendPos(Entities.SelfID, pos, who.Rot);
                     return;
                 }
             }
             
             pos.Y = 1000 * 32;
-            Chat.MessageFromLevel(who, "λNICK %Swas slapped sky high by " + src);
+            Chat.MessageFromLevel(who, "λNICK %Swas slapped sky high by " + p.ColoredName);
             who.SendPos(Entities.SelfID, pos, who.Rot);
         }
         
@@ -86,10 +82,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Slap [name]");
-            Player.Message(p, "%HSlaps [name], knocking them into the air");
-            Player.Message(p, "%T/Slap [level]");
-            Player.Message(p, "%HSlaps all players on [level] that are a lower rank, knocking them into the air");
+            p.Message("%T/Slap [name]");
+            p.Message("%HSlaps [name], knocking them into the air");
+            p.Message("%T/Slap [level]");
+            p.Message("%HSlaps all players on [level] that are a lower rank, knocking them into the air");
         }
     }
 }

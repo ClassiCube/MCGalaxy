@@ -16,29 +16,29 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdMoveAll : Command {
+    public sealed class CmdMoveAll : Command2 {
         public override string name { get { return "MoveAll"; } }
         public override string shortcut { get { return "ma"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             Level level = Matcher.FindLevels(p, message);
             if (level == null) return;
             
             Player[] players = PlayerInfo.Online.Items;           
             foreach (Player pl in players) { 
-                if (p == null || pl.Rank < p.Rank)
+                if (pl.Rank < data.Rank)
                     PlayerActions.ChangeMap(pl, level.name);
                 else
-                    Player.Message(p, "You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
+                    p.Message("You cannot move " + pl.ColoredName + " %Sbecause they are of equal or higher rank"); 
             }
         }
         
         public override void Help(Player p) { 
-            Player.Message(p, "%T/MoveAll [level]");
-            Player.Message(p, "%HMoves all players to that level."); 
+            p.Message("%T/MoveAll [level]");
+            p.Message("%HMoves all players to that level."); 
         }
     }
 }

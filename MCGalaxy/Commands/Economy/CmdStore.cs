@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdStore : Command {
+    public sealed class CmdStore : Command2 {
         public override string name { get { return "Store"; } }
         public override string shortcut { get { return "Shop"; } }
         public override string type { get { return CommandTypes.Economy; } }
@@ -28,30 +28,30 @@ namespace MCGalaxy.Commands.Eco {
             get { return new[] { new CommandAlias("Item") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 foreach (Item item in Economy.Items) {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p);
                 }
-                Player.Message(p, "%HUse %T/Store [item] %Hto see more information about that item.");
+                p.Message("%HUse %T/Store [item] %Hto see more information about that item.");
             } else {
                 Item item = Economy.GetItem(message);
                 if (item == null) { Help(p); return; }                
 
                 if (!item.Enabled) {
-                    Player.Message(p, "%WThe " + item.ShopName + " item is not currently buyable."); return;
+                    p.Message("%WThe " + item.ShopName + " item is not currently buyable."); return;
                 }
                 item.OnStoreCommand(p);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Store [item]");
-            Player.Message(p, "%HViews information about the specific item, such as its cost.");
-            Player.Message(p, "%T/Store");
-            Player.Message(p, "%HViews information about all enabled items.");
-            Player.Message(p, "%H  Available items: %S" + Economy.EnabledItemNames());
+            p.Message("%T/Store [item]");
+            p.Message("%HViews information about the specific item, such as its cost.");
+            p.Message("%T/Store");
+            p.Message("%HViews information about all enabled items.");
+            p.Message("%H  Available items: %S" + Economy.EnabledItemNames());
         }
     }
 }

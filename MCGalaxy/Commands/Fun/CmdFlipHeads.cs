@@ -16,20 +16,20 @@
     permissions and limitations under the Licenses.
 */
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdFlipHeads : Command {        
+    public sealed class CmdFlipHeads : Command2 {        
         public override string name { get { return "FlipHeads"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             Server.flipHead = !Server.flipHead;
             if (Server.flipHead) Chat.MessageGlobal("All necks were broken");
             else Chat.MessageGlobal("All necks were mended");
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/FlipHeads");
-            Player.Message(p, "%HMakes all players have upside down heads");
+            p.Message("%T/FlipHeads");
+            p.Message("%HMakes all players have upside down heads");
         }
     }
 }

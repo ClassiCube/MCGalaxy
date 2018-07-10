@@ -18,13 +18,13 @@
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdBind : Command {
+    public sealed class CmdBind : Command2 {
         public override string name { get { return "Bind"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
@@ -33,14 +33,14 @@ namespace MCGalaxy.Commands.Building {
                 for (int b = 0; b < p.BlockBindings.Length; b++) {
                     p.BlockBindings[b] = (BlockID)b;
                 }
-                Player.Message(p, "All bindings were unbound.");
+                p.Message("All bindings were unbound.");
                 return;
             }
             
             BlockID src;
             if (!CommandParser.GetBlock(p, args[0], out src)) return;
             if (Block.IsPhysicsType(src)) {
-                Player.Message(p, "Physics blocks cannot be bound to another block."); return; 
+                p.Message("Physics blocks cannot be bound to another block."); return; 
             }
 
             if (args.Length == 2) {
@@ -49,21 +49,21 @@ namespace MCGalaxy.Commands.Building {
                 if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;
                 
                 p.BlockBindings[src] = dst;
-                Player.Message(p, "{0} bound to {1}", Block.GetName(p, src), Block.GetName(p, dst));
+                p.Message("{0} bound to {1}", Block.GetName(p, src), Block.GetName(p, dst));
             } else {
                 if (p.BlockBindings[src] == src) { 
-                    Player.Message(p, "{0} is not bound.", Block.GetName(p, src)); return;
+                    p.Message("{0} is not bound.", Block.GetName(p, src)); return;
                 }
                 p.BlockBindings[src] = src; 
-                Player.Message(p, "Unbound {0}.", Block.GetName(p, src));
+                p.Message("Unbound {0}.", Block.GetName(p, src));
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Bind [block] [replacement block]");
-            Player.Message(p, "%HCauses [replacement] to be placed, whenever you place [block].");
-            Player.Message(p, "%T/Bind [block] %H- Removes binding for [block].");
-            Player.Message(p, "%T/Bind clear %H- Clears all binds.");
+            p.Message("%T/Bind [block] [replacement block]");
+            p.Message("%HCauses [replacement] to be placed, whenever you place [block].");
+            p.Message("%T/Bind [block] %H- Removes binding for [block].");
+            p.Message("%T/Bind clear %H- Clears all binds.");
         }
     }
 }

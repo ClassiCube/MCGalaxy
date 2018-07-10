@@ -16,12 +16,12 @@
     permissions and limitations under the Licenses.
  */
 namespace MCGalaxy.Commands.Maintenance {
-    public sealed class CmdLimit : Command {        
+    public sealed class CmdLimit : Command2 {        
         public override string name { get { return "Limit"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
             bool hasLimit = args.Length > 1;
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
 
             if (args.Length < 2) { Help(p); return; }
-            if (args.Length == 2) { Player.Message(p, "You need to provide a rank name for this type."); return; }
+            if (args.Length == 2) { p.Message("You need to provide a rank name for this type."); return; }
             Group grp = Matcher.FindRanks(p, args[2]);
             if (grp == null) return;
 
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Maintenance {
             string percent = (target * 100).ToString("F2") + "%";
             
             if (!hasValue) {
-                Player.Message(p, type + ": &b" + percent);
+                p.Message(type + ": &b" + percent);
             } else {
                 Chat.MessageAll(type + " set to &b" + percent);
                 SrvProperties.Save();
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SetLimit(Player p, string type, ref int target, int value, bool hasValue) {
             if (!hasValue) {
-                Player.Message(p, type + ": &b" + target);
+                p.Message(type + ": &b" + target);
             } else {
                 target = value;
                 Chat.MessageAll(type + " set to &b" + target);
@@ -99,11 +99,11 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Limit [type] [amount] <rank>");
-            Player.Message(p, "%HSets the limit for [type]");
-            Player.Message(p, "%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
+            p.Message("%T/Limit [type] [amount] <rank>");
+            p.Message("%HSets the limit for [type]");
+            p.Message("%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
                            "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen)");
-            Player.Message(p, "%H<rank> is required for drawlimit, maxundo, gen types.");
+            p.Message("%H<rank> is required for drawlimit, maxundo, gen types.");
         }
     }
 }

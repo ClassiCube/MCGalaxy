@@ -43,11 +43,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Torus <brush args>");
-            Player.Message(p, "%HDraws a torus(circular tube), with the first point as the centre, " +
+            p.Message("%T/Torus <brush args>");
+            p.Message("%HDraws a torus(circular tube), with the first point as the centre, " +
                            "and second being the radius.");
-            Player.Message(p, "   %HNote: radius of the tube itself is the vertical difference between the two points.");            
-            Player.Message(p, BrushHelpLine);
+            p.Message("   %HNote: radius of the tube itself is the vertical difference between the two points.");            
+            p.Message(BrushHelpLine);
         }
     }
 }

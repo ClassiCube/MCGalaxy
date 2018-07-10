@@ -177,10 +177,9 @@ namespace MCGalaxy {
                 BuildAccess.CheckDetailed(p);
                 p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
             }
+        	
             if (p.level == this) return p.AllowBuild;
-            
-            AccessResult access = BuildAccess.Check(p);
-            return access == AccessResult.Whitelisted || access == AccessResult.Allowed;
+            return BuildAccess.CheckDetailed(p);
         }
         
         internal bool BuildIn(BlockID block) {

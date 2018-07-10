@@ -18,12 +18,12 @@
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdBounty : Command {        
+    public sealed class CmdBounty : Command2 {        
         public override string name { get { return "Bounty"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
@@ -34,12 +34,12 @@ namespace MCGalaxy.Commands.Fun {
             if (!CommandParser.GetInt(p, args[1], "Bounty amount", ref amount, 1, 256)) return;
             
             if (p.money < amount) {
-                Player.Message(p, "You do not have enough " + ServerConfig.Currency + " to place such a large bountry."); return;
+                p.Message("You do not have enough " + ServerConfig.Currency + " to place such a large bountry."); return;
             }
             
             BountyData old = ZSGame.Instance.FindBounty(who.name);
             if (old != null && old.Amount >= amount) {
-                Player.Message(p, "There is already a larger active bounty for " + who.ColoredName); return;
+                p.Message("There is already a larger active bounty for " + who.ColoredName); return;
             }
             
             string msg;
@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Bounty [name] [amount]");
-            Player.Message(p, "%HSets a bounty on the given player.");
+            p.Message("%T/Bounty [name] [amount]");
+            p.Message("%HSets a bounty on the given player.");
         }
     }
 }

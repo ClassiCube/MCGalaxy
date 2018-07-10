@@ -20,7 +20,7 @@ using System.Net;
 using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdUnbanip : Command {
+    public sealed class CmdUnbanip : Command2 {
         public override string name { get { return "UnbanIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -28,16 +28,16 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new CommandAlias[] { new CommandAlias("UnIPBan") }; }
         }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             args[0] = ModActionCmd.FindIP(p, args[0], "un-IP ban", "unbanip");
             if (args[0] == null) return;
 
             IPAddress ip;
-            if (!IPAddress.TryParse(args[0], out ip)) { Player.Message(p, "\"{0}\" is not a valid IP.", args[0]); return; }
-            if (p != null && p.ip == args[0]) { Player.Message(p, "You cannot un-IP ban yourself."); return; }
-            if (!Server.bannedIP.Contains(args[0])) { Player.Message(p, args[0] + " is not a banned IP."); return; }
+            if (!IPAddress.TryParse(args[0], out ip)) { p.Message("\"{0}\" is not a valid IP.", args[0]); return; }
+            if (p != null && p.ip == args[0]) { p.Message("You cannot un-IP ban yourself."); return; }
+            if (!Server.bannedIP.Contains(args[0])) { p.Message(args[0] + " is not a banned IP."); return; }
             
             string reason = args.Length > 1 ? args[1] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
@@ -48,8 +48,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p)  {
-            Player.Message(p, "%T/UnbanIP [ip/player]");
-            Player.Message(p, "%HUn-bans an IP, or the IP the given player is on.");
+            p.Message("%T/UnbanIP [ip/player]");
+            p.Message("%HUn-bans an IP, or the IP the given player is on.");
         }
     }
 }

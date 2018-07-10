@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace MCGalaxy.Commands.Info {
-    public sealed class CmdPlayers : Command {
+    public sealed class CmdPlayers : Command2 {
         public override string name { get { return "Players"; } }
         public override string shortcut { get { return "Who"; } }
         public override string type { get { return CommandTypes.Information; } }
 
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             int totalPlayers = 0;
             if (message.Length > 0) {
                 Group grp = Matcher.FindRanks(p, message);
@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
                 
                 GroupPlayers rankPlayers = Make(p, grp, ref totalPlayers);
                 if (totalPlayers == 0) {
-                    Player.Message(p, "There are no players of that rank online.");
+                    p.Message("There are no players of that rank online.");
                 } else {
                     Output(rankPlayers, p, false);
                 }
@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.Info {
             }
             
             if (totalPlayers == 1) {
-                Player.Message(p, "There is &a1 %Splayer online.");
+                p.Message("There is &a1 %Splayer online.");
             } else {
-                Player.Message(p, "There are &a" + totalPlayers + " %Splayers online.");
+                p.Message("There are &a" + totalPlayers + " %Splayers online.");
             }
             
             for (int i = allPlayers.Count - 1; i >= 0; i--) {
@@ -104,14 +104,14 @@ namespace MCGalaxy.Commands.Info {
             if (data.Length > 0) data.Remove(data.Length - 1, 1);
             
             string title = ":" + list.group.Color + GetPlural(list.group.Name) + ":";
-            Player.Message(p, title + data.ToString());
+            p.Message(title + data.ToString());
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Players");
-            Player.Message(p, "%HLists name and rank of all online players");
-            Player.Message(p, "%T/Players [rank]");
-            Player.Message(p, "%HLists all online players who have that rank");
+            p.Message("%T/Players");
+            p.Message("%HLists name and rank of all online players");
+            p.Message("%T/Players [rank]");
+            p.Message("%HLists all online players who have that rank");
         }
     }
 }

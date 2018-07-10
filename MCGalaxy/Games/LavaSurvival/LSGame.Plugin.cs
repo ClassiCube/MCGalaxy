@@ -49,7 +49,7 @@ namespace MCGalaxy.Games {
         }
 
         void HandlePlayerConnect(Player p) {
-            Player.Message(p, "&cLava Survival %Sis running! Type %T/ls go %Sto join");
+            p.Message("&cLava Survival %Sis running! Type %T/ls go %Sto join");
         }
         
         void HandlePlayerDeath(Player p, BlockID block) {

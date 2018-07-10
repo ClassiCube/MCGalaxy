@@ -18,13 +18,13 @@ using System.Text.RegularExpressions;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
-    public class CmdSearch : Command {
+    public class CmdSearch : Command2 {
         public override string name { get { return "Search"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool UseableWhenFrozen { get { return true; } }
         
-        public override void Use(Player p, string message) {
+        public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             args[0] = args[0].ToLower();
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Info {
         
         static void SearchBlocks(Player p, string keyword, string modifier) {
             List<BlockID> blocks = new List<BlockID>();
-            BlockDefinition[] defs = Player.IsSuper(p) ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition[] defs = p.IsSuper ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             
             for (int b = 0; b < Block.ExtendedCount; b++) {
                 BlockID block = (BlockID)b;
@@ -134,19 +134,19 @@ namespace MCGalaxy.Commands.Info {
         
         static void OutputList(Player p, string keyword, string cmd, string type, string modifier, List<string> items) {
             if (items.Count == 0) {
-                Player.Message(p, "No {0} found containing \"{1}\"", type, keyword);
+                p.Message("No {0} found containing \"{1}\"", type, keyword);
             } else {
                 MultiPageOutput.Output(p, items, item => item, cmd + " " + keyword, type, modifier, false);
             }
         }
         
         public override void Help(Player p) {
-            Player.Message(p, "%T/Search [list] [keyword]");
-            Player.Message(p, "%HFinds entries in a list that match the given keyword");
-            Player.Message(p, "%H  keyword can also include wildcard characters:");
-            Player.Message(p, "%H    * - placeholder for zero or more characters");
-            Player.Message(p, "%H    ? - placeholder for exactly one character");
-            Player.Message(p, "%HLists available: &fblocks/commands/ranks/players/loaded/maps");
+            p.Message("%T/Search [list] [keyword]");
+            p.Message("%HFinds entries in a list that match the given keyword");
+            p.Message("%H  keyword can also include wildcard characters:");
+            p.Message("%H    * - placeholder for zero or more characters");
+            p.Message("%H    ? - placeholder for exactly one character");
+            p.Message("%HLists available: &fblocks/commands/ranks/players/loaded/maps");
         }
     }
 }

@@ -113,15 +113,15 @@ namespace MCGalaxy.Games {
         
         bool CheckTNTPlace(Player p, TWData data, ushort x, ushort y, ushort z) {
             if (InZone(x, y, z, tntFreeZones)) {
-                Player.Message(p, "TNT cannot be placed in this area"); return false;
+                p.Message("TNT cannot be placed in this area"); return false;
             }
             if (cfg.MaxActiveTnt == 0) return true;
             
             if (data.TNTCounter == cfg.MaxActiveTnt) {
-                Player.Message(p, "TNT Wars: Maximum amount of TNT placed"); return false;
+                p.Message("TNT Wars: Maximum amount of TNT placed"); return false;
             }
             if (data.TNTCounter > cfg.MaxActiveTnt) {
-                Player.Message(p, "TNT Wars: You are past the maximum amount of TNT that can be placed!"); return false;
+                p.Message("TNT Wars: You are past the maximum amount of TNT that can be placed!"); return false;
             }
             return true;
         }
@@ -225,8 +225,8 @@ namespace MCGalaxy.Games {
                     plData.Health -= damage;
                     plData.HarmedBy = killer;
                     
-                    Player.Message(killer, "TNT Wars: You harmed " + pl.ColoredName);
-                    Player.Message(pl, "TNT Wars: You were harmed by " + killer.ColoredName);
+                    killer.Message("TNT Wars: You harmed " + pl.ColoredName);
+                    pl.Message("TNT Wars: You were harmed by " + killer.ColoredName);
                 }
             }
             
@@ -239,10 +239,10 @@ namespace MCGalaxy.Games {
                     suffix = " %S(with help from " + assistant.ColoredName + ")";
                     
                     if (TeamKill(assistant, pl)) {
-                        Player.Message(assistant, "TNT Wars: - " + cfg.AssistScore + " points for team kill assist!");
+                        assistant.Message("TNT Wars: - " + cfg.AssistScore + " points for team kill assist!");
                         ChangeScore(assistant, -cfg.AssistScore);
                     } else {
-                        Player.Message(assistant, "TNT Wars: + " + cfg.AssistScore + " points for assist!");
+                        assistant.Message("TNT Wars: + " + cfg.AssistScore + " points for assist!");
                         ChangeScore(assistant, cfg.AssistScore);
                     }
                 }
@@ -265,21 +265,21 @@ namespace MCGalaxy.Games {
             if (kills > 0 && cfg.Streaks) {
                 if (data.KillStreak >= cfg.StreakOneAmount && data.KillStreak < cfg.StreakTwoAmount && data.LastKillStreakAnnounced != cfg.StreakOneAmount)
                 {
-                    Player.Message(killer, "TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakOneMultiplier + ")");
+                    killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakOneMultiplier + ")");
                     Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak);
                     data.ScoreMultiplier = cfg.StreakOneMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakOneAmount;
                 }
                 else if (data.KillStreak >= cfg.StreakTwoAmount && data.KillStreak < cfg.StreakThreeAmount && data.LastKillStreakAnnounced != cfg.StreakTwoAmount)
                 {
-                    Player.Message(killer, "TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakTwoMultiplier + " and a bigger explosion!)");
+                    killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakTwoMultiplier + " and a bigger explosion!)");
                     Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak + " and now has a bigger explosion for their TNT!");
                     data.ScoreMultiplier = cfg.StreakTwoMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakTwoAmount;
                 }
                 else if (data.KillStreak >= cfg.StreakThreeAmount && data.LastKillStreakAnnounced != cfg.StreakThreeAmount)
                 {
-                    Player.Message(killer, "TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakThreeMultiplier + " and you now have 1 extra health!)");
+                    killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakThreeMultiplier + " and you now have 1 extra health!)");
                     Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak + " and now has 1 extra health!");
                     data.ScoreMultiplier = cfg.StreakThreeMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakThreeAmount;
@@ -290,7 +290,7 @@ namespace MCGalaxy.Games {
                         data.Health += 1;
                     }
                 } else {
-                    Player.Message(killer, "TNT Wars: Kill streak of " + data.KillStreak);
+                    killer.Message("TNT Wars: Kill streak of " + data.KillStreak);
                 }
             }
             
@@ -300,11 +300,11 @@ namespace MCGalaxy.Games {
             if (points > 0) {
                 points = (int)(points * data.ScoreMultiplier);
                 ChangeScore(killer, points);
-                Player.Message(killer, "TNT Wars: + " + points + " points for " + kills + " kills");
+                killer.Message("TNT Wars: + " + points + " points for " + kills + " kills");
             }
             if (penalty > 0) {
                 ChangeScore(killer, -penalty);
-                Player.Message(killer, "TNT Wars: - " + penalty + " points for team killing!");
+                killer.Message("TNT Wars: - " + penalty + " points for team killing!");
             }
         }
     }
