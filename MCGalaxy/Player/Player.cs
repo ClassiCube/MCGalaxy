@@ -129,11 +129,13 @@ namespace MCGalaxy {
             bool isMod = Server.Mods.CaselessContains(truename);
             bool devPrefix = ServerConfig.SoftwareStaffPrefixes;
             
-            string viptitle =
-                (devPrefix && isMod) ? string.Format("{0}[&aInfo{0}] ", color) :
-                (devPrefix && isDev) ? string.Format("{0}[&9Dev{0}] ", color)  : "";
-            prefix += viptitle;
-            prefix = (title.Length == 0) ? prefix : prefix + color + "[" + titlecolor + title + color + "] ";
+            if (devPrefix && isMod) prefix += MakeTitle("Info", "&a");
+            if (devPrefix && isDev) prefix += MakeTitle("Dev", "&9");
+            if (title.Length > 0)   prefix += MakeTitle(title, titlecolor);
+        }
+        
+        internal string MakeTitle(string title, string titleCol) {
+             return color + "[" + titleCol + title + color + "] ";
         }
         
         public bool CheckIfInsideBlock() {
