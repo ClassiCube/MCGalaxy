@@ -79,13 +79,12 @@ namespace MCGalaxy.Eco {
             if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
-                p.Message("%Wdon't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
+                p.Message("%WYou don't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
             }
             string name = p.name + "_" + args[2];
             
             p.Message("&aCreating level: '&f" + name + "&a' . . .");
-            Command.Find("NewLvl").Use(Player.Console, 
-                                       name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);           
+            UseCommand(p, "NewLvl", name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
                 
             CmdLoad.LoadLevel(Player.Console, name);
             Level level = LevelInfo.FindExact(name);

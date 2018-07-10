@@ -26,13 +26,13 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {
             string args = ("level " + arg1 + " " + arg2).Trim();
-            Command.Find("BlockProperties").Use(p, args);
+            UseCommand(p, "BlockProperties", args);
         }
         
         static void HandleEnv(Player p, string type, string value) {
             type = type.ToLower();
             if (type == "preset") {
-                Command.Find("Environment").Use(p, "preset " + value); return;
+                UseCommand(p, "Environment", "preset " + value); return;
             }
             
             Level lvl = p.level;
@@ -105,9 +105,9 @@ namespace MCGalaxy.Commands.World {
             } else if (IsDeleteCommand(cmd)) {
                 DeleteMap(p, value);
             } else if (cmd == "SAVE") {
-                Command.Find("Save").Use(p, "");
+                UseCommand(p, "Save", "");
             } else if (cmd == "RESTORE") {
-                Command.Find("Restore").Use(p, value);
+                UseCommand(p, "Restore", value);
             } else if (cmd == "RESIZE") {
                 value = p.level.name + " " + value;
                 string[] args = value.SplitSpaces();
@@ -122,17 +122,12 @@ namespace MCGalaxy.Commands.World {
                 if (!access.Whitelisted.CaselessContains(p.name)) {
                     access.Whitelist(Player.Console, p.level, p.name);
                 }
-                
-                string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) access.SetMin(Player.Console, p.level, grp);
+                UseCommand(p, "PerVisit", value);
             } else if (cmd == "PERBUILD") {
-                string rank = value.Length == 0 ? ServerConfig.DefaultRankName : value;
-                Group grp = Matcher.FindRanks(p, rank);
-                if (grp != null) p.level.BuildAccess.SetMin(Player.Console, p.level, grp);
+                UseCommand(p, "PerBuild", value);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) value = "normal";
-                Command.Find("Texture").Use(p, "levelzip " + value);
+                UseCommand(p, "Texture", "levelzip " + value);
             } else {
                 LevelOption opt = LevelOptions.Find(cmd);
                 if (opt == null) {
@@ -215,14 +210,14 @@ namespace MCGalaxy.Commands.World {
         }
 
         static void HandleSpawn(Player p, string ignored1, string ignored2) {
-            Command.Find("SetSpawn").Use(p, "");
+            UseCommand(p, "SetSpawn", "");
         }
         
         
         static void HandleZone(Player p, string cmd, string name) {
             cmd = cmd.ToUpper();
             if (cmd == "LIST") {
-                Command.Find("ZoneList").Use(p, "");
+                UseCommand(p, "ZoneList", "");
             } else if (cmd == "ADD") {
                 if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
                 AddBuildPlayer(p, name);
@@ -302,7 +297,7 @@ namespace MCGalaxy.Commands.World {
             if (args.Length == 0) {
                 p.Message("Arguments required. See %T/Help zone");
             } else {
-                Command.Find("Zone").Use(p, cmd + " " + args);
+                UseCommand(p, "Zone", cmd + " " + args);
             }
         }
     }

@@ -42,11 +42,16 @@ namespace MCGalaxy.Blocks.Extended {
             List<string> cmds = GetParts(message, out text);
             if (text != null) p.Message(text);
             
+            CommandData data = default(CommandData);
+            data.Rank = p.Rank;
+            data.Context = CommandContext.MessageBlock;
+            
             if (cmds.Count == 1) {
                 string[] parts = cmds[0].SplitSpaces(2);
-                p.HandleCommand(parts[0], parts.Length > 1 ? parts[1] : "");
+                string args = parts.Length > 1 ? parts[1] : "";
+                p.HandleCommand(parts[0], args, data);
             } else if (cmds.Count > 0) {
-                p.HandleCommands(cmds);
+                p.HandleCommands(cmds, data);
             }
             p.prevMsg = message;
         }

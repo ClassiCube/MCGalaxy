@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 Player target = candidates[new Random().Next(candidates.Count)];
                 target.LastPatrol = DateTime.UtcNow;
-                Command.Find("TP").Use(p, target.name);
+                Command.Find("TP").Use(p, target.name, data);
                 p.Message("Now visiting " + target.ColoredName + "%S.");
             }
         }

@@ -572,13 +572,16 @@ namespace MCGalaxy {
                 return false;
             }
             
+            CommandData data = default(CommandData);
+            data.Rank = Rank;
             int sep = text.IndexOf(' ');
+            
             if (sep == -1) {
-                HandleCommand(text, "");
+                HandleCommand(text, "", data);
             } else {
                 string cmd = text.Substring(0, sep);
                 string args = text.Substring(sep + 1);
-                HandleCommand(cmd, args);
+                HandleCommand(cmd, args, data);
             }
             return true;
         }
@@ -596,13 +599,13 @@ namespace MCGalaxy {
             return lines.Length > 0 ? lines[rnd.Next(lines.Length)] : text;
         }
         
-        public void HandleCommand(string cmd, string args) {
+        public void HandleCommand(string cmd, string args, CommandData data) {
             cmd = cmd.ToLower();
             try {
                 Command command = GetCommand(ref cmd, ref args);
                 if (command == null) return;
                 
-                Thread thread = new Thread(() => UseCommand(command, args));
+                Thread thread = new Thread(() => UseCommand(command, args, data));
                 thread.Name = "MCG_Command";
                 thread.IsBackground = true;
                 thread.Start();
@@ -611,7 +614,7 @@ namespace MCGalaxy {
             }
         }
         
-        public void HandleCommands(List<string> cmds) {
+        public void HandleCommands(List<string> cmds, CommandData data) {
             List<string> messages = new List<string>(cmds.Count);
             List<Command> commands = new List<Command>(cmds.Count);
             try {
@@ -626,7 +629,7 @@ namespace MCGalaxy {
                     messages.Add(args); commands.Add(command);
                 }
 
-                Thread thread = new Thread(() => UseCommands(commands, messages));
+                Thread thread = new Thread(() => UseCommands(commands, messages, data));
                 thread.Name = "MCG_Command";
                 thread.IsBackground = true;
                 thread.Start();
@@ -703,7 +706,7 @@ namespace MCGalaxy {
             return command;
         }
         
-        bool UseCommand(Command command, string message) {
+        bool UseCommand(Command command, string message, CommandData data) {
             string cmd = command.name;
             if (!cmd.CaselessEq("pass") && !cmd.CaselessEq("lastcmd")) {
                 lastCMD = message.Length == 0 ? cmd : cmd + " " + message;
@@ -719,7 +722,7 @@ namespace MCGalaxy {
             } catch { }
             
             try {
-                command.Use(this, message);
+                command.Use(this, message, data);
             } catch (Exception e) {
                 Logger.LogError(e);
                 Message("%WAn error occured when using the command!");
@@ -730,9 +733,9 @@ namespace MCGalaxy {
             return true;
         }
         
-        bool UseCommands(List<Command> commands, List<string> messages) {
+        bool UseCommands(List<Command> commands, List<string> messages, CommandData data) {
             for (int i = 0; i < messages.Count; i++) {
-                if (!UseCommand(commands[i], messages[i])) return false;
+                if (!UseCommand(commands[i], messages[i], data)) return false;
             }
             return true;
         }

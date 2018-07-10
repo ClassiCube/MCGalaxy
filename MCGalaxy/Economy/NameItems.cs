@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.Find("Title").Use(p, "-own");
+                UseCommand(p, "Title", "-own");
                 p.Message("&aYour title was removed for free."); return;
             }
             
@@ -42,7 +42,7 @@ namespace MCGalaxy.Eco {
                 p.Message("%WTitles must be under 20 characters."); return;
             }
             
-            Command.Find("Title").Use(p, "-own " + title);
+            UseCommand(p, "Title", "-own " + title);
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
@@ -58,7 +58,7 @@ namespace MCGalaxy.Eco {
         
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-                Command.Find("Nick").Use(p, "-own");
+                UseCommand(p, "Nick", "-own");
                 p.Message("&aYour nickname was removed for free."); return;
             }
             
@@ -70,7 +70,7 @@ namespace MCGalaxy.Eco {
                 p.Message("%WNicknames must be under 30 characters."); return;
             }
             
-            Command.Find("Nick").Use(p, "-own " + nick);
+            UseCommand(p, "Nick", "-own " + nick);
             Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
     }
@@ -92,7 +92,7 @@ namespace MCGalaxy.Eco {
                 p.Message("%WYour title color is already " + color + colName); return;
             }
             
-            Command.Find("TColor").Use(p, "-own " + colName);
+            UseCommand(p, "TColor", "-own " + colName);
             Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + colName);
         }
     }
@@ -114,7 +114,7 @@ namespace MCGalaxy.Eco {
                 p.Message("%WYour color is already " + color + colName); return;
             }
             
-            Command.Find("Color").Use(p, "-own " + colName);
+            UseCommand(p, "Color", "-own " + colName);
             Economy.MakePurchase(p, Price, "%3Color: " + color + colName);
         }
     }

@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            base.Use(p, "1 1 " + message);
+            base.Use(p, "1 1 " + message, data);
         }
 
         public override void Help(Player p) {

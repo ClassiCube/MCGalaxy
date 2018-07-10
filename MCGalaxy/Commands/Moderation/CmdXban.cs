@@ -35,9 +35,9 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
 
             string name = message.SplitSpaces()[0];
-            Command.Find("UndoPlayer").Use(p, name + " all");
-            if (banIP) Command.Find("BanIP").Use(p, "@" + name);
-            Command.Find("Ban").Use(p, message);    
+            Command.Find("UndoPlayer").Use(p, name + " all", data);
+            if (banIP) Command.Find("BanIP").Use(p, "@" + name, data);
+            Command.Find("Ban").Use(p, message, data);    
         }
 
         public override void Help(Player p) {

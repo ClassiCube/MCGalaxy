@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Fun {
             if (message.CaselessEq("scores")) {
                 HandleScores(p);
             } else {
-                base.Use(p, message);
+                base.Use(p, message, data);
             }
         }
         

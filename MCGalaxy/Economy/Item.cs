@@ -69,6 +69,13 @@ namespace MCGalaxy.Eco {
             }
         }
         
+        protected void UseCommand(Player p, string cmd, string args) {
+            CommandData data = default(CommandData);
+            data.Rank = LevelPermission.Nobody;
+            data.Context = CommandContext.Purchase;
+            Command.Find(cmd).Use(p, args, data);
+        }
+        
         /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
         protected internal abstract void OnBuyCommand(Player p, string message, string[] args);
         

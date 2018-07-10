@@ -98,6 +98,12 @@ namespace MCGalaxy.Commands.World {
         };
         
         
+        static void UseCommand(Player p, string cmd, string args) {
+            CommandData data = default(CommandData);
+            data.Rank = LevelPermission.Nobody;
+            Command.Find(cmd).Use(p, args, data);
+        }
+        
         static string NextLevel(Player p) {
             string level = p.name.ToLower();
             if (LevelInfo.MapExists(level) || LevelInfo.MapExists(level + "00")) {

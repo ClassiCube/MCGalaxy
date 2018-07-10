@@ -38,14 +38,15 @@ namespace MCGalaxy.Commands.Moderation {
                 name = args[1];
             }
             
-            if (name.Length == 0 && p.following.Length == 0) { Help(p); return; }
-            if (name.CaselessEq(p.following) || (name.Length == 0 && p.following.Length > 0))
-                Unfollow(p, stealth);
-            else
-                Follow(p, name, stealth);
+            if (name.Length == 0 && p.following.Length == 0) { Help(p); return; }            
+            if (name.CaselessEq(p.following) || (name.Length == 0 && p.following.Length > 0)) {
+                Unfollow(p, data, stealth);
+            } else {
+                Follow(p, name, data, stealth);
+            }
         }
         
-        static void Unfollow(Player p, bool stealth) {
+        static void Unfollow(Player p, CommandData data, bool stealth) {
             Player who = PlayerInfo.FindExact(p.following);
             p.Message("Stopped following ", who == null ? p.following : who.ColoredName);
             p.following = "";
@@ -53,13 +54,13 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (!p.hidden) return;
             if (!stealth) {
-                Command.Find("Hide").Use(p, "");
+                Command.Find("Hide").Use(p, "", data);
             } else {
                 p.Message("You are still hidden.");
             }
         }
         
-        static void Follow(Player p, string name, bool stealth) {
+        static void Follow(Player p, string name, CommandData data, bool stealth) {
             Player who = PlayerInfo.FindMatches(p, name);
             if (who == null) return;
             if (who == p) { p.Message("Cannot follow yourself."); return; }
@@ -69,9 +70,9 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message(who.ColoredName+ " %Sis already following " + who.following); return; 
             }
 
-            if (!p.hidden) Command.Find("Hide").Use(p, "");
+            if (!p.hidden) Command.Find("Hide").Use(p, "", data);
 
-            if (p.level != who.level) Command.Find("TP").Use(p, who.name);
+            if (p.level != who.level) Command.Find("TP").Use(p, who.name, data);
             if (p.following.Length > 0) {
                 Player old = PlayerInfo.FindExact(p.following);
                 if (old != null) Entities.Spawn(p, old);

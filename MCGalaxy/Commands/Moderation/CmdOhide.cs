@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
             bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
             if (own) who.oHideRank = data.Rank;
             
-            Command.Find("Hide").Use(who, "");
+            Command.Find("Hide").Use(who, "", data);
             p.Message("Hidden {0} %Sfrom players below {1} rank",
                            who.ColoredName, own ? "your" : "their");
         }

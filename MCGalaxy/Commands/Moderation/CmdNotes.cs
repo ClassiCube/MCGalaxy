@@ -77,10 +77,11 @@ namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdMyNotes : CmdNotes {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
-
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message, CommandData data) { base.Use(p, p.name); }
+        public override void Use(Player p, string message, CommandData data) { 
+            base.Use(p, p.name, data); 
+        }
 
         public override void Help(Player p) {
             p.Message("%T/MyNotes %H- views your own notes.");

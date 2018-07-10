@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckRank(p, source, "teleport", true)) return;
             
             p.Message("Attempting to teleport " + source.name + " to " + target.name + ".");
-            Command.Find("TP").Use(source, target.name);
+            Command.Find("TP").Use(source, target.name, data);
         }
         
         public override void Help(Player p) {

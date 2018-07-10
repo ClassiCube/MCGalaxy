@@ -132,7 +132,7 @@ namespace MCGalaxy {
             OnChatSysEvent.Call(scope, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
-                if (filter != null && !filter(pl, arg)) continue;               
+                if (filter != null && !filter(pl, arg)) continue;
                 pl.Message(msg);
             }
         }
@@ -160,7 +160,6 @@ namespace MCGalaxy {
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
-            if (source == null) source = Player.Console;
             
             OnChatFromEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
@@ -186,8 +185,7 @@ namespace MCGalaxy {
         public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
-            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];           
-            if (source == null) source = Player.Console;
+            ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
             OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {

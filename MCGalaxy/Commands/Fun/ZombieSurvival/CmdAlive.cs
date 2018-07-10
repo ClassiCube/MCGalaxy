@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string type { get { return CommandTypes.Games; } }
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
-         public override void Use(Player p, string message, CommandData data) {
+        public override void Use(Player p, string message, CommandData data) {
             Player[] alive = ZSGame.Instance.Alive.Items;
             if (alive.Length == 0) { p.Message("No one is alive."); return; }
             

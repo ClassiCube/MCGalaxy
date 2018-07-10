@@ -47,7 +47,9 @@ namespace MCGalaxy.Commands.Building {
             if (!p.group.CanExecute(cmd)) {
                 p.Message("Cannot use the \"{0}\" command.", cmdName); return;
             }
-            cmd.Use(p, cmdArgs);
+            
+            data.Context = CommandContext.Static;
+            cmd.Use(p, cmdArgs, data);
         }
         
         public override void Help(Player p) {

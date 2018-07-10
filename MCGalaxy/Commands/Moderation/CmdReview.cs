@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (message.CaselessEq("leave")) {
                 HandleLeave(p);
             } else if (message.CaselessEq("next")) {
-                HandleNext(p);
+                HandleNext(p, data);
             } else if (message.CaselessEq("clear")) {
                 HandleClear(p); 
             } else {
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        void HandleNext(Player p) {
+        void HandleNext(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("{0} cannot answer the review queue.", p.SuperName); return; }
             if (!CheckExtraPerm(p, 2)) return;
             if (Server.reviewlist.Count == 0) {
@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
-            Command.Find("TP").Use(p, who.name);
+            Command.Find("TP").Use(p, who.name, data);
             p.Message("You have been teleported to " + user);
             who.Message("Your review request has been answered by " + p.ColoredName + ".");
             AnnounceQueueChanged();

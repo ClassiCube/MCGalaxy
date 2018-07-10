@@ -27,31 +27,21 @@ namespace MCGalaxy {
         
         public abstract string name { get; }
         public virtual string shortcut { get { return ""; } }
-        /// <summary> The type/category/group this command falls under.</summary>
         public abstract string type { get; }
-        /// <summary> Whether this command can be used in museum maps. </summary>
         public virtual bool museumUsable { get { return true; } }
-        /// <summary> The default minimum rank that is able to use this command. </summary>
         public virtual LevelPermission defaultRank { get { return LevelPermission.Guest; } }
-        /// <summary> Executes this command. </summary>
-        public abstract void Use(Player p, string message);
-        /// <summary> Outputs usage information about this command, for when a user does /Help [command]. </summary>
-        public abstract void Help(Player p);
         
-        /// <summary> Outputs further usage information about this command, for when a user does /Help [command] [message]. </summary>
-        /// <remarks> Defaults to just calling Help(p). </remarks>
+        public abstract void Use(Player p, string message);
+        public virtual void Use(Player p, string message, CommandData data) { Use(p, message); }
+        public abstract void Help(Player p);
         public virtual void Help(Player p, string message) { Help(p); Formatter.PrintCommandInfo(p, this); }
-        /// <summary> Extra permissions required to use certain aspects of this command. </summary>
+        
         public virtual CommandPerm[] ExtraPerms { get { return null; } }
         public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
-        /// <summary>  Aliases for this command. </summary>
         public virtual CommandAlias[] Aliases { get { return null; } }
-        /// <summary> Whether this command can be used by 'super' players. (Console and IRC controllers). </summary>
+        
         public virtual bool SuperUseable { get { return true; } }
-        /// <summary> Whether this command is restricted in usage in message blocks.
-        /// Restricted commands require the player to have the extra permission for /mb to be able to be placed in message blocks. </summary>
         public virtual bool MessageBlockRestricted { get { return false; } }
-        /// <summary> Whether this command can be used by players who are frozen. </summary>
         public virtual bool UseableWhenFrozen { get { return false; } }
         
         public static CommandList all = new CommandList();
@@ -147,9 +137,7 @@ namespace MCGalaxy {
     }
     
     public enum CommandContext : byte {
-        Normal, Static, SendCmd,        
-        MessageBlock_1 = 161,
-        MessageBlock_64 = 224,
+        Normal, Static, SendCmd, Purchase, MessageBlock
     }
     
     public struct CommandData {
@@ -157,15 +145,13 @@ namespace MCGalaxy {
         public CommandContext Context;
     }
     
-    public abstract class Command2 : Command {
-        
+    // Clunky design, but needed to stay backwards compatible with custom commands
+    public abstract class Command2 : Command {       
         public override void Use(Player p, string message) {
             if (p == null) p = Player.Console;
             CommandData data = default(CommandData); data.Rank = p.Rank;
             Use(p, message, data);
         }
-        
-        public abstract void Use(Player p, string message, CommandData data);
     }
     
     // Kept around for backwards compatibility

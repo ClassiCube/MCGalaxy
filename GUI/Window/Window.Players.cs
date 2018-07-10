@@ -49,7 +49,11 @@ namespace MCGalaxy.Gui {
             
             string[] args = text.SplitSpaces(2);
             string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
-            curPlayer.HandleCommand(cmdName, cmdArgs);
+            
+            CommandData data = default(CommandData);
+            data.Rank = LevelPermission.Nobody;
+            data.Context = CommandContext.SendCmd;
+            curPlayer.HandleCommand(cmdName, cmdArgs, data);
                 
             if (args.Length > 1) {
                 Players_AppendStatus("Made player do /" + cmdName + " " + cmdArgs);
@@ -80,7 +84,9 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
             if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
-            curPlayer.HandleCommand("Spawn", "");
+            CommandData data = default(CommandData);
+            data.Rank = curPlayer.Rank;
+            curPlayer.HandleCommand("Spawn", "", data);
             Players_AppendStatus("Sent player to spawn");
         }
 

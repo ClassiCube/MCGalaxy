@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageFrom(p, leaveM, null, true);
                 }
                 
-                if (!p.opchat) opchat.Use(p, "");
+                if (!p.opchat) opchat.Use(p, "", data);
                 Server.hidden.AddIfNotExists(p.name);
             } else {
                 AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
                     Chat.MessageFrom(p, joinM, null, true);
                 }
                 
-                if (p.opchat) opchat.Use(p, "");
-                if (p.adminchat) adminchat.Use(p, "");
+                if (p.opchat) opchat.Use(p, "", data);
+                if (p.adminchat) adminchat.Use(p, "", data);
                 Server.hidden.Remove(p.name);
             }
             
