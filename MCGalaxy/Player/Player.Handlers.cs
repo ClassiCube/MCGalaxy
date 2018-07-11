@@ -602,7 +602,7 @@ namespace MCGalaxy {
         public void HandleCommand(string cmd, string args, CommandData data) {
             cmd = cmd.ToLower();
             try {
-                Command command = GetCommand(ref cmd, ref args);
+                Command command = GetCommand(ref cmd, ref args, data);
                 if (command == null) return;
                 
                 Thread thread = new Thread(() => UseCommand(command, args, data));
@@ -623,7 +623,7 @@ namespace MCGalaxy {
                     string cmd = parts[0].ToLower();
                     string args = parts.Length > 1 ? parts[1] : "";
                     
-                    Command command = GetCommand(ref cmd, ref args);
+                    Command command = GetCommand(ref cmd, ref args, data);
                     if (command == null) return;
                     
                     messages.Add(args); commands.Add(command);
@@ -659,7 +659,7 @@ namespace MCGalaxy {
             return true;
         }
         
-        Command GetCommand(ref string cmdName, ref string cmdArgs) {
+        Command GetCommand(ref string cmdName, ref string cmdArgs, CommandData data) {
             if (!CheckCommand(cmdName)) return null;
             Command.Search(ref cmdName, ref cmdArgs);
             
@@ -674,7 +674,7 @@ namespace MCGalaxy {
                 cmdArgs = cmdArgs.TrimEnd(' ');
             }
             
-            OnPlayerCommandEvent.Call(this, cmdName, cmdArgs);
+            OnPlayerCommandEvent.Call(this, cmdName, cmdArgs, data);
             if (cancelcommand) { cancelcommand = false; return null; }
             
             Command command = Command.Find(cmdName);

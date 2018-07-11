@@ -63,15 +63,15 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
     
-    public delegate void OnPlayerCommand(Player p, string cmd, string args);
+    public delegate void OnPlayerCommand(Player p, string cmd, string args, CommandData data);
     /// <summary> Called whenever a player uses a command. </summary>
     /// <remarks> You must cancel this event to prevent "Unknown command!" being shown. </remarks>
     public sealed class OnPlayerCommandEvent : IEvent<OnPlayerCommand> {
         
-        public static void Call(Player p, string cmd, string args) {
+        public static void Call(Player p, string cmd, string args, CommandData data) {
             IEvent<OnPlayerCommand>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(p, cmd, args); } 
+                try { items[i].method(p, cmd, args, data); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

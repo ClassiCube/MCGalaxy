@@ -73,17 +73,17 @@ namespace MCGalaxy.Games {
             p.cancelchat = true;
         }
         
-        void HandlePlayerCommand(Player p, string cmd, string args) {
+        void HandlePlayerCommand(Player p, string cmd, string args, CommandData data) {
             if (p.level != Map || cmd != "teamchat") return;
-            CtfData data = Get(p);
+            CtfData data_ = Get(p);
             
-            if (data.TeamChatting) {
+            if (data_.TeamChatting) {
                 p.Message("You are no longer chatting with your team!");
             } else {
                 p.Message("You are now chatting with your team!");
             }
             
-            data.TeamChatting = !data.TeamChatting;
+            data_.TeamChatting = !data_.TeamChatting;
             p.cancelcommand = true;
         }
         

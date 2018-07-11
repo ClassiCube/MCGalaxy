@@ -63,7 +63,7 @@ namespace MCGalaxy {
                     return false;
                 
                 TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
-                ModAction action = new ModAction(p.name, null, ModActionType.Muted, "&0Auto mute for spamming", duration);
+                ModAction action = new ModAction(p.name, Player.Console, ModActionType.Muted, "&0Auto mute for spamming", duration);
                 OnModActionEvent.Call(action);
                 return true;
             }
