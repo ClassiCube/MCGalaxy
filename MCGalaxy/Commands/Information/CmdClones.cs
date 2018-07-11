@@ -30,7 +30,8 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0 && p != null) {
+            if (message.Length == 0) {
+                if (p.IsSuper) { SuperRequiresArgs(p, "IP address"); return; }
                 message = p.ip;
             } else {
                 message = ModActionCmd.FindIP(p, message, "find alts of", "clones");

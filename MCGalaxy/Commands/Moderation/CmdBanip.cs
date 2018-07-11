@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             IPAddress ip;
             if (!IPAddress.TryParse(args[0], out ip)) { p.Message("\"{0}\" is not a valid IP.", args[0]); return; }
             if (IPAddress.IsLoopback(ip)) { p.Message("You cannot IP ban the server."); return; }
-            if (p != null && p.ip == args[0]) { p.Message("You cannot IP ban yourself."); return; }
+            if (p.ip == args[0]) { p.Message("You cannot IP ban yourself."); return; }
             if (Server.bannedIP.Contains(args[0])) { p.Message("{0} is already IP banned.", args[0]); return; }
             // Check if IP is shared by any other higher ranked accounts
             if (!CheckIP(p, args[0])) return;

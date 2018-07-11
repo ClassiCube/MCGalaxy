@@ -239,7 +239,7 @@ namespace MCGalaxy.Games {
                     Command.Find("Take").Use(Player.Console, p.name + " 10 Auto fine for pillaring");
                     p.Message("  %WThe next time you pillar, you will be &4kicked!");
                 } else {
-                    ModAction action = new ModAction(p.name, null, ModActionType.Kicked, "Auto kick for pillaring");
+                    ModAction action = new ModAction(p.name, Player.Console, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);
                     p.Kick("No pillaring allowed!");
                 }

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             IPAddress ip;
             if (!IPAddress.TryParse(args[0], out ip)) { p.Message("\"{0}\" is not a valid IP.", args[0]); return; }
-            if (p != null && p.ip == args[0]) { p.Message("You cannot un-IP ban yourself."); return; }
+            if (p.ip == args[0]) { p.Message("You cannot un-IP ban yourself."); return; }
             if (!Server.bannedIP.Contains(args[0])) { p.Message(args[0] + " is not a banned IP."); return; }
             
             string reason = args.Length > 1 ? args[1] : "";

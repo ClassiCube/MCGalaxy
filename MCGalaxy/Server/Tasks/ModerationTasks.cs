@@ -56,7 +56,7 @@ namespace MCGalaxy.Tasks {
         internal static void FreezeCalcNextRun() { CalcNextRun(freezeTask, Server.frozen); }
         
         static void FreezeCallback(string[] args) {
-            ModAction action = new ModAction(args[0], null, ModActionType.Unfrozen, "auto unfreeze");
+            ModAction action = new ModAction(args[0], Player.Console, ModActionType.Unfrozen, "auto unfreeze");
             OnModActionEvent.Call(action);
         }
         
