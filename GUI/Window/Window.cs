@@ -42,7 +42,6 @@ namespace MCGalaxy.Gui {
         }
 
         void Window_Load(object sender, EventArgs e) {
-            main_btnProps.Enabled = false;
             MaximizeBox = false;
             Text = "Starting " + Server.SoftwareNameVersioned + "...";
             Show();

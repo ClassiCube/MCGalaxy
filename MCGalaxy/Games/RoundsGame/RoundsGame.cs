@@ -184,7 +184,7 @@ namespace MCGalaxy.Games {
             // TODO: do this in a nicer way
             Map.blocks = old.blocks;
             Map.CustomBlocks = old.CustomBlocks;
-            LevelActions.ReloadAll(Map, null, false);
+            LevelActions.ReloadAll(Map, Player.Console, false);
             Map.Message("Reset map to latest backup");
         }
         
