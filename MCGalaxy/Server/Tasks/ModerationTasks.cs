@@ -68,7 +68,7 @@ namespace MCGalaxy.Tasks {
         internal static void MuteCalcNextRun() { CalcNextRun(muteTask, Server.muted); }
         
         static void MuteCallback(string[] args) {
-            ModAction action = new ModAction(args[0], null, ModActionType.Unmuted, "auto unmute");
+            ModAction action = new ModAction(args[0], Player.Console, ModActionType.Unmuted, "auto unmute");
             OnModActionEvent.Call(action);
         }
         
