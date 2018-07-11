@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Bots {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            if (!LevelInfo.ValidateAction(p, p.level, "summon that bot")) return;
+            if (!LevelInfo.ValidateAction(p, data, p.level, "summon that bot")) return;
             
             PlayerBot bot = Matcher.FindBots(p, message);
             if (bot == null) return;

@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Misc {
                 if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
                     pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                     pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
-                    pl.SendMessage("You were summoned by " + p.ColoredName + "%S.");
+                    pl.Message("You were summoned by " + p.ColoredName + "%S.");
                 }
             }
             Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Misc {
             
             who.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             who.SendPos(Entities.SelfID, p.Pos, p.Rot);
-            who.SendMessage("You were summoned by " + p.ColoredName + "%S.");
+            who.Message("You were summoned by " + p.ColoredName + "%S.");
         }
         
         static bool CheckVisitPerm(Player p, Player who, bool confirmed) {

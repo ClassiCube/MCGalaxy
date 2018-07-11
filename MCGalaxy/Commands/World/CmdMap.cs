@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.World {
             
             if (!CheckExtraPerm(p, 1)) return;
             if (optName.CaselessEq(LevelOptions.RealmOwner) && !CheckExtraPerm(p, 2)) return;
-            if (!LevelInfo.ValidateAction(p, lvl, "change map settings of this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, lvl, "change map settings of this level")) return;
             
             LevelOption opt = LevelOptions.Find(optName);
             if (opt == null) {

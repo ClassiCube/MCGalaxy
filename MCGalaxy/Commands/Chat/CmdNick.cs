@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
-            UseBotOrPlayer(p, message, "nick");
+            UseBotOrPlayer(p, data, message, "nick");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {

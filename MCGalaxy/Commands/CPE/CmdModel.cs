@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, message, "model");
+            UseBotOrPlayer(p, data, message, "model");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string model) {

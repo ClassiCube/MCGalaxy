@@ -33,15 +33,15 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.SplitSpaces();
             if (args.Length < 4) { Help(p); return; }
             
-            if (DoResize(p, args)) return;
+            if (DoResize(p, args, data)) return;
             p.Message("Type %T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
                            args[0], args[1], args[2], args[3]);
         }
         
-        public static bool DoResize(Player p, string[] args) {
+        public static bool DoResize(Player p, string[] args, CommandData data) {
             Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return true;
-            if (!LevelInfo.ValidateAction(p, lvl, "resize this level")) return false;
+            if (!LevelInfo.ValidateAction(p, data, lvl, "resize this level")) return false;
             
             ushort x = 0, y = 0, z = 0;
             if (!CmdNewLvl.CheckMapAxis(p, args[1], "Width",  ref x)) return false;

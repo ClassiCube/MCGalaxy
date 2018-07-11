@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.SplitSpaces(4);
             if (args.Length < 3) { Help(p); return; }
             
-            BlockProps[] scope = GetScope(p, args[0]);
+            BlockProps[] scope = GetScope(p, data, args[0]);
             if (scope == null) return;
             
             Player pScope = scope == Block.Props ? null : p;
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
             SetProperty(p, scope, block, prop, args);
         }
         
-        static BlockProps[] GetScope(Player p, string scope) {
+        static BlockProps[] GetScope(Player p, CommandData data, string scope) {
             if (scope.CaselessEq("core") || scope.CaselessEq("global")) return Block.Props;
 
             if (scope.CaselessEq("level")) {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.World {
                     p.Message("Cannot use level scope from {0}.", p.SuperName); return null;
                 }
                 
-                if (!LevelInfo.ValidateAction(p, p.level, "change block properties in this level")) return null;
+                if (!LevelInfo.ValidateAction(p, data, p.level, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             

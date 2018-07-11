@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
-            UsePlayer(p, message, "logout message");
+            UsePlayer(p, data, message, "logout message");
         }
         
         protected override void SetPlayerData(Player p, Player who, string msg) {

@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Colour"), new CommandAlias("XColor", "-own") }; }
         }        
-        public override void Use(Player p, string message, CommandData data) { UseBotOrPlayer(p, message, "color"); }
+        public override void Use(Player p, string message, CommandData data) { 
+            UseBotOrPlayer(p, data, message, "color"); 
+        }
 
         protected override void SetBotData(Player p, PlayerBot bot, string colName) {
-            if (!LevelInfo.ValidateAction(p, p.level, "change color of that bot")) return;
-            
             string color = colName.Length == 0 ? "&1" : Matcher.FindColor(p, colName);
             if (color == null) return;
             

@@ -94,7 +94,7 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in players) {
                 if (pl.level != Map) {
-                    pl.SendMessage("Sending you to the correct map.");
+                    pl.Message("Sending you to the correct map.");
                     PlayerActions.ChangeMap(pl, Map.name);
                 }
                 
@@ -223,7 +223,7 @@ namespace MCGalaxy.Games {
             UpdateAllStatus();
             
             if (winner != null) {
-                winner.SendMessage("Congratulations, you won this round of countdown!");
+                winner.Message("Congratulations, you won this round of countdown!");
                 PlayerActions.Respawn(winner);
             } else {
                 Player[] players = Players.Items;

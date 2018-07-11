@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.World {
             
             if (LevelInfo.MapExists(newName)) { p.Message("Level already exists."); return; }
             if (lvl == Server.mainLevel) { p.Message("Cannot rename the main level."); return; }
-            if (!LevelInfo.ValidateAction(p, lvl, "rename this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, lvl, "rename this level")) return;
             
             List<Player> players = lvl.getPlayers();
             lvl.Unload();

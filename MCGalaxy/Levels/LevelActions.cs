@@ -218,9 +218,9 @@ namespace MCGalaxy {
             if (!announce) return;
             
             if (src == null || !Entities.CanSee(p, src)) {
-                p.SendMessage("&bMap reloaded");
+                p.Message("&bMap reloaded");
             } else {
-                p.SendMessage("&bMap reloaded by " + src.ColoredName);
+                p.Message("&bMap reloaded by " + src.ColoredName);
             }
             if (Entities.CanSee(src, p)) {
                 src.Message("&4Finished reloading for " + p.ColoredName);

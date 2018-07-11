@@ -202,7 +202,7 @@ namespace MCGalaxy.Core {
             LogAction(e, who, action + newRank.ColoredName);
             
             if (who != null && e.Announce) {
-                who.SendMessage("You are now ranked " + newRank.ColoredName + "%S, type /Help for your new set of commands.");
+                who.Message("You are now ranked " + newRank.ColoredName + "%S, type /Help for your new set of commands.");
             }
             if (Server.tempRanks.Remove(e.Target)) {
                 ModerationTasks.TemprankCalcNextRun();

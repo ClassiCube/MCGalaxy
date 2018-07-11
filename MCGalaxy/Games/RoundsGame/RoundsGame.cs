@@ -203,7 +203,7 @@ namespace MCGalaxy.Games {
                 int i = rnd.Next(0, transfers.Count);
                 Player pl = transfers[i];
                 
-                pl.SendMessage("Going to the next map - &a" + Map.MapName);
+                pl.Message("Going to the next map - &a" + Map.MapName);
                 PlayerActions.ChangeMap(pl, Map);
                 transfers.RemoveAt(i);
             }

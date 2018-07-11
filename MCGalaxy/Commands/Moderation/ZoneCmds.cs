@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (IsCreateCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
-                CreateZone(p, args, 1);
+                CreateZone(p, args, data, 1);
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 DeleteZone(p, args);
@@ -53,25 +53,25 @@ namespace MCGalaxy.Commands.Moderation {
                 if (!zone.Access.CheckDetailed(p)) {
                     p.Message("Hence, you cannot edit this zone."); return;
                 } else if (opt.CaselessEq("edit")) {
-                    EditZone(p, args, zone);
+                    EditZone(p, args, data, zone);
                 } else {
                     SetZoneProp(p, args, zone);
                 }
             } else {
-                CreateZone(p, args, 0);
+                CreateZone(p, args, data, 0);
             }
         }
         
-        void CreateZone(Player p, string[] args, int offset) {
+        void CreateZone(Player p, string[] args, CommandData data, int offset) {
             if (p.level.FindZoneExact(args[offset]) != null) {
                 p.Message("A zone with that name already exists. Use %T/zedit %Sto change it.");
                 return;
             }
-            if (!LevelInfo.ValidateAction(p, args[0], "create zones in this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, args[0], "create zones in this level")) return;
             
             Zone z = new Zone();
             z.Config.Name = args[offset];
-            if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, p.level)) return;
+            if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, data, p.level)) return;
 
             p.Message("Creating zone " + z.ColoredName);
             p.Message("Place or break two blocks to determine the edges.");
@@ -106,8 +106,8 @@ namespace MCGalaxy.Commands.Moderation {
             lvl.Save(true);
         }
         
-        void EditZone(Player p, string[] args, Zone zone) {
-            PermissionCmd.Do(p, args, 2, false, zone.Access, p.level);
+        void EditZone(Player p, string[] args, CommandData data, Zone zone) {
+            PermissionCmd.Do(p, args, 2, false, zone.Access, data, p.level);
         }
         
         void SetZoneProp(Player p, string[] args, Zone zone) {

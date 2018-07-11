@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Bots {
             string[] args = message.SplitSpaces();
             PlayerBot bot = Matcher.FindBots(p, args[0]);
             if (bot == null) return;            
-            if (!LevelInfo.ValidateAction(p, p.level, "change AI of bots in this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, p.level, "change AI of bots in this level")) return;
                 
             if (args.Length == 1) {
                 bot.Instructions.Clear();

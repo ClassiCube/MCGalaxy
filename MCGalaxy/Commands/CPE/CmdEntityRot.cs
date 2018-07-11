@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, message, "rotation");
+            UseBotOrPlayer(p, data, message, "rotation");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string args) {

@@ -19,7 +19,7 @@
 namespace MCGalaxy.Commands {
     public abstract class EntityPropertyCmd : Command2 {
         
-        protected void UseBotOrPlayer(Player p, string message, string type) {
+        protected void UseBotOrPlayer(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
             bool isBot = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
             if (isBot) {
                 if (!CheckExtraPerm(p, 2)) return;
                 
-                if (!LevelInfo.ValidateAction(p, p.level, "change the " + type + " of that bot")) return;
+                if (!LevelInfo.ValidateAction(p, data, p.level, "change the " + type + " of that bot")) return;
                 SetBotData(p, bot, args.Length > 2 ? args[2] : "");
             } else {
                 if (p != who && !CheckExtraPerm(p, 1)) return;
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands {
             }
         }
         
-        protected void UsePlayer(Player p, string message, string type) {
+        protected void UsePlayer(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             if (!CheckOwn(p, args, "player name")) return;

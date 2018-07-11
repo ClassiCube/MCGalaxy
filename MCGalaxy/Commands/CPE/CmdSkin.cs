@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, message, "skin");
+            UseBotOrPlayer(p, data, message, "skin");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {

@@ -33,7 +33,9 @@ namespace MCGalaxy.Commands.Bots {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
+            
             if (!Formatter.ValidName(p, args[1], "bot")) return;
+            if (!LevelInfo.ValidateAction(p, data, p.level, "modify bots in this level")) return;
             
             string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {
@@ -54,7 +56,6 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void AddBot(Player p, string botName) {
-            if (!LevelInfo.ValidateAction(p, p.level, "add bots to this level")) return;
             PlayerBot bot = new PlayerBot(botName, p.level);
             TryAddBot(p, bot);
         }
@@ -84,8 +85,6 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void RemoveBot(Player p, string botName) {
-            if (!LevelInfo.ValidateAction(p, p.level, "remove bots from this level")) return;
-            
             if (botName.CaselessEq("all")) {
                 PlayerBot.RemoveLoadedBots(p.level, false);
                 BotsFile.Save(p.level);
@@ -101,8 +100,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetBotText(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level, "set bot text of that bot")) return;
-            
+
             if (text == null) {
                 p.Message("Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
                 bot.ClickedOnText = null;
@@ -117,8 +115,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetDeathMessage(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!LevelInfo.ValidateAction(p, p.level, "set kill message of that bot")) return;
-            
+
             if (text == null) {
                 p.Message("Reset shown when bot {0} %Skills someone", bot.ColoredName);
                 bot.DeathMessage = null;
@@ -131,7 +128,6 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void RenameBot(Player p, string botName, string newName) {
-            if (!LevelInfo.ValidateAction(p, p.level, "rename bots on this level")) return;
             if (newName == null) { p.Message("New name of bot required."); return; }
             if (!Formatter.ValidName(p, newName, "bot")) return;
             
@@ -153,7 +149,6 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void CopyBot(Player p, string botName, string newName) {
-            if (!LevelInfo.ValidateAction(p, p.level, "copy bots on this level")) return;
             if (newName == null) { p.Message("Name of new bot required."); return; }
             if (!Formatter.ValidName(p, newName, "bot")) return;
             

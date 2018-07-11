@@ -50,7 +50,7 @@ namespace MCGalaxy {
             
             if (jailed || frozen || !canBuild) { RevertBlock(x, y, z); return; }
             if (!agreed) {
-                SendMessage(mustAgreeMsg);
+                Message(mustAgreeMsg);
                 RevertBlock(x, y, z); return;
             }
             
@@ -58,12 +58,12 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (ServerConfig.verifyadmins && adminpen) {
-                SendMessage("%WYou must first verify with %T/Pass [Password]");
+                Message("%WYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
             if ( LSGame.Instance.Running && LSGame.Instance.Map == level && LSGame.Instance.IsPlayerDead(this) ) {
-                SendMessage("You are out of the round, and cannot build.");
+                Message("You are out of the round, and cannot build.");
                 RevertBlock(x, y, z); return;
             }
 
@@ -73,7 +73,7 @@ namespace MCGalaxy {
             if (cancelBlock) { cancelBlock = false; return; }
 
             if (old >= Block.Air_Flood && old <= Block.Door_Air_air) {
-                SendMessage("Block is active, you cannot disturb it.");
+                Message("Block is active, you cannot disturb it.");
                 RevertBlock(x, y, z); return;
             }
             
@@ -89,7 +89,7 @@ namespace MCGalaxy {
                 
                 if (diff > ReachDistance + 4) {
                     Logger.Log(LogType.Warning, "{0} attempted to build with a {1} distance offset", name, diff);
-                    SendMessage("You can't build that far away.");
+                    Message("You can't build that far away.");
                     RevertBlock(x, y, z); return;
                 }
             }
@@ -282,16 +282,16 @@ namespace MCGalaxy {
                 RawHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {
-                    SendMessage("Deleting blocks is disabled in this level.");
+                    Message("Deleting blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Config.Buildable) {
-                    SendMessage("Placing blocks is disabled in this level.");
+                    Message("Placing blocks is disabled in this level.");
                     RevertBlock(x, y, z); return;
                 }
                 
                 if (held >= Block.Extended) {
                     if (!hasBlockDefs || level.CustomBlockDefs[held] == null) {
-                        SendMessage("Invalid block type: " + Block.ToRaw(held));
+                        Message("Invalid block type: " + Block.ToRaw(held));
                         RevertBlock(x, y, z); return;
                     }
                 }
@@ -479,7 +479,7 @@ namespace MCGalaxy {
             }
 
             // People who are muted can't speak or vote
-            if (muted) { SendMessage("You are muted."); return; } //Muted: Only allow commands
+            if (muted) { Message("You are muted."); return; } //Muted: Only allow commands
 
             if (Server.voting) {
                 if (CheckVote(text, this, "y", "yes", ref Server.YesVotes) ||
@@ -490,7 +490,7 @@ namespace MCGalaxy {
             if (ZSGame.Instance.HandlesChatMessage(this, text)) return;
             
             // Put this after vote collection so that people can vote even when chat is moderated
-            if (Server.chatmod && !voice) { SendMessage("Chat moderation is on, you cannot speak."); return; }
+            if (Server.chatmod && !voice) { Message("Chat moderation is on, you cannot speak."); return; }
             
             // Filter out bad words
             if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
@@ -524,17 +524,17 @@ namespace MCGalaxy {
             }
 
             if (text.CaselessContains("^detail.user=")) {
-                SendMessage("%WYou cannot use WoM detail strings in a chat message.");
+                Message("%WYou cannot use WoM detail strings in a chat message.");
                 return true;
             }
 
             if (IsPartialSpaced(text)) {
                 partialMessage += text.Substring(0, text.Length - 2) + " ";
-                SendMessage("&3Partial message: &f" + partialMessage);
+                Message("&3Partial message: &f" + partialMessage);
                 return true;
             } else if (IsPartialJoined(text)) {
                 partialMessage += text.Substring(0, text.Length - 2);
-                SendMessage("&3Partial message: &f" + partialMessage);
+                Message("&3Partial message: &f" + partialMessage);
                 return true;
             } else if (partialMessage.Length > 0) {
                 text = partialMessage + text;
@@ -601,6 +601,8 @@ namespace MCGalaxy {
         
         public void HandleCommand(string cmd, string args, CommandData data) {
             cmd = cmd.ToLower();
+            if (!ServerConfig.CmdSpamCheck && !CheckMBRecursion(data)) return;
+            
             try {
                 Command command = GetCommand(ref cmd, ref args, data);
                 if (command == null) return;
@@ -610,13 +612,16 @@ namespace MCGalaxy {
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Logger.LogError(e); SendMessage("Command failed.");
+                Logger.LogError(e); 
+                Message("%WCommand failed");
             }
         }
         
         public void HandleCommands(List<string> cmds, CommandData data) {
             List<string> messages = new List<string>(cmds.Count);
             List<Command> commands = new List<Command>(cmds.Count);
+            if (!ServerConfig.CmdSpamCheck && !CheckMBRecursion(data)) return;
+            
             try {
                 foreach (string raw in cmds) {
                     string[] parts = raw.SplitSpaces(2);
@@ -634,27 +639,40 @@ namespace MCGalaxy {
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Logger.LogError(e); SendMessage("%WCommand failed.");
+                Logger.LogError(e); 
+                Message("%WCommand failed.");
             }
         }
         
+        bool CheckMBRecursion(CommandData data) {
+            if (data.Context == CommandContext.MessageBlock) {
+                mbRecursion++;
+                // failsafe for when server has turned off command spam checking
+                if (mbRecursion >= 100) {
+                    mbRecursion = 0;
+                    Message("%WInfinite message block loop detected, aborting");
+                    return false;
+                }
+            } else { mbRecursion = 0; }
+            return true;
+        }
+        
         bool CheckCommand(string cmd) {
-            if (cmd.Length == 0) { SendMessage("No command entered."); return false; }
+            if (cmd.Length == 0) { Message("No command entered."); return false; }
             if (ServerConfig.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree" || cmd == "pass" || cmd == "setpass")) {
-                SendMessage(mustAgreeMsg); return false;
+                Message(mustAgreeMsg); return false;
             }
             if (jailed) {
-                SendMessage("You cannot use any commands while jailed."); return false;
+                Message("You cannot use any commands while jailed."); return false;
             }
             if (ServerConfig.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
-                SendMessage("%WYou must verify first with %T/Pass [Password]"); return false;
+                Message("%WYou must verify first with %T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
             if (delta.TotalSeconds > 0) {
                 int secs = (int)Math.Ceiling(delta.TotalSeconds);
-                SendMessage("Blocked from using commands for " +
-                            "another " + secs + " seconds"); return false;
+                Message("Blocked from using commands for another " + secs + " seconds"); return false;
             }
             return true;
         }
@@ -666,7 +684,7 @@ namespace MCGalaxy {
             byte bindIndex;
             if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
                 if (CmdArgsBindings[bindIndex] == null) { 
-                    SendMessage("No command is bound to: %T/" + cmdName); return null; 
+                    Message("No command is bound to: %T/" + cmdName); return null; 
                 }
                 
                 cmdName = CmdBindings[bindIndex];
@@ -684,7 +702,7 @@ namespace MCGalaxy {
                     command = Command.Find("Mode");
                 } else {
                     Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmdName, cmdArgs);
-                    SendMessage("Unknown command \"" + cmdName + "\"."); return null;
+                    Message("Unknown command \"" + cmdName + "\"."); return null;
                 }
             }
 
@@ -695,13 +713,13 @@ namespace MCGalaxy {
             
             string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {
-                SendMessage("Command is disabled as " + reason); return null;
+                Message("Command is disabled as " + reason); return null;
             }
             if (level.IsMuseum && !command.museumUsable) {
-                SendMessage("Cannot use this command while in a museum."); return null;
+                Message("Cannot use this command while in a museum."); return null;
             }
             if (frozen && !command.UseableWhenFrozen) {
-                SendMessage("Cannot use this command while frozen."); return null;
+                Message("Cannot use this command while frozen."); return null;
             }
             return command;
         }

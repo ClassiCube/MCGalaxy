@@ -125,7 +125,7 @@ namespace MCGalaxy.Games {
                         if (lastKiller == killer.name) {
                             infectCombo++;
                             if (infectCombo >= 2) {
-                                killer.SendMessage("You gained " + (2 + infectCombo) + " " + ServerConfig.Currency);
+                                killer.Message("You gained " + (2 + infectCombo) + " " + ServerConfig.Currency);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
                                 Map.Message("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
@@ -293,9 +293,9 @@ namespace MCGalaxy.Games {
                 int reward = GetMoneyReward(pl, data, alive, rand);
                 
                 if (reward == -1) {
-                    pl.SendMessage("You may not hide inside a block! No " + ServerConfig.Currency + " for you."); reward = 0;
+                    pl.Message("You may not hide inside a block! No " + ServerConfig.Currency + " for you."); reward = 0;
                 } else if (reward > 0) {
-                    pl.SendMessage("&6You gained " + reward + " " + ServerConfig.Currency);
+                    pl.Message("&6You gained " + reward + " " + ServerConfig.Currency);
                 }
                 
                 pl.SetMoney(pl.money + reward);
@@ -303,7 +303,7 @@ namespace MCGalaxy.Games {
                 pl.Game.PledgeSurvive = false;
                 
                 if (pl.Game.Referee) {
-                    pl.SendMessage("You gained one " + ServerConfig.Currency + " because you're a ref. Would you like a medal as well?");
+                    pl.Message("You gained one " + ServerConfig.Currency + " because you're a ref. Would you like a medal as well?");
                     pl.SetMoney(pl.money + 1);
                 }
                 

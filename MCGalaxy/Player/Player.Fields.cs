@@ -95,6 +95,7 @@ namespace MCGalaxy {
 
         public bool trainGrab;
         public bool onTrain, trainInvincible;
+        int mbRecursion;
 
         public bool frozen;
         public string following = "";

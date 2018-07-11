@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             message = message.ToLower();
             
-            if (!LevelInfo.ValidateAction(p, p.level, "set env settings of this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, p.level, "set env settings of this level")) return;
             string[] args = message.SplitSpaces();
             string opt = args[0];
             

@@ -97,7 +97,7 @@ namespace MCGalaxy.Games {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != game.Map || pl.Supports(CpeExt.MessageTypes)) continue;
-                pl.SendMessage("You have " + VoteTime + " seconds to vote for the next map");
+                pl.Message("You have " + VoteTime + " seconds to vote for the next map");
             }
             
             Level map = game.Map;

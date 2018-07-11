@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.World {
             if (map == null) return;
 
             if (map.CaselessEq(ServerConfig.MainLevel)) { p.Message("Cannot delete the main level."); return; }
-            if (!LevelInfo.ValidateAction(p, map, "delete this level")) return;
+            if (!LevelInfo.ValidateAction(p, data, map, "delete this level")) return;
             
             p.Message("Created backup.");
             if (LevelActions.Delete(map)) return;

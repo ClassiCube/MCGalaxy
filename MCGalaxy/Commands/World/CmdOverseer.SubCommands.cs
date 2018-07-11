@@ -113,14 +113,15 @@ namespace MCGalaxy.Commands.World {
                 string[] args = value.SplitSpaces();
                 if (args.Length < 4) { Command.Find("ResizeLvl").Help(p); return; }
 
-                if (CmdResizeLvl.DoResize(p, args)) return;
+                CommandData data = default(CommandData); data.Rank = p.Rank;
+                if (CmdResizeLvl.DoResize(p, args, data)) return;
                 p.Message("Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
                 AccessController access = p.level.VisitAccess;
                 if (!access.Whitelisted.CaselessContains(p.name)) {
-                    access.Whitelist(Player.Console, p.level, p.name);
+                    access.Whitelist(Player.Console, LevelPermission.Nobody, p.level, p.name);
                 }
                 UseCommand(p, "PerVisit", value);
             } else if (cmd == "PERBUILD") {
@@ -179,13 +180,14 @@ namespace MCGalaxy.Commands.World {
         
         internal static bool SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
-            lvl.BuildAccess.Whitelist(Player.Console, lvl, p.name);
-            lvl.VisitAccess.Whitelist(Player.Console, lvl, p.name);
+            const LevelPermission rank = LevelPermission.Nobody;
+            lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
+            lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
 
             Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
             if (grp == null) return false;
             
-            lvl.BuildAccess.SetMin(Player.Console, lvl, grp);
+            lvl.BuildAccess.SetMin(Player.Console, rank, lvl, grp);
             return true;
         }
         
@@ -219,80 +221,24 @@ namespace MCGalaxy.Commands.World {
             if (cmd == "LIST") {
                 UseCommand(p, "ZoneList", "");
             } else if (cmd == "ADD") {
-                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
-                AddBuildPlayer(p, name);
+                UseCommand(p, "PerBuild", "+" + name);
             } else if (IsDeleteCommand(cmd)) {
-                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
-                DeleteBuildPlayer(p, name);
+                UseCommand(p, "PerBuild", "-" + name);
             } else if (cmd == "BLOCK") {
-                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
-                name = PlayerInfo.FindMatchesPreferOnline(p, name);
-                if (name == null) return;
-                
-                if (name.CaselessEq(p.name)) { p.Message("You can't blacklist yourself"); return; }
-                RemoveVisitPlayer(p, name);
+                UseCommand(p, "PerVisit", "-" + name);
             } else if (cmd == "UNBLOCK") {
-                if (name.Length == 0) { p.Message("You need to provide a player name."); return; }
-                if (!Formatter.ValidName(p, name, "player")) return;
-                AddVisitPlayer(p, name);
+                UseCommand(p, "PerVisit", "+" + name);
             } else if (cmd == "BLACKLIST") {
                 List<string> blacklist = p.level.VisitAccess.Blacklisted;
                 if (blacklist.Count > 0) {
                     p.Message("Blacklisted players: " + blacklist.Join());
                 } else {
-                    p.Message("There are no blacklisted players on this map.");
+                    p.Message("No players are blacklisted from visiting this map.");
                 }
             } else {
                 p.MessageLines(zoneHelp);
             }
         }
-        
-        static void AddBuildPlayer(Player p, string rawArgs) {
-            string[] args = rawArgs.SplitSpaces();
-            string reason = args.Length > 1 ? args[1] : "";
-            string name = ModActionCmd.FindName(p, "zone", "os zone add", "", args[0], ref reason);
-            if (name == null) return;
-            
-            p.Message("Added zone for &b" + name);
-            LevelAccessController access = p.level.BuildAccess;
-            if (access.Blacklisted.CaselessRemove(name)) {
-                access.OnListChanged(p, p.level, name, true, true);
-            }
-            if (!access.Whitelisted.CaselessContains(name)) {
-                access.Whitelisted.Add(name);
-                access.OnListChanged(p, p.level, name, true, false);
-            }
-        }
-        
-        static void DeleteBuildPlayer(Player p, string name) {
-            if (!Formatter.ValidName(p, name, "player")) return;
-            
-            LevelAccessController access = p.level.BuildAccess;
-            if (access.Whitelisted.CaselessRemove(name)) {
-                access.OnListChanged(p, p.level, name, false, true);
-            } else {
-                p.Message(name + " was not whitelisted.");
-            }
-        }
-        
-        static void AddVisitPlayer(Player p, string name) {
-            List<string> blacklist = p.level.VisitAccess.Blacklisted;
-            if (!blacklist.CaselessContains(name)) {
-                p.Message(name + " is not blacklisted."); return;
-            }
-            blacklist.CaselessRemove(name);
-            p.level.VisitAccess.OnListChanged(p, p.level, name, true, true);
-        }
-        
-        static void RemoveVisitPlayer(Player p, string name) {
-            List<string> blacklist = p.level.VisitAccess.Blacklisted;
-            if (blacklist.CaselessContains(name)) {
-                p.Message(name + " is already blacklisted."); return;
-            }
-            blacklist.Add(name);
-            p.level.VisitAccess.OnListChanged(p, p.level, name, false, false);
-        }
-        
         static void HandleZones(Player p, string cmd, string args) {
             if (args.Length == 0) {
                 p.Message("Arguments required. See %T/Help zone");

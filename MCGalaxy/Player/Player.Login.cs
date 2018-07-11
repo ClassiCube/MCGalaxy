@@ -112,7 +112,7 @@ namespace MCGalaxy {
             if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
 
             hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
-            if (hidden) SendMessage("&8Reminder: You are still hidden.");
+            if (hidden) Message("&8Reminder: You are still hidden.");
             
             if (Chat.AdminchatPerms.UsableBy(Rank) && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
@@ -129,26 +129,26 @@ namespace MCGalaxy {
             }
 
             if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
-                SendMessage("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
+                Message("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
                 agreed = false;
             }
 
             if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
-                    SendMessage("%WPlease set your admin verification password with %T/SetPass [Password]!");
+                    Message("%WPlease set your admin verification password with %T/SetPass [Password]!");
                 else
-                    SendMessage("%Wcomplete admin verification with %T/Pass [Password]!");
+                    Message("%Wcomplete admin verification with %T/Pass [Password]!");
             }
             
             if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name)) {
                 int count = Database.CountRows("Inbox" + name);
                 if (count > 0) {
-                    SendMessage("You have &a" + count + " %Smessages in %T/Inbox");
+                    Message("You have &a" + count + " %Smessages in %T/Inbox");
                 }
             }
             
             if (ServerConfig.PositionUpdateInterval > 1000)
-                SendMessage("Lowlag mode is currently &aON.");
+                Message("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
                 Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", name, ip);
@@ -221,10 +221,10 @@ namespace MCGalaxy {
             if (raw == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK %Shas connected for the first time!");
-                SendMessage("Welcome " + ColoredName + "%S! This is your first visit.");
+                Message("Welcome " + ColoredName + "%S! This is your first visit.");
             } else {
                 PlayerData.Apply((PlayerData)raw, this);
-                SendMessage("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
+                Message("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
             }
             gotSQLData = true;
         }

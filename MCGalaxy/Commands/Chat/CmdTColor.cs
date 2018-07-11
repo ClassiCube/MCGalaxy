@@ -28,7 +28,9 @@ namespace MCGalaxy.Commands.Chatting {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
         }
-        public override void Use(Player p, string message, CommandData data) { UsePlayer(p, message, "title color"); }
+        public override void Use(Player p, string message, CommandData data) { 
+            UsePlayer(p, data, message, "title color"); 
+        }
         
         protected override void SetPlayerData(Player p, Player who, string colName) {
             string color = "";

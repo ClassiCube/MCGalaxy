@@ -24,25 +24,26 @@ namespace MCGalaxy.Commands.World {
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        public static bool Do(Player p, string[] args, int offset, bool max, AccessController access, Level lvl) {
+        public static bool Do(Player p, string[] args, int offset, bool max, 
+                              AccessController access, CommandData data, Level lvl) {
             for (int i = offset; i < args.Length; i++) {
                 string arg = args[i];
                 if (arg[0] == '+' || arg[0] == '-') {
-                    if (!SetList(p, access, arg, lvl)) return false;
+                    if (!SetList(p, arg, access, data, lvl)) return false;
                 } else if (max) {
                     Group grp = Matcher.FindRanks(p, arg);
                     if (grp == null) return false;
-                    access.SetMax(p, lvl, grp);
+                    access.SetMax(p, data.Rank, lvl, grp);
                 } else {
                     Group grp = Matcher.FindRanks(p, arg);
                     if (grp == null) return false;
-                    access.SetMin(p, lvl, grp);
+                    access.SetMin(p, data.Rank, lvl, grp);
                 }
             }
             return true;
         }
         
-        protected void DoLevel(Player p, string message, bool visit) {
+        protected void DoLevel(Player p, string message, CommandData data, bool visit) {
             const string maxPrefix = "-max ";
             bool max = message.CaselessStarts(maxPrefix);
             if (max) message = message.Substring(maxPrefix.Length);
@@ -54,7 +55,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             string map = args.Length == 1 ? p.level.name : Matcher.FindMaps(p, args[0]);
-            if (map == null) return;           
+            if (map == null) return;
             Level lvl;
             LevelConfig cfg = LevelInfo.GetConfig(map, out lvl);
             int offset = args.Length == 1 ? 0 : 1;
@@ -65,10 +66,11 @@ namespace MCGalaxy.Commands.World {
             } else {
                 access = visit ? lvl.VisitAccess : lvl.BuildAccess;
             }
-            Do(p, args, offset, max, access, lvl);
+            Do(p, args, offset, max, access, data, lvl);
         }
         
-        static bool SetList(Player p, AccessController access, string name, Level lvl) {
+        static bool SetList(Player p, string name,
+                            AccessController access, CommandData data, Level lvl) {
             bool include = name[0] == '+';
             string mode = include ? "whitelist" : "blacklist";
             name = name.Substring(1);
@@ -86,9 +88,9 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (include) {
-                access.Whitelist(p, lvl, name);
+                access.Whitelist(p, data.Rank, lvl, name);
             } else {
-                access.Blacklist(p, lvl, name);
+                access.Blacklist(p, data.Rank, lvl, name);
             }
             return true;
         }      
@@ -115,7 +117,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max build rank restriction") }; }
         }
         
-        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, false); }    
+        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, data, false); }    
         public override void Help(Player p) { ShowHelp(p, "build on", "build"); }
     }
     
@@ -129,7 +131,7 @@ namespace MCGalaxy.Commands.World {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "bypass max visit rank restriction") }; }
         }
 
-        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, true); }        
+        public override void Use(Player p, string message, CommandData data) { DoLevel(p, message, data, true); }        
         public override void Help(Player p) { ShowHelp(p, "visit", "visit"); }
     }    
 }
