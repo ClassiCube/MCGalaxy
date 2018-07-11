@@ -31,8 +31,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (cmd == "clear") {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 foreach (Level lvl in loaded) {
-                    lock (lvl.queueLock)
-                        lvl.blockqueue.Clear();
+                    lvl.blockqueue.ClearAll();
                 }
                 return;
             }

@@ -16,13 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    
-    public static class BlockQueue {
+namespace MCGalaxy {    
+    public sealed class BlockQueue : List<ulong> {
         
         public static int Interval = 100;
         public static int UpdatesPerTick = 750;
@@ -31,19 +31,21 @@ namespace MCGalaxy {
         const int posShift = 32;
         const int idShift = 12;
         const int blockMask = (1 << 12) - 1;
+        readonly object locker = new object();
 
         public static void Loop(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
-                lock (lvl.queueLock)
-                    ProcessLevelBlocks(lvl);
+                lock (lvl.blockqueue.locker) {
+                    lvl.blockqueue.Process(lvl);
+                }
             }
             
             bulkSender.level = null;
             task.Delay = TimeSpan.FromMilliseconds(Interval);
         }
 
-        public static void Add(Player p, Level lvl, int index, BlockID block) {
+        public void Add(Player p, int index, BlockID block) {
             // Bit packing format
             // 32-63: index
             // 12-31: session ID
@@ -52,37 +54,38 @@ namespace MCGalaxy {
             flags |= (ulong)p.SessionID << idShift;
             flags |= (ulong)block & blockMask;
             
-            lock (lvl.queueLock) { lvl.blockqueue.Add(flags); }
+            lock (locker) Add(flags);
         }
         
-        public static void RemoveAll(Player p) {
-            lock (p.level.queueLock) {
-                p.level.blockqueue.RemoveAll(b => (int)((b >> idShift) & Player.SessionIDMask) == p.SessionID);
+        public void RemoveAll(Player p) {
+            lock (locker) {
+                RemoveAll(b => (int)((b >> idShift) & Player.SessionIDMask) == p.SessionID);
             }
         }
         
-        static void ProcessLevelBlocks(Level lvl) {
+        public void ClearAll() { lock (locker) Clear(); }
+        
+        void Process(Level lvl) {
             try {
-                if (lvl.blockqueue.Count == 0) return;
-                if (!lvl.HasPlayers()) { lvl.blockqueue.Clear(); return; }
+                if (Count == 0) return;
+                if (!lvl.HasPlayers()) { Clear(); return; }
                     
                 bulkSender.level = lvl;
-                int count = UpdatesPerTick;
-                if (lvl.blockqueue.Count < UpdatesPerTick)
-                    count = lvl.blockqueue.Count;
+                int count = Count;
+                if (count > UpdatesPerTick) count = UpdatesPerTick;
 
                 for (int i = 0; i < count; i++) {
-                    ulong flags = lvl.blockqueue[i];
+                    ulong flags = this[i];
                     int index = (int)(flags >> posShift);
                     BlockID block = (BlockID)(flags & blockMask);
                     bulkSender.Add(index, block);
                 }
                 bulkSender.Send(true);
-                lvl.blockqueue.RemoveRange(0, count);
+                RemoveRange(0, count);
             } catch (Exception e)  {
                 Logger.LogError(e);
-                Logger.Log(LogType.Warning, "Block cache failed for map: {0}. {1} lost.", lvl.name, lvl.blockqueue.Count);
-                lvl.blockqueue.Clear();
+                Logger.Log(LogType.Warning, "Block cache failed for map: {0}. {1} lost.", lvl.name, Count);
+                Clear();
             }
         }
     }

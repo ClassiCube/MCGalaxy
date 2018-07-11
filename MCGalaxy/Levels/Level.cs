@@ -90,8 +90,7 @@ namespace MCGalaxy {
             BlockDB.Cache.Clear();
             Zones.Clear();
             
-            lock (queueLock)
-                blockqueue.Clear();
+            blockqueue.ClearAll();
             lock (saveLock) {
                 blocks = null;
                 CustomBlocks = null;

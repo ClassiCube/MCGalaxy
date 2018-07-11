@@ -412,7 +412,7 @@ namespace MCGalaxy {
             if (type == 1) return; // not different visually
             
             if (buffered) {
-                BlockQueue.Add(p, p.level, index, block);
+                p.level.blockqueue.Add(p, index, block);
             } else {
             	Player.GlobalBlockchange(this, x, y, z, block);
             }

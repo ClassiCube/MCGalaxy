@@ -16,40 +16,40 @@
     permissions and limitations under the Licenses.
  */
 using MCGalaxy.Network;
+using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdReachDistance : Command2 {
-        public override string name { get { return "ReachDistance"; } }
-        public override string shortcut { get { return "Reach"; } }
+namespace MCGalaxy.Commands.CPE {    
+    public sealed class CmdHold : Command2 {
+        public override string name { get { return "Hold"; } }
+        public override string shortcut { get { return "HoldThis"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            if (!p.Supports(CpeExt.ClickDistance)) {
-                p.Message("Your client doesn't support changing your reach distance."); return;
+            if (!p.Supports(CpeExt.HeldBlock)) {
+                p.Message("Your client doesn't support changing your held block."); return;
+            }            
+            string[] args = message.SplitSpaces(2);
+            
+            BlockID block;
+            if (!CommandParser.GetBlock(p, args[0], out block)) return;
+            bool locked = false;
+            if (args.Length > 1 && !CommandParser.GetBool(p, args[1], ref locked)) return;
+            
+            if (Block.IsPhysicsType(block)) {
+                Player.Message(p, "Cannot hold physics blocks"); return;
             }
             
-            float dist = 0;
-            if (!CommandParser.GetReal(p, message, "Distance", ref dist, 0, 1024)) return;
-            
-            int packedDist = (int)(dist * 32);
-            if (packedDist > short.MaxValue) {
-                p.Message("\"{0}\", is too long a reach distance. Max is 1023 blocks.", message);
-            } else {
-                p.Send(Packet.ClickDistance((short)packedDist));
-                p.ReachDistance = dist;
-                p.Message("Set your reach distance to {0} blocks.", dist);
-                Server.reach.AddOrReplace(p.name, packedDist.ToString());
-                Server.reach.Save();
-            }
+            p.Send(Packet.HoldThis(Block.ToRaw(block), locked, p.hasExtBlocks));
+            p.Message("Set your held block to {0}.", Block.GetName(p, block));
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ReachDistance [distance]");
-            p.Message("%HSets the reach distance for how far away you can modify blocks.");
-            p.Message("%H  The default reach distance is 5.");
+            p.Message("%T/Hold [block] <locked>");
+            p.Message("%HMakes you hold the given block in your hand");
+            p.Message("%H  <locked> optionally prevents you from changing it");
         }
     }
 }

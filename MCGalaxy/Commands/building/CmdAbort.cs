@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             p.DefaultBrushArgs = "";
             p.Transform = NoTransform.Instance;
             
-            BlockQueue.RemoveAll(p);
+            p.level.blockqueue.RemoveAll(p);
             p.Message("Every toggle or action was aborted.");
         }
         

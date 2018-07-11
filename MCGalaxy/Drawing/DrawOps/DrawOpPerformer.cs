@@ -209,11 +209,10 @@ namespace MCGalaxy.Drawing.Ops {
                     if (!p.Ignores.DrawOutput) {
                         p.Message("Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
-
-                    lock (lvl.queueLock) { lvl.blockqueue.Clear(); }
+                    lvl.blockqueue.ClearAll();
                 } else if (op.TotalModified < reloadThreshold) {
                     if (!Block.VisuallyEquals(old, b.Block)) {
-                        BlockQueue.Add(p, lvl, index, b.Block);
+                        lvl.blockqueue.Add(p, index, b.Block);
                     }
 
                     if (lvl.physics > 0) {
