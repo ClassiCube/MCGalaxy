@@ -43,8 +43,7 @@ namespace MCGalaxy {
             task.Delay = TimeSpan.FromMilliseconds(Interval);
         }
 
-        public static void Add(Player p, int index, BlockID block) {
-            if (index == -1) return;
+        public static void Add(Player p, Level lvl, int index, BlockID block) {
             // Bit packing format
             // 32-63: index
             // 12-31: session ID
@@ -53,9 +52,7 @@ namespace MCGalaxy {
             flags |= (ulong)p.SessionID << idShift;
             flags |= (ulong)block & blockMask;
             
-            lock (p.level.queueLock) {
-                p.level.blockqueue.Add(flags);
-            }
+            lock (lvl.queueLock) { lvl.blockqueue.Add(flags); }
         }
         
         public static void RemoveAll(Player p) {

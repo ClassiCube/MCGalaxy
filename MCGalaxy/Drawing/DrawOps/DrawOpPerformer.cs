@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops {
             for (int i = 0; i < zones.Length; i++) {
                 // player could potentially modify blocks in this particular zone
                 if (zones[i].Access.CheckAllowed(p)) return false;
-            }            
+            }
             return !lvl.BuildAccess.CheckDetailed(p);
         }
         
@@ -86,7 +86,7 @@ namespace MCGalaxy.Drawing.Ops {
             return true;
         }
         
-        internal static void DoQueuedDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks) {
+        static void DoQueuedDrawOp(Player p, DrawOp op, Brush brush, Vec3S32[] marks) {
             PendingDrawOp item = new PendingDrawOp();
             item.Op = op; item.Brush = brush; item.Marks = marks;
 
@@ -113,38 +113,38 @@ namespace MCGalaxy.Drawing.Ops {
                         return;
                     }
                 }
-                
-                UndoDrawOpEntry entry = new UndoDrawOpEntry();
-                entry.DrawOpName = item.Op.Name;
-                entry.LevelName = item.Op.Level.name;
-                entry.Start = DateTime.UtcNow;
-                // Use same time method as DoBlockchange writing to undo buffer
-                int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-                entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
-                
-                if (item.Brush != null) item.Brush.Configure(item.Op, p);
-                bool needReload = DoDrawOp(item, p);
-                timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
-                entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
-                
-                if (item.Op.Undoable) p.DrawOps.Add(entry);
-                if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
-                
-                if (needReload) DoReload(p, item.Op.Level);
-                item.Op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
+                Execute(p, item.Op, item.Brush, item.Marks);
             }
         }
         
-        static bool DoDrawOp(PendingDrawOp item, Player p) {
-            Level lvl = item.Op.Level;
-            DrawOpOutputter outputter = new DrawOpOutputter(item.Op);
+        internal static void Execute(Player p, DrawOp op, Brush brush, Vec3S32[] marks) {
+            UndoDrawOpEntry entry = new UndoDrawOpEntry();
+            entry.DrawOpName = op.Name;
+            entry.LevelName = op.Level.name;
+            entry.Start = DateTime.UtcNow;
+            // Use same time method as DoBlockchange writing to undo buffer
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+            entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
             
-            if (item.Op.AffectedByTransform) {
-                p.Transform.Perform(item.Marks, p, lvl, item.Op, item.Brush, outputter.Output);
+            if (brush != null) brush.Configure(op, p);
+            Level lvl = op.Level;
+            DrawOpOutputter outputter = new DrawOpOutputter(op);
+            
+            if (op.AffectedByTransform) {
+                p.Transform.Perform(marks, p, lvl, op, brush, outputter.Output);
             } else {
-                item.Op.Perform(item.Marks, item.Brush, outputter.Output);
+                op.Perform(marks, brush, outputter.Output);
             }
-            return item.Op.TotalModified >= outputter.reloadThreshold;
+            bool needsReload = op.TotalModified >= outputter.reloadThreshold;            
+            
+            timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
+            entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
+            
+            if (op.Undoable) p.DrawOps.Add(entry);
+            if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
+            
+            if (needsReload) DoReload(p, op.Level);
+            op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
         }
 
         static void DoReload(Player p, Level lvl) {
@@ -161,7 +161,7 @@ namespace MCGalaxy.Drawing.Ops {
             readonly DrawOp op;
             internal readonly int reloadThreshold;
             
-            public DrawOpOutputter(DrawOp op) { 
+            public DrawOpOutputter(DrawOp op) {
                 this.op = op;
                 reloadThreshold = op.Level.ReloadThreshold;
             }
@@ -201,10 +201,8 @@ namespace MCGalaxy.Drawing.Ops {
                     }
                 }
                 
-                if (p != null) {
-                    lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, b.Block);
-                    p.SessionModified++; p.TotalModified++; p.TotalDrawn++; // increment block stats inline
-                }
+                lvl.BlockDB.Cache.Add(p, b.X, b.Y, b.Z, op.Flags, old, b.Block);
+                p.SessionModified++; p.TotalModified++; p.TotalDrawn++; // increment block stats inline
                 
                 // Potentially buffer the block change
                 if (op.TotalModified == reloadThreshold) {
@@ -212,10 +210,11 @@ namespace MCGalaxy.Drawing.Ops {
                         p.Message("Changed over {0} blocks, preparing to reload map..", reloadThreshold);
                     }
 
-                    lock (lvl.queueLock)
-                        lvl.blockqueue.Clear();
+                    lock (lvl.queueLock) { lvl.blockqueue.Clear(); }
                 } else if (op.TotalModified < reloadThreshold) {
-                    if (!Block.VisuallyEquals(old, b.Block)) BlockQueue.Add(p, index, b.Block);
+                    if (!Block.VisuallyEquals(old, b.Block)) {
+                        BlockQueue.Add(p, lvl, index, b.Block);
+                    }
 
                     if (lvl.physics > 0) {
                         if (old == Block.Sponge && b.Block != Block.Sponge)

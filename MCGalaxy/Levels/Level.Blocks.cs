@@ -411,8 +411,11 @@ namespace MCGalaxy {
             BlockDB.Cache.Add(p, x, y, z, flags, old, block);
             if (type == 1) return; // not different visually
             
-            if (buffered) BlockQueue.Add(p, index, block);
-            else Player.GlobalBlockchange(this, x, y, z, block);
+            if (buffered) {
+                BlockQueue.Add(p, p.level, index, block);
+            } else {
+            	Player.GlobalBlockchange(this, x, y, z, block);
+            }
         }
         
         public BlockDefinition GetBlockDef(BlockID block) {

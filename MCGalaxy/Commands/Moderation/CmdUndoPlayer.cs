@@ -82,9 +82,10 @@ namespace MCGalaxy.Commands.Moderation {
                 foreach (Level lvl in levels) {
                     op.SetMarks(marks);
                     op.SetLevel(lvl);
-                    op.Player = p; p.level = lvl;
-                    DrawOpPerformer.DoQueuedDrawOp(p, op, null, marks);
+                    op.Player = p;
+                    DrawOpPerformer.Execute(p, op, null, marks);
                 }
+                p.level = null;
             } else {
                 DrawOpPerformer.Do(op, null, p, marks);
             }

@@ -119,23 +119,14 @@ namespace MCGalaxy {
                                  TimeSpan.FromMilliseconds(ServerConfig.PositionUpdateInterval));
         }
         
-        static void InitGame(RoundsGame game) {
-            if (!game.GetConfig().StartImmediately) return;
-            try {
-                game.Start(Player.Console, "", int.MaxValue);
-            } catch (Exception ex) { 
-                Logger.LogError("Error auto-starting " + game.GameName, ex); 
-            }
-        }
-        
         static void InitRest(SchedulerTask task) {
             IRC = new IRCBot();
             if (ServerConfig.UseIRC) IRC.Connect();
              
-            InitGame(CountdownGame.Instance);
-            InitGame(ZSGame.Instance);
-            InitGame(LSGame.Instance);
-            InitGame(CTFGame.Instance);
+            CountdownGame.Instance.AutoStart();
+            ZSGame.Instance.AutoStart();
+            LSGame.Instance.AutoStart();
+            CTFGame.Instance.AutoStart();
             
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));

@@ -68,6 +68,23 @@ namespace MCGalaxy.Games {
             t.Name = "MCG_" + GameName;
             t.Start();
         }
+
+        public void AutoStart() {
+            if (!GetConfig().StartImmediately) return;
+            try {
+                Start(Player.Console, "", int.MaxValue);
+            } catch (Exception ex) { 
+                Logger.LogError("Error auto-starting " + GameName, ex); 
+            }
+        }
+        
+        protected virtual string GetStartMap(RoundsGame game, string forcedMap) {
+            if (forcedMap.Length > 0) return forcedMap;
+            List<string> maps = Picker.GetCandidateMaps(game);
+            
+            if (maps == null || maps.Count == 0) return null;
+            return LevelPicker.GetRandomMap(new Random(), maps);
+        }
         
         void RunGame() {
             try {
@@ -88,14 +105,6 @@ namespace MCGalaxy.Games {
                 catch (Exception ex2) { Logger.LogError(ex2); }
             }
             IGame.RunningGames.Remove(this);
-        }
-        
-        protected virtual string GetStartMap(RoundsGame game, string forcedMap) {
-            if (forcedMap.Length > 0) return forcedMap;
-            List<string> maps = Picker.GetCandidateMaps(game);
-            
-            if (maps == null || maps.Count == 0) return null;
-            return LevelPicker.GetRandomMap(new Random(), maps);
         }
         
         protected virtual bool SetMap(string map) {
