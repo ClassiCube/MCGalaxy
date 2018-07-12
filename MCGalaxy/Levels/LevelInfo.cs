@@ -138,7 +138,7 @@ namespace MCGalaxy {
         }
         
         internal static bool ValidateAction(Player p, CommandData data, string map, string action) {
-            if (p == null) return true;           
+            if (p.IsConsole) return true;
             Level lvl; LevelConfig cfg = GetConfig(map, out lvl);
             if (lvl != null) return ValidateAction(p, data, lvl, action);
             
@@ -151,7 +151,7 @@ namespace MCGalaxy {
         }
         
         internal static bool ValidateAction(Player p, CommandData data, Level lvl, string action) {
-            if (p == null) return true;
+            if (p.IsConsole) return true;
             if (!lvl.VisitAccess.CheckDetailed(p) || !lvl.BuildAccess.CheckDetailed(p)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
             }

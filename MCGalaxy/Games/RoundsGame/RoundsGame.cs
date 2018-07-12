@@ -154,6 +154,7 @@ namespace MCGalaxy.Games {
             if (RoundsLeft == 0) return;
             
             string map = Picker.ChooseNextLevel(this);
+            if (!Running) return;
             if (map == null) { ContinueOnSameMap(); return; }
             
             Map.Message("The next map has been chosen - &c" + map.ToLower());

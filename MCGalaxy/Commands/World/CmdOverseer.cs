@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
             string cmd = args[0];
-            string arg = args.Length > 1 ? args[1] : "";
+            string arg1 = args.Length > 1 ? args[1] : "";
             string arg2 = args.Length > 2 ? args[2] : "";
             
             bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
             foreach (SubCommand subCmd in subCommands) {
                 if (!subCmd.Group.CaselessEq(cmd)) continue;
                 
-                subCmd.Handler(p, arg, arg2); return;
+                subCmd.Handler(p, arg1, arg2); return;
             }
             Help(p);
         }
