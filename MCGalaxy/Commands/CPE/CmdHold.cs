@@ -42,7 +42,8 @@ namespace MCGalaxy.Commands.CPE {
                 Player.Message(p, "Cannot hold physics blocks"); return;
             }
             
-            p.Send(Packet.HoldThis(Block.ToRaw(block), locked, p.hasExtBlocks));
+            BlockID raw = p.ConvertBlock(block);
+            p.Send(Packet.HoldThis(raw, locked, p.hasExtBlocks));
             p.Message("Set your held block to {0}.", Block.GetName(p, block));
         }
         

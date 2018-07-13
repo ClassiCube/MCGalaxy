@@ -379,11 +379,8 @@ namespace MCGalaxy {
                 if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
-                    }
-                    
-                    BlockID raw = Block.ToRaw((BlockID)value);
-                    if (raw > MaxRawBlock) raw = level.RawFallback((BlockID)value);
-                    value = raw;
+                    }                    
+                    value = ConvertBlock((BlockID)value);
                 } else {
                     if (zone != null && zone.Config.GetEnvProp(i) != -1) {
                         value = zone.Config.GetEnvProp(i);

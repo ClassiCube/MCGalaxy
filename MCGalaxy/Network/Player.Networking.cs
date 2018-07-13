@@ -265,7 +265,13 @@ namespace MCGalaxy {
             NetUtils.WriteU16(y, buffer, 3);
             NetUtils.WriteU16(z, buffer, 5);
             
-            BlockID raw;
+            BlockID raw = ConvertBlock(block);
+            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
+            Socket.SendLowPriority(buffer);
+        }
+        
+        public BlockID ConvertBlock(BlockID block) {
+        	BlockID raw;
             if (block >= Block.Extended) {
                 raw = Block.ToRaw(block);
             } else {
@@ -278,11 +284,10 @@ namespace MCGalaxy {
             if (!hasBlockDefs && raw < Block.CpeCount) {
                 BlockDefinition def = level.CustomBlockDefs[raw];
                 if (def != null) raw = def.FallBack;
-            }            
-            if (!hasCustomBlocks) raw = Block.ConvertCPE((BlockRaw)raw);
+            }
             
-            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
-            Socket.SendLowPriority(buffer);
+            if (!hasCustomBlocks) raw = Block.ConvertCPE((BlockRaw)raw);
+            return raw;
         }
 
         internal void CloseSocket() { 

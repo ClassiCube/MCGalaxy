@@ -219,7 +219,7 @@ namespace MCGalaxy {
                 if (block >= Block.ExtendedCount) {
                     model = "humanoid"; // invalid block ids
                 } else {
-                    model = pl.level.RawFallback(block).ToString();
+                    model = pl.ConvertBlock(block).ToString();
                 }                
             }
             pl.Send(Packet.ChangeModel(id, model, pl.hasCP437));

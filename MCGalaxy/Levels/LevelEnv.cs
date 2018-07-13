@@ -143,9 +143,7 @@ namespace MCGalaxy {
                 int value = origValue;
                 
                 if (prop == EnvProp.SidesBlock || prop == EnvProp.EdgeBlock) {
-                    BlockID raw = Block.ToRaw((BlockID)value);
-                    if (raw > pl.MaxRawBlock) raw = pl.level.RawFallback((BlockID)value);
-                    value = raw;
+                    value = pl.ConvertBlock((BlockID)value);
                 }
                 
                 if (pl.Supports(CpeExt.EnvMapAspect)) {

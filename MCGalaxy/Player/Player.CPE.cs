@@ -115,10 +115,8 @@ namespace MCGalaxy {
         
         string lastUrl = "";
         public void SendCurrentTextures() {
-            BlockID side = Block.ToRaw(level.Config.EdgeBlock);
-            if (side > MaxRawBlock) side = level.RawFallback(level.Config.EdgeBlock);
-            BlockID edge = Block.ToRaw(level.Config.HorizonBlock);
-            if (edge > MaxRawBlock) edge = level.RawFallback(level.Config.HorizonBlock);
+            BlockID side = ConvertBlock(level.Config.EdgeBlock);
+            BlockID edge = ConvertBlock(level.Config.HorizonBlock);
 
             string url = GetTextureUrl();
             if (Supports(CpeExt.EnvMapAspect)) {
