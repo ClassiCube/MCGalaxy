@@ -41,6 +41,7 @@ namespace MCGalaxy.Commands.Fun {
             
             if (like) p.level.Config.Likes++;
             else p.level.Config.Dislikes++;
+            
             p.Game.RatedMap = true;
             p.Game.LikedMap = like;
             Level.SaveSettings(p.level);

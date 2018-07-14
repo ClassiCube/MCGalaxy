@@ -27,8 +27,15 @@ namespace MCGalaxy {
         }
         
         public static bool CanUseFly(Player p, Level lvl) {
-            byte[] packet = MakeHackControl(p, lvl.GetMotd(p));
-            return packet[1] != 0;
+            return MakeHackControl(p, lvl.GetMotd(p))[1] != 0;
+        }
+        
+        public static bool CanUseNoclip(Player p, Level lvl) {
+            return MakeHackControl(p, lvl.GetMotd(p))[2] != 0;
+        }
+        
+        public static bool CanUseSpeed(Player p, Level lvl) {
+            return MakeHackControl(p, lvl.GetMotd(p))[3] != 0;
         }
         
         public static byte[] MakeHackControl(Player p, string motd) {

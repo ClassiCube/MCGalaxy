@@ -36,7 +36,7 @@ namespace MCGalaxy.SQL {
         public override bool MultipleSchema { get { return false; } }
         
         internal override IDbConnection CreateConnection() {
-            const string format = "Data Source={0}/MCGalaxy.db;Version=3;Pooling={1};Max Pool Size=300;";
+            const string format = "Data Source={0}/MCGalaxy.db;Pooling={1};Max Pool Size=300;";
             string str = string.Format(format, Utils.FolderPath, ServerConfig.DatabasePooling);
             return new SQLiteConnection(str);
         }
