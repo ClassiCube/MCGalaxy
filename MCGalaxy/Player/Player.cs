@@ -422,7 +422,7 @@ namespace MCGalaxy {
                 if (selIndex == 1 && selTitle != null) {
                     SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1" + FormatSelectionMark(selMarks[0]));
                 } else if (selIndex == 2 && selTitle != null) {
-                    SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2" + FormatSelectionMark(selMarks[0]));
+                    SendCpeMessage(CpeMessageType.BottomRight1, "Mark #2" + FormatSelectionMark(selMarks[1]));
                 }
                 if (selIndex != selMarks.Length) return;
                 
