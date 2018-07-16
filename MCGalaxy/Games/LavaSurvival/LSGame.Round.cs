@@ -46,7 +46,9 @@ namespace MCGalaxy.Games {
                         Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
                         Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
                     }
+                	
                     layerSecs++;
+                    flooded = true;
                 }
                 
                 secs++; Thread.Sleep(1000);
