@@ -80,14 +80,12 @@ namespace MCGalaxy.Games {
             return pl.ColoredName + suffix;
         }
         
-        public override void Start(Player p, string map, int rounds) {
-            map = "countdown";
-            if (!LevelInfo.MapExists(map)) {
+        protected override string GetStartMap(Player p, string forcedMap) {
+            if (!LevelInfo.MapExists("countdown")) {
                 p.Message("Countdown level not found, generating..");
                 GenerateMap(p, 32, 32, 32);
             }
-            
-            base.Start(p, map, rounds);
+            return "countdown";
         }
         
         protected override void StartGame() {

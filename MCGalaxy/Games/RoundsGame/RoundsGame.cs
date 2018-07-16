@@ -40,7 +40,7 @@ namespace MCGalaxy.Games {
         
         protected abstract void StartGame();
         public virtual void Start(Player p, string map, int rounds) {
-            map = GetStartMap(this, map);
+            map = GetStartMap(p, map);
             if (map == null) {
                 p.Message("No maps have been setup for {0} yet", GameName); return;
             }
@@ -78,9 +78,9 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected virtual string GetStartMap(RoundsGame game, string forcedMap) {
+        protected virtual string GetStartMap(Player p, string forcedMap) {
             if (forcedMap.Length > 0) return forcedMap;
-            List<string> maps = Picker.GetCandidateMaps(game);
+            List<string> maps = Picker.GetCandidateMaps(this);
             
             if (maps == null || maps.Count == 0) return null;
             return LevelPicker.GetRandomMap(new Random(), maps);
