@@ -34,22 +34,11 @@ namespace MCGalaxy.Commands.Building {
 
             p.Message("Static mode: &a" + p.staticCommands);
             if (message.Length == 0 || !p.staticCommands) return;
+            data.Context = CommandContext.Static;
 
             string[] parts = message.SplitSpaces(2);
-            string cmdName = parts[0], cmdArgs = parts.Length > 1 ? parts[1] : "";
-            Command.Search(ref cmdName, ref cmdArgs);
-            
-            Command cmd = Command.Find(cmdName);
-            if (cmd == null) {
-                p.Message("Unknown command \"" + cmdName + "\"."); return;
-            }
-            
-            if (!p.group.CanExecute(cmd)) {
-                p.Message("Cannot use the \"{0}\" command.", cmdName); return;
-            }
-            
-            data.Context = CommandContext.Static;
-            cmd.Use(p, cmdArgs, data);
+            string cmd = parts[0], args = parts.Length > 1 ? parts[1] : "";
+            p.HandleCommand(cmd, args, data);
         }
         
         public override void Help(Player p) {
