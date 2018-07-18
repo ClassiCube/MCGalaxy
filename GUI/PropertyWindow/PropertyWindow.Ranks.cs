@@ -41,9 +41,11 @@ namespace MCGalaxy.Gui {
         
         
         List<Group> copiedGroups = new List<Group>();
+        Group curGroup;
         void LoadRanks() {
             rank_list.Items.Clear();
             copiedGroups.Clear();
+            curGroup = null;
             
             foreach (Group grp in Group.GroupList) {
                 copiedGroups.Add(grp.CopyConfig());
@@ -60,21 +62,25 @@ namespace MCGalaxy.Gui {
         
         
         void rank_btnColor_Click(object sender, EventArgs e) {
-            chat_ShowColorDialog(rank_btnColor, copiedGroups[rank_list.SelectedIndex].Name + " rank color");
-            copiedGroups[rank_list.SelectedIndex].Color = Colors.Parse(rank_btnColor.Text);
+            chat_ShowColorDialog(rank_btnColor, curGroup.Name + " rank color");
+            curGroup.Color = Colors.Parse(rank_btnColor.Text);
         }
 
         void rank_list_SelectedIndexChanged(object sender, EventArgs e) {
-            if (rankSupressEvents || rank_list.SelectedIndex == -1) return;
+            if (rankSupressEvents) return;
+            curGroup = null;
+            if (rank_list.SelectedIndex == -1) return;
+            
             Group grp = copiedGroups[rank_list.SelectedIndex];
-
+            curGroup = grp;
+            
             rank_txtName.Text = grp.Name;
             rank_numPerm.Value = (int)grp.Permission;
             chat_ParseColor(grp.Color, rank_btnColor);
             rank_txtMOTD.Text = grp.MOTD;
             rank_txtPrefix.Text = grp.Prefix;
             rank_cbAfk.Checked = grp.AfkKicked;
-            rank_numAfk.Value = grp.AfkKickMinutes;
+            rank_numAfk.Value = grp.AfkKickTime;
             
             rank_numDraw.Value = grp.DrawLimit;
             rank_numUndo.Value = grp.MaxUndo;
@@ -90,57 +96,56 @@ namespace MCGalaxy.Gui {
             }
             if (rank_txtName.Text.Length == 0) return;
             
-            copiedGroups[rank_list.SelectedIndex].Name = rank_txtName.Text;
+            curGroup.Name = rank_txtName.Text;
             rankSupressEvents = true;
-            rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)copiedGroups[rank_list.SelectedIndex].Permission;
+            rank_list.Items[rank_list.SelectedIndex] = rank_txtName.Text + " = " + (int)curGroup.Permission;
             rankSupressEvents = false;
         }
 
         void rank_numPerm_ValueChanged(object sender, EventArgs e) {
             int perm = (int)rank_numPerm.Value;
-            copiedGroups[rank_list.SelectedIndex].Permission = (LevelPermission)perm;
+            curGroup.Permission = (LevelPermission)perm;
             rankSupressEvents = true;
-            rank_list.Items[rank_list.SelectedIndex] = copiedGroups[rank_list.SelectedIndex].Name + " = " + perm;
+            rank_list.Items[rank_list.SelectedIndex] = curGroup.Name + " = " + perm;
             rankSupressEvents = false;
         }
 
         
         void rank_txtMOTD_TextChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MOTD = rank_txtMOTD.Text;
+            curGroup.MOTD = rank_txtMOTD.Text;
         }
         
         void rank_txtPrefix_TextChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].Prefix = rank_txtPrefix.Text;
+            curGroup.Prefix = rank_txtPrefix.Text;
         }
         
         void rank_cbAfk_CheckedChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].AfkKicked = rank_cbAfk.Checked;
+            curGroup.AfkKicked = rank_cbAfk.Checked;
             rank_numAfk.Enabled = rank_cbAfk.Checked;
-            rank_lblAfk.Enabled = rank_cbAfk.Checked;
         }
         
         void rank_numAfk_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].AfkKickMinutes = (int)rank_numAfk.Value;
+            curGroup.AfkKickTime = rank_numAfk.Value;
         }       
         
         void rank_numDraw_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].DrawLimit = (int)rank_numDraw.Value;
+            curGroup.DrawLimit = (int)rank_numDraw.Value;
         }
         
         void rank_numUndo_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].MaxUndo = (int)rank_numUndo.Value;
+            curGroup.MaxUndo = (int)rank_numUndo.Value;
         }
         
         void rank_numMaps_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].OverseerMaps = (int)rank_numMaps.Value;
+            curGroup.OverseerMaps = (int)rank_numMaps.Value;
         }
         
         void rank_numGen_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].GenVolume = (int)rank_numGen.Value;
+            curGroup.GenVolume = (int)rank_numGen.Value;
         }
         
         void rank_numCopy_ValueChanged(object sender, EventArgs e) {
-            copiedGroups[rank_list.SelectedIndex].CopySlots = (int)rank_numCopy.Value;
+            curGroup.CopySlots = (int)rank_numCopy.Value;
         }
         
         void rank_btnAdd_Click(object sender, EventArgs e) {

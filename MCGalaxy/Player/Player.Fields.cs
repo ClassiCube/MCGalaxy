@@ -60,7 +60,7 @@ namespace MCGalaxy {
         public string ip;
         public string color;
         public Group group;
-        public LevelPermission oHideRank = LevelPermission.Null;
+        public LevelPermission hideRank = LevelPermission.Banned;
         public bool hidden;
         public bool painting;
         public bool muted;

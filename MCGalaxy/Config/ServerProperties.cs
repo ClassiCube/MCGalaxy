@@ -142,7 +142,7 @@ namespace MCGalaxy {
         
         static void SetOldAfkKick() {
             foreach (Group grp in Group.GroupList) {
-                grp.AfkKickMinutes = old.afkKickMins;
+        	    grp.AfkKickTime = TimeSpan.FromMinutes(old.afkKickMins);
                 // 0 minutes had the special meaning of 'not AFK kicked'
                 grp.AfkKicked = old.afkKickMins > 0 && grp.Permission < old.afkKickMax;
             }

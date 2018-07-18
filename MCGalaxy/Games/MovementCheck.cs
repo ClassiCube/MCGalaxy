@@ -26,11 +26,11 @@ namespace MCGalaxy.Games {
             int dz = Math.Abs(a.Pos.Z - b.Pos.Z);
             return dx <= dist && dy <= dist && dz <= dist;
         }
+		static TimeSpan interval = TimeSpan.FromSeconds(5);
         
         public static bool DetectNoclip(Player p, Position newPos) {
             if (p.Game.Referee || Hacks.CanUseNoclip(p, p.level)) return false;
-            if (!p.CheckIfInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, 1))
-                return false;
+            if (!p.IsInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, interval)) return false;
             
             Warn(ref p.Game.LastNoclipWarn, p, "noclip");
             return false;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
             
             int maxMove = (int)(moveDist * 32);
             bool speedhacking = dx >= maxMove || dz >= maxMove;         
-            if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, 1)) return false;
+            if (!speedhacking || p.Game.SpeedhackLog.AddSpamEntry(5, interval)) return false;
             
             Warn(ref p.Game.LastSpeedhackWarn, p, "speedhack");
             p.SendPos(Entities.SelfID, p.Pos, p.Rot);

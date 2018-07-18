@@ -94,8 +94,8 @@ namespace MCGalaxy {
         [ConfigString("backup-location", "Backup", "")]
         public static string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
         
-        [ConfigInt("afk-minutes", "Other", 10)]
-        public static int AutoAfkMins = 10;
+        [ConfigTimespan("afk-minutes", "Other", 10, true)]
+        public static TimeSpan AutoAfkTime = TimeSpan.FromMinutes(10);
         [ConfigString("default-rank", "General", "guest")]
         public static string DefaultRankName = "guest";
 
@@ -242,34 +242,34 @@ namespace MCGalaxy {
         public static bool ChatSpamCheck = false;
         [ConfigInt("spam-messages", "Spam control", 8, 0, 10000)]
         public static int ChatSpamCount = 8;
-        [ConfigInt("spam-mute-time", "Spam control", 60, 0, 1000000)]
-        public static int ChatSpamMuteTime = 60;
-        [ConfigInt("spam-counter-reset-time", "Spam control", 5, 0, 10000)]
-        public static int ChatSpamInterval = 5;
+        [ConfigTimespan("spam-mute-time", "Spam control", 60, false)]
+        public static TimeSpan ChatSpamMuteTime = TimeSpan.FromSeconds(60);
+        [ConfigTimespan("spam-counter-reset-time", "Spam control", 5, false)]
+        public static TimeSpan ChatSpamInterval = TimeSpan.FromSeconds(5);
         
         [ConfigBool("cmd-spam-check", "Spam control", true)]
         public static bool CmdSpamCheck = true;
         [ConfigInt("cmd-spam-count", "Spam control", 25, 0, 10000)]
         public static int CmdSpamCount = 25;
-        [ConfigInt("cmd-spam-block-time", "Spam control", 30, 0, 1000000)]
-        public static int CmdSpamBlockTime = 30;
-        [ConfigInt("cmd-spam-interval", "Spam control", 1, 0, 10000)]
-        public static int CmdSpamInterval = 1;
+        [ConfigTimespan("cmd-spam-block-time", "Spam control", 30, false)]
+        public static TimeSpan CmdSpamBlockTime = TimeSpan.FromSeconds(30);
+        [ConfigTimespan("cmd-spam-interval", "Spam control", 1, false)]
+        public static TimeSpan CmdSpamInterval = TimeSpan.FromSeconds(1);
         
         [ConfigBool("block-spam-check", "Spam control", true)]
         public static bool BlockSpamCheck = true;
         [ConfigInt("block-spam-count", "Spam control", 200, 0, 10000)]
         public static int BlockSpamCount = 200;
-        [ConfigInt("block-spam-interval", "Spam control", 5, 0, 10000)]
-        public static int BlockSpamInterval = 5;
+        [ConfigTimespan("block-spam-interval", "Spam control", 5, false)]
+        public static TimeSpan BlockSpamInterval = TimeSpan.FromSeconds(5);
         
         [ConfigBool("ip-spam-check", "Spam control", true)]
         public static bool IPSpamCheck = true;
         [ConfigInt("ip-spam-count", "Spam control", 25, 0, 10000)]
         public static int IPSpamCount = 10;
-        [ConfigInt("ip-spam-block-time", "Spam control", 30, 0, 1000000)]
-        public static int IPSpamBlockTime = 180;
-        [ConfigInt("ip-spam-interval", "Spam control", 1, 0, 10000)]
-        public static int IPSpamInterval = 60;
+        [ConfigTimespan("ip-spam-block-time", "Spam control", 180, false)]
+        public static TimeSpan IPSpamBlockTime = TimeSpan.FromSeconds(180);
+        [ConfigTimespan("ip-spam-interval", "Spam control", 60, false)]
+        public static TimeSpan IPSpamInterval = TimeSpan.FromSeconds(60);
     }
 }

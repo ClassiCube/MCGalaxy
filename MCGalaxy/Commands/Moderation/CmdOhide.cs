@@ -32,11 +32,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckRank(p, who, "hide", false)) return;
             
             bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
-            if (own) who.oHideRank = data.Rank;
+            if (!own) data.Rank = who.Rank;
             
             Command.Find("Hide").Use(who, "", data);
-            p.Message("Hidden {0} %Sfrom players below {1} rank",
-                           who.ColoredName, own ? "your" : "their");
+            p.Message("Hidden {0} %Sfrom players ranked below {1}",
+                      who.ColoredName, Group.GetColoredName(data.Rank));
         }
 
         public override void Help(Player p) {

@@ -32,72 +32,7 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
-            LoadLevel(p, args[0], false);
-        }
-        
-        public static Level LoadLevel(Player p, string name, bool autoLoaded = false) {
-            name = name.ToLower();
-            try {
-                return LoadLevelCore(p, name, autoLoaded);
-            } finally {
-                Server.DoGC();
-            }
-        }
-        
-        static Level LoadLevelCore(Player p, string name, bool autoLoaded) {
-            if (!LevelInfo.MapExists(name)) {
-                p.Message("Level \"{0}\" does not exist", name); return null;
-            }
-            
-            Level existing = LevelInfo.FindExact(name);
-            if (existing != null) {
-                p.Message("Level {0} %Sis already loaded.", existing.ColoredName); return null;
-            }
-            
-            Level lvl = ReadLevel(p, name);
-            if (lvl == null || !lvl.CanJoin(p)) return null;
-
-            existing = LevelInfo.FindExact(name);
-            if (existing != null) {
-                p.Message("Level {0} %Sis already loaded.", existing.ColoredName); return null;
-            }
-
-            LevelInfo.Loaded.Add(lvl);
-            OnLevelAddedEvent.Call(lvl);
-            
-            if (!autoLoaded) {
-                string autoloadMsg = "Level " + lvl.ColoredName + " %Sloaded.";
-                Chat.Message(ChatScope.All, autoloadMsg, null, Chat.FilterVisible(p));
-            }
-            return lvl;
-        }
-        
-        static Level ReadLevel(Player p, string name) {
-            Level level = Level.Load(name);
-            if (level != null) return level;
-            if (!File.Exists(LevelInfo.MapPath(name) + ".backup")) {
-                p.Message("Backup of {0} does not exist.", name); return null;
-            }
-            
-            Logger.Log(LogType.Warning, "Attempting to load backup map for " + name);
-            level = Level.Load(name, LevelInfo.MapPath(name) + ".backup");
-            if (level != null) return level;
-            
-            p.Message("Loading backup failed.");
-            string backupPath = LevelInfo.BackupBasePath(name);
-            
-            if (Directory.Exists(backupPath)) {
-                int latest = LevelInfo.LatestBackup(name);
-                Logger.Log(LogType.Warning, "Attempting to load latest backup of {0}, number {1} instead.", name, latest);
-                
-                string path = LevelInfo.BackupFilePath(name, latest.ToString());
-                level = Level.Load(name, path);
-                if (level == null)
-                    p.Message("Loading latest backup failed as well.");
-            } else {
-                p.Message("Latest backup of {0} does not exist.", name);
-            }
-            return level;
+            LevelActions.Load(p, args[0], true);
         }
         
         public override void Help(Player p) {

@@ -52,11 +52,11 @@ namespace MCGalaxy.Games {
         [ConfigInt("layer-count", null, 10, 0)]
         public int LayerCount = 10;
         
-        [ConfigTimespan("layer-interval", null, 2)]
+        [ConfigTimespan("layer-interval", null, 2, true)]
         public TimeSpan LayerInterval = TimeSpan.FromMinutes(2);
-        [ConfigTimespan("round-time", null, 15)]
+        [ConfigTimespan("round-time", null, 15, true)]
         public TimeSpan RoundTime = TimeSpan.FromMinutes(15);
-        [ConfigTimespan("flood-time", null, 5)]
+        [ConfigTimespan("flood-time", null, 5, true)]
         public TimeSpan FloodTime = TimeSpan.FromMinutes(5);
         
         [ConfigVec3("block-flood", null)] public Vec3U16 FloodPos;

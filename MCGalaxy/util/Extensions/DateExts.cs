@@ -37,7 +37,7 @@ namespace MCGalaxy {
             return (long)(time.ToUniversalTime() - UnixEpoch).TotalSeconds;
         }
         
-        public static bool AddSpamEntry(this List<DateTime> log, int maxEntries, int checkInterval) {
+        public static bool AddSpamEntry(this List<DateTime> log, int maxEntries, TimeSpan checkInterval) {
             DateTime now = DateTime.UtcNow;
             if (log.Count > 0 && log.Count >= maxEntries)
                 log.RemoveAt(0);
@@ -45,7 +45,7 @@ namespace MCGalaxy {
             
             if (log.Count < maxEntries) return true;
             TimeSpan oldestDelta = now - log[0];
-            return oldestDelta.TotalSeconds > checkInterval;
+            return oldestDelta > checkInterval;
         }
     }
 }

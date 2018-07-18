@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CommandParser.IsBlockAllowed(p, "change permissions of", block)) return;
 
             BlockPerms perms = BlockPerms.Find(block);
-            SetPerms(p, args, perms, "block");
+            SetPerms(p, args, data, perms, "block");
         }
         
         protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {

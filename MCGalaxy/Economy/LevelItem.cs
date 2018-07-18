@@ -86,8 +86,7 @@ namespace MCGalaxy.Eco {
             p.Message("&aCreating level: '&f" + name + "&a' . . .");
             UseCommand(p, "NewLvl", name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
                 
-            CmdLoad.LoadLevel(Player.Console, name);
-            Level level = LevelInfo.FindExact(name);
+            Level level = LevelActions.Load(Player.Console, name, true);
             CmdOverseer.SetPerms(p, level);
             Level.SaveSettings(level);
             PlayerActions.ChangeMap(p, name);

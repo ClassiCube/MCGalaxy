@@ -22,9 +22,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected void SetPerms(Player p, string[] args, ItemPerms perms, string type) {
+        protected void SetPerms(Player p, string[] args, CommandData data, ItemPerms perms, string type) {
             string grpName = args[1];          
-            if (!perms.UsableBy(p.Rank)) {
+            if (!perms.UsableBy(data.Rank)) {
                 p.Message("You rank cannot use this {0}.", type); return;
             }
             
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Group grp = GetGroup(p, grpName.Substring(1));
                 if (grp == null) return;
 
-                if (p.Rank == grp.Permission) {
+                if (data.Rank == grp.Permission) {
                     p.Message("You cannot disallow your own rank from using a {0}.", type); return;
                 }
                 

@@ -170,7 +170,7 @@ namespace MCGalaxy.Commands {
             }
             
             block = Block.Parse(p, input);
-            if (block == Block.Invalid) p.Message("&cThere is no block \"{0}\".", input);
+            if (block == Block.Invalid) p.Message("%WThere is no block \"{0}\".", input);
             return block != Block.Invalid;
         }
 
@@ -185,7 +185,7 @@ namespace MCGalaxy.Commands {
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
         /// <remarks> Outputs information of which ranks can modify the block if not. </remarks>
         public static bool IsBlockAllowed(Player p, string action, BlockID block) {
-            if (p.group.Blocks[block]) return true;            
+            if (p.group.Blocks[block]) return true;
             BlockPerms.Find(block).MessageCannotUse(p, action);
             return false;
         }

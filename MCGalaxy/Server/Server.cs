@@ -295,7 +295,7 @@ namespace MCGalaxy {
             
             Level lvl = LevelInfo.FindExact(mapName);
             if (lvl == null)
-                lvl = CmdLoad.LoadLevel(Player.Console, mapName);
+                lvl = LevelActions.Load(Player.Console, mapName, false);
             if (lvl == null) return false;
             
             SetMainLevel(lvl); return true;

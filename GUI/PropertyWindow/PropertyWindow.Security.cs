@@ -61,22 +61,22 @@ namespace MCGalaxy.Gui {
             
             ServerConfig.ChatSpamCheck = sec_cbChatAuto.Checked;
             ServerConfig.ChatSpamCount = (int)sec_numChatMsgs.Value;
-            ServerConfig.ChatSpamInterval = (int)sec_numChatSecs.Value;
-            ServerConfig.ChatSpamMuteTime = (int)sec_numChatMute.Value;
+            ServerConfig.ChatSpamInterval = sec_numChatSecs.Value;
+            ServerConfig.ChatSpamMuteTime = sec_numChatMute.Value;
             
             ServerConfig.CmdSpamCheck = sec_cbCmdAuto.Checked;
             ServerConfig.CmdSpamCount = (int)sec_numCmdMsgs.Value;
-            ServerConfig.CmdSpamInterval = (int)sec_numCmdSecs.Value;
-            ServerConfig.CmdSpamBlockTime = (int)sec_numCmdMute.Value;
+            ServerConfig.CmdSpamInterval = sec_numCmdSecs.Value;
+            ServerConfig.CmdSpamBlockTime = sec_numCmdMute.Value;
             
             ServerConfig.BlockSpamCheck = sec_cbBlocksAuto.Checked;
             ServerConfig.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
-            ServerConfig.BlockSpamInterval = (int)sec_numBlocksSecs.Value;
+            ServerConfig.BlockSpamInterval = sec_numBlocksSecs.Value;
             
             ServerConfig.IPSpamCheck = sec_cbIPAuto.Checked;
             ServerConfig.IPSpamCount = (int)sec_numIPMsgs.Value;
-            ServerConfig.IPSpamInterval = (int)sec_numIPSecs.Value;
-            ServerConfig.IPSpamBlockTime = (int)sec_numIPMute.Value;
+            ServerConfig.IPSpamInterval = sec_numIPSecs.Value;
+            ServerConfig.IPSpamBlockTime = sec_numIPMute.Value;
         }
         
         

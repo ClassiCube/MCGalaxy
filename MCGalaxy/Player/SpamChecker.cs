@@ -62,7 +62,7 @@ namespace MCGalaxy {
                 if (chatLog.AddSpamEntry(ServerConfig.ChatSpamCount, ServerConfig.ChatSpamInterval)) 
                     return false;
                 
-                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
+                TimeSpan duration = ServerConfig.ChatSpamMuteTime;
                 ModAction action = new ModAction(p.name, Player.Console, ModActionType.Muted, "&0Auto mute for spamming", duration);
                 OnModActionEvent.Call(action);
                 return true;
@@ -76,9 +76,10 @@ namespace MCGalaxy {
                 if (cmdLog.AddSpamEntry(ServerConfig.CmdSpamCount, ServerConfig.CmdSpamInterval)) 
                     return false;
                 
-                p.Message("You have been blocked from using commands for " +
-                              ServerConfig.CmdSpamBlockTime + " seconds due to spamming");
-                p.cmdUnblocked = DateTime.UtcNow.AddSeconds(ServerConfig.CmdSpamBlockTime);
+                string blockTime = ServerConfig.CmdSpamBlockTime.Shorten(true, true);
+                p.Message("You have been blocked from using commands for "
+                          + blockTime + " due to spamming");
+                p.cmdUnblocked = DateTime.UtcNow.Add(ServerConfig.CmdSpamBlockTime);
                 return true;
             }
         }

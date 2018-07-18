@@ -32,11 +32,9 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-                mainLevel = CmdLoad.LoadLevel(Player.Console, ServerConfig.MainLevel);
-                if (mainLevel == null) GenerateMain();
-                
+				mainLevel = LevelActions.Load(Player.Console, ServerConfig.MainLevel, false);
+                if (mainLevel == null) GenerateMain();                
                 mainLevel.Config.AutoUnload = false;
-                LevelInfo.Add(mainLevel);
             } catch (Exception ex) {
                 Logger.LogError("Error loading main level", ex);
             }
@@ -45,8 +43,10 @@ namespace MCGalaxy {
         static void GenerateMain() {
             Logger.Log(LogType.SystemActivity, "main level not found, generating..");
             mainLevel = new Level(ServerConfig.MainLevel, 128, 64, 128);
+            
             MapGen.Generate(mainLevel, "flat", "", null);
             mainLevel.Save();
+            LevelInfo.Add(mainLevel);
         }
         
         static void LoadPlayerLists(SchedulerTask task) {
@@ -88,7 +88,7 @@ namespace MCGalaxy {
             
             foreach (string map in maps) {
                 if (map.CaselessEq(ServerConfig.MainLevel)) continue;
-                CmdLoad.LoadLevel(Player.Console, map);
+                LevelActions.Load(Player.Console, map, false);
             }
         }
         

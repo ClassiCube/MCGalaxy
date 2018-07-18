@@ -54,6 +54,10 @@
     <Compile Include="..\CLI\CLI.cs">
       <Link>CLI.cs</Link>
     </Compile>
+    <Compile Include="Controls\ColoredTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TimespanUpDown.cs" />
     <Compile Include="Descriptors.cs" />
     <Compile Include="GuiPerms.cs" />
     <Compile Include="Popups\ColorSelector.cs" />
@@ -105,9 +109,6 @@
     <Compile Include="Settings\PlayerProperties.cs" />
     <Compile Include="Settings\TypeConverters.cs" />
     <Compile Include="Settings\ZombieProperties.cs" />
-    <Compile Include="ColoredTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs" />
     <Compile Include="UPnP.cs" />
     <Compile Include="Window\Window.cs">
@@ -120,9 +121,6 @@
     <Compile Include="Window\Window.Main.cs" />
     <Compile Include="Window\Window.Map.cs" />
     <Compile Include="Window\Window.Players.cs" />
-    <EmbeddedResource Include="Popups\PortTools.resx">
-      <DependentUpon>PortTools.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Window\Window.resx">
       <DependentUpon>Window.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -142,6 +140,7 @@
     <Content Include="Galaxy.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controls" />
     <Folder Include="Popups" />
     <Folder Include="PropertyWindow" />
     <Folder Include="Window" />

@@ -313,7 +313,7 @@ namespace MCGalaxy.Games {
         }
 
         static int GetMoneyReward(Player pl, ZSData data, Player[] alive, Random rand) {
-            if (pl.CheckIfInsideBlock()) return -1;
+            if (pl.IsInsideBlock()) return -1;
             
             if (alive.Length == 0) {
                 return rand.Next(1 + data.CurrentInfected, 5 + data.CurrentInfected);

@@ -110,7 +110,7 @@ namespace MCGalaxy.Games {
         protected virtual bool SetMap(string map) {
             Picker.QueuedMap = null;
             Level next = LevelInfo.FindExact(map);
-            if (next == null) next = CmdLoad.LoadLevel(Player.Console, map);
+            if (next == null) next = LevelActions.Load(Player.Console, map, false);
             if (next == null) return false;
             
             Map = next;

@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Group group = ModActionCmd.CheckTarget(p, "mute", who.name);
                 if (group == null) return;
                 
-                TimeSpan duration = TimeSpan.FromSeconds(ServerConfig.ChatSpamMuteTime);
+                TimeSpan duration = ServerConfig.ChatSpamMuteTime;
                 if (args.Length > 1) {
                     if (!CommandParser.GetTimespan(p, args[1], ref duration, "mute for", "s")) return;
                 }

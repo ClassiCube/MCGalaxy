@@ -98,6 +98,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             who.group = newRank;
             who.AllowBuild = who.level.BuildAccess.CheckAllowed(who);
+            if (who.hidden && who.hideRank < who.Rank) who.hideRank = who.Rank;
             
             who.SetPrefix();
             who.Send(Packet.UserType(who));

@@ -173,10 +173,8 @@ namespace MCGalaxy {
         
         /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
         public static bool CanSee(Player p, Player target) {
-            if (p == null || target == null || !target.hidden || p == target) return true;
-            
-            if (target.oHideRank != LevelPermission.Null) return p.Rank >= target.oHideRank;
-            return p.Rank >= target.Rank;
+            if (p == null || target == null || !target.hidden || p == target) return true;           
+            return p.Rank >= target.hideRank;
         }
 
         public static void UpdateModel(Entity entity, string model) {

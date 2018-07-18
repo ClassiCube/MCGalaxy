@@ -86,7 +86,7 @@ namespace MCGalaxy {
             bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
             if (!visitAccess.CheckDetailed(p, ignorePerms)) return false;
             
-            CmdLoad.LoadLevel(p, name, true);
+            LevelActions.Load(p, name, false);
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) return GotoLevel(p, lvl);
 

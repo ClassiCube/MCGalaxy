@@ -59,8 +59,8 @@ namespace MCGalaxy {
         public int OverseerMaps = 3;
         [ConfigBool("AfkKicked", null, true)]
         public bool AfkKicked = true;
-        [ConfigInt("AfkKickMinutes", null, 45, 0)]
-        public int AfkKickMinutes = 45;
+        [ConfigTimespan("AfkKickMinutes", null, 45, true)]
+        public TimeSpan AfkKickTime = TimeSpan.FromMinutes(45);
         [ConfigString("Prefix", null, "", true)] 
         public string Prefix = "";
         [ConfigInt("CopySlots", null, 0, 0)]
@@ -113,7 +113,7 @@ namespace MCGalaxy {
             copy.Name = Name; copy.Color = Color; copy.Permission = Permission;
             copy.DrawLimit = DrawLimit; copy.MaxUndo = MaxUndo; copy.MOTD = MOTD;
             copy.GenVolume = GenVolume; copy.OverseerMaps = OverseerMaps;
-            copy.AfkKicked = AfkKicked; copy.AfkKickMinutes = AfkKickMinutes;
+            copy.AfkKicked = AfkKicked; copy.AfkKickTime = AfkKickTime;
             copy.Prefix = Prefix; copy.CopySlots = CopySlots; copy.filename = filename;
             return copy;
         }

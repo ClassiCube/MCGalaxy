@@ -41,7 +41,7 @@ namespace MCGalaxy.Core {
                 
                 if (blockedUntil < now) {
                     if (!entry.AddSpamEntry(ServerConfig.IPSpamCount, ServerConfig.IPSpamInterval)) {
-                        entry.BlockedUntil = now.AddSeconds(ServerConfig.IPSpamBlockTime);
+                        entry.BlockedUntil = now.Add(ServerConfig.IPSpamBlockTime);
                     }
                     return true;
                 }
@@ -62,7 +62,7 @@ namespace MCGalaxy.Core {
                 if (!ServerConfig.IPSpamCheck) { ips.Clear(); return; }
                 
                 // Find all connections which last joined before the connection spam check interval
-                DateTime threshold = DateTime.UtcNow.AddSeconds(-ServerConfig.IPSpamInterval);
+                DateTime threshold = DateTime.UtcNow.Add(-ServerConfig.IPSpamInterval);
                 List<string> expired = null;
                 foreach (var kvp in ips) {
                     DateTime lastJoin = kvp.Value[kvp.Value.Count - 1];

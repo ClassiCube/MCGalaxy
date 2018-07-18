@@ -32,8 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void AnnounceOps(Player p, string msg) {
-            LevelPermission hideRank = p.oHideRank == LevelPermission.Null ? p.Rank : p.oHideRank;
-            ItemPerms perms = new ItemPerms(hideRank, null, null);
+            ItemPerms perms = new ItemPerms(p.hideRank, null, null);
             Chat.MessageFrom(ChatScope.Perms, p, msg, perms, null, true);
         }
 
@@ -54,6 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.hidden = !p.hidden;
             if (p.hidden) {
                 AnnounceOps(p, "To Ops -λNICK%S- is now &finvisible");
+                p.hideRank = data.Rank;
                 
                 if (!silent) {
                     string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Server.hidden.AddIfNotExists(p.name);
             } else {
                 AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
-                p.oHideRank = LevelPermission.Null;
+                p.hideRank = LevelPermission.Banned;
                 
                 if (!silent) {
                     string joinM = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);

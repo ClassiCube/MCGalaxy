@@ -100,20 +100,22 @@ namespace MCGalaxy.Tasks {
                     p.Send(Packet.Ping());
                 }
                 
-                if (ServerConfig.AutoAfkMins <= 0) return;
+                if (ServerConfig.AutoAfkTime.Ticks <= 0) return;
                 if (DateTime.UtcNow < p.AFKCooldown) return;
                 
                 if (p.IsAfk) {
-                    int time = p.group.AfkKickMinutes;
-                    if (p.AutoAfk) time += ServerConfig.AutoAfkMins;
+                    TimeSpan time = p.group.AfkKickTime;
+                    if (p.AutoAfk) time += ServerConfig.AutoAfkTime;
                     
-                    if (p.group.AfkKicked && p.LastAction.AddMinutes(time) < DateTime.UtcNow) {
-                        p.Leave("Auto-kick, AFK for " + p.group.AfkKickMinutes + " minutes");
+                    if (p.group.AfkKicked && p.LastAction.Add(time) < DateTime.UtcNow) {
+                        string afkTime = p.group.AfkKickTime.Shorten(true, true);
+                        p.Leave("Auto-kick, AFK for " + afkTime);
                     }
                 } else {
                     DateTime lastAction = p.LastAction;
-                    if (lastAction.AddMinutes(ServerConfig.AutoAfkMins) < DateTime.UtcNow) {
-                        CmdAfk.ToggleAfk(p, "auto: Not moved for " + ServerConfig.AutoAfkMins + " minutes");
+                    if (lastAction.Add(ServerConfig.AutoAfkTime) < DateTime.UtcNow) {
+                        string afkTime = ServerConfig.AutoAfkTime.Shorten(true, true);
+                        CmdAfk.ToggleAfk(p, "auto: Not moved for " + afkTime);
                         p.AutoAfk = true;
                         p.LastAction = lastAction;
                     }

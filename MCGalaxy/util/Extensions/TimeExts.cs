@@ -35,6 +35,10 @@ namespace MCGalaxy {
             if (time.Length == 0) time = seconds ? "0s" : "0m";
             return negate ? "-" + time : time;
         }
+		
+        public static long SecondsLong(this TimeSpan value) {
+            return value.Ticks / TimeSpan.TicksPerSecond;
+        }
         
         static void Add(ref string time, int amount, char suffix, bool spaces) {
             if (amount == 0) return;

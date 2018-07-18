@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args.Length == 2) {
                 CommandPerms perms = CommandPerms.Find(cmd.name);
-                SetPerms(p, args, perms, "command");
+                SetPerms(p, args, data, perms, "command");
             } else {
                 int num = 0;
                 if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref num)) return;
@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (perms == null) {
                     p.Message("This command has no extra permission by that number."); return;
                 }
-                SetPerms(p, args, perms, "extra permission");
+                SetPerms(p, args, data, perms, "extra permission");
             }
         }
         

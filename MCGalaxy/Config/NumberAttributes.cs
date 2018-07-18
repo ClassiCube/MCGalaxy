@@ -44,7 +44,7 @@ namespace MCGalaxy.Config {
             }
             return value;
         }
-    }   
+    }
     
     // Hacky workaround for old ExponentialFog attribute
     public sealed class ConfigBoolIntAttribute : ConfigIntAttribute {
@@ -78,7 +78,7 @@ namespace MCGalaxy.Config {
     public class ConfigRealAttribute : ConfigAttribute {
         float defValue, minValue, maxValue;
         
-        public ConfigRealAttribute(string name, string section, float def, 
+        public ConfigRealAttribute(string name, string section, float def,
                                    float min = float.NegativeInfinity, float max = float.PositiveInfinity)
             : base(name, section) { defValue = def; minValue = min; maxValue = max; }
         
@@ -102,17 +102,23 @@ namespace MCGalaxy.Config {
     }
     
     public class ConfigTimespanAttribute : ConfigRealAttribute {
-        public ConfigTimespanAttribute(string name, string section, float def) 
-            : base(name, section, def, 0) { }
+        bool mins;
+        public ConfigTimespanAttribute(string name, string section, float def, bool mins)
+            : base(name, section, def, 0) { this.mins = mins; }
         
         public override object Parse(string raw) {
             float value = (float)base.Parse(raw);
-            return TimeSpan.FromMinutes(value);
+            if (mins) {
+                return TimeSpan.FromMinutes(value);
+            } else {
+                return TimeSpan.FromSeconds(value);
+            }
         }
         
         public override string Serialise(object value) {
             TimeSpan span = (TimeSpan)value;
-            return span.TotalMinutes.ToString();
+            double time = mins ? span.TotalMinutes : span.TotalSeconds;
+            return time.ToString();
         }
     }
 }

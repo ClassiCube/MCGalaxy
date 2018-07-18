@@ -100,10 +100,7 @@ namespace MCGalaxy {
             
             // hidden via /hide or /ohide
             // TODO: Just use Entities.CanSee
-            if (target.hidden) {
-                if (target.oHideRank != LevelPermission.Null) return Rank >= target.oHideRank;
-                return Rank >= target.Rank;
-            }
+            if (target.hidden) return Rank >= target.hideRank;
             
             if (!ZSGame.Instance.Running || Game.Referee) return true;
             ZSData data = ZSGame.TryGet(target);
@@ -138,7 +135,7 @@ namespace MCGalaxy {
              return color + "[" + titleCol + title + color + "] ";
         }
         
-        public bool CheckIfInsideBlock() {
+        public bool IsInsideBlock() {
             AABB bb = ModelBB.OffsetPosition(Pos);
             return AABB.IntersectsSolidBlocks(bb, level);
         }
