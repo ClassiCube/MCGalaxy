@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Moderation {
             string line = Server.tempRanks.FindData(target);
             if (line == null) {
                 p.Message("{0} %Whas not been assigned a temp rank.",
-            	          PlayerInfo.GetColoredName(p, target));
+                          PlayerInfo.GetColoredName(p, target));
                 return;
             }
             

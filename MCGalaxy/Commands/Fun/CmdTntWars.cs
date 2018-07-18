@@ -87,11 +87,11 @@ namespace MCGalaxy.Commands.Fun {
             } else if (prop.CaselessEq("graceperiod")) {
                 SetBool(p, ref cfg.GracePeriod, value, "Grace period");
             } else if (prop.CaselessEq("gracetime")) {
-                int time = 1;
-                if (!CommandParser.GetInt(p, value, "Grace time", ref time, 10, 300)) return;
+                TimeSpan time = default(TimeSpan);
+                if (!CommandParser.GetTimespan(p, value, ref time, "set grace time to", "s")) return;
                 cfg.GracePeriodTime = time;
                 
-                p.Message("TNT Wars: Grace period is now {0} seconds", value);
+                p.Message("TNT Wars: Grace period is now {0}", time.Shorten(true, true));
             } else if (prop.CaselessEq("gamemode")) {
                 if (value.CaselessEq("tdm")) {
                     if (gameCfg.Mode == TWGameMode.FFA) {

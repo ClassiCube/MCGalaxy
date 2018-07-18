@@ -128,6 +128,10 @@ namespace MCGalaxy.Gui {
             ls_numLayer.Value = lsCurCfg.LayerChance;
             ls_numCount.Value = lsCurCfg.LayerCount;
             ls_numHeight.Value = lsCurCfg.LayerHeight;
+            
+            ls_numRound.Value = lsCurCfg.RoundTime;
+            ls_numFlood.Value = lsCurCfg.FloodTime;
+            ls_numLayerTime.Value = lsCurCfg.LayerInterval;
         }
         
         void SaveLSMapSettings() {
@@ -139,7 +143,11 @@ namespace MCGalaxy.Gui {
             
             lsCurCfg.LayerChance = (int)ls_numLayer.Value;
             lsCurCfg.LayerCount  = (int)ls_numCount.Value;
-            lsCurCfg.LayerHeight = (int)ls_numHeight.Value;         
+            lsCurCfg.LayerHeight = (int)ls_numHeight.Value;
+            
+            lsCurCfg.RoundTime = ls_numRound.Value;
+            lsCurCfg.FloodTime = ls_numFlood.Value;
+            lsCurCfg.LayerInterval = ls_numLayerTime.Value;
             lsCurCfg.Save(lsCurMap);
             
             LSGame game = LSGame.Instance;
@@ -220,7 +228,7 @@ namespace MCGalaxy.Gui {
             twCurCfg.Streaks = tw_cbStreaks.Checked;
             
             twCurCfg.GracePeriod = tw_cbGrace.Checked;
-            twCurCfg.GracePeriodTime = (int)tw_numGrace.Value;
+            twCurCfg.GracePeriodTime = tw_numGrace.Value;
             twCurCfg.BalanceTeams = tw_cbBalance.Checked;
             twCurCfg.TeamKills = tw_cbKills.Checked;
             twCurCfg.Save(twCurMap);

@@ -21,6 +21,7 @@
 ////-----|  Note: Double click on // to see |-----\\\\
 ///------|        them in the sidebar!!     |------\\\
 //-------|__________________________________|-------\\
+using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Maths;
@@ -41,8 +42,8 @@ namespace MCGalaxy.Games {
         
         [ConfigBool("grace-period", null, true)]
         public bool GracePeriod = true;
-        [ConfigInt("grace-time", null, 30)]
-        public int GracePeriodTime = 30;
+        [ConfigTimespan("grace-time", null, 30, false)]
+        public TimeSpan GracePeriodTime = TimeSpan.FromSeconds(30);
         
         [ConfigInt("max-active-tnt", null, 1)]
         public int MaxActiveTnt = 1;

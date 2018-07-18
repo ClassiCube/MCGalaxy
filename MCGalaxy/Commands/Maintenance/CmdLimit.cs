@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
+
 namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdLimit : Command2 {        
         public override string name { get { return "Limit"; } }
@@ -64,7 +66,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "mu":
                 case "maxundo":
                     Chat.MessageAll(grp.ColoredName + "%S's undo limit set to &b" + limit);
-                    grp.MaxUndo = limit; break;
+                    grp.MaxUndo = TimeSpan.FromSeconds(limit); break;
                 case "gen":
                 case "genlimit":
                     Chat.MessageAll(grp.ColoredName + "%S's map gen volume limit set to &b" + limit);

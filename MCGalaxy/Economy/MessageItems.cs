@@ -60,7 +60,7 @@ namespace MCGalaxy.Eco {
 
         protected override void DoPurchase(Player p, string message, string[] args) {
             if (args.Length == 1) {
-        	    PlayerDB.SetLogoutMessage(p.name, "");
+                PlayerDB.SetLogoutMessage(p.name, "");
                 p.Message("&aYour logout message was removed for free.");
                 return;
             }

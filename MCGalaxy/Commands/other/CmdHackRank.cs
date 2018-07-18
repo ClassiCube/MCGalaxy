@@ -51,8 +51,8 @@ namespace MCGalaxy.Commands.Misc {
             HackRankArgs args = new HackRankArgs();
             args.name = p.name; args.newRank = newRank;
             
-            TimeSpan delay = TimeSpan.FromSeconds(ServerConfig.HackrankKickDelay);
-            Server.MainScheduler.QueueOnce(HackRankCallback, args, delay);
+            Server.MainScheduler.QueueOnce(HackRankCallback, args, 
+                                           ServerConfig.HackrankKickDelay);
         }
         
         void HackRankCallback(SchedulerTask task) {

@@ -82,17 +82,14 @@ namespace MCGalaxy.Gui
             this.main_btnApply = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.chkRpLimit = new System.Windows.Forms.Label();
-            this.chkPhysicsRest = new System.Windows.Forms.CheckBox();
             this.chkDeath = new System.Windows.Forms.CheckBox();
-            this.hackrank_kick = new System.Windows.Forms.CheckBox();
+            this.hack_lbl = new System.Windows.Forms.CheckBox();
             this.sec_cmbVerifyRank = new System.Windows.Forms.ComboBox();
             this.sec_cbVerifyAdmins = new System.Windows.Forms.CheckBox();
             this.chkGuestLimitNotify = new System.Windows.Forms.CheckBox();
             this.rank_cbTPHigher = new System.Windows.Forms.CheckBox();
             this.rank_cmbDefault = new System.Windows.Forms.ComboBox();
             this.sec_cbWhitelist = new System.Windows.Forms.CheckBox();
-            this.afk_txtTimer = new System.Windows.Forms.TextBox();
-            this.bak_numTime = new System.Windows.Forms.NumericUpDown();
             this.sql_chkUseSQL = new System.Windows.Forms.CheckBox();
             this.irc_chkEnabled = new System.Windows.Forms.CheckBox();
             this.irc_txtServer = new System.Windows.Forms.TextBox();
@@ -117,11 +114,11 @@ namespace MCGalaxy.Gui
             this.irc_txtPass = new System.Windows.Forms.TextBox();
             this.rank_numMaps = new System.Windows.Forms.NumericUpDown();
             this.rank_numDraw = new System.Windows.Forms.NumericUpDown();
-            this.rank_numUndo = new System.Windows.Forms.NumericUpDown();
             this.rank_numGen = new System.Windows.Forms.NumericUpDown();
             this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.eco_cbItemRank = new System.Windows.Forms.ComboBox();
+            this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
             this.ls_numMax = new System.Windows.Forms.NumericUpDown();
             this.ls_numKiller = new System.Windows.Forms.NumericUpDown();
             this.ls_numFast = new System.Windows.Forms.NumericUpDown();
@@ -183,22 +180,23 @@ namespace MCGalaxy.Gui
             this.rank_list = new System.Windows.Forms.ListBox();
             this.pageMisc = new System.Windows.Forms.TabPage();
             this.grpExtra = new System.Windows.Forms.GroupBox();
+            this.misc_numReview = new MCGalaxy.Gui.TimespanUpDown();
             this.chkRestart = new System.Windows.Forms.CheckBox();
-            this.nudCooldownTime = new System.Windows.Forms.NumericUpDown();
             this.misc_lblReview = new System.Windows.Forms.Label();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
             this.chk17Dollar = new System.Windows.Forms.CheckBox();
             this.chkSmile = new System.Windows.Forms.CheckBox();
             this.grpMessages = new System.Windows.Forms.GroupBox();
-            this.hackrank_kick_time = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
+            this.hack_num = new MCGalaxy.Gui.TimespanUpDown();
             this.grpPhysics = new System.Windows.Forms.GroupBox();
             this.txtRP = new System.Windows.Forms.TextBox();
             this.chkRpNorm = new System.Windows.Forms.Label();
             this.txtNormRp = new System.Windows.Forms.TextBox();
             this.afk_grp = new System.Windows.Forms.GroupBox();
+            this.afk_numTimer = new MCGalaxy.Gui.TimespanUpDown();
             this.afk_lblTimer = new System.Windows.Forms.Label();
             this.bak_grp = new System.Windows.Forms.GroupBox();
+            this.bak_numTime = new MCGalaxy.Gui.TimespanUpDown();
             this.bak_lblLocation = new System.Windows.Forms.Label();
             this.bak_txtLocation = new System.Windows.Forms.TextBox();
             this.bak_lblTime = new System.Windows.Forms.Label();
@@ -292,7 +290,12 @@ namespace MCGalaxy.Gui
             this.ls_btnStart = new System.Windows.Forms.Button();
             this.ls_grpMapSettings = new System.Windows.Forms.GroupBox();
             this.ls_grpTime = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.ls_numFlood = new MCGalaxy.Gui.TimespanUpDown();
+            this.ls_numLayerTime = new MCGalaxy.Gui.TimespanUpDown();
+            this.ls_numRound = new MCGalaxy.Gui.TimespanUpDown();
+            this.ls_lblLayerTime = new System.Windows.Forms.Label();
+            this.ls_lblFlood = new System.Windows.Forms.Label();
+            this.ls_lblRound = new System.Windows.Forms.Label();
             this.ls_grpLayer = new System.Windows.Forms.GroupBox();
             this.ls_lblBlocksTall = new System.Windows.Forms.Label();
             this.ls_lblLayersEach = new System.Windows.Forms.Label();
@@ -340,8 +343,8 @@ namespace MCGalaxy.Gui
             this.tw_cbKills = new System.Windows.Forms.CheckBox();
             this.tw_cbBalance = new System.Windows.Forms.CheckBox();
             this.tw_grpGrace = new System.Windows.Forms.GroupBox();
+            this.tw_numGrace = new MCGalaxy.Gui.TimespanUpDown();
             this.tw_lblGrace = new System.Windows.Forms.Label();
-            this.tw_numGrace = new System.Windows.Forms.NumericUpDown();
             this.tw_cbGrace = new System.Windows.Forms.CheckBox();
             this.tw_grpScores = new System.Windows.Forms.GroupBox();
             this.tw_lblMulti = new System.Windows.Forms.Label();
@@ -430,19 +433,19 @@ namespace MCGalaxy.Gui
             this.sec_numBlocksMsgs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new MCGalaxy.Gui.TimespanUpDown();
+            this.chkPhysRestart = new System.Windows.Forms.CheckBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
             this.chat_grpOther.SuspendLayout();
             this.chat_grpColors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numPerm)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numMaps)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numDraw)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numKiller)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).BeginInit();
@@ -462,11 +465,14 @@ namespace MCGalaxy.Gui
             this.rank_grpMisc.SuspendLayout();
             this.pageMisc.SuspendLayout();
             this.grpExtra.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.misc_numReview)).BeginInit();
             this.grpMessages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hack_num)).BeginInit();
             this.grpPhysics.SuspendLayout();
             this.afk_grp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.afk_numTimer)).BeginInit();
             this.bak_grp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).BeginInit();
             this.pageIRC.SuspendLayout();
             this.gb_ircSettings.SuspendLayout();
             this.sql_grp.SuspendLayout();
@@ -494,6 +500,9 @@ namespace MCGalaxy.Gui
             this.ls_grpControls.SuspendLayout();
             this.ls_grpMapSettings.SuspendLayout();
             this.ls_grpTime.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFlood)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numLayerTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numRound)).BeginInit();
             this.ls_grpLayer.SuspendLayout();
             this.ls_grpBlock.SuspendLayout();
             this.ls_grpSettings.SuspendLayout();
@@ -899,18 +908,6 @@ namespace MCGalaxy.Gui
             this.chkRpLimit.Text = "/rp limit:";
             this.toolTip.SetToolTip(this.chkRpLimit, "Limit for custom physics set by /rp");
             // 
-            // chkPhysicsRest
-            // 
-            this.chkPhysicsRest.Appearance = System.Windows.Forms.Appearance.Button;
-            this.chkPhysicsRest.Location = new System.Drawing.Point(8, 20);
-            this.chkPhysicsRest.Name = "chkPhysicsRest";
-            this.chkPhysicsRest.Size = new System.Drawing.Size(119, 23);
-            this.chkPhysicsRest.TabIndex = 22;
-            this.chkPhysicsRest.Text = "Restart physics";
-            this.chkPhysicsRest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.toolTip.SetToolTip(this.chkPhysicsRest, "Restart physics on shutdown, clearing all physics blocks.");
-            this.chkPhysicsRest.UseVisualStyleBackColor = true;
-            // 
             // chkDeath
             // 
             this.chkDeath.AutoSize = true;
@@ -922,16 +919,16 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.chkDeath, "\"Bob has died 10 times.\"");
             this.chkDeath.UseVisualStyleBackColor = true;
             // 
-            // hackrank_kick
+            // hack_lbl
             // 
-            this.hackrank_kick.AutoSize = true;
-            this.hackrank_kick.Location = new System.Drawing.Point(7, 20);
-            this.hackrank_kick.Name = "hackrank_kick";
-            this.hackrank_kick.Size = new System.Drawing.Size(193, 17);
-            this.hackrank_kick.TabIndex = 32;
-            this.hackrank_kick.Text = "Kick people who use hackrank after ";
-            this.toolTip.SetToolTip(this.hackrank_kick, "Hackrank kicks people? Or not?");
-            this.hackrank_kick.UseVisualStyleBackColor = true;
+            this.hack_lbl.AutoSize = true;
+            this.hack_lbl.Location = new System.Drawing.Point(7, 20);
+            this.hack_lbl.Name = "hack_lbl";
+            this.hack_lbl.Size = new System.Drawing.Size(193, 17);
+            this.hack_lbl.TabIndex = 32;
+            this.hack_lbl.Text = "Kick people who use hackrank after ";
+            this.toolTip.SetToolTip(this.hack_lbl, "Hackrank kicks people? Or not?");
+            this.hack_lbl.UseVisualStyleBackColor = true;
             // 
             // sec_cmbVerifyRank
             // 
@@ -996,33 +993,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.sec_cbWhitelist, "If enabled, only players who have been whitelisted with /whitelist are allowed to" +
                         " join");
             this.sec_cbWhitelist.UseVisualStyleBackColor = true;
-            // 
-            // afk_txtTimer
-            // 
-            this.afk_txtTimer.Location = new System.Drawing.Point(61, 16);
-            this.afk_txtTimer.Name = "afk_txtTimer";
-            this.afk_txtTimer.Size = new System.Drawing.Size(66, 21);
-            this.afk_txtTimer.TabIndex = 10;
-            this.toolTip.SetToolTip(this.afk_txtTimer, "How many minutes a player can idle before server announces auto afk. (0 = disable" +
-                        "d)");
-            // 
-            // bak_numTime
-            // 
-            this.bak_numTime.Location = new System.Drawing.Point(81, 43);
-            this.bak_numTime.Maximum = new decimal(new int[] {
-                                    1000000,
-                                    0,
-                                    0,
-                                    0});
-            this.bak_numTime.Name = "bak_numTime";
-            this.bak_numTime.Size = new System.Drawing.Size(41, 21);
-            this.bak_numTime.TabIndex = 5;
-            this.toolTip.SetToolTip(this.bak_numTime, "How often should backups be taken, in seconds.\nDefault = 300");
-            this.bak_numTime.Value = new decimal(new int[] {
-                                    300,
-                                    0,
-                                    0,
-                                    0});
             // 
             // sql_chkUseSQL
             // 
@@ -1290,25 +1260,6 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.rank_numDraw, "Maximum number of blocks players can affect in draw commands.");
             this.rank_numDraw.ValueChanged += new System.EventHandler(this.rank_numDraw_ValueChanged);
             // 
-            // rank_numUndo
-            // 
-            this.rank_numUndo.Location = new System.Drawing.Point(85, 47);
-            this.rank_numUndo.Maximum = new decimal(new int[] {
-                                    2147483647,
-                                    0,
-                                    0,
-                                    0});
-            this.rank_numUndo.Minimum = new decimal(new int[] {
-                                    1,
-                                    0,
-                                    0,
-                                    -2147483648});
-            this.rank_numUndo.Name = "rank_numUndo";
-            this.rank_numUndo.Size = new System.Drawing.Size(81, 21);
-            this.rank_numUndo.TabIndex = 15;
-            this.toolTip.SetToolTip(this.rank_numUndo, "Maximum number of seconds players can undo up to in the past with /undo");
-            this.rank_numUndo.ValueChanged += new System.EventHandler(this.rank_numUndo_ValueChanged);
-            // 
             // rank_numGen
             // 
             this.rank_numGen.Location = new System.Drawing.Point(259, 47);
@@ -1368,6 +1319,17 @@ namespace MCGalaxy.Gui
             this.eco_cbItemRank.TabIndex = 23;
             this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank a player must have to purchase this item.");
             this.eco_cbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cbItemRank_SelectedIndexChanged);
+            // 
+            // rank_numUndo
+            // 
+            this.rank_numUndo.Location = new System.Drawing.Point(85, 47);
+            this.rank_numUndo.Name = "rank_numUndo";
+            this.rank_numUndo.Seconds = ((long)(0));
+            this.rank_numUndo.Size = new System.Drawing.Size(81, 21);
+            this.rank_numUndo.TabIndex = 24;
+            this.rank_numUndo.Text = "0s";
+            this.toolTip.SetToolTip(this.rank_numUndo, "Maximum time players can undo up to in the past with /undo");
+            this.rank_numUndo.Value = System.TimeSpan.Parse("00:00:00");
             // 
             // ls_numMax
             // 
@@ -1484,10 +1446,11 @@ namespace MCGalaxy.Gui
             // 
             this.rank_numAfk.Location = new System.Drawing.Point(113, 102);
             this.rank_numAfk.Name = "rank_numAfk";
+            this.rank_numAfk.Seconds = ((long)(0));
             this.rank_numAfk.Size = new System.Drawing.Size(62, 21);
             this.rank_numAfk.TabIndex = 23;
             this.rank_numAfk.Text = "0s";
-            this.rank_numAfk.Seconds = ((long)(0));
+            this.rank_numAfk.Value = System.TimeSpan.Parse("00:00:00");
             this.rank_numAfk.ValueChanged += new System.EventHandler(this.rank_numAfk_ValueChanged);
             // 
             // sec_cbLogNotes
@@ -1787,6 +1750,7 @@ namespace MCGalaxy.Gui
             // 
             // rank_grpLimits
             // 
+            this.rank_grpLimits.Controls.Add(this.rank_numUndo);
             this.rank_grpLimits.Controls.Add(this.rank_numCopy);
             this.rank_grpLimits.Controls.Add(this.rank_lblCopy);
             this.rank_grpLimits.Controls.Add(this.rank_lblGen);
@@ -1795,7 +1759,6 @@ namespace MCGalaxy.Gui
             this.rank_grpLimits.Controls.Add(this.rank_numMaps);
             this.rank_grpLimits.Controls.Add(this.rank_numDraw);
             this.rank_grpLimits.Controls.Add(this.rank_lblDraw);
-            this.rank_grpLimits.Controls.Add(this.rank_numUndo);
             this.rank_grpLimits.Controls.Add(this.rank_lblUndo);
             this.rank_grpLimits.Location = new System.Drawing.Point(142, 143);
             this.rank_grpLimits.Name = "rank_grpLimits";
@@ -2024,8 +1987,8 @@ namespace MCGalaxy.Gui
             // grpExtra
             // 
             this.grpExtra.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpExtra.Controls.Add(this.misc_numReview);
             this.grpExtra.Controls.Add(this.chkRestart);
-            this.grpExtra.Controls.Add(this.nudCooldownTime);
             this.grpExtra.Controls.Add(this.misc_lblReview);
             this.grpExtra.Controls.Add(this.chkGuestLimitNotify);
             this.grpExtra.Controls.Add(this.chkRepeatMessages);
@@ -2039,6 +2002,16 @@ namespace MCGalaxy.Gui
             this.grpExtra.TabStop = false;
             this.grpExtra.Text = "Extra";
             // 
+            // misc_numReview
+            // 
+            this.misc_numReview.Location = new System.Drawing.Point(143, 157);
+            this.misc_numReview.Name = "misc_numReview";
+            this.misc_numReview.Seconds = ((long)(300));
+            this.misc_numReview.Size = new System.Drawing.Size(66, 21);
+            this.misc_numReview.TabIndex = 35;
+            this.misc_numReview.Text = "5m";
+            this.misc_numReview.Value = System.TimeSpan.Parse("00:05:00");
+            // 
             // chkRestart
             // 
             this.chkRestart.AutoSize = true;
@@ -2048,23 +2021,6 @@ namespace MCGalaxy.Gui
             this.chkRestart.TabIndex = 51;
             this.chkRestart.Text = "Restart on error";
             this.chkRestart.UseVisualStyleBackColor = true;
-            // 
-            // nudCooldownTime
-            // 
-            this.nudCooldownTime.Location = new System.Drawing.Point(143, 157);
-            this.nudCooldownTime.Maximum = new decimal(new int[] {
-                                    86400,
-                                    0,
-                                    0,
-                                    0});
-            this.nudCooldownTime.Name = "nudCooldownTime";
-            this.nudCooldownTime.Size = new System.Drawing.Size(57, 21);
-            this.nudCooldownTime.TabIndex = 50;
-            this.nudCooldownTime.Value = new decimal(new int[] {
-                                    600,
-                                    0,
-                                    0,
-                                    0});
             // 
             // misc_lblReview
             // 
@@ -2108,9 +2064,8 @@ namespace MCGalaxy.Gui
             // grpMessages
             // 
             this.grpMessages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpMessages.Controls.Add(this.hackrank_kick);
-            this.grpMessages.Controls.Add(this.hackrank_kick_time);
-            this.grpMessages.Controls.Add(this.label36);
+            this.grpMessages.Controls.Add(this.hack_num);
+            this.grpMessages.Controls.Add(this.hack_lbl);
             this.grpMessages.Location = new System.Drawing.Point(10, 103);
             this.grpMessages.Name = "grpMessages";
             this.grpMessages.Size = new System.Drawing.Size(332, 49);
@@ -2118,31 +2073,24 @@ namespace MCGalaxy.Gui
             this.grpMessages.TabStop = false;
             this.grpMessages.Text = "Messages";
             // 
-            // hackrank_kick_time
+            // hack_num
             // 
-            this.hackrank_kick_time.Location = new System.Drawing.Point(201, 18);
-            this.hackrank_kick_time.Name = "hackrank_kick_time";
-            this.hackrank_kick_time.Size = new System.Drawing.Size(60, 21);
-            this.hackrank_kick_time.TabIndex = 33;
-            this.hackrank_kick_time.Text = "5";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(268, 21);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(46, 13);
-            this.label36.TabIndex = 34;
-            this.label36.Text = "Seconds";
+            this.hack_num.Location = new System.Drawing.Point(201, 18);
+            this.hack_num.Name = "hack_num";
+            this.hack_num.Seconds = ((long)(5));
+            this.hack_num.Size = new System.Drawing.Size(66, 21);
+            this.hack_num.TabIndex = 34;
+            this.hack_num.Text = "5s";
+            this.hack_num.Value = System.TimeSpan.Parse("00:00:05");
             // 
             // grpPhysics
             // 
             this.grpPhysics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpPhysics.Controls.Add(this.chkPhysRestart);
             this.grpPhysics.Controls.Add(this.chkRpLimit);
             this.grpPhysics.Controls.Add(this.txtRP);
             this.grpPhysics.Controls.Add(this.chkRpNorm);
             this.grpPhysics.Controls.Add(this.txtNormRp);
-            this.grpPhysics.Controls.Add(this.chkPhysicsRest);
             this.grpPhysics.Location = new System.Drawing.Point(352, 124);
             this.grpPhysics.Name = "grpPhysics";
             this.grpPhysics.Size = new System.Drawing.Size(133, 117);
@@ -2176,8 +2124,8 @@ namespace MCGalaxy.Gui
             // afk_grp
             // 
             this.afk_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.afk_grp.Controls.Add(this.afk_numTimer);
             this.afk_grp.Controls.Add(this.afk_lblTimer);
-            this.afk_grp.Controls.Add(this.afk_txtTimer);
             this.afk_grp.Location = new System.Drawing.Point(352, 13);
             this.afk_grp.Name = "afk_grp";
             this.afk_grp.Size = new System.Drawing.Size(133, 100);
@@ -2185,10 +2133,20 @@ namespace MCGalaxy.Gui
             this.afk_grp.TabStop = false;
             this.afk_grp.Text = "AFK";
             // 
+            // afk_numTimer
+            // 
+            this.afk_numTimer.Location = new System.Drawing.Point(61, 16);
+            this.afk_numTimer.Name = "afk_numTimer";
+            this.afk_numTimer.Seconds = ((long)(600));
+            this.afk_numTimer.Size = new System.Drawing.Size(66, 21);
+            this.afk_numTimer.TabIndex = 33;
+            this.afk_numTimer.Text = "10m";
+            this.afk_numTimer.Value = System.TimeSpan.Parse("00:10:00");
+            // 
             // afk_lblTimer
             // 
             this.afk_lblTimer.AutoSize = true;
-            this.afk_lblTimer.Location = new System.Drawing.Point(5, 21);
+            this.afk_lblTimer.Location = new System.Drawing.Point(5, 20);
             this.afk_lblTimer.Name = "afk_lblTimer";
             this.afk_lblTimer.Size = new System.Drawing.Size(54, 13);
             this.afk_lblTimer.TabIndex = 12;
@@ -2198,16 +2156,26 @@ namespace MCGalaxy.Gui
             // 
             this.bak_grp.AutoSize = true;
             this.bak_grp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.bak_grp.Controls.Add(this.bak_numTime);
             this.bak_grp.Controls.Add(this.bak_lblLocation);
             this.bak_grp.Controls.Add(this.bak_txtLocation);
             this.bak_grp.Controls.Add(this.bak_lblTime);
-            this.bak_grp.Controls.Add(this.bak_numTime);
             this.bak_grp.Location = new System.Drawing.Point(10, 13);
             this.bak_grp.Name = "bak_grp";
             this.bak_grp.Size = new System.Drawing.Size(332, 84);
             this.bak_grp.TabIndex = 36;
             this.bak_grp.TabStop = false;
             this.bak_grp.Text = "Backups";
+            // 
+            // bak_numTime
+            // 
+            this.bak_numTime.Location = new System.Drawing.Point(81, 43);
+            this.bak_numTime.Name = "bak_numTime";
+            this.bak_numTime.Seconds = ((long)(300));
+            this.bak_numTime.Size = new System.Drawing.Size(66, 21);
+            this.bak_numTime.TabIndex = 34;
+            this.bak_numTime.Text = "5m";
+            this.bak_numTime.Value = System.TimeSpan.Parse("00:05:00");
             // 
             // bak_lblLocation
             // 
@@ -3222,22 +3190,75 @@ namespace MCGalaxy.Gui
             // 
             // ls_grpTime
             // 
-            this.ls_grpTime.Controls.Add(this.label9);
+            this.ls_grpTime.Controls.Add(this.ls_numFlood);
+            this.ls_grpTime.Controls.Add(this.ls_numLayerTime);
+            this.ls_grpTime.Controls.Add(this.ls_numRound);
+            this.ls_grpTime.Controls.Add(this.ls_lblLayerTime);
+            this.ls_grpTime.Controls.Add(this.ls_lblFlood);
+            this.ls_grpTime.Controls.Add(this.ls_lblRound);
             this.ls_grpTime.Location = new System.Drawing.Point(6, 180);
             this.ls_grpTime.Name = "ls_grpTime";
-            this.ls_grpTime.Size = new System.Drawing.Size(284, 74);
+            this.ls_grpTime.Size = new System.Drawing.Size(284, 71);
             this.ls_grpTime.TabIndex = 39;
             this.ls_grpTime.TabStop = false;
             this.ls_grpTime.Text = "Time settings";
             // 
-            // label9
+            // ls_numFlood
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(74, 33);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(127, 13);
-            this.label9.TabIndex = 36;
-            this.label9.Text = "????????????????????????";
+            this.ls_numFlood.Location = new System.Drawing.Point(69, 43);
+            this.ls_numFlood.Name = "ls_numFlood";
+            this.ls_numFlood.Seconds = ((long)(300));
+            this.ls_numFlood.Size = new System.Drawing.Size(62, 21);
+            this.ls_numFlood.TabIndex = 38;
+            this.ls_numFlood.Text = "5m";
+            this.ls_numFlood.Value = System.TimeSpan.Parse("00:05:00");
+            // 
+            // ls_numLayerTime
+            // 
+            this.ls_numLayerTime.Location = new System.Drawing.Point(216, 16);
+            this.ls_numLayerTime.Name = "ls_numLayerTime";
+            this.ls_numLayerTime.Seconds = ((long)(120));
+            this.ls_numLayerTime.Size = new System.Drawing.Size(62, 21);
+            this.ls_numLayerTime.TabIndex = 37;
+            this.ls_numLayerTime.Text = "2m";
+            this.ls_numLayerTime.Value = System.TimeSpan.Parse("00:02:00");
+            // 
+            // ls_numRound
+            // 
+            this.ls_numRound.Location = new System.Drawing.Point(69, 16);
+            this.ls_numRound.Name = "ls_numRound";
+            this.ls_numRound.Seconds = ((long)(900));
+            this.ls_numRound.Size = new System.Drawing.Size(62, 21);
+            this.ls_numRound.TabIndex = 36;
+            this.ls_numRound.Text = "15m";
+            this.ls_numRound.Value = System.TimeSpan.Parse("00:15:00");
+            // 
+            // ls_lblLayerTime
+            // 
+            this.ls_lblLayerTime.AutoSize = true;
+            this.ls_lblLayerTime.Location = new System.Drawing.Point(154, 20);
+            this.ls_lblLayerTime.Name = "ls_lblLayerTime";
+            this.ls_lblLayerTime.Size = new System.Drawing.Size(59, 13);
+            this.ls_lblLayerTime.TabIndex = 35;
+            this.ls_lblLayerTime.Text = "Layer time:";
+            // 
+            // ls_lblFlood
+            // 
+            this.ls_lblFlood.AutoSize = true;
+            this.ls_lblFlood.Location = new System.Drawing.Point(8, 46);
+            this.ls_lblFlood.Name = "ls_lblFlood";
+            this.ls_lblFlood.Size = new System.Drawing.Size(59, 13);
+            this.ls_lblFlood.TabIndex = 34;
+            this.ls_lblFlood.Text = "Flood time:";
+            // 
+            // ls_lblRound
+            // 
+            this.ls_lblRound.AutoSize = true;
+            this.ls_lblRound.Location = new System.Drawing.Point(5, 20);
+            this.ls_lblRound.Name = "ls_lblRound";
+            this.ls_lblRound.Size = new System.Drawing.Size(63, 13);
+            this.ls_lblRound.TabIndex = 34;
+            this.ls_lblRound.Text = "Round time:";
             // 
             // ls_grpLayer
             // 
@@ -3714,8 +3735,8 @@ namespace MCGalaxy.Gui
             // 
             // tw_grpGrace
             // 
-            this.tw_grpGrace.Controls.Add(this.tw_lblGrace);
             this.tw_grpGrace.Controls.Add(this.tw_numGrace);
+            this.tw_grpGrace.Controls.Add(this.tw_lblGrace);
             this.tw_grpGrace.Controls.Add(this.tw_cbGrace);
             this.tw_grpGrace.Location = new System.Drawing.Point(6, 125);
             this.tw_grpGrace.Name = "tw_grpGrace";
@@ -3724,31 +3745,24 @@ namespace MCGalaxy.Gui
             this.tw_grpGrace.TabStop = false;
             this.tw_grpGrace.Text = "Grace Period";
             // 
+            // tw_numGrace
+            // 
+            this.tw_numGrace.Location = new System.Drawing.Point(59, 41);
+            this.tw_numGrace.Name = "tw_numGrace";
+            this.tw_numGrace.Seconds = ((long)(30));
+            this.tw_numGrace.Size = new System.Drawing.Size(66, 21);
+            this.tw_numGrace.TabIndex = 35;
+            this.tw_numGrace.Text = "30s";
+            this.tw_numGrace.Value = System.TimeSpan.Parse("00:00:30");
+            // 
             // tw_lblGrace
             // 
             this.tw_lblGrace.AutoSize = true;
             this.tw_lblGrace.Location = new System.Drawing.Point(23, 44);
             this.tw_lblGrace.Name = "tw_lblGrace";
-            this.tw_lblGrace.Size = new System.Drawing.Size(80, 13);
+            this.tw_lblGrace.Size = new System.Drawing.Size(33, 13);
             this.tw_lblGrace.TabIndex = 2;
-            this.tw_lblGrace.Text = "Time (seconds):";
-            // 
-            // tw_numGrace
-            // 
-            this.tw_numGrace.Location = new System.Drawing.Point(107, 41);
-            this.tw_numGrace.Maximum = new decimal(new int[] {
-                                    300,
-                                    0,
-                                    0,
-                                    0});
-            this.tw_numGrace.Name = "tw_numGrace";
-            this.tw_numGrace.Size = new System.Drawing.Size(42, 21);
-            this.tw_numGrace.TabIndex = 1;
-            this.tw_numGrace.Value = new decimal(new int[] {
-                                    30,
-                                    0,
-                                    0,
-                                    0});
+            this.tw_lblGrace.Text = "Time:";
             // 
             // tw_cbGrace
             // 
@@ -4424,10 +4438,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatSecs.Location = new System.Drawing.Point(156, 45);
             this.sec_numChatSecs.Name = "sec_numChatSecs";
+            this.sec_numChatSecs.Seconds = ((long)(5));
             this.sec_numChatSecs.Size = new System.Drawing.Size(62, 21);
             this.sec_numChatSecs.TabIndex = 34;
             this.sec_numChatSecs.Text = "5s";
-            this.sec_numChatSecs.Seconds = ((long)(5));
+            this.sec_numChatSecs.Value = System.TimeSpan.Parse("00:00:05");
             // 
             // sec_lblChatForMute
             // 
@@ -4442,10 +4457,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numChatMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numChatMute.Name = "sec_numChatMute";
+            this.sec_numChatMute.Seconds = ((long)(60));
             this.sec_numChatMute.Size = new System.Drawing.Size(62, 21);
             this.sec_numChatMute.TabIndex = 32;
             this.sec_numChatMute.Text = "1m";
-            this.sec_numChatMute.Seconds = ((long)(60));
+            this.sec_numChatMute.Value = System.TimeSpan.Parse("00:01:00");
             // 
             // sec_grpCmd
             // 
@@ -4513,10 +4529,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdSecs.Location = new System.Drawing.Point(161, 45);
             this.sec_numCmdSecs.Name = "sec_numCmdSecs";
+            this.sec_numCmdSecs.Seconds = ((long)(1));
             this.sec_numCmdSecs.Size = new System.Drawing.Size(62, 21);
             this.sec_numCmdSecs.TabIndex = 34;
             this.sec_numCmdSecs.Text = "1s";
-            this.sec_numCmdSecs.Seconds = ((long)(1));
+            this.sec_numCmdSecs.Value = System.TimeSpan.Parse("00:00:01");
             // 
             // sec_lblCmdForMute
             // 
@@ -4531,10 +4548,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numCmdMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numCmdMute.Name = "sec_numCmdMute";
+            this.sec_numCmdMute.Seconds = ((long)(60));
             this.sec_numCmdMute.Size = new System.Drawing.Size(62, 21);
             this.sec_numCmdMute.TabIndex = 32;
             this.sec_numCmdMute.Text = "1m";
-            this.sec_numCmdMute.Seconds = ((long)(60));
+            this.sec_numCmdMute.Value = System.TimeSpan.Parse("00:01:00");
             // 
             // sec_grpIP
             // 
@@ -4602,10 +4620,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numIPSecs.Location = new System.Drawing.Point(166, 45);
             this.sec_numIPSecs.Name = "sec_numIPSecs";
+            this.sec_numIPSecs.Seconds = ((long)(1));
             this.sec_numIPSecs.Size = new System.Drawing.Size(62, 21);
             this.sec_numIPSecs.TabIndex = 34;
             this.sec_numIPSecs.Text = "1s";
-            this.sec_numIPSecs.Seconds = ((long)(1));
+            this.sec_numIPSecs.Value = System.TimeSpan.Parse("00:00:01");
             // 
             // sec_lblIPForMute
             // 
@@ -4620,10 +4639,11 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numIPMute.Location = new System.Drawing.Point(53, 79);
             this.sec_numIPMute.Name = "sec_numIPMute";
+            this.sec_numIPMute.Seconds = ((long)(300));
             this.sec_numIPMute.Size = new System.Drawing.Size(62, 21);
             this.sec_numIPMute.TabIndex = 32;
             this.sec_numIPMute.Text = "5m";
-            this.sec_numIPMute.Seconds = ((long)(300));
+            this.sec_numIPMute.Value = System.TimeSpan.Parse("00:05:00");
             // 
             // sec_grpOther
             // 
@@ -4712,10 +4732,22 @@ namespace MCGalaxy.Gui
             // 
             this.sec_numBlocksSecs.Location = new System.Drawing.Point(142, 45);
             this.sec_numBlocksSecs.Name = "sec_numBlocksSecs";
+            this.sec_numBlocksSecs.Seconds = ((long)(5));
             this.sec_numBlocksSecs.Size = new System.Drawing.Size(62, 21);
             this.sec_numBlocksSecs.TabIndex = 34;
             this.sec_numBlocksSecs.Text = "5s";
-            this.sec_numBlocksSecs.Seconds = ((long)(5));
+            this.sec_numBlocksSecs.Value = System.TimeSpan.Parse("00:00:05");
+            // 
+            // chkPhysRestart
+            // 
+            this.chkPhysRestart.AutoSize = true;
+            this.chkPhysRestart.Location = new System.Drawing.Point(6, 20);
+            this.chkPhysRestart.Name = "chkPhysRestart";
+            this.chkPhysRestart.Size = new System.Drawing.Size(124, 17);
+            this.chkPhysRestart.TabIndex = 52;
+            this.chkPhysRestart.Text = "Restart on shutdown";
+            this.toolTip.SetToolTip(this.chkPhysRestart, "\"Bob has died 10 times.\"");
+            this.chkPhysRestart.UseVisualStyleBackColor = true;
             // 
             // PropertyWindow
             // 
@@ -4744,14 +4776,13 @@ namespace MCGalaxy.Gui
             this.chat_grpOther.PerformLayout();
             this.chat_grpColors.ResumeLayout(false);
             this.chat_grpColors.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numPerm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numMaps)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numDraw)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numGen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numKiller)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).EndInit();
@@ -4778,15 +4809,18 @@ namespace MCGalaxy.Gui
             this.pageMisc.PerformLayout();
             this.grpExtra.ResumeLayout(false);
             this.grpExtra.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCooldownTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.misc_numReview)).EndInit();
             this.grpMessages.ResumeLayout(false);
             this.grpMessages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hack_num)).EndInit();
             this.grpPhysics.ResumeLayout(false);
             this.grpPhysics.PerformLayout();
             this.afk_grp.ResumeLayout(false);
             this.afk_grp.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.afk_numTimer)).EndInit();
             this.bak_grp.ResumeLayout(false);
             this.bak_grp.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).EndInit();
             this.pageIRC.ResumeLayout(false);
             this.gb_ircSettings.ResumeLayout(false);
             this.gb_ircSettings.PerformLayout();
@@ -4827,6 +4861,9 @@ namespace MCGalaxy.Gui
             this.ls_grpMapSettings.ResumeLayout(false);
             this.ls_grpTime.ResumeLayout(false);
             this.ls_grpTime.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFlood)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numLayerTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numRound)).EndInit();
             this.ls_grpLayer.ResumeLayout(false);
             this.ls_grpLayer.PerformLayout();
             this.ls_grpBlock.ResumeLayout(false);
@@ -4889,6 +4926,16 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.sec_numBlocksSecs)).EndInit();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox chkPhysRestart;
+        private System.Windows.Forms.Label ls_lblRound;
+        private System.Windows.Forms.Label ls_lblFlood;
+        private System.Windows.Forms.Label ls_lblLayerTime;
+        private MCGalaxy.Gui.TimespanUpDown ls_numRound;
+        private MCGalaxy.Gui.TimespanUpDown ls_numLayerTime;
+        private MCGalaxy.Gui.TimespanUpDown ls_numFlood;
+        private MCGalaxy.Gui.TimespanUpDown misc_numReview;
+        private MCGalaxy.Gui.TimespanUpDown hack_num;
+        private MCGalaxy.Gui.TimespanUpDown afk_numTimer;
         private System.Windows.Forms.Label tw_lblAssist;
         private System.Windows.Forms.Label tw_lblMulti;
         private System.Windows.Forms.Button chat_btnWarn;
@@ -4929,7 +4976,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button ctf_btnEnd;
         private System.Windows.Forms.GroupBox ctf_grpControls;
         private System.Windows.Forms.TabPage tabCTF;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox ls_grpTime;
         private System.Windows.Forms.Label ls_lblLayer;
         private System.Windows.Forms.NumericUpDown ls_numLayer;
@@ -4988,7 +5034,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox rank_cbAfk;
         private MCGalaxy.Gui.TimespanUpDown rank_numAfk;
         private System.Windows.Forms.Label rank_lblUndo;
-        private System.Windows.Forms.NumericUpDown rank_numUndo;
+        private MCGalaxy.Gui.TimespanUpDown rank_numUndo;
         private System.Windows.Forms.Label rank_lblDraw;
         private System.Windows.Forms.NumericUpDown rank_numDraw;
         private System.Windows.Forms.NumericUpDown rank_numMaps;
@@ -5160,19 +5206,15 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button rank_btnAdd;
         private System.Windows.Forms.ListBox rank_list;
         private System.Windows.Forms.TabPage pageMisc;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.TextBox hackrank_kick_time;
         private System.Windows.Forms.TextBox txtNormRp;
         private System.Windows.Forms.TextBox txtRP;
-        private System.Windows.Forms.TextBox afk_txtTimer;
-        private System.Windows.Forms.NumericUpDown bak_numTime;
+        private MCGalaxy.Gui.TimespanUpDown bak_numTime;
         private System.Windows.Forms.TextBox bak_txtLocation;
-        private System.Windows.Forms.CheckBox hackrank_kick;
+        private System.Windows.Forms.CheckBox hack_lbl;
         private System.Windows.Forms.CheckBox chat_chkFilter;
         private System.Windows.Forms.CheckBox chkRepeatMessages;
         private System.Windows.Forms.CheckBox chkDeath;
         private System.Windows.Forms.CheckBox chk17Dollar;
-        private System.Windows.Forms.CheckBox chkPhysicsRest;
         private System.Windows.Forms.CheckBox chkSmile;
         private System.Windows.Forms.Label chkRpNorm;
         private System.Windows.Forms.Label chkRpLimit;
@@ -5266,7 +5308,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox srv_grpUpdate;
         private System.Windows.Forms.Button srv_btnForceUpdate;
         private System.Windows.Forms.CheckBox chkGuestLimitNotify;
-        private System.Windows.Forms.NumericUpDown nudCooldownTime;
         private System.Windows.Forms.Label misc_lblReview;
         private System.Windows.Forms.Label rank_lblMOTD;
         private System.Windows.Forms.TextBox rank_txtMOTD;
@@ -5279,7 +5320,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown tw_numMultiKills;
         private System.Windows.Forms.GroupBox tw_grpGrace;
         private System.Windows.Forms.Label tw_lblGrace;
-        private System.Windows.Forms.NumericUpDown tw_numGrace;
+        private MCGalaxy.Gui.TimespanUpDown tw_numGrace;
         private System.Windows.Forms.GroupBox tw_grpTeams;
         private System.Windows.Forms.CheckBox tw_cbKills;
         private System.Windows.Forms.CheckBox tw_cbBalance;

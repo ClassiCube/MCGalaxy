@@ -105,24 +105,23 @@ namespace MCGalaxy.Commands.Building {
         }
         
                 
-        const int undoMax = -1; // allows everything to be undone.
         internal static TimeSpan GetDelta(Player p, string name, string[] parts, int offset) {
             TimeSpan delta = TimeSpan.Zero;
             string timespan = parts.Length > offset ? parts[parts.Length - 1] : "30m";
-            bool canAll = p.name.CaselessEq(name) || p.group.MaxUndo == undoMax;
+            bool self = p.name.CaselessEq(name);
             
             if (timespan.CaselessEq("all")) {
-                return TimeSpan.FromSeconds(canAll ? int.MaxValue : p.group.MaxUndo);
+                return self ? TimeSpan.FromSeconds(int.MaxValue) : p.group.MaxUndo;
             } else if (!CommandParser.GetTimespan(p, timespan, ref delta, "undo the past", "s")) {
                 return TimeSpan.MinValue;
             }
 
             if (delta.TotalSeconds == 0) 
                 delta = TimeSpan.FromMinutes(90);
-            if (!canAll && delta.TotalSeconds > p.group.MaxUndo) {
-                p.Message("{0}%Ss may only undo up to {1} seconds.",
-                               p.group.ColoredName, p.group.MaxUndo);
-                return TimeSpan.FromSeconds(p.group.MaxUndo);
+            if (!self && delta > p.group.MaxUndo) {
+                p.Message("{0}%Ss may only undo up to {1}",
+                          p.group.ColoredName, p.group.MaxUndo.Shorten(true, true));
+                return p.group.MaxUndo;
             }
             return delta;
         }
@@ -131,8 +130,6 @@ namespace MCGalaxy.Commands.Building {
             p.Message("%T/Undo %H- Undoes your last draw operation");
             p.Message("%T/Undo [timespan]");
             p.Message("%HUndoes your blockchanges in the past [timespan]");
-            if (p.group.MaxUndo == -1 || p.group.MaxUndo == int.MaxValue)
-                p.Message("%H  if <timespan> is all, &cundoes for 68 years");
             p.Message("%T/Undo physics [timespan] %H- Undoes physics on current map");
         }
     }

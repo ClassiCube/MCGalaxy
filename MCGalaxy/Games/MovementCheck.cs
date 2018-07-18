@@ -26,7 +26,7 @@ namespace MCGalaxy.Games {
             int dz = Math.Abs(a.Pos.Z - b.Pos.Z);
             return dx <= dist && dy <= dist && dz <= dist;
         }
-		static TimeSpan interval = TimeSpan.FromSeconds(5);
+        static TimeSpan interval = TimeSpan.FromSeconds(5);
         
         public static bool DetectNoclip(Player p, Position newPos) {
             if (p.Game.Referee || Hacks.CanUseNoclip(p, p.level)) return false;

@@ -133,7 +133,7 @@ namespace MCGalaxy.Gui {
         }
         
         void rank_numUndo_ValueChanged(object sender, EventArgs e) {
-            curGroup.MaxUndo = (int)rank_numUndo.Value;
+            curGroup.MaxUndo = rank_numUndo.Value;
         }
         
         void rank_numMaps_ValueChanged(object sender, EventArgs e) {

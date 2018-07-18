@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Chatting {
                     ShowMessage(p, "-λNICK%S- is no longer AFK");
                     p.CheckForMessageSpam();
                 }
-            	OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, null, cantSend);
+                OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, null, cantSend);
             }
         }
         

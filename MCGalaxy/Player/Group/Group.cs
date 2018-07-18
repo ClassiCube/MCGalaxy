@@ -49,8 +49,8 @@ namespace MCGalaxy {
         
         [ConfigInt("Limit", null, 0, 0)]
         public int DrawLimit;
-        [ConfigInt("MaxUndo", null, 0, -1)]
-        public int MaxUndo;
+        [ConfigTimespan("MaxUndo", null, 0, false)]
+        public TimeSpan MaxUndo;
         [ConfigString("MOTD", null, "", true)]
         public string MOTD = "";
         [ConfigInt("GenVolume", null, mapGenLimit)]
@@ -73,10 +73,10 @@ namespace MCGalaxy {
         public bool[] Blocks = new bool[Block.ExtendedCount];
         public Group() { }
         
-        private Group(LevelPermission perm, int maxB, int maxUn, string name, char colCode) {
+        private Group(LevelPermission perm, int drawLimit, int undoSecs, string name, char colCode) {
             Permission = perm;
-            DrawLimit = maxB;
-            MaxUndo = maxUn;
+            DrawLimit = drawLimit;
+            MaxUndo = TimeSpan.FromSeconds(undoSecs);
             Name = name;
             Color = "&" + colCode;
             GenVolume = perm < LevelPermission.Admin ? mapGenLimit : mapGenLimitAdmin;

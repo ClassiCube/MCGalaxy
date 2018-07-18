@@ -32,7 +32,7 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-				mainLevel = LevelActions.Load(Player.Console, ServerConfig.MainLevel, false);
+                mainLevel = LevelActions.Load(Player.Console, ServerConfig.MainLevel, false);
                 if (mainLevel == null) GenerateMain();                
                 mainLevel.Config.AutoUnload = false;
             } catch (Exception ex) {
@@ -55,7 +55,7 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Logger.LogError("Error upgrading agreed list", ex);
             }
-			
+            
             agreed = PlayerList.Load("ranks/agreed.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             Player.Console.DatabaseID = NameConverter.InvalidNameID("(console)");

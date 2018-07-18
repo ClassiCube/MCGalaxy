@@ -271,7 +271,7 @@ namespace MCGalaxy {
         }
         
         public BlockID ConvertBlock(BlockID block) {
-        	BlockID raw;
+            BlockID raw;
             if (block >= Block.Extended) {
                 raw = Block.ToRaw(block);
             } else {

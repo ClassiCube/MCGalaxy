@@ -309,7 +309,7 @@ namespace MCGalaxy.Games {
         
         protected override string FormatStatus1(Player p) {
             if (Config.Mode != TWGameMode.TDM) return "";
-        	
+            
             return Red.ColoredName + ": &f" + Red.Score + "/" + cfg.ScoreRequired + ", "
                 + Blue.ColoredName + ": &f" + Blue.Score + "/" + cfg.ScoreRequired;
         }

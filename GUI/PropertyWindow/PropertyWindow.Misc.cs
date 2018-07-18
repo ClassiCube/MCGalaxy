@@ -23,11 +23,11 @@ namespace MCGalaxy.Gui {
         void LoadMiscProps() {
             bak_numTime.Value = ServerConfig.BackupInterval;
             bak_txtLocation.Text = ServerConfig.BackupDirectory;
-            hackrank_kick.Checked = ServerConfig.HackrankKicks;
-            hackrank_kick_time.Text = ServerConfig.HackrankKickDelay.ToString();
+            hack_lbl.Checked = ServerConfig.HackrankKicks;
+            hack_num.Value = ServerConfig.HackrankKickDelay;
             
-            afk_txtTimer.Text = ServerConfig.AutoAfkTime.TotalSeconds.ToString();
-            chkPhysicsRest.Checked = ServerConfig.PhysicsRestart;
+            afk_numTimer.Value = ServerConfig.AutoAfkTime;
+            chkPhysRestart.Checked = ServerConfig.PhysicsRestart;
             txtRP.Text = ServerConfig.PhysicsRestartLimit.ToString();
             txtNormRp.Text = ServerConfig.PhysicsRestartNormLimit.ToString();
             
@@ -36,18 +36,18 @@ namespace MCGalaxy.Gui {
             chk17Dollar.Checked = ServerConfig.DollarNames;
             chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
             chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
-            nudCooldownTime.Value = ServerConfig.ReviewCooldown;
+            misc_numReview.Value = ServerConfig.ReviewCooldown;
             chkRestart.Checked = ServerConfig.restartOnError;
         }
         
         void ApplyMiscProps() {
-            ServerConfig.BackupInterval = (int)bak_numTime.Value;
+            ServerConfig.BackupInterval = bak_numTime.Value;
             ServerConfig.BackupDirectory = bak_txtLocation.Text;
-            ServerConfig.HackrankKicks = hackrank_kick.Checked;
-            ServerConfig.HackrankKickDelay = int.Parse(hackrank_kick_time.Text);
+            ServerConfig.HackrankKicks = hack_lbl.Checked;
+            ServerConfig.HackrankKickDelay = hack_num.Value;
             
-            ServerConfig.AutoAfkTime = TimeSpan.FromSeconds(int.Parse(afk_txtTimer.Text));
-            ServerConfig.PhysicsRestart = chkPhysicsRest.Checked;
+            ServerConfig.AutoAfkTime = afk_numTimer.Value;
+            ServerConfig.PhysicsRestart = chkPhysRestart.Checked;
             ServerConfig.PhysicsRestartLimit = int.Parse(txtRP.Text);
             ServerConfig.PhysicsRestartNormLimit = int.Parse(txtNormRp.Text);
             
@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.DollarNames = chk17Dollar.Checked;
             ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
             ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
-            ServerConfig.ReviewCooldown = (int)nudCooldownTime.Value;
+            ServerConfig.ReviewCooldown = misc_numReview.Value;
             ServerConfig.restartOnError = chkRestart.Checked; 
         }
         

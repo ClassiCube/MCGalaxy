@@ -192,7 +192,7 @@ namespace MCGalaxy {
                 p.Message("Hence you cannot modify the {0} {1}.", Type, mode); return false;
             }
             
-        	Group group = PlayerInfo.GetGroup(name);
+            Group group = PlayerInfo.GetGroup(name);
             if (group.Permission <= plRank) return true;
             
             if (!whitelist) {

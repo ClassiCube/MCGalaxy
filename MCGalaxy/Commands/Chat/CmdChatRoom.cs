@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Chatting {
                 
                 if (pl.spyChatRooms.CaselessRemove(room)) {
                     pl.Message("Stopped spying on chatroom '{0}' because it was deleted by: {1}",
-            		           room, p.ColoredName);
+                               room, p.ColoredName);
                 }
             }
             Chat.MessageGlobal("The chatroom '{0}' has been deleted", room);
@@ -201,7 +201,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (pl.spyChatRooms.CaselessRemove(room)) {
                 pl.Message("The chat room '{0}' has been removed from your spying list " +
-            	           "because you are force joining the room '{0}'", room);
+                           "because you are force joining the room '{0}'", room);
             }
             
             pl.Message("You've been forced to join the chat room '{0}'", room);

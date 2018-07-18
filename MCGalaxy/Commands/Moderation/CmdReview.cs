@@ -52,8 +52,11 @@ namespace MCGalaxy.Commands.Moderation {
         
         void HandleEnter(Player p) {
             if (p.IsSuper) { p.Message("{0} cannot enter the review queue.", p.SuperName); return; }
-            if (DateTime.UtcNow < p.NextReviewTime) {
-                p.Message("You have to wait " + ServerConfig.ReviewCooldown + " seconds everytime you use this command");
+            TimeSpan delta = p.NextReviewTime - DateTime.UtcNow;
+            
+            if (delta.TotalSeconds >= 0) {
+                p.Message("You must wait {0} before you can request another review",
+                          delta.Shorten(true, true));
                 return;
             }
             
@@ -83,7 +86,7 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageFrom(ChatScope.Perms, p, 
                              "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerms, null, true);
             
-            p.NextReviewTime = DateTime.UtcNow.AddSeconds(ServerConfig.ReviewCooldown);
+            p.NextReviewTime = DateTime.UtcNow.Add(ServerConfig.ReviewCooldown);
         }
 
         void HandleView(Player p) {

@@ -28,12 +28,9 @@ namespace MCGalaxy.Tasks {
     internal static class ServerTasks {
 
         internal static void QueueTasks() {
-            Server.MainScheduler.QueueRepeat(CheckState, null, TimeSpan.FromSeconds(3));
-            
-            Server.Background.QueueRepeat(AutoSave,
-                                          1, TimeSpan.FromSeconds(ServerConfig.BackupInterval));
-            Server.Background.QueueRepeat(BlockUpdates,
-                                          null, TimeSpan.FromSeconds(ServerConfig.BlockDBSaveInterval));
+            Server.MainScheduler.QueueRepeat(CheckState, null, TimeSpan.FromSeconds(3));            
+            Server.Background.QueueRepeat(AutoSave, 1, ServerConfig.BackupInterval);
+            Server.Background.QueueRepeat(BlockUpdates, null, ServerConfig.BlockDBSaveInterval);
         }
         
         
@@ -125,7 +122,7 @@ namespace MCGalaxy.Tasks {
         
         internal static void BlockUpdates(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            task.Delay = TimeSpan.FromSeconds(ServerConfig.BlockDBSaveInterval);
+            task.Delay = ServerConfig.BlockDBSaveInterval;
             
             foreach (Level lvl in loaded) {
                 try {
@@ -161,7 +158,7 @@ namespace MCGalaxy.Tasks {
 
             if (count <= 0) count = 15;
             task.State = count;
-            task.Delay = TimeSpan.FromSeconds(ServerConfig.BackupInterval);
+            task.Delay = ServerConfig.BackupInterval;
 
             Player[] players = PlayerInfo.Online.Items;
             try {

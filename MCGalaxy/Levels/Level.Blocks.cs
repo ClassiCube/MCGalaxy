@@ -177,7 +177,7 @@ namespace MCGalaxy {
                 BuildAccess.CheckDetailed(p);
                 p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
             }
-        	
+            
             if (p.level == this) return p.AllowBuild;
             return BuildAccess.CheckDetailed(p);
         }
@@ -414,7 +414,7 @@ namespace MCGalaxy {
             if (buffered) {
                 p.level.blockqueue.Add(p, index, block);
             } else {
-            	Player.GlobalBlockchange(this, x, y, z, block);
+                Player.GlobalBlockchange(this, x, y, z, block);
             }
         }
         

@@ -88,9 +88,10 @@ namespace MCGalaxy {
         [ConfigInt("physics-undo-max", "Other", 50000)]
         public static int PhysicsUndo = 50000;
         
-        [ConfigInt("backup-time", "Backup", 300, 1)]
-        public static int BackupInterval = 300;
-        public static int BlockDBSaveInterval = 60;
+        [ConfigTimespan("backup-time", "Backup", 300, false)]
+        public static TimeSpan BackupInterval = TimeSpan.FromSeconds(300);
+        [ConfigTimespan("blockdb-backup-time", "Backup", 60, false)]
+        public static TimeSpan BlockDBSaveInterval = TimeSpan.FromSeconds(60);
         [ConfigString("backup-location", "Backup", "")]
         public static string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
         
@@ -125,12 +126,12 @@ namespace MCGalaxy {
 
         [ConfigBool("kick-on-hackrank", "Other", true)]
         public static bool HackrankKicks = true;
-        [ConfigInt("hackrank-kick-time", "Other", 5)]
-        public static int HackrankKickDelay = 5; // seconds
+        [ConfigTimespan("hackrank-kick-time", "Other", 5, false)]
+        public static TimeSpan HackrankKickDelay = TimeSpan.FromSeconds(5);
         [ConfigBool("show-empty-ranks", "Other", false)]
         public static bool ListEmptyRanks = false;
-        [ConfigInt("review-cooldown", "Review", 600, 0, 600)]
-        public static int ReviewCooldown = 600;
+        [ConfigTimespan("review-cooldown", "Review", 600, false)]
+        public static TimeSpan ReviewCooldown = TimeSpan.FromSeconds(600);
         [ConfigReal("draw-reload-threshold", "Other", 0.001f, 0, 1)]
         public static float DrawReloadThreshold = 0.001f;
         [ConfigBool("allow-tp-to-higher-ranks", "Other", true)]

@@ -61,8 +61,7 @@ namespace MCGalaxy.Commands.Info {
         static void PrintRanks(Player p) {
             foreach (Group grp in Group.GroupList) {
                 if (grp.Permission >= LevelPermission.Nobody) continue;
-                int undo = grp.MaxUndo == -1 ? int.MaxValue : grp.MaxUndo;
-                string undoTime = TimeSpan.FromSeconds(undo).Shorten(true, false);
+                string undoTime = grp.MaxUndo.Shorten(true, false);
                 
                 p.Message("{0} %S- Draw: {1}, Undo: {2}, Perm: {3}",
                                grp.ColoredName, grp.DrawLimit, undoTime, (int)grp.Permission);
