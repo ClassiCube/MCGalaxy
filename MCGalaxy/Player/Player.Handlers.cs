@@ -43,8 +43,8 @@ namespace MCGalaxy {
             return true;
         }
 
-        public void ManualChange(ushort x, ushort y, ushort z, bool placing,
-                                 BlockID block, bool checkPlaceDist) {
+        public void HandleManualChange(ushort x, ushort y, ushort z, bool placing,
+                                       BlockID block, bool checkPlaceDist) {
             BlockID old = level.GetBlock(x, y, z);
             if (old == Block.Invalid) return;
             
@@ -160,20 +160,22 @@ namespace MCGalaxy {
             if (painting && CollideType.IsSolid(level.CollideType(old))) {
                 flags = BlockDBFlags.Painted;
             }
-            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);
             
-            bool autoGrass = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
-            if (!autoGrass) return type;           
-            BlockID below = level.GetBlock(x, (ushort)(y - 1), z);
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block); 
+            y--; // check for growth at block below
+            
+            bool grow = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
+            if (!grow || level.CanAffect(this, x, y, z) != null) return type;
+            BlockID below = level.GetBlock(x, y, z);
             
             BlockID grass = level.Props[below].GrassBlock;
             if (grass != Block.Invalid && block == Block.Air) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, grass);
+                level.Blockchange(this, x, y, z, grass);
             }
             
             BlockID dirt = level.Props[below].DirtBlock;
             if (dirt != Block.Invalid && !level.LightPasses(block)) {
-                level.Blockchange(this, x, (ushort)(y - 1), z, dirt);
+                level.Blockchange(this, x, y, z, dirt);
             }
             return type;
         }
@@ -295,7 +297,7 @@ namespace MCGalaxy {
                         RevertBlock(x, y, z); return;
                     }
                 }
-                ManualChange(x, y, z, action != 0, held, true);
+                HandleManualChange(x, y, z, action != 0, held, true);
             } catch ( Exception e ) {
                 // Don't ya just love it when the server tattles?
                 Chat.MessageOps(DisplayName + " has triggered a block change error");

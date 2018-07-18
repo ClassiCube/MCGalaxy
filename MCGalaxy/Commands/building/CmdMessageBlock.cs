@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
             MBArgs args = (MBArgs)state;
             
             BlockID old = p.level.GetBlock(x, y, z);
-            if (p.level.CheckAffectPermissions(p, x, y, z, old, args.Block)) {
+            if (p.level.CheckAffect(p, x, y, z, old, args.Block)) {
                 p.level.UpdateBlock(p, x, y, z, args.Block);
                 UpdateDatabase(p, args, x, y, z);
                 p.Message("Message block created.");

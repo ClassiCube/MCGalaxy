@@ -172,26 +172,15 @@ namespace MCGalaxy {
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
         }
         
-        bool CheckRank(Player p) {
-            if (p.lastAccessStatus <= DateTime.UtcNow) {
-                BuildAccess.CheckDetailed(p);
-                p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
-            }
-            
-            if (p.level == this) return p.AllowBuild;
-            return BuildAccess.CheckDetailed(p);
-        }
-        
         internal bool BuildIn(BlockID block) {
             if (block == Block.Op_Water || block == Block.Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Block.Convert(block);
             return block >= Block.Water && block <= Block.StillLava;
         }
         
-        public bool CheckAffectPermissions(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
-            if (!p.group.Blocks[old] && !Block.AllowBreak(old) && !BuildIn(old)) return false;
+        public AccessController CanAffect(Player p, ushort x, ushort y, ushort z) {
             Zone[] zones = Zones.Items;
-            if (zones.Length == 0) return CheckRank(p);
+            if (zones.Length == 0) goto checkRank; // TODO: avoid this
             
             // Check zones specifically allowed in
             for (int i = 0; i < zones.Length; i++) {
@@ -201,8 +190,8 @@ namespace MCGalaxy {
                 ZoneConfig cfg = zn.Config;
                 if (cfg.BuildBlacklist.Count > 0 && cfg.BuildBlacklist.CaselessContains(p.name)) break;
                 
-                if (p.group.Permission >= cfg.BuildMin) return true;
-                if (cfg.BuildWhitelist.Count > 0 && cfg.BuildWhitelist.CaselessContains(p.name)) return true;
+                if (p.group.Permission >= cfg.BuildMin) return null;
+                if (cfg.BuildWhitelist.Count > 0 && cfg.BuildWhitelist.CaselessContains(p.name)) return null;
             }
             
             // Check zones denied from
@@ -211,13 +200,28 @@ namespace MCGalaxy {
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
                 AccessResult access = zn.Access.Check(p);
                 if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
-
-                if (p.lastAccessStatus > DateTime.UtcNow) return false;
-                zn.Access.CheckDetailed(p);
-                p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
-                return false;
+                
+                return zn.Access;
             }
-            return CheckRank(p);
+            
+        checkRank:
+            if (p.level == this) {
+                return p.AllowBuild ? null : BuildAccess;
+            } else {
+                return BuildAccess.CheckAllowed(p) ? null : BuildAccess;
+            }
+        }
+        
+        public bool CheckAffect(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
+            if (!p.group.Blocks[old] || !p.group.Blocks[block]) return false;
+            AccessController denied = CanAffect(p, x, y, z);
+            if (denied == null) return true;
+            
+            if (p.lastAccessStatus < DateTime.UtcNow) {
+                denied.CheckDetailed(p);
+                p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
+            }
+            return false;
         }
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, BlockID block) {
@@ -239,7 +243,7 @@ namespace MCGalaxy {
                 BlockID old = GetBlock(x, y, z);
 
                 errorLocation = "Permission checking";
-                if (!CheckAffectPermissions(p, x, y, z, old, block)) {
+                if (!CheckAffect(p, x, y, z, old, block)) {
                     p.RevertBlock(x, y, z); return 0;
                 }
                 if (old == block) return 0;
@@ -305,7 +309,7 @@ namespace MCGalaxy {
         }
         
         public bool DoPhysicsBlockchange(int b, BlockID block, bool overRide = false,
-                                           PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
+                                         PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) {
             if (blocks == null || b < 0 || b >= blocks.Length) return false;
             BlockID old = blocks[b];
             #if TEN_BIT_BLOCKS
@@ -419,7 +423,7 @@ namespace MCGalaxy {
         }
         
         public BlockDefinition GetBlockDef(BlockID block) {
-            if (block == Block.Air) return null;           
+            if (block == Block.Air) return null;
             if (Block.IsPhysicsType(block)) {
                 return CustomBlockDefs[Block.Convert(block)];
             } else {

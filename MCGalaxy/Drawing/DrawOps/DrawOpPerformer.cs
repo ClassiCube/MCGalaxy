@@ -135,7 +135,7 @@ namespace MCGalaxy.Drawing.Ops {
             } else {
                 op.Perform(marks, brush, outputter.Output);
             }
-            bool needsReload = op.TotalModified >= outputter.reloadThreshold;            
+            bool needsReload = op.TotalModified >= outputter.reloadThreshold;
             
             timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
             entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
@@ -182,8 +182,8 @@ namespace MCGalaxy.Drawing.Ops {
                 #endif
                 
                 if (old == Block.Invalid) return;
-                // Check to make sure the block is actually different and that we can change it
-                if (old == b.Block || !lvl.CheckAffectPermissions(p, b.X, b.Y, b.Z, old, b.Block)) return;
+                // Check to make sure the block is actually different and that can be used
+                if (old == b.Block || !lvl.CheckAffect(p, b.X, b.Y, b.Z, old, b.Block)) return;
                 
                 // Set the block (inlined)
                 lvl.Changed = true;
