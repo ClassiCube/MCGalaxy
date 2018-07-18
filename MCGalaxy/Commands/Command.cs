@@ -149,8 +149,7 @@ namespace MCGalaxy {
     public abstract class Command2 : Command {       
         public override void Use(Player p, string message) {
             if (p == null) p = Player.Console;
-            CommandData data = default(CommandData); data.Rank = p.Rank;
-            Use(p, message, data);
+            Use(p, message, p.DefaultCmdData);
         }
     }
     

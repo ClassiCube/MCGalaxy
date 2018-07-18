@@ -55,14 +55,14 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public static string Append(Player p, string ai, string action, string[] args) {
+        public static string Append(Player p, string ai, string cmd, string[] args) {
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                if (action.Length == 0)      action = "walk";
-                if (action.CaselessEq("tp")) action = "teleport";
+                if (cmd.Length == 0)      cmd = "walk";
+                if (cmd.CaselessEq("tp")) cmd = "teleport";
 
-                BotInstruction ins = BotInstruction.Find(action);
+                BotInstruction ins = BotInstruction.Find(cmd);
                 if (ins == null) {
-                    p.Message("Could not find instruction \"" + action + "\""); return null;
+                    p.Message("Could not find instruction \"" + cmd + "\""); return null;
                 }
                 
                 CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);

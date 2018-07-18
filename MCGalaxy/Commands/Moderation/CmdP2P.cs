@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player target = PlayerInfo.FindMatches(p, args[1]);
             
             if (source == null || target == null) return;
-            if (!CheckRank(p, source, "teleport", true)) return;
+            if (!CheckRank(p, data, source, "teleport", true)) return;
             
             p.Message("Attempting to teleport " + source.name + " to " + target.name + ".");
             Command.Find("TP").Use(source, target.name, data);

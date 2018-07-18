@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Misc {
             if (args.Length == 1) {
                 target = PlayerInfo.FindMatches(p, args[0]);
                 if (target == null) return;
-                if (!CheckPlayer(p, target)) return;
+                if (!CheckPlayer(p, target, data)) return;
             } else if (args[0].CaselessEq("bot")) {
                 bot = Matcher.FindBots(p, args[1]);
                 if (bot == null) return;
@@ -108,13 +108,11 @@ namespace MCGalaxy.Commands.Misc {
             p.PreTeleportRot = p.Rot;
         }
         
-        static bool CheckPlayer(Player p, Player target) {
+        static bool CheckPlayer(Player p, Player target, CommandData data) {
             if (target.level.IsMuseum) {
                 p.Message(target.ColoredName + " %Sis in a museum."); return false;
-            }
-            
-            if (!ServerConfig.HigherRankTP 
-                && !CheckRank(p, target, "teleport to", true)) return false;
+            }          
+            if (!ServerConfig.HigherRankTP && !CheckRank(p, data, target, "teleport to", true)) return false;
             
             IGame game = IGame.GameOn(target.level);
             if (!p.Game.Referee && game != null) {

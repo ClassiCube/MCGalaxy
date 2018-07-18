@@ -37,9 +37,8 @@ namespace MCGalaxy {
         protected abstract string MaxCmd { get; }
         
         
-        public AccessResult Check(Player p) { return Check(p.name, p.Rank); }
         public bool CheckAllowed(Player p) {
-            AccessResult access = Check(p);
+            AccessResult access = Check(p.name, p.Rank);
             return access == AccessResult.Allowed || access == AccessResult.Whitelisted;
         }
         
@@ -53,13 +52,12 @@ namespace MCGalaxy {
             }
             return AccessResult.Allowed;
         }
-
-        public bool CheckDetailed(Player p, bool ignoreRankPerm = false) {
-            AccessResult access = Check(p);
+        
+        public bool CheckDetailed(Player p) { return CheckDetailed(p, p.Rank); }
+        public bool CheckDetailed(Player p, LevelPermission plRank) {
+            AccessResult access = Check(p.name, plRank);
             if (access == AccessResult.Allowed) return true;
             if (access == AccessResult.Whitelisted) return true;
-            if (access == AccessResult.AboveMaxRank && ignoreRankPerm) return true;
-            if (access == AccessResult.BelowMinRank && ignoreRankPerm) return true;
             
             if (access == AccessResult.Blacklisted) {
                 p.Message("You are blacklisted from {0} {1}", ActionIng, ColoredName);
@@ -187,7 +185,7 @@ namespace MCGalaxy {
         /// <summary> Returns true if the player is allowed to modify these access permissions,
         /// and is also allowed to change the access permissions for the target player. </summary>
         bool CheckList(Player p, LevelPermission plRank, string name, bool whitelist) {
-            if (p != null && !CheckDetailed(p)) {
+            if (!CheckDetailed(p, plRank)) {
                 string mode = whitelist ? "whitelist" : "blacklist";
                 p.Message("Hence you cannot modify the {0} {1}.", Type, mode); return false;
             }

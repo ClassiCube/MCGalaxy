@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Moderation {
                           PlayerInfo.GetColoredName(p, target), curRank.ColoredName);
                 return;
             }
-            if (!CanChangeRank(target, curRank, newRank, p, ref reason)) return;
+            if (!CanChangeRank(target, curRank, newRank, p, data, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
             action.targetGroup = curRank;
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         internal static bool CanChangeRank(string name, Group curRank, Group newRank,
-                                           Player p, ref string reason) {
+                                           Player p, CommandData data, ref string reason) {
             Group banned = Group.BannedRank;
             if (reason == null) {
                 reason = newRank.Permission >= curRank.Permission ?
@@ -88,8 +88,8 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (!p.IsConsole) {
-                if (!CheckRank(p, curRank.Permission, "change the rank of", false)) return false;            
-                if (newRank.Permission >= p.Rank) {
+                if (!CheckRank(p, data, curRank.Permission, "change the rank of", false)) return false;            
+                if (newRank.Permission >= data.Rank) {
                     p.Message("Cannot rank a player to a rank equal to or higher than yours."); return false;
                 }
             }

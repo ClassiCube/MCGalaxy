@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             TransformFactory transform = TransformFactory.Find(args[0]);
             
-            if (args[0].CaselessEq("list")) {
+            if (IsListCommand(args[0])) {
                 List(p);
             } else if (transform == null) {
                 p.Message("No transform found with name \"{0}\".", args[0]);

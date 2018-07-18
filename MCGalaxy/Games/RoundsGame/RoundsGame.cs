@@ -157,7 +157,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             if (map == null) { ContinueOnSameMap(); return; }
             
-            Map.Message("The next map has been chosen - &c" + map.ToLower());
+            Map.Message("The next map has been chosen - &c" + map);
             Map.Message("Please wait while you are transfered.");            
             Level lastMap = Map; LastMap = Map.MapName;
             

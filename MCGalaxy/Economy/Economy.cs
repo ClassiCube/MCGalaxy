@@ -35,7 +35,7 @@ namespace MCGalaxy.Eco {
             using (StreamReader r = new StreamReader(Paths.EconomyPropsFile)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
-                    line = line.ToLower().Trim();
+                    line = line.Trim();
                     try {
                         ParseLine(line);
                     } catch (Exception ex) {

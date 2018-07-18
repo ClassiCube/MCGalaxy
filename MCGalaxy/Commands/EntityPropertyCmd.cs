@@ -32,14 +32,14 @@ namespace MCGalaxy.Commands {
             if (bot == null && who == null) return;
 
             if (isBot) {
-                if (!CheckExtraPerm(p, data.Rank, 2)) return;
+                if (!CheckExtraPerm(p, data, 2)) return;
                 
-                if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "change the " + type + " of that bot")) return;
+                if (!LevelInfo.Check(p, data.Rank, p.level, "change the " + type + " of that bot")) return;
                 SetBotData(p, bot, args.Length > 2 ? args[2] : "");
             } else {
-                if (p != who && !CheckExtraPerm(p, data.Rank, 1)) return;
+                if (p != who && !CheckExtraPerm(p, data, 1)) return;
                 
-                if (!CheckRank(p, who, "change the " + type + " of", true)) return;
+                if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
                 SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
             }
         }
@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
-            if (!CheckRank(p, who, "change the " + type + " of", true)) return;
-            if (p != who && !CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
+            if (p != who && !CheckExtraPerm(p, data, 1)) return;
             SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
         }
         

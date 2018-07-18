@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0 && p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (!CheckRank(p, who, "voice", true)) return;
+            if (!CheckRank(p, data, who, "voice", true)) return;
             
             if (who.voice) {
                 p.Message("Removing voice status from " + who.ColoredName);

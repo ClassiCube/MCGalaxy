@@ -24,32 +24,33 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
+            if (message.Length == 0) { List(p, ""); return; }
             string[] args = message.SplitSpaces();
+            string cmd = args[0];
             
-            if (args[0].CaselessEq("add")) {
+            if (IsCreateCommand(cmd)) {
                 if (args.Length < 2) { Help(p); return; }
-                AddVIP(p, args[1]);
-            } else if (IsDeleteCommand(args[0])) {
+                Add(p, args[1]);
+            } else if (IsDeleteCommand(cmd)) {
                 if (args.Length < 2) { Help(p); return; }
-                RemoveVIP(p, args[1]);
-            } else if (args[0].CaselessEq("list")) {
-                ListVIPs(p, args);
+                Remove(p, args[1]);
+            } else if (IsListCommand(cmd)) {
+                string modifier = args.Length > 1 ? args[1] : "";
+                List(p, modifier);
             } else if (args.Length == 1) {
-                AddVIP(p, args[0]);
+                Add(p, args[0]);
             } else {
                 Help(p);
             }
         }
         
-        static void AddVIP(Player p, string name) {
+        static void Add(Player p, string name) {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
             
-            if (Server.vip.Contains(name)) {
+            if (!Server.vip.AddUnique(name)) {
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
             } else {
-                Server.vip.Add(name);
                 Server.vip.Save(false);
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis now a VIP.");
                 
@@ -58,14 +59,13 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        void RemoveVIP(Player p, string name) {
+        static void Remove(Player p, string name) {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
             
-            if (!Server.vip.Contains(name)) {
+            if (!Server.vip.Remove(name)) {
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis not a VIP.");
             } else {
-                Server.vip.Remove(name);
                 Server.vip.Save(false);
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis no longer a VIP.");
                 
@@ -74,10 +74,8 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        static void ListVIPs(Player p, string[] args) {
+        static void List(Player p, string modifier) {
             List<string> list = Server.vip.All();
-            string modifier = args.Length > 1 ? args[1] : "";
-            
             if (list.Count == 0) {
                 p.Message("There are no VIPs.");
             } else {

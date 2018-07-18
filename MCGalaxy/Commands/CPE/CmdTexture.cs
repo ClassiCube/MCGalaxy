@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
                 UpdateGlobal(p);
             } else if (scope == "level" || scope == "levelzip") {
-                if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "set texture of this level")) return;
+                if (!LevelInfo.Check(p, data.Rank, p.level, "set texture of this level")) return;
                 p.level.Config.Terrain = "";
                 p.level.Config.TexturePack = "";
                 

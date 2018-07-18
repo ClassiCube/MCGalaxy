@@ -57,20 +57,20 @@ namespace MCGalaxy.Commands.Misc {
             
             string name = args[1];
             if (IsCreateCommand(cmd)) {
-                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
+                if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 if (warps.Exists(name)) { p.Message("{0} already exists", group); return; }
 
                 warps.Create(name, p);
                 p.Message("{0} {1} created.", group, name);
             } else if (IsDeleteCommand(cmd)) {
-                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
+                if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
                 
                 warps.Remove(warp, p);
                 p.Message("{0} {1} deleted.", group, warp.Name);
             } else if (IsEditCommand(cmd)) {
-                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
+                if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
 

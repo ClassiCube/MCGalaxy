@@ -51,7 +51,7 @@ namespace MCGalaxy {
             lock (locker) return names.CaselessContains(name);
         }
 
-        public bool AddIfNotExists(string name) {
+        public bool AddUnique(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
                 if (idx >= 0) return false;

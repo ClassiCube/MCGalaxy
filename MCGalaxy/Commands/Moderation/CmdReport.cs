@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleList(Player p, string[] args, CommandData data) {
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             string[] users = GetReportedUsers();
             
             if (users.Length > 0) {
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 p.Message("You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 p.Message("You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleClear(Player p, string[] args, CommandData data) {
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
             

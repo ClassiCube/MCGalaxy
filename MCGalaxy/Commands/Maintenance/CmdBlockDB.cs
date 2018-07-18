@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 lvl = Matcher.FindLevels(p, args[1]);
                 if (lvl == null) return;
             }
-            if (!LevelInfo.ValidateAction(p, data.Rank, lvl, "change BlockDB state of this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, lvl, "change BlockDB state of this level")) return;
             
             if (args[0].CaselessEq("clear")) {
                 p.Message("Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);

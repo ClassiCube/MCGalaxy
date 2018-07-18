@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Building {
                 if (parts.Length != 2) { Help(p); return; }
                 if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
                 LoadCopy(p, parts[1]);
-            } else if (opt == "delete") {
+            } else if (IsDeleteCommand(opt)) {
                 if (parts.Length != 2) { Help(p); return; }
                 if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
                 
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
                 if (path == null) { p.Message("No such copy exists."); return; }
                 File.Delete(path);
                 p.Message("Deleted copy " + parts[1]);
-            } else if (opt == "list") {
+            } else if (IsListCommand(opt)) {
                 string dir = "extra/savecopy/" + p.name;
                 if (!Directory.Exists(dir)) {
                     p.Message("No such directory exists"); return;

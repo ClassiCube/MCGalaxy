@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                 Server.lockdown.Remove(map);
                 Chat.MessageFromOps(p, "Map " + map + " unlocked by: λNICK");
             } else {
-                Server.lockdown.AddIfNotExists(map);
+                Server.lockdown.AddUnique(map);
                 Chat.MessageFromOps(p, "Map " + map + " locked by: λNICK");
             }
             Server.lockdown.Save();

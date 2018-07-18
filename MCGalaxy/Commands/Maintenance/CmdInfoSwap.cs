@@ -33,8 +33,8 @@ namespace MCGalaxy.Commands.Maintenance {
             if (src == null || dst == null) return;
 
             Group srcGroup = Group.GroupIn(src), dstGroup = Group.GroupIn(dst);
-            if (!CheckRank(p, srcGroup.Permission, "%T/InfoSwap%S", false)) return;
-            if (!CheckRank(p, dstGroup.Permission, "%T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, data, srcGroup.Permission, "%T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, data, dstGroup.Permission, "%T/InfoSwap%S", false)) return;
                         
             SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);

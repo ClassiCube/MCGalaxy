@@ -30,20 +30,22 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(4);
+            string cmd = args[0];
+            
             if (args.Length >= 3) {
-                Assign(p, args);
-            } else if (args[0].CaselessEq("list")) {
+                Assign(p, args, data);
+            } else if (IsListCommand(cmd)) {
                 List(p);
-            } else if (IsDeleteCommand(args[0]) && args.Length > 1) {
-                Delete(p, args[1]);
-            } else if (IsInfoCommand(args[0]) && args.Length > 1) {
+            } else if (IsDeleteCommand(cmd) && args.Length > 1) {
+                Delete(p, args[1], data);
+            } else if (IsInfoCommand(cmd) && args.Length > 1) {
                 Info(p, args[1]);
             } else {
                 Help(p);
             }
         }
         
-        static void Assign(Player p, string[] args) {
+        static void Assign(Player p, string[] args, CommandData data) {
             string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (target == null) return;
 
@@ -62,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Group curRank = PlayerInfo.GetGroup(target);
             string reason = args.Length > 3 ? args[3] : "assigning temp rank";
-            if (!CmdSetRank.CanChangeRank(target, curRank, newRank, p, ref reason)) return;
+            if (!CmdSetRank.CanChangeRank(target, curRank, newRank, p, data, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason, duration);
             action.targetGroup = curRank;
@@ -70,7 +72,7 @@ namespace MCGalaxy.Commands.Moderation {
             OnModActionEvent.Call(action);
         }
         
-        internal static void Delete(Player p, string target) {
+        internal static void Delete(Player p, string target, CommandData data) {
             string line = Server.tempRanks.FindData(target);
             if (line == null) {
                 p.Message("{0} %Whas not been assigned a temp rank.",
@@ -85,7 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (oldRank == null) return;
             
             string reason = "temp rank unassigned";
-            if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, p, ref reason)) return;
+            if (!CmdSetRank.CanChangeRank(target, curRank, oldRank, p, data, ref reason)) return;
             
             ModAction action = new ModAction(target, p, ModActionType.Rank, reason);
             action.Metadata = oldRank;

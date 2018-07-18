@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { p.Message("You need to provide a player name."); return; }
             
             string[] parts = message.SplitSpaces(), names = null;
-            int[] ids = GetIds(p, parts, out names);
+            int[] ids = GetIds(p, parts, data, out names);
             if (ids == null) return;
             
             TimeSpan delta = CmdUndo.GetDelta(p, parts[0], parts, 1);
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        int[] GetIds(Player p, string[] parts, out string[] names) {
+        int[] GetIds(Player p, string[] parts, CommandData data, out string[] names) {
             int count = Math.Max(1, parts.Length - 1);
             List<int> ids = new List<int>();
             names = new string[count];
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Group grp = PlayerInfo.GetGroup(names[i]);
                 if (!p.name.CaselessEq(names[i])) {
-                    if (!CheckRank(p, grp.Permission, "undo", false)) return null;
+                    if (!CheckRank(p, data, grp.Permission, "undo", false)) return null;
                 }
 
                 ids.AddRange(NameConverter.FindIds(names[i]));

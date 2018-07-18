@@ -164,9 +164,9 @@ namespace MCGalaxy.Gui {
         }
         
         void eco_dgv_DataError(object sender, DataGridViewDataErrorEventArgs e) {
-            string col = eco_dgvMaps.Columns[e.ColumnIndex].HeaderText.ToLower();
+            string col = eco_dgvMaps.Columns[e.ColumnIndex].HeaderText;
             if (e.ColumnIndex > 0) {
-                Popup.Warning("Column " + col + " must be an integer greater than zero");
+                Popup.Warning(col + " must be an integer greater than zero");
             } else {
                 Popup.Warning("Error setting contents of column " + col);
             }

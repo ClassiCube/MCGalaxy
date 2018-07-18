@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length > 0) {
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (!CheckRank(p, who, "send oprules to", false)) return;
+                if (!CheckRank(p, data, who, "send oprules to", false)) return;
             }
 
             string[] oprules = oprulesFile.GetText();

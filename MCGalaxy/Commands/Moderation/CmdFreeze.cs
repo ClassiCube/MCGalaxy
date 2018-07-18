@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
             
-            Group group = ModActionCmd.CheckTarget(p, "freeze", who.name);
+            Group group = ModActionCmd.CheckTarget(p, data, "freeze", who.name);
             if (group == null) return;
             
             if (who.frozen) {

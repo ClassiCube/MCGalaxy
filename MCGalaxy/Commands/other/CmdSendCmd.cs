@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
             Player target = PlayerInfo.FindMatches(p, args[0]);
             if (target == null) return;
             
-            if (!CheckRank(p, target, "send commands for", true)) return;
+            if (!CheckRank(p, data, target, "send commands for", true)) return;
             if (args.Length == 1) { p.Message("No command name given."); return; }
             
             string cmdName = args[1], cmdArgs = args.Length > 2 ? args[2] : "";

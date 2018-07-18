@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces();
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (!CheckRank(p, who, "hide", false)) return;
+            if (!CheckRank(p, data, who, "hide", false)) return;
             
             bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
             if (!own) data.Rank = who.Rank;

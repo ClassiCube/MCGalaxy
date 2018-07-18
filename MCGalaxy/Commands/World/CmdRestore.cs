@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
                 lvl = p.level;
             }
 
-            if (!LevelInfo.ValidateAction(p, data.Rank, lvl, "restore a backup of this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, lvl, "restore a backup of this level")) return;
             if (File.Exists(LevelInfo.BackupFilePath(lvl.name, args[0]))) {
                 try {
                     DoRestore(lvl, args[0]);

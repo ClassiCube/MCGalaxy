@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Fun {
             } else if (IsInfoCommand(message)) {
                 HandleStatus(p, game); return;
             }
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             
             if (message.CaselessEq("start") || message.CaselessStarts("start ")) {
                 HandleStart(p, game, message.SplitSpaces());

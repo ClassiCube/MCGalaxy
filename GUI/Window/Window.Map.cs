@@ -74,7 +74,7 @@ namespace MCGalaxy.Gui {
         
         string Map_GetComboboxItem(ComboBox box, string propName) {
             object selected = box.SelectedItem;
-            string value = selected == null ? "" : selected.ToString().ToLower();
+            string value = selected == null ? "" : selected.ToString();
             
             if (value.Length == 0) {
                 Popup.Warning("Map " + propName + " cannot be blank.");

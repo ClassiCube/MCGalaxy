@@ -37,24 +37,24 @@ namespace MCGalaxy.Commands.Moderation {
                     
                 case "add":
                     if (parts.Length < 2) { p.Message("You need to provide a name to add."); return; }
-                    if (Server.ircControllers.Contains(parts[1])) {
-                        p.Message(parts[1] + " is already an IRC controller."); return;
-                    }
                     
-                    Server.ircControllers.Add(parts[1]);
-                    Server.ircControllers.Save();
-                    p.Message(parts[1] + " added to the IRC controller list.");
+                    if (!Server.ircControllers.AddUnique(parts[1])) {
+                        p.Message(parts[1] + " is already an IRC controller.");
+                    } else {
+                        Server.ircControllers.Save();
+                        p.Message(parts[1] + " added to the IRC controller list.");
+                    }
                     break;
                     
                 case "remove":
                     if (parts.Length < 2) { p.Message("You need to provide a name to remove."); return; }
-                    if (!Server.ircControllers.Contains(parts[1])) {
-                        p.Message(parts[1] + " is not an IRC controller."); return;
-                    }
                     
-                    Server.ircControllers.Remove(parts[1]);
-                    Server.ircControllers.Save();
-                    p.Message(parts[1] + " removed from the IRC controller list.");
+                    if (!Server.ircControllers.Remove(parts[1])) {
+                        p.Message(parts[1] + " is not an IRC controller.");
+                    } else {
+                        Server.ircControllers.Save();
+                        p.Message(parts[1] + " removed from the IRC controller list.");
+                    }
                     break;
                     
                 case "list":
@@ -64,14 +64,14 @@ namespace MCGalaxy.Commands.Moderation {
                     break;
                     
                 case "rank":
-                    if (parts.Length < 2) { 
-                        p.Message("IRC controllers have the rank {0}", 
-                                       Group.GetColoredName(ServerConfig.IRCControllerRank));
+                    if (parts.Length < 2) {
+                        p.Message("IRC controllers have the rank {0}",
+                                  Group.GetColoredName(ServerConfig.IRCControllerRank));
                         return;
                     }
                     
                     Group grp = Matcher.FindRanks(p, parts[1]);
-                    if (grp == null) return;                  
+                    if (grp == null) return;
                     if (ServerConfig.IRCControllerRank > data.Rank) {
                         p.Message("Cannot change the IRC controllers rank, as it is currently a rank higher than yours."); return;
                     }
@@ -95,7 +95,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("%T/IRCControllers reload/list");
             p.Message("%HReloads or outputs list of IRC controllers");
             p.Message("%T/IRCControllers rank [rank]");
-            p.Message("%HSets which rank IRC controllers are treated as having in-game.");
+            p.Message("%HSets which rank IRC controllers are treated as having");
         }
     }
 }

@@ -41,7 +41,7 @@ namespace MCGalaxy.Tasks {
         internal static void TemprankCalcNextRun() { CalcNextRun(temprankTask, Server.tempRanks); }
         
         static void TemprankCallback(string[] args) {
-            CmdTempRank.Delete(Player.Console, args[0]);
+            CmdTempRank.Delete(Player.Console, args[0], Player.Console.DefaultCmdData);
             // Handle case of old rank no longer existing
             if (Server.tempRanks.Remove(args[0])) {
                 Server.tempRanks.Save();

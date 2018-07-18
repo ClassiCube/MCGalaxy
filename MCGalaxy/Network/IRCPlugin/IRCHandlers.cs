@@ -31,12 +31,12 @@ namespace MCGalaxy.Network {
     public sealed class IRCHandlers {
         
         readonly IRCBot bot;
-        readonly Player ircGuest = new Player("IRC");
+        readonly Player ircDefault = new Player("IRC");
         readonly Player ircOp = new Player("IRC");
         
         public IRCHandlers(IRCBot bot) {
             this.bot = bot;
-            ircGuest.group = Group.GuestRank;
+            ircDefault.group = Group.DefaultRank;
         }
         
         volatile bool hookedEvents = false;
@@ -129,7 +129,7 @@ namespace MCGalaxy.Network {
         void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
             ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
             
-            if (scopeFilter(ircGuest, arg) && (filter == null || filter(ircGuest, arg))) {
+            if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
                 bot.Say(msg, false);
             } else {
                 ircOp.group = Group.Find(ServerConfig.IRCControllerRank);
@@ -160,7 +160,7 @@ namespace MCGalaxy.Network {
             bot.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
         }
         
-        void HandleGroupLoad() { ircGuest.group = Group.GuestRank; }
+        void HandleGroupLoad() { ircDefault.group = Group.DefaultRank; }
         
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
@@ -265,9 +265,7 @@ namespace MCGalaxy.Network {
             
             try {
                 Player p = new IRCPlayer(channel, user.Nick, bot);
-                CommandData data = default(CommandData);
-                data.Rank = Group.DefaultRank.Permission;
-                Command.Find("Players").Use(p, "", data);
+                Command.Find("Players").Use(p, "", ircDefault.DefaultCmdData);
             } catch (Exception e) {
                 Logger.LogError(e);
             }

@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         void HandleCreate(Player p, string[] args, CommandData data) {
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             Team team = p.Game.Team;
             if (team != null) { p.Message("You need to leave your current team before you can create one."); return; }
             if (args.Length == 1) {

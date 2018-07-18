@@ -43,20 +43,10 @@ namespace MCGalaxy.Config {
             : base(name, section) { defPerm = def; }
         
         public override object Parse(string raw) {
-            sbyte permNum;
-            LevelPermission perm;
-            
-            if (!sbyte.TryParse(raw, out permNum)) {
-                // Try parse the permission as name for backwards compatibility
-                Group grp = Group.Find(raw);
-                if (grp == null) {
-                    Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, defPerm);
-                    perm = defPerm;
-                } else {
-                    perm = grp.Permission;
-                }
-            } else {
-                perm = (LevelPermission)permNum;
+            LevelPermission perm = Group.ParsePermOrName(raw, LevelPermission.Null);
+            if (perm == LevelPermission.Null) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, defPerm);
+                perm = defPerm;
             }
             
             if (perm < LevelPermission.Banned) {

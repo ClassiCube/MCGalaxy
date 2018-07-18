@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (!ServerConfig.WhitelistedOnly) { p.Message("Whitelist is not enabled."); return; }
             if (message.Length == 0) { List(p, ""); return; }
             string[] args = message.SplitSpaces();
-
+            string cmd = args[0];
+            
             if (args[0].CaselessEq("add")) {
                 if (args.Length < 2) { Help(p); return; }
                 Add(p, args[1]);
@@ -46,25 +47,23 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Add(Player p, string player) {
-            if (Server.whiteList.Contains(player)) {
+            if (!Server.whiteList.AddUnique(player)) {
                 p.Message(player + " %Sis already on the whitelist!"); return;
+            } else {
+                Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");
+                Server.whiteList.Save();
+                Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
             }
-            
-            Server.whiteList.Add(player);
-            Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");
-            Server.whiteList.Save();
-            Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
         }
         
         static void Remove(Player p, string player) {
-            if (!Server.whiteList.Contains(player)) {
+            if (!Server.whiteList.Remove(player)) {
                 p.Message(player + " %Sis not on the whitelist!"); return;
+            } else {
+                Server.whiteList.Save();
+                Chat.MessageFromOps(p, "λNICK %Sremoved &f" + player + " %Sfrom the whitelist.");
+                Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
             }
-            
-            Server.whiteList.Remove(player);
-            Chat.MessageFromOps(p, "λNICK %Sremoved &f" + player + " %Sfrom the whitelist.");
-            Server.whiteList.Save();
-            Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
         }
         
         static void List(Player p, string modifier) {
@@ -73,7 +72,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("There are no whitelisted players.");
             } else {
                 p.Message("Whitelisted players:");
-                MultiPageOutput.Output(p, list, 
+                MultiPageOutput.Output(p, list,
                                        (name) => PlayerInfo.GetColoredName(p, name),
                                        "Whitelist list", "players", modifier, false);
             }

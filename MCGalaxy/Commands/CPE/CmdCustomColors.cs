@@ -28,14 +28,15 @@ namespace MCGalaxy.Commands.CPE {
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (message.Length == 0) { Help(p); return; }
+            string cmd = args[0];
             
-            if (IsCreateCommand(args[0])) {
+            if (IsCreateCommand(cmd)) {
                 AddHandler(p, args);
-            } else if (IsDeleteCommand(args[0])) {
+            } else if (IsDeleteCommand(cmd)) {
                 RemoveHandler(p, args);
-            } else if (IsEditCommand(args[0])) {
+            } else if (IsEditCommand(cmd)) {
                 EditHandler(p, args);
-            } else if (args[0].CaselessEq("list")) {
+            } else if (IsListCommand(cmd)) {
                 string modifer = args.Length > 1 ? args[1] : "";
                 ListHandler(p, "ccols list", modifer);
             } else {

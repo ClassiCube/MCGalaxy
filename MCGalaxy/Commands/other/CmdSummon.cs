@@ -33,34 +33,33 @@ namespace MCGalaxy.Commands.Misc {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can summon all players") }; }
         }
 
-        public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }            
-            if (message.CaselessEq("all")) {
-                if (CheckExtraPerm(p, data.Rank, 1)) SummonAll(p);
+        public override void Use(Player p, string target, CommandData data) {
+            if (target.Length == 0) { Help(p); return; }
+            
+            if (!target.CaselessEq("all")) {
+                SummonPlayer(p, target, data);
             } else {
-                SummonPlayer(p, message);
-            }
-        }
-        
-        static void SummonAll(Player p) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level == p.level && pl != p && p.Rank > pl.Rank) {
-                    pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                    pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
-                    pl.Message("You were summoned by " + p.ColoredName + "%S.");
+                if (!CheckExtraPerm(p, data, 1)) return;
+                Player[] players = PlayerInfo.Online.Items;
+                
+                foreach (Player pl in players) {
+                    if (pl.level == p.level && pl != p && data.Rank > pl.Rank) {
+                        pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
+                        pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
+                        pl.Message("You were summoned by " + p.ColoredName + "%S.");
+                    }
                 }
+                Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
             }
-            Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
         }
         
-        static void SummonPlayer(Player p, string message) {
+        static void SummonPlayer(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             bool confirmed = args.Length > 1 && args[1].CaselessEq("confirm");
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) return;
-            if (!CheckRank(p, who, "summon", true)) return;
+            if (!CheckRank(p, data, who, "summon", true)) return;
             
             if (p.level != who.level) {
                 if (!CheckVisitPerm(p, who, confirmed)) return;
@@ -80,7 +79,7 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         static bool CheckVisitPerm(Player p, Player who, bool confirmed) {
-            AccessResult result = p.level.VisitAccess.Check(who);
+            AccessResult result = p.level.VisitAccess.Check(who.name, who.Rank);
             if (result == AccessResult.Allowed) return true;
             if (result == AccessResult.Whitelisted) return true;
             if (result == AccessResult.AboveMaxRank && confirmed) return true;
@@ -91,12 +90,12 @@ namespace MCGalaxy.Commands.Misc {
                 return false;
             } else if (result == AccessResult.BelowMinRank) {
                 p.Message("Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
-                               Group.GetColoredName(p.level.VisitAccess.Min),
-                               who.ColoredName, who.group.ColoredName);
+                          Group.GetColoredName(p.level.VisitAccess.Min),
+                          who.ColoredName, who.group.ColoredName);
             } else if (result == AccessResult.AboveMaxRank) {
                 p.Message("Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
-                               Group.GetColoredName(p.level.VisitAccess.Max),
-                               who.ColoredName, who.group.ColoredName);
+                          Group.GetColoredName(p.level.VisitAccess.Max),
+                          who.ColoredName, who.group.ColoredName);
             }
             
             p.Message("If you still want to summon them, type %T/Summon {0} confirm", who.name);

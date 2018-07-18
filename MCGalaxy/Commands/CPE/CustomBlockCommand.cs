@@ -25,7 +25,7 @@ using BlockRaw = System.Byte;
 namespace MCGalaxy.Commands.CPE {
     internal static class CustomBlockCommand {
         
-        public static void Execute(Player p, string message, bool global, string cmd) {
+        public static void Execute(Player p, string message, CommandData data, bool global, string cmd) {
             string[] parts = message.SplitSpaces(4);
             for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.CPE {
                     AddHandler(p, parts, global, cmd); break;
                 case "copyall":
                 case "copyfrom":
-                    CopyAllHandler(p, parts, global, cmd); break;
+                    CopyAllHandler(p, parts, data,global, cmd); break;
                 case "copy":
                 case "clone":
                 case "duplicate":
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.CPE {
             SendStepHelp(p, global);
         }
         
-        static void CopyAllHandler(Player p, string[] parts, bool global, string cmd) {
+        static void CopyAllHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
             string map = Matcher.FindMaps(p, parts[1]);
             if (map == null) return;
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.CPE {
             Level lvl = null;
             LevelConfig cfg = LevelInfo.GetConfig(map, out lvl); 
             AccessController visit = new LevelAccessController(cfg, map, true);
-            if (!visit.CheckDetailed(p)) {
+            if (!visit.CheckDetailed(p, data.Rank)) {
                 p.Message("Hence, you cannot copy custom blocks from that level"); return;
             }
             
@@ -782,7 +782,7 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            CustomBlockCommand.Execute(p, message, true, "/gb");
+            CustomBlockCommand.Execute(p, message, data, true, "/gb");
         }
         
         public override void Help(Player p) {
@@ -802,7 +802,7 @@ namespace MCGalaxy.Commands.CPE {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            CustomBlockCommand.Execute(p, message, false, "/lb");
+            CustomBlockCommand.Execute(p, message, data, false, "/lb");
         }
         
         public override void Help(Player p) {

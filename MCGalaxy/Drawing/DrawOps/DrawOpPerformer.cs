@@ -150,8 +150,7 @@ namespace MCGalaxy.Drawing.Ops {
         static void DoReload(Player p, Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level.name.CaselessEq(lvl.name))
-                    LevelActions.ReloadFor(p, pl, true);
+                if (pl.level == lvl) LevelActions.ReloadFor(p, pl, true);
             }
             Server.DoGC();
         }
@@ -183,7 +182,17 @@ namespace MCGalaxy.Drawing.Ops {
                 
                 if (old == Block.Invalid) return;
                 // Check to make sure the block is actually different and that can be used
-                if (old == b.Block || !lvl.CheckAffect(p, b.X, b.Y, b.Z, old, b.Block)) return;
+                if (old == b.Block || !p.group.Blocks[old] || !p.group.Blocks[b.Block]) return;
+                
+                // Check if player can affect block at coords in world
+                AccessController denied = lvl.CanAffect(p, b.X, b.Y, b.Z);
+                if (denied != null) {
+                    if (p.lastAccessStatus < DateTime.UtcNow) {
+                        denied.CheckDetailed(p);
+                        p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
+                    }
+                    return;
+                }
                 
                 // Set the block (inlined)
                 lvl.Changed = true;

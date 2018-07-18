@@ -131,6 +131,13 @@ namespace MCGalaxy {
         public bool joker;
         public bool adminpen;
         public bool voice;
+        
+        public CommandData DefaultCmdData {
+            get { 
+                CommandData data = default(CommandData);
+                data.Rank = Rank; return data;
+            }
+        }
 
         public bool useCheckpointSpawn;
         public int lastCheckpointIndex = -1;

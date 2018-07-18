@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         void HandleView(Player p, CommandData data) {
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
 
             if (Server.reviewlist.Count == 0) {
                 p.Message("There are no players in the review queue."); return;
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void HandleNext(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("{0} cannot answer the review queue.", p.SuperName); return; }
-            if (!CheckExtraPerm(p, data.Rank, 2)) return;
+            if (!CheckExtraPerm(p, data, 2)) return;
             if (Server.reviewlist.Count == 0) {
                 p.Message("There are no players in the review queue."); return;
             }
@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleClear(Player p, CommandData data) {
-            if (!CheckExtraPerm(p, data.Rank, 3)) return;
+            if (!CheckExtraPerm(p, data, 3)) return;
             Server.reviewlist.Clear();
             p.Message("The review queue has been cleared");
         }

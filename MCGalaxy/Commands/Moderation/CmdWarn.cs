@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
 
-            Group group = ModActionCmd.CheckTarget(p, "warn", target);
+            Group group = ModActionCmd.CheckTarget(p, data, "warn", target);
             if (group == null) return;
                         
             ModAction action = new ModAction(target, p, ModActionType.Warned, reason);

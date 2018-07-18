@@ -56,21 +56,23 @@ namespace MCGalaxy {
             return CommandExtraPerms.Find(name, num).UsableBy(plRank);
         }
         
-        protected bool CheckExtraPerm(Player p, LevelPermission plRank, int num) {
-            if (HasExtraPerm(p, plRank, num)) return true;
+        protected bool CheckExtraPerm(Player p, CommandData data, int num) {
+            if (HasExtraPerm(p, data.Rank, num)) return true;
             
             CommandExtraPerms perms = CommandExtraPerms.Find(name, num);
             perms.MessageCannotUse(p);
             return false;
         }
         
-        protected internal static bool CheckRank(Player p, Player who, string action, bool canAffectOwnRank) {
-            return p == who || CheckRank(p, who.Rank, action, canAffectOwnRank);
+        protected internal static bool CheckRank(Player p, CommandData data, Player who, 
+                                                 string action, bool canAffectOwnRank) {
+            return p == who || CheckRank(p, data, who.Rank, action, canAffectOwnRank);
         }
         
-        protected internal static bool CheckRank(Player p, LevelPermission rank, string action, bool canAffectOwnRank) {
-            if (canAffectOwnRank && rank <= p.Rank) return true;
-            if (!canAffectOwnRank && rank < p.Rank) return true;
+        protected internal static bool CheckRank(Player p, CommandData data, LevelPermission rank, 
+                                                 string action, bool canAffectOwnRank) {
+            if (canAffectOwnRank && rank <= data.Rank) return true;
+            if (!canAffectOwnRank && rank < data.Rank) return true;
             
             if (canAffectOwnRank)
                 p.Message("Can only {0} players ranked {1} %Sor below", action, p.group.ColoredName);
@@ -93,9 +95,13 @@ namespace MCGalaxy {
         }  
 
         protected internal static bool IsInfoCommand(string str) {
-            return str.CaselessEq("info") || str.CaselessEq("status") || str.CaselessEq("about")
-                || str.CaselessEq("view") || str.CaselessEq("check");
-        }        
+            return str.CaselessEq("about") || str.CaselessEq("info") || str.CaselessEq("status")
+                || str.CaselessEq("check");
+        }
+        
+        protected internal static bool IsListCommand(string str) {
+            return str.CaselessEq("list") || str.CaselessEq("view");
+        }
     }
     
     public sealed class CommandTypes {

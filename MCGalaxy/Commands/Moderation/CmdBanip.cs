@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }            
+            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             args[0] = ModActionCmd.FindIP(p, args[0], "IP ban", "banip");
             if (args[0] == null) return;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (p.ip == args[0]) { p.Message("You cannot IP ban yourself."); return; }
             if (Server.bannedIP.Contains(args[0])) { p.Message("{0} is already IP banned.", args[0]); return; }
             // Check if IP is shared by any other higher ranked accounts
-            if (!CheckIP(p, args[0])) return;
+            if (!CheckIP(p, data, args[0])) return;
             
             string reason = args.Length > 1 ? args[1] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
@@ -52,14 +52,14 @@ namespace MCGalaxy.Commands.Moderation {
             OnModActionEvent.Call(action);
         }
         
-        static bool CheckIP(Player p, string ip) {
+        static bool CheckIP(Player p, CommandData data, string ip) {
             if (p.IsConsole) return true;
             List<string> accounts = PlayerInfo.FindAccounts(ip);
             if (accounts == null || accounts.Count == 0) return true;
             
             foreach (string name in accounts) {
                 Group grp = PlayerInfo.GetGroup(name);
-                if (grp == null || grp.Permission < p.Rank) continue;
+                if (grp.Permission < data.Rank) continue;
                 
                 p.Message("You can only IP ban IPs used by players with a lower rank.");
                 p.Message(name + "(" + grp.ColoredName + "%S) uses that IP.");

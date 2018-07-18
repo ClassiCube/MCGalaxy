@@ -24,10 +24,7 @@ using MCGalaxy.Commands.World;
 namespace MCGalaxy {
     public static class PlayerActions {
         
-        /// <summary> Moves the player to the specified map. </summary>
         public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
-        
-        /// <summary> Moves the player to the specified map. </summary>
         public static bool ChangeMap(Player p, Level lvl) { return ChangeMap(p, lvl, null); }
         
         static bool ChangeMap(Player p, Level lvl, string name) {
@@ -72,25 +69,26 @@ namespace MCGalaxy {
             }
         }
         
-        static bool LoadOfflineLevel(Player p, string name) {
-            string propsPath = LevelInfo.PropsPath(name);
+        static bool LoadOfflineLevel(Player p, string map) {
+            string propsPath = LevelInfo.PropsPath(map);
             LevelConfig cfg = new LevelConfig();
             cfg.Load(propsPath);
             
             if (!cfg.LoadOnGoto) {
-                p.Message("Level \"{0}\" cannot be loaded using %T/Goto.", name);
+                p.Message("Level \"{0}\" cannot be loaded using %T/Goto.", map);
                 return false;
             }
             
-            LevelAccessController visitAccess = new LevelAccessController(cfg, name, true);
-            bool ignorePerms = p.summonedMap != null && p.summonedMap.CaselessEq(name);
-            if (!visitAccess.CheckDetailed(p, ignorePerms)) return false;
+            LevelAccessController visitAccess = new LevelAccessController(cfg, map, true);
+            bool skip = p.summonedMap != null && p.summonedMap.CaselessEq(map);
+            LevelPermission plRank = skip ? LevelPermission.Nobody : p.Rank;
+            if (!visitAccess.CheckDetailed(p, plRank)) return false;
             
-            LevelActions.Load(p, name, false);
-            Level lvl = LevelInfo.FindExact(name);
+            LevelActions.Load(p, map, false);
+            Level lvl = LevelInfo.FindExact(map);
             if (lvl != null) return GotoLevel(p, lvl);
 
-            p.Message("Level \"{0}\" failed to be auto-loaded.", name);
+            p.Message("Level \"{0}\" failed to be auto-loaded.", map);
             return false;
         }
         

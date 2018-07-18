@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Bots{
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
-            if (cmd.CaselessEq("list")) {
+            if (IsListCommand(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 HandleList(p, modifier);
                 return;

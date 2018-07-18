@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Misc {
                 if (p != null) p.HandleDeath(Block.Stone, "@p %Skilled themselves in their confusion");
                 return;
             }
-            if (!CheckRank(p, target, "kill", false)) return;
+            if (!CheckRank(p, data, target, "kill", false)) return;
             
             bool explode = false;
             string deathMsg = GetDeathMessage(args, p.ColoredName, ref explode);

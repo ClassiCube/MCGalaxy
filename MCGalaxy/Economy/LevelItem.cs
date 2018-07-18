@@ -46,11 +46,11 @@ namespace MCGalaxy.Eco {
             LevelPreset preset = FindPreset(args[2]);
             if (preset == null) {
                 preset = new LevelPreset();
+                preset.name = args[2];
                 Presets.Add(preset);
             }
             
             switch (args[3]) {
-                case "name": preset.name = args[4]; break;
                 case "price": preset.price = int.Parse(args[4]); break;
                 case "x": preset.x = args[4]; break;
                 case "y": preset.y = args[4]; break;
@@ -64,7 +64,6 @@ namespace MCGalaxy.Eco {
                 writer.WriteLine();
                 string prefix = "level:levels:" + preset.name;
                 
-                writer.WriteLine(prefix + ":name:" + preset.name);
                 writer.WriteLine(prefix + ":price:" + preset.price);
                 writer.WriteLine(prefix + ":x:" + preset.x);
                 writer.WriteLine(prefix + ":y:" + preset.y);
@@ -124,7 +123,7 @@ namespace MCGalaxy.Eco {
             if (!MapGen.IsRecognisedTheme(args[6])) {
                 MapGen.PrintThemes(p); return;
             }
-            preset.type = args[6].ToLower();
+            preset.type = args[6];
             if (!CommandParser.GetInt(p, args[7], "Price", ref preset.price, 0)) return;
 
             Presets.Add(preset);
@@ -157,7 +156,7 @@ namespace MCGalaxy.Eco {
             } else if (args[3] == "type" || args[3] == "theme") {
                 if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
                 
-                preset.type = args[4].ToLower();
+                preset.type = args[4];
                 p.Message("&aSuccessfully changed preset type to &f" + preset.type);
             } else if (args[3] == "price") {
                 int newPrice = 0;
@@ -197,8 +196,7 @@ namespace MCGalaxy.Eco {
         
         public LevelPreset FindPreset(string name) {
             foreach (LevelPreset preset in Presets) {
-                if (preset.name != null && preset.name.CaselessEq(name))
-                    return preset;
+                if (preset.name.CaselessEq(name)) return preset;
             }
             return null;
         }

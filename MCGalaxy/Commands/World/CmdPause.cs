@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.World {
                 }
             }
             
-            if (!LevelInfo.ValidateAction(p, data.Rank, lvl, "pause physics on this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, lvl, "pause physics on this level")) return;
             bool enabled = lvl.PhysicsPaused;
             lvl.PhysicsPaused = !lvl.PhysicsPaused;
             

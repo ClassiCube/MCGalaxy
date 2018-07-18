@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "set spawn of this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, p.level, "set spawn of this level")) return;
             
             if (message.Length == 0) {
                 p.Message("Spawn location set to your current location.");
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             if (who.level != p.level) { p.Message("{0} %Sis on a different map.", who.ColoredName); return; }
-            if (!CheckRank(p, who, "set spawn of", false)) return;
+            if (!CheckRank(p, data, who, "set spawn of", false)) return;
             
             p.Message("Set spawn location of {0} %Sto your current location.", who.ColoredName);
             who.Pos = p.Pos; who.Rot = p.Rot;

@@ -137,22 +137,22 @@ namespace MCGalaxy {
             return cfg;
         }
         
-        internal static bool ValidateAction(Player p, LevelPermission plRank, string map, string action) {
+        internal static bool Check(Player p, LevelPermission plRank, string map, string action) {
             if (p.IsConsole) return true;
             Level lvl; LevelConfig cfg = GetConfig(map, out lvl);
-            if (lvl != null) return ValidateAction(p, plRank, lvl, action);
+            if (lvl != null) return Check(p, plRank, lvl, action);
             
             LevelAccessController visit = new LevelAccessController(cfg, map, true);
             LevelAccessController build = new LevelAccessController(cfg, map, false);
-            if (!visit.CheckDetailed(p) || !build.CheckDetailed(p)) {
+            if (!visit.CheckDetailed(p, plRank) || !build.CheckDetailed(p, plRank)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
             }
             return true;
         }
         
-        internal static bool ValidateAction(Player p, LevelPermission plRank, Level lvl, string action) {
+        internal static bool Check(Player p, LevelPermission plRank, Level lvl, string action) {
             if (p.IsConsole) return true;
-            if (!lvl.VisitAccess.CheckDetailed(p) || !lvl.BuildAccess.CheckDetailed(p)) {
+            if (!lvl.VisitAccess.CheckDetailed(p, plRank) || !lvl.BuildAccess.CheckDetailed(p, plRank)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
             }
             return true;

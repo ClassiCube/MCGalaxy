@@ -49,23 +49,22 @@ namespace MCGalaxy.Eco {
         
 
         internal void Setup(Player p, string[] args) {
-            switch (args[1].ToLower()) {
-                case "enable":
-                    p.Message("&aThe {0} item is now enabled.", Name);
-                    Enabled = true; break;
-                case "disable":
-                    p.Message("&aThe {0} item is now disabled.", Name);
-                    Enabled = false; break;
-                case "purchaserank":
-                    if (args.Length == 2) { p.Message("You need to provide a rank name."); return; }
-                    Group grp = Matcher.FindRanks(p, args[2]);
-                    if (grp == null) return;
-                    
-                    PurchaseRank = grp.Permission;
-                    p.Message("Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
-                    break;
-                default:
-                    OnSetupCommand(p, args); break;
+            string cmd = args[1];
+            if (cmd.CaselessEq("enable")) {
+                p.Message("&aThe {0} item is now enabled.", Name);
+                Enabled = true;
+            } else if (cmd.CaselessEq("disable")) {
+                p.Message("&aThe {0} item is now disabled.", Name);
+                Enabled = false;
+            } else if (cmd.CaselessStarts("purchaserank")) {
+                if (args.Length == 2) { p.Message("You need to provide a rank name."); return; }
+                Group grp = Matcher.FindRanks(p, args[2]);
+                if (grp == null) return;
+                
+                PurchaseRank = grp.Permission;
+                p.Message("Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
+            } else {
+                OnSetupCommand(p, args);
             }
         }
         

@@ -84,9 +84,7 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnSpawn_Click(object sender, EventArgs e) {
             if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
-            CommandData data = default(CommandData);
-            data.Rank = curPlayer.Rank;
-            curPlayer.HandleCommand("Spawn", "", data);
+            curPlayer.HandleCommand("Spawn", "", curPlayer.DefaultCmdData);
             Players_AppendStatus("Sent player to spawn");
         }
 

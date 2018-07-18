@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (who.muted) {
                 Unmute(p, who.name, args);
             } else {
-                Group group = ModActionCmd.CheckTarget(p, "mute", who.name);
+                Group group = ModActionCmd.CheckTarget(p, data, "mute", who.name);
                 if (group == null) return;
                 
                 TimeSpan duration = ServerConfig.ChatSpamMuteTime;

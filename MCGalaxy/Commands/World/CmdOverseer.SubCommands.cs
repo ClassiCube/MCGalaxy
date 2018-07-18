@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleLevelBlock(Player p, string arg1, string arg2) {
             string lbArgs = (arg1 + " " + arg2).Trim();
-            CustomBlockCommand.Execute(p, lbArgs, false, "/os lb");
+            CustomBlockCommand.Execute(p, lbArgs, p.DefaultCmdData, false, "/os lb");
         }
         
         
@@ -113,8 +113,7 @@ namespace MCGalaxy.Commands.World {
                 string[] args = value.SplitSpaces();
                 if (args.Length < 4) { Command.Find("ResizeLvl").Help(p); return; }
 
-                CommandData data = default(CommandData); data.Rank = p.Rank;
-                if (CmdResizeLvl.DoResize(p, args, data)) return;
+                if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData)) return;
                 p.Message("Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
                                args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
@@ -162,8 +161,7 @@ namespace MCGalaxy.Commands.World {
             CmdNewLvl newLvl = (CmdNewLvl)Command.Find("NewLvl"); // TODO: this is a nasty hack, find a better way
             args = (level + " " + value).SplitSpaces();
             
-            CommandData data = default(CommandData); data.Rank = p.Rank;
-            Level lvl = newLvl.GenerateMap(p, args, data);
+            Level lvl = newLvl.GenerateMap(p, args, p.DefaultCmdData);
             if (lvl == null) return;
             
             if (SetPerms(p, lvl)) {

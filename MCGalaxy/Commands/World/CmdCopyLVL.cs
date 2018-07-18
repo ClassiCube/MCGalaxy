@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
             string src = args[0];
             src = Matcher.FindMaps(p, src);
             if (src == null) return;
-            if (!LevelInfo.ValidateAction(p, data.Rank, src, "copy this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, src, "copy this map")) return;
             
             string dst = args[1];
             if (!Formatter.ValidName(p, dst, "level")) return;

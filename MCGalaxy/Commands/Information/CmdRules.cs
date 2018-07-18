@@ -34,14 +34,14 @@ namespace MCGalaxy.Commands.Info {
             rulesFile.EnsureExists();
             
             if (message.CaselessEq("agree")) { Agree(p); return; }
-            if (message.CaselessEq("disagree")) { Disagree(p); return; }
+            if (message.CaselessEq("disagree")) { Disagree(p, data); return; }
             
             Player who = p;
             if (message.Length > 0) {
-                if (!CheckExtraPerm(p, data.Rank, 1)) return;
+                if (!CheckExtraPerm(p, data, 1)) return;
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-            }           
+            }
             if (who != null) who.hasreadrules = true;
 
             string[] rules = rulesFile.GetText();
@@ -56,21 +56,23 @@ namespace MCGalaxy.Commands.Info {
         
         void Agree(Player p) {
             if (p.IsSuper) { p.Message("Only in-game players can agree to the rules."); return; }
-            if (!ServerConfig.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }            
+            if (!ServerConfig.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }
             if (!p.hasreadrules) { p.Message("&9You must read %T/Rules &9before agreeing."); return; }
-            if (Server.agreed.Contains(p.name)) { p.Message("You have already agreed to the rules."); return; }
             
-            p.agreed = true;
-            p.Message("Thank you for agreeing to follow the rules. You may now build and use commands!");
-            Server.agreed.Add(p.name);
-            Server.agreed.Save(false);
+            if (!Server.agreed.AddUnique(p.name)) {
+                p.Message("You have already agreed to the rules.");
+            } else {                
+                p.agreed = true;
+                p.Message("Thank you for agreeing to follow the rules. You may now build and use commands!");
+                Server.agreed.Save(false);
+            }
         }
         
-        void Disagree(Player p) {
+        void Disagree(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("Only in-game players can disagree with the rules."); return; }
             if (!ServerConfig.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }
             
-            if (p.Rank > LevelPermission.Guest) {
+            if (data.Rank > LevelPermission.Guest) {
                 p.Message("Your awesomeness prevents you from using this command"); return;
             }
             p.Leave("If you don't agree with the rules, consider playing elsewhere.");

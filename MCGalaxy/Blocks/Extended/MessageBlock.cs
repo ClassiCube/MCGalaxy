@@ -42,8 +42,7 @@ namespace MCGalaxy.Blocks.Extended {
             List<string> cmds = GetParts(message, out text);
             if (text != null) p.Message(text);
             
-            CommandData data = default(CommandData);
-            data.Rank = p.Rank;
+            CommandData data = p.DefaultCmdData;
             data.Context = CommandContext.MessageBlock;
             
             if (cmds.Count == 1) {

@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
 					SuperRequiresArgs(name + " all", p, "level name"); return;
 				}
 				
-				if (!CheckExtraPerm(p, data.Rank, 1)) return;
+				if (!CheckExtraPerm(p, data, 1)) return;
 				LevelActions.ReloadAll(lvl, p, true);
 			}
 			Server.DoGC();

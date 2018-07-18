@@ -44,13 +44,13 @@ namespace MCGalaxy.Commands.Moderation {
                 CreateZone(p, args, data, 1);
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
-                DeleteZone(p, args);
+                DeleteZone(p, args, data);
             } else if (opt.CaselessEq("edit") || opt.CaselessEq("set")) {
                 if (args.Length <= 2) { Help(p); return; }
                 Zone zone = Matcher.FindZones(p, p.level, args[1]);
                 if (zone == null) return;
                 
-                if (!zone.Access.CheckDetailed(p)) {
+                if (!zone.Access.CheckDetailed(p, data.Rank)) {
                     p.Message("Hence, you cannot edit this zone."); return;
                 } else if (opt.CaselessEq("edit")) {
                     EditZone(p, args, data, zone);
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("A zone with that name already exists. Use %T/zedit %Sto change it.");
                 return;
             }
-            if (!LevelInfo.ValidateAction(p, data.Rank, args[0], "create zones in this level")) return;
+            if (!LevelInfo.Check(p, data.Rank, p.level, "create zones in this level")) return;
             
             Zone z = new Zone();
             z.Config.Name = args[offset];
@@ -93,11 +93,11 @@ namespace MCGalaxy.Commands.Moderation {
             return false;
         }
         
-        void DeleteZone(Player p, string[] args) {
+        void DeleteZone(Player p, string[] args, CommandData data) {
             Level lvl = p.level;
             Zone zone = Matcher.FindZones(p, lvl, args[1]);
             if (zone == null) return;
-            if (!zone.Access.CheckDetailed(p)) {
+            if (!zone.Access.CheckDetailed(p, data.Rank)) {
                 p.Message("Hence, you cannot delete this zone."); return;
             }
             
@@ -186,13 +186,14 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Place or delete a block where you would like to check for zones.");
-            p.MakeSelection(1, "Selecting point for %SZone check", null, TestZone);
+            p.MakeSelection(1, "Selecting point for %SZone check", data, TestZone);
         }
         
         bool TestZone(Player p, Vec3S32[] marks, object state, BlockID block) {
             Vec3S32 P = marks[0];
             Level lvl = p.level;
             bool found = false;
+            CommandData data = (CommandData)state;
 
             Zone[] zones = lvl.Zones.Items;
             for (int i = 0; i < zones.Length; i++) {
@@ -200,7 +201,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (!z.Contains(P.X, P.Y, P.Z)) continue;
                 found = true;
                 
-                AccessResult status = z.Access.Check(p);
+                AccessResult status = z.Access.Check(p.name, data.Rank);
                 bool allowed = z.Access.CheckAllowed(p);
                 p.Message("  Zone {0} %S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
             }

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Fun {
                 return;
             }
             
-            if (!CheckRank(p, who, "slap", true)) return;
+            if (!CheckRank(p, data, who, "slap", true)) return;
             DoSlap(p, who);
         }
         

@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void UndoPhysics(Player p, CommandData data, TimeSpan delta) {
-            if (!CheckExtraPerm(p, data.Rank, 1)) return;
+            if (!CheckExtraPerm(p, data, 1)) return;
             if (!p.group.CanExecute("Physics")) {
                 p.Message("%WYou can only undo physics if you can use %T/Physics"); return;
             }

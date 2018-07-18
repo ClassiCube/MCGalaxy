@@ -571,8 +571,7 @@ namespace MCGalaxy {
                 return false;
             }
             
-            CommandData data = default(CommandData);
-            data.Rank = Rank;
+            CommandData data = DefaultCmdData;
             int sep = text.IndexOf(' ');
             
             if (sep == -1) {

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Misc {
             Group newRank = Matcher.FindRanks(p, args[1]);
             if (who == null || newRank == null) return;
             
-            if (!CheckRank(p, who, "fakerank", true)) return;
+            if (!CheckRank(p, data, who, "fakerank", true)) return;
             DoFakerank(p, who, newRank);
         }
 

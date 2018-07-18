@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
                                                  args[0], ref reason);
             if (target == null) return;
             
-            Group group = ModActionCmd.CheckTarget(p, "temp ban", target);
+            Group group = ModActionCmd.CheckTarget(p, data, "temp ban", target);
             if (group == null) return;
             
             if (Server.tempBans.Contains(target)) {

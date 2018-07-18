@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
-                if (!CheckRank(p, who, "teleport", false)) return;
+                if (!CheckRank(p, data, who, "teleport", false)) return;
                 
                 if (who.possess.Length > 0) {
                     p.Message("That player is currently possessing someone!"); return;

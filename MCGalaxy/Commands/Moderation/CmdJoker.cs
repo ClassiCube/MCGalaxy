@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             Player who = PlayerInfo.FindMatches(p, message);
             if (who == null) return;
-            if (!CheckRank(p, who, "joker", true)) return;
+            if (!CheckRank(p, data, who, "joker", true)) return;
             if (!MessageCmd.CanSpeak(p, name)) return;
 
             if (!who.joker) {

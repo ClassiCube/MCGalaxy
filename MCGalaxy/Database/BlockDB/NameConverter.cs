@@ -54,7 +54,7 @@ namespace MCGalaxy.DB {
         }
         
         public static int InvalidNameID(string name) {
-            bool added = Server.invalidIds.AddIfNotExists(name);
+            bool added = Server.invalidIds.AddUnique(name);
             if (added) Server.invalidIds.Save();
             
             int index = Server.invalidIds.All().CaselessIndexOf(name);

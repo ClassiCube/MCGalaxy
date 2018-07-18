@@ -33,9 +33,6 @@ namespace MCGalaxy.Commands.Chatting {
         static List<string> Chatrooms = new List<string>();
         
         public override void Use(Player p, string message, CommandData data) {
-            string[] parts = message.ToLower().SplitSpaces(2);
-            // TODO: get rid of ToLower() here
-            
             if (message.Length == 0) {
                 if (Chatrooms.Count == 0) {
                     p.Message("There are currently no chatrooms");
@@ -45,30 +42,27 @@ namespace MCGalaxy.Commands.Chatting {
                 return;
             }
             
-            switch (parts[0]) {
-                case "join":
-                    HandleJoin(p, parts); break;
-                case "leave":
-                    HandleLeave(p); break;
-                case "make":
-                case "create":
-                    HandleCreate(p, parts, data); break;
-                case "delete":
-                case "remove":
-                    HandleDelete(p, parts, data); break;
-                case "spy":
-                case "watch":
-                    HandleSpy(p, parts, data); break;
-                case "forcejoin":
-                    HandleForceJoin(p, parts, data); break;
-                case "kick":
-                case "forceleave":
-                    HandleKick(p, parts, data); break;
-                case "global":
-                case "all":
-                    HandleAll(p, parts, data); break;
-                default:
-                    HandleOther(p, parts); break;
+            string[] args = message.SplitSpaces(2);
+            string cmd = args[0];
+            
+            if (cmd.CaselessEq("join")) {
+                HandleJoin(p, args);
+            } else if (cmd.CaselessEq("leave")) {
+                HandleLeave(p);
+            } else if (IsCreateCommand(cmd)) {
+                HandleCreate(p, args, data);
+            } else if (IsDeleteCommand(cmd)) {
+                HandleDelete(p, args, data);
+            } else if (cmd.CaselessEq("spy") || cmd.CaselessEq("watch")) {
+                HandleSpy(p, args, data);
+            } else if (cmd.CaselessEq("forcejoin")) {
+                HandleForceJoin(p, args, data);
+            } else if (cmd.CaselessEq("kick")) {
+                HandleKick(p, args, data);
+            } else if (cmd.CaselessEq("global") || cmd.CaselessEq("all")) {
+                HandleAll(p, args, data);
+            } else {
+                HandleOther(p, args);
             }
         }
         
@@ -99,7 +93,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (parts.Length <= 1) {
                 p.Message("%WYou need to provide the name of the " + suffix); return false;
             }
-            return CheckExtraPerm(p, data.Rank, 1);
+            return CheckExtraPerm(p, data, 1);
         }
         
         void HandleCreate(Player p, string[] parts, CommandData data) {
@@ -171,7 +165,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!Chatrooms.CaselessContains(room)) {
                 p.Message("There is no chatroom with the name '{0}'", room); return;
             }
-            if (!CheckRank(p, pl, "force-join", false)) return;
+            if (!CheckRank(p, data, pl, "force-join", false)) return;
             
             if (pl.spyChatRooms.CaselessRemove(room)) {
                 pl.Message("The chat room '{0}' has been removed from your spying list " +
@@ -191,7 +185,7 @@ namespace MCGalaxy.Commands.Chatting {
             string name = parts[1];
             Player pl = PlayerInfo.FindMatches(p, name);
             if (pl == null) return;
-            if (!CheckRank(p, pl, "kick from a chatroom", false)) return;
+            if (!CheckRank(p, data, pl, "kick from a chatroom", false)) return;
             
             pl.Message("You were kicked from the chat room '" + pl.Chatroom + "'");
             p.Message(pl.ColoredName + " %Swas kicked from the chat room '" + pl.Chatroom + "'");

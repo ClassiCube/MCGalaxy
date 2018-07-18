@@ -48,11 +48,8 @@ namespace MCGalaxy.Commands.World {
             if (scope.CaselessEq("core") || scope.CaselessEq("global")) return Block.Props;
 
             if (scope.CaselessEq("level")) {
-                if (p.IsSuper) {
-                    p.Message("Cannot use level scope from {0}.", p.SuperName); return null;
-                }
-                
-                if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "change block properties in this level")) return null;
+                if (p.IsSuper) { p.Message("Cannot use level scope from {0}.", p.SuperName); return null; }
+                if (!LevelInfo.Check(p, data.Rank, p.level, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             

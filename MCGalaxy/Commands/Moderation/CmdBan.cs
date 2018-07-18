@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             
-            Group group = ModActionCmd.CheckTarget(p, "ban", target);
+            Group group = ModActionCmd.CheckTarget(p, data, "ban", target);
             if (group == null) return;
             
             if (group.Permission == LevelPermission.Banned) {

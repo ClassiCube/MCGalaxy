@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             bool silent = false;
             if (message.CaselessEq("silent")) {
-                if (!CheckExtraPerm(p, data.Rank, 1)) return;
+                if (!CheckExtraPerm(p, data, 1)) return;
                 silent = true;
             }
             
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
                 
                 if (!p.opchat) opchat.Use(p, "", data);
-                Server.hidden.AddIfNotExists(p.name);
+                Server.hidden.AddUnique(p.name);
             } else {
                 AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
                 p.hideRank = LevelPermission.Banned;
