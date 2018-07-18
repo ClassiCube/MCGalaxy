@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("A zone with that name already exists. Use %T/zedit %Sto change it.");
                 return;
             }
-            if (!LevelInfo.ValidateAction(p, data, args[0], "create zones in this level")) return;
+            if (!LevelInfo.ValidateAction(p, data.Rank, args[0], "create zones in this level")) return;
             
             Zone z = new Zone();
             z.Config.Name = args[offset];

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "Report"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "can check, view and delete reports") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage reports") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("Reports", "list") }; }
@@ -39,20 +39,17 @@ namespace MCGalaxy.Commands.Moderation {
             if (!Directory.Exists("extra/reported"))
                 Directory.CreateDirectory("extra/reported");
 
-            switch (args[0]) {
-                case "list":
-                    HandleList(p, args); break;
-                case "view":
-                case "read":
-                case "check":
-                    HandleCheck(p, args); break;
-                case "delete":
-                case "remove":
-                    HandleDelete(p, args); break;
-                case "clear":
-                    HandleClear(p, args); break;
-                default:
-                    HandleAdd(p, args); break;
+            string cmd = args[0];
+            if (cmd.CaselessEq("list")) {
+                HandleList(p, args, data);
+            } else if (cmd.CaselessEq("clear")) {
+                HandleClear(p, args, data);
+            } else if (IsDeleteCommand(cmd)) {
+                HandleDelete(p, args, data);
+            } else if (IsInfoCommand(cmd)) {
+                HandleCheck(p, args, data);
+            } else {
+                HandleAdd(p, args);
             }
         }
         
@@ -72,8 +69,8 @@ namespace MCGalaxy.Commands.Moderation {
                       "extra/reportedbackups/" + user + ".txt");
         }
         
-        void HandleList(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
+        void HandleList(Player p, string[] args, CommandData data) {
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             string[] users = GetReportedUsers();
             
             if (users.Length > 0) {
@@ -89,11 +86,11 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        void HandleCheck(Player p, string[] args) {
+        void HandleCheck(Player p, string[] args, CommandData data) {
             if (args.Length != 2) {
                 p.Message("You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p, 1)) return;
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
@@ -105,11 +102,11 @@ namespace MCGalaxy.Commands.Moderation {
             p.MessageLines(reports);
         }
         
-        void HandleDelete(Player p, string[] args) {
+        void HandleDelete(Player p, string[] args, CommandData data) {
             if (args.Length != 2) {
                 p.Message("You need to provide a player's name."); return;
             }
-            if (!CheckExtraPerm(p, 1)) return;
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
             
@@ -126,8 +123,8 @@ namespace MCGalaxy.Commands.Moderation {
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         
-        void HandleClear(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
+        void HandleClear(Player p, string[] args, CommandData data) {
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
             

@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0 || message.CaselessEq("enter")) {
                 HandleEnter(p);
             } else if (message.CaselessEq("list") || message.CaselessEq("view")) {
-                HandleView(p);
+                HandleView(p, data);
             } else if (message.CaselessEq("leave")) {
                 HandleLeave(p);
             } else if (message.CaselessEq("next")) {
                 HandleNext(p, data);
             } else if (message.CaselessEq("clear")) {
-                HandleClear(p); 
+                HandleClear(p, data); 
             } else {
                 Help(p);
             }
@@ -89,8 +89,8 @@ namespace MCGalaxy.Commands.Moderation {
             p.NextReviewTime = DateTime.UtcNow.Add(ServerConfig.ReviewCooldown);
         }
 
-        void HandleView(Player p) {
-            if (!CheckExtraPerm(p, 1)) return;
+        void HandleView(Player p, CommandData data) {
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
 
             if (Server.reviewlist.Count == 0) {
                 p.Message("There are no players in the review queue."); return;
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void HandleNext(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("{0} cannot answer the review queue.", p.SuperName); return; }
-            if (!CheckExtraPerm(p, 2)) return;
+            if (!CheckExtraPerm(p, data.Rank, 2)) return;
             if (Server.reviewlist.Count == 0) {
                 p.Message("There are no players in the review queue."); return;
             }
@@ -136,8 +136,8 @@ namespace MCGalaxy.Commands.Moderation {
             AnnounceQueueChanged();
         }
         
-        void HandleClear(Player p) {
-            if (!CheckExtraPerm(p, 3)) return;
+        void HandleClear(Player p, CommandData data) {
+            if (!CheckExtraPerm(p, data.Rank, 3)) return;
             Server.reviewlist.Clear();
             p.Message("The review queue has been cleared");
         }

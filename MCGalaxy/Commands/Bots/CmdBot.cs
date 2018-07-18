@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Bots {
             if (args.Length < 2) { Help(p); return; }
             
             if (!Formatter.ValidName(p, args[1], "bot")) return;
-            if (!LevelInfo.ValidateAction(p, data, p.level, "modify bots in this level")) return;
+            if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "modify bots in this level")) return;
             
             string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {

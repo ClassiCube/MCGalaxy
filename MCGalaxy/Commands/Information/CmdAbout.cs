@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Break/build a block to display information.");
-            p.MakeSelection(1, "Selecting location for %SBlock info", null, PlacedMark);
+            p.MakeSelection(1, "Selecting location for %SBlock info", data, PlacedMark);
         }
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -67,7 +67,8 @@ namespace MCGalaxy.Commands.Info {
             string blockName = Block.GetName(p, block);
             p.Message("Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
             
-            if (HasExtraPerm(p, 1)) {
+            CommandData data = (CommandData)state;
+            if (HasExtraPerm(p, data.Rank, 1)) {
                 BlockDBChange.OutputMessageBlock(p, block, x, y, z);
                 BlockDBChange.OutputPortal(p, block, x, y, z);
             }

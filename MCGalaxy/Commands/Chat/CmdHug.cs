@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             TryMessageAction(p, args[0], "λNICK %Sgave λTARGET %Sa " + hugType + " hug", false);
             if (hugType == "deadly") {
-                if (!CheckExtraPerm(p, 1)) return;
+                if (!CheckExtraPerm(p, data.Rank, 1)) return;
                 Player target = PlayerInfo.FindMatches(p, args[0]);
                 if (target == null) return;
             

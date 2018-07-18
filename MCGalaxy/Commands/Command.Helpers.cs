@@ -52,12 +52,12 @@ namespace MCGalaxy {
             p.Message("When using /{0} from {2}, you must provide a {1}.", cmd, type, p.SuperName);
         }
         
-        protected bool HasExtraPerm(Player p, int num) {
-            return CommandExtraPerms.Find(name, num).UsableBy(p.Rank);
+        protected bool HasExtraPerm(Player p, LevelPermission plRank, int num) {
+            return CommandExtraPerms.Find(name, num).UsableBy(plRank);
         }
         
-        protected bool CheckExtraPerm(Player p, int num) {
-            if (HasExtraPerm(p, num)) return true;
+        protected bool CheckExtraPerm(Player p, LevelPermission plRank, int num) {
+            if (HasExtraPerm(p, plRank, num)) return true;
             
             CommandExtraPerms perms = CommandExtraPerms.Find(name, num);
             perms.MessageCannotUse(p);
@@ -88,11 +88,13 @@ namespace MCGalaxy {
         }
         
         protected internal static bool IsEditCommand(string str) {
-            return str.CaselessEq("edit") || str.CaselessEq("change") || str.CaselessEq("modify");
+            return str.CaselessEq("edit") || str.CaselessEq("change") || str.CaselessEq("modify")
+                || str.CaselessEq("move") || str.CaselessEq("update");
         }  
 
         protected internal static bool IsInfoCommand(string str) {
-            return str.CaselessEq("info") || str.CaselessEq("status") || str.CaselessEq("about");
+            return str.CaselessEq("info") || str.CaselessEq("status") || str.CaselessEq("about")
+                || str.CaselessEq("view") || str.CaselessEq("check");
         }        
     }
     

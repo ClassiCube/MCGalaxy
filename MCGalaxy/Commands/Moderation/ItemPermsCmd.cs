@@ -29,13 +29,13 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (grpName[0] == '+') {
-                Group grp = GetGroup(p, grpName.Substring(1));
+                Group grp = GetGroup(p, data, grpName.Substring(1));
                 if (grp == null) return;
 
                 Allow(perms, grp.Permission);
                 UpdatePerms(perms, p, " %Scan now be used by " + grp.ColoredName);
             } else if (grpName[0] == '-') {
-                Group grp = GetGroup(p, grpName.Substring(1));
+                Group grp = GetGroup(p, data, grpName.Substring(1));
                 if (grp == null) return;
 
                 if (data.Rank == grp.Permission) {
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Disallow(perms, grp.Permission);
                 UpdatePerms(perms, p, " %Sis no longer usable by " + grp.ColoredName);
             } else {
-                Group grp = GetGroup(p, grpName);
+                Group grp = GetGroup(p, data, grpName);
                 if (grp == null) return;
 
                 perms.MinRank = grp.Permission;
@@ -73,12 +73,12 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        protected static Group GetGroup(Player p, string grpName) {
+        protected static Group GetGroup(Player p, CommandData data, string grpName) {
             Group grp = Matcher.FindRanks(p, grpName);
             if (grp == null) return null;
             
-            if (grp.Permission > p.Rank) {
-                p.Message("Cannot set permissions to a rank higher than yours."); return null;
+            if (grp.Permission > data.Rank) {
+                p.Message("%WCannot set permissions to a rank higher than yours."); return null;
             }
             return grp;
         }

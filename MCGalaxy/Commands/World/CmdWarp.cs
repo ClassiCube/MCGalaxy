@@ -26,15 +26,11 @@ namespace MCGalaxy.Commands.Misc {
         public override bool museumUsable { get { return false; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] {
-                    new CommandPerm(LevelPermission.Operator, "can create warps"),
-                    new CommandPerm(LevelPermission.Operator, "can delete warps"),
-                    new CommandPerm(LevelPermission.Operator, "can move/edit warps"),
-                }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage warps") }; }
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            UseCore(p, message, WarpList.Global, "Warp");
+            UseCore(p, message, data, WarpList.Global, "Warp");
         }
         
         static string FormatWarp(Warp warp) {
@@ -42,7 +38,8 @@ namespace MCGalaxy.Commands.Misc {
             return warp.Name + " - (" + pos.X + ", " + pos.Y + ", " + pos.Z + ") on " + warp.Level;
         }
         
-        protected void UseCore(Player p, string message, WarpList warps, string group) {
+        protected void UseCore(Player p, string message, CommandData data,
+                               WarpList warps, string group) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
             if (cmd.Length == 0) { Help(p); return; }
@@ -60,20 +57,20 @@ namespace MCGalaxy.Commands.Misc {
             
             string name = args[1];
             if (IsCreateCommand(cmd)) {
-                if (checkExtraPerms && !CheckExtraPerm(p, 1)) return;
+                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
                 if (warps.Exists(name)) { p.Message("{0} already exists", group); return; }
 
                 warps.Create(name, p);
                 p.Message("{0} {1} created.", group, name);
             } else if (IsDeleteCommand(cmd)) {
-                if (checkExtraPerms && !CheckExtraPerm(p, 2)) return;
+                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
                 
                 warps.Remove(warp, p);
                 p.Message("{0} {1} deleted.", group, warp.Name);
-            } else if (cmd.CaselessEq("move") || cmd.CaselessEq("update")) {
-                if (checkExtraPerms && !CheckExtraPerm(p, 3)) return;
+            } else if (IsEditCommand(cmd)) {
+                if (checkExtraPerms && !CheckExtraPerm(p, data.Rank, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
 

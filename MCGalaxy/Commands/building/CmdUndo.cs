@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            if (undoPhysics) { UndoPhysics(p, delta); }
+            if (undoPhysics) { UndoPhysics(p, data, delta); }
             else { UndoSelf(p, delta); }
         }
         
@@ -73,8 +73,8 @@ namespace MCGalaxy.Commands.Building {
             p.Message("Try using %T/Undo [timespan] %Sinstead");
         }
         
-        void UndoPhysics(Player p, TimeSpan delta) {
-            if (!CheckExtraPerm(p, 1)) return;
+        void UndoPhysics(Player p, CommandData data, TimeSpan delta) {
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             if (!p.group.CanExecute("Physics")) {
                 p.Message("%WYou can only undo physics if you can use %T/Physics"); return;
             }

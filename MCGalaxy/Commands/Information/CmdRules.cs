@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Info {
         public override string name { get { return "Rules"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Builder, "can send rules to other players") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Builder, "can send rules to others") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Agree", "agree"), new CommandAlias("Disagree", "disagree") }; }
@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
             
             Player who = p;
             if (message.Length > 0) {
-                if (!CheckExtraPerm(p, 1)) return;
+                if (!CheckExtraPerm(p, data.Rank, 1)) return;
                 who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
             }           
@@ -77,14 +77,10 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            if (HasExtraPerm(p, 1)) {
-                p.Message("%T/Rules <player>");
-                p.Message("%HDisplays server rules to <player>.");
-                p.Message("%HIf <player> is not given, the rules are displayed to you.");
-            } else {
-                p.Message("%T/Rules");
-                p.Message("%HDisplays the server rules.");
+            if (HasExtraPerm(p, p.Rank, 1)) {
+                p.Message("%T/Rules [player] %H- Displays server rules to [player]");
             }
+            p.Message("%T/Rules %H- Displays the server rules to you");
             p.Message("%T/Rules agree %H- Agrees to the server's rules");
             p.Message("%T/Rules disagree %H- Disagrees with the server's rules");
         }

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Misc {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
 
-            if (p != who && !CheckExtraPerm(p, 1)) return;
+            if (p != who && !CheckExtraPerm(p, data.Rank, 1)) return;
             if (!CheckRank(p, who, "toggle invincibility", true)) return;
             
             who.invincible = !who.invincible;

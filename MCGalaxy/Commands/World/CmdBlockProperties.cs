@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.World {
                     p.Message("Cannot use level scope from {0}.", p.SuperName); return null;
                 }
                 
-                if (!LevelInfo.ValidateAction(p, data, p.level, "change block properties in this level")) return null;
+                if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "change block properties in this level")) return null;
                 return p.level.Props;
             }
             

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Bots {
             string[] args = message.SplitSpaces();
             PlayerBot bot = Matcher.FindBots(p, args[0]);
             if (bot == null) return;            
-            if (!LevelInfo.ValidateAction(p, data, p.level, "change AI of bots in this level")) return;
+            if (!LevelInfo.ValidateAction(p, data.Rank, p.level, "change AI of bots in this level")) return;
                 
             if (args.Length == 1) {
                 bot.Instructions.Clear();
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Bots {
                 UpdateBot(p, bot, "'s hunt instinct: " + bot.hunt);
                 return;
             } else if (ai.CaselessEq("kill")) {
-                if (!CheckExtraPerm(p, 1)) return;
+                if (!CheckExtraPerm(p, data.Rank, 1)) return;
                 bot.kill = !bot.kill;
                 UpdateBot(p, bot, "'s kill instinct: " + bot.kill);
                 return;

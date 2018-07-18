@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             
             Level lvl = null;
             try {
-                lvl = GenerateMap(p, args);
+                lvl = GenerateMap(p, args, data);
                 if (lvl == null) return;
                 
                 lvl.Save(true);
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        internal Level GenerateMap(Player p, string[] args) {
+        internal Level GenerateMap(Player p, string[] args, CommandData data) {
             if (args.Length < 5) return null;
             if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return null; }
 
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.MapExists(name)) {
                 p.Message("Level \"{0}\" already exists", name); return null;
             }
-            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p, 1)) return null;
+            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p, data.Rank, 1)) return null;
 
             if (Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
                 p.Message("You are already generating a map, please wait until that map has finished generating first.");

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Fun {
                 case "owner": HandleOwner(p, args); return;
                 case "kick": HandleKick(p, args); return;
                 case "color": HandleColor(p, args); return;
-                case "create": HandleCreate(p, args); return;
+                case "create": HandleCreate(p, args, data); return;
                 case "join": HandleJoin(p, args); return;
                 case "invite": HandleInvite(p, args); return;
                 case "leave": HandleLeave(p, args); return;
@@ -110,8 +110,8 @@ namespace MCGalaxy.Commands.Fun {
             Team.SaveList();
         }
         
-        void HandleCreate(Player p, string[] args) {
-            if (!CheckExtraPerm(p, 1)) return;
+        void HandleCreate(Player p, string[] args, CommandData data) {
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             Team team = p.Game.Team;
             if (team != null) { p.Message("You need to leave your current team before you can create one."); return; }
             if (args.Length == 1) {

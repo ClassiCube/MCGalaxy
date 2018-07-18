@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.World {
         public static bool DoResize(Player p, string[] args, CommandData data) {
             Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return true;
-            if (!LevelInfo.ValidateAction(p, data, lvl, "resize this level")) return false;
+            if (!LevelInfo.ValidateAction(p, data.Rank, lvl, "resize this level")) return false;
             
             ushort x = 0, y = 0, z = 0;
             if (!CmdNewLvl.CheckMapAxis(p, args[1], "Width",  ref x)) return false;

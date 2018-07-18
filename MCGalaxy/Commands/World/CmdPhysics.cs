@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.World {
                 if (lvl == null) return;
             }
             
-            if (!LevelInfo.ValidateAction(p, data, lvl, "set physics of this level")) return;
+            if (!LevelInfo.ValidateAction(p, data.Rank, lvl, "set physics of this level")) return;
             SetPhysics(lvl, state);
         }
         

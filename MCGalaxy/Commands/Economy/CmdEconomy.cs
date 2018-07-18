@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             string[] args = new string[] { "", "", "", "", "", "", "", "" };
             for (int i = 0; i < Math.Min(args.Length, raw.Length); i++)
                 args[i] = raw[i];
-            if (!CheckExtraPerm(p, 1)) return;
+            if (!CheckExtraPerm(p, data.Rank, 1)) return;
             
             if (args[0].CaselessEq("enable")) {
                 p.Message("Economy is now &aenabled");

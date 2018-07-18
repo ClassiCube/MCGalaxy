@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Building {
                 mbArgs.Message = args[1];
             }
             
-            bool allCmds = HasExtraPerm(p, 1);
+            bool allCmds = HasExtraPerm(p, data.Rank, 1);
             if (!MessageBlock.Validate(p, mbArgs.Message, allCmds)) return;
 
             p.Message("Place where you wish the message block to go.");

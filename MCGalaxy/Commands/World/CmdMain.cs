@@ -37,13 +37,13 @@ namespace MCGalaxy.Commands.World {
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             } else {
-                if (!CheckExtraPerm(p, 1)) return;
+                if (!CheckExtraPerm(p, data.Rank, 1)) return;
                 if (!Formatter.ValidName(p, message, "level")) return;
-                if (!LevelInfo.ValidateAction(p, data, Server.mainLevel, "set main to another level")) return;
+                if (!LevelInfo.ValidateAction(p, data.Rank, Server.mainLevel, "set main to another level")) return;
                 
                 string map = Matcher.FindMaps(p, message);
                 if (map == null) return;
-                if (!LevelInfo.ValidateAction(p, data, map, "set main to this level")) return;
+                if (!LevelInfo.ValidateAction(p, data.Rank, map, "set main to this level")) return;
                 
                 Server.SetMainLevel(map);
                 SrvProperties.Save();

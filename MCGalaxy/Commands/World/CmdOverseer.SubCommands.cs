@@ -161,7 +161,9 @@ namespace MCGalaxy.Commands.World {
 
             CmdNewLvl newLvl = (CmdNewLvl)Command.Find("NewLvl"); // TODO: this is a nasty hack, find a better way
             args = (level + " " + value).SplitSpaces();
-            Level lvl = newLvl.GenerateMap(p, args);
+            
+            CommandData data = default(CommandData); data.Rank = p.Rank;
+            Level lvl = newLvl.GenerateMap(p, args, data);
             if (lvl == null) return;
             
             if (SetPerms(p, lvl)) {

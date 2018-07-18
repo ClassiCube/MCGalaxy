@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Info {
             else
                 p.Message("Console state: &3{0}", ServerConfig.ConsoleName);
             
-            if (HasExtraPerm(p, 1)) ShowServerStats(p);
+            if (HasExtraPerm(p, data.Rank, 1)) ShowServerStats(p);
         }
 
         void ShowServerStats(Player p) {

@@ -119,6 +119,7 @@ namespace MCGalaxy.Gui
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.eco_cbItemRank = new System.Windows.Forms.ComboBox();
             this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
+            this.chkPhysRestart = new System.Windows.Forms.CheckBox();
             this.ls_numMax = new System.Windows.Forms.NumericUpDown();
             this.ls_numKiller = new System.Windows.Forms.NumericUpDown();
             this.ls_numFast = new System.Windows.Forms.NumericUpDown();
@@ -433,7 +434,6 @@ namespace MCGalaxy.Gui
             this.sec_numBlocksMsgs = new System.Windows.Forms.NumericUpDown();
             this.sec_lblBlocksOnMsgs = new System.Windows.Forms.Label();
             this.sec_numBlocksSecs = new MCGalaxy.Gui.TimespanUpDown();
-            this.chkPhysRestart = new System.Windows.Forms.CheckBox();
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
@@ -1330,6 +1330,17 @@ namespace MCGalaxy.Gui
             this.rank_numUndo.Text = "0s";
             this.toolTip.SetToolTip(this.rank_numUndo, "Maximum time players can undo up to in the past with /undo");
             this.rank_numUndo.Value = System.TimeSpan.Parse("00:00:00");
+            // 
+            // chkPhysRestart
+            // 
+            this.chkPhysRestart.AutoSize = true;
+            this.chkPhysRestart.Location = new System.Drawing.Point(6, 20);
+            this.chkPhysRestart.Name = "chkPhysRestart";
+            this.chkPhysRestart.Size = new System.Drawing.Size(124, 17);
+            this.chkPhysRestart.TabIndex = 52;
+            this.chkPhysRestart.Text = "Restart on shutdown";
+            this.toolTip.SetToolTip(this.chkPhysRestart, "\"Bob has died 10 times.\"");
+            this.chkPhysRestart.UseVisualStyleBackColor = true;
             // 
             // ls_numMax
             // 
@@ -3695,7 +3706,7 @@ namespace MCGalaxy.Gui
             this.tw_grpMapSettings.Enabled = false;
             this.tw_grpMapSettings.Location = new System.Drawing.Point(182, 213);
             this.tw_grpMapSettings.Name = "tw_grpMapSettings";
-            this.tw_grpMapSettings.Size = new System.Drawing.Size(296, 287);
+            this.tw_grpMapSettings.Size = new System.Drawing.Size(296, 207);
             this.tw_grpMapSettings.TabIndex = 7;
             this.tw_grpMapSettings.TabStop = false;
             this.tw_grpMapSettings.Text = "Map Settings";
@@ -4737,17 +4748,6 @@ namespace MCGalaxy.Gui
             this.sec_numBlocksSecs.TabIndex = 34;
             this.sec_numBlocksSecs.Text = "5s";
             this.sec_numBlocksSecs.Value = System.TimeSpan.Parse("00:00:05");
-            // 
-            // chkPhysRestart
-            // 
-            this.chkPhysRestart.AutoSize = true;
-            this.chkPhysRestart.Location = new System.Drawing.Point(6, 20);
-            this.chkPhysRestart.Name = "chkPhysRestart";
-            this.chkPhysRestart.Size = new System.Drawing.Size(124, 17);
-            this.chkPhysRestart.TabIndex = 52;
-            this.chkPhysRestart.Text = "Restart on shutdown";
-            this.toolTip.SetToolTip(this.chkPhysRestart, "\"Bob has died 10 times.\"");
-            this.chkPhysRestart.UseVisualStyleBackColor = true;
             // 
             // PropertyWindow
             // 
