@@ -358,7 +358,6 @@ namespace System.Data.SQLite {
 
     public sealed class SQLiteCommand : IDbCommand {
         string strCmdText, strRemaining;
-
         SQLiteConnection conn;
         SQLiteParameterCollection parameters = new SQLiteParameterCollection();
         SQLiteStatement stmt;
@@ -369,25 +368,27 @@ namespace System.Data.SQLite {
             if (connection != null)   Connection = connection;
         }
         
+        void DisposeStatement() {
+            if (stmt != null) stmt.Dispose();
+            stmt = null;
+        }
+        
         public void Dispose() {
             conn = null;
             parameters.Clear();
             strCmdText = null;
             strRemaining = null;
-            
-            if (stmt != null) stmt.Dispose();
-            stmt = null;
+            DisposeStatement();
         }
 
         internal SQLiteStatement NextStatement() {
-            if (stmt != null) stmt.Dispose();
+            if (stmt != null) DisposeStatement();
             if (String.IsNullOrEmpty(strRemaining)) return null;
             
-            stmt = null;
             try {
                 stmt = conn.Prepare(strRemaining, ref strRemaining);
             } catch (Exception) {
-                if (stmt != null) { stmt.Dispose(); stmt = null; }
+                DisposeStatement();
                 // Cannot continue on, so set the remaining text to null.
                 strRemaining = null;
                 throw;
