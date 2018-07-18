@@ -89,7 +89,6 @@ namespace MCGalaxy {
             ServicePointManager.Expect100Continue = false;
             
             CheckFile("MySql.Data.dll");
-            CheckFile("System.Data.SQLite.dll");
             CheckFile("sqlite3_x32.dll");
             CheckFile("sqlite3_x64.dll");
             CheckFile("Newtonsoft.Json.dll");

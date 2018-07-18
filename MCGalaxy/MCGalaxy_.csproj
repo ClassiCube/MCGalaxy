@@ -76,9 +76,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -396,6 +393,7 @@
     <Compile Include="CorePlugin\ModActionHandler.cs" />
     <Compile Include="CorePlugin\NotesPlugin.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
+    <Compile Include="Database\Backends\SQLite3.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />
     <Compile Include="Database\BlockDB\BlockDBCache.cs" />
     <Compile Include="Database\BlockDB\BlockDBFile.cs" />
