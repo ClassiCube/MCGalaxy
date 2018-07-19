@@ -30,7 +30,9 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
+            Map.SetPhysics(destroyMode ? 2 : 1);           
             int secs = 0, layerSecs = 0;
+            
             while (RoundInProgress && secs < roundTotalSecs) {
                 if (!Running) return;
                 if ((secs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
@@ -96,8 +98,6 @@ namespace MCGalaxy.Games {
 
         protected override bool SetMap(string map) {
             if (!base.SetMap(map)) return false;
-            
-            Map.SetPhysics(destroyMode ? 2 : 1);
             Map.Config.PhysicsOverload = 1000000;
             return true;
         }

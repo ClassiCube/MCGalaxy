@@ -72,6 +72,8 @@ namespace MCGalaxy.Games {
             roundTotalSecs = (int)cfg.RoundTime.TotalSeconds;
             floodDelaySecs = (int)cfg.FloodTime.TotalSeconds;
             layerIntervalSecs = (int)cfg.LayerInterval.TotalSeconds;
+            
+            if (RoundInProgress) Map.SetPhysics(destroyMode ? 2 : 1);
         }
                 
         protected override List<Player> GetPlayers() {
