@@ -38,13 +38,11 @@ namespace MCGalaxy.Commands.Moderation {
             bool area = message.CaselessStarts("area ");
             if (area) message = message.Substring("area ".Length);
             
-            if (message.Length == 0) message = p.name + " 1800";
+            if (message.Length == 0) message = p.name;
             string[] parts = message.SplitSpaces();
 
             if (parts.Length >= 2) {
                 if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", "s")) return;
-            } else if (ParseTimespan(parts[0], out delta)) {
-                parts[0] = p.name;
             } else {
                 delta = TimeSpan.FromMinutes(30);
             }
@@ -94,14 +92,6 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 p.Message("No changes found by {1} %Sin the past &b{0}",
                                delta.Shorten(true), PlayerInfo.GetColoredName(p, who));
-            }
-        }
-        
-        static bool ParseTimespan(string input, out TimeSpan delta) {
-            delta = TimeSpan.Zero;
-            try { delta = input.ParseShort("s"); return true;
-            } catch (ArgumentException) { return false;
-            } catch (FormatException) { return false;
             }
         }
 

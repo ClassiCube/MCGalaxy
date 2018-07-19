@@ -61,11 +61,15 @@ namespace MCGalaxy.Commands {
                                        string action, string defUnit) {
             try {
                 span = input.ParseShort(defUnit);
+                // Typically span is added to current time, so ensure span isn't too big
+                DateTime.UtcNow.Add(span).AddYears(1);
                 return true;
             } catch (OverflowException) {
-                p.Message("Timespan given is too big.");
+                p.Message("%WTimespan given is too big");
+            } catch (ArgumentOutOfRangeException) {
+                p.Message("%WTimespan given is too big");
             } catch (FormatException ex) {
-                p.Message("{0} is not a valid quantifier.", ex.Message);
+                p.Message("%W{0} is not a valid quantifier.", ex.Message);
                 p.Message(TimespanHelp, action);
             }
             return false;

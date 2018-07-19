@@ -73,7 +73,7 @@ namespace MCGalaxy {
             return TimeSpan.FromTicks(total);
         }
         
-        static long GetTicks(int num, string unit) {            
+        static long GetTicks(int num, string unit) {
             if (unit.CaselessEq("s")) return num * TimeSpan.TicksPerSecond;
             if (unit.CaselessEq("m")) return num * TimeSpan.TicksPerMinute;
             if (unit.CaselessEq("h")) return num * TimeSpan.TicksPerHour;
