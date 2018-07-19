@@ -152,7 +152,7 @@ namespace MCGalaxy.Tasks {
             foreach (var kvp in botsByLevel) {
                 string path = BotsFile.BotsPath(kvp.Key);
                 using (StreamWriter w = new StreamWriter(path)) {
-                	BotsFile.WriteAll(w, kvp.Value);
+                    BotsFile.WriteAll(w, kvp.Value);
                 }
             }
             

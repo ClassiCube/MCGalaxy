@@ -129,12 +129,11 @@ namespace MCGalaxy {
         
         static void MoveSqliteDll() {
             try {
-                if (File.Exists("sqlite3_x32.dll") && IntPtr.Size == 4)
-                    File.Copy("sqlite3_x32.dll", "sqlite3.dll", true);
-                
-                if (File.Exists("sqlite3_x64.dll") && IntPtr.Size == 8)
-                    File.Copy("sqlite3_x64.dll", "sqlite3.dll", true);
-            } catch { }
+                string dll = IntPtr.Size == 8 ? "sqlite3_x64.dll" : "sqlite3_x32.dll";
+                if (File.Exists(dll)) File.Copy(dll, "sqlite3.dll", true);
+            } catch (Exception ex) {
+                Logger.LogError("Error moving SQLite dll", ex);
+            }
         }
         
         static void EnsureFilesExist() {

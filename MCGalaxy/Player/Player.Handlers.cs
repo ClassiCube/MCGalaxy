@@ -651,9 +651,9 @@ namespace MCGalaxy {
                     Message("%WInfinite message block loop detected, aborting");
                     return false;
                 }
-        	} else if (data.Context == CommandContext.Normal) { 
+            } else if (data.Context == CommandContext.Normal) { 
                 mbRecursion = 0; 
-        	}
+            }
             return true;
         }
         

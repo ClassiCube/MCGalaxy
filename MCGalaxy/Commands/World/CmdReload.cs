@@ -17,45 +17,45 @@
  */
 using System;
 namespace MCGalaxy.Commands.World {
-	public sealed class CmdReload : Command2 {
-		public override string name { get { return "Reload"; } }
-		public override string shortcut { get { return "Reveal"; } }
-		public override string type { get { return CommandTypes.World; } }
-		public override bool museumUsable { get { return false; } }
-		public override CommandAlias[] Aliases {
-			get { return new [] { new CommandAlias("ReJoin"), new CommandAlias("rd"),
-					new CommandAlias("WFlush"), new CommandAlias("WorldFlush") }; }
-		}
-		public override CommandPerm[] ExtraPerms {
-			get { return new[] { new CommandPerm(LevelPermission.Operator, "can reload for all players") }; }
-		}
+    public sealed class CmdReload : Command2 {
+        public override string name { get { return "Reload"; } }
+        public override string shortcut { get { return "Reveal"; } }
+        public override string type { get { return CommandTypes.World; } }
+        public override bool museumUsable { get { return false; } }
+        public override CommandAlias[] Aliases {
+            get { return new [] { new CommandAlias("ReJoin"), new CommandAlias("rd"),
+                    new CommandAlias("WFlush"), new CommandAlias("WorldFlush") }; }
+        }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can reload for all players") }; }
+        }
 
-		public override void Use(Player p, string message, CommandData data) {
-			if (CheckSuper(p, message, "player or level name")) return;
-			if (message.Length == 0) message = p.name;
-			string[] parts = message.SplitSpaces();
-			
-			if (!parts[0].CaselessEq("all")) {
-				LevelActions.ReloadFor(p, p, true);
-			} else {
-				Level lvl = p.level;
-				if (parts.Length == 2) {
-					lvl = Matcher.FindLevels(p, parts[1]);
-					if (lvl == null) return;
-				} else if (p.IsSuper) {
-					SuperRequiresArgs(name + " all", p, "level name"); return;
-				}
-				
-				if (!CheckExtraPerm(p, data, 1)) return;
-				LevelActions.ReloadAll(lvl, p, true);
-			}
-			Server.DoGC();
-		}
-		
-		public override void Help(Player p) {
-			p.Message("%T/Reload %H- Reloads the map you are in, just for you.");
-			p.Message("%T/Reload all %H- Reloads for all players in map you are in.");
-			p.Message("%T/Reload all [map] %H- Reloads for all players in [map]");
-		}
-	}
+        public override void Use(Player p, string message, CommandData data) {
+            if (CheckSuper(p, message, "player or level name")) return;
+            if (message.Length == 0) message = p.name;
+            string[] parts = message.SplitSpaces();
+            
+            if (!parts[0].CaselessEq("all")) {
+                LevelActions.ReloadFor(p, p, true);
+            } else {
+                Level lvl = p.level;
+                if (parts.Length == 2) {
+                    lvl = Matcher.FindLevels(p, parts[1]);
+                    if (lvl == null) return;
+                } else if (p.IsSuper) {
+                    SuperRequiresArgs(name + " all", p, "level name"); return;
+                }
+                
+                if (!CheckExtraPerm(p, data, 1)) return;
+                LevelActions.ReloadAll(lvl, p, true);
+            }
+            Server.DoGC();
+        }
+        
+        public override void Help(Player p) {
+            p.Message("%T/Reload %H- Reloads the map you are in, just for you.");
+            p.Message("%T/Reload all %H- Reloads for all players in map you are in.");
+            p.Message("%T/Reload all [map] %H- Reloads for all players in [map]");
+        }
+    }
 }
