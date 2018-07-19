@@ -13,12 +13,15 @@ namespace MCGalaxy.Config {
     }
     
     public sealed class JsonArray : List<object> { }
-    public sealed class JsonObject : Dictionary<string, object> {
+    
+    public sealed class JsonObject {
+        // NOTE: BlockDefinitions entries have about 30 members
+        public List<string> Keys = new List<string>(30);
+        public List<object> Values = new List<object>(30);
         
         public void Deserialise(ConfigElement[] elems, object instance, string group) {
-            foreach (KeyValuePair<string, object> e in this) {
-                string key = e.Key, value = (string)e.Value;
-                ConfigElement.Parse(elems, group, instance, key, value);
+            for (int i = 0; i < Keys.Count; i++) {
+                ConfigElement.Parse(elems, group, instance, Keys[i], (string)Values[i]);
             }
         }
     }
@@ -95,7 +98,9 @@ namespace MCGalaxy.Config {
                 token = NextToken(ctx);
                 if (token == T_NONE) { ctx.Success = false; return null; }
                 
-                members[key] = ParseValue(token, ctx);
+                object value = ParseValue(token, ctx);
+                members.Keys.Add(key);
+                members.Values.Add(value);
             }
         }
         

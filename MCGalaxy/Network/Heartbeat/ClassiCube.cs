@@ -111,12 +111,13 @@ namespace MCGalaxy.Network {
             JsonObject obj = (JsonObject)Json.ParseStream(ctx);
             if (obj == null) return null;
             
-            foreach (KeyValuePair<string, object> e in obj) {
-                if (!e.Key.CaselessEq("errors")) continue;
-                if (e.Value == null) return null;
+            for (int i = 0; i < obj.Keys.Count; i++) {
+                if (!obj.Keys[i].CaselessEq("errors")) continue;
+                object value = obj.Values[i];
+                if (value == null) return null;
                 
                 // silly design, but form of json is: "errors": [ ["Error1"], ["Error2"] ]
-                JsonArray errors = (JsonArray)e.Value;
+                JsonArray errors = (JsonArray)value;
                 foreach (object raw in errors) {
                     JsonArray error = raw as JsonArray;
                     if (error != null && error.Count > 0) return (string)error[0];
