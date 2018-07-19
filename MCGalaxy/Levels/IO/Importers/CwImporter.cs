@@ -123,7 +123,7 @@ namespace MCGalaxy.Levels.IO {
                 
                 NbtCompound props = (NbtCompound)tag;
                 BlockDefinition def = new BlockDefinition();
-                def.BlockID = props["ID"].ByteValue;
+                def.RawID = props["ID"].ByteValue;
                 def.Name = props["Name"].StringValue;
                 def.CollideType = props["CollideType"].ByteValue;
                 def.Speed = props["Speed"].FloatValue;
@@ -154,8 +154,6 @@ namespace MCGalaxy.Levels.IO {
                 BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
                 if (PropsEquals(def, globalDef)) continue;
                 
-                def.SideTex = def.LeftTex;
-                def.Version2 = true;
                 lvl.UpdateCustomBlock(block, def);
                 hasBlockDefs = true;
             }

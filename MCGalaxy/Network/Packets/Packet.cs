@@ -385,7 +385,7 @@ namespace MCGalaxy.Network {
         public static byte[] UndefineBlock(BlockDefinition def, bool extBlocks) {
             byte[] buffer = new byte[extBlocks ? 3 : 2];
             buffer[0] = Opcode.CpeUndefineBlock;
-            NetUtils.WriteBlock(def.BlockID, buffer, 1, extBlocks);
+            NetUtils.WriteBlock(def.RawID, buffer, 1, extBlocks);
             return buffer;
         }
         
@@ -414,7 +414,7 @@ namespace MCGalaxy.Network {
             // speed = 2^((raw - 128) / 64);
             // therefore raw = 64log2(speed) + 128
             byte rawSpeed = (byte)(64 * Math.Log(def.Speed, 2) + 128);
-            NetUtils.WriteBlock(def.BlockID, buffer, i, extBlocks);
+            NetUtils.WriteBlock(def.RawID, buffer, i, extBlocks);
             i += extBlocks ? 2 : 1;
             NetUtils.Write(def.Name, buffer, i, hasCP437);
             i += NetUtils.StringSize;
@@ -426,7 +426,7 @@ namespace MCGalaxy.Network {
                 WriteTex(buffer, ref i, def.LeftTex,  extTexs); WriteTex(buffer, ref i, def.RightTex, extTexs);
                 WriteTex(buffer, ref i, def.FrontTex, extTexs); WriteTex(buffer, ref i, def.BackTex,  extTexs);
             } else {
-                WriteTex(buffer, ref i, def.SideTex, extTexs);
+                WriteTex(buffer, ref i, def.RightTex, extTexs);
             }            
             WriteTex(buffer, ref i, def.BottomTex, extTexs);
             

@@ -97,7 +97,6 @@ namespace MCGalaxy.Commands.CPE {
             
             SetBD(p, global, new BlockDefinition());
             BlockDefinition def = GetBD(p, global);
-            def.Version2 = true;
             def.SetBlock(target);
             
             p.Message("Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
@@ -203,7 +202,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (def.Shape == 0) {
                 p.Message("  Block is a sprite");
-                p.Message("  Texture ID: {0}", def.SideTex);
+                p.Message("  Texture ID: {0}", def.RightTex);
             } else {
                 p.Message("  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
                                def.MinX, def.MinZ, def.MinY, def.MaxX, def.MaxZ, def.MaxY);
@@ -238,7 +237,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string FormatBlock(BlockDefinition def) {
-            return "Custom block %T" + def.BlockID + " %Shas name %T" + def.Name;
+            return "Custom block %T" + def.RawID + " %Shas name %T" + def.Name;
         }
         
         static void RemoveHandler(Player p, string[] parts, bool global, string cmd) {
@@ -254,7 +253,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition.Remove(def, defs, p.IsSuper ? null : p.level);
             
             string scope = global ? "global" : "level";
-            p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
+            p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
             
             BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
             if (!global && globalDef != null)
@@ -291,8 +290,8 @@ namespace MCGalaxy.Commands.CPE {
                     if (bd.Shape == 0) bd.SetAllTex(bd.TopTex);
                 }
             } else if (step == 5) {
-                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.SideTex, 0, 255)) {
-                    bd.SetSideTex(bd.SideTex);
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.RightTex, 0, 255)) {
+                    bd.SetSideTex(bd.RightTex);
                     step++;
                 }
             } else if (step == 6) {
@@ -401,12 +400,12 @@ namespace MCGalaxy.Commands.CPE {
                     if (!EditUShort(p, value, "Top texture", ref def.TopTex, arg)) return;
                     break;
                 case "alltex":
-                    if (!EditUShort(p, value, "All textures", ref def.SideTex, arg)) return;
-                    def.SetAllTex(def.SideTex);
+                    if (!EditUShort(p, value, "All textures", ref def.RightTex, arg)) return;
+                    def.SetAllTex(def.RightTex);
                     break;
                 case "sidetex":
-                    if (!EditUShort(p, value, "Side texture", ref def.SideTex, arg)) return;
-                    def.SetSideTex(def.SideTex);
+                    if (!EditUShort(p, value, "Side texture", ref def.RightTex, arg)) return;
+                    def.SetSideTex(def.RightTex);
                     break;
                 case "lefttex":
                     if (!EditUShort(p, value, "Left texture", ref def.LeftTex, arg)) return;
@@ -481,7 +480,7 @@ namespace MCGalaxy.Commands.CPE {
                     }
                     
                     // Don't let multiple blocks be assigned to same order
-                    if (order != def.BlockID && order != 0) {
+                    if (order != def.RawID && order != 0) {
                         for (int i = 0; i < defs.Length; i++) {
                             if (defs[i] == null || defs[i].InventoryOrder != order) continue;
                             p.Message("Block {0} already had order {1}", defs[i].Name, order);
@@ -489,11 +488,11 @@ namespace MCGalaxy.Commands.CPE {
                         }
                     }
                     
-                    def.InventoryOrder = order == def.BlockID ? -1 : order;
+                    def.InventoryOrder = order == def.RawID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, level);
                     BlockDefinition.Save(global, level);
                     p.Message("Set inventory order for {0} to {1}", blockName,
-                                   order == def.BlockID ? "default" : order.ToString());
+                                   order == def.RawID ? "default" : order.ToString());
                     return;
                 default:
                     p.Message("Unrecognised property: " + arg); return;
@@ -528,7 +527,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             string scope = global ? "global" : "level";
-            p.Message("Created a new " + scope + " custom block " + def.Name + "(" + def.BlockID + ")");
+            p.Message("Created a new " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
             
             block = def.GetBlock();
             BlockDefinition.Add(def, defs, p.IsSuper ? null : p.level);

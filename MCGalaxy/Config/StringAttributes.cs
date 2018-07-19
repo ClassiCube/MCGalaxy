@@ -56,8 +56,11 @@ namespace MCGalaxy.Config {
         public ConfigStringAttribute(string name, string section, string def)
             : base(name, section) { defValue = def; }
         
+        public ConfigStringAttribute()
+            : base(null, null) { allowEmpty = true; }
+        
         public override object Parse(string value) {
-            if (value.Length == 0 && !allowEmpty) {
+            if (String.IsNullOrEmpty(value) && !allowEmpty) {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" has no value, using default of {1}", Name, defValue);
                 return defValue;
             }

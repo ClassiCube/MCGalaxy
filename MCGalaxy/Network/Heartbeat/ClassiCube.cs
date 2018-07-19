@@ -16,11 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
-using Newtonsoft.Json;
 
 namespace MCGalaxy.Network {
     
@@ -62,7 +63,7 @@ namespace MCGalaxy.Network {
             OnSendingHeartbeatEvent.Call(this, ref name);
             name = Colors.Strip(name);
             
-            return 
+            return
                 "&port="     + ServerConfig.Port +
                 "&max="      + ServerConfig.MaxPlayers +
                 "&name="     + Uri.EscapeDataString(name) +
@@ -76,43 +77,52 @@ namespace MCGalaxy.Network {
         public override void OnRequest(HttpWebRequest request) {
             if (proxyUrl == null) return;
             request.Proxy = new WebProxy(proxyUrl);
-        }   
+        }
         
         public override void OnResponse(string response) {
             if (String.IsNullOrEmpty(response)) return;
             
             // in form of http://www.classicube.net/server/play/<hash>/
-            if (response.EndsWith("/")) 
+            if (response.EndsWith("/"))
                 response = response.Substring(0, response.Length - 1);
             string hash = response.Substring(response.LastIndexOf('/') + 1);
 
-            // Run this code if we don't already have a hash or if the hash has changed
-            if (String.IsNullOrEmpty(Server.Hash) || hash != Server.Hash) {
-                Server.Hash = hash;
-                Server.URL = response;
+            // only need to do this when contents have changed
+            if (hash == Server.Hash) return;
+            Server.Hash = hash;
+            Server.URL = response;
+            
+            if (!response.Contains("\"errors\": [")) {
+                Server.UpdateUrl(Server.URL);
+                File.WriteAllText("text/externalurl.txt", Server.URL);
+                Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
+            } else {
+                string error = GetError(response);
+                if (error == null) error = "Error while finding URL. Is the port open?";
                 
-                if (!response.Contains("\"errors\": [")) {
-                    Server.UpdateUrl(Server.URL);
-                    File.WriteAllText("text/externalurl.txt", Server.URL);
-                    Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
-                } else {
-                    Response resp = JsonConvert.DeserializeObject<Response>(Server.URL);
-                    if (resp.errors != null && resp.errors.Length > 0 && resp.errors[0].Length > 0)
-                        Server.URL = resp.errors[0][0];
-                    else
-                        Server.URL = "Error while finding URL. Is the port open?";
-                    Server.UpdateUrl(Server.URL);
-                    Logger.Log(LogType.Warning, response);
+                Server.URL = error;
+                Server.UpdateUrl(Server.URL);
+                Logger.Log(LogType.Warning, response);
+            }
+        }
+        
+        static string GetError(string json) {
+            JsonContext ctx = new JsonContext(); ctx.Val = json;
+            JsonObject obj = (JsonObject)Json.ParseStream(ctx);
+            if (obj == null) return null;
+            
+            foreach (KeyValuePair<string, object> e in obj) {
+                if (!e.Key.CaselessEq("errors")) continue;
+                if (e.Value == null) return null;
+                
+                // silly design, but form of json is: "errors": [ ["Error1"], ["Error2"] ]
+                JsonArray errors = (JsonArray)e.Value;
+                foreach (object raw in errors) {
+                    JsonArray error = raw as JsonArray;
+                    if (error != null && error.Count > 0) return (string)error[0];
                 }
             }
-        }        
-        
-        #pragma warning disable 0649
-        class Response {
-            public string[][] errors;
-            public string response;
-            public string status;
+            return null;
         }
-        #pragma warning restore 0649
     }
 }

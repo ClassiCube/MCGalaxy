@@ -71,9 +71,6 @@
     <Reference Include="MySql.Data">
       <HintPath>..\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -377,6 +374,7 @@
     <Compile Include="Commands\World\CmdUnload.cs" />
     <Compile Include="Commands\World\PermissionCmds.cs" />
     <Compile Include="Config\ConfigAttribute.cs" />
+    <Compile Include="Config\JSON.cs" />
     <Compile Include="Config\NumberAttributes.cs" />
     <Compile Include="Config\OtherAttributes.cs" />
     <Compile Include="Config\ConfigElement.cs" />

@@ -23,6 +23,7 @@ namespace MCGalaxy.Config {
     public sealed class ConfigBoolAttribute : ConfigAttribute {
         bool defValue;
         
+        public ConfigBoolAttribute() : this(null, null, false) { }
         public ConfigBoolAttribute(string name, string section, bool def)
             : base(name, section) { defValue = def; }
         
@@ -33,6 +34,11 @@ namespace MCGalaxy.Config {
                 return defValue;
             }
             return boolValue;
+        }
+        
+        public override string Serialise(object value) {
+            bool boolValue = (bool)value;
+            return boolValue ? "true" : "false";
         }
     }
     

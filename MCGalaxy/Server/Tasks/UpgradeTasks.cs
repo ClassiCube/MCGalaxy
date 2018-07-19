@@ -20,9 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using MCGalaxy.Bots;
-using MCGalaxy.DB;
 using MCGalaxy.SQL;
-using Newtonsoft.Json;
 
 namespace MCGalaxy.Tasks {
     internal static class UpgradeTasks {
@@ -137,12 +135,12 @@ namespace MCGalaxy.Tasks {
             Logger.Log(LogType.SystemActivity, "Making bots file per-level.. " +
                        "saved backup of global bots file to extra/bots.json.bak");
             
-            BotProperties[] bots = JsonConvert.DeserializeObject<BotProperties[]>(json);
+            List<BotProperties> bots = BotsFile.ReadAll(json);
             Dictionary<string, List<BotProperties>> botsByLevel = new Dictionary<string, List<BotProperties>>();
             
             foreach (BotProperties bot in bots) {
                 List<BotProperties> levelBots;
-                if (bot.Level == null || bot.Level.Length == 0) continue;
+                if (String.IsNullOrEmpty(bot.Level)) continue;
                 
                 if (!botsByLevel.TryGetValue(bot.Level, out levelBots)) {
                     levelBots = new List<BotProperties>();
@@ -152,8 +150,10 @@ namespace MCGalaxy.Tasks {
             }
             
             foreach (var kvp in botsByLevel) {
-                json = JsonConvert.SerializeObject(kvp.Value);
-                File.WriteAllText(BotsFile.BotsPath(kvp.Key), json);
+                string path = BotsFile.BotsPath(kvp.Key);
+                using (StreamWriter w = new StreamWriter(path)) {
+                	BotsFile.WriteAll(w, kvp.Value);
+                }
             }
             
             if (Server.mainLevel.Bots.Count == 0) {

@@ -44,7 +44,7 @@ namespace MCGalaxy {
         public Position TargetPos;
         public bool movement = false;
         public int movementSpeed = 3;
-        internal sbyte curJump = 0;
+        internal int curJump = 0;
         
         public PlayerBot(string n, Level lvl) {
             name = n; DisplayName = n; SkinName = n;

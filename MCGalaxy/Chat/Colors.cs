@@ -69,22 +69,22 @@ namespace MCGalaxy {
         
         public static ColorDesc DefaultCol(char code) {
             switch (code) {
-                case '0': return new ColorDesc('0', "Black");
-                case '1': return new ColorDesc('1', "Navy");
-                case '2': return new ColorDesc('2', "Green");
-                case '3': return new ColorDesc('3', "Teal");
-                case '4': return new ColorDesc('4', "Maroon");
-                case '5': return new ColorDesc('5', "Purple");
-                case '6': return new ColorDesc('6', "Gold");
-                case '7': return new ColorDesc('7', "Silver");
-                case '8': return new ColorDesc('8', "Gray");
-                case '9': return new ColorDesc('9', "Blue");
-                case 'a': return new ColorDesc('a', "Lime");
-                case 'b': return new ColorDesc('b', "Aqua");
-                case 'c': return new ColorDesc('c', "Red");
-                case 'd': return new ColorDesc('d', "Pink");
-                case 'e': return new ColorDesc('e', "Yellow");
-                case 'f': return new ColorDesc('f', "White");
+                    case '0': return new ColorDesc('0', "Black");
+                    case '1': return new ColorDesc('1', "Navy");
+                    case '2': return new ColorDesc('2', "Green");
+                    case '3': return new ColorDesc('3', "Teal");
+                    case '4': return new ColorDesc('4', "Maroon");
+                    case '5': return new ColorDesc('5', "Purple");
+                    case '6': return new ColorDesc('6', "Gold");
+                    case '7': return new ColorDesc('7', "Silver");
+                    case '8': return new ColorDesc('8', "Gray");
+                    case '9': return new ColorDesc('9', "Blue");
+                    case 'a': return new ColorDesc('a', "Lime");
+                    case 'b': return new ColorDesc('b', "Aqua");
+                    case 'c': return new ColorDesc('c', "Red");
+                    case 'd': return new ColorDesc('d', "Pink");
+                    case 'e': return new ColorDesc('e', "Yellow");
+                    case 'f': return new ColorDesc('f', "White");
             }
             
             ColorDesc col = default(ColorDesc);
@@ -120,21 +120,21 @@ namespace MCGalaxy {
             if (code >= 'A' && code <= 'F') code += ' ';
             return IsDefined(code) ? Get(code).Name : "";
         }
-            
+        
         
         static readonly string[] ircColors = new string[] {
-            "\u000300", "\u000301", "\u000302", "\u000303", "\u000304", "\u000305", 
+            "\u000300", "\u000301", "\u000302", "\u000303", "\u000304", "\u000305",
             "\u000306", "\u000307", "\u000308", "\u000309", "\u000310", "\u000311",
             "\u000312", "\u000313", "\u000314", "\u000315",
         };
         static readonly string[] ircSingle = new string[] {
-            "\u00030", "\u00031", "\u00032", "\u00033", "\u00034", "\u00035", 
+            "\u00030", "\u00031", "\u00032", "\u00033", "\u00034", "\u00035",
             "\u00036", "\u00037", "\u00038", "\u00039",
         };
         static readonly string[] ircReplacements = new string[] {
             white, black, navy, green, red, maroon, purple, gold,
             yellow, lime, teal, aqua, blue, pink, gray, silver,
-        };       
+        };
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
         public static string ConvertIRCToMC(string input) {
@@ -187,7 +187,7 @@ namespace MCGalaxy {
             if (col == 'I') { col = ServerConfig.IRCColor[1]; return true; }
             if (col == 'W') { col = ServerConfig.WarningErrorColor[1]; return true; }
             return IsDefined(col);
-        }       
+        }
         
         
         /// <summary> Converts percentage color codes to their actual/real color codes. </summary>
@@ -234,8 +234,8 @@ namespace MCGalaxy {
                 char color = chars[i + 1];
                 if (!Map(ref color)) continue;
                 
-                chars[i] = '&'; 
-                chars[i + 1] = color; 
+                chars[i] = '&';
+                chars[i + 1] = color;
                 i++; // skip over color code
             }
         }
@@ -254,8 +254,8 @@ namespace MCGalaxy {
                 }
             }
             return new string(output, 0, usedChars);
-        }        
-       
+        }
+        
         /// <summary> Removes all non-existent color codes, and converts
         /// custom colors to their fallback standard color codes if required. </summary>
         public static string Cleanup(string value, bool supportsCustomCols) {
@@ -322,38 +322,35 @@ namespace MCGalaxy {
             if (!(hex.Length == 3 || hex.Length == 6)) return false;
             
             for (int i = 0; i < hex.Length; i++) {
-                if (Hex(hex[i]) == -1) return false;
+                if (UnHex(hex[i]) == -1) return false;
             }
-                        
+            
             int R, G, B;
             if (hex.Length == 6) {
-                R = (Hex(hex[0]) << 4) | Hex(hex[1]);
-                G = (Hex(hex[2]) << 4) | Hex(hex[3]);
-                B = (Hex(hex[4]) << 4) | Hex(hex[5]);
+                R = (UnHex(hex[0]) << 4) | UnHex(hex[1]);
+                G = (UnHex(hex[2]) << 4) | UnHex(hex[3]);
+                B = (UnHex(hex[4]) << 4) | UnHex(hex[5]);
             } else {
-                R = Hex(hex[0]); R |= (R << 4);
-                G = Hex(hex[1]); G |= (G << 4);
-                B = Hex(hex[2]); B |= (B << 4);
+                R = UnHex(hex[0]); R |= (R << 4);
+                G = UnHex(hex[1]); G |= (G << 4);
+                B = UnHex(hex[2]); B |= (B << 4);
             }
 
             c.R = (byte)R; c.G = (byte)G; c.B = (byte)B; c.A = 255;
             return true;
         }
         
-        /// <summary> Parses an #RRGGBB hex color string. </summary>        
+        /// <summary> Parses an #RRGGBB hex color string. </summary>
         public static ColorDesc ParseHex(string hex) {
             ColorDesc c;
             if (!TryParseHex(hex, out c)) throw new ArgumentException("invalid input");
             return c;
         }
         
-        static int Hex(char value) {
-            if (value >= '0' && value <= '9')
-                return (int)(value - '0');
-            if (value >= 'a' && value <= 'f')
-                return (int)(value - 'a') + 10;
-            if (value >= 'A' && value <= 'F')
-                return (int)(value - 'A') + 10;
+        public static int UnHex(char c) {
+            if (c >= '0' && c <= '9') { return (int)(c - '0'); }
+            if (c >= 'a' && c <= 'f') { return (int)(c - 'a') + 10; }
+            if (c >= 'A' && c <= 'F') { return (int)(c - 'A') + 10; }
             
             return -1;
         }
@@ -386,7 +383,7 @@ namespace MCGalaxy {
             r = (byte)(191 * ((hex >> 2) & 1) + 64 * (hex >> 3));
             g = (byte)(191 * ((hex >> 1) & 1) + 64 * (hex >> 3));
             b = (byte)(191 * ((hex >> 0) & 1) + 64 * (hex >> 3));
-        }      
+        }
         
         public bool IsModified() {
             if ((Code >= '0' && Code <= '9') || (Code >= 'a' && Code <= 'f')) {

@@ -46,6 +46,8 @@ namespace MCGalaxy {
                 ConfigElement elem;
                 elem.Field = field;
                 elem.Attrib = (ConfigAttribute)attributes[0];
+                
+                if (elem.Attrib.Name == null) elem.Attrib.Name = field.Name;
                 elems.Add(elem);
             }
             return elems.ToArray();

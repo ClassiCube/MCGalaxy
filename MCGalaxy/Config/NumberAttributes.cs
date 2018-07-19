@@ -23,6 +23,8 @@ namespace MCGalaxy.Config {
     public class ConfigIntAttribute : ConfigAttribute {
         int defValue, minValue, maxValue;
         
+        public ConfigIntAttribute()
+            : this(null, null, 0, int.MinValue, int.MaxValue) { }
         public ConfigIntAttribute(string name, string section, int def,
                                   int min = int.MinValue, int max = int.MaxValue)
             : base(name, section) { defValue = def; minValue = min; maxValue = max; }
@@ -47,8 +49,7 @@ namespace MCGalaxy.Config {
     }
     
     // Hacky workaround for old ExponentialFog attribute
-    public sealed class ConfigBoolIntAttribute : ConfigIntAttribute {
-        
+    sealed class ConfigBoolIntAttribute : ConfigIntAttribute {        
         public ConfigBoolIntAttribute(string name, string section, int defValue)
             : base(name, section, defValue, -1, 1) {
         }
@@ -60,8 +61,7 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigBlockAttribute : ConfigIntAttribute {
-        
+    public class ConfigBlockAttribute : ConfigIntAttribute {       
         public ConfigBlockAttribute(string name, string section, int def)
             : base(name, section, def, 0, Block.ExtendedCount - 1) {
         }
@@ -75,9 +75,35 @@ namespace MCGalaxy.Config {
         }
     }
     
+    public class ConfigByteAttribute : ConfigIntAttribute {    	
+    	public ConfigByteAttribute() : this(null, null) { }
+        public ConfigByteAttribute(string name, string section)
+            : base(name, section, 0, 0, 255) { }
+        
+        public override object Parse(string raw) {
+            int value = (int)base.Parse(raw);
+            // Can't directly unbox object to byte - must unbox to byte, then cast to byte
+            return (byte)value;
+        }
+    }
+    
+    public class ConfigUShortAttribute : ConfigIntAttribute {
+        public ConfigUShortAttribute() : this(null, null) { }
+        public ConfigUShortAttribute(string name, string section)
+            : base(name, section, 0, 0, 65535) { }
+        
+        public override object Parse(string raw) {
+            int value = (int)base.Parse(raw);
+            // Can't directly unbox object to ushort - must unbox to ushort, then cast to ushort
+            return (ushort)value;
+        }
+    }
+    
     public class ConfigRealAttribute : ConfigAttribute {
         float defValue, minValue, maxValue;
         
+        public ConfigRealAttribute()
+            : this(null, null, 0, float.NegativeInfinity, float.PositiveInfinity) { }
         public ConfigRealAttribute(string name, string section, float def,
                                    float min = float.NegativeInfinity, float max = float.PositiveInfinity)
             : base(name, section) { defValue = def; minValue = min; maxValue = max; }
