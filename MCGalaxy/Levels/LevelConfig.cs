@@ -85,7 +85,7 @@ namespace MCGalaxy {
         [ConfigBlock("EdgeBlock", "Env", Block.Bedrock)]
         public BlockID EdgeBlock = Block.Invalid;
         /// <summary> Whether exponential fog mode is used client-side. </summary>
-        [ConfigBoolInt("ExpFog", "Env", 0)]
+        [ConfigBoolInt("ExpFog", "Env")]
         public int ExpFog = -1;
         [ConfigString("Texture", "Env", "", true)]
         public string Terrain = "";

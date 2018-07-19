@@ -66,16 +66,16 @@ namespace MCGalaxy.Config {
         
         static object ParseValue(int token, JsonContext ctx) {
             switch (token) {
-                    case '{': return ParseObject(ctx);
-                    case '[': return ParseArray(ctx);
-                    case '"': return ParseString(ctx);
+                case '{': return ParseObject(ctx);
+                case '[': return ParseArray(ctx);
+                case '"': return ParseString(ctx);
                     
-                    case T_NUM:   return ParseNumber(ctx);
-                    case T_TRUE:  return "true";
-                    case T_FALSE: return "false";
-                    case T_NULL:  return null;
+                case T_NUM:   return ParseNumber(ctx);
+                case T_TRUE:  return "true";
+                case T_FALSE: return "false";
+                case T_NULL:  return null;
                     
-                    default: return null;
+                default: return null;
             }
         }
         
@@ -176,7 +176,7 @@ namespace MCGalaxy.Config {
         static void WriteValue(StreamWriter w, ConfigAttribute a, string value) {
             if (String.IsNullOrEmpty(value)) {
                 w.Write("null");
-            } else if (a is ConfigBoolAttribute || a is ConfigIntAttribute || a is ConfigRealAttribute) {
+            } else if (a is ConfigBoolAttribute || a is ConfigIntegerAttribute || a is ConfigRealAttribute) {
                 w.Write(value);
             } else {
                 WriteString(w, value);

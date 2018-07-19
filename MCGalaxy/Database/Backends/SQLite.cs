@@ -317,9 +317,7 @@ namespace MCGalaxy.SQL {
             if (state != ConnectionState.Closed) throw new InvalidOperationException();
             Close();
 
-            string path = Utils.FolderPath + "/MCGalaxy.db";
-            path = Path.GetFullPath(path);
-
+            const string path = "MCGalaxy.db";
             try {
                 if (ServerConfig.DatabasePooling) handle = RemoveFromPool();
                 
