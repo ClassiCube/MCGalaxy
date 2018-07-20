@@ -91,7 +91,9 @@ namespace MCGalaxy.SQL {
                 }
             }
             
-            File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
+            try {
+                File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
+            } catch { }
             Logger.LogError(e);
             return arg;
         }
