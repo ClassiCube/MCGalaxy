@@ -110,11 +110,14 @@ namespace MCGalaxy {
             Position pos = level.SpawnPos;
             Orientation rot = p.Rot;
             byte yaw = level.rotx, pitch = level.roty;
+            // in case player disconnected mid-way through loading map
+            if (p.disconnected) return;
             
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, false);
             rot.RotY = yaw; rot.HeadX = pitch;
             p.Pos = pos;
             p.SetYawPitch(yaw, pitch);
+            if (p.disconnected) return;
             
             Entities.SpawnEntities(p, pos, rot);
             OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);

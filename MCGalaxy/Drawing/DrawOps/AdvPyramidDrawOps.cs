@@ -76,7 +76,7 @@ namespace MCGalaxy.Drawing.Ops {
             {
                 int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
                 int curHeight = Invert ? yy : height - yy;
-                if (curHeight == 0) continue;           
+                if (curHeight == 0) continue;
                 
                 double curRadius = Radius * ((double)curHeight / (double)height);
                 int absx = Math.Abs(xx), absz = Math.Abs(zz);
