@@ -287,19 +287,20 @@ namespace MCGalaxy {
             if (OnSettingsUpdate != null) OnSettingsUpdate();
         }
         
-        public static bool SetMainLevel(string mapName) {
-            if (mapName.CaselessEq(ServerConfig.MainLevel)) return false;
+        public static bool SetMainLevel(string map) {
+            string main = mainLevel != null ? mainLevel.name : ServerConfig.MainLevel;
+            if (map.CaselessEq(main)) return false;
             
-            Level lvl = LevelInfo.FindExact(mapName);
+            Level lvl = LevelInfo.FindExact(map);
             if (lvl == null)
-                lvl = LevelActions.Load(Player.Console, mapName, false);
+                lvl = LevelActions.Load(Player.Console, map, false);
             if (lvl == null) return false;
             
             SetMainLevel(lvl); return true;
         }
         
         public static void SetMainLevel(Level lvl) {
-            Level oldMain = mainLevel;            
+            Level oldMain = mainLevel;
             mainLevel = lvl;
             
             mainLevel.Config.AutoUnload = false;

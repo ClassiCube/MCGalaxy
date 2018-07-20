@@ -55,7 +55,7 @@ namespace MCGalaxy.Gui {
             ServerConfig.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
             
             string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
-            Server.SetMainLevel(main);
+            ServerConfig.MainLevel = main;
             ServerConfig.AutoLoadMaps = lvl_chkAutoload.Checked;
             ServerConfig.ServerWideChat = lvl_chkWorld.Checked;
             

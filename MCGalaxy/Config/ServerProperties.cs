@@ -58,7 +58,9 @@ namespace MCGalaxy {
             
             if (!Directory.Exists(ServerConfig.BackupDirectory))
                 ServerConfig.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
+            
             Save();
+            Server.SetMainLevel(ServerConfig.MainLevel);
         }
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
