@@ -45,20 +45,16 @@ namespace MCGalaxy.Generator {
             return simpleGens.ContainsKey(s.ToLower());
         }
         
-        /// <summary> Outputs list of all map generator themes to the given player. </summary>
         public static void PrintThemes(Player p) {
             p.Message("Simple themes: " + simpleGens.Keys.Join(", "));
             p.Message("Advanced themes: " + advGens.Keys.Join(", "));
         }
         
-        /// <summary> Retrieves the list of theme names of simple map generators. </summary>
         public static IEnumerable<string> SimpleThemeNames { get { return simpleGens.Keys; } }
         
-        /// <summary> Retrieves the list of theme names of advanced map generators. </summary>
         public static IEnumerable<string> AdvancedThemeNames { get { return advGens.Keys; } }
         
         
-        /// <summary> Returns whether the given axis length is acceptable for map generation. </summary>
         public static bool OkayAxis(int len) {
             return len >= 16 && len <= 8192 && (len % 16) == 0;
         }

@@ -25,27 +25,20 @@ namespace MCGalaxy.Levels.IO {
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapImporter {
         
-        /// <summary> The file extension of this format. </summary>
         public abstract string Extension { get; }
         
-        /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
-        /// <param name="metadata"> Whether metadata should be loaded. </param>
         public Level Read(string path, string name, bool metadata) {
             using (FileStream fs = File.OpenRead(path))
                 return Read(fs, name, metadata);
         }
         
-        /// <summary> Reads the data for a level from a file containing data encoded in this format. </summary>
-        /// <param name="metadata"> Whether metadata should be loaded. </param>
         public abstract Level Read(Stream src, string name, bool metadata);
 
-        /// <summary> Reads the dimensions for a level from a file containing data encoded in this format. </summary>
         public Vec3U16 ReadDimensions(string path) {
             using (FileStream fs = File.OpenRead(path))
                 return ReadDimensions(fs);
         }
         
-        /// <summary> Reads the dimensions for a level from a file containing data encoded in this format. </summary>
         public abstract Vec3U16 ReadDimensions(Stream src);
         
         public static List<IMapImporter> Formats = new List<IMapImporter>() {
@@ -70,17 +63,14 @@ namespace MCGalaxy.Levels.IO {
     /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapExporter {
 
-        /// <summary> The file extension of this format. </summary>
         public abstract string Extension { get; }
         
-        /// <summary> Saves the data encoded in this format for a level to a file. </summary>
         public void Write(string path, Level lvl) {
             using (FileStream fs = File.Create(path)) {
                 Write(fs, lvl);
             }
         }
         
-        /// <summary> Saves the data encoded in this format for a level to a file. </summary>
         public abstract void Write(Stream dst, Level lvl);
         
         public static List<IMapExporter> Formats = new List<IMapExporter>() {

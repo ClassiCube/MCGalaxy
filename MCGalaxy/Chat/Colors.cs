@@ -220,9 +220,8 @@ namespace MCGalaxy {
             len -= 4; i += 4;
             
             // And then with "s://" or "://" ?
-            if (len >= 4 && chars[i] == 's' && chars[i + 1] == ':' && chars[i + 2] == '/' && chars[i + 3] == '/') return true;
-            if (len >= 3 && chars[i] == ':' && chars[i + 1] == '/' && chars[i + 2] == '/') return true;
-            return false;
+            if (chars[i] == 's') { len--; i++; }
+            return len >= 3 && chars[i] == ':' && chars[i + 1] == '/' && chars[i + 2] == '/';
         }
         
         static void Escape(char[] chars, int start, int end) {

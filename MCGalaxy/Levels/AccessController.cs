@@ -47,7 +47,7 @@ namespace MCGalaxy {
             if (Whitelisted.CaselessContains(name)) return AccessResult.Whitelisted;
             
             if (rank < Min) return AccessResult.BelowMinRank;
-            if (rank > Max && MaxCmd != null && CommandExtraPerms.Find(MaxCmd, 1).UsableBy(rank)) {
+            if (rank > Max && MaxCmd != null && !CommandExtraPerms.Find(MaxCmd, 1).UsableBy(rank)) {
                 return AccessResult.AboveMaxRank;
             }
             return AccessResult.Allowed;
