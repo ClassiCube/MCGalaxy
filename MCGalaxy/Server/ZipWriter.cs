@@ -18,13 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace MCGalaxy {
     
     struct ZipEntry {
-        public string Filename;
+		public byte[] Filename;
         public long CompressedSize, UncompressedSize, LocalHeaderOffset;
         public uint Crc32;
+        public ushort BitFlags, CompressionMethod;
         
         public void Reset() {
             // signify to use zip64 version of these fields instead
@@ -112,12 +114,17 @@ namespace MCGalaxy {
         
         public void WriteEntry(Stream src, string file) {
             ZipEntry entry = default(ZipEntry);
-            entry.Filename = file;
+            entry.Filename = Encoding.UTF8.GetBytes(file);
             entry.LocalHeaderOffset = stream.Position;
             
             // leave some room to fill in header later
-            int headerSize = 30 + file.Length + zip64Extra;
+            int headerSize = 30 + entry.Filename.Length + zip64Extra;
             stream.Write(buffer, 0, headerSize);
+            
+            // bit flag for non-ascii filename
+            foreach (char c in file) {
+                if (c < ' ' || c > '~') entry.BitFlags |= (1 << 11);
+            }
             
             ZipEntryStream dst;
             using (dst = new ZipEntryStream(stream)) {
@@ -184,8 +191,8 @@ namespace MCGalaxy {
             
             w.Write(0x04034b50);
             w.Write(version);
-            w.Write((ushort)0); // bitflags
-            w.Write((ushort)0); // compression method
+            w.Write(entry.BitFlags);
+            w.Write(entry.CompressionMethod);
             WriteLastModified();
             w.Write(entry.Crc32);
             w.Write((int)entry.CompressedSize);
@@ -193,7 +200,7 @@ namespace MCGalaxy {
             w.Write((ushort)entry.Filename.Length);
             w.Write(extraLen);
             
-            WriteString(entry.Filename);
+            w.Write(entry.Filename);
             if (zip64) WriteZip64ExtraField(copy, false);
         }
         
@@ -206,8 +213,8 @@ namespace MCGalaxy {
             w.Write(0x02014b50); // signature
             w.Write(version);
             w.Write(version);
-            w.Write((ushort)0); // bitflags
-            w.Write((ushort)0); // compression method
+            w.Write(entry.BitFlags);
+            w.Write(entry.CompressionMethod);
             WriteLastModified();
             w.Write(entry.Crc32);
             w.Write((int)entry.CompressedSize);
@@ -220,14 +227,8 @@ namespace MCGalaxy {
             w.Write(0);          // external attributes
             w.Write((int)entry.LocalHeaderOffset);
             
-            WriteString(entry.Filename);
+            w.Write(entry.Filename);
             if (zip64) WriteZip64ExtraField(copy, true);
-        }
-        
-        void WriteString(string str) {
-            for (int i = 0; i < str.Length; i++) {
-                w.Write((byte)str[i].UnicodeToCp437());
-            }
         }
         
         void WriteZip64ExtraField(ZipEntry entry, bool offset) {
