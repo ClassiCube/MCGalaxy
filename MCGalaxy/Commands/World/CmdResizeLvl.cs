@@ -33,25 +33,28 @@ namespace MCGalaxy.Commands.World {
             string[] args = message.SplitSpaces();
             if (args.Length < 4) { Help(p); return; }
             
-            if (DoResize(p, args, data)) return;
+            bool needConfirm;
+            if (DoResize(p, args, data, out needConfirm)) return;
+            
+            if (!needConfirm) return;
             p.Message("Type %T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
-                           args[0], args[1], args[2], args[3]);
+                      args[0], args[1], args[2], args[3]);
         }
         
-        public static bool DoResize(Player p, string[] args, CommandData data) {
+        public static bool DoResize(Player p, string[] args, CommandData data, out bool needConfirm) {         
+            needConfirm = false;
             Level lvl = Matcher.FindLevels(p, args[0]);
+             
             if (lvl == null) return true;
             if (!LevelInfo.Check(p, data.Rank, lvl, "resize this level")) return false;
             
             ushort x = 0, y = 0, z = 0;
-            if (!CmdNewLvl.CheckMapAxis(p, args[1], "Width",  ref x)) return false;
-            if (!CmdNewLvl.CheckMapAxis(p, args[2], "Height", ref y)) return false;
-            if (!CmdNewLvl.CheckMapAxis(p, args[3], "Length", ref z)) return false;
-            if (!CmdNewLvl.CheckMapVolume(p, x, y, z)) return true;
+            if (!CmdNewLvl.GetDimensions(p, args, 1, ref x, ref y, ref z)) return false;
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
                 p.Message("New level dimensions are smaller than the current dimensions, %Wyou will lose blocks%S.");
+                needConfirm = true;
                 return false;
             }
             

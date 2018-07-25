@@ -61,10 +61,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             ushort x = 0, y = 0, z = 0;
-            if (!CmdNewLvl.CheckMapAxis(p, args[1], "Width",  ref x)) return;
-            if (!CmdNewLvl.CheckMapAxis(p, args[2], "Height", ref y)) return;
-            if (!CmdNewLvl.CheckMapAxis(p, args[3], "Length", ref z)) return;
-            if (!CmdNewLvl.CheckMapVolume(p, x, y, z)) return;
+            if (!CmdNewLvl.GetDimensions(p, args, 1, ref x, ref y, ref z)) return;
             
             CountdownGame game = (CountdownGame)game_;
             game.GenerateMap(p, x, y, z);

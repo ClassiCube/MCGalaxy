@@ -113,9 +113,12 @@ namespace MCGalaxy.Commands.World {
                 string[] args = value.SplitSpaces();
                 if (args.Length < 4) { Command.Find("ResizeLvl").Help(p); return; }
 
-                if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData)) return;
+                bool needConfirm;
+                if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData, out needConfirm)) return;
+                
+                if (!needConfirm) return;
                 p.Message("Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
-                               args[1], args[2], args[3]);
+                          args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
                 AccessController access = p.level.VisitAccess;

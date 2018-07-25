@@ -51,11 +51,11 @@ namespace MCGalaxy.Eco {
             }
             
             switch (args[3]) {
-                case "price": preset.price = int.Parse(args[4]); break;
-                case "x": preset.x = args[4]; break;
-                case "y": preset.y = args[4]; break;
-                case "z": preset.z = args[4]; break;
-                case "type": preset.type = args[4]; break;
+                    case "price": preset.price = int.Parse(args[4]); break;
+                    case "x": preset.x = args[4]; break;
+                    case "y": preset.y = args[4]; break;
+                    case "z": preset.z = args[4]; break;
+                    case "type": preset.type = args[4]; break;
             }
         }
         
@@ -84,7 +84,7 @@ namespace MCGalaxy.Eco {
             
             p.Message("&aCreating level: '&f" + name + "&a' . . .");
             UseCommand(p, "NewLvl", name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
-                
+            
             Level level = LevelActions.Load(Player.Console, name, true);
             CmdOverseer.SetPerms(p, level);
             Level.SaveSettings(level);
@@ -114,11 +114,10 @@ namespace MCGalaxy.Eco {
             
             preset = new LevelPreset();
             preset.name = args[2];
-            if (OkayAxis(args[3]) && OkayAxis(args[4]) && OkayAxis(args[5])) {
-                preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
-            } else {
-                p.Message("%WDimension must be a power of 2"); return;
-            }
+            
+            ushort x = 0, y = 0, z = 0;
+            if (!CmdNewLvl.GetDimensions(p, args, 3, ref x, ref y, ref z)) return;
+            preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
             
             if (!MapGen.IsRecognisedTheme(args[6])) {
                 MapGen.PrintThemes(p); return;
@@ -139,7 +138,7 @@ namespace MCGalaxy.Eco {
             Presets.Remove(preset);
             p.Message("&aSuccessfully removed preset: &f" + preset.name);
         }
-        
+
         void EditPreset(Player p, string[] args, LevelPreset preset) {
             if (preset == null) { p.Message("%WThat preset level doesn't exist"); return; }
             
@@ -147,11 +146,15 @@ namespace MCGalaxy.Eco {
                 preset.name = args[4];
                 p.Message("&aSuccessfully changed preset name to &f" + preset.name);
             } else if (args[3] == "x" || args[3] == "y" || args[3] == "z") {
-                if (!OkayAxis(args[4])) { p.Message("%WDimension was wrong, it must be a power of 2"); return; }
-
-                if (args[3] == "x") preset.x = args[4];
-                if (args[3] == "y") preset.y = args[4];
-                if (args[3] == "z") preset.z = args[4];
+                string[] dims = new string[] { preset.x, preset.y, preset.z };
+                if (args[3] == "x") dims[0] = args[4];
+                if (args[3] == "y") dims[1] = args[4];
+                if (args[3] == "z") dims[2] = args[4];
+                
+                ushort x = 0, y = 0, z = 0;
+                if (!CmdNewLvl.GetDimensions(p, dims, 0, ref x, ref y, ref z)) return;
+                preset.x = dims[0]; preset.y = dims[1]; preset.z = dims[2];
+                
                 p.Message("&aSuccessfully changed preset {0} size to &f{1}", args[3], args[4]);
             } else if (args[3] == "type" || args[3] == "theme") {
                 if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
@@ -189,8 +192,8 @@ namespace MCGalaxy.Eco {
             
             foreach (LevelPreset preset in Presets) {
                 p.Message("&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
-                               preset.name, preset.x, preset.y, preset.z,
-                               preset.type, preset.price, ServerConfig.Currency);
+                          preset.name, preset.x, preset.y, preset.z,
+                          preset.type, preset.price, ServerConfig.Currency);
             }
         }
         
@@ -199,12 +202,6 @@ namespace MCGalaxy.Eco {
                 if (preset.name.CaselessEq(name)) return preset;
             }
             return null;
-        }
-        
-        static bool OkayAxis(string value) {
-            ushort length;
-            if (!ushort.TryParse(value, out length)) return false;
-            return MapGen.OkayAxis(length);
         }
     }
 }

@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands {
                 result = false; return true;
             }
             
-            p.Message("\"{0}\" is not a valid boolean.", input);
-            p.Message("Value must be either 1/yes/on or 0/no/off");
+            p.Message("%W\"{0}\" is not a valid boolean.", input);
+            p.Message("%WValue must be either 1/yes/on or 0/no/off");
             return false;
         }
         
@@ -82,17 +82,17 @@ namespace MCGalaxy.Commands {
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
             if (!int.TryParse(input, out value)) {
-                p.Message("\"{0}\" is not a valid integer.", input); return false;
+                p.Message("%W\"{0}\" is not a valid integer.", input); return false;
             }
             
             if (value < min || value > max) {
                 // Try to provide more helpful range messages
                 if (max == int.MaxValue) {
-                    p.Message("{0} must be {1} or greater", argName, min);
+                    p.Message("%W{0} must be {1} or greater", argName, min);
                 } else if (min == int.MinValue) {
-                    p.Message("{0} must be {1} or less", argName, max);
+                    p.Message("%W{0} must be {1} or less", argName, max);
                 } else {
-                    p.Message("{0} must be between {1} and {2}", argName, min, max);
+                    p.Message("%W{0} must be between {1} and {2}", argName, min, max);
                 }
                 return false;
             }
@@ -105,11 +105,11 @@ namespace MCGalaxy.Commands {
                                    float min, float max) {
             float value;
             if (!Utils.TryParseDecimal(input, out value)) {
-                p.Message("\"{0}\" is not a valid number.", input); return false;
+                p.Message("%W\"{0}\" is not a valid number.", input); return false;
             }
             
             if (value < min || value > max) {
-                p.Message("{0} must be between {1} and {2}", argName, 
+                p.Message("%W{0} must be between {1} and {2}", argName, 
                                min.ToString("F4"), max.ToString("F4"));
                 return false;
             }
@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands {
         public static bool GetHex(Player p, string input, ref ColorDesc col) {
             ColorDesc tmp;
             if (!Colors.TryParseHex(input, out tmp)) {
-                p.Message("\"#{0}\" is not a valid HEX color.", input); return false;
+                p.Message("%W\"#{0}\" is not a valid HEX color.", input); return false;
             }
             col = tmp; return true;
         }

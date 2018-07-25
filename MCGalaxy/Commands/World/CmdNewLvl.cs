@@ -51,10 +51,7 @@ namespace MCGalaxy.Commands.World {
 
             ushort x = 0, y = 0, z = 0;
             string name = args[0].ToLower();
-            if (!CheckMapAxis(p, args[1], "Width",  ref x)) return null;
-            if (!CheckMapAxis(p, args[2], "Height", ref y)) return null;
-            if (!CheckMapAxis(p, args[3], "Length", ref z)) return null;
-            if (!CheckMapVolume(p, x, y, z)) return null;
+            if (!GetDimensions(p, args, 1, ref x, ref y, ref z)) return null;
             string seed = args.Length == 6 ? args[5] : "";
             
             if (!Formatter.ValidName(p, name, "level")) return null;
@@ -85,7 +82,15 @@ namespace MCGalaxy.Commands.World {
         }
         
         
-        internal static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
+        internal static bool GetDimensions(Player p, string[] args, int i, ref ushort x, ref ushort y, ref ushort z) {
+            return 
+                CheckMapAxis(p, args[i    ], "Width",  ref x) &&
+                CheckMapAxis(p, args[i + 1], "Height", ref y) &&
+                CheckMapAxis(p, args[i + 2], "Length", ref z) &&
+                CheckMapVolume(p, x, y, z);
+        }
+        
+        static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
             if (!CommandParser.GetUShort(p, input, type, ref len)) return false;
             if (len == 0) { p.Message("%W{0} cannot be 0.", type); return false; }
             if (len > 16384) { p.Message("%W{0} must be 16384 or less.", type); return false; }
@@ -97,20 +102,18 @@ namespace MCGalaxy.Commands.World {
             return true;
         }
         
-        internal static bool CheckMapVolume(Player p, int x, int y, int z) {
+         static bool CheckMapVolume(Player p, int x, int y, int z) {
             if (p.IsConsole) return true;
             int limit = p.group.GenVolume;
             if ((long)x * y * z <= limit) return true;
             
-            string text = "You cannot create a map with over ";
+            string text = "%WYou cannot create a map with over ";
             if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
             else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
             else text += limit + " blocks";
             p.Message(text);
             return false;
         }
-        
-        
         
         public override void Help(Player p) {
             p.Message("%T/NewLvl [name] [width] [height] [length] [theme] <seed>");

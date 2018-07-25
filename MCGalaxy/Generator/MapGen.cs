@@ -50,14 +50,8 @@ namespace MCGalaxy.Generator {
             p.Message("Advanced themes: " + advGens.Keys.Join(", "));
         }
         
-        public static IEnumerable<string> SimpleThemeNames { get { return simpleGens.Keys; } }
-        
+        public static IEnumerable<string> SimpleThemeNames { get { return simpleGens.Keys; } }       
         public static IEnumerable<string> AdvancedThemeNames { get { return advGens.Keys; } }
-        
-        
-        public static bool OkayAxis(int len) {
-            return len >= 16 && len <= 8192 && (len % 16) == 0;
-        }
 
         public static bool Generate(Level lvl, string theme, string seed, Player p) {
             MapGenArgs genArgs = new MapGenArgs();

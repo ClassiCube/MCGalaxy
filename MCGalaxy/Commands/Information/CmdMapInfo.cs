@@ -169,7 +169,7 @@ namespace MCGalaxy.Commands.Info {
                 p.Message("No custom texture pack set for this map.");
             }
             
-            const string format = "Colors: Fog {0}, Sky {1}, Clouds {2}, Sunlight {3}, Shadowlight {4}";
+            const string format = "Colors: &eFog {0}, &eSky {1}, &eClouds {2}, &eSunlight {3}, &eShadowlight {4}";
             p.Message(format, Color(cfg.FogColor), Color(cfg.SkyColor), 
                            Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));
             
@@ -227,7 +227,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string Color(string src) {
-            return (src == null || src.Length == 0 || src == "-1") ? "&bnone&e" : "&b" + src + "&e";
+            return (src == null || src.Length == 0 || src == "-1") ? "&bnone" : "&b" + src;
         }
         
         public override void Help(Player p)  {
