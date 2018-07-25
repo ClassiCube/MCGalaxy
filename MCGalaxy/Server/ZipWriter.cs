@@ -18,12 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace MCGalaxy {
     
     struct ZipEntry {
-		public byte[] Filename;
+        public byte[] Filename;
         public long CompressedSize, UncompressedSize, LocalHeaderOffset;
         public uint Crc32;
         public ushort BitFlags, CompressionMethod;
@@ -37,15 +38,11 @@ namespace MCGalaxy {
     }
     
     sealed class ZipEntryStream : Stream {
-        public uint Crc32;
+        public uint Crc32 = uint.MaxValue;
         public long CompressedLen;
-        Stream stream;
+        public Stream stream;
         
-        public ZipEntryStream(Stream stream) {
-            this.stream = stream;
-            Crc32 = uint.MaxValue;
-        }
-        
+        public ZipEntryStream(Stream stream) { this.stream = stream; }        
         public override bool CanRead  { get { return false; } }
         public override bool CanSeek  { get { return false; } }
         public override bool CanWrite { get { return true; } }
@@ -61,21 +58,35 @@ namespace MCGalaxy {
         public override void Write(byte[] buffer, int offset, int count) {
             stream.Write(buffer, offset, count);
             CompressedLen += count;
-            
-            for (int i = offset; i < offset + count; i++) {
-                Crc32 = crc32Table[(Crc32 ^ buffer[i]) & 0xFF] ^ (Crc32 >> 8);
-            }
         }
         
         public override void WriteByte(byte value) {
             stream.WriteByte(value);
             CompressedLen++;
-            Crc32 = crc32Table[(Crc32 ^ value) & 0xFF] ^ (Crc32 >> 8);
         }
         
-        public override void Close() {
-            stream = null;
-            Crc32 ^= uint.MaxValue;
+        public override void Close() { stream = null; }  
+        public long WriteStream(Stream src, byte[] buffer, bool compress) {
+            if (compress) {
+                using (DeflateStream ds = new DeflateStream(this, CompressionMode.Compress))
+                    return WriteData(ds, src, buffer);
+            }
+            return WriteData(this, src, buffer);
+        }
+        
+        long WriteData(Stream dst, Stream src, byte[] buffer) {
+            int count = 0;
+            long totalLen = 0;
+            
+            while ((count = src.Read(buffer, 0, buffer.Length)) > 0) {
+                dst.Write(buffer, 0, count);
+                totalLen += count;
+                
+                for (int i = 0; i < count; i++) {
+                    Crc32 = crc32Table[(Crc32 ^ buffer[i]) & 0xFF] ^ (Crc32 >> 8);
+                }
+            }
+            return totalLen;
         }
         
         static uint[] crc32Table;
@@ -93,7 +104,7 @@ namespace MCGalaxy {
             }
         }
     }
-    
+
     public sealed class ZipWriter {
         BinaryWriter w;
         Stream stream;
@@ -112,7 +123,7 @@ namespace MCGalaxy {
             w = new BinaryWriter(stream);
         }
         
-        public void WriteEntry(Stream src, string file) {
+        public void WriteEntry(Stream src, string file, bool compress) {
             ZipEntry entry = default(ZipEntry);
             entry.Filename = Encoding.UTF8.GetBytes(file);
             entry.LocalHeaderOffset = stream.Position;
@@ -121,23 +132,18 @@ namespace MCGalaxy {
             int headerSize = 30 + entry.Filename.Length + zip64Extra;
             stream.Write(buffer, 0, headerSize);
             
-            // bit flag for non-ascii filename
+            // set bit flag for non-ascii filename
             foreach (char c in file) {
                 if (c < ' ' || c > '~') entry.BitFlags |= (1 << 11);
             }
             
-            ZipEntryStream dst;
-            using (dst = new ZipEntryStream(stream)) {
-                int read = 0;
-                
-                while ((read = src.Read(buffer, 0, buffer.Length)) > 0) {
-                    dst.Write(buffer, 0, read);
-                    entry.UncompressedSize += read;
-                }
-            }
+            if (compress) entry.CompressionMethod = 8;           
+            ZipEntryStream dst = new ZipEntryStream(stream);
+            entry.UncompressedSize = dst.WriteStream(src, buffer, compress);
+            dst.stream = null;
             
             entry.CompressedSize = dst.CompressedLen;
-            entry.Crc32 = dst.Crc32;
+            entry.Crc32 = dst.Crc32 ^ uint.MaxValue;
             entries.Add(entry); numEntries++;
         }
         

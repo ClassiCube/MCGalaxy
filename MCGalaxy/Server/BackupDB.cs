@@ -24,13 +24,8 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public static partial class Backup {
         
-        public static void BackupDatabase(StreamWriter sql, bool lite) {
-            //We technically know all tables in the DB...  But since this is MySQL, we can also get them all with a MySQL command
-            //So we show the tables, and store the result.
-            //Also output information data (Same format as phpMyAdmin's dump)
-
-            //Important note:  This does NOT account for foreign keys, BLOB's etc.  It only works for what we actually put in the db.
-
+        public static void BackupDatabase(StreamWriter sql) {
+            // NOTE: This does NOT account for foreign keys, BLOBs etc. It only works for what we actually put in the DB.
             sql.WriteLine("-- {0} SQL Database Dump", Server.SoftwareName);
             sql.WriteLine("-- Host: {0}", ServerConfig.MySQLHost);
             sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now);
@@ -40,7 +35,6 @@ namespace MCGalaxy {
 
             List<string> tables = Database.Backend.AllTables();
             foreach (string name in tables) {
-                if (lite && name.CaselessStarts("Block")) continue;
                 BackupTable(name, sql);
             }
         }
@@ -60,18 +54,17 @@ namespace MCGalaxy {
         
         internal static void ReplaceDatabase(Stream sql) {
             using (FileStream backup = File.Create("backup.sql"))
-                BackupDatabase(new StreamWriter(backup), false); // backup
+                BackupDatabase(new StreamWriter(backup));
 
             List<string> tables = Database.Backend.AllTables();
             foreach (string table in tables)
-                Database.Backend.DeleteTable(table); // drop all tables
+                Database.Backend.DeleteTable(table);
             
             ImportSql(sql);
         }
         
         internal static void ImportSql(Stream sql) {
-            // Import data (we only have CREATE TABLE and INSERT INTO statements)
-            
+            // Import data (we only have CREATE TABLE and INSERT INTO statements)            
             using (StreamReader reader = new StreamReader(sql)) {
                 ImportBulk(reader);
             }

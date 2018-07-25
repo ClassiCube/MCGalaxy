@@ -29,11 +29,11 @@ namespace MCGalaxy {
             public bool Files, Database, Lite;
         }
         
-        public static void CreatePackage(Player p, bool files, bool db, bool lite) {
+        public static void Perform(Player p, bool files, bool db, bool lite, bool compress) {
             if (db) {
                 Logger.Log(LogType.SystemActivity, "Backing up the database...");
                 using (StreamWriter sql = new StreamWriter(sqlPath))
-                    BackupDatabase(sql,lite);
+                    BackupDatabase(sql);
                 Logger.Log(LogType.SystemActivity, "Backed up the database to " + sqlPath);
             }
             
@@ -46,13 +46,9 @@ namespace MCGalaxy {
 
             Logger.Log(LogType.SystemActivity, "Creating compressed backup...");
             using (Stream stream = File.Create(zipPath)) {
-                ZipWriter writer = new ZipWriter(stream);
-                if (files) {
-                    Logger.Log(LogType.SystemActivity, "Compressing files...");
-                    SaveFiles(writer, filesList);
-                }
-                
-                if (db) SaveDatabase(writer);
+                ZipWriter writer = new ZipWriter(stream);              
+                if (files) SaveFiles(writer, filesList, compress);          
+                if (db) SaveDatabase(writer, compress);
                 
                 writer.FinishEntries();
                 writer.WriteFooter();
@@ -87,23 +83,29 @@ namespace MCGalaxy {
             return paths;
         }
         
-        static void SaveFiles(ZipWriter writer, List<string> paths) {
-            foreach (string path in paths) {
+        static void SaveFiles(ZipWriter writer, List<string> paths, bool compress) {
+            Logger.Log(LogType.SystemActivity, "Compressing {0} files...", paths.Count);
+            for (int i = 0; i < paths.Count; i++) {
+                string path = paths[i];
+                bool compressThis = compress && !path.CaselessContains(".lvl");
+                
                 try {
                     using (Stream src = File.OpenRead(path)) {
-                        writer.WriteEntry(src, path);
+                        writer.WriteEntry(src, path, compressThis);
                     }
                 } catch (Exception ex) {
                     Logger.LogError("Failed to backup file: " + path, ex);
                 }
+                
+                if (i == 0 || (i % 100) != 0) continue;
+                Logger.Log(LogType.SystemActivity, "Backed up {0}/{1} files", i, paths.Count);
             }
         }
         
-        static void SaveDatabase(ZipWriter writer) {
+        static void SaveDatabase(ZipWriter writer, bool compress) {
             Logger.Log(LogType.SystemActivity, "Compressing Database...");
-            // TODO: gzip compress
             using (FileStream fs = File.OpenRead(sqlPath)) {
-                writer.WriteEntry(fs, sqlPath);
+                writer.WriteEntry(fs, sqlPath, compress);
             }
             Logger.Log(LogType.SystemActivity, "Database compressed");
         }
@@ -123,7 +125,7 @@ namespace MCGalaxy {
                 }
             }
             
-            // To make life easier, we reload settings now, to maker it less likely to need restart
+            // To make life easier, we reload settings now, to make it less likely to need restart
             Server.LoadAllSettings();
             p.Message("Server restored" + (errors > 0 ? " with errors. May be a partial restore" : ""));
             p.Message("It is recommended that you restart the server, although this is not required.");

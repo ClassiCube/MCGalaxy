@@ -32,14 +32,14 @@ namespace MCGalaxy.Commands.Maintenance {
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             switch (args[0].ToLower()) {
-                case "public": SetPublic(p, args); break;
-                case "private": SetPrivate(p, args); break;
-                case "reload": DoReload(p, args); break;
-                case "backup": DoBackup(p, args); break;
-                case "restore": DoRestore(p, args); break;
-                case "import": DoImport(p, args); break;
-                case "upgradeblockdb": DoBlockDBUpgrade(p, args); break;
-                default: Help(p); break;
+                    case "public": SetPublic(p, args); break;
+                    case "private": SetPrivate(p, args); break;
+                    case "reload": DoReload(p, args); break;
+                    case "backup": DoBackup(p, args); break;
+                    case "restore": DoRestore(p, args); break;
+                    case "import": DoImport(p, args); break;
+                    case "upgradeblockdb": DoBlockDBUpgrade(p, args); break;
+                    default: Help(p); break;
             }
         }
         
@@ -56,33 +56,28 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         void DoReload(Player p, string[] args) {
-            if (!CheckPerms(p)) {
-                p.Message("Only Console or the Server Owner can reload the server settings."); return;
-            }
             p.Message("Reloading settings...");
-            Server.LoadAllSettings();
-            p.Message("Settings reloaded!  You may need to restart the server, however.");
+            Server.LoadAllSettings(); 
+            p.Message("Settings reloaded! You may need to restart the server, however.");
         }
         
         void DoBackup(Player p, string[] args) {
             string type = args.Length == 1 ? "" : args[1].ToLower();
+            bool compress = true;
+            if (args.Length > 2 && !CommandParser.GetBool(p, args[2], ref compress)) return;
+            
             if (type.Length == 0 || type == "all") {
                 p.Message("Server backup started. Please wait while backup finishes.");
-                Backup.CreatePackage(p, true, true, false);
-            } else if (type == "database" || type == "sql" || type == "db") {
-                // Creates CREATE TABLE and INSERT statements for all tables and rows in the database
+                Backup.Perform(p, true, true, false, compress);
+            } else if (type == "database" || type == "db") {
                 p.Message("Database backup started. Please wait while backup finishes.");
-                Backup.CreatePackage(p, false, true, false);
-            } else if (type == "allbutdb" || type == "files" || type == "file") {
-                // Saves all files and folders to a .zip
+                Backup.Perform(p, false, true, false, compress);
+            } else if (type == "files" || type == "file") {
                 p.Message("All files backup started. Please wait while backup finishes.");
-                Backup.CreatePackage(p, true, false, false);
+                Backup.Perform(p, true, false, false, compress);
             } else if (type == "lite") {
-                p.Message("Server backup (except BlockDB and undo data) started. Please wait while backup finishes.");
-                Backup.CreatePackage(p, true, true, true);
-            } else if (type == "litedb") {
-                p.Message("Database backup (except BlockDB tables) started. Please wait while backup finishes.");
-                Backup.CreatePackage(p, false, true, true);
+                p.Message("Server backup (except BlockDB) started. Please wait while backup finishes.");
+                Backup.Perform(p, true, true, true, compress);
             } else if (type == "table") {
                 if (args.Length == 2) { p.Message("You need to provide the table name to backup."); return; }
                 if (!Formatter.ValidName(p, args[2], "table")) return;
@@ -140,20 +135,30 @@ namespace MCGalaxy.Commands.Maintenance {
             if (ServerConfig.OwnerName.CaselessEq("Notch")) return false;
             return p.name.CaselessEq(ServerConfig.OwnerName);
         }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("backup")) {
+                p.Message("%T/Server backup [mode] <compress>");
+                p.Message("%HMode can be one of the following:");
+                p.Message("  &fall %H- Backups everything (default)");
+                p.Message("  &fdb %H- Only backups the database");
+                p.Message("  &ffiles %H- Backups everything, except the database");
+                p.Message("  &flite %H- Backups everything, except BlockDB files");
+                p.Message("%H<compress> - Whether to compress the backup (default yes)");
+            } else {
+                base.Help(p, message);
+            }
+        }
 
         public override void Help(Player p) {
-            p.Message("%T/Server reload %H- Reload the server files. (May require restart) (Owner only)");
-            p.Message("%T/Server public/private %H- Make the server public or private.");
-            p.Message("%T/Server restore %H- Restore the server from a backup.");
-            p.Message("%T/Server backup all/db/files/lite/litedb %H- Make a backup.");
-            p.Message("  %Hall - Backups everything (default)");
-            p.Message("  %Hdb - Only backups the database.");
-            p.Message("  %Hfiles - Backups everything, except the database.");
-            p.Message("  %Hlite - Backups everything, except BlockDB and undo files.");
-            p.Message("  %Hlitedb - Backups database, except BlockDB tables.");
+            p.Message("%T/Server reload %H- Reloads the server files");
+            p.Message("%T/Server public/private %H- Makes the server public or private");
+            p.Message("%T/Server restore %H- Restores the server from a backup");
+            p.Message("%T/Server backup %H- Make a backup. See %T/help server backup");
             p.Message("%T/Server backup table [name] %H- Backups that database table");
             p.Message("%T/Server import [name] %H- Imports a backed up database table");
             p.Message("%T/Server upgradeblockdb %H- Dumps BlockDB tables from database");
+            p.Message("%HOnly useful when upgrading from a very old {0} version", Server.SoftwareName);
         }
     }
 }
