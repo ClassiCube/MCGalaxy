@@ -138,10 +138,12 @@ namespace MCGalaxy {
                 if (c < ' ' || c > '~') entry.BitFlags |= (1 << 11);
             }
             
-            if (compress) entry.CompressionMethod = 8;           
             ZipEntryStream dst = new ZipEntryStream(stream);
             entry.UncompressedSize = dst.WriteStream(src, buffer, compress);
             dst.stream = null;
+            
+            if (compress && entry.UncompressedSize > 0) 
+                entry.CompressionMethod = 8;
             
             entry.CompressedSize = dst.CompressedLen;
             entry.Crc32 = dst.Crc32 ^ uint.MaxValue;
