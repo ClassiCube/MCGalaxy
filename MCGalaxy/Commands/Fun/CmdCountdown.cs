@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
-            if (args.Length < 4) { Help(p); return; }           
+            if (args.Length < 4) { Help(p); return; }
             if (game_.Running) {
                 p.Message("You must stop Countdown before replacing the map."); return;
             }

@@ -627,6 +627,7 @@
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\Updater.cs" />
+    <Compile Include="Server\ZipWriter.cs" />
     <Compile Include="util\Extensions\DateExts.cs" />
     <Compile Include="util\Extensions\Extensions.cs" />
     <Compile Include="util\Extensions\StringExts.cs" />

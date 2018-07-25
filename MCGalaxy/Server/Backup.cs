@@ -23,7 +23,7 @@ using System.IO.Packaging;
 namespace MCGalaxy {
     public static partial class Backup {
 
-        const string path = "MCGalaxy.zip";
+        const string zipPath = "MCGalaxy.zip", sqlPath = "SQL.sql", dbPath = "MCGalaxy.db";
         public class BackupArgs {
             public Player p;
             public bool Files, Database, Lite;
@@ -32,102 +32,85 @@ namespace MCGalaxy {
         public static void CreatePackage(Player p, bool files, bool db, bool lite) {
             if (db) {
                 Logger.Log(LogType.SystemActivity, "Backing up the database...");
-                using (StreamWriter sql = new StreamWriter("SQL.sql"))
+                using (StreamWriter sql = new StreamWriter(sqlPath))
                     BackupDatabase(sql,lite);
-                Logger.Log(LogType.SystemActivity, "Backed up the database to SQL.sql");
+                Logger.Log(LogType.SystemActivity, "Backed up the database to " + sqlPath);
             }
             
-            List<Uri> filesList = null;
+            List<string> filesList = null;
             if (files) {
                 Logger.Log(LogType.SystemActivity, "Determining which files to backup...");
-                string dir = Directory.GetCurrentDirectory() + "\\";
-                filesList = GetAllFiles(new DirectoryInfo("./"), new Uri(dir), lite);
+                filesList = GetAllFiles(lite);
                 Logger.Log(LogType.SystemActivity, "Finished determining included files");
             }
 
             Logger.Log(LogType.SystemActivity, "Creating compressed backup...");
-            using (ZipPackage package = (ZipPackage)ZipPackage.Open(path, FileMode.Create)) {
+            using (Stream stream = File.Create(zipPath)) {
+                ZipWriter writer = new ZipWriter(stream);
                 if (files) {
                     Logger.Log(LogType.SystemActivity, "Compressing files...");
-                    SaveFiles(package, filesList);
+                    SaveFiles(writer, filesList);
                 }
                 
-                if (db) SaveDatabase(package);
+                if (db) SaveDatabase(writer);
+                
+                writer.FinishEntries();
+                writer.WriteFooter();
                 Logger.Log(LogType.SystemActivity, "Compressed all data!");
             }
             p.Message("Backup of (" + (files ? "everything" + (db ? "" : " but database") : "database") + ") complete!");
             Logger.Log(LogType.SystemActivity, "Server backed up!");
         }
-
-        const string undo1 = "extra/undo/", undo2 = @"extra\undo\";
-        const string prev1 = "extra/undoPrevious/", prev2 = @"extra\undoPrevious\";
-        const string levelBackup1 = "levels/backups/", levelBackup2 = @"levels\backups\";
-        const string levelPrev1 = "levels/prev/", levelPrev2 = @"levels\prev\";
-        const string blockDB1 = "blockdb/", blockDB2 = @"blockdb\";
-        static char[] directorySeparators = new char[] { '/', '\\' };
         
-        static List<Uri> GetAllFiles(DirectoryInfo dir, Uri baseUri, bool lite) {
-            List<Uri> list = new List<Uri>();
-            foreach (FileSystemInfo entry in dir.GetFileSystemInfos()) {
-                if (entry is FileInfo) {
-                    string path = ((FileInfo)entry).FullName;
-                    if (lite && (path.Contains(undo1)        || path.Contains(undo2)))        continue;
-                    if (lite && (path.Contains(prev1)        || path.Contains(prev2)))        continue;
-                    if (lite && (path.Contains(levelBackup1) || path.Contains(levelBackup2))) continue;
-                    if (lite && (path.Contains(levelPrev1)   || path.Contains(levelPrev2)))   continue;
-                    if (lite && (path.Contains(blockDB1)     || path.Contains(blockDB2)))     continue;
-                    
-                    try {
-                        Uri uri = baseUri.MakeRelativeUri(new Uri(path));
-                        if (uri.ToString().IndexOfAny(directorySeparators) > 0) {
-                            list.Add(PackUriHelper.CreatePartUri(uri));
-                        }
-                    } catch {
-                        Logger.Log(LogType.Warning, "Error trying to backup file: " + path);
-                        throw;
-                    }
-                } else {
-                    list.AddRange(GetAllFiles((DirectoryInfo)entry, baseUri, lite));
-                }
-            }
-            return list;
-        }
-        
-        static void SaveFiles(ZipPackage package, List<Uri> partURIs) {
-            foreach (Uri loc in partURIs) {
-                string file = Uri.UnescapeDataString(loc.ToString());
-                if (file.Contains(path)) continue;
-                
-                try {
-                    PackagePart part = package.CreatePart(loc, "");
-                    using (Stream src = new FileStream("./" + file, FileMode.Open, FileAccess.Read))
-                        CopyStream(src, part.GetStream());
-                } catch (Exception ex) {
-                    Logger.LogError("Failed to backup file: " + file, ex);
-                }
-            }
-        }
-        
-        static void SaveDatabase(ZipPackage package) {
-            Logger.Log(LogType.SystemActivity, "Compressing Database...");
-            Uri uri = new Uri("/SQL.sql", UriKind.Relative);
+        static List<string> GetAllFiles(bool lite) {
+            string[] all = Directory.GetFiles("./", "*", SearchOption.AllDirectories);
+            List<string> paths = new List<string>();
             
-            PackagePart part = package.CreatePart(uri, "", CompressionOption.Normal);
-            CopyStream(File.OpenRead("SQL.sql"), part.GetStream());
-            Logger.Log(LogType.SystemActivity, "Database compressed");
+            for (int i = 0; i < all.Length; i++) {
+                string path = all[i];
+                // convert to zip entry form
+                path = path.Replace('\\', '/').Replace("./", "");
+                
+                if (lite && path.Contains("extra/undo/"))         continue;
+                if (lite && path.Contains("extra/undoPrevious/")) continue;
+                if (lite && path.Contains("levels/prev"))         continue;
+                if (lite && path.Contains("levels/backups/"))     continue;
+                if (lite && path.Contains("blockdb/"))            continue;
+                
+                //if (path.Contains(zipPath)) continue;
+                //if (path.Contains(sqlPath)) continue;
+                //if (path.Contains(dbPath))  continue;
+                // ignore files in root folder
+                if (path.IndexOf('/') == -1) continue;
+                paths.Add(path);
+            }
+            return paths;
         }
-
-        static void CopyStream(Stream source, Stream target) {
-            const int bufSize = 0x1000;
-            byte[] buf = new byte[bufSize];
-            int bytesRead = 0;
-            while ((bytesRead = source.Read(buf, 0, bufSize)) > 0)
-                target.Write(buf, 0, bytesRead);
+        
+        static void SaveFiles(ZipWriter writer, List<string> paths) {
+            foreach (string path in paths) {
+                try {
+                    using (Stream src = File.OpenRead(path)) {
+                        writer.WriteEntry(src, path);
+                    }
+                } catch (Exception ex) {
+                    Logger.LogError("Failed to backup file: " + path, ex);
+                }
+            }
+        }
+        
+        static void SaveDatabase(ZipWriter writer) {
+            Logger.Log(LogType.SystemActivity, "Compressing Database...");
+            // TODO: gzip compress
+            using (FileStream fs = File.OpenRead(sqlPath)) {
+                writer.WriteEntry(fs, sqlPath);
+            }
+            Logger.Log(LogType.SystemActivity, "Database compressed");
         }
 
         public static void ExtractPackage(Player p) {
             int errors = 0;
-            using (FileStream src = File.OpenRead(path))
+            using (FileStream src = File.OpenRead(zipPath))
                 using (ZipPackage zip = (ZipPackage)ZipPackage.Open(src))
             {
                 PackagePartCollection parts = zip.GetParts();
@@ -144,6 +127,14 @@ namespace MCGalaxy {
             Server.LoadAllSettings();
             p.Message("Server restored" + (errors > 0 ? " with errors. May be a partial restore" : ""));
             p.Message("It is recommended that you restart the server, although this is not required.");
+        }
+        
+        static void CopyStream(Stream source, Stream target) {
+            const int bufSize = 0x1000;
+            byte[] buf = new byte[bufSize];
+            int bytesRead = 0;
+            while ((bytesRead = source.Read(buf, 0, bufSize)) > 0)
+                target.Write(buf, 0, bytesRead);
         }
         
         static void ExtractItem(ZipPackagePart item, ref int errors) {
