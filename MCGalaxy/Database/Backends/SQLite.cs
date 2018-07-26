@@ -819,7 +819,7 @@ namespace MCGalaxy.SQL {
         public string GetString(int i) {
             TypeAffinity aff = CheckAffinity(i);
             if (aff == TypeAffinity.Text || aff == TypeAffinity.Blob)
-                return stmt.GetText(i);
+                return stmt.GetText(i);            
             throw new InvalidCastException();
         }
 
@@ -877,10 +877,12 @@ namespace MCGalaxy.SQL {
         
         SQLiteType GetSQLiteType(int i) {
             SQLiteType typ = fieldTypes[i];
-            if (typ.Affinity != TypeAffinity.Uninitialized) return typ;
+            TypeAffinity affinity = stmt.ColumnAffinity(i);
+            // NOTE: affinity of a column can change (e.g. NULL when null string, STRING for when has value)
+            if (affinity == typ.Affinity) return typ;
 
             // Fetch the declared column datatype and attempt to convert it to a known DbType.
-            typ.Affinity = stmt.ColumnAffinity(i);
+            typ.Affinity = affinity;
             string typeName = stmt.ColumnType(i);
             typ.Type = SQLiteConvert.TypeNameToDbType(typeName);
             
