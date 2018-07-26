@@ -114,9 +114,12 @@ namespace MCGalaxy {
                 p.Message("Restoring {0} files", entries);
                 
                 for (int i = 0; i < entries; i++) {
-                    string path = ExtractItem(reader, i, ref errors);
-                    if (!path.CaselessEq(sqlPath)) continue;
+                    string path = ExtractItem(reader, i, ref errors);                    
+                    if (i > 0 && (i % 100) == 0) {
+                        Logger.Log(LogType.SystemActivity, "Restored {0}/{1} files", i, entries);
+                    }
                     
+                    if (!path.CaselessEq(sqlPath)) continue;                
                     // If DB is in there, they backed it up, meaning they want it restored
                     using (Stream part = reader.GetEntry(i, out path)) {
                         ReplaceDatabase(part);
@@ -162,8 +165,8 @@ namespace MCGalaxy {
                 }
             }
         }
-               
-                
+        
+        
         static void BackupDatabase(StreamWriter sql) {
             // NOTE: This does NOT account for foreign keys, BLOBs etc. It only works for what we actually put in the DB.
             sql.WriteLine("-- {0} SQL Database Dump", Server.SoftwareName);
