@@ -610,13 +610,14 @@
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Levels\Level.cs" />
-    <Compile Include="Server\Backup\Backup.cs" />
-    <Compile Include="Server\Backup\ZipReader.cs" />
-    <Compile Include="Server\Backup\ZipWriter.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Scripting\Backends.cs" />
+    <Compile Include="Server\Maintenance\Backup.cs" />
+    <Compile Include="Server\Maintenance\Updater.cs" />
+    <Compile Include="Server\Maintenance\ZipReader.cs" />
+    <Compile Include="Server\Maintenance\ZipWriter.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
     <Compile Include="Server\Server.Fields.cs" />
@@ -626,7 +627,6 @@
     <Compile Include="Server\Tasks\ModerationTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
-    <Compile Include="Server\Updater.cs" />
     <Compile Include="util\Extensions\DateExts.cs" />
     <Compile Include="util\Extensions\Extensions.cs" />
     <Compile Include="util\Extensions\StringExts.cs" />
@@ -723,7 +723,7 @@
     <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
-    <Folder Include="Server\Backup" />
+    <Folder Include="Server\Maintenance" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
   </ItemGroup>
