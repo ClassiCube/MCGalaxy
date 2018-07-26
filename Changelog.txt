@@ -1,3 +1,27 @@
+v 1.9.0.7
+Added: /hold to make you hold a particular block
+Fixed: /clones not working from console
+Fixed: games erroring when game is aborted mid-way through round vote
+Fixed: noclip/speed detection in games should only when the specific hack is disabled
+Fixed:  Mark#2 message in bottom right showing first point
+Fixed: Negative flood time messages in LS
+Fixed: Denied messages shown, when block is placed on bottom layer of zone
+Fixed: Error when trying to undo yourself for extreme amounts of time
+Fixed: LS not flooding map when round continues again on same map
+Fixed: Players not getting disconnected when server has run out of disk space
+Fixed: Player name showing in tab list, when player disconnects when joining map
+Fixed: Changing main name via reloading server.properties, not changing main map
+Fixed: perbuild/pervisit max restrictions behaving improperly
+Fixed: /server backup doesn't use tonnes of memory
+Improved: Better command API, p is no longer null for console
+Improved: Make /static [command] show better permission denied messages
+Improved: Use custom timespan numericupdowns in GUI
+Improved: Simplify /chatroom somewhat
+Improved: Now /os map pervisit/perbuild act is if you have nobody permissions
+Improved: /server backup compresses files by default
+Improved: Log progress when restoring/backing up files
+Removed: Me and HackRank shouldn't be MB useable
+
 v 1.9.0.6
 Improved: Majorly improve games in GUI, game setup commands
 Improved: TNT wars majorly improved
