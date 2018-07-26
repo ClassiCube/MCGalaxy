@@ -155,7 +155,7 @@ namespace MCGalaxy {
                 used[id] = 1;
             }
             
-            for (byte i = 0; i <= 255; i++ ) {
+            for (byte i = 0; i < 255; i++ ) {
                 if (used[i] == 0) return i;
             }
             return 255;
