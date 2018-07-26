@@ -200,7 +200,7 @@ namespace MCGalaxy {
             if (GuestRank == null)
                 Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7'));
             if (NobodyRank == null)
-                Register(new Group(LevelPermission.Nobody, 65536, -1, "Nobody", '0'));
+                Register(new Group(LevelPermission.Nobody, 65536, int.MaxValue, "Nobody", '0'));
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(ServerConfig.DefaultRankName);
