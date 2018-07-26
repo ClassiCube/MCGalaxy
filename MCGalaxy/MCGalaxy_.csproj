@@ -75,7 +75,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Behaviour\BlockBehaviour.cs" />
@@ -610,9 +609,10 @@
     <Compile Include="Database\Database.cs" />
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
-    <Compile Include="Server\Backup.cs" />
-    <Compile Include="Server\BackupDB.cs" />
     <Compile Include="Levels\Level.cs" />
+    <Compile Include="Server\Backup\Backup.cs" />
+    <Compile Include="Server\Backup\ZipReader.cs" />
+    <Compile Include="Server\Backup\ZipWriter.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
@@ -627,7 +627,6 @@
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
     <Compile Include="Server\Updater.cs" />
-    <Compile Include="Server\ZipWriter.cs" />
     <Compile Include="util\Extensions\DateExts.cs" />
     <Compile Include="util\Extensions\Extensions.cs" />
     <Compile Include="util\Extensions\StringExts.cs" />
@@ -724,6 +723,7 @@
     <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
+    <Folder Include="Server\Backup" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
   </ItemGroup>

@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 p.Message("Only Console or the Server Owner can restore the server.");
                 return;
             }
-            Backup.ExtractPackage(p);
+            Backup.Extract(p);
         }
         
         void DoImport(Player p, string[] args) {
