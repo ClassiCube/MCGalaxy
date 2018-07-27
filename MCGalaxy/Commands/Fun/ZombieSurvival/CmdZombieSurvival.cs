@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Fun {
         public override string shortcut { get { return "ZS"; } }
         protected override RoundsGame Game { get { return ZSGame.Instance; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("ZG"), new CommandAlias("RoundTime", "set round") }; }
+            get { return new[] { new CommandAlias("ZG"), new CommandAlias("RoundTime", "set roundtime") }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage zombie survival") }; }
@@ -39,8 +39,7 @@ namespace MCGalaxy.Commands.Fun {
             if (prop.CaselessEq("map")) {
                 p.Message("Pillaring allowed: &b" + lCfg.Pillaring);
                 p.Message("Build type: &b" + lCfg.BuildType);
-                p.Message("Round time: Min &b{0}, %S Max &b{1}",
-                               lCfg.MinRoundTime.Shorten(true), lCfg.MaxRoundTime.Shorten(true));
+                p.Message("Round time: &b{0}" + lCfg.RoundTime.Shorten(true, true));
                 return;
             }
             if (args.Length < 3) { Help(p, "set"); return; }  
@@ -66,13 +65,8 @@ namespace MCGalaxy.Commands.Fun {
                 
                 p.Message("Set build type to &b" + lCfg.BuildType);
                 game.UpdateAllStatus2();
-            } else if (prop.CaselessEq("minround")) {
-                if (!ParseTimespan(p, "min round time", args, ref lCfg.MinRoundTime)) return;
-            } else if (prop.CaselessEq("maxround")) {
-                if (!ParseTimespan(p, "max round time", args, ref lCfg.MaxRoundTime)) return;
-            } else if (prop.CaselessEq("round")) {
-                if (!ParseTimespan(p, "round time", args, ref lCfg.MinRoundTime)) return;
-                lCfg.MaxRoundTime = lCfg.MinRoundTime;
+            } else if (prop.CaselessEq("roundtime")) {
+                if (!ParseTimespan(p, "round time", args, ref lCfg.RoundTime)) return;
             } else {
                 Help(p, "set"); return;
             }
@@ -101,8 +95,8 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("%HSets whether players are allowed to pillar");
                 p.Message("%T/ZS set build [normal/modifyonly/nomodify]");
                 p.Message("%HSets build type of the map");
-                p.Message("%T/ZS set minround/maxround [timespan]");
-                p.Message("%HSets duration for which a round can last");
+                p.Message("%T/ZS set roundtime [timespan]");
+                p.Message("%HSets how long a round is");
             } else {
                 base.Help(p, message);
             }

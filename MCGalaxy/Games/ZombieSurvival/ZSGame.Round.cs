@@ -43,15 +43,9 @@ namespace MCGalaxy.Games {
         }
         
         void StartRound(List<Player> players) {
-            Random rnd = new Random();
-            int min = (int)Map.Config.MinRoundTime.TotalSeconds;
-            int max = (int)Map.Config.MaxRoundTime.TotalSeconds;
-            if (min > max) { int tmp = min; min = max; max = tmp; }
-            
-            int duration = rnd.Next(min, max);
-            string suffix = duration == 1 ? " %Sminute!" : " %Sminutes!";
-            Map.Message("This round will last for &a" + duration + suffix);
-            RoundEnd = DateTime.UtcNow.AddMinutes(duration);
+            TimeSpan duration = Map.Config.RoundTime;
+            Map.Message("This round will last for &a" + duration.Shorten(true, true));
+            RoundEnd = DateTime.UtcNow.Add(duration);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player p in online) {
@@ -59,7 +53,8 @@ namespace MCGalaxy.Games {
                 Alive.Add(p);
             }
             Infected.Clear();
-
+            
+            Random rnd = new Random();
             Player first = null;
             do {
                 first = QueuedZombie != null ? PlayerInfo.FindExact(QueuedZombie) : players[rnd.Next(players.Count)];

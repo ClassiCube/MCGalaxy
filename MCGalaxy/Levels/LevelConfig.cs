@@ -250,9 +250,9 @@ namespace MCGalaxy {
         public BuildType BuildType = BuildType.Normal;
         
         [ConfigTimespan("MinRoundTime", "Game", 4, true)]
-        public TimeSpan MinRoundTime = TimeSpan.FromMinutes(4);
+        public TimeSpan RoundTime = TimeSpan.FromMinutes(5);
         [ConfigTimespan("MaxRoundTime", "Game", 7, true)]
-        public TimeSpan MaxRoundTime = TimeSpan.FromMinutes(7);
+        public TimeSpan __MaxRoundTime = TimeSpan.FromMinutes(7);
         [ConfigBool("DrawingAllowed", "Game", true)]
         public bool Drawing = true;
         [ConfigInt("RoundsPlayed", "Game", 0)]
