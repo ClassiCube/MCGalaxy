@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Bots {
                 bot.Instructions.Clear();
                 bot.kill = false;
                 bot.hunt = false;
-                bot.AIName = "";
+                bot.AIName = null;
                 UpdateBot(p, bot, "'s AI was turned off.");
                 return;
             } else if (args.Length != 2) {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Bots {
             if (ai.CaselessEq("hunt")) {
                 bot.hunt = !bot.hunt;
                 bot.Instructions.Clear();
-                bot.AIName = "";
+                bot.AIName = null;
                 UpdateBot(p, bot, "'s hunt instinct: " + bot.hunt);
                 return;
             } else if (ai.CaselessEq("kill")) {
