@@ -38,6 +38,7 @@ namespace MCGalaxy.Gui {
         Player curPlayer;
 
         public Window() {
+            logCallback = LogMessage;
             InitializeComponent();
         }
 
@@ -93,10 +94,13 @@ namespace MCGalaxy.Gui {
             Server.Background.QueueOnce(InitServerTask);
         }
         
+        // avoid new object being allocated every time
+        delegate void LogCallback(LogType type, string message);
+        LogCallback logCallback;
+        
         void LogMessage(LogType type, string message) {
             if (InvokeRequired) {
-                BeginInvoke((Action<LogType, string>)LogMessage, type, message);
-                return;
+                BeginInvoke(logCallback, type, message); return;
             }           
             if (Server.shuttingDown) return;
             string newline = Environment.NewLine;

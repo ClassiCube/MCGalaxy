@@ -20,11 +20,12 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace MCGalaxy.Gui {
+    public delegate ItemPerms PermsGetter();
     public sealed class ItemPermsHelper {
         public ComboBox MinBox;
         public ComboBox[] AllowBoxes, DisallowBoxes;
         public bool SupressEvents = true;
-        public Func<ItemPerms> GetCurPerms;
+        public PermsGetter GetCurPerms;
         
         public void Update(ItemPerms perms) {
             SupressEvents = true;

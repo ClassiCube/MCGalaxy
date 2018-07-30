@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Gui {
     public sealed class PlayerCollection : List<Player>, ITypedList {
         PropertyDescriptorCollection _props;
 
@@ -64,18 +64,19 @@ namespace MCGalaxy {
         }
     }
     
+	public delegate object ValueGetter<T>(T instance);
     public class MethodDescriptor<T> : PropertyDescriptor {
-        Func<T, object> _func;
-        Type _returnType;
+        ValueGetter<T> getter;
+        Type returnType;
 
-        public MethodDescriptor(string name, Func<T, object> func, Type returnType) : base(name, null) {
-            _func = func;
-            _returnType = returnType;
+        public MethodDescriptor(string name, ValueGetter<T> getter, Type returnType) : base(name, null) {
+            this.getter = getter;
+            this.returnType = returnType;
         }
 
-        public override object GetValue(object component) { return _func((T)component); }
+        public override object GetValue(object component) { return getter((T)component); }
         public override Type ComponentType { get { return typeof(T); } }
-        public override Type PropertyType { get { return _returnType; } }
+        public override Type PropertyType { get { return returnType; } }
         public override bool CanResetValue(object component) { return false; }
         public override void ResetValue(object component) { }
         public override bool IsReadOnly { get { return true; } }
