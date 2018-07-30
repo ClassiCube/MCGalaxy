@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.hidden = !p.hidden;
             if (p.hidden) {
-                AnnounceOps(p, "To Ops -λNICK%S- is now &finvisible");
                 p.hideRank = data.Rank;
+                AnnounceOps(p, "To Ops -λNICK%S- is now &finvisible");               
                 
                 if (!silent) {
                     string leaveM = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);

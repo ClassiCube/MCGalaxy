@@ -116,6 +116,7 @@ namespace MCGalaxy {
             
             if (Chat.AdminchatPerms.UsableBy(Rank) && ServerConfig.AdminsJoinSilently) {
                 hidden = true; adminchat = true;
+                hideRank = Rank;
             }
             
             OnPlayerConnectEvent.Call(this);

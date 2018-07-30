@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.CPE {
             if (args.Length > 1 && !CommandParser.GetBool(p, args[1], ref locked)) return;
             
             if (Block.IsPhysicsType(block)) {
-                Player.Message(p, "Cannot hold physics blocks"); return;
+                p.Message("Cannot hold physics blocks"); return;
             }
             
             BlockID raw = p.ConvertBlock(block);
