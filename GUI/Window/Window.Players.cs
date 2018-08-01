@@ -37,7 +37,7 @@ namespace MCGalaxy.Gui {
             string text = pl_txtMessage.Text.Trim();
             if (text.Length == 0) { Players_AppendStatus("No message to send"); return; }
             
-            Player.Message(curPlayer, "<CONSOLE>: &f" + pl_txtMessage.Text);            
+            curPlayer.Message("<CONSOLE>: &f" + pl_txtMessage.Text);            
             Players_AppendStatus("Sent player message: " + pl_txtMessage.Text);
             pl_txtMessage.Text = "";
         }

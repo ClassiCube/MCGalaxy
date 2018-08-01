@@ -52,10 +52,7 @@ namespace MCGalaxy.Commands.Fun {
         
         protected static bool CheckIsAuthor(Player p) {
             string[] authors = p.level.Config.Authors.SplitComma();
-            for (int i = 0; i < authors.Length; i++) {
-                if (authors[i].CaselessEq(p.name)) return true;
-            }
-            return false;
+            return authors.CaselessContains(p.name);
         }
         
         public override void Help(Player p) {

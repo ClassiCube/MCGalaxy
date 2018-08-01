@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Chatting {
                 p.Message("Ping/latency list for online players:");
                 
                 foreach (Player pl in players) {
-                    if (!Entities.CanSee(p, pl)) continue;
+                    if (!Entities.CanSee(data, p, pl)) continue;
                     if (pl.Ping.AveragePingMilliseconds() == 0) continue;
                     p.Message(pl.ColoredName + " %S- " + pl.Ping.Format());
                 }

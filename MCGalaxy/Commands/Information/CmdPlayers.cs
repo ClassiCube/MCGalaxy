@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Info {
                 Group grp = Matcher.FindRanks(p, message);
                 if (grp == null) return;
                 
-                GroupPlayers rankPlayers = Make(p, grp, ref totalPlayers);
+                GroupPlayers rankPlayers = Make(p, data, grp, ref totalPlayers);
                 if (totalPlayers == 0) {
                     p.Message("There are no players of that rank online.");
                 } else {
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Info {
             
             List<GroupPlayers> allPlayers = new List<GroupPlayers>();
             foreach (Group grp in Group.GroupList) {
-                allPlayers.Add(Make(p, grp, ref totalPlayers));
+                allPlayers.Add(Make(p, data, grp, ref totalPlayers));
             }
             
             if (totalPlayers == 1) {
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         struct GroupPlayers { public Group group; public StringBuilder builder; }      
-        static GroupPlayers Make(Player p, Group group, ref int totalPlayers) {
+        static GroupPlayers Make(Player p, CommandData data, Group group, ref int totalPlayers) {
             GroupPlayers list;
             list.group = group;
             list.builder = new StringBuilder();
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info {
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
                 if (pl.group != group) continue;
-                if (p != pl && !Entities.CanSee(p, pl)) continue;
+                if (p != pl && !Entities.CanSee(data, p, pl)) continue;
                 
                 totalPlayers++;
                 Append(list, pl);

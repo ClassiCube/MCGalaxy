@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.CaselessEq("enter")) {
-                HandleEnter(p);
+                HandleEnter(p, data);
             } else if (message.CaselessEq("list") || message.CaselessEq("view")) {
                 HandleView(p, data);
             } else if (message.CaselessEq("leave")) {
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        void HandleEnter(Player p) {
+        void HandleEnter(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("{0} cannot enter the review queue.", p.SuperName); return; }
             TimeSpan delta = p.NextReviewTime - DateTime.UtcNow;
             
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Moderation {
             ItemPerms nextPerms = CommandExtraPerms.Find("Review", 2);
             
             foreach (Player pl in players) {
-                if (nextPerms.UsableBy(pl.Rank) && Entities.CanSee(p, pl)) {
+                if (nextPerms.UsableBy(pl.Rank) && Entities.CanSee(data, p, pl)) {
                     opsOn = true; break;
                 }
             }

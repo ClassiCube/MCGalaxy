@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) { Help(p); return; }
 
-            List<Player> candidates = GetPatrolCandidates(p);
+            List<Player> candidates = GetPatrolCandidates(p, data);
             if (candidates.Count == 0) {
                 p.Message("%WNo players to patrol.");
             } else {
@@ -45,14 +45,14 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        List<Player> GetPatrolCandidates(Player p) {
+        List<Player> GetPatrolCandidates(Player p, CommandData data) {
             List<Player> candidates = new List<Player>();
             ItemPerms except = CommandExtraPerms.Find(name, 1);
             Player[] players = PlayerInfo.Online.Items;
             DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
             
             foreach (Player target in players) {
-                if (except.UsableBy(target.Rank) || !Entities.CanSee(p, target)) continue;
+                if (except.UsableBy(target.Rank) || !Entities.CanSee(data, p, target)) continue;
                 if (target == p || target.LastPatrol > cutoff) continue;
                 candidates.Add(target);
             }

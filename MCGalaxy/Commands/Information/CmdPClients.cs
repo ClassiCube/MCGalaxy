@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                if (!Entities.CanSee(p, pl)) continue;
+                if (!Entities.CanSee(data, p, pl)) continue;
                 string appName = pl.appName;
                 if (String.IsNullOrEmpty(appName))
                     appName = "(unknown)";

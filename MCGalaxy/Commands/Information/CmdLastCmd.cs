@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length == 0) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (Entities.CanSee(p, pl))
+                    if (Entities.CanSee(data, p, pl))
                         ShowLastCommand(p, pl);
                 }
             } else {
