@@ -111,12 +111,12 @@ namespace MCGalaxy {
             if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) adminpen = true;
             if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
 
+            hideRank = Rank;
             hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
             if (hidden) Message("&8Reminder: You are still hidden.");
             
             if (Chat.AdminchatPerms.UsableBy(Rank) && ServerConfig.AdminsJoinSilently) {
-                hidden = true; adminchat = true;
-                hideRank = Rank;
+                hidden = true; adminchat = true;                
             }
             
             OnPlayerConnectEvent.Call(this);
