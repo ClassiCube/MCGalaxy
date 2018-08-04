@@ -2807,7 +2807,6 @@ namespace MCGalaxy.Gui
             this.pageEco.Size = new System.Drawing.Size(498, 521);
             this.pageEco.TabIndex = 11;
             this.pageEco.Text = "Eco";
-            this.pageEco.UseVisualStyleBackColor = true;
             // 
             // eco_gbRank
             // 
