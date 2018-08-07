@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy {
     public static class DateExts {
@@ -25,6 +26,13 @@ namespace MCGalaxy {
             string[] parts = value.SplitSpaces();
             return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
                                 int.Parse(parts[2]), int.Parse(parts[3]));
+        }
+        
+        public static DateTime ParseDBDate(this string value) {
+            DateTime date;
+            // prefer the exact format
+            if (DateTime.TryParseExact(value, Database.DateFormat, null, 0, out date)) return date;
+            return DateTime.Parse(value);
         }
         
         public static DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static void Output(Player p, string[] entry) {
-            DateTime time = DateTime.ParseExact(entry[i_sent], Database.DateFormat, null);
+            DateTime time = entry[i_sent].ParseDBDate();
             TimeSpan delta = DateTime.Now - time;
             string sender = PlayerInfo.GetColoredName(p, entry[i_from]);
             

@@ -113,7 +113,7 @@ namespace MCGalaxy.DB {
         }
         
         public static string FormatDate(string input) {
-            DateTime time = DateTime.ParseExact(input, Database.DateFormat, null);
+            DateTime time = input.ParseDBDate();
             TimeSpan delta = DateTime.Now - time;
             return string.Format("{0:H:mm} on {0:d} ({1} ago)", time, delta.Shorten());
         }
