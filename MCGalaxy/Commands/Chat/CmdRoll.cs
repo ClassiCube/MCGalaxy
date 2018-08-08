@@ -22,9 +22,14 @@ namespace MCGalaxy.Commands.Chatting {
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
-            int min = 1, max = 6;            
-            if (message.Length > 0 && !CommandParser.GetInt(p, message, "Min", ref min)) return;
-            if (args.Length    > 1 && !CommandParser.GetInt(p, args[1], "Max", ref max)) return;
+            int min = 1, max = 6;
+            
+            if (args.Length > 1) {
+                if (!CommandParser.GetInt(p, args[0], "Min", ref min)) return;
+                if (!CommandParser.GetInt(p, args[1], "Max", ref max)) return;
+            } else if (message.Length > 0) {
+                if (!CommandParser.GetInt(p, args[0], "Max", ref max)) return;
+            }
             
             if (min > max) { int tmp = min; min = max; max = tmp; }            
             // rand.Next(min, max) is exclusive of max, so we need to use (max + 1)
