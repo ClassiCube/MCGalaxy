@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Fun {
             if (p.aiming && message.Length == 0) {
                 p.aiming = false;
                 p.ClearBlockchange();
-                p.Message("Disabled " + Weapon.ToLower() );
+                p.Message(Weapon + " disabled");
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Fun {
             p.ClearBlockchange();
             p.Blockchange += PlacedMark;
 
-            p.Message(Weapon + " mode engaged, fire at will");
+            p.Message(Weapon + " engaged, fire at will");
             if (p.aiming) return;
 
             p.aiming = true;

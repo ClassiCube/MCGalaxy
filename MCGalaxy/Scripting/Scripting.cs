@@ -93,24 +93,27 @@ namespace MCGalaxy.Scripting {
             
             List<string> source = ReadSourceCode(srcPath, args);
             CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
-            if (!results.Errors.HasErrors) return true;
+            if (results.Errors.Count == 0) return true;
 
             sb = new StringBuilder();
             AppendDivider(sb, exists);
             bool first = true;
+            
             foreach (CompilerError err in results.Errors) {
                 if (!first) AppendDivider(sb, true);
+                string type = err.IsWarning ? "Warning" : "Error";
                 
-                sb.AppendLine("Error on line " + err.Line + ":");
+                sb.AppendLine(type + " on line " + err.Line + ":");
                 if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
                 if (err.Column > 0) sb.Append(' ', err.Column - 1);
-                sb.AppendLine("^-- Error #" + err.ErrorNumber + " - " + err.ErrorText);
+                sb.AppendLine("^-- " + type + " #" + err.ErrorNumber + " - " + err.ErrorText);
                 first = false;
             }
+            
             using (StreamWriter w = new StreamWriter(ErrorPath, exists)) {
                 w.Write(sb.ToString());
             }
-            return false;
+            return !results.Errors.HasErrors;
         }
         
         List<string> ReadSourceCode(string path, CompilerParameters args) {
