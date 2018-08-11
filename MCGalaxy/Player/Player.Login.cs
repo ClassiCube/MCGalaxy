@@ -199,9 +199,9 @@ namespace MCGalaxy {
             string modelScales = Server.modelScales.FindData(name);
             if (modelScales != null) {
                 string[] bits = modelScales.SplitSpaces(3);
-                Utils.TryParseDecimal(bits[0], out ScaleX);
-                Utils.TryParseDecimal(bits[1], out ScaleY);
-                Utils.TryParseDecimal(bits[2], out ScaleZ);
+                Utils.TryParseSingle(bits[0], out ScaleX);
+                Utils.TryParseSingle(bits[1], out ScaleY);
+                Utils.TryParseSingle(bits[2], out ScaleZ);
             }            
 
             string rotations = Server.rotations.FindData(name);

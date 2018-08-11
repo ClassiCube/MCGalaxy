@@ -132,7 +132,7 @@ namespace MCGalaxy {
         public static bool ListEmptyRanks = false;
         [ConfigTimespan("review-cooldown", "Review", 600, false)]
         public static TimeSpan ReviewCooldown = TimeSpan.FromSeconds(600);
-        [ConfigReal("draw-reload-threshold", "Other", 0.001f, 0, 1)]
+        [ConfigFloat("draw-reload-threshold", "Other", 0.001f, 0, 1)]
         public static float DrawReloadThreshold = 0.001f;
         [ConfigBool("allow-tp-to-higher-ranks", "Other", true)]
         public static bool HigherRankTP = true;        

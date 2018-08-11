@@ -100,41 +100,50 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigRealAttribute : ConfigAttribute {
-        float defValue, minValue, maxValue;
+    public abstract class ConfigRealAttribute : ConfigAttribute {
+        public ConfigRealAttribute(string name, string section) 
+            : base(name, section) { }
         
-        public ConfigRealAttribute()
-            : this(null, null, 0, float.NegativeInfinity, float.PositiveInfinity) { }
-        public ConfigRealAttribute(string name, string section, float def,
-                                   float min = float.NegativeInfinity, float max = float.PositiveInfinity)
-            : base(name, section) { defValue = def; minValue = min; maxValue = max; }
-        
-        public override object Parse(string raw) {
-            float value;
-            if (!Utils.TryParseDecimal(raw, out value)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid number, using default of {1}", Name, defValue);
-                value = defValue;
+        protected double ParseReal(string raw, double def, double min, double max) {
+            double value;
+            if (!Utils.TryParseDouble(raw, out value)) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid number, using default of {1}", Name, def);
+                value = def;
             }
             
-            if (value < minValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small a number, using {1}", Name, minValue);
-                value = minValue;
+            if (value < min) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too small a number, using {1}", Name, min);
+                value = min;
             }
-            if (value > maxValue) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big a number, using {1}", Name, maxValue);
-                value = maxValue;
+            if (value > max) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is too big a number, using {1}", Name, max);
+                value = max;
             }
             return value;
         }
     }
     
-    public class ConfigTimespanAttribute : ConfigRealAttribute {
-        bool mins;
-        public ConfigTimespanAttribute(string name, string section, float def, bool mins)
-            : base(name, section, def, 0) { this.mins = mins; }
+    public class ConfigFloatAttribute : ConfigRealAttribute {
+        float defValue, minValue, maxValue;
+        
+        public ConfigFloatAttribute()
+            : this(null, null, 0, float.NegativeInfinity, float.PositiveInfinity) { }
+        public ConfigFloatAttribute(string name, string section, float def,
+                                    float min = float.NegativeInfinity, float max = float.PositiveInfinity)
+            : base(name, section) { defValue = def; minValue = min; maxValue = max; }
         
         public override object Parse(string raw) {
-            float value = (float)base.Parse(raw);
+            return (float)ParseReal(raw, defValue, minValue, maxValue);
+        }
+    }
+    
+    public class ConfigTimespanAttribute : ConfigRealAttribute {
+        bool mins; int def;
+        public ConfigTimespanAttribute(string name, string section, int def, bool mins)
+            : base(name, section) { this.def = def; this.mins = mins; }
+        
+        public override object Parse(string raw) {
+            double value = ParseReal(raw, def, 0, int.MaxValue);
             if (mins) {
                 return TimeSpan.FromMinutes(value);
             } else {

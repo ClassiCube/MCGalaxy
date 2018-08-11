@@ -28,7 +28,7 @@ namespace MCGalaxy {
         [ConfigUShort("BlockID", null)]
         public ushort RawID;
         [ConfigString] public string Name;
-        [ConfigReal] public float Speed;
+        [ConfigFloat] public float Speed;
         [ConfigByte] public byte CollideType;
         [ConfigUShort] public ushort TopTex;
         [ConfigUShort] ushort SideTex;

@@ -27,35 +27,44 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces();
             if (args.Length < 2) { Help(p); return; }
             
-            float n1, n2; string op = args[1];
-            if (!Utils.TryParseDecimal(args[0], out n1)) {
-                p.Message("\"{0}\" is not a valid number.", args[0]); return;
+            double n1 = 0, n2 = 0, result = 0;
+            string r1 = args[0], op = args[1], r2 = null, format = null;
+            
+            if (!Utils.TryParseDouble(r1, out n1)) {
+                p.Message("%W\"{0}\" is not a valid number.", r1); return;
             }
 
-            if (op == "+" || op == "-" || op == "*" || op == "/" || op == "^") {
-                if (args.Length == 2) { Help(p); return; }
-                if (!Utils.TryParseDecimal(args[2], out n2)) {
-                    p.Message("\"{0}\" is not a valid number.", args[2]); return;
+            char sym = op[0];
+            if (sym == '+' || sym == '-' || sym == '*' || sym == '/' || sym == '^') {
+                if (args.Length == 2 ||op.Length > 1) { Help(p); return; }
+                r2 = args[2];
+                
+                if (!Utils.TryParseDouble(r2, out n2)) {
+                    p.Message("%W\"{0}\" is not a valid number.", r2); return;
                 }
                 
-                float result = 0;
-                if (op == "+") { result = n1 + n2; }
-                if (op == "-") { result = n1 - n2; }
-                if (op == "*") { result = n1 * n2; }
-                if (op == "/") { result = n1 / n2; }
-                if (op == "^") { result = (float)Math.Pow(n1, n2); }
+                if (sym == '+') { result = n1 + n2; }
+                if (sym == '-') { result = n1 - n2; }
+                if (sym == '*') { result = n1 * n2; }
+                if (sym == '/') { result = n1 / n2; }
+                if (sym == '^') { result = Math.Pow(n1, n2); }
                 
-                p.Message("&aResult&f: {0} {1} {2} = {3}", n1, op, n2, result);
+                format = "&aResult&f: {0} {1} {2} = {3}";
             } else if (op == "sqrt") {
-                double sqrt = Math.Sqrt(n1);
-                p.Message("&aResult&f: Square Root of {0} = {1}", n1, sqrt);
+                result = Math.Sqrt(n1);
+                format = "&aResult&f: Square root of {0} = {3}";
             } else if (op == "square") {
-                p.Message("&aResult&f: Square of {0} = {1}", n1, n1 * n1);
+                result = n1 * n1;
+                format = "&aResult&f: Square of {0} = {3}";
             }  else if (op == "cubed") {
-                p.Message("&aResult&f: Cube of {0} = {1}", n1, n1 * n1 * n1);
+                result = n1 * n1 * n1;
+                format = "&aResult&f: Cube of {0} = {3}";
             } else {
                 p.Message("%WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
+                return;
             }
+            
+            p.Message(format, r1, op, r2, result);
         }
         
         public override void Help(Player p) {

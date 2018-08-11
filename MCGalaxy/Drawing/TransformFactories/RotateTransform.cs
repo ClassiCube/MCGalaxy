@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 
 namespace MCGalaxy.Drawing.Transforms {
@@ -34,12 +35,12 @@ namespace MCGalaxy.Drawing.Transforms {
         public override Transform Construct(Player p, string message) {
             string[] args = message.SplitSpaces();
             if (args.Length < 3 || args.Length > 4) { p.MessageLines(Help); return null; }
-            float angleX, angleY, angleZ;
+            float angleX = 0, angleY = 0, angleZ = 0;
             RotateTransform rotater = new RotateTransform();
             
-            if (!ParseAngle(p, args[0], out angleX)) return null;
-            if (!ParseAngle(p, args[1], out angleY)) return null;
-            if (!ParseAngle(p, args[2], out angleZ)) return null;
+            if (!ParseAngle(p, args[0], ref angleX)) return null;
+            if (!ParseAngle(p, args[1], ref angleY)) return null;
+            if (!ParseAngle(p, args[2], ref angleZ)) return null;
             rotater.SetAngles(angleX, angleY, angleZ);
 
             if (args.Length == 3) return rotater; // no centre argument
@@ -50,13 +51,10 @@ namespace MCGalaxy.Drawing.Transforms {
             return rotater;
         }
         
-        static bool ParseAngle(Player p, string input, out float angle) {
-            if (!Utils.TryParseDecimal(input, out angle)) {
+        static bool ParseAngle(Player p, string input, ref float angle) {
+            if (!CommandParser.GetReal(p, input, "Angle", ref angle, -360, 360)) {
                 p.MessageLines(HelpString); return false;
-            }            
-            if (angle < -360 || angle > 360) { 
-                p.Message("Angle must be between -360 and 360."); return false; 
-            }
+        	}
             return true;
         }
     }

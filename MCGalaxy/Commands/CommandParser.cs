@@ -102,9 +102,9 @@ namespace MCGalaxy.Commands {
         
         /// <summary> Attempts to parse the given argument as a real number. </summary>
         public static bool GetReal(Player p, string input, string argName, ref float result,
-                                   float min, float max) {
+                                   float min = float.NegativeInfinity, float max = float.MaxValue) {
             float value;
-            if (!Utils.TryParseDecimal(input, out value)) {
+            if (!Utils.TryParseSingle(input, out value)) {
                 p.Message("%W\"{0}\" is not a valid number.", input); return false;
             }
             

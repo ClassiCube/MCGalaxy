@@ -126,7 +126,7 @@ namespace MCGalaxy.Maths {
             model = sep == -1 ? model : model.Substring(0, sep);
             
             float scale;
-            if (!Utils.TryParseDecimal(scaleStr, out scale)) scale = 1.0f;
+            if (!Utils.TryParseSingle(scaleStr, out scale)) scale = 1.0f;
             if (scale < 0.01f) scale = 0.01f;
             
             float max = model.CaselessEq("chibi") ? 3 : 2;

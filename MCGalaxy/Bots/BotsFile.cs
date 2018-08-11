@@ -141,9 +141,9 @@ namespace MCGalaxy.Bots {
         
         [ConfigByte] public byte BodyX;
         [ConfigByte] public byte BodyZ;
-        [ConfigReal] public float ScaleX;
-        [ConfigReal] public float ScaleY;
-        [ConfigReal] public float ScaleZ;
+        [ConfigFloat] public float ScaleX;
+        [ConfigFloat] public float ScaleY;
+        [ConfigFloat] public float ScaleZ;
         
         public void FromBot(PlayerBot bot) {
             Name = bot.name; Level = bot.level.name;

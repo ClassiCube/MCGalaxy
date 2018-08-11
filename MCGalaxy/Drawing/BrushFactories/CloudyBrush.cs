@@ -75,14 +75,9 @@ namespace MCGalaxy.Drawing.Brushes {
             return true;
         }
         
-        static bool ParseDecimal(Player p, string arg, ref float target, float baseValue) {
-            float temp;
-            if (!Utils.TryParseDecimal(arg, out temp)) {
-                p.Message("\"{0}\" was not a valid decimal.", arg); return false;
-            }
-            
-            target = temp * baseValue;
-            return true;
+        static bool ParseDecimal(Player p, string arg, ref float target, float scale) {
+            if (!CommandParser.GetReal(p, arg, "Value", ref target)) return false;           
+            target *= scale; return true;
         }
     }
     

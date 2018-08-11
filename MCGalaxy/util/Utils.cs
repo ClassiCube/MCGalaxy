@@ -67,17 +67,32 @@ namespace MCGalaxy {
         
         /// <summary> Divides by 16, rounding up if there is a remainder. </summary>
         public static int CeilDiv16(int x) { return (x + 15) / 16; }
-        
-        // Not all languages use . as their decimal point separator
-        public static bool TryParseDecimal(string s, out float result) {
+
+        public static bool TryParseSingle(string s, out float result) {
             if (s != null && s.IndexOf(',') >= 0) s = s.Replace(',', '.');
             result = 0;
             float temp;
+            
             const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite 
                 | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
             
             if (!Single.TryParse(s, style, NumberFormatInfo.InvariantInfo, out temp)) return false;
             if (Single.IsInfinity(temp) || Single.IsNaN(temp)) return false;
+            result = temp;
+            return true;
+        }
+        
+        public static bool TryParseDouble(string s, out double result) {
+            if (s != null && s.IndexOf(',') >= 0) s = s.Replace(',', '.');
+            result = 0;           
+            double temp;
+            
+            // Not all languages use . as their decimal point separator
+            const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite 
+                | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
+            
+            if (!Double.TryParse(s, style, NumberFormatInfo.InvariantInfo, out temp)) return false;
+            if (Double.IsInfinity(temp) || Double.IsNaN(temp)) return false;
             result = temp;
             return true;
         }

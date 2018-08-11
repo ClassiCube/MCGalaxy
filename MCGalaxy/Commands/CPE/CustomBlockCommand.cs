@@ -308,7 +308,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (CommandParser.GetByte(p, value, "Collide type", ref bd.CollideType, 0, 7))
                     step++;
             } else if (step == 10) {
-                if (Utils.TryParseDecimal(value, out bd.Speed) && bd.Speed >= 0.25f && bd.Speed <= 3.96f)
+                if (CommandParser.GetReal(p, value, "Movement speed", ref bd.Speed, 0.25f, 3.96f))
                     step++;
             } else if (step == 11) {
                 if (CommandParser.GetBool(p, value, ref temp)) {
@@ -379,7 +379,6 @@ namespace MCGalaxy.Commands.CPE {
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
             string value = parts[3], blockName = def.Name;
-            float fTemp;
             bool temp = false, changedFallback = false;
             Level level = p.IsSuper ? null : p.level;
             
@@ -391,11 +390,9 @@ namespace MCGalaxy.Commands.CPE {
                     if (!EditByte(p, value, "Collide type", ref def.CollideType, arg)) return;
                     break;
                 case "speed":
-                    if (!Utils.TryParseDecimal(value, out fTemp) || fTemp < 0.25f || fTemp > 3.96f) {
+                    if (!CommandParser.GetReal(p, value, "Movement speed", ref def.Speed, 0.25f, 3.96f)) {
                         SendEditHelp(p, arg); return;
-                    }
-                    def.Speed = fTemp; break;
-                    
+                    } break;                  
                 case "toptex":
                     if (!EditUShort(p, value, "Top texture", ref def.TopTex, arg)) return;
                     break;

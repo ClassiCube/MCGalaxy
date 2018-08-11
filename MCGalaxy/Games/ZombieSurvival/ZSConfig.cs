@@ -25,9 +25,9 @@ namespace MCGalaxy.Games {
     
     public sealed class ZSConfig : RoundsGameConfig {
         
-        [ConfigReal("zombie-hitbox-distance", "Zombie", 1f)]
+        [ConfigFloat("zombie-hitbox-distance", "Zombie", 1f)]
         public float HitboxDist = 1f;
-        [ConfigReal("zombie-max-move-distance", "Zombie", 1.5625f)]
+        [ConfigFloat("zombie-max-move-distance", "Zombie", 1.5625f)]
         public float MaxMoveDist = 1.5625f;
 
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
