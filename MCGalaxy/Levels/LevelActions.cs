@@ -29,7 +29,7 @@ namespace MCGalaxy {
     public static class LevelActions {
         
         static string BlockPropsLvlPath(string map) { return BlockProps.PropsPath("_" + map); }
-        static string BlockPropsOldPath(string map) { return BlockProps.PropsPath("lvl" + map); }
+        static string BlockPropsOldPath(string map) { return BlockProps.PropsPath("lvl_" + map); }
         static string BlockDefsPath(string map)     { return "blockdefs/lvl_" + map + ".json"; }
         
         public static bool Backup(string map, string backupName) {
