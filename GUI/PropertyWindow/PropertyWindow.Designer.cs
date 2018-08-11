@@ -1330,6 +1330,7 @@ namespace MCGalaxy.Gui
             this.rank_numUndo.Text = "0s";
             this.toolTip.SetToolTip(this.rank_numUndo, "Maximum time players can undo up to in the past with /undo");
             this.rank_numUndo.Value = System.TimeSpan.Parse("00:00:00");
+            this.rank_numUndo.ValueChanged += new System.EventHandler(this.rank_numUndo_ValueChanged);
             // 
             // chkPhysRestart
             // 
