@@ -136,9 +136,9 @@ namespace MCGalaxy {
 
             if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
-                    Message("%WPlease set your admin verification password with %T/SetPass [Password]!");
+                    Message("%WPlease set your admin verification password with %T/SetPass [password]!");
                 else
-                    Message("%Wcomplete admin verification with %T/Pass [Password]!");
+                    Message("%WPlease complete admin verification with %T/Pass [password]!");
             }
             
             if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name)) {

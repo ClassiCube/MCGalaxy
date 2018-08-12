@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.World {
                       args[0], args[1], args[2], args[3]);
         }
         
-        public static bool DoResize(Player p, string[] args, CommandData data, out bool needConfirm) {         
+        public static bool DoResize(Player p, string[] args, CommandData data, out bool needConfirm) {
             needConfirm = false;
             Level lvl = Matcher.FindLevels(p, args[0]);
-             
+            
             if (lvl == null) return true;
             if (!LevelInfo.Check(p, data.Rank, lvl, "resize this level")) return false;
             
@@ -58,56 +58,53 @@ namespace MCGalaxy.Commands.World {
                 return false;
             }
             
-            Level newLvl = ResizeLevel(lvl, x, y, z);
-            if (newLvl == null) { p.Message("%WError resizing map."); return false; }
-            LevelActions.Replace(lvl, newLvl);
+            Level resized = ResizeLevel(lvl, x, y, z);
+            if (resized == null) { p.Message("%WError resizing map."); return false; }
+            LevelActions.Replace(lvl, resized);
             return true;
         }
         
         static Level ResizeLevel(Level lvl, int width, int height, int length) {
-            using (Level tmp = new Level(lvl.name, (ushort)width, (ushort)height, (ushort)length)) {
-                byte[] src = lvl.blocks, dst = tmp.blocks;
-                
-                // Copy blocks in bulk
-                width  = Math.Min(lvl.Width,  tmp.Width);
-                height = Math.Min(lvl.Height, tmp.Height);
-                length = Math.Min(lvl.Length, tmp.Length);
-                for (int y = 0; y < height; y++) {
-                    for (int z = 0; z < length; z++) {
-                        int srcI = lvl.Width * (z + y * lvl.Length);
-                        int dstI = tmp.Width * (z + y * tmp.Length);
-                        Buffer.BlockCopy(src, srcI, dst, dstI, width);
-                    }
-                }
-                
-                // Copy extended blocks in bulk
-                width  = Math.Min(lvl.ChunksX, tmp.ChunksX);
-                height = Math.Min(lvl.ChunksY, tmp.ChunksY);
-                length = Math.Min(lvl.ChunksZ, tmp.ChunksZ);
-                for (int cy = 0; cy < height; cy++)
-                    for (int cz = 0; cz < length; cz++)
-                        for (int cx = 0; cx < width; cx++)
-                {
-                    src = lvl.CustomBlocks[(cy * lvl.ChunksZ + cz) * lvl.ChunksX + cx];
-                    if (src == null) continue;
-                    
-                    dst = new byte[16 * 16 * 16];
-                    tmp.CustomBlocks[(cy * tmp.ChunksZ + cz) * tmp.ChunksX + cx] = dst;
-                    Buffer.BlockCopy(src, 0, dst, 0, 16 * 16 * 16);
-                }
-                
-                tmp.spawnx = lvl.spawnx; tmp.spawny = lvl.spawny; tmp.spawnz = lvl.spawnz;
-                tmp.rotx = lvl.rotx; tmp.roty = lvl.roty;
-                
-                lock (lvl.saveLock) {
-                    lvl.Backup(true);
-                    IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), tmp);
-                    lvl.SaveChanges = false;
+            Level res = new Level(lvl.name, (ushort)width, (ushort)height, (ushort)length);
+            byte[] src = lvl.blocks, dst = res.blocks;
+            
+            // Copy blocks in bulk
+            width  = Math.Min(lvl.Width,  res.Width);
+            height = Math.Min(lvl.Height, res.Height);
+            length = Math.Min(lvl.Length, res.Length);
+            for (int y = 0; y < height; y++) {
+                for (int z = 0; z < length; z++) {
+                    int srcI = lvl.Width * (z + y * lvl.Length);
+                    int dstI = res.Width * (z + y * res.Length);
+                    Buffer.BlockCopy(src, srcI, dst, dstI, width);
                 }
             }
-
-            Server.DoGC();
-            return Level.Load(lvl.name);
+            
+            // Copy extended blocks in bulk
+            width  = Math.Min(lvl.ChunksX, res.ChunksX);
+            height = Math.Min(lvl.ChunksY, res.ChunksY);
+            length = Math.Min(lvl.ChunksZ, res.ChunksZ);
+            for (int cy = 0; cy < height; cy++)
+                for (int cz = 0; cz < length; cz++)
+                    for (int cx = 0; cx < width; cx++)
+            {
+                src = lvl.CustomBlocks[(cy * lvl.ChunksZ + cz) * lvl.ChunksX + cx];
+                if (src == null) continue;
+                
+                dst = new byte[16 * 16 * 16];
+                res.CustomBlocks[(cy * res.ChunksZ + cz) * res.ChunksX + cx] = dst;
+                Buffer.BlockCopy(src, 0, dst, 0, 16 * 16 * 16);
+            }
+            
+            res.spawnx = lvl.spawnx; res.spawny = lvl.spawny; res.spawnz = lvl.spawnz;
+            res.rotx = lvl.rotx; res.roty = lvl.roty;
+            
+            lock (lvl.saveLock) {
+                lvl.Backup(true);
+                IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), res);
+                lvl.SaveChanges = false;
+            }
+            return res;
         }
         
         public override void Help(Player p) {

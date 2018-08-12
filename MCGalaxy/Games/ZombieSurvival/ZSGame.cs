@@ -125,9 +125,9 @@ namespace MCGalaxy.Games {
             base.Start(p, map, rounds);
         }
         
-        protected override void StartGame() { 
-            HookStats();
+        protected override void StartGame() {
             Database.Backend.CreateTable("ZombieStats", createSyntax);
+            HookStats(); 
         }
 
         public void InfectPlayer(Player p, Player killer) {
