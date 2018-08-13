@@ -1143,7 +1143,7 @@ namespace MCGalaxy.Gui
             this.rank_cbSilentAdmins.Size = new System.Drawing.Size(118, 17);
             this.rank_cbSilentAdmins.TabIndex = 41;
             this.rank_cbSilentAdmins.Text = "Admins join silently";
-            this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the game silently");
+            this.toolTip.SetToolTip(this.rank_cbSilentAdmins, "Players who can read adminchat also join the server silently");
             this.rank_cbSilentAdmins.UseVisualStyleBackColor = true;
             // 
             // rank_txtPrefix
@@ -1340,7 +1340,6 @@ namespace MCGalaxy.Gui
             this.chkPhysRestart.Size = new System.Drawing.Size(124, 17);
             this.chkPhysRestart.TabIndex = 52;
             this.chkPhysRestart.Text = "Restart on shutdown";
-            this.toolTip.SetToolTip(this.chkPhysRestart, "\"Bob has died 10 times.\"");
             this.chkPhysRestart.UseVisualStyleBackColor = true;
             // 
             // ls_numMax
