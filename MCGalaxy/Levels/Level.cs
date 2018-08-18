@@ -273,15 +273,8 @@ namespace MCGalaxy {
             try {
                 Level lvl = IMapImporter.Formats[0].Read(path, name, true);
                 lvl.backedup = true;
-
-                lvl.Config.JailX = (ushort)(lvl.spawnx * 32);
-                lvl.Config.JailY = (ushort)(lvl.spawny * 32);
-                lvl.Config.JailZ = (ushort)(lvl.spawnz * 32);
-                lvl.Config.jailrotx = lvl.rotx;
-                lvl.Config.jailroty = lvl.roty;
-                
                 LoadMetadata(lvl);
-                MCGalaxy.Bots.BotsFile.Load(lvl);
+                BotsFile.Load(lvl);
 
                 object locker = ThreadSafeCache.DBCache.GetLocker(name);
                 lock (locker) {
@@ -300,6 +293,12 @@ namespace MCGalaxy {
         }
         
         public static void LoadMetadata(Level lvl) {
+            lvl.Config.JailX = (ushort)(lvl.spawnx * 32);
+            lvl.Config.JailY = (ushort)(lvl.spawny * 32);
+            lvl.Config.JailZ = (ushort)(lvl.spawnz * 32);
+            lvl.Config.jailrotx = lvl.rotx;
+            lvl.Config.jailroty = lvl.roty;
+                
             try {
                 string propsPath = LevelInfo.PropsPath(lvl.MapName);
                 bool propsExisted = lvl.Config.Load(propsPath);

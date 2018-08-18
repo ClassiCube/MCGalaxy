@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Bots;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
 
@@ -104,6 +105,10 @@ namespace MCGalaxy.Commands.World {
                 IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), res);
                 lvl.SaveChanges = false;
             }
+            
+            res.backedup = true;
+            Level.LoadMetadata(res);
+            BotsFile.Load(res);
             return res;
         }
         
