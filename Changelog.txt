@@ -1,3 +1,17 @@
+v 1.9.0.8
+Fixed: ZS round times
+Fixed: Some issues with hiding
+Fixed: /top10 oldest breaking with a few servers
+Fixed: /roll with two numbers, make /roll with 1 number better
+Fixed: compiler error log listing warnings as errors
+Fixed: Being added to countdown players list, even when can't join countdown map
+Fixed: Changing undo limit in ranks in gui not saving
+Fixed: Old level blockprops files not being copied/deleted/renamed
+Fixed: Accuracy issues with MaxUndo for ranks and /calc
+Fixed: Out of memory error when resizing, caused changes in map to not be saved
+Fixed: Physics restart checkbox having wrong tooltip
+Improved: Can get MCGalaxy to compile for .NET 2.0
+
 v 1.9.0.7
 Added: /hold to make you hold a particular block
 Fixed: /clones not working from console
