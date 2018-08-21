@@ -103,23 +103,18 @@ namespace MCGalaxy {
         
 
         public bool SetMin(Player p, LevelPermission plRank, Level lvl, Group grp) {
-            string minType = "Min " + Type;
-            if (!CheckRank(p, plRank, Min, minType, false)) return false;
-            if (!CheckRank(p, plRank, grp.Permission, minType, true)) return false;
+            if (!CheckRank(p, plRank, grp.Permission, false)) return false;
             
             Min = grp.Permission;
-            OnPermissionChanged(p, lvl, grp, minType);
+            OnPermissionChanged(p, lvl, grp, "Min ");
             return true;
         }
 
         public bool SetMax(Player p, LevelPermission plRank, Level lvl, Group grp) {
-            string maxType = "Max " + Type;
-            const LevelPermission ignore = LevelPermission.Nobody;
-            if (Max != ignore && !CheckRank(p, plRank, Max, maxType, false)) return false;
-            if (grp.Permission != ignore && !CheckRank(p, plRank, grp.Permission, maxType, true)) return false;
-            
+            if (!CheckRank(p, plRank, grp.Permission, true)) return false;
+
             Max = grp.Permission;
-            OnPermissionChanged(p, lvl, grp, maxType);
+            OnPermissionChanged(p, lvl, grp, "Max ");
             return true;
         }
 
@@ -157,7 +152,7 @@ namespace MCGalaxy {
 
 
         public void OnPermissionChanged(Player p, Level lvl, Group grp, string type) {
-            string msg = type + " rank changed to " + grp.ColoredName;
+            string msg = type + Type + " rank changed to " + grp.ColoredName;
             ApplyChanges(p, lvl, msg);
         }
         
@@ -173,28 +168,29 @@ namespace MCGalaxy {
         
         protected abstract void ApplyChanges(Player p, Level lvl, string msg);
         
-        bool CheckRank(Player p, LevelPermission plRank, LevelPermission perm, string type, bool newPerm) {
-            if (perm <= plRank) return true;
+        bool CheckRank(Player p, LevelPermission plRank, LevelPermission perm, bool max) {
+            string mode = max ? "max" : "min";
+            if (!CheckDetailed(p, plRank)) {                
+                p.Message("%WHence you cannot change the {1} {0} rank.", Type, mode); return false;
+            }
             
-            p.Message("You cannot change the {0} rank of {1}{2} higher than yours.",
-                      type.ToLower(), ColoredName,
-                      newPerm ? " %Sto a rank" : ", %Sas its current " + type.ToLower() + " rank is");
+            if (perm <= plRank || max && perm == LevelPermission.Nobody) return true;          
+            p.Message("%WYou cannot change the {1} {0} rank of {2} %Wto a rank higher than yours.",
+                      Type, mode, ColoredName);
             return false;
         }
         
-        /// <summary> Returns true if the player is allowed to modify these access permissions,
-        /// and is also allowed to change the access permissions for the target player. </summary>
         bool CheckList(Player p, LevelPermission plRank, string name, bool whitelist) {
             if (!CheckDetailed(p, plRank)) {
                 string mode = whitelist ? "whitelist" : "blacklist";
-                p.Message("Hence you cannot modify the {0} {1}.", Type, mode); return false;
+                p.Message("%WHence you cannot modify the {0} {1}.", Type, mode); return false;
             }
             
             Group group = PlayerInfo.GetGroup(name);
             if (group.Permission <= plRank) return true;
             
             if (!whitelist) {
-                p.Message("You cannot blacklist players of a higher rank.");
+                p.Message("%WYou cannot blacklist players of a higher rank.");
                 return false;
             } else if (Check(name, group.Permission) == AccessResult.Blacklisted) {
                 p.Message("{0} %Sis blacklisted from {1} {2}%S.",

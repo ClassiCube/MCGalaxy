@@ -83,8 +83,8 @@ namespace MCGalaxy.Commands.World {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return false;
             
-            if (name.CaselessEq(p.name)) {
-                p.Message("You cannot {0} yourself.", mode); return false;
+            if (!include && name.CaselessEq(p.name)) {
+                p.Message("%WYou cannot blacklist yourself."); return false;
             }
             
             if (include) {
