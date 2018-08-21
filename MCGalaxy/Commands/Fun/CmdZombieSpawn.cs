@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 
-/*namespace MCForge
+/*namespace MCGalaxy
 {
     public class CmdZombieSpawn : Command
     {

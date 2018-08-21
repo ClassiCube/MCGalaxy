@@ -57,7 +57,8 @@ namespace MCGalaxy.Commands.Maintenance {
         
         void DoReload(Player p, string[] args) {
             p.Message("Reloading settings...");
-            Server.LoadAllSettings(); 
+            Server.LoadAllSettings();
+            Server.LoadPlayerLists();
             p.Message("Settings reloaded! You may need to restart the server, however.");
         }
         

@@ -110,7 +110,7 @@ namespace MCGalaxy {
             Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
-            Background.QueueOnce(LoadPlayerLists);
+            Background.QueueOnce(InitPlayerLists);
             Background.QueueOnce(UpgradeTasks.UpgradeBots);
             
             Background.QueueOnce(SetupSocket);

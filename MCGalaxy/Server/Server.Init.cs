@@ -49,38 +49,43 @@ namespace MCGalaxy {
             LevelInfo.Add(mainLevel);
         }
         
-        static void LoadPlayerLists(SchedulerTask task) {
+        static void InitPlayerLists(SchedulerTask task) {
             try {
                 UpgradeTasks.UpgradeOldAgreed();
             } catch (Exception ex) {
                 Logger.LogError("Error upgrading agreed list", ex);
             }
             
+            LoadPlayerLists();
+            ModerationTasks.QueueTasks();
+        }
+		
+        internal static void LoadPlayerLists() {
             agreed = PlayerList.Load("ranks/agreed.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             Player.Console.DatabaseID = NameConverter.InvalidNameID("(console)");
             
-            bannedIP = PlayerList.Load("ranks/banned-ip.txt");
+            bannedIP       = PlayerList.Load("ranks/banned-ip.txt");
             ircControllers = PlayerList.Load("ranks/IRC_Controllers.txt");
-            hidden = PlayerList.Load("ranks/hidden.txt");
-            vip = PlayerList.Load("text/vip.txt");
+            hidden   = PlayerList.Load("ranks/hidden.txt");
+            vip      = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
             lockdown = PlayerList.Load("text/lockdown.txt");
+            
             models = PlayerExtList.Load("extra/models.txt");
-            skins = PlayerExtList.Load("extra/skins.txt");
-            reach = PlayerExtList.Load("extra/reach.txt");
-            rotations = PlayerExtList.Load("extra/rotations.txt");
+            skins  = PlayerExtList.Load("extra/skins.txt");
+            reach  = PlayerExtList.Load("extra/reach.txt");
+            rotations   = PlayerExtList.Load("extra/rotations.txt");
             modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
-            muted = PlayerExtList.Load("ranks/muted.txt");
+            muted  = PlayerExtList.Load("ranks/muted.txt");
             frozen = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
-            tempBans = PlayerExtList.Load(Paths.TempBansFile);
-            ModerationTasks.QueueTasks();                     
+            tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             
             if (ServerConfig.WhitelistedOnly)
                 whiteList = PlayerList.Load("ranks/whitelist.txt");
-        }
+	    }
         
         static void LoadAutoloadMaps(SchedulerTask task) {
             AutoloadMaps = PlayerExtList.Load("text/autoload.txt", '=');
