@@ -63,32 +63,38 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         void DoBackup(Player p, string[] args) {
-            string type = args.Length == 1 ? "" : args[1].ToLower();
-            bool compress = true;
-            if (args.Length > 2 && !CommandParser.GetBool(p, args[2], ref compress)) return;
+            string type  = args.Length > 1 ? args[1] : "";
+            string value = args.Length > 2 ? args[2] : "";
             
-            if (type.Length == 0 || type == "all") {
+            if (type.CaselessEq("table")) {
+                if (value.Length == 0) { p.Message("You need to provide the name of the table to backup."); return; }
+                if (!Formatter.ValidName(p, value, "table")) return;
+                if (!Database.TableExists(value)) { p.Message("Table \"{0}\" does not exist.", value); return; }
+                
+                p.Message("Start backing up table {0}. Please wait while backup finishes.", value);
+                using (StreamWriter sql = new StreamWriter(value + ".sql")) {
+                    Backup.BackupTable(value, sql);
+                }
+                p.Message("Finished backing up table {0}.", value);
+                return;
+            } 
+            
+            bool compress = true;
+            if (value.Length > 0 && !CommandParser.GetBool(p, value, ref compress)) return;
+            
+            if (type.Length == 0 || type.CaselessEq("all")) {
                 p.Message("Server backup started. Please wait while backup finishes.");
                 Backup.Perform(p, true, true, false, compress);
-            } else if (type == "database" || type == "db") {
+            } else if (type.CaselessEq("database") || type.CaselessEq("db")) {
                 p.Message("Database backup started. Please wait while backup finishes.");
                 Backup.Perform(p, false, true, false, compress);
-            } else if (type == "files" || type == "file") {
+            } else if (type.CaselessEq("files") || type.CaselessEq("file")) {
                 p.Message("All files backup started. Please wait while backup finishes.");
                 Backup.Perform(p, true, false, false, compress);
-            } else if (type == "lite") {
+            } else if (type.CaselessEq("lite")) {
                 p.Message("Server backup (except BlockDB) started. Please wait while backup finishes.");
                 Backup.Perform(p, true, true, true, compress);
-            } else if (type == "table") {
-                if (args.Length == 2) { p.Message("You need to provide the table name to backup."); return; }
-                if (!Formatter.ValidName(p, args[2], "table")) return;
-                if (!Database.TableExists(args[2])) { p.Message("Table \"{0}\" does not exist.", args[2]); return; }
-                
-                p.Message("Backing up table {0} started. Please wait while backup finishes.", args[2]);
-                using (StreamWriter sql = new StreamWriter(args[2] + ".sql"))
-                    Backup.BackupTable(args[2], sql);
-                p.Message("Finished backing up table {0}.", args[2]);
-            } else {
+            } else else {
                 Help(p);
             }
         }
