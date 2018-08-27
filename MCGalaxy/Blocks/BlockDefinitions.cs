@@ -56,10 +56,10 @@ namespace MCGalaxy {
         
         // BlockDefinitionsExt version 2 fields
         [ConfigBool] bool Version2;
-        [ConfigUShort]  public ushort LeftTex;
+        [ConfigUShort] public ushort LeftTex;
         [ConfigUShort] public ushort RightTex;
         [ConfigUShort] public ushort FrontTex;
-        [ConfigUShort]  public ushort BackTex;
+        [ConfigUShort] public ushort BackTex;
         
         [ConfigInt(null, null, -1, -1)]
         public int InventoryOrder = -1;

@@ -68,6 +68,20 @@ namespace MCGalaxy {
             // If not enough split strings, set remaining to null
             for (; i < split.Length; i++) { split[i] = null; }
         }
+                
+        static char[] comma = new char[] { ',' };
+        static string[] emptyStrs = new string[0];
+        
+        public static string[] SplitComma(this string str) {
+            // Don't want an array of one entry of empty string
+            if (str.Length == 0) return emptyStrs;
+            
+            if (str.IndexOf(' ') >= 0) str = str.Replace(" ", "");
+            if (str.Length == 0) return emptyStrs;
+ 
+            return str.Split(comma);
+        }
+        
         
         public static byte[] GZip(this byte[] bytes) {
             using (MemoryStream ms = new MemoryStream()) {

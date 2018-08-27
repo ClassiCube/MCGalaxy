@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Maintenance {
             } else if (type.CaselessEq("lite")) {
                 p.Message("Server backup (except BlockDB) started. Please wait while backup finishes.");
                 Backup.Perform(p, true, true, true, compress);
-            } else else {
+            } else {
                 Help(p);
             }
         }
