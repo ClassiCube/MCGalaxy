@@ -40,20 +40,23 @@ namespace MCGalaxy.Commands.Building {
             }
             
             BrushArgs args = new BrushArgs(p, message, Block.Air);
-            Brush brush = BrushFactory.Find("paste").Construct(args);
-            if (brush == null) return;
+            if (!BrushFactory.Find("Paste").Validate(args)) return;
             
             p.Message("Place a block in the corner of where you want to paste.");
-            p.MakeSelection(1, "Selecting location for %SPaste", brush, DoPaste);
+            p.MakeSelection(1, "Selecting location for %SPaste", args, DoPaste);
         }
 
         bool DoPaste(Player p, Vec3S32[] m, object state, BlockID block) {
             CopyState cState = p.CurrentCopy;
             m[0] += cState.Offset;
+            
+            BrushArgs args = (BrushArgs)state;
+            Brush brush = BrushFactory.Find("Paste").Construct(args);
+            if (brush == null) return false;
 
             PasteDrawOp op = new PasteDrawOp();
             op.CopyState = cState;
-            DrawOpPerformer.Do(op, (Brush)state, p, m);
+            DrawOpPerformer.Do(op, brush, p, m);
             return true;
         }
         
