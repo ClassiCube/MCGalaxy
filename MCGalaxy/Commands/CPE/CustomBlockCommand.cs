@@ -83,14 +83,14 @@ namespace MCGalaxy.Commands.CPE {
                 
                 if (ExistsInScope(old, target, global)) {
                     p.Message("There is already a custom block with the id " + id +
-                                   ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
+                              ", you must either use a different id or use \"" + cmd + " remove " + id + "\"");
                     return;
                 }
             } else {
                 target = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (target == Block.Invalid) {
-                    p.Message("There are no custom block ids left, " +
-                                   "you must " + cmd +" remove a custom block first.");
+                    p.Message("There are no custom block ids left, you must " 
+                	          + cmd + " remove a custom block first.");
                     return;
                 }
             }
@@ -139,18 +139,28 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
-            if (parts.Length <= 2) { Help(p, cmd); return; }
+            if (parts.Length < 2) { Help(p, cmd); return; }
             BlockID src, dst;
             if (!CheckBlock(p, parts[1], out src, true)) return;
-            if (!CheckBlock(p, parts[2], out dst)) return;
+            
+            if (parts.Length > 2) {
+                if (!CheckBlock(p, parts[2], out dst)) return;
+            } else {
+                dst = GetFreeBlock(global, p.IsSuper ? null : p.level);
+                if (dst == Block.Invalid) {
+                    p.Message("There are no custom block ids left, you must " 
+                	          + cmd + " remove a custom block first.");
+                    return;
+                }
+            }
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockDefinition srcDef = defs[src];
             if (!DoCopy(p, global, cmd, false, srcDef, src, dst)) return;
             
             string scope = global ? "global" : "level";
-            p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", scope,
-                           Block.ToRaw(src), Block.ToRaw(dst));
+            p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
+                      scope, Block.ToRaw(src), Block.ToRaw(dst));
         }
 
         static bool DoCopy(Player p, bool global, string cmd, bool keepOrder, 
