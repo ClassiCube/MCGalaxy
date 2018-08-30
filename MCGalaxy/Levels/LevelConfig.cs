@@ -271,7 +271,7 @@ namespace MCGalaxy {
         
         
         public bool Load(string path) {
-            return ConfigElement.ParseFile(Server.levelConfig, "level", path, this);
+            return ConfigElement.ParseFile(Server.levelConfig, path, this);
         }
         
         public void SaveFor(string map) { Save(LevelInfo.PropsPath(map), map); }

@@ -53,17 +53,16 @@ namespace MCGalaxy {
             return elems.ToArray();
         }
         
-        public static bool ParseFile(ConfigElement[] elements, string group, string path, object instance) {
-            return PropertiesFile.Read(path, (k, v) => Parse(elements, group, instance, k, v));
+        public static bool ParseFile(ConfigElement[] elements, string path, object instance) {
+            return PropertiesFile.Read(path, (k, v) => Parse(elements, instance, k, v));
         }
         
-        public static void Parse(ConfigElement[] elems, string group, object instance, string k, string v) {
+        public static void Parse(ConfigElement[] elems, object instance, string k, string v) {
             foreach (ConfigElement elem in elems) {
                 if (!elem.Attrib.Name.CaselessEq(k)) continue;
                 
                 elem.Field.SetValue(instance, elem.Attrib.Parse(v)); return;
             }
-            Logger.Log(LogType.Warning, "\"{0}\" was not a recognised {1} config key.", k, group);
         }
         
         public static void Serialise(ConfigElement[] elements, StreamWriter dst, object instance) {

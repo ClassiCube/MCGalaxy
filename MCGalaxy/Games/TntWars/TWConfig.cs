@@ -80,7 +80,7 @@ namespace MCGalaxy.Games {
         
         public void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(TWMapConfig));
-            ConfigElement.ParseFile(cfg, "TNT wars map", Path(map), this);
+            ConfigElement.ParseFile(cfg, Path(map), this);
         }
         
         public void Save(string map) {

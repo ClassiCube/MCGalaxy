@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
         
         public void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
-            ConfigElement.ParseFile(cfg, "Lava survival map", Path(map), this);
+            ConfigElement.ParseFile(cfg, Path(map), this);
         }
         
         public void Save(string map) {

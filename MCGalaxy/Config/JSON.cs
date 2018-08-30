@@ -19,9 +19,9 @@ namespace MCGalaxy.Config {
         public List<string> Keys = new List<string>(30);
         public List<object> Values = new List<object>(30);
         
-        public void Deserialise(ConfigElement[] elems, object instance, string group) {
+        public void Deserialise(ConfigElement[] elems, object instance) {
             for (int i = 0; i < Keys.Count; i++) {
-                ConfigElement.Parse(elems, group, instance, Keys[i], (string)Values[i]);
+                ConfigElement.Parse(elems, instance, Keys[i], (string)Values[i]);
             }
         }
     }

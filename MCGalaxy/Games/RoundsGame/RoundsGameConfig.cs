@@ -48,7 +48,7 @@ namespace MCGalaxy.Games {
         
         public virtual void Load() {
             if (cfg == null) cfg = ConfigElement.GetAll(GetType());
-            ConfigElement.ParseFile(cfg, GameName, PropsPath, this);
+            ConfigElement.ParseFile(cfg, PropsPath, this);
         }
         
         

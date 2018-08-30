@@ -85,7 +85,7 @@ namespace MCGalaxy {
             } else if (key.CaselessEq("afk-kick-perm")) {
                 perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder);
             } else {
-                ConfigElement.Parse(Server.serverConfig, "server", null, key, value);
+                ConfigElement.Parse(Server.serverConfig, null, key, value);
             }
         }
         

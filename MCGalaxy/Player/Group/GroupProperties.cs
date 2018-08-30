@@ -54,7 +54,7 @@ namespace MCGalaxy {
                     value = value.TrimStart();
                 }
                 
-                ConfigElement.Parse(cfg, "group", temp, key, value);
+                ConfigElement.Parse(cfg, temp, key, value);
             }
         }
         

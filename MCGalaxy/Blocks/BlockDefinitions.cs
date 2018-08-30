@@ -28,10 +28,9 @@ namespace MCGalaxy {
         [ConfigUShort("BlockID", null)]
         public ushort RawID;
         [ConfigString] public string Name;
-        [ConfigFloat] public float Speed;
-        [ConfigByte] public byte CollideType;
+        [ConfigFloat]  public float Speed;
+        [ConfigByte]   public byte CollideType;
         [ConfigUShort] public ushort TopTex;
-        [ConfigUShort] ushort SideTex;
         [ConfigUShort] public ushort BottomTex;
         
         [ConfigBool] public bool BlocksLight;
@@ -55,7 +54,6 @@ namespace MCGalaxy {
         [ConfigByte] public byte MaxZ;
         
         // BlockDefinitionsExt version 2 fields
-        [ConfigBool] bool Version2;
         [ConfigUShort] public ushort LeftTex;
         [ConfigUShort] public ushort RightTex;
         [ConfigUShort] public ushort FrontTex;
@@ -74,17 +72,20 @@ namespace MCGalaxy {
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
             def.RawID = RawID; def.Name = Name;
-            def.CollideType = CollideType; def.Speed = Speed;
+            def.Speed = Speed; def.CollideType = CollideType; 
             def.TopTex = TopTex; def.BottomTex = BottomTex;
+            
             def.BlocksLight = BlocksLight; def.WalkSound = WalkSound;
             def.FullBright = FullBright; def.Shape = Shape;
-            def.BlockDraw = BlockDraw; def.FogDensity = FogDensity;
-            def.FogR = FogR; def.FogG = FogG; def.FogB = FogB;
-            def.FallBack = FallBack;
+            def.BlockDraw = BlockDraw; def.FallBack = FallBack;
+            
+            def.FogDensity = FogDensity;
+            def.FogR = FogR; def.FogG = FogG; def.FogB = FogB;          
             def.MinX = MinX; def.MinY = MinY; def.MinZ = MinZ;
             def.MaxX = MaxX; def.MaxY = MaxY; def.MaxZ = MaxZ;
+            
             def.LeftTex = LeftTex; def.RightTex = RightTex;
-            def.FrontTex = FrontTex; def.BackTex = BackTex;
+            def.FrontTex = FrontTex; def.BackTex = BackTex;            
             def.InventoryOrder = InventoryOrder;
             return def;
         }
@@ -107,7 +108,7 @@ namespace MCGalaxy {
                     if (obj == null) continue;
                     
                     BlockDefinition def = new BlockDefinition();
-                    obj.Deserialise(elems, def, "Block definition");
+                    obj.Deserialise(elems, def);
                     if (String.IsNullOrEmpty(def.Name)) continue;
                     
                     BlockID block = def.GetBlock();
@@ -141,10 +142,8 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 // don't want to save global blocks in the level's custom blocks list
-                if (!global && def == GlobalDefs[i]) def = null;
-                
+                if (!global && def == GlobalDefs[i]) def = null;               
                 if (def == null) continue;
-                def.SideTex = def.RightTex; def.Version2 = true;
                 
                 // need to add ',' from last element
                 if (!first) w.WriteLine(", ");

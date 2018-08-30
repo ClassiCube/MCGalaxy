@@ -90,7 +90,7 @@ namespace MCGalaxy.Games {
             if (key.CaselessEq("zombie-levels-list")) {
                 Maps = new List<string>(value.SplitComma());
             } else {
-                ConfigElement.Parse(cfg, GameName, this, key, value);
+                ConfigElement.Parse(cfg, this, key, value);
             }
         }
         

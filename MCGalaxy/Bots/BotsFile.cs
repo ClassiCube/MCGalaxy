@@ -64,7 +64,7 @@ namespace MCGalaxy.Bots {
                 if (obj == null) continue;
                 
                 BotProperties data = new BotProperties();
-                obj.Deserialise(elems, data, "Bot properties");
+                obj.Deserialise(elems, data);
                 
                 if (String.IsNullOrEmpty(data.DisplayName)) data.DisplayName = data.Name;
                 props.Add(data);
