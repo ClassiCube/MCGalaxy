@@ -37,11 +37,11 @@ namespace MCGalaxy.Undo {
                 // line format: mapName x y z date oldblock newblock
                 string timeRaw = lines[(i * items) - 3].Replace('&', ' ');
                 time = DateTime.Parse(timeRaw, CultureInfo.InvariantCulture);
-                if (time < args.Start) { args.Stop = true; return; }
+                if (time < args.Start) { args.Finished = true; return; }
                 if (time > args.End) continue;
                 
                 string map = lines[(i * items) - 7];
-                if (!args.LevelName.CaselessEq(map)) continue;
+                if (!args.Map.CaselessEq(map)) continue;
                 
                 pos.X = ushort.Parse(lines[(i * items) - 6]);
                 pos.Y = ushort.Parse(lines[(i * items) - 5]);

@@ -27,6 +27,21 @@ namespace MCGalaxy.Undo {
         public string DrawOpName;
         public string LevelName;
         public DateTime Start, End;
+        
+        public void Init(string op, string map) {
+            DrawOpName = op; LevelName = map;
+            // Use same time method as DoBlockchange writing to undo buffer
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
+            Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
+        }
+        
+        public void Finish(Player p) {
+            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
+            End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
+            
+            p.DrawOps.Add(this);
+            if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
+        }
     }
 
     /// <summary> Retrieves and saves undo data in a particular format. </summary>
@@ -101,30 +116,17 @@ namespace MCGalaxy.Undo {
     }
     
     /// <summary> Arguments provided to an UndoFormat for retrieving undo data. </summary>
-    public class UndoFormatArgs {
-        
-        /// <summary> Level to retrieve undo data on. </summary>
-        internal readonly string LevelName;
-
+    public class UndoFormatArgs {       
+        public readonly string Map;
         /// <summary> Small work buffer, used to avoid memory allocations. </summary>
-        internal byte[] Temp;
+        public byte[] Temp;
 
-        /// <summary> Whether the format has finished retrieving undo data,
-        /// due to finding an entry before the start range. </summary>
-        public bool Stop;
-
-        /// <summary> First instance in time that undo data should be retrieved back to. </summary>
-        internal readonly DateTime Start;
-
-        /// <summary> Last instance in time that undo data should be retrieved up to. </summary>
-        internal readonly DateTime End;
-        
-        /// <summary> Performs action on the given undo format entry. </summary>
+        public bool Finished;
+        public readonly DateTime Start, End;
         public Action<UndoFormatEntry> Output;
 
-        public UndoFormatArgs(string lvlName, DateTime start, DateTime end,
-                              Action<UndoFormatEntry> output) {
-            LevelName = lvlName; Start = start; End = end; Output = output;
+        public UndoFormatArgs(string map, DateTime start, DateTime end, Action<UndoFormatEntry> output) {
+            Map = map; Start = start; End = end; Output = output;
         }
     }
 

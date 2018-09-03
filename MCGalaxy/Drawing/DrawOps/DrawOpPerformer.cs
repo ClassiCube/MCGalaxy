@@ -119,12 +119,7 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal static void Execute(Player p, DrawOp op, Brush brush, Vec3S32[] marks) {
             UndoDrawOpEntry entry = new UndoDrawOpEntry();
-            entry.DrawOpName = op.Name;
-            entry.LevelName = op.Level.name;
-            entry.Start = DateTime.UtcNow;
-            // Use same time method as DoBlockchange writing to undo buffer
-            int timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds;
-            entry.Start = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
+            entry.Init(op.Name, op.Level.name);
             
             if (brush != null) brush.Configure(op, p);
             Level lvl = op.Level;
@@ -137,12 +132,7 @@ namespace MCGalaxy.Drawing.Ops {
             }
             bool needsReload = op.TotalModified >= outputter.reloadThreshold;
             
-            timeDelta = (int)DateTime.UtcNow.Subtract(Server.StartTime).TotalSeconds + 1;
-            entry.End = Server.StartTime.AddTicks(timeDelta * TimeSpan.TicksPerSecond);
-            
-            if (op.Undoable) p.DrawOps.Add(entry);
-            if (p.DrawOps.Count > 200) p.DrawOps.RemoveFirst();
-            
+            if (op.Undoable) entry.Finish(p);
             if (needsReload) DoReload(p, op.Level);
             op.TotalModified = 0; // reset total modified (as drawop instances are reused in static mode)
         }

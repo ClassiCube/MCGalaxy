@@ -102,7 +102,7 @@ namespace MCGalaxy.Drawing.Ops {
             foreach (string file in files) {
                 using (Stream s = File.OpenRead(file)) {
                     UndoFormat.GetFormat(file).EnumerateEntries(s, args);
-                    if (args.Stop) break;
+                    if (args.Finished) break;
                 }
             }
         }
