@@ -55,12 +55,12 @@ namespace MCGalaxy.Commands.Fun {
                 
                 cfg.Save(); return;
             } else if (prop.CaselessEq("pillaring")) {
-                if (!CommandParser.GetBool(p, args[1], ref lCfg.Pillaring)) return;
+                if (!CommandParser.GetBool(p, args[2], ref lCfg.Pillaring)) return;
                 
                 p.Message("Set pillaring allowed to &b" + lCfg.Pillaring);
                 game.UpdateAllStatus2();
             } else if (prop.CaselessEq("build")) {
-                if (!CommandParser.GetEnum(p, args[1], "Build type", ref lCfg.BuildType)) return;
+                if (!CommandParser.GetEnum(p, args[2], "Build type", ref lCfg.BuildType)) return;
                 p.level.UpdateBlockPermissions();
                 
                 p.Message("Set build type to &b" + lCfg.BuildType);
