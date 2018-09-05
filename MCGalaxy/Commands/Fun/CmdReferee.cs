@@ -21,7 +21,8 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdReferee : Command2 {
-        public override string name { get { return "Ref"; } }
+        public override string name { get { return "Referee"; } }
+        public override string shortcut { get { return "Ref"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool SuperUseable { get { return false; } }

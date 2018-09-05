@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Misc {
         internal static bool GetTeleportCoords(Player p, Entity ori, string[] args, bool precise, 
                                                out Position pos, out byte yaw, out byte pitch) {
             Vec3S32 P;
-            pos = ori.Pos; yaw = ori.Rot.RotY; pitch = ori.Rot.HeadX;
+            pos = p.Pos; yaw = ori.Rot.RotY; pitch = ori.Rot.HeadX;
             
             if (!precise) {
                 // relative to feet block coordinates
