@@ -185,28 +185,29 @@ namespace MCGalaxy.Commands.Moderation {
         /// or finds the IP of the account whose name matches the message. </summary>
         /// <remarks> "@input" can be used to always find IP by matching account name. <br/>
         /// Warns the player if the input matches both an IP and an account name. </remarks>
-        internal static string FindIP(Player p, string message, string action, string cmd) {
+        internal static string FindIP(Player p, string message, string cmd, out string name) {
             IPAddress ip;
+            name = null;
+            
             // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
             if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
                 string account = ServerConfig.ClassicubeAccountPlus ? message + "+" : message;
                 if (PlayerInfo.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
-                p.Message("Note: \"{0}\" is an IP, but also an account name. "
-                               + "If you meant to {1} the account, use %T/{2} @{0}",
-                               message, action, cmd);
+                p.Message("Note: \"{0}\" is both an IP and an account name. "
+                          + "If you meant the account, use %T/{1} @{0}", message, cmd);
                 return message;
             }
             
             if (message[0] == '@') message = message.Remove(0, 1);
             Player who = PlayerInfo.FindMatches(p, message);
-            if (who != null) return who.ip;
+            if (who != null) { name = who.name; return who.ip; }
             
             p.Message("Searching PlayerDB..");
-            string databaseIP;
-            PlayerInfo.FindOfflineIPMatches(p, message, out databaseIP);
-            return databaseIP;
+            string dbIP;
+            name = PlayerInfo.FindOfflineIPMatches(p, message, out dbIP);
+            return dbIP;
         }
     }
 }
