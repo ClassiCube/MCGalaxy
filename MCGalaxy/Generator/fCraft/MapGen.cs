@@ -14,7 +14,7 @@ namespace MCGalaxy.Generator {
     /// <summary> Map generator template. Templates define landscape shapes and features. </summary>
     public enum MapGenTheme {
         Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island2,
-        Lake, Mountains, Peninsula, Random, River, Streams
+        Lake, Mountains2, Peninsula, Random, River, Streams
     }
 
 

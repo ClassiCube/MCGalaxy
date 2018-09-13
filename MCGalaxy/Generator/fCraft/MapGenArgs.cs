@@ -231,7 +231,7 @@ namespace MCGalaxy.Generator {
                         WaterCoverage = .3f
                     };
 
-                case MapGenTheme.Mountains:
+                case MapGenTheme.Mountains2:
                     return new fCraftMapGenArgs {
                         AddWater = false,
                         MaxHeight = 40,
