@@ -510,8 +510,8 @@
     <Compile Include="Games\ZombieSurvival\ZSGame.Plugin.cs" />
     <Compile Include="Games\ZombieSurvival\ZSConfig.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
-    <Compile Include="Generator\fCraft\MapGenerator.cs" />
-    <Compile Include="Generator\fCraft\MapGeneratorArgs.cs" />
+    <Compile Include="Generator\fCraft\MapGen.cs" />
+    <Compile Include="Generator\fCraft\MapGenArgs.cs" />
     <Compile Include="Generator\fCraft\Noise.cs" />
     <Compile Include="Generator\Foliage\AshTree.cs" />
     <Compile Include="Generator\Foliage\OakTree.cs" />
@@ -521,9 +521,9 @@
     <Compile Include="Generator\HeightmapGen.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
     <Compile Include="Generator\MapGen.cs" />
-    <Compile Include="Generator\NoiseGen.cs" />
-    <Compile Include="Generator\RealisticGenParams.cs" />
-    <Compile Include="Generator\RealisticMapGen.cs" />
+    <Compile Include="Generator\Realistic\MapGenArgs.cs" />
+    <Compile Include="Generator\Realistic\Noise.cs" />
+    <Compile Include="Generator\Realistic\MapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
     <Compile Include="Levels\Hacks.cs" />
     <Compile Include="Levels\IO\Exporters\LvlExporter.cs" />
@@ -717,6 +717,7 @@
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Database\Stats" />
     <Folder Include="Games\RoundsGame" />
+    <Folder Include="Generator\Realistic" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />
     <Folder Include="Network\Socket" />

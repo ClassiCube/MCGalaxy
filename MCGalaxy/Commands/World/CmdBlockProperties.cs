@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands.World {
             
             p.Message("%Hproperties: %Sportal, messageblock, rails, waterkills, lavakills, door, tdoor, " +
                            "killer, deathmessage, animalai, stackblock, opblock, odoor, drownable, grass, dirt");
-            p.Message("%HType %T/Help BlockProps [property] %Hfor more details");
+            p.Message("%HUse %T/Help BlockProps [property] %Hfor more details");
         }
         
         public override void Help(Player p, string message) {

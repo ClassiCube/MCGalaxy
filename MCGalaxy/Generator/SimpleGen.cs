@@ -18,30 +18,45 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Generator { 
+namespace MCGalaxy.Generator {
     public static class SimpleGen {
-
         delegate byte NextBlock();
+        const string defHelp = "%HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
         public static void RegisterGenerators() {
-            MapGen.RegisterSimpleGen("island", GenSimple);
-            MapGen.RegisterSimpleGen("mountains", GenSimple);
-            MapGen.RegisterSimpleGen("forest", GenSimple);
-            MapGen.RegisterSimpleGen("ocean", GenSimple);            
-            MapGen.RegisterSimpleGen("flat", GenFlat);
-            MapGen.RegisterSimpleGen("pixel", GenPixel);
-            MapGen.RegisterSimpleGen("empty", GenEmpty);            
-            MapGen.RegisterSimpleGen("desert", GenSimple);
-            MapGen.RegisterSimpleGen("space", GenSpace);
-            MapGen.RegisterSimpleGen("rainbow", GenRainbow);
-            MapGen.RegisterSimpleGen("hell", GenHell);
+            const GenType type = GenType.Simple;
+            MapGen.Register("Island",    type, GenIsland,    defHelp);
+            MapGen.Register("Mountains", type, GenMountains, defHelp);
+            MapGen.Register("Forest",    type, GenForest,    defHelp);
+            MapGen.Register("Ocean",     type, GenOcean,     defHelp);
+            MapGen.Register("Flat",  type, GenFlat,  "%HSeed specifies grass height (default half of level height)");
+            MapGen.Register("Pixel", type, GenPixel, "%HSeed does nothing");
+            MapGen.Register("Empty", type, GenEmpty, "%HSeed does nothing");
+            MapGen.Register("Desert",  type, GenDesert,  defHelp);
+            MapGen.Register("Space",   type, GenSpace,   defHelp);
+            MapGen.Register("Rainbow", type, GenRainbow, defHelp);
+            MapGen.Register("Hell",    type, GenHell,    defHelp);
         }
         
-        unsafe static bool GenFlat(MapGenArgs args) {
-            Level lvl = args.Level;
-            int grassHeight = lvl.Height / 2;
-            if (args.UseSeed && args.Seed >= 0 && args.Seed < lvl.Height)
-                grassHeight = args.Seed;            
+        static bool GenIsland(Player p, Level lvl, string seed) {
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.island);
+        }
+        
+        static bool GenMountains(Player p, Level lvl, string seed) {
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.mountains);
+        }
+        
+        static bool GenForest(Player p, Level lvl, string seed) {
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.forest);
+        }
+        
+        static bool GenOcean(Player p, Level lvl, string seed) {
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.ocean);
+        }
+        
+        unsafe static bool GenFlat(Player p, Level lvl, string seed) {
+            int grassHeight = lvl.Height / 2, v;
+            if (int.TryParse(seed, out v) && v >= 0 && v < lvl.Height) grassHeight = v;
             lvl.Config.EdgeLevel = grassHeight + 1;
             
             fixed (byte* ptr = lvl.blocks) {
@@ -53,68 +68,72 @@ namespace MCGalaxy.Generator {
             return true;
         }
 
-        static bool GenEmpty(MapGenArgs args) {
-            int maxX = args.Level.Width - 1, maxZ = args.Level.Length - 1;
-            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
-            args.Level.Config.EdgeLevel = 1;
+        static bool GenEmpty(Player p, Level lvl, string seed) {
+            int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
+            Cuboid(lvl, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
+            lvl.Config.EdgeLevel = 1;
             return true;
         }
         
-        static bool GenPixel(MapGenArgs args) {
-            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
+        static bool GenDesert(Player p, Level lvl, string seed) {
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.desert);
+        }
+        
+        static bool GenPixel(Player p, Level lvl, string seed) {
+            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
             NextBlock nextBlock = () => Block.White;
             
             // Cuboid the four walls
-            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
-            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
-            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, nextBlock);
-            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 1, 0,    maxX, maxY, 0,    nextBlock);
+            Cuboid(lvl, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 1, 0,    0, maxY, maxZ,    nextBlock);
+            Cuboid(lvl, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base
-            Cuboid(args, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
+            Cuboid(lvl, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             return true;
         }
         
-        static bool GenSpace(MapGenArgs args) {
-            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
-            Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            NextBlock nextBlock = () => rand.Next(100) == 0 ? Block.Iron : Block.Obsidian;
+        static bool GenSpace(Player p, Level lvl, string seed) {
+            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
+            Random rng = MapGen.MakeRng(seed);
+            NextBlock nextBlock = () => rng.Next(100) == 0 ? Block.Iron : Block.Obsidian;
 
             // Cuboid the four walls
-            Cuboid(args, 0, 2, 0,    maxX, maxY, 0, nextBlock);
-            Cuboid(args, 0, 2, maxZ, maxX, maxY, maxZ, nextBlock);
-            Cuboid(args, 0, 2, 0,    0, maxY, maxZ, nextBlock);
-            Cuboid(args, maxX, 2, 0, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 2, 0,    maxX, maxY, 0,    nextBlock);
+            Cuboid(lvl, 0, 2, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 2, 0,    0, maxY, maxZ,    nextBlock);
+            Cuboid(lvl, maxX, 2, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base and top
-            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, () => Block.Bedrock);
-            Cuboid(args, 0, 1, 0,    maxX, 1, maxZ, nextBlock);
-            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 0, 0,    maxX, 0, maxZ, () => Block.Bedrock);
+            Cuboid(lvl, 0, 1, 0,    maxX, 1, maxZ,    nextBlock);
+            Cuboid(lvl, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
         }
         
-        static bool GenRainbow(MapGenArgs args) {
-            int maxX = args.Level.Width - 1, maxY = args.Level.Height - 1, maxZ = args.Level.Length - 1;
-            Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            NextBlock nextBlock = () => (byte)rand.Next(Block.Red, Block.White);
+        static bool GenRainbow(Player p, Level lvl, string seed) {
+            int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
+            Random rng = MapGen.MakeRng(seed);
+            NextBlock nextBlock = () => (byte)rng.Next(Block.Red, Block.White);
 
             // Cuboid the four walls
-            Cuboid(args, 0, 1, 0,    maxX, maxY, 0, nextBlock);
-            Cuboid(args, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
-            Cuboid(args, 0, 1, 0,    0, maxY, maxZ, nextBlock);
-            Cuboid(args, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 1, 0,    maxX, maxY, 0,    nextBlock);
+            Cuboid(lvl, 0, 1, maxZ, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 1, 0,    0, maxY, maxZ,    nextBlock);
+            Cuboid(lvl, maxX, 1, 0, maxX, maxY, maxZ, nextBlock);
             
             // Cuboid base and top
-            Cuboid(args, 0, 0, 0,    maxX, 0, maxZ, nextBlock);
-            Cuboid(args, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
+            Cuboid(lvl, 0, 0, 0,    maxX, 0, maxZ,    nextBlock);
+            Cuboid(lvl, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
         }
         
-        static bool GenHell(MapGenArgs args) {
-            Random rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            int width = args.Level.Width, height = args.Level.Height, length = args.Level.Length;
+        static bool GenHell(Player p, Level lvl, string seed) {
+            Random rng = MapGen.MakeRng(seed);
+            int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             int index = 0;
-            byte[] blocks = args.Level.blocks;
+            byte[] blocks = lvl.blocks;
             
             for (int y = 0; y < height; ++y)
                 for (int z = 0; z < length; ++z)
@@ -125,7 +144,7 @@ namespace MCGalaxy.Generator {
                 } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
                     blocks[index] = Block.Obsidian;
                 } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
-                    if (rand.Next(1000) != 7) { index++; continue; }
+                    if (rng.Next(1000) != 7) { index++; continue; }
                     
                     int colIndex = z * width + x;
                     for (int i = 1; i < (height - y); ++i) {
@@ -135,25 +154,20 @@ namespace MCGalaxy.Generator {
                 }
                 index++;
             }
-            return GenSimple(args);
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.hell);
         }
         
-        
-        static bool GenSimple(MapGenArgs args) {
-            return new RealisticMapGen().GenerateMap(args);
-        }
-        
-        unsafe static void MapSet(int width, int length, byte* ptr, 
+        unsafe static void MapSet(int width, int length, byte* ptr,
                                   int yStart, int yEnd, byte block) {
             int start = (yStart * length) * width;
             int end = (yEnd * length + (length - 1)) * width + (width - 1);
             Utils.memset((IntPtr)ptr, block, start, end - start + 1);
         }
         
-        static void Cuboid(MapGenArgs args, int minX, int minY, int minZ,
+        static void Cuboid(Level lvl, int minX, int minY, int minZ,
                            int maxX, int maxY, int maxZ, NextBlock nextBlock) {
-            int width = args.Level.Width, length = args.Level.Length;
-            byte[] blocks = args.Level.blocks;
+            int width = lvl.Width, length = lvl.Length;
+            byte[] blocks = lvl.blocks;
             
             for (int y = minY; y <= maxY; y++)
                 for (int z = minZ; z <= maxZ; z++)

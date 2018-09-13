@@ -119,7 +119,7 @@ namespace MCGalaxy.Eco {
             if (!CmdNewLvl.GetDimensions(p, args, 3, ref x, ref y, ref z)) return;
             preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
             
-            if (!MapGen.IsRecognisedTheme(args[6])) {
+            if (MapGen.Find(args[6]) == null) {
                 MapGen.PrintThemes(p); return;
             }
             preset.type = args[6];
@@ -157,7 +157,7 @@ namespace MCGalaxy.Eco {
                 
                 p.Message("&aSuccessfully changed preset {0} size to &f{1}", args[3], args[4]);
             } else if (args[3] == "type" || args[3] == "theme") {
-                if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return; }
+                if (MapGen.Find(args[4]) == null) { MapGen.PrintThemes(p); return; }
                 
                 preset.type = args[4];
                 p.Message("&aSuccessfully changed preset type to &f" + preset.type);

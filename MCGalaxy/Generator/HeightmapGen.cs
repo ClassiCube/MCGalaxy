@@ -69,12 +69,10 @@ namespace MCGalaxy.Generator {
             }
         }
         
-        public static bool Generate(MapGenArgs args) {
-            Player p = args.Player;
-            Level lvl = args.Level;
-            if (args.Args.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
+        public static bool Generate(Player p, Level lvl, string args) {
+            if (args.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
             
-            if (!DownloadImage(args.Args, "extra/heightmap/", p)) return false;
+            if (!DownloadImage(args, "extra/heightmap/", p)) return false;
             Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
             if (bmp == null) return false;
             
