@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Misc {
             
             int freeY = -1;
             if (p.level.IsValidPos(x, y, z)) {
-                freeY = FindYBelow(p.level, (ushort)x, (ushort)y, (ushort)z);
+                freeY = FindYBelow(p.level, (ushort)x, y, (ushort)z);
             }
             
             if (freeY == -1) {
@@ -51,18 +51,19 @@ namespace MCGalaxy.Commands.Misc {
             }
         }
         
-        static int FindYBelow(Level lvl, ushort x, ushort y, ushort z) {
-            for (; y > 0; y--) {
-                BlockID block = lvl.GetBlock(x, y, z);
-                if (block != Block.Invalid && CollideType.IsSolid(lvl.CollideType(block))) continue;
-                
-                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
-                if (above != Block.Invalid && CollideType.IsSolid(lvl.CollideType(above))) continue;
-
-                BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
-                if (below != Block.Invalid && CollideType.IsSolid(lvl.CollideType(below))) return y;
+        static int FindYBelow(Level lvl, ushort x, int y, ushort z) {
+            for (; y >= 0; y--) {
+                if (SolidAt(lvl, x, y    , z)) continue;
+                if (SolidAt(lvl, x, y + 1, z)) continue;
+                if (SolidAt(lvl, x, y - 1, z)) return y;
             }
             return -1;
+        }
+        
+        static bool SolidAt(Level lvl, ushort x, int y, ushort z) {
+            if (y >= lvl.Height) return false;
+            BlockID block = lvl.GetBlock(x, (ushort)y, z);
+            return CollideType.IsSolid(lvl.CollideType(block));
         }
         
         public override void Help(Player p) {
