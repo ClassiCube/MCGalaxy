@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Games;

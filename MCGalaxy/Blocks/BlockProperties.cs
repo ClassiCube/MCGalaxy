@@ -81,7 +81,7 @@ namespace MCGalaxy.Blocks {
             BlockProps props = default(BlockProps);
             props.oDoorBlock = Block.Invalid;
             props.GrassBlock = Block.Invalid;
-            props.DirtBlock = Block.Invalid;
+            props.DirtBlock  = Block.Invalid;
             return props;
         }
         
