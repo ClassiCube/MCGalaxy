@@ -399,7 +399,7 @@ namespace MCGalaxy {
                 if (!HasCustomProps(block)) {
                     Props[i] = Block.Props[i];
                 } else {
-                    Props[i] = BlockProps.MakeDefault();
+                    Props[i] = BlockProps.MakeEmpty();
                 }
             }
         }

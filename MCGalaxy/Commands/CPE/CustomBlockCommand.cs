@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.CPE {
                 target = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (target == Block.Invalid) {
                     p.Message("There are no custom block ids left, you must " 
-                	          + cmd + " remove a custom block first.");
+                              + cmd + " remove a custom block first.");
                     return;
                 }
             }
@@ -149,7 +149,7 @@ namespace MCGalaxy.Commands.CPE {
                 dst = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (dst == Block.Invalid) {
                     p.Message("There are no custom block ids left, you must " 
-                	          + cmd + " remove a custom block first.");
+                              + cmd + " remove a custom block first.");
                     return;
                 }
             }
@@ -641,9 +641,8 @@ namespace MCGalaxy.Commands.CPE {
                 p.level.Props[block] = Block.Props[block];
                 p.level.UpdateBlockHandler(block);
             } else {
-                BlockProps[] defProps = new BlockProps[Block.ExtendedCount];
-                Block.MakeDefaultProps(defProps);
-                Block.ChangeGlobalProps(block, defProps[block]);
+                BlockProps props = Block.MakeDefaultProps(block);
+                Block.ChangeGlobalProps(block, props);
             }
         }
         

@@ -77,7 +77,7 @@ namespace MCGalaxy.Blocks {
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         public byte ChangedScope;
         
-        public static BlockProps MakeDefault() {
+        public static BlockProps MakeEmpty() {
             BlockProps props = default(BlockProps);
             props.oDoorBlock = Block.Invalid;
             props.GrassBlock = Block.Invalid;

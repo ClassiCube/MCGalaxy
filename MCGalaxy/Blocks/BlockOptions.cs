@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
-using MCGalaxy.Generator.Foliage;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {
@@ -79,15 +78,13 @@ namespace MCGalaxy.Blocks {
             return null;
         }
         
-        internal static void ApplyChanges(BlockProps[] scope, Level lvl, BlockID block) {
+        internal static void SaveChanges(BlockProps[] scope, Level lvl, BlockID block) {
             if (scope == Block.Props) {
-                scope[block].ChangedScope |= 1;
-                BlockProps.Save("default",      scope, Block.PropsLock, 1);
-                Block.ChangeGlobalProps(block, scope[block]);
+        	    Block.ChangeGlobalProps(block, scope[block]);
+                BlockProps.Save("default",      scope, Block.PropsLock, 1);                
             } else {
-                scope[block].ChangedScope |= 2;
-                BlockProps.Save("_" + lvl.name, scope, lvl.PropsLock,   2);
-                lvl.UpdateBlockHandler(block);
+        	    lvl.UpdateBlockHandler(block);
+                BlockProps.Save("_" + lvl.name, scope, lvl.PropsLock,   2);                
             }
         }
         
@@ -111,8 +108,8 @@ namespace MCGalaxy.Blocks {
         
         static void Toggle(Player p, BlockProps[] scope, BlockID block, string type, ref bool on) {
             on = !on;           
-            string blockName = BlockName(scope, p, block);            
-            p.Message("Block {0} is {1}: {2}", blockName, type, on ? "&aYes" : "&cNo");
+            string name = BlockName(scope, p, block);            
+            p.Message("Block {0} is {1}: {2}", name, type, on ? "&aYes" : "&cNo");
         }
         
         static void SetAI(Player p, BlockProps[] scope, BlockID block, string msg) {
@@ -120,52 +117,52 @@ namespace MCGalaxy.Blocks {
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
             scope[block].AnimalAI = ai;
             
-            string blockName = BlockName(scope, p, block);
-            p.Message("Animal AI for {0} set to: {1}", blockName, ai);
+            string name = BlockName(scope, p, block);
+            p.Message("Animal AI for {0} set to: {1}", name, ai);
         }
         
         static void SetDeathMsg(Player p, BlockProps[] scope, BlockID block, string msg) {
             scope[block].DeathMessage = msg;
             
-            string blockName = BlockName(scope, p, block);
-            if (msg == null) {
-                p.Message("Death message for {0} removed.", blockName);
+            string name = BlockName(scope, p, block);
+            if (msg.Length == 0) {
+                p.Message("Death message for {0} removed.", name);
             } else {
-                p.Message("Death message for {0} set to: {1}", blockName, msg);
+                p.Message("Death message for {0} set to: {1}", name, msg);
             }
         }
         
         static void SetStackId(Player p, BlockProps[] scope, BlockID block, string msg) {
             BlockID stackBlock;
-            if (msg == null) {
+            if (msg.Length == 0) {
                 stackBlock = Block.Air;
             } else {
                 if (!CommandParser.GetBlock(p, msg, out stackBlock)) return;
             }
             scope[block].StackBlock = stackBlock;
             
-            string blockName = BlockName(scope, p, block);
+            string name = BlockName(scope, p, block);
             if (stackBlock == Block.Air) {
-                p.Message("Removed stack block for {0}", blockName);
+                p.Message("Removed stack block for {0}", name);
             } else {
                 p.Message("Stack block for {0} set to: {1}",
-                          blockName, BlockName(scope, p, stackBlock));
+                          name, BlockName(scope, p, stackBlock));
             }
         }
         
         static void SetBlock(Player p, BlockProps[] scope, BlockID block,
                              string msg, string type, ref BlockID target) {
-            string blockName = BlockName(scope, p, block);
-            if (msg == null) {
+            string name = BlockName(scope, p, block);
+            if (msg.Length == 0) {
                 target = Block.Invalid;
-                p.Message("{1} for {0} removed.", blockName, type);
+                p.Message("{1} for {0} removed.", name, type);
             } else {
                 BlockID other;
                 if (!CommandParser.GetBlock(p, msg, out other)) return;
                 if (other == block) { p.Message("ID of {0} must be different.", type); return; }
                 
                 target = other;
-                p.Message("{2} for {0} set to: {1}", blockName, BlockName(scope, p, other), type);
+                p.Message("{2} for {0} set to: {1}", name, BlockName(scope, p, other), type);
             }
         }
     }

@@ -158,7 +158,11 @@ namespace MCGalaxy {
         }        
         
         public static void SetBlocks() {
-            MakeDefaultProps(Props);
+            BlockProps[] props = Props;
+            for (int b = 0; b < props.Length; b++) {
+                props[b] = MakeDefaultProps((BlockID)b);
+            }
+            
             SetDefaultNames();
             string propsPath = BlockProps.PropsPath("default");
                 

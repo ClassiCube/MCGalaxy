@@ -40,12 +40,11 @@ namespace MCGalaxy.Commands.World {
                 p.Message("%WThere is no block \"{0}\".", args[1]); return;
             }
             
-            string value = args.Length > 3 ? args[3] : null;
-            BlockOption opt = BlockOptions.Find(args[2]);
-            if (opt == null) { Help(p); return; }
-            
-            opt.SetFunc(p, scope, block, value);
-            BlockOptions.ApplyChanges(scope, p.level, block);
+            if (args[2].CaselessEq("reset")) {
+            	ResetProps(p, scope, block);
+            } else {
+            	SetProps(p, scope, block, args);
+            }
         }
         
         static BlockProps[] GetScope(Player p, CommandData data, string scope) {
@@ -61,11 +60,37 @@ namespace MCGalaxy.Commands.World {
             return null;
         }
         
+        void ResetProps(Player p, BlockProps[] scope, BlockID block) {
+        	if (scope == Block.Props) {
+        	    scope[block] = Block.MakeDefaultProps(block);
+        	} else {
+        		scope[block] = Block.Props[block];
+        	}
+        	
+        	string name = BlockOptions.BlockName(scope, p, block);
+            p.Message("Reset properties of block {0} to default", name);
+        	BlockOptions.SaveChanges(scope, p.level, block);
+        }
+        
+        void SetProps(Player p, BlockProps[] scope, BlockID block, string[] args) {      	
+            BlockOption opt = BlockOptions.Find(args[2]);
+            if (opt == null) { Help(p); return; }
+
+            string value = args.Length > 3 ? args[3] : "";            
+            opt.SetFunc(p, scope, block, value);
+            
+            int scopeId = (scope == Block.Props) ? 1 : 2;
+            scope[block].ChangedScope |= (byte)scopeId;
+            BlockOptions.SaveChanges(scope, p.level, block);
+        }
+        
         public override void Help(Player p) {
             p.Message("%T/BlockProps global/level [id/name] [property] <value>");
-            p.Message("%HSets various properties for blocks.");            
-            p.Message("%HUse %T/Help BlockProps props %Hfor a list of properties");
-            p.Message("%HUse %T/Help BlockProps [property] %Hfor more details");
+            p.Message("%HSets various properties of that block");
+            p.Message("%H  Use %T/Help BlockProps props %Hfor a list of properties");
+            p.Message("%H  Use %T/Help BlockProps [property] %Hfor more details");
+            p.Message("%T/BlockProps global/level [id/name] reset");
+            p.Message("%HResets properties of that block to their default");
         }
         
         public override void Help(Player p, string message) {
