@@ -95,11 +95,12 @@ namespace MCGalaxy.Bots {
         internal static void WriteAll(StreamWriter w, List<BotProperties> props) {
             w.WriteLine("[");
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
+            string separator = null;
             
-            for (int i = 0; i < props.Count; i++) {               
-                Json.Serialise(w, elems, props[i]);              
-                bool last = i == props.Count - 1;
-                w.WriteLine(last ? "" : ",");
+            for (int i = 0; i < props.Count; i++) {
+                w.Write(separator);
+                Json.Serialise(w, elems, props[i]);
+                separator = ",\r\n";
             }
             w.WriteLine("]");
         }

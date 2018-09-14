@@ -72,7 +72,7 @@ namespace MCGalaxy {
         public BlockDefinition Copy() {
             BlockDefinition def = new BlockDefinition();
             def.RawID = RawID; def.Name = Name;
-            def.Speed = Speed; def.CollideType = CollideType; 
+            def.Speed = Speed; def.CollideType = CollideType;
             def.TopTex = TopTex; def.BottomTex = BottomTex;
             
             def.BlocksLight = BlocksLight; def.WalkSound = WalkSound;
@@ -80,12 +80,12 @@ namespace MCGalaxy {
             def.BlockDraw = BlockDraw; def.FallBack = FallBack;
             
             def.FogDensity = FogDensity;
-            def.FogR = FogR; def.FogG = FogG; def.FogB = FogB;          
+            def.FogR = FogR; def.FogG = FogG; def.FogB = FogB;
             def.MinX = MinX; def.MinY = MinY; def.MinZ = MinZ;
             def.MaxX = MaxX; def.MaxY = MaxY; def.MaxZ = MaxZ;
             
             def.LeftTex = LeftTex; def.RightTex = RightTex;
-            def.FrontTex = FrontTex; def.BackTex = BackTex;            
+            def.FrontTex = FrontTex; def.BackTex = BackTex;
             def.InventoryOrder = InventoryOrder;
             return def;
         }
@@ -131,24 +131,19 @@ namespace MCGalaxy {
             
             using (StreamWriter w = new StreamWriter(path)) {
                 w.WriteLine("[");
-                SaveEntries(w, global, defs);
-                w.WriteLine();
-                w.WriteLine("]");
-            }
-        }
-        
-        static void SaveEntries(StreamWriter w, bool global, BlockDefinition[] defs) {
-            bool first = true;
-            for (int i = 0; i < defs.Length; i++) {
-                BlockDefinition def = defs[i];
-                // don't want to save global blocks in the level's custom blocks list
-                if (!global && def == GlobalDefs[i]) def = null;               
-                if (def == null) continue;
+                string separator = null;
                 
-                // need to add ',' from last element
-                if (!first) w.WriteLine(", ");
-                Json.Serialise(w, elems, def);
-                first = false;
+                for (int i = 0; i < defs.Length; i++) {
+                    BlockDefinition def = defs[i];
+                    // don't want to save global blocks in the level's custom blocks list
+                    if (!global && def == GlobalDefs[i]) def = null;
+                    if (def == null) continue;
+                    
+                    w.Write(separator);
+                    Json.Serialise(w, elems, def);
+                    separator = ",\r\n";
+                }
+                w.WriteLine("]");
             }
         }
         

@@ -189,20 +189,22 @@ namespace MCGalaxy.Config {
         }
         
         public static void Serialise(StreamWriter w, ConfigElement[] elems, object instance) {
-            w.WriteLine("{");
+            w.Write("{\r\n");
+            string separator = null;
+            
             for (int i = 0; i < elems.Length; i++) {
                 ConfigElement elem = elems[i];
                 ConfigAttribute a = elem.Attrib;
+                w.Write(separator);
                 
                 w.Write("    "); WriteString(w, a.Name); w.Write(": ");
                 object raw = elem.Field.GetValue(instance);
                 string value = elem.Attrib.Serialise(raw);
                 
                 WriteValue(w, a, value);
-                bool last = i == elems.Length - 1;
-                w.WriteLine(last ? "" : ",");
+                separator = ",\r\n";
             }
-            w.Write('}');
+            w.Write("\r\n}");
         }
     }
 }

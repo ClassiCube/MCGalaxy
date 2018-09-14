@@ -259,8 +259,8 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = defs[block];
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
             
-            RemoveBlockProps(global, block, p);
             BlockDefinition.Remove(def, defs, p.IsSuper ? null : p.level);
+            ResetProps(global, block, p);          
             
             string scope = global ? "global" : "level";
             p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
@@ -538,7 +538,7 @@ namespace MCGalaxy.Commands.CPE {
             
             block = def.GetBlock();
             BlockDefinition.Add(def, defs, p.IsSuper ? null : p.level);
-            UpdateBlockProps(global, p, block, props);
+            ResetProps(global, block, p);
             return true;
         }
         
@@ -625,25 +625,15 @@ namespace MCGalaxy.Commands.CPE {
             block = Block.FromRaw(raw);
             return success;
         }
-        
-        
-        static void UpdateBlockProps(bool global, Player p, BlockID block, BlockProps props) {
-            if (!global) {
-                p.level.Props[block] = props;
-                p.level.UpdateBlockHandler(block);
-            } else {
-                Block.ChangeGlobalProps(block, props);
-            }
-        }
-        
-        static void RemoveBlockProps(bool global, BlockID block, Player p) {
-            if (!global) {
-                p.level.Props[block] = Block.Props[block];
-                p.level.UpdateBlockHandler(block);
-            } else {
-                BlockProps props = Block.MakeDefaultProps(block);
-                Block.ChangeGlobalProps(block, props);
-            }
+
+        static void ResetProps(bool global, BlockID block, Player p) {
+            BlockProps[] scope = global ? Block.Props : p.level.Props;
+            int changed = scope[block].ChangedScope & BlockOptions.ScopeId(scope);
+            if (changed != 0) return;
+            
+            // properties not manually modified, revert (e.g. make grass die in shadow again)
+            scope[block] = BlockOptions.DefaultProps(scope, p.level, block);
+            BlockOptions.ApplyChanges(scope, p.level, block, false);
         }
         
         

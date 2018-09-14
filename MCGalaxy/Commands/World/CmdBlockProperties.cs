@@ -40,10 +40,13 @@ namespace MCGalaxy.Commands.World {
                 p.Message("%WThere is no block \"{0}\".", args[1]); return;
             }
             
-            if (args[2].CaselessEq("reset")) {
-            	ResetProps(p, scope, block);
+            string opt = args[2];
+            if (opt.CaselessEq("info")) {
+                Detail(p, scope, block);
+            } else if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
+                ResetProps(p, scope, block);
             } else {
-            	SetProps(p, scope, block, args);
+                SetProps(p, scope, block, args);
             }
         }
         
@@ -60,37 +63,74 @@ namespace MCGalaxy.Commands.World {
             return null;
         }
         
-        void ResetProps(Player p, BlockProps[] scope, BlockID block) {
-        	if (scope == Block.Props) {
-        	    scope[block] = Block.MakeDefaultProps(block);
-        	} else {
-        		scope[block] = Block.Props[block];
-        	}
-        	
-        	string name = BlockOptions.BlockName(scope, p, block);
-            p.Message("Reset properties of block {0} to default", name);
-        	BlockOptions.SaveChanges(scope, p.level, block);
+        internal static void Detail(Player p, BlockProps[] scope, BlockID block) {
+            BlockProps props = scope[block];
+            string name = BlockOptions.Name(scope, p, block);
+            p.Message("%TProperties of {0}:", name);
+            
+            if (props.KillerBlock)          p.Message("  Kills players who collide with this block");
+            if (props.DeathMessage != null) p.Message("  Death message: %S" + props.DeathMessage);
+            
+            if (props.IsDoor)  p.Message("  Is an ordinary door");
+            if (props.IsTDoor) p.Message("  Is a tdoor (allows other blocks through when open)");
+            if (props.oDoorBlock != Block.Invalid) 
+                p.Message("  Is an odoor (can be toggled by doors, and toggles other odoors)");
+            
+            if (props.IsPortal)       p.Message("  Can be used as a %T/Portal");
+            if (props.IsMessageBlock) p.Message("  Can be used as a %T/MessageBlock");
+            
+            if (props.WaterKills) p.Message("  Is destroyed by flooding water");
+            if (props.LavaKills)  p.Message("  Is destroyed by flooding lava");
+            
+            if (props.OPBlock) p.Message("  Is not affected by explosions");
+            if (props.IsRails) p.Message("  Can be used as rails for %T/Train");
+            
+            if (props.AnimalAI != AnimalAI.None) {
+                p.Message("  Has the {0} AI behaviour", props.AnimalAI);
+            }
+            if (props.StackBlock != Block.Air) {
+                p.Message("  Stacks as {0} when placed on top of itself", 
+                          BlockOptions.Name(scope, p, props.StackBlock));
+            }
+            if (props.Drownable) p.Message("%H  Players can drown in this block");
+            
+            if (props.GrassBlock != Block.Invalid) {
+                p.Message("  Grows into {0} when in sunlight", 
+                          BlockOptions.Name(scope, p, props.GrassBlock));
+            }
+            if (props.DirtBlock != Block.Invalid) {
+                p.Message("  Decays into {0} when in shadow", 
+                          BlockOptions.Name(scope, p, props.DirtBlock));
+            }
         }
         
-        void SetProps(Player p, BlockProps[] scope, BlockID block, string[] args) {      	
+        void ResetProps(Player p, BlockProps[] scope, BlockID block) {
+            scope[block] = BlockOptions.DefaultProps(scope, p.level, block);
+            string name  = BlockOptions.Name(scope, p, block);
+            
+            p.Message("Reset properties of block {0} to default", name);
+            BlockOptions.ApplyChanges(scope, p.level, block, true);
+        }
+        
+        void SetProps(Player p, BlockProps[] scope, BlockID block, string[] args) {
             BlockOption opt = BlockOptions.Find(args[2]);
             if (opt == null) { Help(p); return; }
-
-            string value = args.Length > 3 ? args[3] : "";            
-            opt.SetFunc(p, scope, block, value);
+            string value = args.Length > 3 ? args[3] : "";
             
-            int scopeId = (scope == Block.Props) ? 1 : 2;
-            scope[block].ChangedScope |= (byte)scopeId;
-            BlockOptions.SaveChanges(scope, p.level, block);
+            opt.SetFunc(p, scope, block, value);
+            scope[block].ChangedScope |= BlockOptions.ScopeId(scope);
+            BlockOptions.ApplyChanges(scope, p.level, block, true);
         }
         
         public override void Help(Player p) {
+            p.Message("%T/BlockProps global/level [id/name] info");
+            p.Message("%HLists the properties of that block");
+            p.Message("%T/BlockProps global/level [id/name] reset");
+            p.Message("%HResets properties of that block to their default");
             p.Message("%T/BlockProps global/level [id/name] [property] <value>");
             p.Message("%HSets various properties of that block");
             p.Message("%H  Use %T/Help BlockProps props %Hfor a list of properties");
             p.Message("%H  Use %T/Help BlockProps [property] %Hfor more details");
-            p.Message("%T/BlockProps global/level [id/name] reset");
-            p.Message("%HResets properties of that block to their default");
         }
         
         public override void Help(Player p, string message) {

@@ -41,7 +41,6 @@ namespace MCGalaxy {
             
         public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.ExtendedCount];
         public BlockProps[] Props = new BlockProps[Block.ExtendedCount];
-        internal readonly object PropsLock = new object();
         public ExtrasCollection Extras = new ExtrasCollection();
         public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
         bool unloadedBots;

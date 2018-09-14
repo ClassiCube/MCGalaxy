@@ -24,19 +24,7 @@ namespace MCGalaxy {
     public static partial class Block {
         
         public static BlockProps[] Props = new BlockProps[Block.ExtendedCount];
-        public static readonly object PropsLock = new object();
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
-        
-        internal static void ChangeGlobalProps(BlockID block, BlockProps props) {
-            Level[] loaded = LevelInfo.Loaded.Items;
-            Block.Props[block] = props;
-            
-            foreach (Level lvl in loaded) {
-                if (lvl.HasCustomProps(block)) continue;
-                lvl.Props[block] = props;
-                lvl.UpdateBlockHandler(block);
-            }
-        }
         
         internal static BlockProps MakeDefaultProps(BlockID b) {
             BlockProps props = BlockProps.MakeEmpty();

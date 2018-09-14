@@ -72,6 +72,7 @@ namespace MCGalaxy.Config {
     
     public sealed class ConfigBlockAttribute : ConfigIntegerAttribute {
         BlockID defBlock;
+        public ConfigBlockAttribute() : this(null, null, Block.Air) { }
         public ConfigBlockAttribute(string name, string section, BlockID def)
             : base(name, section) { defBlock = def; }
         
