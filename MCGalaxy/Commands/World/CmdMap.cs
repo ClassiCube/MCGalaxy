@@ -125,8 +125,7 @@ namespace MCGalaxy.Commands.World {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("options")) {
-                p.Message("%HOptions: %S{0}", 
-                               LevelOptions.Options.Join(opt_ => opt_.Name));
+                p.Message("%HOptions: &f{0}", LevelOptions.Options.Join(o => o.Name));
                 p.Message("%HUse %T/Help map [option] %Hto see description for that option");
                 return;
             }
