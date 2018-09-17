@@ -92,15 +92,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
-            if (!CommandParser.GetUShort(p, input, type, ref len)) return false;
-            if (len == 0) { p.Message("%W{0} cannot be 0.", type); return false; }
-            if (len > 16384) { p.Message("%W{0} must be 16384 or less.", type); return false; }
-            
-            if ((len % 16) != 0) {
-                p.Message("%WMap {0} of {1} blocks is not divisible by 16!", type, len);
-                p.Message("%WAs such, you may see rendering artifacts on some clients.");
-            }
-            return true;
+            return CommandParser.GetUShort(p, input, type, ref len, 1, 16384);
         }
         
          static bool CheckMapVolume(Player p, int x, int y, int z) {

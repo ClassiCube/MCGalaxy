@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
@@ -29,21 +30,25 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(4);
-            if (args.Length < 3) { Help(p); return; }
+            if (args.Length < 2) { Help(p); return; }
             
             BlockProps[] scope = GetScope(p, data, args[0]);
             if (scope == null) return;
             
+            if (args[1].CaselessEq("list")) {
+            	ListProps(p, scope, args); return;
+            }
+                        
             Player pScope = scope == Block.Props ? Player.Console : p;
             BlockID block = Block.Parse(pScope, args[1]);
             if (block == Block.Invalid) {
                 p.Message("%WThere is no block \"{0}\".", args[1]); return;
             }
             
+            if (args.Length < 3) { Help(p); return; }
             string opt = args[2];
-            if (opt.CaselessEq("info")) {
-                Detail(p, scope, block);
-            } else if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
+            
+            if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
                 ResetProps(p, scope, block);
             } else {
                 SetProps(p, scope, block, args);
@@ -104,6 +109,26 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
+        static List<BlockID> FilterProps(BlockProps[] scope) {
+            int changed = BlockOptions.ScopeId(scope);
+            List<BlockID> filtered = new List<BlockID>();
+            
+            for (int b = 0; b < scope.Length; b++) {
+                if ((scope[b].ChangedScope & changed) == 0) continue;                
+                filtered.Add((BlockID)b);
+            }
+            return filtered;
+        }
+        
+        void ListProps(Player p, BlockProps[] scope, string[] args) {
+            List<BlockID> filtered = FilterProps(scope);
+            string cmd      = "BlockProps " + args[0] + " list";
+            string modifier = args.Length > 2 ? args[2] : "";
+            
+            MultiPageOutput.Output(p, filtered, b => BlockOptions.Name(scope, p, b),
+                                   cmd, "modified blocks", modifier, false);
+        }
+        
         void ResetProps(Player p, BlockProps[] scope, BlockID block) {
             scope[block] = BlockOptions.DefaultProps(scope, p.level, block);
             string name  = BlockOptions.Name(scope, p, block);
@@ -123,7 +148,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BlockProps global/level [id/name] info");
+            p.Message("%T/BlockProps global/level [id/name] info"); // TODO: remove this, update with copy/list
             p.Message("%HLists the properties of that block");
             p.Message("%T/BlockProps global/level [id/name] reset");
             p.Message("%HResets properties of that block to their default");
