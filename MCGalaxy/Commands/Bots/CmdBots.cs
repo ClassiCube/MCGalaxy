@@ -29,9 +29,9 @@ namespace MCGalaxy.Commands.Bots {
         public override void Use(Player p, string message, CommandData data) { 
             Level lvl = p.IsSuper ? null : p.level;
             string[] args = message.SplitSpaces(2);
-            int ignored, offset = 0;
+            int offset = 0;
             
-            if (args.Length == 2 || !(message.Length == 0 || args[0].CaselessEq("all") || int.TryParse(args[0], out ignored))) {
+            if (args.Length == 2 || (message.Length > 0 && !IsListModifier(args[0]))) {
                 lvl = Matcher.FindLevels(p, args[0]);
                 offset = 1;
                 if (lvl == null) return;

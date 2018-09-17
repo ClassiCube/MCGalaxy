@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = message.SplitSpaces(2);
             BrushFactory brush = BrushFactory.Find(args[0]);
             
-            if (args[0].CaselessEq("list")) {
+            if (IsListCommand(args[0])) {
                 List(p);
             } else if (brush == null) {
                 p.Message("No brush found with name \"{0}\".", args[0]);

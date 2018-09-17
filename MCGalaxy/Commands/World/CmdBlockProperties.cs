@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             BlockProps[] scope = GetScope(p, data, args[0]);
             if (scope == null) return;
             
-            if (args[1].CaselessEq("list")) {
+            if (IsListCommand(args[1]) && (args.Length == 2 || IsListModifier(args[2]))) {
             	ListProps(p, scope, args); return;
             }
                         
@@ -148,8 +148,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BlockProps global/level [id/name] info"); // TODO: remove this, update with copy/list
-            p.Message("%HLists the properties of that block");
+            p.Message("%T/BlockProps global/level list"); // TODO: copy
+            p.Message("%HLists blocks which have non-default properties");
             p.Message("%T/BlockProps global/level [id/name] reset");
             p.Message("%HResets properties of that block to their default");
             p.Message("%T/BlockProps global/level [id/name] [property] <value>");

@@ -80,6 +80,12 @@ namespace MCGalaxy {
             return false;
         }
         
+        protected static bool IsListModifier(string str) {
+            int ignored;
+            return str.CaselessEq("all") || int.TryParse(str, out ignored);
+        }
+        
+        
         protected internal static bool IsCreateCommand(string str) {
             return str.CaselessEq("create") || str.CaselessEq("add") || str.CaselessEq("new");
         } 
