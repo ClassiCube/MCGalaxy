@@ -33,22 +33,19 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 2) { Help(p); return; }
             
             BlockProps[] scope = GetScope(p, data, args[0]);
-            if (scope == null) return;
-            
+            if (scope == null) return;           
             if (IsListCommand(args[1]) && (args.Length == 2 || IsListModifier(args[2]))) {
             	ListProps(p, scope, args); return;
             }
-                        
-            Player pScope = scope == Block.Props ? Player.Console : p;
-            BlockID block = Block.Parse(pScope, args[1]);
-            if (block == Block.Invalid) {
-                p.Message("%WThere is no block \"{0}\".", args[1]); return;
-            }
             
-            if (args.Length < 3) { Help(p); return; }
+            BlockID block = GetBlock(p, scope, args[1]);
+            if (block == Block.Invalid) return;
+            if (args.Length < 3) { Help(p); return; }            
             string opt = args[2];
             
-            if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
+            if (opt.CaselessEq("copy")) {
+                CopyProps(p, scope, block, args);
+            } else if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
                 ResetProps(p, scope, block);
             } else {
                 SetProps(p, scope, block, args);
@@ -66,6 +63,16 @@ namespace MCGalaxy.Commands.World {
             
             p.Message("%WScope must be: global or level");
             return null;
+        }
+        
+        static BlockID GetBlock(Player p, BlockProps[] scope, string str) {
+        	Player pScope = scope == Block.Props ? Player.Console : p;
+            BlockID block = Block.Parse(pScope, str);
+            
+            if (block == Block.Invalid) {
+                p.Message("%WThere is no block \"{0}\".", str);
+            }
+            return block;
         }
         
         internal static void Detail(Player p, BlockProps[] scope, BlockID block) {
@@ -129,11 +136,25 @@ namespace MCGalaxy.Commands.World {
                                    cmd, "modified blocks", modifier, false);
         }
         
+        void CopyProps(Player p, BlockProps[] scope, BlockID block, string[] args) {
+        	if (args.Length < 4) { Help(p); return; }
+        	BlockID dst = GetBlock(p, scope, args[3]);
+        	if (dst == Block.Invalid) return;
+        	
+        	scope[dst] = scope[block];
+        	scope[dst].ChangedScope |= BlockOptions.ScopeId(scope);
+            
+            p.Message("Copied properties of {0} to {1}",
+                      BlockOptions.Name(scope, p, block),
+                      BlockOptions.Name(scope, p, dst));
+            BlockOptions.ApplyChanges(scope, p.level, block, true);
+        }
+        
         void ResetProps(Player p, BlockProps[] scope, BlockID block) {
             scope[block] = BlockOptions.DefaultProps(scope, p.level, block);
             string name  = BlockOptions.Name(scope, p, block);
             
-            p.Message("Reset properties of block {0} to default", name);
+            p.Message("Reset properties of {0} to default", name);
             BlockOptions.ApplyChanges(scope, p.level, block, true);
         }
         
@@ -147,9 +168,11 @@ namespace MCGalaxy.Commands.World {
             BlockOptions.ApplyChanges(scope, p.level, block, true);
         }
         
-        public override void Help(Player p) {
-            p.Message("%T/BlockProps global/level list"); // TODO: copy
+        public override void Help(Player p) {                	
+            p.Message("%T/BlockProps global/level list");
             p.Message("%HLists blocks which have non-default properties");
+            p.Message("%T/BlockProps global/level [id/name] copy [new id]");
+            p.Message("%HCopies properties of that block to another");
             p.Message("%T/BlockProps global/level [id/name] reset");
             p.Message("%HResets properties of that block to their default");
             p.Message("%T/BlockProps global/level [id/name] [property] <value>");
