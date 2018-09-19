@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (color == null) return;
             
             p.Message("You changed the color of bot " + bot.ColoredName + 
-                           " %Sto " + color + Colors.Name(color));
+                      " %Sto " + color + Colors.Name(color));
             bot.color = color;
             
             bot.GlobalDespawn();
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
-                if (color == who.color) { p.Message("λNICK %Salready has that color."); return; }
+                if (color == who.color) { p.Message(who.ColoredName + " %Salready has that color."); return; }
                 
                 Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
                 who.color = color;
