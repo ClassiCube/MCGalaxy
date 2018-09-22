@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.World {
         
         static void HandleMap(Player p, string cmd, string value) {
             cmd = cmd.ToUpper();
-            bool mapOnly = !(cmd == "ADD" || cmd.Length == 0);
+            bool mapOnly = !(cmd.Length == 0 || IsCreateCommand(cmd));
             if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
                 p.Message("You may only perform that action on your own map."); return;
             }
