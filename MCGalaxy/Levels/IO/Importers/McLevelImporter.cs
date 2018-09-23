@@ -24,6 +24,7 @@ namespace MCGalaxy.Levels.IO {
     public sealed class McLevelImporter : IMapImporter {
 
         public override string Extension { get { return ".mclevel"; } }
+        public override string Description { get { return "Minecraft Indev map"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
             throw new NotSupportedException();

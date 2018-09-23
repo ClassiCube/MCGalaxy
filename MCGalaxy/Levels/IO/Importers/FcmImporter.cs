@@ -25,6 +25,7 @@ namespace MCGalaxy.Levels.IO {
     public sealed class FcmImporter : IMapImporter {
 
         public override string Extension { get { return ".fcm"; } }
+        public override string Description { get { return "fCraft/800Craft/ProCraft map"; } }
         
         public override Vec3U16 ReadDimensions(Stream src) {
             BinaryReader reader = new BinaryReader(src);

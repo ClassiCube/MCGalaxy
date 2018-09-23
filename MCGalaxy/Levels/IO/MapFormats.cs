@@ -24,8 +24,9 @@ namespace MCGalaxy.Levels.IO {
     
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapImporter {
-        
+    	
         public abstract string Extension { get; }
+        public abstract string Description { get; }
         
         public Level Read(string path, string name, bool metadata) {
             using (FileStream fs = File.OpenRead(path))

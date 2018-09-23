@@ -41,6 +41,7 @@ namespace MCGalaxy.Levels.IO {
     public sealed class DatImporter : IMapImporter {
 
         public override string Extension { get { return ".dat"; } }
+        public override string Description { get { return "Minecraft Classic map"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
             throw new NotSupportedException();

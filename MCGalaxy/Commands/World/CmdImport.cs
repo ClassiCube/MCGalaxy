@@ -68,9 +68,19 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             p.Message("%T/Import [name]");
             p.Message("%HImports a map file with that name.");
-            p.Message("%HSupported formats: %S{0}",
-                           IMapImporter.Formats.Join(imp => imp.Extension));
+            p.Message("%HSee %T/Help Import formats %Hfor supported formats");
             p.Message("  %HNote: Only loads maps from the /extra/import/ folder");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (message.CaselessEq("formats")) {
+                p.Message("%HSupported formats:");
+                foreach (IMapImporter format in IMapImporter.Formats) {
+                    p.Message("  {0} ({1})", format.Extension, format.Description);
+                }
+            } else {
+                base.Help(p, message);
+            }
         }
     }
 }

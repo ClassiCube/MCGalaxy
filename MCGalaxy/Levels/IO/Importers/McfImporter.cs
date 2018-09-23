@@ -28,6 +28,7 @@ namespace MCGalaxy.Levels.IO {
     public sealed class McfImporter : IMapImporter {
 
         public override string Extension { get { return ".mcf"; } }
+        public override string Description { get { return "MCForge redux map"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
