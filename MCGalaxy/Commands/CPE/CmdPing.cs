@@ -30,18 +30,20 @@ namespace MCGalaxy.Commands.Chatting {
                 if (p.IsSuper) { p.Message("Super users cannot measure their own ping."); return; }
                 
                 if (!p.hasTwoWayPing) {
-                    p.Message("Your client does not support measuring ping. You may need to update it.");
+                    p.Message("Your client does not support measuring ping.");
+                } else if (p.Ping.Measures() == 0) {
+                    p.Message("No ping measurements yet. Try again in a bit.");
                 } else {
-                     p.Message(p.Ping.Format());
+                    p.Message(p.Ping.Format());
                 }
             } else {
-                if (!CheckExtraPerm(p, data, 1)) return;            
+                if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list for online players:");
                 
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(data, p, pl)) continue;
-                    if (pl.Ping.AveragePingMilliseconds() == 0) continue;
+                    if (pl.Ping.Measures() == 0) continue;
                     p.Message(pl.ColoredName + " %S- " + pl.Ping.Format());
                 }
             }

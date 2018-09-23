@@ -65,42 +65,47 @@ namespace MCGalaxy.Network {
         }
         
         
-        /// <summary> Gets lowest (best) ping in milliseconds, or 0 if no ping measures. </summary>
-        public int LowestPingMilliseconds() {
-            double totalMs = 100000000;
-            foreach (PingEntry ping in Entries) {
-                if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
-                totalMs = Math.Min(totalMs, ping.Latency);
-            }
-            return (int)totalMs;
+        bool Valid(int i) {
+            PingEntry e = Entries[i];
+            return e.TimeSent.Ticks != 0 && e.TimeReceived.Ticks != 0;
         }
         
-        /// <summary> Gets average ping in milliseconds, or 0 if no ping measures. </summary>
-        public int AveragePingMilliseconds() {
-            double totalMs = 0;
+        public int Measures() {
             int measures = 0;
-            foreach (PingEntry ping in Entries) {
-                if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
-                totalMs += ping.Latency; measures++;
+            for (int i = 0; i < Entries.Length; i++) {
+                if (Valid(i)) measures++;
             }
-            return measures == 0 ? 0 : (int)(totalMs / measures);
+            return measures;
         }
         
-        /// <summary> Gets worst ping in milliseconds, or 0 if no ping measures. </summary>
-        public double HighestPingMilliseconds() {
-            double totalMs = 0;
-            foreach (PingEntry ping in Entries) {
-                if (ping.TimeSent.Ticks == 0 || ping.TimeReceived.Ticks == 0) continue;
-                totalMs = Math.Max(totalMs, ping.Latency);
+        public int LowestPing() {
+            double ms = 100000000;
+            for (int i = 0; i < Entries.Length; i++) {
+                if (Valid(i)) { ms = Math.Min(ms, Entries[i].Latency); }
             }
-            return (int)totalMs;
+            return (int)ms;
+        }
+        
+        public int AveragePing() {
+            double ms = 0;
+            int measures = 0;
+            for (int i = 0; i < Entries.Length; i++) {
+                if (Valid(i)) { ms += Entries[i].Latency; measures++; }
+            }
+            return measures == 0 ? 0 : (int)(ms / measures);
+        }
+        
+        public int HighestPing() {
+            double ms = 0;
+            for (int i = 0; i < Entries.Length; i++) {
+                if (Valid(i)) { ms = Math.Max(ms, Entries[i].Latency); }
+            }
+            return (int)ms;
         }
         
         public string Format() {
             return string.Format("Lowest ping {0}ms, average {1}ms, highest {2}ms",
-                                 LowestPingMilliseconds(),
-                                 AveragePingMilliseconds(),
-                                 HighestPingMilliseconds());
+                                 LowestPing(), AveragePing(), HighestPing());
         }
     }
 }
