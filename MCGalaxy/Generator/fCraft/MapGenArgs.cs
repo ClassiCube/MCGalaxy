@@ -4,10 +4,10 @@ using MCGalaxy;
 
 namespace MCGalaxy.Generator {
     /// <summary> Contains parameters for advanced map generation. </summary>
-    public sealed class fCraftMapGeneratorArgs {
+    public sealed class fCraftMapGenArgs {
         public string MapName;
 
-        public MapGenTheme Theme = MapGenTheme.Forest;
+        public MapGenBiome Biome = MapGenBiome.Forest;
         public int   Seed, // 0
         MaxHeight = 20,
         MaxDepth = 12,
@@ -53,13 +53,13 @@ namespace MCGalaxy.Generator {
         public int   BeachExtent = 6,
         BeachHeight = 2;
 
-        public fCraftMapGeneratorArgs() {
+        public fCraftMapGenArgs() {
             Seed = (new Random()).Next();
         }
         
-        public void ApplyTheme( fCraftMapGenerator gen ) {
-            switch( Theme ) {
-                case MapGenTheme.Arctic:
+        public void ApplyTheme( fCraftMapGen gen ) {
+            switch( Biome ) {
+                case MapGenBiome.Arctic:
                     gen.bWaterSurface = Block.Glass;
                     gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.White;
@@ -71,7 +71,7 @@ namespace MCGalaxy.Generator {
                     gen.groundThickness = 1;
                     break;
                     
-                case MapGenTheme.Desert:
+                case MapGenBiome.Desert:
                     gen.bWaterSurface = Block.StillWater;
                     gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Sand;
@@ -82,7 +82,7 @@ namespace MCGalaxy.Generator {
                     gen.bCliff = Block.Gravel;
                     break;
                     
-                case MapGenTheme.Hell:
+                case MapGenBiome.Hell:
                     gen.bWaterSurface = Block.StillLava;
                     gen.bDeepWaterSurface = Block.StillLava;
                     gen.bGroundSurface = Block.Obsidian;
@@ -93,7 +93,7 @@ namespace MCGalaxy.Generator {
                     gen.bCliff = Block.Stone;
                     break;
                     
-                case MapGenTheme.Forest:
+                case MapGenBiome.Forest:
                     gen.bWaterSurface = Block.StillWater;
                     gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Grass;
@@ -104,7 +104,7 @@ namespace MCGalaxy.Generator {
                     gen.bCliff = Block.Stone;
                     break;
                     
-                case MapGenTheme.Swamp:
+                case MapGenBiome.Swamp:
                     gen.bWaterSurface = Block.StillWater;
                     gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Dirt;
@@ -118,10 +118,10 @@ namespace MCGalaxy.Generator {
         }
 
 
-        public static fCraftMapGeneratorArgs MakeTemplate( MapGenTemplate template ) {
+        public static fCraftMapGenArgs MakeTemplate( MapGenTheme template ) {
             switch( template ) {
-                case MapGenTemplate.Archipelago:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Archipelago:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 8,
                         MaxDepth = 20,
                         FeatureScale = 3,
@@ -130,9 +130,9 @@ namespace MCGalaxy.Generator {
                         WaterCoverage = .85f
                     };
 
-                case MapGenTemplate.Atoll:
-                    return new fCraftMapGeneratorArgs {
-                        Theme = MapGenTheme.Desert,
+                case MapGenTheme.Atoll:
+                    return new fCraftMapGenArgs {
+                        Biome = MapGenBiome.Desert,
                         MaxHeight = 2,
                         MaxDepth = 39,
                         UseBias = true,
@@ -147,8 +147,8 @@ namespace MCGalaxy.Generator {
                         WaterCoverage = .95f
                     };
 
-                case MapGenTemplate.Bay:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Bay:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 22,
                         MaxDepth = 12,
                         UseBias = true,
@@ -162,11 +162,11 @@ namespace MCGalaxy.Generator {
                         DelayBias = true
                     };
 
-                case MapGenTemplate.Dunes:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Dunes:
+                    return new fCraftMapGenArgs {
                         AddTrees = false,
                         AddWater = false,
-                        Theme = MapGenTheme.Desert,
+                        Biome = MapGenBiome.Desert,
                         MaxHeight = 12,
                         MaxDepth = 7,
                         FeatureScale = 2,
@@ -176,8 +176,8 @@ namespace MCGalaxy.Generator {
                         InvertHeightmap = true
                     };
 
-                case MapGenTemplate.Hills:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Hills:
+                    return new fCraftMapGenArgs {
                         AddWater = false,
                         MaxHeight = 8,
                         MaxDepth = 8,
@@ -186,10 +186,10 @@ namespace MCGalaxy.Generator {
                         TreeSpacingMax = 13
                     };
 
-                case MapGenTemplate.Ice:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Ice:
+                    return new fCraftMapGenArgs {
                         AddTrees = false,
-                        Theme = MapGenTheme.Arctic,
+                        Biome = MapGenBiome.Arctic,
                         MaxHeight = 2,
                         MaxDepth = 2032,
                         FeatureScale = 2,
@@ -201,8 +201,8 @@ namespace MCGalaxy.Generator {
                         MaxHeightVariation = 0
                     };
 
-                case MapGenTemplate.Island:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Island2:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 16,
                         MaxDepth = 39,
                         UseBias = true,
@@ -217,8 +217,8 @@ namespace MCGalaxy.Generator {
                         Roughness = 0.45f
                     };
 
-                case MapGenTemplate.Lake:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Lake:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 14,
                         MaxDepth = 20,
                         UseBias = true,
@@ -231,8 +231,8 @@ namespace MCGalaxy.Generator {
                         WaterCoverage = .3f
                     };
 
-                case MapGenTemplate.Mountains:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Mountains2:
+                    return new fCraftMapGenArgs {
                         AddWater = false,
                         MaxHeight = 40,
                         MaxDepth = 10,
@@ -246,11 +246,11 @@ namespace MCGalaxy.Generator {
                         CliffThreshold = .9f
                     };
 
-                case MapGenTemplate.Random:
-                    return new fCraftMapGeneratorArgs();
+                case MapGenTheme.Random:
+                    return new fCraftMapGenArgs();
 
-                case MapGenTemplate.River:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.River:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 22,
                         MaxDepth = 8,
                         FeatureScale = 0,
@@ -260,8 +260,8 @@ namespace MCGalaxy.Generator {
                         WaterCoverage = .31f
                     };
 
-                case MapGenTemplate.Streams:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Streams:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 5,
                         MaxDepth = 4,
                         FeatureScale = 2,
@@ -274,8 +274,8 @@ namespace MCGalaxy.Generator {
                         TreeSpacingMax = 14
                     };
 
-                case MapGenTemplate.Peninsula:
-                    return new fCraftMapGeneratorArgs {
+                case MapGenTheme.Peninsula:
+                    return new fCraftMapGenArgs {
                         MaxHeight = 22,
                         MaxDepth = 12,
                         UseBias = true,

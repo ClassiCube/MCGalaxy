@@ -52,7 +52,7 @@ namespace MCGalaxy {
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             }
             
-            LoadCoreProps();
+            LoadDefaultProps();
             for (int i = 0; i < blockAABBs.Length; i++) {
                 blockAABBs[i] = Block.BlockAABB((ushort)i, this);
             }
@@ -386,33 +386,21 @@ namespace MCGalaxy {
             }
         }
         
-        internal bool HasCustomProps(BlockID block) {
-            if ((Props[block].ChangedScope & 2) != 0) return true;
-            
-            if (Block.IsPhysicsType(block)) return false;
-            return CustomBlockDefs[block] != BlockDefinition.GlobalDefs[block];
-        }
-        
-        void LoadCoreProps() {
-            for (int i = 0; i < Props.Length; i++) {
-                BlockID block = (BlockID)i;
-                if (!HasCustomProps(block)) {
-                    Props[i] = Block.Props[i];
-                } else {
-                    Props[i] = BlockProps.MakeDefault();
-                }
+        void LoadDefaultProps() {
+            for (int b = 0; b < Props.Length; b++) {
+                Props[b] = BlockOptions.DefaultProps(Props, this, (BlockID)b);
             }
         }
         
         public void UpdateBlockProps() {
-            LoadCoreProps();
+            LoadDefaultProps();
             string propsPath = BlockProps.PropsPath("_" + MapName);
                 
             // backwards compatibility with older versions
             if (!File.Exists(propsPath)) {
-                BlockProps.Load("lvl_" + MapName, Props, PropsLock, 2, true);
+                BlockProps.Load("lvl_" + MapName, Props, 2, true);
             } else {
-                BlockProps.Load("_" + MapName,    Props, PropsLock, 2, false);
+                BlockProps.Load("_" + MapName,    Props, 2, false);
             }            
         }
         

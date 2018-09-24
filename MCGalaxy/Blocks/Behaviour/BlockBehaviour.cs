@@ -152,7 +152,7 @@ namespace MCGalaxy.Blocks {
                 case Block.Train: return TrainPhysics.Do;
             }
 
-            HandlePhysics animalAI = AnimalAIHandler(props[block].AnimalAI);
+        	HandlePhysics animalAI = AnimalAIHandler(props[block].AnimalAI);
             if (animalAI != null) return animalAI;
             if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
             if (props[block].GrassBlock != Block.Invalid) return OtherPhysics.DoDirtGrow;

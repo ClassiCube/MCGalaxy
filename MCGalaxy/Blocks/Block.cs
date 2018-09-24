@@ -158,16 +158,20 @@ namespace MCGalaxy {
         }        
         
         public static void SetBlocks() {
-            MakeDefaultProps(Props);
+            BlockProps[] props = Props;
+            for (int b = 0; b < props.Length; b++) {
+                props[b] = MakeDefaultProps((BlockID)b);
+            }
+            
             SetDefaultNames();
             string propsPath = BlockProps.PropsPath("default");
                 
             // backwards compatibility with older versions
             if (!File.Exists(propsPath)) {
-                BlockProps.Load("core",    Props, PropsLock, 1, false);
-                BlockProps.Load("global",  Props, PropsLock, 1, true);
+                BlockProps.Load("core",    Props, 1, false);
+                BlockProps.Load("global",  Props, 1, true);
             } else {
-                BlockProps.Load("default", Props, PropsLock, 1, false);
+                BlockProps.Load("default", Props, 1, false);
             }
             
             BlockPerms.Load();

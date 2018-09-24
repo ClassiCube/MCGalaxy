@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.CaselessEq("list")) {
+            if (IsListCommand(message)) {
                 p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
                 return;
             }

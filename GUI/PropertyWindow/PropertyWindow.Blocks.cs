@@ -71,7 +71,7 @@ namespace MCGalaxy.Gui {
             }
             BlockPerms.ResendAllBlockPermissions();
             
-            BlockProps.Save("default", Block.Props, Block.PropsLock, 1);
+            BlockProps.Save("default", Block.Props, 1);
             BlockPerms.Save();
             Block.SetBlocks();
             LoadBlocks();

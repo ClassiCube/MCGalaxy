@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Transforms {
         
         public override Transform Construct(Player p, string message) {
             string[] args = message.SplitSpaces();
-            if (args.Length > 4) { p.MessageLines(Help); return null; }
+            if (message.Length == 0 || args.Length > 4) { p.MessageLines(Help); return null; }
             int mul = 0, div = 0;
             ScaleTransform scaler = new ScaleTransform();
             
@@ -86,7 +86,7 @@ namespace MCGalaxy.Drawing.Transforms {
             if (!CommandParser.GetInt(p, top,    argName + " (numerator)",   ref mul, -32768, 32768)) return false;
             if (!CommandParser.GetInt(p, bottom, argName + " (denominator)", ref div, -32768, 32768)) return false;
             
-            if (div == 0) { p.Message("Cannot divide by 0."); return false; }
+            if (div == 0) { p.Message("%WCannot divide by 0."); return false; }
             float fract = mul / (float)div;
             if (Math.Abs(fract) > 32) { p.Message(argName + " must be between -32 and 32."); return false; }
             return true;

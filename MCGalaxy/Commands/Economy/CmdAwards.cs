@@ -26,42 +26,38 @@ namespace MCGalaxy.Commands.Eco {
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
-            if (args.Length > 2) { Help(p); return; }
-            string plName = "", modifier = args[args.Length - 1];
-            int ignored;
+            if (args.Length > 2) { Help(p); return; }           
+            int offset = 0;
             
-            if (args.Length == 2) {
-                plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-                if (plName == null) return;
-            } else if (message.Length > 0 && !message.CaselessEq("all")) {
-                if (!int.TryParse(args[0], out ignored)) {
-                    modifier = "";
-                    plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-                    if (plName == null) return;
-                }
+            List<Awards.Award> awards = Awards.AwardsList;
+            string name = "";            
+            if (args.Length == 2 || (message.Length > 0 && !IsListModifier(args[0]))) {
+                offset = 1;
+                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+                
+                if (name == null) return;
+                awards = AwardsHas(name);
             }
 
-            List<Awards.Award> awards = GetAwards(plName);
             if (awards.Count == 0) {
-                if (plName.Length > 0) {
-                    p.Message("{0} %Shas no awards.", 
-                                   PlayerInfo.GetColoredName(p, plName));
+                if (name.Length > 0) {
+                    p.Message("{0} %Shas no awards.", PlayerInfo.GetColoredName(p, name));
                 } else {
                     p.Message("This server has no awards yet.");
                 }
                 return;
             }
             
-            string cmd = plName.Length == 0 ? "awards" : "awards " + plName;
+            string cmd = name.Length == 0 ? "awards" : "awards " + name;
+            string modifier = args.Length > offset ? args[offset] : "";
+            
             MultiPageOutput.Output(p, awards, FormatAward,
                                    cmd, "Awards", modifier, true);
         }
         
-        static List<Awards.Award> GetAwards(string plName) {
-            if (plName.Length == 0) return Awards.AwardsList;
-            
+        static List<Awards.Award> AwardsHas(string name) {
             List<Awards.Award> awards = new List<Awards.Award>();
-            List<string> playerAwards = Awards.GetPlayerAwards(plName);
+            List<string> playerAwards = Awards.GetPlayerAwards(name);
             if (playerAwards == null) return awards;
             
             foreach (string awardName in playerAwards) {

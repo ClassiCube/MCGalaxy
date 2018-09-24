@@ -18,77 +18,65 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Generator {
-    
-    /// <summary> Holds arguments for a map generator. </summary>
-    public struct MapGenArgs {
-        public Player Player;
-        public Level Level;
-        public string Theme, Args;
-        public bool UseSeed;
-        public int Seed;
-    }
-    
-    /// <summary> Represents a map generator, returning whether map generation succeeded or not. </summary>
-    public delegate bool MapGenerator(MapGenArgs args);
+namespace MCGalaxy.Generator {    
+    public delegate bool MapGenFunc(Player p, Level lvl, string seed);
+    public enum GenType { Simple, fCraft, Advanced };
     
     /// <summary> Maintains a list of map generator instances. </summary>
-    public static class MapGen {
+    public sealed class MapGen {
+        public string Theme, Desc;
+        public GenType Type;
+        public MapGenFunc GenFunc;
         
-        /// <summary> Returns whether the given map generation theme name is recognised. </summary>
-        public static bool IsRecognisedTheme(string s) {
-            s = s.ToLower();
-            return simpleGens.ContainsKey(s) || advGens.ContainsKey(s);
+        public bool Generate(Player p, Level lvl, string seed) {
+            lvl.Config.Theme = Theme;
+            lvl.Config.Seed  = seed;
+            return GenFunc(p, lvl, seed);
+        }
+        
+        
+        public static Random MakeRng(string seed) {
+            if (seed.Length == 0) return new Random();
+            return new Random(MakeInt(seed));
+        }
+        
+        public static int MakeInt(string seed) {
+            if (seed.Length == 0) return new Random().Next();
+            
+            int value;
+            if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
+            return value;
         }
 
-        public static bool IsSimpleTheme(string s) {
-            return simpleGens.ContainsKey(s.ToLower());
+        
+        public static List<MapGen> Generators = new List<MapGen>();
+        public static MapGen Find(string theme) {
+            foreach (MapGen gen in Generators) {
+                if (gen.Theme.CaselessEq(theme)) return gen;
+            }
+            return null;
         }
         
+        static string FilterThemes(GenType type) { 
+            return Generators.Join(g => g.Type == type ? g.Theme : null); 
+        }
         public static void PrintThemes(Player p) {
-            p.Message("Simple themes: " + simpleGens.Keys.Join(", "));
-            p.Message("Advanced themes: " + advGens.Keys.Join(", "));
+            p.Message("%HSimple themes: &f"   + FilterThemes(GenType.Simple));
+            p.Message("%HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
+            p.Message("%HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
-        public static IEnumerable<string> SimpleThemeNames { get { return simpleGens.Keys; } }       
-        public static IEnumerable<string> AdvancedThemeNames { get { return advGens.Keys; } }
-
-        public static bool Generate(Level lvl, string theme, string seed, Player p) {
-            MapGenArgs genArgs = new MapGenArgs();
-            genArgs.Level = lvl; genArgs.Player = p;
-            genArgs.Theme = theme; lvl.Config.Theme = theme;
-            genArgs.Args = seed;   lvl.Config.Seed  = seed;
-            
-            genArgs.UseSeed = seed.Length > 0;
-            if (genArgs.UseSeed && !int.TryParse(seed, out genArgs.Seed))
-                genArgs.Seed = seed.GetHashCode();
-            MapGenerator generator = null;
-            
-            simpleGens.TryGetValue(theme, out generator);
-            if (generator != null) return generator(genArgs);
-            advGens.TryGetValue(theme, out generator);
-            if (generator != null) return generator(genArgs);
-            return false;
-        }
-        
-        
-        static Dictionary<string, MapGenerator> simpleGens, advGens;
-        public static void RegisterSimpleGen(string theme, MapGenerator gen) {
-            simpleGens[theme.ToLower()] = gen;
-        }
-        
-        public static void RegisterAdvancedGen(string theme, MapGenerator gen) {
-            advGens[theme.ToLower()] = gen;
+        public static void Register(string theme, GenType type, MapGenFunc func, string desc) {
+            MapGen gen = new MapGen() { Theme = theme, GenFunc = func, Desc = desc, Type = type };
+            Generators.Add(gen);
         }
         
         static MapGen() {
-            simpleGens = new Dictionary<string, MapGenerator>();
-            advGens = new Dictionary<string, MapGenerator>();
             SimpleGen.RegisterGenerators();
-            fCraftMapGenerator.RegisterGenerators();
-            
+            fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
-            RegisterAdvancedGen("heightmap", HeightmapGen.Generate);
+            Register("Heightmap", GenType.Advanced, HeightmapGen.Generate,
+                     "%HSeed specifies the URL of the heightmap image");
         }
     }
 }

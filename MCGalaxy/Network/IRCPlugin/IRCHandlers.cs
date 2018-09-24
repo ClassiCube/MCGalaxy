@@ -258,10 +258,10 @@ namespace MCGalaxy.Network {
             return HandleIRCCommand(user, channel, cmdName, cmdArgs);
         }
         
-        bool HandleWhoCommand(UserInfo user, string channel, string ircCmd, bool opchat) {
-            bool whoCmd = ircCmd == ".who" || ircCmd == ".players" || ircCmd == "!players";
+        bool HandleWhoCommand(UserInfo user, string channel, string cmd, bool opchat) {
+            bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
             DateTime last = opchat ? lastOpWho : lastWho;
-            if (!whoCmd || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
+            if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
                 Player p = new IRCPlayer(channel, user.Nick, bot);

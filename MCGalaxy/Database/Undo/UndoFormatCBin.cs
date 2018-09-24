@@ -38,8 +38,8 @@ namespace MCGalaxy.Undo {
                 ChunkHeader chunk = list[i];
                 // Can we safely discard the entire chunk?
                 bool inRange = chunk.BaseTime.AddTicks((65536 >> 2) * TimeSpan.TicksPerSecond) >= args.Start;
-                if (!inRange) { args.Stop = true; return; }
-                if (!args.LevelName.CaselessEq(chunk.LevelName)) continue;
+                if (!inRange) { args.Finished = true; return; }
+                if (!args.Map.CaselessEq(chunk.LevelName)) continue;
                 
                 s.Seek(chunk.DataPosition, SeekOrigin.Begin);
                 if (args.Temp == null)
@@ -56,7 +56,7 @@ namespace MCGalaxy.Undo {
                     // int delta = Flags & 0x3FFF;
                     // timeDeltaSeconds = delta >= 0x2000 ? (short)(delta - 16384) : (short)delta;
                     time = chunk.BaseTime.AddTicks((flags & 0x3FFF) * TimeSpan.TicksPerSecond);
-                    if (time < args.Start) { args.Stop = true; return; }
+                    if (time < args.Start) { args.Finished = true; return; }
                     if (time > args.End) continue;
                     
                     int index = I32(temp, offset + 2);

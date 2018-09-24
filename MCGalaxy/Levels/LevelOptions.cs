@@ -26,8 +26,8 @@ namespace MCGalaxy {
         public string Name, Help;
         public LevelOptions.OptionSetter SetFunc;
         
-        public LevelOption(string name, LevelOptions.OptionSetter setFunc, string help) {
-            Name = name; SetFunc = setFunc; Help = help;
+        public LevelOption(string name, LevelOptions.OptionSetter func, string help) {
+            Name = name; SetFunc = func; Help = help;
         }
     }
     
@@ -126,18 +126,19 @@ namespace MCGalaxy {
         }
         
         static void SetFinite(Player p, Level l, string v) { Toggle(p, l, ref l.Config.FiniteLiquids, "Finite mode"); }
-        static void SetAI(Player p, Level l, string v) { Toggle(p, l, ref l.Config.AnimalHuntAI, "Animal AI"); }
-        static void SetEdge(Player p, Level l, string v) { Toggle(p, l, ref l.Config.EdgeWater, "Edge water"); }
-        static void SetGrass(Player p, Level l, string v) { Toggle(p, l, ref l.Config.GrassGrow, "Growing grass"); }
-        static void SetDeath(Player p, Level l, string v) { Toggle(p, l, ref l.Config.SurvivalDeath, "Survival death"); }
+        static void SetAI(Player p,     Level l, string v) { Toggle(p, l, ref l.Config.AnimalHuntAI, "Animal AI"); }
+        static void SetEdge(Player p,   Level l, string v) { Toggle(p, l, ref l.Config.EdgeWater, "Edge water"); }
+        static void SetGrass(Player p,  Level l, string v) { Toggle(p, l, ref l.Config.GrassGrow, "Growing grass"); }
+        static void SetDeath(Player p,  Level l, string v) { Toggle(p, l, ref l.Config.SurvivalDeath, "Survival death"); }
         static void SetKiller(Player p, Level l, string v) { Toggle(p, l, ref l.Config.KillerBlocks, "Killer blocks"); }
         static void SetUnload(Player p, Level l, string v) { Toggle(p, l, ref l.Config.AutoUnload, "Auto unload"); }
-        static void SetGoto(Player p, Level l, string v) { Toggle(p, l, ref l.Config.LoadOnGoto, "Load on goto"); }
-        static void SetDecay(Player p, Level l, string v) { Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay"); }
-        static void SetFlow(Player p, Level l, string v) { Toggle(p, l, ref l.Config.RandomFlow, "Random flow"); }
-        static void SetTrees(Player p, Level l, string v) { Toggle(p, l, ref l.Config.GrowTrees, "Tree growing"); }
+        static void SetGoto(Player p,   Level l, string v) { Toggle(p, l, ref l.Config.LoadOnGoto, "Load on goto"); }
+        static void SetDecay(Player p,  Level l, string v) { Toggle(p, l, ref l.Config.LeafDecay, "Leaf decay"); }
+        static void SetFlow(Player p,   Level l, string v) { Toggle(p, l, ref l.Config.RandomFlow, "Random flow"); }
+        static void SetTrees(Player p,  Level l, string v) { Toggle(p, l, ref l.Config.GrowTrees, "Tree growing"); }
         static void SetBuildable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Buildable, "Buildable"); }
         static void SetDeletable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Deletable, "Deletable"); }
+        
         static void SetChat(Player p, Level l, string v) {
             Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true);
         }

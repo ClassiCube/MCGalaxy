@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
             }
             
             string[] names = Enum.GetNames(typeof(TEnum));
-            p.Message(argName + " must be one of the following: " + names.Join());
+            p.Message(argName + " must be one of the following: &f" + names.Join());
             return false;
         }
         

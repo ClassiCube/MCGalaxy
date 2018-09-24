@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdViewRanks : Command2 {

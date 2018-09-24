@@ -31,19 +31,19 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            args[0] = ModActionCmd.FindIP(p, args[0], "un-IP ban", "unbanip");
-            if (args[0] == null) return;
+            string name, addr = ModActionCmd.FindIP(p, args[0], "UnbanIP", out name);
+            if (addr == null) return;
 
             IPAddress ip;
-            if (!IPAddress.TryParse(args[0], out ip)) { p.Message("\"{0}\" is not a valid IP.", args[0]); return; }
-            if (p.ip == args[0]) { p.Message("You cannot un-IP ban yourself."); return; }
-            if (!Server.bannedIP.Contains(args[0])) { p.Message(args[0] + " is not a banned IP."); return; }
+            if (!IPAddress.TryParse(addr, out ip)) { p.Message("\"{0}\" is not a valid IP.", addr); return; }
+            if (p.ip == addr) { p.Message("You cannot un-IP ban yourself."); return; }
+            if (!Server.bannedIP.Contains(addr)) { p.Message(addr + " is not a banned IP."); return; }
             
             string reason = args.Length > 1 ? args[1] : "";
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             
-            ModAction action = new ModAction(args[0], p, ModActionType.UnbanIP, reason);
+            ModAction action = new ModAction(addr, p, ModActionType.UnbanIP, reason);
             OnModActionEvent.Call(action);
         }
         

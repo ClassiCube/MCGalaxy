@@ -44,7 +44,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.SystemActivity, "main level not found, generating..");
             mainLevel = new Level(ServerConfig.MainLevel, 128, 64, 128);
             
-            MapGen.Generate(mainLevel, "flat", "", null);
+            MapGen.Find("Flat").Generate(Player.Console, mainLevel, "");
             mainLevel.Save();
             LevelInfo.Add(mainLevel);
         }

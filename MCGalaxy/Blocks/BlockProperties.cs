@@ -75,21 +75,23 @@ namespace MCGalaxy.Blocks {
         public BlockID DirtBlock;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
+        /// <remarks> bit 0 set means modified at global scope, bit 1 set means modified at level scope</remarks>
         public byte ChangedScope;
         
-        public static BlockProps MakeDefault() {
+        public static BlockProps MakeEmpty() {
             BlockProps props = default(BlockProps);
             props.oDoorBlock = Block.Invalid;
             props.GrassBlock = Block.Invalid;
-            props.DirtBlock = Block.Invalid;
+            props.DirtBlock  = Block.Invalid;
             return props;
         }
         
         
-        public static void Save(string group, BlockProps[] list, object locker, byte scope) {
-            lock (locker) {
-                if (!Directory.Exists("blockprops"))
+        public static void Save(string group, BlockProps[] list, byte scope) {
+            lock (list) {
+                if (!Directory.Exists("blockprops")) {
                     Directory.CreateDirectory("blockprops");
+        	    }
                 SaveCore(group, list, scope);
             }
         }
@@ -118,8 +120,8 @@ namespace MCGalaxy.Blocks {
         
         public static string PropsPath(string group) { return "blockprops/" + group + ".txt"; }
         
-        public static void Load(string group, BlockProps[] list, object locker, byte scope, bool mapOld) {
-            lock (locker) {
+        public static void Load(string group, BlockProps[] list, byte scope, bool mapOld) {
+            lock (list) {
                 if (!Directory.Exists("blockprops")) return;
                 string path = PropsPath(group);
                 if (File.Exists(path)) LoadCore(path, list, scope, mapOld);

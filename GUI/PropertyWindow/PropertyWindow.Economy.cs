@@ -45,8 +45,9 @@ namespace MCGalaxy.Gui {
             eco_colLvlY.CellTemplate = new NumericalCell();
             eco_colLvlZ.CellTemplate = new NumericalCell();
 
-            foreach (string type in MapGen.SimpleThemeNames) {
-                eco_colLvlType.Items.Add(type);
+            foreach (MapGen gen in MapGen.Generators) {
+                if (gen.Type == GenType.Advanced) continue;
+                eco_colLvlType.Items.Add(gen.Theme);
             }
             eco_dgvMaps.DataError += eco_dgv_DataError;
         }

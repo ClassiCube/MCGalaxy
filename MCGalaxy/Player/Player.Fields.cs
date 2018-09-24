@@ -168,7 +168,7 @@ namespace MCGalaxy {
         internal BlockDefinition gbBlock, lbBlock;
 
         //Undo
-        internal VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>();
+        public VolatileArray<UndoDrawOpEntry> DrawOps = new VolatileArray<UndoDrawOpEntry>();
         internal readonly object pendingDrawOpsLock = new object();
         internal List<PendingDrawOp> PendingDrawOps = new List<PendingDrawOp>();
 

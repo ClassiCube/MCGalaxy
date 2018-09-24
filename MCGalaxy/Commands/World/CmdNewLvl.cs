@@ -47,7 +47,8 @@ namespace MCGalaxy.Commands.World {
         
         internal Level GenerateMap(Player p, string[] args, CommandData data) {
             if (args.Length < 5) return null;
-            if (!MapGen.IsRecognisedTheme(args[4])) { MapGen.PrintThemes(p); return null; }
+            MapGen gen = MapGen.Find(args[4]);
+            if (gen == null) { MapGen.PrintThemes(p); return null; }
 
             ushort x = 0, y = 0, z = 0;
             string name = args[0].ToLower();
@@ -58,7 +59,7 @@ namespace MCGalaxy.Commands.World {
             if (LevelInfo.MapExists(name)) {
                 p.Message("Level \"{0}\" already exists", name); return null;
             }
-            if (!MapGen.IsSimpleTheme(args[4]) && !CheckExtraPerm(p, data, 1)) return null;
+            if (gen.Type == GenType.Advanced && !CheckExtraPerm(p, data, 1)) return null;
 
             if (Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
                 p.Message("You are already generating a map, please wait until that map has finished generating first.");
@@ -69,7 +70,7 @@ namespace MCGalaxy.Commands.World {
             try {
                 p.Message("Generating map \"{0}\"..", name);
                 lvl = new Level(name, x, y, z);
-                if (!MapGen.Generate(lvl, args[4], seed, p)) { lvl.Dispose(); return null; }
+                if (!gen.Generate(p, lvl, seed)) { lvl.Dispose(); return null; }
 
                 string format = seed.Length > 0 ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
                 string msg = string.Format(format, p.ColoredName, lvl.ColoredName, seed);
@@ -91,15 +92,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
-            if (!CommandParser.GetUShort(p, input, type, ref len)) return false;
-            if (len == 0) { p.Message("%W{0} cannot be 0.", type); return false; }
-            if (len > 16384) { p.Message("%W{0} must be 16384 or less.", type); return false; }
-            
-            if ((len % 16) != 0) {
-                p.Message("%WMap {0} of {1} blocks is not divisible by 16!", type, len);
-                p.Message("%WAs such, you may see rendering artifacts on some clients.");
-            }
-            return true;
+            return CommandParser.GetUShort(p, input, type, ref len, 1, 16384);
         }
         
          static bool CheckMapVolume(Player p, int x, int y, int z) {
@@ -118,21 +111,22 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             p.Message("%T/NewLvl [name] [width] [height] [length] [theme] <seed>");
             p.Message("%HCreates/generates a new level.");
-            p.Message("  %HSizes must be >= 16 and <= 8192, and divisible by 16.");
-            p.Message("  %HNOTE: Other players on older clients don't show past 1024.");
-            p.Message("  %HType %T/Help NewLvl themes %Hto see a list of themes.");
-            p.Message("%HSeed is optional, and controls how the level is generated.");
-            p.Message("  %HFlat theme: Seed specifies the grass height.");
-            p.Message("  %HHeightmap theme: Seed specifies url of heightmap image.");            
-            p.Message("  %HOther themes: Seed affects how terrain is generated. " +
-                           "If seed is the same, the generated level will be the same.");
+            p.Message("  %HSizes must be between 1 and 16384");
+            p.Message("  %HSeed is optional, and controls how the level is generated");
+            p.Message("%HUse %T/Help NewLvl themes %Hfor a list of themes.");
+            p.Message("%HUse %T/Help NewLvl [theme] %Hfor details on how seeds affect levels generated with that theme.");
         }
         
         public override void Help(Player p, string message) {
+            MapGen gen = MapGen.Find(message);
+            
             if (message.CaselessEq("theme") || message.CaselessEq("themes")) {
                 MapGen.PrintThemes(p);
+            } else if (gen == null) {
+                p.Message("No theme found with name \"{0}\".", message);
+                p.Message("%HUse %T/Help NewLvl themes %Hfor a list of themes.");
             } else {
-                base.Help(p, message);
+                p.Message(gen.Desc);
             }
         }
     }

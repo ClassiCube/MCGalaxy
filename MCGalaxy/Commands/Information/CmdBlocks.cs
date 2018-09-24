@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
+using MCGalaxy.Commands.World;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
@@ -33,6 +34,7 @@ namespace MCGalaxy.Commands.Info {
             string[] args = message.SplitSpaces();
             string modifier = args.Length > 1 ? args[1] : "";            
             string type = args[0];
+            BlockID block;
             
             if (type.Length == 0 || type.CaselessEq("basic")) {
                 p.Message("Basic blocks: ");
@@ -44,8 +46,8 @@ namespace MCGalaxy.Commands.Info {
                 MultiPageOutput.Output(p, ComplexBlocks(), 
                                        b => FormatBlockName(p, b),
                                        "Blocks complex", "blocks", modifier, false);
-            } else if (Block.Parse(p, type) != Block.Invalid) {
-                OutputBlockData(p, type);
+            } else if ((block = Block.Parse(p, type)) != Block.Invalid) {
+                OutputBlockInfo(p, block);
             } else if (Group.Find(type) != null) {
                 Group grp = Group.Find(type);
                 p.Message("Blocks which {0} %Scan place: ", grp.ColoredName);
@@ -90,57 +92,52 @@ namespace MCGalaxy.Commands.Info {
             return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         
-        static void OutputBlockData(Player p, string blockName) {
-            BlockID block = Block.Parse(p, blockName);
+        static void OutputBlockInfo(Player p, BlockID block) {
+            string name = Block.GetName(p, block);
+            BlockProps[] scope = p.IsSuper ? Block.Props : p.level.Props;
+            CmdBlockProperties.Detail(p, scope, block);
+            
             if (Block.IsPhysicsType(block)) {
-                p.Message("&bComplex information for \"{0}\":", blockName);
-                p.Message("&cBlock will appear as a \"{0}\" block", Block.GetName(p, Block.Convert(block)));
-                OutputBlockProps(p, block);
-                return;
+                p.Message("&bComplex information for \"{0}\":", name);
+                OutputPhysicsInfo(p, scope, block); return;
             }
             
             string msg = "";
             for (BlockID b = Block.CpeCount; b < Block.Count; b++) {
                 if (Block.Convert(b) != block) continue;
-                msg += Block.GetName(p, b) + ", ";
+                msg += FormatBlockName(p, b) + ", ";
             }
 
             if (msg.Length > 0) {
-                p.Message("Blocks which look like \"{0}\":", blockName);
+                p.Message("Blocks which look like \"{0}\":", name);
                 p.Message(msg.Remove(msg.Length - 2));
             } else {
-                p.Message("No Complex Blocks look like \"{0}\"", blockName);
+                p.Message("No complex blocks look like \"{0}\"", name);
             }
         }
         
-        static void OutputBlockProps(Player p, BlockID b) {
-            BlockProps[] scope = p.IsSuper ? Block.Props : p.level.Props;
+        static void OutputPhysicsInfo(Player p, BlockProps[] scope, BlockID b) {
             BlockProps props = scope[b];
+            BlockID conv = Block.Convert(b);
+            p.Message("&c  Appears as a \"{0}\" block", Block.GetName(p, conv));
 
-            if (Block.LightPass(b))
-                p.Message("Block will allow light through");
-            if (Physics(scope, b))
-                p.Message("Block affects physics in some way"); //AFFECT!
-            else
-                p.Message("Block will not affect physics in any way"); //It's AFFECT!
-            if (Block.NeedRestart(b)) p.Message("The block's physics will auto-start");
+            if (Block.LightPass(b))   p.Message("  Allows light through");
+            if (Block.NeedRestart(b)) p.Message("  The block's physics will auto-start");
+            
+            if (Physics(scope, b)) {
+                p.Message("  Affects physics in some way"); //AFFECT!
+            } else {
+                p.Message("  Does not affect physics in any way"); //It's AFFECT!
+            }
 
-            if (props.OPBlock) p.Message("Block is unaffected by explosions");
-
-            if (Block.AllowBreak(b)) p.Message("Anybody can activate the block");
-            if (Block.Walkthrough(b)) p.Message("Block can be walked through");
-            if (props.KillerBlock) p.Message("Walking through block will kill you");
-
-            if (props.IsDoor) p.Message("Block is an ordinary door");
-            if (props.IsTDoor) p.Message("Block is a tdoor, which allows other blocks through when open");
-            if (props.oDoorBlock != Block.Invalid) p.Message("Block is an odoor, which can be toggled by doors and toggles other odoors");
-
-            if (Mover(scope, b)) p.Message("Block can be activated by walking through it");
+            if (Block.AllowBreak(b))     p.Message("  Anybody can activate this block");
+            if (Block.Walkthrough(conv)) p.Message("  Can be walked through");
+            if (Mover(scope, conv))      p.Message("  Can be activated by walking through it");
         }
         
-        static bool Mover(BlockProps[] scope, BlockID b) {
-            bool nonSolid = Block.Walkthrough(Block.Convert(b));
-            return BlockBehaviour.GetWalkthroughHandler(b, scope, nonSolid) != null;
+        static bool Mover(BlockProps[] scope, BlockID conv) {
+            bool nonSolid = Block.Walkthrough(conv);
+            return BlockBehaviour.GetWalkthroughHandler(conv, scope, nonSolid) != null;
         }
         
         static bool Physics(BlockProps[] scope, BlockID b) {
@@ -154,8 +151,7 @@ namespace MCGalaxy.Commands.Info {
         public override void Help(Player p) {
             p.Message("%T/Blocks %H- Lists all basic blocks");
             p.Message("%T/Blocks complex %H- Lists all complex blocks");
-            p.Message("%T/Blocks [basic block] %H- Lists all blocks which look the same");
-            p.Message("%T/Blocks [complex block] %H- Lists specific info on that block");
+            p.Message("%T/Blocks [block] %H- Lists information about that block");
             p.Message("%T/Blocks [rank] %H- Lists all blocks [rank] can use");
             p.Message("%HTo see available ranks, type %T/ViewRanks");
         }

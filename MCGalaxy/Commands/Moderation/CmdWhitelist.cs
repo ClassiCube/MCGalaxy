@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (IsDeleteCommand(args[0])) {
                 if (args.Length < 2) { Help(p); return; }
                 Remove(p, args[1]);
-            } else if (args[0].CaselessEq("list")) {
+            } else if (IsListCommand(args[0])) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 List(p, modifier);
             } else if (args.Length == 1) {

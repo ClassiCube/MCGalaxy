@@ -24,145 +24,119 @@ namespace MCGalaxy {
     public static partial class Block {
         
         public static BlockProps[] Props = new BlockProps[Block.ExtendedCount];
-        public static readonly object PropsLock = new object();
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
-        internal static void ChangeGlobalProps(BlockID block, BlockProps props) {
-            Level[] loaded = LevelInfo.Loaded.Items;
-            Block.Props[block] = props;
-            
-            foreach (Level lvl in loaded) {
-                if (lvl.HasCustomProps(block)) continue;
-                lvl.Props[block] = props;
-                lvl.UpdateBlockHandler(block);
-            }
-        }
-        
-        internal static void MakeDefaultProps(BlockProps[] props) {
-            for (int b = 0; b < props.Length; b++) {
-                props[b] = BlockProps.MakeDefault();
-                if ((b >= Op_Glass && b <= Op_Lava) || b == Invalid || b == RocketStart || b == Bedrock) {
-                    props[b].OPBlock = true;
-                }
-                
-                if ((b >= tDoor_Log && b <= tDoor_Green) || (b >= tDoor_TNT && b <= tDoor_Lava)) {
-                    props[b].IsTDoor = true;
-                }                
-                if (b >= MB_White && b <= MB_Lava) {
-                    props[b].IsMessageBlock = true;
-                }             
-                if (b == Portal_Blue || b == Portal_Orange || (b >= Portal_Air && b <= Portal_Lava)) {
-                    props[b].IsPortal = true;
-                }
-                
-                // oDoor blocks
-                if (b >= oDoor_Log && b <= oDoor_Wood) {
-                    props[b].oDoorBlock = (ushort)(oDoor_Log_air + (b - oDoor_Log));
-                }
-                if (b >= oDoor_Green && b <= oDoor_Water) {
-                    props[b].oDoorBlock = (ushort)(oDoor_Green_air + (b - oDoor_Green));
-                }
-                if (b >= oDoor_Log_air && b <= oDoor_Wood_air) {
-                    props[b].oDoorBlock = (ushort)(oDoor_Log + (b - oDoor_Log_air));
-                }
-                if (b >= oDoor_Green_air && b <= oDoor_Water_air) {
-                    props[b].oDoorBlock = (ushort)(oDoor_Green + (b - oDoor_Green_air));
-                }
-                
-                if ((b >= Red && b <= White) || (b >= LightPink && b <= turquoise)) {
-                    props[b].LavaKills = true;
-                }
-                if (b == Air || b == Sapling || (b >= Dandelion && b <= RedMushroom)) {
-                    props[b].LavaKills = true;
-                    props[b].WaterKills = true;
-                }
-                
-                // Door blocks
-                if (b >= Door_Obsidian && b <= Door_Slab) props[b].IsDoor = true;
-                if (b >= Door_Iron && b <= Door_Bookshelf) props[b].IsDoor = true;
-                if (b >= Door_Orange && b <= Door_White) props[b].IsDoor = true;
+        internal static BlockProps MakeDefaultProps(BlockID b) {
+            BlockProps props = BlockProps.MakeEmpty();
+            if ((b >= Op_Glass && b <= Op_Lava) || b == Invalid || b == RocketStart || b == Bedrock) {
+                props.OPBlock = true;
             }
             
-            // Other door blocks, since they aren't in a consistent order
-            props[Door_Log].IsDoor = true;
-            props[Door_Red].IsDoor = true;
-            props[Door_Cobblestone].IsDoor = true;
-            props[Door_Gold].IsDoor = true;
-            props[Door_Air].IsDoor = true;
-            props[Door_AirActivatable].IsDoor = true;
-            props[Door_Water].IsDoor = true;
-            props[Door_Lava].IsDoor = true;
+            if ((b >= tDoor_Log && b <= tDoor_Green) || (b >= tDoor_TNT && b <= tDoor_Lava)) {
+                props.IsTDoor = true;
+            }
+            if (b >= MB_White && b <= MB_Lava) {
+                props.IsMessageBlock = true;
+            }
+            if (b == Portal_Blue || b == Portal_Orange || (b >= Portal_Air && b <= Portal_Lava)) {
+                props.IsPortal = true;
+            }
+            
+            // oDoor blocks
+            if (b >= oDoor_Log && b <= oDoor_Wood) {
+                props.oDoorBlock = (BlockID)(oDoor_Log_air + (b - oDoor_Log));
+            }
+            if (b >= oDoor_Green && b <= oDoor_Water) {
+                props.oDoorBlock = (BlockID)(oDoor_Green_air + (b - oDoor_Green));
+            }
+            if (b >= oDoor_Log_air && b <= oDoor_Wood_air) {
+                props.oDoorBlock = (BlockID)(oDoor_Log + (b - oDoor_Log_air));
+            }
+            if (b >= oDoor_Green_air && b <= oDoor_Water_air) {
+                props.oDoorBlock = (BlockID)(oDoor_Green + (b - oDoor_Green_air));
+            }
+            
+            // Water/Lava kills
+            props.LavaKills = b == Wood || b == Log 
+                || b == Sponge || b == Bookshelf || b == Leaves || b == Crate;
+            
+            if ((b >= Red && b <= White) || (b >= LightPink && b <= turquoise)) {
+                props.LavaKills = true;
+            }
+            if (b == Air || b == Sapling || (b >= Dandelion && b <= RedMushroom)) {
+                props.LavaKills  = true;
+                props.WaterKills = true;
+            }
+            
+            props.IsDoor   = IsDoor(b);
+            props.AnimalAI = GetAI(b);
+            props.IsRails  = b == Red || b == Op_Air;
+            
+            props.Drownable = b >= Water && b <= StillLava;
+            if (props.Drownable) props.DeathMessage = "@p %S&cdrowned.";
+            if (b == Air) props.DeathMessage = "@p %Shit the floor &chard.";
+            
+            string deathMsg = GetDeathMessage(b);
+            if (deathMsg != null) {
+                props.DeathMessage = deathMsg;
+                props.KillerBlock  = true;
+            }
             
             // Block specific properties
-            props[Wood].LavaKills = true; props[Log].LavaKills = true;
-            props[Sponge].LavaKills = true; props[Bookshelf].LavaKills = true;
-            props[Leaves].LavaKills = true; props[Crate].LavaKills = true;
-            props[Red].IsRails = true; props[Op_Air].IsRails = true;
-            props[Slab].StackBlock = DoubleSlab;
-            props[CobblestoneSlab].StackBlock = Cobblestone;
-            props[Water].Drownable = true; props[StillWater].Drownable = true;
-            props[Lava].Drownable = true; props[StillLava].Drownable = true;
-            props[Dirt].GrassBlock = Block.Grass; props[Grass].DirtBlock = Block.Dirt;
-            
-            // Block specific physics properties
-            props[Block.Bird_Black].AnimalAI = AnimalAI.Fly;
-            props[Block.Bird_White].AnimalAI = AnimalAI.Fly;
-            props[Block.Bird_Lava].AnimalAI = AnimalAI.Fly;
-            props[Block.Bird_Water].AnimalAI = AnimalAI.Fly;
-            
-            props[Block.Bird_Red].AnimalAI = AnimalAI.KillerAir;
-            props[Block.Bird_Blue].AnimalAI = AnimalAI.KillerAir;
-            props[Block.Bird_Killer].AnimalAI = AnimalAI.KillerAir;
-
-            props[Block.Fish_Betta].AnimalAI = AnimalAI.KillerWater;
-            props[Block.Fish_Shark].AnimalAI = AnimalAI.KillerWater;
-            props[Block.Fish_LavaShark].AnimalAI = AnimalAI.KillerLava;
-            
-            props[Block.Fish_Gold].AnimalAI = AnimalAI.FleeWater;
-            props[Block.Fish_Salmon].AnimalAI = AnimalAI.FleeWater;
-            props[Block.Fish_Sponge].AnimalAI = AnimalAI.FleeWater;
-            
-            // Block specific death messages and killer states
-            const string drowned = "@p %S&cdrowned.";
-            const string coldDied = "@p %Sstepped in &dcold water and froze.";
-            const string lavaDied = "@p %Sstood in &cmagma and melted.";
-            
-            SetKiller(props, Block.TNT_Explosion, "@p %S&cblew into pieces.");
-            SetKiller(props, Block.Deadly_Air, "@p %Swalked into &cnerve gas and suffocated.");     
-            SetKiller(props, Block.Deadly_Water, coldDied);
-            SetKiller(props, Block.Deadly_ActiveWater, coldDied);           
-            SetKiller(props, Block.Deadly_Lava, lavaDied);
-            SetKiller(props, Block.Deadly_ActiveLava, lavaDied);
-            SetKiller(props, Block.Deadly_FastLava, lavaDied);
-                                  
-            SetKiller(props, Block.Magma, "@p %Swas hit by &cflowing magma and melted.");
-            SetKiller(props, Block.Geyser, "@p %Swas hit by &cboiling water and melted.");
-            SetKiller(props, Block.Bird_Killer, "@p %Swas hit by a &cphoenix and burnt.");            
-            SetKiller(props, Block.Train, "@p %Swas hit by a &ctrain.");
-            SetKiller(props, Block.Fish_Shark, "@p %Swas eaten by a &cshark.");
-            SetKiller(props, Block.LavaFire, "@p %Sburnt to a &ccrisp.");           
-            SetKiller(props, Block.RocketHead, "@p %Swas &cin a fiery explosion.");
-            SetKiller(props, Block.ZombieBody, "@p %Sdied due to lack of &5brain.");
-            SetKiller(props, Block.Creeper, "@p %Swas killed &cb-SSSSSSSSSSSSSS");           
-            SetKiller(props, Block.Fish_LavaShark, "@p %Swas eaten by a ... LAVA SHARK?!");
-            SetKiller(props, Block.Snake, "@p %Swas bit by a deadly snake.");
-            
-            props[Block.Air].DeathMessage = "@p %Shit the floor &chard.";
-            props[Block.Water].DeathMessage = drowned;
-            props[Block.StillWater].DeathMessage = drowned;
-            props[Block.Lava].DeathMessage = drowned;
-            props[Block.StillLava].DeathMessage = drowned;
+            if (b == Block.Slab)            props.StackBlock = DoubleSlab;
+            if (b == Block.CobblestoneSlab) props.StackBlock = Cobblestone;
+            if (b == Block.Dirt)            props.GrassBlock = Block.Grass;
+            if (b == Block.Grass)           props.DirtBlock  = Block.Dirt;
+            return props;
         }
         
-        static void SetKiller(BlockProps[] props, BlockID block, string msg) {
-            props[block].DeathMessage = msg;
-            props[block].KillerBlock = true;
+        static bool IsDoor(BlockID b) {
+            if (b >= Door_Obsidian && b <= Door_Slab)  return true;
+            if (b >= Door_Iron && b <= Door_Bookshelf) return true;
+            if (b >= Door_Orange && b <= Door_White)   return true;
+            if (b >= Door_Air && b <= Door_Lava)       return true;
+            return b == Door_Cobblestone || b == Door_Red || b == Door_Log || b == Door_Gold;
+        }
+        
+        static AnimalAI GetAI(BlockID b) {
+            if (b == Bird_Black || b == Bird_White || b == Bird_Lava || b == Bird_Water) return AnimalAI.Fly;
+            if (b == Bird_Red   || b == Bird_Blue  || b == Bird_Killer) return AnimalAI.KillerAir;
+
+            if (b == Fish_Betta || b == Fish_Shark) return AnimalAI.KillerWater;
+            if (b == Fish_LavaShark)                return AnimalAI.KillerLava;           
+            if (b == Fish_Gold  || b == Fish_Salmon || b == Fish_Sponge) return AnimalAI.FleeWater;
+            
+            return AnimalAI.None;
+        }
+        
+        static string GetDeathMessage(BlockID b) {
+            if (b == TNT_Explosion) return "@p %S&cblew into pieces.";
+            if (b == Deadly_Air) return "@p %Swalked into &cnerve gas and suffocated.";
+            
+            if (b == Deadly_Water || b == Deadly_ActiveWater)
+                return "@p %Sstepped in &dcold water and froze.";
+            if (b == Deadly_Lava  || b == Deadly_ActiveLava || b == Deadly_FastLava)
+                return "@p %Sstood in &cmagma and melted.";
+            
+            if (b == Magma)  return "@p %Swas hit by &cflowing magma and melted.";
+            if (b == Geyser) return "@p %Swas hit by &cboiling water and melted.";
+            if (b == Bird_Killer) return "@p %Swas hit by a &cphoenix and burnt.";
+            if (b == Train)       return "@p %Swas hit by a &ctrain.";
+            if (b == Fish_Shark)  return "@p %Swas eaten by a &cshark.";
+            if (b == LavaFire)    return "@p %Sburnt to a &ccrisp.";
+            if (b == RocketHead)  return "@p %Swas &cin a fiery explosion.";
+            if (b == ZombieBody)  return "@p %Sdied due to lack of &5brain.";
+            if (b == Creeper)     return "@p %Swas killed &cb-SSSSSSSSSSSSSS";
+            if (b == Fish_LavaShark) return "@p %Swas eaten by a ... LAVA SHARK?!";
+            if (b == Snake)       return "@p %Swas bit by a deadly snake.";
+            
+            return null;
         }
         
         internal static void SetDefaultNames() {
-            string[] names = new string[] { "Air", "Stone", "Grass", "Dirt", "Cobblestone", 
-                "Wood", "Sapling", "Bedrock", "Active_Water", "Water", "Active_Lava", "Lava", 
-                "Sand", "Gravel", "Gold_Ore", "Iron_Ore", "Coal", "Log", "Leaves", "Sponge", 
+            string[] names = new string[] { "Air", "Stone", "Grass", "Dirt", "Cobblestone",
+                "Wood", "Sapling", "Bedrock", "Active_Water", "Water", "Active_Lava", "Lava",
+                "Sand", "Gravel", "Gold_Ore", "Iron_Ore", "Coal", "Log", "Leaves", "Sponge",
                 "Glass", "Red", "Orange", "Yellow", "Lime", "Green", "Teal", "Aqua", "Cyan",
                 "Blue", "Indigo", "Violet", "Magenta", "Pink", "Black", "Gray", "White",
                 "Dandelion", "Rose", "Brown_Shroom", "Red_Shroom", "Gold", "Iron",
@@ -212,7 +186,7 @@ namespace MCGalaxy {
                 if (i > 0 && i < Block.CpeCount) {
                     BlockDefinition def = BlockDefinition.GlobalDefs[i];
                     if (def != null) name = def.Name;
-                }               
+                }
                 coreNames[i] = name;
                 
                 name = name.ToLower();

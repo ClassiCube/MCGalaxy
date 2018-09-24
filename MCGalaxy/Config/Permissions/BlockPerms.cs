@@ -18,9 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using MCGalaxy.Commands;
-using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks {

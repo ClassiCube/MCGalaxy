@@ -50,8 +50,9 @@ namespace MCGalaxy.Gui {
             WindowState = FormWindowState.Normal;
 
             InitServer();
-            foreach (string theme in MapGen.SimpleThemeNames) {
-                map_cmbType.Items.Add(theme);
+            foreach (MapGen gen in MapGen.Generators) {
+                if (gen.Type == GenType.Advanced) continue;
+                map_cmbType.Items.Add(gen.Theme);
             }
             
             Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
@@ -94,7 +95,7 @@ namespace MCGalaxy.Gui {
             Server.Background.QueueOnce(InitServerTask);
         }
         
-        // avoid new object being allocated every time
+        // cache LogMessage, avoids new object being allocated every time
         delegate void LogCallback(LogType type, string message);
         LogCallback logCallback;
         

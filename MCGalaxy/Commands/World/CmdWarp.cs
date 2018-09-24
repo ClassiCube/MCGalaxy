@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Misc {
             if (cmd.Length == 0) { Help(p); return; }
             bool checkExtraPerms = warps == WarpList.Global;
             
-            if (cmd.CaselessEq("list")) {
+            if (IsListCommand(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 MultiPageOutput.Output(p, warps.Items, FormatWarp, group + " list", group + "s", modifier, true);
                 return;

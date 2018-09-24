@@ -6,21 +6,21 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Generator {
 
     /// <summary> Map generator themes. A theme defines what type of blocks are used to fill the map. </summary>
-    public enum MapGenTheme {
+    public enum MapGenBiome {
         Forest, Arctic, Desert, Hell, Swamp
     }
 
 
     /// <summary> Map generator template. Templates define landscape shapes and features. </summary>
-    public enum MapGenTemplate {
-        Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island,
-        Lake, Mountains, Peninsula, Random, River, Streams
+    public enum MapGenTheme {
+        Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island2,
+        Lake, Mountains2, Peninsula, Random, River, Streams
     }
 
 
     /// <summary> Provides functionality for generating map files. </summary>
-    public sealed class fCraftMapGenerator {
-        readonly fCraftMapGeneratorArgs args;
+    public sealed class fCraftMapGen {
+        readonly fCraftMapGenArgs args;
         readonly Random rand;
         readonly Noise noise;
         float[,] heightmap, slopemap;
@@ -31,7 +31,7 @@ namespace MCGalaxy.Generator {
         internal int groundThickness = 5;
         const int SeaFloorThickness = 3;
 
-        public fCraftMapGenerator( fCraftMapGeneratorArgs generatorArgs ) {
+        public fCraftMapGen( fCraftMapGenArgs generatorArgs ) {
             if( generatorArgs == null ) throw new ArgumentNullException( "generatorArgs" );
             args = generatorArgs;
             rand = new Random( args.Seed );
@@ -398,32 +398,32 @@ namespace MCGalaxy.Generator {
         
         
         public static void RegisterGenerators() {
-            foreach (MapGenTemplate templ in Enum.GetValues(typeof(MapGenTemplate))) {
-                MapGen.RegisterSimpleGen("fc_" + templ, GenerateMap);
+            string[] names = Enum.GetNames(typeof(MapGenBiome));
+            string desc = "%HSeed specifies biome of the map. " +
+                 "It must be one of the following: &f" + names.Join();
+                                                                                   
+            foreach (MapGenTheme theme in Enum.GetValues(typeof(MapGenTheme))) {
+                MapGen.Register(theme.ToString(), GenType.fCraft,
+                                (p, lvl, seed) => Gen(p, lvl, seed, theme), desc);
             }
         }
         
-        static bool GenerateMap(MapGenArgs genArgs) {
-            MapGenTheme theme = MapGenTheme.Forest;
-            if (genArgs.Args.Length > 0 && 
-                !CommandParser.GetEnum(genArgs.Player, genArgs.Args, "Seed", ref theme)) return false;
-
-            MapGenTemplate templ = (MapGenTemplate)Enum.Parse(typeof(MapGenTemplate), genArgs.Theme.Substring(3), true);
-            fCraftMapGeneratorArgs args = fCraftMapGeneratorArgs.MakeTemplate(templ);
-            Level map = genArgs.Level;
+        static bool Gen(Player p, Level lvl, string seed, MapGenTheme theme) {
+            MapGenBiome biome = MapGenBiome.Forest;
+            if (seed.Length > 0 && !CommandParser.GetEnum(p, seed, "Seed", ref biome)) return false;
+            fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(theme);
             
-            float ratio = map.Height / 96.0f;
-            args.MaxHeight = (int)Math.Round(args.MaxHeight * ratio);
-            args.MaxDepth = (int)Math.Round(args.MaxDepth * ratio);
+            float ratio = lvl.Height / 96.0f;
+            args.MaxHeight    = (int)Math.Round(args.MaxHeight    * ratio);
+            args.MaxDepth     = (int)Math.Round(args.MaxDepth     * ratio);
             args.SnowAltitude = (int)Math.Round(args.SnowAltitude * ratio);
             
-            args.Theme = theme;
-            args.AddTrees = theme == MapGenTheme.Forest;
-            args.AddWater = theme != MapGenTheme.Desert;
-            args.WaterLevel = (map.Height - 1) / 2;
+            args.Biome      = biome;
+            args.AddTrees   = biome == MapGenBiome.Forest;
+            args.AddWater   = biome != MapGenBiome.Desert;
+            args.WaterLevel = (lvl.Height - 1) / 2;
 
-            fCraftMapGenerator generator = new fCraftMapGenerator(args);
-            generator.Generate(map);
+            new fCraftMapGen(args).Generate(lvl);
             return true;
         }
     }

@@ -71,33 +71,39 @@ namespace MCGalaxy.Commands.Misc {
             p.SendPos(Entities.SelfID, pos, rot);
         }
         
-        static void TeleportCoords(Player p, string[] args, bool precise) {
-            Vec3S32 P; Position pos;
+        internal static bool GetTeleportCoords(Player p, Entity ori, string[] args, bool precise, 
+                                               out Position pos, out byte yaw, out byte pitch) {
+            Vec3S32 P;
+            pos = p.Pos; yaw = ori.Rot.RotY; pitch = ori.Rot.HeadX;
             
             if (!precise) {
                 // relative to feet block coordinates
                 P = p.Pos.FeetBlockCoords;
-                if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
+                if (!CommandParser.GetCoords(p, args, 0, ref P)) return false;
                 pos = Position.FromFeetBlockCoords(P.X, P.Y, P.Z);
             } else {
                 // relative to feet position exactly
                 P = new Vec3S32(p.Pos.X, p.Pos.Y + Entities.CharacterHeight, p.Pos.Z);
-                if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
+                if (!CommandParser.GetCoords(p, args, 0, ref P)) return false;
                 pos = new Position(P.X, P.Y - Entities.CharacterHeight, P.Z);
             }
             
-            byte yaw = p.Rot.RotY, pitch = p.Rot.HeadX;
-            int angle = 0;
-            
+            int angle = 0;            
             if (args.Length > 3) {
-                if (!CommandParser.GetInt(p, args[3], "Yaw angle", ref angle, -360, 360)) return;
+                if (!CommandParser.GetInt(p, args[3], "Yaw angle", ref angle, -360, 360)) return false;
                 yaw = Orientation.DegreesToPacked(angle);
             }            
             if (args.Length > 4) {
-                if (!CommandParser.GetInt(p, args[4], "Pitch angle", ref angle, -360, 360)) return;
+                if (!CommandParser.GetInt(p, args[4], "Pitch angle", ref angle, -360, 360)) return false;
                 pitch = Orientation.DegreesToPacked(angle);
             }
-            
+            return true;
+        }
+        
+        static void TeleportCoords(Player p, string[] args, bool precise) {
+            Position pos; byte yaw, pitch;
+            if (!GetTeleportCoords(p, p, args, precise, out pos, out yaw, out pitch)) return;
+
             SavePreTeleportState(p);
             p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
         }

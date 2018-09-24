@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Games;
@@ -80,6 +79,12 @@ namespace MCGalaxy {
                 p.Message("Can only {0} players ranked below {1}", action, p.group.ColoredName);
             return false;
         }
+        
+        protected static bool IsListModifier(string str) {
+            int ignored;
+            return str.CaselessEq("all") || int.TryParse(str, out ignored);
+        }
+        
         
         protected internal static bool IsCreateCommand(string str) {
             return str.CaselessEq("create") || str.CaselessEq("add") || str.CaselessEq("new");

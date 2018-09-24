@@ -34,54 +34,51 @@ namespace MCGalaxy.Generator {
         float[] terrain, overlay, overlay2;
         float treeDens;
         short treeDist;
-        Random rand;
+        Random rng;
         ushort LiquidLevel;
-        RealisticGenParams genParams;
+        RealisticMapGenArgs args;
         
-        public bool GenerateMap(MapGenArgs args) {
+        public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
             DateTime start = DateTime.UtcNow;
             Logger.Log(LogType.SystemActivity, "Attempting map gen");
-            rand = args.UseSeed ? new Random(args.Seed) : new Random();
-            Level lvl = args.Level;
-            
-            if (!RealisticGenParams.Themes.TryGetValue(args.Theme, out genParams))
-                genParams = new RealisticGenParams();
+            rng = MapGen.MakeRng(seed);
+            this.args = args;
             
             try {
                 terrain = new float[lvl.Width * lvl.Length];
                 overlay = new float[lvl.Width * lvl.Length];
-                if (genParams.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
-                LiquidLevel = genParams.GetLiquidLevel(lvl.Height);
+                if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+                LiquidLevel = args.GetLiquidLevel(lvl.Height);
 
-                GenerateFault(terrain, lvl, rand);
+                GenerateFault(terrain, lvl);
                 FilterAverage(lvl);
                 Logger.Log(LogType.SystemActivity, "Creating overlay");
-                GeneratePerlinNoise(overlay, lvl, rand);
+                GeneratePerlinNoise(overlay, lvl);
 
-                if (genParams.GenerateOverlay2) {
+                if (args.GenerateOverlay2) {
                     Logger.Log(LogType.SystemActivity, "Planning trees");
-                    GeneratePerlinNoise(overlay2, lvl, rand);
+                    GeneratePerlinNoise(overlay2, lvl);
                 }
 
                 Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
-                float rangeLo = genParams.RangeLow;
-                float rangeHi = genParams.RangeHigh;
-                treeDens = genParams.TreeDens;
-                treeDist = genParams.TreeDist;
+                float rangeLo = args.RangeLow;
+                float rangeHi = args.RangeHigh;
+                treeDens = args.TreeDensity;
+                treeDist = args.TreeDistance;
 
                 //loops though evey X/Z coordinate
                 for (int index = 0; index < terrain.Length; index++) {
                     ushort x = (ushort)(index % lvl.Width);
                     ushort z = (ushort)(index / lvl.Width);
                     ushort y;
-                    if (genParams.FalloffEdges) {
+                    if (args.FalloffEdges) {
                         float offset = NegateEdge(x, z, lvl);
                         y = Evaluate(lvl, Range(terrain[index], rangeLo - offset, rangeHi - offset));
                     } else {
                         y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi));
                     }
                     
-                    if (!genParams.UseLavaLiquid)
+                    if (!args.UseLavaLiquid)
                         GenNonLavaColumn(x, y, z, lvl, index);
                     else
                         GenLavaColumn(x, y, z, lvl, index);
@@ -89,7 +86,7 @@ namespace MCGalaxy.Generator {
                 Logger.Log(LogType.SystemActivity, "Total time was {0} seconds.", (DateTime.UtcNow - start).TotalSeconds);
             } catch (Exception e) {
                 Logger.LogError(e);
-                args.Player.Message("Generation failed.");
+                p.Message("%WGeneration failed. See error logs.");
                 return false;
             }
             return true;
@@ -99,10 +96,10 @@ namespace MCGalaxy.Generator {
             if (y > LiquidLevel) {
                 int pos = x + Lvl.Width * (z + y * Lvl.Length);
                 for (ushort yy = 0; y - yy >= 0; yy++) {
-                    if (genParams.SimpleColumns) {
+                    if (args.SimpleColumns) {
                         Lvl.blocks[pos] = Block.Sand;
                     } else if (overlay[index] < 0.72f) {
-                        if (genParams.IslandColumns) { //increase sand height for island
+                        if (args.IslandColumns) { //increase sand height for island
                             if (y > LiquidLevel + 2) {
                                 if (yy == 0) Lvl.blocks[pos] = Block.Grass;     //top layer
                                 else if (yy < 3) Lvl.blocks[pos] = Block.Dirt;  //next few
@@ -121,8 +118,8 @@ namespace MCGalaxy.Generator {
                     pos -= Lvl.Width * Lvl.Length;
                 }
 
-                if (genParams.GenFlowers && overlay[index] < 0.25f) {
-                    switch (rand.Next(12)) {
+                if (args.GenFlowers && overlay[index] < 0.25f) {
+                    switch (rng.Next(12)) {
                         case 10:
                             Lvl.SetTile(x, (ushort)(y + 1), z, Block.Rose); break;
                         case 11:
@@ -132,15 +129,15 @@ namespace MCGalaxy.Generator {
                     }
                 }
                 
-                if (genParams.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
+                if (args.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
                     if (Lvl.IsAirAt(x, (ushort)(y + 1), z)) {
-                        if (Lvl.GetBlock(x, y, z) == Block.Grass || genParams.UseCactus) {
-                            if (rand.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
+                        if (Lvl.GetBlock(x, y, z) == Block.Grass || args.UseCactus) {
+                            if (rng.Next(13) == 0 && !Tree.TreeCheck(Lvl, x, y, z, treeDist)) {
                                 Tree tree = null;
-                                if (genParams.UseCactus) tree = new CactusTree();
+                                if (args.UseCactus) tree = new CactusTree();
                                 else tree = new NormalTree();
                                 
-                                tree.SetData(rand, tree.DefaultSize(rand));
+                                tree.SetData(rng, tree.DefaultSize(rng));
                                 tree.Generate(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
                                             {
                                                 if (Lvl.IsAirAt(xT, yT, zT))
@@ -179,7 +176,7 @@ namespace MCGalaxy.Generator {
                     }
                     
                     if (overlay[index] < 0.3f) {
-                        switch (rand.Next(13)) {
+                        switch (rng.Next(13)) {
                             case 9:
                             case 10:
                             case 11:
@@ -190,7 +187,7 @@ namespace MCGalaxy.Generator {
                                 break;
                         }
                     }
-                    Lvl.SetTile(x, (ushort)(y), z, (rand.Next(100) % 3 == 1 ? Block.Black : Block.Obsidian));
+                    Lvl.SetTile(x, (ushort)(y), z, (rng.Next(100) % 3 == 1 ? Block.Black : Block.Obsidian));
                 }
             } else {
                 for (ushort yy = 0; LiquidLevel - yy >= 0; yy++) {
@@ -211,10 +208,10 @@ namespace MCGalaxy.Generator {
         }
         
         
-        void GenerateFault(float[] array, Level Lvl, Random rand) {
-            float baseHeight = genParams.StartHeight;
-            float dispMax = genParams.DisplacementMax;
-            float dispStep = genParams.DisplacementStep;
+        void GenerateFault(float[] array, Level Lvl) {
+            float baseHeight = args.StartHeight;
+            float dispMax = args.DisplacementMax;
+            float dispStep = args.DisplacementStep;
 
             for (int i = 0; i < array.Length; i++)
                 array[i] = baseHeight;
@@ -226,10 +223,10 @@ namespace MCGalaxy.Generator {
             Logger.Log(LogType.SystemActivity, "Iterations = " + numIterations);
             
             for (int iter = 0; iter < numIterations; iter++) {            
-                float phi = (float)(rand.NextDouble() * 360);
+                float phi = (float)(rng.NextDouble() * 360);
                 float cosPhi = (float)Math.Cos(phi);
                 float sinPhi = (float)Math.Sin(phi);
-                float c = ((float)rand.NextDouble()) * 2 * d - d;
+                float c = ((float)rng.NextDouble()) * 2 * d - d;
 
                 int index = 0;
                 for (ushort z = 0; z < Lvl.Length; z++) {
@@ -249,8 +246,8 @@ namespace MCGalaxy.Generator {
             }
         }
 
-        void GeneratePerlinNoise(float[] array, Level Lvl, Random rand) {
-            NoiseGen.GenerateNormalized(array, 0.7f, 8, Lvl.Width, Lvl.Length, rand.Next(), 64);
+        void GeneratePerlinNoise(float[] array, Level Lvl) {
+            NoiseGen.GenerateNormalized(array, 0.7f, 8, Lvl.Width, Lvl.Length, rng.Next(), 64);
         }
 
         //converts the float into a ushort for map height

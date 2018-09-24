@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Directory.CreateDirectory("extra/reported");
 
             string cmd = args[0];
-            if (cmd.CaselessEq("list")) {
+            if (IsListCommand(cmd)) {
                 HandleList(p, args, data);
             } else if (cmd.CaselessEq("clear")) {
                 HandleClear(p, args, data);
