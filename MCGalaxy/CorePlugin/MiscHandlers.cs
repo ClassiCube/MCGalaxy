@@ -53,7 +53,7 @@ namespace MCGalaxy.Core {
             }
 
             p.ZoneIn = null;
-            p.OnChangedZone();
+            p.OnChangedZone(); // TODO: CurrentEnv here??
             p.SendCurrentTextures();
             p.SendCurrentBlockPermissions();
             

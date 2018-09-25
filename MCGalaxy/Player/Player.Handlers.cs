@@ -366,7 +366,11 @@ namespace MCGalaxy {
         
         public void OnChangedZone() {
             if (Supports(CpeExt.InstantMOTD)) SendMapMotd();
-            Zone zone = ZoneIn;
+            SendCurrentEnv();
+        }
+        
+        public void SendCurrentEnv() {
+        	Zone zone = ZoneIn;
             
             for (int i = 0; i <= 4; i++) {
                 string col = level.Config.GetColor(i);
@@ -381,7 +385,7 @@ namespace MCGalaxy {
                 if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {
                     if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
                         value = zone.Config.GetEnvProp(i);
-                    }                    
+                    }
                     value = ConvertBlock((BlockID)value);
                 } else {
                     if (zone != null && zone.Config.GetEnvProp(i) != -1) {

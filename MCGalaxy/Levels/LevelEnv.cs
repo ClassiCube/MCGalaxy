@@ -125,43 +125,5 @@ namespace MCGalaxy {
                                area, enabled ? "&aON" : "&cOFF");
             }
         }
-
-        
-        internal static void UpdateWeather(Predicate<Player> selector, byte weather) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!selector(pl) || !pl.Supports(CpeExt.EnvWeatherType)) continue;
-                pl.Send(Packet.EnvWeatherType(weather));
-                if (pl.ZoneIn != null) pl.OnChangedZone();
-            }
-        }
-        
-        internal static void UpdateAppearance(Predicate<Player> selector, EnvProp prop, int origValue) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!selector(pl)) continue;
-                int value = origValue;
-                
-                if (prop == EnvProp.SidesBlock || prop == EnvProp.EdgeBlock) {
-                    value = pl.ConvertBlock((BlockID)value);
-                }
-                
-                if (pl.Supports(CpeExt.EnvMapAspect)) {
-                    pl.Send(Packet.EnvMapProperty(prop, value));
-                } else {
-                    pl.SendCurrentTextures(); // Old MapAppearance packets have a few of the map properties
-                }
-                if (pl.ZoneIn != null) pl.OnChangedZone();
-            }
-        }
-        
-        internal static void UpdateColor(Predicate<Player> selector, byte type, string hex) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (!selector(pl) || !pl.Supports(CpeExt.EnvColors)) continue;
-                pl.SendEnvColor(type, hex);
-                if (pl.ZoneIn != null) pl.OnChangedZone();
-            }
-        }
     }
 }
