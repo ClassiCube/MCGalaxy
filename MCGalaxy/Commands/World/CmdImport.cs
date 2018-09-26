@@ -29,28 +29,27 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidName(p, message, "level")) return;
             
-            string file = Paths.ImportsDir + message;
+            string path = Paths.ImportsDir + message;
             if (!Directory.Exists(Paths.ImportsDir)) {
                 Directory.CreateDirectory(Paths.ImportsDir);
             }
             
-            foreach (IMapImporter importer in IMapImporter.Formats) {
-                if (!File.Exists(file + importer.Extension)) continue;
-                Import(p, file, message, importer);
-                return;
+            IMapImporter importer = IMapImporter.Find(ref path);
+            if (importer != null) {
+                Import(p, path, message, importer);
+            } else {
+                string formats = IMapImporter.Formats.Join(imp => imp.Extension);
+                p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
             }
-
-            string formats = IMapImporter.Formats.Join(imp => imp.Extension);
-            p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
         }
         
-        void Import(Player p, string path, string name, IMapImporter importer) {
-            if (LevelInfo.MapExists(name)) {
-                p.Message("%WMap {0} already exists. Try renaming the file to something else before importing.", name);
+        void Import(Player p, string path, string map, IMapImporter importer) {
+            if (LevelInfo.MapExists(map)) {
+                p.Message("%WMap {0} already exists. Try renaming the file to something else before importing.", map);
                 return;
             }
             try {
-                Level lvl = importer.Read(path + importer.Extension, name, true);
+                Level lvl = importer.Read(path, map, true);
                 try {
                     lvl.Save(true);
                 } finally {

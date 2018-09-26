@@ -24,7 +24,7 @@ namespace MCGalaxy.Levels.IO {
     
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapImporter {
-    	
+        
         public abstract string Extension { get; }
         public abstract string Description { get; }
         
@@ -46,6 +46,14 @@ namespace MCGalaxy.Levels.IO {
             new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), 
             new DatImporter(), new McLevelImporter(),
         };
+        
+        public static IMapImporter Find(ref string path) {
+            foreach (IMapImporter importer in IMapImporter.Formats) {
+                path = Path.ChangeExtension(path, importer.Extension);
+                if (File.Exists(path)) return importer;
+            }
+            return null;
+        }
         
         protected void ConvertCustom(Level lvl) {
             ushort x, y, z;
