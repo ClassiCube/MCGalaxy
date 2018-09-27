@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using MCGalaxy.Commands.World;
@@ -41,32 +40,26 @@ namespace MCGalaxy.Commands.Info {
             string map = env ? (args.Length > 1 ? args[1] : "") : args[0];
 
             Level lvl = map.Length == 0 ? p.level : null;
-            MapInfoData mapData = new MapInfoData();
+            MapInfo info = new MapInfo();
             
+            // User provided specific map name
             if (lvl == null) {
-                if (!GetFromMap(p, mapData, map)) return;
-            } else {
-                mapData.FromOnlineLevel(lvl);
+                map = Matcher.FindMaps(p, map);
+                if (map == null) return;
+                lvl = LevelInfo.FindExact(map);
             }
             
-            if (env) ShowEnv(p, mapData, mapData.Config);
-            else ShowNormal(p, mapData, mapData.Config);
-        }
-        
-        bool GetFromMap(Player p, MapInfoData data, string map) {
-            map = Matcher.FindMaps(p, map);
-            if (map == null) return false;
-            
-            Level lvl = LevelInfo.FindExact(map);
             if (lvl != null) {
-                data.FromOnlineLevel(lvl);
+                info.FromLevel(lvl);
             } else {
-                data.FromOfflineLevel(map);
+                info.FromMap(map);
             }
-            return true;
+            
+            if (env) ShowEnv(p, info, info.Config);
+            else ShowNormal(p, info, info.Config);
         }
         
-        void ShowNormal(Player p, MapInfoData data, LevelConfig cfg) {
+        void ShowNormal(Player p, MapInfo data, LevelConfig cfg) {
             p.Message("&bAbout {0}%S: Width={1} Height={2} Length={3}", 
                            cfg.Color + data.Name, data.Width, data.Height, data.Length);
             
@@ -101,7 +94,7 @@ namespace MCGalaxy.Commands.Info {
             ShowZombieSurvival(p, data, cfg);
         }
         
-        void ShowPermissions(Player p, MapInfoData data, LevelConfig cfg) {
+        void ShowPermissions(Player p, MapInfo data, LevelConfig cfg) {
             PrintRanks(p, data.Visit, "  Visitable by ");
             PrintRanks(p, data.Build, "  Modifiable by ");
             
@@ -122,7 +115,7 @@ namespace MCGalaxy.Commands.Info {
             p.Message(perms.ToString());
         }
         
-        void ShowZombieSurvival(Player p, MapInfoData data, LevelConfig cfg) {
+        void ShowZombieSurvival(Player p, MapInfo data, LevelConfig cfg) {
             if (!ZSGame.Instance.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.SplitComma();
@@ -154,7 +147,7 @@ namespace MCGalaxy.Commands.Info {
             return name;
         }
         
-        void ShowEnv(Player p, MapInfoData data, LevelConfig cfg) {
+        void ShowEnv(Player p, MapInfo data, LevelConfig cfg) {
             string url = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
             if (url.Length > 0) {
                 p.Message("Terrain: &b" + url);
@@ -191,14 +184,14 @@ namespace MCGalaxy.Commands.Info {
             return angle == 0 ? "none" : (angle / 1024.0).ToString("F3") + "/s";
         }
         
-        class MapInfoData {
+        class MapInfo {
             public ushort Width, Height, Length;
             public string Name, MapName;
             public long BlockDBEntries = -1;
             public LevelAccessController Visit, Build;
             public LevelConfig Config;
 
-            public void FromOnlineLevel(Level lvl) {
+            public void FromLevel(Level lvl) {
                 Name = lvl.name; MapName = lvl.MapName;
                 Width = lvl.Width; Height = lvl.Height; Length = lvl.Length;
                 BlockDBEntries = lvl.BlockDB.TotalEntries();
@@ -208,21 +201,21 @@ namespace MCGalaxy.Commands.Info {
                 Build = lvl.BuildAccess;
             }
             
-            public void FromOfflineLevel(string name) {
-                this.Name = name; MapName = name;
-                string path = LevelInfo.MapPath(name);
+            public void FromMap(string map) {
+                this.Name = map; MapName = map;
+                string path = LevelInfo.MapPath(map);
                 Vec3U16 dims = IMapImporter.Formats[0].ReadDimensions(path);
                 Width = dims.X; Height = dims.Y; Length = dims.Z;
-                BlockDBEntries = BlockDBFile.CountEntries(name);
+                BlockDBEntries = BlockDBFile.CountEntries(map);
 
-                path = LevelInfo.PropsPath(name);
+                path = LevelInfo.PropsPath(map);
                 LevelConfig cfg = new LevelConfig();
                 cfg.SetDefaults(Height);
                 cfg.Load(path);
                 
                 Config = cfg;              
-                Visit = new LevelAccessController(cfg, name, true);
-                Build = new LevelAccessController(cfg, name, false);
+                Visit = new LevelAccessController(cfg, map, true);
+                Build = new LevelAccessController(cfg, map, false);
             }
         }
         

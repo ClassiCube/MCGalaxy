@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Eco {
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, trans.TargetName, out matches);
             if (matches > 1) return;
-            if (p == who) { p.Message("You cannot pay yourself &3" + ServerConfig.Currency); return; }
+            if (p == who) { p.Message("%WYou cannot pay yourself &3" + ServerConfig.Currency); return; }
             int money, srcMoney = p.IsSuper ? int.MaxValue : p.money;
             
             if (who == null) {
