@@ -687,6 +687,7 @@ namespace MCGalaxy.Commands.CPE {
             if (prop == "maxcoords") return "max";
             if (prop == "density") return "fogdensity";
             if (prop == "col" || prop == "fogcol")  return "fogcolor";
+            if (prop == "fogcolour") return "fogcolor";
             if (prop == "fallbackid" || prop == "fallbackblock") return "fallback";
             
             return prop;
