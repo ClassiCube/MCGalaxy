@@ -60,7 +60,6 @@ namespace MCGalaxy {
             
             this.name = name; MapName = name.ToLower();
             BlockDB = new BlockDB(this);
-            Config.SetDefaults(height);
             
             blocks = new byte[Width * Height * Length];
             ChunksX = Utils.CeilDiv16(Width);

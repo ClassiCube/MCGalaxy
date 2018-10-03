@@ -369,8 +369,22 @@ namespace MCGalaxy {
             SendCurrentEnv();
         }
         
+        int CurrentEnvProp(EnvProp i, Zone zone) {
+            int value   = level.Config.GetEnvProp(i);
+            bool block  = i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock;
+            int invalid = block ? Block.Invalid : -1;
+            
+            if (zone != null && zone.Config.GetEnvProp(i) != invalid) {
+                value = zone.Config.GetEnvProp(i);
+            }
+                
+            if (value == invalid) value = level.Config.DefaultEnvProp(i, level.Height);
+            if (block)            value = ConvertBlock((BlockID)value);
+            return value;
+        }
+        
         public void SendCurrentEnv() {
-        	Zone zone = ZoneIn;
+            Zone zone = ZoneIn;
             
             for (int i = 0; i <= 4; i++) {
                 string col = level.Config.GetColor(i);
@@ -380,24 +394,15 @@ namespace MCGalaxy {
                 if (Supports(CpeExt.EnvColors)) SendEnvColor((byte)i, col);
             }
             
-            for (EnvProp i = 0; i < EnvProp.Max; i++) {
-                int value = level.Config.GetEnvProp(i);
-                if (i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock) {
-                    if (zone != null && zone.Config.GetEnvProp(i) != Block.Invalid) {
-                        value = zone.Config.GetEnvProp(i);
-                    }
-                    value = ConvertBlock((BlockID)value);
-                } else {
-                    if (zone != null && zone.Config.GetEnvProp(i) != -1) {
-                        value = zone.Config.GetEnvProp(i);
-                    }
+            if (Supports(CpeExt.EnvMapAspect)) {
+                for (EnvProp i = 0; i < EnvProp.Max; i++) {
+                    int value = CurrentEnvProp(i, zone);
+                    Send(Packet.EnvMapProperty(i, value));
                 }
-                if (Supports(CpeExt.EnvMapAspect)) Send(Packet.EnvMapProperty(i, value));
             }
             
             if (Supports(CpeExt.EnvWeatherType)) {
-                int weather = level.Config.Weather;
-                if (zone != null && zone.Config.Weather != -1) weather = zone.Config.Weather;
+                int weather = CurrentEnvProp(EnvProp.Weather, zone);
                 Send(Packet.EnvWeatherType((byte)weather));
             }
         }

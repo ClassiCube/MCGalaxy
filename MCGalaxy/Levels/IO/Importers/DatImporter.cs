@@ -114,8 +114,6 @@ namespace MCGalaxy.Levels.IO {
                     lvl.Width = (ushort)NetUtils.ReadI32(data, valueOffset);
                 } else if (MemCmp(data, pointer, "depth")) {
                     lvl.Height = (ushort)NetUtils.ReadI32(data, valueOffset);
-                    lvl.Config.EdgeLevel = lvl.Height / 2;
-                    lvl.Config.CloudsHeight = lvl.Height + 2;
                 } else if (MemCmp(data, pointer, "height")) {
                     lvl.Length = (ushort)NetUtils.ReadI32(data, valueOffset);
                 } else if (MemCmp(data, pointer, "xSpawn")) {

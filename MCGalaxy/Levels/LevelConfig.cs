@@ -79,10 +79,10 @@ namespace MCGalaxy {
         public int SkyboxVerSpeed = -1;
         
         /// <summary> The block which will be displayed on the horizon. </summary>
-        [ConfigBlock("HorizonBlock", "Env", Block.Water)]
+        [ConfigBlock("HorizonBlock", "Env", Block.Invalid)]
         public BlockID HorizonBlock = Block.Invalid;
         /// <summary> The block which will be displayed on the edge of the map. </summary>
-        [ConfigBlock("EdgeBlock", "Env", Block.Bedrock)]
+        [ConfigBlock("EdgeBlock", "Env", Block.Invalid)]
         public BlockID EdgeBlock = Block.Invalid;
         /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBoolInt("ExpFog", "Env")]
@@ -108,30 +108,32 @@ namespace MCGalaxy {
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
         
-        public void SetDefaults(int height) {
-            Weather = 0;
-            EdgeLevel = height / 2;
-            SidesOffset = -2;
-            CloudsHeight = height + 2;
+        public void ResetAllEnv() {
+            // TODO: Rewrite using ConfigElement somehow
+            Weather      = -1;
+            EdgeLevel    = -1;
+            SidesOffset  = -1;
+            CloudsHeight = -1;
             
-            MaxFogDistance = 0;
-            CloudsSpeed = 256;
-            WeatherSpeed = 256;
-            WeatherFade = 128;
-            SkyboxHorSpeed = 0;
-            SkyboxVerSpeed = 0;
+            MaxFogDistance = -1;
+            CloudsSpeed    = -1;
+            WeatherSpeed   = -1;
+            WeatherFade    = -1;
+            SkyboxHorSpeed = -1;
+            SkyboxVerSpeed = -1;
             
-            HorizonBlock = Block.Water;
-            EdgeBlock = Block.Bedrock;
-            ExpFog = 0;
+            HorizonBlock = Block.Invalid;
+            EdgeBlock    = Block.Invalid;
+            ExpFog       = -1;
             
-            Terrain = "";
+            Terrain     = "";
             TexturePack = "";
-            CloudColor = "";
-            FogColor = "";
-            SkyColor = "";
+            
+            CloudColor  = "";
+            FogColor    = "";
+            SkyColor    = "";
             ShadowColor = "";
-            LightColor = "";
+            LightColor  = "";
         }
         
         public string GetColor(int i) {
@@ -156,7 +158,21 @@ namespace MCGalaxy {
             if (i == EnvProp.SidesOffset)    return SidesOffset;
             if (i == EnvProp.SkyboxHorSpeed) return SkyboxHorSpeed;
             if (i == EnvProp.SkyboxVerSpeed) return SkyboxVerSpeed;
+            if (i == EnvProp.Weather)        return Weather;
             return -1;
+        }
+        
+        public int DefaultEnvProp(EnvProp i, int height) {
+            if (i == EnvProp.SidesBlock)     return Block.Bedrock;
+            if (i == EnvProp.EdgeBlock)      return Block.Water;
+            if (i == EnvProp.EdgeLevel)      return height / 2;
+            if (i == EnvProp.CloudsLevel)    return height + 2;
+
+            if (i == EnvProp.CloudsSpeed)    return 256;
+            if (i == EnvProp.WeatherSpeed)   return 256;
+            if (i == EnvProp.WeatherFade)    return 128;
+            if (i == EnvProp.SidesOffset)    return -2;
+            return 0;
         }
     }
     

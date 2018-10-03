@@ -23,6 +23,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
+using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdMapInfo : Command2 {
@@ -61,33 +62,30 @@ namespace MCGalaxy.Commands.Info {
         
         void ShowNormal(Player p, MapInfo data, LevelConfig cfg) {
             p.Message("&bAbout {0}%S: Width={1} Height={2} Length={3}", 
-                           cfg.Color + data.Name, data.Width, data.Height, data.Length);
+                      cfg.Color + data.Name, data.Width, data.Height, data.Length);
             
             string physicsState = CmdPhysics.states[cfg.Physics];
             p.Message("  Physics are {0}%S, gun usage is {1}",
-                           physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
+                      physicsState, cfg.Guns ? "&aenabled" : "&cdisabled");
 
-            DateTime createTime = File.GetCreationTimeUtc(LevelInfo.MapPath(data.MapName));
+            DateTime createTime  = File.GetCreationTimeUtc(LevelInfo.MapPath(data.MapName));
             TimeSpan createDelta = DateTime.UtcNow - createTime;
-            string backupPath = LevelInfo.BackupBasePath(data.MapName);
+            string backupPath    = LevelInfo.BackupBasePath(data.MapName);
             
             if (Directory.Exists(backupPath)) {
                 int latest = LevelInfo.LatestBackup(data.MapName);
                 DateTime backupTime = File.GetCreationTimeUtc(LevelInfo.BackupFilePath(data.MapName, latest.ToString()));
                 TimeSpan backupDelta = DateTime.UtcNow - backupTime;
                 p.Message("  Created {2} ago, last backup ({1} ago): &a{0}",
-                               latest, backupDelta.Shorten(), createDelta.Shorten());
+                          latest, backupDelta.Shorten(), createDelta.Shorten());
             } else {
                 p.Message("  Created {0} ago, no backups yet", createDelta.Shorten());
             }
             
-            if (data.BlockDBEntries != -1) {
-                p.Message("  BlockDB (Used for /b) is {0} %Swith {1} entries",
-                               cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
-            } else {
-                p.Message("  BlockDB (Used for /b) is {0}",
-                               cfg.UseBlockDB ? "&aEnabled" : "&cDisabled");
-            }
+            string dbFormat = "  BlockDB (Used for /b) is {0} %Swith {1} entries";
+            if (data.BlockDBEntries == -1) dbFormat = "  BlockDB (Used for /b) is {0}";
+            p.Message(dbFormat, 
+                      cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             
             ShowPermissions(p, data, cfg);
             p.Message("Use %T/mi env {0} %Sto see environment settings.", data.MapName);
@@ -162,26 +160,24 @@ namespace MCGalaxy.Commands.Info {
                 p.Message("No custom texture pack set for this map.");
             }
             
-            const string format = "Colors: &eFog {0}, &eSky {1}, &eClouds {2}, &eSunlight {3}, &eShadowlight {4}";
-            p.Message(format, Color(cfg.FogColor), Color(cfg.SkyColor), 
-                           Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));
-            
+            p.Message("Colors: &eFog {0}, &eSky {1}, &eClouds {2}, &eSunlight {3}, &eShadowlight {4}", 
+                      Color(cfg.FogColor), Color(cfg.SkyColor),
+                      Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));           
             p.Message("Water level: &b{0}%S, Bedrock offset: &b{1}%S, Clouds height: &b{2}%S, Max fog distance: &b{3}",
-                           cfg.EdgeLevel, cfg.SidesOffset, cfg.CloudsHeight, cfg.MaxFogDistance);
+                      data.Get(EnvProp.EdgeLevel),   data.Get(EnvProp.SidesOffset), 
+                      data.Get(EnvProp.CloudsLevel), data.Get(EnvProp.MaxFog));
             p.Message("Edge Block: &b{0}%S, Horizon Block: &b{1}", 
-                           Block.GetName(p, cfg.EdgeBlock), Block.GetName(p, cfg.HorizonBlock));
+                      Block.GetName(p, (BlockID)data.Get(EnvProp.SidesBlock)),
+                      Block.GetName(p, (BlockID)data.Get(EnvProp.EdgeBlock)));
             p.Message("Clouds speed: &b{0}%%S, Weather speed: &b{1}%",
-                           (cfg.CloudsSpeed / 256f).ToString("F2"),
-                           (cfg.WeatherSpeed / 256f).ToString("F2"));
+                      (data.Get(EnvProp.CloudsSpeed)  / 256f).ToString("F2"),
+                      (data.Get(EnvProp.WeatherSpeed) / 256f).ToString("F2"));
             p.Message("Weather fade rate: &b{0}%%S, Exponential fog: {1}",
-                           (cfg.WeatherFade / 128f).ToString("F2"),
-                           cfg.ExpFog > 0 ? "&aON" : "&cOFF");
+                      (data.Get(EnvProp.WeatherFade) / 128f).ToString("F2"),
+                      cfg.ExpFog > 0 ? "&aON" : "&cOFF");
             p.Message("Skybox rotations: Horizontal &b{0}%S, Vertical &b{1}",
-                           SkyboxSpeed(cfg.SkyboxHorSpeed), SkyboxSpeed(cfg.SkyboxVerSpeed));
-        }
-        
-        static string SkyboxSpeed(int angle) { 
-            return angle == 0 ? "none" : (angle / 1024.0).ToString("F3") + "/s";
+                      data.GetSkybox(EnvProp.SkyboxHorSpeed), 
+                      data.GetSkybox(EnvProp.SkyboxVerSpeed));
         }
         
         class MapInfo {
@@ -210,12 +206,23 @@ namespace MCGalaxy.Commands.Info {
 
                 path = LevelInfo.PropsPath(map);
                 LevelConfig cfg = new LevelConfig();
-                cfg.SetDefaults(Height);
                 cfg.Load(path);
                 
-                Config = cfg;              
+                Config = cfg;
                 Visit = new LevelAccessController(cfg, map, true);
                 Build = new LevelAccessController(cfg, map, false);
+            }
+            
+            public int Get(EnvProp i) {
+                int value   = Config.GetEnvProp(i);
+                bool block  = i == EnvProp.EdgeBlock || i == EnvProp.SidesBlock;
+                int invalid = block ? Block.Invalid : -1;
+                return value != invalid ? value : Config.DefaultEnvProp(i, Height);
+            }
+            
+            public string GetSkybox(EnvProp i) {
+                int angle = Get(i);
+                return angle == 0 ? "none" : (angle / 1024.0).ToString("F3") + "/s";
             }
         }
         

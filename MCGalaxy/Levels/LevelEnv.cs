@@ -30,18 +30,18 @@ namespace MCGalaxy {
         }
         
         public static void SetWeather(Player p, string input, string area, ref int target) {
-            byte value;
+            int value;
             if (IsResetString(input)) {
                 p.Message("Reset weather for {0} %Sto 0 (Sun)", area);
-                value = 0;
+                value = -1;
             } else {
-                if (byte.TryParse(input, out value)) {
+                if (int.TryParse(input, out value)) {
                 } else if (input.CaselessEq("sun")) { value = 0;
                 } else if (input.CaselessEq("rain")) { value = 1;
                 } else if (input.CaselessEq("snow")) { value = 2;
                 }
                 
-                if (value > 2) {
+                if (value < 0 || value > 2) {
                     p.Message("Weather can be either sun, rain, or snow."); return;
                 }
                 string type = value == 0 ? "%SSun" : (value == 1 ? "&1Rain" : "&fSnow");
@@ -50,11 +50,10 @@ namespace MCGalaxy {
             target = value;
         }
         
-        public static void SetBlock(Player p, string input, string area,
-                                    string variable, byte defValue, ref BlockID target) {
+        public static void SetBlock(Player p, string input, string area, string type, ref BlockID target) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", variable, area);
-                target = defValue;
+                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                target = Block.Invalid;
             } else {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, input, out block)) return;
@@ -64,36 +63,35 @@ namespace MCGalaxy {
                 
                 string name = Block.GetName(p, block);
                 target = block;
-                p.Message("Set {0} for {1} %Sto {2}", variable, area, name);
+                p.Message("Set {0} for {1} %Sto {2}", type, area, name);
             }
         }
         
-        public static void SetShort(Player p, string input, string area,
-                                    string variable, int defValue, ref int target) {
+        public static void SetShort(Player p, string input, string area, string type, ref int target) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", variable, area);
-                target = (short)defValue;
+                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                target = -1;
             } else {
                 int value = 0;
-                if (!CommandParser.GetInt(p, input, variable, ref value,
+                if (!CommandParser.GetInt(p, input, type, ref value,
                                           short.MinValue, short.MaxValue)) return;
                 
                 target = (short)value;
-                p.Message("Set {0} for {1} %Sto {2}", variable, area, value);
+                p.Message("Set {0} for {1} %Sto {2}", type, area, value);
             }
         }
         
-        public static void SetFloat(Player p, string input, string area, int scale, string variable,
-                                    int defValue, ref int target, int min, int max) {
+        public static void SetFloat(Player p, string input, string area, int scale, string type,
+                                    ref int target, int min, int max) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", variable, area);
-                target = defValue;
+                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                target = -1;
             } else {
                 float value = 0, minF = (float)min / scale, maxF = (float)max / scale;
-                if (!CommandParser.GetReal(p, input, variable, ref value, minF, maxF)) return;
+                if (!CommandParser.GetReal(p, input, type, ref value, minF, maxF)) return;
 
                 target = (int)(value * scale);
-                p.Message("Set {0} for {1} %Sto {2}", variable, area, value.ToString("F4"));
+                p.Message("Set {0} for {1} %Sto {2}", type, area, value.ToString("F4"));
             }
         }
         
