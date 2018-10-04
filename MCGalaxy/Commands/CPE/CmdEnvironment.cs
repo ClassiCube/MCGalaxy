@@ -51,59 +51,17 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         internal static bool Handle(Player p, Level lvl, string opt, string value, AreaConfig cfg, string area) {
-            // using if else instead of switch here reduces IL by about 200 bytes
-            if (opt == "sky") {
-                EnvOptions.SetColor(p, value, area, "sky color", ref cfg.SkyColor);
-            } else if (opt == "cloud" || opt == "clouds") {
-                EnvOptions.SetColor(p, value, area, "cloud color", ref cfg.CloudColor);
-            } else if (opt == "fog") {
-                EnvOptions.SetColor(p, value, area, "fog color", ref cfg.FogColor);
-            } else if (opt == "dark" || opt == "shadow") {
-                EnvOptions.SetColor(p, value, area, "shadow color", ref cfg.ShadowColor);
-            } else if (opt == "sun" || opt == "light" || opt == "sunlight") {
-                EnvOptions.SetColor(p, value, area, "sun color", ref cfg.LightColor);
-            } else if (opt == "weather") {
-                EnvOptions.SetWeather(p, value, area, ref cfg.Weather);
-            } else if (opt == "cloudheight" || opt == "cloudsheight") {
-                EnvOptions.SetShort(p, value, area, "clouds height", ref cfg.CloudsHeight);
-            } else if (opt == "waterlevel" || opt == "edgelevel" || opt == "level") {
-                EnvOptions.SetShort(p, value, area, "water level", ref cfg.EdgeLevel);
-            } else if (opt == "bedrockoffset" || opt == "sidesoffset" || opt == "sideoffset") {
-                EnvOptions.SetShort(p, value, area, "bedrock offset", ref cfg.SidesOffset);
-            } else if (opt == "maxfogdistance" || opt == "maxfog" || opt == "fogdistance") {
-                EnvOptions.SetShort(p, value, area, "max fog distance", ref cfg.MaxFogDistance);
-            } else if (opt == "cloudspeed" || opt == "cloudsspeed") {
-                EnvOptions.SetFloat(p, value, area, 256, "clouds speed",
-                                  ref cfg.CloudsSpeed, -0xFFFFFF, 0xFFFFFF);
-            } else if (opt == "weatherspeed") {
-                EnvOptions.SetFloat(p, value, area, 256, "weather speed",
-                                  ref cfg.WeatherSpeed, -0xFFFFFF, 0xFFFFFF);
-            } else if (opt == "weatherfade") {
-                EnvOptions.SetFloat(p, value, area, 128, "weather fade rate",
-                                  ref cfg.WeatherFade, 0, 255);
-            } else if (opt == "horizon" || opt == "edge" || opt == "water") {
-                EnvOptions.SetBlock(p, value, area, "edge block", ref cfg.HorizonBlock);
-            } else if (opt == "side" || opt == "border" || opt == "bedrock") {
-                EnvOptions.SetBlock(p, value, area, "sides block", ref cfg.EdgeBlock);
-            } else if (opt == "expfog") {
-                EnvOptions.SetBool(p, value, area, "exp fog", 0, ref cfg.ExpFog);
-            } else if (opt == "skyboxhorspeed" || opt == "skyboxhor") {
-                EnvOptions.SetFloat(p, value, area, 1024, "skybox horizontal speed",
-                                  ref cfg.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);
-            }  else if (opt == "skyboxverspeed" || opt == "skyboxver") {
-                EnvOptions.SetFloat(p, value, area, 1024, "skybox vertical speed",
-                                  ref cfg.SkyboxVerSpeed, -0xFFFFFF, 0xFFFFFF);
-            } else {
-                return false;
-            }
+            EnvOption setting = EnvOptions.Find(opt);
+            if (setting == null) return false;
             
+            setting.SetFunc(p, area, cfg, value);
             SendEnv(lvl);
             Level.SaveSettings(lvl);
             return true;
         }
         
         static void SendEnv(Level lvl) {
-        	Player[] players = PlayerInfo.Online.Items;
+            Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != lvl) continue;
                 pl.SendCurrentEnv();
@@ -152,11 +110,11 @@ namespace MCGalaxy.Commands.CPE {
             if (preset == null) { SendPresetsMessage(p); return false; }
             LevelConfig cfg = lvl.Config;
             
-            cfg.SkyColor    = preset.Sky;   
+            cfg.SkyColor    = preset.Sky;
             cfg.CloudColor  = preset.Clouds;
-            cfg.FogColor    = preset.Fog;   
+            cfg.FogColor    = preset.Fog;
             cfg.ShadowColor = preset.Shadow;
-            cfg.LightColor  = preset.Sun;   
+            cfg.LightColor  = preset.Sun;
             
             SendEnv(lvl);
             Level.SaveSettings(lvl);
@@ -186,18 +144,23 @@ namespace MCGalaxy.Commands.CPE {
         public override void Help(Player p) {
             p.Message("%T/Environment [variable] [value]");
             p.Message("%HSee %T/Help env variables %Hfor list of variables");
-            p.Message("%HUsing 'normal' for [value] will reset the variable");
             p.Message("%T/Environment normal %H- resets all variables");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("variable") || message.CaselessEq("variables")) {
-                p.Message("%HVariables: fog, cloud, sky, sun, shadow, weather, level,");
-                p.Message("%H   horizon, border, preset, maxfog, cloudsheight, cloudspeed,");
-                p.Message("%H   weatherspeed, weatherfade, expfog, sidesoffset,");
-                p.Message("%H   skyboxhorspeed, skyboxverspeed");
+                p.Message("%HVariables: &f{0}", EnvOptions.Options.Join(o => o.Name));
+                p.Message("%HUse %T/Help env [variable] %Hto see details for that variable");
+                return;
+            }
+            
+            EnvOption opt = EnvOptions.Find(message);
+            if (opt != null) {
+                p.Message("%T/Env {0} [value]", opt.Name);
+                p.Message(opt.Help);
+                p.Message("%HUse 'normal' for [value] to reset to default");
             } else {
-                base.Help(p, message);
+                p.Message("%WUnrecognised property \"{0}\"", message);
             }
         }
     }

@@ -178,7 +178,6 @@ namespace MCGalaxy.Commands.World {
             p.Message("%T/BlockProps global/level [id/name] [property] <value>");
             p.Message("%HSets various properties of that block");
             p.Message("%H  Use %T/Help BlockProps props %Hfor a list of properties");
-            p.Message("%H  Use %T/Help BlockProps [property] %Hfor more details");
         }
         
         public override void Help(Player p, string message) {

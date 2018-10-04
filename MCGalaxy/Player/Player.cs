@@ -30,12 +30,6 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
-    public class ChatMessage {
-        public string text { get; set; }
-        public string time { get; set; }
-        public string username { get; set; }
-    }
-    
     sealed class ConsolePlayer : Player {
         public ConsolePlayer() : base("(console)") {
             group = Group.NobodyRank;
