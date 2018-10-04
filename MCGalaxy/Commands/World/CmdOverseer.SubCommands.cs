@@ -30,14 +30,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void HandleEnv(Player p, string type, string value) {
-            type = type.ToLower();
-            if (type == "preset") {
-                UseCommand(p, "Environment", "preset " + value); return;
-            }
-            
-            Level lvl = p.level;
-            string arg = value.Length == 0 ? "normal" : value;
-            if (CmdEnvironment.Handle(p, lvl, type, arg, lvl.Config, lvl.ColoredName)) return;
+		    Level lvl = p.level;
+            if (CmdEnvironment.Handle(p, lvl, type, value, lvl.Config, lvl.ColoredName)) return;
             p.MessageLines(envHelp);
         }
 

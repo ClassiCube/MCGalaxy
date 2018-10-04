@@ -129,7 +129,8 @@ namespace MCGalaxy {
         
         
         static bool IsResetString(string value) {
-            return value.CaselessEq("normal") || value.CaselessEq("reset") || value.CaselessEq("default");
+            return value.CaselessEq("normal") || value.CaselessEq("default") 
+                || value.CaselessEq("reset")  || value.Length == 0;
         }
         
         static void SetWeather(Player p, string area, AreaConfig cfg, string value) {

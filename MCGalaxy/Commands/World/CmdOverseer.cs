@@ -145,7 +145,6 @@ namespace MCGalaxy.Commands.World {
             "%T/os env horizon %H- Sets the \"ocean\" block outside your map.",
             "%T/os env border %H- Sets the \"bedrock\" block outside your map.",
             "%T/os env weather [sun/rain/snow] %H- Sets weather of your map.",
-            " Note: Shrub, flowers, mushrooms, rope, fire cannot be used for horizon/bedrock.",
             " Note: If no hex or block is given, the default will be used.",
         };
         

@@ -17,8 +17,6 @@
  */
 using System;
 using System.IO;
-using MCGalaxy.Commands.Building;
-using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {
     public sealed class CmdEnvironment : Command2 {
@@ -29,32 +27,37 @@ namespace MCGalaxy.Commands.CPE {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("preset")) {
-                SendPresetsMessage(p); return;
+                MessagePresets(p); return;
             }
-            message = message.ToLower();
+        	
             Level lvl = p.level;
-            
             if (!LevelInfo.Check(p, data.Rank, lvl, "set env settings of this level")) return;
+            
             string[] args = message.SplitSpaces();
-            string opt = args[0];
-            
-            if (args.Length <= 1) {
-                if (!opt.CaselessEq("normal")) { Help(p); return; }
-                ResetEnv(p, lvl); return;
-            }
-            
-            if (opt.CaselessEq("preset")) {
-                SetPreset(p, lvl, args[1]); return;
-            }
-            
-            if (!Handle(p, lvl, opt, args[1], lvl.Config, lvl.ColoredName)) { Help(p); }
+            string opt = args[0], value = args.Length > 1 ? args[1] : "";
+            if (!Handle(p, lvl, opt, value, lvl.Config, lvl.ColoredName)) { Help(p); }
         }
         
-        internal static bool Handle(Player p, Level lvl, string opt, string value, AreaConfig cfg, string area) {
-            EnvOption setting = EnvOptions.Find(opt);
-            if (setting == null) return false;
+        internal static bool Handle(Player p, Level lvl, string type, string value, AreaConfig cfg, string area) {
+            if (type.CaselessEq("preset")) {
+                EnvPreset preset = FindPreset(value);
+                if (preset == null) { MessagePresets(p); return false; }
+                
+                cfg.SkyColor    = preset.Sky;
+                cfg.CloudColor  = preset.Clouds;
+                cfg.FogColor    = preset.Fog;
+                cfg.ShadowColor = preset.Shadow;
+                cfg.LightColor  = preset.Sun;
+            } else if (type.CaselessEq("normal")) {                
+                cfg.ResetAllEnv();
+                p.Message("Reset environment for {0} %Sto normal", area);
+                SendTextures(lvl);
+            } else {
+                EnvOption opt = EnvOptions.Find(type);
+                if (opt == null) return false;
+                opt.SetFunc(p, area, cfg, value);
+            }
             
-            setting.SetFunc(p, area, cfg, value);
             SendEnv(lvl);
             Level.SaveSettings(lvl);
             return true;
@@ -68,77 +71,51 @@ namespace MCGalaxy.Commands.CPE {
             }
         }
         
-        static void ResetEnv(Player p, Level lvl) {
-            LevelConfig cfg = lvl.Config;
-            cfg.ResetAllEnv();
-            
+        static void SendTextures(Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != lvl) continue;
                 pl.SendCurrentTextures();
-                pl.SendCurrentEnv();
             }
-            Level.SaveSettings(lvl);
         }
         
-        static bool SetPreset(Player p, Level lvl, string value) {
-            EnvPreset preset = null; // fog, sky, clouds, sun, shadow
-            if (value.CaselessEq("cartoon")) {
-                preset = new EnvPreset("00ffff", "1e90ff", "00bfff", "f5deb3", "f4a460");
-            } else if (value.CaselessEq("noir")) {
-                preset = new EnvPreset("000000", "1f1f1f", "000000", "696969", "1f1f1f");
-            } else if (value.CaselessEq("trippy")) {
-                preset = new EnvPreset("4B0082", "FFD700", "006400", "7CFC00", "B22222");
-            } else if (value.CaselessEq("watery")) {
-                preset = new EnvPreset("5f9ea0", "008080", "008B8B", "E0FFFF", "008B8B");
-            } else if (value.CaselessEq("normal")) {
-                preset = new EnvPreset("-1", "-1", "-1", "-1", "-1");
-            } else if (value.CaselessEq("gloomy")) {
-                preset = new EnvPreset("6A80A5", "405875", "405875", "444466", "3B3B59");
-            } else if (value.CaselessEq("cloudy")) {
-                preset = new EnvPreset("AFAFAF", "8E8E8E", "8E8E8E", "9b9b9b", "8C8C8C");
-            } else if (value.CaselessEq("sunset")) {
-                preset = new EnvPreset("FFA322", "836668", "9A6551", "7F6C60", "46444C");
-            } else if (value.CaselessEq("midnight")) {
-                preset = new EnvPreset("131947", "070A23", "1E223A", "181828", "0F0F19");
+        static EnvPreset FindPreset(string value) {
+            // fog, sky, clouds, sun, shadow
+            if (value.CaselessEq("cartoon"))  return new EnvPreset("00FFFF 1E90FF 00BFFF F5DEB3 F4A460");
+            if (value.CaselessEq("noir"))     return new EnvPreset("000000 1F1F1F 000000 696969 1F1F1F");
+            if (value.CaselessEq("trippy"))   return new EnvPreset("4B0082 FFD700 006400 7CFC00 B22222");
+            if (value.CaselessEq("watery"))   return new EnvPreset("5F9EA0 008080 008B8B E0FFFF 008B8B");
+            if (value.CaselessEq("gloomy"))   return new EnvPreset("6A80A5 405875 405875 444466 3B3B59");
+            if (value.CaselessEq("cloudy"))   return new EnvPreset("AFAFAF 8E8E8E 8E8E8E 9B9B9B 8C8C8C");
+            if (value.CaselessEq("sunset"))   return new EnvPreset("FFA322 836668 9A6551 7F6C60 46444C");
+            if (value.CaselessEq("midnight")) return new EnvPreset("131947 070A23 1E223A 181828 0F0F19");
+                
+            if (value.CaselessEq("normal")) {
+                return new EnvPreset("    ");
             } else if (File.Exists("presets/" + value.ToLower() + ".env")) {
                 string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
-                string[] parts = text.SplitSpaces();
-                preset = new EnvPreset(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                return new EnvPreset(text);
             }
-            
-            if (preset == null) { SendPresetsMessage(p); return false; }
-            LevelConfig cfg = lvl.Config;
-            
-            cfg.SkyColor    = preset.Sky;
-            cfg.CloudColor  = preset.Clouds;
-            cfg.FogColor    = preset.Fog;
-            cfg.ShadowColor = preset.Shadow;
-            cfg.LightColor  = preset.Sun;
-            
-            SendEnv(lvl);
-            Level.SaveSettings(lvl);
-            return true;
+            return null;
         }
         
         class EnvPreset {
             public string Fog, Sky, Clouds, Sun, Shadow;
             
-            public EnvPreset( string fog, string sky, string clouds,
-                             string sun, string shadow ) {
-                Fog = fog; Sky = sky; Clouds = clouds;
-                Sun = sun; Shadow = shadow;
+            public EnvPreset(string raw) {
+            	string[] args = raw.SplitSpaces();
+            	Fog = args[0]; Sky = args[1]; Clouds = args[2]; Sun = args[3]; Shadow = args[4];
             }
         }
 
-        static void SendPresetsMessage(Player p) {
-            p.Message("%T/Env preset [type] %H- Uses an env preset on your current map");
-            p.Message("Valid types: Cartoon/Midnight/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
+        static void MessagePresets(Player p) {
+            p.Message("%T/Env preset [type] %H- Applies an env preset on the map");
+            p.Message("%HPresets: &fCartoon/Midnight/Noir/Normal/Trippy/Watery/Sunset/Gloomy/Cloudy");
             if (!Directory.Exists("presets")) return;
             
             string[] files = Directory.GetFiles("presets", "*.env");
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
-            if (all.Length > 0) p.Message("Custom preset types: " + all);
+            if (all.Length > 0) p.Message("%HCustom presets: &f" + all);
         }
         
         public override void Help(Player p) {
