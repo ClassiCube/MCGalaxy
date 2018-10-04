@@ -39,7 +39,7 @@ namespace MCGalaxy.Blocks {
         public bool IsTDoor;
         /// <summary> Whether this block is considered a door. </summary>
         public bool IsDoor;
-        /// <summary> Extended block ID of the block this is converted to when toggled by a neighbouring door. </summary>
+        /// <summary> Block ID of the block this is converted to when toggled by a neighbouring door. </summary>
         public BlockID oDoorBlock;
         
         /// <summary> Whether this block is considered a message block. </summary>
@@ -61,17 +61,17 @@ namespace MCGalaxy.Blocks {
         /// <summary> Animal AI behaviour of this block. </summary>
         public AnimalAI AnimalAI;
         
-        /// <summary> The extended block ID that is placed when two of this block are placed on top of each other. </summary>
+        /// <summary> Block ID that is placed when two of this block are placed on top of each other. </summary>
         /// <remarks> e.g. slabs and cobblestone slabs. </remarks>
         public BlockID StackBlock;
         
         /// <summary> Whether players can drown inside this block (e.g. water). </summary>
         public bool Drownable;
         
-        /// <summary> The extended block ID this is changed into when exposed to sunlight. </summary>
+        /// <summary> Block ID this is changed into when exposed to sunlight. </summary>
         public BlockID GrassBlock;
         
-        /// <summary> The extended block ID this is changed into when no longer exposed to sunlight. </summary>
+        /// <summary> Block ID this is changed into when no longer exposed to sunlight. </summary>
         public BlockID DirtBlock;
         
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>

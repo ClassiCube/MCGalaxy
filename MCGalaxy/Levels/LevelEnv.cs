@@ -16,14 +16,29 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Network;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public static class LevelEnv {
+namespace MCGalaxy {    
+    public sealed class EnvOption {
+        public string Name, Help;
+        public EnvOptions.OptionSetter SetFunc;
+        
+        public EnvOption(string name, EnvOptions.OptionSetter func, string help) {
+            Name = name; SetFunc = func; Help = help;
+        }
+    }
+    
+	public static class EnvOptions {
+		public delegate void OptionSetter(Player p, string area, LevelConfig cfg, string value);
+		
+        public static List<EnvOption> Options = new List<EnvOption>() {
+             //new EnvOption("Weather",  SetWeather,  "%HSets the weather (sun, rain, snow)"),
+        };		
         
         static bool IsResetString(string value) {
             return value.CaselessEq("normal") || value.CaselessEq("reset") || value.CaselessEq("default");
