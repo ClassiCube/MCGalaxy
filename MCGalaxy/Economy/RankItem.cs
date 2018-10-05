@@ -89,7 +89,7 @@ namespace MCGalaxy.Eco {
                 p.Message("%WYou are already at or past the max buyable rank"); return;
             }           
             if (p.money < nextRank.Price) {
-                p.Message("%WYou don't have enough &3" + ServerConfig.Currency + " %Wto buy the next rank"); return;
+                p.Message("%WYou don't have enough &3" + Server.Config.Currency + " %Wto buy the next rank"); return;
             }
             
             string rankName = Group.Find(nextRank.Perm).Name; // TODO: What if null reference happens here
@@ -106,7 +106,7 @@ namespace MCGalaxy.Eco {
                 
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
-                p.Message("&aSet price of rank {0} &ato &f{1} &3{2}", grp.ColoredName, cost, ServerConfig.Currency);
+                p.Message("&aSet price of rank {0} &ato &f{1} &3{2}", grp.ColoredName, cost, Server.Config.Currency);
                 GetOrAdd(grp.Permission).Price = cost;
             } else if (Command.IsDeleteCommand(args[1])) {
                 Group grp = Matcher.FindRanks(p, args[2]);
@@ -126,7 +126,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
             p.Message("%T/Eco rank price [rank] [amount]");
-            p.Message("%HSets how many &3{0} %Hthat rank costs.", ServerConfig.Currency);
+            p.Message("%HSets how many &3{0} %Hthat rank costs.", Server.Config.Currency);
             p.Message("%T/Eco rank remove [rank]");
             p.Message("%HMakes that rank no longer buyable");
         }
@@ -137,7 +137,7 @@ namespace MCGalaxy.Eco {
                 p.Message("&6Rankup %S- %Wno further ranks to buy.");
             } else {
                 p.Message("&6Rankup to {0} %S- &a{1} %S{2}",
-                               Group.GetColoredName(next.Perm), next.Price, ServerConfig.Currency);
+                               Group.GetColoredName(next.Perm), next.Price, Server.Config.Currency);
             }
         }
         
@@ -153,7 +153,7 @@ namespace MCGalaxy.Eco {
             
             foreach (RankEntry rank in Ranks) {
                 p.Message("&6{0} %S- &a{1} %S{2}",
-                               Group.GetColoredName(rank.Perm), rank.Price, ServerConfig.Currency);
+                               Group.GetColoredName(rank.Perm), rank.Price, Server.Config.Currency);
             }
         }
     }

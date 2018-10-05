@@ -75,7 +75,7 @@ namespace MCGalaxy {
 
         
         public void Connect() {
-            if (!ServerConfig.UseIRC || Connected || Server.shuttingDown) return;
+            if (!Server.Config.UseIRC || Connected || Server.shuttingDown) return;
             InitConnectionState();
             handlers.Hook();
             
@@ -103,17 +103,17 @@ namespace MCGalaxy {
             resetting = true;
             retries = 0;
             Disconnect("IRC Bot resetting...");
-            if (ServerConfig.UseIRC) Connect();
+            if (Server.Config.UseIRC) Connect();
         }
         
         /// <summary> Returns whether this bot is connected to IRC. </summary>
         public bool Connected { get { return connection != null && connection.Connected; } }        
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
-        public bool Enabled { get { return ServerConfig.UseIRC && connection != null && connection.Connected; } }
+        public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }
         
         
         void InitConnectionState() {
-            if (!ServerConfig.UseIRC || connection != null) return;
+            if (!Server.Config.UseIRC || connection != null) return;
             connection = new Connection(new UTF8Encoding(false), args);
             LoadBannedCommands();
         }
@@ -129,16 +129,16 @@ namespace MCGalaxy {
         }
         
         void UpdateState() {
-            channels = ServerConfig.IRCChannels.SplitComma();
-            opchannels = ServerConfig.IRCOpChannels.SplitComma();
-            nick = ServerConfig.IRCNick.Replace(" ", "");
-            server = ServerConfig.IRCServer;
+            channels = Server.Config.IRCChannels.SplitComma();
+            opchannels = Server.Config.IRCOpChannels.SplitComma();
+            nick = Server.Config.IRCNick.Replace(" ", "");
+            server = Server.Config.IRCServer;
             
             args = new ConnectionArgs(nick, server);
             args.RealName = Server.SoftwareNameVersioned;
-            args.Port = ServerConfig.IRCPort;
-            bool usePass = ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0;
-            args.ServerPassword = usePass ? ServerConfig.IRCPassword : "*";
+            args.Port = Server.Config.IRCPort;
+            bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
+            args.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
         }
         
         void SetDefaultBannedCommands() {

@@ -55,7 +55,7 @@ namespace MCGalaxy.Gui {
                 map_cmbType.Items.Add(gen.Theme);
             }
             
-            Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
+            Text = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
             MakeNotifyIcon();
             
             main_Players.DataSource = new PlayerCollection();
@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
             string players = " (" + playerCount + " players)";
             
             // ArgumentException thrown if text length is > 63
-            string text = (ServerConfig.Name + players);
+            string text = (Server.Config.Name + players);
             if (text.Length > 63) text = text.Substring(0, 63);
             notifyIcon.Text = text;
         }
@@ -214,13 +214,13 @@ namespace MCGalaxy.Gui {
         void SettingsUpdate() {
             RunOnUI_Async(() => {
                 if (Server.shuttingDown) return;
-                Text = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
+                Text = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
                 UpdateNotifyIconText();
             });
         }
 
         public void PopupNotify(string message, ToolTipIcon icon = ToolTipIcon.Info) {
-            notifyIcon.ShowBalloonTip(3000, ServerConfig.Name, message, icon);
+            notifyIcon.ShowBalloonTip(3000, Server.Config.Name, message, icon);
         }
 
         void UpdateUrl(string s) {
@@ -234,7 +234,7 @@ namespace MCGalaxy.Gui {
             }
             
             if (Server.shuttingDown || Popup.OKCancel("Really shutdown the server? All players will be disconnected!", "Exit")) {
-                Server.Stop(false, ServerConfig.DefaultShutdownMessage);
+                Server.Stop(false, Server.Config.DefaultShutdownMessage);
                 notifyIcon.Dispose();
             } else {
                 // Prevents form from closing when user clicks the X and then hits 'cancel'

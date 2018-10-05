@@ -43,10 +43,10 @@ namespace MCGalaxy.Commands.Eco {
 
             string targetName = PlayerInfo.GetColoredName(p, target);
             p.Message("Economy stats for {0}%S:", targetName);
-            p.Message(" Current balance: &f{0} &3{1}", money, ServerConfig.Currency);
+            p.Message(" Current balance: &f{0} &3{1}", money, Server.Config.Currency);
             
             Economy.EcoStats ecos = Economy.RetrieveStats(target);
-            p.Message(" Total spent: &f" + ecos.TotalSpent + " &3" + ServerConfig.Currency);
+            p.Message(" Total spent: &f" + ecos.TotalSpent + " &3" + Server.Config.Currency);
             Output(p, ecos.Purchase, "purchase");
             Output(p, ecos.Payment, "payment");
             Output(p, ecos.Salary, "receipt");
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Eco {
 
         public override void Help(Player p) {
             p.Message("%T/Balance [player]");
-            p.Message("%HShows how much &3" + ServerConfig.Currency + " %H[player] has, " +
+            p.Message("%HShows how much &3" + Server.Config.Currency + " %H[player] has, " +
                            "plus their most recent transactions.");
             p.Message("%HIf [player] is not given, shows your own balance.");
         }

@@ -20,63 +20,63 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
         void LoadSecurityProps() {
-            sec_cbLogNotes.Checked = ServerConfig.LogNotes;            
-            sec_cbVerifyAdmins.Checked = ServerConfig.verifyadmins;
-            sec_cbWhitelist.Checked = ServerConfig.WhitelistedOnly;            
+            sec_cbLogNotes.Checked = Server.Config.LogNotes;            
+            sec_cbVerifyAdmins.Checked = Server.Config.verifyadmins;
+            sec_cbWhitelist.Checked = Server.Config.WhitelistedOnly;            
             sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
-            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, ServerConfig.VerifyAdminsRank);
-            sec_cmbVerifyRank.Enabled = ServerConfig.verifyadmins;
+            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, Server.Config.VerifyAdminsRank);
+            sec_cmbVerifyRank.Enabled = Server.Config.verifyadmins;
             
-            sec_cbChatAuto.Checked = ServerConfig.ChatSpamCheck;
-            sec_numChatMsgs.Value = ServerConfig.ChatSpamCount;
-            sec_numChatSecs.Value = ServerConfig.ChatSpamInterval;
-            sec_numChatMute.Value = ServerConfig.ChatSpamMuteTime;
-            ToggleChatSpamSettings(ServerConfig.ChatSpamCheck);
+            sec_cbChatAuto.Checked = Server.Config.ChatSpamCheck;
+            sec_numChatMsgs.Value = Server.Config.ChatSpamCount;
+            sec_numChatSecs.Value = Server.Config.ChatSpamInterval;
+            sec_numChatMute.Value = Server.Config.ChatSpamMuteTime;
+            ToggleChatSpamSettings(Server.Config.ChatSpamCheck);
             
-            sec_cbCmdAuto.Checked = ServerConfig.CmdSpamCheck;
-            sec_numCmdMsgs.Value = ServerConfig.CmdSpamCount;
-            sec_numCmdSecs.Value = ServerConfig.CmdSpamInterval;
-            sec_numCmdMute.Value = ServerConfig.CmdSpamBlockTime;
-            ToggleCmdSpamSettings(ServerConfig.CmdSpamCheck);
+            sec_cbCmdAuto.Checked = Server.Config.CmdSpamCheck;
+            sec_numCmdMsgs.Value = Server.Config.CmdSpamCount;
+            sec_numCmdSecs.Value = Server.Config.CmdSpamInterval;
+            sec_numCmdMute.Value = Server.Config.CmdSpamBlockTime;
+            ToggleCmdSpamSettings(Server.Config.CmdSpamCheck);
             
-            sec_cbBlocksAuto.Checked = ServerConfig.BlockSpamCheck;
-            sec_numBlocksMsgs.Value = ServerConfig.BlockSpamCount;
-            sec_numBlocksSecs.Value = ServerConfig.BlockSpamInterval;
-            ToggleBlocksSpamSettings(ServerConfig.BlockSpamCheck);
+            sec_cbBlocksAuto.Checked = Server.Config.BlockSpamCheck;
+            sec_numBlocksMsgs.Value = Server.Config.BlockSpamCount;
+            sec_numBlocksSecs.Value = Server.Config.BlockSpamInterval;
+            ToggleBlocksSpamSettings(Server.Config.BlockSpamCheck);
             
-            sec_cbIPAuto.Checked = ServerConfig.IPSpamCheck;
-            sec_numIPMsgs.Value = ServerConfig.IPSpamCount;
-            sec_numIPSecs.Value = ServerConfig.IPSpamInterval;
-            sec_numIPMute.Value = ServerConfig.IPSpamBlockTime;
+            sec_cbIPAuto.Checked = Server.Config.IPSpamCheck;
+            sec_numIPMsgs.Value = Server.Config.IPSpamCount;
+            sec_numIPSecs.Value = Server.Config.IPSpamInterval;
+            sec_numIPMute.Value = Server.Config.IPSpamBlockTime;
             ToggleIPSpamSettings(sec_cbIPAuto.Checked);
         }
 
         void ApplySecurityProps() {
-            ServerConfig.LogNotes = sec_cbLogNotes.Checked;
-            ServerConfig.verifyadmins = sec_cbVerifyAdmins.Checked;
-            ServerConfig.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
-            ServerConfig.WhitelistedOnly = sec_cbWhitelist.Checked;
-            if (ServerConfig.WhitelistedOnly && Server.whiteList == null)
+            Server.Config.LogNotes = sec_cbLogNotes.Checked;
+            Server.Config.verifyadmins = sec_cbVerifyAdmins.Checked;
+            Server.Config.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
+            Server.Config.WhitelistedOnly = sec_cbWhitelist.Checked;
+            if (Server.Config.WhitelistedOnly && Server.whiteList == null)
                 Server.whiteList = PlayerList.Load("ranks/whitelist.txt");
             
-            ServerConfig.ChatSpamCheck = sec_cbChatAuto.Checked;
-            ServerConfig.ChatSpamCount = (int)sec_numChatMsgs.Value;
-            ServerConfig.ChatSpamInterval = sec_numChatSecs.Value;
-            ServerConfig.ChatSpamMuteTime = sec_numChatMute.Value;
+            Server.Config.ChatSpamCheck = sec_cbChatAuto.Checked;
+            Server.Config.ChatSpamCount = (int)sec_numChatMsgs.Value;
+            Server.Config.ChatSpamInterval = sec_numChatSecs.Value;
+            Server.Config.ChatSpamMuteTime = sec_numChatMute.Value;
             
-            ServerConfig.CmdSpamCheck = sec_cbCmdAuto.Checked;
-            ServerConfig.CmdSpamCount = (int)sec_numCmdMsgs.Value;
-            ServerConfig.CmdSpamInterval = sec_numCmdSecs.Value;
-            ServerConfig.CmdSpamBlockTime = sec_numCmdMute.Value;
+            Server.Config.CmdSpamCheck = sec_cbCmdAuto.Checked;
+            Server.Config.CmdSpamCount = (int)sec_numCmdMsgs.Value;
+            Server.Config.CmdSpamInterval = sec_numCmdSecs.Value;
+            Server.Config.CmdSpamBlockTime = sec_numCmdMute.Value;
             
-            ServerConfig.BlockSpamCheck = sec_cbBlocksAuto.Checked;
-            ServerConfig.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
-            ServerConfig.BlockSpamInterval = sec_numBlocksSecs.Value;
+            Server.Config.BlockSpamCheck = sec_cbBlocksAuto.Checked;
+            Server.Config.BlockSpamCount = (int)sec_numBlocksMsgs.Value;
+            Server.Config.BlockSpamInterval = sec_numBlocksSecs.Value;
             
-            ServerConfig.IPSpamCheck = sec_cbIPAuto.Checked;
-            ServerConfig.IPSpamCount = (int)sec_numIPMsgs.Value;
-            ServerConfig.IPSpamInterval = sec_numIPSecs.Value;
-            ServerConfig.IPSpamBlockTime = sec_numIPMute.Value;
+            Server.Config.IPSpamCheck = sec_cbIPAuto.Checked;
+            Server.Config.IPSpamCount = (int)sec_numIPMsgs.Value;
+            Server.Config.IPSpamInterval = sec_numIPSecs.Value;
+            Server.Config.IPSpamBlockTime = sec_numIPMute.Value;
         }
         
         

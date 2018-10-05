@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (!ServerConfig.WhitelistedOnly) { p.Message("Whitelist is not enabled."); return; }
+            if (!Server.Config.WhitelistedOnly) { p.Message("Whitelist is not enabled."); return; }
             if (message.Length == 0) { List(p, ""); return; }
             string[] args = message.SplitSpaces();
             string cmd = args[0];

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Misc {
             if (newRank.Permission == LevelPermission.Banned) {
                 Chat.MessageGlobal("{0} %Swas &8banned%S.", who.ColoredName);
             } else {
-                string reason    = newRank.Permission >= who.Rank ? ServerConfig.DefaultPromoteMessage : ServerConfig.DefaultDemoteMessage;
+                string reason    = newRank.Permission >= who.Rank ? Server.Config.DefaultPromoteMessage : Server.Config.DefaultDemoteMessage;
                 string direction = newRank.Permission >= who.Rank ? " %Swas promoted to " : " %Swas demoted to ";
                 string rankMsg   = who.ColoredName + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
                 

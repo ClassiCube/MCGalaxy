@@ -118,7 +118,7 @@ namespace MCGalaxy.Core {
                 ModActionCmd.ChangeRank(e.Target, e.targetGroup, Group.BannedRank, who);
                 
                 if (who != null) {
-                    string msg = e.Reason.Length == 0 ? ServerConfig.DefaultBanMessage : e.Reason;
+                    string msg = e.Reason.Length == 0 ? Server.Config.DefaultBanMessage : e.Reason;
                     who.Kick("Banned by " + e.Actor.ColoredName + ": " + msg);
                 }
             }
@@ -187,7 +187,7 @@ namespace MCGalaxy.Core {
                 }
                 who.warn++;
             } else {
-                if (!ServerConfig.LogNotes) {
+                if (!Server.Config.LogNotes) {
                     e.Actor.Message("Notes logging must be enabled to warn offline players."); return;
                 }
                 LogAction(e, who, "&ewarned");

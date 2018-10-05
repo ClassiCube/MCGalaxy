@@ -107,7 +107,7 @@ namespace MCGalaxy {
         public virtual void Message(byte id, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
-                message = ServerConfig.DefaultColor + message;
+                message = Server.Config.DefaultColor + message;
             }
             message = Chat.Format(message, this);
             

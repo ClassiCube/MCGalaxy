@@ -51,7 +51,7 @@ namespace MCGalaxy {
             Level lvl = LevelInfo.FindExact(name);
             if (lvl != null) return GotoLevel(p, lvl);
             
-            if (ServerConfig.AutoLoadMaps) {
+            if (Server.Config.AutoLoadMaps) {
                 string map = Matcher.FindMaps(p, name);
                 if (map == null) return false;
                 
@@ -121,9 +121,9 @@ namespace MCGalaxy {
             
             Entities.SpawnEntities(p, pos, rot);
             OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);
-            if (!announce || !ServerConfig.ShowWorldChanges) return; 
+            if (!announce || !Server.Config.ShowWorldChanges) return; 
             
-            announce = !p.hidden && ServerConfig.IRCShowWorldChanges;
+            announce = !p.hidden && Server.Config.IRCShowWorldChanges;
             string msg = p.level.IsMuseum ? "λNICK %Swent to the " : "λNICK %Swent to ";
             Chat.MessageFrom(ChatScope.Global, p, msg + level.ColoredName,
                              null, FilterGoto(p), announce);

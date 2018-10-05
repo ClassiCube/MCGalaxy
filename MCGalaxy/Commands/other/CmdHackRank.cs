@@ -48,12 +48,12 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         void DoKick(Player p, Group newRank) {
-            if (!ServerConfig.HackrankKicks) return;
+            if (!Server.Config.HackrankKicks) return;
             HackRankArgs args = new HackRankArgs();
             args.name = p.name; args.newRank = newRank;
             
             Server.MainScheduler.QueueOnce(HackRankCallback, args, 
-                                           ServerConfig.HackrankKickDelay);
+                                           Server.Config.HackrankKickDelay);
         }
         
         void HackRankCallback(SchedulerTask task) {

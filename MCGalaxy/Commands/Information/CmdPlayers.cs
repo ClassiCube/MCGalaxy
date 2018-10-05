@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Info {
             }
             
             for (int i = allPlayers.Count - 1; i >= 0; i--) {
-                Output(allPlayers[i], p, ServerConfig.ListEmptyRanks);
+                Output(allPlayers[i], p, Server.Config.ListEmptyRanks);
             }
         }
         

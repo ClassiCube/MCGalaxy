@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Moderation {
             Chat.MessageFrom(ChatScope.Perms, p, 
                              "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerms, null, true);
             
-            p.NextReviewTime = DateTime.UtcNow.Add(ServerConfig.ReviewCooldown);
+            p.NextReviewTime = DateTime.UtcNow.Add(Server.Config.ReviewCooldown);
         }
 
         void HandleView(Player p, CommandData data) {

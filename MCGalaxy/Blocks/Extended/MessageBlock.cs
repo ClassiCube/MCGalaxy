@@ -31,7 +31,7 @@ namespace MCGalaxy.Blocks.Extended {
             if (message == null) return false;
             message = message.Replace("@p", p.name);
                 
-            if (message != p.prevMsg || (alwaysRepeat || ServerConfig.RepeatMBs)) {
+            if (message != p.prevMsg || (alwaysRepeat || Server.Config.RepeatMBs)) {
                 Execute(p, message);
             }
             return true;

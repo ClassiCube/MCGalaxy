@@ -32,7 +32,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                p.Message("%WYou don't have enough &3" + ServerConfig.Currency + "%W to buy a " + Name + "."); return;
+                p.Message("%WYou don't have enough &3" + Server.Config.Currency + "%W to buy a " + Name + "."); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an revive potion " +

@@ -89,9 +89,9 @@ namespace MCGalaxy.Levels.IO {
             
             string url = comp["TextureURL"].StringValue;
             if (url.CaselessEnds(".png"))
-                lvl.Config.Terrain = url == ServerConfig.DefaultTerrain ? "" : url;
+                lvl.Config.Terrain = url == Server.Config.DefaultTerrain ? "" : url;
             else
-                lvl.Config.TexturePack = url == ServerConfig.DefaultTexture ? "" : url;
+                lvl.Config.TexturePack = url == Server.Config.DefaultTexture ? "" : url;
         }
         
         static void ParseEnvColors(NbtCompound cpe, Level lvl) {

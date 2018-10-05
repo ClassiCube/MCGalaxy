@@ -21,256 +21,256 @@ using System.IO;
 using MCGalaxy.Config;
 
 namespace MCGalaxy {
-    public static class ServerConfig {
+	public sealed class ServerConfig : EnvConfig {
 
         [ConfigString("server-name", "General", "[MCGalaxy] Default", false, " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")]
-        public static string Name = "[MCGalaxy] Default";
+        public string Name = "[MCGalaxy] Default";
         [ConfigString("motd", "General", "Welcome", false)]
-        public static string MOTD = "Welcome!";
+        public string MOTD = "Welcome!";
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.")]
-        public static string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
+        public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
         [ConfigInt("max-players", "Server", 12, 1, 128)]
-        public static int MaxPlayers = 12;
+        public int MaxPlayers = 12;
         [ConfigInt("max-guests", "Server", 10, 1, 128)]
-        public static int MaxGuests = 10;
+        public int MaxGuests = 10;
         [ConfigString("listen-ip", "Server", "0.0.0.0")]
-        public static string ListenIP = "0.0.0.0";
+        public string ListenIP = "0.0.0.0";
         [ConfigInt("port", "Server", 25565, 0, 65535)]
-        public static int Port = 25565;
+        public int Port = 25565;
         [ConfigBool("public", "Server", true)]
-        public static bool Public = true;
+        public bool Public = true;
         [ConfigBool("verify-names", "Server", true)]
-        public static bool VerifyNames = true;
+        public bool VerifyNames = true;
         
         [ConfigBool("autoload", "Server", true)]
-        public static bool AutoLoadMaps = true;        
+        public bool AutoLoadMaps = true;        
         /// <summary> true if maps sees server-wide chat, false if maps have level-only/isolated chat </summary>
         [ConfigBool("world-chat", "Server", true)]
-        public static bool ServerWideChat = true;
+        public bool ServerWideChat = true;
         [ConfigString("main-name", "General", "main", false, "._+")]
-        public static string MainLevel = "main";
+        public string MainLevel = "main";
         [ConfigString("xjail-map-name", "Other", "(main)", false, "()._+")]
-        public static string XJailLevel = "(main)";
+        public string XJailLevel = "(main)";
         [ConfigString("default-texture-url", "General", "", true)]
-        public static string DefaultTerrain = "";
+        public string DefaultTerrain = "";
         [ConfigString("default-texture-pack-url", "General", "", true)]
-        public static string DefaultTexture = "";
+        public string DefaultTexture = "";
         
         [ConfigBool("report-back", "Error handling", true)]
-        public static bool reportBack = true;
+        public bool reportBack = true;
         [ConfigBool("core-secret-commands", "Other", true)]
-        public static bool CoreSecretCommands = true;
+        public bool CoreSecretCommands = true;
         [ConfigBool("restart-on-error", "Error handling", true)]
-        public static bool restartOnError = true;
+        public bool restartOnError = true;
         [ConfigBool("software-staff-prefixes", "Other", true)]
-        public static bool SoftwareStaffPrefixes = true;
+        public bool SoftwareStaffPrefixes = true;
         
         [ConfigInt("position-interval", "Server", 100, 20, 2000)]
-        public static int PositionUpdateInterval = 100;
+        public int PositionUpdateInterval = 100;
         [ConfigBool("classicube-account-plus", "Server", true)]
-        public static bool ClassicubeAccountPlus = true;
+        public bool ClassicubeAccountPlus = true;
         [ConfigBool("agree-to-rules-on-entry", "Other", false)]
-        public static bool AgreeToRulesOnEntry = false;
+        public bool AgreeToRulesOnEntry = false;
         [ConfigBool("admins-join-silent", "Other", false)]
-        public static bool AdminsJoinSilently = false;
+        public bool AdminsJoinSilently = false;
         
         [ConfigBool("check-updates", "Update", false)]
-        public static bool CheckForUpdates = true;
+        public bool CheckForUpdates = true;
         [ConfigBool("enable-cpe", "Server", true)]
-        public static bool EnableCPE = true;
+        public bool EnableCPE = true;
         
         [ConfigInt("rplimit", "Other", 500, 0, 50000)]
-        public static int PhysicsRestartLimit = 500;
+        public int PhysicsRestartLimit = 500;
         [ConfigInt("rplimit-norm", "Other", 10000, 0, 50000)]
-        public static int PhysicsRestartNormLimit = 10000;
+        public int PhysicsRestartNormLimit = 10000;
         [ConfigBool("physicsrestart", "Other", true)]
-        public static bool PhysicsRestart = true;
+        public bool PhysicsRestart = true;
         [ConfigInt("physics-undo-max", "Other", 50000)]
-        public static int PhysicsUndo = 50000;
+        public int PhysicsUndo = 50000;
         
         [ConfigTimespan("backup-time", "Backup", 300, false)]
-        public static TimeSpan BackupInterval = TimeSpan.FromSeconds(300);
+        public TimeSpan BackupInterval = TimeSpan.FromSeconds(300);
         [ConfigTimespan("blockdb-backup-time", "Backup", 60, false)]
-        public static TimeSpan BlockDBSaveInterval = TimeSpan.FromSeconds(60);
+        public TimeSpan BlockDBSaveInterval = TimeSpan.FromSeconds(60);
         [ConfigString("backup-location", "Backup", "")]
-        public static string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
+        public string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
         
         [ConfigTimespan("afk-minutes", "Other", 10, true)]
-        public static TimeSpan AutoAfkTime = TimeSpan.FromMinutes(10);
+        public TimeSpan AutoAfkTime = TimeSpan.FromMinutes(10);
         [ConfigString("default-rank", "General", "guest")]
-        public static string DefaultRankName = "guest";
+        public string DefaultRankName = "guest";
 
         [ConfigInt("max-bots-per-level", "Other", 192, 0, 256)]
-        public static int MaxBotsPerLevel = 192;
+        public int MaxBotsPerLevel = 192;
         [ConfigBool("deathcount", "Other", true)]
-        public static bool AnnounceDeathCount = true;
+        public bool AnnounceDeathCount = true;
         [ConfigBool("use-whitelist", "Other", false)]
-        public static bool WhitelistedOnly = false;
+        public bool WhitelistedOnly = false;
         [ConfigBool("force-cuboid", "Other", false)]
-        public static bool forceCuboid = false;
+        public bool forceCuboid = false;
         [ConfigBool("repeat-messages", "Other", false)]
-        public static bool RepeatMBs = false;
+        public bool RepeatMBs = false;
         [ConfigString("money-name", "Other", "moneys")]
-        public static string Currency = "moneys";        
+        public string Currency = "moneys";        
         [ConfigString("server-owner", "Other", "Notch")]
-        public static string OwnerName = "Notch";
+        public string OwnerName = "Notch";
         
         [ConfigBool("guest-limit-notify", "Other", false)]
-        public static bool GuestLimitNotify = false;
+        public bool GuestLimitNotify = false;
         [ConfigBool("guest-join-notify", "Other", true)]
-        public static bool GuestJoinsNotify = true;
+        public bool GuestJoinsNotify = true;
         [ConfigBool("guest-leave-notify", "Other", true)]
-        public static bool GuestLeavesNotify = true;
+        public bool GuestLeavesNotify = true;
         [ConfigBool("show-world-changes", "Other", true)]
-        public static bool ShowWorldChanges = true;
+        public bool ShowWorldChanges = true;
 
         [ConfigBool("kick-on-hackrank", "Other", true)]
-        public static bool HackrankKicks = true;
+        public bool HackrankKicks = true;
         [ConfigTimespan("hackrank-kick-time", "Other", 5, false)]
-        public static TimeSpan HackrankKickDelay = TimeSpan.FromSeconds(5);
+        public TimeSpan HackrankKickDelay = TimeSpan.FromSeconds(5);
         [ConfigBool("show-empty-ranks", "Other", false)]
-        public static bool ListEmptyRanks = false;
+        public bool ListEmptyRanks = false;
         [ConfigTimespan("review-cooldown", "Review", 600, false)]
-        public static TimeSpan ReviewCooldown = TimeSpan.FromSeconds(600);
+        public TimeSpan ReviewCooldown = TimeSpan.FromSeconds(600);
         [ConfigFloat("draw-reload-threshold", "Other", 0.001f, 0, 1)]
-        public static float DrawReloadThreshold = 0.001f;
+        public float DrawReloadThreshold = 0.001f;
         [ConfigBool("allow-tp-to-higher-ranks", "Other", true)]
-        public static bool HigherRankTP = true;        
+        public bool HigherRankTP = true;        
         [ConfigPerm("os-perbuild-default", "Other", LevelPermission.Nobody)]
-        public static LevelPermission OSPerbuildDefault = LevelPermission.Nobody;        
+        public LevelPermission OSPerbuildDefault = LevelPermission.Nobody;        
         
         [ConfigBool("irc", "IRC bot", false)]
-        public static bool UseIRC = false;
+        public bool UseIRC = false;
         [ConfigInt("irc-port", "IRC bot", 6667, 0, 65535)]
-        public static int IRCPort = 6667;
+        public int IRCPort = 6667;
         [ConfigString("irc-server", "IRC bot", "irc.esper.net")]
-        public static string IRCServer = "irc.esper.net";
+        public string IRCServer = "irc.esper.net";
         [ConfigString("irc-nick", "IRC bot", "ForgeBot")]
-        public static string IRCNick = "ForgeBot";
+        public string IRCNick = "ForgeBot";
         [ConfigString("irc-channel", "IRC bot", "#changethis", true)]
-        public static string IRCChannels = "#changethis";
+        public string IRCChannels = "#changethis";
         [ConfigString("irc-opchannel", "IRC bot", "#changethistoo", true)]
-        public static string IRCOpChannels = "#changethistoo";
+        public string IRCOpChannels = "#changethistoo";
         [ConfigBool("irc-identify", "IRC bot", false)]
-        public static bool IRCIdentify = false;
+        public bool IRCIdentify = false;
         [ConfigString("irc-nickserv-name", "IRC bot", "NickServ", true)]
-        public static string IRCNickServName = "NickServ";
+        public string IRCNickServName = "NickServ";
         [ConfigString("irc-password", "IRC bot", "", true)]
-        public static string IRCPassword = "";
+        public string IRCPassword = "";
 
         [ConfigBool("UseMySQL", "Database", false)]
-        public static bool UseMySQL = false;
+        public bool UseMySQL = false;
         [ConfigString("host", "Database", "127.0.0.1")]
-        public static string MySQLHost = "127.0.0.1";
+        public string MySQLHost = "127.0.0.1";
         [ConfigString("SQLPort", "Database", "3306", false, "0123456789")]
-        public static string MySQLPort = "3306";
+        public string MySQLPort = "3306";
         [ConfigString("Username", "Database", "root", true)]
-        public static string MySQLUsername = "root";
+        public string MySQLUsername = "root";
         [ConfigString("Password", "Database", "password", true)]
-        public static string MySQLPassword = "password";
+        public string MySQLPassword = "password";
         [ConfigString("DatabaseName", "Database", "MCZallDB")]
-        public static string MySQLDatabaseName = "MCZallDB";
+        public string MySQLDatabaseName = "MCZallDB";
         [ConfigBool("Pooling", "Database", true)]
-        public static bool DatabasePooling = true;
+        public bool DatabasePooling = true;
 
         [ConfigBool("irc-player-titles", "IRC bot", true)]
-        public static bool IRCShowPlayerTitles = true;
+        public bool IRCShowPlayerTitles = true;
         [ConfigBool("irc-show-world-changes", "IRC bot", false)]
-        public static bool IRCShowWorldChanges = false;
+        public bool IRCShowWorldChanges = false;
         [ConfigBool("irc-show-afk", "IRC bot", false)]
-        public static bool IRCShowAFK = false;
+        public bool IRCShowAFK = false;
         [ConfigString("irc-command-prefix", "IRC bot", ".x", true)]
-        public static string IRCCommandPrefix = ".x";
+        public string IRCCommandPrefix = ".x";
         [ConfigEnum("irc-controller-verify", "IRC bot", IRCControllerVerify.HalfOp, typeof(IRCControllerVerify))]
-        public static IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
+        public IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
         [ConfigPerm("irc-controller-rank", "IRC bot", LevelPermission.Nobody)]
-        public static LevelPermission IRCControllerRank = LevelPermission.Nobody;       
+        public LevelPermission IRCControllerRank = LevelPermission.Nobody;       
         
         [ConfigBool("tablist-rank-sorted", "Tablist", true)]
-        public static bool TablistRankSorted = true;
+        public bool TablistRankSorted = true;
         [ConfigBool("tablist-global", "Tablist", false)]
-        public static bool TablistGlobal = true;
+        public bool TablistGlobal = true;
         [ConfigBool("tablist-bots", "Tablist", false)]
-        public static bool TablistBots = false;
+        public bool TablistBots = false;
 
         [ConfigBool("parse-emotes", "Other", true)]
-        public static bool ParseEmotes = true;        
+        public bool ParseEmotes = true;        
         [ConfigBool("dollar-before-dollar", "Other", true)]
-        public static bool DollarNames = true;
+        public bool DollarNames = true;
         [ConfigStringList("disabledstandardtokens", "Other")]
-        internal static List<string> DisabledChatTokens = new List<string>();
+        internal List<string> DisabledChatTokens = new List<string>();
         [ConfigBool("profanity-filter", "Other", false)]
-        public static bool ProfanityFiltering = false;
+        public bool ProfanityFiltering = false;
         [ConfigString("host-state", "Other", "Alive")]
-        public static string ConsoleName = "Alive";
+        public string ConsoleName = "Alive";
         
         [ConfigColor("defaultColor", "Colors", "&e")]
-        public static string DefaultColor = "&e";
+        public string DefaultColor = "&e";
         [ConfigColor("irc-color", "Colors", "&5")]
-        public static string IRCColor = "&5";
+        public string IRCColor = "&5";
         [ConfigColor("global-chat-color", "Colors", "&6")]
-        public static string GlobalChatColor = "&6";
+        public string GlobalChatColor = "&6";
         [ConfigColor("help-syntax-color", "Colors", "&a")]
-        public static string HelpSyntaxColor = "&a";
+        public string HelpSyntaxColor = "&a";
         [ConfigColor("help-desc-color", "Colors", "&e")]
-        public static string HelpDescriptionColor = "&e";
+        public string HelpDescriptionColor = "&e";
         [ConfigColor("warning-error-color", "Colors", "&c")]
-        public static string WarningErrorColor = "&c";
+        public string WarningErrorColor = "&c";
         
         [ConfigBool("cheapmessage", "Other", true)]
-        public static bool ShowInvincibleMessage = true;        
+        public bool ShowInvincibleMessage = true;        
         [ConfigString("cheap-message-given", "Messages", " is now invincible")]
-        public static string InvincibleMessage = " is now invincible";
+        public string InvincibleMessage = " is now invincible";
         [ConfigString("custom-ban-message", "Messages", "You're banned!")]
-        public static string DefaultBanMessage = "You're banned!";
+        public string DefaultBanMessage = "You're banned!";
         [ConfigString("custom-shutdown-message", "Messages", "Server shutdown. Rejoin in 10 seconds.")]
-        public static string DefaultShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
+        public string DefaultShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
         [ConfigString("custom-promote-message", "Messages", "&6Congratulations for working hard and getting &2PROMOTED!")]
-        public static string DefaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
+        public string DefaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
         [ConfigString("custom-demote-message", "Messages", "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(")]
-        public static string DefaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";       
+        public string DefaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";       
         [ConfigString("custom-restart-message", "Messages", "Server restarted. Sign in again and rejoin.")]
-        public static string DefaultRestartMessage = "Server restarted. Sign in again and rejoin.";
+        public string DefaultRestartMessage = "Server restarted. Sign in again and rejoin.";
         
         [ConfigBool("log-notes", "Other", true)]
-        public static bool LogNotes = true;
+        public bool LogNotes = true;
         [ConfigBool("admin-verification", "Admin", true)]
-        public static bool verifyadmins = true;
+        public bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Admin", LevelPermission.Operator)]
-        public static LevelPermission VerifyAdminsRank = LevelPermission.Operator;
+        public LevelPermission VerifyAdminsRank = LevelPermission.Operator;
         
         [ConfigBool("mute-on-spam", "Spam control", false)]
-        public static bool ChatSpamCheck = false;
+        public bool ChatSpamCheck = false;
         [ConfigInt("spam-messages", "Spam control", 8, 0, 10000)]
-        public static int ChatSpamCount = 8;
+        public int ChatSpamCount = 8;
         [ConfigTimespan("spam-mute-time", "Spam control", 60, false)]
-        public static TimeSpan ChatSpamMuteTime = TimeSpan.FromSeconds(60);
+        public TimeSpan ChatSpamMuteTime = TimeSpan.FromSeconds(60);
         [ConfigTimespan("spam-counter-reset-time", "Spam control", 5, false)]
-        public static TimeSpan ChatSpamInterval = TimeSpan.FromSeconds(5);
+        public TimeSpan ChatSpamInterval = TimeSpan.FromSeconds(5);
         
         [ConfigBool("cmd-spam-check", "Spam control", true)]
-        public static bool CmdSpamCheck = true;
+        public bool CmdSpamCheck = true;
         [ConfigInt("cmd-spam-count", "Spam control", 25, 0, 10000)]
-        public static int CmdSpamCount = 25;
+        public int CmdSpamCount = 25;
         [ConfigTimespan("cmd-spam-block-time", "Spam control", 30, false)]
-        public static TimeSpan CmdSpamBlockTime = TimeSpan.FromSeconds(30);
+        public TimeSpan CmdSpamBlockTime = TimeSpan.FromSeconds(30);
         [ConfigTimespan("cmd-spam-interval", "Spam control", 1, false)]
-        public static TimeSpan CmdSpamInterval = TimeSpan.FromSeconds(1);
+        public TimeSpan CmdSpamInterval = TimeSpan.FromSeconds(1);
         
         [ConfigBool("block-spam-check", "Spam control", true)]
-        public static bool BlockSpamCheck = true;
+        public bool BlockSpamCheck = true;
         [ConfigInt("block-spam-count", "Spam control", 200, 0, 10000)]
-        public static int BlockSpamCount = 200;
+        public int BlockSpamCount = 200;
         [ConfigTimespan("block-spam-interval", "Spam control", 5, false)]
-        public static TimeSpan BlockSpamInterval = TimeSpan.FromSeconds(5);
+        public TimeSpan BlockSpamInterval = TimeSpan.FromSeconds(5);
         
         [ConfigBool("ip-spam-check", "Spam control", true)]
-        public static bool IPSpamCheck = true;
+        public bool IPSpamCheck = true;
         [ConfigInt("ip-spam-count", "Spam control", 25, 0, 10000)]
-        public static int IPSpamCount = 10;
+        public int IPSpamCount = 10;
         [ConfigTimespan("ip-spam-block-time", "Spam control", 180, false)]
-        public static TimeSpan IPSpamBlockTime = TimeSpan.FromSeconds(180);
+        public TimeSpan IPSpamBlockTime = TimeSpan.FromSeconds(180);
         [ConfigTimespan("ip-spam-interval", "Spam control", 60, false)]
-        public static TimeSpan IPSpamInterval = TimeSpan.FromSeconds(60);
+        public TimeSpan IPSpamInterval = TimeSpan.FromSeconds(60);
     }
 }

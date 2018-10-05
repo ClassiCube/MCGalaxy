@@ -37,13 +37,13 @@ namespace MCGalaxy {
             
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
-            if (ServerConfig.ClassicubeAccountPlus) name += "+";
+            if (Server.Config.ClassicubeAccountPlus) name += "+";
             
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
             
-            hasCpe = buffer[offset + 130] == 0x42 && ServerConfig.EnableCPE;
+            hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
             level = Server.mainLevel;
             Loading = true;
             if (disconnected) return;
@@ -75,12 +75,12 @@ namespace MCGalaxy {
                 }
                 
                 // Remove clone from list (hold lock for as short time as possible)
-                if (clone != null && ServerConfig.VerifyNames) PlayerInfo.Online.Remove(clone);
+                if (clone != null && Server.Config.VerifyNames) PlayerInfo.Online.Remove(clone);
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
             }
             
-            if (clone != null && ServerConfig.VerifyNames) {
+            if (clone != null && Server.Config.VerifyNames) {
                 string reason = ip == clone.ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
                 clone.Leave(reason);
             } else if (clone != null) {
@@ -108,14 +108,14 @@ namespace MCGalaxy {
             SetPrefix();
             LoadCpeData();
             
-            if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) adminpen = true;
-            if (Server.noEmotes.Contains(name)) { parseEmotes = !ServerConfig.ParseEmotes; }
+            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) adminpen = true;
+            if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;
             hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
             if (hidden) Message("&8Reminder: You are still hidden.");
             
-            if (Chat.AdminchatPerms.UsableBy(Rank) && ServerConfig.AdminsJoinSilently) {
+            if (Chat.AdminchatPerms.UsableBy(Rank) && Server.Config.AdminsJoinSilently) {
                 hidden = true; adminchat = true;                
             }
             
@@ -125,16 +125,16 @@ namespace MCGalaxy {
             string joinm = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinm = "&8(hidden)" + joinm;
             
-            if (ServerConfig.GuestJoinsNotify || Rank > LevelPermission.Guest) {
+            if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) {
                 Chat.MessageFrom(this, joinm, Chat.FilterVisible(this), !hidden);
             }
 
-            if (ServerConfig.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
+            if (Server.Config.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 Message("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
                 agreed = false;
             }
 
-            if (ServerConfig.verifyadmins && Rank >= ServerConfig.VerifyAdminsRank) {
+            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) {
                 if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
                     Message("%WPlease set your admin verification password with %T/SetPass [password]!");
                 else
@@ -148,7 +148,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if (ServerConfig.PositionUpdateInterval > 1000)
+            if (Server.Config.PositionUpdateInterval > 1000)
                 Message("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {

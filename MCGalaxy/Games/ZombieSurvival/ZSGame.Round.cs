@@ -120,7 +120,7 @@ namespace MCGalaxy.Games {
                         if (lastKiller == killer.name) {
                             infectCombo++;
                             if (infectCombo >= 2) {
-                                killer.Message("You gained " + (2 + infectCombo) + " " + ServerConfig.Currency);
+                                killer.Message("You gained " + (2 + infectCombo) + " " + Server.Config.Currency);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
                                 Map.Message("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
@@ -174,7 +174,7 @@ namespace MCGalaxy.Games {
             Map.Message("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
             
             if (killer == null) {
-                p.Message("As this was an automatic infection, you have not lost any &3" + ServerConfig.Currency);
+                p.Message("As this was an automatic infection, you have not lost any &3" + Server.Config.Currency);
             } else {
                 p.SetMoney(Math.Max(p.money - 2, 0));
             }
@@ -193,7 +193,7 @@ namespace MCGalaxy.Games {
                 pKiller.Message("Cannot collect the bounty, as the player who set it is offline.");
             } else {
                 Map.Message("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
-                              bounty.Amount + " %S" + ServerConfig.Currency + " on " + p.ColoredName);
+                              bounty.Amount + " %S" + Server.Config.Currency + " on " + p.ColoredName);
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
@@ -265,7 +265,7 @@ namespace MCGalaxy.Games {
 
         void IncreaseAliveStats(Player p) {
             if (p.Game.PledgeSurvive) {
-                p.Message("You received &a5 &3" + ServerConfig.Currency +
+                p.Message("You received &a5 &3" + Server.Config.Currency +
                                " %Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }
@@ -288,9 +288,9 @@ namespace MCGalaxy.Games {
                 int reward = GetMoneyReward(pl, data, alive, rand);
                 
                 if (reward == -1) {
-                    pl.Message("You may not hide inside a block! No " + ServerConfig.Currency + " for you."); reward = 0;
+                    pl.Message("You may not hide inside a block! No " + Server.Config.Currency + " for you."); reward = 0;
                 } else if (reward > 0) {
-                    pl.Message("&6You gained " + reward + " " + ServerConfig.Currency);
+                    pl.Message("&6You gained " + reward + " " + Server.Config.Currency);
                 }
                 
                 pl.SetMoney(pl.money + reward);
@@ -298,7 +298,7 @@ namespace MCGalaxy.Games {
                 pl.Game.PledgeSurvive = false;
                 
                 if (pl.Game.Referee) {
-                    pl.Message("You gained one " + ServerConfig.Currency + " because you're a ref. Would you like a medal as well?");
+                    pl.Message("You gained one " + Server.Config.Currency + " because you're a ref. Would you like a medal as well?");
                     pl.SetMoney(pl.money + 1);
                 }
                 

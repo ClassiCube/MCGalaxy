@@ -35,9 +35,9 @@ namespace MCGalaxy.Commands.CPE {
                 else if (scope == "levelzip")
                     p.Message("Level tex pack: "  + GetPath(p.level.Config.TexturePack));
                 else if (scope == "global")
-                    p.Message("Global terrain: "  + GetPath(ServerConfig.DefaultTerrain));
+                    p.Message("Global terrain: "  + GetPath(Server.Config.DefaultTerrain));
                 else if (scope == "globalzip")
-                    p.Message("Global tex pack: " + GetPath(ServerConfig.DefaultTexture));
+                    p.Message("Global tex pack: " + GetPath(Server.Config.DefaultTexture));
                 else
                     Help(p);
                 return;
@@ -59,16 +59,16 @@ namespace MCGalaxy.Commands.CPE {
             }
 
             if (scope == "global" || scope == "globalzip") {
-                ServerConfig.DefaultTerrain = "";
-                ServerConfig.DefaultTexture = "";
+                Server.Config.DefaultTerrain = "";
+                Server.Config.DefaultTexture = "";
                     
                 if (url.Length == 0) {
                     p.Message("Reset server textures to default");
                 } else if (url.CaselessEnds(".png")) {
-                    ServerConfig.DefaultTerrain = url;
+                    Server.Config.DefaultTerrain = url;
                     p.Message("Set server's default terrain to " + url);
                 } else if (url.CaselessEnds(".zip")) {
-                    ServerConfig.DefaultTexture = url;
+                    Server.Config.DefaultTexture = url;
                     p.Message("Set server's default texture pack to " + url);
                 }
                 UpdateGlobal(p);

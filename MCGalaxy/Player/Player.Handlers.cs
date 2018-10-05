@@ -57,7 +57,7 @@ namespace MCGalaxy {
             if (level.IsMuseum && Blockchange == null) return;
             bool deletingBlock = !painting && !placing;
 
-            if (ServerConfig.verifyadmins && adminpen) {
+            if (Server.Config.verifyadmins && adminpen) {
                 Message("%WYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
@@ -370,10 +370,13 @@ namespace MCGalaxy {
         }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {
-            int value   = level.Config.GetEnvProp(i);
+            int value   = Server.Config.GetEnvProp(i);
             bool block  = i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock;
             int invalid = block ? Block.Invalid : -1;
             
+            if (level.Config.GetEnvProp(i) != invalid) {
+                value = level.Config.GetEnvProp(i);
+            }
             if (zone != null && zone.Config.GetEnvProp(i) != invalid) {
                 value = zone.Config.GetEnvProp(i);
             }
@@ -387,7 +390,10 @@ namespace MCGalaxy {
             Zone zone = ZoneIn;
             
             for (int i = 0; i <= 4; i++) {
-                string col = level.Config.GetColor(i);
+            	string col = Server.Config.GetColor(i);
+            	if (level.Config.GetColor(i) != "") {
+            		col = level.Config.GetColor(i);
+            	}
                 if (zone != null && zone.Config.GetColor(i) != "") {
                     col = zone.Config.GetColor(i);
                 }
@@ -461,7 +467,7 @@ namespace MCGalaxy {
             // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
             if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
 
-            if (ServerConfig.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
+            if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
                 Chat.MessageFromLevel(this, "λNICK %Shas died &3" + TimesDied + " times");
             }
             lastDeath = DateTime.UtcNow;
@@ -501,7 +507,7 @@ namespace MCGalaxy {
             if (Server.chatmod && !voice) { Message("Chat moderation is on, you cannot speak."); return; }
             
             // Filter out bad words
-            if (ServerConfig.ProfanityFiltering) text = ProfanityFilter.Parse(text);
+            if (Server.Config.ProfanityFiltering) text = ProfanityFilter.Parse(text);
 
             if (ChatModes.Handle(this, text)) return;
             text = HandleJoker(text);
@@ -608,7 +614,7 @@ namespace MCGalaxy {
         
         public void HandleCommand(string cmd, string args, CommandData data) {
             cmd = cmd.ToLower();
-            if (!ServerConfig.CmdSpamCheck && !CheckMBRecursion(data)) return;
+            if (!Server.Config.CmdSpamCheck && !CheckMBRecursion(data)) return;
             
             try {
                 Command command = GetCommand(ref cmd, ref args, data);
@@ -627,7 +633,7 @@ namespace MCGalaxy {
         public void HandleCommands(List<string> cmds, CommandData data) {
             List<string> messages = new List<string>(cmds.Count);
             List<Command> commands = new List<Command>(cmds.Count);
-            if (!ServerConfig.CmdSpamCheck && !CheckMBRecursion(data)) return;
+            if (!Server.Config.CmdSpamCheck && !CheckMBRecursion(data)) return;
             
             try {
                 foreach (string raw in cmds) {
@@ -668,13 +674,13 @@ namespace MCGalaxy {
         
         bool CheckCommand(string cmd) {
             if (cmd.Length == 0) { Message("No command entered."); return false; }
-            if (ServerConfig.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree" || cmd == "pass" || cmd == "setpass")) {
+            if (Server.Config.AgreeToRulesOnEntry && !agreed && !(cmd == "agree" || cmd == "rules" || cmd == "disagree" || cmd == "pass" || cmd == "setpass")) {
                 Message(mustAgreeMsg); return false;
             }
             if (jailed) {
                 Message("You cannot use any commands while jailed."); return false;
             }
-            if (ServerConfig.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
+            if (Server.Config.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
                 Message("%WYou must verify first with %T/Pass [Password]"); return false;
             }
             

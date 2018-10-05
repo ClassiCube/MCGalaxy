@@ -28,7 +28,7 @@ namespace MCGalaxy.Network {
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
     public sealed class ClassiCubeBeat : Heartbeat {
         string proxyUrl;
-        public override string URL { get { return ServerConfig.HeartbeatURL; } }
+        public override string URL { get { return Server.Config.HeartbeatURL; } }
         
         public override void Init() {
             try {
@@ -59,15 +59,15 @@ namespace MCGalaxy.Network {
         }
 
         public override string GetHeartbeatData()  {
-            string name = ServerConfig.Name;
+            string name = Server.Config.Name;
             OnSendingHeartbeatEvent.Call(this, ref name);
             name = Colors.Strip(name);
             
             return
-                "&port="     + ServerConfig.Port +
-                "&max="      + ServerConfig.MaxPlayers +
+                "&port="     + Server.Config.Port +
+                "&max="      + Server.Config.MaxPlayers +
                 "&name="     + Uri.EscapeDataString(name) +
-                "&public="   + ServerConfig.Public +
+                "&public="   + Server.Config.Public +
                 "&version=7" +
                 "&salt="     + Server.salt +
                 "&users="    + PlayerInfo.NonHiddenCount() +

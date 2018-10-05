@@ -181,11 +181,11 @@ namespace MCGalaxy {
                 return true;
             }
             
-            if (col == 'S') { col = ServerConfig.DefaultColor[1]; return true; }
-            if (col == 'H') { col = ServerConfig.HelpDescriptionColor[1]; return true; }
-            if (col == 'T') { col = ServerConfig.HelpSyntaxColor[1]; return true; }
-            if (col == 'I') { col = ServerConfig.IRCColor[1]; return true; }
-            if (col == 'W') { col = ServerConfig.WarningErrorColor[1]; return true; }
+            if (col == 'S') { col = Server.Config.DefaultColor[1]; return true; }
+            if (col == 'H') { col = Server.Config.HelpDescriptionColor[1]; return true; }
+            if (col == 'T') { col = Server.Config.HelpSyntaxColor[1]; return true; }
+            if (col == 'I') { col = Server.Config.IRCColor[1]; return true; }
+            if (col == 'W') { col = Server.Config.WarningErrorColor[1]; return true; }
             return IsDefined(col);
         }
         

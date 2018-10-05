@@ -231,7 +231,7 @@ namespace MCGalaxy.Games {
                     data.LastPillarWarn = DateTime.UtcNow;
                 }
                 
-                string action = data.PillarFined ? "kicked" : "fined 10 " + ServerConfig.Currency;
+                string action = data.PillarFined ? "kicked" : "fined 10 " + Server.Config.Currency;
                 p.Message("You are pillaring! %WStop before you are " + action + "!");
             } else if (data.BlocksStacked == 4) {
                 if (!data.PillarFined) {

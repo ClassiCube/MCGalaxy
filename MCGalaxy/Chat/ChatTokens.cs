@@ -57,7 +57,7 @@ namespace MCGalaxy {
         
         static void ApplyStandard(StringBuilder sb, Player p) {
             foreach (ChatToken token in Standard) {
-                if (ServerConfig.DisabledChatTokens.Contains(token.Trigger)) continue;
+                if (Server.Config.DisabledChatTokens.Contains(token.Trigger)) continue;
                 string value = token.Formatter(p);
                 if (value != null) sb.Replace(token.Trigger, value);
             }
@@ -103,10 +103,10 @@ namespace MCGalaxy {
 
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
         static string TokenTime(Player p) { return DateTime.Now.ToString("HH:mm:ss"); }
-        static string TokenIRC(Player p) { return ServerConfig.IRCServer + " > " + ServerConfig.IRCChannels; }
+        static string TokenIRC(Player p) { return Server.Config.IRCServer + " > " + Server.Config.IRCChannels; }
         static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
-        static string TokenServerName(Player p) { return ServerConfig.Name; }
-        static string TokenServerMOTD(Player p) { return ServerConfig.MOTD; }
+        static string TokenServerName(Player p) { return Server.Config.Name; }
+        static string TokenServerMOTD(Player p) { return Server.Config.MOTD; }
         static string TokenLoaded(Player p) { return LevelInfo.Loaded.Count.ToString(); }
         static string TokenWorlds(Player p) { return LevelInfo.AllMapFiles().Length.ToString(); }
         static string TokenOnline(Player p) {
@@ -118,8 +118,8 @@ namespace MCGalaxy {
             return count.ToString();
         }
         
-        static string TokenName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
-        static string TokenTrueName(Player p) { return (ServerConfig.DollarNames ? "$" : "") + p.truename; }
+        static string TokenName(Player p) { return (Server.Config.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
+        static string TokenTrueName(Player p) { return (Server.Config.DollarNames ? "$" : "") + p.truename; }
         static string TokenColor(Player p) { return p.color; }
         static string TokenRank(Player p) { return p.group.Name; }
         static string TokenDeaths(Player p) { return p.TimesDied.ToString(); }

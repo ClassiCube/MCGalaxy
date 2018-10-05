@@ -89,7 +89,7 @@ namespace MCGalaxy.DB {
         
         static string MostLogins()    { return "Most logins"; }
         static string MostDeaths()    { return "Most deaths"; }
-        static string MostMoney()     { return "Most " + ServerConfig.Currency; }
+        static string MostMoney()     { return "Most " + Server.Config.Currency; }
         static string MostNewest()    { return "Newest players"; }
         static string MostOldest()    { return "Oldest players"; }
         static string MostRecent()    { return "Most recent players"; }

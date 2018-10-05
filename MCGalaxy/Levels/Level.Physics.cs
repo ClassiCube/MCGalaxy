@@ -88,7 +88,7 @@ namespace MCGalaxy {
                     // Check if tick took too long to execute (server is falling behind)
                     if (wait < (int)(-Config.PhysicsOverload * 0.75f)) {
                         if (wait < -Config.PhysicsOverload) {
-                            if (!ServerConfig.PhysicsRestart) SetPhysics(0);
+                            if (!Server.Config.PhysicsRestart) SetPhysics(0);
                             ClearPhysics();
                             Chat.MessageGlobal("Physics shutdown on {0}", ColoredName);
                             

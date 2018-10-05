@@ -21,43 +21,43 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {  
         
         void LoadMiscProps() {
-            bak_numTime.Value = ServerConfig.BackupInterval;
-            bak_txtLocation.Text = ServerConfig.BackupDirectory;
-            hack_lbl.Checked = ServerConfig.HackrankKicks;
-            hack_num.Value = ServerConfig.HackrankKickDelay;
+            bak_numTime.Value = Server.Config.BackupInterval;
+            bak_txtLocation.Text = Server.Config.BackupDirectory;
+            hack_lbl.Checked = Server.Config.HackrankKicks;
+            hack_num.Value = Server.Config.HackrankKickDelay;
             
-            afk_numTimer.Value = ServerConfig.AutoAfkTime;
-            chkPhysRestart.Checked = ServerConfig.PhysicsRestart;
-            txtRP.Text = ServerConfig.PhysicsRestartLimit.ToString();
-            txtNormRp.Text = ServerConfig.PhysicsRestartNormLimit.ToString();
+            afk_numTimer.Value = Server.Config.AutoAfkTime;
+            chkPhysRestart.Checked = Server.Config.PhysicsRestart;
+            txtRP.Text = Server.Config.PhysicsRestartLimit.ToString();
+            txtNormRp.Text = Server.Config.PhysicsRestartNormLimit.ToString();
             
-            chkDeath.Checked = ServerConfig.AnnounceDeathCount;
-            chkSmile.Checked = ServerConfig.ParseEmotes;
-            chk17Dollar.Checked = ServerConfig.DollarNames;
-            chkRepeatMessages.Checked = ServerConfig.RepeatMBs;
-            chkGuestLimitNotify.Checked = ServerConfig.GuestLimitNotify;
-            misc_numReview.Value = ServerConfig.ReviewCooldown;
-            chkRestart.Checked = ServerConfig.restartOnError;
+            chkDeath.Checked = Server.Config.AnnounceDeathCount;
+            chkSmile.Checked = Server.Config.ParseEmotes;
+            chk17Dollar.Checked = Server.Config.DollarNames;
+            chkRepeatMessages.Checked = Server.Config.RepeatMBs;
+            chkGuestLimitNotify.Checked = Server.Config.GuestLimitNotify;
+            misc_numReview.Value = Server.Config.ReviewCooldown;
+            chkRestart.Checked = Server.Config.restartOnError;
         }
         
         void ApplyMiscProps() {
-            ServerConfig.BackupInterval = bak_numTime.Value;
-            ServerConfig.BackupDirectory = bak_txtLocation.Text;
-            ServerConfig.HackrankKicks = hack_lbl.Checked;
-            ServerConfig.HackrankKickDelay = hack_num.Value;
+            Server.Config.BackupInterval = bak_numTime.Value;
+            Server.Config.BackupDirectory = bak_txtLocation.Text;
+            Server.Config.HackrankKicks = hack_lbl.Checked;
+            Server.Config.HackrankKickDelay = hack_num.Value;
             
-            ServerConfig.AutoAfkTime = afk_numTimer.Value;
-            ServerConfig.PhysicsRestart = chkPhysRestart.Checked;
-            ServerConfig.PhysicsRestartLimit = int.Parse(txtRP.Text);
-            ServerConfig.PhysicsRestartNormLimit = int.Parse(txtNormRp.Text);
+            Server.Config.AutoAfkTime = afk_numTimer.Value;
+            Server.Config.PhysicsRestart = chkPhysRestart.Checked;
+            Server.Config.PhysicsRestartLimit = int.Parse(txtRP.Text);
+            Server.Config.PhysicsRestartNormLimit = int.Parse(txtNormRp.Text);
             
-            ServerConfig.AnnounceDeathCount = chkDeath.Checked;
-            ServerConfig.ParseEmotes = chkSmile.Checked;
-            ServerConfig.DollarNames = chk17Dollar.Checked;
-            ServerConfig.RepeatMBs = chkRepeatMessages.Checked;
-            ServerConfig.GuestLimitNotify = chkGuestLimitNotify.Checked;
-            ServerConfig.ReviewCooldown = misc_numReview.Value;
-            ServerConfig.restartOnError = chkRestart.Checked; 
+            Server.Config.AnnounceDeathCount = chkDeath.Checked;
+            Server.Config.ParseEmotes = chkSmile.Checked;
+            Server.Config.DollarNames = chk17Dollar.Checked;
+            Server.Config.RepeatMBs = chkRepeatMessages.Checked;
+            Server.Config.GuestLimitNotify = chkGuestLimitNotify.Checked;
+            Server.Config.ReviewCooldown = misc_numReview.Value;
+            Server.Config.restartOnError = chkRestart.Checked; 
         }
         
         void adv_btnEditTexts_Click(object sender, EventArgs e) {

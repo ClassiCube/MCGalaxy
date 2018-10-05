@@ -50,7 +50,7 @@ namespace MCGalaxy.Core {
         }
         
         static void AddNote(ModAction e, string type) {
-             if (!ServerConfig.LogNotes) return;
+             if (!Server.Config.LogNotes) return;
              string src = e.Actor.name;
              
              string time = DateTime.UtcNow.ToString("dd/MM/yyyy");

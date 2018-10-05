@@ -27,7 +27,7 @@ namespace MCGalaxy.Gui {
         
         void LoadEcoProps() {
             eco_cbEnabled.Checked = Economy.Enabled;
-            eco_txtCurrency.Text = ServerConfig.Currency;
+            eco_txtCurrency.Text = Server.Config.Currency;
             Eco_UpdateEnables();
             
             foreach (Item item in Economy.Items) {
@@ -54,7 +54,7 @@ namespace MCGalaxy.Gui {
         
         void ApplyEcoProps() {
             Economy.Enabled = eco_cbEnabled.Checked;
-            ServerConfig.Currency = eco_txtCurrency.Text;
+            Server.Config.Currency = eco_txtCurrency.Text;
         }
         
         class NumericalCell : DataGridViewTextBoxCell {

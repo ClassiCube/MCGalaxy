@@ -23,29 +23,8 @@ using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
-    public abstract class AreaConfig {
-        [ConfigString("MOTD", "General", "ignore", true)]
-        public string MOTD = "ignore";
-
-        // Permission settings
-        [ConfigBool("Buildable", "Permissions", true)]
-        public bool Buildable = true;
-        [ConfigBool("Deletable", "Permissions", true)]
-        public bool Deletable = true;
-
-        [ConfigPerm("PerBuild", "Permissions", LevelPermission.Guest)]
-        public LevelPermission BuildMin = LevelPermission.Guest;
-        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Nobody)]
-        public LevelPermission BuildMax = LevelPermission.Nobody;
-        
-        // Other blacklists/whitelists
-        [ConfigStringList("BuildWhitelist", "Permissions")]
-        public List<string> BuildWhitelist = new List<string>();
-        [ConfigStringList("BuildBlacklist", "Permissions")]
-        public List<string> BuildBlacklist = new List<string>();
-        
-
-        // Environment settings
+	public abstract class EnvConfig {
+		// Environment settings
         const int envRange = 0xFFFFFF;
         [ConfigInt("Weather", "Env", 0, -1, 2)]
         public int Weather = -1;
@@ -87,10 +66,6 @@ namespace MCGalaxy {
         /// <summary> Whether exponential fog mode is used client-side. </summary>
         [ConfigBoolInt("ExpFog", "Env")]
         public int ExpFog = -1;
-        [ConfigString("Texture", "Env", "", true)]
-        public string Terrain = "";
-        [ConfigString("TexturePack", "Env", "", true)]
-        public string TexturePack = "";
         
         /// <summary> Color of the clouds (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("CloudColor", "Env", "", true)]
@@ -108,7 +83,7 @@ namespace MCGalaxy {
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
         
-        public void ResetAllEnv() {
+        public void ResetEnv() {
             // TODO: Rewrite using ConfigElement somehow
             Weather      = -1;
             EdgeLevel    = -1;
@@ -125,9 +100,6 @@ namespace MCGalaxy {
             HorizonBlock = Block.Invalid;
             EdgeBlock    = Block.Invalid;
             ExpFog       = -1;
-            
-            Terrain     = "";
-            TexturePack = "";
             
             CloudColor  = "";
             FogColor    = "";
@@ -174,6 +146,28 @@ namespace MCGalaxy {
             if (i == EnvProp.SidesOffset)    return -2;
             return 0;
         }
+	}
+	
+	public abstract class AreaConfig : EnvConfig {
+        [ConfigString("MOTD", "General", "ignore", true)]
+        public string MOTD = "ignore";
+
+        // Permission settings
+        [ConfigBool("Buildable", "Permissions", true)]
+        public bool Buildable = true;
+        [ConfigBool("Deletable", "Permissions", true)]
+        public bool Deletable = true;
+
+        [ConfigPerm("PerBuild", "Permissions", LevelPermission.Guest)]
+        public LevelPermission BuildMin = LevelPermission.Guest;
+        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Nobody)]
+        public LevelPermission BuildMax = LevelPermission.Nobody;
+        
+        // Other blacklists/whitelists
+        [ConfigStringList("BuildWhitelist", "Permissions")]
+        public List<string> BuildWhitelist = new List<string>();
+        [ConfigStringList("BuildBlacklist", "Permissions")]
+        public List<string> BuildBlacklist = new List<string>();
     }
     
     public sealed class LevelConfig : AreaConfig {
@@ -193,6 +187,11 @@ namespace MCGalaxy {
         public bool UseBlockDB = true;
         [ConfigInt("LoadDelay", "Other", 0, 0, 2000)]
         public int LoadDelay = 0;
+
+        [ConfigString("Texture", "Env", "", true)]
+        public string Terrain = "";
+        [ConfigString("TexturePack", "Env", "", true)]
+        public string TexturePack = "";
         
         public byte jailrotx, jailroty;
         [ConfigInt("JailX", "Jail", 0, 0, 65535)]

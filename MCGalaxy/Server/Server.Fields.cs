@@ -32,6 +32,7 @@ namespace MCGalaxy {
         
         public static event MessageEventHandler OnURLChange;
         public static event VoidHandler OnSettingsUpdate;
+        public static ServerConfig Config = new ServerConfig();
         
         public static IRCBot IRC;
         public static Thread locationChecker;
@@ -72,9 +73,9 @@ namespace MCGalaxy {
 
         public static List<string> reviewlist = new List<string>();
         static string[] announcements = new string[0];
-        [Obsolete("Use %S or ServerConfig.DefaultColor")]
+        [Obsolete("Use %S or Server.Config.DefaultColor")]
         public static string DefaultColor;
-        [Obsolete("Use ServerConfig.Currency")]
+        [Obsolete("Use Server.Config.Currency")]
         public static string moneys;
         public static string IP;
         public static string RestartPath;

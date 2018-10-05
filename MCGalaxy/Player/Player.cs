@@ -38,7 +38,7 @@ namespace MCGalaxy {
         }
         
         public override string FullName {
-            get { return "Console [&a" + ServerConfig.ConsoleName + "%S]"; }
+            get { return "Console [&a" + Server.Config.ConsoleName + "%S]"; }
         }
         
         public override void Message(byte id, string message) {
@@ -118,7 +118,7 @@ namespace MCGalaxy {
             
             bool isDev = Server.Devs.CaselessContains(truename);
             bool isMod = Server.Mods.CaselessContains(truename);
-            bool devPrefix = ServerConfig.SoftwareStaffPrefixes;
+            bool devPrefix = Server.Config.SoftwareStaffPrefixes;
             
             if (devPrefix && isMod) prefix += MakeTitle("Info", "&a");
             if (devPrefix && isDev) prefix += MakeTitle("Dev", "&9");
@@ -287,7 +287,7 @@ namespace MCGalaxy {
             
             if (!isKick) {
                 string leavem = "&c- λFULL %S" + chatMsg;
-                if (ServerConfig.GuestLeavesNotify || Rank > LevelPermission.Guest) {
+                if (Server.Config.GuestLeavesNotify || Rank > LevelPermission.Guest) {
                     Chat.MessageFrom(this, leavem, Chat.FilterVisible(this), !hidden);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);

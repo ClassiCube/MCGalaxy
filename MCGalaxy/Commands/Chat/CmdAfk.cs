@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static void ShowMessage(Player p, string message) {
-            bool announce = !p.hidden && ServerConfig.IRCShowAFK;
+            bool announce = !p.hidden && Server.Config.IRCShowAFK;
             Chat.MessageFrom(p, message, Chat.FilterVisible(p), announce);
         }
         

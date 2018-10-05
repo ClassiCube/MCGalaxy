@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
 
         public override void Use(Player p, string message, CommandData data) {
             p.parseEmotes = !p.parseEmotes;
-            bool addToList = p.parseEmotes != ServerConfig.ParseEmotes;
+            bool addToList = p.parseEmotes != Server.Config.ParseEmotes;
             if (!addToList) Server.noEmotes.Remove(p.name);
             else Server.noEmotes.AddUnique(p.name);
             Server.noEmotes.Save();

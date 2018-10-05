@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Chatting {
                                    "10 seconds between snacks."); return;
             }
             if (Economy.Enabled && p.money < 1) {
-                p.Message("You need to have at least 1 &3" + ServerConfig.Currency + 
+                p.Message("You need to have at least 1 &3" + Server.Config.Currency + 
                                    " %Sto purchase a snack."); return;
             }            
 
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Chatting {
      
         public override void Help(Player p) {
             p.Message("%T/Eat %H- Eats a random snack.");
-            p.Message("%HIf economy is enabled, costs 1 &3" + ServerConfig.Currency);
+            p.Message("%HIf economy is enabled, costs 1 &3" + Server.Config.Currency);
         }
     }
 }

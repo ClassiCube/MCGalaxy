@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Maintenance {
             ShutdownArgs args = (ShutdownArgs)task.State;
             if (args.Delay == 0) {
                 string reason = args.Reason;
-                if (reason.Length == 0) reason = ServerConfig.DefaultShutdownMessage;
+                if (reason.Length == 0) reason = Server.Config.DefaultShutdownMessage;
                 Server.Stop(false, reason);
             } else {
                 Log("Server shutdown in " + args.Delay + " seconds");

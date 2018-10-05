@@ -23,46 +23,46 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
         void LoadGeneralProps() {
-            srv_txtName.Text = ServerConfig.Name;
-            srv_txtMOTD.Text = ServerConfig.MOTD;
-            srv_numPort.Value = ServerConfig.Port;
-            srv_txtOwner.Text = ServerConfig.OwnerName;
-            srv_chkPublic.Checked = ServerConfig.Public;
+            srv_txtName.Text = Server.Config.Name;
+            srv_txtMOTD.Text = Server.Config.MOTD;
+            srv_numPort.Value = Server.Config.Port;
+            srv_txtOwner.Text = Server.Config.OwnerName;
+            srv_chkPublic.Checked = Server.Config.Public;
             
-            srv_numPlayers.Value = ServerConfig.MaxPlayers;
-            srv_numGuests.Value = ServerConfig.MaxGuests;
+            srv_numPlayers.Value = Server.Config.MaxPlayers;
+            srv_numGuests.Value = Server.Config.MaxGuests;
             srv_numGuests.Maximum = srv_numPlayers.Value;
-            srv_cbMustAgree.Checked = ServerConfig.AgreeToRulesOnEntry;
+            srv_cbMustAgree.Checked = Server.Config.AgreeToRulesOnEntry;
             
-            lvl_txtMain.Text = ServerConfig.MainLevel;
-            lvl_chkAutoload.Checked = ServerConfig.AutoLoadMaps;
-            lvl_chkWorld.Checked = ServerConfig.ServerWideChat;
+            lvl_txtMain.Text = Server.Config.MainLevel;
+            lvl_chkAutoload.Checked = Server.Config.AutoLoadMaps;
+            lvl_chkWorld.Checked = Server.Config.ServerWideChat;
             
-            adv_chkVerify.Checked = ServerConfig.VerifyNames;
-            adv_chkCPE.Checked = ServerConfig.EnableCPE;       
-            chkUpdates.Checked = ServerConfig.CheckForUpdates;
+            adv_chkVerify.Checked = Server.Config.VerifyNames;
+            adv_chkCPE.Checked = Server.Config.EnableCPE;       
+            chkUpdates.Checked = Server.Config.CheckForUpdates;
         }
         
         void ApplyGeneralProps() {
-            ServerConfig.Name = srv_txtName.Text;
-            ServerConfig.MOTD = srv_txtMOTD.Text;
-            ServerConfig.Port = (int)srv_numPort.Value;
-            ServerConfig.OwnerName = srv_txtOwner.Text;
-            ServerConfig.Public = srv_chkPublic.Checked;
+            Server.Config.Name = srv_txtName.Text;
+            Server.Config.MOTD = srv_txtMOTD.Text;
+            Server.Config.Port = (int)srv_numPort.Value;
+            Server.Config.OwnerName = srv_txtOwner.Text;
+            Server.Config.Public = srv_chkPublic.Checked;
             
-            ServerConfig.MaxPlayers = (byte)srv_numPlayers.Value;
-            ServerConfig.MaxGuests = (byte)srv_numGuests.Value;
-            ServerConfig.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
+            Server.Config.MaxPlayers = (byte)srv_numPlayers.Value;
+            Server.Config.MaxGuests = (byte)srv_numGuests.Value;
+            Server.Config.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
             
             string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
-            ServerConfig.MainLevel = main;
-            ServerConfig.AutoLoadMaps = lvl_chkAutoload.Checked;
-            ServerConfig.ServerWideChat = lvl_chkWorld.Checked;
+            Server.Config.MainLevel = main;
+            Server.Config.AutoLoadMaps = lvl_chkAutoload.Checked;
+            Server.Config.ServerWideChat = lvl_chkWorld.Checked;
             
-            ServerConfig.VerifyNames = adv_chkVerify.Checked;
-            ServerConfig.EnableCPE = adv_chkCPE.Checked;            
-            ServerConfig.CheckForUpdates = chkUpdates.Checked;
-            //ServerConfig.reportBack = ;  //No setting for this?                
+            Server.Config.VerifyNames = adv_chkVerify.Checked;
+            Server.Config.EnableCPE = adv_chkCPE.Checked;            
+            Server.Config.CheckForUpdates = chkUpdates.Checked;
+            //Server.Config.reportBack = ;  //No setting for this?                
         }        
         
         

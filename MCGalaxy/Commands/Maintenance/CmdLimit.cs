@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 float threshold = 0;
                 if (hasLimit && !CommandParser.GetReal(p, args[1], "Limit", ref threshold, 0, 100)) return;
                 
-                SetLimitPercent(p, ref ServerConfig.DrawReloadThreshold, threshold, hasLimit);
+                SetLimitPercent(p, ref Server.Config.DrawReloadThreshold, threshold, hasLimit);
                 return;
             }
             
@@ -42,14 +42,14 @@ namespace MCGalaxy.Commands.Maintenance {
             switch (args[0].ToLower()) {
                 case "rp":
                 case "restartphysics":
-                    SetLimit(p, "Custom /rp limit", ref ServerConfig.PhysicsRestartLimit, limit, hasLimit);
+                    SetLimit(p, "Custom /rp limit", ref Server.Config.PhysicsRestartLimit, limit, hasLimit);
                     return;
                 case "rpnormal":
-                    SetLimit(p, "Normal /rp limit", ref ServerConfig.PhysicsRestartNormLimit, limit, hasLimit);
+                    SetLimit(p, "Normal /rp limit", ref Server.Config.PhysicsRestartNormLimit, limit, hasLimit);
                     return;
                 case "pu":
                 case "physicsundo":
-                    SetLimit(p, "Physics undo max entries", ref ServerConfig.PhysicsUndo, limit, hasLimit);
+                    SetLimit(p, "Physics undo max entries", ref Server.Config.PhysicsUndo, limit, hasLimit);
                     return;
             }
 

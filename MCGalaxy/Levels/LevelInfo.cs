@@ -83,7 +83,7 @@ namespace MCGalaxy {
 
         /// <summary> Relative path of a level's backup folder </summary>
         public static string BackupBasePath(string name) {
-            return ServerConfig.BackupDirectory + "/" + name;
+            return Server.Config.BackupDirectory + "/" + name;
         }
         
         /// <summary> Relative path of a level's backup map directory </summary>
@@ -166,7 +166,7 @@ namespace MCGalaxy {
             
             // For backwards compatibility, treat name+XYZ map names as belonging to name+
             // If no + though, don't use because otherwise people can register accounts and claim maps
-            return ServerConfig.ClassicubeAccountPlus && map.CaselessStarts(name);
+            return Server.Config.ClassicubeAccountPlus && map.CaselessStarts(name);
         }
     }
 }

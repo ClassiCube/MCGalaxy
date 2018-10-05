@@ -121,7 +121,7 @@ namespace MCGalaxy.Eco {
             // Must always provide an argument.
             if (args.Length < 2) { OnStoreCommand(p); return; }
             if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
+                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); return;
             }
             DoPurchase(p, message, args);
         }
@@ -133,7 +133,7 @@ namespace MCGalaxy.Eco {
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[2], "Price", ref cost)) return;
                 
-                p.Message("Changed price of {0} item to &f{1} &3{2}", Name, cost, ServerConfig.Currency);
+                p.Message("Changed price of {0} item to &f{1} &3{2}", Name, cost, Server.Config.Currency);
                 Price = cost;
             } else {
                 p.Message("Supported actions: enable, disable, price [cost]");
@@ -143,15 +143,15 @@ namespace MCGalaxy.Eco {
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
             p.Message("%T/Eco {0} price [amount]", Name.ToLower());
-            p.Message("%HSets how many &3{0} %Hthis item costs.", ServerConfig.Currency);
+            p.Message("%HSets how many &3{0} %Hthis item costs.", Server.Config.Currency);
         }
         
         protected internal override void OnStoreOverview(Player p) {
             if (p.Rank >= PurchaseRank) {
-                p.Message("&6{0} %S- &a{1} %S{2}", Name, Price, ServerConfig.Currency);
+                p.Message("&6{0} %S- &a{1} %S{2}", Name, Price, Server.Config.Currency);
             } else {
                 string grpName = Group.GetColoredName(PurchaseRank);
-                p.Message("&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, ServerConfig.Currency, grpName);
+                p.Message("&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, Server.Config.Currency, grpName);
             }
         }
         
@@ -161,7 +161,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected void OutputItemInfo(Player p) {
-            p.Message("%HCosts &a{0} {1} %Heach time the item is bought.", Price, ServerConfig.Currency);
+            p.Message("%HCosts &a{0} {1} %Heach time the item is bought.", Price, Server.Config.Currency);
             List<string> shortcuts = new List<string>();
             foreach (Alias a in Alias.aliases) {
                 if (!a.Target.CaselessEq("buy") || a.Format == null) continue;

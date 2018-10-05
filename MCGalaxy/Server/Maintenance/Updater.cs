@@ -43,7 +43,7 @@ namespace MCGalaxy {
         }
 
         static void UpdateCheck() {
-            if (!ServerConfig.CheckForUpdates) return;
+            if (!Server.Config.CheckForUpdates) return;
             WebClient client = HttpUtil.CreateWebClient();
 
             try {

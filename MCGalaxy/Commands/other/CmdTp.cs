@@ -118,7 +118,7 @@ namespace MCGalaxy.Commands.Misc {
             if (target.level.IsMuseum) {
                 p.Message(target.ColoredName + " %Sis in a museum."); return false;
             }          
-            if (!ServerConfig.HigherRankTP && !CheckRank(p, data, target, "teleport to", true)) return false;
+            if (!Server.Config.HigherRankTP && !CheckRank(p, data, target, "teleport to", true)) return false;
             
             IGame game = IGame.GameOn(target.level);
             if (!p.Game.Referee && game != null) {

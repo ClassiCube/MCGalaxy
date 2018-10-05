@@ -50,17 +50,17 @@ namespace MCGalaxy {
             CTFGame.Config.Load();
             CountdownGame.Config.Load();
             
-            Database.Backend = ServerConfig.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+            Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             #pragma warning disable 0618
-            Server.DefaultColor = ServerConfig.DefaultColor;
-            Server.moneys = ServerConfig.Currency;
+            Server.DefaultColor = Server.Config.DefaultColor;
+            Server.moneys = Server.Config.Currency;
             #pragma warning restore 0618
             
-            if (!Directory.Exists(ServerConfig.BackupDirectory))
-                ServerConfig.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
+            if (!Directory.Exists(Server.Config.BackupDirectory))
+                Server.Config.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
             
             Save();
-            Server.SetMainLevel(ServerConfig.MainLevel);
+            Server.SetMainLevel(Server.Config.MainLevel);
         }
         
         static void LineProcessor(string key, string value, ref OldPerms perms) {
@@ -85,7 +85,7 @@ namespace MCGalaxy {
             } else if (key.CaselessEq("afk-kick-perm")) {
                 perms.afkKickMax = Group.ParsePermOrName(value, LevelPermission.AdvBuilder);
             } else {
-                ConfigElement.Parse(Server.serverConfig, null, key, value);
+                ConfigElement.Parse(Server.serverConfig, Server.Config, key, value);
             }
         }
         
@@ -232,7 +232,7 @@ namespace MCGalaxy {
             w.WriteLine("#   bufferblocks                  = Should buffer blocks by default for maps?");
             w.WriteLine();
             
-            ConfigElement.Serialise(Server.serverConfig, w, null);
+            ConfigElement.Serialise(Server.serverConfig, w, Server.Config);
         }
     }
 }

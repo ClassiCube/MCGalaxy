@@ -40,7 +40,7 @@ namespace MCGalaxy.Eco {
             
             if (p.money < Price * count) {
                 p.Message("%WYou don't have enough &3{2} %Wto buy {1} {0}.",
-                               Name, count * 10, ServerConfig.Currency); return;
+                               Name, count * 10, Server.Config.Currency); return;
             }
             
             ZSData data = ZSGame.Get(p);
@@ -50,7 +50,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreCommand(Player p) {
             p.Message("%T/Buy 10blocks [num]");
-            p.Message("%HCosts &a{0} * [num] %H{1}", Price, ServerConfig.Currency);
+            p.Message("%HCosts &a{0} * [num] %H{1}", Price, Server.Config.Currency);
             p.Message("Increases the blocks you are able to place by 10 * [num].");
         }
     }
@@ -131,7 +131,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, ServerConfig.Currency); return;
+                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +

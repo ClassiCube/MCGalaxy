@@ -48,7 +48,7 @@ namespace MCGalaxy.Cli {
                 Updater.NewerVersionDetected += LogNewerVersionDetected;
                 
                 Server.Start();
-                Console.Title = ServerConfig.Name + " - " + Server.SoftwareNameVersioned;
+                Console.Title = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
                 Console.CancelKeyPress += OnCancelKeyPress;
                 ConsoleLoop();
             } catch (Exception e) {
@@ -62,14 +62,14 @@ namespace MCGalaxy.Cli {
                 case ConsoleSpecialKey.ControlBreak:
                     // Cannot set e.Cancel for this one
                     Write("&e-- Server shutdown (Ctrl+Break) --");
-                    Thread stopThread = Server.Stop(false, ServerConfig.DefaultShutdownMessage);
+                    Thread stopThread = Server.Stop(false, Server.Config.DefaultShutdownMessage);
                     stopThread.Join();
                     break;
                     
                 case ConsoleSpecialKey.ControlC:
                     e.Cancel = true;
                     Write("&e-- Server shutdown (Ctrl+C) --" );
-                    Server.Stop(false, ServerConfig.DefaultShutdownMessage);
+                    Server.Stop(false, Server.Config.DefaultShutdownMessage);
                     break;
             }
         }
@@ -79,7 +79,7 @@ namespace MCGalaxy.Cli {
             FileLogger.Flush(null);
             
             Thread.Sleep(500);
-            if (ServerConfig.restartOnError) {
+            if (Server.Config.restartOnError) {
                 Thread stopThread = Server.Stop(true, "Server restart - unhandled error");
                 stopThread.Join();
             }

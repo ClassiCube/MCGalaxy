@@ -32,7 +32,7 @@ namespace MCGalaxy {
 
         static void LoadMainLevel(SchedulerTask task) {
             try {
-                mainLevel = LevelActions.Load(Player.Console, ServerConfig.MainLevel, false);
+                mainLevel = LevelActions.Load(Player.Console, Server.Config.MainLevel, false);
                 if (mainLevel == null) GenerateMain();                
                 mainLevel.Config.AutoUnload = false;
             } catch (Exception ex) {
@@ -42,7 +42,7 @@ namespace MCGalaxy {
         
         static void GenerateMain() {
             Logger.Log(LogType.SystemActivity, "main level not found, generating..");
-            mainLevel = new Level(ServerConfig.MainLevel, 128, 64, 128);
+            mainLevel = new Level(Server.Config.MainLevel, 128, 64, 128);
             
             MapGen.Find("Flat").Generate(Player.Console, mainLevel, "");
             mainLevel.Save();
@@ -83,7 +83,7 @@ namespace MCGalaxy {
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             
-            if (ServerConfig.WhitelistedOnly)
+            if (Server.Config.WhitelistedOnly)
                 whiteList = PlayerList.Load("ranks/whitelist.txt");
 	    }
         
@@ -92,21 +92,21 @@ namespace MCGalaxy {
             List<string> maps = AutoloadMaps.AllNames();
             
             foreach (string map in maps) {
-                if (map.CaselessEq(ServerConfig.MainLevel)) continue;
+                if (map.CaselessEq(Server.Config.MainLevel)) continue;
                 LevelActions.Load(Player.Console, map, false);
             }
         }
         
         static void SetupSocket(SchedulerTask task) {
-            Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", ServerConfig.Port);
+            Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", Server.Config.Port);
             Listener = new TcpListen();
             
             IPAddress ip;
-            if (!IPAddress.TryParse(ServerConfig.ListenIP, out ip)) {
+            if (!IPAddress.TryParse(Server.Config.ListenIP, out ip)) {
                 Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
                 ip = IPAddress.Any;
             }            
-            Listener.Listen(ip, (ushort)ServerConfig.Port);
+            Listener.Listen(ip, (ushort)Server.Config.Port);
         }
         
         static void InitHeartbeat(SchedulerTask task) {
@@ -121,12 +121,12 @@ namespace MCGalaxy {
             MainScheduler.QueueRepeat(RandomMessage, null, 
                                       TimeSpan.FromMinutes(5));
             Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
-                                 TimeSpan.FromMilliseconds(ServerConfig.PositionUpdateInterval));
+                                 TimeSpan.FromMilliseconds(Server.Config.PositionUpdateInterval));
         }
         
         static void InitRest(SchedulerTask task) {
             IRC = new IRCBot();
-            if (ServerConfig.UseIRC) IRC.Connect();
+            if (Server.Config.UseIRC) IRC.Connect();
              
             CountdownGame.Instance.AutoStart();
             ZSGame.Instance.AutoStart();

@@ -31,7 +31,7 @@ namespace MCGalaxy {
     }
     
     public static class EnvOptions {
-        public delegate void OptionSetter(Player p, string area, AreaConfig cfg, string value);
+        public delegate void OptionSetter(Player p, string area, EnvConfig cfg, string value);
         
         public static List<EnvOption> Options = new List<EnvOption>() {
              new EnvOption("Weather",   SetWeather,   "%HSets the weather (sun, rain, snow)"),
@@ -75,55 +75,55 @@ namespace MCGalaxy {
         }        
         
         
-        static void SetHorizon(Player p, string area, AreaConfig cfg, string value) {
+        static void SetHorizon(Player p, string area, EnvConfig cfg, string value) {
             SetBlock(p, value, area, "edge block", ref cfg.HorizonBlock);
         }        
-        static void SetBorder(Player p, string area, AreaConfig cfg, string value) {
+        static void SetBorder(Player p, string area, EnvConfig cfg, string value) {
             SetBlock(p, value, area, "sides block", ref cfg.EdgeBlock);
         }
         
-        static void SetCloudsHeight(Player p, string area, AreaConfig cfg, string value) {
+        static void SetCloudsHeight(Player p, string area, EnvConfig cfg, string value) {
             SetInt(p, value, area, "clouds height", ref cfg.CloudsHeight);
         }
-        static void SetEdgeLevel(Player p, string area, AreaConfig cfg, string value) {
+        static void SetEdgeLevel(Player p, string area, EnvConfig cfg, string value) {
             SetInt(p, value, area, "edge level", ref cfg.EdgeLevel);
         }
-        static void SetSidesOffset(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSidesOffset(Player p, string area, EnvConfig cfg, string value) {
             SetInt(p, value, area, "sides offset", ref cfg.SidesOffset);
         }
-        static void SetMaxFog(Player p, string area, AreaConfig cfg, string value) {
+        static void SetMaxFog(Player p, string area, EnvConfig cfg, string value) {
             SetInt(p, value, area, "max fog distance", ref cfg.MaxFogDistance);
         }
         
-        static void SetSky(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSky(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "sky color", ref cfg.SkyColor);
         }
-        static void SetClouds(Player p, string area, AreaConfig cfg, string value) {
+        static void SetClouds(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "cloud color", ref cfg.CloudColor);
         }
-        static void SetFog(Player p, string area, AreaConfig cfg, string value) {
+        static void SetFog(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "fog color", ref cfg.FogColor);
         }
-        static void SetSun(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSun(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "sun color", ref cfg.LightColor);
         }
-        static void SetShadow(Player p, string area, AreaConfig cfg, string value) {
+        static void SetShadow(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "shadow color", ref cfg.ShadowColor);
         }
         
-        static void SetCloudsSpeed(Player p, string area, AreaConfig cfg, string value) {
+        static void SetCloudsSpeed(Player p, string area, EnvConfig cfg, string value) {
             SetFloat(p, value, area, 256, "clouds speed", ref cfg.CloudsSpeed, -0xFFFFFF, 0xFFFFFF);
         }       
-        static void SetWeatherSpeed(Player p, string area, AreaConfig cfg, string value) {
+        static void SetWeatherSpeed(Player p, string area, EnvConfig cfg, string value) {
             SetFloat(p, value, area, 256, "weather speed", ref cfg.WeatherSpeed, -0xFFFFFF, 0xFFFFFF);
         }      
-        static void SetWeatherFade(Player p, string area, AreaConfig cfg, string value) {
+        static void SetWeatherFade(Player p, string area, EnvConfig cfg, string value) {
             SetFloat(p, value, area, 128, "weather fade rate", ref cfg.WeatherFade, 0, 255);
         }        
-        static void SetSkyboxHor(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSkyboxHor(Player p, string area, EnvConfig cfg, string value) {
             SetFloat(p, value, area, 1024, "skybox horizontal speed", ref cfg.SkyboxHorSpeed, -0xFFFFFF, 0xFFFFFF);
         }        
-        static void SetSkyboxVer(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSkyboxVer(Player p, string area, EnvConfig cfg, string value) {
             SetFloat(p, value, area, 1024, "skybox vertical speed", ref cfg.SkyboxVerSpeed, -0xFFFFFF, 0xFFFFFF);
         }
         
@@ -133,7 +133,7 @@ namespace MCGalaxy {
                 || value.CaselessEq("reset")  || value.Length == 0;
         }
         
-        static void SetWeather(Player p, string area, AreaConfig cfg, string value) {
+        static void SetWeather(Player p, string area, EnvConfig cfg, string value) {
             int weather;
             if (IsResetString(value)) {
                 p.Message("Reset weather for {0} %Sto 0 (Sun)", area);
@@ -154,7 +154,7 @@ namespace MCGalaxy {
             cfg.Weather = weather;
         }
         
-        static void SetSmoothFog(Player p, string area, AreaConfig cfg, string value) {
+        static void SetSmoothFog(Player p, string area, EnvConfig cfg, string value) {
             if (IsResetString(value)) {
                 p.Message("Reset smooth fog for {0} %Sto &cOFF", area);
                 cfg.ExpFog = -1;

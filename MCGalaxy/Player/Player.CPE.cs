@@ -138,7 +138,7 @@ namespace MCGalaxy {
                 Send(Packet.MapAppearanceV2(url, side, edge, edgeHeight, cloudsHeight, maxFogDist, hasCP437));
                 lastUrl = url;
             } else if (Supports(CpeExt.EnvMapAppearance)) {
-                url = level.Config.Terrain.Length == 0 ? ServerConfig.DefaultTerrain : level.Config.Terrain;
+                url = level.Config.Terrain.Length == 0 ? Server.Config.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
         }
@@ -146,7 +146,7 @@ namespace MCGalaxy {
         public string GetTextureUrl() {
             string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
             if (url.Length == 0) {
-                url = ServerConfig.DefaultTexture.Length == 0 ? ServerConfig.DefaultTerrain : ServerConfig.DefaultTexture;
+                url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
             }
             return url;
         }

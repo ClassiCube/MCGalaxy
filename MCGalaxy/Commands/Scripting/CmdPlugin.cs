@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void CreatePlugin(Player p, string name) {
             p.Message("Creating a plugin example source");
-            string creator = p.IsSuper ? ServerConfig.Name : p.name;
+            string creator = p.IsSuper ? Server.Config.Name : p.name;
             string syntax = pluginSrc.Replace(@"\t", "\t");
             syntax = string.Format(syntax, name, creator, Server.VersionString);
             File.WriteAllText("plugins/" + name + ".cs", syntax);

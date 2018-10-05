@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands.Misc {
             else
                 p.Message("{0} %Sis {1}.", who.ColoredName, msg);
             
-            string globalMsg = who.invincible ? ServerConfig.InvincibleMessage : "has stopped being invincible";
-            if (ServerConfig.ShowInvincibleMessage && !who.hidden) {
+            string globalMsg = who.invincible ? Server.Config.InvincibleMessage : "has stopped being invincible";
+            if (Server.Config.ShowInvincibleMessage && !who.hidden) {
                 Chat.MessageFrom(who, "λNICK %S" + globalMsg);
             }
         }

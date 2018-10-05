@@ -36,8 +36,8 @@ namespace MCGalaxy.SQL {
         
         internal override IDbConnection CreateConnection() {
             const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
-            string str = string.Format(format, ServerConfig.MySQLHost, ServerConfig.MySQLPort,
-                                       ServerConfig.MySQLUsername, ServerConfig.MySQLPassword, ServerConfig.DatabasePooling);
+            string str = string.Format(format, Server.Config.MySQLHost, Server.Config.MySQLPort,
+                                       Server.Config.MySQLUsername, Server.Config.MySQLPassword, Server.Config.DatabasePooling);
             return new MySqlConnection(str);
         }
         
@@ -51,7 +51,7 @@ namespace MCGalaxy.SQL {
 
         
         public override void CreateDatabase() {
-            string sql = "CREATE DATABASE if not exists `" + ServerConfig.MySQLDatabaseName + "`";
+            string sql = "CREATE DATABASE if not exists `" + Server.Config.MySQLDatabaseName + "`";
             Database.Do(sql, true, null, null);
         }
         

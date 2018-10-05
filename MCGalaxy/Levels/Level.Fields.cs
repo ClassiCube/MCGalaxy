@@ -56,7 +56,7 @@ namespace MCGalaxy {
         public bool IsMuseum;
 
         public int ReloadThreshold {
-            get { return Math.Max(10000, (int)(ServerConfig.DrawReloadThreshold * Width * Height * Length)); }
+            get { return Math.Max(10000, (int)(Server.Config.DrawReloadThreshold * Width * Height * Length)); }
         }
         
         public static bool cancelload;
@@ -68,7 +68,7 @@ namespace MCGalaxy {
         
         /// <summary> Whether this map sees server-wide chat. </summary>
         /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
-        public bool SeesServerWideChat { get { return Config.ServerWideChat && ServerConfig.ServerWideChat; } }
+        public bool SeesServerWideChat { get { return Config.ServerWideChat && Server.Config.ServerWideChat; } }
         
         internal readonly object saveLock = new object(), botsIOLock = new object();
         public BlockQueue blockqueue = new BlockQueue();

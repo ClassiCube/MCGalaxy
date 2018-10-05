@@ -22,46 +22,46 @@ namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         
         void LoadChatProps() {
-            chat_ParseColor(ServerConfig.DefaultColor, chat_btnDefault);
-            chat_ParseColor(ServerConfig.IRCColor, chat_btnIRC);
-            chat_ParseColor(ServerConfig.HelpSyntaxColor, chat_btnSyntax);
-            chat_ParseColor(ServerConfig.HelpDescriptionColor, chat_btnDesc);
-            chat_ParseColor(ServerConfig.WarningErrorColor, chat_btnWarn);
+            chat_ParseColor(Server.Config.DefaultColor, chat_btnDefault);
+            chat_ParseColor(Server.Config.IRCColor, chat_btnIRC);
+            chat_ParseColor(Server.Config.HelpSyntaxColor, chat_btnSyntax);
+            chat_ParseColor(Server.Config.HelpDescriptionColor, chat_btnDesc);
+            chat_ParseColor(Server.Config.WarningErrorColor, chat_btnWarn);
             
-            chat_txtConsole.Text = ServerConfig.ConsoleName;
-            chat_chkFilter.Checked = ServerConfig.ProfanityFiltering;
-            chat_cbTabRank.Checked = ServerConfig.TablistRankSorted;
-            chat_cbTabLevel.Checked = !ServerConfig.TablistGlobal;
-            chat_cbTabBots.Checked = ServerConfig.TablistBots;
+            chat_txtConsole.Text = Server.Config.ConsoleName;
+            chat_chkFilter.Checked = Server.Config.ProfanityFiltering;
+            chat_cbTabRank.Checked = Server.Config.TablistRankSorted;
+            chat_cbTabLevel.Checked = !Server.Config.TablistGlobal;
+            chat_cbTabBots.Checked = Server.Config.TablistBots;
             
-            chat_txtShutdown.Text = ServerConfig.DefaultShutdownMessage;
-            chat_chkCheap.Checked = ServerConfig.ShowInvincibleMessage;
+            chat_txtShutdown.Text = Server.Config.DefaultShutdownMessage;
+            chat_chkCheap.Checked = Server.Config.ShowInvincibleMessage;
             chat_txtCheap.Enabled = chat_chkCheap.Checked;
-            chat_txtCheap.Text = ServerConfig.InvincibleMessage;
-            chat_txtBan.Text = ServerConfig.DefaultBanMessage;
-            chat_txtPromote.Text = ServerConfig.DefaultPromoteMessage;
-            chat_txtDemote.Text = ServerConfig.DefaultDemoteMessage;
+            chat_txtCheap.Text = Server.Config.InvincibleMessage;
+            chat_txtBan.Text = Server.Config.DefaultBanMessage;
+            chat_txtPromote.Text = Server.Config.DefaultPromoteMessage;
+            chat_txtDemote.Text = Server.Config.DefaultDemoteMessage;
         }
         
         void ApplyChatProps() {
-            ServerConfig.DefaultColor = Colors.Parse(chat_btnDefault.Text);
-            ServerConfig.IRCColor = Colors.Parse(chat_btnIRC.Text);
-            ServerConfig.HelpSyntaxColor = Colors.Parse(chat_btnSyntax.Text);
-            ServerConfig.HelpDescriptionColor = Colors.Parse(chat_btnDesc.Text);
-            ServerConfig.WarningErrorColor = Colors.Parse(chat_btnWarn.Text);
+            Server.Config.DefaultColor = Colors.Parse(chat_btnDefault.Text);
+            Server.Config.IRCColor = Colors.Parse(chat_btnIRC.Text);
+            Server.Config.HelpSyntaxColor = Colors.Parse(chat_btnSyntax.Text);
+            Server.Config.HelpDescriptionColor = Colors.Parse(chat_btnDesc.Text);
+            Server.Config.WarningErrorColor = Colors.Parse(chat_btnWarn.Text);
             
-            ServerConfig.ConsoleName = chat_txtConsole.Text;
-            ServerConfig.ProfanityFiltering = chat_chkFilter.Checked;
-            ServerConfig.TablistRankSorted = chat_cbTabRank.Checked;
-            ServerConfig.TablistGlobal = !chat_cbTabLevel.Checked;
-            ServerConfig.TablistBots = chat_cbTabBots.Checked;
+            Server.Config.ConsoleName = chat_txtConsole.Text;
+            Server.Config.ProfanityFiltering = chat_chkFilter.Checked;
+            Server.Config.TablistRankSorted = chat_cbTabRank.Checked;
+            Server.Config.TablistGlobal = !chat_cbTabLevel.Checked;
+            Server.Config.TablistBots = chat_cbTabBots.Checked;
             
-            ServerConfig.DefaultShutdownMessage = chat_txtShutdown.Text;
-            ServerConfig.ShowInvincibleMessage = chat_chkCheap.Checked;
-            ServerConfig.InvincibleMessage = chat_txtCheap.Text;
-            ServerConfig.DefaultBanMessage = chat_txtBan.Text;
-            ServerConfig.DefaultPromoteMessage = chat_txtPromote.Text;
-            ServerConfig.DefaultDemoteMessage = chat_txtDemote.Text;
+            Server.Config.DefaultShutdownMessage = chat_txtShutdown.Text;
+            Server.Config.ShowInvincibleMessage = chat_chkCheap.Checked;
+            Server.Config.InvincibleMessage = chat_txtCheap.Text;
+            Server.Config.DefaultBanMessage = chat_txtBan.Text;
+            Server.Config.DefaultPromoteMessage = chat_txtPromote.Text;
+            Server.Config.DefaultDemoteMessage = chat_txtDemote.Text;
         }
         
 

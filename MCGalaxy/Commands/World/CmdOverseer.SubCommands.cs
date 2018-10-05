@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (LevelInfo.FindExact(map) == null)
-                LevelActions.Load(p, map, !ServerConfig.AutoLoadMaps);
+                LevelActions.Load(p, map, !Server.Config.AutoLoadMaps);
             if (LevelInfo.FindExact(map) != null)
                 PlayerActions.ChangeMap(p, map);
         }
@@ -160,7 +160,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl == null) return;
             
             if (SetPerms(p, lvl)) {
-                Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
+                Group grp = Group.Find(Server.Config.OSPerbuildDefault);
                 p.Message("Use %T/os zone add [name] %Sto allow " +
                                "players ranked below " + grp.ColoredName + " %Sto build in the map.");
             }
@@ -179,7 +179,7 @@ namespace MCGalaxy.Commands.World {
             lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
             lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
 
-            Group grp = Group.Find(ServerConfig.OSPerbuildDefault);
+            Group grp = Group.Find(Server.Config.OSPerbuildDefault);
             if (grp == null) return false;
             
             lvl.BuildAccess.SetMin(Player.Console, rank, lvl, grp);

@@ -42,7 +42,7 @@ namespace MCGalaxy.Network {
             IPAddress localIP = null;
             if (Server.Listener != null) {
                 localIP = Server.Listener.LocalIP;
-            } else if (!IPAddress.TryParse(ServerConfig.ListenIP, out localIP)) {
+            } else if (!IPAddress.TryParse(Server.Config.ListenIP, out localIP)) {
                 return null;
             }
             

@@ -151,7 +151,7 @@ namespace MCGalaxy {
             if (source.level.SeesServerWideChat) {
                 MessageFrom(ChatScope.Global, source, msg, null, filter, irc);
             } else {
-                string prefix = ServerConfig.ServerWideChat ? "<Map>" : "";
+                string prefix = Server.Config.ServerWideChat ? "<Map>" : "";
                 MessageFrom(ChatScope.Level, source, prefix + msg, source.level, filter);
             }
         }
@@ -177,7 +177,7 @@ namespace MCGalaxy {
             if (source.level.SeesServerWideChat) {
                 MessageChat(ChatScope.Global, source, msg, null, filter, irc);
             } else {
-                string prefix = ServerConfig.ServerWideChat ? "<Map>" : "";
+                string prefix = Server.Config.ServerWideChat ? "<Map>" : "";
                 MessageChat(ChatScope.Level, source, prefix + msg, source.level, filter);
             }
         }

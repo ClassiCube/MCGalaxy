@@ -280,7 +280,7 @@ namespace MCGalaxy.Games {
         }
 
         protected override string FormatStatus3(Player p) {
-            string money = "&a" + p.money + " %S" + ServerConfig.Currency;
+            string money = "&a" + p.money + " %S" + Server.Config.Currency;
             string state = ", you are " + (Get(p).Infected ? "&cdead" : "&aalive");
             return money + state;
         }

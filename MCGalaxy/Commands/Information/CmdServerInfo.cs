@@ -40,23 +40,23 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length > 0) { Help(p); return; }
             
             int count = Database.CountRows("Players");
-            p.Message("Server's name: &b{0}%S", ServerConfig.Name);
+            p.Message("Server's name: &b{0}%S", Server.Config.Name);
             p.Message("&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
                            count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
             p.Message("&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
-                           LevelInfo.Loaded.Count, ServerConfig.Currency);
+                           LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             p.Message("Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
                            up.Shorten(true), Server.SoftwareName, Server.VersionString);
 
             p.Message("Player positions are updated every &b"
-                           + ServerConfig.PositionUpdateInterval + " %Smilliseconds.");
-            string owner = ServerConfig.OwnerName;
+                           + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
+            string owner = Server.Config.OwnerName;
             if (!owner.CaselessEq("Notch"))
-                p.Message("Owner is &3{0}. %SConsole state: &3{1}", owner, ServerConfig.ConsoleName);
+                p.Message("Owner is &3{0}. %SConsole state: &3{1}", owner, Server.Config.ConsoleName);
             else
-                p.Message("Console state: &3{0}", ServerConfig.ConsoleName);
+                p.Message("Console state: &3{0}", Server.Config.ConsoleName);
             
             if (HasExtraPerm(p, data.Rank, 1)) ShowServerStats(p);
         }

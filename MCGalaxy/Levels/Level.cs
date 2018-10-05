@@ -102,7 +102,7 @@ namespace MCGalaxy {
             if (zoneMOTD != null && zoneMOTD != "ignore") return zoneMOTD;
             
             if (Config.MOTD != "ignore") return Config.MOTD;
-            return String.IsNullOrEmpty(p.group.MOTD) ? ServerConfig.MOTD : p.group.MOTD;
+            return String.IsNullOrEmpty(p.group.MOTD) ? Server.Config.MOTD : p.group.MOTD;
         }
         
         public Zone FindZoneExact(string name) {
@@ -127,7 +127,7 @@ namespace MCGalaxy {
         }
         
         public bool AutoUnload() {
-            return ServerConfig.AutoLoadMaps && Config.AutoUnload
+            return Server.Config.AutoLoadMaps && Config.AutoUnload
                 && !IsMuseum && !HasPlayers() && Unload(true);
         }
         
@@ -237,7 +237,7 @@ namespace MCGalaxy {
             SaveSettings(this);
 
             Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
-                       name, players.Count, PlayerInfo.Online.Count, ServerConfig.MaxPlayers);
+                       name, players.Count, PlayerInfo.Online.Count, Server.Config.MaxPlayers);
             Changed = false;
         }
 

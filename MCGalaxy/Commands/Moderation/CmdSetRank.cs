@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Moderation {
             Group banned = Group.BannedRank;
             if (reason == null) {
                 reason = newRank.Permission >= curRank.Permission ?
-                    ServerConfig.DefaultPromoteMessage : ServerConfig.DefaultDemoteMessage;
+                    Server.Config.DefaultPromoteMessage : Server.Config.DefaultDemoteMessage;
             }
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return false;

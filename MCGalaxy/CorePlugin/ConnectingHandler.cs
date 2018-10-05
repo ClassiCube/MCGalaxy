@@ -55,7 +55,7 @@ namespace MCGalaxy.Core {
         static object md5Lock = new object();
         
         static bool VerifyName(Player p, string mppass) {
-            if (!ServerConfig.VerifyNames) return true;
+            if (!Server.Config.VerifyNames) return true;
             
             byte[] hash = null;
             lock (md5Lock)
@@ -96,18 +96,18 @@ namespace MCGalaxy.Core {
         }
 
         static bool CheckWhitelist(Player p) {
-            if (!ServerConfig.WhitelistedOnly) return true;
+            if (!Server.Config.WhitelistedOnly) return true;
             if (!Server.whiteList.Contains(p.name)) return false;
             
             // If verify names is off, check if the player is on the same IP.
-            return ServerConfig.VerifyNames || PlayerInfo.FindAccounts(p.ip).Contains(p.name);
+            return Server.Config.VerifyNames || PlayerInfo.FindAccounts(p.ip).Contains(p.name);
         }
         
         static bool CheckPlayersCount(Player p) {
             if (Server.vip.Contains(p.name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
-            if (online.Length >= ServerConfig.MaxPlayers && !HttpUtil.IsPrivateIP(p.ip)) {
+            if (online.Length >= Server.Config.MaxPlayers && !HttpUtil.IsPrivateIP(p.ip)) {
                 p.Leave(null, "Server full!", true); return false;
             }
             if (p.Rank > LevelPermission.Guest) return true;
@@ -117,17 +117,17 @@ namespace MCGalaxy.Core {
             foreach (Player pl in online) {
                 if (pl.Rank <= LevelPermission.Guest) guests++;
             }
-            if (guests < ServerConfig.MaxGuests) return true;
+            if (guests < Server.Config.MaxGuests) return true;
             
-            if (ServerConfig.GuestLimitNotify) Chat.MessageOps("Guest " + p.truename + " couldn't log in - too many guests.");
+            if (Server.Config.GuestLimitNotify) Chat.MessageOps("Guest " + p.truename + " couldn't log in - too many guests.");
             Logger.Log(LogType.Warning, "Guest {0} couldn't log in - too many guests.", p.truename);
             p.Leave(null, "Server has reached max number of guests", true);
             return false;
         }
         
         static bool CheckBanned(Player p, bool whitelisted) {
-            if (Server.bannedIP.Contains(p.ip) && (!ServerConfig.WhitelistedOnly || !whitelisted)) {
-                p.Kick(null, ServerConfig.DefaultBanMessage, true);
+            if (Server.bannedIP.Contains(p.ip) && (!Server.Config.WhitelistedOnly || !whitelisted)) {
+                p.Kick(null, Server.Config.DefaultBanMessage, true);
                 return false;
             }
             if (p.Rank != LevelPermission.Banned) return true;
@@ -139,7 +139,7 @@ namespace MCGalaxy.Core {
             if (banner != null) {
                 p.Kick(null, "Banned by " + banner + ": " + reason, true);
             } else {
-                p.Kick(null, ServerConfig.DefaultBanMessage, true);
+                p.Kick(null, Server.Config.DefaultBanMessage, true);
             }
             return false;
         }

@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string DefaultRealmOwner(string map) {
-            bool plus = ServerConfig.ClassicubeAccountPlus;
+            bool plus = Server.Config.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
             if (plus && map.IndexOf('+') == -1) return null;
             
@@ -146,14 +146,14 @@ namespace MCGalaxy.Commands.Info {
         }
         
         void ShowEnv(Player p, MapInfo data, LevelConfig cfg) {
-            string url = cfg.Terrain.Length > 0 ? cfg.Terrain : ServerConfig.DefaultTerrain;
+            string url = cfg.Terrain.Length > 0 ? cfg.Terrain : Server.Config.DefaultTerrain;
             if (url.Length > 0) {
                 p.Message("Terrain: &b" + url);
             } else {
                 p.Message("No custom terrain set for this map.");
             }
             
-            url = cfg.TexturePack.Length > 0 ? cfg.TexturePack : ServerConfig.DefaultTexture;
+            url = cfg.TexturePack.Length > 0 ? cfg.TexturePack : Server.Config.DefaultTexture;
             if (url.Length > 0) {
                 p.Message("Texture pack: &b" + url);
             } else {

@@ -198,7 +198,7 @@ namespace MCGalaxy {
         }
         
         void PerformMovement() {
-            double scale = Math.Ceiling(ServerConfig.PositionUpdateInterval / 25.0);
+            double scale = Math.Ceiling(Server.Config.PositionUpdateInterval / 25.0);
             int steps = movementSpeed * (int)scale;
             
             downsCount = -1;

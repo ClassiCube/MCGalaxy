@@ -29,7 +29,7 @@ namespace MCGalaxy.SQL {
             conn = db.CreateConnection();
             conn.Open();
             
-            if (db.MultipleSchema) conn.ChangeDatabase(ServerConfig.MySQLDatabaseName);
+            if (db.MultipleSchema) conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
             transaction = conn.BeginTransaction();
         }
 

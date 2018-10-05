@@ -117,7 +117,7 @@ namespace MCGalaxy.Network {
 
         
         string Unescape(Player p, string msg) {
-            string full = ServerConfig.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
+            string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
             return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
         }
         
@@ -132,7 +132,7 @@ namespace MCGalaxy.Network {
             if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
                 bot.Say(msg, false);
             } else {
-                ircOp.group = Group.Find(ServerConfig.IRCControllerRank);
+                ircOp.group = Group.Find(Server.Config.IRCControllerRank);
                 if (ircOp.group == null) ircOp.group = Group.NobodyRank;
                 
                 if (scopeFilter(ircOp, arg) && (filter == null || filter(ircOp, arg))) {
@@ -231,16 +231,16 @@ namespace MCGalaxy.Network {
             string ircCmd = parts[0].ToLower();
             if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
             
-            if (ircCmd.CaselessEq(ServerConfig.IRCCommandPrefix) && !HandleChannelCommand(user, channel, message, parts)) return;
+            if (ircCmd.CaselessEq(Server.Config.IRCCommandPrefix) && !HandleChannelCommand(user, channel, message, parts)) return;
 
             if (opchat) {
                 Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
                 Chat.MessageOps(string.Format("To Ops &f-%I(IRC) {0}&f- {1}", user.Nick,
-                                              ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+                                              Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
                 Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
                 MessageInGame(user.Nick, string.Format("%I(IRC) {0}: &f{1}", user.Nick,
-                                                       ServerConfig.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+                                                       Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
         
@@ -327,7 +327,7 @@ namespace MCGalaxy.Network {
             public readonly IRCBot Bot;
             
             public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
-                group = Group.Find(ServerConfig.IRCControllerRank);
+                group = Group.Find(Server.Config.IRCControllerRank);
                 if (group == null) group = Group.NobodyRank;
                 
                 IRCChannel = ircChannel;
@@ -377,12 +377,12 @@ namespace MCGalaxy.Network {
         }
         
         void Authenticate() {
-            string nickServ = ServerConfig.IRCNickServName;
+            string nickServ = Server.Config.IRCNickServName;
             if (nickServ.Length == 0) return;
             
-            if (ServerConfig.IRCIdentify && ServerConfig.IRCPassword.Length > 0) {
+            if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
                 Logger.Log(LogType.IRCCActivity, "Identifying with " + nickServ);
-                bot.connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + ServerConfig.IRCPassword);
+                bot.connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
 
@@ -502,7 +502,7 @@ namespace MCGalaxy.Network {
             if (index == -1) return false;
             foundAtAll = true;
             
-            IRCControllerVerify verify = ServerConfig.IRCVerify;
+            IRCControllerVerify verify = Server.Config.IRCVerify;
             if (verify == IRCControllerVerify.None) return true;
             
             if (verify == IRCControllerVerify.HalfOp) {

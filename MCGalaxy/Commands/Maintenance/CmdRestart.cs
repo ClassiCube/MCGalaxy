@@ -22,7 +22,7 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) message = ServerConfig.DefaultRestartMessage;
+            if (message.Length == 0) message = Server.Config.DefaultRestartMessage;
             Server.Stop(true, message);
         }
         

@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             string map = Matcher.FindMaps(p, message);
             if (map == null) return;
 
-            if (map.CaselessEq(ServerConfig.MainLevel)) { p.Message("Cannot delete the main level."); return; }
+            if (map.CaselessEq(Server.Config.MainLevel)) { p.Message("Cannot delete the main level."); return; }
             if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
             
             p.Message("Created backup.");

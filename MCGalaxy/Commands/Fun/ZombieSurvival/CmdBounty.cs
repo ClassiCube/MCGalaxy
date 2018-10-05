@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Fun {
             if (!CommandParser.GetInt(p, args[1], "Bounty amount", ref amount, 1, 256)) return;
             
             if (p.money < amount) {
-                p.Message("You do not have enough " + ServerConfig.Currency + " to place such a large bountry."); return;
+                p.Message("You do not have enough " + Server.Config.Currency + " to place such a large bountry."); return;
             }
             
             BountyData old = ZSGame.Instance.FindBounty(who.name);
@@ -45,10 +45,10 @@ namespace MCGalaxy.Commands.Fun {
             string msg;
             if (old == null) {
                 msg = string.Format("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
-                                    who.ColoredName, amount, ServerConfig.Currency);
+                                    who.ColoredName, amount, Server.Config.Currency);
             } else {
                 msg = string.Format("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
-                                    who.ColoredName, amount, ServerConfig.Currency, old.Amount);
+                                    who.ColoredName, amount, Server.Config.Currency, old.Amount);
                 ZSGame.Instance.Bounties.Remove(old);
             }
             ZSGame.Instance.Map.Message(msg);

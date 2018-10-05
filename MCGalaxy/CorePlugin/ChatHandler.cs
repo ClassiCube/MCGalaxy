@@ -49,7 +49,7 @@ namespace MCGalaxy.Core {
         }
         
         internal static void HandleCommand(Player p, string cmd, string args, CommandData data) {
-            if (!ServerConfig.CoreSecretCommands) return;
+            if (!Server.Config.CoreSecretCommands) return;
 
             // DO NOT REMOVE THE TWO COMMANDS BELOW, /PONY AND /RAINBOWDASHLIKESCOOLTHINGS. -EricKilla
             if (cmd == "pony") {

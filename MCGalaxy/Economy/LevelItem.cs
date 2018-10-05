@@ -78,7 +78,7 @@ namespace MCGalaxy.Eco {
             if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
-                p.Message("%WYou don't have enough &3" + ServerConfig.Currency + "%W to buy that map"); return;
+                p.Message("%WYou don't have enough &3" + Server.Config.Currency + "%W to buy that map"); return;
             }
             string name = p.name + "_" + args[2];
             
@@ -130,7 +130,7 @@ namespace MCGalaxy.Eco {
             p.Message("Name: &f" + preset.name);
             p.Message("x:" + preset.x + ", y:" + preset.y + ", z:" + preset.z);
             p.Message("Map Type: &f" + preset.type);
-            p.Message("Map Price: &f" + preset.price + " &3" + ServerConfig.Currency);
+            p.Message("Map Price: &f" + preset.price + " &3" + Server.Config.Currency);
         }
         
         void RemovePreset(Player p, string[] args, LevelPreset preset) {
@@ -166,7 +166,7 @@ namespace MCGalaxy.Eco {
                 if (!CommandParser.GetInt(p, args[4], "Price", ref newPrice, 0)) return;
                 
                 preset.price = newPrice;
-                p.Message("&aSuccessfully changed preset price to &f" + preset.price + " &3" + ServerConfig.Currency);
+                p.Message("&aSuccessfully changed preset price to &f" + preset.price + " &3" + Server.Config.Currency);
             } else {
                 p.Message("Supported properties to edit: name, title, x, y, z, type, price");
             }
@@ -193,7 +193,7 @@ namespace MCGalaxy.Eco {
             foreach (LevelPreset preset in Presets) {
                 p.Message("&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
                           preset.name, preset.x, preset.y, preset.z,
-                          preset.type, preset.price, ServerConfig.Currency);
+                          preset.type, preset.price, Server.Config.Currency);
             }
         }
         

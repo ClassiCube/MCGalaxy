@@ -86,7 +86,7 @@ namespace MCGalaxy {
 
         public bool deleteMode;
         public bool ignoreGrief;
-        public bool parseEmotes = ServerConfig.ParseEmotes;
+        public bool parseEmotes = Server.Config.ParseEmotes;
         public bool opchat;
         public bool adminchat;
         public bool whisper;

@@ -319,7 +319,7 @@ namespace MCGalaxy.SQL {
 
             const string path = "MCGalaxy.db";
             try {
-                if (ServerConfig.DatabasePooling) handle = RemoveFromPool();
+                if (Server.Config.DatabasePooling) handle = RemoveFromPool();
                 
                 if (handle == IntPtr.Zero) {
                     IntPtr db = IntPtr.Zero;
@@ -381,7 +381,7 @@ namespace MCGalaxy.SQL {
             if (handle == IntPtr.Zero) return;
 
             // TODO: handle leak here??
-            if (ServerConfig.DatabasePooling) {
+            if (Server.Config.DatabasePooling) {
                 if (Reset(canThrow)) AddToPool(handle);
             } else {
                 LimitPool(0);

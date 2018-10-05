@@ -33,11 +33,11 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (!Directory.Exists("extra/passwords"))
                 Directory.CreateDirectory("extra/passwords");
-            if (data.Rank < ServerConfig.VerifyAdminsRank) {
-                Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", ServerConfig.VerifyAdminsRank); return;
+            if (data.Rank < Server.Config.VerifyAdminsRank) {
+                Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", Server.Config.VerifyAdminsRank); return;
             }
             
-            if (!ServerConfig.verifyadmins) { p.Message("Admin verficiation is not currently enabled."); return; }
+            if (!Server.Config.verifyadmins) { p.Message("Admin verficiation is not currently enabled."); return; }
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Moderation {
         void SetPassword(Player p, string message) {
             if (p.adminpen && PasswordHasher.Exists(p.name)) {
                 p.Message("%WcYou already have a password set. %SYou %Wcannot change %Sit unless %Wyou verify it with &a/pass [Password]. " +
-                               "%SIf you have %Wforgotten %Syour password, contact %W" + ServerConfig.OwnerName + " %Sand they can %Wreset it!");
+                               "%SIf you have %Wforgotten %Syour password, contact %W" + Server.Config.OwnerName + " %Sand they can %Wreset it!");
                 return;
             }
             if (message.IndexOf(' ') >= 0) { p.Message("Your password must be one word!"); return; }
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("%WYou must first verify with %T/Pass [Password]"); return;
             }
             
-            string owner = ServerConfig.OwnerName;
+            string owner = Server.Config.OwnerName;
             if (!p.IsConsole && (owner.CaselessEq("Notch") || owner.Length == 0)) {
                 p.Message("Please tell the server owner to set the 'Server Owner' property."); return;
             }

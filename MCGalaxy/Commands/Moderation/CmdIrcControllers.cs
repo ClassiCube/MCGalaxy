@@ -66,20 +66,20 @@ namespace MCGalaxy.Commands.Moderation {
                 case "rank":
                     if (parts.Length < 2) {
                         p.Message("IRC controllers have the rank {0}",
-                                  Group.GetColoredName(ServerConfig.IRCControllerRank));
+                                  Group.GetColoredName(Server.Config.IRCControllerRank));
                         return;
                     }
                     
                     Group grp = Matcher.FindRanks(p, parts[1]);
                     if (grp == null) return;
-                    if (ServerConfig.IRCControllerRank > data.Rank) {
+                    if (Server.Config.IRCControllerRank > data.Rank) {
                         p.Message("Cannot change the IRC controllers rank, as it is currently a rank higher than yours."); return;
                     }
                     if (grp.Permission > data.Rank) {
                         p.Message("Cannot set the IRC controllers rank to a rank higher than yours."); return;
                     }
                     
-                    ServerConfig.IRCControllerRank = grp.Permission;
+                    Server.Config.IRCControllerRank = grp.Permission;
                     SrvProperties.Save();
                     p.Message("Set IRC controller rank to {0}%S.", grp.ColoredName);
                     break;

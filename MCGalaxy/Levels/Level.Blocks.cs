@@ -337,10 +337,10 @@ namespace MCGalaxy {
                     uP.Index = b;
                     uP.SetData(old, block);
 
-                    if (UndoBuffer.Count < ServerConfig.PhysicsUndo) {
+                    if (UndoBuffer.Count < Server.Config.PhysicsUndo) {
                         UndoBuffer.Add(uP);
                     } else {
-                        if (currentUndo >= ServerConfig.PhysicsUndo)
+                        if (currentUndo >= Server.Config.PhysicsUndo)
                             currentUndo = 0;
                         UndoBuffer[currentUndo] = uP;
                     }

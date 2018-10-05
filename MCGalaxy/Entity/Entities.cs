@@ -87,7 +87,7 @@ namespace MCGalaxy {
             OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
 
             SpawnRaw(dst, id, p, pos, rot, skin, name, model);
-            if (!ServerConfig.TablistGlobal) TabList.Add(dst, p, id);
+            if (!Server.Config.TablistGlobal) TabList.Add(dst, p, id);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -128,7 +128,7 @@ namespace MCGalaxy {
             
             OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
             SpawnRaw(dst, b.id, b, b.Pos, b.Rot, skin, name, model);
-            if (ServerConfig.TablistBots) TabList.Add(dst, b);
+            if (Server.Config.TablistBots) TabList.Add(dst, b);
         }
         
         static void SpawnRaw(Player dst, byte id, Entity entity, Position pos, Orientation rot,
@@ -158,13 +158,13 @@ namespace MCGalaxy {
             OnEntityDespawnedEvent.Call(other, dst);
             byte id = other == dst ? SelfID : other.id;
             dst.Send(Packet.RemoveEntity(id));
-            if (!ServerConfig.TablistGlobal) TabList.Remove(dst, other);
+            if (!Server.Config.TablistGlobal) TabList.Remove(dst, other);
         }
         
         internal static void Despawn(Player dst, PlayerBot b) {
             OnEntityDespawnedEvent.Call(b, dst);
             dst.Send(Packet.RemoveEntity(b.id));
-            if (ServerConfig.TablistBots) TabList.Remove(dst, b);
+            if (Server.Config.TablistBots) TabList.Remove(dst, b);
         }
 
         #endregion
