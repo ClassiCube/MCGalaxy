@@ -1174,7 +1174,7 @@ namespace MCGalaxy.Gui
                                     0,
                                     0});
             this.rank_numPerm.Minimum = new decimal(new int[] {
-                                    50,
+                                    20,
                                     0,
                                     0,
                                     -2147483648});

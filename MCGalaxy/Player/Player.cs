@@ -334,8 +334,8 @@ namespace MCGalaxy {
         }
         
         /// <summary> Sends a block change packet to the user containing the current block at the given coordinates. </summary>
-        /// <remarks> Vanilla client always assumes block place/delete succeeds, so this method is usually used to echo back the
-        /// old block. (e.g. due to insufficient permission to change that block, used as mark for draw operations) </remarks>
+        /// <remarks> Vanilla client always assumes block place/delete succeeds, so this is usually used to echo back the
+        /// old block. (e.g. insufficient permission to change that block, used as mark for draw operations) </remarks>
         public void RevertBlock(ushort x, ushort y, ushort z) {
             SendBlockchange(x, y, z, level.GetBlock(x, y, z));
         }

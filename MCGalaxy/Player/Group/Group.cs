@@ -30,7 +30,7 @@ namespace MCGalaxy {
     public sealed partial class Group {
 
         public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
-        public static Group GuestRank { get { return Find(LevelPermission.Guest); } }
+        public static Group GuestRank  { get { return Find(LevelPermission.Guest); } }
         public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
         public static Group DefaultRank;
         public static List<Group> GroupList = new List<Group>();
