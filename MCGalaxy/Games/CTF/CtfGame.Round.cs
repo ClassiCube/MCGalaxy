@@ -79,7 +79,7 @@ namespace MCGalaxy.Games {
             
             BlockID origBlock = Map.GetBlock(x, y, z);
             if (origBlock != Block.Invalid) {
-                Player.GlobalBlockchange(Map, x, y, z, origBlock);
+                Map.BroadcastChange(x, y, z, origBlock);
             }
         }
         
@@ -91,7 +91,7 @@ namespace MCGalaxy.Games {
             data.LastHeadPos = coords;
             ushort x = (ushort)coords.X, y = (ushort)coords.Y, z = (ushort)coords.Z;
             CtfTeam opposing = Opposing(TeamOf(p));
-            Player.GlobalBlockchange(Map, x, y, z, opposing.FlagBlock);
+            Map.BroadcastChange(x, y, z, opposing.FlagBlock);
         }
         
         public override void EndRound() {

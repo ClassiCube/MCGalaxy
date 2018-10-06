@@ -45,6 +45,7 @@ namespace MCGalaxy {
             }
         }
         
+        
         /// <summary> Gets the block at the given coordinates. </summary>
         /// <returns> Undefined behaviour if coordinates are invalid. </returns>
         public BlockID FastGetBlock(int index) {
@@ -126,12 +127,6 @@ namespace MCGalaxy {
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
-        public byte RawFallback(BlockID b) {
-            BlockDefinition def = CustomBlockDefs[b];
-            if (def != null) return def.FallBack;
-            return b < Block.CpeCount ? (byte)b : Block.Air;
-        }
-        
         public void SetTile(int index, byte block) {
             if (blocks == null || index < 0 || index >= blocks.Length) return;
             blocks[index] = block;
@@ -170,6 +165,13 @@ namespace MCGalaxy {
             
             if (chunk == null) return;
             chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)] = 0;
+        }
+        
+        
+        public byte GetFallback(BlockID b) {
+            BlockDefinition def = CustomBlockDefs[b];
+            if (def != null) return def.FallBack;
+            return b < Block.CpeCount ? (byte)b : Block.Air;
         }
         
         internal bool BuildIn(BlockID block) {
@@ -222,12 +224,19 @@ namespace MCGalaxy {
                 p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
             }
             return false;
+        }        
+        
+        /// <summary> Sends a block update packet to all players in this level. </summary>
+        public void BroadcastChange(ushort x, ushort y, ushort z, BlockID block) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) { 
+                if (p.level == this) p.SendBlockchange(x, y, z, block);
+            }
         }
         
+        
         public void Blockchange(Player p, ushort x, ushort y, ushort z, BlockID block) {
-            if (DoBlockchange(p, x, y, z, block) == 2) {
-                Player.GlobalBlockchange(this, x, y, z, block);
-            }
+            if (DoBlockchange(p, x, y, z, block) == 2) BroadcastChange(x, y, z, block);
         }
         
         /// <summary> Returns: <br/>
@@ -295,8 +304,11 @@ namespace MCGalaxy {
         
         public void Blockchange(int b, BlockID block, bool overRide = false,
                                 PhysicsArgs data = default(PhysicsArgs), bool addUndo = true) { //Block change made by physics
-            if (DoPhysicsBlockchange(b, block, overRide, data, addUndo))
-                Player.GlobalBlockchange(this, b, block);
+            if (!DoPhysicsBlockchange(b, block, overRide, data, addUndo)) return;
+            
+            ushort x, y, z;
+            IntToPos(b, out x, out y, out z);
+            BroadcastChange(x, y, z, block);
         }
         
         public void Blockchange(ushort x, ushort y, ushort z, BlockID block, bool overRide = false,
@@ -418,7 +430,7 @@ namespace MCGalaxy {
             if (buffered) {
                 p.level.blockqueue.Add(p, index, block);
             } else {
-                Player.GlobalBlockchange(this, x, y, z, block);
+                BroadcastChange(x, y, z, block);
             }
         }
         

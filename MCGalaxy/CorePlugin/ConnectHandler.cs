@@ -27,15 +27,14 @@ namespace MCGalaxy.Core {
         
         internal static void HandleConnect(Player p) {
             CheckReviewList(p);
-            if (p.group.CanExecute("ReachDistance"))
-                LoadReach(p);
+            if (p.CanUse("ReachDistance")) LoadReach(p);
             
             LoadWaypoints(p);
             p.Ignores.Load(p);
         }
         
         static void CheckReviewList(Player p) {
-            if (!p.group.CanExecute("Review")) return;
+            if (!p.CanUse("Review")) return;
             ItemPerms checkPerms = CommandExtraPerms.Find("Review", 1);
             if (!checkPerms.UsableBy(p.Rank)) return;
             

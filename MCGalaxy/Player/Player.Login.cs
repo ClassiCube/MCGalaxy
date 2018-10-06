@@ -112,7 +112,7 @@ namespace MCGalaxy {
             if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;
-            hidden = group.CanExecute("Hide") && Server.hidden.Contains(name);
+            hidden   = CanUse("Hide") && Server.hidden.Contains(name);
             if (hidden) Message("&8Reminder: You are still hidden.");
             
             if (Chat.AdminchatPerms.UsableBy(Rank) && Server.Config.AdminsJoinSilently) {
@@ -141,7 +141,7 @@ namespace MCGalaxy {
                     Message("%WPlease complete admin verification with %T/Pass [password]!");
             }
             
-            if (group.CanExecute("Inbox") && Database.TableExists("Inbox" + name)) {
+            if (CanUse("Inbox") && Database.TableExists("Inbox" + name)) {
                 int count = Database.CountRows("Inbox" + name);
                 if (count > 0) {
                     Message("You have &a" + count + " %Smessages in %T/Inbox");

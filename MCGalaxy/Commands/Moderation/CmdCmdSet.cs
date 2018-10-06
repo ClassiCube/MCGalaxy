@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
             Command cmd = Command.Find(cmdName);
             
             if (cmd == null) { p.Message("Could not find command entered"); return; }
-            if (!p.group.CanExecute(cmd)) {
+            if (!p.CanUse(cmd)) {
                 p.Message("Your rank cannot use this command."); return;
             }
             

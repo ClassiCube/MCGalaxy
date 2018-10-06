@@ -284,7 +284,7 @@ namespace MCGalaxy.Network {
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
             
             try {
-                if (!p.group.CanExecute(cmd)) {
+                if (!p.CanUse(cmd)) {
                     CommandPerms.Find(cmd.name).MessageCannotUse(p);
                     return false;
                 }

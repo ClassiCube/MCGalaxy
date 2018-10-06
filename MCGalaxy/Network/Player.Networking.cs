@@ -278,7 +278,7 @@ namespace MCGalaxy {
                 raw = Block.Convert(block);
                 if (raw >= Block.CpeCount) raw = Block.Orange;
             }
-            if (raw > MaxRawBlock) raw = level.RawFallback(block);
+            if (raw > MaxRawBlock) raw = level.GetFallback(block);
             
             // Custom block replaced a core block
             if (!hasBlockDefs && raw < Block.CpeCount) {

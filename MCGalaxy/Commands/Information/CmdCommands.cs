@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Info {
             List<Command> shortcuts = new List<Command>();
             foreach (Command cmd in Command.allCmds) {
                 if (cmd.shortcut.Length == 0) continue;
-                if (!p.group.CanExecute(cmd)) continue;
+                if (!p.CanUse(cmd)) continue;
                 shortcuts.Add(cmd);
             }
             
@@ -105,7 +105,8 @@ namespace MCGalaxy.Commands.Info {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (!group.CanExecute(c) || disabled != null || c.name == null) continue;
+                if (disabled != null || c.name == null) continue;
+                if (!group.Commands.Contains(c)) continue;
                 cmds.Add(c);
             }   
             
@@ -144,7 +145,7 @@ namespace MCGalaxy.Commands.Info {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (p.group.CanExecute(c) && disabled == null) {
+                if (p.CanUse(c) && disabled == null) {
                     if (!c.type.CaselessContains(type) || c.name == null) continue;
                     cmds.Add(c);
                 }

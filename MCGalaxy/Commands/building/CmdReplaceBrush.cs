@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
             if (args.Length < 2) { Help(p); return null; }
             
             string replaceCmd = ReplaceNot ? "ReplaceNot" : "Replace";
-            if (!p.group.CanExecute(replaceCmd) || !p.group.CanExecute("Brush")) {
+            if (!p.CanUse(replaceCmd) || !p.CanUse("Brush")) {
                 p.Message("You cannot use /brush and/or /" + replaceCmd + 
                                    ", so therefore cannot use this command."); return null;
             }

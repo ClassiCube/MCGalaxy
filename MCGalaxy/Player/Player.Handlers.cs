@@ -153,8 +153,8 @@ namespace MCGalaxy {
         public int ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
             BlockID old = level.GetBlock(x, y, z);
             int type = level.DoBlockchange(this, x, y, z, block);
-            if (type == 0) return type;                                     // no change performed
-            if (type == 2) Player.GlobalBlockchange(level, x, y, z, block); // different visually
+            if (type == 0) return type;                           // no change performed
+            if (type == 2) level.BroadcastChange(x, y, z, block); // different visually
             
             ushort flags = BlockDBFlags.ManualPlace;
             if (painting && CollideType.IsSolid(level.CollideType(old))) {
@@ -721,7 +721,7 @@ namespace MCGalaxy {
                 }
             }
 
-            if (!group.CanExecute(command)) {
+            if (!CanUse(command)) {
                 CommandPerms.Find(command.name).MessageCannotUse(this);
                 return null; 
             }

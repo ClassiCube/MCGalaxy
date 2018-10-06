@@ -101,12 +101,6 @@ namespace MCGalaxy {
             }
         }
 
-        public bool CanExecute(Command cmd) { return Commands.Contains(cmd); }
-        public bool CanExecute(string cmdName) {
-            Command cmd = Command.Find(cmdName);
-            return cmd != null && Commands.Contains(cmd);
-        }
-
         /// <summary> Creates a copy of this group, except for members list and usable commands and blocks. </summary>
         public Group CopyConfig() {
             Group copy = new Group();

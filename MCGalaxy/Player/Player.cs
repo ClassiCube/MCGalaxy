@@ -148,20 +148,11 @@ namespace MCGalaxy {
                                         TimesVisited, TimesDied, money, blocks,
                                         cuboided, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
         }
-
-        #region == GLOBAL MESSAGES ==
         
-        public static void GlobalBlockchange(Level level, int b, BlockID block) {
-            ushort x, y, z;
-            level.IntToPos(b, out x, out y, out z);
-            GlobalBlockchange(level, x, y, z, block);
-        }
-        
-        public static void GlobalBlockchange(Level level, ushort x, ushort y, ushort z, BlockID block) {
-            Player[] players = PlayerInfo.Online.Items; 
-            foreach (Player p in players) { 
-                if (p.level == level) p.SendBlockchange(x, y, z, block);
-            }
+        public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }
+        public bool CanUse(string cmdName) {
+            Command cmd = Command.Find(cmdName);
+            return cmd != null && CanUse(cmd);
         }
 
         public bool MarkPossessed(string marker = "") {
@@ -176,7 +167,6 @@ namespace MCGalaxy {
             return true;
         }
 
-        #endregion
         #region == DISCONNECTING ==
         
         /// <summary> Disconnects the players from the server, 

@@ -180,7 +180,7 @@ namespace MCGalaxy.Network {
             for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
                 #if TEN_BIT_BLOCKS
                 BlockID block = blocks[i];
-                data[j++] = block <= 511 ? (BlockRaw)block : level.RawFallback(block);
+                data[j++] = block <= 511 ? (BlockRaw)block : level.GetFallback(block);
                 #else
                 data[j++] = (BlockRaw)blocks[i];
                 #endif
@@ -202,7 +202,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
                 #if TEN_BIT_BLOCKS
                 BlockID block = blocks[i];
-                data[j++] = block <= 511 ? (BlockRaw)block : level.RawFallback(block);
+                data[j++] = block <= 511 ? (BlockRaw)block : level.GetFallback(block);
                 #else
                 data[j++] = (BlockRaw)blocks[i];
                 #endif
@@ -222,7 +222,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = level.RawFallback(blocks[i]);
+                data[j++] = level.GetFallback(blocks[i]);
             }
             return data;
         }
@@ -239,7 +239,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = Block.ConvertCPE(level.RawFallback(blocks[i]));
+                data[j++] = Block.ConvertCPE(level.GetFallback(blocks[i]));
             }
             return data;
         }
