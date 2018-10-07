@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             p.Message("Gold blocks were placed at ({0}, {1}, {2}).", x, y, z);
-            return false;
+            return true;
         }
         
         static void Place(Player p, int x, int y, int z) {
