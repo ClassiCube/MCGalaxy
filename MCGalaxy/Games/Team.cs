@@ -74,6 +74,8 @@ namespace MCGalaxy.Games {
         }
         
         public static Team Find(string name) {
+            name = Colors.Strip(name);
+        	
             foreach (Team team in Teams) {
                 string teamName = Colors.Strip(team.Name);
                 if (name.CaselessEq(teamName)) return team;

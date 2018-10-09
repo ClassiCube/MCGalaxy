@@ -138,11 +138,13 @@ namespace MCGalaxy.Commands.Fun {
             
             team = Team.Find(p.Game.TeamInvite);
             if (team == null) { p.Message("The team you were invited to no longer exists."); return; }
-            team.Members.Add(p.name);
-            team.Action(p, "joined the team.");
+            
             p.Game.Team = team;
             p.Game.TeamInvite = null;
             p.SetPrefix();
+            
+            team.Members.Add(p.name);
+            team.Action(p, "joined the team.");
             Team.SaveList();
         }
         
