@@ -1,3 +1,36 @@
+v 1.9.0.9
+Added: /blockprops list, /blockprops reset, /blockprops copy
+Added: Allow using /env preset and /env normal in /zone set too
+Added: You can set default environment (i.e. global/server env) for maps in /env
+Improved: Can just do /lb copy [id] (auto fills in last free block ID)
+Improved: For inf id, don't send second array when only custom blocks <= 255 are used
+Fixed: /scale with no arguments not showing help
+Fixed: Permission messages being shown twice to console with /os map add
+Fixed: /descend not counting bottom of map as solid
+Fixed: 'already has that colour' message being wrong
+Fixed: /os map create (not /os map add), not working when used from non-realm map
+Fixed: /ref not working as /referee
+Fixed: /zs set pillaring and /zs set build
+Fixed: /server backup table not working
+Fixed: /static paste and /spin 90 messing up
+Fixed: Missing oDoor block property in /blockprops
+Fixed: /env reset shouldn't reset textures
+Fixed: /team invite stuffing up when team has colours in its name
+Fixed: Changing rank prefix not updating in-game players
+Improved: Make blockprops behaviour more consistent with lb add/copy
+Improved: don't bother warning with non divisible by 16 axis lengths
+Improved: Majorly improve /help newlvl
+Improved: /location shows state, can be used on any IP, and alias of /geoip
+Improved: Allow summoning bots to coords
+Improved: Also reload list files when doing /server reload
+Improved: Allow whitelisting yourself in perbuild and zones
+Improved: Don't spam server logs with 'unrecognised config key X'
+Improved: Drop unused fields from block def json files
+Improved: Show proper message when can't measure ping
+Improved: /help import now provides details about supported formats
+Improved: Allow using /give on yourself
+Improved: Now provide details for each /env variable
+
 v 1.9.0.8
 Fixed: ZS round times
 Fixed: Some issues with hiding
