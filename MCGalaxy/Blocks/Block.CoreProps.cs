@@ -133,6 +133,11 @@ namespace MCGalaxy {
             return null;
         }
 
+        internal static void SetDefaultNames() {
+            Aliases.Clear();
+            SetDefaultAliases();
+            int start = 0;
+
         // Using a single const string reduces size by 2KB
 const string default_names =
     "Air@Stone@Grass@Dirt@Cobblestone@Wood@Sapling@Bedrock@" +
@@ -168,11 +173,6 @@ const string default_names =
     "Blue_Bird@@Killer_Phoenix@@@GoldFish@Sea_Sponge@Shark@" +
     "Salmon@Betta_Fish@Lava_Shark@Snake@Snake_Tail@Door_Gold@@@";
     
-        internal static void SetDefaultNames() {
-            Aliases.Clear();
-            SetDefaultAliases();
-            int start = 0;
-            
             for (int b = 0; b < Block.Count; b++) {
                 int end = default_names.IndexOf('@', start);
                 string name = start == end ? "unknown" : default_names.Substring(start, end - start);
