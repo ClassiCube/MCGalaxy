@@ -25,6 +25,18 @@ namespace MCGalaxy {
         public const byte CpeCount = CpeMaxBlock + 1;
         public const int Count = 256;
 
+        // 10 bit block ids are broken down into: 2 bits of class/type, 8 bits value
+        // class | value meaning
+        // --------------
+        // 00    | Default blocks:
+        //       |    0  to 65  are classic + CPE blocks
+        //       |    66 to 255 are physics blocks
+        // 01    | Custom blocks:
+        //       |    0  to 65  are same as default blocks (not used)
+        //       |    66 to 255 are custom blocks 66 to 255
+        // 10    | Extended custom blocks 256 to 511
+        // 11    | Extended custom blocks 512 to 767
+        
         #if TEN_BIT_BLOCKS
         public const ushort MaxRaw = 767;
         public const int ExtendedCount = 256 * 4;

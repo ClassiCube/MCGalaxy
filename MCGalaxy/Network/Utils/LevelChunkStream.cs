@@ -96,47 +96,17 @@ namespace MCGalaxy.Network {
             return stream;
         }
         
-        static unsafe void CalcFallbacks(Player p, byte* conv) {
-            for (int b = 0; b < Block.ExtendedCount; b++) {
-                BlockID block = (BlockID)b;
-                if (Block.IsPhysicsType(block)) {
-                    conv[b] = (byte)Block.Convert(block);
-                    if (conv[b] > Block.CpeCount) conv[b] = Block.Orange;
-                    continue;
-                }
-                
-                // Map [256, 256 + 65] to [0, 65]
-                if (block >= Block.Count && block < Block.Count + Block.CpeCount) block -= Block.Count;
-                
-                // Players with block defs don't need fallbacks for first 256 blocks
-                if (block < Block.Count && p.hasBlockDefs) { conv[b] = (byte)block; continue; }
-                
-                // Use custom block fallback, if possible
-                BlockDefinition def = p.level.CustomBlockDefs[block];
-                if (def == null) {
-                    conv[b] = block < Block.CpeCount ? (byte)block : Block.Air;
-                } else {
-                    conv[b] = def.FallBack;
-                }
-            }
-            
-            // Convert CPE blocks to their fallbacks
-            if (!p.hasCustomBlocks) {
-                for (int b = 0; b < Block.ExtendedCount; b++) {
-                    conv[b] = Block.ConvertCPE(conv[b]);
-                }
-            }
-        }
-        
         public unsafe static void CompressMapSimple(Player p, Stream stream, LevelChunkStream dst) {
             const int bufferSize = 64 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bIndex = 0;
             
             // Store on stack instead of performing function call for every block in map
-            byte* conv = stackalloc byte[Block.ExtendedCount];
+            byte* conv = stackalloc byte[256];
+            for (int i = 0; i < 256; i++) {
+                conv[i] = (byte)p.ConvertBlock((BlockID)i);
+            }
             
-            CalcFallbacks(p, conv);
             Level lvl = p.level;
             byte[] blocks = lvl.blocks;
             float progScale = 100.0f / blocks.Length;
@@ -168,7 +138,10 @@ namespace MCGalaxy.Network {
             byte* convExt3 = conv + Block.Count * 3;
             #endif
 
-            CalcFallbacks(p, conv);
+            for (int j = 0; j < Block.ExtendedCount; j++) {
+                conv[j] = (byte)p.ConvertBlock((BlockID)j);
+            }
+            
             Level lvl = p.level;
             byte[] blocks = lvl.blocks;
             float progScale = 100.0f / blocks.Length;
@@ -176,43 +149,75 @@ namespace MCGalaxy.Network {
             // compress the map data in 64 kb chunks
             #if TEN_BIT_BLOCKS
             if (p.hasExtBlocks) {
-                byte[] buffer2 = new byte[bufferSize];
+                // Initially assume all custom blocks are <= 255
+                int i;
+                for (i = 0; i < blocks.Length; i++) {
+                    byte block = blocks[i];
+                    if (block == Block.custom_block) {
+                        buffer[bIndex] = lvl.GetExtTile(i);
+                    } else if (block == Block.custom_block_2) {
+                        break;
+                    } else if (block == Block.custom_block_3) {
+                        break;
+                    } else {
+                        buffer[bIndex] = conv[block];
+                    }
+                    
+                    bIndex++;
+                    if (bIndex == bufferSize) {
+                        stream.Write(buffer, 0, bufferSize);
+                        bIndex = 0;
+                    }
+                }
+                
+                // Check if map only used custom blocks <= 255
+                if (bIndex > 0) stream.Write(buffer, 0, bIndex);                
+                if (i == blocks.Length) return;
+                bIndex = 0;
+                
+                // Nope - have to go slower path now                
                 using (LevelChunkStream dst2 = new LevelChunkStream(p))
                     using (Stream stream2 = LevelChunkStream.CompressMapHeader(p, blocks.Length, dst2))
                 {
-                    dst.chunkValue = 0;  // 'classic' blocks
                     dst2.chunkValue = 1; // 'extended' blocks
+                    byte[] buffer2 = new byte[bufferSize];
                     
-                    for (int i = 0; i < blocks.Length; ++i) {
+                    // Need to fill in all the upper 8 bits of blocks before this one with 0
+                    for (int j = 0; j < i; j += bufferSize) {
+                        int len = Math.Min(bufferSize, i - j);
+                        stream2.Write(buffer2, 0, len);
+                    }
+                    
+                    for (; i < blocks.Length; i++) {
                         byte block = blocks[i];
                         if (block == Block.custom_block) {
-                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex]  = lvl.GetExtTile(i);
                             buffer2[bIndex] = 0;
                         } else if (block == Block.custom_block_2) {
-                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex]  = lvl.GetExtTile(i);
                             buffer2[bIndex] = 1;
                         } else if (block == Block.custom_block_3) {
-                            buffer[bIndex] = lvl.GetExtTile(i);
+                            buffer[bIndex]  = lvl.GetExtTile(i);
                             buffer2[bIndex] = 2;
                         } else {
-                            buffer[bIndex] = conv[block];
+                            buffer[bIndex]  = conv[block];
                             buffer2[bIndex] = 0;
                         }
                         
                         bIndex++;
                         if (bIndex == bufferSize) {
-                            stream.Write(buffer, 0, bufferSize);
+                            stream.Write(buffer,   0, bufferSize);
                             stream2.Write(buffer2, 0, bufferSize);
                             bIndex = 0;
                         }
                     }
                     if (bIndex > 0) stream2.Write(buffer2, 0, bIndex);
                 }
-            } else if (p.hasBlockDefs) {
-                for (int i = 0; i < blocks.Length; ++i) {
+            } else {
+                for (int i = 0; i < blocks.Length; i++) {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
-                        buffer[bIndex] = lvl.GetExtTile(i);
+                        buffer[bIndex] = convExt[lvl.GetExtTile(i)];
                     } else if (block == Block.custom_block_2) {
                         buffer[bIndex] = convExt2[lvl.GetExtTile(i)];
                     } else if (block == Block.custom_block_3) {
@@ -227,28 +232,10 @@ namespace MCGalaxy.Network {
                         stream.Write(buffer, 0, bufferSize); bIndex = 0;
                     }
                 }
-            } else {
-                for (int i = 0; i < blocks.Length; ++i) {
-                    byte block = blocks[i];
-                    if (block == Block.custom_block) {
-                        block = convExt[lvl.GetExtTile(i)];
-                    } else if (block == Block.custom_block_2) {
-                        block = convExt2[lvl.GetExtTile(i)];
-                    } else if (block == Block.custom_block_3) {
-                        block = convExt3[lvl.GetExtTile(i)];
-                    }
-                    buffer[bIndex] = conv[block];
-                    
-                    bIndex++;
-                    if (bIndex == bufferSize) {
-                        dst.chunkValue = (byte)(i * progScale);
-                        stream.Write(buffer, 0, bufferSize); bIndex = 0;
-                    }
-                }
             }
             #else
             if (p.hasBlockDefs) {
-                for (int i = 0; i < blocks.Length; ++i) {
+                for (int i = 0; i < blocks.Length; i++) {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
                         buffer[bIndex] = lvl.GetExtTile(i);
@@ -263,12 +250,13 @@ namespace MCGalaxy.Network {
                     }
                 }
             } else {
-                for (int i = 0; i < blocks.Length; ++i) {
+                for (int i = 0; i < blocks.Length; i++) {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
-                        block = convExt[lvl.GetExtTile(i)];
+                        buffer[bIndex] = convExt[lvl.GetExtTile(i)];
+                    } else {
+                        buffer[bIndex] = conv[block];
                     }
-                    buffer[bIndex] = conv[block];
                     
                     bIndex++;
                     if (bIndex == bufferSize) {
