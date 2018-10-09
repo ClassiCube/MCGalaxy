@@ -61,7 +61,7 @@ namespace MCGalaxy {
         public bool AfkKicked = true;
         [ConfigTimespan("AfkKickMinutes", null, 45, true)]
         public TimeSpan AfkKickTime = TimeSpan.FromMinutes(45);
-        [ConfigString("Prefix", null, "", true)] 
+        [ConfigString("Prefix", null, "", true)]
         public string Prefix = "";
         [ConfigInt("CopySlots", null, 0, 0)]
         public int CopySlots = 1;
@@ -207,20 +207,26 @@ namespace MCGalaxy {
             Player.Console.group = NobodyRank;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
-                p.group = Group.Find(p.group.Permission);
-                if (p.group == null) p.group = DefaultRank;
-                if (PlayerDB.FindColor(p).Length > 0 || p.color == p.group.Color) continue;
-                
-                p.color = p.group.Color;
-                Entities.GlobalRespawn(p);
-                p.SetPrefix();
+                UpdateGroup(p);
             }
+        }
+        
+        static void UpdateGroup(Player p) {
+            Group grp = Group.Find(p.group.Permission);
+            if (grp == null) grp = DefaultRank;
+            p.group = grp;
+            
+            if (PlayerDB.FindColor(p).Length == 0 && p.color != grp.Color) {
+                p.color = grp.Color;
+                Entities.GlobalRespawn(p);
+            }         
+            p.SetPrefix();
         }
 
         static readonly object saveLock = new object();
         public static void SaveAll(List<Group> givenList) {
             lock (saveLock) {
-                GroupProperties.SaveGroups(givenList);       
+                GroupProperties.SaveGroups(givenList);
             }
             OnGroupSaveEvent.Call();
         }
