@@ -132,68 +132,63 @@ namespace MCGalaxy {
             
             return null;
         }
-        
+
+        // Using a single const string reduces size by 2KB
+const string default_names =
+    "Air@Stone@Grass@Dirt@Cobblestone@Wood@Sapling@Bedrock@" +
+    "Active_Water@Water@Active_Lava@Lava@Sand@Gravel@Gold_Ore@Iron_Ore@" +
+    "Coal@Log@Leaves@Sponge@Glass@Red@Orange@Yellow@" +
+    "Lime@Green@Teal@Aqua@Cyan@Blue@Indigo@Violet@" +
+    "Magenta@Pink@Black@Gray@White@Dandelion@Rose@Brown_Shroom@" +
+    "Red_Shroom@Gold@Iron@DoubleSlab@Slab@Brick@TNT@BookShelf@" +
+    "MossyRocks@Obsidian@CobblestoneSlab@Rope@SandStone@Snow@Fire@LightPink@" +
+    "ForestGreen@Brown@DeepBlue@Turquoise@Ice@CeramicTile@MagmaBlock@Pillar@" +
+    "Crate@StoneBrick@@@@@FlagBase@@" +
+    "@Fast_Hot_Lava@C4@C4_Det@@@@@" +
+    "Door_Cobblestone@@@Door_Red@@Door_Orange@Door_Yellow@Door_LightGreen@" +
+    "@Door_AquaGreen@Door_Cyan@Door_LightBlue@Door_Purple@Door_LightPurple@Door_Pink@Door_DarkPink@" +
+    "Door_DarkGrey@Door_LightGrey@Door_White@@Op_Glass@Opsidian@Op_Brick@Op_Stone@" +
+    "Op_Cobblestone@Op_Air@Op_Water@Op_Lava@@Lava_Sponge@Wood_Float@Door@" +
+    "Lava_Fast@Door_Obsidian@Door_Glass@Door_Stone@Door_Leaves@Door_Sand@Door_Wood@Door_Green@" +
+    "Door_TNT@Door_Stair@tDoor@tDoor_Obsidian@tDoor_Glass@tDoor_Stone@tDoor_Leaves@tDoor_Sand@" +
+    "tDoor_Wood@tDoor_Green@White_Message@Black_Message@Air_Message@Water_Message@Lava_Message@tDoor_TNT@" +
+    "tDoor_Stair@tDoor_Air@tDoor_Water@tDoor_lava@Waterfall@Lavafall@@Water_Faucet@" +
+    "Lava_Faucet@Finite_Water@Finite_Lava@Finite_Faucet@oDoor@oDoor_Obsidian@oDoor_Glass@oDoor_Stone@" +
+    "oDoor_Leaves@oDoor_Sand@oDoor_Wood@oDoor_Green@oDoor_TNT@oDoor_Stair@oDoor_Lava@oDoor_Water@" +
+    "Air_Portal@Water_Portal@Lava_Portal@Custom_Block@Air_Door@Air_Switch@Door_Water@Door_Lava@" +
+    "oDoor_Air@oDoor_Obsidian_Air@oDoor_Glass_Air@oDoor_Stone_Air@oDoor_Leaves_Air@oDoor_Sand_Air@oDoor_Wood_Air@Blue_Portal@" +
+    "Orange_Portal@oDoor_Red@oDoor_TNT_Air@oDoor_Stair_Air@oDoor_Lava_Air@oDoor_Water_Air@Small_TNT@Big_TNT@" +
+    "TNT_Explosion@Lava_Fire@Nuke_TNT@RocketStart@RocketHead@Firework@Hot_Lava@Cold_Water@" +
+    "Nerve_Gas@Active_Cold_Water@Active_Hot_Lava@Magma@Geyser@Checkpoint@@@" +
+    "Air_Flood@Door_Air@Air_Flood_Layer@Air_Flood_Down@Air_Flood_Up@@@@" +
+    "@@@Door8_Air@Door9_Air@@@@" +
+    "@@@@Door_Iron@Door_Dirt@Door_Grass@Door_Blue@" +
+    "Door_Book@@@@@@Train@Creeper@" +
+    "Zombie@Zombie_Head@@Dove@Pidgeon@Duck@Phoenix@Red_Robin@" +
+    "Blue_Bird@@Killer_Phoenix@@@GoldFish@Sea_Sponge@Shark@" +
+    "Salmon@Betta_Fish@Lava_Shark@Snake@Snake_Tail@Door_Gold@@@";
+    
         internal static void SetDefaultNames() {
-            string[] names = new string[] { "Air", "Stone", "Grass", "Dirt", "Cobblestone",
-                "Wood", "Sapling", "Bedrock", "Active_Water", "Water", "Active_Lava", "Lava",
-                "Sand", "Gravel", "Gold_Ore", "Iron_Ore", "Coal", "Log", "Leaves", "Sponge",
-                "Glass", "Red", "Orange", "Yellow", "Lime", "Green", "Teal", "Aqua", "Cyan",
-                "Blue", "Indigo", "Violet", "Magenta", "Pink", "Black", "Gray", "White",
-                "Dandelion", "Rose", "Brown_Shroom", "Red_Shroom", "Gold", "Iron",
-                "DoubleSlab", "Slab", "Brick", "TNT", "BookShelf", "MossyRocks",
-                "Obsidian", "CobblestoneSlab", "Rope", "SandStone", "Snow", "Fire", "LightPink",
-                "ForestGreen", "Brown", "DeepBlue", "Turquoise", "Ice", "CeramicTile", "MagmaBlock",
-                "Pillar", "Crate", "StoneBrick", null, null,
-                null, null, "FlagBase", null, null,
-                "Fast_Hot_Lava", "C4", "C4_Det", null, null, null, null,
-                "Door_Cobblestone", null, null, "Door_Red", null,
-                "Door_Orange", "Door_Yellow", "Door_LightGreen", null, "Door_AquaGreen",
-                "Door_Cyan", "Door_LightBlue", "Door_Purple", "Door_LightPurple", "Door_Pink",
-                "Door_DarkPink", "Door_DarkGrey", "Door_LightGrey", "Door_White", null,
-                "Op_Glass", "Opsidian", "Op_Brick", "Op_Stone", "Op_Cobblestone", "Op_Air",
-                "Op_Water", "Op_Lava", null, "Lava_Sponge", "Wood_Float", "Door",
-                "Lava_Fast", "Door_Obsidian", "Door_Glass", "Door_Stone", "Door_Leaves", "Door_Sand",
-                "Door_Wood", "Door_Green", "Door_TNT", "Door_Stair", "tDoor", "tDoor_Obsidian",
-                "tDoor_Glass", "tDoor_Stone", "tDoor_Leaves", "tDoor_Sand", "tDoor_Wood",
-                "tDoor_Green", "White_Message", "Black_Message", "Air_Message", "Water_Message",
-                "Lava_Message", "tDoor_TNT", "tDoor_Stair", "tDoor_Air", "tDoor_Water", "tDoor_lava",
-                "Waterfall", "Lavafall", null, "Water_Faucet", "Lava_Faucet", "Finite_Water",
-                "Finite_Lava", "Finite_Faucet", "oDoor", "oDoor_Obsidian", "oDoor_Glass",
-                "oDoor_Stone", "oDoor_Leaves", "oDoor_Sand", "oDoor_Wood", "oDoor_Green",
-                "oDoor_TNT", "oDoor_Stair", "oDoor_Lava", "oDoor_Water", "Air_Portal", "Water_Portal",
-                "Lava_Portal", "Custom_Block", "Air_Door", "Air_Switch", "Door_Water", "Door_Lava",
-                "oDoor_Air", "oDoor_Obsidian_Air", "oDoor_Glass_Air", "oDoor_Stone_Air",
-                "oDoor_Leaves_Air", "oDoor_Sand_Air", "oDoor_Wood_Air", "Blue_Portal", "Orange_Portal",
-                "oDoor_Red", "oDoor_TNT_Air", "oDoor_Stair_Air", "oDoor_Lava_Air", "oDoor_Water_Air",
-                "Small_TNT", "Big_TNT", "TNT_Explosion", "Lava_Fire", "Nuke_TNT", "RocketStart",
-                "RocketHead", "Firework", "Hot_Lava", "Cold_Water", "Nerve_Gas", "Active_Cold_Water",
-                "Active_Hot_Lava", "Magma", "Geyser", "Checkpoint", null, null, "Air_Flood",
-                "Door_Air", "Air_Flood_Layer", "Air_Flood_Down", "Air_Flood_Up", null,
-                null, null, null, null, null, "Door8_Air",
-                "Door9_Air", null, null, null, null, null,
-                null, null, "Door_Iron", "Door_Dirt", "Door_Grass", "Door_Blue", "Door_Book",
-                null, null, null, null, null,
-                "Train", "Creeper", "Zombie", "Zombie_Head", null, "Dove", "Pidgeon", "Duck",
-                "Phoenix", "Red_Robin", "Blue_Bird", null, "Killer_Phoenix", null, null,
-                "GoldFish", "Sea_Sponge", "Shark", "Salmon", "Betta_Fish", "Lava_Shark", "Snake",
-                "Snake_Tail", "Door_Gold", null, null };
-            
             Aliases.Clear();
             SetDefaultAliases();
-            for (int i = 0; i < names.Length; i++) {
-                string name = names[i];
-                if (name == null) name = "unknown";
-                if (i > 0 && i < Block.CpeCount) {
-                    BlockDefinition def = BlockDefinition.GlobalDefs[i];
+            int start = 0;
+            
+            for (int b = 0; b < Block.Count; b++) {
+                int end = default_names.IndexOf('@', start);
+                string name = start == end ? "unknown" : default_names.Substring(start, end - start);
+                start = end + 1;
+                
+                if (b > 0 && b < Block.CpeCount) {
+                    BlockDefinition def = BlockDefinition.GlobalDefs[b];
                     if (def != null) name = def.Name;
                 }
-                coreNames[i] = name;
+                coreNames[b] = name;
                 
                 name = name.ToLower();
                 if (name != "unknown")
-                    Aliases[name] = (byte)i;
+                    Aliases[name] = (byte)b;
                 if (name.IndexOf('_') >= 0)
-                    Aliases[name.Replace("_", "")] = (byte)i;
+                    Aliases[name.Replace("_", "")] = (byte)b;
             }
         }
         

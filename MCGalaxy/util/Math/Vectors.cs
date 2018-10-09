@@ -83,9 +83,7 @@ namespace MCGalaxy.Maths {
         
         public int LengthSquared { get { return X * X + Y * Y + Z * Z; } }
         
-        public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }
-        
-        public float Dot(Vec3S32 b) { return X * b.X + Y * b.Y + Z * b.Z; }        
+        public float Length { get { return (float)Math.Sqrt( X * X + Y * Y + Z * Z ); } }    
         
         
         public int this[int index] {
