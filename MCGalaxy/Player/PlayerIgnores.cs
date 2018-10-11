@@ -23,7 +23,7 @@ namespace MCGalaxy {
     
     public class PlayerIgnores {
         public List<string> Names = new List<string>(), IRCNicks = new List<string>();
-        public bool All, IRC, Titles, Nicks, EightBall, DrawOutput, WorldChanges;
+        public bool All, IRC, Titles, Nicks, Color, EightBall, DrawOutput, WorldChanges;
         
         public void Load(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
@@ -38,6 +38,7 @@ namespace MCGalaxy {
                     
                     if (line == "&titles") { Titles = true; continue; }
                     if (line == "&nicks") { Nicks = true; continue; }
+                    if (line == "&colors") { Color = true; continue; }
                     
                     if (line == "&8ball") { EightBall = true; continue; }
                     if (line == "&drawoutput") { DrawOutput = true; continue; }
