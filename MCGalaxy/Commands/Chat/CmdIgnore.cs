@@ -44,6 +44,8 @@ namespace MCGalaxy.Commands.Chatting {
                 Toggle(p, ref p.Ignores.Titles, "{1}Player titles {0} show before names in chat"); return;
             } else if (action == "nicks") {
                 Toggle(p, ref p.Ignores.Nicks, "{1}Custom player nicks {0} show in chat"); return;
+            } else if (action == "color") {
+                Toggle(p, ref p.Ignores.Color, "{1}Custom player colors {0} show in chat"); return;
             } else if (action == "8ball") {
                 Toggle(p, ref p.Ignores.EightBall, "{0} ignoring %T/8ball"); return;
             } else if (action == "drawoutput") {
@@ -110,6 +112,7 @@ namespace MCGalaxy.Commands.Chatting {
             p.Message("%H irc [nick] - IRC chat by that IRC nick ignored.");
             p.Message("%H titles - player titles before names are ignored.");
             p.Message("%H nicks - custom player nicks do not show in chat.");
+            p.Message("%H colors - custom player colors do not show in chat.");
             p.Message("%H 8ball - %T/8ball %His ignored.");
             p.Message("%H drawoutput - drawing command output is ignored.");
             p.Message("%H worldchanges - world change messages are ignored.");  
