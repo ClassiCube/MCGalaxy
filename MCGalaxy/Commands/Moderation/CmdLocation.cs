@@ -26,6 +26,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override string shortcut { get { return "GeoIP"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can see state/province") }; }
+        }
         
         class GeoInfo {
             [ConfigString] public string region;
@@ -60,9 +63,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (elems == null) elems = ConfigElement.GetAll(typeof(GeoInfo));
             obj.Deserialise(elems, info);
             
+            
+            string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
             string target = name == null ? ip : "of " + PlayerInfo.GetColoredName(p, name);
-            p.Message("The IP {0} %Shas been traced to: &b{1}%S/&b{2}", 
-                      target, info.region, info.country);
+            p.Message("The IP {0} %Straces to: " + suffix, target, info.region, info.country);
         }
         
         public override void Help(Player p) {
