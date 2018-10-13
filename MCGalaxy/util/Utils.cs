@@ -21,14 +21,14 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy { 
+namespace MCGalaxy {
     public static class Utils {
 
         /// <summary> The absolute path on disc of the folder MCGalaxy.exe is currently running from. </summary>
         public static string FolderPath { get { return AppDomain.CurrentDomain.BaseDirectory; } }
         
         public static string Hex(byte r, byte g, byte b) {
-             return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+            return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
         
         public static unsafe void memset(IntPtr srcPtr, byte value, int startIndex, int bytes) {
@@ -68,10 +68,10 @@ namespace MCGalaxy {
         /// <summary> Divides by 16, rounding up if there is a remainder. </summary>
         public static int CeilDiv16(int x) { return (x + 15) / 16; }
         
-        const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite 
+        const NumberStyles style = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite
             | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
-            
-         // Not all languages use . as their decimal point separator    
+        
+        // Not all languages use . as their decimal point separator
         public static bool TryParseSingle(string s, out float result) {
             if (s != null && s.IndexOf(',') >= 0) s = s.Replace(',', '.');
             result = 0; float temp;
@@ -92,7 +92,7 @@ namespace MCGalaxy {
             return true;
         }
 
-                
+        
         public static List<string> ReadAllLinesList(string path) {
             List<string> lines = new List<string>();
             using (StreamReader r = new StreamReader(path, Encoding.UTF8)) {
@@ -100,6 +100,17 @@ namespace MCGalaxy {
                 while ((line = r.ReadLine()) != null) { lines.Add(line); }
             }
             return lines;
+        }
+        
+        public static void FilterURL(ref string url) {
+            // a lot of people try linking to the dropbox page instead of directly to file, so we auto correct them
+            if (url.CaselessStarts("http://www.dropbox")) {
+                url = "http://dl.dropbox" + url.Substring("http://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            } else if (url.CaselessStarts("https://www.dropbox")) {
+                url = "https://dl.dropbox" + url.Substring("https://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            }
         }
     }
 }

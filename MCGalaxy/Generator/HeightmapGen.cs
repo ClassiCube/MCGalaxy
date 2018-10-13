@@ -35,6 +35,7 @@ namespace MCGalaxy.Generator {
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
                 p.Message("{0} is not a valid URL.", url); return false;
             }
+            Utils.FilterURL(ref url);
             
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {

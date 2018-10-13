@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.CPE {
             if (skin[0] == '+')
                 skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
             
-            CmdTexture.FilterURL(ref skin);
+            Utils.FilterURL(ref skin);
             return skin;
         }
 
