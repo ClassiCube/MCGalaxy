@@ -126,7 +126,7 @@ namespace MCGalaxy {
             if (hidden) joinMsg = "&8(hidden)" + joinMsg;
             
             if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) {
-                Chat.MessageFrom(this, joinMsg, Chat.FilterVisible(this), !hidden);
+                Chat.MessageFrom(ChatScope.All, this, joinMsg, null, Chat.FilterVisible(this), !hidden);
             }
 
             if (Server.Config.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {

@@ -276,14 +276,14 @@ namespace MCGalaxy {
             if (chatMsg == null) return;
             
             if (!isKick) {
-                string leavem = "&c- λFULL %S" + chatMsg;
+                string leaveMsg = "&c- λFULL %S" + chatMsg;
                 if (Server.Config.GuestLeavesNotify || Rank > LevelPermission.Guest) {
-                    Chat.MessageFrom(this, leavem, Chat.FilterVisible(this), !hidden);
+                    Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, Chat.FilterVisible(this), !hidden);
                 }
                 Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
             } else {
-                string leavem = "&c- λFULL %Skicked %S" + chatMsg;
-                Chat.MessageFrom(ChatScope.Global, this, leavem, null, null, true);
+                string leaveMsg = "&c- λFULL %Skicked %S" + chatMsg;
+                Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, null, true);
                 Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
             }
         }

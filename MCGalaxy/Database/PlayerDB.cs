@@ -26,7 +26,7 @@ namespace MCGalaxy.DB {
     /// <summary> Stores per-player persistent data. </summary>
     public static class PlayerDB {
         
-        static string LoginPath(string name)  { return "text/login/" + name.ToLower() + ".txt"; }
+        static string LoginPath(string name)  { return "text/login/"  + name.ToLower() + ".txt"; }
         static string LogoutPath(string name) { return "text/logout/" + name.ToLower() + ".txt"; }
         
         static char[] trimChars = new char[] {'='};
