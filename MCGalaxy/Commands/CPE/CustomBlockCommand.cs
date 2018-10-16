@@ -295,17 +295,17 @@ namespace MCGalaxy.Commands.CPE {
                     step++;
                 }
             } else if (step == 4) {
-                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.TopTex, 0, 255)) {
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.TopTex)) {
                     step += (bd.Shape == 0 ? 5 : 1); // skip other texture steps for sprites
                     if (bd.Shape == 0) bd.SetAllTex(bd.TopTex);
                 }
             } else if (step == 5) {
-                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.RightTex, 0, 255)) {
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.RightTex)) {
                     bd.SetSideTex(bd.RightTex);
                     step++;
                 }
             } else if (step == 6) {
-                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.BottomTex, 0, 255))
+                if (CommandParser.GetUShort(p, value, "Texture ID", ref bd.BottomTex))
                     step++;
             } else if (step == 7) {
                 if (ParseCoords(p, value, ref bd.MinX, ref bd.MinY, ref bd.MinZ))
@@ -700,19 +700,19 @@ namespace MCGalaxy.Commands.CPE {
         
         const string texLine = "Press F10 to see the numbers for each texture in terrain.png";
         static Dictionary<string, string[]> helpSections = new Dictionary<string, string[]>() {
-            { "name", new string[] { "Type the name for the block." } },
+            { "name", new string[]  { "Type the name for the block." } },
             { "shape", new string[] { "Type '0' if the block is a cube, '1' if a sprite (e.g roses)." } },
             { "blockslight", new string[] { "Type 'yes' if the block casts a shadow, 'no' if it doesn't." } },
-            { "fullbright", new string[] { "Type 'yes' if the block is fully lit (e.g. lava), 'no' if not." } },
+            { "fullbright", new string[]  { "Type 'yes' if the block is fully lit (e.g. lava), 'no' if not." } },
             
-            { "alltex", new string[] { "Type a number between '0' and '255' for all textures.", texLine } },
-            { "sidetex", new string[] { "Type a number between '0' and '255' for sides texture.", texLine } },
-            { "lefttex", new string[] { "Type a number between '0' and '255' for the left side texture.", texLine } },
-            { "righttex", new string[] { "Type a number between '0' and '255' for the right side texture.", texLine } },
-            { "fronttex", new string[] { "Type a number between '0' and '255' for the front side texture.", texLine } },
-            { "backtex", new string[] { "Type a number between '0' and '255' for the back side texture.", texLine } },
-            { "toptex", new string[] { "Type a number between '0' and '255' for the top texture.", texLine } },
-            { "bottomtex", new string[] { "Type a number between '0' and '255' for the bottom texture.", texLine } },
+            { "alltex", new string[]    { "Type a number for all textures.", texLine } },
+            { "sidetex", new string[]   { "Type a number for sides texture.", texLine } },
+            { "lefttex", new string[]   { "Type a number for the left side texture.", texLine } },
+            { "righttex", new string[]  { "Type a number for the right side texture.", texLine } },
+            { "fronttex", new string[]  { "Type a number for the front side texture.", texLine } },
+            { "backtex", new string[]   { "Type a number for the back side texture.", texLine } },
+            { "toptex", new string[]    { "Type a number for the top texture.", texLine } },
+            { "bottomtex", new string[] { "Type a number for the bottom texture.", texLine } },
             
             { "min", new string[] { "Enter the three minimum coordinates of the cube in units (separated by spaces). 1 block = 16 units.",
                     "Minimum coordinates for a normal block are &40 &20 &10." } },
