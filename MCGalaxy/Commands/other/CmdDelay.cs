@@ -22,8 +22,6 @@ namespace MCGalaxy.Commands.World {
     public sealed class CmdDelay : Command2 {
         public override string name { get { return "Delay"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
             TimeSpan duration = TimeSpan.Zero;

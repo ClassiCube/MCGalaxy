@@ -33,7 +33,7 @@ namespace MCGalaxy {
         static void LoadMainLevel(SchedulerTask task) {
             try {
                 mainLevel = LevelActions.Load(Player.Console, Server.Config.MainLevel, false);
-                if (mainLevel == null) GenerateMain();                
+                if (mainLevel == null) GenerateMain();
                 mainLevel.Config.AutoUnload = false;
             } catch (Exception ex) {
                 Logger.LogError("Error loading main level", ex);

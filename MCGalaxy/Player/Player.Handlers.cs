@@ -99,7 +99,7 @@ namespace MCGalaxy {
             if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
-            if (ModeBlock != Block.Air) block = ModeBlock;
+            if (ModeBlock != Block.Invalid) block = ModeBlock;
             
             // Ignores updating blocks that are the same and revert block back only to the player
             BlockID newB = deletingBlock ? Block.Air : block;

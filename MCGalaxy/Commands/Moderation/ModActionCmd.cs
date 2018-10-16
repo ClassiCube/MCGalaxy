@@ -109,8 +109,8 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void CheckBlockBindings(Player who) {
             BlockID block = who.ModeBlock;
-            if (block != Block.Air && !CommandParser.IsBlockAllowed(who, "place", block)) {
-                who.ModeBlock = Block.Air;
+            if (block != Block.Invalid && !CommandParser.IsBlockAllowed(who, "place", block)) {
+                who.ModeBlock = Block.Invalid;
                 who.Message("   Hence, &b{0} %Smode was turned &cOFF",
                             Block.GetName(who, block));
             }

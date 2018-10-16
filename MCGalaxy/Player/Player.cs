@@ -102,7 +102,7 @@ namespace MCGalaxy {
         }        
         
         public BlockID GetHeldBlock() {
-            if (ModeBlock != Block.Air) return ModeBlock;
+            if (ModeBlock != Block.Invalid) return ModeBlock;
             return BlockBindings[RawHeldBlock];
         }
         

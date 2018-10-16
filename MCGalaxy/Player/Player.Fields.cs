@@ -182,7 +182,7 @@ namespace MCGalaxy {
         //Games
         public DateTime lastDeath = DateTime.UtcNow;
 
-        public BlockID ModeBlock;
+        public BlockID ModeBlock = Block.Invalid;
         public BlockID RawHeldBlock = Block.Stone;
         public BlockID[] BlockBindings = new BlockID[Block.ExtendedCount];        
         public string[] CmdBindings = new string[10];
