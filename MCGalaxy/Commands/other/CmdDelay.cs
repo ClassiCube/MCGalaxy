@@ -30,24 +30,19 @@ namespace MCGalaxy.Commands.World {
             if (!CommandParser.GetTimespan(p, message, ref duration, "wait for", "ms")) return;
             
             if (duration.TotalSeconds > 60) {
-                p.Message("Can only wait for a minute at most."); return;
+                p.Message("%WCan only wait for a minute at most."); return;
             }
             
-            if (Interlocked.CompareExchange(ref p.UsingDelay, 1, 0) == 1) {
-                p.Message("You are already using /delay."); return;
+            if (data.Context != CommandContext.MessageBlock) {
+                p.Message("%WThis command can only be used in message blocks."); return;
             }
-            
-            try {
-                Thread.Sleep((int)duration.TotalMilliseconds);
-            } finally {
-                Interlocked.Exchange(ref p.UsingDelay, 0);
-            }
+            Thread.Sleep((int)duration.TotalMilliseconds);
         }
         
         public override void Help(Player p) {
             p.Message("%T/Delay [timespan]");
             p.Message("%HWaits for a certain amount of time.");
-            p.Message("%HMain use is to run a command after a certain delay in a %T/MB");
+            p.Message("%HUse to run a command after a certain delay in a %T/MB");
             p.Message("%H  e.g. %T/MB air /Delay 1000ms |/Help Me %Hruns %T/Help Me " +
                            "%H1000 milliseconds (1 second) after the MB is clicked");
         }
