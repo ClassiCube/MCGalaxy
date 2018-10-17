@@ -269,10 +269,6 @@ namespace MCGalaxy {
         
         public static Level Load(Player p, string map, bool announce) {
             map = map.ToLower();
-            if (!LevelInfo.MapExists(map)) {
-                p.Message("Level \"{0}\" does not exist", map); return null;
-            }
-            
             Level cur = LevelInfo.FindExact(map);
             if (cur != null) {
                 p.Message("%WLevel {0} %Wis already loaded.", cur.ColoredName); return null;
@@ -304,13 +300,20 @@ namespace MCGalaxy {
             
             string path = LevelInfo.MapPath(map) + ".backup";
             if (!File.Exists(path)) {
-                p.Message("%WBackup of {0} does not exist.", map); return null;
+                p.Message("Level \"{0}\" does not exist", map); return null;
             }
             Logger.Log(LogType.Warning, "Attempting to load backup map for " + map);
             
             lvl = Level.Load(map, path);
             if (lvl != null) return lvl;
-            p.Message("%WLoading backup of {0} failed too.", map);
+            p.Message("%WLoading backup of {0} failed.", map);
+            
+            path = LevelInfo.PrevPath(map);
+            Logger.Log(LogType.Warning, "Attempting to load previous save for " + map);
+            
+            lvl = Level.Load(map, path);
+            if (lvl != null) return lvl;
+            p.Message("%WLoading previous save of {0} failed.", map);
             
             string backupDir = LevelInfo.BackupBasePath(map);
             if (Directory.Exists(backupDir)) {
