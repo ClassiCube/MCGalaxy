@@ -265,7 +265,7 @@ namespace MCGalaxy {
             if (cancelload) { cancelload = false; return null; }
 
             if (!File.Exists(path)) {
-                Logger.Log(LogType.Warning, "Attempted to load {0}, but the level file does not exist.", name);
+                Logger.Log(LogType.Warning, "Attempted to load level {0}, but {1} does not exist.", name, path);
                 return null;
             }
             

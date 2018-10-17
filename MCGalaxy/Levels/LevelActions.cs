@@ -294,35 +294,33 @@ namespace MCGalaxy {
             }
         }
         
+        static Level ReadBackup(Player p, string map, string path, string type) {
+            Logger.Log(LogType.Warning, "Attempting to load {1} for {0}", map, type);           
+            Level lvl = Level.Load(map, path);
+            
+            if (lvl != null) return lvl;
+            p.Message("%WLoading {1} of {0} failed.", map, type);
+            return null;
+        }
+        
         static Level ReadLevel(Player p, string map) {
             Level lvl = Level.Load(map);
             if (lvl != null) return lvl;
             
             string path = LevelInfo.MapPath(map) + ".backup";
-            if (!File.Exists(path)) {
-                p.Message("Level \"{0}\" does not exist", map); return null;
-            }
-            Logger.Log(LogType.Warning, "Attempting to load backup map for " + map);
-            
-            lvl = Level.Load(map, path);
+            if (!File.Exists(path)) { p.Message("Level \"{0}\" does not exist", map); return lvl; }            
+            lvl = ReadBackup(p, map, path, "backup copy");
             if (lvl != null) return lvl;
-            p.Message("%WLoading backup of {0} failed.", map);
             
             path = LevelInfo.PrevPath(map);
-            Logger.Log(LogType.Warning, "Attempting to load previous save for " + map);
-            
-            lvl = Level.Load(map, path);
+            lvl = ReadBackup(p, map, path, "previous save");
             if (lvl != null) return lvl;
-            p.Message("%WLoading previous save of {0} failed.", map);
             
             string backupDir = LevelInfo.BackupBasePath(map);
             if (Directory.Exists(backupDir)) {
                 int latest = LevelInfo.LatestBackup(map);
-                Logger.Log(LogType.Warning, "Attempting to load latest backup ({1}) of {0} instead", map, latest);
-                
-                path = LevelInfo.BackupFilePath(map, latest.ToString());
-                lvl = Level.Load(map, path);
-                if (lvl == null) p.Message("%WLoading latest backup failed too.");
+                path = LevelInfo.BackupFilePath(map, latest.ToString());              
+                lvl = ReadBackup(p, map, path, "latest backup");
             } else {
                 p.Message("%WLatest backup of {0} does not exist.", map);
             }
