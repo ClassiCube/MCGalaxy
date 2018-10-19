@@ -66,7 +66,9 @@ namespace MCGalaxy.Drawing.Transforms {
                 scaler.ZMul = mul; scaler.ZDiv = div;
             }
 
+            scaler.CheckScales();            
             if ((args.Length % 2) != 0) return scaler; // no centre argument
+            
             if (!args[args.Length - 1].CaselessEq("centre")) {
                 p.Message("The mode must be either \"centre\", or not given."); return null;
             }
