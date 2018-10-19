@@ -1,3 +1,14 @@
+v 1.9.1.0
+Improved: Extra permission for seeing state/province in /location
+Improved: Connect/Disconnect shows to all players, regardless of /map chat.
+Improved: Allow texture ids beyond 255 when creating a custom block.
+Improved: /delay is only usable in /mbs, remove the 'you are already using delay'
+Improved: Allow /mode 0, /static doesn't turn off /mode
+Fixed: Be more resilient to level corruptions when mid-way through saving
+Fixed: /scale not working properly sometimes
+Fixed: /bezier with /static mode stuffing up
+Fixed: Not being able to bind to command aliases in /cmdbind
+
 v 1.9.0.9
 Added: /blockprops list, /blockprops reset, /blockprops copy
 Added: Allow using /env preset and /env normal in /zone set too
