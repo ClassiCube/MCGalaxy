@@ -33,6 +33,8 @@ namespace MCGalaxy.Drawing.Ops {
 
         static Vec3F32 offset = new Vec3F32(0.5f);
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
+            points.Clear();
+        	
             points.Add(marks[0]);
             // Want to rasterize bezier curve from centre of 'grid'
             TesselateCurve(marks[0] + offset, marks[2] + offset, marks[1] + offset, 0);
