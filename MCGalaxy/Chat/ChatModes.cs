@@ -31,11 +31,9 @@ namespace MCGalaxy {
                 
                 string target = p.whisperTo;
                 if (target.Length == 0) {
-                    int sepIndex = text.IndexOf(' ');
-                    if (sepIndex != -1) {
-                        target = text.Substring(0, sepIndex);
-                        text = text.Substring(sepIndex + 1);
-                    } else {
+                    text.Separate(out target, out text);
+                    
+                    if (text.Length == 0) {
                         p.Message("No message entered");
                         return true;
                     }

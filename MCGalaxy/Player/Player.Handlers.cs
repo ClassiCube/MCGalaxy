@@ -586,16 +586,9 @@ namespace MCGalaxy {
                 return false;
             }
             
-            CommandData data = DefaultCmdData;
-            int sep = text.IndexOf(' ');
-            
-            if (sep == -1) {
-                HandleCommand(text, "", data);
-            } else {
-                string cmd = text.Substring(0, sep);
-                string args = text.Substring(sep + 1);
-                HandleCommand(cmd, args, data);
-            }
+            string cmd, args;            
+            text.Separate(out cmd, out args);
+            HandleCommand(cmd, args, DefaultCmdData);
             return true;
         }
         
@@ -698,13 +691,12 @@ namespace MCGalaxy {
             
             byte bindIndex;
             if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
-                if (CmdArgsBindings[bindIndex] == null) { 
+                if (CmdBindings[bindIndex] == null) { 
                     Message("No command is bound to: %T/" + cmdName); return null; 
                 }
                 
-                cmdName = CmdBindings[bindIndex];
-                cmdArgs = CmdArgsBindings[bindIndex] + " " + cmdArgs;
-                cmdArgs = cmdArgs.TrimEnd(' ');
+                CmdBindings[bindIndex].Separate(out cmdName, out cmdArgs);
+                Command.Search(ref cmdName, ref cmdArgs);
             }
             
             OnPlayerCommandEvent.Call(this, cmdName, cmdArgs, data);

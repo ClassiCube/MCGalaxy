@@ -31,14 +31,24 @@ namespace MCGalaxy {
     public static class Extensions {
         
         static char[] space = new char[] { ' ' };
+        
+        /// <summary> Same as value.Split(' '), but doesn't allocate ' ' each time. </summary>
+        /// <example> "abc def xyz".SplitSpaces() becomes "abc", "def", "xyz" </example>
         public static string[] SplitSpaces(this string value) {
             return value.Split(space);
         }
         
+        /// <summary> Same as value.Split(' ', maxParts), but doesn't allocate ' ' each time. </summary>
+        /// <example> "abc def xyz".SplitSpaces(2) becomes "abc", "def xyz" </example>
         public static string[] SplitSpaces(this string value, int maxParts) {
             return value.Split(space, maxParts);
         }
         
+        /// <summary> Works like value.Split(' '), removing first 'startCount' and last 'endCount' elements, 
+        /// then joining the leftover elements together again. </summary>
+        /// <example> "abc def ghi xyz".Splice(1, 1) becomes "def ghi" </example>
+        /// <example> "abc def ghi xyz".Splice(0, 3) becomes "abc" </example>
+        /// <example> "abc def ghi xyz".Splice(3, 3) becomes "" </example>
         public static string Splice(this string value, int startCount, int endCount) {
             int start = 0;
             for (int i = 0; i < startCount; i++) {
@@ -55,6 +65,8 @@ namespace MCGalaxy {
             return value.Substring(0, end);
         }
         
+        /// <summary> Works like value.Split(splitter), setting elements to null if result.Length is less than split.Length. </summary>
+        /// <example> "abc def".FixedSplit(new string[3], ' ') results in "abc", "def", null </example>
         public static void FixedSplit(this string value, string[] split, char splitter) {
             int start = 0, i = 0;
             for (; i < split.Length && start <= value.Length; i++) {
@@ -72,6 +84,8 @@ namespace MCGalaxy {
         static char[] comma = new char[] { ',' };
         static string[] emptyStrs = new string[0];
         
+        /// <summary> Trims spaces then calls Split(','). However, returns an empty array on empty input, 
+        /// instead of a array consisting of "" that a .Split() call would. </summary>
         public static string[] SplitComma(this string str) {
             // Don't want an array of one entry of empty string
             if (str.Length == 0) return emptyStrs;
@@ -80,6 +94,12 @@ namespace MCGalaxy {
             if (str.Length == 0) return emptyStrs;
  
             return str.Split(comma);
+        }
+        
+        public static void Separate(this string str, out string prefix, out string suffix) {
+            int index = str.IndexOf(' ');
+            prefix = index == -1 ? str : str.Substring(0, index);
+            suffix = index == -1 ? ""  : str.Substring(index + 1);
         }
         
         

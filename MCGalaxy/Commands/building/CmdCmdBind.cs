@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
                 bool anyBinds = false;
                 for (int i = 0; i < p.CmdBindings.Length; i++)  {
                     if (p.CmdBindings[i] != null) {
-                        p.Message("%T/{0} %Sbound to %T/{1} {2}", i, p.CmdBindings[i], p.CmdArgsBindings[i]);
+                        p.Message("%T/{0} %Sbound to %T/{1}", i, p.CmdBindings[i]);
                         anyBinds = true;
                     }
                 }
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                 return;
             }
             
-            string[] parts = message.SplitSpaces(3);
+            string[] parts = message.SplitSpaces(2);
             int j = 0;
             if (!CommandParser.GetInt(p, parts[0], "index", ref j, 0, p.CmdBindings.Length - 1)) return;
             
@@ -48,13 +48,11 @@ namespace MCGalaxy.Commands.Building {
                 if (p.CmdBindings[j] == null) {
                     p.Message("No command bound for %T/{0}", j);
                 } else {
-                    p.Message("%T/{0} %Sbound to %T/{1} {2}", j, p.CmdBindings[j], p.CmdArgsBindings[j]);
+                    p.Message("%T/{0} %Sbound to %T/{1}", j, p.CmdBindings[j]);
                 }
             } else {
                 p.CmdBindings[j] = parts[1];
-                p.CmdArgsBindings[j] = parts.Length > 2 ? parts[2] : "";
-
-                p.Message("Bound %T/{0} {1}%Sto %T/" + j, p.CmdBindings[j], p.CmdArgsBindings[j], j);
+                p.Message("Bound %T/{1} %Sto %T/{0}", j, p.CmdBindings[j]);
             }
         }
         

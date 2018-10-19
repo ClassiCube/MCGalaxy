@@ -52,15 +52,8 @@ namespace MCGalaxy.UI {
                 text = text.Substring(1);
             
             lastCMD = text;
-            int sep = text.IndexOf(' ');
-            string name = "", args = "";
-            
-            if (sep >= 0) {
-                name = text.Substring(0, sep);
-                args = text.Substring(sep + 1);
-            } else {
-                name = text;
-            }
+            string name, args;
+            text.Separate(out name, out args);
             
             Command.Search(ref name, ref args);
             if (Server.Check(name, args)) { Server.cancelcommand = false; return; }
