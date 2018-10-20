@@ -59,7 +59,7 @@ namespace MCGalaxy {
             if (opt.CaselessEq("Edge"))    opt = "Horizon";
             if (opt.CaselessEq("Side"))    opt = "Border";
             if (opt.CaselessEq("Water"))   opt = "Horizon";
-            if (opt.CaselessEq("Bedrock")) opt = "Bedrock";
+            if (opt.CaselessEq("Bedrock")) opt = "Border";
             if (opt.CaselessEq("CloudHeight")) opt = "CloudsHeight";
             if (opt.CaselessEq("Level"))       opt = "EdgeLevel";
             if (opt.CaselessEq("SideOffset"))  opt = "SidesOffset";            
