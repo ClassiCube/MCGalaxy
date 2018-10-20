@@ -4,7 +4,8 @@ You probably want to go to the Releases page and get the latest zip from there.
 However, you can still download the required files from here. You need these files:
 MCGalaxy.exe, MCGalaxy.CLI, MCGalaxy_.dll
 
---
+
+---------------------------------------------------------------------------------------------------------------
 MCGalaxy_ infid.dll is a special version of MCGalaxy which increases maximum id in /gb and /lb from 255 to 767.
 Replace MCGalaxy_.dll with this file (i.e. rename it to MCGalaxy_.dll) to use it.
 
