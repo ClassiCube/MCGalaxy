@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.World {
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error importing map", ex);
-                p.Message("The map conversion failed."); 
+                p.Message("%WMap conversion failed. See error logs."); 
                 return;
             }
             p.Message("Converted map!");

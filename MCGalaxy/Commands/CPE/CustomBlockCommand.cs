@@ -606,12 +606,12 @@ namespace MCGalaxy.Commands.CPE {
             string[] coords = parts.SplitSpaces();
             if (coords.Length != 3) return false;
             
-            byte tx = 0, ty = 0, tz = 0;
-            if (!CommandParser.GetByte(p, coords[0], "X", ref tx, 0, 16)) return false;
-            if (!CommandParser.GetByte(p, coords[1], "Y", ref ty, 0, 16)) return false;
-            if (!CommandParser.GetByte(p, coords[2], "Z", ref tz, 0, 16)) return false;
+            int tx = 0, ty = 0, tz = 0;
+            if (!CommandParser.GetInt(p, coords[0], "X", ref tx, -127, 127)) return false;
+            if (!CommandParser.GetInt(p, coords[1], "Y", ref ty, -127, 127)) return false;
+            if (!CommandParser.GetInt(p, coords[2], "Z", ref tz, -127, 127)) return false;
             
-            x = tx; z = ty; y = tz; // blockdef files have z being height, we use y being height
+            x = (byte)tx; z = (byte)ty; y = (byte)tz; // blockdef files have z being height, we use y being height
             return true;
         }
         
