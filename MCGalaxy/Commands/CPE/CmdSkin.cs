@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.CPE {
         static string GetSkin(string skin, string defSkin) {
             if (skin.Length == 0) skin = defSkin;
             if (skin[0] == '+')
-                skin = "http://skins.minecraft.net/MinecraftSkins/" + skin.Substring(1) + ".png";
+                skin = "https://minotar.net/skin/" + skin.Substring(1) + ".png";
             
             Utils.FilterURL(ref skin);
             return skin;
