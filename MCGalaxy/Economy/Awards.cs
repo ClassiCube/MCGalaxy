@@ -121,7 +121,7 @@ namespace MCGalaxy.Eco {
         
         public static bool TakeAward(string playerName, string name) {
             List<string> awards = GetPlayerAwards(playerName);
-            return awards != null && awards.CaselessRemove(playerName);
+            return awards != null && awards.CaselessRemove(name);
         }
         
         public static string AwardAmount(string playerName) {
