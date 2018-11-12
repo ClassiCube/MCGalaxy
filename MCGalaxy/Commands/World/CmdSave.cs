@@ -73,15 +73,15 @@ namespace MCGalaxy.Commands.World {
             if (!TrySave(p, lvl, true)) return;
             p.Message("Level {0} %Ssaved", lvl.ColoredName);
             
-            int num = lvl.Backup(true, restoreName);
-            if (num == -1) return;
+            string backup = lvl.Backup(true, restoreName);
+            if (backup == null) return;
             
             if (restoreName.Length == 0) {
-                Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, num);
-                lvl.Message("Backup " + num + " saved for " + lvl.ColoredName);
+                Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, backup);
+                lvl.Message("Backup " + backup + " saved for " + lvl.ColoredName);
             } else {
-                Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, restoreName);
-                lvl.Message(lvl.ColoredName + " %Shad a backup created named &b" + restoreName);
+                Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, backup);
+                lvl.Message(lvl.ColoredName + " %Shad a backup created named &b" + backup);
             }
         }
         

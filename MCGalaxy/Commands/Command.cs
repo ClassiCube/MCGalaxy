@@ -112,10 +112,11 @@ namespace MCGalaxy {
         }
         
         public static void Search(ref string cmdName, ref string cmdArgs) {
+            if (cmdName.Length == 0) return;
             Alias alias = Alias.Find(cmdName);
             
             // Aliases override built in command shortcuts
-            if (alias == null && cmdName.Length > 0) {
+            if (alias == null) {
                 foreach (Command cmd in allCmds) {
                     if (!cmd.shortcut.CaselessEq(cmdName)) continue;
                     cmdName = cmd.name; return;

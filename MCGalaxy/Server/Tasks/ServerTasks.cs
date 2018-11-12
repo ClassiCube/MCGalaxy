@@ -145,10 +145,10 @@ namespace MCGalaxy.Tasks {
 
                     lvl.Save();
                     if (count == 0)  {
-                        int backupNumber = lvl.Backup();
-                        if (backupNumber != -1) {
-                            lvl.Message("Backup " + backupNumber + " saved.");
-                            Logger.Log(LogType.BackgroundActivity, "Backup {0} saved for {1}", backupNumber, lvl.name);
+                        string backup = lvl.Backup();
+                        if (backup != null) {
+                            lvl.Message("Backup " + backup + " saved.");
+                            Logger.Log(LogType.BackgroundActivity, "Backup {0} saved for {1}", backup, lvl.name);
                         }
                     }
                 } catch (Exception ex) {
