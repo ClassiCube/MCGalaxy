@@ -1,3 +1,7 @@
+v 1.9.1.1
+Fixed: +skin urls not working
+Fixed: /award take not working
+
 v 1.9.1.0
 Improved: Extra permission for seeing state/province in /location
 Improved: Connect/Disconnect shows to all players, regardless of /map chat.
