@@ -18,11 +18,15 @@
 using System;
 
 namespace MCGalaxy.Util {
+    /// <summary> Sparsely represents 1 bit of data per voxel in a 3D volume. </summary>
+    /// <remarks> Typically this means 1 bit per block in a level. </remarks>
+    /// <remarks> Does NOT perform any bounds checking. </remarks>
     public sealed class SparseBitSet {
         
         int chunksX, chunksY, chunksZ;
         byte[][] bits;
         
+        /// <summary> Initialises a sparse bit set for the given 3D volume. </summary>
         public SparseBitSet(int width, int height, int length) {
             chunksX = Utils.CeilDiv16(width);
             chunksY = Utils.CeilDiv16(height);
@@ -30,6 +34,8 @@ namespace MCGalaxy.Util {
             bits = new byte[chunksX * chunksY * chunksZ][];
         }
         
+        /// <summary> Returns the 1 bit of data associated with the given coordinates. </summary>
+        /// <remarks> If Set() was never called before at the given coordinates, returns false. </remarks>
         public bool Get(int x, int y, int z) {
             int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
             byte[] chunk = bits[index];
@@ -39,6 +45,7 @@ namespace MCGalaxy.Util {
             return (chunk[index >> 3] & (1 << (index & 0x7))) != 0;
         }
         
+        /// <summary> Sets the 1 bit of data associated with the given coordinates. </summary>
         public void Set(int x, int y, int z, bool bit) {
             int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
             byte[] chunk = bits[index];
@@ -52,6 +59,8 @@ namespace MCGalaxy.Util {
             chunk[index >> 3] |= (byte)((bit ? 1 : 0) << (index & 0x7)); // set new bit
         }
         
+        /// <summary> Attempts to sets the 1 bit of data associated with the given coordinates to true. </summary>
+        /// <remarks> true if the 1 bit of data was not already set to true, false if it was. </remarks>
         public bool TrySetOn(int x, int y, int z) {
             int index = (x >> 4) + chunksX * ((z >> 4) + (y >> 4) * chunksZ);
             byte[] chunk = bits[index];
@@ -67,6 +76,7 @@ namespace MCGalaxy.Util {
             return true;
         }
         
+        /// <summary> Resets all bits of data to false. </summary>
         public void Clear() {
             for (int i = 0; i < bits.Length; i++)
                 bits[i] = null;

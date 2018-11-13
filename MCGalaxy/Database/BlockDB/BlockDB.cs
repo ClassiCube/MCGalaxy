@@ -48,7 +48,7 @@ namespace MCGalaxy.DB {
             ReadDimensions();
             Locker = new IReaderWriterLock();
             
-            if (Dims.X < lvl.Width) Dims.X = lvl.Width;
+            if (Dims.X < lvl.Width)  Dims.X = lvl.Width;
             if (Dims.Y < lvl.Height) Dims.Y = lvl.Height;
             if (Dims.Z < lvl.Length) Dims.Z = lvl.Length;
             Cache.Dims = Dims;
