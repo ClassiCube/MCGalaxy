@@ -243,16 +243,16 @@ namespace MCGalaxy {
 
         /// <summary> Saves a backup of the map and associated files. (like bots, .properties) </summary>
         /// <param name="force"> Whether to save a backup, even if nothing changed since last one. </param>
-        /// <param name="name"> Specific name of the backup, or "" to automatically pick a name. </param>
+        /// <param name="backup"> Specific name of the backup, or "" to automatically pick a name. </param>
         /// <returns> The name of the backup, or null if no backup was saved. </returns>
-        public string Backup(bool force = false, string name = "") {
+        public string Backup(bool force = false, string backup = "") {
             if (!backedup || force) {
                 string backupPath = LevelInfo.BackupBasePath(name);
                 if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);                
                 int next = LevelInfo.LatestBackup(name) + 1;
-                if (name.Length == 0) name = next.ToString();
+                if (backup.Length == 0) backup = next.ToString();
 
-                if (!LevelActions.Backup(name, name)) {
+                if (!LevelActions.Backup(name, backup)) {
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
                     return null;
                 }
