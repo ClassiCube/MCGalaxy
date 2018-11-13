@@ -1,4 +1,5 @@
-v 1.9.1.1
+v 1.9.1.2
+Improved: Can make custom blocks outside 0-16 range.
 Fixed: +skin urls not working
 Fixed: /award take not working
 
