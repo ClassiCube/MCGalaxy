@@ -67,6 +67,16 @@ namespace MCGalaxy.Levels.IO {
                 lvl.FastSetExtTile(x, y, z, raw);
             }
         }
+        
+        protected static void ReadFully(Stream s, byte[] data, int count) {
+            int offset = 0;
+            while (count > 0) {
+                int read = s.Read(data, offset, count);
+                
+                if (read == 0) throw new EndOfStreamException("End of stream reading data");
+                offset += read; count -= read;
+            }
+        }
     }
 
     /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>

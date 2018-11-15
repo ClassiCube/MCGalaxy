@@ -51,7 +51,7 @@ namespace MCGalaxy.Levels.IO {
                 lvl.rotx = header[offset + 10];
                 lvl.roty = header[offset + 11];
                 
-                gs.Read(lvl.blocks, 0, lvl.blocks.Length);
+                ReadFully(gs, lvl.blocks, lvl.blocks.Length);
                 ReadCustomBlocksSection(lvl, gs);
                 if (!metadata) return lvl;
                 
@@ -69,16 +69,16 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static Vec3U16 ReadHeader(Stream gs, byte[] header, out int offset) {
-            gs.Read(header, 0, 2);
+            ReadFully(gs, header, 2);
             Vec3U16 dims = default(Vec3U16);
             dims.X = BitConverter.ToUInt16(header, 0);
 
             if (dims.X == 1874) { // version field, width is next ushort
-                gs.Read(header, 0, 16);
+                ReadFully(gs, header, 16);
                 dims.X = BitConverter.ToUInt16(header, 0);
                 offset = 2;
             } else {
-                gs.Read(header, 0, 12);
+                ReadFully(gs, header, 12);
                 offset = 0;
             }
             
@@ -100,7 +100,7 @@ namespace MCGalaxy.Levels.IO {
                 read = gs.Read(data, 0, 1);
                 if (read > 0 && data[0] == 1) {
                     byte[] chunk = new byte[16 * 16 * 16];
-                    gs.Read(chunk, 0, chunk.Length);
+                    ReadFully(gs, chunk, chunk.Length);
                     lvl.CustomBlocks[index] = chunk;
                 }
                 index++;
@@ -130,7 +130,7 @@ namespace MCGalaxy.Levels.IO {
                 
                 int* ptrInt = (int*)ptr;
                 for (int j = 0; j < entries; j++) {
-                    C.Index = *ptrInt; ptrInt++;
+                    C.Index    = *ptrInt;         ptrInt++;
                     C.data.Raw = (uint)(*ptrInt); ptrInt++;
                     lvl.ListCheck.Items[i + j] = C;
                 }
@@ -163,7 +163,7 @@ namespace MCGalaxy.Levels.IO {
             for (int j = 0; j < metaCount; j++) {
                 int size = Read_U16(buffer, gs);
                 if (size > buffer.Length) buffer = new byte[size + 16];
-                gs.Read(buffer, 0, size);
+                ReadFully(gs, buffer, size);
                 
                 string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
                 PropertiesFile.ParseLine(line, '=', out key, out value);
@@ -182,9 +182,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static ushort Read_U16(byte[] buffer, Stream gs) {
-            int read = gs.Read(buffer, 0, sizeof(ushort));
-            if (read < sizeof(ushort)) throw new EndOfStreamException("End of stream reading U16");
-            
+            ReadFully(gs, buffer, sizeof(ushort));
             return NetUtils.ReadU16(buffer, 0);
         }
     }

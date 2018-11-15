@@ -59,8 +59,9 @@ namespace MCGalaxy.Levels.IO {
             
             int length = BitConverter.ToInt32(temp, 0);
             byte[] data = new byte[length];
-            using (GZipStream reader = new GZipStream(src, CompressionMode.Decompress, true))
+            using (GZipStream reader = new GZipStream(src, CompressionMode.Decompress, true)) {
                 reader.Read(data, 0, length);
+            }
 
             for (int i = 0; i < length - 1; i++) {
                 if (data[i] != MAGIC1 || data[i + 1] != MAGIC2) continue;

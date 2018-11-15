@@ -63,7 +63,7 @@ namespace MCGalaxy.Levels.IO {
                         Logger.LogError("Error importing zone '" + key + "' from fCraft map", ex);
                     }
                 }
-                int read = ds.Read(lvl.blocks, 0, lvl.blocks.Length);
+                ReadFully(ds, lvl.blocks, lvl.blocks.Length);
             }
             ConvertCustom(lvl);
             return lvl;
