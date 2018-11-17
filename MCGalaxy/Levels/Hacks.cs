@@ -19,25 +19,38 @@ using System;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
+    /// <summary> Assistant class for parsing MOTD flags. (-hax, +fly etc) </summary>
+    /// <remarks> CanUse methods also check MOTD of zone player is in. </remarks>
     public static class Hacks {
         
+        /// <summary> Returns whether the player is currently able to use any hacks at all. </summary>
         public static bool CanUseHacks(Player p, Level lvl) {
             byte[] packet = MakeHackControl(p, lvl.GetMotd(p));
             return packet[1] != 0 && packet[2] != 0 && packet[3] != 0 && packet[4] != 0 && packet[5] != 0;
         }
         
+        /// <summary> Returns whether the player is currently able to fly. </summary>
         public static bool CanUseFly(Player p, Level lvl) {
             return MakeHackControl(p, lvl.GetMotd(p))[1] != 0;
         }
         
+        /// <summary> Returns whether the player is currently able to use noclip. </summary>
         public static bool CanUseNoclip(Player p, Level lvl) {
             return MakeHackControl(p, lvl.GetMotd(p))[2] != 0;
         }
         
+        /// <summary> Returns whether the player is currently able to move at faster speeds. </summary>
         public static bool CanUseSpeed(Player p, Level lvl) {
             return MakeHackControl(p, lvl.GetMotd(p))[3] != 0;
         }
         
+        /// <summary> Returns whether the player is currently able to respawn. </summary>
+        public static bool CanUseRespawn(Player p, Level lvl) {
+            return MakeHackControl(p, lvl.GetMotd(p))[4] != 0;
+        }
+        
+        /// <summary> Parses the MOTD flags and returns resulting HackControl packet. </summary>
+        ///<remarks> "+ophax" permission is determined by p.Rank >= LevelPermission.Operator </remarks>
         public static byte[] MakeHackControl(Player p, string motd) {
             motd = Colors.Strip(motd);
             bool isOp = p.Rank >= LevelPermission.Operator;

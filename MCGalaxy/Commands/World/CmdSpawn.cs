@@ -25,6 +25,11 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
+            if (!Hacks.CanUseRespawn(p, p.level)) {
+                p.Message("You cannot use %T/Spawn %Son this map.");
+                p.isFlying = false; return;
+            }
+            
             if (message.Length > 0) { Help(p); return; }
             PlayerActions.Respawn(p);
         }
