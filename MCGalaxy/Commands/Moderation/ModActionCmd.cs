@@ -79,32 +79,35 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        /// <summary> Changes the rank of the given player from the old to the new rank. </summary>
-        internal static void ChangeRank(string name, Group oldRank, Group newRank,
-                                        Player who, bool saveToNewRank = true) {
-            Server.reviewlist.Remove(name);
-            oldRank.Players.Remove(name);
-            oldRank.Players.Save();
-            
-            if (saveToNewRank) {
-                newRank.Players.Add(name);
-                newRank.Players.Save();
-            }
-            if (who == null) return;
-
-            Entities.DespawnEntities(who, false);
-            string dbCol = PlayerDB.FindColor(who);
-            if (dbCol.Length == 0) who.color = newRank.Color;
-            
+        static void ChangeOnlineRank(Player who, Group newRank) {
             who.group = newRank;
             who.AllowBuild = who.level.BuildAccess.CheckAllowed(who);
             if (who.hidden && who.hideRank < who.Rank) who.hideRank = who.Rank;
             
+            // If player has explicit /color, don't change it
+            string dbCol = PlayerDB.FindColor(who);
+            if (dbCol.Length == 0) who.color = newRank.Color;
             who.SetPrefix();
+            
+            Entities.DespawnEntities(who, false);
             who.Send(Packet.UserType(who));
             who.SendCurrentBlockPermissions();
             Entities.SpawnEntities(who, false);
             CheckBlockBindings(who);
+        }
+        
+        /// <summary> Changes the rank of the given player from the old to the new rank. </summary>
+        internal static void ChangeRank(string name, Group oldRank, Group newRank,
+                                        Player who, bool saveToNewRank = true) {
+            if (who != null) ChangeOnlineRank(who, newRank);
+            Server.reviewlist.Remove(name);
+            
+            oldRank.Players.Remove(name);
+            oldRank.Players.Save();
+            
+            if (!saveToNewRank) return;
+            newRank.Players.Add(name);
+            newRank.Players.Save();
         }
         
         static void CheckBlockBindings(Player who) {

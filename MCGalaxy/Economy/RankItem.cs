@@ -92,10 +92,10 @@ namespace MCGalaxy.Eco {
                 p.Message("%WYou don't have enough &3" + Server.Config.Currency + " %Wto buy the next rank"); return;
             }
             
-            string rankName = Group.Find(nextRank.Perm).Name; // TODO: What if null reference happens here
-            Command.Find("SetRank").Use(Player.Console, p.name + " " + rankName);
-            p.Message("You bought the rank " + p.group.ColoredName);
-            Economy.MakePurchase(p, nextRank.Price, "&3Rank: " + p.group.ColoredName);
+            Group rank = Group.Find(nextRank.Perm); // TODO: What if null reference happens here
+            Command.Find("SetRank").Use(Player.Console, p.name + " " + rank.Name);
+            p.Message("You bought the rank " + rank.ColoredName);
+            Economy.MakePurchase(p, nextRank.Price, "&3Rank: " + rank.ColoredName);
         }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
