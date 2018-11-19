@@ -34,7 +34,7 @@ namespace MCGalaxy.Gui.Popups {
         
         void cmbList_SelectedIndexChanged(object sender, EventArgs e) {
             if (cmbList.SelectedIndex == -1) return;
-            SaveCurrentFile();
+            TrySaveChanges();
             
             string selectedName = cmbList.SelectedItem.ToString();
             curFile = TextFile.Files[selectedName];
@@ -53,23 +53,27 @@ namespace MCGalaxy.Gui.Popups {
             }
         }
         
-        void SaveCurrentFile() {
+        void SaveChanges(string[] lines) {
+            curFile.SetText(lines);
+            Popup.Message("Saved " + curFile.Filename);
+        }
+        
+        void TrySaveChanges() {
             if (curFile == null) return;
-            string[] userLines = txtEdit.Lines;
-            if (!HasTextChanged(userLines)) return;
+            string[] lines = txtEdit.Lines;
+            if (!HasChanged(lines)) return;
             
             if (Popup.YesNo("Save changes to " + curFile.Filename + "?", "Save changes")) {
-                curFile.SetText(userLines);
-                Popup.Message("Saved " + curFile.Filename);
+                SaveChanges(lines);
             }
         }
         
-        bool HasTextChanged(string[] userLines) {
-            string[] lines = curFile.GetText();
-            if (lines.Length != userLines.Length) return true;
+        bool HasChanged(string[] lines) {
+            string[] curLines = curFile.GetText();
+            if (lines.Length != curLines.Length) return true;
             
             for (int i = 0; i < lines.Length; i++) {
-                if (userLines[i] != lines[i]) return true;
+                if (lines[i] != curLines[i]) return true;
             }
             return false;
         }
@@ -100,7 +104,12 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         void EditTxt_Unload(object sender, EventArgs e) {
-            SaveCurrentFile();
+            TrySaveChanges();
+        }
+        
+        void btnSave_Click(object sender, EventArgs e) {
+            if (curFile == null) return;
+            SaveChanges(txtEdit.Lines);
         }
     }
 }

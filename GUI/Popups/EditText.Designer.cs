@@ -32,12 +32,13 @@ namespace MCGalaxy.Gui.Popups
         	this.txtEdit = new System.Windows.Forms.TextBox();
         	this.btnColor = new System.Windows.Forms.Button();
         	this.btnToken = new System.Windows.Forms.Button();
+        	this.btnSave = new System.Windows.Forms.Button();
         	this.SuspendLayout();
         	// 
         	// cmbList
         	// 
         	this.cmbList.FormattingEnabled = true;
-        	this.cmbList.Location = new System.Drawing.Point(392, 9);
+        	this.cmbList.Location = new System.Drawing.Point(392, 10);
         	this.cmbList.Name = "cmbList";
         	this.cmbList.Size = new System.Drawing.Size(108, 21);
         	this.cmbList.TabIndex = 0;
@@ -72,11 +73,22 @@ namespace MCGalaxy.Gui.Popups
         	this.btnToken.UseVisualStyleBackColor = true;
         	this.btnToken.Click += new System.EventHandler(this.btnToken_Click);
         	// 
+        	// btnSave
+        	// 
+        	this.btnSave.Location = new System.Drawing.Point(321, 9);
+        	this.btnSave.Name = "btnSave";
+        	this.btnSave.Size = new System.Drawing.Size(65, 23);
+        	this.btnSave.TabIndex = 5;
+        	this.btnSave.Text = "Save";
+        	this.btnSave.UseVisualStyleBackColor = true;
+        	this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+        	// 
         	// EditText
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         	this.ClientSize = new System.Drawing.Size(507, 328);
+        	this.Controls.Add(this.btnSave);
         	this.Controls.Add(this.btnToken);
         	this.Controls.Add(this.btnColor);
         	this.Controls.Add(this.txtEdit);
@@ -91,6 +103,7 @@ namespace MCGalaxy.Gui.Popups
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnToken;
         private System.Windows.Forms.Button btnColor;
 
