@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             Level lvl = Matcher.FindLevels(p, args[0]);
             if (lvl == null) return;
             string newMap = args[1].ToLower();
-            if (!Formatter.ValidName(p, newMap, "level")) return;
+            if (!Formatter.ValidMapName(p, newMap)) return;
             
             if (LevelInfo.MapExists(newMap)) { p.Message("Level already exists."); return; }
             if (lvl == Server.mainLevel) { p.Message("Cannot rename the main level."); return; }

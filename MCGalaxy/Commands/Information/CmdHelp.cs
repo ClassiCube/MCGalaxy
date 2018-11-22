@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Info {
                 string undoTime = grp.MaxUndo.Shorten(true, false);
                 
                 p.Message("{0} %S- Draw: {1}, Undo: {2}, Perm: {3}",
-                               grp.ColoredName, grp.DrawLimit, undoTime, (int)grp.Permission);
+                          grp.ColoredName, grp.DrawLimit, undoTime, (int)grp.Permission);
             }
         }
         

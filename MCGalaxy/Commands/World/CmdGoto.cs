@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
                 }
 
                 PlayerActions.ChangeMap(p, map);
-            } else if (Formatter.ValidName(p, message, "level")) {
+            } else if (Formatter.ValidMapName(p, message)) {
                 PlayerActions.ChangeMap(p, message);
             }
         }

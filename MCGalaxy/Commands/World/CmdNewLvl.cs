@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.World {
             if (!GetDimensions(p, args, 1, ref x, ref y, ref z)) return null;
             string seed = args.Length == 6 ? args[5] : "";
             
-            if (!Formatter.ValidName(p, name, "level")) return null;
+            if (!Formatter.ValidMapName(p, name)) return null;
             if (LevelInfo.MapExists(name)) {
                 p.Message("Level \"{0}\" already exists", name); return null;
             }

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            if (!Formatter.ValidName(p, message, "level")) return;
+            if (!Formatter.ValidMapName(p, message)) return;
             
             string path = LevelInfo.BackupFilePath(p.level.name, message);
             if (File.Exists(path)) {

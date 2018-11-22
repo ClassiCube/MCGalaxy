@@ -60,7 +60,7 @@ namespace MCGalaxy {
 
         /// <summary> Find partial matches of 'name' against the list of all map files. </summary>
         public static string FindMaps(Player pl, string name) {
-            if (!Formatter.ValidName(pl, name, "level")) return null;            
+            if (!Formatter.ValidMapName(pl, name)) return null;            
             int matches;
             return Find(pl, name, out matches, LevelInfo.AllMapNames(),
                         null, l => l, "levels", 10);

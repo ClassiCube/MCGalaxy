@@ -78,5 +78,11 @@ namespace MCGalaxy {
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
         }
+		
+        public static bool ValidMapName(Player p, string name) {
+            if (LevelInfo.ValidName(name)) return true;
+            p.Message("\"{0}\" is not a valid level name.", name);
+            return false;
+        }
     }
 }

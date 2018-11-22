@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            if (!Formatter.ValidName(p, message, "level")) return;
+            if (!Formatter.ValidMapName(p, message)) return;
             
             string path = Paths.ImportsDir + message;
             if (!Directory.Exists(Paths.ImportsDir)) {

@@ -160,13 +160,17 @@ namespace MCGalaxy.SQL {
             Database.Execute(sql.ToString(), args);
         }
         
+       internal static bool ValidNameChar(char c) {
+            return 
+                c > ' '   && c != '"' && c != '%' && c != '&'  &&
+                c != '\'' && c != '*' && c != '/' && c != ':'  &&
+                c != '<'  && c != '>' && c != '?' && c != '\\' &&
+                c != '`'  && c != '|' && c <= '~';
+        }
+        
         protected static void ValidateTable(string name) {
             foreach (char c in name) {
-                if (c >= '0' && c <= '9') continue;
-                if (c >= 'a' && c <= 'z') continue;
-                if (c >= 'A' && c <= 'Z') continue;
-                if (c == '+' || c == '_' || c == '@' || c == '-' || c == '.') continue;
-                
+                if (ValidNameChar(c)) continue;
                 throw new ArgumentException("Invalid character in table name: " + c);
             }
         }

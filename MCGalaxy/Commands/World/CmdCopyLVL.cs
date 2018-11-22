@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.World {
             if (!LevelInfo.Check(p, data.Rank, src, "copy this map")) return;
             
             string dst = args[1];
-            if (!Formatter.ValidName(p, dst, "level")) return;
+            if (!Formatter.ValidMapName(p, dst)) return;
             if (LevelInfo.MapExists(dst)) { p.Message("Level \"" + dst + "\" already exists."); return; }
 
             try {

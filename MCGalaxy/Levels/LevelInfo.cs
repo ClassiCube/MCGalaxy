@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy {
 
@@ -148,6 +149,13 @@ namespace MCGalaxy {
             if (p.IsConsole) return true;
             if (!lvl.VisitAccess.CheckDetailed(p, plRank) || !lvl.BuildAccess.CheckDetailed(p, plRank)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
+            }
+            return true;
+        }
+        
+        public static bool ValidName(string map) {
+            foreach (char c in map) {
+                if (!IDatabaseBackend.ValidNameChar(c)) return false;
             }
             return true;
         }
