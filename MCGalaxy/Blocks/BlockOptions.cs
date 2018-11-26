@@ -77,7 +77,7 @@ namespace MCGalaxy.Blocks {
         
         
         internal static BlockProps DefaultProps(BlockProps[] scope, Level lvl, BlockID block) {
-            if (scope == Block.Props) return Block.MakeDefaultProps(block);                
+            if (scope == Block.Props) return Block.MakeDefaultProps(block);
             return UnchangedProps(lvl, block) ? Block.Props[block] : BlockProps.MakeEmpty();
         }
         

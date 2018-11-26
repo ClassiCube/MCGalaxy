@@ -168,8 +168,8 @@ namespace MCGalaxy.Commands.World {
         
         static string[] mapHelp = new string[] {
             "%T/os map add [type - default is flat] %H- Creates your map (128x128x128)",
-            "%T/os map add [width] [height] [length] [type]",
-            "%H  See %T/Help newlvl types %Hfor a list of map types.",
+            "%T/os map add [width] [height] [length] [theme]",
+            "%H  See %T/Help newlvl themes %Hfor a list of map themes.",
             "%T/os map physics [level] %H- Sets the physics on your map.",
             "%T/os map delete %H- Deletes your map",
             "%T/os map restore [num] %H- Restores backup [num] of your map",
