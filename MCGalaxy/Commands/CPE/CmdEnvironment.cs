@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.CPE {
                 SrvProperties.Save();
             } else {
                 SendEnv(lvl);
-                Level.SaveSettings(lvl);
+                lvl.SaveSettings();
             }
             return true;
         }

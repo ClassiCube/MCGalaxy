@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands.World {
                     p.Message("%WYou cannot change that map option via /os map."); return;
                 } else {
                     opt.SetFunc(p, p.level, value);
-                    Level.SaveSettings(p.level);
+                    p.level.SaveSettings();
                 }
             }
         }

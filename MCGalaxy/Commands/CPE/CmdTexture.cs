@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (pl.level != p.level) continue;
                 pl.SendCurrentTextures();
             }
-            Level.SaveSettings(p.level);
+            p.level.SaveSettings();
         }
         
         public override void Help(Player p) {

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Fun {
             
             p.Game.RatedMap = true;
             p.Game.LikedMap = like;
-            Level.SaveSettings(p.level);
+            p.level.SaveSettings();
             
             prefix = like ? "&a" : "&cdis";
             p.Message("You have {0}liked %Sthis map.", prefix);

@@ -241,7 +241,7 @@ namespace MCGalaxy.Games {
             }
             
             GiveMoney(alive);
-            Level.SaveSettings(Map);
+            Map.SaveSettings();
         }
 
         void AnnounceWinners(Player[] alive, Player[] dead) {

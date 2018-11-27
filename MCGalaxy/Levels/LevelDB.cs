@@ -83,7 +83,7 @@ namespace MCGalaxy {
                 z.AddTo(level);
             }
             
-            if (changedPerbuild) Level.SaveSettings(level);
+            if (changedPerbuild) level.SaveSettings();
             if (level.Zones.Count > 0 && !level.Save(true)) return;
             
             Database.Backend.DeleteTable("Zone" + map);

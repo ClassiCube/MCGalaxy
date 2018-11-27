@@ -185,9 +185,7 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
 
-        public static void SaveSettings(Level lvl) {
-            if (!lvl.IsMuseum) lvl.Config.SaveFor(lvl.MapName);
-        }
+        public void SaveSettings() { if (!IsMuseum) Config.SaveFor(MapName); }
 
         // Returns true if ListCheck does not already have an check in the position.
         // Useful for fireworks, which depend on two physics blocks being checked, one with extraInfo.
@@ -234,7 +232,7 @@ namespace MCGalaxy {
             
             IMapExporter.Formats[0].Write(path + ".backup", this);
             File.Copy(path + ".backup", path);
-            SaveSettings(this);
+            SaveSettings();
 
             Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
                        name, players.Count, PlayerInfo.Online.Count, Server.Config.MaxPlayers);

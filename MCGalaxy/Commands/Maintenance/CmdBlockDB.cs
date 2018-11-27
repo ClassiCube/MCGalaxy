@@ -51,13 +51,13 @@ namespace MCGalaxy.Commands.Maintenance {
                 lvl.BlockDB.Cache.Enabled = false;
                 
                 p.Message("&cDisabled %Srecording further block changes for " + lvl.ColoredName);
-                Level.SaveSettings(lvl);
+                lvl.SaveSettings();
             } else if (args[0].CaselessEq("enable")) {
                 lvl.Config.UseBlockDB = true;
                 lvl.BlockDB.Cache.Enabled = true;
                 
                 p.Message("&aEnabled %Srecording further block changes for " + lvl.ColoredName);
-                Level.SaveSettings(lvl);
+                lvl.SaveSettings();
             } else {
                 Help(p);
             }

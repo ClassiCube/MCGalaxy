@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.World {
                 p.Message("Could not find option entered.");
             } else {
                 opt.SetFunc(p, lvl, value);
-                Level.SaveSettings(lvl);
+                lvl.SaveSettings();
             }
         }
         

@@ -87,7 +87,7 @@ namespace MCGalaxy.Eco {
             
             Level level = LevelActions.Load(Player.Console, name, true);
             CmdOverseer.SetPerms(p, level);
-            Level.SaveSettings(level);
+            level.SaveSettings();
             PlayerActions.ChangeMap(p, name);
 
             p.Message("&aSuccessfully created your map: '&f" + name + "&a'");

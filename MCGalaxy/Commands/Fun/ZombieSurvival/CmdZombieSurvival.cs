@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 Help(p, "set"); return;
             }
-            Level.SaveSettings(p.level);
+            p.level.SaveSettings();
         }
         
         static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan span) {
