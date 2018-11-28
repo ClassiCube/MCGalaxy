@@ -307,7 +307,7 @@ namespace MCGalaxy {
         }
         
         void HandleMovement(byte[] buffer, int offset) {
-            if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos); return; }
+            if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
                 RawHeldBlock = ReadBlock(buffer, offset + 1);
                 if (hasExtBlocks) offset++; // corret offset for position later
@@ -327,7 +327,7 @@ namespace MCGalaxy {
             
             byte yaw = buffer[offset + 8], pitch = buffer[offset + 9];
             Position next = new Position(x, y, z);
-            CheckBlocks(next);
+            CheckBlocks(Pos, next);
 
             OnPlayerMoveEvent.Call(this, next, yaw, pitch);
             if (cancelmove) { cancelmove = false; return; }
@@ -390,10 +390,10 @@ namespace MCGalaxy {
             Zone zone = ZoneIn;
             
             for (int i = 0; i <= 4; i++) {
-            	string col = Server.Config.GetColor(i);
-            	if (level.Config.GetColor(i) != "") {
-            		col = level.Config.GetColor(i);
-            	}
+                string col = Server.Config.GetColor(i);
+                if (level.Config.GetColor(i) != "") {
+                    col = level.Config.GetColor(i);
+                }
                 if (zone != null && zone.Config.GetColor(i) != "") {
                     col = zone.Config.GetColor(i);
                 }
@@ -413,15 +413,16 @@ namespace MCGalaxy {
             }
         }
         
-        void CheckBlocks(Position pos) {
+        void CheckBlocks(Position prev, Position next) {
             try {
-                Vec3U16 P = (Vec3U16)pos.BlockCoords;
-                AABB bb = ModelBB.OffsetPosition(Pos);
+                Vec3U16 P = (Vec3U16)prev.BlockCoords;
+                AABB bb = ModelBB.OffsetPosition(next);
                 int index = level.PosToInt(P.X, P.Y, P.Z);
                     
                 if (level.Config.SurvivalDeath) {
+                    bool movingDown = next.Y < prev.Y;
                     PlayerPhysics.Drown(this, bb);
-                    PlayerPhysics.Fall(this, bb);
+                    PlayerPhysics.Fall(this,  bb, movingDown);
                 }
                 lastFallY = bb.Min.Y;
                 

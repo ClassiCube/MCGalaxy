@@ -129,8 +129,11 @@ namespace MCGalaxy {
              return color + "[" + titleCol + title + color + "] ";
         }
         
-        public bool IsInsideBlock() {
+        public bool IsLikelyInsideBlock() {
             AABB bb = ModelBB.OffsetPosition(Pos);
+            // client collision is very slightly more precise than server
+            // so move slightly in to avoid false positives
+            bb = bb.Expand(-1);
             return AABB.IntersectsSolidBlocks(bb, level);
         }
 

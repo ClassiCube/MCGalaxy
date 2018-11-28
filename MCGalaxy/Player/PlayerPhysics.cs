@@ -56,7 +56,15 @@ namespace MCGalaxy.Blocks.Physics {
             if (!hitWalkthrough) p.lastWalkthrough = -1;
         }
         
-        internal static void Fall(Player p, AABB bb) {
+        internal static void Fall(Player p, AABB bb, bool movingDown) {
+            // Client position is slightly more precise than server's
+            // If don't adjust, it's possible for player to land on edge of a block and not die    
+            // Only do when not moving down, so hitting a pillar while falling doesn't trigger
+            if (!movingDown) {
+                bb.Min.X -= 1; bb.Max.X += 1;
+                bb.Min.Z -= 1; bb.Max.Z += 1;
+            }
+            
             bb.Min.Y -= 2; // test block below player feet
             Vec3S32 min = bb.BlockMin, max = bb.BlockMax;
             bool allGas = true;
@@ -79,7 +87,7 @@ namespace MCGalaxy.Blocks.Physics {
             }
             
             if (!allGas) return;
-            if (bb.Min.Y > p.lastFallY) p.startFallY = -1; // flying up resets fall height            
+            if (bb.Min.Y > p.lastFallY) p.startFallY = -1; // flying up resets fall height
             p.startFallY = Math.Max(bb.Min.Y, p.startFallY);
         }
         

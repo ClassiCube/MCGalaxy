@@ -30,7 +30,7 @@ namespace MCGalaxy.Games {
         
         public static bool DetectNoclip(Player p, Position newPos) {
             if (p.Game.Referee || Hacks.CanUseNoclip(p, p.level)) return false;
-            if (!p.IsInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, interval)) return false;
+            if (!p.IsLikelyInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, interval)) return false;
             
             Warn(ref p.Game.LastNoclipWarn, p, "noclip");
             return false;
