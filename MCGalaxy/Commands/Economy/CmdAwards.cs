@@ -20,58 +20,43 @@ using System.Collections.Generic;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdAwards : Command2 {        
+    public sealed class CmdAwards : Command2 {
         public override string name { get { return "Awards"; } }
         public override string type { get { return CommandTypes.Economy; } }
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
-            if (args.Length > 2) { Help(p); return; }           
+            if (args.Length > 2) { Help(p); return; }
             int offset = 0;
             
-            List<Awards.Award> awards = Awards.AwardsList;
-            string name = "";            
+            string name = "";
+            StringFormatter<Awards.Award> formatter = FormatServerAward;
+            
             if (args.Length == 2 || (message.Length > 0 && !IsListModifier(args[0]))) {
                 offset = 1;
                 name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 
                 if (name == null) return;
-                awards = AwardsHas(name);
+                List<string> playerAwards = Awards.GetPlayerAwards(name);
+                formatter = (award) => FormatPlayerAward(award, playerAwards);
             }
 
-            if (awards.Count == 0) {
-                if (name.Length > 0) {
-                    p.Message("{0} %Shas no awards.", PlayerInfo.GetColoredName(p, name));
-                } else {
-                    p.Message("This server has no awards yet.");
-                }
-                return;
-            }
+            List<Awards.Award> awards = Awards.AwardsList;
+            if (awards.Count == 0) { p.Message("This server has no awards yet."); return; }
             
             string cmd = name.Length == 0 ? "awards" : "awards " + name;
             string modifier = args.Length > offset ? args[offset] : "";
             
-            MultiPageOutput.Output(p, awards, FormatAward,
+            MultiPageOutput.Output(p, awards, formatter,
                                    cmd, "Awards", modifier, true);
         }
         
-        static List<Awards.Award> AwardsHas(string name) {
-            List<Awards.Award> awards = new List<Awards.Award>();
-            List<string> playerAwards = Awards.GetPlayerAwards(name);
-            if (playerAwards == null) return awards;
-            
-            foreach (string awardName in playerAwards) {
-                Awards.Award award = new Awards.Award();
-                award.Name = awardName;
-                
-                Awards.Award match = Awards.FindExact(awardName);
-                if (match != null) award.Description = match.Description;
-                awards.Add(award);
-            }
-            return awards;
+        static string FormatPlayerAward(Awards.Award award, List<string> awards) {
+            bool has = awards != null && awards.CaselessContains(award.Name);
+            return (has ? "&a" : "&c") + award.Name + ": &7" + award.Description;
         }
         
-        static string FormatAward(Awards.Award award) {
+        static string FormatServerAward(Awards.Award award) {
             return "&6" + award.Name + ": &7" + award.Description;
         }
         
