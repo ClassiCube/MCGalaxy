@@ -27,22 +27,20 @@ namespace MCGalaxy.Commands.Eco {
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length > 2) { Help(p); return; }
-            int offset = 0;
-            
-            string name = "";
-            StringFormatter<Awards.Award> formatter = FormatServerAward;
-            
+            int offset = 0;           
+            string name = p.name;
+
             if (args.Length == 2 || (message.Length > 0 && !IsListModifier(args[0]))) {
                 offset = 1;
-                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
-                
+                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);               
                 if (name == null) return;
-                List<string> playerAwards = Awards.GetPlayerAwards(name);
-                formatter = (award) => FormatPlayerAward(award, playerAwards);
             }
 
             List<Awards.Award> awards = Awards.AwardsList;
             if (awards.Count == 0) { p.Message("This server has no awards yet."); return; }
+            
+            List<string> playerAwards = Awards.GetPlayerAwards(name);
+            StringFormatter<Awards.Award> formatter = (award) => FormatPlayerAward(award, playerAwards);
             
             string cmd = name.Length == 0 ? "awards" : "awards " + name;
             string modifier = args.Length > offset ? args[offset] : "";
@@ -56,13 +54,9 @@ namespace MCGalaxy.Commands.Eco {
             return (has ? "&a" : "&c") + award.Name + ": &7" + award.Description;
         }
         
-        static string FormatServerAward(Awards.Award award) {
-            return "&6" + award.Name + ": &7" + award.Description;
-        }
-        
         public override void Help(Player p) {
-            p.Message("%T/Awards %H- Lists all awards the server has");
-            p.Message("%T/Awards [player] %H- Lists awards that player has");
+            p.Message("%T/Awards <player> %H- Lists awards");
+            p.Message("%HAppears &agreen %Hif player has an award, &cred %Hif not");
         }
     }
 }
