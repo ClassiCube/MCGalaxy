@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands.CPE {
                     AddHandler(p, parts, global, cmd); break;
                 case "copyall":
                 case "copyfrom":
-                    CopyAllHandler(p, parts, data,global, cmd); break;
+                    CopyAllHandler(p, parts, data, global, cmd); break;
                 case "copy":
                 case "clone":
                 case "duplicate":
-                    CopyHandler(p, parts, global, cmd); break;
+                    CopyHandler(p, parts, data, global, cmd); break;
                 case "delete":
                 case "remove":
                     RemoveHandler(p, parts, global, cmd); break;
@@ -108,20 +108,31 @@ namespace MCGalaxy.Commands.CPE {
             SendStepHelp(p, global);
         }
         
-        static void CopyAllHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
-            if (parts.Length < 2) { Help(p, cmd); return; }
-            string map = Matcher.FindMaps(p, parts[1]);
-            if (map == null) return;
+        static BlockDefinition[] GetDefs(Player p, CommandData data, string map, ref string coloredMap) {
+            map = Matcher.FindMaps(p, map);
+            if (map == null) return null;
             
             Level lvl = null;
             LevelConfig cfg = LevelInfo.GetConfig(map, out lvl); 
             AccessController visit = new LevelAccessController(cfg, map, true);
+            
             if (!visit.CheckDetailed(p, data.Rank)) {
-                p.Message("Hence, you cannot copy custom blocks from that level"); return;
+                p.Message("Hence, you cannot copy custom blocks from that level"); 
+                return null;
             }
             
+            coloredMap = cfg.Color + map;
+            return BlockDefinition.Load(false, map);
+        }
+        
+        static void CopyAllHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
+            if (parts.Length < 2) { Help(p, cmd); return; }
+            string coloredMap = null;
             int copied = 0;
-            BlockDefinition[] defs = BlockDefinition.Load(false, map);
+            
+            BlockDefinition[] defs = GetDefs(p, data, parts[1], ref coloredMap);
+            if (defs == null) return;        
+            
             for (int i = 0; i < defs.Length; i++) {
                 if (defs[i] == null) continue;
                 
@@ -134,17 +145,23 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             string prefix = copied > 0 ? copied.ToString() : "No";
-            p.Message("{0} custom blocks were copied from level {1}", 
-                           prefix, cfg.Color + map);
+            p.Message("{0} custom blocks were copied from level {1}", prefix, coloredMap);
         }
         
-        static void CopyHandler(Player p, string[] parts, bool global, string cmd) {
+        static void CopyHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
-            BlockID src, dst;
+            BlockID src, dst;            
             if (!CheckBlock(p, parts[1], out src, true)) return;
             
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;          
             if (parts.Length > 2) {
                 if (!CheckBlock(p, parts[2], out dst)) return;
+                
+                if (parts.Length > 3) {
+                    string coloredMap = null;
+                    defs = GetDefs(p, data, parts[3], ref coloredMap);
+                    if (defs == null) return;
+                }
             } else {
                 dst = GetFreeBlock(global, p.IsSuper ? null : p.level);
                 if (dst == Block.Invalid) {
@@ -153,11 +170,8 @@ namespace MCGalaxy.Commands.CPE {
                     return;
                 }
             }
-            
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition srcDef = defs[src];
-            if (!DoCopy(p, global, cmd, false, srcDef, src, dst)) return;
-            
+
+            if (!DoCopy(p, global, cmd, false, defs[src], src, dst)) return;           
             string scope = global ? "global" : "level";
             p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
                       scope, Block.ToRaw(src), Block.ToRaw(dst));
