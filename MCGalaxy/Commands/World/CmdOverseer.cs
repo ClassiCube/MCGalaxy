@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.World {
         #region Help messages
 
         static string[] blockPropsHelp = new string[] {
-            "%T/os blockprops [id] [action] <args> %H- Manages properties for custom blocks on your map.",
+            "%T/os blockprops [id] [action] <args> %H- Changes properties of blocks in your map.",
             "%H  See %T/Help blockprops %Hfor a list of actions",
         };
         

@@ -43,47 +43,21 @@ namespace MCGalaxy.Commands.Info {
                 }
             }
 
-            switch (args[0].ToLower()) {
-                case "build":
-                case "building":
-                    PrintHelpForGroup(p, sort, modifier, "build", "Building"); break;
-                case "chat":
-                    PrintHelpForGroup(p, sort, modifier, "chat", "Chat"); break;
-                case "eco":
-                case "economy":
-                    PrintHelpForGroup(p, sort, modifier, "eco", "Economy"); break;
-                case "mod":
-                case "moderation":
-                    PrintHelpForGroup(p, sort, modifier, "mod", "Moderation"); break;
-                case "info":
-                case "information":
-                    PrintHelpForGroup(p, sort, modifier, "info", "Information"); break;
-                case "game":
-                case "games":
-                    PrintHelpForGroup(p, sort, modifier, "game", "Game"); break;
-                case "other":
-                case "others":
-                    PrintHelpForGroup(p, sort, modifier, "other", "Other");  break;
-                case "maps":
-                case "world":
-                    PrintHelpForGroup(p, sort, modifier, "world", "World"); break;
-                case "short":
-                case "shortcut":
-                case "shortcuts":
-                    PrintShortcuts(p, sort); break;
-                case "old":
-                case "oldmenu":
-                case "command":
-                case "":
-                    PrintRankCommands(p, sort, modifier, p.group, true); break;
-                case "commandsall":
-                case "commandall":
-                case "all":
-                    PrintAllCommands(p, sort, modifier); break;
-                default:
-                    Group grp = Group.Find(args[0]);
-                    if (grp == null) return false;
-                    PrintRankCommands(p, sort, modifier, grp, false); break;
+            string type = args[0].ToLower();
+            if (type == "short" || type == "shortcut" || type == "shortcuts") {
+                 PrintShortcuts(p, sort);
+            } else if (type == "old" || type == "oldmenu" || type == "" || type == "command") {
+                 PrintRankCommands(p, sort, modifier, p.group, true);
+            } else if (type == "all" || type == "commandall" || type == "commandsall") {
+                 PrintAllCommands(p, sort, modifier);
+            } else {
+                bool any = PrintCategoryCommands(p, sort, modifier, type);
+                if (any) return true;
+                
+                // list commands a rank can use                
+                Group grp = Group.Find(type);
+                if (grp == null) return false;
+                PrintRankCommands(p, sort, modifier, grp, false);
             }
             return true;
         }
@@ -105,9 +79,7 @@ namespace MCGalaxy.Commands.Info {
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (disabled != null || c.name == null) continue;
-                if (!group.Commands.Contains(c)) continue;
-                cmds.Add(c);
+                if (disabled == null && group.Commands.Contains(c)) cmds.Add(c);
             }   
             
             if (cmds.Count == 0) {
@@ -140,29 +112,44 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Type %T/Help <command> %Sfor more help on a command.");
         }
         
-        static void PrintHelpForGroup(Player p, string sort, string modifier,
-                                      string type, string category) {
+        static string GetCategory(string type) {
+            if (type.CaselessEq("building"))   return CommandTypes.Building;
+            if (type.CaselessEq("eco"))        return CommandTypes.Economy;
+            if (type.CaselessEq("games"))      return CommandTypes.Games;
+            if (type.CaselessEq("info"))       return CommandTypes.Information;
+            if (type.CaselessEq("moderation")) return CommandTypes.Moderation;
+            if (type.CaselessEq("others"))     return CommandTypes.Other;
+            if (type.CaselessEq("maps"))       return CommandTypes.World;
+            return type;
+        }
+        
+        static bool PrintCategoryCommands(Player p, string sort, string modifier, string type) {
             List<Command> cmds = new List<Command>();
+            string category = GetCategory(type);
+            bool any = false;
+            
             foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (p.CanUse(c) && disabled == null) {
-                    if (!c.type.CaselessContains(type) || c.name == null) continue;
-                    cmds.Add(c);
-                }
+                if (!c.type.CaselessContains(category)) continue;
+                
+                if (disabled == null && p.CanUse(c)) cmds.Add(c);
+                any = true;
             }    
             
             if (cmds.Count == 0) {
-                p.Message("You cannot use any of the " + category + " commands."); return;
+                p.Message("You cannot use any of the " + category + " commands."); return any;
             }            
             SortCommands(cmds, sort);
             p.Message(category + " commands you may use:");
 
-            type = "Commands " + category;
+            type = "Commands " + type;
             if (sort.Length > 0) type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
+            
             p.Message("Type %T/Help <command> %Sfor more help on a command.");
+            return any;
         }
         
         static void SortCommands(List<Command> cmds, string sort) {
