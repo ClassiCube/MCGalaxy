@@ -19,6 +19,8 @@ using System;
 namespace MCGalaxy.Commands.Chatting {    
     public sealed class CmdRoll : MessageCmd {
         public override string name { get { return "Roll"; } }
+        static volatile Random rng;
+        static readonly object rngLock = new object();
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
@@ -35,7 +37,15 @@ namespace MCGalaxy.Commands.Chatting {
             // rand.Next(min, max) is exclusive of max, so we need to use (max + 1)
             int adjMax = max == int.MaxValue ? int.MaxValue : max + 1;
             
-            string msg = "λNICK %Srolled a &a" + new Random().Next(min, adjMax) + " %S(" + min + "|" + max + ")";
+            // Don't want RNG to get seeded the same if /roll is called in quick succession
+            // (since it uses Environment.TickCount, which only has 10-15 millisecond accuracy)
+            int number;
+            lock (rngLock) {
+                if (rng == null) rng = new Random();
+                number = rng.Next(min, adjMax);
+            }
+            
+            string msg = "λNICK %Srolled a &a" + number + " %S(" + min + "|" + max + ")";
             TryMessage(p, msg);
         }
         
