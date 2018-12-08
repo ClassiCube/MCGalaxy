@@ -50,11 +50,11 @@ namespace MCGalaxy.Commands.Maintenance {
                 p.Message("\"{0}\" must be offline to use %T/InfoSwap", name); return null;
             }
             
-            name = PlayerInfo.FindName(name);
-            if (name == null) {
+            string match = PlayerInfo.FindName(name);
+            if (match == null) {
                 p.Message("\"{0}\" was not found in the database.", name); return null;
             }
-            return name;
+            return match;
         }
         
         static void SwapStats(string src, string dst) {
