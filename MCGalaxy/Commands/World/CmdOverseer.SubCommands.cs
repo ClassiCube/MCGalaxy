@@ -159,11 +159,8 @@ namespace MCGalaxy.Commands.World {
             Level lvl = newLvl.GenerateMap(p, args, p.DefaultCmdData);
             if (lvl == null) return;
             
-            if (SetPerms(p, lvl)) {
-                Group grp = Group.Find(Server.Config.OSPerbuildDefault);
-                p.Message("Use %T/os zone add [name] %Sto allow " +
-                               "players ranked below " + grp.ColoredName + " %Sto build in the map.");
-            }
+            SetPerms(p, lvl);
+            p.Message("Use %T/os zone add [name] %Sto allow other players to build in the map.");
             
             try {
                 lvl.Save(true);
@@ -173,17 +170,16 @@ namespace MCGalaxy.Commands.World {
             }
         }
         
-        internal static bool SetPerms(Player p, Level lvl) {
+        internal static void SetPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
             const LevelPermission rank = LevelPermission.Nobody;
             lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
             lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
 
             Group grp = Group.Find(Server.Config.OSPerbuildDefault);
-            if (grp == null) return false;
+            if (grp == null) return;
             
             lvl.BuildAccess.SetMin(Player.Console, rank, lvl, grp);
-            return true;
         }
         
         static void DeleteMap(Player p, string value) {
