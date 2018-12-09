@@ -17,6 +17,7 @@
  */
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Net;
 using MCGalaxy.Network;
@@ -78,11 +79,11 @@ namespace MCGalaxy.Generator {
             if (bmp == null) return false;
             
             int index = 0, oneY = lvl.Width * lvl.Length;
-            using (bmp) {
+            try {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
-                    p.Message("The size of the heightmap is {0} by {1}.", bmp.Width, bmp.Height);
-                    p.Message("The width and length of the new level must match that size.");
-                    return false;
+                    p.Message("&cSize of the heightmap does not match Width x Length of the map");
+                    p.Message("&cAs such, the map may not look accurate.");
+                    bmp = Resize(bmp, lvl.Width, lvl.Length);
                 }
                 
                 using (PixelGetter pixels = new PixelGetter(bmp)) {
@@ -110,8 +111,22 @@ namespace MCGalaxy.Generator {
                         index++;
                     }
                 }
-            }
+            // Cannot use using { } here because bmp may be reassigned
+            } finally { bmp.Dispose(); }
             return true;
+        }
+        
+        static Bitmap Resize(Bitmap bmp, int width, int height) {
+            Bitmap resized = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(resized)) {
+                g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                g.SmoothingMode     = SmoothingMode.None;
+                g.PixelOffsetMode   = PixelOffsetMode.None;
+                g.DrawImage(bmp, 0, 0, width, height);
+            }
+            
+            bmp.Dispose();
+            return resized;
         }
         
         static bool IsShorterBy(int height, PixelGetter pixels, int x, int z) {

@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands.Building {
             width = resizedWidth; height = resizedHeight;
         }
         
-        Bitmap Resize(Bitmap bmp, int width, int height) {
+        static Bitmap Resize(Bitmap bmp, int width, int height) {
             Bitmap resized = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(resized)) {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
