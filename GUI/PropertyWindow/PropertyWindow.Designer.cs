@@ -267,7 +267,7 @@ namespace MCGalaxy.Gui
             this.eco_colLvlX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eco_colLvlY = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eco_colLvlZ = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.eco_colLvlType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.eco_colLvlTheme = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.eco_btnLvlDel = new System.Windows.Forms.Button();
             this.eco_btnLvlAdd = new System.Windows.Forms.Button();
             this.eco_cbLvl = new System.Windows.Forms.CheckBox();
@@ -2897,7 +2897,7 @@ namespace MCGalaxy.Gui
                                     this.eco_colLvlX,
                                     this.eco_colLvlY,
                                     this.eco_colLvlZ,
-                                    this.eco_colLvlType});
+                                    this.eco_colLvlTheme});
             this.eco_dgvMaps.Location = new System.Drawing.Point(6, 39);
             this.eco_dgvMaps.Margin = new System.Windows.Forms.Padding(2);
             this.eco_dgvMaps.MultiSelect = false;
@@ -2939,12 +2939,12 @@ namespace MCGalaxy.Gui
             this.eco_colLvlZ.Name = "eco_colLvlZ";
             this.eco_colLvlZ.Width = 50;
             // 
-            // eco_colLvlType
+            // eco_colLvlTheme
             // 
-            this.eco_colLvlType.HeaderText = "Type";
-            this.eco_colLvlType.Name = "eco_colLvlType";
-            this.eco_colLvlType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.eco_colLvlType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.eco_colLvlTheme.HeaderText = "Theme";
+            this.eco_colLvlTheme.Name = "eco_colLvlTheme";
+            this.eco_colLvlTheme.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.eco_colLvlTheme.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // eco_btnLvlDel
             // 
@@ -5014,7 +5014,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox eco_cbLvl;
         private System.Windows.Forms.Button eco_btnLvlAdd;
         private System.Windows.Forms.Button eco_btnLvlDel;
-        private System.Windows.Forms.DataGridViewComboBoxColumn eco_colLvlType;
+        private System.Windows.Forms.DataGridViewComboBoxColumn eco_colLvlTheme;
         private System.Windows.Forms.DataGridViewTextBoxColumn eco_colLvlZ;
         private System.Windows.Forms.DataGridViewTextBoxColumn eco_colLvlY;
         private System.Windows.Forms.DataGridViewTextBoxColumn eco_colLvlX;

@@ -24,7 +24,8 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Place"; } }
         public override string shortcut { get { return "pl"; } }
         public override string type { get { return CommandTypes.Building; } }
-
+        public override bool SuperUseable { get { return false; } }
+        
         public override void Use(Player p, string message, CommandData data) {
             BlockID block = p.GetHeldBlock();
             Vec3S32 P = p.Pos.BlockCoords;

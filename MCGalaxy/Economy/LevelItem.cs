@@ -174,7 +174,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupCommandHelp(Player p) {
             base.OnSetupCommandHelp(p);
-            p.Message("%T/Eco level add [name] [x] [y] [z] [type] [price]");
+            p.Message("%T/Eco level add [name] [x] [y] [z] [theme] [price]");
             p.Message("%T/Eco level remove [name]");
             p.Message("%T/Eco level edit [name] [name/x/y/z/type/price] [value]");
             p.Message("%HAdds, removes, or edits a level preset.");

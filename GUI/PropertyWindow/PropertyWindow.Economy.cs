@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 using MCGalaxy.Eco;
 using MCGalaxy.Generator;
@@ -44,10 +45,11 @@ namespace MCGalaxy.Gui {
             eco_colLvlX.CellTemplate = new NumericalCell();
             eco_colLvlY.CellTemplate = new NumericalCell();
             eco_colLvlZ.CellTemplate = new NumericalCell();
+            eco_colLvlTheme.CellTemplate = new ThemeCell();
 
             foreach (MapGen gen in MapGen.Generators) {
                 if (gen.Type == GenType.Advanced) continue;
-                eco_colLvlType.Items.Add(gen.Theme);
+                eco_colLvlTheme.Items.Add(gen.Theme);
             }
             eco_dgvMaps.DataError += eco_dgv_DataError;
         }
@@ -64,6 +66,15 @@ namespace MCGalaxy.Gui {
                 
                 if (!int.TryParse(str, out num) || num < 0) return false;
                 return base.SetValue(rowIndex, raw);
+            }
+        }
+        
+        class ThemeCell : DataGridViewComboBoxCell {
+            protected override object GetFormattedValue(object value, int rowIndex, 
+                                                        ref DataGridViewCellStyle cellStyle, TypeConverter valueTypeConverter, 
+                                                        TypeConverter formattedValueTypeConverter, DataGridViewDataErrorContexts context) {
+                MapGen gen = MapGen.Find((string)value);
+                return gen != null ? gen.Theme : null;
             }
         }
         
@@ -89,9 +100,9 @@ namespace MCGalaxy.Gui {
                 text = eco_cbCfg.SelectedItem.ToString();
             }
             
-            eco_gbItem.Visible  = false;
-            eco_gbLvl.Visible = false;
-            eco_gbRank.Visible  = false;
+            eco_gbItem.Visible = false;
+            eco_gbLvl.Visible  = false;
+            eco_gbRank.Visible = false;
             eco_curItem = null;
             
             Item item = Economy.GetItem(text);
