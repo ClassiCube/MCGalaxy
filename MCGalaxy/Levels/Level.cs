@@ -254,7 +254,7 @@ namespace MCGalaxy {
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);
                     return null;
                 }
-                return next.ToString();
+                return backup;
             }
             Logger.Log(LogType.SystemActivity, "Level unchanged, skipping backup");
             return null;
