@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Info {
                 PrintColors(p);
             } else if (message.CaselessEq("emotes") || message.CaselessStarts("emotes ")) {
                 PrintEmotes(p, message);
-            }  else {
+            } else {
                 if (CmdCommands.ListCommands(p, message)) return;
                 if (ParseCommand(p, message) || ParseBlock(p, message) || ParsePlugin(p, message)) return;
                 p.Message("Could not find command, plugin or block specified.");

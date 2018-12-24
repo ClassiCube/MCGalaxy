@@ -112,6 +112,7 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Type %T/Help <command> %Sfor more help on a command.");
         }
         
+        // common shortcuts people tend to use 
         static string GetCategory(string type) {
             if (type.CaselessEq("building"))   return CommandTypes.Building;
             if (type.CaselessEq("eco"))        return CommandTypes.Economy;
@@ -126,21 +127,22 @@ namespace MCGalaxy.Commands.Info {
         static bool PrintCategoryCommands(Player p, string sort, string modifier, string type) {
             List<Command> cmds = new List<Command>();
             string category = GetCategory(type);
-            bool any = false;
-            
+            bool foundAny = false;
+
             foreach (Command c in Command.allCmds) {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (!c.type.CaselessContains(category)) continue;
+                if (!c.type.CaselessEq(category)) continue;
                 
                 if (disabled == null && p.CanUse(c)) cmds.Add(c);
-                any = true;
-            }    
+                foundAny = true;
+            }
+            if (!foundAny) return false;
             
             if (cmds.Count == 0) {
-                p.Message("You cannot use any of the " + category + " commands."); return any;
+                p.Message("You cannot use any of the " + category + " commands."); return true;
             }            
             SortCommands(cmds, sort);
-            p.Message(category + " commands you may use:");
+            p.Message(category.Capitalize() + " commands you may use:");
 
             type = "Commands " + type;
             if (sort.Length > 0) type += " " + sort;
@@ -149,7 +151,7 @@ namespace MCGalaxy.Commands.Info {
                                    type, "commands", modifier, false);
             
             p.Message("Type %T/Help <command> %Sfor more help on a command.");
-            return any;
+            return true;
         }
         
         static void SortCommands(List<Command> cmds, string sort) {
