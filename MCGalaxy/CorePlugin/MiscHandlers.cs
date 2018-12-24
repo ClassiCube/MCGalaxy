@@ -40,20 +40,15 @@ namespace MCGalaxy.Core {
             p.cancelmove = true;
         }
         
-        internal static void HandleOnMapSent(Player p, Level prevLevel, Level level) {
+        internal static void HandleSentMap(Player p, Level prevLevel, Level level) {
             p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             p.prevMsg = "";
             p.showMBs = false;
             p.showPortals = false;
             p.SetModel(p.Model, level); // in case had been using a level-only custom block for their model
-            
-            if (p.isFlying && !Hacks.CanUseFly(p, level)) {
-                p.Message("You cannot use %T/Fly %Son this map.");
-                p.isFlying = false;
-            }
 
             p.ZoneIn = null;
-            p.OnChangedZone(); // TODO: CurrentEnv here??
+            OnChangedZoneEvent.Call(p);
             p.SendCurrentTextures();
             p.SendCurrentBlockPermissions();
             
@@ -71,11 +66,20 @@ namespace MCGalaxy.Core {
                 p.Message("BlockDB is disabled here, %Wyou will not be able to /undo or /redo");
             }
         }
+		
+		internal static void HandleChangedZone(Player p) {
+			if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
+            p.SendCurrentEnv();
+            
+            if (p.isFlying && !Hacks.CanUseFly(p, p.level)) {
+                p.Message("You cannot use %T/Fly %Son this map.");
+                p.isFlying = false;
+            }
+        }
         
         internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch,
                                                byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
-            if (action != MouseAction.Pressed) return;
-            
+            if (action != MouseAction.Pressed) return;           
             if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
             
             if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;

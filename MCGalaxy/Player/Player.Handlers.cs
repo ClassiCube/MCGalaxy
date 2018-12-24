@@ -356,17 +356,12 @@ namespace MCGalaxy {
                 if (!zones[i].Contains(P.X, P.Y, P.Z)) continue;
                 
                 ZoneIn = zones[i];
-                OnChangedZone();
+                OnChangedZoneEvent.Call(this);
                 return;
             }
             
             ZoneIn = null;
-            if (zone != null) OnChangedZone();
-        }
-        
-        public void OnChangedZone() {
-            if (Supports(CpeExt.InstantMOTD)) SendMapMotd();
-            SendCurrentEnv();
+            if (zone != null) OnChangedZoneEvent.Call(this);
         }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {

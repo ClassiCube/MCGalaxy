@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Config;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 
@@ -141,7 +142,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.ZoneIn != this) continue;
                 pl.ZoneIn = null;
-                pl.OnChangedZone();
+                OnChangedZoneEvent.Call(pl);
             }
         }
         

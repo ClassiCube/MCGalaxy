@@ -210,7 +210,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     }
 
     public delegate void OnSendingMotd(Player p, ref string motd);
-    /// <summary> Called when MOTD is being send to the user. </summary>
+    /// <summary> Called when MOTD is being sent to a player. </summary>
     public sealed class OnSendingMotdEvent : IEvent<OnSendingMotd> {
         
         public static void Call(Player p, ref string motd) {
@@ -221,12 +221,10 @@ namespace MCGalaxy.Events.PlayerEvents {
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
-    }
-    
+    }   
 
     public delegate void OnPlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning);
-    /// <summary> Called when a player is being initially spawned in a map, 
-    /// or is respawning (e.g. died from a killer block). </summary>
+    /// <summary> Called when a player is initially spawning in a map, or is respawning (e.g. killed by deadly lava). </summary>
     public sealed class OnPlayerSpawningEvent : IEvent<OnPlayerSpawning> {
         
         public static void Call(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
@@ -241,4 +239,15 @@ namespace MCGalaxy.Events.PlayerEvents {
             }
         }
     }
+
+    public delegate void OnChangedZone(Player p);
+    /// <summary> Called when player has moved into a different zone. </summary>
+    /// <remarks> The 'zone' the player moves into may be null. </remarks>
+    public sealed class OnChangedZoneEvent : IEvent<OnChangedZone> {
+        
+        public static void Call(Player p) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(p));
+        }
+    }    
 }

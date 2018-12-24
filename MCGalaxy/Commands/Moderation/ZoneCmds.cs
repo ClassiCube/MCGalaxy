@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
@@ -144,7 +145,7 @@ namespace MCGalaxy.Commands.Moderation {
         void OnChangedZone(Zone zone) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.ZoneIn == zone) pl.OnChangedZone();
+                if (pl.ZoneIn == zone) OnChangedZoneEvent.Call(pl);
             }
         }
         
