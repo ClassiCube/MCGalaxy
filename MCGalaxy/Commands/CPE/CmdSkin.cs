@@ -38,6 +38,10 @@ namespace MCGalaxy.Commands.CPE {
 
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {
             skin = GetSkin(skin, bot.name);
+            if (skin.Length > NetUtils.StringSize) {
+                p.Message("The skin must be " + NetUtils.StringSize + " characters or less."); return;
+            }
+            
             bot.SkinName = skin;
             p.Message("You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
             
@@ -48,6 +52,10 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetPlayerData(Player p, Player who, string skin) {
             skin = GetSkin(skin, who.truename);
+            if (skin.Length > NetUtils.StringSize) {
+                p.Message("The skin must be " + NetUtils.StringSize + " characters or less."); return;
+            }
+            
             who.SkinName = skin;
             Entities.GlobalRespawn(who);
             
