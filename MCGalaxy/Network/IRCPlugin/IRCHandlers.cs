@@ -437,7 +437,7 @@ namespace MCGalaxy.Network {
         
         List<string> GetNicks(string channel) {
             foreach (var chan in userMap) {
-            	if (chan.Key.CaselessEq(channel)) return chan.Value;
+                if (chan.Key.CaselessEq(channel)) return chan.Value;
             }
             
             List<string> nicks = new List<string>();

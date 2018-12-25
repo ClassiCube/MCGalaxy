@@ -36,14 +36,15 @@ namespace MCGalaxy {
             string name, group;
             GetEntry(p, dst, out name, out group);
             
-            name = Colors.Cleanup(name, dst.hasTextColors);
+            name  = Colors.Escape(name); // for nicks
+            name  = Colors.Cleanup(name, dst.hasTextColors);
             group = Colors.Cleanup(group, dst.hasTextColors);
             dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
             group = Server.Config.TablistGlobal ? "On " + p.level.name : "&fPlayers";
-            name = p.color + p.truename;
+            name  = dst.Ignores.Nicks ? p.color + p.truename : p.ColoredName;
             OnTabListEntryAddedEvent.Call(p, ref name, ref group, dst);
 
             if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }
@@ -57,7 +58,7 @@ namespace MCGalaxy {
             
             string name = b.color + b.name, group = "Bots";
             OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
-            dst.Send(Packet.ExtAddPlayerName(b.id, b.SkinName, name, group, 0, dst.hasCP437));
+            dst.Send(Packet.ExtAddPlayerName(b.id, b.name, name, group, 0, dst.hasCP437));
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
@@ -88,7 +89,7 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Updates the tab list entry for this player to all other players 
+        /// <summary> Removes this tab list entry for this player to all other players 
         /// (whose clients support it) in the server. </summary>
         internal static void RemoveAll(Player p, bool self, bool toVisible) {
             if (!Server.Config.TablistGlobal) return;

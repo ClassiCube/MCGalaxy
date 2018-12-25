@@ -65,8 +65,10 @@ namespace MCGalaxy.Commands.Chatting {
                 
                 Chat.MessageFrom(who, "λNICK %Shad their nick set to " + who.color + nick);
                 who.DisplayName = nick;
-            }            
+            }
+        	
             PlayerDB.Save(who);
+            TabList.Update(who, true);
         }
         
         public override void Help(Player p) {

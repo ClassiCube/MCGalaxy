@@ -43,7 +43,8 @@ namespace MCGalaxy.Commands.Chatting {
             } else if (action == "titles") {
                 Toggle(p, ref p.Ignores.Titles, "{1}Player titles {0} show before names in chat"); return;
             } else if (action == "nicks") {
-                Toggle(p, ref p.Ignores.Nicks, "{1}Custom player nicks {0} show in chat"); return;
+                Toggle(p, ref p.Ignores.Nicks, "{1}Custom player nicks {0} show in chat");
+                TabList.Update(p, true); return;
             } else if (action == "8ball") {
                 Toggle(p, ref p.Ignores.EightBall, "{0} ignoring %T/8ball"); return;
             } else if (action == "drawoutput") {
