@@ -397,14 +397,14 @@ namespace MCGalaxy.Network {
 
             if (newNick.Trim().Length == 0) return;
             
-            foreach (var kvp in userMap) {
-                int index = GetNickIndex(user.Nick, kvp.Value);
+            foreach (var chans in userMap) {
+                int index = GetNickIndex(user.Nick, chans.Value);
                 if (index >= 0) {
-                    string prefix = GetPrefix(kvp.Value[index]);
-                    kvp.Value[index] = prefix + newNick;
+                    string prefix = GetPrefix(chans.Value[index]);
+                    chans.Value[index] = prefix + newNick;
                 } else {
                     // should never happen, but just in case.
-                    bot.connection.Sender.Names(kvp.Key);
+                    bot.connection.Sender.Names(chans.Key);
                 }
             }
 
@@ -436,12 +436,13 @@ namespace MCGalaxy.Network {
         }
         
         List<string> GetNicks(string channel) {
-            List<string> chanNicks;
-            if (!userMap.TryGetValue(channel, out chanNicks)) {
-                chanNicks = new List<string>();
-                userMap[channel] = chanNicks;
+            foreach (var chan in userMap) {
+            	if (chan.Key.CaselessEq(channel)) return chan.Value;
             }
-            return chanNicks;
+            
+            List<string> nicks = new List<string>();
+            userMap[channel] = nicks;
+            return nicks;
         }
         
         void UpdateNick(string n, List<string> chanNicks) {
@@ -495,8 +496,8 @@ namespace MCGalaxy.Network {
         }
         
         bool VerifyNick(string channel, string userNick, ref string error, ref bool foundAtAll) {
-            List<string> chanNicks = null;
-            if (!userMap.TryGetValue(channel, out chanNicks)) return false;
+            List<string> chanNicks = GetNicks(channel);
+            if (chanNicks.Count == 0) return false;
             
             int index = GetNickIndex(userNick, chanNicks);
             if (index == -1) return false;
@@ -513,7 +514,8 @@ namespace MCGalaxy.Network {
                 return true;
             } else {
                 foreach (string chan in bot.opchannels) {
-                    if (!userMap.TryGetValue(chan, out chanNicks)) continue;
+                    chanNicks = GetNicks(chan);
+                    if (chanNicks.Count == 0) continue;
                     
                     index = GetNickIndex(userNick, chanNicks);
                     if (index != -1) return true;
