@@ -50,11 +50,16 @@ namespace MCGalaxy {
                 }
                 if (!isFiltered) continue;
 
-                // If a bad word is found anywhere in the word, replace the word
-                int length = words[i].Length;               
-                words[i] = "&c[&fBlocked&c]&f";
+                // If a bad word is found anywhere in the word, replace the word            
+                words[i] = Replace(words[i]);
             }            
             return String.Join(" ", words);
+        }
+        
+        static string Replace(string word) {
+            string replacement = Server.Config.ProfanityReplacement;
+            // for * repeat to ****
+            return replacement.Length == 1 ? new string(replacement[0], word.Length) : replacement;
         }
         
         static void InitReduceTable() {

@@ -201,6 +201,8 @@ namespace MCGalaxy {
         internal List<string> DisabledChatTokens = new List<string>();
         [ConfigBool("profanity-filter", "Other", false)]
         public bool ProfanityFiltering = false;
+        [ConfigString("profanity-replacement", "Other", "*")]
+        public string ProfanityReplacement = "*";
         [ConfigString("host-state", "Other", "Alive")]
         public string ConsoleName = "Alive";
         
