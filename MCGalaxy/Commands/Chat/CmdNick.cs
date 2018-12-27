@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Chat.MessageFrom(who, "λNICK %Shad their custom nick reset");
                 who.DisplayName = who.truename;
             } else {
-                if (nick.Length >= 30) { p.Message("Nick must be under 30 letters."); return; }     
+                if (Colors.Strip(nick).Length >= 30) { p.Message("Nick must be under 30 letters."); return; }
                 
                 Chat.MessageFrom(who, "λNICK %Shad their nick set to " + who.color + nick);
                 who.DisplayName = nick;

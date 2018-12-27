@@ -102,7 +102,7 @@ namespace MCGalaxy {
         };
 
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
-        static string TokenTime(Player p) { return DateTime.Now.ToString("HH:mm:ss"); }
+        static string TokenTime(Player p) { return DateTime.Now.ToString("hh:mm tt"); }
         static string TokenIRC(Player p) { return Server.Config.IRCServer + " > " + Server.Config.IRCChannels; }
         static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
         static string TokenServerName(Player p) { return Server.Config.Name; }

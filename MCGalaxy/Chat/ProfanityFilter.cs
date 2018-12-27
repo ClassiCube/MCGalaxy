@@ -52,7 +52,7 @@ namespace MCGalaxy {
 
                 // If a bad word is found anywhere in the word, replace the word
                 int length = words[i].Length;               
-                words[i] = new String('*', length);
+                words[i] = "&c[&fBlocked&c]&f";
             }            
             return String.Join(" ", words);
         }
