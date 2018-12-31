@@ -39,13 +39,12 @@ namespace MCGalaxy.Games {
                 
                 if (secs >= floodDelaySecs) {
                     if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
-                        Logger.Log(LogType.GameActivity, "[Lava Survival] Layer " +curLayer + " flooding.");
                         ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
                         Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
                         curLayer++;
                     } else if (!layerMode && secs == floodDelaySecs) {
                         Map.Message("&4Look out, here comes the flood!");
-                        Logger.Log(LogType.GameActivity, "[Lava Survival] Map flooding.");
+                        Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
                         Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
                     }
                     
