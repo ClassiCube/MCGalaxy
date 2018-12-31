@@ -25,10 +25,12 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
+        public override void Use(Player p, string message, CommandData data) {          
             if (!p.Supports(CpeExt.ClickDistance)) {
                 p.Message("Your client doesn't support changing your reach distance."); return;
+            }
+            if (message.Length == 0) {
+                p.Message("Your reach distance is {0} blocks", p.ReachDistance); return;
             }
             
             float dist = 0;
