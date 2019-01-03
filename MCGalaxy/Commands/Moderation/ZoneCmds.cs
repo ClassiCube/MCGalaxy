@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
             Zone z = new Zone();
             z.Config.Name = args[offset];
             if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, data, p.level)) return;
-
+            
             p.Message("Creating zone " + z.ColoredName);
             p.Message("Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for %SNew zone", z, AddZone);

@@ -29,23 +29,32 @@ namespace MCGalaxy.Commands.World {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidMapName(p, message)) return;
             
-            string path = Paths.ImportsDir + message;
             if (!Directory.Exists(Paths.ImportsDir)) {
                 Directory.CreateDirectory(Paths.ImportsDir);
             }
             
-            IMapImporter importer = IMapImporter.Find(ref path);
-            if (importer != null) {
-                Import(p, path, message, importer);
+            if (message.CaselessEq("all")) {
+                string[] maps = Directory.GetFiles(Paths.ImportsDir);
+                foreach (string map in maps) {
+                    Import(p, Path.GetFileName(map));
+                }
             } else {
-                string formats = IMapImporter.Formats.Join(imp => imp.Extension);
-                p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
+                Import(p, message);
             }
         }
         
-        void Import(Player p, string path, string map, IMapImporter importer) {
+        static void Import(Player p, string map) {
+            string path = Paths.ImportsDir + map;
+            IMapImporter importer = IMapImporter.Find(ref path);
+            
+            if (importer == null) {
+                string formats = IMapImporter.Formats.Join(imp => imp.Extension);
+                p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
+            }
+            
             if (LevelInfo.MapExists(map)) {
-                p.Message("%WMap {0} already exists. Try renaming the file to something else before importing.", map);
+                p.Message("%WMap {0} already exists. Rename the file to something else before importing", 
+            	          Path.GetFileNameWithoutExtension(map));
                 return;
             }
             try {
@@ -58,17 +67,20 @@ namespace MCGalaxy.Commands.World {
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error importing map", ex);
-                p.Message("%WMap conversion failed. See error logs."); 
+                p.Message("%WImporting map {0} failed. See error logs.", map);
                 return;
             }
-            p.Message("Converted map!");
+            p.Message("Successfully imported map {0}!", map);
         }
         
         public override void Help(Player p) {
+            p.Message("%T/Import all");
+            p.Message("%HImports every map in /extra/import/ folder");
             p.Message("%T/Import [name]");
             p.Message("%HImports a map file with that name.");
-            p.Message("%HSee %T/Help Import formats %Hfor supported formats");
             p.Message("  %HNote: Only loads maps from the /extra/import/ folder");
+            p.Message("%HSee %T/Help Import formats %Hfor supported formats");
+            
         }
         
         public override void Help(Player p, string message) {
