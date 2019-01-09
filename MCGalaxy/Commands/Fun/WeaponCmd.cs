@@ -21,25 +21,29 @@ using System.Threading;
 using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Fun {
-    public abstract class WeaponCmd : Command2 {       
+    public abstract class WeaponCmd : Command2 {
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         protected abstract string Weapon { get; }
         
+        protected void Disable(Player p) {
+            p.aiming = false;
+            p.ClearBlockchange();
+            p.Message(Weapon + " disabled");
+        }        
+        static bool hookedPlayerClick;
+        
         public override void Use(Player p, string message, CommandData data) {
             if (!p.level.Config.Guns) {
                 p.Message(Weapon + "s cannot be used on this map!"); return;
             }
-
             if (p.aiming && message.Length == 0) {
-                p.aiming = false;
-                p.ClearBlockchange();
-                p.Message(Weapon + " disabled");
-                return;
+                Disable(p); return;
             }
 
             WeaponType weaponType = GetWeaponType(p, message);
@@ -47,12 +51,23 @@ namespace MCGalaxy.Commands.Fun {
             
             p.blockchangeObject = weaponType;
             p.ClearBlockchange();
-            p.Blockchange += PlacedMark;
-
-            p.Message(Weapon + " engaged, fire at will");
+            bool hasPlayerClick = p.Supports(CpeExt.PlayerClick);
+            
+            if (hasPlayerClick) {
+                if (!hookedPlayerClick) {
+                    OnPlayerClickEvent.Register(PlayerClickCallback, Priority.Low);
+                    hookedPlayerClick = true;
+                }
+                p.Message(Weapon + " engaged, click to fire at will");
+            } else {
+                p.Blockchange += BlockClickCallback;
+                p.Message(Weapon + " engaged, fire at will");
+            }            
+            
             if (p.aiming) return;
-
             p.aiming = true;
+            if (hasPlayerClick) return;
+            
             AimState state = new AimState();
             state.player = p;
             SchedulerTask task = new SchedulerTask(AimCallback, state, TimeSpan.Zero, true);
@@ -91,7 +106,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static void DoAim(AimState state) {
             Player p = state.player;
-            Vec3F32 dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
+            Vec3F32 dir = DirUtils.GetDirVector(p.Rot.RotY, p.Rot.HeadX);
             ushort x = (ushort)Math.Round(p.Pos.BlockX + dir.X * 3);
             ushort y = (ushort)Math.Round(p.Pos.BlockY + dir.Y * 3);
             ushort z = (ushort)Math.Round(p.Pos.BlockZ + dir.Z * 3);
@@ -129,8 +144,26 @@ namespace MCGalaxy.Commands.Fun {
             if (lvl.IsAirAt(pos.X, pos.Y, pos.Z)) glassCoords.Add(pos);
         }
         
-        protected abstract void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block);
+        void BlockClickCallback(Player p, ushort x, ushort y, ushort z, BlockID block) {
+            p.RevertBlock(x, y, z);
+            if (!p.level.Config.Guns) { Disable(p); return; }
+            if (!CommandParser.IsBlockAllowed(p, "use", block)) return;
+
+            OnActivated(p, p.Rot.RotY, p.Rot.HeadX, block);
+        }
         
+        void PlayerClickCallback(Player p, MouseButton btn, MouseAction action,
+                                 ushort yaw, ushort pitch, byte entity,
+                                 ushort x, ushort y, ushort z, TargetBlockFace face) {
+            if (!p.aiming || btn != MouseButton.Left || action != MouseAction.Pressed) return;
+            if (!p.level.Config.Guns) { Disable(p); return; }
+            
+            BlockID held = p.GetHeldBlock();
+            if (!CommandParser.IsBlockAllowed(p, "use", held)) return;
+            OnActivated(p, (byte)(yaw >> 8), (byte)(pitch >> 8), held);
+        }
+        
+        protected abstract void OnActivated(Player p, byte yaw, byte pitch, BlockID block);
         
         protected class WeaponArgs {
             public Player player;

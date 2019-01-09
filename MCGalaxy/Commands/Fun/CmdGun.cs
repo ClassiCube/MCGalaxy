@@ -27,18 +27,14 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Gun"; } }
         protected override string Weapon { get { return "Gun"; } }
         
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block) {
-            p.RevertBlock(x, y, z);
-            if (!p.level.Config.Guns) { p.ClearBlockchange(); return; }
-            if (!CommandParser.IsBlockAllowed(p, "use", block)) return;
-
+        protected override void OnActivated(Player p, byte yaw, byte pitch, BlockID block) {
             WeaponArgs args = new WeaponArgs();
             args.player = p;
-            args.block = block;
+            args.block  = block;
             args.weaponType = (WeaponType)p.blockchangeObject;
             
             args.start = MakePos(p);
-            args.dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
+            args.dir = DirUtils.GetDirVector(yaw, pitch);
             args.pos = args.PosAt(3);
             args.iterations = 4;
 

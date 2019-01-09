@@ -28,14 +28,10 @@ namespace MCGalaxy.Commands.Fun {
         public override string name { get { return "Missile"; } }
         protected override string Weapon { get { return "Missile"; } }
 
-        protected override void PlacedMark(Player p, ushort x, ushort y, ushort z, BlockID block) {
+        protected override void OnActivated(Player p, byte yaw, byte pitch, BlockID block) {
             if (!p.staticCommands) {
                 p.ClearBlockchange();
                 p.aiming = false;
-            }
-            p.RevertBlock(x, y, z);
-            if (!p.level.Config.Guns || !CommandParser.IsBlockAllowed(p, "place", block)) {
-                p.ClearBlockchange(); return;
             }
             
             WeaponArgs args = new WeaponArgs();
@@ -78,7 +74,7 @@ namespace MCGalaxy.Commands.Fun {
         static Vec3U16 MissileTarget(WeaponArgs args) {
             Player p = args.player;
             args.start = MakePos(p);
-            args.dir = DirUtils.GetFlatDirVector(p.Rot.RotY, p.Rot.HeadX);
+            args.dir = DirUtils.GetDirVector(p.Rot.RotY, p.Rot.HeadX);
             int i;
             
             for (i = 1; ; i++) {
