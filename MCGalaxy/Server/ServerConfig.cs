@@ -78,6 +78,8 @@ namespace MCGalaxy {
         public bool CheckForUpdates = true;
         [ConfigBool("enable-cpe", "Server", true)]
         public bool EnableCPE = true;
+        [ConfigBool("checkpoints-respawn-clientside", "Other", true)]
+        public bool CheckpointsRespawnClientside = true;
         
         [ConfigInt("rplimit", "Other", 500, 0, 50000)]
         public int PhysicsRestartLimit = 500;

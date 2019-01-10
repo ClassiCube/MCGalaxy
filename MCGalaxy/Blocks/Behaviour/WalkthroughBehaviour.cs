@@ -38,7 +38,7 @@ namespace MCGalaxy.Blocks {
         internal static bool Train(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (!p.trainInvincible && p.level.Config.KillerBlocks) p.HandleDeath(Block.Train);
             return true;
-        }       
+        }
         
         internal static bool DoPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
             if (p.level.PosToInt(x, y, z) == p.lastWalkthrough) return true;
@@ -59,8 +59,10 @@ namespace MCGalaxy.Blocks {
             if (index != p.lastCheckpointIndex) {
                 Position pos = p.Pos;
                 pos.X = x * 32 + 16; pos.Z = z * 32 + 16;
-                p.SendPos(Entities.SelfID, pos, p.Rot);
-                Entities.Spawn(p, p);
+                if (Server.Config.CheckpointsRespawnClientside) {
+                    p.SendPos(Entities.SelfID, pos, p.Rot);
+                    Entities.Spawn(p, p);
+                }
                 p.lastCheckpointIndex = index;
             }
             return true;
