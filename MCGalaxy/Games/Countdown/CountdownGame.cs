@@ -128,13 +128,13 @@ namespace MCGalaxy.Games {
                 squaresLeft.Add(new SquarePos(xx, zz));
             }
             
-            bulk.Send(true);
+            bulk.Flush();
         }        
         
         void SetBoardOpening(BlockID block) {
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
             Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, block);
-            bulk.Send(true);
+            bulk.Flush();
         }
         
         void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {

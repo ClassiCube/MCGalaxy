@@ -80,7 +80,7 @@ namespace MCGalaxy {
                     BlockID block = (BlockID)(flags & blockMask);
                     bulkSender.Add(index, block);
                 }
-                bulkSender.Send(true);
+                bulkSender.Flush();
                 RemoveRange(0, count);
             } catch (Exception e)  {
                 Logger.LogError(e);

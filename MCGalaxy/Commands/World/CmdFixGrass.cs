@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.World {
                 }
                 index++;
             }
-            buffer.Send(true);
+            buffer.Flush();
         }
         
         static void FixLight(Player p, Level lvl, ref int totalFixed) {
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.World {
                 }
                 index++;
             }
-            buffer.Send(true);
+            buffer.Flush();
         }
 
         public override void Help(Player p) {

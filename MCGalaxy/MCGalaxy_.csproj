@@ -505,6 +505,8 @@
     <Compile Include="Games\TntWars\TWGame.Round.cs" />
     <Compile Include="Games\TntWars\TWGame.cs" />
     <Compile Include="Games\TntWars\TWConfig.cs" />
+    <Compile Include="Games\Weapons\Weapon.cs" />
+    <Compile Include="Games\Weapons\Guns.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.DB.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.Round.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.cs" />
@@ -718,6 +720,7 @@
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Config\Permissions" />
     <Folder Include="Database\Stats" />
+    <Folder Include="Games\Weapons" />
     <Folder Include="Games\RoundsGame" />
     <Folder Include="Generator\Realistic" />
     <Folder Include="Network\Heartbeat" />

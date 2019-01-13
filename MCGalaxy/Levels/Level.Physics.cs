@@ -198,7 +198,7 @@ namespace MCGalaxy {
             }
             
             if (bulkSender != null)
-                bulkSender.Send(true);
+                bulkSender.Flush();
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         

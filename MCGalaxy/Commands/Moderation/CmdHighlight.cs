@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Moderation {
                            int index = p.level.PosToInt(P.X, P.Y, P.Z);
                            buffer.Add(index, P.Block);
                        });
-            buffer.Send(true);
+            buffer.Flush();
             
             if (op.found) {
                 p.Message("Now highlighting past &b{0} %Sfor {1}",

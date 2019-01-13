@@ -192,9 +192,8 @@ namespace MCGalaxy {
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.aiming) continue;
-                pl.aiming = false;
-                pl.ClearBlockchange();
+                if (pl.level != lvl || pl.weapon == null) continue;
+                pl.weapon.Disable();
             }
         }
         

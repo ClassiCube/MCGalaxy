@@ -39,13 +39,12 @@ namespace MCGalaxy.Network {
         /// <summary> Constructs a bulk sender that will only send block changes to that player. </summary>
         public BufferedBlockSender(Player player) {
             this.player = player;
-            this.level = player.level;
+            this.level  = player.level;
         }
         
-        /// <summary> Adds a block change, and potentially sends block change packets if
-        /// number of buffered block changes has reached the limit. </summary>
-        /// <returns> Whether block change packets were actually sent. </returns>
-        public bool Add(int index, BlockID block) {
+        /// <summary> Adds a block change to list of buffered changes. </summary>
+        /// <remarks> When buffer limit is reached, calls Flush(), resetting buffered list. </remarks>
+        public void Add(int index, BlockID block) {
             indices[count] = index;
             if (Block.IsPhysicsType(block)) {
                 blocks[count] = Block.Convert(block);
@@ -54,20 +53,16 @@ namespace MCGalaxy.Network {
             }
             
             count++;
-            return Send(false);
+            if (count == 256) Flush();
         }
         
-        /// <summary> Sends the block change packets if either 'force' is true,
-        /// or the number of buffered block changes has reached the limit. </summary>
-        /// <returns> Whether block change packets were actually sent. </returns>
-        public bool Send(bool force) {
-            if (count > 0 && (force || count == 256)) {
-                if (player != null) SendPlayer();
-                else SendLevel();
-                count = 0;
-                return true;
-            }
-            return false;
+        /// <summary> Sends buffered block change packets to target player(s). </summary>
+        public void Flush() {
+            if (count == 0) return;
+            
+            if (player != null) SendPlayer();
+            else SendLevel();
+            count = 0;
         }
         
         void SendLevel() {

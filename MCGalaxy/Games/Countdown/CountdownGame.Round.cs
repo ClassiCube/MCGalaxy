@@ -41,7 +41,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             SetBoardOpening(Block.Air);
-            bulk.Send(true);
+            bulk.Flush();
             if (!Running) return;
             
             BeginRound();
@@ -112,7 +112,7 @@ namespace MCGalaxy.Games {
             Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.Air);
             Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air);
             Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air);
-            bulk.Send(true);
+            bulk.Flush();
         }
         
         void RemoveAllSquareBorders() {
@@ -123,7 +123,7 @@ namespace MCGalaxy.Games {
             for (int zz = 6 - 1; zz <= Map.Length - 6; zz += 3) {
                 Cuboid(4, 4, zz, maxX - 4, 4, zz, Block.Air);
             }
-            bulk.Send(true);
+            bulk.Flush();
         }
         
         void RemoveSquares() {
@@ -142,19 +142,19 @@ namespace MCGalaxy.Games {
         void RemoveSquare(SquarePos pos) {
             ushort x1 = pos.X, x2 = (ushort)(pos.X + 1), z1 = pos.Z, z2 = (ushort)(pos.Z + 1);
             Cuboid(x1, 4, z1, x2, 4, z2, Block.Yellow);
-            bulk.Send(true);
+            bulk.Flush();
             
             Thread.Sleep(Interval);
             Cuboid(x1, 4, z1, x2, 4, z2, Block.Orange);
-            bulk.Send(true);
+            bulk.Flush();
             
             Thread.Sleep(Interval);
             Cuboid(x1, 4, z1, x2, 4, z2, Block.Red);
-            bulk.Send(true);
+            bulk.Flush();
             
             Thread.Sleep(Interval);
             Cuboid(x1, 4, z1, x2, 4, z2, Block.Air);
-            bulk.Send(true);
+            bulk.Flush();
             
             // Remove glass borders, if neighbouring squares were previously removed
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;

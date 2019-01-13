@@ -87,7 +87,6 @@ namespace MCGalaxy.Commands.Fun {
         
         class AimState {
             public Player player;
-            public Position oldPos = default(Position);
             public List<Vec3U16> lastGlass = new List<Vec3U16>();
             public List<Vec3U16> glassCoords = new List<Vec3U16>();
         }

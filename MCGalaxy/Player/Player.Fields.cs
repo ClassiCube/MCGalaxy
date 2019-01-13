@@ -126,6 +126,7 @@ namespace MCGalaxy {
         public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
 
         public bool aiming;
+        public Weapon weapon;
         public bool isFlying;
 
         public bool joker;

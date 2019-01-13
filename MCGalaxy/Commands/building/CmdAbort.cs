@@ -31,7 +31,6 @@ namespace MCGalaxy.Commands.Building {
             p.staticCommands = false;
             p.deleteMode = false;
             p.ModeBlock = Block.Invalid;
-            p.aiming = false;
             p.onTrain = false;
             p.isFlying = false;
             p.BrushName = "normal";
@@ -39,6 +38,7 @@ namespace MCGalaxy.Commands.Building {
             p.Transform = NoTransform.Instance;
             
             p.level.blockqueue.RemoveAll(p);
+            if (p.weapon != null) p.weapon.Disable();
             p.Message("Every toggle or action was aborted.");
         }
         

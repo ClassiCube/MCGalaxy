@@ -239,7 +239,7 @@ namespace MCGalaxy {
                 LastAction = DateTime.UtcNow;
                 IsAfk = false;
                 isFlying = false;
-                aiming = false;
+                if (weapon != null) weapon.Disable();
                 
                 if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
                 discMsg = Colors.Escape(discMsg);
