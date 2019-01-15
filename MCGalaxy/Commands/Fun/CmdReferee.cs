@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (p.Game.Referee) {
                     p.Send(Packet.HackControl(true, true, true, true, true, -1));
                 } else {
-                    p.Send(Hacks.MakeHackControl(p, p.level.GetMotd(p)));
+                    p.Send(Hacks.MakeHackControl(p, p.GetMotd()));
                 }
             }
         }

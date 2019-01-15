@@ -24,29 +24,29 @@ namespace MCGalaxy {
     public static class Hacks {
         
         /// <summary> Returns whether the player is currently able to use any hacks at all. </summary>
-        public static bool CanUseHacks(Player p, Level lvl) {
-            byte[] packet = MakeHackControl(p, lvl.GetMotd(p));
+        public static bool CanUseHacks(Player p) {
+            byte[] packet = MakeHackControl(p, p.GetMotd());
             return packet[1] != 0 && packet[2] != 0 && packet[3] != 0 && packet[4] != 0 && packet[5] != 0;
         }
         
         /// <summary> Returns whether the player is currently able to fly. </summary>
-        public static bool CanUseFly(Player p, Level lvl) {
-            return MakeHackControl(p, lvl.GetMotd(p))[1] != 0;
+        public static bool CanUseFly(Player p) {
+            return MakeHackControl(p, p.GetMotd())[1] != 0;
         }
         
         /// <summary> Returns whether the player is currently able to use noclip. </summary>
-        public static bool CanUseNoclip(Player p, Level lvl) {
-            return MakeHackControl(p, lvl.GetMotd(p))[2] != 0;
+        public static bool CanUseNoclip(Player p) {
+            return MakeHackControl(p, p.GetMotd())[2] != 0;
         }
         
         /// <summary> Returns whether the player is currently able to move at faster speeds. </summary>
-        public static bool CanUseSpeed(Player p, Level lvl) {
-            return MakeHackControl(p, lvl.GetMotd(p))[3] != 0;
+        public static bool CanUseSpeed(Player p) {
+            return MakeHackControl(p, p.GetMotd())[3] != 0;
         }
         
         /// <summary> Returns whether the player is currently able to respawn. </summary>
-        public static bool CanUseRespawn(Player p, Level lvl) {
-            return MakeHackControl(p, lvl.GetMotd(p))[4] != 0;
+        public static bool CanUseRespawn(Player p) {
+            return MakeHackControl(p, p.GetMotd())[4] != 0;
         }
         
         /// <summary> Parses the MOTD flags and returns resulting HackControl packet. </summary>

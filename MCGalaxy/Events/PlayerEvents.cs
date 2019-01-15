@@ -209,12 +209,13 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnSendingMotd(Player p, ref string motd);
-    /// <summary> Called when MOTD is being sent to a player. </summary>
-    public sealed class OnSendingMotdEvent : IEvent<OnSendingMotd> {
+    public delegate void OnGettingMotd(Player p, ref string motd);
+    /// <summary> Called when MOTD is being retrieved for a player. </summary>
+    /// <remarks> e.g. You can use this event to make one player always have +hax motd. </remarks>
+    public sealed class OnGettingMotdEvent : IEvent<OnGettingMotd> {
         
         public static void Call(Player p, ref string motd) {
-            IEvent<OnSendingMotd>[] items = handlers.Items;
+            IEvent<OnGettingMotd>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
                 try { items[i].method(p, ref motd); } 

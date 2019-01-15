@@ -71,7 +71,7 @@ namespace MCGalaxy.Core {
 			if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
             p.SendCurrentEnv();
             
-            if (p.isFlying && !Hacks.CanUseFly(p, p.level)) {
+            if (p.isFlying && !Hacks.CanUseFly(p)) {
                 p.Message("You cannot use %T/Fly %Son this map.");
                 p.isFlying = false;
             }

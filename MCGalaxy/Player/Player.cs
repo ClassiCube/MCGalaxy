@@ -106,6 +106,18 @@ namespace MCGalaxy {
             return BlockBindings[RawHeldBlock];
         }
         
+        public string GetMotd() {
+            Zone zone = ZoneIn;
+            string motd = zone == null ? "ignore" : zone.Config.MOTD;
+            
+            // fallback to level MOTD, then rank MOTD, then server MOTD            
+            if (motd == "ignore") motd = level.Config.MOTD;           
+            if (motd == "ignore") motd = String.IsNullOrEmpty(group.MOTD) ? Server.Config.MOTD : group.MOTD;
+            
+            OnGettingMotdEvent.Call(this, ref motd);
+            return motd;
+        }
+        
         public void SetPrefix() {
             prefix = Game.Referee ? "&2[Ref] " : "";
             if (GroupPrefix.Length > 0) { prefix += GroupPrefix + color; }

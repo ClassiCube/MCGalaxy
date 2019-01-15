@@ -29,7 +29,7 @@ namespace MCGalaxy.Games {
         static TimeSpan interval = TimeSpan.FromSeconds(5);
         
         public static bool DetectNoclip(Player p, Position newPos) {
-            if (p.Game.Referee || Hacks.CanUseNoclip(p, p.level)) return false;
+            if (p.Game.Referee || Hacks.CanUseNoclip(p)) return false;
             if (!p.IsLikelyInsideBlock() || p.Game.NoclipLog.AddSpamEntry(5, interval)) return false;
             
             Warn(ref p.Game.LastNoclipWarn, p, "noclip");
@@ -37,7 +37,7 @@ namespace MCGalaxy.Games {
         }
         
         public static bool DetectSpeedhack(Player p, Position newPos, float moveDist) {
-            if (p.Game.Referee || Hacks.CanUseSpeed(p, p.level)) return false;
+            if (p.Game.Referee || Hacks.CanUseSpeed(p)) return false;
             int dx = Math.Abs(p.Pos.X - newPos.X), dz = Math.Abs(p.Pos.Z - newPos.Z);
             
             int maxMove = (int)(moveDist * 32);

@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Misc {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (!Hacks.CanUseFly(p, p.level)) {
+            if (!Hacks.CanUseFly(p)) {
                 p.Message("You cannot use %T/Fly %Son this map.");
                 p.isFlying = false; return;
             }

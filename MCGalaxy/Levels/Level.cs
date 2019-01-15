@@ -24,6 +24,7 @@ using MCGalaxy.Bots;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Levels.IO;
@@ -96,15 +97,6 @@ namespace MCGalaxy {
             }
         }
         
-        public string GetMotd(Player p) {
-            Zone zone = p.ZoneIn;
-            string zoneMOTD = zone == null ? null : zone.Config.MOTD;
-            if (zoneMOTD != null && zoneMOTD != "ignore") return zoneMOTD;
-            
-            if (Config.MOTD != "ignore") return Config.MOTD;
-            return String.IsNullOrEmpty(p.group.MOTD) ? Server.Config.MOTD : p.group.MOTD;
-        }
-        
         public Zone FindZoneExact(string name) {
             Zone[] zones = Zones.Items;
             foreach (Zone zone in zones) {
@@ -152,7 +144,7 @@ namespace MCGalaxy {
                     BotsFile.Save(this);
                     PlayerBot.RemoveLoadedBots(this, false);
                 }
-            } catch (Exception ex) { 
+            } catch (Exception ex) {
                 Logger.LogError("Error saving bots", ex);
             }
 
@@ -234,7 +226,7 @@ namespace MCGalaxy {
             File.Copy(path + ".backup", path);
             SaveSettings();
 
-            Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})", 
+            Logger.Log(LogType.SystemActivity, "SAVED: Level \"{0}\". ({1}/{2}/{3})",
                        name, players.Count, PlayerInfo.Online.Count, Server.Config.MaxPlayers);
             Changed = false;
         }
@@ -246,7 +238,7 @@ namespace MCGalaxy {
         public string Backup(bool force = false, string backup = "") {
             if (!backedup || force) {
                 string backupPath = LevelInfo.BackupBasePath(name);
-                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);                
+                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
                 int next = LevelInfo.LatestBackup(name) + 1;
                 if (backup.Length == 0) backup = next.ToString();
 
@@ -299,7 +291,7 @@ namespace MCGalaxy {
             lvl.Config.JailZ = (ushort)(lvl.spawnz * 32);
             lvl.Config.jailrotx = lvl.rotx;
             lvl.Config.jailroty = lvl.roty;
-                
+            
             try {
                 string propsPath = LevelInfo.PropsPath(lvl.MapName);
                 bool propsExisted = lvl.Config.Load(propsPath);
@@ -364,18 +356,18 @@ namespace MCGalaxy {
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct UndoPos {
-            public int Index; 
+            public int Index;
             int flags;
             BlockRaw oldRaw, newRaw;
             
-            public BlockID OldBlock { 
+            public BlockID OldBlock {
                 get { return (BlockID)(oldRaw | ((flags & 0x03)       << Block.ExtendedShift)); }
             }
-            public BlockID NewBlock { 
+            public BlockID NewBlock {
                 get { return (BlockID)(newRaw | (((flags & 0xC >> 2)) << Block.ExtendedShift)); }
             }
-            public DateTime Time { 
-                get { return Server.StartTime.AddTicks((flags >> 4) * TimeSpan.TicksPerSecond); } 
+            public DateTime Time {
+                get { return Server.StartTime.AddTicks((flags >> 4) * TimeSpan.TicksPerSecond); }
             }
             
             public void SetData(BlockID oldBlock, BlockID newBlock) {
@@ -396,13 +388,13 @@ namespace MCGalaxy {
         public void UpdateBlockProps() {
             LoadDefaultProps();
             string propsPath = BlockProps.PropsPath("_" + MapName);
-                
+            
             // backwards compatibility with older versions
             if (!File.Exists(propsPath)) {
                 BlockProps.Load("lvl_" + MapName, Props, 2, true);
             } else {
                 BlockProps.Load("_" + MapName,    Props, 2, false);
-            }            
+            }
         }
         
         public void UpdateBlockHandlers() {
@@ -412,7 +404,7 @@ namespace MCGalaxy {
         }
         
         public void UpdateBlockHandler(BlockID block) {
-            bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));           
+            bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
             deleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
             placeHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
             walkthroughHandlers[block]  = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
