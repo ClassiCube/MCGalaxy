@@ -100,25 +100,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void UpdateDatabase(Player p, MBArgs args, ushort x, ushort y, ushort z) {
-            args.Message = args.Message.Replace("'", "\\'");
-            args.Message = Colors.Escape(args.Message);
-            args.Message = args.Message.UnicodeToCp437();
-            
             string map = p.level.name;
             object locker = ThreadSafeCache.DBCache.GetLocker(map);
             
             lock (locker) {
-                Database.Backend.CreateTable("Messages" + map, LevelDB.createMessages);
-                p.level.hasMessageBlocks = true;
-                
-                int count = Database.CountRows("Messages" + map,
-                                               "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);                
-                if (count == 0) {
-                    Database.Backend.AddRow("Messages" + map, "X, Y, Z, Message", x, y, z, args.Message);
-                } else {
-                    Database.Backend.UpdateRows("Messages" + map, "Message=@3",
-                                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, args.Message);
-                }
+                MessageBlock.Set(map, x, y, z, args.Message);
             }
         }
 

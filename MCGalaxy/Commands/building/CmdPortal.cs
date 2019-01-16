@@ -108,29 +108,18 @@ namespace MCGalaxy.Commands.Building {
         
         void ExitChange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             p.ClearBlockchange();
-            p.RevertBlock(x, y, z);
+            p.c(x, y, z);
+            
             PortalArgs args = (PortalArgs)p.blockchangeObject;
-            string exitMap = p.level.name.UnicodeToCp437();
+            string exitMap = p.level.name;
 
             foreach (PortalPos P in args.Entries) {
                 string map = P.Map;
-                if (map == p.level.name) { p.SendBlockchange(P.x, P.y, P.z, args.Block); }
+                if (map == p.level.name) p.RevertBlock(P.x, P.y, P.z);
                 object locker = ThreadSafeCache.DBCache.GetLocker(map);
                 
                 lock (locker) {
-                    Database.Backend.CreateTable("Portals" + map, LevelDB.createPortals);
-                    Level lvl = LevelInfo.FindExact(map);
-                    if (lvl != null) lvl.hasPortals = true;
-
-                    int count = Database.CountRows("Portals" + map,
-                                                   "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z);                    
-                    if (count == 0) {
-                        Database.Backend.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-                                                P.x, P.y, P.z, x, y, z, exitMap);
-                    } else {
-                        Database.Backend.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-                                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", P.x, P.y, P.z, x, y, z, exitMap);
-                    }
+                    Portal.Set(map, P.x, P.y, P.z, x, y, z, exitMap);
                 }
             }
 

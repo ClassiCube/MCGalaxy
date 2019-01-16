@@ -55,6 +55,7 @@ namespace MCGalaxy.Blocks.Extended {
             return true;
         }
         
+        
         internal static object ReadCoords(IDataRecord record, object arg) {
             Vec3U16 pos;
             pos.X = (ushort)record.GetInt32(0);
@@ -65,12 +66,7 @@ namespace MCGalaxy.Blocks.Extended {
             return arg;
         }
         
-        internal static List<Vec3U16> GetAllCoords(string map) {
-            List<Vec3U16> coords = new List<Vec3U16>();
-            Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
-            return coords;
-        }
-        
+        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
         static PortalExit ParseExit(IDataRecord record) {
             PortalExit data = new PortalExit();
             data.Map = record.GetText(0).Cp437ToUnicode();
@@ -86,14 +82,19 @@ namespace MCGalaxy.Blocks.Extended {
             return arg;
         }
         
+        
+        internal static List<Vec3U16> GetAllCoords(string map) {
+            List<Vec3U16> coords = new List<Vec3U16>();
+            Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
+            return coords;
+        }
+
         public static List<PortalExit> GetAll(string map) {
             List<PortalExit> exits = new List<PortalExit>();
-            Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
-                                      exits, ReadAllExits);
+            Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
             return exits;
         }
         
-        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
             object raw = Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
                                                    null, ReadExit,
@@ -101,9 +102,28 @@ namespace MCGalaxy.Blocks.Extended {
             return (PortalExit)raw;
         }
         
-        internal static void Delete(string map, ushort x, ushort y, ushort z) {
+        public static void Delete(string map, ushort x, ushort y, ushort z) {
             Database.Backend.DeleteRows("Portals" + map,
                                         "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+        }
+        
+        public static void Set(string map, ushort x, ushort y, ushort z, 
+                               ushort exitX, ushort exitY, ushort exitZ, string exitMap) {
+            Database.Backend.CreateTable("Portals" + map, LevelDB.createPortals);
+            int count = Database.CountRows("Portals" + map,
+                                           "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            
+            if (count == 0) {
+                Database.Backend.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
+                                        x, y, z, exitX, exitY, exitZ, exitMap);
+            } else {
+                Database.Backend.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
+                                            "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
+                                            exitX, exitY, exitZ, exitMap);
+            }
+            
+            Level lvl = LevelInfo.FindExact(map);
+            if (lvl != null) lvl.hasPortals = true;
         }
     }
 }

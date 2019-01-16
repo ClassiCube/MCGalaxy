@@ -30,7 +30,7 @@ namespace MCGalaxy.Blocks.Extended {
             string message = Get(p.level.MapName, x, y, z);
             if (message == null) return false;
             message = message.Replace("@p", p.name);
-                
+            
             if (message != p.prevMsg || (alwaysRepeat || Server.Config.RepeatMBs)) {
                 Execute(p, message);
             }
@@ -103,15 +103,15 @@ namespace MCGalaxy.Blocks.Extended {
         }
 
 
-        internal static List<Vec3U16> GetAllCoords(string map) {
+        public static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
             Database.Backend.ReadRows("Messages" + map, "X,Y,Z", coords, Portal.ReadCoords);
             return coords;
         }
         
-        internal static string Get(string map, ushort x, ushort y, ushort z) {
+        public static string Get(string map, ushort x, ushort y, ushort z) {
             string msg = Database.ReadString("Messages" + map, "Message",
-                                            "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+                                             "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
             if (msg == null) return null;
 
             msg = msg.Trim().Replace("\\'", "\'");
@@ -119,9 +119,29 @@ namespace MCGalaxy.Blocks.Extended {
             return msg;
         }
         
-        internal static void Delete(string map, ushort x, ushort y, ushort z) {
-            Database.Backend.DeleteRows("Messages" + map, 
+        public static void Delete(string map, ushort x, ushort y, ushort z) {
+            Database.Backend.DeleteRows("Messages" + map,
                                         "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+        }
+        
+        public static void Set(string map, ushort x, ushort y, ushort z, string contents) {
+            contents = contents.Replace("'", "\\'");
+            contents = Colors.Escape(contents);
+            contents = contents.UnicodeToCp437();
+            
+            Database.Backend.CreateTable("Messages" + map, LevelDB.createMessages);            
+            int count = Database.CountRows("Messages" + map,
+                                           "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            
+            if (count == 0) {
+                Database.Backend.AddRow("Messages" + map, "X, Y, Z, Message", x, y, z, contents);
+            } else {
+                Database.Backend.UpdateRows("Messages" + map, "Message=@3",
+                                            "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, contents);
+            }
+            
+            Level lvl = LevelInfo.FindExact(map);
+            if (lvl != null) lvl.hasMessageBlocks = true;
         }
     }
 }
