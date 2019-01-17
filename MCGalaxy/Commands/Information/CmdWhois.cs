@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using MCGalaxy.Commands.Moderation;
 using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Info {
@@ -24,9 +26,12 @@ namespace MCGalaxy.Commands.Info {
         public override string shortcut { get { return "WhoWas"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
+        
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can see player's IP and if on whitelist") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Admin, "can see player's IP and if on whitelist"),
+                    new CommandPerm(LevelPermission.Admin, "can see all accounts under player's IP") }; }
         }
+        
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("Info"), new CommandAlias("i") }; }
         }
@@ -50,6 +55,22 @@ namespace MCGalaxy.Commands.Info {
                 foreach (OnlineStatPrinter printer in OnlineStat.Stats) {
                     printer(p, who);
                 }
+            }
+            
+            if (!HasExtraPerm(p, data.Rank, 2)) return;
+            string name;
+            if (message.Length == 0) {
+                if (p.IsSuper) { SuperRequiresArgs(p, "IP address"); return; }
+                message = p.ip;
+            } else {
+                message = ModActionCmd.FindIP(p, message, "Clones", out name);
+                if (message == null) return;
+            }
+
+            List<string> accounts = PlayerInfo.FindAccounts(message);
+            if (accounts.Count > 1) {
+            	p.Message("Clones:");
+                p.Message(accounts.Join(alt => PlayerInfo.GetColoredName(p, alt)));
             }
         }
 
