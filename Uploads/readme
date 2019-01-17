@@ -6,9 +6,10 @@ MCGalaxy.exe, MCGalaxy.CLI, MCGalaxy_.dll
 
 
 ---------------------------------------------------------------------------------------------------------------
-MCGalaxy_ infid.dll is a special version of MCGalaxy which increases maximum id in /gb and /lb from 255 to 767.
+MCGalaxy_infid.dll is a special version of MCGalaxy which increases maximum id in /gb and /lb from 255 to 767.
 Replace MCGalaxy_.dll with this file (i.e. rename it to MCGalaxy_.dll) to use it.
 
 You probably don't want this version though, because it slightly reduces performance.
 Using a block over 255 will also make the map use twice as much memory in the client.
+
 You were warned!

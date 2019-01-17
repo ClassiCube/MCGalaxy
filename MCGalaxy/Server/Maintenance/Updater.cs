@@ -30,7 +30,11 @@ namespace MCGalaxy {
         public const string BaseURL = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";
         const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
+        #if TEN_BIT_BLOCKS
+        const string DLLLocation = BaseURL + "Uploads/MCGalaxy_infid.dll?raw=true";
+        #else
         const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
+        #endif
         const string ChangelogLocation = BaseURL + "Changelog.txt";
         const string EXELocation = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
         const string CLILocation = BaseURL + "Uploads/MCGalaxyCLI.exe?raw=true";

@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Building {
         
         void ExitChange(Player p, ushort x, ushort y, ushort z, BlockID block) {
             p.ClearBlockchange();
-            p.c(x, y, z);
+            p.RevertBlock(x, y, z);
             
             PortalArgs args = (PortalArgs)p.blockchangeObject;
             string exitMap = p.level.name;
