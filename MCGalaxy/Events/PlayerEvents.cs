@@ -222,6 +222,21 @@ namespace MCGalaxy.Events.PlayerEvents {
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
+    }
+    
+    public delegate void OnSendingMotd(Player p, ref string motd);
+    /// <summary> Called when MOTD is being sent to a player. </summary>
+    /// <remarks> To change MOTD for a player in general (e.g. for /fly), use OnGettingMotdEvent instead. </remarks>
+    public sealed class OnSendingMotdEvent : IEvent<OnSendingMotd> {
+        
+        public static void Call(Player p, ref string motd) {
+            IEvent<OnSendingMotd>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, ref motd); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
     }   
 
     public delegate void OnPlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning);
