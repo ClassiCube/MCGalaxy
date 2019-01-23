@@ -26,20 +26,24 @@ namespace MCGalaxy.DB {
 
         public const string ColumnDeaths = "totalDeaths";
         public const string ColumnLogins = "totalLogin";
-        public const string ColumnMoney = "Money";
+        public const string ColumnMoney  = "Money";
         public const string ColumnKicked = "totalKicked";
         
-        public const string ColumnColor = "color";
-        public const string ColumnTitle = "title";
+        public const string ColumnColor  = "color";
+        public const string ColumnTitle  = "title";
         public const string ColumnTColor = "title_color";
         
-        public const string ColumnFirstLogin = "FirstLogin";
-        public const string ColumnLastLogin = "LastLogin";
-        public const string ColumnTimeSpent = "TimeSpent";
+        public const string ColumnName = "Name";
+        public const string ColumnIP   = "IP";
+        public const string ColumnID   = "ID";
         
-        public const string ColumnTotalBlocks = "totalBlocks";
+        public const string ColumnFirstLogin = "FirstLogin";
+        public const string ColumnLastLogin  = "LastLogin";
+        public const string ColumnTimeSpent  = "TimeSpent";
+        
+        public const string ColumnTotalBlocks   = "totalBlocks";
         public const string ColumnTotalCuboided = "totalCuboided";
-        public const string ColumnMessages = "Messages";
+        public const string ColumnMessages      = "Messages";
         
         public string Name, Color, Title, TitleColor, IP;
         public DateTime FirstLogin, LastLogin;
@@ -91,9 +95,9 @@ namespace MCGalaxy.DB {
         
         internal static PlayerData Parse(IDataRecord record) {
             PlayerData data = new PlayerData();
-            data.Name = record.GetText("Name");
-            data.IP   = record.GetText("IP");
-            data.DatabaseID = record.GetInt("ID");
+            data.Name = record.GetText(ColumnName);
+            data.IP   = record.GetText(ColumnIP);
+            data.DatabaseID = record.GetInt(ColumnID);
             
             // Backwards compatibility with old format
             string rawTime = record.GetText(ColumnTimeSpent);

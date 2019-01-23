@@ -17,6 +17,7 @@
  */
 using System;
 using System.Data;
+using System.Net;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
@@ -75,7 +76,20 @@ namespace MCGalaxy.Commands.Maintenance {
                 
                 PlayerDB.Update(args[0], PlayerData.ColumnTitle, args[2].UnicodeToCp437());
                 MessageDataChanged(p, args[0], args[1], args[2]);
-            } else if (opt == "modified") {
+            } else if (opt == "ip") {
+                if (args.Length < 3) {
+                    p.Message("A new IP address must be provided."); return;
+                }
+                
+                IPAddress ip;
+                if (!IPAddress.TryParse(args[2], out ip)) {
+                    p.Message("%W\"{0}\" is not a valid IP address.", args[2]); return;
+                }
+                
+                if (who != null) who.ip = args[2];
+                PlayerDB.Update(args[0], PlayerData.ColumnIP, args[2]);
+                MessageDataChanged(p, args[0], args[1], args[2]);
+            }  else if (opt == "modified") {
                 SetInteger(p, args, PlayerData.ColumnTotalBlocks, int.MaxValue, who,
                            v => who.TotalModified = v, type_lo);
             } else if (opt == "drawn") {
@@ -94,13 +108,13 @@ namespace MCGalaxy.Commands.Maintenance {
                 SetInteger(p, args, PlayerData.ColumnMessages, 16777215, who,
                            v => who.TotalMessagesSent = v, type_norm);
             }  else if (opt == "timespent") {
-                SetTimespan(p, args, PlayerData.ColumnTimeSpent, who, 
+                SetTimespan(p, args, PlayerData.ColumnTimeSpent, who,
                             v => who.TotalTime = v);
             } else if (opt == "color") {
-                SetColor(p, args, PlayerData.ColumnColor, who, 
+                SetColor(p, args, PlayerData.ColumnColor, who,
                          v => who.color = (v.Length == 0 ? who.group.Color : v));
             } else if (opt == "titlecolor") {
-                SetColor(p, args, PlayerData.ColumnTColor, who, 
+                SetColor(p, args, PlayerData.ColumnTColor, who,
                          v => who.titlecolor = v);
             } else {
                 p.Message("%WInvalid type");
@@ -208,8 +222,8 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         static void MessageValidTypes(Player p) {
-            p.Message("%HValid types: %SFirstLogin, LastLogin, Logins, Title, Deaths, Money, " +
-                           "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
+            p.Message("%HValid types: %SFirstLogin, LastLogin, Logins, Title, IP, Deaths, Money, " +
+                      "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
         }
         
         public override void Help(Player p) {
