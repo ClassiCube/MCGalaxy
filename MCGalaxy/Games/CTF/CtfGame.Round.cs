@@ -75,12 +75,9 @@ namespace MCGalaxy.Games {
         void ResetPlayerFlag(Player p, CtfData data) {
             Vec3S32 last = data.LastHeadPos;
             ushort x = (ushort)last.X, y = (ushort)last.Y, z = (ushort)last.Z;
-            data.LastHeadPos = default(Vec3S32);
             
-            BlockID origBlock = Map.GetBlock(x, y, z);
-            if (origBlock != Block.Invalid) {
-                Map.BroadcastChange(x, y, z, origBlock);
-            }
+            data.LastHeadPos = default(Vec3S32);            
+            Map.BroadcastRevert(x, y, z);
         }
         
         void DrawPlayerFlag(Player p, CtfData data) {

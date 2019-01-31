@@ -175,10 +175,10 @@ namespace MCGalaxy.Drawing.Ops {
                 if (old == b.Block || !p.group.Blocks[old] || !p.group.Blocks[b.Block]) return;
                 
                 // Check if player can affect block at coords in world
-                AccessController denied = lvl.CanAffect(p, b.X, b.Y, b.Z);
-                if (denied != null) {
+                AccessController denier = lvl.CanAffect(p, b.X, b.Y, b.Z);
+                if (denier != null) {
                     if (p.lastAccessStatus < DateTime.UtcNow) {
-                        denied.CheckDetailed(p);
+                        denier.CheckDetailed(p);
                         p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
                     }
                     return;

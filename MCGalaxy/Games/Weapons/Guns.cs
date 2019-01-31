@@ -52,7 +52,7 @@ namespace MCGalaxy.Games {
             if (args.iterations > 12) {
                 Vec3U16 pos = args.visible[0];
                 args.visible.RemoveAt(0);
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
+                p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
             }
             return true;
         }
@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
             if (args.visible.Count > 0) {
                 Vec3U16 pos = args.visible[0];
                 args.visible.RemoveAt(0);
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
+                p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
             }
             return args.visible.Count > 0;
         }
@@ -88,7 +88,7 @@ namespace MCGalaxy.Games {
                 if (cur != Block.Air && !args.all.Contains(pos) && OnHitBlock(args, pos, cur))
                     return false;
 
-                p.level.Blockchange(pos.X, pos.Y, pos.Z, args.block);
+                p.level.BroadcastChange(pos.X, pos.Y, pos.Z, args.block);
                 args.visible.Add(pos);
                 args.all.Add(pos);
                 
@@ -145,7 +145,7 @@ namespace MCGalaxy.Games {
                 args.all.Clear();
             } else {
                 foreach (Vec3U16 pos in args.visible) {
-                    p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air, true);
+                    p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
                 }
                 args.visible.Clear();
             }

@@ -180,6 +180,8 @@ namespace MCGalaxy {
             return block >= Block.Water && block <= Block.StillLava;
         }
         
+        /// <summary> Returns the AccessController denying the player from changing blocks at the given coordinates. </summary>
+        /// <remarks> If no AccessController denies the player, returns null. </remarks>
         public AccessController CanAffect(Player p, ushort x, ushort y, ushort z) {
             Zone[] zones = Zones.Items;
             if (zones.Length == 0) goto checkRank; // TODO: avoid this
@@ -216,11 +218,11 @@ namespace MCGalaxy {
         
         public bool CheckAffect(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
             if (!p.group.Blocks[old] || !p.group.Blocks[block]) return false;
-            AccessController denied = CanAffect(p, x, y, z);
-            if (denied == null) return true;
+            AccessController denier = CanAffect(p, x, y, z);
+            if (denier == null) return true;
             
             if (p.lastAccessStatus < DateTime.UtcNow) {
-                denied.CheckDetailed(p);
+                denier.CheckDetailed(p);
                 p.lastAccessStatus = DateTime.UtcNow.AddSeconds(2);
             }
             return false;
@@ -232,6 +234,13 @@ namespace MCGalaxy {
             foreach (Player p in players) { 
                 if (p.level == this) p.SendBlockchange(x, y, z, block);
             }
+        }
+        
+        /// <summary> Sends a block update packet to all players in this level. </summary>
+        /// <remarks> The block sent is the current block at the given coordinates. </remarks>
+        public void BroadcastRevert(ushort x, ushort y, ushort z) {
+            BlockID block = GetBlock(x, y, z);
+            if (block != Block.Invalid) BroadcastChange(x, y, z, block);
         }
         
         
