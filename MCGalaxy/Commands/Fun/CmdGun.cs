@@ -31,15 +31,11 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Guns cannot be used on this map!"); return;
             }
             if (p.weapon != null && message.Length == 0) {
-                p.weapon.Disable();
-                p.weapon = null;
-                return;
+                p.weapon.Disable(); return;
             }
 
             Gun gun = GetGun(p, message);
             if (gun == null) { Help(p); return; }
-            
-            p.weapon = gun;
             gun.Enable(p);
         }
         

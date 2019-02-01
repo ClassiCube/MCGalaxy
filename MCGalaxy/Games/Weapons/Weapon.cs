@@ -42,11 +42,12 @@ namespace MCGalaxy.Games {
             }
             this.p = p;
             p.ClearBlockchange();
+            p.weapon = this;            
+            p.Blockchange += BlockClickCallback;
             
             if (p.Supports(CpeExt.PlayerClick)) {
                 p.Message(Name + " engaged, click to fire at will");
-            } else {
-                p.Blockchange += BlockClickCallback;
+            } else {                
                 p.Message(Name + " engaged, fire at will");
                 aimer = new AimBox();
                 aimer.Hook(p);
@@ -67,8 +68,9 @@ namespace MCGalaxy.Games {
             Weapon weapon = p.weapon;
             if (weapon == null) return;
             
+            // always revert block back, client assumes changes always succeed
             p.RevertBlock(x, y, z);
-            // defer to player click handler
+            // defer to player click handler if used
             if (weapon.aimer == null) return;
             
             if (!p.level.Config.Guns) { weapon.Disable(); return; }
