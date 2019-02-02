@@ -26,7 +26,7 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
 
     /// <summary> Represents a weapon which can interact with blocks or players until it dies. </summary>
-    /// <remarks> Activated by clicking through either PlayerClick or a glass box around the player. </remarks>
+    /// <remarks> Activated by clicking through either PlayerClick or on a glass box around the player. </remarks>
     public abstract class Weapon {
 
         public abstract string Name { get; }
@@ -38,12 +38,13 @@ namespace MCGalaxy.Games {
         public void Enable(Player p) {
             if (!hookedEvents) {
                 OnPlayerClickEvent.Register(PlayerClickCallback, Priority.Low);
+                OnBlockChangeEvent.Register(BlockChangeCallback, Priority.Low);
                 hookedEvents = true;
             }
+            
             this.p = p;
             p.ClearBlockchange();
-            p.weapon = this;            
-            p.Blockchange += BlockClickCallback;
+            p.weapon = this;
             
             if (p.Supports(CpeExt.PlayerClick)) {
                 p.Message(Name + " engaged, click to fire at will");
@@ -56,7 +57,6 @@ namespace MCGalaxy.Games {
 
         public void Disable() {
             p.aiming = false;
-            p.ClearBlockchange();
             p.Message(Name + " disabled");
             p.weapon = null;
         }
@@ -64,12 +64,14 @@ namespace MCGalaxy.Games {
         protected abstract void OnActivated(byte yaw, byte pitch, BlockID block);
 
         
-        static void BlockClickCallback(Player p, ushort x, ushort y, ushort z, BlockID block) {
+        static void BlockChangeCallback(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             Weapon weapon = p.weapon;
             if (weapon == null) return;
             
-            // always revert block back, client assumes changes always succeed
+            // revert block back since client assumes changes always succeeds
             p.RevertBlock(x, y, z);
+            p.cancelBlock = true;
+            
             // defer to player click handler if used
             if (weapon.aimer == null) return;
             
