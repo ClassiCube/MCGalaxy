@@ -35,21 +35,21 @@ namespace MCGalaxy.Commands.World {
             
             if (message.CaselessEq("all")) {
                 string[] maps = Directory.GetFiles(Paths.ImportsDir);
-                foreach (string map in maps) {
-                    Import(p, Path.GetFileName(map));
-                }
+                foreach (string map in maps) { Import(p, map); }
             } else {
                 Import(p, message);
             }
         }
         
         static void Import(Player p, string map) {
+            map = Path.GetFileNameWithoutExtension(map);
             string path = Paths.ImportsDir + map;
             IMapImporter importer = IMapImporter.Find(ref path);
             
             if (importer == null) {
                 string formats = IMapImporter.Formats.Join(imp => imp.Extension);
                 p.Message("%WNo {0} file with that name was found in /extra/import folder.", formats);
+                return;
             }
             
             if (LevelInfo.MapExists(map)) {
