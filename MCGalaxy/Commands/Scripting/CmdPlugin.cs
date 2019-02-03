@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (engine.Compile(srcPath, dstPath)) {
                     p.Message("Plugin compiled successfully.");
                 } else {
-                    p.Message("Compilation error. See " + IScripting.ErrorPath + " for more information.");
+                    p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
                 }
             } else {
                 p.Message("File &9{0} %Snot found.", srcPath);
