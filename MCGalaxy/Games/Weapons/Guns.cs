@@ -24,10 +24,16 @@ namespace MCGalaxy.Games {
 
     /// <summary> Represents a gun weapon which dies when it hits a block or a player. </summary>
     /// <remarks> Fires in a straight line from where playing is looking. </remarks>
-    public class Gun : Weapon {        
+    public class Gun : Weapon {
         public override string Name { get { return "Gun"; } }
 
         protected override void OnActivated(byte yaw, byte pitch, BlockID block) {
+            AmmunitionData args = MakeArgs(yaw, pitch, block);
+            SchedulerTask task  = new SchedulerTask(GunCallback, args, TimeSpan.Zero, true);
+            p.CriticalTasks.Add(task);
+        }
+        
+        protected AmmunitionData MakeArgs(byte yaw, byte pitch, BlockID block) {            
             AmmunitionData args = new AmmunitionData();
             args.block  = block;
             
@@ -35,9 +41,7 @@ namespace MCGalaxy.Games {
             args.dir = DirUtils.GetDirVector(yaw, pitch);
             args.pos = args.PosAt(3);
             args.iterations = 4;
-
-            SchedulerTask task = new SchedulerTask(GunCallback, args, TimeSpan.Zero, true);
-            p.CriticalTasks.Add(task);
+            return args;
         }
         
         protected virtual bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
@@ -68,7 +72,7 @@ namespace MCGalaxy.Games {
             return args.visible.Count > 0;
         }
         
-        void GunCallback(SchedulerTask task) {
+        protected void GunCallback(SchedulerTask task) {
             AmmunitionData args = (AmmunitionData)task.State;
             if (args.moving) {
                 args.moving    = TickGun(args);
@@ -103,9 +107,12 @@ namespace MCGalaxy.Games {
         public override string Name { get { return "Penetrative gun"; } }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
-            if (p.level.physics < 2 || block == Block.Glass) return true;           
+            if (p.level.physics < 2 || block == Block.Glass) return true;
+            
+            if (!p.level.Props[block].LavaKills) return true;
             // Penetrative gun goes through blocks lava can go through
-            return !p.level.Props[block].LavaKills;
+            p.level.Blockchange(pos.X, pos.Y, pos.Z, Block.Air);
+            return false;
         }
     }
     
