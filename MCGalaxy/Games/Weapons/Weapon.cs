@@ -61,7 +61,7 @@ namespace MCGalaxy.Games {
             p.weapon = null;
         }
         
-        protected abstract void OnActivated(byte yaw, byte pitch, BlockID block);
+        protected abstract void OnActivated(Vec3F32 dir, BlockID block);
 
         
         static void BlockChangeCallback(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
@@ -78,7 +78,8 @@ namespace MCGalaxy.Games {
             if (!p.level.Config.Guns) { weapon.Disable(); return; }
             if (!CommandParser.IsBlockAllowed(p, "use", block)) return;
 
-            weapon.OnActivated(p.Rot.RotY, p.Rot.HeadX, block);
+            Vec3F32 dir = DirUtils.GetDirVector(p.Rot.RotY, p.Rot.HeadX);
+            weapon.OnActivated(dir, block);
         }
         
         static void PlayerClickCallback(Player p, MouseButton btn, MouseAction action,
@@ -92,7 +93,9 @@ namespace MCGalaxy.Games {
             
             BlockID held = p.RawHeldBlock;
             if (!CommandParser.IsBlockAllowed(p, "use", held)) return;
-            weapon.OnActivated((byte)(yaw >> 8), (byte)(pitch >> 8), held);
+            
+            Vec3F32 dir = DirUtils.GetDirVectorExt(yaw, pitch);
+            weapon.OnActivated(dir, held);
         }
         
         protected static Player PlayerAt(Player p, Vec3U16 pos, bool skipSelf) {
@@ -114,7 +117,7 @@ namespace MCGalaxy.Games {
     
     public class AmmunitionData {
         public BlockID block;
-        public Vec3U16 pos, start;
+        public Vec3U16 start;
         public Vec3F32 dir;
         public bool moving = true;
         

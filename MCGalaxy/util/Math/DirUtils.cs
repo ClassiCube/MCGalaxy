@@ -75,20 +75,21 @@ namespace MCGalaxy.Maths {
                 dirY = -1;
         }
         
-        public static Vec3F32 GetFlatDirVector(byte yaw, byte pitch) {
-            const double packed2Rad = (2 * Math.PI) / 256.0;
-            double x = Math.Sin(yaw * packed2Rad);
-            double y = -Math.Sin(pitch * packed2Rad); // e.g. 64 -> PI/2, result should be -1
-            double z = -Math.Cos(yaw * packed2Rad);   // e.g. 128 -> PI, result should be 1
+        static Vec3F32 GetDirVector(double yaw, double pitch) {
+            double x =  Math.Sin(yaw) * Math.Cos(pitch);
+            double y = -Math.Sin(pitch);
+            double z = -Math.Cos(yaw) * Math.Cos(pitch);
             return new Vec3F32((float)x, (float)y, (float)z);
+        }
+        
+        public static Vec3F32 GetDirVectorExt(ushort yaw, ushort pitch) {
+            const double packed2Rad = (2 * Math.PI) / 65536.0;
+            return GetDirVector(yaw * packed2Rad, pitch * packed2Rad);
         }
         
         public static Vec3F32 GetDirVector(byte yaw, byte pitch) {
             const double packed2Rad = (2 * Math.PI) / 256.0;
-            double x = Math.Sin(yaw * packed2Rad) * Math.Cos(pitch * packed2Rad);
-            double y = -Math.Sin(pitch * packed2Rad);
-            double z = -Math.Cos(yaw * packed2Rad) * Math.Cos(pitch * packed2Rad);
-            return new Vec3F32((float)x, (float)y, (float)z);
+            return GetDirVector(yaw * packed2Rad, pitch * packed2Rad);
         }
         
         public static void GetYawPitch(Vec3F32 dir, out byte yaw, out byte pitch) {

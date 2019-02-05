@@ -27,19 +27,18 @@ namespace MCGalaxy.Games {
     public class Gun : Weapon {
         public override string Name { get { return "Gun"; } }
 
-        protected override void OnActivated(byte yaw, byte pitch, BlockID block) {
-            AmmunitionData args = MakeArgs(yaw, pitch, block);
+        protected override void OnActivated(Vec3F32 dir, BlockID block) {
+            AmmunitionData args = MakeArgs(dir, block);
             SchedulerTask task  = new SchedulerTask(GunCallback, args, TimeSpan.Zero, true);
             p.CriticalTasks.Add(task);
         }
         
-        protected AmmunitionData MakeArgs(byte yaw, byte pitch, BlockID block) {            
+        protected AmmunitionData MakeArgs(Vec3F32 dir, BlockID block) {
             AmmunitionData args = new AmmunitionData();
             args.block  = block;
             
             args.start = (Vec3U16)p.Pos.BlockCoords;
-            args.dir = DirUtils.GetDirVector(yaw, pitch);
-            args.pos = args.PosAt(3);
+            args.dir   = dir;
             args.iterations = 4;
             return args;
         }
@@ -83,9 +82,8 @@ namespace MCGalaxy.Games {
         
         bool TickGun(AmmunitionData args) {
             while (true) {
-                args.pos = args.PosAt(args.iterations);
+                Vec3U16 pos = args.PosAt(args.iterations);
                 args.iterations++;
-                Vec3U16 pos = args.pos;
 
                 BlockID cur = p.level.GetBlock(pos.X, pos.Y, pos.Z);
                 if (cur == Block.Invalid) return false;
