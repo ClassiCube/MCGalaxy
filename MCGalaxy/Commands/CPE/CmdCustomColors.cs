@@ -52,8 +52,7 @@ namespace MCGalaxy.Commands.CPE {
                 p.Message("You may only edit standard codes using %T/CustomColors edit"); return;
             }
             if (code == ' ' || code == '\0' || code == '\u00a0' || code == '%' || code == '&') {
-                p.Message("{0} must be a standard ASCII character.", code);
-                p.Message("It also cannot be a space, percentage, or ampersand.");
+                p.Message("Colour code cannot be a space, percentage, or ampersand.");
                 return;
             }
             
@@ -169,7 +168,7 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p) {
             p.Message("%T/CustomColors add [code] [name] [fallback] [hex]");
-            p.Message("%H  code is a single ascii character.");
+            p.Message("%H  code is a single character.");
             p.Message("%H  fallback is the color code shown to non-supporting clients.");
             p.Message("%T/CustomColors remove [code] %H- Removes that custom color.");
             p.Message("%T/CustomColors list [offset] %H- lists all custom colors.");
