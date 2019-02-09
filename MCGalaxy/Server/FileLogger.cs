@@ -58,6 +58,7 @@ namespace MCGalaxy {
         
         static void LogMessage(LogType type, string message) {
             if (String.IsNullOrEmpty(message)) return;
+            if (!Server.Config.FileLogging[(int)type]) return;
             
             if (type == LogType.Error) {
                 StringBuilder sb = new StringBuilder();

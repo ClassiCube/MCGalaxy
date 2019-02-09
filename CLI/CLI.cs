@@ -90,6 +90,8 @@ namespace MCGalaxy.Cli {
         }
 
         static void LogMessage(LogType type, string message) {
+            if (!Server.Config.ConsoleLogging[(int)type]) return;
+        	
             switch (type) {
                 case LogType.Error:
                     Write("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");

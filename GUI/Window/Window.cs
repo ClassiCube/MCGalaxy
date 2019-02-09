@@ -100,6 +100,8 @@ namespace MCGalaxy.Gui {
         LogCallback logCallback;
         
         void LogMessage(LogType type, string message) {
+            if (!Server.Config.FileLogging[(int)type]) return;
+        	
             if (InvokeRequired) {
                 BeginInvoke(logCallback, type, message); return;
             }           

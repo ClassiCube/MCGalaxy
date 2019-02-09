@@ -21,7 +21,7 @@ using System.IO;
 using MCGalaxy.Config;
 
 namespace MCGalaxy {
-	public sealed class ServerConfig : EnvConfig {
+    public sealed class ServerConfig : EnvConfig {
 
         [ConfigString("server-name", "General", "[MCGalaxy] Default", false, " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")]
         public string Name = "[MCGalaxy] Default";
@@ -195,17 +195,17 @@ namespace MCGalaxy {
         [ConfigBool("tablist-bots", "Tablist", false)]
         public bool TablistBots = false;
 
-        [ConfigBool("parse-emotes", "Other", true)]
+        [ConfigBool("parse-emotes", "Chat", true)]
         public bool ParseEmotes = true;        
-        [ConfigBool("dollar-before-dollar", "Other", true)]
+        [ConfigBool("dollar-before-dollar", "Chat", true)]
         public bool DollarNames = true;
-        [ConfigStringList("disabledstandardtokens", "Other")]
+        [ConfigStringList("disabledstandardtokens", "Chat")]
         internal List<string> DisabledChatTokens = new List<string>();
-        [ConfigBool("profanity-filter", "Other", false)]
+        [ConfigBool("profanity-filter", "Chat", false)]
         public bool ProfanityFiltering = false;
-        [ConfigString("profanity-replacement", "Other", "*")]
+        [ConfigString("profanity-replacement", "Chat", "*")]
         public string ProfanityReplacement = "*";
-        [ConfigString("host-state", "Other", "Alive")]
+        [ConfigString("host-state", "Chat", "Alive")]
         public string ConsoleName = "Alive";
         
         [ConfigColor("defaultColor", "Colors", "&e")]
@@ -236,8 +236,16 @@ namespace MCGalaxy {
         [ConfigString("custom-restart-message", "Messages", "Server restarted. Sign in again and rejoin.")]
         public string DefaultRestartMessage = "Server restarted. Sign in again and rejoin.";
         
-        [ConfigBool("log-notes", "Other", true)]
+        static readonly bool[] defLogLevels = new bool[] { 
+            true,true,true,true,true,true, true,true,true, 
+            true,true,true,true,true,true, true,true };
+        [ConfigBool("log-notes", "Logging", true)]
         public bool LogNotes = true;
+        [ConfigBoolArray("file-logging", "Logging", true, 17)]
+        public bool[] FileLogging = defLogLevels;
+        [ConfigBoolArray("console-logging", "Logging", true, 17)]
+        public bool[] ConsoleLogging = defLogLevels;
+        
         [ConfigBool("admin-verification", "Admin", true)]
         public bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Admin", LevelPermission.Operator)]

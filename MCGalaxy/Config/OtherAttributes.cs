@@ -42,7 +42,7 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigPermAttribute : ConfigAttribute {       
+    public sealed class ConfigPermAttribute : ConfigAttribute {
         LevelPermission defPerm;
         
         public ConfigPermAttribute(string name, string section, LevelPermission def)
@@ -72,7 +72,7 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigEnumAttribute : ConfigAttribute {      
+    public sealed class ConfigEnumAttribute : ConfigAttribute {
         object defValue;
         Type enumType;
         
@@ -105,6 +105,37 @@ namespace MCGalaxy.Config {
                 value = default(Vec3U16);
             }
             return value;
+        }
+    }
+    
+    public sealed class ConfigBoolArrayAttribute : ConfigAttribute {
+        bool defValue;
+        int minCount;
+        
+        public ConfigBoolArrayAttribute() : this(null, null, false, 0) { }
+        public ConfigBoolArrayAttribute(string name, string section, bool def, int min)
+            : base(name, section) { defValue = def; minCount = min; }
+        
+        public override object Parse(string value) {
+            string[] parts = value.SplitComma();
+            bool[] values  = new bool[minCount];
+            int i;
+            
+            for (i = 0; i < parts.Length; i++) {
+                if (bool.TryParse(parts[i], out values[i])) continue;
+                
+                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid boolean, using default of {1}", Name, defValue);
+                values[i] = defValue;
+            }
+            
+            // shouldn't usually happen, but handle anyways
+            for (; i < values.Length; i++) values[i] = defValue;
+            return values;
+        }
+        
+        public override string Serialise(object value) {
+            bool[] values = (bool[])value;
+            return values.Join(b => b.ToString(), ", ");
         }
     }
 }
