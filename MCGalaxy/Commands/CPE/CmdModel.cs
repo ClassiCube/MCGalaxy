@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.CPE {
             
             model = model.ToLower();
             model = model.Replace(':', '|'); // since many assume : is for scale instead of |.
-            changedAxisScale = false;
+            changedAxisScale = false;  
             
             if (model.CaselessStarts("x ")) {
                 changedAxisScale = true;

@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
             if (duration.TotalSeconds > 60) {
                 p.Message("%WCan only wait for a minute at most."); return;
             }
-            
+
             if (data.Context != CommandContext.MessageBlock) {
                 p.Message("%WThis command can only be used in message blocks."); return;
             }

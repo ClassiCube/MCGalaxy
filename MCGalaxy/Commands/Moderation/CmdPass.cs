@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "Pass"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
+        public override bool LogUsage { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }
         }
