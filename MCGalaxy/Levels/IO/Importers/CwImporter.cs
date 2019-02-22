@@ -122,6 +122,9 @@ namespace MCGalaxy.Levels.IO {
                 NbtCompound props = (NbtCompound)tag;
                 BlockDefinition def = new BlockDefinition();
                 def.RawID = props["ID"].ByteValue;
+                // can't change "ID" to short since backwards compatibility
+                if (props.Contains("ID2")) def.RawID = (ushort)props["ID2"].ShortValue;
+                
                 def.Name = props["Name"].StringValue;
                 def.CollideType = props["CollideType"].ByteValue;
                 def.Speed = props["Speed"].FloatValue;
@@ -147,8 +150,15 @@ namespace MCGalaxy.Levels.IO {
                 def.MinX = coords[0]; def.MinZ = coords[1]; def.MinY = coords[2];
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
-                // Don't define level custom block if same as global custom block
+               
                 BlockID block = def.GetBlock();
+                if (block >= Block.ExtendedCount) {
+                    Logger.Log(LogType.Warning, "Cannot import custom block {0} (ID {1})",
+                               def.Name, def.RawID);
+                    continue;
+                }
+                
+                // Don't define level custom block if same as global custom block
                 BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
                 if (PropsEquals(def, globalDef)) continue;
                 
