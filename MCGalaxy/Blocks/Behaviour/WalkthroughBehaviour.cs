@@ -64,8 +64,11 @@ namespace MCGalaxy.Blocks {
                     Entities.Spawn(p, p);
                 }
                 p.lastCheckpointIndex = index;
+                return true;
             }
-            return true;
+            
+            // allow activating other blocks (e.g. /mb message above it)
+            return false;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace MCGalaxy.Blocks {
     public delegate void HandlePlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
-    /// <remarks> If this returns true, the usual 'death check' behaviour is skipped. </remarks>
+    /// <remarks> If this returns false, continues trying other walkthrough blocks the player is touching. </remarks>
     public delegate bool HandleWalkthrough(Player p, BlockID block, ushort x, ushort y, ushort z);
 
     /// <summary> Called to handle the physics for this particular block. </summary>
