@@ -158,10 +158,14 @@ namespace MCGalaxy.Drawing {
             
             X = r.ReadInt32(); Y = r.ReadInt32(); Z = r.ReadInt32();
             Width = r.ReadInt32(); Height = r.ReadInt32(); Length = r.ReadInt32();
-            LoadBlocks(r, id);
-            
+            LoadBlocks(r, id);       
             UsedBlocks = Volume;
+            
+            // origin is not present in version 1
+            if (id == identifier1) return;
             OriginX = r.ReadInt32(); OriginY = r.ReadInt32(); OriginZ = r.ReadInt32();
+            
+            // was added in later (ReadByte also catches end of stream)
             if (stream.ReadByte() != 0x0f) return;
             Offset.X = r.ReadInt32(); Offset.Y = r.ReadInt32(); Offset.Z = r.ReadInt32();
             PasteAir = stream.ReadByte() == 1;
