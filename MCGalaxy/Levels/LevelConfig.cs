@@ -82,6 +82,9 @@ namespace MCGalaxy {
         /// <summary> Color of the blocks in the light (RGB packed into an int). Set to -1 to use client defaults. </summary>
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
+        /// <summary> Color of the skybox (RGB packed into an int). Set to -1 to use client defaults. </summary>
+        [ConfigString("SkyboxColor", "Env", "", true)]
+        public string SkyboxColor = "";
         
         public void ResetEnv() {
             // TODO: Rewrite using ConfigElement somehow
@@ -106,6 +109,7 @@ namespace MCGalaxy {
             SkyColor    = "";
             ShadowColor = "";
             LightColor  = "";
+            SkyboxColor = "";
         }
         
         public string GetColor(int i) {
@@ -114,6 +118,7 @@ namespace MCGalaxy {
             if (i == 2) return FogColor;
             if (i == 3) return ShadowColor;
             if (i == 4) return LightColor;
+            if (i == 5) return SkyboxColor;
             return null;
         }
         

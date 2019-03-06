@@ -46,7 +46,8 @@ namespace MCGalaxy {
              new EnvOption("Clouds", SetClouds, "%HSets color of the clouds (default FFFFFF)"),
              new EnvOption("Fog",    SetFog,    "%HSets color of the fog (default FFFFFF)"),
              new EnvOption("Sun",    SetSun,    "%HSets color of blocks in sunlight (default FFFFFF)"),
-             new EnvOption("Shadow", SetShadow, "%HSets color of blocks in darkness (default 9B9B9B)"),             
+             new EnvOption("Shadow", SetShadow, "%HSets color of blocks in darkness (default 9B9B9B)"),      
+             new EnvOption("Skybox", SetSkybox, "%HSets color of the skybox (default FFFFFF)"),             
              new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "%HSets how fast clouds move (negative moves in opposite direction)"),
              new EnvOption("WeatherSpeed", SetWeatherSpeed, "%HSets how fast rain/snow falls (negative falls upwards)"),
              new EnvOption("WeatherFade",  SetWeatherFade,  "%HSets how quickly rain/snow fades out over distance"),
@@ -112,6 +113,9 @@ namespace MCGalaxy {
         }
         static void SetShadow(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "shadow color", ref cfg.ShadowColor);
+        }
+        static void SetSkybox(Player p, string area, EnvConfig cfg, string value) {
+            SetColor(p, value, area, "skybox color", ref cfg.SkyboxColor);
         }
         
         static void SetCloudsSpeed(Player p, string area, EnvConfig cfg, string value) {
