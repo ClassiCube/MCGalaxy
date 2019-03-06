@@ -73,14 +73,28 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (args.Length < 3) { OnStoreCommand(p); return; }
+            if (args.Length < 2) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
             if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             
             if (p.money < preset.price) {
                 p.Message("%WYou don't have enough &3" + Server.Config.Currency + "%W to buy that map"); return;
             }
-            string name = p.name + "_" + args[2];
+            
+            string name = null;
+            if (args.Length >= 3) {
+                name = p.name + "_" + args[2];
+            } else {
+                // use a numbered map by default
+                for (int i = 1; i < 100; i++) {
+                    name = p.name + "_" + i;
+                    if (!LevelInfo.MapExists(name)) break;
+                }
+            }
+            
+            if (LevelInfo.MapExists(name)) {
+                p.Message("%WLevel \"{0}\" already exists", name); return;
+            }
             
             p.Message("&aCreating level: '&f" + name + "&a' . . .");
             UseCommand(p, "NewLvl", name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);

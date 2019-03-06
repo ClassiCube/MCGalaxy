@@ -30,7 +30,7 @@ namespace MCGalaxy.Bots {
             bot.countdown--;
 
             Orientation rot = bot.Rot;
-            rot.RotY += meta.Speed;
+            rot.RotY += (byte)meta.Speed;
             bot.Rot = rot;
 
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
@@ -72,7 +72,7 @@ namespace MCGalaxy.Bots {
             if (bot.countdown == 0) { bot.countdown = meta.Seconds; return true; }
             bot.countdown--;
 
-            byte speed = meta.Speed;
+            byte speed = (byte)meta.Speed;
             Orientation rot = bot.Rot;
             if (bot.nodUp) {
                 if (rot.HeadX > 32 && rot.HeadX < 128) {

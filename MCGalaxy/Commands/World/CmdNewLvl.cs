@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.World {
             
             if (!Formatter.ValidMapName(p, name)) return null;
             if (LevelInfo.MapExists(name)) {
-                p.Message("Level \"{0}\" already exists", name); return null;
+                p.Message("%WLevel \"{0}\" already exists", name); return null;
             }
             if (gen.Type == GenType.Advanced && !CheckExtraPerm(p, data, 1)) return null;
 
