@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.World {
                 if (value.Length == 0) value = "normal";
                 UseCommand(p, "Texture", "levelzip " + value);
             } else if (cmd == "FIXGRASS") {
-                UseCommand(p, "FixGrass", "");
+                UseCommand(p, "FixGrass " + value");
 	    } else {
                 LevelOption opt = LevelOptions.Find(cmd);
                 if (opt == null) {
