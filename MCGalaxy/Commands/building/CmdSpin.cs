@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdSpin : Command2 {
         public override string name { get { return "Spin"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {

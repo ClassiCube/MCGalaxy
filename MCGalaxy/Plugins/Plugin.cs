@@ -44,17 +44,17 @@ namespace MCGalaxy {
         public abstract void Help(Player p);
         
         /// <summary> Name of the plugin. </summary>
-        public abstract string name { get; }        
+        public abstract string name { get; }
         /// <summary> Your website. </summary>
-        public abstract string website { get; }        
+        public abstract string website { get; }
         /// <summary> Oldest version of MCGalaxy the plugin is compatible with. </summary>
-        public abstract string MCGalaxy_Version { get; }        
+        public abstract string MCGalaxy_Version { get; }
         /// <summary> Version of your plugin. </summary>
-        public abstract int build { get; }      
+        public abstract int build { get; }
         /// <summary> Message to display once plugin is loaded. </summary>
-        public abstract string welcome { get; }        
+        public abstract string welcome { get; }
         /// <summary> The creator/author of this plugin. (Your name) </summary>
-        public abstract string creator { get; }        
+        public abstract string creator { get; }
         /// <summary> Whether or not to auto load this plugin on server startup. </summary>
         public abstract bool LoadAtStartup { get; }
     }

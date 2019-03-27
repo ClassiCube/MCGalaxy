@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Fun {
     public sealed class CmdGun : Command2 {
         public override string name { get { return "Gun"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         

@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Mark"; } }
         public override string shortcut { get { return "click"; } }
         public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("m"), new CommandAlias("x"),
