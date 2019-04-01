@@ -26,37 +26,36 @@ using MCGalaxy.Drawing;
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
         
-        public static bool DownloadImage(string url, string dir, Player p) {
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+        public static byte[] DownloadImage(string url, Player p) {
             if (!url.CaselessStarts("http://") && !url.CaselessStarts("https://"))
                 url = "http://" + url;
             
             Utils.FilterURL(ref url);
             Uri uri;
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
-                p.Message("{0} is not a valid URL.", url); return false;
-            }            
+                p.Message("{0} is not a valid URL.", url); return null;
+            }
             
+            byte[] data = null;
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
                     p.Message("Downloading file from: &f" + url);
-                    client.DownloadFile(uri, dir + "tempImage_" + p.name + ".bmp");
+                    data = client.DownloadData(uri);
                 }
                 p.Message("Finished downloading image.");
-                return true;
             } catch (Exception ex) {
                 Logger.LogError("Error downloading image", ex);
                 p.Message("%WFailed to download the image from the given url.");
                 p.Message("%WThe url may need to end with its extension (such as .jpg).");
-                return false;
+                return null;
             }
+            return data;
         }
         
-        public static Bitmap ReadBitmap(string name, string dir, Player p) {
+        public static Bitmap DecodeImage(byte[] data, Player p) {
             Bitmap bmp = null;
             try {
-                bmp = new Bitmap(dir + name + ".bmp");
+                bmp = new Bitmap(new MemoryStream(data));
                 int width = bmp.Width;
                 // sometimes Mono will return an invalid bitmap instance that throws ArgumentNullException,
                 // so we make sure to check for that here rather than later.
@@ -71,11 +70,12 @@ namespace MCGalaxy.Generator {
             }
         }
         
-        public static bool Generate(Player p, Level lvl, string args) {
-            if (args.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
+        public static bool Generate(Player p, Level lvl, string url) {
+            if (url.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
             
-            if (!DownloadImage(args, "extra/heightmap/", p)) return false;
-            Bitmap bmp = ReadBitmap("tempImage_" + p.name, "extra/heightmap/", p);
+            byte[] data = DownloadImage(url, p);
+            if (data == null) return false;
+            Bitmap bmp = DecodeImage(data, p);
             if (bmp == null) return false;
             
             int index = 0, oneY = lvl.Width * lvl.Length;
@@ -111,7 +111,7 @@ namespace MCGalaxy.Generator {
                         index++;
                     }
                 }
-            // Cannot use using { } here because bmp may be reassigned
+                // Cannot use using { } here because bmp may be reassigned
             } finally { bmp.Dispose(); }
             return true;
         }

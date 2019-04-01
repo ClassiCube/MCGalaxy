@@ -34,7 +34,6 @@ namespace MCGalaxy.Drawing.Ops {
         
         internal Draw.Bitmap Source;
         internal bool DualLayer, LayerMode;
-        internal string Filename;
         public ImagePalette Palette;
         
         internal Vec3S32 dx, dy, adj;
@@ -65,8 +64,6 @@ namespace MCGalaxy.Drawing.Ops {
             
             Source.Dispose();
             Source = null;
-            if (Filename == "tempImage_" + Player.name)
-                File.Delete("extra/images/tempImage_" + Player.name + ".bmp");
             Player.Message("Finished printing image using {0} palette.", Palette.Name);
         }
         

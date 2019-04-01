@@ -74,15 +74,14 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (parts[0].IndexOf('.') != -1) {
-                if (!HeightmapGen.DownloadImage(parts[0], "extra/images/", p)) return;
-                dArgs.Name = "tempImage_" + p.name;
+                dArgs.Data = HeightmapGen.DownloadImage(parts[0], p);
+                if (dArgs.Data == null) return;
             } else {
-                dArgs.Name = parts[0];
+                string path = "extra/images/" + parts[0] + ".bmp";
+                if (!File.Exists(path)) { p.Message("{0} does not exist", path); return; }
+                dArgs.Data = File.ReadAllBytes(path);
             }
 
-            if (!File.Exists("extra/images/" + dArgs.Name + ".bmp")) {
-                p.Message("The URL entered was invalid!"); return;
-            }
             p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
         }
@@ -100,13 +99,13 @@ namespace MCGalaxy.Commands.Building {
             try {
                 DoDrawImageCore(p, m, dArgs);
             } catch (Exception ex) {
-                Logger.LogError("Error drawing image", ex); 
+                Logger.LogError("Error drawing image", ex);
                 // Do not want it taking down the whole server if error occurs
             }
         }
         
         void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
-            Bitmap bmp = HeightmapGen.ReadBitmap(dArgs.Name, "extra/images/", p);
+            Bitmap bmp = HeightmapGen.DecodeImage(dArgs.Data, p);
             if (bmp == null) return;
 
             ImagePrintDrawOp op = new ImagePrintDrawOp();
@@ -122,8 +121,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             op.SetLevel(p.level);
-            op.Player = p; op.Source = bmp;
-            op.Palette = dArgs.Pal; op.Filename = dArgs.Name;
+            op.Player = p; op.Source = bmp; op.Palette = dArgs.Pal;
             DrawOpPerformer.Do(op, null, p, marks, false);
         }
         
@@ -141,7 +139,7 @@ namespace MCGalaxy.Commands.Building {
             resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
             
             p.Message("%WImage is too large ({0}x{1}), resizing to ({2}x{3})",
-                           width, height, resizedWidth, resizedHeight);
+                      width, height, resizedWidth, resizedHeight);
             width = resizedWidth; height = resizedHeight;
         }
         
@@ -178,7 +176,7 @@ namespace MCGalaxy.Commands.Building {
             p.Message("%H  <width height> optionally resize the printed image");
         }
 
-        class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public string Name; public int Width, Height; }
+        class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public byte[] Data; public int Width, Height; }
     }
 }
 
