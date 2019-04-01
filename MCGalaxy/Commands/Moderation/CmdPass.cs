@@ -19,7 +19,8 @@
  */
 using System;
 using System.IO;
-using MCGalaxy.Util;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command2 {
@@ -42,73 +43,105 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
-            if (args.Length == 2 && args[0].CaselessEq("set"))
+            if (args.Length == 2 && args[0].CaselessEq("set")) {
                 SetPassword(p, args[1]);
-            else if (args.Length == 2 && args[0].CaselessEq("reset"))
+            } else if (args.Length == 2 && args[0].CaselessEq("reset")) {
                 ResetPassword(p, args[1]);
-            else
+            } else {
                 VerifyPassword(p, message);
+            }
         }
         
-        void VerifyPassword(Player p, string message) {
+        void VerifyPassword(Player p, string password) {
             if (!p.adminpen) { p.Message("%WYou are already verified."); return; }
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
 
-            if (message.IndexOf(' ') >= 0) { p.Message("Your password must be %Wone %Sword!"); return; }
-            if (!PasswordHasher.Exists(p.name)) {
+            if (password.IndexOf(' ') >= 0) { p.Message("Your password must be %Wone %Sword!"); return; }
+            if (!HasPassword(p.name)) {
                 p.Message("You have not %Wset a password, %Suse %T/SetPass [Password] %Wto set one!"); return;
             }
 
-            if (PasswordHasher.MatchesPass(p.name, message)) {
+            if (CheckHash(p.name, password)) {
                 p.Message("You are now &averified %Sand have &aaccess to admin commands and features.");
                 p.adminpen = false;
             } else {
                 p.passtries++;
                 p.Message("%WWrong Password. %SRemember your password is %Wcase sensitive.");
-                p.Message("Forgot your password? %SContact the owner so they can reset it.");
+                p.Message("Forgot your password? Contact %W{0} %Sto %Wreset it.", Server.Config.OwnerName);
             }
         }
         
-        void SetPassword(Player p, string message) {
-            if (p.adminpen && PasswordHasher.Exists(p.name)) {
-                p.Message("%WcYou already have a password set. %SYou %Wcannot change %Sit unless %Wyou verify it with &a/pass [Password]. " +
-                               "%SIf you have %Wforgotten %Syour password, contact %W" + Server.Config.OwnerName + " %Sand they can %Wreset it!");
+        void SetPassword(Player p, string password) {
+            string path = HashPath(p.name);
+            if (p.adminpen && File.Exists(path)) {
+                p.Message("%WYou must first verify with %T/pass [Password] %Wbefore you can change your password.");
+                p.Message("Forgot your password? Contact %W{0} %Sto %Wreset it.", Server.Config.OwnerName);
                 return;
             }
-            if (message.IndexOf(' ') >= 0) { p.Message("Your password must be one word!"); return; }
+            if (password.IndexOf(' ') >= 0) { p.Message("%WPassword must be one word."); return; }
             
-            PasswordHasher.StoreHash(p.name, message);
-            p.Message("Your password has &asuccessfully &abeen set to:");
-            p.Message("&c" + message);
+            byte[] computed = ComputeHash(p.name, password);
+            File.WriteAllBytes(path, computed);
+            p.Message("Your password was &aset to: &c" + password);
         }
         
-        void ResetPassword(Player p, string message) {
-            if (message.Length == 0) { Help(p); return; }
-            Player who = PlayerInfo.FindMatches(p, message);
+        void ResetPassword(Player p, string target) {
+            if (target.Length == 0) { Help(p); return; }
+            Player who = PlayerInfo.FindMatches(p, target);
             if (who == null) return;
             
             if (!p.IsConsole && p.adminpen) {
                 p.Message("%WYou must first verify with %T/Pass [Password]"); return;
             }
-            
-            string owner = Server.Config.OwnerName;
-            if (!p.IsConsole && (owner.CaselessEq("Notch") || owner.Length == 0)) {
-                p.Message("Please tell the server owner to set the 'Server Owner' property."); return;
-            }
-            if (!p.IsConsole && !owner.CaselessEq(p.name))  {
-                p.Message("Only console and the server owner may reset passwords."); return;
+            if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {
+                p.Message("%WOnly console and the server owner may reset passwords."); return;
             }
             
-            if (!File.Exists("extra/passwords/" + who.name + ".dat")) {
-                p.Message("That player does not have a password."); return;
+            string path = HashPath(who.name);
+            if (!File.Exists(path)) {
+                p.Message(who.ColoredName + " %Sdoes not have a password.");
+            } else {
+                File.Delete(path);
+                p.Message("Reset password for " + who.ColoredName);
             }
-            File.Delete("extra/passwords/" + who.name + ".dat");
-            p.Message("Password sucessfully removed for " + who.ColoredName + "%S.");
         }
 
-        public override void Help(Player p) {         
+        static string HashPath(string name)  { return "extra/passwords/" + name + ".dat"; }
+        static bool HasPassword(string name) { return File.Exists(HashPath(name)); }
+
+        static byte[] ComputeHash(string name, string pass) {
+            // Pointless, but kept for backwards compatibility
+            pass = pass.Replace("<", "(");
+            pass = pass.Replace(">", ")");
+
+            MD5 hash = MD5.Create();
+            byte[] nameB = hash.ComputeHash(Encoding.ASCII.GetBytes(name));
+            byte[] dataB = hash.ComputeHash(Encoding.ASCII.GetBytes(pass));
+            
+            byte[] result = new byte[nameB.Length + dataB.Length];
+            Array.Copy(nameB, 0, result, 0,            nameB.Length);
+            Array.Copy(dataB, 0, result, nameB.Length, dataB.Length);
+            return hash.ComputeHash(result);
+        }
+
+        static bool CheckHash(string name, string pass) {
+            byte[] stored   = File.ReadAllBytes(HashPath(name));
+            byte[] computed = ComputeHash(name, pass);
+            // Old passwords stored UTF8 string instead of just the raw 16 byte hashes
+            // We need to support both since this behaviour was accidentally changed
+            if (stored.Length != computed.Length) {
+                return Encoding.UTF8.GetString(stored) == Encoding.UTF8.GetString(computed);
+            }
+            
+            for (int i = 0; i < stored.Length; i++) {
+                if (stored[i] != computed[i]) return false;
+            }
+            return true;
+        }
+        
+        public override void Help(Player p) {
             p.Message("%T/Pass reset [Player] %H- Resets the password for that player");
-            p.Message("%H Note: Can only be used by console and the server owner.");            
+            p.Message("%H Note: Can only be used by console and the server owner.");
             p.Message("%T/Pass set [Password] %H- Sets your password to [password]");
             p.Message("%H Note: %WDo NOT set this as your Minecraft password!");
             p.Message("%T/Pass [Password]");

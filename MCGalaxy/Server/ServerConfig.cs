@@ -114,8 +114,8 @@ namespace MCGalaxy {
         public bool RepeatMBs = false;
         [ConfigString("money-name", "Other", "moneys")]
         public string Currency = "moneys";        
-        [ConfigString("server-owner", "Other", "Notch")]
-        public string OwnerName = "Notch";
+        [ConfigString("server-owner", "Other", "the owner")]
+        public string OwnerName = "the owner";
         
         [ConfigBool("guest-limit-notify", "Other", false)]
         public bool GuestLimitNotify = false;

@@ -37,8 +37,6 @@ namespace MCGalaxy.Commands.Info {
         static PerformanceCounter cpuPCounter = null;
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length > 0) { Help(p); return; }
-            
             int count = Database.CountRows("Players");
             p.Message("Server's name: &b{0}%S", Server.Config.Name);
             p.Message("&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
@@ -49,14 +47,15 @@ namespace MCGalaxy.Commands.Info {
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             p.Message("Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
                            up.Shorten(true), Server.SoftwareName, Server.VersionString);
-
             p.Message("Player positions are updated every &b"
                            + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
+            
             string owner = Server.Config.OwnerName;
-            if (!owner.CaselessEq("Notch"))
+            if (!owner.CaselessEq("Notch") && !owner.CaselessEq("the owner")) {
                 p.Message("Owner is &3{0}. %SConsole state: &3{1}", owner, Server.Config.ConsoleName);
-            else
+            } else {
                 p.Message("Console state: &3{0}", Server.Config.ConsoleName);
+            }
             
             if (HasExtraPerm(p, data.Rank, 1)) ShowServerStats(p);
         }
