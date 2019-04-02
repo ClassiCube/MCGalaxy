@@ -19,6 +19,32 @@ using System.Net.Sockets;
 
 namespace MCGalaxy.Network {
     
+    /// <summary> Abstracts sending to/receiving from a network socket. </summary>
+    public interface INetworkSocket {
+        
+        /// <summary> Gets the remote IP of this socket. </summary>
+        string RemoteIP { get; }
+        
+        /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
+        bool LowLatency { set; }
+        
+        /// <summary> Registers receive/send callbacks handlers. </summary>
+        /// <remarks> Separate, to ensure data is only received/sent with a fully constructed object. </remarks>
+        void RegisterCallbacks();
+        
+        /// <summary> Receives next block of received data, asynchronously. </summary>
+        void ReceiveNextAsync();
+        
+        /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
+        void Send(byte[] buffer, bool sync);
+        
+        /// <summary> Sends a block of low-priority data, either synchronously or asynchronously. </summary>
+        void SendLowPriority(byte[] buffer);
+        
+        /// <summary> Closes this network socket. </summary>
+        void Close();
+    }
+    
     /// <summary> Abstracts sending to/receiving from a TCP socket. </summary>
     public sealed class TcpSocket : INetworkSocket {
         readonly Player player;
@@ -104,8 +130,8 @@ namespace MCGalaxy.Network {
         
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
-        public void Send(byte[] buffer, bool sync = false) {
-            if (player.disconnected || !socket.Connected || buffer == null) return;
+        public void Send(byte[] buffer, bool sync) {
+            if (player.disconnected || !socket.Connected) return;
 
             try {
                 if (sync) {
@@ -114,7 +140,7 @@ namespace MCGalaxy.Network {
                 }
                 
                 lock (sendLock) {
-                    if (sendInProgress) { 
+                    if (sendInProgress) {
                         sendQueue.Enqueue(buffer);
                     } else {
                         if (!DoSendAsync(buffer)) sendInProgress = false; 

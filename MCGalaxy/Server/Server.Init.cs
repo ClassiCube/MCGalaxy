@@ -106,7 +106,7 @@ namespace MCGalaxy {
                 Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
                 ip = IPAddress.Any;
             }            
-            Listener.Listen(ip, (ushort)Server.Config.Port);
+            Listener.Listen(ip, Server.Config.Port);
         }
         
         static void InitHeartbeat(SchedulerTask task) {

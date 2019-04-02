@@ -17,17 +17,34 @@ using System.Net;
 using System.Net.Sockets;
 
 namespace MCGalaxy.Network {
+            
+    /// <summary> Abstracts listening on network socket. </summary>
+    public interface INetworkListen {
+
+        /// <summary> Gets the IP address this network socket is listening on. </summary>
+        IPAddress IP { get; }
+        
+        /// <summary> Gets the port this network socket is listening on. </summary>
+        int Port { get; }
+
+        /// <summary> Begins listening for connections on the given IP and port. </summary>
+        /// <remarks> Client connections are asynchronously accepted. </remarks>
+        void Listen(IPAddress ip, int port);
+        
+        /// <summary> Closes this network listener. </summary>
+        void Close();
+    }
     
     /// <summary> Abstracts listening on a TCP socket. </summary>
     public sealed class TcpListen : INetworkListen {
         Socket socket;
         IPAddress ip;
-        ushort port;
+        int port;
         
-        public IPAddress LocalIP { get { return ip; } }
-        public ushort LocalPort { get { return port; } }
+        public IPAddress IP { get { return ip; } }
+        public int Port     { get { return port; } }
         
-        public void Listen(IPAddress ip, ushort port) {
+        public void Listen(IPAddress ip, int port) {
             try {
                 this.ip = ip; this.port = port;
                 IPEndPoint ep = new IPEndPoint(ip, port);
@@ -35,7 +52,7 @@ namespace MCGalaxy.Network {
                 
                 socket.Bind(ep);
                 socket.Listen((int)SocketOptionName.MaxConnections);
-                AcceptNextAsync();
+                AsyncAcceptNext();
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "Failed to start listening on port {0} ({1})", port, ex.Message);
@@ -44,7 +61,7 @@ namespace MCGalaxy.Network {
         }
         
         static AsyncCallback acceptCallback = new AsyncCallback(AcceptCallback);
-        public void AcceptNextAsync() {
+        void AsyncAcceptNext() {
             socket.BeginAccept(acceptCallback, this);
         }
         
@@ -57,13 +74,13 @@ namespace MCGalaxy.Network {
             try {
                 p = new Player();
                 p.Connect(listen.socket.EndAccept(result));
-                listen.AcceptNextAsync();
+                listen.AsyncAcceptNext();
                 accepted = true;
             } catch (Exception ex) {
                 if (!(ex is SocketException)) Logger.LogError(ex);
                 
                 if (p != null) p.Disconnect();
-                if (!accepted) listen.AcceptNextAsync();
+                if (!accepted) listen.AsyncAcceptNext();
             }
         }
 

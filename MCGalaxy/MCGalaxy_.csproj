@@ -574,11 +574,10 @@
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Network\IRCPlugin\IRCBot.cs" />
     <Compile Include="Network\IRCPlugin\IRCHandlers.cs" />
+    <Compile Include="Network\Listeners.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.cs" />
-    <Compile Include="Network\Socket\Interfaces.cs" />
-    <Compile Include="Network\Socket\TcpListen.cs" />
-    <Compile Include="Network\Socket\TcpSocket.cs" />
+    <Compile Include="Network\Sockets.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
     <Compile Include="Network\Utils\HttpUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
@@ -724,7 +723,6 @@
     <Folder Include="Generator\Realistic" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />
-    <Folder Include="Network\Socket" />
     <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
