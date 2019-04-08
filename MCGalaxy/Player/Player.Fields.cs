@@ -51,7 +51,7 @@ namespace MCGalaxy {
         public string BrushName = "Normal", DefaultBrushArgs = "";
         public Transform Transform = NoTransform.Instance;
         public string afkMessage;
-        public bool disconnected, ClickToMark = true;
+        public bool ClickToMark = true;
 
         public string name;
         public string DisplayName;

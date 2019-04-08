@@ -71,7 +71,8 @@ namespace MCGalaxy.Network {
                 "&version=7" +
                 "&salt="     + Server.salt +
                 "&users="    + PlayerInfo.NonHiddenCount() +
-                "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned);
+                "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned) +
+                "&web="      + Server.Config.WebClient;
         }
         
         public override void OnRequest(HttpWebRequest request) {

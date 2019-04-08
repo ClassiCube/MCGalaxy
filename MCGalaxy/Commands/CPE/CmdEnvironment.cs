@@ -146,7 +146,9 @@ namespace MCGalaxy.Commands.CPE {
                 p.Message("%HVariables: &f{0}", EnvOptions.Options.Join(o => o.Name));
                 p.Message("%HUse %T/Help env [variable] %Hto see details for that variable");
                 return;
-            }
+        	} else if (message.CaselessEq("presets")) {
+                MessagePresets(p); return;
+        	}
             
             EnvOption opt = EnvOptions.Find(message);
             if (opt != null) {

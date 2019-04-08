@@ -41,6 +41,8 @@ namespace MCGalaxy {
         public bool Public = true;
         [ConfigBool("verify-names", "Server", true)]
         public bool VerifyNames = true;
+        [ConfigBool("support-web-client", "Server", true)]
+        public bool WebClient = true;
         
         [ConfigBool("autoload", "Server", true)]
         public bool AutoLoadMaps = true;        

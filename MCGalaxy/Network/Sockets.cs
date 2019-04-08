@@ -20,29 +20,26 @@ using System.Net.Sockets;
 namespace MCGalaxy.Network {
     
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
-    public interface INetworkSocket {
+    public abstract class INetworkSocket {
         
-        /// <summary> Gets the remote IP of this socket. </summary>
-        string RemoteIP { get; }
+    	/// <summary> Whether the socket has been closed/disconnected. </summary>
+    	public bool Disconnected;    	
+        /// <summary> The IP address of the remote end (i.e. client) of the socket. </summary>
+        public abstract string RemoteIP { get; }
         
         /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
-        bool LowLatency { set; }
+        public abstract bool LowLatency { set; }
         
-        /// <summary> Registers receive/send callbacks handlers. </summary>
-        /// <remarks> Separate, to ensure data is only received/sent with a fully constructed object. </remarks>
-        void RegisterCallbacks();
-        
-        /// <summary> Receives next block of received data, asynchronously. </summary>
-        void ReceiveNextAsync();
+        /// <summary> Initialises state to begin asynchronously sending and receiving data. </summary>
+        public abstract void Init();
         
         /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
-        void Send(byte[] buffer, bool sync);
-        
-        /// <summary> Sends a block of low-priority data, either synchronously or asynchronously. </summary>
-        void SendLowPriority(byte[] buffer);
+        public abstract void Send(byte[] buffer, bool sync);
+        /// <summary> Asynchronously sends a block of low-priority data. </summary>
+        public abstract void SendLowPriority(byte[] buffer);
         
         /// <summary> Closes this network socket. </summary>
-        void Close();
+        public abstract void Close();
     }
     
     /// <summary> Abstracts sending to/receiving from a TCP socket. </summary>
@@ -62,38 +59,39 @@ namespace MCGalaxy.Network {
         readonly SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
         
         public TcpSocket(Player p, Socket s) {
-            player = p; socket = s;            
+            player = p; socket = s;
             recvArgs.UserToken = this;
             recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);           
             sendArgs.UserToken = this;
             sendArgs.SetBuffer(sendBuffer, 0, sendBuffer.Length);
         }
         
-        public void RegisterCallbacks() {
+        public override void Init() {
             recvArgs.Completed += recvCallback; 
             sendArgs.Completed += sendCallback;
+            ReceiveNextAsync();
         }
         
-        public string RemoteIP {
+        public override string RemoteIP {
             get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
         }
         
-        public bool LowLatency { set { socket.NoDelay = value; } }
+        public override bool LowLatency { set { socket.NoDelay = value; } }
         
         
         static EventHandler<SocketAsyncEventArgs> recvCallback = RecvCallback;
-        public void ReceiveNextAsync() {
+        void ReceiveNextAsync() {
             // ReceiveAsync returns false if completed sync
             if (!socket.ReceiveAsync(recvArgs)) RecvCallback(null, recvArgs);
         }
         
         static void RecvCallback(object sender, SocketAsyncEventArgs e) {
-            Player p = null;
-            try {
-                TcpSocket s = (TcpSocket)e.UserToken;
-                p = s.player;
-                if (p.disconnected) return;
+            TcpSocket s = (TcpSocket)e.UserToken;
+            Player p = s.player;
+            if (s.Disconnected) return;
             
+            try {
+                // If received 0, means socket was closed
                 int recvLen = e.BytesTransferred;
                 if (recvLen == 0) { p.Disconnect(); return; }
 
@@ -104,7 +102,7 @@ namespace MCGalaxy.Network {
                 int processedLen = p.ProcessReceived(s.unprocessed, s.unprocessedLen);
                 
                 // Disconnect invalid clients
-                if (p.nonPlayerClient && processedLen == -1) { s.Close(); p.disconnected = true; }
+                if (p.nonPlayerClient && processedLen == -1) { s.Close(); s.Disconnected = true; }
                 if (processedLen == -1) return;
                 
                 // move remaining partial packet data back to start of unprocessed buffer
@@ -113,7 +111,7 @@ namespace MCGalaxy.Network {
                 }
                 s.unprocessedLen -= processedLen;
                 
-                if (!p.disconnected) s.ReceiveNextAsync();
+                if (!s.Disconnected) s.ReceiveNextAsync();
             } catch (SocketException) {
                 if (p != null) p.Disconnect();
             }  catch (ObjectDisposedException) {
@@ -121,7 +119,7 @@ namespace MCGalaxy.Network {
                 if (p == null) return;
                 
                 Player.pending.Remove(p);
-                p.disconnected = true;
+                s.Disconnected = true;
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 if (p != null) p.Leave("Error!");
@@ -130,8 +128,8 @@ namespace MCGalaxy.Network {
         
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
-        public void Send(byte[] buffer, bool sync) {
-            if (player.disconnected || !socket.Connected) return;
+        public override void Send(byte[] buffer, bool sync) {
+            if (Disconnected || !socket.Connected) return;
 
             try {
                 if (sync) {
@@ -154,7 +152,7 @@ namespace MCGalaxy.Network {
         }
         
         // TODO: do this seprately
-        public void SendLowPriority(byte[] buffer) { Send(buffer, false); }
+        public override void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
         bool DoSendAsync(byte[] buffer) {
             sendInProgress = true;
@@ -188,7 +186,7 @@ namespace MCGalaxy.Network {
                         // If that happens, SendCallback isn't called so we need to send data here instead
                         if (s.DoSendAsync(s.sendQueue.Dequeue())) return;
 
-                        if (p.disconnected) s.sendQueue.Clear();
+                        if (s.Disconnected) s.sendQueue.Clear();
                     }
                 }
             } catch (SocketException) {
@@ -201,7 +199,7 @@ namespace MCGalaxy.Network {
         }
         
         
-        public void Close() {
+        public override void Close() {
             // Try to close the socket. Sometimes socket is already closed, so just hide this.
             try { socket.Shutdown(SocketShutdown.Both); } catch { }
             try { socket.Close(); } catch { }

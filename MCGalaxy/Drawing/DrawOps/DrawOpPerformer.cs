@@ -108,7 +108,7 @@ namespace MCGalaxy.Drawing.Ops {
                     
                     // Flush any remaining draw ops if the player has left the server.
                     // (so as to not keep alive references)
-                    if (p.disconnected) {
+                    if (p.Socket != null && p.Socket.Disconnected) {
                         p.PendingDrawOps.Clear();
                         return;
                     }

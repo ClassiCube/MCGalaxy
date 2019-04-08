@@ -73,10 +73,9 @@ namespace MCGalaxy {
             try {
                 Socket = new TcpSocket(this, s);
                 ip = Socket.RemoteIP;
-                Socket.RegisterCallbacks();
-                
                 Logger.Log(LogType.UserActivity, ip + " connected to the server.");
-                Socket.ReceiveNextAsync();
+                
+                Socket.Init();
                 pending.Add(this);
             } catch (Exception ex) {
                 Leave("Login failed!"); 
@@ -235,14 +234,13 @@ namespace MCGalaxy {
             if (name == null || name.Length == 0) {
                 if (Socket != null) CloseSocket();
                 pending.Remove(this);
-                disconnected = true;
                 Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
                 return;
             }
             
             Server.reviewlist.Remove(name);
             try { 
-                if (disconnected) {
+                if (Socket.Disconnected) {
                     CloseSocket();
                     PlayerInfo.Online.Remove(this);
                     return;
@@ -258,7 +256,7 @@ namespace MCGalaxy {
                 
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
                 Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
-                disconnected = true;
+                Socket.Disconnected = true;
                 ZoneIn = null;
                 if (isKick) TimesBeenKicked++;
                 

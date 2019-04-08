@@ -46,7 +46,7 @@ namespace MCGalaxy {
             hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
             level = Server.mainLevel;
             Loading = true;
-            if (disconnected) return;
+            if (Socket.Disconnected) return;
             
             if (hasCpe) { SendCpeExtensions(); } 
             else { CompleteLoginProcess(); }
@@ -54,7 +54,7 @@ namespace MCGalaxy {
         
         void SendCpeExtensions() {
             Send(Packet.ExtInfo((byte)(extensions.Length + 1)));
-            // fix for classicube client, doesn't reply if only send EnvMapAppearance with version 2
+            // fix for classicube java client, doesn't reply if only send EnvMapAppearance with version 2
             Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
             
             foreach (ExtEntry ext in extensions) {
@@ -88,7 +88,7 @@ namespace MCGalaxy {
             }
 
             SendMap(null);
-            if (disconnected) return;
+            if (Socket.Disconnected) return;
             loggedIn = true;
             pending.Remove(this);
 
@@ -245,7 +245,7 @@ namespace MCGalaxy {
         static void ShowAltsTask(SchedulerTask task) {
             string name = (string)task.State;
             Player p = PlayerInfo.FindExact(name);
-            if (p == null || p.ip == "127.0.0.1" || p.disconnected) return;
+            if (p == null || p.ip == "127.0.0.1" || p.Socket.Disconnected) return;
             
             List<string> alts = PlayerInfo.FindAccounts(p.ip);
             // in older versions it was possible for your name to appear multiple times in DB
