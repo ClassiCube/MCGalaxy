@@ -17,74 +17,76 @@ using System.Net;
 using System.Net.Sockets;
 
 namespace MCGalaxy.Network {
-            
+    
     /// <summary> Abstracts listening on network socket. </summary>
-    public interface INetworkListen {
-
-        /// <summary> Gets the IP address this network socket is listening on. </summary>
-        IPAddress IP { get; }
-        
-        /// <summary> Gets the port this network socket is listening on. </summary>
-        int Port { get; }
+    public abstract class INetListen {
+        /// <summary> The IP address this network socket is listening on. </summary>
+        public IPAddress IP;
+        /// <summary> The port this network socket is listening on. </summary>
+        public int Port;
 
         /// <summary> Begins listening for connections on the given IP and port. </summary>
         /// <remarks> Client connections are asynchronously accepted. </remarks>
-        void Listen(IPAddress ip, int port);
+        public abstract void Listen(IPAddress ip, int port);
         
         /// <summary> Closes this network listener. </summary>
-        void Close();
+        public abstract void Close();
     }
     
     /// <summary> Abstracts listening on a TCP socket. </summary>
-    public sealed class TcpListen : INetworkListen {
+    public sealed class TcpListen : INetListen {
         Socket socket;
-        IPAddress ip;
-        int port;
         
-        public IPAddress IP { get { return ip; } }
-        public int Port     { get { return port; } }
-        
-        public void Listen(IPAddress ip, int port) {
+        public override void Listen(IPAddress ip, int port) {
+            if (IP == ip && Port == port) return;
+            Close();
+            IP = ip; Port = port;
+            
             try {
-                this.ip = ip; this.port = port;
-                IPEndPoint ep = new IPEndPoint(ip, port);
-                socket = new Socket(ep.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);               
+                socket.Bind(new IPEndPoint(ip, port));
                 
-                socket.Bind(ep);
                 socket.Listen((int)SocketOptionName.MaxConnections);
-                AsyncAcceptNext();
+                AcceptNextAsync();
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "Failed to start listening on port {0} ({1})", port, ex.Message);
-                socket = null;
+                socket = null; return;
+            }
+            Logger.Log(LogType.SystemActivity, "Started listening on port {0}... ", port);
+        }
+        
+        void AcceptNextAsync() {
+            // retry, because if we don't call BeginAccept, no one can connect anymore
+            for (int i = 0; i < 3; i++) {
+                try {
+                    socket.BeginAccept(acceptCallback, this); return;
+                } catch (Exception ex) {
+                    Logger.LogError(ex);
+                }
             }
         }
         
         static AsyncCallback acceptCallback = new AsyncCallback(AcceptCallback);
-        void AsyncAcceptNext() {
-            socket.BeginAccept(acceptCallback, this);
-        }
-        
         static void AcceptCallback(IAsyncResult result) {
             if (Server.shuttingDown) return;
             TcpListen listen = (TcpListen)result.AsyncState;
-            Player p = null;
-            bool accepted = false;
+            TcpSocket s = null;
             
             try {
-                p = new Player();
-                p.Connect(listen.socket.EndAccept(result));
-                listen.AsyncAcceptNext();
-                accepted = true;
+                Socket raw = listen.socket.EndAccept(result);
+                s = new TcpSocket(raw);
+                
+                Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
+                s.Init();                
             } catch (Exception ex) {
                 if (!(ex is SocketException)) Logger.LogError(ex);
-                
-                if (p != null) p.Disconnect();
-                if (!accepted) listen.AsyncAcceptNext();
+                if (s != null) s.Close();
             }
+            listen.AcceptNextAsync();
         }
 
-        public void Close() {
+        public override void Close() {
             if (socket != null) socket.Close();
         }
     }

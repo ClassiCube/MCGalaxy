@@ -69,20 +69,6 @@ namespace MCGalaxy {
             }
         }
         
-        internal void Connect(Socket s) {
-            try {
-                Socket = new TcpSocket(this, s);
-                ip = Socket.RemoteIP;
-                Logger.Log(LogType.UserActivity, ip + " connected to the server.");
-                
-                Socket.Init();
-                pending.Add(this);
-            } catch (Exception ex) {
-                Leave("Login failed!"); 
-                Logger.LogError("Error logging in", ex);
-            }
-        }
-        
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
         
@@ -232,8 +218,7 @@ namespace MCGalaxy {
             
             //Umm...fixed?
             if (name == null || name.Length == 0) {
-                if (Socket != null) CloseSocket();
-                pending.Remove(this);
+                if (Socket != null) Socket.Close();
                 Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
                 return;
             }
@@ -241,7 +226,6 @@ namespace MCGalaxy {
             Server.reviewlist.Remove(name);
             try { 
                 if (Socket.Disconnected) {
-                    CloseSocket();
                     PlayerInfo.Online.Remove(this);
                     return;
                 }
@@ -261,9 +245,7 @@ namespace MCGalaxy {
                 if (isKick) TimesBeenKicked++;
                 
                 if (!loggedIn) {
-                    pending.Remove(this);
-                    PlayerInfo.Online.Remove(this);
-                    
+                    PlayerInfo.Online.Remove(this);                    
                     string user = name + " (" + ip + ")";
                     Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
@@ -281,7 +263,7 @@ namespace MCGalaxy {
             } catch (Exception e) { 
                 Logger.LogError("Error disconnecting player", e); 
             } finally {
-                CloseSocket();
+                Socket.Close();
             }
         }
         
@@ -302,7 +284,6 @@ namespace MCGalaxy {
         }
 
         public void Dispose() {
-            pending.Remove(this);
             Extras.Clear();
             
             foreach (CopyState cState in CopySlots) { 

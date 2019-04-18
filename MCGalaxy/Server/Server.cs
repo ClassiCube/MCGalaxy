@@ -240,9 +240,10 @@ namespace MCGalaxy {
                 foreach (Player p in players) { p.Leave(msg); }
             } catch (Exception ex) { Logger.LogError(ex); }
             
-             try {
-                Player[] pending = Player.pending.Items;
-                foreach (Player p in pending) { p.Leave(msg); }
+            byte[] kick = Packet.Kick(msg, false);
+            try {
+                INetSocket[] pending = INetSocket.pending.Items;
+                foreach (INetSocket p in pending) { p.Send(kick, false); }
             } catch (Exception ex) { Logger.LogError(ex); }
 
             Plugin.UnloadAll();

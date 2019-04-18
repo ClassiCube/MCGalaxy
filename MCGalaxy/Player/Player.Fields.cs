@@ -28,7 +28,6 @@ namespace MCGalaxy {
     
     public partial class Player : IDisposable {
 
-        public static VolatileArray<Player> pending = new VolatileArray<Player>(false);
         public PlayerIgnores Ignores = new PlayerIgnores();
         public static string lastMSG = "";
         public Zone ZoneIn;
@@ -40,7 +39,7 @@ namespace MCGalaxy {
 
         public string truename;
         internal bool nonPlayerClient = false;
-        public INetworkSocket Socket;
+        public INetSocket Socket;
         public PingList Ping = new PingList();
         public BlockID MaxRawBlock = Block.OriginalMaxBlock;
         

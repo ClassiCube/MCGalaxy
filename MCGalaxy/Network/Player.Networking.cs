@@ -24,12 +24,92 @@ using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
-    public partial class Player : IDisposable {
+    public partial class Player : IDisposable, INetProtocol {
 
         public bool hasCpe, finishedCpeLogin = false;
         public string appName;
         int extensionCount;
-        byte customBlockSupportLevel;
+        
+        int INetProtocol.ProcessReceived(byte[] buffer, int bufferLen) {
+            int processedLen = 0;
+            try {
+                while (processedLen < bufferLen) {
+                    int packetLen = PacketSize(buffer[processedLen]);
+                    if (packetLen == -1) return bufferLen;
+                    
+                    // Partial packet data received
+                    if (processedLen + packetLen > bufferLen) return processedLen;
+                    HandlePacket(buffer, processedLen);
+                    processedLen += packetLen;
+                }
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+            return processedLen;
+        }
+        
+        int PacketSize(byte opcode) {
+            switch (opcode) {
+                case Opcode.Handshake:      return 1 + 1 + 64 + 64 + 1;
+                case Opcode.SetBlockClient: return 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
+                case Opcode.EntityTeleport: return 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
+                case Opcode.Message:        return 1 + 1 + 64;
+                case Opcode.CpeExtInfo:     return 1 + 64 + 2;
+                case Opcode.CpeExtEntry:    return 1 + 64 + 4;
+                case Opcode.CpeCustomBlockSupportLevel: return 1 + 1;
+                case Opcode.CpePlayerClick: return 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
+                case Opcode.Ping:           return 1;
+                case Opcode.CpeTwoWayPing:  return 1 + 1 + 2;
+
+                default:
+                    string msg = "Unhandled message id \"" + opcode + "\"!";
+                    Leave(msg, msg, true);
+                    return -1;
+            }
+        }
+        
+        void HandlePacket(byte[] buffer, int offset) {
+            switch (buffer[offset]) {
+                case Opcode.Ping: break;
+                case Opcode.Handshake:
+                    HandleLogin(buffer, offset); break;
+                case Opcode.SetBlockClient:
+                    if (!loggedIn) break;
+                    HandleBlockchange(buffer, offset); break;
+                case Opcode.EntityTeleport:
+                    if (!loggedIn) break;
+                    HandleMovement(buffer, offset); break;
+                case Opcode.Message:
+                    if (!loggedIn) break;
+                    HandleChat(buffer, offset); break;
+                case Opcode.CpeExtInfo:
+                    HandleExtInfo(buffer, offset); break;
+                case Opcode.CpeExtEntry:
+                    HandleExtEntry(buffer, offset); break;
+                case Opcode.CpeCustomBlockSupportLevel:
+                    break; // only ever one level
+                case Opcode.CpePlayerClick:
+                    HandlePlayerClicked(buffer, offset); break;
+                case Opcode.CpeTwoWayPing:
+                    HandleTwoWayPing(buffer, offset); break;
+            }
+        }
+        
+        #if TEN_BIT_BLOCKS
+        BlockID ReadBlock(byte[] buffer, int offset) {
+            BlockID block;
+            if (hasExtBlocks) {
+                block = NetUtils.ReadU16(buffer, offset);
+            } else {
+                block = buffer[offset];
+            }
+            
+            if (block > Block.MaxRaw) block = Block.MaxRaw;
+            return Block.FromRaw(block);
+        }
+        #else
+        BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
+        #endif
         
         void HandleExtInfo(byte[] buffer, int offset) {
             appName = NetUtils.ReadString(buffer, offset + 1);
@@ -45,40 +125,13 @@ namespace MCGalaxy {
             CheckReadAllExtensions();
         }
 
-        void HandlePlayerClicked(byte[] buffer, int offset) {
-            MouseButton Button = (MouseButton)buffer[offset + 1];
-            MouseAction Action = (MouseAction)buffer[offset + 2];
-            ushort yaw = NetUtils.ReadU16(buffer, offset + 3);
-            ushort pitch = NetUtils.ReadU16(buffer, offset + 5);
-            byte entityID = buffer[offset + 7];
-            ushort x = NetUtils.ReadU16(buffer, offset + 8);
-            ushort y = NetUtils.ReadU16(buffer, offset + 10);
-            ushort z = NetUtils.ReadU16(buffer, offset + 12);
-            
-            TargetBlockFace face = (TargetBlockFace)buffer[offset + 14];
-            if (face > TargetBlockFace.None) face = TargetBlockFace.None;
-            OnPlayerClickEvent.Call(this, Button, Action, yaw, pitch, entityID, x, y, z, face);
-        }
-        
-        void HandleTwoWayPing(byte[] buffer, int offset) {
-            bool serverToClient = buffer[offset + 1] != 0;
-            ushort data = NetUtils.ReadU16(buffer, offset + 2);
-            
-            if (!serverToClient) {
-                // Client-> server ping, immediately send reply.
-                Send(Packet.TwoWayPing(false, data));
-            } else {
-                // Server -> client ping, set time received for reply.
-                Ping.Update(data);
-            }
-        }
-
         void CheckReadAllExtensions() {
             if (extensionCount <= 0 && !finishedCpeLogin) {
                 CompleteLoginProcess();
                 finishedCpeLogin = true;
             }
         }
+        
         
         public void Send(byte[] buffer, bool sync = false) { Socket.Send(buffer, sync); }
         
@@ -90,10 +143,7 @@ namespace MCGalaxy {
             if (p == null) p = Player.Console;
             p.Message(0, message);
         }
-        
-        public static void SendMessage(Player p, string message) {
-            Message(p, message);
-        }
+        public static void SendMessage(Player p, string message) { Message(p, message); }
         
         public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
         public void Message(string message, object a0, object a1) { Message(string.Format(message, a0, a1)); }       
@@ -270,6 +320,7 @@ namespace MCGalaxy {
             Socket.SendLowPriority(buffer);
         }
         
+        
         public BlockID ConvertBlock(BlockID block) {
             BlockID raw;
             if (block >= Block.Extended) {
@@ -288,11 +339,6 @@ namespace MCGalaxy {
             
             if (!hasCustomBlocks) raw = Block.ConvertCPE((BlockRaw)raw);
             return raw;
-        }
-
-        internal void CloseSocket() { 
-            Socket.Close();
-            pending.Remove(this);
         }
     }
 }

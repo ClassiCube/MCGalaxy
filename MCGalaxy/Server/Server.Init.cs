@@ -98,10 +98,9 @@ namespace MCGalaxy {
         }
         
         static void SetupSocket(SchedulerTask task) {
-            Logger.Log(LogType.SystemActivity, "Creating listening socket on port {0}... ", Server.Config.Port);
-            Listener = new TcpListen();
-            
+            Listener = new TcpListen();            
             IPAddress ip;
+            
             if (!IPAddress.TryParse(Server.Config.ListenIP, out ip)) {
                 Logger.Log(LogType.Warning, "Unable to parse listen IP config key, listening on any IP");
                 ip = IPAddress.Any;

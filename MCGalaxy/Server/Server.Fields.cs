@@ -52,7 +52,7 @@ namespace MCGalaxy {
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;
-        public static INetworkListen Listener;
+        public static INetListen Listener;
 
         //Other
         public static bool SetupFinished = false;

@@ -90,7 +90,6 @@ namespace MCGalaxy {
             SendMap(null);
             if (Socket.Disconnected) return;
             loggedIn = true;
-            pending.Remove(this);
 
             SessionStartTime = DateTime.UtcNow;
             LastLogin = DateTime.Now;
