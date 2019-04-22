@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {
     public sealed class CmdTexture : Command2 {
@@ -46,22 +47,21 @@ namespace MCGalaxy.Commands.CPE {
             string url = args[1];
             if (url.CaselessEq("normal") || url.CaselessEq("reset")) {
                 url = "";
-            } else if (!(url.StartsWith("http://") || url.StartsWith("https://"))) {
-                p.Message("Please use http:// or https:// in front of your URL"); return;
-            }
-            Utils.FilterURL(ref url);
-            
-            if (url.Length > NetUtils.StringSize) {
-                p.Message("The URL must be " + NetUtils.StringSize + " characters or less."); return;
-            }
-            if (url.Length > 0 && !(url.EndsWith(".png") || url.EndsWith(".zip"))) {
-                p.Message("URL must end in .png (for terrain) or .zip (for texture pack)"); return;
+            } else {
+                HttpUtil.FilterURL(ref url);
+                
+                if (!(url.EndsWith(".png") || url.EndsWith(".zip"))) {
+                    p.Message("URL must end in .png (for terrain) or .zip (for texture pack)"); return;
+                }
+                if (url.Length > NetUtils.StringSize) {
+                    p.Message("The URL must be " + NetUtils.StringSize + " characters or less."); return;
+                }
             }
 
             if (scope == "global" || scope == "globalzip") {
                 Server.Config.DefaultTerrain = "";
                 Server.Config.DefaultTexture = "";
-                    
+                
                 if (url.Length == 0) {
                     p.Message("Reset server textures to default");
                 } else if (url.CaselessEnds(".png")) {
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.CPE {
                 p.level.Config.Terrain = "";
                 p.level.Config.TexturePack = "";
                 
-                if (url.Length == 0) {                    
+                if (url.Length == 0) {
                     p.Message("Reset level textures to server default");
                 } else if (url.CaselessEnds(".png")) {
                     p.level.Config.Terrain = url;

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Bots;
+using MCGalaxy.Network;
 
 namespace MCGalaxy.Commands.CPE {
     public class CmdSkin : EntityPropertyCmd {
@@ -78,7 +79,9 @@ namespace MCGalaxy.Commands.CPE {
             if (skin[0] == '+')
                 skin = "https://minotar.net/skin/" + skin.Substring(1) + ".png";
             
-            Utils.FilterURL(ref skin);
+            if (skin.CaselessStarts("http://") || skin.CaselessStarts("https")) {
+                HttpUtil.FilterURL(ref skin);
+            }
             return skin;
         }
 

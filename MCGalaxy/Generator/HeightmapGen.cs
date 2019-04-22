@@ -26,32 +26,6 @@ using MCGalaxy.Drawing;
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
         
-        public static byte[] DownloadImage(string url, Player p) {
-            if (!url.CaselessStarts("http://") && !url.CaselessStarts("https://"))
-                url = "http://" + url;
-            
-            Utils.FilterURL(ref url);
-            Uri uri;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
-                p.Message("{0} is not a valid URL.", url); return null;
-            }
-            
-            byte[] data = null;
-            try {
-                using (WebClient client = HttpUtil.CreateWebClient()) {
-                    p.Message("Downloading file from: &f" + url);
-                    data = client.DownloadData(uri);
-                }
-                p.Message("Finished downloading image.");
-            } catch (Exception ex) {
-                Logger.LogError("Error downloading image", ex);
-                p.Message("%WFailed to download the image from the given url.");
-                p.Message("%WThe url may need to end with its extension (such as .jpg).");
-                return null;
-            }
-            return data;
-        }
-        
         public static Bitmap DecodeImage(byte[] data, Player p) {
             Bitmap bmp = null;
             try {
@@ -73,7 +47,7 @@ namespace MCGalaxy.Generator {
         public static bool Generate(Player p, Level lvl, string url) {
             if (url.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
             
-            byte[] data = DownloadImage(url, p);
+            byte[] data = HttpUtil.DownloadImage(url, p);
             if (data == null) return false;
             Bitmap bmp = DecodeImage(data, p);
             if (bmp == null) return false;

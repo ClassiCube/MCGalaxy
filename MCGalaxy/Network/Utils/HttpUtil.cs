@@ -78,5 +78,48 @@ namespace MCGalaxy.Network {
             catch { }
             return false;
         }
+        
+        /// <summary> Prefixes a URL by http:// if needed, and converts dropbox webpages to direct links. </summary>
+        public static void FilterURL(ref string url) {
+            if (!url.CaselessStarts("http://") && !url.CaselessStarts("https://"))
+                url = "http://" + url;
+            
+            // a lot of people try linking to the dropbox page instead of directly to file, so auto correct
+            if (url.CaselessStarts("http://www.dropbox")) {
+                url = "http://dl.dropbox" + url.Substring("http://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            } else if (url.CaselessStarts("https://www.dropbox")) {
+                url = "https://dl.dropbox" + url.Substring("https://www.dropbox".Length);
+                url = url.Replace("?dl=0", "");
+            }
+        }
+        
+        public static byte[] DownloadData(string url, Player p) {
+            FilterURL(ref url);
+            Uri uri;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
+                p.Message("%W{0} is not a valid URL.", url); return null;
+            }
+            
+            byte[] data = null;
+            try {
+                using (WebClient client = CreateWebClient()) {
+                    p.Message("Downloading file from: &f" + url);
+                    data = client.DownloadData(uri);
+                }
+                p.Message("Finished downloading.");
+            } catch (Exception ex) {
+                Logger.LogError("Error downloading", ex);
+                p.Message("%WFailed to download from &f" + url);
+                return null;
+            }
+            return data;
+        }
+        
+        public static byte[] DownloadImage(string url, Player p) {
+            byte[] data = DownloadData(url, p);
+            if (data == null) p.Message("%WThe url may need to end with its extension (such as .jpg).");
+            return data;
+        }
     }
 }

@@ -24,6 +24,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
@@ -74,7 +75,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             if (parts[0].IndexOf('.') != -1) {
-                dArgs.Data = HeightmapGen.DownloadImage(parts[0], p);
+                dArgs.Data = HttpUtil.DownloadImage(parts[0], p);
                 if (dArgs.Data == null) return;
             } else {
                 string path = "extra/images/" + parts[0] + ".bmp";

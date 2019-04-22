@@ -47,14 +47,6 @@ namespace MCGalaxy.Levels.IO {
             new DatImporter(), new McLevelImporter(),
         };
         
-        public static IMapImporter Find(ref string path) {
-            foreach (IMapImporter importer in IMapImporter.Formats) {
-                path = Path.ChangeExtension(path, importer.Extension);
-                if (File.Exists(path)) return importer;
-            }
-            return null;
-        }
-        
         protected void ConvertCustom(Level lvl) {
             ushort x, y, z;
             byte[] blocks = lvl.blocks;

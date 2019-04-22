@@ -303,7 +303,7 @@ namespace MCGalaxy.Network {
             string val = raw.Substring(sep + 1).Trim();
             
             if (key.CaselessEq("Connection")) {
-                conn    = val.CaselessEq("Upgrade");
+                conn    = val.CaselessContains("Upgrade");
             } else if (key.CaselessEq("Upgrade")) {
                 upgrade = val.CaselessEq("websocket");
             } else if (key.CaselessEq("Sec-WebSocket-Version")) {

@@ -101,16 +101,5 @@ namespace MCGalaxy {
             }
             return lines;
         }
-        
-        public static void FilterURL(ref string url) {
-            // a lot of people try linking to the dropbox page instead of directly to file, so we auto correct them
-            if (url.CaselessStarts("http://www.dropbox")) {
-                url = "http://dl.dropbox" + url.Substring("http://www.dropbox".Length);
-                url = url.Replace("?dl=0", "");
-            } else if (url.CaselessStarts("https://www.dropbox")) {
-                url = "https://dl.dropbox" + url.Substring("https://www.dropbox".Length);
-                url = url.Replace("?dl=0", "");
-            }
-        }
     }
 }
