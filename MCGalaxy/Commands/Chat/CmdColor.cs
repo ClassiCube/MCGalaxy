@@ -70,8 +70,8 @@ namespace MCGalaxy.Commands.Chatting {
             p.Message("%T/Color [player] [color]");
             p.Message("%HSets the nick color of that player");
             p.Message("%H  If [color] is not given, reverts to player's rank color.");
-            p.Message("%H/Color bot [bot] [color]");
-            p.Message("%TSets the name color of that bot.");
+            p.Message("%T/Color bot [bot] [color]");
+            p.Message("%HSets the name color of that bot.");
             p.Message("%HTo see a list of all colors, use /Help colors.");
         }
     }
