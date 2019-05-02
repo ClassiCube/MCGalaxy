@@ -94,7 +94,10 @@ namespace MCGalaxy {
         
         static bool GotoLevel(Player p, Level lvl) {
             if (p.level == lvl) { p.Message("You are already in {0}%S.", lvl.ColoredName); return false; }
-            if (!lvl.CanJoin(p)) return false;
+            
+            bool canJoin = lvl.CanJoin(p);
+            OnJoiningLevelEvent.Call(p, lvl, ref canJoin);
+            if (!canJoin) return false;
 
             p.Loading = true;
             Entities.DespawnEntities(p);

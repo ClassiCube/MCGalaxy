@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static string GetPath(string url) { return url.Length == 0 ? "(none)" : url; }
         
-        void UpdateGlobal(Player p) {
+        static void UpdateGlobal(Player p) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 pl.SendCurrentTextures();
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.CPE {
             SrvProperties.Save();
         }
         
-        void UpdateLevel(Player p) {
+        static void UpdateLevel(Player p) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
                 if (pl.level != p.level) continue;
@@ -116,7 +116,6 @@ namespace MCGalaxy.Commands.CPE {
             p.Message("%HChanges server default or current level's texture.");
             p.Message("%H[url] must end with .png (terrain) or .zip (texture pack)");
             p.Message("%HUsing 'reset' for [url] will reset the texture to default");
-            p.Message("%H  Note: zip texture packs are not supported by all clients");
         }
     }
 }

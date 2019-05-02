@@ -183,6 +183,22 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
     
+        
+    public delegate void OnJoiningLevel(Player p, Level lvl, ref bool canJoin);
+    /// <summary> Called when player intends to join a map. </summary>
+    /// <remarks> canJoin decides whether player will be allowed into the map. </remarks>
+    public sealed class OnJoiningLevelEvent : IEvent<OnJoiningLevel> {
+        
+        public static void Call(Player p, Level lvl, ref bool canJoin) {
+            IEvent<OnJoiningLevel>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, lvl, ref canJoin); }
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }  
+    
     public delegate void OnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce);
     /// <summary> Called when a player has been sent a new map, and has been spawned in that map. </summary>
     public sealed class OnJoinedLevelEvent : IEvent<OnJoinedLevel> {
