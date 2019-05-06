@@ -36,8 +36,9 @@ namespace MCGalaxy.Commands.Maintenance {
                     case "private": SetPrivate(p, args); break;
                     case "reload": DoReload(p, args); break;
                     case "backup": DoBackup(p, args); break;
-                    case "restore": DoRestore(p, args); break;
+                    case "restore": DoRestore(p); break;
                     case "import": DoImport(p, args); break;
+                    case "update" : DoUpdate(p); break;
                     case "upgradeblockdb": DoBlockDBUpgrade(p, args); break;
                     default: Help(p); break;
             }
@@ -99,12 +100,18 @@ namespace MCGalaxy.Commands.Maintenance {
             }
         }
         
-        static void DoRestore(Player p, string[] args) {
+        static void DoRestore(Player p) {
             if (!CheckPerms(p)) {
-                p.Message("Only Console or the Server Owner can restore the server.");
-                return;
+                p.Message("Only Console or the Server Owner can restore the server."); return;
             }
             Backup.Extract(p);
+        }
+        
+        static void DoUpdate(Player p) {
+            if (!CheckPerms(p)) {
+                p.Message("Only Console or the Server Owner can update the server."); return;
+            }
+        	Updater.PerformUpdate();
         }
         
         void DoImport(Player p, string[] args) {
@@ -160,7 +167,8 @@ namespace MCGalaxy.Commands.Maintenance {
         public override void Help(Player p) {
             p.Message("%T/Server reload %H- Reloads the server files");
             p.Message("%T/Server public/private %H- Makes the server public or private");
-            p.Message("%T/Server restore %H- Restores the server from a backup");
+            p.Message("%T/Server update %H- Force updates the server");
+            p.Message("%T/Server restore %H- Restores the server from a backup");           
             p.Message("%T/Server backup %H- Make a backup. See %T/help server backup");
             p.Message("%T/Server backup table [name] %H- Backups that database table");
             p.Message("%T/Server import [name] %H- Imports a backed up database table");

@@ -29,7 +29,7 @@ namespace MCGalaxy.Cli {
         public static void RunCLI() {
             if (!File.Exists("MCGalaxy_.dll")) {
                 Console.WriteLine("Cannot start server as MCGalaxy_.dll is missing");
-                Console.WriteLine("Download it from https://github.com/Hetal728/MCGalaxy/tree/master/Uploads");
+                Console.WriteLine("Download from https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads");
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey(true);
                 return;
