@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Building {
             } else if (IsListCommand(opt)) {
                 string dir = "extra/savecopy/" + p.name;
                 if (!Directory.Exists(dir)) {
-                    p.Message("No such directory exists"); return;
+                    p.Message("You have no saved copies"); return;
                 }
                 
                 string[] files = Directory.GetFiles(dir);
@@ -94,19 +94,29 @@ namespace MCGalaxy.Commands.Building {
             int marks = cArgs.offsetIndex != -1 ? 3 : 2;
             p.MakeSelection(marks, "Selecting region for %SCopy", cArgs, DoCopy, DoCopyMark);
         }
+        
+        void CompleteCopy(Player p, Vec3S32[] m, CopyArgs cArgs) {
+            if (!cArgs.cut) return;
+            DrawOp op = new CuboidDrawOp();
+            op.Flags = BlockDBFlags.Cut;
+            Brush brush = new SolidBrush(Block.Air);
+            DrawOpPerformer.Do(op, brush, p, new Vec3S32[] { m[0], m[1] }, false);
+        }
 
         void DoCopyMark(Player p, Vec3S32[] m, int i, object state, BlockID block) {
+            CopyArgs cArgs = (CopyArgs)state;
             if (i == 2) {
                 CopyState copy = p.CurrentCopy;
                 copy.Offset.X = copy.OriginX - m[i].X;
                 copy.Offset.Y = copy.OriginY - m[i].Y;
                 copy.Offset.Z = copy.OriginZ - m[i].Z;
+                
                 p.Message("Set offset of where to paste from.");
+                CompleteCopy(p, m, cArgs);
                 return;
             }
             if (i != 1) return;
             
-            CopyArgs cArgs = (CopyArgs)state;
             Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
             ushort minX = (ushort)min.X, minY = (ushort)min.Y, minZ = (ushort)min.Z;
             ushort maxX = (ushort)max.X, maxY = (ushort)max.Y, maxZ = (ushort)max.Z;
@@ -132,7 +142,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (cState.UsedBlocks > p.group.DrawLimit) {
                 p.Message("You tried to copy {0} blocks. You cannot copy more than {1} blocks.",
-                               cState.UsedBlocks, p.group.DrawLimit);
+                          cState.UsedBlocks, p.group.DrawLimit);
                 cState.Clear(); cState = null;
                 p.ClearSelection();
                 return;
@@ -140,23 +150,17 @@ namespace MCGalaxy.Commands.Building {
             
             cState.CopySource = "level " + p.level.name;
             p.CurrentCopy = cState;
-            
-            if (cArgs.cut) {
-                DrawOp op = new CuboidDrawOp();
-                op.Flags = BlockDBFlags.Cut;
-                Brush brush = new SolidBrush(Block.Air);
-                DrawOpPerformer.Do(op, brush, p, new Vec3S32[] { min, max }, false);
-            }
 
             p.Message("Copied &a{0} %Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
-                           cState.OriginX == cState.X ? "Min" : "Max",
-                           cState.OriginY == cState.Y ? "Min" : "Max",
-                           cState.OriginZ == cState.Z ? "Min" : "Max");
-            if (!cState.PasteAir) {
-                p.Message("To also copy air blocks, use %T/Copy Air");
-            }
+                      cState.OriginX == cState.X ? "Min" : "Max",
+                      cState.OriginY == cState.Y ? "Min" : "Max",
+                      cState.OriginZ == cState.Z ? "Min" : "Max");
+            if (!cState.PasteAir) p.Message("To also copy air blocks, use %T/Copy Air");
+            
             if (cArgs.offsetIndex != -1) {
                 p.Message("Place a block to determine where to paste from");
+            } else {
+                CompleteCopy(p, m, cArgs);
             }
         }
         
@@ -174,13 +178,13 @@ namespace MCGalaxy.Commands.Building {
             }
             
             CopyState cState = p.CurrentCopy;
-            if (cState == null) { 
-                p.Message("You haven't copied anything yet"); return; 
+            if (cState == null) {
+                p.Message("You haven't copied anything yet"); return;
             }
             
             string path = "extra/savecopy/" + p.name + "/" + file + ".cpb";
             using (FileStream fs = File.Create(path))
-                using(GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
+                using (GZipStream gs = new GZipStream(fs, CompressionMode.Compress))
             {
                 cState.SaveTo(gs);
             }
