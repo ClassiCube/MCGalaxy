@@ -92,6 +92,8 @@ namespace MCGalaxy.Network {
                 url = "https://dl.dropbox" + url.Substring("https://www.dropbox".Length);
                 url = url.Replace("?dl=0", "");
             }
+            
+            url = url.Replace("dl.dropboxusercontent.com", "dl.dropbox.com");
         }
         
         public static byte[] DownloadData(string url, Player p) {
