@@ -33,6 +33,7 @@ namespace MCGalaxy.Commands.Bots {
             string[] args = message.SplitSpaces(2);
             PlayerBot bot = Matcher.FindBots(p, args[0]);
             if (bot == null) return;
+            if (!bot.EditableBy(p, "summon")) { return; }
             
             Position pos; byte yaw, pitch;            
             if (args.Length == 1) {

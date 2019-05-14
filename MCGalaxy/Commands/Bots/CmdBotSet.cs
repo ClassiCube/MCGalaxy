@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Bots {
             PlayerBot bot = Matcher.FindBots(p, args[0]);
             if (bot == null) return;            
             if (!LevelInfo.Check(p, data.Rank, p.level, "change AI of bots in this level")) return;
-                
+            if (!bot.EditableBy(p, "change the AI of")) { return; }
             if (args.Length == 1) {
                 bot.Instructions.Clear();
                 bot.kill = false;

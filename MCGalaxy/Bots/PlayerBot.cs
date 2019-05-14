@@ -21,6 +21,7 @@ using System.IO;
 using MCGalaxy.Bots;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy {
     
@@ -32,6 +33,7 @@ namespace MCGalaxy {
         public string name, DisplayName;
         public string ClickedOnText;
         public string DeathMessage;
+        public string Owner;
         public string ColoredName { get { return color + DisplayName; } }
         
         public byte id;
@@ -58,6 +60,22 @@ namespace MCGalaxy {
         public override bool CanSeeEntity(Entity other) { return true; }
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
+        
+        public bool EditableBy(Player p, string attemptedAction = "modify") {
+            if (CanEditAny(p)) { return true; }
+            if (Owner == p.name) { return true; }
+            
+            p.Message("%WYou are not allowed to {0} bots that you did not create.", attemptedAction);
+            return false;
+        }
+        
+        public static bool CanEditAny(Player p) {
+            if (LevelInfo.IsRealmOwner(p.name, p.level.name)) { return true; }
+            ItemPerms perms = CommandExtraPerms.Find("Bot", 1);
+            perms = perms == null ? new ItemPerms(LevelPermission.Operator, null, null) : perms;
+            if (perms.UsableBy(p.Rank)) { return true; }
+            return false;
+        }
         
         public static void Add(PlayerBot bot, bool save = true) {
             // Lock to ensure that no two bots can end up with the same playerid

@@ -27,12 +27,20 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
+            string[] args = message.SplitSpaces(2);
+            if (args.Length > 1 && args[0].CaselessEq("bot")) {
+                ForBot(p, args[1]);
+                return;
+            }
+            ForPlayer(p, message);
+        }
+        
+        static void ForPlayer(Player p, string message) {
             Player nick = FindNick(p, message);
             
             if (nick == null) return;
             p.Message("This player's real username is " + nick.name);
         }
-        
         static Player FindNick(Player p, string nick) {
             nick = Colors.Strip(nick);
             Player[] players = PlayerInfo.Online.Items;
@@ -41,9 +49,25 @@ namespace MCGalaxy.Commands.Info {
                                 pl => Colors.Strip(pl.DisplayName), "online player nicks");
         }
         
+        static void ForBot(Player p, string message) {
+            PlayerBot nick = FindBotNick(p, message);
+            
+            if (nick == null) return;
+            p.Message("This bot's real name is {0}, its nickname is {1}%S and its owner is {2}.", nick.name, nick.DisplayName, nick.Owner);
+        }
+        static PlayerBot FindBotNick(Player p, string nick) {
+            nick = Colors.Strip(nick);
+            PlayerBot[] bots = p.level.Bots.Items;
+            int matches;
+            return Matcher.Find(p, nick, out matches, bots, pl => true,
+                                pl => Colors.Strip(pl.DisplayName), "bot nicknames");
+        }
+        
         public override void Help(Player p) {
             p.Message("%T/WhoNick [nickname]");
             p.Message("%HDisplays the player's real username");
+            p.Message("%T/WhoNick bot [nickname]");
+            p.Message("%HDisplays the bots's real name");
         }
     }
 }

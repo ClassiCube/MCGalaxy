@@ -28,6 +28,9 @@ namespace MCGalaxy.Commands.Bots {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("BotAdd", "add"), new CommandAlias("BotRemove", "remove") }; }
         }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can modify bots that do not belong to them") }; }
+        }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
@@ -57,6 +60,7 @@ namespace MCGalaxy.Commands.Bots {
         
         void AddBot(Player p, string botName) {
             PlayerBot bot = new PlayerBot(botName, p.level);
+            bot.Owner = p.name;
             TryAddBot(p, bot);
         }
         
@@ -86,12 +90,17 @@ namespace MCGalaxy.Commands.Bots {
         
         void RemoveBot(Player p, string botName) {
             if (botName.CaselessEq("all")) {
-                PlayerBot.RemoveLoadedBots(p.level, false);
-                BotsFile.Save(p.level);
+                if (PlayerBot.CanEditAny(p)) {
+                    PlayerBot.RemoveLoadedBots(p.level, false);
+                    BotsFile.Save(p.level);
+                } else {
+                    p.Message("%WYou cannot remove all bots unless you are the owner of this map.");
+                }
+
             } else {
                 PlayerBot bot = Matcher.FindBots(p, botName);
                 if (bot == null) return;
-                
+                if (!bot.EditableBy(p, "remove")) { return; }
                 PlayerBot.Remove(bot);
                 p.Message("Removed bot {0}", bot.ColoredName);
             }
@@ -100,7 +109,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetBotText(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-
+            if (!bot.EditableBy(p, "set the text of")) { return; }
             if (text == null) {
                 p.Message("Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
                 bot.ClickedOnText = null;
@@ -115,7 +124,7 @@ namespace MCGalaxy.Commands.Bots {
         void SetDeathMessage(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-
+            if (!bot.EditableBy(p, "set the death message of")) { return; }
             if (text == null) {
                 p.Message("Reset shown when bot {0} %Skills someone", bot.ColoredName);
                 bot.DeathMessage = null;
@@ -133,6 +142,7 @@ namespace MCGalaxy.Commands.Bots {
             
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
+            if (!bot.EditableBy(p, "rename")) { return; }
             if (BotExists(p.level, newName, bot)) {
                 p.Message("A bot with the new name already exists."); return;
             }
@@ -159,7 +169,7 @@ namespace MCGalaxy.Commands.Bots {
             BotProperties props = new BotProperties();
             props.FromBot(bot);
             props.ApplyTo(clone);
-
+            clone.Owner = p.name;
             clone.SetModel(clone.Model, p.level);
             BotsFile.LoadAi(props, clone);
             // Preserve custom name tag

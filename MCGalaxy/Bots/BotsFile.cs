@@ -127,6 +127,7 @@ namespace MCGalaxy.Bots {
         [ConfigString] public string Color;
         [ConfigString] public string ClickedOnText;
         [ConfigString] public string DeathMessage;
+        [ConfigString] public string Owner;
         
         [ConfigString] public string AI;
         [ConfigBool] public bool Kill;
@@ -147,6 +148,7 @@ namespace MCGalaxy.Bots {
         [ConfigFloat] public float ScaleZ;
         
         public void FromBot(PlayerBot bot) {
+            Owner = bot.Owner;
             Name = bot.name; Level = bot.level.name;
             Skin = bot.SkinName; AI = bot.AIName;
             Model = bot.Model; Color = bot.color;
@@ -168,6 +170,7 @@ namespace MCGalaxy.Bots {
             rot.RotX = BodyX; rot.RotZ = BodyZ;
             bot.Rot = rot;
             
+            bot.Owner = Owner;
             bot.SkinName = Skin; bot.Model = Model; bot.color = Color;
             bot.AIName = AI; bot.hunt = Hunt; bot.kill = Kill;
             bot.DisplayName = DisplayName;

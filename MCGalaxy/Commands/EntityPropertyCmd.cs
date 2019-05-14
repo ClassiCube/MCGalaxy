@@ -35,6 +35,7 @@ namespace MCGalaxy.Commands {
                 if (!CheckExtraPerm(p, data, 2)) return;
                 
                 if (!LevelInfo.Check(p, data.Rank, p.level, "change the " + type + " of that bot")) return;
+                if (!bot.EditableBy(p, "change the " + type + " of")) { return; }
                 SetBotData(p, bot, args.Length > 2 ? args[2] : "");
             } else {
                 if (p != who && !CheckExtraPerm(p, data, 1)) return;
