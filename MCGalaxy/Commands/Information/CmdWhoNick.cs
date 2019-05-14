@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
             PlayerBot nick = FindBotNick(p, message);
             
             if (nick == null) return;
-            p.Message("This bot's real name is {0}, its nickname is {1}%S and its owner is {2}.", nick.name, nick.DisplayName, nick.Owner);
+            p.Message("This bot's real name is &1{0}%S, its nickname is {1}%S and its owner is {2}.", nick.name, nick.DisplayName, string.IsNullOrEmpty(nick.Owner) ? "no one" : nick.Owner);
         }
         static PlayerBot FindBotNick(Player p, string nick) {
             nick = Colors.Strip(nick);
