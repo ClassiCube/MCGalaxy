@@ -98,7 +98,6 @@ namespace MCGalaxy {
             PlayerBot[] bots = lvl.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
                 Remove(bots[i], save);
-                removedCount++;
             }
             return bots.Length;
         }
