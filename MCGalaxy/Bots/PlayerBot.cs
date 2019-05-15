@@ -106,7 +106,7 @@ namespace MCGalaxy {
             PlayerBot[] bots = lvl.Bots.Items;
             int removedCount = 0;
             for (int i = 0; i < bots.Length; i++) {
-                if (bots[i].Owner.CaselessEq(ownerName)) {
+                if (ownerName.CaselessEq(bots[i].Owner)) {
                     Remove(bots[i], save);
                     removedCount++;
                 }
