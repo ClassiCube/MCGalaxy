@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Bots {
             if (args[0].CaselessEq("add")) {
                 AddBot(p, bot);
             } else if (IsDeleteCommand(args[0])) {
-                RemoveBot(p, bot);
+                RemoveBot(p, bot, value);
             } else if (args[0].CaselessEq("text")) {
                 SetBotText(p, bot, value);
             } else if (args[0].CaselessEq("deathmsg") || args[0].CaselessEq("deathmessage")) {
@@ -59,6 +59,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void AddBot(Player p, string botName) {
+            botName = botName.Replace(' ', '_');
             PlayerBot bot = new PlayerBot(botName, p.level);
             bot.Owner = p.name;
             TryAddBot(p, bot);
@@ -88,11 +89,34 @@ namespace MCGalaxy.Commands.Bots {
             return false;
         }
         
-        void RemoveBot(Player p, string botName) {
+        void RemoveBot(Player p, string botName, string extArgs) {
             if (botName.CaselessEq("all")) {
+                //bot remove all[botname] griefer[extArgs]
+                if (extArgs != null) {
+                    string ownerName = PlayerInfo.FindMatchesPreferOnline(p, extArgs);
+                    if (ownerName == null) { return; }
+                    if (PlayerBot.CanEditAny(p) || ownerName.CaselessEq(p.name)) {
+                        int removedCount = PlayerBot.RemoveBotsOwnedBy(p, ownerName, p.level, false);
+                        if (removedCount == 0) {
+                            p.Message("There are no bots owned by {0}%S in this level.", PlayerInfo.GetColoredName(p, ownerName));
+                        } else {
+                            p.Message("Removed {0} bot{1} belonging to {2}%S.", removedCount, removedCount > 1 ? "s" : "", PlayerInfo.GetColoredName(p, ownerName));
+                            BotsFile.Save(p.level);
+                        }
+                    } else {
+                        p.Message("%WYou cannot remove all bots belonging to {0}%W unless you are the owner of this map.", PlayerInfo.GetColoredName(p, ownerName));
+                    }
+                    return;
+                }
+                
                 if (PlayerBot.CanEditAny(p)) {
-                    PlayerBot.RemoveLoadedBots(p.level, false);
-                    BotsFile.Save(p.level);
+                    int removedCount = PlayerBot.RemoveLoadedBots(p.level, false);
+                    if (removedCount == 0) {
+                        p.Message("There are no bots in this level.");
+                    } else {
+                        p.Message("Removed {0} bot{1}.", removedCount, removedCount > 1 ? "s" : "");
+                        BotsFile.Save(p.level);
+                    }
                 } else {
                     p.Message("%WYou cannot remove all bots unless you are the owner of this map.");
                 }
@@ -180,7 +204,9 @@ namespace MCGalaxy.Commands.Bots {
         public override void Help(Player p) {
             p.Message("%T/Bot add [name] %H- Adds a new bot at your position");
             p.Message("%T/Bot remove [name] %H- Removes the bot with that name");
-            p.Message("%H  If [name] is \"all\", removes all bots on your map");
+            p.Message("%T/Bot remove all %H- Removes all bots on your map.");
+            p.Message("%T/Bot remove all [owner]");
+            p.Message("%HRemoves all bots owned by [owner] on your map.");
             p.Message("%T/Bot text [name] <text>");
             p.Message("%HSets the text shown when a player clicks on this bot");
             p.Message("%HSee %T/Help mb %Hfor more details on <text>");
