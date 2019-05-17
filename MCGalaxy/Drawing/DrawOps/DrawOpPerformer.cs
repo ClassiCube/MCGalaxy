@@ -170,7 +170,6 @@ namespace MCGalaxy.Drawing.Ops {
                 if (old == Block.custom_block) old = (BlockID)(Block.Extended | lvl.FastGetExtTile(b.X, b.Y, b.Z));
                 #endif
                 
-                if (old == Block.Invalid) return;
                 // Check to make sure the block is actually different and that can be used
                 if (old == b.Block || !p.group.Blocks[old] || !p.group.Blocks[b.Block]) return;
                 
