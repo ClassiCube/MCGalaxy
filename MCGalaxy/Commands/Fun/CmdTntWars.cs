@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Fun {
                 SetBool(p, ref cfg.BalanceTeams, value, "Team balancing");
             } else if (prop.CaselessEq("teamkill")) {
                 SetBool(p, ref cfg.TeamKills, value, "Team killing");
-            } else if (prop.CaselessEq("zones")) {
+            } else if (prop.CaselessEq("zone")) {
                 if (args.Length < 4) { Help(p, "zone"); return; }
                 
                 if (value.CaselessEq("notnt")) {
@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (assist == 0) {
                     p.Message("Scores per assist is now &cdisabled");
                 } else {
-                    p.Message("TScore per assist is now &a{0} %Spoints", assist);
+                    p.Message("Score per assist is now &a{0} %Spoints", assist);
                 }
             } else {
                 return false;
