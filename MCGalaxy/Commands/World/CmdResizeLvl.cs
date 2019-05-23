@@ -67,6 +67,8 @@ namespace MCGalaxy.Commands.World {
         
         static Level ResizeLevel(Level lvl, int width, int height, int length) {
             Level res = new Level(lvl.name, (ushort)width, (ushort)height, (ushort)length);
+            res.hasPortals       = lvl.hasPortals;
+            res.hasMessageBlocks = lvl.hasMessageBlocks;
             byte[] src = lvl.blocks, dst = res.blocks;
             
             // Copy blocks in bulk
