@@ -34,11 +34,11 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         void btnCreate_Click(object sender, EventArgs e) {
-            if (String.IsNullOrEmpty(txtCmdName.Text.Trim())) {
+            string cmdName = txtCmdName.Text.Trim();
+            if (cmdName.Length == 0) {
                 Popup.Warning("Command must have a name"); return;
             }
             
-            string cmdName = txtCmdName.Text.Trim().ToLower();
             IScripting engine = radVB.Checked ? IScripting.VB : IScripting.CS;
             string path = engine.SourcePath(cmdName);
             if (File.Exists(path)) {
@@ -52,7 +52,7 @@ namespace MCGalaxy.Gui.Popups {
                 Popup.Error("Failed to generate command. Check error logs for more details.");
                 return;
             }
-            Popup.Message("Command: Cmd" + cmdName + engine.Ext + " created.");
+            Popup.Message("Command Cmd" + cmdName + engine.Ext + " created.");
         }
 
         void btnLoad_Click(object sender, EventArgs e) {
@@ -75,7 +75,7 @@ namespace MCGalaxy.Gui.Popups {
                 
                 CompilerParameters args = new CompilerParameters();
                 args.GenerateInMemory = true;
-                CompilerResults result = engine.CompileSource(fileName, args);
+                CompilerResults result = engine.CompileSource(File.ReadAllText(fileName), args);
 
                 if (result.Errors.HasErrors) {
                     foreach (CompilerError err in result.Errors) {
