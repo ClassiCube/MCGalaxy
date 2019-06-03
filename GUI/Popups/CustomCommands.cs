@@ -75,10 +75,7 @@ namespace MCGalaxy.Gui.Popups {
                 
                 CompilerParameters args = new CompilerParameters();
                 args.GenerateInMemory = true;
-                var result = engine.CompileSource(File.ReadAllText(fileName), args);
-                if (result == null) { 
-                    Popup.Error("Error compiling files. Check logs for more details."); return; 
-                }
+                CompilerResults result = engine.CompileSource(fileName, args);
 
                 if (result.Errors.HasErrors) {
                     foreach (CompilerError err in result.Errors) {

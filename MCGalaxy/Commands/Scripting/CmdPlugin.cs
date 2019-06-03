@@ -59,14 +59,12 @@ namespace MCGalaxy.Commands.Scripting {
             string srcPath = "plugins/" + name + engine.Ext;
             string dstPath = IScripting.PluginPath(name);
             
-            if (File.Exists(srcPath)) {
-                if (engine.Compile(srcPath, dstPath)) {
-                    p.Message("Plugin compiled successfully.");
-                } else {
-                    p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
-                }
-            } else {
+            if (!File.Exists(srcPath)) {
                 p.Message("File &9{0} %Snot found.", srcPath);
+            } else if (engine.Compile(srcPath, dstPath)) {
+                p.Message("Plugin compiled successfully.");
+            } else {
+                p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }
         

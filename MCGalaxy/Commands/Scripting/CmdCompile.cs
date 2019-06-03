@@ -39,13 +39,12 @@ namespace MCGalaxy.Commands.Scripting {
                 Help(p); return;
             }
 
-            string path = engine.SourcePath(args[0]);
-            if (!File.Exists(path)) {
-                p.Message("File &9{0} %Snot found.", path); return;
-            }
+            string srcPath = engine.SourcePath(args[0]);
+            string dstPath = IScripting.DllPath(args[0]);   
             
-            string dstPath = IScripting.DllPath(args[0]);            
-            if (engine.Compile(path, dstPath)) {
+            if (!File.Exists(srcPath)) {
+                p.Message("File &9{0} %Snot found.", srcPath);
+            } else if (engine.Compile(srcPath, dstPath)) {
                 p.Message("Command compiled successfully.");
             } else {
                 p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
