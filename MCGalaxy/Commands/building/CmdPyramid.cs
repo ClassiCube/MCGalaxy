@@ -40,12 +40,6 @@ namespace MCGalaxy.Commands.Building {
             return new PyramidSolidDrawOp();
         }
         
-        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
-            if (m[0].Y == m[1].Y) return;
-            dArgs.Player.Message("The two corners of the pyramid must be on the same level");
-            m = null;
-        }
-        
         public override void Help(Player p) {
             p.Message("%T/Pyramid <brush args>");
             p.Message("%HDraws a square pyramid, using two points for the base.");

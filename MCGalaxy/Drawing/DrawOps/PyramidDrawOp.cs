@@ -41,7 +41,7 @@ namespace MCGalaxy.Drawing.Ops {
 
                 p1.X++; p2.X--; 
                 p1.Z++; p2.Z--;
-                p1.Y += yDir; p2.Y = p1.Y;                
+                p1.Y += yDir; p2.Y = p1.Y;
             }
             return total;
         }
@@ -57,7 +57,7 @@ namespace MCGalaxy.Drawing.Ops {
 
                 p1.X++; p2.X--;
                 p1.Z++; p2.Z--;
-                p1.Y += yDir; p2.Y = p1.Y;               
+                p1.Y += yDir; p2.Y = p1.Y;
             }
         }
     }
