@@ -38,14 +38,13 @@ namespace MCGalaxy.Core {
             if (!IPThrottler.CheckIP(p)) return false;
             if (!CheckTempban(p)) return false;
 
-            bool whitelisted = CheckWhitelist(p);
-            if (!whitelisted) {
+            if (Server.Config.WhitelistedOnly && !Server.whiteList.Contains(p.name)) {
                 p.Leave(null, "This is a private server!", true);
                 return false;
             }
             
             p.group = Group.GroupIn(p.name);
-            if (!CheckBanned(p, whitelisted)) return false;
+            if (!CheckBanned(p)) return false;
             if (!CheckPlayersCount(p)) return false;
             return true;
         }
@@ -94,14 +93,6 @@ namespace MCGalaxy.Core {
             } catch { }
             return true;
         }
-
-        static bool CheckWhitelist(Player p) {
-            if (!Server.Config.WhitelistedOnly) return true;
-            if (!Server.whiteList.Contains(p.name)) return false;
-            
-            // If verify names is off, check if the player is on the same IP.
-            return Server.Config.VerifyNames || PlayerInfo.FindAccounts(p.ip).Contains(p.name);
-        }
         
         static bool CheckPlayersCount(Player p) {
             if (Server.vip.Contains(p.name)) return true;
@@ -125,8 +116,8 @@ namespace MCGalaxy.Core {
             return false;
         }
         
-        static bool CheckBanned(Player p, bool whitelisted) {
-            if (Server.bannedIP.Contains(p.ip) && (!Server.Config.WhitelistedOnly || !whitelisted)) {
+        static bool CheckBanned(Player p) {
+            if (Server.bannedIP.Contains(p.ip)) {
                 p.Kick(null, Server.Config.DefaultBanMessage, true);
                 return false;
             }
