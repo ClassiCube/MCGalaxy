@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!Server.vip.AddUnique(name)) {
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
             } else {
-                Server.vip.Save(false);
+                Server.vip.Save();
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis now a VIP.");
                 
                 Player vip = PlayerInfo.FindExact(name);
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!Server.vip.Remove(name)) {
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis not a VIP.");
             } else {
-                Server.vip.Save(false);
+                Server.vip.Save();
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis no longer a VIP.");
                 
                 Player vip = PlayerInfo.FindExact(name);
@@ -75,15 +75,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void List(Player p, string modifier) {
-            List<string> list = Server.vip.All();
-            if (list.Count == 0) {
-                p.Message("There are no VIPs.");
-            } else {
-                p.Message("VIPs:");
-                MultiPageOutput.Output(p, list, 
-                                       (name) => PlayerInfo.GetColoredName(p, name),
-                                       "VIP list", "players", modifier, false);
-            }
+            Server.vip.Output(p, "VIPs", "VIP list", modifier);
         }
 
         public override void Help(Player p) {

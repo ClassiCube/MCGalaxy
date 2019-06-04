@@ -67,15 +67,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void List(Player p, string modifier) {
-            List<string> list = Server.whiteList.All();
-            if (list.Count == 0) {
-                p.Message("There are no whitelisted players.");
-            } else {
-                p.Message("Whitelisted players:");
-                MultiPageOutput.Output(p, list,
-                                       (name) => PlayerInfo.GetColoredName(p, name),
-                                       "Whitelist list", "players", modifier, false);
-            }
+            Server.whiteList.Output(p, "whitelisted players", "Whitelist list", modifier);
         }
 
         public override void Help(Player p) {

@@ -58,9 +58,8 @@ namespace MCGalaxy.Commands.Moderation {
                     break;
                     
                 case "list":
-                    string names = Server.ircControllers.All().Join();
-                    p.Message("IRC controllers list:");
-                    p.Message(names);
+                    string modifier = parts.Length > 1 ? parts[1] : "";
+                    Server.ircControllers.Output(p, "IRC controllers", "IRCControllers list", modifier);
                     break;
                     
                 case "rank":

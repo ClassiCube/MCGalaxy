@@ -50,6 +50,11 @@ namespace MCGalaxy {
         public bool Contains(string name) {
             lock (locker) return names.CaselessContains(name);
         }
+        
+        // only used for NameConverter
+        internal int IndexOf(string name) {
+        	lock (locker) return names.CaselessIndexOf(name);
+        }
 
         public bool AddUnique(string name) {
             lock (locker) {
@@ -61,11 +66,24 @@ namespace MCGalaxy {
             return true;
         }
         
+        
         /// <summary> Finds matches within this list for the given name. </summary>
         public string FindMatches(Player p, string name, string type, out int matches) {
             lock (locker) {
                 return Matcher.Find(p, name, out matches, names,
                                     null, n => n, type, 20);
+            }
+        }
+        
+        public void Output(Player p, string group, string listCmd, string modifier) {
+            List<string> list = All();
+            if (list.Count == 0) {
+                p.Message("There are no {0}.", group);
+            } else {
+                p.Message("{0}:", group.Capitalize());
+                MultiPageOutput.Output(p, list,
+                                       (name) => PlayerInfo.GetColoredName(p, name),
+                                       listCmd, "players", modifier, false);
             }
         }
         

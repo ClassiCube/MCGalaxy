@@ -28,6 +28,7 @@ namespace MCGalaxy.DB {
         // NOTE: this restriction is due to BlockDBCacheEntry
         public const int MaxPlayerID = 0x00FFFFFF;
         
+        /// <summary> Returns the name associated with the given ID, or ID#[id] if not found </summary>
         public static string FindName(int id) {
             List<string> invalid = Server.invalidIds.All();
             if (id > MaxPlayerID - invalid.Count)
@@ -42,22 +43,23 @@ namespace MCGalaxy.DB {
             return arg;
         }
         
+        /// <summary> Finds all the IDs associated with the given name. </summary>
         public static int[] FindIds(string name) {
-            List<string> invalid = Server.invalidIds.All();
             List<int> ids = new List<int>();
             
-            int i = invalid.CaselessIndexOf(name);
+            int i = Server.invalidIds.IndexOf(name);
             if (i >= 0) ids.Add(MaxPlayerID - i);
             
             Database.Backend.ReadRows("Players", "ID", ids, ListIds, "WHERE Name=@0", name);
             return ids.ToArray();
         }
         
+        /// <summary> Returns a non-database ID for the given name </summary>
         public static int InvalidNameID(string name) {
             bool added = Server.invalidIds.AddUnique(name);
             if (added) Server.invalidIds.Save();
             
-            int index = Server.invalidIds.All().CaselessIndexOf(name);
+            int index = Server.invalidIds.IndexOf(name);
             return MaxPlayerID - index;
         }
     }
