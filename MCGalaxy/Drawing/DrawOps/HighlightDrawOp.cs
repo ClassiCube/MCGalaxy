@@ -29,14 +29,18 @@ namespace MCGalaxy.Drawing.Ops {
     public class HighlightDrawOp : DrawOp {
         public override string Name { get { return "Highlight"; } }
         
+        // Some servers like to use custom default highlight blocks due to using custom blocks
+        public static BlockID DefaultPlaceHighlight  = Block.Green;
+        public static BlockID DefaultDeleteHighlight = Block.Red;
+        
         /// <summary> Point in time that the /highlight should go backwards up to. </summary>
         public DateTime Start = DateTime.MinValue;
         
         /// <summary> Block to highlight placements with. </summary>
-        public BlockID PlaceHighlight = Block.Green;
+        public BlockID PlaceHighlight = DefaultPlaceHighlight;
         
         /// <summary> Block to highlight deletions with. </summary>
-        public BlockID DeleteHighlight = Block.Red;
+        public BlockID DeleteHighlight = DefaultDeleteHighlight;
         
         
         internal string who;
