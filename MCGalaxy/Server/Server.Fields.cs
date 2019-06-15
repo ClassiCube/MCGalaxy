@@ -71,7 +71,7 @@ namespace MCGalaxy {
         [Obsolete("Use LevelInfo.Loaded.Items")]
         public static List<Level> levels;
 
-        public static List<string> reviewlist = new List<string>();
+        public static PlayerList reviewlist = new PlayerList();
         static string[] announcements = new string[0];
         [Obsolete("Use %S or Server.Config.DefaultColor")]
         public static string DefaultColor;

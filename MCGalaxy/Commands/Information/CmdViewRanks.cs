@@ -32,20 +32,14 @@ namespace MCGalaxy.Commands.Info {
             string[] args = message.SplitSpaces(2);
             if (message.Length == 0) { 
                 p.Message("Available ranks: " + Group.GroupList.Join(g => g.ColoredName)); return; 
-            }
-            string modifer = args.Length > 1 ? args[1] : "";
+            }            
             
             Group grp = message.CaselessEq("banned") ? Group.BannedRank : Matcher.FindRanks(p, args[0]);
             if (grp == null) return;
 
-            List<string> list = grp.Players.All();
-            if (list.Count == 0) {
-                p.Message("No one has the rank of " + grp.ColoredName);
-            } else {
-                p.Message("People with the rank of " + grp.ColoredName + ":");
-                MultiPageOutput.Output(p, list, (name) => name,
-                                       "ViewRanks " + args[0], "players", modifer, false);
-            }
+            string modifier = args.Length > 1 ? args[1] : "";
+            grp.Players.OutputPlain(p, "players ranked " + grp.ColoredName,
+                                    "ViewRanks " + args[0], modifier);
         }
         
         public override void Help(Player p) {

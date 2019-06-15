@@ -47,13 +47,14 @@ namespace MCGalaxy {
             lock (locker) return names.CaselessRemove(name);
         }
         
+        /// <summary> Returns whether the given name is caselessly in this list. </summary>
         public bool Contains(string name) {
             lock (locker) return names.CaselessContains(name);
         }
         
-        // only used for NameConverter
-        internal int IndexOf(string name) {
-        	lock (locker) return names.CaselessIndexOf(name);
+        /// <summary> Removes all names from this list. </summary>
+        public void Clear() {
+            lock (locker) names.Clear();
         }
 
         public bool AddUnique(string name) {
@@ -66,6 +67,18 @@ namespace MCGalaxy {
             return true;
         }
         
+        // only used for NameConverter
+        internal int IndexOf(string name) {
+            lock (locker) return names.CaselessIndexOf(name);
+        }
+        
+        internal string GetAt(int index) {
+            lock (locker) {
+                if (index < 0 || index >= names.Count) return null;
+                return names[index];
+            }
+        }
+        
         
         /// <summary> Finds matches within this list for the given name. </summary>
         public string FindMatches(Player p, string name, string type, out int matches) {
@@ -75,6 +88,8 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Outputs list of players using MultiPageOutput.Output. </summary>
+        /// <remarks> Names are formatted using PlayerInfo.GetColoredName(). </remarks>
         public void Output(Player p, string group, string listCmd, string modifier) {
             List<string> list = All();
             if (list.Count == 0) {
@@ -83,6 +98,19 @@ namespace MCGalaxy {
                 p.Message("{0}:", group.Capitalize());
                 MultiPageOutput.Output(p, list,
                                        (name) => PlayerInfo.GetColoredName(p, name),
+                                       listCmd, "players", modifier, false);
+            }
+        }
+        
+        /// <summary> Outputs list of players using MultiPageOutput.Output. </summary>
+        /// <remarks> Names are not formatted at all. </remarks>
+        public void OutputPlain(Player p, string group, string listCmd, string modifier) {
+            List<string> list = All();
+            if (list.Count == 0) {
+                p.Message("There are no {0}.", group);
+            } else {
+                p.Message("{0}:", group.Capitalize());
+                MultiPageOutput.Output(p, list, (name) => name,
                                        listCmd, "players", modifier, false);
             }
         }

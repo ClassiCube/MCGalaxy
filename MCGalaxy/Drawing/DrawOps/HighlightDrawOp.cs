@@ -29,7 +29,7 @@ namespace MCGalaxy.Drawing.Ops {
     public class HighlightDrawOp : DrawOp {
         public override string Name { get { return "Highlight"; } }
         
-        // Some servers like to use custom default highlight blocks due to using custom blocks
+        // Some servers like to set custom default highlight blocks due to using custom blocks
         public static BlockID DefaultPlaceHighlight  = Block.Green;
         public static BlockID DefaultDeleteHighlight = Block.Red;
         

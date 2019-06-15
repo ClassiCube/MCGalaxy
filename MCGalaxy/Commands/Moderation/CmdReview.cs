@@ -19,6 +19,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Moderation {
@@ -60,7 +61,7 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             }
             
-            if (Server.reviewlist.CaselessContains(p.name)) {
+            if (Server.reviewlist.Contains(p.name)) {
                 p.Message("You are already in the review queue!"); return;
             }
 
@@ -92,13 +93,14 @@ namespace MCGalaxy.Commands.Moderation {
         void HandleView(Player p, CommandData data) {
             if (!CheckExtraPerm(p, data, 1)) return;
 
-            if (Server.reviewlist.Count == 0) {
+            List<string> inQueue = Server.reviewlist.All();
+            if (inQueue.Count == 0) {
                 p.Message("There are no players in the review queue."); return;
             }
             
             p.Message("&9Players in the review queue:");
             int pos = 1;
-            foreach (string name in Server.reviewlist) {
+            foreach (string name in inQueue) {
                 Group grp = PlayerInfo.GetGroup(name);
                 p.Message("&a" + pos + ". &f" + name + " &a- Current Rank: " + grp.ColoredName);
                 pos++;
@@ -106,7 +108,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void HandleLeave(Player p) {
-            if (Server.reviewlist.CaselessRemove(p.name)) {
+            if (Server.reviewlist.Remove(p.name)) {
                 AnnounceQueueChanged();
                 p.Message("You have left the review queue!");
             } else {
@@ -117,13 +119,14 @@ namespace MCGalaxy.Commands.Moderation {
         void HandleNext(Player p, CommandData data) {
             if (p.IsSuper) { p.Message("{0} cannot answer the review queue.", p.SuperName); return; }
             if (!CheckExtraPerm(p, data, 2)) return;
-            if (Server.reviewlist.Count == 0) {
+
+            string user = Server.reviewlist.GetAt(0);
+            if (user == null) {
                 p.Message("There are no players in the review queue."); return;
             }
             
-            string user = Server.reviewlist[0];
             Player who = PlayerInfo.FindExact(user);
-            Server.reviewlist.RemoveAt(0);
+            Server.reviewlist.Remove(user);
             
             if (who == null) {
                 p.Message("Player " + user + " is offline, and was removed from the review queue");
@@ -143,8 +146,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void AnnounceQueueChanged() {
+            List<string> inQueue = Server.reviewlist.All();
             int pos = 1;
-            foreach (string name in Server.reviewlist) {
+            
+            foreach (string name in inQueue) {
                 Player who = PlayerInfo.FindExact(name);
                 if (who == null) continue;
                 

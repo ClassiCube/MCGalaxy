@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Moderation {
                     
                 case "list":
                     string modifier = parts.Length > 1 ? parts[1] : "";
-                    Server.ircControllers.Output(p, "IRC controllers", "IRCControllers list", modifier);
+                    Server.ircControllers.OutputPlain(p, "IRC controllers", "IRCControllers list", modifier);
                     break;
                     
                 case "rank":
