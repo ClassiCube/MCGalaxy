@@ -45,10 +45,11 @@ namespace MCGalaxy {
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
             
+            CountdownGame.Config.Load();
             ZSGame.Config.Load();
             LSGame.Config.Load();
             CTFGame.Config.Load();
-            CountdownGame.Config.Load();
+            TWGame.Config.Load();
             
             Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
             #pragma warning disable 0618

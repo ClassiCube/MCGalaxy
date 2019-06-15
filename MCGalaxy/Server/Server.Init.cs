@@ -131,6 +131,7 @@ namespace MCGalaxy {
             ZSGame.Instance.AutoStart();
             LSGame.Instance.AutoStart();
             CTFGame.Instance.AutoStart();
+            TWGame.Instance.AutoStart();
             
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));
