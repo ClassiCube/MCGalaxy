@@ -54,8 +54,7 @@ namespace MCGalaxy.Gui {
             Server.Config.MaxGuests = (byte)srv_numGuests.Value;
             Server.Config.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
             
-            string main = Player.ValidName(lvl_txtMain.Text) ? lvl_txtMain.Text : "main";
-            Server.Config.MainLevel = main;
+            Server.Config.MainLevel = lvl_txtMain.Text;
             Server.Config.AutoLoadMaps = lvl_chkAutoload.Checked;
             Server.Config.ServerWideChat = lvl_chkWorld.Checked;
             

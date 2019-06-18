@@ -216,8 +216,8 @@ namespace MCGalaxy {
             CriticalTasks.Clear();
             ZoneIn = null;
             
-            //Umm...fixed?
-            if (name == null || name.Length == 0) {
+            // Disconnected before sent handshake
+            if (name == null) {
                 if (Socket != null) Socket.Close();
                 Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
                 return;
@@ -245,7 +245,7 @@ namespace MCGalaxy {
                 if (isKick) TimesBeenKicked++;
                 
                 if (!loggedIn) {
-                    PlayerInfo.Online.Remove(this);                    
+                    PlayerInfo.Online.Remove(this);
                     string user = name + " (" + ip + ")";
                     Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
@@ -303,6 +303,7 @@ namespace MCGalaxy {
         public static List<Player> players;
 
         public static bool ValidName(string name) {
+            if (name.Length == 0) return false;
             const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
             foreach (char c in name) {
                 if (valid.IndexOf(c) == -1) return false;
