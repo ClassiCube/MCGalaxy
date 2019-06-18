@@ -816,12 +816,7 @@ namespace MCGalaxy.SQL {
             return -1;
         }
 
-        public string GetString(int i) {
-            TypeAffinity aff = CheckAffinity(i);
-            if (aff == TypeAffinity.Text || aff == TypeAffinity.Blob)
-                return stmt.GetText(i);            
-            throw new InvalidCastException();
-        }
+        public string GetString(int i) { return stmt.GetText(i); }
 
         public object GetValue(int i) {
             VerifyForGet();

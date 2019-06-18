@@ -31,7 +31,7 @@ namespace MCGalaxy.SQL {
         
         static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
         public static int CountRows(string table, string modifier = "", params object[] args) {
-            return (int)Backend.ReadRows(table, "COUNT(*)", 0, ReadInt, modifier, args);
+            return (int)Backend.ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
         }
         
         static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
