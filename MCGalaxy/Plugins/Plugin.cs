@@ -67,7 +67,7 @@ namespace MCGalaxy {
         
         public override string website { get { return "http://www.example.org"; } }
         public override int build { get { return 0; } }
-        public override string welcome { get { return "Plugin " + name + " loaded."; } }
+        public override string welcome { get { return ""; } }
         public override bool LoadAtStartup { get { return true; } }
     }
 }
