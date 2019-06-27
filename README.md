@@ -39,7 +39,7 @@ You need to find out your LAN/local IP address.
 To join from a web browser, add ?ip=[lan ip] to the server's URL.\
 (e.g. http://www.classicube.net/server/play/d1362e7fee1a54365514712d007c8799?ip=192.168.1.30)
 
-To join from the desktop client, direct connect to ```[lan ip]:25565``` instead. (e.g. ```192.168.1.30:25565```)
+To join from the desktop client, **Direct connect** to ```[lan ip]:25565``` instead. (e.g. ```192.168.1.30:25565```)
 
 
 #### Across the internet
@@ -47,7 +47,7 @@ You need to port forward your router. Players can then join by entering the serv
 
 For the desktop client:
 * Click **Sign in**. 
-* Type/paste the hash (e.g. *d1362e7fee1a54365514712d007c8799*) into the *classicube.net/server/play* text box. 
+* Type/paste the hash (e.g. ```d1362e7fee1a54365514712d007c8799```) into the *classicube.net/server/play* text box. 
 * Click *Connect*.
 
 
