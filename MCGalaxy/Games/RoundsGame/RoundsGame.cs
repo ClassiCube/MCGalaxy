@@ -155,7 +155,10 @@ namespace MCGalaxy.Games {
             
             string map = Picker.ChooseNextLevel(this);
             if (!Running) return;
-            if (map == null) { ContinueOnSameMap(); return; }
+            
+            if (map == null || map.CaselessEq(Map.MapName)) { 
+                ContinueOnSameMap(); return; 
+            }
             
             Map.Message("The next map has been chosen - &c" + map);
             Map.Message("Please wait while you are transfered.");            
