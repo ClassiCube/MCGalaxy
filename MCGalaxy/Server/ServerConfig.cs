@@ -37,8 +37,8 @@ namespace MCGalaxy {
         public string ListenIP = "0.0.0.0";
         [ConfigInt("port", "Server", 25565, 0, 65535)]
         public int Port = 25565;
-        [ConfigBool("public", "Server", true)]
-        public bool Public = true;
+        [ConfigBool("public", "Server", false)]
+        public bool Public = false;
         [ConfigBool("verify-names", "Server", true)]
         public bool VerifyNames = true;
         [ConfigBool("support-web-client", "Server", true)]
