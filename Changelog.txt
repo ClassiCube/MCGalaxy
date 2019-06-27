@@ -1,3 +1,70 @@
+v 1.9.1.4
+Fixed: Make @ offset work properly with /cut
+Improved: Bots track owner/creator, prevents non-staff modifying bots of other players
+Improved: Auto filter dropboxusercontent.com to dropbox.com for urls
+Fixed: /tw set zone being /tw set zones instead
+Fixed: /map edgewater flooding invalid block instead of water
+Fixed: Not being able to delete invalid blocks
+Fixed: Portals/message blocks not functioning initially after resize
+Fixed: Don't tie whitelist to player IPs when verify names is off
+Fixed: Make /pyramid just use min Y for pyramid base
+Improved: Tidy up compiler.log output
+Fixed: Warnings shouldn't prevent custom command from compiling
+Fixed: Custom commands in GUI aren't forced to lowercase filename
+Improved: Make /review thread safe
+Fixed: TNT wars not auto starting and not auto loading config
+Fixed: Plugin error when loading/unloading when reloading doesn't break server reloading
+Improved: Replace fancy quotes with their simple ASCII forms
+Improved: Simplify /reload message
+Fixed: Map not being reset when next map voted is the same as current map
+Fixed: Disconnected players still showing in TNT wars tab list
+Improved: Make default server visibility private
+
+v 1.9.1.3
+Added: Support for web client
+Added: Save button for EditText popup
+Improved: Allow /lb copy to copy from another map
+Improved: Allow some non-alphanumeric ascii characters for level names
+Improved: Layout of /awards
+Fixed: 0 byte file getting loaded as a 1x1x1 map
+Fixed: /roll showing same result when used multiple times consecutively in an /mb
+Fixed: /infoswap on non-existent accounts always messaging: ''" was not found in the database
+Improved: Heightmap theme now auto resizes, but warns when doing so.
+Improved: Simpler permissions message in /os map add
+Fixed: Level items in eco gui not working at all
+Fixed: /save [map] [restore] showing wrong restore name
+Fixed: /fly not respecting -fly zone motds
+Fixed: .x not working if IRC channel name's capitalisation was incorrect
+Improved: Player nicks show in tab list
+Fixed: Don't allow /skin over 64 characters
+Improved: Don't count colors in nickname for <30 char limit
+Added: Allow custom profanity filter replacement
+Improved: Allow just doing /reach to show reach distance
+Improved: Don't spam console with layer flood messages
+Added: /import all to import every map in /extra/import
+Added: Allow disabling checkpoints client side respawn
+Fixed: Download inf id dll when updating an inf id server
+Added: /pe ip
+Fixed: /gun should always revert blockchanges made by player
+Fixed: Branches of ash tree being too short
+Fixed: /gun not behaving properly after doing /b
+Fixed: /import all including filename
+Fixed: Erroring when trying to import unsupported format
+Improved: /gun relies on just mouse click instead of glass box
+Added: Option for disabling certain types of chat/log messages from being logged to disc/console
+Improved: Allow disabling custom commands from showing in server logs
+Fixed: Importing maps with over 256 custom block definitions producing wacky blockdefs
+Allow activating a checkpoint and other blocks around it …
+Fixed: copy format version 1 not loading
+Improved: Allow negative speed for spin bot AI instruction
+Improved: auto number map when /buy ing level, if no name is given
+Added: env skybox [col] to set skybox colour
+Improved: Allow mark/spin/patrol/botai/gun to be used in museums
+Improved: Better messages in /pass
+Added: /help env presets
+Improved: Allow importing from webpages
+Added: /server update
+
 v 1.9.1.2
 Improved: Can make custom blocks outside 0-16 range.
 Fixed: +skin urls not working
