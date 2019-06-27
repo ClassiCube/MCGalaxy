@@ -104,7 +104,7 @@ namespace MCGalaxy {
             Level prev = p.level; p.level = lvl;
             
             p.SendRawMap(prev, lvl);
-            PostSentMap(p, prev, lvl, false);
+            PostSentMap(p, prev, lvl, true);
             p.Loading = false;
             return true;
         }
