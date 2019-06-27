@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -149,6 +149,12 @@ namespace MCGalaxy {
             for (int i = 0; i < ircSingle.Length; i++) {
                 sb.Replace(ircSingle[i], ircReplacements[i]);
             }
+            
+            // replace fancy quotes
+            sb.Replace("“", "\"");
+            sb.Replace("”", "\"");
+            sb.Replace("‘", "'");
+            sb.Replace("’", "'"); 
             
             // trim misc formatting chars
             sb.Replace("\x02", ""); // bold
