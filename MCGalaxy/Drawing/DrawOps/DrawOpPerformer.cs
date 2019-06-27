@@ -138,10 +138,7 @@ namespace MCGalaxy.Drawing.Ops {
         }
 
         static void DoReload(Player p, Level lvl) {
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                if (pl.level == lvl) LevelActions.ReloadFor(p, pl, true);
-            }
+            LevelActions.ReloadAll(lvl, p, true);
             Server.DoGC();
         }
 

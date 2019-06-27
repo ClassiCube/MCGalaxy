@@ -341,9 +341,8 @@ namespace MCGalaxy {
                 if (pl.hasBlockDefs) continue;
                 
                 // if custom block is replacing core block, need to always reload for fallback
-                if (block >= Block.CpeCount && !pl.level.MayHaveCustomBlocks) continue;
-                
-                LevelActions.ReloadFor(pl, pl, false);
+                if (block >= Block.CpeCount && !pl.level.MayHaveCustomBlocks) continue;                
+                PlayerActions.ReloadMap(pl);
             }
         }
     }

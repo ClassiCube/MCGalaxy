@@ -166,7 +166,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) {
                 if (pl.level != old) continue;
                 pl.level = lvl;
-                ReloadFor(Player.Console, pl, false);
+                PlayerActions.ReloadMap(pl);
             }
             
             old.Unload(true, false);
@@ -206,25 +206,17 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
-                LevelActions.ReloadFor(src, p, true);
-            }
-        }
-        
-        public static void ReloadFor(Player src, Player p, bool announce) {
-            p.Loading = true;
-            Entities.DespawnEntities(p);
-            p.SendMap(p.level);
-            Entities.SpawnEntities(p);
-            p.Loading = false;
-            if (!announce) return;
-            
-            if (src == null || !Entities.CanSee(p, src)) {
-                p.Message("&bMap reloaded");
-            } else {
-                p.Message("&bMap reloaded by " + src.ColoredName);
-            }
-            if (Entities.CanSee(src, p)) {
-                src.Message("&4Finished reloading for " + p.ColoredName);
+                PlayerActions.ReloadMap(p);
+                if (!announce) continue;
+                
+                if (src == null || !Entities.CanSee(p, src)) {
+                    p.Message("&bMap reloaded");
+                } else {
+                    p.Message("&bMap reloaded by " + src.ColoredName);
+                }
+                if (Entities.CanSee(src, p)) {
+                    src.Message("&4Finished reloading for " + p.ColoredName);
+                }
             }
         }
         
@@ -295,7 +287,7 @@ namespace MCGalaxy {
         }
         
         static Level ReadBackup(Player p, string map, string path, string type) {
-            Logger.Log(LogType.Warning, "Attempting to load {1} for {0}", map, type);           
+            Logger.Log(LogType.Warning, "Attempting to load {1} for {0}", map, type);
             Level lvl = Level.Load(map, path);
             
             if (lvl != null) return lvl;
@@ -308,7 +300,7 @@ namespace MCGalaxy {
             if (lvl != null) return lvl;
             
             string path = LevelInfo.MapPath(map) + ".backup";
-            if (!File.Exists(path)) { p.Message("Level \"{0}\" does not exist", map); return lvl; }            
+            if (!File.Exists(path)) { p.Message("Level \"{0}\" does not exist", map); return lvl; }
             lvl = ReadBackup(p, map, path, "backup copy");
             if (lvl != null) return lvl;
             
@@ -319,7 +311,7 @@ namespace MCGalaxy {
             string backupDir = LevelInfo.BackupBasePath(map);
             if (Directory.Exists(backupDir)) {
                 int latest = LevelInfo.LatestBackup(map);
-                path = LevelInfo.BackupFilePath(map, latest.ToString());              
+                path = LevelInfo.BackupFilePath(map, latest.ToString());
                 lvl = ReadBackup(p, map, path, "latest backup");
             } else {
                 p.Message("%WLatest backup of {0} does not exist.", map);

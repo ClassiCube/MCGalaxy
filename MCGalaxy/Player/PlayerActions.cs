@@ -101,18 +101,26 @@ namespace MCGalaxy {
 
             p.Loading = true;
             Entities.DespawnEntities(p);
-            Level oldLevel = p.level;
-            p.level = lvl;
-            p.SendMap(oldLevel);
+            Level prev = p.level; p.level = lvl;
             
-            PostSentMap(p, oldLevel, lvl, true);
+            p.SendRawMap(prev, lvl);
+            PostSentMap(p, prev, lvl, false);
+            p.Loading = false;
             return true;
         }
         
-        internal static void PostSentMap(Player p, Level prevLevel, Level level, bool announce) {
-            Position pos = level.SpawnPos;
+        internal static void ReloadMap(Player p) {
+            p.Loading = true;
+            Entities.DespawnEntities(p);
+            p.SendRawMap(p.level, p.level);
+            Entities.SpawnEntities(p, p.Pos, p.Rot);
+            p.Loading = false;
+        }
+        
+        internal static void PostSentMap(Player p, Level prev, Level lvl, bool announce) {
+            Position pos = lvl.SpawnPos;
             Orientation rot = p.Rot;
-            byte yaw = level.rotx, pitch = level.roty;
+            byte yaw = lvl.rotx, pitch = lvl.roty;
             // in case player disconnected mid-way through loading map
             if (p.Socket.Disconnected) return;
             
@@ -123,12 +131,12 @@ namespace MCGalaxy {
             if (p.Socket.Disconnected) return;
             
             Entities.SpawnEntities(p, pos, rot);
-            OnJoinedLevelEvent.Call(p, prevLevel, level, ref announce);
-            if (!announce || !Server.Config.ShowWorldChanges) return; 
+            OnJoinedLevelEvent.Call(p, prev, lvl, ref announce);
+            if (!announce || !Server.Config.ShowWorldChanges) return;
             
             announce = !p.hidden && Server.Config.IRCShowWorldChanges;
             string msg = p.level.IsMuseum ? "λNICK %Swent to the " : "λNICK %Swent to ";
-            Chat.MessageFrom(ChatScope.Global, p, msg + level.ColoredName,
+            Chat.MessageFrom(ChatScope.Global, p, msg + lvl.ColoredName,
                              null, FilterGoto(p), announce);
         }
         
