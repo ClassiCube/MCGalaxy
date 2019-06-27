@@ -41,34 +41,29 @@ namespace MCGalaxy {
         
         /// <summary> Called when a player does /Help on the plugin. Typically, shows to the player what this plugin is about. </summary>
         /// <param name="p"> Player who is doing /Help. </param>
-        public abstract void Help(Player p);
+        public virtual void Help(Player p) {
+            p.Message("No help is available for this plugin.");
+        }
         
         /// <summary> Name of the plugin. </summary>
         public abstract string name { get; }
         /// <summary> Your website. </summary>
-        public abstract string website { get; }
+        public virtual string website { get { return ""; } }
         /// <summary> Oldest version of MCGalaxy the plugin is compatible with. </summary>
         public abstract string MCGalaxy_Version { get; }
         /// <summary> Version of your plugin. </summary>
-        public abstract int build { get; }
+        public virtual int build { get { return 0; } }
         /// <summary> Message to display once plugin is loaded. </summary>
-        public abstract string welcome { get; }
+        public virtual string welcome { get { return ""; } }
         /// <summary> The creator/author of this plugin. (Your name) </summary>
         public abstract string creator { get; }
         /// <summary> Whether or not to auto load this plugin on server startup. </summary>
-        public abstract bool LoadAtStartup { get; }
+        public virtual bool LoadAtStartup { get { return true; } }
     }
     
-    public abstract class Plugin_Simple : Plugin {
-
-        public override void Help(Player p) {
-            p.Message("No help is available for this plugin.");
-        }
-        
-        public override string website { get { return "http://www.example.org"; } }
-        public override int build { get { return 0; } }
-        public override string welcome { get { return ""; } }
-        public override bool LoadAtStartup { get { return true; } }
-    }
+    // Plugin used to be completely abstract, with Plugin_Simple having virtual methods
+    // However this is now obsolete as the virtual methods were moved into Plugin
+    // This class is just kept around for backwards compatibility
+    public abstract class Plugin_Simple : Plugin { }
 }
 
