@@ -92,7 +92,7 @@ namespace MCGalaxy.Gui {
             }
             
             ushort size;
-            if (!ushort.TryParse(value, out size) || size > 16384) {
+            if (!ushort.TryParse(value, out size) || size == 0 || size > 16384) {
                 Popup.Warning("Map " + propName + " must be an integer between 1 and 16384");
                 return null;
             }
