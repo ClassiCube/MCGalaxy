@@ -20,16 +20,18 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
-        GamesHelper lsHelper, ctfHelper, twHelper;
+        GamesHelper lsHelper, zsHelper, ctfHelper, twHelper;
         
         void LoadGameProps() {
             string[] allMaps = LevelInfo.AllMapNames();
+            LoadZSSettings(allMaps);
             LoadCTFSettings(allMaps);
             LoadLSSettings(allMaps);
             LoadTWSettings(allMaps);
         }
 
         void SaveGameProps() {
+            SaveZSSettings();
             SaveCTFSettings();
             SaveLSSettings();
             SaveTWSettings();
@@ -37,6 +39,7 @@ namespace MCGalaxy.Gui {
         
         GamesHelper GetGameHelper(IGame game) {
             // TODO: Find a better way of doing this
+            if (game == ZSGame.Instance)  return zsHelper;
             if (game == CTFGame.Instance) return ctfHelper;
             if (game == LSGame.Instance)  return lsHelper;
             if (game == TWGame.Instance)  return twHelper;
@@ -53,6 +56,23 @@ namespace MCGalaxy.Gui {
             GamesHelper helper = GetGameHelper(game);
             if (helper == null) return;
             RunOnUI_Async(() => helper.UpdateButtons());
+        }
+        
+        
+        void LoadZSSettings(string[] allMaps) {
+            zsHelper = new GamesHelper(
+                ZSGame.Instance, zs_cbStart, zs_cbMap, zs_cbMain,
+                zs_btnStart, zs_btnStop, zs_btnEnd,
+                zs_btnAdd, zs_btnRemove, zs_lstUsed, zs_lstNotUsed);
+            zsHelper.Load(allMaps);
+        }
+        
+        void SaveZSSettings() {
+            try {
+                zsHelper.Save();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving ZS settings", ex);
+            }
         }
         
         
