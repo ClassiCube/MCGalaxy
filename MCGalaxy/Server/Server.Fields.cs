@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
         
         /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
-        public const string InternalVersion = "1.9.1.3";
+        public const string InternalVersion = "1.9.1.4";
         public static Version Version { get { return new Version(InternalVersion); } }
         public static string VersionString { get { return InternalVersion; } }
         
@@ -94,8 +94,6 @@ namespace MCGalaxy {
         public const byte version = 7;
         public static string salt = "";
         public static bool chatmod = false, flipHead = false;
-
         public static bool shuttingDown = false;
-        public static bool mono { get { return (Type.GetType("Mono.Runtime") != null); } }
     }
 }

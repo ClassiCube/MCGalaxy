@@ -2637,11 +2637,11 @@ namespace MCGalaxy.Gui
             // srv_btnPort
             // 
             this.srv_btnPort.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.srv_btnPort.Location = new System.Drawing.Point(152, 71);
+            this.srv_btnPort.Location = new System.Drawing.Point(152, 72);
             this.srv_btnPort.Name = "srv_btnPort";
-            this.srv_btnPort.Size = new System.Drawing.Size(110, 23);
+            this.srv_btnPort.Size = new System.Drawing.Size(95, 23);
             this.srv_btnPort.TabIndex = 3;
-            this.srv_btnPort.Text = "Server Port Utilities";
+            this.srv_btnPort.Text = "Port forwarding";
             this.srv_btnPort.UseVisualStyleBackColor = true;
             this.srv_btnPort.Click += new System.EventHandler(this.ChkPort_Click);
             // 

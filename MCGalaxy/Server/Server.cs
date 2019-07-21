@@ -171,14 +171,14 @@ namespace MCGalaxy {
                 if (Server.Config.WhitelistedOnly && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
-        }
+        }        
         
         public static void LoadAllSettings() {
             // Unload custom plugins
-            List<Plugin> plugins = Plugin.all;
-            foreach (Plugin plugin in plugins) {
-                if (Plugin.core.Contains(plugin)) continue;
-                plugin.Unload(false);
+            List<Plugin> plugins = new List<Plugin>(Plugin.all);
+            foreach (Plugin p in plugins) {
+                if (Plugin.core.Contains(p)) continue;
+                Plugin.Unload(p, false);
             }
             
             ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
@@ -207,9 +207,9 @@ namespace MCGalaxy {
             announcements = announcementsFile.GetText();
             
             // Reload custom plugins
-            foreach (Plugin plugin in plugins) {
-                if (Plugin.core.Contains(plugin)) continue;
-                plugin.Load(false);
+            foreach (Plugin p in plugins) {
+                if (Plugin.core.Contains(p)) continue;
+                Plugin.Load(p, false);
             }
         }
         

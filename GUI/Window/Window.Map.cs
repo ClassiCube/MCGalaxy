@@ -31,11 +31,11 @@ namespace MCGalaxy.Gui {
             string seed = map_txtSeed.Text;
             if (String.IsNullOrEmpty(name)) { Popup.Warning("Map name cannot be blank."); return; }
             
-            string x = Map_GetComboboxItem(map_cmbX, "width");
+            string x = Map_GetComboboxSize(map_cmbX, "width");
             if (x == null) return;           
-            string y = Map_GetComboboxItem(map_cmbY, "height");
+            string y = Map_GetComboboxSize(map_cmbY, "height");
             if (y == null) return;            
-            string z = Map_GetComboboxItem(map_cmbZ, "length");
+            string z = Map_GetComboboxSize(map_cmbZ, "length");
             if (z == null) return;            
             string type = Map_GetComboboxItem(map_cmbType, "type");
             if (type == null) return;            
@@ -78,6 +78,22 @@ namespace MCGalaxy.Gui {
             
             if (value.Length == 0) {
                 Popup.Warning("Map " + propName + " cannot be blank.");
+                return null;
+            }
+            return value;
+        }
+        
+        string Map_GetComboboxSize(ComboBox box, string propName) {
+            string value = box.Text; 
+            
+            if (value.Length == 0) {
+                Popup.Warning("Map " + propName + " cannot be blank.");
+                return null;
+            }
+            
+            ushort size;
+            if (!ushort.TryParse(value, out size) || size == 0 || size > 16384) {
+                Popup.Warning("Map " + propName + " must be an integer between 1 and 16384");
                 return null;
             }
             return value;

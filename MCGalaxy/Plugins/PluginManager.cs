@@ -28,8 +28,8 @@ namespace MCGalaxy {
         internal static List<Plugin> core = new List<Plugin>();
         public static List<Plugin> all = new List<Plugin>();
 
+        /// <summary> Loads all plugins from the given plugin .dll name. </summary>
         public static bool Load(string name, bool startup) {
-            string creator = "";
             string path = IScripting.PluginPath(name);
             
             try {
@@ -38,26 +38,36 @@ namespace MCGalaxy {
                 List<Plugin> plugins = IScripting.LoadTypes<Plugin>(lib);
                 
                 foreach (Plugin plugin in plugins) {
-                    creator = plugin.creator;
-                    string ver = plugin.MCGalaxy_Version;
-                    if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
-                        Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", plugin.name, Server.SoftwareName);
-                        return false;
-                    }
-                    Plugin.all.Add(plugin);
-                    
-                    if (plugin.LoadAtStartup || !startup) {
-                        plugin.Load(startup);
-                        Logger.Log(LogType.SystemActivity, "Plugin: {0} loaded...build: {1}", plugin.name, plugin.build);
-                    } else {
-                        Logger.Log(LogType.SystemActivity, "Plugin: {0} was not loaded, you can load it with /pload", plugin.name);
-                    }
-                    Logger.Log(LogType.SystemActivity, plugin.welcome);
+                    if (!Load(plugin, startup)) return false;
                 }
                 return true;
             } catch (Exception ex) {
-                Logger.LogError("Error loading plugin " + name, ex);
-                if (!String.IsNullOrEmpty(creator)) Logger.Log(LogType.Warning, "You can go bug {0} about it.", creator);
+                Logger.LogError("Error loading plugins from " + path, ex);
+                return false;
+            }
+        }
+        
+        public static bool Load(Plugin p, bool startup) {
+            try {
+                string ver = p.MCGalaxy_Version;
+                if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
+                    Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", p.name, Server.SoftwareName);
+                    return false;
+                }
+                all.Add(p);
+                
+                if (p.LoadAtStartup || !startup) {
+                    p.Load(startup);
+                    Logger.Log(LogType.SystemActivity, "Plugin {0} loaded...build: {1}", p.name, p.build);
+                } else {
+                    Logger.Log(LogType.SystemActivity, "Plugin {0} was not loaded, you can load it with /pload", p.name);
+                }
+                
+                if (!String.IsNullOrEmpty(p.welcome)) Logger.Log(LogType.SystemActivity, p.welcome);
+                return true;
+            } catch (Exception ex) {
+                Logger.LogError("Error loading plugin " + p.name, ex);               
+                if (!String.IsNullOrEmpty(p.creator)) Logger.Log(LogType.Warning, "You can go bug {0} about it.", p.creator);
                 return false;
             }
         }
@@ -66,7 +76,7 @@ namespace MCGalaxy {
             bool success = true;
             try {
                 p.Unload(shutdown);
-                Logger.Log(LogType.SystemActivity, p.name + " was unloaded.");
+                Logger.Log(LogType.SystemActivity, "Plugin {0} was unloaded.", p.name);
             } catch (Exception ex) {
                 Logger.LogError("Error unloading plugin " + p.name, ex);
                 success = false;
@@ -96,7 +106,7 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void LoadCorePlugin(Plugin plugin) {
+        static void LoadCorePlugin(Plugin plugin) {
             plugin.Load(true);
             Plugin.all.Add(plugin);
             Plugin.core.Add(plugin);

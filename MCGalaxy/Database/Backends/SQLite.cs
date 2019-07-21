@@ -535,13 +535,13 @@ namespace MCGalaxy.SQL {
         }
 
         public static string FromUTF8(IntPtr ptr, int len) {
-            if (ptr == IntPtr.Zero) return String.Empty;
+            if (ptr == IntPtr.Zero) return "";
             
             if (len < 0) {
                 len = 0;
                 while (Marshal.ReadByte(ptr, len) != 0) { len++; }
             }
-            if (len == 0) return String.Empty;
+            if (len == 0) return "";
             
             byte[] data = new byte[len];
             Marshal.Copy(ptr, data, 0, len);

@@ -87,7 +87,7 @@ namespace MCGalaxy {
                 Leave(null, "Already logged in!", true); return;
             }
 
-            SendMap(null);
+            SendRawMap(null, level);
             if (Socket.Disconnected) return;
             loggedIn = true;
 

@@ -211,16 +211,14 @@ namespace MCGalaxy {
             Send(Hacks.MakeHackControl(this, motd));
             if (Game.Referee) Send(Packet.HackControl(true, true, true, true, true, -1));
         }
-        
-        public void SendMap(Level oldLevel) { SendRawMap(oldLevel, level); }
-        
+
         readonly object joinLock = new object();
         public bool SendRawMap(Level oldLevel, Level level) {
             lock (joinLock)
                 return SendRawMapCore(oldLevel, level);
         }
         
-        bool SendRawMapCore(Level oldLevel, Level level) {
+        bool SendRawMapCore(Level prev, Level level) {
             if (level.blocks == null) return false;
             bool success = true;
             useCheckpointSpawn = false;
@@ -240,8 +238,8 @@ namespace MCGalaxy {
                 }
                 
                 if (hasBlockDefs) {
-                    if (oldLevel != null && oldLevel != level) {
-                        RemoveOldLevelCustomBlocks(oldLevel);
+                    if (prev != null && prev != level) {
+                        RemoveOldLevelCustomBlocks(prev);
                     }
                     BlockDefinition.SendLevelCustomBlocks(this);
                     
@@ -268,7 +266,7 @@ namespace MCGalaxy {
                 Send(buffer);
                 Loading = false;
                 
-                OnSentMapEvent.Call(this, oldLevel, level);
+                OnSentMapEvent.Call(this, prev, level);
             } catch (Exception ex) {
                 success = false;
                 PlayerActions.ChangeMap(this, Server.mainLevel);

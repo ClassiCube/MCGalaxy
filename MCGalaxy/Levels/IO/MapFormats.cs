@@ -49,7 +49,7 @@ namespace MCGalaxy.Levels.IO {
         
         protected void ConvertCustom(Level lvl) {
             ushort x, y, z;
-            byte[] blocks = lvl.blocks;
+            byte[] blocks = lvl.blocks; // local var to avoid JIT bounds check
             for (int i = 0; i < blocks.Length; i++) {
                 byte raw = blocks[i];
                 if (raw <= Block.CpeMaxBlock) continue;

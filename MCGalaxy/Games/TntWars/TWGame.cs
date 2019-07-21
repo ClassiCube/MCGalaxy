@@ -177,7 +177,8 @@ namespace MCGalaxy.Games {
         
         void RestoreColor(Player p) {
             TWData data = TryGet(p);
-            if (data == null) return;
+            // TODO: p.Socket.Disconnected check should be elsewhere
+            if (data == null || p.Socket.Disconnected) return;
             
             p.color = data.OrigCol;
             p.SetPrefix();

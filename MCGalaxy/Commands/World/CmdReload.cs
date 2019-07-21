@@ -36,7 +36,8 @@ namespace MCGalaxy.Commands.World {
             string[] parts = message.SplitSpaces();
             
             if (!parts[0].CaselessEq("all")) {
-                LevelActions.ReloadFor(p, p, true);
+                PlayerActions.ReloadMap(p);
+                p.Message("&bMap reloaded");
             } else {
                 Level lvl = p.level;
                 if (parts.Length == 2) {

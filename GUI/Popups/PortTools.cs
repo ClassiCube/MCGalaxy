@@ -27,61 +27,45 @@ namespace MCGalaxy.Gui.Popups {
     public partial class PortTools : Form {
 
         readonly BackgroundWorker worker;
-        public PortTools() {
+        int port;
+        
+        public PortTools(string portStr) {
             InitializeComponent();
             worker = new BackgroundWorker { WorkerSupportsCancellation = true };
             worker.DoWork += mWorkerForwarder_DoWork;
             worker.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
+            
+            if (!int.TryParse(portStr, out port)) port = 25565;
+            btnForward.Text = "Forward " + port;
         }
 
-        private void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start("http://www.canyouseeme.org/"); }
+        void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            try { Process.Start("https://www.canyouseeme.org/"); }
             catch { }
         }
 
-        private void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
+        void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
             worker.CancelAsync();
         }
 
-        private void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            try { Process.Start("http://portforward.com"); }
+        void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            try { Process.Start("https://portforward.com"); }
             catch { }
         }
 
-        private void btnForward_Click(object sender, EventArgs e) {
-            int port = 25565;
-            if (String.IsNullOrEmpty(txtPortForward.Text.Trim()))
-                txtPortForward.Text = "25565";
-
-            try {
-                port = int.Parse(txtPortForward.Text);
-            } catch {
-                txtPortForward.Text = "25565";
-            }
-            
+        void btnForward_Click(object sender, EventArgs e) {
             SetUPnPEnabled(false);
-            worker.RunWorkerAsync(new object[] { port, true });
+            worker.RunWorkerAsync(true);
         }
 
-        private void btnDelete_Click(object sender, EventArgs e) {
-            int port = 25565;
-            if (String.IsNullOrEmpty(txtPortForward.Text.Trim()))
-                txtPortForward.Text = "25565";
-
-            try {
-                port = int.Parse(txtPortForward.Text);
-            } catch {
-                txtPortForward.Text = "25565";
-            }
-
+        void btnDelete_Click(object sender, EventArgs e) {
             SetUPnPEnabled(false);
-            worker.RunWorkerAsync(new object[] { port, false });
+            worker.RunWorkerAsync(false);
         }
 
         void mWorkerForwarder_DoWork(object sender, DoWorkEventArgs e) {
             int tries = 0;
-            int port = (int)((object[])e.Argument)[0];
-            bool adding = (bool)((object[])e.Argument)[1];
+            bool adding = (bool)e.Argument;
             
             retry:
             try {
@@ -108,28 +92,27 @@ namespace MCGalaxy.Gui.Popups {
             int result = (int)e.Result;
             switch (result) {
                 case 0:
-                    lblForward.Text = "Error contacting router.";
-                    lblForward.ForeColor = Color.Red;
+                    lblResult.Text = "Error contacting router.";
+                    lblResult.ForeColor = Color.Red;
                     return;
                 case 1:
-                    lblForward.Text = "Port forwarded automatically using UPnP";
-                    lblForward.ForeColor = Color.Green;
+                    lblResult.Text = "Port forwarded automatically using UPnP";
+                    lblResult.ForeColor = Color.Green;
                     return;
                 case 2:
-                    lblForward.Text = "Something Weird just happened, try again.";
-                    lblForward.ForeColor = Color.Black;
+                    lblResult.Text = "Something weird just happened, try again.";
+                    lblResult.ForeColor = Color.Black;
                     return;
                 case 3:
-                    lblForward.Text = "Deleted Port Forward Rule.";
-                    lblForward.ForeColor = Color.Green;
+                    lblResult.Text = "Deleted port forward rule.";
+                    lblResult.ForeColor = Color.Green;
                     return;
             }
         }
         
         void SetUPnPEnabled(bool enabled) {
             btnDelete.Enabled = enabled;
-            btnForward.Enabled = enabled;
-            txtPortForward.Enabled = enabled;            
+            btnForward.Enabled = enabled;        
         }
     }
 }
