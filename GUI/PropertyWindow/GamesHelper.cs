@@ -60,7 +60,12 @@ namespace MCGalaxy.Gui {
             cfg.StartImmediately = cbStart.Checked;
             cfg.MapInHeartbeat   = cbMap.Checked;
             cfg.SetMainLevel     = cbMain.Checked;
-            cfg.Save();
+            
+            try {
+                cfg.Save()
+            } catch (Exception ex) {
+                Logger.LogError("Error saving " + game.GameName + " settings", ex);
+            }
         }
         
         public void UpdateButtons() {
