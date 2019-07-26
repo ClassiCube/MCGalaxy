@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands.Info {
                 if (grp.Permission >= LevelPermission.Nobody) continue;
                 string undoTime = grp.MaxUndo.Shorten(true, false);
                 
-                p.Message("{0} %S- Draw: {1}, Undo: {2}, Perm: {3}",
-                          grp.ColoredName, grp.DrawLimit, undoTime, (int)grp.Permission);
+                p.Message("{0} %S- Draw: {1}, Undo: {2}, Perm: {3}, max OS maps: {4}",
+                          grp.ColoredName, grp.DrawLimit, undoTime, (int)grp.Permission, grp.OverseerMaps);
             }
         }
         
