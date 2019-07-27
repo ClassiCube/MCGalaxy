@@ -61,8 +61,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (elems == null) elems = ConfigElement.GetAll(typeof(GeoInfo));
-            obj.Deserialise(elems, info);
-            
+            obj.Deserialise(elems, info);            
             
             string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
             string target = name == null ? ip : "of " + PlayerInfo.GetColoredName(p, name);

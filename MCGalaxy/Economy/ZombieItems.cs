@@ -135,18 +135,18 @@ namespace MCGalaxy.Eco {
 
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); return;
+                p.Message("%WYou don't have enough &3{1} %Wto buy an {0}.", Name, Server.Config.Currency); return;
             }
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
                                "when a round of zombie survival is in progress."); return;
             }
             
-            ZSData data = ZSGame.Get(p);           
+            ZSData data  = ZSGame.Get(p);
             if (data.Invisible) { p.Message("You are already invisible."); return; }
+            ZSConfig cfg = ZSGame.Config;
             
-            int maxPotions = data.Infected ? 
-                ZSGame.Config.ZombieInvisibilityPotions : ZSGame.Config.InvisibilityPotions;            
+            int maxPotions = data.Infected ? cfg.ZombieInvisibilityPotions : cfg.InvisibilityPotions;
             if (data.InvisibilityPotions >= maxPotions) {
                 p.Message("You cannot buy any more invisibility potions this round."); return;
             }
@@ -156,16 +156,12 @@ namespace MCGalaxy.Eco {
                 p.Message("You cannot buy an invisibility potion during the last minute of a round."); return;
             }
             
-            int duration = data.Infected ?
-                ZSGame.Config.ZombieInvisibilityDuration : ZSGame.Config.InvisibilityDuration;
-            data.Invisible = true;
-            data.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
+            int duration = data.Infected ? cfg.ZombieInvisibilityDuration : cfg.InvisibilityDuration;
             data.InvisibilityPotions++;
             int left = maxPotions - data.InvisibilityPotions;
             
             p.Message("Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", duration, left);
-            ZSGame.Instance.Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
-            Entities.GlobalDespawn(p, false, false);
+            ZSGame.Instance.GoInvisible(p, duration);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
         }
         
@@ -175,10 +171,6 @@ namespace MCGalaxy.Eco {
             p.Message("%T/Buy " + Name);
             OutputItemInfo(p);
             
-            /*p.Message("Makes you invisible to {0} - %Wyou can still {1}",
-                           ForHumans ? "zombies" : "humans",
-                           ForHumans ? "be infected" : "infect humans");
-            p.Message("Lasts for " + Duration + " seconds before you reappear.");*/
             p.Message("Humans: Makes you invisible to zombies for {0} seconds", ZSGame.Config.InvisibilityDuration);
             p.Message("  %WYou can still get infected while invisible");
             p.Message("Zombies: Makes you invisible to humans for {0} seconds", ZSGame.Config.ZombieInvisibilityDuration);
@@ -207,7 +199,7 @@ namespace MCGalaxy.Eco {
             ZSData data = ZSGame.Get(p);
             if (!data.Infected) {
                 p.Message("You are already a human."); return;
-            }            
+            }
             
             DateTime end = ZSGame.Instance.RoundEnd;
             if (DateTime.UtcNow.AddSeconds(ZSGame.Config.ReviveNoTime) > end) {
@@ -225,15 +217,9 @@ namespace MCGalaxy.Eco {
                                ZSGame.Config.ReviveTooSlow); return;
             }
             
-            int chance = new Random().Next(1, 101);
-            if (chance <= ZSGame.Config.ReviveChance) {
-                ZSGame.Instance.DisinfectPlayer(p);
-                ZSGame.Instance.Map.Message(p.ColoredName + " %Sused a revive potion. &aIt was super effective!");
-            } else {
-                ZSGame.Instance.Map.Message(p.ColoredName + " %Stried using a revive potion. &cIt was not very effective..");
-            }
-            Economy.MakePurchase(p, Price, "%3Revive:");
+            ZSGame.Instance.AttemptRevive(p);
             data.RevivesUsed++;
+            Economy.MakePurchase(p, Price, "%3Revive:");
         }
         
         protected override void DoPurchase(Player p, string message, string[] args) { }

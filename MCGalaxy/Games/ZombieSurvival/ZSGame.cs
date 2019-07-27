@@ -249,7 +249,26 @@ namespace MCGalaxy.Games {
             else if (winStreak == 2) prefix += "&7*" + p.color;
             else if (winStreak == 3) prefix += "&6*" + p.color;
             else if (winStreak > 0)  prefix += "&6"  + winStreak + p.color;
-        }        
+        }
+        
+        public void GoInvisible(Player p, int duration) {
+            ZSData data    = Get(p);
+            data.Invisible = true;
+            data.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
+
+            Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
+            Entities.GlobalDespawn(p, false, false);
+        }
+        
+        public void AttemptRevive(Player p) {
+            int chance = new Random().Next(1, 101);
+            if (chance <= Config.ReviveChance) {
+                DisinfectPlayer(p);
+                Map.Message(p.ColoredName + " %Sused a revive potion. &aIt was super effective!");
+            } else {
+                Map.Message(p.ColoredName + " %Stried using a revive potion. &cIt was not very effective..");
+            }
+        }
         
 
         public bool HasMap(string name) {
