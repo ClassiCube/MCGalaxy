@@ -68,7 +68,7 @@ namespace MCGalaxy.Eco {
             try {
                 lock (saveLock) SaveCore();
             } catch (Exception e) {
-                Logger.LogError("Error loading " + Paths.EconomyPropsFile, e);
+                Logger.LogError("Error saving " + Paths.EconomyPropsFile, e);
             }
         }
         
@@ -89,7 +89,7 @@ namespace MCGalaxy.Eco {
             new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(),
             new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(),
             new InfectMessageItem(), new NickItem(), new ReviveItem(),
-            new HumanInvisibilityItem(), new ZombieInvisibilityItem() };
+            new InvisibilityItem() };
         
         /// <summary> Finds the item whose name or one of its aliases caselessly matches the input. </summary>
         public static Item GetItem(string name) {
