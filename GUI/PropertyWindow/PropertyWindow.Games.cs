@@ -65,10 +65,35 @@ namespace MCGalaxy.Gui {
                 zs_btnStart, zs_btnStop, zs_btnEnd,
                 zs_btnAdd, zs_btnRemove, zs_lstUsed, zs_lstNotUsed);
             zsHelper.Load(allMaps);
+            
+            ZSConfig cfg = ZSGame.Config;
+            zs_numInvHumanDur.Value  = cfg.InvisibilityDuration;
+            zs_numInvHumanMax.Value  = cfg.InvisibilityPotions;
+            zs_numInvZombieDur.Value = cfg.ZombieInvisibilityDuration;
+            zs_numInvZombieMax.Value = cfg.ZombieInvisibilityPotions;
+            
+            zs_numReviveMax.Value   = cfg.ReviveTimes;
+            zs_numReviveEff.Value   = cfg.ReviveChance;
+            zs_numReviveLimit.Value = cfg.ReviveTooSlow;
+            
+            zs_txtName.Text  = cfg.ZombieName;
+            zs_txtModel.Text = cfg.ZombieModel;
         }
         
         void SaveZSSettings() {
             try {
+                ZSConfig cfg = ZSGame.Config;
+                cfg.InvisibilityDuration = (int)zs_numInvHumanDur.Value;
+                cfg.InvisibilityPotions  = (int)zs_numInvHumanMax.Value;
+                cfg.ZombieInvisibilityDuration = (int)zs_numInvZombieDur.Value;
+                cfg.ZombieInvisibilityPotions  = (int)zs_numInvZombieMax.Value;
+                
+                cfg.ReviveTimes   = (int)zs_numReviveMax.Value;
+                cfg.ReviveChance  = (int)zs_numReviveEff.Value;
+                cfg.ReviveTooSlow = (int)zs_numReviveLimit.Value;
+                
+                cfg.ZombieName  = zs_txtName.Text;
+                cfg.ZombieModel = zs_txtModel.Text;
                 zsHelper.Save();
             } catch (Exception ex) {
                 Logger.LogError("Error saving ZS settings", ex);

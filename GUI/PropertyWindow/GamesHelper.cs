@@ -62,7 +62,7 @@ namespace MCGalaxy.Gui {
             cfg.SetMainLevel     = cbMain.Checked;
             
             try {
-                cfg.Save()
+                cfg.Save();
             } catch (Exception ex) {
                 Logger.LogError("Error saving " + game.GameName + " settings", ex);
             }
