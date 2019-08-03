@@ -30,12 +30,19 @@ namespace MCGalaxy.Games {
         public string LastMap = "";
         public LevelPicker Picker;
         
+        /// <summary> Messages general info about current round and players. </summary>
+        /// <remarks> e.g. who is alive, points of each team, etc. </remarks>
         public abstract void OutputStatus(Player p);
+        /// <summary> The instance of this game's overall configuration object. </summary>
         public abstract RoundsGameConfig GetConfig();
+        /// <summary> Updates state from the map specific configuration file. </summary>
         public abstract void UpdateMapConfig();
         
+        /// <summary> Runs a single round of this game. </summary>
         protected abstract void DoRound();
+        /// <summary> Gets the list of all players in this game. </summary>
         protected abstract List<Player> GetPlayers();
+        /// <summary> Saves stats to the database for the given player. </summary>
         protected virtual void SaveStats(Player pl) { }
         
         protected abstract void StartGame();
@@ -69,6 +76,7 @@ namespace MCGalaxy.Games {
             t.Start();
         }
 
+        /// <summary> Attempts to auto start this game with infinite rounds. </summary>
         public void AutoStart() {
             if (!GetConfig().StartImmediately) return;
             try {

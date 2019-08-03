@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
         public TWDifficulty Difficulty = TWDifficulty.Normal;
     }
     
-    public sealed class TWMapConfig {
+    public sealed class TWMapConfig : RoundsGameMapConfig {
         
         [ConfigBool("grace-period", null, true)]
         public bool GracePeriod = true;
@@ -75,22 +75,18 @@ namespace MCGalaxy.Games {
         [ConfigVec3("blue-spawn", null)] public Vec3U16 BlueSpawn;
         
         const string propsDir = "properties/tntwars/";
-        static string Path(string map) { return propsDir + map + ".properties"; }
-        static ConfigElement[] cfg;
-        
-        public void Load(string map) {
+        static ConfigElement[] cfg;        
+        public override void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(TWMapConfig));
-            ConfigElement.ParseFile(cfg, Path(map), this);
+            LoadFrom(cfg, propsDir, map);
         }
         
-        public void Save(string map) {
-            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-            
+        public override void Save(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(TWMapConfig));
-            ConfigElement.SerialiseSimple(cfg, Path(map), this);
+            SaveTo(cfg, propsDir, map);
         }
         
-        public void SetDefaults(Level lvl) {
+        public override void SetDefaults(Level lvl) {
             ushort midX = (ushort)(lvl.Width / 2);
             ushort midY = (ushort)(lvl.Height / 2 + 1);
             ushort maxZ = (ushort)(lvl.Length - 1);

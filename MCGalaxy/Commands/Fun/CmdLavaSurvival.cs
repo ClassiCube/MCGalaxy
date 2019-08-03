@@ -17,7 +17,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
@@ -33,12 +32,15 @@ namespace MCGalaxy.Commands.Fun {
 
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
+            LSMapConfig cfg = new LSMapConfig();
+            LoadMapConfig(p, cfg);
+            
             if (prop.CaselessEq("spawn")) {
-                HandleSetSpawn(p, args);
+                HandleSetSpawn(p, args, cfg);
             } else if (prop.CaselessEq("block")) {
-                HandleSetBlock(p, args);
+                HandleSetBlock(p, args, cfg);
             } else if (prop.CaselessEq("other")) {
-                HandleSetOther(p, args);
+                HandleSetOther(p, args, cfg);
             } else {
                 Help(p, "set");
             }
@@ -57,8 +59,7 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         
-        void HandleSetSpawn(Player p, string[] args) {
-            LSMapConfig cfg = RetrieveConfig(p);
+        void HandleSetSpawn(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Flood position: &b" + cfg.FloodPos);
                 p.Message("Layer position: &b" + cfg.LayerPos);
@@ -94,29 +95,28 @@ namespace MCGalaxy.Commands.Fun {
                 Help(p, "spawn");
             }
             
-            if (ok) UpdateConfig(p, cfg);
+            if (ok) SaveMapConfig(p, cfg);
         }
         
-        static bool SetFloodPos(Player p, Vec3S32[] m, object state, BlockID block) {
+        bool SetFloodPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
             cfg.FloodPos = (Vec3U16)m[0];
-            UpdateConfig(p, cfg);
+            SaveMapConfig(p, cfg);
 
             p.Message("Flood position set to &b({0})", m[0]);
             return false;
         }
         
-        static bool SetLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
+        bool SetLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
             cfg.LayerPos = (Vec3U16)m[0];
-            UpdateConfig(p, cfg);
+            SaveMapConfig(p, cfg);
 
             p.Message("Layer position set to &b({0})", m[0]);
             return false;
         }
         
-        void HandleSetBlock(Player p, string[] args) {
-            LSMapConfig cfg = RetrieveConfig(p);
+        void HandleSetBlock(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Fast lava chance: &b" + cfg.FastChance + "%");
                 p.Message("Killer lava/water chance: &b" + cfg.KillerChance + "%");
@@ -141,11 +141,10 @@ namespace MCGalaxy.Commands.Fun {
                 Help(p, "block");
             }
             
-            if (ok) UpdateConfig(p, cfg);
+            if (ok) SaveMapConfig(p, cfg);
         }
         
-        void HandleSetOther(Player p, string[] args) {
-            LSMapConfig cfg = RetrieveConfig(p);
+        void HandleSetOther(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Layer time: &b" + cfg.LayerInterval.Shorten(true));
                 p.Message("Round time: &b" + cfg.RoundTime.Shorten(true));
@@ -174,29 +173,17 @@ namespace MCGalaxy.Commands.Fun {
                 Help(p, "other");
             }
             
-            if (ok) UpdateConfig(p, cfg);
+            if (ok) SaveMapConfig(p, cfg);
         }
         
-        static bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
+        bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
             cfg.SafeZoneMin = (Vec3U16)Vec3S32.Min(m[0], m[1]);
             cfg.SafeZoneMax = (Vec3U16)Vec3S32.Max(m[0], m[1]);
-            UpdateConfig(p, cfg);
+            SaveMapConfig(p, cfg);
 
             p.Message("Safe zone set! &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
             return false;
-        }
-        
-        static LSMapConfig RetrieveConfig(Player p) {
-            LSMapConfig cfg = new LSMapConfig();
-            cfg.SetDefaults(p.level);
-            cfg.Load(p.level.name);
-            return cfg;
-        }
-        
-        static void UpdateConfig(Player p, LSMapConfig cfg) {
-            cfg.Save(p.level.name);
-            if (p.level == LSGame.Instance.Map) LSGame.Instance.UpdateMapConfig();
         }
         
         public override void Help(Player p, string message) {

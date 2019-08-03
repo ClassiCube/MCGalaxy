@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
@@ -33,33 +31,34 @@ namespace MCGalaxy.Commands.Fun {
         
         protected override void HandleSet(Player p, RoundsGame game, string[] args) {
             string prop = args[1];
-            CTFMapConfig cfg = RetrieveConfig(p);
+            CTFMapConfig cfg = new CTFMapConfig();
+            LoadMapConfig(p, cfg);
             
             if (prop.CaselessEq("bluespawn")) {
                 cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
                 p.Message("Set spawn of blue team to &b" + cfg.BlueSpawn);
-                UpdateConfig(p, cfg);
+                SaveMapConfig(p, cfg);
             } else if (prop.CaselessEq("redspawn")) {
                 cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
                 p.Message("Set spawn of red team to &b" + cfg.RedSpawn);
-                UpdateConfig(p, cfg);
+                SaveMapConfig(p, cfg);
             } else if (prop.CaselessEq("blueflag")) {
                 p.Message("Place or delete a block to set blue team's flag.");
-                p.MakeSelection(1, null, BlueFlagCallback);
+                p.MakeSelection(1, cfg, BlueFlagCallback);
             } else if (prop.CaselessEq("redflag")) {
                 p.Message("Place or delete a block to set red team's flag.");
-                p.MakeSelection(1, null, RedFlagCallback);
+                p.MakeSelection(1, cfg, RedFlagCallback);
             } else if (prop.CaselessEq("divider")) {
                 cfg.ZDivider = p.Pos.BlockZ;
                 p.Message("Set Z line divider to {0}.", cfg.ZDivider);
-                UpdateConfig(p, cfg);
+                SaveMapConfig(p, cfg);
             } else {
                 Help(p, "set");
             }
         }
         
-        static bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
-            CTFMapConfig cfg = RetrieveConfig(p);
+        bool BlueFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
+            CTFMapConfig cfg = (CTFMapConfig)state;
             Vec3U16 P = (Vec3U16)marks[0];
             cfg.BlueFlagPos = P;
             p.Message("Set flag position of blue team to ({0})", P);
@@ -69,12 +68,12 @@ namespace MCGalaxy.Commands.Fun {
             cfg.BlueFlagBlock = block;
             p.Message("Set flag block of blue team to {0}", Block.GetName(p, block));
             
-            UpdateConfig(p, cfg);
+            SaveMapConfig(p, cfg);
             return false;
         }
         
-        static bool RedFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
-            CTFMapConfig cfg = RetrieveConfig(p);
+        bool RedFlagCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
+            CTFMapConfig cfg = (CTFMapConfig)state;
             Vec3U16 P = (Vec3U16)marks[0];         
             cfg.RedFlagPos = P;
             p.Message("Set flag position of red team to ({0})", P);
@@ -84,15 +83,8 @@ namespace MCGalaxy.Commands.Fun {
             cfg.RedFlagBlock = block;
             p.Message("Set flag block of red team to {0}", Block.GetName(p, block));
             
-            UpdateConfig(p, cfg);
+            SaveMapConfig(p, cfg);
             return false;
-        }
-        
-        static CTFMapConfig RetrieveConfig(Player p) {
-            CTFMapConfig cfg = new CTFMapConfig();
-            cfg.SetDefaults(p.level);
-            cfg.Load(p.level.name);
-            return cfg;
         }
         
         static void UpdateConfig(Player p, CTFMapConfig cfg) {

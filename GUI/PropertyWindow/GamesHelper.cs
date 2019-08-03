@@ -119,6 +119,12 @@ namespace MCGalaxy.Gui {
         }
         
         
+        public void UpdateMapConfig(string map) {
+            if (game.Running && game.Map.name == map) {
+                game.UpdateMapConfig();
+            }
+        }
+        
         public void UpdateMaps() {
             UpdateUsedMaps();
             UpdateNotUsedMaps(null);

@@ -31,7 +31,7 @@ namespace MCGalaxy.Games {
         protected override string PropsPath { get { return "properties/ctf.properties"; } }
     }
     
-    public sealed class CTFMapConfig {
+    public sealed class CTFMapConfig : RoundsGameMapConfig {
         [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
         [ConfigVec3("red-pos", null)] public Vec3U16 RedFlagPos;
         [ConfigBlock("red-block", null, Block.Air)]
@@ -57,22 +57,18 @@ namespace MCGalaxy.Games {
 
         
         const string propsDir = "properties/CTF/";
-        static string Path(string map) { return propsDir + map + ".properties"; }
         static ConfigElement[] cfg;
-        
-        public void Load(string map) {
+        public override void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(CTFMapConfig));
-            ConfigElement.ParseFile(cfg, Path(map), this);
+            LoadFrom(cfg, propsDir, map);
         }
         
-        public void Save(string map) {
-            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-            
+        public override void Save(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(CTFMapConfig));
-            ConfigElement.SerialiseSimple(cfg, Path(map), this);
+            SaveTo(cfg, propsDir, map);
         }
         
-        public void SetDefaults(Level lvl) {
+        public override void SetDefaults(Level lvl) {
             ZDivider = lvl.Length / 2;
             RedFlagBlock  = Block.Red;
             BlueFlagBlock = Block.Blue;

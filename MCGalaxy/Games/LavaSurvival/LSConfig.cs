@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
         protected override string PropsPath { get { return "properties/lavasurvival.properties"; } }
     }
     
-    public sealed class LSMapConfig {
+    public sealed class LSMapConfig : RoundsGameMapConfig {
         [ConfigInt("fast-chance", null, 0, 0, 100)]
         public int FastChance;
         [ConfigInt("killer-chance", null, 100, 0, 100)]
@@ -66,22 +66,18 @@ namespace MCGalaxy.Games {
         
         
         const string propsDir = "properties/lavasurvival/";
-        static string Path(string map) { return propsDir + map + ".properties"; }
-        static ConfigElement[] cfg;
-        
-        public void Load(string map) {
+        static ConfigElement[] cfg;       
+        public override void Load(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
-            ConfigElement.ParseFile(cfg, Path(map), this);
+            LoadFrom(cfg, propsDir, map);
         }
         
-        public void Save(string map) {
-            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-            
+        public override void Save(string map) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
-            ConfigElement.SerialiseSimple(cfg, Path(map), this);
+            SaveTo(cfg, propsDir, map);
         }
         
-        public void SetDefaults(Level lvl) {
+        public override void SetDefaults(Level lvl) {
             ushort x = (ushort)(lvl.Width / 2), y = (ushort)(lvl.Height / 2), z = (ushort)(lvl.Length / 2);
             FloodPos = new Vec3U16(x, (ushort)(lvl.Height - 1), z);
             LayerPos = new Vec3U16(0, y                       , 0);

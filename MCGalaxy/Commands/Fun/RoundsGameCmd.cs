@@ -93,5 +93,16 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         protected abstract void HandleSet(Player p, RoundsGame game, string[] args);
+        
+        protected void LoadMapConfig(Player p, RoundsGameMapConfig cfg) {
+            cfg.SetDefaults(p.level);
+            cfg.Load(p.level.name);
+        }
+        
+        protected void SaveMapConfig(Player p, RoundsGameMapConfig cfg) {
+            RoundsGame game = Game;
+            cfg.Save(p.level.name);
+            if (p.level == game.Map) game.UpdateMapConfig();
+        }
     }
 }

@@ -193,12 +193,9 @@ namespace MCGalaxy.Gui {
             lsCurCfg.RoundTime = ls_numRound.Value;
             lsCurCfg.FloodTime = ls_numFlood.Value;
             lsCurCfg.LayerInterval = ls_numLayerTime.Value;
-            lsCurCfg.Save(lsCurMap);
             
-            LSGame game = LSGame.Instance;
-            if (game.Running && game.Map.name == lsCurMap) {
-                game.UpdateMapConfig();
-            }
+            lsCurCfg.Save(lsCurMap);
+            lsHelper.UpdateMapConfig(lsCurMap);
         }
         
         
@@ -276,12 +273,9 @@ namespace MCGalaxy.Gui {
             twCurCfg.GracePeriodTime = tw_numGrace.Value;
             twCurCfg.BalanceTeams = tw_cbBalance.Checked;
             twCurCfg.TeamKills = tw_cbKills.Checked;
-            twCurCfg.Save(twCurMap);
             
-            TWGame game = TWGame.Instance;
-            if (game.Running && game.Map.name == twCurMap) {
-                game.UpdateMapConfig();
-            }
+            twCurCfg.Save(twCurMap);          
+            twHelper.UpdateMapConfig(twCurMap);
         }       
 
         void tw_btnAbout_Click(object sender, EventArgs e) {

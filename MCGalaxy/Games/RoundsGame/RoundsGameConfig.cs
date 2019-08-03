@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GameEvents;
 using MCGalaxy.Events.LevelEvents;
@@ -26,6 +27,30 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
 
+    /// <summary> Stores map-specific game configuration state. </summary>
+    public abstract class RoundsGameMapConfig {
+        
+        protected void LoadFrom(ConfigElement[] cfg, string propsDir, string map) {
+            string path = propsDir + map + ".properties";
+            ConfigElement.ParseFile(cfg, path, this);
+        }
+        
+        protected void SaveTo(ConfigElement[] cfg, string propsDir, string map) {
+            string path = propsDir + map + ".properties";
+            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
+            ConfigElement.SerialiseSimple(cfg, path, this);
+        }
+        
+        /// <summary> Saves this configuration to disc. </summary>
+        public abstract void Save(string map);
+        /// <summary> Loads this configuration from disc. </summary>
+        public abstract void Load(string map);
+        /// <summary> Applies default values for config fields which differ per map. </summary>
+        /// <remarks> e.g. spawn positions, zones </remarks>
+        public abstract void SetDefaults(Level lvl);
+    }
+    
+    /// <summary> Stores overall game configuration state. </summary>
     public abstract class RoundsGameConfig {
         [ConfigBool("start-on-server-start", "Game", false)] 
         public bool StartImmediately;
@@ -36,6 +61,8 @@ namespace MCGalaxy.Games {
         [ConfigStringList("maps", "Game")] 
         public List<string> Maps = new List<string>();
 
+        /// <summary> Whether users are allowed to auto-join maps used by this game. </summary>
+        /// <remarks> If false, users can only join these maps when manually /load ed. </remarks>
         public abstract bool AllowAutoload { get; }
         protected abstract string PropsPath { get; }
         protected abstract string GameName { get; }
