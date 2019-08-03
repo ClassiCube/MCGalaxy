@@ -137,8 +137,8 @@ namespace MCGalaxy {
             Level lvl; LevelConfig cfg = GetConfig(map, out lvl);
             if (lvl != null) return Check(p, plRank, lvl, action);
             
-            LevelAccessController visit = new LevelAccessController(cfg, map, true);
-            LevelAccessController build = new LevelAccessController(cfg, map, false);
+            AccessController visit = new LevelAccessController(cfg, map, true);
+            AccessController build = new LevelAccessController(cfg, map, false);
             if (!visit.CheckDetailed(p, plRank) || !build.CheckDetailed(p, plRank)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
             }

@@ -271,8 +271,6 @@ namespace MCGalaxy {
         
         [ConfigTimespan("MinRoundTime", "Game", 4, true)]
         public TimeSpan RoundTime = TimeSpan.FromMinutes(5);
-        [ConfigTimespan("MaxRoundTime", "Game", 7, true)]
-        public TimeSpan __MaxRoundTime = TimeSpan.FromMinutes(7);
         [ConfigBool("DrawingAllowed", "Game", true)]
         public bool Drawing = true;
         [ConfigInt("RoundsPlayed", "Game", 0)]

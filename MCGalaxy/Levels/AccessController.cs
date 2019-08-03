@@ -27,7 +27,9 @@ namespace MCGalaxy {
         
         public abstract LevelPermission Min { get; set; }
         public abstract LevelPermission Max { get; set; }
+        /// <summary> List of players who are always allowed to access. </summary>
         public abstract List<string> Whitelisted { get; }
+        /// <summary> List of players who are never allowd to access. </summary>
         public abstract List<string> Blacklisted { get; }
         
         protected abstract string ColoredName { get; }
@@ -202,47 +204,46 @@ namespace MCGalaxy {
     }
     
     /// <summary> Encapuslates access permissions (visit or build) for a level. </summary>
-    public sealed class LevelAccessController : AccessController {
-        
-        public readonly bool IsVisit;
+    public sealed class LevelAccessController : AccessController {        
+        readonly bool isVisit;
         readonly LevelConfig cfg;
         readonly string lvlName;
         
         public LevelAccessController(LevelConfig cfg, string levelName, bool isVisit) {
             this.cfg = cfg;
             this.lvlName = levelName;
-            IsVisit = isVisit;
+            this.isVisit = isVisit;
         }
 
         public override LevelPermission Min {
-            get { return IsVisit ? cfg.VisitMin : cfg.BuildMin; }
+            get { return isVisit ? cfg.VisitMin : cfg.BuildMin; }
             set {
-                if (IsVisit) cfg.VisitMin = value;
+                if (isVisit) cfg.VisitMin = value;
                 else cfg.BuildMin = value;
             }
         }
 
         public override LevelPermission Max {
-            get { return IsVisit ? cfg.VisitMax : cfg.BuildMax; }
+            get { return isVisit ? cfg.VisitMax : cfg.BuildMax; }
             set {
-                if (IsVisit) cfg.VisitMax = value;
+                if (isVisit) cfg.VisitMax = value;
                 else cfg.BuildMax = value;
             }
         }
 
         public override List<string> Whitelisted {
-            get { return IsVisit ? cfg.VisitWhitelist : cfg.BuildWhitelist; }
+            get { return isVisit ? cfg.VisitWhitelist : cfg.BuildWhitelist; }
         }
 
         public override List<string> Blacklisted {
-            get { return IsVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
+            get { return isVisit ? cfg.VisitBlacklist : cfg.BuildBlacklist; }
         }
         
         protected override string ColoredName { get { return cfg.Color + lvlName; } }
-        protected override string Action { get { return IsVisit ? "go to" : "build in"; } }
-        protected override string ActionIng { get { return IsVisit ? "going to" : "building in"; } }
-        protected override string Type { get { return IsVisit ? "visit" : "build"; } }
-        protected override string MaxCmd { get { return IsVisit ? "PerVisit" : "PerBuild"; } }
+        protected override string Action { get { return isVisit ? "go to" : "build in"; } }
+        protected override string ActionIng { get { return isVisit ? "going to" : "building in"; } }
+        protected override string Type { get { return isVisit ? "visit" : "build"; } }
+        protected override string MaxCmd { get { return isVisit ? "PerVisit" : "PerBuild"; } }
 
         
         protected override void ApplyChanges(Player p, Level lvl, string msg) {
@@ -258,14 +259,14 @@ namespace MCGalaxy {
         void Update(Level lvl) {
             cfg.SaveFor(lvlName);
             if (lvl == null) return;
-            if (IsVisit && lvl == Server.mainLevel) return;
+            if (isVisit && lvl == Server.mainLevel) return;
             Player[] players = PlayerInfo.Online.Items;
             
             foreach (Player p in players) {
                 if (p.level != lvl) continue;
                 bool allowed = CheckAllowed(p);
                 
-                if (!IsVisit) {
+                if (!isVisit) {
                     p.AllowBuild = allowed;
                 } else if (!allowed) {                    
                     p.Message("%WNo longer allowed to visit %S{0}", ColoredName);

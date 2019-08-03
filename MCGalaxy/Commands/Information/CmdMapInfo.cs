@@ -184,7 +184,7 @@ namespace MCGalaxy.Commands.Info {
             public ushort Width, Height, Length;
             public string Name, MapName;
             public long BlockDBEntries = -1;
-            public LevelAccessController Visit, Build;
+            public AccessController Visit, Build;
             public LevelConfig Config;
 
             public void FromLevel(Level lvl) {

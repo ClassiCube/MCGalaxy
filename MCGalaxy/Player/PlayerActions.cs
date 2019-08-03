@@ -79,7 +79,7 @@ namespace MCGalaxy {
                 return false;
             }
             
-            LevelAccessController visitAccess = new LevelAccessController(cfg, map, true);
+            AccessController visitAccess = new LevelAccessController(cfg, map, true);
             bool skip = p.summonedMap != null && p.summonedMap.CaselessEq(map);
             LevelPermission plRank = skip ? LevelPermission.Nobody : p.Rank;
             if (!visitAccess.CheckDetailed(p, plRank)) return false;
