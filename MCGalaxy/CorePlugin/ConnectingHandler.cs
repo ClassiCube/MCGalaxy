@@ -39,7 +39,7 @@ namespace MCGalaxy.Core {
             if (!CheckTempban(p)) return false;
 
             if (Server.Config.WhitelistedOnly && !Server.whiteList.Contains(p.name)) {
-                p.Leave(null, "This is a private server!", true);
+                p.Leave(null, Server.Config.DefaultWhitelistMessage, true);
                 return false;
             }
             
