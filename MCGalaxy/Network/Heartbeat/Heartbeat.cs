@@ -48,7 +48,7 @@ namespace MCGalaxy.Network {
         /// <summary> Gets the data to be sent for a heartbeat. </summary>
         public abstract string GetHeartbeatData();
         
-        /// <summary> Called when a request is about to be send to the web server. </summary>
+        /// <summary> Called when a request is about to be sent to the web server. </summary>
         public abstract void OnRequest(HttpWebRequest request);
         
         /// <summary> Called when a response is received from the web server. </summary>

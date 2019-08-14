@@ -120,7 +120,7 @@ namespace MCGalaxy {
             foreach (PlayerBot b in botsList) { Despawn(p, b); }
         }
         
-        internal static void Spawn(Player dst, PlayerBot b) {
+        public static void Spawn(Player dst, PlayerBot b) {
             string name = Chat.Format(b.color + b.DisplayName, dst, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
             string skin = Chat.Format(b.SkinName, dst, true, false);

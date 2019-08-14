@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands {
                                        string action, string defUnit) {
             try {
                 span = input.ParseShort(defUnit);
-                // Typically span is added to current time, so ensure span isn't too big
+                // Typically span gets added to current time, so check span isn't too big here
                 DateTime.UtcNow.Add(span).AddYears(1);
                 return true;
             } catch (OverflowException) {
