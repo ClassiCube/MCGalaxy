@@ -154,14 +154,14 @@ namespace MCGalaxy {
             }
         }
         
-        internal static void Despawn(Player dst, Player other) {
+        public static void Despawn(Player dst, Player other) {
             OnEntityDespawnedEvent.Call(other, dst);
             byte id = other == dst ? SelfID : other.id;
             dst.Send(Packet.RemoveEntity(id));
             if (!Server.Config.TablistGlobal) TabList.Remove(dst, other);
         }
         
-        internal static void Despawn(Player dst, PlayerBot b) {
+        public static void Despawn(Player dst, PlayerBot b) {
             OnEntityDespawnedEvent.Call(b, dst);
             dst.Send(Packet.RemoveEntity(b.id));
             if (Server.Config.TablistBots) TabList.Remove(dst, b);
