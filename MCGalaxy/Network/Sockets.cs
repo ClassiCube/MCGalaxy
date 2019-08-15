@@ -177,7 +177,7 @@ namespace MCGalaxy.Network {
                     if (sendInProgress) {
                         sendQueue.Enqueue(buffer);
                     } else {
-                        if (!DoSendAsync(buffer)) sendInProgress = false;
+                        sendInProgress = TrySendAsync(buffer);
                     }
                 }
             } catch (SocketException) {
@@ -190,8 +190,7 @@ namespace MCGalaxy.Network {
         // TODO: do this seprately
         public override void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
-        bool DoSendAsync(byte[] buffer) {
-            sendInProgress = true;
+        bool TrySendAsync(byte[] buffer) {
             // BlockCopy has some overhead, not worth it for very small data
             if (buffer.Length <= 16) {
                 for (int i = 0; i < buffer.Length; i++) {
@@ -217,8 +216,9 @@ namespace MCGalaxy.Network {
                     while (s.sendQueue.Count > 0) {
                         // DoSendAsync returns false if SendAsync completed sync
                         // If that happens, SendCallback isn't called so we need to send data here instead
-                        if (s.DoSendAsync(s.sendQueue.Dequeue())) return;
-
+                        s.sendInProgress = s.TrySendAsync(s.sendQueue.Dequeue());
+                        
+                        if (s.sendInProgress) return;
                         if (s.Disconnected) s.sendQueue.Clear();
                     }
                 }

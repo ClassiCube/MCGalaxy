@@ -786,7 +786,7 @@ namespace MCGalaxy.SQL {
         }
 
         public float GetFloat(int i) { return (float)GetDouble(i); }
-        public short GetInt16(int i) { return (short)GetInt16(i); }
+        public short GetInt16(int i) { return (short)GetInt32(i); }
         public string GetName(int i) { return stmt.ColumnName(i); }
 
         public int GetInt32(int i) {
