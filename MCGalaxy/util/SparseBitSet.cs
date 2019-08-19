@@ -78,8 +78,9 @@ namespace MCGalaxy.Util {
         
         /// <summary> Resets all bits of data to false. </summary>
         public void Clear() {
-            for (int i = 0; i < bits.Length; i++)
-                bits[i] = null;
+            byte[][] bits_ = bits; // local var to avoid JIT bounds check
+            for (int i = 0; i < bits_.Length; i++)
+                bits_[i] = null;
         }
     }
 }
