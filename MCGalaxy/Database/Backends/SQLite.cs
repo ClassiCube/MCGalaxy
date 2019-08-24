@@ -428,7 +428,7 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    sealed class SQLiteCommand : IDbCommand {
+    public sealed class SQLiteCommand : IDbCommand {
         string strCmdText, strRemaining;
         SQLiteConnection conn;
         SQLiteParameterCollection parameters = new SQLiteParameterCollection();
@@ -711,7 +711,7 @@ namespace MCGalaxy.SQL {
         public TypeAffinity Affinity;
     }
 
-    sealed class SQLiteDataReader : IDataReader {
+    public sealed class SQLiteDataReader : IDataReader {
         SQLiteCommand _command;
         SQLiteStatement stmt;
         int readState, rowsAffected, columns;
@@ -982,7 +982,7 @@ namespace MCGalaxy.SQL {
         public const int Done = 101;
     }
 
-    sealed class SQLiteParameter : IDbDataParameter {
+    public sealed class SQLiteParameter : IDbDataParameter {
         int type = -1;
         object value;
         string name;
@@ -1022,7 +1022,7 @@ namespace MCGalaxy.SQL {
         public int Size { get { return 0; } set { } }
     }
 
-    sealed class SQLiteParameterCollection : IDataParameterCollection {
+    public sealed class SQLiteParameterCollection : IDataParameterCollection {
         internal List<SQLiteParameter> list = new List<SQLiteParameter>();
         public bool IsSynchronized { get { return false; } }
         public bool IsFixedSize { get { return false; } }
@@ -1260,7 +1260,7 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    sealed class SQLiteTransaction : IDbTransaction {
+    public sealed class SQLiteTransaction : IDbTransaction {
         SQLiteConnection conn;
         
         internal SQLiteTransaction(SQLiteConnection connection) {
