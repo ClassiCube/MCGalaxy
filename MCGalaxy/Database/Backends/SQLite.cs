@@ -40,7 +40,7 @@ namespace MCGalaxy.SQL {
         public override bool MultipleSchema { get { return false; } }
         
         internal override IDbConnection CreateConnection() {
-            return new SQLiteConnection();
+            return new MCGSQLiteConnection();
         }
         
         internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
@@ -144,6 +144,11 @@ namespace MCGalaxy.SQL {
             DoInsert("INSERT OR REPLACE INTO", table, columns, args);
         }
     }
+    
+    public sealed class MCGSQLiteConnection : SQLiteConnection {
+        protected override bool ConnectionPooling { get { return Server.Config.DatabasePooling; } }
+        protected override string DBPath { get { return "MCGalaxy.db"; } }
+    }
 
     /********************************************************
      * ADO.NET 2.0 Data Provider for SQLite Version 3.X
@@ -234,10 +239,13 @@ namespace MCGalaxy.SQL {
         internal static extern IntPtr sqlite3_errstr(SQLiteErrorCode rc); /* 3.7.15+ */
     }
 
-    public sealed class SQLiteConnection : IDbConnection {
+    public abstract class SQLiteConnection : IDbConnection {
         ConnectionState state = ConnectionState.Closed;
         internal int _transactionLevel;
         IntPtr handle;
+        
+        protected abstract bool ConnectionPooling { get; }
+        protected abstract string DBPath { get; }
 
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel) {
             return new SQLiteTransaction(this);
@@ -317,15 +325,14 @@ namespace MCGalaxy.SQL {
             if (state != ConnectionState.Closed) throw new InvalidOperationException();
             Close();
 
-            const string path = "MCGalaxy.db";
             try {
-                if (Server.Config.DatabasePooling) handle = RemoveFromPool();
+                if (ConnectionPooling) handle = RemoveFromPool();
                 
                 if (handle == IntPtr.Zero) {
                     IntPtr db = IntPtr.Zero;
 
                     const int flags = 4 | 2; // CREATE(4) | READ_WRITE(2)
-                    SQLiteErrorCode n = Interop.sqlite3_open_v2(SQLiteConvert.ToUTF8(path), ref db, flags, IntPtr.Zero);
+                    SQLiteErrorCode n = Interop.sqlite3_open_v2(SQLiteConvert.ToUTF8(DBPath), ref db, flags, IntPtr.Zero);
                     
                     if (n != SQLiteErrorCodes.Ok) throw new SQLiteException(n, null);
                     handle = db;
@@ -381,7 +388,7 @@ namespace MCGalaxy.SQL {
             if (handle == IntPtr.Zero) return;
 
             // TODO: handle leak here??
-            if (Server.Config.DatabasePooling) {
+            if (ConnectionPooling) {
                 if (Reset(canThrow)) AddToPool(handle);
             } else {
                 LimitPool(0);
