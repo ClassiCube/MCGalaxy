@@ -108,7 +108,7 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
-        public static byte[] UserType(Player p, byte type) {
+        public static byte[] UserType(byte type) {
             return new byte[] { Opcode.SetPermission, type };
         }
         
