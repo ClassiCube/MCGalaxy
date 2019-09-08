@@ -40,7 +40,7 @@ namespace MCGalaxy.Network {
                 NetUtils.Write(motd, buffer, 66, p.hasCP437);
             }
 
-            buffer[130] = p.group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0;
+            buffer[130] = p.UserType();
             return buffer;
         }
         
@@ -108,11 +108,8 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
-        public static byte[] UserType(Player p) {
-            byte[] buffer = new byte[2];
-            buffer[0] = Opcode.SetPermission;
-            buffer[1] = p.group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0;
-            return buffer;
+        public static byte[] UserType(Player p, byte type) {
+            return new byte[] { Opcode.SetPermission, type };
         }
         
         #endregion

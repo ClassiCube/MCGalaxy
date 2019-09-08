@@ -310,6 +310,8 @@ namespace MCGalaxy {
             }
             return true;
         }
+        
+        internal byte UserType() { return group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0; }
 
         #endregion
 

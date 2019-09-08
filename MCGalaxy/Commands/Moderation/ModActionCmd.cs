@@ -90,7 +90,8 @@ namespace MCGalaxy.Commands.Moderation {
             who.SetPrefix();
             
             Entities.DespawnEntities(who, false);
-            who.Send(Packet.UserType(who));
+            who.Send(Packet.UserType(who, who.UserType()));
+            
             who.SendCurrentBlockPermissions();
             Entities.SpawnEntities(who, false);
             CheckBlockBindings(who);
