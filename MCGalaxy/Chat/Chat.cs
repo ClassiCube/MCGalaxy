@@ -42,7 +42,14 @@ namespace MCGalaxy {
     
     public delegate bool ChatMessageFilter(Player pl, object arg);
     public static class Chat {
-        
+    	
+        public static ItemPerms StaffPerms { 
+            get { 
+                ItemPerms perms = CommandExtraPerms.Find("Staff", 1);
+                return perms != null ? perms : new ItemPerms(LevelPermission.Operator, null, null);
+            }
+        }
+    	
         public static ItemPerms OpchatPerms { 
             get { 
                 ItemPerms perms = CommandExtraPerms.Find("OpChat", 1);
@@ -112,6 +119,11 @@ namespace MCGalaxy {
         
         public static void MessageAll(string msg) { Message(ChatScope.All, msg, null, null); }
         public static void MessageGlobal(string msg) { Message(ChatScope.Global, msg, null, null); }
+        
+        public static void MessageStaff(string msg) {
+            Message(ChatScope.Perms, msg, StaffPerms, null);
+        }
+        
         public static void MessageOps(string msg) {
             Message(ChatScope.Perms, msg, OpchatPerms, null);
         }
