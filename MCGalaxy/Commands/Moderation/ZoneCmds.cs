@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ZRemove", "del"), new CommandAlias("ZDelete", "del"),
-                    new CommandAlias("ZAdd"), new CommandAlias("ZEdit", "edit") }; }
+                    new CommandAlias("ZAdd"), new CommandAlias("ZEdit", "perbuild") }; }
         }
         
         public override void Use(Player p, string message, CommandData data) {
