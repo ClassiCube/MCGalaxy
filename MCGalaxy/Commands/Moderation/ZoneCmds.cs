@@ -46,14 +46,14 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 DeleteZone(p, args, data);
-            } else if (opt.CaselessEq("edit") || opt.CaselessEq("set")) {
+            } else if (opt.CaselessEq("perbuild") || opt.CaselessEq("set")) {
                 if (args.Length <= 2) { Help(p); return; }
                 Zone zone = Matcher.FindZones(p, p.level, args[1]);
                 if (zone == null) return;
                 
                 if (!zone.Access.CheckDetailed(p, data.Rank)) {
                     p.Message("Hence, you cannot edit this zone."); return;
-                } else if (opt.CaselessEq("edit")) {
+                } else if (opt.CaselessEq("perbuild")) {
                     EditZone(p, args, data, zone);
                 } else {
                     SetZoneProp(p, args, zone);
@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("%HCreates a new zone, optionally also sets build permissions");
             p.Message("%T/Zone del [name]");
             p.Message("%HDeletes the given zone");
-            p.Message("%T/Zone edit [name] [permissions]");
+            p.Message("%T/Zone perbuild [name] [permissions]");
             p.Message("%HSets build permissions for the given zone");
             p.Message("%H  For syntax of permissions, see %T/Help PerBuild");
             p.Message("%T/Zone set [name] [property] [value]");
