@@ -153,7 +153,7 @@ namespace MCGalaxy.Bots {
         }
         
         static void FaceTowards(PlayerBot bot, Player p) {
-            int dx = p.Pos.X - bot.Pos.X, dy = p.Pos.Y - bot.Pos.Y, dz = p.Pos.Z - bot.Pos.Z;
+            int dx = p.Pos.X - bot.Pos.X, dy = (p.Pos.Y + AABB.EyeHeight(p.Model)) - (bot.Pos.Y + AABB.EyeHeight(bot.Model)), dz = p.Pos.Z - bot.Pos.Z;
             Vec3F32 dir = new Vec3F32(dx, dy, dz);
             dir = Vec3F32.Normalise(dir);
             

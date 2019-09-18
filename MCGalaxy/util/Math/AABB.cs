@@ -120,7 +120,8 @@ namespace MCGalaxy.Maths {
             return bb;
         }
         
-        internal static float GetScaleFrom(ref string model) {
+        internal static float GetScaleFrom(ref string model, bool unlimitedScaleAllowed = false) {
+            if (model.CaselessEq("giant")) { return 2; }
             int sep = model.IndexOf('|');
             string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
             model = sep == -1 ? model : model.Substring(0, sep);
@@ -129,7 +130,7 @@ namespace MCGalaxy.Maths {
             if (!Utils.TryParseSingle(scaleStr, out scale)) scale = 1.0f;
             if (scale < 0.01f) scale = 0.01f;
             
-            float max = model.CaselessEq("chibi") ? 3 : 2;
+            float max = unlimitedScaleAllowed ? int.MaxValue : (model.CaselessEq("chibi") ? 3 : 2);
             return Math.Min(scale, max);
         }
         
@@ -144,6 +145,33 @@ namespace MCGalaxy.Maths {
             if (model.CaselessEq("spider"))   return new Vec3S32(30, 24, 30);
             
             return new Vec3S32(18, 56, 18); // default humanoid size
+        }
+        
+        /// <summary> Gives distance (in half-pixel world units)
+        /// from feet to camera height </summary>
+        public static int EyeHeight(string model) {
+            float scale = GetScaleFrom(ref model, true);
+            int blockID = -1;
+            if (Int32.TryParse(model, out blockID)) { return 16; } //lazily return middle of full block if it thinks it's a block ID.
+            model = model.ToLower();
+            
+            //clientside camera height for humanoid is 26 pixels, but 28 gives us the actual middle of the head, which is really what we want.
+            float eyeHeight = 28;
+            const float sitOffset = 10;
+            
+            if (model == "chibi")            { eyeHeight = 14; }
+            else if (model == "sit")         { eyeHeight -= sitOffset; }
+            else if (model == "head")        { eyeHeight = 4; } //clientside is 6 but we want center of head
+            else if (model == "chicken")     { eyeHeight = 12; } //clientside is 14, but we want center of head
+            else if (model == "creeper")     { eyeHeight = 22; }
+            else if (model == "pig")         { eyeHeight = 12; }
+            else if (model == "sheep")       { eyeHeight = 19; } //clientside is 20, but we want center of head
+            else if (model == "sheep_nofur") { eyeHeight = 19; }
+            else if (model == "spider")      { eyeHeight = 8; }
+            
+            eyeHeight *= scale;
+            eyeHeight *= 2f; //multiply by two because world positions are measured in half-pixels
+            return (int)eyeHeight;
         }
         
         public static bool IntersectsSolidBlocks(AABB bb, Level lvl) {
