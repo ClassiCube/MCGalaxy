@@ -33,16 +33,15 @@ namespace MCGalaxy {
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
-        public bool MayHaveCustomBlocks {
-            get {
-                byte[][] customBlocks = CustomBlocks;
-                if (customBlocks == null) return false;
+        /// <summary> Relatively quick guess at whether this map might use custom blocks. </summary>
+        public bool MightHaveCustomBlocks() {
+            byte[][] customBlocks = CustomBlocks;
+            if (customBlocks == null) return false;
                 
-                for (int i = 0; i < customBlocks.Length; i++) {
-                    if (customBlocks[i] != null) return true;
-                }
-                return false;
+            for (int i = 0; i < customBlocks.Length; i++) {
+                if (customBlocks[i] != null) return true;
             }
+            return false;
         }
         
         
@@ -390,7 +389,7 @@ namespace MCGalaxy {
                     AddCheck(b, false, data);
                 }
                 
-                // Save bandwidth sending identical looking blocks, like air/op_air changes.
+                // Save bandwidth not sending identical looking blocks, like air/op_air changes.
                 return !Block.VisuallyEquals(old, block);
             } catch {
                 return false;

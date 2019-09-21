@@ -251,10 +251,10 @@ namespace MCGalaxy {
                 using (LevelChunkStream dst = new LevelChunkStream(this))
                     using (Stream stream = LevelChunkStream.CompressMapHeader(this, volume, dst))
                 {
-                    if (!level.MayHaveCustomBlocks) {
-                        LevelChunkStream.CompressMapSimple(this, stream, dst);
-                    } else {
+                	if (level.MightHaveCustomBlocks()) {
                         LevelChunkStream.CompressMap(this, stream, dst);
+                	} else {
+                        LevelChunkStream.CompressMapSimple(this, stream, dst);
                     }
                 }
                 

@@ -84,14 +84,16 @@ namespace MCGalaxy.Network {
         }
         
         
-        internal static Stream CompressMapHeader(Player player, int volume, LevelChunkStream dst) {
+        public static Stream CompressMapHeader(Player p, int volume, LevelChunkStream dst) {
             Stream stream = null;
-            if (player.Supports(CpeExt.FastMap)) {
+            if (p.Supports(CpeExt.FastMap)) {
                 stream = new DeflateStream(dst, CompressionMode.Compress, true);
             } else {
                 stream = new GZipStream(dst, CompressionMode.Compress, true);
-                byte[] buffer = new byte[4]; NetUtils.WriteI32(volume, buffer, 0);
-                stream.Write(buffer, 0, sizeof(int));
+                byte[] buffer = new byte[4];
+                
+                NetUtils.WriteI32(volume, buffer, 0);
+                stream.Write(buffer, 0, 4);
             }
             return stream;
         }
@@ -117,7 +119,7 @@ namespace MCGalaxy.Network {
                 bIndex++;
                 
                 if (bIndex == bufferSize) {
-                    // '0' to indicate classic blocks
+                    // '0' to indicate this chunk has lower 8 bits of block ids
                     dst.chunkValue = p.hasExtBlocks ? (byte)0 : (byte)(i * progScale);
                     stream.Write(buffer, 0, bufferSize); bIndex = 0;
                 }
@@ -132,7 +134,7 @@ namespace MCGalaxy.Network {
             
             // Store on stack instead of performing function call for every block in map
             byte* conv = stackalloc byte[Block.ExtendedCount];
-            byte* convExt = conv + Block.Count;
+            byte* convExt  = conv + Block.Count;
             #if TEN_BIT_BLOCKS
             byte* convExt2 = conv + Block.Count * 2;
             byte* convExt3 = conv + Block.Count * 3;
