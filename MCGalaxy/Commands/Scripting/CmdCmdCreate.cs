@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Scripting {
             p.Message("%HCreates a dummy C# command named Cmd[Name]");
             p.Message("%T/CmdCreate [name] vb");
             p.Message("%HCreates a dummy Visual Basic command named Cmd[Name].");
-            p.Message("%This file can be used as the basis for creating a new command.");
+            p.Message("%TThis file can be used as the basis for creating a new command.");
         }
     }
 }
