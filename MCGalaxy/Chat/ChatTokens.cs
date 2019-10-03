@@ -150,7 +150,6 @@ namespace MCGalaxy {
             }
             
             string[] lines = tokensFile.GetText();
-            char[] colon = new char[] {':'};
             
             foreach (string line in lines) {
                 if (line.StartsWith("//") || line.Length == 0) continue;

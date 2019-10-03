@@ -62,7 +62,6 @@ namespace MCGalaxy {
     public sealed class ZipReader {
         BinaryReader reader;
         Stream stream;
-        byte[] buffer = new byte[81920];
         
         List<ZipEntry> entries = new List<ZipEntry>();
         int numEntries;

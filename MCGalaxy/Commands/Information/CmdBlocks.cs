@@ -117,10 +117,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputPhysicsInfo(Player p, BlockProps[] scope, BlockID b) {
-            BlockProps props = scope[b];
             BlockID conv = Block.Convert(b);
             p.Message("&c  Appears as a \"{0}\" block", Block.GetName(p, conv));
 
+            // TODO: Use scope[b] instead of hardcoded global
             if (Block.LightPass(b))   p.Message("  Allows light through");
             if (Block.NeedRestart(b)) p.Message("  The block's physics will auto-start");
             

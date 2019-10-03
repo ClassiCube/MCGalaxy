@@ -96,9 +96,7 @@ namespace MCGalaxy {
                             OnPhysicsStateChangedEvent.Call(this, PhysicsState.Stopped);
                             wait = Config.PhysicsSpeed;
                         } else {
-                            Player[] online = PlayerInfo.Online.Items;
                             Message("Physics warning!");
-                            
                             Logger.Log(LogType.Warning, "Physics warning on " + name);
                             OnPhysicsStateChangedEvent.Call(this, PhysicsState.Warning);
                         }

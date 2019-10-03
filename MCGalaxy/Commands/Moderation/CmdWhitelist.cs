@@ -30,17 +30,17 @@ namespace MCGalaxy.Commands.Moderation {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
             
-            if (args[0].CaselessEq("add")) {
+            if (cmd.CaselessEq("add")) {
                 if (args.Length < 2) { Help(p); return; }
                 Add(p, args[1]);
-            } else if (IsDeleteCommand(args[0])) {
+            } else if (IsDeleteCommand(cmd)) {
                 if (args.Length < 2) { Help(p); return; }
                 Remove(p, args[1]);
-            } else if (IsListCommand(args[0])) {
+            } else if (IsListCommand(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 List(p, modifier);
             } else if (args.Length == 1) {
-                Add(p, args[0]);
+                Add(p, cmd);
             } else {
                 Help(p);
             }

@@ -34,7 +34,6 @@ namespace MCGalaxy.Blocks.Extended {
             Orientation rot = p.Rot;
             
             if (p.level.name != exit.Map) {
-                Level curLevel = p.level;
                 p.summonedMap = exit.Map;
                 bool changedMap = false;
                 

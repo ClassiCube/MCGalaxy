@@ -153,8 +153,6 @@ namespace MCGalaxy.Commands {
         static void LoadExtraPerm(string[] args) {
             string cmdName = args[0];
             int num = int.Parse(args[1]), minPerm = int.Parse(args[2]);
-            string desc = args[3] == null ? "" : args[3];
-            
             Set(cmdName, num, "", (LevelPermission)minPerm, null, null);
         }
     }
