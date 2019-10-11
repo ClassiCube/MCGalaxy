@@ -16,7 +16,6 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
@@ -49,12 +48,13 @@ namespace MCGalaxy {
         public static int NonHiddenUniqueIPCount() {
             Player[] players = Online.Items;
             List<string> IPs = new List<string>();
+            Dictionary<string, bool> uniqueIPs = new Dictionary<string, bool>();
             foreach (Player p in players) {
                 if (!p.hidden) { 
-                    IPs.Add(p.ip);
+                    uniqueIPs[p.ip] = true;
                 }
             }
-            return IPs.Distinct().Count();
+            return uniqueIPs.Count;
         }
         
         public static Player FindMatches(Player pl, string name, bool onlyCanSee = true) {
