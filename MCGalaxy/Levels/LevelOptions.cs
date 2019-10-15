@@ -140,7 +140,7 @@ namespace MCGalaxy {
         static void SetDeletable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Deletable, "Deletable"); }
         
         static void SetChat(Player p, Level l, string v) {
-            Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (level only) chat", true);
+            Toggle(p, l, ref l.Config.ServerWideChat, "Roleplay (local level only) chat", true);
         }
         static void SetDrawing(Player p, Level l, string v) { 
             Toggle(p, l, ref l.Config.Drawing, "Drawing commands"); 
