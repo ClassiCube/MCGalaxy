@@ -43,9 +43,11 @@ namespace MCGalaxy {
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
-            LevelConfig config = LevelInfo.GetConfig(p.level.name, out p.level);
-            string levelName = config.ServerWideChat ? p.level.name : p.level.name + Server.Config.DefaultColor+" <Local chat>";
-            group = Server.Config.TablistGlobal ? "On " + levelName : "&fPlayers";
+            string map = p.level.name;
+            // TODO: Make %S work with tab list names
+            if (!p.level.SeesServerWideChat) map += Server.Config.DefaultColor + " <Local chat>";
+            
+            group = Server.Config.TablistGlobal ? "On " + map : "&fPlayers";
             name  = dst.Ignores.Nicks ? p.color + p.truename : p.ColoredName;
             OnTabListEntryAddedEvent.Call(p, ref name, ref group, dst);
 

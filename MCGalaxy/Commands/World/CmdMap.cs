@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.World {
             
             p.Message("%TGeneral settings:");
             p.Message("  MOTD: &b" + cfg.MOTD);
-            p.Message("  Roleplay (local level only) chat: " + GetBool(!cfg.ServerWideChat));
+            p.Message("  Local level only chat: " + GetBool(!cfg.ServerWideChat));
             p.Message("  Load on /goto: {0}%S, Auto unload: {1}",
                            GetBool(cfg.LoadOnGoto), GetBool(cfg.AutoUnload));
             p.Message("  Buildable: {0}%S, Deletable: {1}%S, Drawing: {2}",
