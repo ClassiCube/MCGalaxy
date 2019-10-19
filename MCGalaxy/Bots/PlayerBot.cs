@@ -60,7 +60,7 @@ namespace MCGalaxy {
         public override bool CanSeeEntity(Entity other) { return true; }
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
-        public override float MaxScale { get { return float.MaxValue; } }
+        public override bool RestrictsScale { get { return false; } }
         
         public bool EditableBy(Player p, string attemptedAction = "modify") {
             if (CanEditAny(p)) { return true; }

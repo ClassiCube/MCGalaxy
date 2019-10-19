@@ -71,7 +71,7 @@ namespace MCGalaxy {
         
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
-        public override float MaxScale { get { return 3; } }
+        public override bool RestrictsScale { get { return true; } }
         
         public override bool CanSeeEntity(Entity other) {
             Player target = other as Player;

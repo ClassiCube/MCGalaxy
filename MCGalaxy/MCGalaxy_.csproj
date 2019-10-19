@@ -474,6 +474,7 @@
     <Compile Include="Economy\RankItem.cs" />
     <Compile Include="Entity\Entities.cs" />
     <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\ModelInfo.cs" />
     <Compile Include="Entity\Structs.cs" />
     <Compile Include="Entity\TabList.cs" />
     <Compile Include="Events\EconomyEvents.cs" />
