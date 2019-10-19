@@ -45,7 +45,7 @@ namespace MCGalaxy.Bots {
                 PlayerBot bot = new PlayerBot(data.Name, lvl);
                 data.ApplyTo(bot);
                 
-                bot.SetModel(bot.Model, lvl);
+                bot.SetModel(bot.Model);
                 LoadAi(data, bot);
                 PlayerBot.Add(bot, false);
             }

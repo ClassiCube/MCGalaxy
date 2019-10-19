@@ -45,7 +45,7 @@ namespace MCGalaxy.Core {
             p.prevMsg = "";
             p.showMBs = false;
             p.showPortals = false;
-            p.SetModel(p.Model, level); // in case had been using a level-only custom block for their model
+            p.SetModel(p.Model); // in case had been using a level-only custom block for their model
 
             p.ZoneIn = null;
             OnChangedZoneEvent.Call(p);

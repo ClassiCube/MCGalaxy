@@ -52,7 +52,7 @@ namespace MCGalaxy {
             name = n; DisplayName = n; SkinName = n;
             color = "&1";      
             level = lvl;
-            SetModel(Model, lvl);
+            SetModel(Model);
             hasExtPositions = true;
             BotsScheduler.Activate();
         }
@@ -60,6 +60,7 @@ namespace MCGalaxy {
         public override bool CanSeeEntity(Entity other) { return true; }
         public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
+        public override float MaxScale { get { return float.MaxValue; } }
         
         public bool EditableBy(Player p, string attemptedAction = "modify") {
             if (CanEditAny(p)) { return true; }

@@ -121,7 +121,6 @@ namespace MCGalaxy.Maths {
         }
         
         internal static float GetScaleFrom(ref string model, bool unlimitedScaleAllowed = false) {
-            if (model.CaselessEq("giant")) { return 2; }
             int sep = model.IndexOf('|');
             string scaleStr = sep == -1 ? null : model.Substring(sep + 1);
             model = sep == -1 ? model : model.Substring(0, sep);
@@ -129,6 +128,9 @@ namespace MCGalaxy.Maths {
             float scale;
             if (!Utils.TryParseSingle(scaleStr, out scale)) scale = 1.0f;
             if (scale < 0.01f) scale = 0.01f;
+            
+            // backwards compatibility
+            if (model.CaselessEq("giant")) scale *= 2;
             
             float max = unlimitedScaleAllowed ? int.MaxValue : (model.CaselessEq("chibi") ? 3 : 2);
             return Math.Min(scale, max);

@@ -194,7 +194,7 @@ namespace MCGalaxy.Commands.Bots {
             props.FromBot(bot);
             props.ApplyTo(clone);
             clone.Owner = p.name;
-            clone.SetModel(clone.Model, p.level);
+            clone.SetModel(clone.Model);
             BotsFile.LoadAi(props, clone);
             // Preserve custom name tag
             if (bot.DisplayName == bot.name) clone.DisplayName = newName;
