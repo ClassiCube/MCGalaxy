@@ -43,6 +43,7 @@ namespace MCGalaxy.Commands.CPE {
         protected override void SetBotData(Player p, PlayerBot bot, string model) {
             bool changedAxisScale;
             model = ParseModel(p, bot, model, out changedAxisScale);
+            if (model == null) return;
             Entities.UpdateModel(bot, model);
             
             p.Message("You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
@@ -52,6 +53,7 @@ namespace MCGalaxy.Commands.CPE {
         protected override void SetPlayerData(Player p, Player who, string model) {
             bool changedAxisScale;
             model = ParseModel(p, who, model, out changedAxisScale);
+            if (model == null) return;
             Entities.UpdateModel(who, model);
             
             if (p != who) {
@@ -97,6 +99,14 @@ namespace MCGalaxy.Commands.CPE {
             } else if (model.CaselessStarts("z ")) {
                 changedAxisScale = true;
                 return ParseModelScale(dst, entity, model, "Z scale", ref entity.ScaleZ);
+            }
+            
+            float max = ModelInfo.MaxScale(entity);
+            // restrict player model scale, but bots can have unlimited model scale
+            if (ModelInfo.GetRawScale(model) > max) {
+                dst.Message("%WScale must be {0} or less for {1} model",
+                            max, ModelInfo.GetRawModel(model));
+                return null;
             }
             return model;
         }
