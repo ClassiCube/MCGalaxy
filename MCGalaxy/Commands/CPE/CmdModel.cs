@@ -113,9 +113,8 @@ namespace MCGalaxy.Commands.CPE {
         
         static string ParseModelScale(Player dst, Entity entity, string model, string argName, ref float value) {
             string[] bits = model.SplitSpaces();
-            float max     = ModelInfo.MaxScale(entity);
-            CommandParser.GetReal(dst, bits[1], argName, ref value, 0, max);
-            return entity.Model;
+            float max     = ModelInfo.MaxScale(entity);       
+            return CommandParser.GetReal(dst, bits[1], argName, ref value, 0, max) ? entity.Model : null;
         }
 
         public override void Help(Player p) {
