@@ -34,13 +34,17 @@ namespace MCGalaxy {
     public partial class Player : IDisposable {
         const string mustAgreeMsg = "You must read /rules then agree to them with /agree!";
         
+        readonly object blockchangeLock = new object();
         internal bool HasBlockChange() { return Blockchange != null; }
+        
         internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, BlockID block) {
-            lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
-            if (Blockchange == null) return false;
+        	lock (blockchangeLock) {
+                lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
+                if (Blockchange == null) return false;
             
-            Blockchange(this, x, y, z, block);
-            return true;
+                Blockchange(this, x, y, z, block);
+                return true;
+        	}
         }
 
         public void HandleManualChange(ushort x, ushort y, ushort z, bool placing,
