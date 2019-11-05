@@ -83,6 +83,8 @@ namespace MCGalaxy {
 
         public void Load() {
             if (!File.Exists(Filename)) return;
+            List<Warp> warps = new List<Warp>();
+            
             using (StreamReader r = new StreamReader(Filename)) {
                 string line;
                 while ((line = r.ReadLine()) != null) {
@@ -99,12 +101,14 @@ namespace MCGalaxy {
                         warp.Pos.Z = int.Parse(parts[4]);
                         warp.Yaw   = byte.Parse(parts[5]);
                         warp.Pitch = byte.Parse(parts[6]);
-                        Items.Add(warp);
+                        warps.Add(warp);
                     } catch (Exception ex) { 
                         Logger.LogError("Error loading warp from " + Filename, ex); 
                     }
                 }
             }
+            // don't change live list while still loading warps
+            Items = warps;
         }
 
         public void Save() {
