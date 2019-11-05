@@ -25,7 +25,13 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Replace"; } }
         public override string shortcut { get { return "r"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
-        protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new CuboidDrawOp(); }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) { 
+            DrawOp op = new CuboidDrawOp(); 
+            op.AffectedByTransform = false;
+            return op;
+        }
+        
         protected override void GetBrush(DrawArgs dArgs) {
             dArgs.BrushName = "Replace";
             dArgs.BrushArgs = dArgs.Message;
