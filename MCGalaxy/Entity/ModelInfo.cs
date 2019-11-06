@@ -103,9 +103,9 @@ namespace MCGalaxy {
             bb = bb.Expand(-1); // adjust the model AABB inwards slightly
             
             float scaleX = scale, scaleY = scale, scaleZ = scale;
-            if (entity.ScaleX != 0) scaleX *= entity.ScaleX;
-            if (entity.ScaleY != 0) scaleY *= entity.ScaleY;
-            if (entity.ScaleZ != 0) scaleZ *= entity.ScaleZ;
+            if (entity.ScaleX != 0) scaleX = entity.ScaleX;
+            if (entity.ScaleY != 0) scaleY = entity.ScaleY;
+            if (entity.ScaleZ != 0) scaleZ = entity.ScaleZ;
             
             // always limit max scale for collisions performance 
             float max = DefaultMaxScale(model);
