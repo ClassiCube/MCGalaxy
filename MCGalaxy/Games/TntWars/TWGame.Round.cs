@@ -135,7 +135,7 @@ namespace MCGalaxy.Games {
             Map.SetPhysics(3);
             
             // TODO: handle when these are externally changed (event)
-            Map.placeHandlers[Block.TNT] = HandleTNTPlace;
+            Map.placeHandlers[Block.TNT]   = HandleTNTPlace;
             Map.physicsHandlers[Block.TNT] = HandleTNTPhysics;
             Map.Props[Block.TNT_Explosion].KillerBlock = false;
             return true;

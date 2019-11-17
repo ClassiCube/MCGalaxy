@@ -27,6 +27,16 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
 
+    /// <summary> Result of attempting to change a block to another. </summary>
+    public enum ChangeResult {
+        /// <summary> Block change was not performed </summary>
+        Unchanged,
+        /// <summary> Old block was same as new block visually. (e.g. white to door_white) </summary>
+        VisuallySame,
+        /// <summary> Old block was different to new block visually. </summary>
+        Modified
+    }
+    
     public sealed partial class Level : IDisposable {
         
         public byte[] blocks;
@@ -244,26 +254,23 @@ namespace MCGalaxy {
         
         
         public void Blockchange(Player p, ushort x, ushort y, ushort z, BlockID block) {
-            if (DoBlockchange(p, x, y, z, block) == 2) BroadcastChange(x, y, z, block);
+            if (DoBlockchange(p, x, y, z, block) == ChangeResult.Modified) BroadcastChange(x, y, z, block);
         }
         
-        /// <summary> Returns: <br/>
-        /// 0 - block change was not performed <br/>
-        /// 1 - old block was same as new block visually (e.g. white to door_white)<br/>
-        /// 2 - old block was different to new block visually </summary>
+        /// <summary> Performs a user like block change, but **DOES NOT** update the BlockDB. </summary>
         /// <remarks> The return code can be used to avoid sending redundant block changes. </remarks>
-        public int DoBlockchange(Player p, ushort x, ushort y, ushort z, BlockID block, bool drawn = false) {
+        public ChangeResult DoBlockchange(Player p, ushort x, ushort y, ushort z, BlockID block, bool drawn = false) {
             string errorLocation = "start";
             try
             {
-                if (x >= Width || y >= Height || z >= Length) return 0;
+                if (x >= Width || y >= Height || z >= Length) return ChangeResult.Unchanged;
                 BlockID old = GetBlock(x, y, z);
 
                 errorLocation = "Permission checking";
                 if (!CheckAffect(p, x, y, z, old, block)) {
-                    p.RevertBlock(x, y, z); return 0;
+                    p.RevertBlock(x, y, z); return ChangeResult.Unchanged;
                 }
-                if (old == block) return 0;
+                if (old == block) return ChangeResult.Unchanged;
 
                 if (old == Block.Sponge && physics > 0 && block != Block.Sponge) {
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), false);
@@ -300,7 +307,7 @@ namespace MCGalaxy {
                 Changed = true;
                 backedup = false;
                 
-                return Block.VisuallyEquals(old, block) ? 1 : 2;
+                return Block.VisuallyEquals(old, block) ? ChangeResult.VisuallySame : ChangeResult.Modified;
             } catch (Exception e) {
                 Logger.LogError(e);
                 Chat.MessageOps(p.name + " triggered a non-fatal error on " + ColoredName + ", %Sat location: " + errorLocation);
@@ -429,11 +436,11 @@ namespace MCGalaxy {
             BlockID old = GetBlock(x, y, z, out index);
             bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
             
-            int type = DoBlockchange(p, x, y, z, block, drawn);
-            if (type == 0) return; // no block change performed
+            ChangeResult result = DoBlockchange(p, x, y, z, block, drawn);
+            if (result == ChangeResult.Unchanged) return;
             
             BlockDB.Cache.Add(p, x, y, z, flags, old, block);
-            if (type == 1) return; // not different visually
+            if (result == ChangeResult.VisuallySame) return;
             
             if (buffered) {
                 p.level.blockqueue.Add(p, index, block);

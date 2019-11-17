@@ -126,24 +126,25 @@ namespace MCGalaxy.Games {
             return true;
         }
         
-        void HandleTNTPlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
+        ChangeResult HandleTNTPlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
             TWData data = Get(p);
-            if (CheckTNTPlace(p, data, x, y, z)) {
-                data.TNTCounter++;
-                int delay = 1250;
-                
-                switch (Config.Difficulty) {
-                        case TWDifficulty.Easy: delay = 3250; break;
-                        case TWDifficulty.Normal: delay = 2250; break;
-                }
-
-                AddTntCheck(Map.PosToInt(x, y, z), p);
-                Server.MainScheduler.QueueOnce(AllowMoreTntTask, data,
-                                               TimeSpan.FromMilliseconds(delay));
-                p.ChangeBlock(x, y, z, Block.TNT);
-            } else {
+            if (!CheckTNTPlace(p, data, x, y, z)) {
                 p.RevertBlock(x, y, z);
+                return ChangeResult.Modified;
             }
+            
+            data.TNTCounter++;
+            int delay = 1250;
+            
+            switch (Config.Difficulty) {
+                    case TWDifficulty.Easy:   delay = 3250; break;
+                    case TWDifficulty.Normal: delay = 2250; break;
+            }
+
+            AddTntCheck(Map.PosToInt(x, y, z), p);
+            Server.MainScheduler.QueueOnce(AllowMoreTntTask, data,
+                                           TimeSpan.FromMilliseconds(delay));
+            return p.ChangeBlock(x, y, z, Block.TNT);
         }
 
         void AddTntCheck(int b, Player p) {

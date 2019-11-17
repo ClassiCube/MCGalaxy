@@ -38,13 +38,13 @@ namespace MCGalaxy {
         internal bool HasBlockChange() { return Blockchange != null; }
         
         internal bool DoBlockchangeCallback(ushort x, ushort y, ushort z, BlockID block) {
-        	lock (blockchangeLock) {
+            lock (blockchangeLock) {
                 lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
                 if (Blockchange == null) return false;
             
                 Blockchange(this, x, y, z, block);
                 return true;
-        	}
+            }
         }
 
         public void HandleManualChange(ushort x, ushort y, ushort z, bool placing,
@@ -113,12 +113,12 @@ namespace MCGalaxy {
             }
             
             if (deletingBlock) {
-                bool deleted = DeleteBlock(old, x, y, z, block);
+                DeleteBlock(old, x, y, z, block);
             } else {
-                bool placed = PlaceBlock(old, x, y, z, block);
+                ChangeResult result = PlaceBlock(old, x, y, z, block);
                 // Client always assumes delete succeeds, so we need to echo back the painted over block
                 // if the block was not changed visually (e.g. they paint white with door_white)
-                if (!placed && painting) RevertBlock(x, y, z);
+                if (painting && result != ChangeResult.Modified) RevertBlock(x, y, z);
             }
         }
         
@@ -131,34 +131,29 @@ namespace MCGalaxy {
             return CommandParser.IsBlockAllowed(this, "place", block);
         }
         
-        bool DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
-            if (deleteMode) { return ChangeBlock(x, y, z, Block.Air) == 2; }
+        void DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
+            if (deleteMode) { ChangeBlock(x, y, z, Block.Air); return; }
 
             HandleDelete handler = level.deleteHandlers[old];
-            if (handler != null) {
-                handler(this, old, x, y, z);
-                return true;
-            }
-            return ChangeBlock(x, y, z, Block.Air) == 2;
+            if (handler != null) { handler(this, old, x, y, z); return; }
+            ChangeBlock(x, y, z, Block.Air);
         }
 
-        bool PlaceBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
+        ChangeResult PlaceBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
             HandlePlace handler = level.placeHandlers[block];
-            if (handler != null) {
-                handler(this, block, x, y, z);
-                return true;
-            }
-            return ChangeBlock(x, y, z, block) == 2;
+            if (handler != null) return handler(this, block, x, y, z);
+            return ChangeBlock(x, y, z, block);
         }
         
         /// <summary> Updates the block at the given position, mainly intended for manual changes by the player. </summary>
         /// <remarks> Adds to the BlockDB. Also turns block below to grass/dirt depending on light. </remarks>
         /// <returns> Return code from DoBlockchange </returns>
-        public int ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
+        public ChangeResult ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
             BlockID old = level.GetBlock(x, y, z);
-            int type = level.DoBlockchange(this, x, y, z, block);
-            if (type == 0) return type;                           // no change performed
-            if (type == 2) level.BroadcastChange(x, y, z, block); // different visually
+            ChangeResult result = level.DoBlockchange(this, x, y, z, block);
+            
+            if (result == ChangeResult.Unchanged) return result;
+            if (result == ChangeResult.Modified)  level.BroadcastChange(x, y, z, block);
             
             ushort flags = BlockDBFlags.ManualPlace;
             if (painting && CollideType.IsSolid(level.CollideType(old))) {
@@ -169,7 +164,7 @@ namespace MCGalaxy {
             y--; // check for growth at block below
             
             bool grow = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
-            if (!grow || level.CanAffect(this, x, y, z) != null) return type;
+            if (!grow || level.CanAffect(this, x, y, z) != null) return result;
             BlockID below = level.GetBlock(x, y, z);
             
             BlockID grass = level.Props[below].GrassBlock;
@@ -181,7 +176,7 @@ namespace MCGalaxy {
             if (dirt != Block.Invalid && !level.LightPasses(block)) {
                 level.Blockchange(this, x, y, z, dirt);
             }
-            return type;
+            return result;
         }
 
         void HandleBlockchange(byte[] buffer, int offset) {

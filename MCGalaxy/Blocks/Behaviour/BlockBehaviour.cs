@@ -27,7 +27,7 @@ namespace MCGalaxy.Blocks {
 
     /// <summary> Handles the player placing a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
-    public delegate void HandlePlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z);
+    public delegate ChangeResult HandlePlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Returns whether this block handles the player walking through this block at the given coordinates. </summary>
     /// <remarks> If this returns false, continues trying other walkthrough blocks the player is touching. </remarks>
@@ -47,7 +47,7 @@ namespace MCGalaxy.Blocks {
             
             if (props[block].GrassBlock != Block.Invalid) return PlaceBehaviour.DirtGrow;
             if (props[block].DirtBlock  != Block.Invalid) return PlaceBehaviour.GrassDie;
-            if (props[block].StackBlock != Block.Air)        return PlaceBehaviour.Stack;
+            if (props[block].StackBlock != Block.Air)     return PlaceBehaviour.Stack;
             return null;
         }
         
