@@ -26,18 +26,24 @@ namespace MCGalaxy {
     
     public static class SrvProperties {
         
+        // only want ASCII alphanumerical characters for salt
+        static bool AcceptableSaltChar(char c) {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') 
+                || (c >= '0' && c <= '9');
+        }
+        
         public static void GenerateSalt() {
             RandomNumberGenerator rng = RandomNumberGenerator.Create();
-            char[] chars = new char[16];
+            char[] str = new char[32];
             byte[] one = new byte[1];
             
-            for (int i = 0; i < chars.Length; ) {
+            for (int i = 0; i < str.Length; ) {
                 rng.GetBytes(one);
-                if (!Char.IsLetterOrDigit((char)one[0])) continue;
+                if (!AcceptableSaltChar((char)one[0])) continue;
                 
-                chars[i] = (char)one[0]; i++;
+                str[i] = (char)one[0]; i++;
             }
-            Server.salt = new string(chars);
+            Server.salt = new string(str);
         }
         
         public static void Load() {
