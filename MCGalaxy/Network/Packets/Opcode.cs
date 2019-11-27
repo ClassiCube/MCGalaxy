@@ -70,5 +70,6 @@ namespace MCGalaxy.Network {
         public const byte CpeSetInventoryOrder = 44;
         //public const byte CpeSetHotbar = 45; //not implemented in MCGalaxy
         public const byte CpeSetSpawnpoint = 46;
+        public const byte CpeVelocityControl = 47;
     }
 }

@@ -373,6 +373,27 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
+        /// <summary> Velocity is considered in terms of the 
+        /// force needed to reach [num] fixed-point units (half a pixel) if applied to Y velocity.
+        /// e.g. 0 39.456f 0 would give an upward force identical to a default clientside jump.
+        /// </summary>
+        public static byte[] VelocityControl(float x, float y, float z, byte xMode, byte yMode, byte zMode) {
+            int ix, iy, iz;
+            ix = (int)(x * 1000);
+            iy = (int)(y * 1000);
+            iz = (int)(z * 1000);
+            
+            byte[] buffer = new Byte[16];
+            buffer[0] = Opcode.CpeVelocityControl;
+            NetUtils.WriteI32(ix, buffer, 1);
+            NetUtils.WriteI32(iy, buffer, 5);
+            NetUtils.WriteI32(iz, buffer, 9);
+            buffer[13] = xMode;
+            buffer[14] = yMode;
+            buffer[15] = zMode;
+            return buffer;
+        }
+        
         #endregion
         
         
