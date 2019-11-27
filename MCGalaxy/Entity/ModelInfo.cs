@@ -82,9 +82,9 @@ namespace MCGalaxy {
             return model.CaselessEq("chibi") ? 3 : 2;
         }
         
-        public static float MaxScale(Entity entity) {
+        public static float MaxScale(Entity entity, string model) {
             if (!entity.RestrictsScale) return float.MaxValue;
-            return DefaultMaxScale(GetRawModel(entity.Model));
+            return DefaultMaxScale(GetRawModel(model));
         }
         
         public static AABB CalcAABB(Entity entity) {

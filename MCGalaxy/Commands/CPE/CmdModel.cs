@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.CPE {
                 return ParseModelScale(dst, entity, model, "Z scale", ref entity.ScaleZ);
             }
             
-            float max = ModelInfo.MaxScale(entity);
+            float max = ModelInfo.MaxScale(entity, model);
             // restrict player model scale, but bots can have unlimited model scale
             if (ModelInfo.GetRawScale(model) > max) {
                 dst.Message("%WScale must be {0} or less for {1} model",
@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static string ParseModelScale(Player dst, Entity entity, string model, string argName, ref float value) {
             string[] bits = model.SplitSpaces();
-            float max     = ModelInfo.MaxScale(entity);       
+            float max     = ModelInfo.MaxScale(entity, entity.Model);
             return CommandParser.GetReal(dst, bits[1], argName, ref value, 0, max) ? entity.Model : null;
         }
 
