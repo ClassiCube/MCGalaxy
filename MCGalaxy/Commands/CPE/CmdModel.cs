@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.UpdateModel(who, model);
             
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK %Shad their model change to a &c" + model);
+                Chat.MessageFrom(who, "λNICK %Shad their model changed to a &c" + model);
             } else {
                 who.Message("Changed your own model to a &c" + model);
             }
