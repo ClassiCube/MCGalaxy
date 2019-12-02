@@ -1,45 +1,43 @@
-// 
-//  Authors:
-//   *  Tyler Kennedy <tk@tkte.ch>
-//   *  Matvei Stefarov <fragmer@gmail.com>
-// 
-//  Copyright (c) 2010, Tyler Kennedy & Matvei Stefarov
-// 
-//  All rights reserved.
-// 
-//  Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-//     * Redistributions of source code must retain the above copyright notice, this
-//       list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright notice,
-//       this list of conditions and the following disclaimer in
-//       the documentation and/or other materials provided with the distribution.
-//     * Neither the name of MCC nor the names of its contributors may be
-//       used to endorse or promote products derived from this software without
-//       specific prior written permission.
-// 
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-//  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-//  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-//  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-//  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-//  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-//  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+/*
+    Copyright 2015 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Text;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Levels.IO {
+    sealed class DatReader {
+        public BinaryReader src;
+        public List<object> handles = new List<object>();
+        public byte[] ReadBytes(int count) { return src.ReadBytes(count); }
+        
+        public byte ReadUInt8() { return src.ReadByte(); }
+        public short ReadInt16() { return IPAddress.HostToNetworkOrder(src.ReadInt16()); }
+        public ushort ReadUInt16() { return (ushort)IPAddress.HostToNetworkOrder(src.ReadInt16()); }
+        public int ReadInt32() { return IPAddress.HostToNetworkOrder(src.ReadInt32()); }
+        public long ReadInt64() { return IPAddress.HostToNetworkOrder(src.ReadInt64()); }
+        public string ReadUtf8() { return Encoding.UTF8.GetString(src.ReadBytes(ReadUInt16())); }
+    }
+    
     public sealed class DatImporter : IMapImporter {
-
         public override string Extension { get { return ".dat"; } }
         public override string Description { get { return "Minecraft Classic map"; } }
 
@@ -47,112 +45,252 @@ namespace MCGalaxy.Levels.IO {
             throw new NotSupportedException();
         }
         
-        const byte MAGIC1 = 0xAC, MAGIC2 = 0xED;
-        const byte TYPE_END_BLOCK = 0x78, TYPE_NULL = 0x70;
+        const byte TC_NULL = 0x70;
+        const byte TC_REFERENCE = 0x71;
+        const byte TC_CLASSDESC = 0x72;
+        const byte TC_OBJECT = 0x73;
+        const byte TC_STRING = 0x74;
+        const byte TC_ARRAY = 0x75;
+        const byte TC_CLASS = 0x76;
+        const byte TC_BLOCKDATA = 0x77;
+        const byte TC_ENDBLOCKDATA = 0x78;
+        const byte TC_RESET = 0x79;
+        const byte TC_BLOCKDATALONG = 0x7A;
+        
+        const int baseWireHandle = 0x7E0000;
+        const byte SC_WRITE_METHOD = 0x01, SC_SERIALIZABLE = 0x02;
+
+        class JClassDesc {
+            public string Name;
+            public byte Flags;
+            public JFieldDesc[] Fields;
+            public List<object> Annotation;
+            public JClassDesc SuperClass;
+        }
+        
+        class JClassData {
+            public object[] Values;
+            public List<object> Annotation;
+        }
+        
+        class JObject {
+            public JClassDesc Desc;
+            public JClassData[] ClassData;
+        }
+        class JArray {
+            public JClassDesc Desc;
+            public object Values;
+        }
+        
+        // object is actually an int, so a simple cast to ushort will fail
+        static ushort U16(object o) { return (ushort)((int)o); }
+        
+        static void ParseRootObject(Level lvl, JObject obj) {
+            JFieldDesc[] fields = obj.Desc.Fields;
+            object[] values     = obj.ClassData[0].Values;
+            
+            for (int i = 0; i < fields.Length; i++) {
+                JFieldDesc f = fields[i];
+                object value = values[i];
+                
+                // yes height/depth are swapped intentionally
+                if (f.Name == "width")  lvl.Width  = U16(value);
+                if (f.Name == "height") lvl.Length = U16(value);
+                if (f.Name == "depth")  lvl.Height = U16(value);
+                if (f.Name == "blocks") lvl.blocks = (byte[])((JArray)value).Values;
+                if (f.Name == "xSpawn") lvl.spawnx = U16(value);
+                if (f.Name == "ySpawn") lvl.spawny = U16(value);
+                if (f.Name == "zSpawn") lvl.spawnz = U16(value);
+            }
+        }
         
         public override Level Read(Stream src, string name, bool metadata) {
-            byte[] temp = new byte[8];
-            Level lvl = new Level(name, 0, 0, 0);
-            src.Seek(-4, SeekOrigin.End);
-            src.Read(temp, 0, sizeof(int));
-            src.Seek(0, SeekOrigin.Begin);
+            using (GZipStream s = new GZipStream(src, CompressionMode.Decompress)) {
+                Level lvl   = new Level(name, 0, 0, 0);
+                DatReader r = new DatReader();
+                r.src = new BinaryReader(s);
+                
+                if (r.ReadInt32() != 0x271BB788 || r.ReadUInt8() != 0x02) {
+                    throw new InvalidDataException("Unexpected constant in .dat file");
+                }
+                
+                if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
+                if (r.ReadUInt16() != 0x0005) throw new InvalidDataException("Invalid stream version");
+                
+                JObject obj = (JObject)ReadObject(r);
+                ParseRootObject(lvl, obj);
+                return lvl;
+            }
+        }
+        
+        static object ReadContent(DatReader r, byte typeCode) {
+            if (typeCode == TC_BLOCKDATA) {
+                return r.ReadBytes(r.ReadUInt8());
+            } else if (typeCode == TC_BLOCKDATALONG) {
+                return r.ReadBytes(r.ReadInt32());
+            } else {
+                return ReadObject(r, typeCode);
+            }
+        }
+        
+        static object ReadObject(DatReader r) { return ReadObject(r, r.ReadUInt8()); }
+        static object ReadObject(DatReader r, byte typeCode) {
+            switch (typeCode) {
+                case TC_STRING:    return NewString(r);
+                case TC_RESET: r.handles.Clear(); return null;
+                case TC_NULL:      return null;
+                case TC_REFERENCE: return PrevObject(r);
+                case TC_CLASS:     return NewClass(r);
+                case TC_OBJECT:    return NewObject(r);
+                case TC_ARRAY:     return NewArray(r);
+                case TC_CLASSDESC: return NewClassDesc(r);
+            }
+            throw new InvalidDataException("Invalid typecode: " + typeCode);
+        }
+        
+        static string NewString(DatReader r) {
+            string value = r.ReadUtf8();
+            r.handles.Add(value);
+            return value;
+        }
+        
+        static object PrevObject(DatReader r) {
+            int handle = r.ReadInt32() - baseWireHandle;
+            if (handle >= 0 && handle < r.handles.Count) return r.handles[handle];
+            throw new InvalidDataException("Invalid stream handle: " + handle);
+        }
+        
+        static JClassDesc NewClass(DatReader r) {
+            JClassDesc classDesc = ClassDesc(r);
+            r.handles.Add(classDesc);
+            return classDesc;
+        }
+        
+        static JObject NewObject(DatReader r) {
+            JObject obj = new JObject();
+            obj.Desc = ClassDesc(r);
+            r.handles.Add(obj);
             
-            int length = BitConverter.ToInt32(temp, 0);
-            byte[] data = new byte[length];
-            using (GZipStream reader = new GZipStream(src, CompressionMode.Decompress, true)) {
-                reader.Read(data, 0, length);
+            List<JClassDesc> descs = new List<JClassDesc>();
+            JClassDesc tmp = obj.Desc;
+            
+            // most superclass data is first
+            while (tmp != null) {
+                descs.Add(tmp);
+                tmp = tmp.SuperClass;
             }
-
-            for (int i = 0; i < length - 1; i++) {
-                if (data[i] != MAGIC1 || data[i + 1] != MAGIC2) continue;
-                int pointer = 0, headerEnd = 0;
-                ReadHeader(data, ref pointer, ref headerEnd, i);
-                ReadFields(data, ref pointer, ref headerEnd, lvl);
-                
-                // find the start of the block array
-                int offset = Array.IndexOf<byte>(data, 0x00, headerEnd);
-                while (offset != -1 && offset < data.Length - 2) {
-                    if (data[offset] == 0x00 && data[offset + 1] == TYPE_END_BLOCK && data[offset + 2] == TYPE_NULL) {
-                        pointer = offset + 7;
-                        CopyBlocks(lvl, data, pointer);
-                        return lvl;
-                    }
-                    offset = Array.IndexOf<byte>(data, 0x00, offset + 1);
-                }
-                throw new InvalidDataException("Could not locate block array.");
+            
+            obj.ClassData = new JClassData[descs.Count];
+            for (int i = descs.Count - 1; i >= 0; i--) {
+                obj.ClassData[i] = ClassData(r, descs[i]);
             }
-            return null;
+            return obj;
         }
         
-        static void ReadHeader(byte[] data, ref int pointer, ref int headerEnd, int i) {
-            pointer = i + 6; // skip magic, version, and typecodes
-            ushort classNameLen = NetUtils.ReadU16(data, pointer);
-            pointer += classNameLen; // skip class name
-            pointer += 13; // skip class description
-
-            headerEnd = pointer;
-            // find the end of serialization listing
-            for (; headerEnd < data.Length - 1; headerEnd++) {
-                if (data[headerEnd] == TYPE_END_BLOCK && data[headerEnd + 1] == TYPE_NULL) {
-                    headerEnd += 2; break;
+        static JArray NewArray(DatReader r) {
+            JArray array = new JArray();
+            array.Desc = ClassDesc(r);
+            r.handles.Add(array);
+            char type = array.Desc.Name[1];
+            int size  = r.ReadInt32();
+            
+            if (type == 'B') {
+                array.Values = r.ReadBytes(size);
+            } else {
+                object[] values = new object[size];
+                for (int i = 0; i < values.Length; i++) {
+                    values[i] = Value(r, type);
                 }
+                array.Values = values;
             }
+            return array;
         }
         
-        static void ReadFields(byte[] data, ref int pointer, ref int headerEnd, Level lvl) {
-            // start parsing serialization listing
-            int offset = 0;
-            while (pointer < headerEnd) {
-                byte type = data[pointer]; pointer += 1;
-                if (type == 'Z') offset++;
-                else if (type == 'I' || type == 'F') offset += 4;
-                else if (type == 'J') offset += 8;
-                ushort nameLen = NetUtils.ReadU16(data, pointer); pointer += 2;
-                
-                // look for relevant variables
-                int valueOffset = headerEnd + offset - 4;
-                if (MemCmp(data, pointer, "width")) {
-                    lvl.Width = (ushort)NetUtils.ReadI32(data, valueOffset);
-                } else if (MemCmp(data, pointer, "depth")) {
-                    lvl.Height = (ushort)NetUtils.ReadI32(data, valueOffset);
-                } else if (MemCmp(data, pointer, "height")) {
-                    lvl.Length = (ushort)NetUtils.ReadI32(data, valueOffset);
-                } else if (MemCmp(data, pointer, "xSpawn")) {
-                    lvl.spawnx = (ushort)NetUtils.ReadI32(data, valueOffset);
-                } else if (MemCmp(data, pointer, "ySpawn")) {
-                    lvl.spawny = (ushort)NetUtils.ReadI32(data, valueOffset);
-                } else if (MemCmp(data, pointer, "zSpawn")) {
-                    lvl.spawnz = (ushort)NetUtils.ReadI32(data, valueOffset);
-                }
-                pointer += nameLen;
+        static JClassDesc NewClassDesc(DatReader r) {
+            JClassDesc desc = new JClassDesc();
+            desc.Name = r.ReadUtf8();
+            r.ReadInt64(); // serial UID
+            r.handles.Add(desc);
+            
+            // read class desc info
+            desc.Flags  = r.ReadUInt8();
+            desc.Fields = new JFieldDesc[r.ReadUInt16()];
+            for (int i = 0; i < desc.Fields.Length; i++) {
+                desc.Fields[i] = FieldDesc(r);
             }
-        }
-
-        static bool MemCmp( byte[] data, int offset, string value ) {
-            for( int i = 0; i < value.Length; i++ ) {
-                if( offset + i >= data.Length || data[offset + i] != value[i] ) return false;
-            }
-            return true;
+            desc.Annotation = Annotation(r);
+            desc.SuperClass = ClassDesc(r);
+            return desc;
         }
         
-        static void CopyBlocks(Level lvl, byte[] source, int offset) {
-            byte[] blocks = new byte[lvl.Width * lvl.Height * lvl.Length];
-            Array.Copy(source, offset, blocks, 0, blocks.Length);
-
-            for (int i = 0; i < blocks.Length; i++) {
-                if (blocks[i] >= 50) blocks[i] = 0;
-                switch (blocks[i]) {
-                    case Block.StillWater:
-                        blocks[i] = Block.Water; break;
-                    case Block.Water:
-                        blocks[i] = Block.StillWater; break;
-                    case Block.Lava:
-                        blocks[i] = Block.StillLava; break;
-                    case Block.StillLava:
-                        blocks[i] = Block.Lava; break;
-                }
+        static JClassDesc ClassDesc(DatReader r) {
+            byte typeCode = r.ReadUInt8();
+            if (typeCode == TC_CLASSDESC) return NewClassDesc(r);
+            if (typeCode == TC_NULL)      return null;
+            if (typeCode == TC_REFERENCE) return (JClassDesc)PrevObject(r);
+            
+            throw new InvalidDataException("Invalid type code: " + typeCode);
+        }
+        
+        static JClassData ClassData(DatReader r, JClassDesc desc) {
+            if ((desc.Flags & SC_SERIALIZABLE) == 0) {
+                throw new InvalidDataException("Invalid class data flags: " + desc.Flags);
             }
-            lvl.blocks = blocks;
+            
+            JClassData data = new JClassData();
+            data.Values = new object[desc.Fields.Length];
+            for (int i = 0; i < data.Values.Length; i++) {
+                data.Values[i] = Value(r, desc.Fields[i].Type);
+            }
+            
+            if ((desc.Flags & SC_WRITE_METHOD) != 0) {
+                data.Annotation = Annotation(r);
+            }
+            return data;
+        }
+        
+        static unsafe object Value(DatReader r, char type) {
+            if (type == 'B') return r.ReadUInt8();
+            if (type == 'C') return (char)r.ReadUInt16();
+            if (type == 'D') { long tmp = r.ReadInt64(); return *(double*)(&tmp); }
+            if (type == 'F') { int tmp  = r.ReadInt32(); return *(float*)(&tmp); }
+            if (type == 'I') return r.ReadInt32();
+            if (type == 'J') return r.ReadInt64();
+            if (type == 'S') return r.ReadInt16();
+            if (type == 'Z') return r.ReadUInt8() != 0;
+            if (type == 'L') return ReadObject(r);
+            if (type == '[') return ReadObject(r);
+            
+            throw new InvalidDataException("Invalid value code: " + type);
+        }
+        
+        class JFieldDesc {
+            public char Type;
+            public string Name, ClassName;
+        }
+        static JFieldDesc FieldDesc(DatReader r) {
+            JFieldDesc desc = new JFieldDesc();
+            byte type = r.ReadUInt8();
+            desc.Type = (char)type;
+            
+            if (type == 'B' || type == 'C' || type == 'D' || type == 'F' || type == 'I' || type == 'J' || type == 'S' || type == 'Z') {
+                desc.Name = r.ReadUtf8();
+            } else if (type == '[' || type == 'L') {
+                desc.Name = r.ReadUtf8();
+                desc.ClassName = (string)ReadObject(r);
+            } else {
+                throw new InvalidDataException("Invalid field type: " + type);
+            }
+            return desc;
+        }
+        
+        static List<object> Annotation(DatReader r) {
+            List<object> parts = new List<object>();
+            byte typeCode;
+            while ((typeCode = r.ReadUInt8()) != TC_ENDBLOCKDATA) {
+                parts.Add(ReadContent(r, typeCode));
+            }
+            return parts;
         }
     }
 }
