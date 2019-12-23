@@ -91,6 +91,11 @@ namespace MCGalaxy {
             result = temp;
             return true;
         }
+        
+        // in JSON we must use . instead of ,
+        public static string StringifyDouble(double value) {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
 
         
         public static List<string> ReadAllLinesList(string path) {

@@ -122,6 +122,12 @@ namespace MCGalaxy.Config {
             }
             return value;
         }
+
+		public override string Serialise(object value) {
+        	if (value is float)  return Utils.StringifyDouble((float)value);
+        	if (value is double) return Utils.StringifyDouble((double)value);
+			return base.Serialise(value);
+		}
     }
     
     public class ConfigFloatAttribute : ConfigRealAttribute {
