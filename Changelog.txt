@@ -1,3 +1,28 @@
+v 1.9.1.6
+Fixed: /money without arguments showing '' is not a valid player name
+Added: Ssupport for CPE VelocityControl
+Fixed: Some imported .dat worlds having the blocks shifted over
+Fixed: Bots on a map getting deleted if you changed x/y/z scale of a bot to a decimal number and your system language uses , instead of .
+
+v 1.9.1.5
+Fixed: GUI map gen only allowing map sizes in the dropdown
+Improved: 'server port utilities' dialog is clearer
+Improved: Allow custom whitelist kick message
+Fixed: Sending stop working after a while with .NET core
+Fixed: doing /z then immediately doing /mb not resetting bottom right messages
+Fixed: /mynotes should have default rank permission of guest 
+Improved: Stare AI accounts for eyeheight and scale now
+Improved: Show bot's skin in /whonick bot.
+Improved: Player count is now based on unique connected IPs
+Improved: Show in tab list when maps have local chat …
+Improved: Don't restrict model bot axis scaling in /model
+Fixed: doing a large /copy, then adding three marks, causes any further marks to cause a blockchange error
+Fixed: warps list not getting cleared before loading on /server reload
+Fixed: replace and /replacenot getting affected by transforms
+Fixed: painting over grass while holding dirt appearing as air, even though the block was actually unchanged in the world
+Added: Support for CPE SetSpawnPoint
+Fixed: Not working with MySQL > 8.0
+
 v 1.9.1.4
 Fixed: Make @ offset work properly with /cut
 Improved: Bots track owner/creator, prevents non-staff modifying bots of other players
