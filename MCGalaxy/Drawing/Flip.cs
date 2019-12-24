@@ -125,26 +125,25 @@ namespace MCGalaxy.Drawing {
             return newState;
         }
         
-        static string[] mirrorX = new string[] { "N", "S",  "NW", "SW",  "NE", "SE" };
+        static string[] mirrorX = new string[] { "W", "E",  "NW", "NE",  "SW", "SE" };
         public static void MirrorX(CopyState state, BlockDefinition[] defs) {
             // ceiling division by 2, because for odd length, we still want to
             // mirror the middle row to rotate directional blocks
-            int midZ = (state.Length + 1) / 2, maxZ = state.Length - 1;
-            state.OriginZ = state.OppositeOriginZ;
-            state.Offset.Z = -state.Offset.Z;
+            int midX = (state.Width + 1) / 2, maxX = state.Width - 1;
+            state.OriginX  = state.OppositeOriginX;
+            state.Offset.X = -state.Offset.X;
             BlockID[] transform = Transform(defs, mirrorX, null);
             
             for (int y = 0; y < state.Height; y++) {
-                for (int z = 0; z < midZ; z++) {
-                    int endZ = maxZ - z;
-                    int start = state.GetIndex(0, y, z);
-                    int end = state.GetIndex(0, y, endZ);
-                    
-                    for (int x = 0; x < state.Width; x++) {
-                        BlockID blockA = transform[state.Get(start)];
+                for (int z = 0; z < state.Length; z++) {
+                    for (int x = 0; x < midX; x++) {
+                        int endX = maxX - x;
+                        int beg  = state.GetIndex(x, y, z);
+                        int end  = state.GetIndex(endX, y, z);
+                        
+                        BlockID blockA = transform[state.Get(beg)];
                         BlockID blockB = transform[state.Get(end)];
-                        state.Set(blockB, start); state.Set(blockA, end);
-                        start++; end++;
+                        state.Set(blockB, beg); state.Set(blockA, end);
                     }
                 }
             }
@@ -159,42 +158,43 @@ namespace MCGalaxy.Drawing {
             
             for (int y = 0; y < midY; y++) {
                 int endY = maxY - y;
-                int start = state.GetIndex(0, y, 0);
-                int end = state.GetIndex(0, endY, 0);
+                int beg  = state.GetIndex(0, y, 0);
+                int end  = state.GetIndex(0, endY, 0);
                 
                 for (int z = 0; z < state.Length; z++) {
                     for (int x = 0; x < state.Width; x++) {
-                        BlockID blockA = transform[state.Get(start)];
+                        BlockID blockA = transform[state.Get(beg)];
                         BlockID blockB = transform[state.Get(end)];
-                        state.Set(blockB, start); state.Set(blockA, end);
-                        start++; end++;
+                        state.Set(blockB, beg); state.Set(blockA, end);
+                        beg++; end++;
                     }
                 }
             }
         }
         
-        static string[] mirrorZ = new string[] { "W", "E",  "NW", "NE",  "SW", "SE" };
+        static string[] mirrorZ = new string[] { "N", "S",  "NW", "SW",  "NE", "SE" };
         public static void MirrorZ(CopyState state, BlockDefinition[] defs) {
-            int midX = (state.Width + 1) / 2, maxX = state.Width - 1;
-            state.OriginX = state.OppositeOriginX;
-            state.Offset.X = -state.Offset.X;
+            int midZ = (state.Length + 1) / 2, maxZ = state.Length - 1;
+            state.OriginZ  = state.OppositeOriginZ;
+            state.Offset.Z = -state.Offset.Z;
             BlockID[] transform = Transform(defs, mirrorZ, null);
             
             for (int y = 0; y < state.Height; y++) {
-                for (int z = 0; z < state.Length; z++) {
-                    for (int x = 0; x < midX; x++) {
-                        int endX = maxX - x;
-                        int start = state.GetIndex(x, y, z);
-                        int end = state.GetIndex(endX, y, z);
-                        
-                        BlockID blockA = transform[state.Get(start)];
+                for (int z = 0; z < midZ; z++) {
+                    int endZ = maxZ - z;
+                    int beg  = state.GetIndex(0, y, z);
+                    int end  = state.GetIndex(0, y, endZ);
+                    
+                    for (int x = 0; x < state.Width; x++) {
+                        BlockID blockA = transform[state.Get(beg)];
                         BlockID blockB = transform[state.Get(end)];
-                        state.Set(blockB, start); state.Set(blockA, end);
+                        state.Set(blockB, beg); state.Set(blockA, end);
+                        beg++; end++;
                     }
                 }
             }
         }
-        
+ 
         
         static BlockID[] Transform(BlockDefinition[] defs, string[] mirrorDirs, string[] rotateDirs) {
             BlockID[] transform = new BlockID[Block.ExtendedCount];
