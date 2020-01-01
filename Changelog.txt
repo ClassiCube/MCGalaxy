@@ -8,7 +8,7 @@ v 1.9.1.5
 Fixed: GUI map gen only allowing map sizes in the dropdown
 Improved: 'server port utilities' dialog is clearer
 Improved: Allow custom whitelist kick message
-Fixed: Sending stop working after a while with .NET core
+Fixed: Sending stopped working after a while with .NET core
 Fixed: doing /z then immediately doing /mb not resetting bottom right messages
 Fixed: /mynotes should have default rank permission of guest 
 Improved: Stare AI accounts for eyeheight and scale now
