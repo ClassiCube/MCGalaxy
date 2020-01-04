@@ -62,6 +62,7 @@ namespace MCGalaxy.Blocks {
                 case Block.Door_Green_air: return DeleteBehaviour.RevertDoor;
             }
             
+        	// NOTE: If this gets changed, make sure to change BlockOptions.cs too
             if (props[block].IsMessageBlock)              return DeleteBehaviour.DoMessageBlock;
             if (props[block].IsPortal)                    return DeleteBehaviour.DoPortal;            
             if (props[block].IsTDoor)                     return DeleteBehaviour.RevertDoor;

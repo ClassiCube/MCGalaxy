@@ -115,19 +115,41 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        static void SetPortal(Player p, BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "a portal",        ref s[b].IsPortal); }
-        static void SetMB(Player p,     BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "a message block", ref s[b].IsMessageBlock); }
+        static void SetPortal(Player p, BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a portal",        ref s[b].IsPortal); }
+        static void SetMB(Player p,     BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a message block", ref s[b].IsMessageBlock); }
         static void SetRails(Player p,  BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "train rails",     ref s[b].IsRails); }
         static void SetWater(Player p,  BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "killed by water", ref s[b].WaterKills); }
         static void SetLava(Player p,   BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "killed by lava",  ref s[b].LavaKills); }
-        static void SetDoor(Player p,   BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "a door",          ref s[b].IsDoor); }
-        static void SetTDoor(Player p,  BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "a tDoor",         ref s[b].IsTDoor); }
+        static void SetDoor(Player p,   BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a door", ref s[b].IsDoor); }
+        static void SetTDoor(Player p,  BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a tDoor",ref s[b].IsTDoor); }
         static void SetKiller(Player p, BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "a killer block",  ref s[b].KillerBlock); }
         static void SetOPBlock(Player p,BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "an OP block",     ref s[b].OPBlock); }
         static void SetDrown(Player p,  BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "drowns players",  ref s[b].Drownable); }
         static void SetGrass(Player p,  BlockProps[] s, BlockID b, string v) { SetBlock(p,s,b,v, "Grass form",  ref s[b].GrassBlock); }
         static void SetDirt(Player p,   BlockProps[] s, BlockID b, string v) { SetBlock(p,s,b,v, "Dirt form",   ref s[b].DirtBlock); }
         static void SetODoor(Player p,  BlockProps[] s, BlockID b, string v) { SetBlock(p,s,b,v, "oDoor form",  ref s[b].oDoorBlock); }
+        
+        // NOTE: Make sure to keep this in sync with BlockBehaviour.GetDeleteHandler
+        static string CheckBehaviour(BlockProps[] props, BlockID block) {
+            if (props[block].IsMessageBlock)              return "message block";
+            if (props[block].IsPortal)                    return "portal";      
+            if (props[block].IsTDoor)                     return "tDoor";
+            if (props[block].oDoorBlock != Block.Invalid) return "oDoor";
+            if (props[block].IsDoor)                      return "door";
+            return null;
+        }
+        
+        static void ToggleBehaviour(Player p, BlockProps[] scope, BlockID block, string type, ref bool on) {
+            string behaviour;
+            // Check if this would make a block both a door and a portal for instance
+            // If blocks have multiple behaviour, this would confuse users because only 1 behaviour works
+            if (!on && (behaviour = CheckBehaviour(scope, block)) != null) {
+                string name = Name(scope, p, block);
+                p.Message("%WBlock {0} cannot be made {1}, is it already a {2}", name, type, behaviour);
+                return;
+            }         
+            Toggle(p, scope, block, type, ref on);
+        }
         
         static void Toggle(Player p, BlockProps[] scope, BlockID block, string type, ref bool on) {
             on = !on;
