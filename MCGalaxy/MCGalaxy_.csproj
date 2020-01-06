@@ -70,9 +70,6 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LibNoise">
-      <HintPath>..\LibNoise.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\MySql.Data.dll</HintPath>
     </Reference>
@@ -528,6 +525,15 @@
     <Compile Include="Generator\Foliage\Tree.cs" />
     <Compile Include="Generator\HeightmapGen.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
+    <Compile Include="Generator\LibNoise\Billow.cs" />
+    <Compile Include="Generator\LibNoise\Checkerboard.cs" />
+    <Compile Include="Generator\LibNoise\GradientNoiseBasis.cs" />
+    <Compile Include="Generator\LibNoise\IModule.cs" />
+    <Compile Include="Generator\LibNoise\Math.cs" />
+    <Compile Include="Generator\LibNoise\Perlin.cs" />
+    <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
+    <Compile Include="Generator\LibNoise\ValueNoiseBasis.cs" />
+    <Compile Include="Generator\LibNoise\Voronoi.cs" />
     <Compile Include="Generator\MapGen.cs" />
     <Compile Include="Generator\Realistic\MapGenArgs.cs" />
     <Compile Include="Generator\Realistic\Noise.cs" />
@@ -725,6 +731,7 @@
     <Folder Include="Database\Stats" />
     <Folder Include="Games\Weapons" />
     <Folder Include="Games\RoundsGame" />
+    <Folder Include="Generator\LibNoise" />
     <Folder Include="Generator\Realistic" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />

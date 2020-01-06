@@ -91,7 +91,6 @@ namespace MCGalaxy {
             CheckFile("MySql.Data.dll");
             CheckFile("sqlite3_x32.dll");
             CheckFile("sqlite3_x64.dll");
-            CheckFile("LibNoise.dll");
 
             EnsureFilesExist();
             MoveSqliteDll();
