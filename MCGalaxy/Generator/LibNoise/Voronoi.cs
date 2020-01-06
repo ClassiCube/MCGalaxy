@@ -27,10 +27,10 @@ namespace LibNoise
     public class Voronoi
         : ValueNoiseBasis, IModule
     {
-        public double Frequency { get; set; }
-        public double Displacement { get; set; }
-        public bool DistanceEnabled { get; set; }
-        public int Seed { get; set; }
+        public double Frequency;
+        public double Displacement;
+        public bool DistanceEnabled;
+        public int Seed;
 
         public Voronoi()
         {

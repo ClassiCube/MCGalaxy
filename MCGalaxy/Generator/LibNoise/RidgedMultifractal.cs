@@ -27,15 +27,14 @@ namespace LibNoise
     public class RidgedMultifractal
         : GradientNoiseBasis, IModule
     {
-        public double Frequency { get; set; }
-        public NoiseQuality NoiseQuality { get; set; }
-        public int Seed { get; set; }
-        private int mOctaveCount;
-        private double mLacunarity;
-
-        private const int MaxOctaves = 30;
-
-        private double[] SpectralWeights = new double[MaxOctaves];
+        public double Frequency;
+        public NoiseQuality NoiseQuality;
+        public int Seed;
+        public int OctaveCount;
+        
+        double mLacunarity;
+        const int MaxOctaves = 30;
+        double[] SpectralWeights = new double[MaxOctaves];
 
         public RidgedMultifractal()
         {
@@ -63,12 +62,6 @@ namespace LibNoise
 
             for (int currentOctave = 0; currentOctave < OctaveCount; currentOctave++)
             {
-                //double nx, ny, nz;
-
-               /* nx = Math.MakeInt32Range(x);
-                ny = Math.MakeInt32Range(y);
-                nz = Math.MakeInt32Range(z);*/
-
                 long seed = (Seed + currentOctave) & 0x7fffffff;
                 signal = GradientCoherentNoise(x, y, z, 
                     (int)seed, NoiseQuality);
@@ -118,19 +111,7 @@ namespace LibNoise
             }
         }
 
-        public int OctaveCount
-        {
-            get { return mOctaveCount; }
-            set
-            {
-                if (value < 1 || value > MaxOctaves)
-                    throw new ArgumentException("Octave count must be greater than zero and less than " + MaxOctaves);
-
-                mOctaveCount = value;
-            }
-        }
-
-        private void CalculateSpectralWeights()
+        void CalculateSpectralWeights()
         {
             double h = 1.0;
 

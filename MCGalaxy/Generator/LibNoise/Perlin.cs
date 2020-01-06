@@ -27,14 +27,12 @@ namespace LibNoise
     public class Perlin
         : GradientNoiseBasis, IModule
     {
-        public double Frequency { get; set; }
-        public double Persistence { get; set; }
-        public NoiseQuality NoiseQuality { get; set; }
-        public int Seed { get; set; }
-        private int mOctaveCount;
-        public double Lacunarity { get; set; }
-
-        private const int MaxOctaves = 30;
+        public double Frequency;
+        public double Persistence;
+        public NoiseQuality NoiseQuality;
+        public int Seed;
+        public int OctaveCount;
+        public double Lacunarity;
 
         public Perlin()
         {
@@ -51,7 +49,6 @@ namespace LibNoise
             double value = 0.0;
             double signal = 0.0;
             double curPersistence = 1.0;
-            //double nx, ny, nz;
             long seed;
 
             x*=Frequency;
@@ -61,9 +58,6 @@ namespace LibNoise
             for(int currentOctave = 0; currentOctave < OctaveCount; currentOctave++)
             {
                 seed = (Seed + currentOctave) & 0xffffffff;
-                /*nx = Math.MakeInt32Range(x);
-                ny = Math.MakeInt32Range(y);
-                nz = Math.MakeInt32Range(z);*/
                 signal = GradientCoherentNoise(x, y, z, (int)seed, NoiseQuality);
                 //signal = cachedNoise3(x, y, z);
 
@@ -76,18 +70,6 @@ namespace LibNoise
             }
 
             return value;
-        }
-
-        public int OctaveCount
-        {
-            get { return mOctaveCount; }
-            set
-            {
-                if (value < 1 || value > MaxOctaves)
-                    throw new ArgumentException("Octave count must be greater than zero and less than " + MaxOctaves);
-
-                mOctaveCount = value;
-            }
         }
     }
 }
