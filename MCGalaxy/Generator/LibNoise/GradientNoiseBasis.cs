@@ -292,8 +292,7 @@ namespace LibNoise
             0.0337884, -0.979891, -0.196654, 0.0
         };
 
-        public static double GradientCoherentNoise(double x, double y, double z, int seed,
-            NoiseQuality noiseQuality)
+        public static double GradientCoherentNoise(double x, double y, double z, int seed)
         {
             int x0 = (x > 0.0 ? (int)x : (int)x - 1);
             int x1 = x0 + 1;
@@ -302,25 +301,10 @@ namespace LibNoise
             int z0 = (z > 0.0 ? (int)z : (int)z - 1);
             int z1 = z0 + 1;
 
-            double xs = 0, ys = 0, zs = 0;
-            switch (noiseQuality)
-            {
-                case NoiseQuality.Low:
-                    xs = (x - x0);
-                    ys = (y - y0);
-                    zs = (z - z0);
-                    break;
-                case NoiseQuality.Standard:
-                    xs = SCurve3(x - x0);
-                    ys = SCurve3(y - y0);
-                    zs = SCurve3(z - z0);
-                    break;
-                case NoiseQuality.High:
-                    xs = SCurve5(x - x0);
-                    ys = SCurve5(y - y0);
-                    zs = SCurve5(z - z0);
-                    break;
-            }
+            // case NoiseQuality.Standard:
+            double xs = SCurve3(x - x0);
+            double ys = SCurve3(y - y0);
+            double zs = SCurve3(z - z0);
 
             double n0, n1, ix0, ix1, iy0, iy1;
             n0 = GradientNoise(x, y, z, x0, y0, z0, seed);
@@ -382,17 +366,6 @@ namespace LibNoise
         static double SCurve3(double a)
         {
             return (a * a * (3.0 - 2.0 * a));
-        }
-
-        /// <summary>
-        /// Returns the given value mapped onto a quintic S-curve.
-        /// </summary>
-        static double SCurve5(double a)
-        {
-            double a3 = a * a * a;
-            double a4 = a3 * a;
-            double a5 = a4 * a;
-            return (6.0 * a5) - (15.0 * a4) + (10.0 * a3);
-        }        
+        }      
     }
 }
