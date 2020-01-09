@@ -531,7 +531,6 @@
     <Compile Include="Generator\LibNoise\IModule.cs" />
     <Compile Include="Generator\LibNoise\Perlin.cs" />
     <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
-    <Compile Include="Generator\LibNoise\ValueNoiseBasis.cs" />
     <Compile Include="Generator\LibNoise\Voronoi.cs" />
     <Compile Include="Generator\MapGen.cs" />
     <Compile Include="Generator\Realistic\MapGenArgs.cs" />

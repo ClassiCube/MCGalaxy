@@ -24,8 +24,7 @@ using System;
 
 namespace LibNoise
 {
-    public class Billow
-        : GradientNoiseBasis, IModule
+    public sealed class Billow : GradientNoiseBasis, IModule
     {
         public double Frequency;
         public double Persistence;
@@ -48,7 +47,6 @@ namespace LibNoise
             double value = 0.0;
             double signal = 0.0;
             double curPersistence = 1.0;
-            //double nx, ny, nz;
             long seed;
 
             x *= Frequency;

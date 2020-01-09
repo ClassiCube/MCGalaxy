@@ -24,8 +24,7 @@ using System;
 
 namespace LibNoise
 {
-    public class Perlin
-        : GradientNoiseBasis, IModule
+    public sealed class Perlin : GradientNoiseBasis, IModule
     {
         public double Frequency;
         public double Persistence;
@@ -50,9 +49,9 @@ namespace LibNoise
             double curPersistence = 1.0;
             long seed;
 
-            x*=Frequency;
-            y*=Frequency;
-            z*=Frequency;
+            x *=Frequency;
+            y *=Frequency;
+            z *=Frequency;
 
             for(int currentOctave = 0; currentOctave < OctaveCount; currentOctave++)
             {

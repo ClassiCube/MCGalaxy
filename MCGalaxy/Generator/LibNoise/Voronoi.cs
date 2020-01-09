@@ -24,22 +24,16 @@ using System;
 
 namespace LibNoise
 {
-    public class Voronoi
-        : ValueNoiseBasis, IModule
+    public sealed class Voronoi : IModule
     {
         public double Frequency;
         public double Displacement;
-        public bool DistanceEnabled;
         public int Seed;
-        
-        /// <summary> Returns the square root of 3. </summary>
-        const double Sqrt3 = 1.7320508075688772935;
 
         public Voronoi()
         {
             Frequency = 1.0;
             Displacement = 1.0;
-            DistanceEnabled = false;
         }
 
         public double GetValue(double x, double y, double z)
@@ -90,26 +84,42 @@ namespace LibNoise
                 }
             }
 
-            double value;
-            if (DistanceEnabled)
-            {
-                // Determine the distance to the nearest seed point.
-                double xDist = xCandidate - x;
-                double yDist = yCandidate - y;
-                double zDist = zCandidate - z;
-                value = (Math.Sqrt(xDist * xDist + yDist * yDist + zDist * zDist)) * Sqrt3 - 1.0;
-            }
-            else
-            {
-                value = 0.0;
-            }
-
             int x0 = (xCandidate > 0.0 ? (int)xCandidate : (int)xCandidate - 1);
             int y0 = (yCandidate > 0.0 ? (int)yCandidate : (int)yCandidate - 1);
             int z0 = (zCandidate > 0.0 ? (int)zCandidate : (int)zCandidate - 1);
 
             // Return the calculated distance with the displacement value applied.
-            return value + (Displacement * (double)ValueNoise(x0, y0, z0));
+            return Displacement * (double)ValueNoise(x0, y0, z0);
+        }
+        
+        
+        const int XNoiseGen = 1619;
+        const int YNoiseGen = 31337;
+        const int ZNoiseGen = 6971;
+        const int SeedNoiseGen = 1013;
+
+        static int IntValueNoise(int x, int y, int z, int seed)
+        {
+            // All constants are primes and must remain prime in order for this noise
+            // function to work correctly.
+            int n = (
+                XNoiseGen * x
+              + YNoiseGen * y
+              + ZNoiseGen * z
+              + SeedNoiseGen * seed)
+              & 0x7fffffff;
+            n = (n >> 13) ^ n;
+            return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+        }
+
+        static double ValueNoise(int x, int y, int z)
+        {
+            return ValueNoise(x, y, z, 0);
+        }
+
+        static double ValueNoise(int x, int y, int z, int seed)
+        {
+            return 1.0 - ((double)IntValueNoise(x, y, z, seed) / 1073741824.0);
         }
     }
 }

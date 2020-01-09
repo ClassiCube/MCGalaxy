@@ -32,7 +32,7 @@ namespace LibNoise
         const int SeedNoiseGen = 1013;
         const int ShiftNoiseGen = 8;
 
-        private static double[] RandomVectors = 
+        static double[] RandomVectors = 
         {
             -0.763874, -0.596439, -0.246489, 0.0,
             0.396055, 0.904518, -0.158073, 0.0,

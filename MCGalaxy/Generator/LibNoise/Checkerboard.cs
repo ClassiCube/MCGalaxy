@@ -24,8 +24,7 @@ using System;
 
 namespace LibNoise
 {
-    public class Checkerboard
-        : IModule
+    public sealed class Checkerboard : IModule
     {
         public double GetValue(double x, double y, double z)
         {
