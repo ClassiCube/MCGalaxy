@@ -46,14 +46,20 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
+        static void WriteU16(byte[] dst, int idx, ushort value) {
+            dst[idx]     = (byte)value;
+            dst[idx + 1] = (byte)(value >> 8);
+        }
+        
         static void WriteHeader(Level lvl, Stream gs, byte[] header) {
-            BitConverter.GetBytes(1874).CopyTo(header, 0);
-            BitConverter.GetBytes(lvl.Width).CopyTo(header, 2);
-            BitConverter.GetBytes(lvl.Length).CopyTo(header, 4);
-            BitConverter.GetBytes(lvl.Height).CopyTo(header, 6);
-            BitConverter.GetBytes(lvl.spawnx).CopyTo(header, 8);
-            BitConverter.GetBytes(lvl.spawnz).CopyTo(header, 10);
-            BitConverter.GetBytes(lvl.spawny).CopyTo(header, 12);
+            WriteU16(header,  0, 1874);
+            WriteU16(header,  2, lvl.Width);
+            WriteU16(header,  4, lvl.Length);
+            WriteU16(header,  6, lvl.Height);
+            WriteU16(header,  8, lvl.spawnx);
+            WriteU16(header, 10, lvl.spawnz);
+            WriteU16(header, 12, lvl.spawny);
+            
             header[14] = lvl.rotx;
             header[15] = lvl.roty;
             header[16] = (byte)lvl.VisitAccess.Min;
