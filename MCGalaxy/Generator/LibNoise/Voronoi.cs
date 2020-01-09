@@ -31,12 +31,14 @@ namespace LibNoise
         public double Displacement;
         public bool DistanceEnabled;
         public int Seed;
+        
+        /// <summary> Returns the square root of 3. </summary>
+        const double Sqrt3 = 1.7320508075688772935;
 
         public Voronoi()
         {
             Frequency = 1.0;
             Displacement = 1.0;
-            Seed = 0;
             DistanceEnabled = false;
         }
 
@@ -95,8 +97,7 @@ namespace LibNoise
                 double xDist = xCandidate - x;
                 double yDist = yCandidate - y;
                 double zDist = zCandidate - z;
-                value = (System.Math.Sqrt(xDist * xDist + yDist * yDist + zDist * zDist)
-                  ) * Math.Sqrt3 - 1.0;
+                value = (Math.Sqrt(xDist * xDist + yDist * yDist + zDist * zDist)) * Sqrt3 - 1.0;
             }
             else
             {

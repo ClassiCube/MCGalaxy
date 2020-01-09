@@ -41,7 +41,6 @@ namespace LibNoise
             OctaveCount = 6;
             Persistence = 0.5;
             NoiseQuality = NoiseQuality.Standard;
-            Seed = 0;
         }
 
         public double GetValue(double x, double y, double z)

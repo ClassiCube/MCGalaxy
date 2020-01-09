@@ -30,9 +30,8 @@ namespace LibNoise
         const int YNoiseGen = 31337;
         const int ZNoiseGen = 6971;
         const int SeedNoiseGen = 1013;
-        const int ShiftNoiseGen = 8;
 
-        public int IntValueNoise(int x, int y, int z, int seed)
+        static int IntValueNoise(int x, int y, int z, int seed)
         {
             // All constants are primes and must remain prime in order for this noise
             // function to work correctly.
@@ -46,12 +45,12 @@ namespace LibNoise
             return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
         }
 
-        public double ValueNoise(int x, int y, int z)
+        public static double ValueNoise(int x, int y, int z)
         {
             return ValueNoise(x, y, z, 0);
         }
 
-        public double ValueNoise(int x, int y, int z, int seed)
+        public static double ValueNoise(int x, int y, int z, int seed)
         {
             return 1.0 - ((double)IntValueNoise(x, y, z, seed) / 1073741824.0);
         }     

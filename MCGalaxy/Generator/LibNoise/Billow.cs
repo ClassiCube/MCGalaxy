@@ -41,7 +41,6 @@ namespace LibNoise
             OctaveCount = 6;
             Persistence = 0.5;
             NoiseQuality = NoiseQuality.Standard;
-            Seed = 0;
         }
 
         public double GetValue(double x, double y, double z)
@@ -60,7 +59,7 @@ namespace LibNoise
             {
                 seed = (Seed + currentOctave) & 0xffffffff;
                 signal = GradientCoherentNoise(x, y, z, (int)seed, NoiseQuality);
-                signal = 2.0 * System.Math.Abs(signal) - 1.0;
+                signal = 2.0 * Math.Abs(signal) - 1.0;
                 value += signal * curPersistence;
 
                 x *= Lacunarity;

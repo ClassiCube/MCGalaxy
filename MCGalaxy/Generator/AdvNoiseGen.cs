@@ -94,8 +94,8 @@ namespace MCGalaxy.Generator {
                 for (int x = 0; x < width; ++x)
             {
                 double noise = module.GetValue(x / 100.0, 0.1, z / 100.0);
-                int dirtHeight = (int)System.Math.Floor((noise + 2) * 10) + (half - 20);
-                int sandHeight = (int)System.Math.Floor((noise + 2) * 15) + (half - 30);
+                int dirtHeight = (int)Math.Floor((noise + 2) * 10) + (half - 20);
+                int sandHeight = (int)Math.Floor((noise + 2) * 15) + (half - 30);
                 byte topBlock = dirtHeight < sandHeight ? Block.Grass : Block.Sand;
                 lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
                 
@@ -117,7 +117,7 @@ namespace MCGalaxy.Generator {
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-                double value = System.Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
+                double value = Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
                 if (value > 20)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }
@@ -130,7 +130,7 @@ namespace MCGalaxy.Generator {
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-                double value = System.Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
+                double value = Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
                 if (value > 30 * y / height)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }

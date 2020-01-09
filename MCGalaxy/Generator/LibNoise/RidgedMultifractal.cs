@@ -67,7 +67,7 @@ namespace LibNoise
                     (int)seed, NoiseQuality);
 
                 // Make the ridges.
-                signal = System.Math.Abs(signal);
+                signal = Math.Abs(signal);
                 signal = offset - signal;
 
                 // Square the signal to increase the sharpness of the ridges.
@@ -119,7 +119,7 @@ namespace LibNoise
             for (int i = 0; i < MaxOctaves; i++)
             {
                 // Compute weight for each frequency.
-                SpectralWeights[i] = System.Math.Pow(frequency, -h);
+                SpectralWeights[i] = Math.Pow(frequency, -h);
                 frequency *= mLacunarity;
             }
         }

@@ -25,7 +25,6 @@ using System;
 namespace LibNoise
 {
     public class GradientNoiseBasis
-        : Math
     {
         const int XNoiseGen = 1619;
         const int YNoiseGen = 31337;
@@ -293,7 +292,7 @@ namespace LibNoise
             0.0337884, -0.979891, -0.196654, 0.0
         };
 
-        public double GradientCoherentNoise(double x, double y, double z, int seed,
+        public static double GradientCoherentNoise(double x, double y, double z, int seed,
             NoiseQuality noiseQuality)
         {
             int x0 = (x > 0.0 ? (int)x : (int)x - 1);
@@ -343,7 +342,7 @@ namespace LibNoise
             return LinearInterpolate(iy0, iy1, zs);
         }
 
-        private double GradientNoise(double fx, double fy, double fz, int ix,
+        static double GradientNoise(double fx, double fy, double fz, int ix,
             int iy, int iz, long seed)
         {
             long vectorIndex = (
@@ -366,6 +365,34 @@ namespace LibNoise
             return ((xvGradient * xvPoint)
                 + (yvGradient * yvPoint)
                 + (zvGradient * zvPoint)) * 2.12;
-        }          
+        }   
+        
+
+        /// <summary>
+        /// Returns the linear interpolation of two values with the given alpha.
+        /// </summary>
+        static double LinearInterpolate(double n0, double n1, double a)
+        {
+            return ((1.0 - a) * n0) + (a * n1);
+        }
+
+        /// <summary>
+        /// Returns the given value mapped onto a cubic S-curve.
+        /// </summary>
+        static double SCurve3(double a)
+        {
+            return (a * a * (3.0 - 2.0 * a));
+        }
+
+        /// <summary>
+        /// Returns the given value mapped onto a quintic S-curve.
+        /// </summary>
+        static double SCurve5(double a)
+        {
+            double a3 = a * a * a;
+            double a4 = a3 * a;
+            double a5 = a4 * a;
+            return (6.0 * a5) - (15.0 * a4) + (10.0 * a3);
+        }        
     }
 }

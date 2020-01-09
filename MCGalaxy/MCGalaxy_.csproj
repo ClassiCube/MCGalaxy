@@ -529,7 +529,6 @@
     <Compile Include="Generator\LibNoise\Checkerboard.cs" />
     <Compile Include="Generator\LibNoise\GradientNoiseBasis.cs" />
     <Compile Include="Generator\LibNoise\IModule.cs" />
-    <Compile Include="Generator\LibNoise\Math.cs" />
     <Compile Include="Generator\LibNoise\Perlin.cs" />
     <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
     <Compile Include="Generator\LibNoise\ValueNoiseBasis.cs" />
