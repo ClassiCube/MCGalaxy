@@ -158,12 +158,7 @@ namespace MySql.Data.MySqlClient
 
     public override string ConnectionString
     {
-      get
-      {
-        // Always return exactly what the user set.
-        // Security-sensitive information may be removed.
-        return Settings.GetConnectionString(!hasBeenOpen || Settings.PersistSecurityInfo);
-      }
+      get { return Settings.ConnectionString; }
       set
       {
         if (State != ConnectionState.Closed)

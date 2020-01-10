@@ -108,8 +108,6 @@ namespace MySql.Data.MySqlClient
     private void InternalBindParameters(string sql, MySqlParameterCollection parameters,
         MySqlPacket packet)
     {
-      bool sqlServerMode = command.Connection.Settings.SqlServerMode;
-
       if (packet == null)
       {
         packet = new MySqlPacket(Driver.Encoding);
@@ -119,7 +117,6 @@ namespace MySql.Data.MySqlClient
 
       MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
       tokenizer.ReturnComments = true;
-      tokenizer.SqlServerMode = sqlServerMode;
 
       int pos = 0;
       string token = tokenizer.NextToken();
@@ -141,8 +138,6 @@ namespace MySql.Data.MySqlClient
         }
         if (token != null)
         {
-          if (sqlServerMode && tokenizer.Quoted && token.StartsWith("[", StringComparison.Ordinal))
-            token = String.Format("`{0}`", token.Substring(1, token.Length - 2));
           packet.WriteStringNoNull(token);
         }
         token = tokenizer.NextToken();
