@@ -140,12 +140,6 @@ namespace MySql.Data.MySqlClient
         packet.WriteStringNoNull("NULL");
       else
       {
-        if (ValueObject.MySqlDbType == MySqlDbType.Guid)
-        {
-          MySqlGuid g = (MySqlGuid)ValueObject;
-          g.OldGuids = settings.OldGuids;
-          ValueObject = g;
-        }
         ValueObject.WriteValue(packet, binary, paramValue);
       }
     }

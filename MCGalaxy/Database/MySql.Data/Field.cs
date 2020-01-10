@@ -288,14 +288,7 @@ namespace MySql.Data.MySqlClient
 
     public IMySqlValue GetValueObject()
     {
-      IMySqlValue v = GetIMySqlValue(Type);
-      if (v is MySqlGuid)
-      {
-        MySqlGuid g = (MySqlGuid)v;
-        g.OldGuids = driver.Settings.OldGuids;
-        v = g;
-      }
-      return v;
+      return GetIMySqlValue(Type);
     }
 
     public static IMySqlValue GetIMySqlValue(MySqlDbType type)
@@ -347,6 +340,7 @@ namespace MySql.Data.MySqlClient
         case MySqlDbType.MediumText:
         case MySqlDbType.LongText:
         case MySqlDbType.JSON:
+        case MySqlDbType.Guid: 
         case (MySqlDbType)Field_Type.NULL:
           return new MySqlString(type, true);
         case MySqlDbType.Blob:
@@ -356,8 +350,6 @@ namespace MySql.Data.MySqlClient
         case MySqlDbType.Binary:
         case MySqlDbType.VarBinary:
           return new MySqlBinary(type, true);
-        case MySqlDbType.Guid:
-          return new MySqlGuid();
         default:
           throw new MySqlException("Unknown data type");
       }

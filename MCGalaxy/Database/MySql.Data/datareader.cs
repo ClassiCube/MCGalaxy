@@ -169,12 +169,6 @@ namespace MySql.Data.MySqlClient
       command.Close(this);
       commandBehavior = CommandBehavior.Default;
 
-      if (this.command.Canceled && connection.driver.Version.isAtLeast(5, 1, 0))
-      {
-        // Issue dummy command to clear kill flag
-        ClearKillFlag();
-      }
-
       if (shouldCloseConnection)
         connection.Close();
 
@@ -216,15 +210,10 @@ namespace MySql.Data.MySqlClient
 
       IMySqlValue val = GetFieldValue(i, false);
 
-      if (!(val is MySqlBinary) && !(val is MySqlGuid))
-        throw new MySqlException("GetBytes can only be called on binary or guid columns");
+      if (!(val is MySqlBinary))
+        throw new MySqlException("GetBytes can only be called on binary columns");
 
-      byte[] bytes = null;
-      if (val is MySqlBinary)
-        bytes = ((MySqlBinary)val).Value;
-      else
-        bytes = ((MySqlGuid)val).Bytes;
-
+      byte[] bytes = ((MySqlBinary)val).Value;
       if (buffer == null)
         return bytes.Length;
 
@@ -565,23 +554,6 @@ namespace MySql.Data.MySqlClient
       return v;
     }
 
-
-    private void ClearKillFlag()
-    {
-      // This query will silently crash because of the Kill call that happened before.
-      string dummyStatement = "SELECT * FROM bogus_table LIMIT 0"; /* dummy query used to clear kill flag */
-      MySqlCommand dummyCommand = new MySqlCommand(dummyStatement, connection);
-      dummyCommand.InternallyCreated = true;
-      try
-      {
-        dummyCommand.ExecuteReader(); // ExecuteReader catches the exception and returns null, which is expected.
-      }
-      catch (MySqlException ex)
-      {
-        if (ex.Number != (int)MySqlErrorCode.NoSuchTable) throw;
-      }
-    }
-
     public void Dispose()
     {
       Dispose(true);
@@ -595,9 +567,6 @@ namespace MySql.Data.MySqlClient
       disposed = true;
     }
     
-    ~MySqlDataReader()
-    {
-      Dispose(false);
-    }
+    ~MySqlDataReader() { Dispose(false); }
   }
 }

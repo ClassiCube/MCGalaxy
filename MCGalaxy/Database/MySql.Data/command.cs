@@ -41,13 +41,10 @@ namespace MySql.Data.MySqlClient
   {
     MySqlConnection connection;
     string cmdText;
-    CommandType cmdType;
     MySqlParameterCollection parameters;
     internal Int64 lastInsertedId;
     private PreparableStatement statement;
     private int commandTimeout;
-    private bool canceled;
-    private bool resetSqlSelect;
     CommandTimer commandTimer;
     private bool useDefaultTimeout;
     private bool internallyCreated;
@@ -55,7 +52,6 @@ namespace MySql.Data.MySqlClient
 
     public MySqlCommand()
     {
-      cmdType = CommandType.Text;
       parameters = new MySqlParameterCollection();
       cmdText = String.Empty;
       useDefaultTimeout = true;
@@ -73,19 +69,7 @@ namespace MySql.Data.MySqlClient
       Connection = connection;
     }
 
-    #region Destructor
-#if !RT
-    ~MySqlCommand()
-    {
-      Dispose(false);
-    }
-#else
-    ~MySqlCommand()
-    {
-      this.Dispose();
-    }
-#endif
-    #endregion
+    ~MySqlCommand() { Dispose(false); }
 
     #region Properties
 
@@ -163,11 +147,6 @@ namespace MySql.Data.MySqlClient
     public IDBDataParameterCollection Parameters
     {
       get { return parameters; }
-    }
-
-    internal bool Canceled
-    {
-      get { return canceled; }
     }
 
     internal bool InternallyCreated
@@ -273,7 +252,6 @@ namespace MySql.Data.MySqlClient
         {
           MySqlDataReader reader = new MySqlDataReader(this, statement);
           connection.Reader = reader;
-          canceled = false;
           // execute the statement
           statement.Execute();
           // wait for data to return

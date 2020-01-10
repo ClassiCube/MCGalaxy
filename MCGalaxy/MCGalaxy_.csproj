@@ -447,7 +447,6 @@
     <Compile Include="Database\MySql.Data\Types\MySqlDateTime.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlDecimal.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlDouble.cs" />
-    <Compile Include="Database\MySql.Data\Types\MySqlGuid.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlInt16.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlInt32.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlInt64.cs" />

@@ -63,12 +63,7 @@ namespace MySql.Data.MySqlClient
       ConnectionString = connectionString;
     }
 
-    #region Destructor
-    ~MySqlConnection()
-    {
-      Dispose(false);
-    }
-    #endregion
+    ~MySqlConnection() { Dispose(false); }
 
     #region Interal Methods & Properties
 
