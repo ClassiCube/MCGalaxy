@@ -243,11 +243,6 @@ namespace MySql.Data.MySqlClient
       return (int)ReadLong(numbytes);
     }
 
-    /// <summary>
-    /// WriteInteger
-    /// </summary>
-    /// <param name="v"></param>
-    /// <param name="numbytes"></param>
     public void WriteInteger(long v, int numbytes)
     {
       long val = v;
@@ -324,16 +319,6 @@ namespace MySql.Data.MySqlClient
     {
       long len = ReadPackedInteger();
       return ReadString(len);
-    }
-
-    public string ReadAsciiString(long length)
-    {
-      if (length == 0)
-        return String.Empty;
-      //            byte[] buf = new byte[length];
-      Read(tempBuffer, 0, (int)length);
-      return Encoding.GetEncoding("us-ascii").GetString(tempBuffer, 0, (int)length);
-      //return encoding.GetString(tempBuffer, 0, (int)length); //buf.Length);
     }
 
     public string ReadString(long length)

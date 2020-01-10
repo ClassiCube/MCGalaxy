@@ -732,13 +732,11 @@ namespace MCGalaxy.SQL {
             if (readState != 0) throw new InvalidOperationException("No current row");
         }
 
-        public bool GetBoolean(int i) { return GetInt32(i) != 0; }
         public byte GetByte(int i) { return (byte)GetInt32(i); }
-        public char GetChar(int i) { return (char)GetInt32(i); }
 
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length) {
+        public int GetBytes(int i, int srcOffset, byte[] dst, int dstOffset, int length) {
             if (CheckAffinity(i) == TypeAffinity.Blob)
-                return stmt.GetBytes(i, (int)fieldOffset, buffer, bufferoffset, length);
+                return stmt.GetBytes(i, srcOffset, dst, dstOffset, length);
             throw new InvalidCastException();
         }
 
@@ -770,7 +768,6 @@ namespace MCGalaxy.SQL {
         }
 
         public float GetFloat(int i) { return (float)GetDouble(i); }
-        public short GetInt16(int i) { return (short)GetInt32(i); }
         public string GetName(int i) { return stmt.ColumnName(i); }
 
         public int GetInt32(int i) {
@@ -806,12 +803,6 @@ namespace MCGalaxy.SQL {
             VerifyForGet();
             SQLiteType t = GetSQLiteType(i);
             return stmt.GetValue(i, t);
-        }
-
-        public int GetValues(object[] values) {
-            int count = Math.Min(columns, values.Length);
-            for (int i = 0; i < count; i++) { values[i] = GetValue(i); }
-            return count;
         }
 
         public bool IsClosed { get { return _command == null; } }
@@ -1189,18 +1180,14 @@ namespace MCGalaxy.SQL {
             return SQLiteConvert.ToDateTime(GetText(index));
         }
 
-        internal long GetBytes(int index, int srcOffset, byte[] dst, int dstOffset, int dstLen) {
+        internal int GetBytes(int index, int srcOffset, byte[] dst, int dstOffset, int length) {
             int srcLen = Interop.sqlite3_column_bytes(handle, index);
             if (dst == null) return srcLen;
-
-            int count = dstLen;
-            if (count + dstOffset > dst.Length) count = dst.Length - dstOffset;
-            if (count + srcOffset > srcLen) count = srcLen - srcOffset;
-
-            if (count <= 0) return 0;
+            if (length <= 0) return 0;
+            
             IntPtr src = Interop.sqlite3_column_blob(handle, index);
-            Marshal.Copy((IntPtr)(src.ToInt64() + srcOffset), dst, dstOffset, count);
-            return count;
+            Marshal.Copy((IntPtr)(src.ToInt64() + srcOffset), dst, dstOffset, length);
+            return length;
         }
     }
 

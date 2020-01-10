@@ -338,12 +338,6 @@ namespace MySql.Data.Types
       return dt.ParseMySql(s);
     }
 
-    static internal MySqlDateTime Parse(string s, Common.DBVersion version)
-    {
-      MySqlDateTime dt = new MySqlDateTime();
-      return dt.ParseMySql(s);
-    }
-
     private MySqlDateTime ParseMySql(string s)
     {
       string[] parts = s.Split('-', ' ', ':', '/', '.');

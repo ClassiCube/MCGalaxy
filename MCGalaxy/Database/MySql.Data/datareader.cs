@@ -180,11 +180,6 @@ namespace MySql.Data.MySqlClient
 
     #region TypeSafe Accessors
 
-    public bool GetBoolean(int i)
-    {
-      return Convert.ToBoolean(GetValue(i));
-    }
-
     public byte GetByte(int i)
     {
       IMySqlValue v = GetFieldValue(i, false);
@@ -193,46 +188,20 @@ namespace MySql.Data.MySqlClient
       else
         return (byte)((MySqlByte)v).Value;
     }
-    
-    public sbyte GetSByte(int i)
-    {
-      IMySqlValue v = GetFieldValue(i, false);
-      if (v is MySqlByte)
-        return ((MySqlByte)v).Value;
-      else
-        return (sbyte)((MySqlByte)v).Value;
-    }
 
-    public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+    public int GetBytes(int i, int srcOffset, byte[] dst, int dstOffset, int length)
     {
       if (i >= FieldCount)
         throw new IndexOutOfRangeException();
 
       IMySqlValue val = GetFieldValue(i, false);
-
       if (!(val is MySqlBinary))
         throw new MySqlException("GetBytes can only be called on binary columns");
 
-      byte[] bytes = ((MySqlBinary)val).Value;
-      if (buffer == null)
-        return bytes.Length;
+      byte[] src = ((MySqlBinary)val).Value;
+      if (dst == null) return src.Length;
 
-      if (bufferoffset >= buffer.Length || bufferoffset < 0)
-        throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
-      if (buffer.Length < (bufferoffset + length))
-        throw new ArgumentException("Buffer is not large enough to hold the requested data");
-      if (fieldOffset < 0 ||
-        ((ulong)fieldOffset >= (ulong)bytes.Length && (ulong)bytes.Length > 0))
-        throw new IndexOutOfRangeException("Data index must be a valid index in the field");
-
-      // adjust the length so we don't run off the end
-      if ((ulong)bytes.Length < (ulong)(fieldOffset + length))
-      {
-        length = (int)((ulong)bytes.Length - (ulong)fieldOffset);
-      }
-
-      Buffer.BlockCopy(bytes, (int)fieldOffset, buffer, (int)bufferoffset, (int)length);
-
+      Buffer.BlockCopy(src, srcOffset, dst, dstOffset, length);
       return length;
     }
 
@@ -242,12 +211,6 @@ namespace MySql.Data.MySqlClient
       resultSet.Fields[fieldIndex].AddTypeConversion(newType);
 #endif
       return Convert.ChangeType(value.Value, newType, CultureInfo.InvariantCulture);
-    }
-
-    public char GetChar(int i)
-    {
-      string s = GetString(i);
-      return s[0];
     }
 
     public String GetDataTypeName(int i)
@@ -283,14 +246,6 @@ namespace MySql.Data.MySqlClient
         return dt.GetDateTime();
     }
 
-    public Decimal GetDecimal(int i)
-    {
-      IMySqlValue v = GetFieldValue(i, true);
-      if (v is MySqlDecimal)
-        return ((MySqlDecimal)v).Value;
-      return Convert.ToDecimal(v.Value);
-    }
-
     public double GetDouble(int i)
     {
       IMySqlValue v = GetFieldValue(i, true);
@@ -318,21 +273,12 @@ namespace MySql.Data.MySqlClient
       return v.SystemType;
     }
 
-    public  float GetFloat(int i)
+    public float GetFloat(int i)
     {
       IMySqlValue v = GetFieldValue(i, true);
       if (v is MySqlSingle)
         return ((MySqlSingle)v).Value;
       return Convert.ToSingle(v.Value);
-    }
-
-    public Int16 GetInt16(int i)
-    {
-      IMySqlValue v = GetFieldValue(i, true);
-      if (v is MySqlInt16)
-        return ((MySqlInt16)v).Value;
-
-      return (short)ChangeType(v, i, typeof(short));
     }
 
     public Int32 GetInt32(int i)
@@ -410,42 +356,6 @@ namespace MySql.Data.MySqlClient
 
       return val.Value;
     }
-
-    public int GetValues(object[] values)
-    {
-      int numCols = Math.Min(values.Length, FieldCount);
-      for (int i = 0; i < numCols; i++)
-        values[i] = GetValue(i);
-
-      return numCols;
-    }
-
-    public UInt16 GetUInt16(int column)
-    {
-      IMySqlValue v = GetFieldValue(column, true);
-      if (v is MySqlUInt16)
-        return ((MySqlUInt16)v).Value;
-
-      return (UInt16)ChangeType(v, column, typeof(UInt16));
-    }
-
-    public UInt32 GetUInt32(int column)
-    {
-      IMySqlValue v = GetFieldValue(column, true);
-      if (v is MySqlUInt32)
-        return ((MySqlUInt32)v).Value;
-      return (uint)ChangeType(v, column, typeof(UInt32));
-    }
-
-    public UInt64 GetUInt64(int column)
-    {
-      IMySqlValue v = GetFieldValue(column, true);
-      if (v is MySqlUInt64)
-        return ((MySqlUInt64)v).Value;
-
-      return (UInt64)ChangeType(v, column, typeof(UInt64));
-    }
-
 
     #endregion
 
