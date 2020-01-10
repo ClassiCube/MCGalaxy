@@ -134,7 +134,7 @@ namespace MySql.Data.MySqlClient
       set
       {
         if (commandTimeout < 0)
-          Throw(new ArgumentException("Command timeout must not be negative"));
+          throw new ArgumentException("Command timeout must not be negative");
 
         // Timeout in milliseconds should not exceed maximum for 32 bit
         // signed integer (~24 days), because underlying driver (and streams)
@@ -254,14 +254,14 @@ namespace MySql.Data.MySqlClient
     {
       // There must be a valid and open connection.
       if (connection == null)
-        Throw(new InvalidOperationException("Connection must be valid and open."));
+        throw new InvalidOperationException("Connection must be valid and open.");
 
       if (connection.State != ConnectionState.Open && !connection.SoftClosed)
-        Throw(new InvalidOperationException("Connection must be valid and open."));
+        throw new InvalidOperationException("Connection must be valid and open.");
 
       // Data readers have to be closed first
       if (connection.IsInUse && !this.internallyCreated)
-        Throw(new MySqlException("There is already an open DataReader associated with this Connection which must be closed first."));
+        throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
     }
 
     /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
@@ -339,7 +339,7 @@ namespace MySql.Data.MySqlClient
 
       cmdText = cmdText.Trim();
       if (String.IsNullOrEmpty(cmdText))
-        Throw(new InvalidOperationException(Resources.CommandTextNotInitialized));
+        throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
       string sql = cmdText.Trim(';');
 
@@ -349,7 +349,7 @@ namespace MySql.Data.MySqlClient
         // We have to recheck that there is no reader, after we got the lock
         if (connection.Reader != null)
         {
-          Throw(new MySqlException(Resources.DataReaderOpen));
+          throw new MySqlException(Resources.DataReaderOpen);
         }
 
 #if !RT
@@ -374,7 +374,7 @@ namespace MySql.Data.MySqlClient
             {
             }
             if (status == System.Transactions.TransactionStatus.Aborted)
-              Throw(new System.Transactions.TransactionAbortedException());
+              throw new System.Transactions.TransactionAbortedException();
           }
         }
 #endif
@@ -533,9 +533,9 @@ namespace MySql.Data.MySqlClient
     public override void Prepare()
     {
       if (connection == null)
-        Throw(new InvalidOperationException("The connection property has not been set."));
+        throw new InvalidOperationException("The connection property has not been set.");
       if (connection.State != ConnectionState.Open)
-        Throw(new InvalidOperationException("The connection is not open."));
+        throw new InvalidOperationException("The connection is not open.");
       if (connection.Settings.IgnorePrepare)
         return;
 
@@ -647,14 +647,6 @@ namespace MySql.Data.MySqlClient
     }
 
     #endregion
-
-    // This method is used to throw all exceptions from this class.  
-    private void Throw(Exception ex)
-    {
-      if (connection != null)
-        connection.Throw(ex);
-      throw ex;
-    }
 
 #if !RT
     public void Dispose()

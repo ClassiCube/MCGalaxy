@@ -26,7 +26,6 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using MySql.Data.MySqlClient.Properties;
-using System.Text;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
