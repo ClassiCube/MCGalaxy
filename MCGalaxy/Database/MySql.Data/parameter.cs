@@ -36,14 +36,13 @@ namespace MySql.Data.MySqlClient
   /// <summary>
   /// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
   /// </summary>
-  public sealed partial class MySqlParameter
+  public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter
   {
     private const int UNSIGNED_MASK = 0x8000;
     private object paramValue;
     private string paramName;
     private MySqlDbType mySqlDbType;
     private bool inferType = true;
-    private const int GEOMETRY_LENGTH = 25;
 
     #region Constructors
 
@@ -83,8 +82,6 @@ namespace MySql.Data.MySqlClient
     {
       Size = size;
     }
-
-    partial void Init();
 
     #endregion
 
@@ -139,16 +136,6 @@ namespace MySql.Data.MySqlClient
         inferType = false;
       }
     }
-
-    /// <summary>
-    /// Gets or sets the maximum number of digits used to represent the <see cref="Value"/> property.
-    /// </summary>
-    public byte Precision { get; set; }
-
-    /// <summary>
-    /// Gets or sets the number of decimal places to which <see cref="Value"/> is resolved.
-    /// </summary>
-    public byte Scale { get; set; }
 
     /// <summary>
     /// Gets or sets the maximum size, in bytes, of the data within the column.
@@ -247,8 +234,6 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    partial void SetDbTypeFromMySqlDbType();
-
     private void SetMySqlDbType(MySqlDbType mysql_dbtype)
     {
       mySqlDbType = mysql_dbtype;
@@ -294,6 +279,226 @@ namespace MySql.Data.MySqlClient
             break;
         }
       }
+    }
+    
+    
+    private DbType dbType;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name, the <see cref="MySqlDbType"/>, the size, and the source column name.
+    /// </summary>
+    /// <param name="parameterName">The name of the parameter to map. </param>
+    /// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
+    /// <param name="size">The length of the parameter. </param>
+    /// <param name="sourceColumn">The name of the source column. </param>
+    public MySqlParameter(string parameterName, MySqlDbType dbType, int size, string sourceColumn) : this(parameterName, dbType)
+    {
+      Size = size;
+      Direction = ParameterDirection.Input;
+      SourceColumn = sourceColumn;
+      SourceVersion = DataRowVersion.Current;
+    }
+
+    void Init()
+    {
+      SourceVersion = DataRowVersion.Current;
+      Direction = ParameterDirection.Input;
+    }
+
+    /// <summary>
+    /// Gets or sets the <see cref="DataRowVersion"/> to use when loading <see cref="Value"/>.
+    /// </summary>
+    public override DataRowVersion SourceVersion { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the source column that is mapped to the <see cref="DataSet"/> and used for loading or returning the <see cref="Value"/>.
+    /// </summary>
+    public override String SourceColumn { get; set; }
+
+    /// <summary>
+    /// Resets the <b>DbType</b> property to its original settings. 
+    /// </summary>
+    public override void ResetDbType()
+    {
+      inferType = true;
+    }
+
+    /// <summary>
+    /// Sets or gets a value which indicates whether the source column is nullable. 
+    /// This allows <see cref="DbCommandBuilder"/> to correctly generate Update statements 
+    /// for nullable columns. 
+    /// </summary>
+    public override bool SourceColumnNullMapping { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="DbType"/> of the parameter.
+    /// </summary>
+    public override DbType DbType
+    {
+      get { return dbType; }
+      set
+      {
+        SetDbType(value);
+        inferType = false;
+      }
+    }
+
+    void SetDbTypeFromMySqlDbType()
+    {
+      switch (mySqlDbType)
+      {
+        case MySqlDbType.NewDecimal:
+        case MySqlDbType.Decimal:
+          dbType = DbType.Decimal;
+          break;
+        case MySqlDbType.Byte:
+          dbType = DbType.SByte;
+          break;
+        case MySqlDbType.UByte:
+          dbType = DbType.Byte;
+          break;
+        case MySqlDbType.Int16:
+          dbType = DbType.Int16;
+          break;
+        case MySqlDbType.UInt16:
+          dbType = DbType.UInt16;
+          break;
+        case MySqlDbType.Int24:
+        case MySqlDbType.Int32:
+          dbType = DbType.Int32;
+          break;
+        case MySqlDbType.UInt24:
+        case MySqlDbType.UInt32:
+          dbType = DbType.UInt32;
+          break;
+        case MySqlDbType.Int64:
+          dbType = DbType.Int64;
+          break;
+        case MySqlDbType.UInt64:
+          dbType = DbType.UInt64;
+          break;
+        case MySqlDbType.Bit:
+          dbType = DbType.UInt64;
+          break;
+        case MySqlDbType.Float:
+          dbType = DbType.Single;
+          break;
+        case MySqlDbType.Double:
+          dbType = DbType.Double;
+          break;
+        case MySqlDbType.Timestamp:
+        case MySqlDbType.DateTime:
+          dbType = DbType.DateTime;
+          break;
+        case MySqlDbType.Date:
+        case MySqlDbType.Newdate:
+        case MySqlDbType.Year:
+          dbType = DbType.Date;
+          break;
+        case MySqlDbType.Time:
+          dbType = DbType.Time;
+          break;
+        case MySqlDbType.Enum:
+        case MySqlDbType.Set:
+        case MySqlDbType.VarChar:
+          dbType = DbType.String;
+          break;
+        case MySqlDbType.TinyBlob:
+        case MySqlDbType.MediumBlob:
+        case MySqlDbType.LongBlob:
+        case MySqlDbType.Blob:
+          dbType = DbType.Object;
+          break;
+        case MySqlDbType.String:
+          dbType = DbType.StringFixedLength;
+          break;
+        case MySqlDbType.Guid:
+          dbType = DbType.Guid;
+          break;
+      }
+    }
+
+
+    private void SetDbType(DbType db_type)
+    {
+      dbType = db_type;
+      switch (dbType)
+      {
+        case DbType.Guid:
+          mySqlDbType = MySqlDbType.Guid;
+          break;
+
+        case DbType.AnsiString:
+        case DbType.String:
+          mySqlDbType = MySqlDbType.VarChar;
+          break;
+
+        case DbType.AnsiStringFixedLength:
+        case DbType.StringFixedLength:
+          mySqlDbType = MySqlDbType.String;
+          break;
+
+        case DbType.Boolean:
+        case DbType.Byte:
+          mySqlDbType = MySqlDbType.UByte;
+          break;
+
+        case DbType.SByte:
+          mySqlDbType = MySqlDbType.Byte;
+          break;
+
+        case DbType.Date:
+          mySqlDbType = MySqlDbType.Date;
+          break;
+        case DbType.DateTime:
+          mySqlDbType = MySqlDbType.DateTime;
+          break;
+
+        case DbType.Time:
+          mySqlDbType = MySqlDbType.Time;
+          break;
+        case DbType.Single:
+          mySqlDbType = MySqlDbType.Float;
+          break;
+        case DbType.Double:
+          mySqlDbType = MySqlDbType.Double;
+          break;
+
+        case DbType.Int16:
+          mySqlDbType = MySqlDbType.Int16;
+          break;
+        case DbType.UInt16:
+          mySqlDbType = MySqlDbType.UInt16;
+          break;
+
+        case DbType.Int32:
+          mySqlDbType = MySqlDbType.Int32;
+          break;
+        case DbType.UInt32:
+          mySqlDbType = MySqlDbType.UInt32;
+          break;
+
+        case DbType.Int64:
+          mySqlDbType = MySqlDbType.Int64;
+          break;
+        case DbType.UInt64:
+          mySqlDbType = MySqlDbType.UInt64;
+          break;
+
+        case DbType.Decimal:
+        case DbType.Currency:
+          mySqlDbType = MySqlDbType.Decimal;
+          break;
+
+        case DbType.Object:
+        case DbType.VarNumeric:
+        case DbType.Binary:
+        default:
+          mySqlDbType = MySqlDbType.Blob;
+          break;
+      }
+
+      ValueObject = MySqlField.GetIMySqlValue(mySqlDbType);
     }
   }
 

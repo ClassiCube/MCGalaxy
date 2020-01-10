@@ -33,7 +33,7 @@ using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlConnection : IDisposable
+  public sealed partial class MySqlConnection : DbConnection, IDisposable
   {
     internal ConnectionState connectionState;
     internal Driver driver;
@@ -643,6 +643,47 @@ namespace MySql.Data.MySqlClient
     {
       Dispose(true);
       GC.SuppressFinalize(this);
+    }
+    
+    private bool disposed = false;
+    public override DataTable GetSchema()
+    {
+      throw new NotImplementedException();
+    }
+
+    public override DataTable GetSchema(string collectionName)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override DataTable GetSchema(string collectionName, string[] restrictionValues)
+    {
+      throw new NotImplementedException();
+    }
+
+    protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+    {
+      if (isolationLevel == IsolationLevel.Unspecified)
+        return BeginTransaction();
+      return BeginTransaction(isolationLevel);
+    }
+
+    protected override DbCommand CreateDbCommand()
+    {
+      return CreateCommand();
+    }
+    
+    protected override void Dispose(bool disposing)
+    {
+      if (disposed)
+        return;
+
+      if (State == ConnectionState.Open)
+        Close();
+
+      disposed = true;
+      base.Dispose(disposing);
+
     }
   }
 

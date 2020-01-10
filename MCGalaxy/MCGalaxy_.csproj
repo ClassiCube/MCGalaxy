@@ -422,9 +422,6 @@
     <Compile Include="Database\MySql.Data\datareader.cs" />
     <Compile Include="Database\MySql.Data\Driver.cs" />
     <Compile Include="Database\MySql.Data\Exception.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlConnection.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameter.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameterCollection.cs" />
     <Compile Include="Database\MySql.Data\Field.cs" />
     <Compile Include="Database\MySql.Data\MySqlConnectionStringBuilder.cs" />
     <Compile Include="Database\MySql.Data\MysqlDefs.cs" />
@@ -785,8 +782,6 @@
     <Folder Include="Database\MySql.Data" />
     <Folder Include="Database\MySql.Data\Authentication" />
     <Folder Include="Database\MySql.Data\common" />
-    <Folder Include="Database\MySql.Data\extensions" />
-    <Folder Include="Database\MySql.Data\extensions\NonRT" />
     <Folder Include="Database\MySql.Data\Types" />
     <Folder Include="Database\Stats" />
     <Folder Include="Games\Weapons" />
