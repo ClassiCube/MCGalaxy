@@ -49,7 +49,6 @@ namespace MySql.Data.MySqlClient
     private static Cache<string, MySqlConnectionStringBuilder> connectionStringCache =
       new Cache<string, MySqlConnectionStringBuilder>(0, 25);
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
     public MySqlConnection()
     {
       //TODO: add event data to StateChange docs
@@ -57,7 +56,6 @@ namespace MySql.Data.MySqlClient
       database = String.Empty;
     }
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
     public MySqlConnection(string connectionString)
       : this()
     {
@@ -423,19 +421,6 @@ namespace MySql.Data.MySqlClient
       MySqlCommand c = new MySqlCommand();
       c.Connection = this;
       return c;
-    }
-
-    /// <summary>
-    /// Creates a new MySqlConnection object with the exact same ConnectionString value
-    /// </summary>
-    /// <returns>A cloned MySqlConnection object</returns>
-    public object Clone()
-    {
-      MySqlConnection clone = new MySqlConnection();
-      string connectionString = Settings.ConnectionString;
-      if (connectionString != null)
-        clone.ConnectionString = connectionString;
-      return clone;
     }
 
     internal void Abort()

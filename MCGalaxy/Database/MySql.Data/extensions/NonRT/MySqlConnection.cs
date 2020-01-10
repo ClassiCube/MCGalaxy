@@ -26,7 +26,7 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlConnection : DbConnection, ICloneable
+  public sealed partial class MySqlConnection : DbConnection
   {
     private bool disposed = false;
 

@@ -36,8 +36,7 @@ using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
-  /// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/> 
-  public sealed partial class MySqlCommand : ICloneable, IDisposable
+  public sealed partial class MySqlCommand : IDisposable
   {
     MySqlConnection connection;
     MySqlTransaction curTransaction;
@@ -529,37 +528,6 @@ namespace MySql.Data.MySqlClient
 
       Prepare(0);
     }
-    #endregion
-
-    #region ICloneable
-
-    /// <summary>
-    /// Creates a clone of this MySqlCommand object.  CommandText, Connection, and Transaction properties
-    /// are included as well as the entire parameter list.
-    /// </summary>
-    /// <returns>The cloned MySqlCommand object</returns>
-    public MySqlCommand Clone()
-    {
-      MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
-      clone.CommandType = CommandType;
-      clone.commandTimeout = commandTimeout;
-      clone.useDefaultTimeout = useDefaultTimeout;
-      PartialClone(clone);
-
-      foreach (MySqlParameter p in parameters)
-      {
-        clone.Parameters.Add(p.Clone());
-      }
-      return clone;
-    }
-
-    partial void PartialClone(MySqlCommand clone);
-
-    object ICloneable.Clone()
-    {
-      return this.Clone();
-    }
-
     #endregion
 
 #if !RT

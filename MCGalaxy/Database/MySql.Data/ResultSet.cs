@@ -48,8 +48,6 @@ namespace MySql.Data.MySqlClient
     private int statementId;
     private int totalRows;
     private int skippedRows;
-    private bool cached;
-    private List<IMySqlValue[]> cachedValues;
 
     public ResultSet(int affectedRows, long insertedId)
     {
@@ -119,17 +117,6 @@ namespace MySql.Data.MySqlClient
       get { return skippedRows; }
     }
 
-    public bool Cached
-    {
-      get { return cached; }
-      set
-      {
-        cached = value;
-        if (cached && cachedValues == null)
-          cachedValues = new List<IMySqlValue[]>();
-      }
-    }
-
     #endregion
 
     /// <summary>
@@ -193,11 +180,7 @@ namespace MySql.Data.MySqlClient
 
     public bool NextRow(CommandBehavior behavior)
     {
-      if (readDone)
-      {
-        if (Cached) return CachedNextRow(behavior);
-        return false;
-      }
+      if (readDone) return false;
 
       if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
         return false;
@@ -235,16 +218,6 @@ namespace MySql.Data.MySqlClient
       return true;
     }
 
-    private bool CachedNextRow(CommandBehavior behavior)
-    {
-      if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
-        return false;
-      if (rowIndex == (totalRows - 1)) return false;
-      rowIndex++;
-      values = cachedValues[rowIndex];
-      return true;
-    }
-
     /// <summary>
     /// Closes the current resultset, dumping any data still on the wire
     /// </summary>
@@ -275,21 +248,11 @@ namespace MySql.Data.MySqlClient
         CacheClose();
 
       driver = null;
-      if (Cached) CacheReset();
     }
 
     private void CacheClose()
     {
       skippedRows = totalRows - rowIndex - 1;
-    }
-
-    private void CacheReset()
-    {
-      if (!Cached) return;
-      rowIndex = -1;
-      affectedRows = -1;
-      insertedId = -1;
-      skippedRows = 0;
     }
 
     public bool FieldRead(int index)
@@ -343,10 +306,6 @@ namespace MySql.Data.MySqlClient
     {
       for (int i = 0; i < Size; i++)
         values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
-
-      // if we are caching then we need to save a copy of this row of data values
-      if (Cached)
-        cachedValues.Add((IMySqlValue[])values.Clone());
 
       // we don't need to worry about caching the following since you won't have output
       // params with TableDirect commands

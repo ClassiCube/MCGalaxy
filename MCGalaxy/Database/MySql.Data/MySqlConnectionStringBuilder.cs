@@ -154,7 +154,7 @@ namespace MySql.Data.MySqlClient
       options.Add(new MySqlConnectionStringOption("cacheserverproperties", "cache server properties", typeof(bool), false, false));
 
       // language and charset options
-      options.Add(new MySqlConnectionStringOption("characterset", "character set,charset", typeof(string), "", false));]
+      options.Add(new MySqlConnectionStringOption("characterset", "character set,charset", typeof(string), "", false));
       options.Add(new MySqlConnectionStringOption("sslmode", "ssl mode", typeof(MySqlSslMode), MySqlSslMode.Preferred, false));
     }
 

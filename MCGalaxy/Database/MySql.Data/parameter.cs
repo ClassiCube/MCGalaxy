@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient
   /// <summary>
   /// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
   /// </summary>
-  public sealed partial class MySqlParameter : ICloneable
+  public sealed partial class MySqlParameter
   {
     private const int UNSIGNED_MASK = 0x8000;
     private object paramValue;
@@ -295,24 +295,6 @@ namespace MySql.Data.MySqlClient
         }
       }
     }
-
-    #region ICloneable
-
-    public MySqlParameter Clone()
-    {
-      MySqlParameter clone = new MySqlParameter(paramName, mySqlDbType, Direction, SourceColumn, SourceVersion, paramValue);
-      // if we have not had our type set yet then our clone should not either
-      clone.inferType = inferType;
-      return clone;
-    }
-
-    object ICloneable.Clone()
-    {
-      return this.Clone();
-    }
-
-    #endregion
-
   }
 
 }
