@@ -35,8 +35,7 @@ using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
-  /// <include file='docs/MySqlDataReader.xml' path='docs/ClassSummary/*'/>
-  public sealed partial class MySqlDataReader : IDisposable
+  public sealed partial class MySqlDataReader : DbDataReader, IDataReader, IDataRecord, IDisposable
   {
     // The DataReader should always be open when returned to the user.
     private bool isOpen = true;
@@ -1011,5 +1010,21 @@ namespace MySql.Data.MySqlClient
       Dispose(false);
     }
     #endregion
+    
+    public override int Depth { get { return 0; } }
+
+    public override DataTable GetSchemaTable()
+    {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns an <see cref="IEnumerator"/> that iterates through the <see cref="MySqlDataReader"/>. 
+    /// </summary>
+    /// <returns></returns>
+    public override IEnumerator GetEnumerator()
+    {
+      return new DbEnumerator(this, (commandBehavior & CommandBehavior.CloseConnection) != 0);
+    }
   }
 }

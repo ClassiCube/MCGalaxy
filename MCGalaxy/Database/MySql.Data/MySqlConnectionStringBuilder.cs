@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 using System.Globalization;
 using System.Reflection;
@@ -29,7 +30,7 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlConnectionStringBuilder 
+  public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
   {
     internal Dictionary<string, object> values = new Dictionary<string, object>();
     //internal Dictionary<string, object> values

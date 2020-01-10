@@ -36,7 +36,7 @@ using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlCommand : IDisposable
+  public sealed class MySqlCommand : DbCommand, IDisposable
   {
     MySqlConnection connection;
     MySqlTransaction curTransaction;
@@ -53,7 +53,6 @@ namespace MySql.Data.MySqlClient
     private bool internallyCreated;
     private bool disposed = false;
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
     public MySqlCommand()
     {
       cmdType = CommandType.Text;
@@ -63,23 +62,18 @@ namespace MySql.Data.MySqlClient
       Constructor();
     }
 
-    partial void Constructor();
-
-    /// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>
     public MySqlCommand(string cmdText)
       : this()
     {
       CommandText = cmdText;
     }
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/ctor3/*'/>
     public MySqlCommand(string cmdText, MySqlConnection connection)
       : this(cmdText)
     {
       Connection = connection;
     }
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/ctor4/*'/>
     public MySqlCommand(string cmdText, MySqlConnection connection,
             MySqlTransaction transaction)
       :
@@ -530,7 +524,6 @@ namespace MySql.Data.MySqlClient
     }
     #endregion
 
-#if !RT
     public void Dispose()
     {
       Dispose(true);
@@ -548,14 +541,50 @@ namespace MySql.Data.MySqlClient
 
       base.Dispose(disposing);
       disposed = true;
+    }
 
-    }
-#else
-    public void Dispose()
+    void Constructor()
     {
-      GC.SuppressFinalize(this);
+      UpdatedRowSource = UpdateRowSource.Both;
     }
-#endif
+
+    /// <summary>
+    /// Gets or sets how command results are applied to the DataRow when used by the 
+    /// Update method of the DbDataAdapter. 
+    /// </summary>
+    public override UpdateRowSource UpdatedRowSource { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the command object should be visible in a Windows Form Designer control. 
+    /// </summary>
+    public override bool DesignTimeVisible { get; set; }
+
+    protected override DbParameter CreateDbParameter()
+    {
+      return new MySqlParameter();
+    }
+
+    protected override DbConnection DbConnection
+    {
+      get { return Connection; }
+      set { Connection = (MySqlConnection)value; }
+    }
+
+    protected override DbParameterCollection DbParameterCollection
+    {
+      get { return Parameters; }
+    }
+
+    protected override DbTransaction DbTransaction
+    {
+      get { return Transaction; }
+      set { Transaction = (MySqlTransaction)value; }
+    }
+
+    protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+    {
+      return ExecuteReader(behavior);
+    }
   }
 }
 

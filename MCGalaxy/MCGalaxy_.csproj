@@ -419,17 +419,12 @@
     <Compile Include="Database\MySql.Data\common\StringUtility.cs" />
     <Compile Include="Database\MySql.Data\common\Version.cs" />
     <Compile Include="Database\MySql.Data\Connection.cs" />
-    <Compile Include="Database\MySql.Data\Crypt.cs" />
     <Compile Include="Database\MySql.Data\datareader.cs" />
     <Compile Include="Database\MySql.Data\Driver.cs" />
     <Compile Include="Database\MySql.Data\Exception.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlCommand.cs" />
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlConnection.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlConnectionStringBuilder.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlDataReader.cs" />
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameter.cs" />
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameterCollection.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlTrace.cs" />
     <Compile Include="Database\MySql.Data\Field.cs" />
     <Compile Include="Database\MySql.Data\MySqlConnectionStringBuilder.cs" />
     <Compile Include="Database\MySql.Data\MysqlDefs.cs" />
@@ -440,6 +435,7 @@
     <Compile Include="Database\MySql.Data\MySqlPoolManager.cs" />
     <Compile Include="Database\MySql.Data\MySqlPromotableTransaction.cs" />
     <Compile Include="Database\MySql.Data\MySqlStream.cs" />
+    <Compile Include="Database\MySql.Data\MySqlTrace.cs" />
     <Compile Include="Database\MySql.Data\NativeDriver.cs" />
     <Compile Include="Database\MySql.Data\parameter.cs" />
     <Compile Include="Database\MySql.Data\parameter_collection.cs" />
