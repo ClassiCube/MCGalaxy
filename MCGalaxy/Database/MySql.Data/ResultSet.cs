@@ -42,7 +42,6 @@ namespace MySql.Data.MySqlClient
     private bool readDone;
     private bool isSequential;
     private int seqIndex;
-    private bool isOutputParameters;
     private int affectedRows;
     private long insertedId;
     private int statementId;
@@ -64,7 +63,6 @@ namespace MySql.Data.MySqlClient
       this.statementId = statementId;
       rowIndex = -1;
       LoadColumns(numCols);
-      isOutputParameters = IsOutputParameterResultSet();
       hasRows = GetNextRow();
       readDone = !hasRows;
     }
@@ -89,12 +87,6 @@ namespace MySql.Data.MySqlClient
     public IMySqlValue[] Values
     {
       get { return values; }
-    }
-
-    public bool IsOutputParameters
-    {
-      get { return isOutputParameters; }
-      set { isOutputParameters = value; }
     }
 
     public int AffectedRows
@@ -266,17 +258,6 @@ namespace MySql.Data.MySqlClient
       Debug.Assert(values != null);
       Debug.Assert(i < values.Length);
       values[i] = valueObject;
-    }
-
-    private bool IsOutputParameterResultSet()
-    {
-      if (driver.HasStatus(ServerStatusFlags.OutputParameters)) return true;
-
-      if (fields.Length == 0) return false;
-
-      for (int x = 0; x < fields.Length; x++)
-        if (!fields[x].ColumnName.StartsWith("@" + StoredProcedure.ParameterPrefix, StringComparison.OrdinalIgnoreCase)) return false;
-      return true;
     }
 
     /// <summary>

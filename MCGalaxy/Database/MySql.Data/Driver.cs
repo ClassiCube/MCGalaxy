@@ -68,9 +68,7 @@ namespace MySql.Data.MySqlClient
 
     public Driver(MySqlConnectionStringBuilder settings)
     {
-      encoding = Encoding.GetEncoding("UTF-8");
-      if (encoding == null)
-        throw new MySqlException("DefaultEncodingNotFound");
+      encoding = Encoding.UTF8;
       connectionString = settings;
       serverCharSet = "utf8";
       serverCharSetIndex = -1;

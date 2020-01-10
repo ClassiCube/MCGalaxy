@@ -44,7 +44,7 @@ namespace MySql.Data.MySqlClient
     // the mapping once
     static CharSetMap()
     {
-      lockObject = new Object();
+      lockObject = new object();
       InitializeMapping();
     }
 
@@ -74,13 +74,10 @@ namespace MySql.Data.MySqlClient
       }
       catch (NotSupportedException)
       {
-        return Encoding.GetEncoding("utf-8");
+        return Encoding.UTF8;
       }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     private static void InitializeMapping()
     {
       LoadCharsetMap();
@@ -150,47 +147,6 @@ namespace MySql.Data.MySqlClient
       mapping.Add("utf16le", new CharacterSet("utf-16", 2));
       mapping.Add("utf32", new CharacterSet("utf-32BE", 4));
       mapping.Add("gb18030", new CharacterSet("gb18030", 4));             
-    }
-
-    internal static void InitCollections(MySqlConnection connection)
-    {
-      defaultCollations = new Dictionary<string, string>();
-      maxLengths = new Dictionary<string, int>();
-
-      MySqlCommand cmd = new MySqlCommand("SHOW CHARSET", connection);
-      using (IDBDataReader reader = cmd.ExecuteReader())
-      {
-        while (reader.Read())
-        {
-          defaultCollations.Add(reader.GetString(0), reader.GetString(2));
-          maxLengths.Add(reader.GetString(0), Convert.ToInt32(reader.GetValue(3)));
-        }
-      }
-    }
-
-    internal static string GetDefaultCollation(string charset, MySqlConnection connection)
-    {
-      lock (lockObject)
-      {
-        if (defaultCollations == null)
-          InitCollections(connection);
-      }
-      if (!defaultCollations.ContainsKey(charset))
-        return null;
-      return defaultCollations[charset];
-    }
-
-    internal static int GetMaxLength(string charset, MySqlConnection connection)
-    {
-      lock (lockObject)
-      {
-        if (maxLengths == null)
-          InitCollections(connection);
-      }
-
-      if (!maxLengths.ContainsKey(charset))
-        return 1;
-      return maxLengths[charset];
     }
   }
 

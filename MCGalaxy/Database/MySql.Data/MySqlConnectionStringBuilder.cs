@@ -102,7 +102,6 @@ namespace MySql.Data.MySqlClient
       options.Add(new MySqlConnectionStringOption("interactivesession", "interactive session,interactive", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("functionsreturnstring", "functions return string", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("useaffectedrows", "use affected rows", typeof(bool), false, false));
-      options.Add(new MySqlConnectionStringOption("oldguids", "old guids", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("keepalive", "keep alive", typeof(uint), (uint)0, false));
       options.Add(new MySqlConnectionStringOption("checkparameters", "check parameters", typeof(bool), true, false));
 
@@ -354,12 +353,6 @@ namespace MySql.Data.MySqlClient
       set { SetValue("useaffectedrows", value); }
     }
 
-
-    public bool OldGuids
-    {
-      get { return (bool)values["oldguids"]; }
-      set { SetValue("oldguids", value); }
-    }
 
     public uint Keepalive
     {

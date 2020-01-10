@@ -178,7 +178,7 @@ namespace MySql.Data.MySqlClient
       get
       {
         return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
-                    Type == MySqlDbType.String || (Type == MySqlDbType.Guid && !driver.Settings.OldGuids);
+                    Type == MySqlDbType.String || Type == MySqlDbType.Guid;
       }
     }
 
@@ -250,9 +250,6 @@ namespace MySql.Data.MySqlClient
       if (driver.Settings.RespectBinaryFlags)
         CheckForExceptions();
 
-      if (Type == MySqlDbType.String && CharacterLength == 36 && !driver.Settings.OldGuids)
-        mySqlDbType = MySqlDbType.Guid;
-
       if (!IsBinary) return;
 
       if (driver.Settings.RespectBinaryFlags)
@@ -266,9 +263,6 @@ namespace MySql.Data.MySqlClient
 
       if (CharacterSetIndex == 63)
         CharacterSetIndex = driver.ConnectionCharSetIndex;
-
-      if (Type == MySqlDbType.Binary && ColumnLength == 16 && driver.Settings.OldGuids)
-        mySqlDbType = MySqlDbType.Guid;
     }
 
     public void AddTypeConversion(Type t)
