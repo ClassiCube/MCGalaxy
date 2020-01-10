@@ -33,7 +33,6 @@ using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -53,7 +52,6 @@ namespace MySql.Data.MySqlClient
     CommandTimer commandTimer;
     private bool useDefaultTimeout;
     private bool internallyCreated;
-    private static List<string> keywords = null;
     private bool disposed = false;
 
     /// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
@@ -339,7 +337,7 @@ namespace MySql.Data.MySqlClient
 
       cmdText = cmdText.Trim();
       if (String.IsNullOrEmpty(cmdText))
-        throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+        throw new InvalidOperationException("The CommandText property has not been properly initialized");
 
       string sql = cmdText.Trim(';');
 
@@ -349,7 +347,7 @@ namespace MySql.Data.MySqlClient
         // We have to recheck that there is no reader, after we got the lock
         if (connection.Reader != null)
         {
-          throw new MySqlException(Resources.DataReaderOpen);
+          throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first");
         }
 
 #if !RT
@@ -384,15 +382,6 @@ namespace MySql.Data.MySqlClient
 
         if (CommandType == CommandType.TableDirect)
           sql = "SELECT * FROM " + sql;
-        else if (CommandType == CommandType.Text)
-        {
-          // validates single word statetment (maybe is a stored procedure call)
-          if (sql.IndexOf(" ") == -1)
-          {
-            if (AddCallStatement(sql))
-              sql = "call " + sql;
-          }
-        }
 
         if (statement == null || !statement.IsPrepared)
         {
@@ -431,7 +420,7 @@ namespace MySql.Data.MySqlClient
         catch (IOException ioex)
         {
           connection.Abort(); // Closes connection without returning it to the pool
-          throw new MySqlException(Resources.FatalErrorDuringExecute, ioex);
+          throw new MySqlException("Fatal error encountered during command execution", ioex);
         }
         catch (MySqlException ex)
         {
@@ -457,7 +446,7 @@ namespace MySql.Data.MySqlClient
           if (ex.IsFatal)
             Connection.Close();
           if (ex.Number == 0)
-            throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
+            throw new MySqlException("Fatal error encountered during command execution", ex);
           throw;
         }
         finally
@@ -529,7 +518,6 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
     public override void Prepare()
     {
       if (connection == null)
@@ -541,80 +529,6 @@ namespace MySql.Data.MySqlClient
 
       Prepare(0);
     }
-    #endregion
-
-    #region Private Methods
-
-    /*		private ArrayList PrepareSqlBuffers(string sql)
-                {
-                    ArrayList buffers = new ArrayList();
-                    MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
-                    writer.Version = connection.driver.Version;
-
-                    // if we are executing as a stored procedure, then we need to add the call
-                    // keyword.
-                    if (CommandType == CommandType.StoredProcedure)
-                    {
-                        if (storedProcedure == null)
-                            storedProcedure = new StoredProcedure(this);
-                        sql = storedProcedure.Prepare( CommandText );
-                    }
-
-                    // tokenize the SQL
-                    sql = sql.TrimStart(';').TrimEnd(';');
-                    ArrayList tokens = TokenizeSql( sql );
-
-                    foreach (string token in tokens)
-                    {
-                        if (token.Trim().Length == 0) continue;
-                        if (token == ";" && ! connection.driver.SupportsBatch)
-                        {
-                            MemoryStream ms = (MemoryStream)writer.Stream;
-                            if (ms.Length > 0)
-                                buffers.Add( ms );
-
-                            writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
-                            writer.Version = connection.driver.Version;
-                            continue;
-                        }
-                        else if (token[0] == parameters.ParameterMarker) 
-                        {
-                            if (SerializeParameter(writer, token)) continue;
-                        }
-
-                        // our fall through case is to write the token to the byte stream
-                        writer.WriteStringNoNull(token);
-                    }
-
-                    // capture any buffer that is left over
-                    MemoryStream mStream = (MemoryStream)writer.Stream;
-                    if (mStream.Length > 0)
-                        buffers.Add( mStream );
-
-                    return buffers;
-                }*/
-
-
-    /// <summary>
-    /// Verifies if a query is valid even if it has not spaces or is a stored procedure call
-    /// </summary>
-    /// <param name="query">Query to validate</param>
-    /// <returns>If it is necessary to add call statement</returns>
-    private bool AddCallStatement(string query)
-    {
-      if (string.IsNullOrEmpty(query)) return false;
-
-      string keyword = query.ToUpper();
-      int indexChar = keyword.IndexOfAny(new char[] { '(', '"', '@', '\'', '`' });
-      if (indexChar > 0)
-        keyword = keyword.Substring(0, indexChar);
-
-      if (keywords == null)
-        keywords = new List<string>(Resources.keywords.Replace("\r", "").Split('\n'));
-
-      return !keywords.Contains(keyword);
-    }
-
     #endregion
 
     #region ICloneable

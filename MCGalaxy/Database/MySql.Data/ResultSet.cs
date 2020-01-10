@@ -23,7 +23,6 @@
 using System;
 using System.Collections;
 using System.Data;
-using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Types;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -151,7 +150,7 @@ namespace MySql.Data.MySqlClient
 
       // Throw an exception if the ordinal cannot be found.
       throw new IndexOutOfRangeException(
-          String.Format(Resources.CouldNotFindColumnName, name));
+          String.Format("Could not find specified column in results: {0}", name));
     }
 
     /// <summary>
@@ -164,7 +163,7 @@ namespace MySql.Data.MySqlClient
       get
       {
         if (rowIndex < 0)
-          throw new MySqlException(Resources.AttemptToAccessBeforeRead);
+          throw new MySqlException("Invalid attempt to access a field before calling Read()");
 
         // keep count of how many columns we have left to access
         uaFieldsUsed[index] = true;
@@ -172,7 +171,7 @@ namespace MySql.Data.MySqlClient
         if (isSequential && index != seqIndex)
         {
           if (index < seqIndex)
-            throw new MySqlException(Resources.ReadingPriorColumnUsingSeqAccess);
+            throw new MySqlException("Invalid attempt to read a prior column using SequentialAccess");
           while (seqIndex < (index - 1))
             driver.SkipColumnValue(values[++seqIndex]);
           values[index] = driver.ReadColumnValue(index, fields[index], values[index]);
@@ -356,7 +355,7 @@ namespace MySql.Data.MySqlClient
         bool rowExists = driver.FetchDataRow(statementId, fields.Length);
         rowIndex = 0;
         if (rowExists)
-          throw new MySqlException(Resources.MoreThanOneOPRow);
+          throw new MySqlException("INTERNAL ERROR:  More than one output parameter row detected");
       }
     }
   }

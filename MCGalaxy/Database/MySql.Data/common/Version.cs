@@ -22,7 +22,6 @@
 
 using System;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.Common
 {
@@ -64,14 +63,14 @@ namespace MySql.Data.Common
       int start = 0;
       int index = versionString.IndexOf('.', start);
       if (index == -1)
-        throw new MySqlException(Resources.BadVersionFormat);
+        throw new MySqlException("Version string not in acceptable format.");
       string val = versionString.Substring(start, index - start).Trim();
       int major = Convert.ToInt32(val, System.Globalization.NumberFormatInfo.InvariantInfo);
 
       start = index + 1;
       index = versionString.IndexOf('.', start);
       if (index == -1)
-        throw new MySqlException(Resources.BadVersionFormat);
+        throw new MySqlException("Version string not in acceptable format.");
       val = versionString.Substring(start, index - start).Trim();
       int minor = Convert.ToInt32(val, System.Globalization.NumberFormatInfo.InvariantInfo);
 

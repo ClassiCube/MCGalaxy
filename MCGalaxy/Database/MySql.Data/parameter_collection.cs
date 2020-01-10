@@ -23,7 +23,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -186,7 +185,7 @@ namespace MySql.Data.MySqlClient
     {
       MySqlParameter newParameter = value as MySqlParameter;
       if (newParameter == null)
-        throw new ArgumentException(Resources.NewValueShouldBeMySqlParameter);
+        throw new ArgumentException("The new value must be a MySqlParameter objec");
 
       CheckIndex(index);
       MySqlParameter p = (MySqlParameter)items[index];
@@ -252,7 +251,7 @@ namespace MySql.Data.MySqlClient
       if (IndexOf(value.ParameterName) >= 0)
       {
         throw new MySqlException(
-            String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+            String.Format("Parameter '{0}' has already been defined", value.ParameterName));
       }
       else
       {
@@ -261,7 +260,7 @@ namespace MySql.Data.MySqlClient
           inComingName = inComingName.Substring(1, inComingName.Length - 1);
         if (IndexOf(inComingName) >= 0)
           throw new MySqlException(
-              String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+              String.Format("Parameter '{0}' has already been defined", value.ParameterName));
       }
 
       if (index == -1)

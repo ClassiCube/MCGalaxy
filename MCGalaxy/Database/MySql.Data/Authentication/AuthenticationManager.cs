@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -44,7 +43,7 @@ namespace MySql.Data.MySqlClient.Authentication
       public static MySqlAuthenticationPlugin GetPlugin(string method)
       {
         if (!plugins.ContainsKey(method))
-          throw new MySqlException(String.Format(Resources.AuthenticationMethodNotSupported, method));
+          throw new MySqlException(String.Format("Authentication method '{0}' not supported by any of the available plugins", method));
         return CreatePlugin(method);
       }
 
@@ -60,7 +59,7 @@ namespace MySql.Data.MySqlClient.Authentication
         }
         catch (Exception e)
         {
-          throw new MySqlException(String.Format(Resources.UnableToCreateAuthPlugin, method), e);
+          throw new MySqlException(String.Format("Unable to create plugin for authentication method '{0}'. Please see inner exception for details", method), e);
         }
       }
     }

@@ -26,7 +26,6 @@ using System.Text;
 using System.Globalization;
 using System.Reflection;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -591,7 +590,7 @@ namespace MySql.Data.MySqlClient
     {
       MySqlConnectionStringOption option = options.Get(key);
       if (option == null)
-        throw new ArgumentException(Resources.KeywordNotSupported, key);
+        throw new ArgumentException("Keyword not supported", key);
       else
         return option;
     }
@@ -734,7 +733,7 @@ namespace MySql.Data.MySqlClient
           if (string.Compare("yes", ( string )value, StringComparison.OrdinalIgnoreCase) == 0) value = true;
           else if (string.Compare("no", (string)value, StringComparison.OrdinalIgnoreCase) == 0) value = false;
           else if (Boolean.TryParse(value.ToString(), out b)) value = b;
-          else throw new ArgumentException(String.Format(Resources.ValueNotCorrectType, value));
+          else throw new ArgumentException(String.Format("Value '{0}' is not of the correct type", value));
           return;
         }
       }
@@ -760,7 +759,7 @@ namespace MySql.Data.MySqlClient
         value = objValue;  return;
       }
 
-      throw new ArgumentException(String.Format(Resources.ValueNotCorrectType, value));
+      throw new ArgumentException(String.Format("Value '{0}' is not of the correct type", value));
     }
 
     private bool ParseEnum(string requestedValue, out object value)

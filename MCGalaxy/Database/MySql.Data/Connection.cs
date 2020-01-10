@@ -30,15 +30,9 @@ using IsolationLevel = System.Data.IsolationLevel;
 using System.Text;
 using MySql.Data.Common;
 using System.Diagnostics;
-using MySql.Data.MySqlClient.Properties;
-#if NET_40_OR_GREATER
-using System.Threading.Tasks;
-using System.Threading;
-#endif
 
 namespace MySql.Data.MySqlClient
 {
-  /// <include file='docs/MySqlConnection.xml' path='docs/ClassSummary/*'/>
   public sealed partial class MySqlConnection : IDisposable
   {
     internal ConnectionState connectionState;
@@ -238,14 +232,14 @@ namespace MySql.Data.MySqlClient
       {
         // we can't allow more than one driver to contribute to the same connection
         if (existingDriver.IsInActiveUse)
-          throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
 
         // there is an existing driver and it's not being currently used.
         // now we need to see if it is using the same connection string
         string text1 = existingDriver.Settings.ConnectionString;
         string text2 = Settings.ConnectionString;
         if (String.Compare(text1, text2, true) != 0)
-          throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
 
         // close existing driver
         // set this new driver as our existing driver
@@ -257,7 +251,7 @@ namespace MySql.Data.MySqlClient
       {
         MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
         if (!transaction.EnlistPromotableSinglePhase(t))
-          throw new NotSupportedException(Resources.DistributedTxnNotSupported);
+          throw new NotSupportedException("MySQL Connector/Net does not currently support distributed transactions");
 
         driver.CurrentTransaction = t;
         DriverTransactionManager.SetDriverInTransaction(driver);
@@ -266,22 +260,20 @@ namespace MySql.Data.MySqlClient
     }
 #endif
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
     public new MySqlTransaction BeginTransaction()
     {
       return BeginTransaction(IsolationLevel.RepeatableRead);
     }
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
     public new MySqlTransaction BeginTransaction(IsolationLevel iso)
     {
       //TODO: check note in help
       if (State != ConnectionState.Open)
-        throw new InvalidOperationException(Resources.ConnectionNotOpen);
+        throw new InvalidOperationException("The connection is not open");
 
       // First check to see if we are in a current transaction
       if (driver.HasStatus(ServerStatusFlags.InTransaction))
-        throw new InvalidOperationException(Resources.NoNestedTransactions);
+        throw new InvalidOperationException("Nested transactions are not supported");
 
       MySqlTransaction t = new MySqlTransaction(this, iso);
 
@@ -303,9 +295,9 @@ namespace MySql.Data.MySqlClient
           cmd.CommandText += "SERIALIZABLE";
           break;
         case IsolationLevel.Chaos:
-          throw new NotSupportedException(Resources.ChaosNotSupported);
+          throw new NotSupportedException("Chaos isolation level is not supported.");
         case IsolationLevel.Snapshot:
-          throw new NotSupportedException(Resources.SnapshotNotSupported);
+          throw new NotSupportedException("Snapshot isolation level is not supported.");
       }
 
       cmd.ExecuteNonQuery();
@@ -322,10 +314,10 @@ namespace MySql.Data.MySqlClient
     public override void ChangeDatabase(string databaseName)
     {
       if (databaseName == null || databaseName.Trim().Length == 0)
-        throw new ArgumentException(Resources.ParameterIsInvalid, "databaseName");
+        throw new ArgumentException("Parameter is invalid", "databaseName");
 
       if (State != ConnectionState.Open)
-        throw new InvalidOperationException(Resources.ConnectionNotOpen);
+        throw new InvalidOperationException("The connection is not open");
 
       // This lock  prevents promotable transaction rollback to run
       // in parallel
@@ -360,7 +352,7 @@ namespace MySql.Data.MySqlClient
     public override void Open()
     {
       if (State == ConnectionState.Open)
-        throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
+        throw new InvalidOperationException("The connection is already open");
       SetState(ConnectionState.Connecting, true);
 
 #if !RT
@@ -372,7 +364,7 @@ namespace MySql.Data.MySqlClient
         if (driver != null &&
           (driver.IsInActiveUse ||
           !driver.Settings.EquivalentTo(this.Settings)))
-          throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
       }
 #endif
 
@@ -530,7 +522,7 @@ namespace MySql.Data.MySqlClient
         Abort();
         if (ex is TimeoutException)
         {
-          throw new MySqlException(Resources.Timeout, true, ex);
+          throw new MySqlException("Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding", true, ex);
         }
         else
         {
@@ -564,7 +556,7 @@ namespace MySql.Data.MySqlClient
       }
       if (ex is TimeoutException)
       {
-        throw new MySqlException(Resources.Timeout, isFatal, ex);
+        throw new MySqlException("Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding", isFatal, ex);
       }
     }
 

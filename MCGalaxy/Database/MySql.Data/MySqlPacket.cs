@@ -25,7 +25,6 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using MySql.Data.Common;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -141,7 +140,7 @@ namespace MySql.Data.MySqlClient
     {
       byte c = ReadByte();
       if (c < 1 || c > 4)
-        throw new MySqlException(Resources.IncorrectTransmission);
+        throw new MySqlException("An incorrect response was received from the server");
       return ReadInteger(c);
     }
 

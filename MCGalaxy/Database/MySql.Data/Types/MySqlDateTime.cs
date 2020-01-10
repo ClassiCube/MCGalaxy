@@ -192,7 +192,7 @@ namespace MySql.Data.Types
       set
       {
         if (value < 0 || value > 999)
-          throw new ArgumentOutOfRangeException("Millisecond", MySqlClient.Properties.Resources.InvalidMillisecondValue);
+          throw new ArgumentOutOfRangeException("Millisecond", "Millisecond must be a value between 0 and 999. For more precision use Microsecond");
         millisecond = value;
         microsecond = value * 1000;
       }
@@ -207,7 +207,7 @@ namespace MySql.Data.Types
       set
       {
         if (value < 0 || value > 999999)
-          throw new ArgumentOutOfRangeException("Microsecond", MySqlClient.Properties.Resources.InvalidMicrosecondValue);
+          throw new ArgumentOutOfRangeException("Microsecond", "Microsecond must be a value between 0 and 999999");
         microsecond = value;
         millisecond = value / 1000;
       }

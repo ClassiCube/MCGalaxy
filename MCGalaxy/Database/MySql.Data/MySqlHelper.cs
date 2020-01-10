@@ -23,11 +23,6 @@
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Text;
-#if NET_40_OR_GREATER
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-#endif
 
 namespace MySql.Data.MySqlClient
 {

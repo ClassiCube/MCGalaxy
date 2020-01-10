@@ -29,7 +29,6 @@ using System.Collections;
 using MySql.Data.Types;
 using System.Collections.Generic;
 using System.Globalization;
-using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Common;
 using MySql.Data.MySqlClient;
 using System.Threading;
@@ -590,7 +589,7 @@ namespace MySql.Data.MySqlClient
         if (bytes.Length == 16)
           return new Guid(bytes);
       }
-      throw new MySqlException(Resources.ValueNotSupportedForGuid);
+      throw new MySqlException("The requested column value could not be treated as or conveted to a Guid");
     }
 
     public Int16 GetInt16(string column)
@@ -822,7 +821,7 @@ namespace MySql.Data.MySqlClient
     public override bool NextResult()
     {
       if (!isOpen)
-        throw new MySqlException(Resources.NextResultIsClosed);
+        throw new MySqlException("Invalid attempt to call NextResult when the reader is closed");
 
       // this will clear out any unread data
       if (resultSet != null)
@@ -863,7 +862,7 @@ namespace MySql.Data.MySqlClient
         if (ex.IsFatal)
           connection.Abort();
         if (ex.Number == 0)
-          throw new MySqlException(Resources.FatalErrorReadingResult, ex);
+          throw new MySqlException("Fatal error encountered attempting to read the resultset", ex);
         if ((commandBehavior & CommandBehavior.CloseConnection) != 0)
           Close();
         throw;
@@ -905,7 +904,7 @@ namespace MySql.Data.MySqlClient
           throw;
         }
 
-        throw new MySqlException(Resources.FatalErrorDuringRead, ex);
+        throw new MySqlException("Fatal error encountered during data read", ex);
       }
     }
 
@@ -913,7 +912,7 @@ namespace MySql.Data.MySqlClient
     private IMySqlValue GetFieldValue(int index, bool checkNull)
     {
       if (index < 0 || index >= FieldCount)
-        throw new ArgumentException(Resources.InvalidColumnOrdinal);
+        throw new ArgumentException("You have specified an invalid column ordinal");
 
       IMySqlValue v = resultSet[index];
 

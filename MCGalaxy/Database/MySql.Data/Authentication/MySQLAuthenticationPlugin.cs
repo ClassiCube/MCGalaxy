@@ -22,7 +22,6 @@
 
 using System.IO;
 using System;
-using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Common;
 using System.Text;
 using System.Diagnostics;
@@ -46,11 +45,11 @@ namespace MySql.Data.MySqlClient.Authentication
       if (method == "mysql_old_password")
       {
         driver.Close(true);
-        throw new MySqlException(Resources.OldPasswordsNotSupported);
+        throw new MySqlException("Authentication with old password no longer supported, use 4.1 style passwords");
       }
       MySqlAuthenticationPlugin plugin = AuthenticationPluginManager.GetPlugin(method);
       if (plugin == null)
-        throw new MySqlException(String.Format(Resources.UnknownAuthenticationMethod, method));
+        throw new MySqlException(String.Format("Unknown authentication method '{0}' was requested", method));
 
       plugin.driver = driver;
       plugin.SetAuthData(authData);
@@ -88,7 +87,8 @@ namespace MySql.Data.MySqlClient.Authentication
 
     protected virtual void AuthenticationFailed(Exception ex)
     {
-      string msg = String.Format(Resources.AuthenticationFailed, Settings.Server, GetUsername(), PluginName, ex.Message);
+      string msg = String.Format("Authentication to host '{0}' for user '{1}' using method '{2}' failed with message: {3}", 
+    	                           Settings.Server, GetUsername(), PluginName, ex.Message);
       throw new MySqlException(msg, ex);
     }
 
@@ -144,7 +144,7 @@ namespace MySql.Data.MySqlClient.Authentication
         if (packet.IsLastPacket)
         {
           driver.Close(true);
-          throw new MySqlException( Resources.OldPasswordsNotSupported );
+          throw new MySqlException("Authentication with old password no longer supported, use 4.1 style passwords");
         }
         else
         {

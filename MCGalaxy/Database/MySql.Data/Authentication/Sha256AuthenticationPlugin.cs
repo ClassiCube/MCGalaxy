@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -68,7 +67,7 @@ namespace MySql.Data.MySqlClient.Authentication
         // send RSA encrypted, since the channel is not protected
         else if (rawPubkey == null) return new byte[] { 0x01 };
         else if (!Settings.AllowPublicKeyRetrieval)
-          throw new MySqlException(Resources.RSAPublicKeyRetrievalNotEnabled);
+          throw new MySqlException("Retrieval of the RSA public key is not enabled for insecure connections");
         else
         {
           byte[] bytes = GetRsaPassword(Settings.Password, AuthenticationData, rawPubkey);

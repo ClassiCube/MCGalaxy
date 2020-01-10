@@ -26,7 +26,6 @@ using System.IO;
 using System.Text;
 using MySql.Data.Common;
 using System.Data;
-using MySql.Data.MySqlClient.Properties;
 using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
@@ -133,7 +132,7 @@ namespace MySql.Data.MySqlClient
         if (MySqlTokenizer.IsParameter(token))
         {
           if ((!parameters.containsUnnamedParameters && token.Length == 1 && parameterCount > 0) || parameters.containsUnnamedParameters && token.Length > 1)
-            throw new MySqlException(Resources.MixedParameterNamingNotAllowed);
+            throw new MySqlException("Mixing named and unnamed parameters is not allowed");
 
           parameters.containsUnnamedParameters = token.Length == 1;
           if (SerializeParameter(parameters, packet, token, parameterCount))
@@ -184,7 +183,7 @@ namespace MySql.Data.MySqlClient
         if (parameterIndex <= parameters.Count)
           parameter = parameters[parameterIndex];
         else
-          throw new MySqlException(Resources.ParameterIndexNotFound);
+          throw new MySqlException("Parameter index was not found in Parameter Collection");
       }
 
       if (parameter == null)
@@ -194,7 +193,7 @@ namespace MySql.Data.MySqlClient
         if (parmName.StartsWith("@", StringComparison.Ordinal) && ShouldIgnoreMissingParameter(parmName))
           return false;
         throw new MySqlException(
-            String.Format(Resources.ParameterMustBeDefined, parmName));
+            String.Format("Parameter '{0}' must be defined", parmName));
       }
       parameter.Serialize(packet, false, Connection.Settings);
       return true;

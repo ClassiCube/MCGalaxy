@@ -23,7 +23,6 @@
 using System;
 using System.Globalization;
 using MySql.Data.Common;
-using MySql.Data.MySqlClient.Properties;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -34,41 +33,6 @@ namespace MySql.Data.MySqlClient
   /// </summary>
   internal class Crypt
   {
-    /// <summary>
-    /// Simple XOR scramble
-    /// </summary>
-    /// <param name="from">Source array</param>
-    /// <param name="fromIndex">Index inside source array</param>
-    /// <param name="to">Destination array</param>
-    /// <param name="toIndex">Index inside destination array</param>
-    /// <param name="password">Password used to xor the bits</param>
-    /// <param name="length">Number of bytes to scramble</param>
-    private static void XorScramble(byte[] from, int fromIndex, byte[] to, int toIndex,
-                    byte[] password, int length)
-    {
-      // make sure we were called properly
-      if (fromIndex < 0 || fromIndex >= from.Length)
-        throw new ArgumentException(Resources.IndexMustBeValid, "fromIndex");
-      if ((fromIndex + length) > from.Length)
-        throw new ArgumentException(Resources.FromAndLengthTooBig, "fromIndex");
-      if (from == null)
-        throw new ArgumentException(Resources.BufferCannotBeNull, "from");
-      if (to == null)
-        throw new ArgumentException(Resources.BufferCannotBeNull, "to");
-      if (toIndex < 0 || toIndex >= to.Length)
-        throw new ArgumentException(Resources.IndexMustBeValid, "toIndex");
-      if ((toIndex + length) > to.Length)
-        throw new ArgumentException(Resources.IndexAndLengthTooBig, "toIndex");
-      if (password == null || password.Length < length)
-        throw new ArgumentException(Resources.PasswordMustHaveLegalChars, "password");
-      if (length < 0)
-        throw new ArgumentException(Resources.ParameterCannotBeNegative, "count");
-
-      // now perform the work
-      for (int i = 0; i < length; i++)
-        to[toIndex++] = (byte)(from[fromIndex++] ^ password[i]);
-    }
-
     /// <summary>
     /// Returns a byte array containing the proper encryption of the 
     /// given password/seed according to the new 4.1.1 authentication scheme.

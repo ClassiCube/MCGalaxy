@@ -25,7 +25,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using MySql.Data.Common;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -216,7 +215,7 @@ namespace MySql.Data.MySqlClient
       }
       catch (IOException ioex)
       {
-        throw new MySqlException(Resources.ReadFromStreamFailed, true, ioex);
+        throw new MySqlException("Reading from the stream has failed", true, ioex);
       }
     }
 
@@ -226,7 +225,7 @@ namespace MySql.Data.MySqlClient
       int length = packet.Position - 4;
 
       if ((ulong)length > maxPacketSize)
-        throw new MySqlException(Resources.QueryTooLarge, (int)MySqlErrorCode.PacketTooLarge);
+        throw new MySqlException("Packets larger than max_allowed_packet are not allowed", (int)MySqlErrorCode.PacketTooLarge);
 
       int offset = 0;
       do

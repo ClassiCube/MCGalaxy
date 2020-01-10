@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -95,7 +94,7 @@ namespace MySql.Data.MySqlClient.Authentication
           return new byte[] { 0x02 };
         }
         else if (!Settings.AllowPublicKeyRetrieval)
-          throw new MySqlException(Resources.RSAPublicKeyRetrievalNotEnabled);
+          throw new MySqlException("Retrieval of the RSA public key is not enabled for insecure connections");
         // Full authentication.
         else
         {
@@ -118,14 +117,14 @@ namespace MySql.Data.MySqlClient.Authentication
       if (this.ServerVersion >= new Version("8.0.5"))
       {
         RSACryptoServiceProvider rsa = MySqlPemReader.ConvertPemToRSAProvider(rawPublicKey);
-        if (rsa == null) throw new MySqlException(Resources.UnableToReadRSAKey);
+        if (rsa == null) throw new MySqlException("Error encountered reading the RSA public key");
 
         return rsa.Encrypt(obfuscated, true);
       }
       else
       {
         RSACryptoServiceProvider rsa = MySqlPemReader.ConvertPemToRSAProvider(rawPublicKey);
-        if (rsa == null) throw new MySqlException(Resources.UnableToReadRSAKey);
+        if (rsa == null) throw new MySqlException("Error encountered reading the RSA public key");
 
         return rsa.Encrypt(obfuscated, false);
       }

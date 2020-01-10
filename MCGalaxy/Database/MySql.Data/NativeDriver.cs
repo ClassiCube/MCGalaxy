@@ -26,7 +26,6 @@ using System.Diagnostics;
 using System.IO;
 using MySql.Data.Common;
 using MySql.Data.Types;
-using MySql.Data.MySqlClient.Properties;
 using System.Text;
 using MySql.Data.MySqlClient.Authentication;
 using System.Reflection;
@@ -200,11 +199,11 @@ namespace MySql.Data.MySqlClient
       }
       catch (Exception ex)
       {
-        throw new MySqlException(Resources.UnableToConnectToHost,
+        throw new MySqlException("Unable to connect to any of the specified MySQL hosts",
             (int)MySqlErrorCode.UnableToConnectToHost, ex);
       }
       if (baseStream == null)
-        throw new MySqlException(Resources.UnableToConnectToHost,
+        throw new MySqlException("Unable to connect to any of the specified MySQL hosts",
             (int)MySqlErrorCode.UnableToConnectToHost);
 
       int maxSinglePacket = 255 * 255 * 255;
@@ -221,7 +220,7 @@ namespace MySql.Data.MySqlClient
         || versionString.ToLowerInvariant().Contains("-commercial");
       version = DBVersion.Parse(versionString);
       if (!owner.isFabric && !version.isAtLeast(5, 0, 0))
-        throw new NotSupportedException(Resources.ServerTooOld);
+        throw new NotSupportedException("Connector/Net no longer supports server versions prior to 5.0.");
       threadId = packet.ReadInteger(4);
 
       byte[] seedPart1 = packet.ReadStringAsBytes();
@@ -276,7 +275,7 @@ namespace MySql.Data.MySqlClient
         && (Settings.SslMode != MySqlSslMode.Preferred))
         {
           // Client requires SSL connections.
-          string message = String.Format(Resources.NoServerSSLSupport,
+          string message = String.Format("The host {0} does not support SSL connections",
               Settings.Server);
           throw new MySqlException(message);
         }
@@ -325,7 +324,7 @@ namespace MySql.Data.MySqlClient
       if (Settings.CertificateFile != null)
       {
         if (!Version.isAtLeast(5, 1, 0))
-          throw new MySqlException(Properties.Resources.FileBasedCertificateNotSupported);
+          throw new MySqlException("File based certificates are only supported when connecting to MySQL Server 5.1 or greater");
 
         X509Certificate2 clientCert = new X509Certificate2(Settings.CertificateFile,
             Settings.CertificatePassword);

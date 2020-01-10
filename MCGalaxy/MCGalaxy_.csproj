@@ -446,7 +446,6 @@
     <Compile Include="Database\MySql.Data\parameter.cs" />
     <Compile Include="Database\MySql.Data\parameter_collection.cs" />
     <Compile Include="Database\MySql.Data\PreparableStatement.cs" />
-    <Compile Include="Database\MySql.Data\Properties\Resources.Designer.cs" />
     <Compile Include="Database\MySql.Data\ResultSet.cs" />
     <Compile Include="Database\MySql.Data\Statement.cs" />
     <Compile Include="Database\MySql.Data\TimedStream.cs" />
@@ -771,8 +770,6 @@
     <None Include="..\README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Database\MySql.Data\Properties\keywords.txt" />
-    <None Include="Database\MySql.Data\Properties\ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Changelog.txt">
@@ -796,7 +793,6 @@
     <Folder Include="Database\MySql.Data\common" />
     <Folder Include="Database\MySql.Data\extensions" />
     <Folder Include="Database\MySql.Data\extensions\NonRT" />
-    <Folder Include="Database\MySql.Data\Properties" />
     <Folder Include="Database\MySql.Data\Types" />
     <Folder Include="Database\Stats" />
     <Folder Include="Games\Weapons" />
@@ -811,9 +807,6 @@
     <Folder Include="Server\Maintenance" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Database\MySql.Data\Properties\Resources.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

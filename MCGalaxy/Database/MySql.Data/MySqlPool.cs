@@ -25,7 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -254,7 +253,9 @@ namespace MySql.Data.MySqlClient
         if (!autoEvent.WaitOne(timeOut, false)) break;
         timeOut = fullTimeOut - (int)DateTime.Now.Subtract(start).TotalMilliseconds;
       }
-      throw new MySqlException(Resources.TimeoutGettingConnection);
+      throw new MySqlException("Timeout expired.  " +
+                               "The timeout period elapsed prior to obtaining a connection from the pool.  " +
+                               "This may have occurred because all pooled connections were in use and max pool size was reached");
     }
 
     /// <summary>

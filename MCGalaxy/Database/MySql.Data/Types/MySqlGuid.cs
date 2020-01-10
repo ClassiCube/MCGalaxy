@@ -23,7 +23,6 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.Types
 {
@@ -105,7 +104,7 @@ namespace MySql.Data.Types
         }
         catch (Exception ex)
         {
-          throw new MySqlException(Resources.DataNotInSupportedFormat, ex);
+          throw new MySqlException("The given value was not in a supported format", ex);
         }
       }
 

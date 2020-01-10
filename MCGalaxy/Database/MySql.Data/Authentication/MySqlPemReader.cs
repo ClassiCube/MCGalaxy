@@ -113,11 +113,7 @@ public class MySqlPemReader
 
             // Read exponent.
             byte[] exponent = reader.ReadBytes(reader.ReadByte());
-#if NETSTANDARD1_3
-            RSA rsa = RSA.Create();
-#else
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-#endif
             RSAParameters rsaKeyInfo = new RSAParameters
             {
               Modulus = modulus,

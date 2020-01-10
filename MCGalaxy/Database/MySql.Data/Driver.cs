@@ -26,7 +26,6 @@ using System.Globalization;
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
-using MySql.Data.MySqlClient.Properties;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -74,7 +73,7 @@ namespace MySql.Data.MySqlClient
     {
       encoding = Encoding.GetEncoding("UTF-8");
       if (encoding == null)
-        throw new MySqlException(Resources.DefaultEncodingNotFound);
+        throw new MySqlException("DefaultEncodingNotFound");
       connectionString = settings;
       serverCharSet = "utf8";
       serverCharSetIndex = -1;

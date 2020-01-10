@@ -24,7 +24,6 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient.Properties;
 using System.Data;
 
 namespace MySql.Data.MySqlClient
@@ -86,7 +85,7 @@ namespace MySql.Data.MySqlClient
         MySqlParameter p = Parameters.GetParameterFlexible(parameterName, false);
         if (p == null)
           throw new InvalidOperationException(
-              String.Format(Resources.ParameterNotFoundDuringPrepare, parameterName));
+              String.Format("Parameter '{0}' was not found during prepare", parameterName));
         p.Encoding = paramList[i].Encoding;
         parametersToSend.Add(p);
       }
