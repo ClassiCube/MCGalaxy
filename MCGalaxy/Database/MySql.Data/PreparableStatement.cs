@@ -36,11 +36,7 @@ namespace MySql.Data.MySqlClient
   {
     private int executionCount;
     private int statementId;
-#if RT
-    RtBitArray nullMap;
-#else
     BitArray nullMap;
-#endif
     List<MySqlParameter> parametersToSend = new List<MySqlParameter>();
     MySqlPacket packet;
     int dataPosition;

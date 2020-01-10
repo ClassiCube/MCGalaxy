@@ -183,7 +183,7 @@ namespace MySql.Data.Common
 
     #region Create Code
 
-    public static MyNetworkStream CreateStream(MySqlConnectionStringBuilder settings, bool unix)
+    public static MyNetworkStream CreateStream(MySqlConnectionStringBuilder settings)
     {
       MyNetworkStream stream = null;
       IPHostEntry ipHE = GetHostEntry(settings.Server);
@@ -191,7 +191,7 @@ namespace MySql.Data.Common
       {
         try
         {
-          stream = CreateSocketStream(settings, address, unix);
+          stream = CreateSocketStream(settings, address);
           if (stream != null) break;
         }
         catch (Exception ex)
@@ -226,30 +226,10 @@ namespace MySql.Data.Common
       return Dns.GetHostEntry(hostname);
     }
 
-    private static EndPoint CreateUnixEndPoint(string host)
+    private static MyNetworkStream CreateSocketStream(MySqlConnectionStringBuilder settings, IPAddress ip)
     {
-      // first we need to load the Mono.posix assembly			
-      Assembly a = Assembly.Load(@"Mono.Posix, Version=2.0.0.0, 				
-                Culture=neutral, PublicKeyToken=0738eb9f132ed756");
-
-      // then we need to construct a UnixEndPoint object
-      EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
-          false, BindingFlags.CreateInstance, null,
-          new object[1] { host }, null, null);
-      return ep;
-    }
-
-    private static MyNetworkStream CreateSocketStream(MySqlConnectionStringBuilder settings, IPAddress ip, bool unix)
-    {
-      EndPoint endPoint;
-      if (!Platform.IsWindows() && unix)
-        endPoint = CreateUnixEndPoint(settings.Server);
-      else
-        endPoint = new IPEndPoint(ip, (int)settings.Port);
-
-      Socket socket = unix ?
-          new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-          new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+      EndPoint endPoint = new IPEndPoint(ip, (int)settings.Port);
+      Socket socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       if (settings.Keepalive > 0)
       {
         SetKeepAlive(socket, settings.Keepalive);

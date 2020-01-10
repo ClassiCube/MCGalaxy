@@ -925,11 +925,7 @@ namespace MySql.Data.MySqlClient
       IMySqlValue v = resultSet[index];
 
       if (checkNull && v.IsNull)
-#if RT
-        throw new MySqlNullValueException();
-#else
         throw new System.Data.SqlTypes.SqlNullValueException();
-#endif
 
       return v;
     }

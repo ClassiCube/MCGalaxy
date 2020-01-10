@@ -409,7 +409,7 @@ namespace MCGalaxy.SQL {
                 while (pool.Count > max) {
                     IntPtr handle = pool.Dequeue();
                     Interop.sqlite3_close_v2(handle);
-                }                
+                }
             }
         }
         

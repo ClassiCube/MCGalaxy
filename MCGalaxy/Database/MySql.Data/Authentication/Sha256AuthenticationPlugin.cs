@@ -32,11 +32,7 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using MySql.Data.MySqlClient.Properties;
-#if NETSTANDARD1_3
-using AliasText = MySql.Data.MySqlClient.Framework.NetStandard1_3;
-#else
-using AliasText = System.Text;
-#endif
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -102,26 +98,15 @@ namespace MySql.Data.MySqlClient.Authentication
     {
       if (password.Length == 0) return new byte[1];
       // Obfuscate the plain text password with the session scramble
-#if NETSTANDARD1_3
-      byte[] obfuscated = GetXor(AliasText.Encoding.UTF8.GetBytes(password), seedBytes);
-#else
-      byte[] obfuscated = GetXor(AliasText.Encoding.Default.GetBytes(password), seedBytes);
-#endif
+      byte[] obfuscated = GetXor(Encoding.Default.GetBytes(password), seedBytes);
+      
       // Encrypt the password and send it to the server
-#if NETSTANDARD1_3
-      RSA rsa = MySqlPemReader.ConvertPemToRSAProvider(rawPublicKey);
-      if (rsa == null)
-        //throw new MySqlException(Resources.UnableToReadRSAKey);
-        throw new MySqlException("RSA2");
-      return rsa.Encrypt(obfuscated, RSAEncryptionPadding.OaepSHA1);
-#else
       RSACryptoServiceProvider rsa = MySqlPemReader.ConvertPemToRSAProvider(rawPublicKey);
       if (rsa == null)
         //throw new MySqlException(Resources.UnableToReadRSAKey);
         throw new MySqlException("RSA2");
       return rsa.Encrypt(obfuscated, true);
-#endif
-        }
+    }
 
     protected byte[] GetXor( byte[] src, byte[] pattern )
     {

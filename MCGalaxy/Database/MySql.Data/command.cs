@@ -44,9 +44,7 @@ namespace MySql.Data.MySqlClient
     MySqlTransaction curTransaction;
     string cmdText;
     CommandType cmdType;
-    long updatedRowCount;
     MySqlParameterCollection parameters;
-    private IAsyncResult asyncResult;
     internal Int64 lastInsertedId;
     private PreparableStatement statement;
     private int commandTimeout;
@@ -54,8 +52,6 @@ namespace MySql.Data.MySqlClient
     private bool resetSqlSelect;
     CommandTimer commandTimer;
     private bool useDefaultTimeout;
-    private bool shouldCache;
-    private int cacheAge;
     private bool internallyCreated;
     private static List<string> keywords = null;
     private bool disposed = false;
@@ -410,7 +406,6 @@ namespace MySql.Data.MySqlClient
         // command behaviors
         HandleCommandBehaviors(behavior);
 
-        updatedRowCount = -1;
         try
         {
           MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);

@@ -287,11 +287,7 @@ namespace MySql.Data.MySqlClient
           case "Decimal": MySqlDbType = MySqlDbType.Decimal; break;
           case "Object": 
           default:
-#if RT
-            if (t.GetTypeInfo().BaseType == typeof(Enum))
-#else
             if( t.BaseType == typeof( Enum ) )
-#endif
               MySqlDbType = MySqlDbType.Int32;
             else 
               MySqlDbType = MySqlDbType.Blob; 
@@ -304,11 +300,7 @@ namespace MySql.Data.MySqlClient
 
     public MySqlParameter Clone()
     {
-#if RT
-      MySqlParameter clone = new MySqlParameter(paramName, mySqlDbType);
-#else
       MySqlParameter clone = new MySqlParameter(paramName, mySqlDbType, Direction, SourceColumn, SourceVersion, paramValue);
-#endif
       // if we have not had our type set yet then our clone should not either
       clone.inferType = inferType;
       return clone;

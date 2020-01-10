@@ -1,4 +1,4 @@
-// Copyright © 2017, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2017, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -26,29 +26,16 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-#if NETSTANDARD1_3
-using AliasText = MySql.Data.MySqlClient.Framework.NetStandard1_3;
-#else
-using AliasText = System.Text;
-#endif
 
 public class MySqlPemReader
 {
-#if NETSTANDARD1_3
-    public static RSA ConvertPemToRSAProvider(byte[] rawPublicKey)
-#else
     public static RSACryptoServiceProvider ConvertPemToRSAProvider(byte[] rawPublicKey)
-#endif
     {
       byte[] decodedKey = DecodeOpenSslKey(rawPublicKey);
       return DecodeX509Key(decodedKey);
     }
 
-#if NETSTANDARD1_3
-    static RSA DecodeX509Key(byte[] key)
-#else
     static RSACryptoServiceProvider DecodeX509Key(byte[] key)
-#endif
     {
       if (key == null) return null;
 
@@ -168,7 +155,7 @@ public class MySqlPemReader
 
       try
       {
-        binaryKey = Convert.FromBase64String(AliasText.Encoding.Default.GetString(formattedRawPublicKey));
+        binaryKey = Convert.FromBase64String(Encoding.Default.GetString(formattedRawPublicKey));
       }
       catch (FormatException)
       {
@@ -182,7 +169,7 @@ public class MySqlPemReader
     {
       if (rawPublicKey == null) return null;
 
-      var pem = AliasText.Encoding.Default.GetString(rawPublicKey);
+      var pem = Encoding.Default.GetString(rawPublicKey);
       pem = pem.Replace(Environment.NewLine, "");
       const string header = "-----BEGIN PUBLIC KEY-----";
       const string footer = "-----END PUBLIC KEY-----";

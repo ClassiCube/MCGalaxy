@@ -80,13 +80,8 @@ namespace MySql.Data.MySqlClient
 
     public void Close()
     {
-#if RT
-      outStream.Dispose();
-      inStream.Dispose();
-#else
       outStream.Close();
       inStream.Close();
-#endif
       timedStream.Close();
     }
 

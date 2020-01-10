@@ -266,18 +266,13 @@ namespace MySql.Data.MySqlClient
       set { baseStream.WriteTimeout = value; }
     }
 
-#if RT
-    public void Close()
-#else
     public override void Close()
-#endif
     {
       if (isClosed)
         return;
       isClosed = true;
-#if !RT
+
       baseStream.Close();
-#endif
       baseStream.Dispose();
     }
 

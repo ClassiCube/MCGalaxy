@@ -417,7 +417,6 @@
     <Compile Include="Database\MySql.Data\common\LowResolutionStopwatch.cs" />
     <Compile Include="Database\MySql.Data\common\MyNetworkStream.cs" />
     <Compile Include="Database\MySql.Data\common\MySqlTokenizer.cs" />
-    <Compile Include="Database\MySql.Data\common\Platform.cs" />
     <Compile Include="Database\MySql.Data\common\StringUtility.cs" />
     <Compile Include="Database\MySql.Data\common\Version.cs" />
     <Compile Include="Database\MySql.Data\Connection.cs" />
@@ -455,7 +454,6 @@
     <Compile Include="Database\MySql.Data\Types\MySqlBinary.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlBit.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlByte.cs" />
-    <Compile Include="Database\MySql.Data\Types\MySqlConversionException.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlDateTime.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlDecimal.cs" />
     <Compile Include="Database\MySql.Data\Types\MySqlDouble.cs" />

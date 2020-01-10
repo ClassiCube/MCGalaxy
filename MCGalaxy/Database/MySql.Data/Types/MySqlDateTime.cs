@@ -417,7 +417,7 @@ namespace MySql.Data.Types
     public DateTime GetDateTime()
     {
       if (!IsValidDateTime)
-        throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");
+        throw new InvalidOperationException("Unable to convert MySQL date/time value to System.DateTime");
 
       DateTimeKind kind = DateTimeKind.Unspecified;
       if (type == MySqlDbType.Timestamp)
@@ -467,9 +467,6 @@ namespace MySql.Data.Types
       return dateString;
     }
 
-    /// <summary></summary>
-    /// <param name="val"></param>
-    /// <returns></returns>
     public static explicit operator DateTime(MySqlDateTime val)
     {
       if (!val.IsValidDateTime) return DateTime.MinValue;

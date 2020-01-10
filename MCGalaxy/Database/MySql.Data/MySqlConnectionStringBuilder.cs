@@ -754,11 +754,7 @@ namespace MySql.Data.MySqlClient
       if (typeName.StartsWith("Int32") && Int32.TryParse(value.ToString(), out intVal32)) { value = intVal32; return; }
 
       object objValue;
-#if RT
-      Type baseType = BaseType.GetTypeInfo().BaseType;
-#else
       Type baseType = BaseType.BaseType;
-#endif
       if (baseType != null && baseType.Name == "Enum" && ParseEnum(value.ToString(), out objValue)) 
       {
         value = objValue;  return;

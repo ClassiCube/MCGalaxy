@@ -25,11 +25,7 @@ using System;
 using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Common;
 using System.Security.Cryptography;
-#if RT
-using AliasText = MySql.Data.MySqlClient.RT;
-#else
-using AliasText = System.Text;
-#endif
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Authentication
 {

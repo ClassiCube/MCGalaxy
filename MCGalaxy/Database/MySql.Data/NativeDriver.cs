@@ -192,7 +192,7 @@ namespace MySql.Data.MySqlClient
       // connect to one of our specified hosts
       try
       {
-        baseStream = MyNetworkStream.CreateStream(Settings, false);
+        baseStream = MyNetworkStream.CreateStream(Settings);
       }
       catch (System.Security.SecurityException)
       {
@@ -908,11 +908,7 @@ namespace MySql.Data.MySqlClient
         foreach (PropertyInfo property in attrs.GetType().GetProperties())
         {
           string name = property.Name;
-#if RT
-          object[] customAttrs = property.GetCustomAttributes(typeof(DisplayNameAttribute), false).ToArray<object>();
-#else
           object[] customAttrs = property.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-#endif
           if (customAttrs.Length > 0)
             name = (customAttrs[0] as DisplayNameAttribute).DisplayName;
 
